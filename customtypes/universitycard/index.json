@@ -1,0 +1,66 @@
+{
+  "id": "universitycard",
+  "label": "HomePageQualities",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "tituloMenor": {
+        "type": "Text",
+        "config": {
+          "label": "Titulo Menor",
+          "placeholder": ""
+        }
+      },
+      "tituloMaior": {
+        "type": "Text",
+        "config": {
+          "label": "Titulo Maior",
+          "placeholder": ""
+        }
+      },
+      "card1Titulo": {
+        "type": "Text",
+        "config": {
+          "label": "Card 1 Titulo",
+          "placeholder": ""
+        }
+      },
+      "card1Descricao": {
+        "type": "Text",
+        "config": {
+          "label": "Card 1 Descricao",
+          "placeholder": ""
+        }
+      },
+      "card2Titulo": {
+        "type": "Text",
+        "config": {
+          "label": "Card 2 Titulo",
+          "placeholder": ""
+        }
+      },
+      "card2Descricao": {
+        "type": "Text",
+        "config": {
+          "label": "Card 2 Descricao",
+          "placeholder": ""
+        }
+      },
+      "card3Titulo": {
+        "type": "Text",
+        "config": {
+          "label": "Card 3 Titulo",
+          "placeholder": ""
+        }
+      },
+      "card3Descricao": {
+        "type": "Text",
+        "config": {
+          "label": "Card 3 Descricao",
+          "placeholder": ""
+        }
+      }
+    }
+  }
+}

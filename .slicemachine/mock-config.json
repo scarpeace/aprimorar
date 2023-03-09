@@ -1,0 +1,13 @@
+{
+  "slices": {
+    "HomePageQualitites": {
+      "default": {
+        "primary": {}
+      }
+    }
+  },
+  "_cts": {
+    "universitycard": {},
+    "about": {}
+  }
+}
