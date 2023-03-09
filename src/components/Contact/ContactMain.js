@@ -9,7 +9,7 @@ const ContactMain = () => {
     <main>
       <Breadcrumb breadcrumbTitle="Contact" breadcrumbSubTitle="Contact Us" />
 
-      <div className="contact-area pt-120 pb-90">
+      <div className="contact-area pt-90 pb-90">
         <div className="container">
           <div className="row">
             <div className="col-xl-8 col-lg-7 col-md-12">
@@ -18,11 +18,15 @@ const ContactMain = () => {
                   <h2>Entre em Contato</h2>
                 </div>
                 <ContactFormSection />
-                <ContactMap />
               </div>
             </div>
-            <div className="col-xl-4 col-lg-5 col-md-8">
+            <div className="col-xl-4 col-lg-3 col-md-12">
               <ContactSidebar />
+            </div>
+            <div className="row">
+              <div className="col-xl-12 col-lg-12 col-md-12">
+                <ContactMap />
+              </div>
             </div>
           </div>
         </div>
