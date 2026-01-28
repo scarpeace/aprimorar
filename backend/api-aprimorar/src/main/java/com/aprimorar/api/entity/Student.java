@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -55,7 +54,7 @@ public class Student {
     private Activity activity;
 
     @CreationTimestamp
-    private Instant creationTimestamp;
+    private Instant createdAt;
 
     @UpdateTimestamp
     private Instant updatedAt;

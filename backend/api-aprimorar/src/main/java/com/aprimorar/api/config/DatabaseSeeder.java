@@ -32,15 +32,13 @@ public class DatabaseSeeder {
     @Bean
     CommandLineRunner initDatabase(){
         return args -> {
-            addressRepo.deleteAll();
-            parentRepo.deleteAll();
-            studentRepo.deleteAll();
-
-            log.info("Iniciando SEED no banco de dados");
-
-            seedStudents();
-
-            log.info("SEED concluído com sucesso");
+            if (studentRepo.count() == 0 && addressRepo.count() == 0 && parentRepo.count() == 0) {
+                log.info("Iniciando SEED no banco de dados");
+                seedStudents();
+                log.info("SEED concluído com sucesso");
+            } else {
+                log.info("Banco de dados já contém dados. SEED não executado.");
+            }
         };
     }
 

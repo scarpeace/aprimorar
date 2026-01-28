@@ -38,6 +38,6 @@ public class Address {
     private String state;
 
     @Column(name = "zip")
-    private String zip_code;
+    private String zipCode;
 
 }

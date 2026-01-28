@@ -1,9 +1,10 @@
 package com.aprimorar.api.controller;
 
-import com.aprimorar.api.entity.Student;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.aprimorar.api.controller.dto.StudentReponseDto;
+import com.aprimorar.api.controller.dto.StudentRequestDto;
+import com.aprimorar.api.service.StudentService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -11,9 +12,30 @@ import java.util.List;
 @RequestMapping("/v1/students")
 public class StudentController {
 
+
+    private final StudentService studentService;
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
     @GetMapping()
-    public List<Student> listStudents(){
-        return null;
+    public ResponseEntity<List<StudentReponseDto>> listStudents(){
+        List<StudentReponseDto> allStudents = studentService.listStudents();
+
+        return ResponseEntity.ok(allStudents);
+    }
+
+    @GetMapping("/{studentId}")
+    public ResponseEntity<StudentReponseDto> getStudentById(@PathVariable String studentId){
+        var foundStudent = studentService.findById(studentId);
+
+       return ResponseEntity.ok(foundStudent);
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<StudentReponseDto> createStudent(@RequestBody StudentRequestDto studentRequestDto){
+        StudentReponseDto response = studentService.createStudent(studentRequestDto);
     }
 
 }
