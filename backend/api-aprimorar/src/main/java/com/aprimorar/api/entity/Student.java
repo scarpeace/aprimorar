@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -32,11 +33,11 @@ public class Student {
     @Column(name = "birthdate")
     private Date birthdate;
 
-    @OneToOne(mappedBy = "student")
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            mappedBy = "student",
+            orphanRemoval = true)
     private Address address;
-
-    @Column(name = "phone")
-    private String phone;
 
     @Column(name = "cpf")
     private String cpf;
@@ -44,7 +45,10 @@ public class Student {
     @Column(name = "school")
     private String school;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            mappedBy = "student",
+            orphanRemoval = true)
     private Parent parent;
 
     @Enumerated(EnumType.STRING)

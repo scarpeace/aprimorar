@@ -1,10 +1,22 @@
 package com.aprimorar.api.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_parent")
 public class Parent {
@@ -14,22 +26,19 @@ public class Parent {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id")
     private Student student;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "birthdate")
-    private Date birthdate;
-
-    @Column(name = "phone")
-    private String phone;
-
-    @Column(name = "cpf")
-    private String cpf;
-
     @Column(name = "email")
     private String email;
+
+    @CreationTimestamp
+    private Instant creationTimestamp;
+
+    @UpdateTimestamp
+    private Instant updatedAt;
 }

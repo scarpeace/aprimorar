@@ -21,8 +21,8 @@ public class Address {
     @Column(name = "address_id")
     private UUID id;
 
+    @OneToOne()
     @JoinColumn(name = "student_id")
-    @OneToOne
     private Student student;
 
     @Column(name = "street")
