@@ -18,18 +18,5 @@ public class StudentMapper {
         );
     }
 
-    public static Student toEntity(StudentRequestDto studentRequestDto){
-        return new Student(null,
-                studentRequestDto.name(),
-                studentRequestDto.birthdate(),
-                null,
-                studentRequestDto.cpf(),
-                studentRequestDto.school(),
-                null,
-                Activity.ENEM,
-                null,
-                null,
-                true);
-    }
 
 }

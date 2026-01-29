@@ -12,18 +12,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+@Embeddable
 @Table(name = "tb_address")
 public class Address {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "address_id")
-    private UUID id;
-
-    @OneToOne()
-    @JoinColumn(name = "student_id")
-    private Student student;
 
     @Column(name = "street")
     private String street;

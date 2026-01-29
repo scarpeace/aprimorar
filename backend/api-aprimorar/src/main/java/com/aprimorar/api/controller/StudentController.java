@@ -33,9 +33,9 @@ public class StudentController {
        return ResponseEntity.ok(foundStudent);
     }
 
-    @PostMapping("/new")
-    public ResponseEntity<StudentReponseDto> createStudent(@RequestBody StudentRequestDto studentRequestDto){
-        StudentReponseDto response = studentService.createStudent(studentRequestDto);
-    }
+//    @PostMapping("/new")
+//    public ResponseEntity<StudentReponseDto> createStudent(@RequestBody StudentRequestDto studentRequestDto){
+//        StudentReponseDto response = studentService.createStudent(studentRequestDto);
+//    }
 
 }

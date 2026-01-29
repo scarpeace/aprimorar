@@ -26,32 +26,28 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "birthdate")
+    @Column(name = "birthdate", nullable = false)
     private Date birthdate;
 
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            mappedBy = "student",
-            orphanRemoval = true)
-    private Address address;
-
-    @Column(name = "cpf")
+    @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
-    @Column(name = "school")
+    @Column(name = "school", nullable = false)
     private String school;
 
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            mappedBy = "student",
-            orphanRemoval = true)
-    private Parent parent;
-
+    @Column(name="activity", nullable = false)
     @Enumerated(EnumType.STRING)
     private Activity activity;
+
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name = "parent_id", referencedColumnName = "parent_id")
+    private Parent parent;
+
+    @Embedded
+    private Address address;
 
     @CreationTimestamp
     private Instant createdAt;

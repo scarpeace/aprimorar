@@ -26,10 +26,6 @@ public class Parent {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "student_id")
-    private Student student;
-
     @Column(name = "name")
     private String name;
 
@@ -37,8 +33,10 @@ public class Parent {
     private String email;
 
     @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
     private Instant creationTimestamp;
 
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private Instant updatedAt;
 }

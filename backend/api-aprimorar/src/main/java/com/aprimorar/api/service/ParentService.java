@@ -14,15 +14,5 @@ public class ParentService {
         this.parentRepo = parentRepo;
     }
 
-    public Parent createParent(ParentRequestDto parentRequestDto){
-        Parent newParent = new Parent(
-                null,
-                null,
-                parentRequestDto.name(),
-                parentRequestDto.email(),
-                null,
-                null);
 
-        return parentRepo.save(newParent);
-    }
 }

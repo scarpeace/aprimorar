@@ -5,7 +5,6 @@ import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.enums.Activity;
-import com.aprimorar.api.repository.AddressRepository;
 import com.aprimorar.api.repository.ParentRepository;
 import com.aprimorar.api.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.text.SimpleDateFormat;
-import java.util.logging.Logger;
 
 @Configuration
 @Profile("dev")
@@ -25,14 +23,13 @@ import java.util.logging.Logger;
 public class DatabaseSeeder {
 
     private final StudentRepository studentRepo;
-    private final AddressRepository addressRepo;
     private final ParentRepository parentRepo;
 
 
     @Bean
     CommandLineRunner initDatabase(){
         return args -> {
-            if (studentRepo.count() == 0 && addressRepo.count() == 0 && parentRepo.count() == 0) {
+            if (studentRepo.count() == 0 && parentRepo.count() == 0) {
                 log.info("Iniciando SEED no banco de dados");
                 seedStudents();
                 log.info("SEED concluído com sucesso");
@@ -70,30 +67,29 @@ public class DatabaseSeeder {
             address1.setDistrict("Centro");
             address1.setCity("São Paulo");
             address1.setState("SP");
-            address1.setZip_code("01234-567");
-            address1.setStudent(student1);
+            address1.setZipCode("01234-567");
+
+            student1.setAddress(address1);
 
             Address address2 = new Address();
             address2.setStreet("Servidão Bertolina, 230");
             address2.setDistrict("Barra da Lagoa");
             address2.setCity("Florianópolis");
             address2.setState("SC");
-            address2.setZip_code("01234-245");
-            address2.setStudent(student2);
+            address2.setZipCode("01234-245");
 
-            student1.setAddress(address1);
             student2.setAddress(address2);
 
             Parent parent1 = new Parent();
             parent1.setName("João Silva Sauro");
             parent1.setEmail("joao_silva@email.com");
-            parent1.setStudent(student1);
+
             student1.setParent(parent1);
 
             Parent parent2 = new Parent();
             parent2.setName("Maurício Pereira Souza");
             parent2.setEmail("mauricio_pereira@email.com");
-            parent2.setStudent(student2);
+
             student2.setParent(parent2);
 
             studentRepo.save(student1);
