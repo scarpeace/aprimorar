@@ -10,6 +10,7 @@ public record StudentReponseDto(UUID id,
                                 String name,
                                 String cpf,
                                 String school,
+                                String phone,
                                 Date birthdate,
                                 Activity activity,
                                 Instant createdAt) {

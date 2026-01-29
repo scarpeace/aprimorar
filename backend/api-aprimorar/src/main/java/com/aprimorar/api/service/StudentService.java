@@ -3,7 +3,6 @@ package com.aprimorar.api.service;
 import com.aprimorar.api.controller.dto.StudentReponseDto;
 import com.aprimorar.api.controller.dto.StudentRequestDto;
 import com.aprimorar.api.entity.Student;
-import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.StudentRepository;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,6 @@ import java.util.UUID;
 
 @Service
 public class StudentService {
-
 
     private final StudentRepository studentRepo;
 
@@ -40,9 +38,11 @@ public class StudentService {
          return StudentMapper.toDto(foundStudent);
     }
 
-//    public StudentReponseDto createStudent(StudentRequestDto studentRequestDto) {
-//        Student newStudent = StudentMapper.toEntity(studentRequestDto);
-//
-//
-//    }
+    public StudentReponseDto createStudent(StudentRequestDto studentRequestDto) {
+        Student newStudent = StudentMapper.toEntity(studentRequestDto);
+
+        Student savedStudent = studentRepo.save(newStudent);
+
+        return StudentMapper.toDto(savedStudent);
+    }
 }

@@ -12,4 +12,13 @@ public class ParentMapper {
                 parent.getEmail());
     }
 
+    public static Parent toEntity(ParentRequestDto parentRequestDto){
+        Parent entity = new Parent();
+
+        entity.setName(parentRequestDto.name());
+        entity.setEmail(parentRequestDto.email());
+
+        return entity;
+    }
+
 }

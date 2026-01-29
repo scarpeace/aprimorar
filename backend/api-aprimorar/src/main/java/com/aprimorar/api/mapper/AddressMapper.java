@@ -15,4 +15,15 @@ public class AddressMapper {
                 address.getZipCode());
     }
 
+    public static Address toEntity(AddressRequestDto addressRequestDto){
+        Address entity = new Address();
+        entity.setCity(addressRequestDto.city());
+        entity.setDistrict(addressRequestDto.district());
+        entity.setStreet(addressRequestDto.street());
+        entity.setState(addressRequestDto.state());
+        entity.setZipCode(addressRequestDto.zipCode());
+
+        return entity;
+    }
+
 }

@@ -29,6 +29,9 @@ public class Student {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @Column(name = "phone", nullable = false)
+    private String phone;
+
     @Column(name = "birthdate", nullable = false)
     private Date birthdate;
 
