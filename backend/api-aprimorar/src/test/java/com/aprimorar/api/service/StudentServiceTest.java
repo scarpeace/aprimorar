@@ -94,7 +94,7 @@ class StudentServiceTest {
     void testDeleteStudentActive() {
         student.setActive(true);
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        String result = studentService.deleteStudent(student.getId().toString());
+        String result = studentService.softDeleteStudent(student.getId().toString());
         assertFalse(student.getActive());
         assertTrue(result.contains("is now not active"));
     }
@@ -104,7 +104,7 @@ class StudentServiceTest {
     void testDeleteStudentInactive() {
         student.setActive(false);
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        String result = studentService.deleteStudent(student.getId().toString());
+        String result = studentService.softDeleteStudent(student.getId().toString());
         assertEquals("It wasn't possible to delete Student, check log", result);
     }
 
@@ -112,7 +112,7 @@ class StudentServiceTest {
     @DisplayName("Should throw exception when ID not found for deletion")
     void testDeleteStudentNotFound() {
         when(studentRepo.findById(any(UUID.class))).thenReturn(Optional.empty());
-        assertThrows(ResponseStatusException.class, () -> studentService.deleteStudent(UUID.randomUUID().toString()));
+        assertThrows(ResponseStatusException.class, () -> studentService.softDeleteStudent(UUID.randomUUID().toString()));
     }
 
     @Test

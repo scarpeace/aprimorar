@@ -40,7 +40,7 @@ public class StudentController {
 
     @DeleteMapping("/{studentId}")
     public ResponseEntity<String> deleteStudent(@PathVariable String studentId){
-        String response  = studentService.deleteStudent(studentId);
+        String response  = studentService.softDeleteStudent(studentId);
 
         return ResponseEntity.ok(response);
     }

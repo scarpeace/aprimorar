@@ -2,71 +2,71 @@
 
 ## 1. Visão Geral do Projeto
 
-Este projeto foi desenvolvido como um desafio técnico pessoal full-stack, focado na criação de um sistema de gerenciamento de alunos e aulas de uma escola de aulas particulares. O objetivo principal era demonstrar proficiência em desenvolvimento seguro, performático em cima das melhores práticas de arquitetura e código limpo.
+Este projeto foi desenvolvido como um desafio pessoal full-stack, focado na criação de um sistema de gerenciamento de alunos e atendimentos de um cursinho de preparatório para ENEM e aulas particulares. O objetivo principal era demonstrar proficiência em desenvolvimento seguro, performático em cima das melhores práticas de arquitetura e código limpo.
 
 <br/>
 
-[//]: # (## 2. 📋 Requisitos e Funcionalidades Principais)
+## 2. 📋 Requisitos e Funcionalidades Principais
 
-[//]: # ()
-[//]: # (O projeto foi construído para atender aos seguintes requisitos:)
 
-[//]: # ()
-[//]: # (* **CRUD de Produtos:** Funcionalidades completas de Criação, Leitura, Atualização e Exclusão de produtos.)
+O projeto foi construído para atender aos seguintes requisitos:
 
-[//]: # ()
-[//]: # (* **Categorização:** Implementação de um sistema robusto de categorias.)
 
-[//]: # ()
+* **CRUD de Produtos:** Funcionalidades completas de Criação, Leitura, Atualização e Exclusão de alunos, responsáveis e aulas.
+
+
+* **Categorização:** Implementação de um sistema robusto de categorias de atendimentos.
+
+
 [//]: # (* **Segurança e Autorização:** Implementação de controle de acesso para impedir que usuários modifiquem dados de terceiros.)
 
-[//]: # ()
+
 [//]: # (* **Autenticação JWT:** Sistema de login funcional e seguro utilizando JSON Web Tokens &#40;JWT&#41;.)
 
-[//]: # ()
-[//]: # (* **Paginação Performática:** Paginação da lista de produtos implementada diretamente no banco de dados.)
 
-[//]: # ()
-[//]: # (* **Filtros Manuais:** Opções manuais para filtrar a lista de produtos.)
+* **Paginação Performática:** Paginação da lista de atendimentos e alunos implementada diretamente no banco de dados.
 
-[//]: # ()
+
+* **Filtros Manuais:** Opções manuais para filtrar a lista de alunos.
+
+
 [//]: # (* **Busca Inteligente por IA:** Utilização da Google Gemini API para interpretação de linguagem natural &#40;ex: "Eu quero chocolate"&#41; e retorno de produtos relacionados.)
 
-[//]: # ()
+
 [//]: # (* **Mecanismo de Fallback:** Implementação de um mecanismo de contingência caso a busca por IA demore ou falhe.)
 
-[//]: # ()
+
 [//]: # (* **Sistema de Carrinho de Compras:** Funcionalidade completa de adição e remoção de itens.)
 
-[//]: # ()
-[//]: # (* **Realização de Pedido:** Fluxo de checkout e finalização de compra.)
 
-[//]: # ()
+* **Agendamento de Atendimentos via API do Google Calendar:** Fluxo de registro e agendamento de aulas via API do Google Calendar.
+
+
 [//]: # (* **Registro de Logs:** Captura de logs de requisição e logs específicos da busca inteligente.)
 
-[//]: # ()
-[//]: # (<br/>)
 
-[//]: # ()
-[//]: # (## 3. 🧰 Tecnologias Utilizadas)
+<br/>
 
-[//]: # ()
-[//]: # (| Categoria | Tecnologia | Detalhe |)
+
+## 3. 🧰 Tecnologias Utilizadas
+
+
+| Categoria | Tecnologia |
 
 [//]: # (| :--- | :--- | :--- |)
 
-[//]: # (| **Backend** | Java | Spring Boot &#40;com foco em segurança e performance&#41; |)
+| **Backend** | Java | Spring Boot | Hibernate | Mockito | JUnit | Swagger | OpenFeign
 
 [//]: # (| **Frontend** | React | Desenvolvimento da interface do usuário |)
 
-[//]: # (| **Banco de Dados** | PostgreSQL | Armazenamento persistente e eficiente de dados |)
+| **Banco de Dados** | PostgreSQL | Armazenamento persistente e eficiente de dados |
 
-[//]: # (| **Containerização** | Docker | Docker e Docker Compose para ambiente de desenvolvimento isolado |)
+| **Containerização** | Docker | Docker e Docker Compose para ambiente de desenvolvimento isolado |
 
 [//]: # (| **Inteligência Artificial** | Google Gemini API | Processamento de linguagem natural para a busca inteligente |)
 
-[//]: # ()
-[//]: # (<br/>)
+
+<br/>
 
 [//]: # ()
 [//]: # ()

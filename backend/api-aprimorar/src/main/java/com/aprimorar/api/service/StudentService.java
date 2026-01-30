@@ -51,7 +51,7 @@ public class StudentService {
         return StudentMapper.toDto(savedStudent);
     }
 
-    public String deleteStudent(String studentId){
+    public String softDeleteStudent(String studentId){
         UUID id = UUID.fromString(studentId);
         Student foundStudent = studentRepo.findById(id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found in the database"));
