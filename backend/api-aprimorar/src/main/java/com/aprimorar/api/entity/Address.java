@@ -13,7 +13,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Embeddable
-@Table(name = "tb_address")
 public class Address {
 
     @Column(name = "street")

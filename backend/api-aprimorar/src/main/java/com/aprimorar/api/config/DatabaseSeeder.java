@@ -49,6 +49,7 @@ public class DatabaseSeeder {
             student1.setName("João Silva");
             student1.setBirthdate(sdf.parse("22/04/2001"));
             student1.setCpf("123.456.789-00");
+            student1.setPhone("(61) 99456-2345");
             student1.setSchool("Escola Estadual São Paulo");
             student1.setActivity(Activity.ENEM);
             student1.setActive(true);
@@ -58,6 +59,7 @@ public class DatabaseSeeder {
             student2.setName("Marcelo Carvalho");
             student2.setBirthdate(sdf.parse("21/03/2000"));
             student2.setCpf("123.443.789-00");
+            student2.setPhone("(61) 99435-4221");
             student2.setSchool("Leonardo da Vinci");
             student2.setActivity(Activity.MENTORIA);
             student2.setActive(true);

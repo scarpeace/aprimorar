@@ -33,9 +33,28 @@ public class StudentController {
        return ResponseEntity.ok(foundStudent);
     }
 
-//    @PostMapping("/new")
-//    public ResponseEntity<StudentReponseDto> createStudent(@RequestBody StudentRequestDto studentRequestDto){
-//        StudentReponseDto response = studentService.createStudent(studentRequestDto);
-//    }
+    @PostMapping("/new")
+    public ResponseEntity<StudentReponseDto> createStudent(@RequestBody StudentRequestDto studentRequestDto){
+        StudentReponseDto response = studentService.createStudent(studentRequestDto);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{studentId}")
+    public ResponseEntity<String> deleteStudent(@PathVariable String studentId){
+        String response  = studentService.deleteStudent(studentId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{studentId}")
+    public ResponseEntity<StudentReponseDto> updateStudent(
+            @PathVariable String studentId ,
+            @RequestBody StudentRequestDto studentRequestDto){
+
+        StudentReponseDto updatedStudent = studentService.updateStudent(studentId, studentRequestDto);
+
+        return ResponseEntity.ok(updatedStudent);
+    }
 
 }

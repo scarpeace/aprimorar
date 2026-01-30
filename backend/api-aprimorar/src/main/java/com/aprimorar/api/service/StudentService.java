@@ -2,7 +2,11 @@ package com.aprimorar.api.service;
 
 import com.aprimorar.api.controller.dto.StudentReponseDto;
 import com.aprimorar.api.controller.dto.StudentRequestDto;
+import com.aprimorar.api.entity.Address;
+import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
+import com.aprimorar.api.mapper.AddressMapper;
+import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.StudentRepository;
 import org.springframework.http.HttpStatus;
@@ -44,5 +48,46 @@ public class StudentService {
         Student savedStudent = studentRepo.save(newStudent);
 
         return StudentMapper.toDto(savedStudent);
+    }
+
+    public String deleteStudent(String studentId){
+        UUID id = UUID.fromString(studentId);
+        Student foundStudent = studentRepo.findById(id)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found in the database"));
+
+        if(foundStudent.getActive() == true){
+            foundStudent.setActive(false);
+            return "Student with id "+ foundStudent.getId() +"is now not active in the database";
+        }else{
+            return "It wasn't possible to delete Student, check log";
+        }
+    }
+
+    public StudentReponseDto updateStudent(String studentId, StudentRequestDto studentRequestDto) {
+        UUID id = UUID.fromString(studentId);
+        Student foundStudent = studentRepo.findById(id)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found in the Database"));
+
+        Parent updatedParent = ParentMapper.toEntity(studentRequestDto.parentRequestDto());
+        Address updatedAddress = AddressMapper.toEntity(studentRequestDto.addressRequestDto());
+
+        Student updatedStudent = new Student(
+                foundStudent.getId(),
+                studentRequestDto.name(),
+                studentRequestDto.phone(),
+                studentRequestDto.birthdate(),
+                studentRequestDto.cpf(),
+                studentRequestDto.school(),
+                studentRequestDto.activity(),
+                updatedParent,
+                updatedAddress,
+                null,
+                null,
+                true
+        );
+
+        studentRepo.save(updatedStudent);
+
+        return StudentMapper.toDto(updatedStudent);
     }
 }
