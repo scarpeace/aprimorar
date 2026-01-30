@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,8 +69,8 @@ public class StudentService {
         Student foundStudent = studentRepo.findById(id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found in the Database"));
 
-        Parent updatedParent = ParentMapper.toEntity(studentRequestDto.parentRequestDto());
-        Address updatedAddress = AddressMapper.toEntity(studentRequestDto.addressRequestDto());
+        Parent updatedParent = ParentMapper.toEntity(studentRequestDto.parent());
+        Address updatedAddress = AddressMapper.toEntity(studentRequestDto.address());
 
         Student updatedStudent = new Student(
                 foundStudent.getId(),
@@ -81,8 +82,8 @@ public class StudentService {
                 studentRequestDto.activity(),
                 updatedParent,
                 updatedAddress,
-                null,
-                null,
+                foundStudent.getCreatedAt(),
+                Instant.now(),
                 true
         );
 

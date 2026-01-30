@@ -1,5 +1,7 @@
 package com.aprimorar.api.mapper;
 
+import com.aprimorar.api.controller.dto.AddressResponseDto;
+import com.aprimorar.api.controller.dto.ParentResponseDto;
 import com.aprimorar.api.controller.dto.StudentReponseDto;
 import com.aprimorar.api.controller.dto.StudentRequestDto;
 import com.aprimorar.api.entity.Address;
@@ -8,6 +10,10 @@ import com.aprimorar.api.entity.Student;
 
 public class StudentMapper {
     public static StudentReponseDto toDto(Student student) {
+        ParentResponseDto parent = ParentMapper.toDto(student.getParent());
+        AddressResponseDto address = AddressMapper.toDto(student.getAddress());
+
+
         return new StudentReponseDto(
                 student.getId(),
                 student.getName(),
@@ -16,14 +22,16 @@ public class StudentMapper {
                 student.getPhone(),
                 student.getBirthdate(),
                 student.getActivity(),
+                address,
+                parent,
                 student.getCreatedAt()
         );
     }
 
 
     public static Student toEntity(StudentRequestDto studentRequestDto) {
-        Address addressEntity = AddressMapper.toEntity(studentRequestDto.addressRequestDto());
-        Parent parentEntity = ParentMapper.toEntity(studentRequestDto.parentRequestDto());
+        Address addressEntity = AddressMapper.toEntity(studentRequestDto.address());
+        Parent parentEntity = ParentMapper.toEntity(studentRequestDto.parent());
 
         Student studentEntity = new Student();
 
@@ -39,7 +47,6 @@ public class StudentMapper {
         studentEntity.setAddress(addressEntity);
 
         return studentEntity;
-
 
     }
 }

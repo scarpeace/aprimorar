@@ -13,5 +13,7 @@ public record StudentReponseDto(UUID id,
                                 String phone,
                                 Date birthdate,
                                 Activity activity,
+                                AddressResponseDto address,
+                                ParentResponseDto parent,
                                 Instant createdAt) {
 }

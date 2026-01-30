@@ -10,7 +10,7 @@ public record StudentRequestDto(String name,
                                String school,
                                 String phone,
                                 Activity activity,
-                                AddressRequestDto addressRequestDto,
-                                ParentRequestDto parentRequestDto
+                                AddressRequestDto address,
+                                ParentRequestDto parent
                                ) {
 }
