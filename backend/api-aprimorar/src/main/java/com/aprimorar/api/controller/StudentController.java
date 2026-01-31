@@ -3,6 +3,8 @@ package com.aprimorar.api.controller;
 import com.aprimorar.api.controller.dto.StudentReponseDto;
 import com.aprimorar.api.controller.dto.StudentRequestDto;
 import com.aprimorar.api.service.StudentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +13,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/students")
+@Tag(name = "Students", description = "Student management APIs")
 public class StudentController {
 
+    private final StudentService studentService;
 
-    @Autowired
-    private StudentService studentService;
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @GetMapping()
     public ResponseEntity<List<StudentReponseDto>> listStudents(){
@@ -32,7 +37,7 @@ public class StudentController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<StudentReponseDto> createStudent(@RequestBody StudentRequestDto studentRequestDto){
+    public ResponseEntity<StudentReponseDto> createStudent(@RequestBody @Valid StudentRequestDto studentRequestDto){
         StudentReponseDto response = studentService.createStudent(studentRequestDto);
 
         return ResponseEntity.ok(response);
@@ -48,7 +53,7 @@ public class StudentController {
     @PutMapping("/{studentId}")
     public ResponseEntity<StudentReponseDto> updateStudent(
             @PathVariable String studentId ,
-            @RequestBody StudentRequestDto studentRequestDto){
+            @RequestBody @Valid StudentRequestDto studentRequestDto){
 
         StudentReponseDto updatedStudent = studentService.updateStudent(studentId, studentRequestDto);
 
