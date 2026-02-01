@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
@@ -46,16 +47,34 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should list students when success")
+    @DisplayName("Should list page of students when success")
     void testListStudents() {
-        List<Student> students = List.of(student);
-        when(studentRepo.findAll()).thenReturn(students);
+        Pageable pageable = PageRequest.of(0,20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(student));
+        when(studentRepo.findAll(pageable)).thenReturn(students);
         try (var mocked = mockStatic(StudentMapper.class)) {
             mocked.when(() -> StudentMapper.toDto(student)).thenReturn(studentReponseDto);
-            List<StudentReponseDto> result = studentService.listStudents();
-            assertEquals(1, result.size());
-            assertEquals(studentReponseDto, result.get(0));
+            Page<StudentReponseDto> result = studentService.listStudents(pageable);
+            assertEquals(1, result.getTotalElements());
+            assertEquals(studentReponseDto, result.getContent().get(0));
         }
+    }
+
+    @Test
+    @DisplayName("Should list active students page when success")
+    void testListActiveStudents(){
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(student));
+        when(studentRepo.findAllByActiveTrue(pageable)).thenReturn(students);
+        try(var mocked = mockStatic(StudentMapper.class)){
+            mocked.when(()-> StudentMapper.toDto(student)).thenReturn(studentReponseDto);
+            Page<StudentReponseDto> result = studentService.listActiveStudents(pageable);
+            assertEquals(1, result.getTotalElements());
+            assertEquals(studentReponseDto, result.getContent().get(0));
+        }
+
     }
 
 

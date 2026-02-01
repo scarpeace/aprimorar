@@ -9,12 +9,13 @@ import com.aprimorar.api.mapper.AddressMapper;
 import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.StudentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -26,12 +27,16 @@ public class StudentService {
         this.studentRepo = studentRepo;
     }
 
-    public List<StudentReponseDto> listStudents(){
+    public Page<StudentReponseDto> listStudents(Pageable pageable){
+        Page<Student> studentPage = studentRepo.findAll(pageable);
 
-        return studentRepo.findAll()
-                .stream()
-                .map(StudentMapper::toDto)
-                .toList();
+        return studentPage.map(StudentMapper::toDto);
+    }
+
+    public Page<StudentReponseDto> listActiveStudents(Pageable pageable){
+        Page<Student> activeStudentsPage = studentRepo.findAllByActiveTrue(pageable);
+
+        return activeStudentsPage.map(StudentMapper::toDto);
     }
 
     public StudentReponseDto findById(String studentId) {
