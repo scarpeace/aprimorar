@@ -29,12 +29,19 @@ public class StudentService {
 
     public Page<StudentReponseDto> listStudents(Pageable pageable){
         Page<Student> studentPage = studentRepo.findAll(pageable);
+        if(studentPage.getTotalElements() <= 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No students where found in the database");
+        }
 
         return studentPage.map(StudentMapper::toDto);
     }
 
     public Page<StudentReponseDto> listActiveStudents(Pageable pageable){
         Page<Student> activeStudentsPage = studentRepo.findAllByActiveTrue(pageable);
+
+        if(activeStudentsPage.getTotalElements() <= 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No active students where found in the database");
+        }
 
         return activeStudentsPage.map(StudentMapper::toDto);
     }
@@ -63,9 +70,9 @@ public class StudentService {
 
         if(foundStudent.getActive() == true){
             foundStudent.setActive(false);
-            return "Student with id "+ foundStudent.getId() +"is now not active in the database";
+            return "Student with id "+ foundStudent.getId() +" was deactivated in the database";
         }else{
-            return "It wasn't possible to delete Student, check log";
+            return "It wasn't possible to deactivate Student, check log";
         }
     }
 

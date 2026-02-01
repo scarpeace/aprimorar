@@ -62,6 +62,16 @@ class StudentServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw error when there is no students in database")
+    void testEmptyStudentList(){
+        Pageable pageable = PageRequest.of(0,20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of());
+        when(studentRepo.findAll(pageable)).thenReturn(students);
+        assertThrows(ResponseStatusException.class, () -> studentService.listStudents(pageable));
+    }
+
+    @Test
     @DisplayName("Should list active students page when success")
     void testListActiveStudents(){
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
@@ -115,7 +125,7 @@ class StudentServiceTest {
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
         String result = studentService.softDeleteStudent(student.getId().toString());
         assertFalse(student.getActive());
-        assertTrue(result.contains("is now not active"));
+        assertTrue(result.contains("was deactivated"));
     }
 
     @Test
@@ -124,7 +134,7 @@ class StudentServiceTest {
         student.setActive(false);
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
         String result = studentService.softDeleteStudent(student.getId().toString());
-        assertEquals("It wasn't possible to delete Student, check log", result);
+        assertEquals("It wasn't possible to deactivate Student, check log", result);
     }
 
     @Test
