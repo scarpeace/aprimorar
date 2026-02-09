@@ -6,14 +6,19 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
-public record StudentReponseDto(UUID id,
-                                String name,
-                                String cpf,
-                                String school,
-                                String phone,
-                                Date birthdate,
-                                Activity activity,
-                                AddressResponseDto address,
-                                ParentResponseDto parent,
-                                Instant createdAt) {
+public record StudentReponseDto(
+        UUID id,
+        String name,
+        String contact,
+        String email,
+        Date birthdate,
+        String cpf,
+        String school,
+        Activity activity,
+        Boolean active,
+        AddressResponseDto address,
+        ParentResponseDto parent,
+        Instant createdAt,
+        Instant updatedAt
+) {
 }

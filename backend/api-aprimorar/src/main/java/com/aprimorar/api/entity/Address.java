@@ -1,17 +1,7 @@
 package com.aprimorar.api.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.util.UUID;
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 @Embeddable
 public class Address {
 
@@ -30,4 +20,54 @@ public class Address {
     @Column(name = "zip")
     private String zipCode;
 
+    public Address() {
+    }
+
+    public Address(String street, String district, String city, String state, String zipCode) {
+        this.street = street;
+        this.district = district;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
 }

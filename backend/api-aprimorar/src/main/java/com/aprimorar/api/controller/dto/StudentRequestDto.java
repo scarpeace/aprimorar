@@ -1,6 +1,7 @@
 package com.aprimorar.api.controller.dto;
 
 import com.aprimorar.api.enums.Activity;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -21,8 +22,12 @@ public record StudentRequestDto(
         @NotBlank(message = "Student school can't be blank")
         String school,
 
-        @NotBlank(message = "Student phone number can't be blank")
-        String phone,
+        @NotBlank(message = "Student contact number can't be blank")
+        String contact,
+
+        @NotBlank(message = "Student email can't be blank")
+        @Email
+        String email,
 
         @NotNull(message = "Student activity can't be null")
         Activity activity,

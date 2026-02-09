@@ -2,17 +2,14 @@ package com.aprimorar.api.service;
 
 import com.aprimorar.api.controller.dto.StudentReponseDto;
 import com.aprimorar.api.controller.dto.StudentRequestDto;
-import com.aprimorar.api.entity.Address;
-import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
-import com.aprimorar.api.mapper.AddressMapper;
-import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.StudentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
@@ -22,28 +19,30 @@ import java.util.UUID;
 public class StudentService {
 
     private final StudentRepository studentRepo;
+    private final StudentMapper studentMapper;
 
-    public StudentService(StudentRepository studentRepo) {
+    public StudentService(StudentRepository studentRepo, StudentMapper studentMapper) {
         this.studentRepo = studentRepo;
+        this.studentMapper = studentMapper;
     }
 
     public Page<StudentReponseDto> listStudents(Pageable pageable){
         Page<Student> studentPage = studentRepo.findAll(pageable);
-        if(studentPage.getTotalElements() <= 0){
+        if(studentPage.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No students where found in the database");
         }
 
-        return studentPage.map(StudentMapper::toDto);
+        return studentPage.map(studentMapper::toDto);
     }
 
     public Page<StudentReponseDto> listActiveStudents(Pageable pageable){
         Page<Student> activeStudentsPage = studentRepo.findAllByActiveTrue(pageable);
 
-        if(activeStudentsPage.getTotalElements() <= 0){
+        if(activeStudentsPage.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No active students where found in the database");
         }
 
-        return activeStudentsPage.map(StudentMapper::toDto);
+        return activeStudentsPage.map(studentMapper::toDto);
     }
 
     public StudentReponseDto findById(String studentId) {
@@ -52,55 +51,41 @@ public class StudentService {
          Student foundStudent = studentRepo.findById(id)
                  .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found in the Database"));
 
-         return StudentMapper.toDto(foundStudent);
+         return studentMapper.toDto(foundStudent);
     }
 
     public StudentReponseDto createStudent(StudentRequestDto studentRequestDto) {
-        Student newStudent = StudentMapper.toEntity(studentRequestDto);
+        Student newStudent = studentMapper.toEntity(studentRequestDto);
 
         Student savedStudent = studentRepo.save(newStudent);
 
-        return StudentMapper.toDto(savedStudent);
+        return studentMapper.toDto(savedStudent);
     }
 
+    @Transactional
     public String softDeleteStudent(String studentId){
         UUID id = UUID.fromString(studentId);
         Student foundStudent = studentRepo.findById(id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found in the database"));
 
-        if(foundStudent.getActive() == true){
+        if(Boolean.TRUE.equals(foundStudent.getActive())){
             foundStudent.setActive(false);
+            foundStudent.setUpdatedAt(Instant.now());
             return "Student with id "+ foundStudent.getId() +" was deactivated in the database";
         }else{
             return "It wasn't possible to deactivate Student, check log";
         }
     }
 
+    @Transactional
     public StudentReponseDto updateStudent(String studentId, StudentRequestDto studentRequestDto) {
         UUID id = UUID.fromString(studentId);
         Student foundStudent = studentRepo.findById(id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found in the Database"));
 
-        Parent updatedParent = ParentMapper.toEntity(studentRequestDto.parent());
-        Address updatedAddress = AddressMapper.toEntity(studentRequestDto.address());
+        studentMapper.updateFromDto(studentRequestDto, foundStudent);
+        foundStudent.setUpdatedAt(Instant.now());
 
-        Student updatedStudent = new Student(
-                foundStudent.getId(),
-                studentRequestDto.name(),
-                studentRequestDto.phone(),
-                studentRequestDto.birthdate(),
-                studentRequestDto.cpf(),
-                studentRequestDto.school(),
-                studentRequestDto.activity(),
-                updatedParent,
-                updatedAddress,
-                foundStudent.getCreatedAt(),
-                Instant.now(),
-                true
-        );
-
-        studentRepo.save(updatedStudent);
-
-        return StudentMapper.toDto(updatedStudent);
+        return studentMapper.toDto(foundStudent);
     }
 }

@@ -6,23 +6,23 @@ import jakarta.validation.constraints.NotNull;
 public record AddressRequestDto(
 
         @NotNull(message = "Address street can't be null")
-        @NotBlank
+        @NotBlank(message = "Address street can't be blank")
         String street,
 
         @NotNull(message = "Address district can't be null")
-        @NotBlank
+        @NotBlank(message = "Address district can't be blank")
         String district,
 
+        @NotNull(message = "Address city can't be null")
         @NotBlank(message = "Address city can't be blank")
-        @NotBlank
         String city,
 
         @NotNull(message = "Address state can't be null")
-        @NotBlank
+        @NotBlank(message = "Address state can't be blank")
         String state,
 
-        @NotNull(message = "Adress zip code can't be null")
-        @NotBlank
+        @NotNull(message = "Address zip code can't be null")
+        @NotBlank(message = "Address zip code can't be blank")
         String zipCode
 ) {
 }

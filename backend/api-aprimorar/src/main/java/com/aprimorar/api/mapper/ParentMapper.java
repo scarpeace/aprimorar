@@ -1,24 +1,22 @@
 package com.aprimorar.api.mapper;
 
+
 import com.aprimorar.api.controller.dto.ParentRequestDto;
 import com.aprimorar.api.controller.dto.ParentResponseDto;
 import com.aprimorar.api.entity.Parent;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-public class ParentMapper {
+@Mapper(componentModel = "spring")
+public interface ParentMapper {
 
-    public static ParentResponseDto toDto(Parent parent){
-        return new ParentResponseDto(
-                parent.getName(),
-                parent.getEmail());
-    }
+    Parent toEntity(ParentRequestDto dto);
 
-    public static Parent toEntity(ParentRequestDto parentRequestDto){
-        Parent entity = new Parent();
+    ParentResponseDto toDto(Parent entity);
 
-        entity.setName(parentRequestDto.name());
-        entity.setEmail(parentRequestDto.email());
-
-        return entity;
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateFromDto(ParentRequestDto dto, @MappingTarget Parent entity);
 
 }

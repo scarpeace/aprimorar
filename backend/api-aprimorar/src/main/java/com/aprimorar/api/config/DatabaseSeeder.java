@@ -7,8 +7,8 @@ import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.repository.ParentRepository;
 import com.aprimorar.api.repository.StudentRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,23 +18,28 @@ import java.text.SimpleDateFormat;
 
 @Configuration
 @Profile("dev")
-@RequiredArgsConstructor
-@Slf4j
 public class DatabaseSeeder {
+
+    private static final Logger log = LoggerFactory.getLogger(DatabaseSeeder.class);
 
     private final StudentRepository studentRepo;
     private final ParentRepository parentRepo;
 
+    public DatabaseSeeder(StudentRepository studentRepo, ParentRepository parentRepo) {
+        this.studentRepo = studentRepo;
+        this.parentRepo = parentRepo;
+    }
 
     @Bean
     CommandLineRunner initDatabase(){
         return args -> {
             if (studentRepo.count() == 0 && parentRepo.count() == 0) {
-                log.info("Iniciando SEED no banco de dados");
+                log.info("Iniciando SEED no Banco de dados");
+                System.out.println();
                 seedStudents();
-                log.info("SEED concluído com sucesso");
+                log.info("SEED do banco de dados finalizado");
             } else {
-                log.info("Banco de dados já contém dados. SEED não executado.");
+                log.info("O banco já possui registros, SEED não iniciado");
             }
         };
     }
@@ -49,7 +54,8 @@ public class DatabaseSeeder {
             student1.setName("João Silva");
             student1.setBirthdate(sdf.parse("22/04/2001"));
             student1.setCpf("123.456.789-00");
-            student1.setPhone("(61) 99456-2345");
+            student1.setContact("(61) 99456-2345");
+            student1.setEmail("joao.silva@email.com");
             student1.setSchool("Escola Estadual São Paulo");
             student1.setActivity(Activity.ENEM);
             student1.setActive(true);
@@ -59,7 +65,8 @@ public class DatabaseSeeder {
             student2.setName("Marcelo Carvalho");
             student2.setBirthdate(sdf.parse("21/03/2000"));
             student2.setCpf("123.443.789-00");
-            student2.setPhone("(61) 99435-4221");
+            student2.setContact("(61) 99435-4221");
+            student2.setEmail("marcelo.carvalho@email.com");
             student2.setSchool("Leonardo da Vinci");
             student2.setActivity(Activity.MENTORIA);
             student2.setActive(true);
@@ -84,13 +91,17 @@ public class DatabaseSeeder {
 
             Parent parent1 = new Parent();
             parent1.setName("João Silva Sauro");
-            parent1.setEmail("joao_silva@email.com");
+            parent1.setEmail("joao_sauro@email.com");
+            parent1.setContact("(61) 98888-1111");
+            parent1.setCpf("111.222.333-44");
 
             student1.setParent(parent1);
 
             Parent parent2 = new Parent();
             parent2.setName("Maurício Pereira Souza");
-            parent2.setEmail("mauricio_pereira@email.com");
+            parent2.setEmail("mauricio_souza@email.com");
+            parent2.setContact("(11) 97777-2222");
+            parent2.setCpf("555.666.777-88");
 
             student2.setParent(parent2);
 

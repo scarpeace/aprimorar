@@ -1,5 +1,8 @@
 package com.aprimorar.api.controller.dto;
 
-public record ParentResponseDto(String name,
-                               String email) {
+public record ParentResponseDto(
+        String name,
+        String email,
+        String contact,
+        String cpf) {
 }

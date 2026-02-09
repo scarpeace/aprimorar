@@ -6,8 +6,6 @@ import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.enums.Activity;
-import com.aprimorar.api.mapper.AddressMapper;
-import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.StudentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +29,8 @@ import static org.mockito.Mockito.*;
 class StudentServiceTest {
     @Mock
     private StudentRepository studentRepo;
+    @Mock
+    private StudentMapper studentMapper;
 
     @InjectMocks
     private StudentService studentService;
@@ -41,7 +41,21 @@ class StudentServiceTest {
 
     @BeforeEach
     void setUp() {
-        student = new Student(UUID.randomUUID(), "John Doe", "123456789", new Date(), "12345678901", "School", Activity.ENEM, new Parent(), new Address(), Instant.now(), Instant.now(), true);
+        student = new Student();
+        student.setId(UUID.randomUUID());
+        student.setName("John Doe");
+        student.setContact("123456789");
+        student.setEmail("john.doe@email.com");
+        student.setBirthdate(new Date());
+        student.setCpf("12345678901");
+        student.setSchool("School");
+        student.setActivity(Activity.ENEM);
+        student.setParent(new Parent());
+        student.setAddress(new Address());
+        student.setActive(true);
+        student.setCreatedAt(Instant.now());
+        student.setUpdatedAt(Instant.now());
+
         studentRequestDto = mock(StudentRequestDto.class);
         studentReponseDto = mock(StudentReponseDto.class);
     }
@@ -53,12 +67,11 @@ class StudentServiceTest {
 
         Page<Student> students = new PageImpl<>(List.of(student));
         when(studentRepo.findAll(pageable)).thenReturn(students);
-        try (var mocked = mockStatic(StudentMapper.class)) {
-            mocked.when(() -> StudentMapper.toDto(student)).thenReturn(studentReponseDto);
-            Page<StudentReponseDto> result = studentService.listStudents(pageable);
-            assertEquals(1, result.getTotalElements());
-            assertEquals(studentReponseDto, result.getContent().get(0));
-        }
+        when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
+
+        Page<StudentReponseDto> result = studentService.listStudents(pageable);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(studentReponseDto, result.getContent().get(0));
     }
 
     @Test
@@ -78,12 +91,11 @@ class StudentServiceTest {
 
         Page<Student> students = new PageImpl<>(List.of(student));
         when(studentRepo.findAllByActiveTrue(pageable)).thenReturn(students);
-        try(var mocked = mockStatic(StudentMapper.class)){
-            mocked.when(()-> StudentMapper.toDto(student)).thenReturn(studentReponseDto);
-            Page<StudentReponseDto> result = studentService.listActiveStudents(pageable);
-            assertEquals(1, result.getTotalElements());
-            assertEquals(studentReponseDto, result.getContent().get(0));
-        }
+        when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
+
+        Page<StudentReponseDto> result = studentService.listActiveStudents(pageable);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(studentReponseDto, result.getContent().get(0));
 
     }
 
@@ -92,11 +104,10 @@ class StudentServiceTest {
     @DisplayName("Should get student when success")
     void testFindByIdFound() {
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        try (var mocked = mockStatic(StudentMapper.class)) {
-            mocked.when(() -> StudentMapper.toDto(student)).thenReturn(studentReponseDto);
-            StudentReponseDto result = studentService.findById(student.getId().toString());
-            assertEquals(studentReponseDto, result);
-        }
+        when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
+
+        StudentReponseDto result = studentService.findById(student.getId().toString());
+        assertEquals(studentReponseDto, result);
     }
 
     @Test
@@ -109,13 +120,12 @@ class StudentServiceTest {
     @Test
     @DisplayName("Should create student when success")
     void testCreateStudent() {
-        try (var mocked = mockStatic(StudentMapper.class)) {
-            mocked.when(() -> StudentMapper.toEntity(studentRequestDto)).thenReturn(student);
-            when(studentRepo.save(student)).thenReturn(student);
-            mocked.when(() -> StudentMapper.toDto(student)).thenReturn(studentReponseDto);
-            StudentReponseDto result = studentService.createStudent(studentRequestDto);
-            assertEquals(studentReponseDto, result);
-        }
+        when(studentMapper.toEntity(studentRequestDto)).thenReturn(student);
+        when(studentRepo.save(student)).thenReturn(student);
+        when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
+
+        StudentReponseDto result = studentService.createStudent(studentRequestDto);
+        assertEquals(studentReponseDto, result);
     }
 
     @Test
@@ -148,16 +158,12 @@ class StudentServiceTest {
     @DisplayName("Should update student when success")
     void testUpdateStudent() {
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        Parent parent = new Parent();
-        Address address = new Address();
-        try (var mockedParent = mockStatic(ParentMapper.class); var mockedAddress = mockStatic(AddressMapper.class); var mockedStudent = mockStatic(StudentMapper.class)) {
-            mockedParent.when(() -> ParentMapper.toEntity(studentRequestDto.parent())).thenReturn(parent);
-            mockedAddress.when(() -> AddressMapper.toEntity(studentRequestDto.address())).thenReturn(address);
-            mockedStudent.when(() -> StudentMapper.toDto(any(Student.class))).thenReturn(studentReponseDto);
-            when(studentRepo.save(any(Student.class))).thenReturn(student);
-            StudentReponseDto result = studentService.updateStudent(student.getId().toString(), studentRequestDto);
-            assertEquals(studentReponseDto, result);
-        }
+        doAnswer(invocation -> null).when(studentMapper).updateFromDto(studentRequestDto, student);
+        when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
+
+        StudentReponseDto result = studentService.updateStudent(student.getId().toString(), studentRequestDto);
+        assertEquals(studentReponseDto, result);
+        verify(studentMapper).updateFromDto(studentRequestDto, student);
     }
 
     @Test

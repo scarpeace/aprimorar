@@ -7,46 +7,23 @@ import com.aprimorar.api.controller.dto.StudentRequestDto;
 import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
-
-public class StudentMapper {
-    public static StudentReponseDto toDto(Student student) {
-        ParentResponseDto parent = ParentMapper.toDto(student.getParent());
-        AddressResponseDto address = AddressMapper.toDto(student.getAddress());
+import org.mapstruct.*;
 
 
-        return new StudentReponseDto(
-                student.getId(),
-                student.getName(),
-                student.getCpf(),
-                student.getSchool(),
-                student.getPhone(),
-                student.getBirthdate(),
-                student.getActivity(),
-                address,
-                parent,
-                student.getCreatedAt()
-        );
-    }
+@Mapper(
+        componentModel = "spring",
+        uses = {ParentMapper.class, AddressMapper.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE )
+public interface StudentMapper {
 
+    Student toEntity(StudentRequestDto dto);
 
-    public static Student toEntity(StudentRequestDto studentRequestDto) {
-        Address addressEntity = AddressMapper.toEntity(studentRequestDto.address());
-        Parent parentEntity = ParentMapper.toEntity(studentRequestDto.parent());
+    StudentReponseDto toDto(Student entity);
 
-        Student studentEntity = new Student();
-
-        studentEntity.setName(studentRequestDto.name());
-        studentEntity.setCpf(studentRequestDto.cpf());
-        studentEntity.setBirthdate(studentRequestDto.birthdate());
-        studentEntity.setPhone(studentRequestDto.phone());
-        studentEntity.setActive(true);
-        studentEntity.setSchool(studentRequestDto.school());
-        studentEntity.setActivity(studentRequestDto.activity());
-
-        studentEntity.setParent(parentEntity);
-        studentEntity.setAddress(addressEntity);
-
-        return studentEntity;
-
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "active", ignore = true)
+    void updateFromDto(StudentRequestDto dto, @MappingTarget Student entity);
 }

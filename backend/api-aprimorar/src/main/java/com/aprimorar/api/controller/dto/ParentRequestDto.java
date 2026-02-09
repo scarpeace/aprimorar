@@ -9,6 +9,12 @@ public record ParentRequestDto(
 
         @NotNull(message = "Parent email can't be null")
         @Email
-        String email
+        String email,
+
+        @NotNull(message = "Parent contact can't be null")
+        String contact,
+
+        @NotNull(message = "Parent cpf can't be null")
+        String cpf
 ) {
 }

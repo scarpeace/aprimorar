@@ -1,29 +1,22 @@
 package com.aprimorar.api.mapper;
 
+
 import com.aprimorar.api.controller.dto.AddressRequestDto;
 import com.aprimorar.api.controller.dto.AddressResponseDto;
 import com.aprimorar.api.entity.Address;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-public class AddressMapper {
+@Mapper(componentModel = "spring")
+public interface AddressMapper {
 
-    public static AddressResponseDto toDto(Address address){
-        return new AddressResponseDto(
-                address.getStreet(),
-                address.getDistrict(),
-                address.getCity(),
-                address.getState(),
-                address.getZipCode());
-    }
+    Address toEntity(AddressRequestDto dto);
 
-    public static Address toEntity(AddressRequestDto addressRequestDto){
-        Address entity = new Address();
-        entity.setCity(addressRequestDto.city());
-        entity.setDistrict(addressRequestDto.district());
-        entity.setStreet(addressRequestDto.street());
-        entity.setState(addressRequestDto.state());
-        entity.setZipCode(addressRequestDto.zipCode());
+    AddressResponseDto toDto(Address entity);
 
-        return entity;
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateFromDto(AddressRequestDto dto, @MappingTarget Address entity);
 
 }
