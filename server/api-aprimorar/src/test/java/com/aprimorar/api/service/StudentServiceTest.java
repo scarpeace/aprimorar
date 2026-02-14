@@ -6,6 +6,7 @@ import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.enums.Activity;
+import com.aprimorar.api.exception.domain.StudentNotFoundException;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.StudentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.*;
@@ -75,13 +75,16 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw error when there is no students in database")
+    @DisplayName("Should return empty page when there are no students in database")
     void testEmptyStudentList(){
         Pageable pageable = PageRequest.of(0,20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of());
         when(studentRepo.findAll(pageable)).thenReturn(students);
-        assertThrows(ResponseStatusException.class, () -> studentService.listStudents(pageable));
+
+        Page<StudentReponseDto> result = studentService.listStudents(pageable);
+        assertEquals(0, result.getTotalElements());
+        assertTrue(result.getContent().isEmpty());
     }
 
     @Test
@@ -106,7 +109,7 @@ class StudentServiceTest {
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
         when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
 
-        StudentReponseDto result = studentService.findById(student.getId().toString());
+        StudentReponseDto result = studentService.findById(student.getId());
         assertEquals(studentReponseDto, result);
     }
 
@@ -114,7 +117,7 @@ class StudentServiceTest {
     @DisplayName("Should throw exception when ID not found")
     void testFindByIdNotFound() {
         when(studentRepo.findById(any(UUID.class))).thenReturn(Optional.empty());
-        assertThrows(ResponseStatusException.class, () -> studentService.findById(UUID.randomUUID().toString()));
+        assertThrows(StudentNotFoundException.class, () -> studentService.findById(UUID.randomUUID()));
     }
 
     @Test
@@ -129,29 +132,34 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should deactivate student when student active (Soft Delete)")
+    @DisplayName("Should deactivate student when student is active (Soft Delete)")
     void testDeleteStudentActive() {
         student.setActive(true);
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        String result = studentService.softDeleteStudent(student.getId().toString());
+
+        studentService.softDeleteStudent(student.getId());
+
         assertFalse(student.getActive());
-        assertTrue(result.contains("was deactivated"));
+        verify(studentRepo).findById(student.getId());
     }
 
     @Test
-    @DisplayName("Should not deactivate when student not found")
+    @DisplayName("Should not deactivate when student is already inactive")
     void testDeleteStudentInactive() {
         student.setActive(false);
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        String result = studentService.softDeleteStudent(student.getId().toString());
-        assertEquals("It wasn't possible to deactivate Student, check log", result);
+
+        studentService.softDeleteStudent(student.getId());
+
+        assertFalse(student.getActive());
+        verify(studentRepo).findById(student.getId());
     }
 
     @Test
     @DisplayName("Should throw exception when ID not found for deletion")
     void testDeleteStudentNotFound() {
         when(studentRepo.findById(any(UUID.class))).thenReturn(Optional.empty());
-        assertThrows(ResponseStatusException.class, () -> studentService.softDeleteStudent(UUID.randomUUID().toString()));
+        assertThrows(StudentNotFoundException.class, () -> studentService.softDeleteStudent(UUID.randomUUID()));
     }
 
     @Test
@@ -161,7 +169,7 @@ class StudentServiceTest {
         doAnswer(invocation -> null).when(studentMapper).updateFromDto(studentRequestDto, student);
         when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
 
-        StudentReponseDto result = studentService.updateStudent(student.getId().toString(), studentRequestDto);
+        StudentReponseDto result = studentService.updateStudent(student.getId(), studentRequestDto);
         assertEquals(studentReponseDto, result);
         verify(studentMapper).updateFromDto(studentRequestDto, student);
     }
@@ -170,6 +178,6 @@ class StudentServiceTest {
     @DisplayName("Should not update student when student not found")
     void testUpdateStudentNotFound() {
         when(studentRepo.findById(any(UUID.class))).thenReturn(Optional.empty());
-        assertThrows(ResponseStatusException.class, () -> studentService.updateStudent(UUID.randomUUID().toString(), studentRequestDto));
+        assertThrows(StudentNotFoundException.class, () -> studentService.updateStudent(UUID.randomUUID(), studentRequestDto));
     }
 }

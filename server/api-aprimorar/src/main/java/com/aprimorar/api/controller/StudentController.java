@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/students")
@@ -36,9 +37,7 @@ public class StudentController {
     ){
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-
         Page<StudentReponseDto> allStudents = studentService.listStudents(pageable);
-
         return ResponseEntity.ok(allStudents);
     }
 
@@ -50,16 +49,14 @@ public class StudentController {
             @RequestParam(defaultValue = "name") String sortBy
     ){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-
         Page<StudentReponseDto> allActiveStudents = studentService.listActiveStudents(pageable);
-
         return ResponseEntity.ok(allActiveStudents);
 
     }
 
     @Operation(summary = "List single STUDENT", description = "Retrieves single student based on ID")
     @GetMapping("/{studentId}")
-    public ResponseEntity<StudentReponseDto> getStudentById(@PathVariable String studentId){
+    public ResponseEntity<StudentReponseDto> getStudentById(@PathVariable UUID studentId){
         var foundStudent = studentService.findById(studentId);
 
        return ResponseEntity.ok(foundStudent);
@@ -75,7 +72,7 @@ public class StudentController {
 
     @Operation(summary = "Delete STUDENT", description = "Soft delete single student based on ID")
     @DeleteMapping("/{studentId}")
-    public ResponseEntity<String> deleteStudent(@PathVariable String studentId){
+    public ResponseEntity<String> deleteStudent(@PathVariable UUID studentId){
         studentService.softDeleteStudent(studentId);
 
         return ResponseEntity.noContent().build();
@@ -84,7 +81,7 @@ public class StudentController {
     @Operation(summary = "Update STUDENT", description = "Updates student with full student data")
     @PatchMapping("/{studentId}")
     public ResponseEntity<StudentReponseDto> updateStudent(
-            @PathVariable String studentId ,
+            @PathVariable UUID studentId ,
             @RequestBody @Valid StudentRequestDto studentRequestDto){
 
         StudentReponseDto updatedStudent = studentService.updateStudent(studentId, studentRequestDto);
