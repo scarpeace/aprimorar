@@ -9,6 +9,12 @@ public record AddressRequestDto(
         @NotBlank(message = "Address street can't be blank")
         String street,
 
+        @NotNull(message = "Address number can't be null")
+        @NotBlank(message = "Address number can't be blank")
+        String number,
+
+        String complement,
+
         @NotNull(message = "Address district can't be null")
         @NotBlank(message = "Address district can't be blank")
         String district,

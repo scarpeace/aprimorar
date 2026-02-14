@@ -27,21 +27,21 @@ public class Student {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "birthdate")
+    @Column(name = "birthdate", nullable = false)
     private Date birthdate;
 
     @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
-    @Column(name = "school")
+    @Column(name = "school", nullable = false)
     private String school;
 
     @Column(name="activity", nullable = false)
     @Enumerated(EnumType.STRING)
     private Activity activity;
 
-    @Column(name = "active", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean active;
+    @Column(name = "active")
+    private Boolean active = true;
 
     @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name = "parent_id", referencedColumnName = "parent_id")

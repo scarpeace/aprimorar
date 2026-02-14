@@ -5,30 +5,38 @@ import jakarta.persistence.*;
 @Embeddable
 public class Address {
 
-    @Column(name = "street")
+    @Column(name = "street", nullable = false)
     private String street;
 
-    @Column(name = "district")
+    @Column(name = "number", nullable = false)
+    private String number;
+
+    @Column(name = "district", nullable = false)
     private String district;
 
-    @Column(name = "city")
+    @Column(name = "city", nullable = false)
     private String city;
 
-    @Column(name = "state")
+    @Column(name = "state", nullable = false)
     private String state;
 
-    @Column(name = "zip")
+    @Column(name = "zip", nullable = false)
     private String zipCode;
+
+    @Column(name = "complement", nullable = true)
+    private String complement;
 
     public Address() {
     }
 
-    public Address(String street, String district, String city, String state, String zipCode) {
+    public Address(String street, String number, String district, String city, String state, String zipCode, String complement) {
         this.street = street;
+        this.number = number;
         this.district = district;
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
+        this.complement = complement;
     }
 
     public String getStreet() {
@@ -37,6 +45,14 @@ public class Address {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getDistrict() {
@@ -69,5 +85,13 @@ public class Address {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public String getComplement() {
+        return complement;
+    }
+
+    public void setComplement(String complement) {
+        this.complement = complement;
     }
 }

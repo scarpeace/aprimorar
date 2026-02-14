@@ -5,6 +5,7 @@ import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.enums.Activity;
+
 import com.aprimorar.api.repository.ParentRepository;
 import com.aprimorar.api.repository.StudentRepository;
 import org.slf4j.Logger;
@@ -72,7 +73,9 @@ public class DatabaseSeeder {
             student2.setActive(true);
 
             Address address1 = new Address();
-            address1.setStreet("Rua das Flores, 123");
+            address1.setStreet("Rua das Flores");
+            address1.setNumber("123");
+            address1.setComplement("Apto 45");
             address1.setDistrict("Centro");
             address1.setCity("São Paulo");
             address1.setState("SP");
@@ -81,7 +84,9 @@ public class DatabaseSeeder {
             student1.setAddress(address1);
 
             Address address2 = new Address();
-            address2.setStreet("Servidão Bertolina, 230");
+            address2.setStreet("Servidão Bertolina");
+            address2.setNumber("230");
+            address2.setComplement("Casa");
             address2.setDistrict("Barra da Lagoa");
             address2.setCity("Florianópolis");
             address2.setState("SC");
@@ -112,6 +117,5 @@ public class DatabaseSeeder {
             log.error("ERRO ao popular banco de dados: {}", e.getMessage());
         }
     }
-
 
 }
