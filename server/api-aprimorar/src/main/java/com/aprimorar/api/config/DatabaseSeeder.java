@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Configuration
 @Profile("dev")
@@ -53,7 +55,7 @@ public class DatabaseSeeder {
             Student student1 = new Student();
 
             student1.setName("João Silva");
-            student1.setBirthdate(sdf.parse("22/04/2001"));
+            student1.setBirthdate(LocalDate.of(2001,3,22));
             student1.setCpf("123.456.789-00");
             student1.setContact("(61) 99456-2345");
             student1.setEmail("joao.silva@email.com");
@@ -64,7 +66,7 @@ public class DatabaseSeeder {
             Student student2 = new Student();
 
             student2.setName("Marcelo Carvalho");
-            student2.setBirthdate(sdf.parse("21/03/2000"));
+            student2.setBirthdate(LocalDate.of(1999, 5, 18));
             student2.setCpf("123.443.789-00");
             student2.setContact("(61) 99435-4221");
             student2.setEmail("marcelo.carvalho@email.com");

@@ -3,6 +3,7 @@ package com.aprimorar.api.controller.dto;
 import com.aprimorar.api.enums.Activity;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ public record StudentReponseDto(
         String name,
         String contact,
         String email,
-        Date birthdate,
+        LocalDate birthdate,
         String cpf,
         String school,
         Activity activity,
