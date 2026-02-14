@@ -2,6 +2,7 @@ package com.aprimorar.api.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -16,10 +17,10 @@ public class Event {
     private Date date;
 
     @Column(name = "price")
-    private double price;
+    private BigDecimal price;
 
     @Column(name = "payment")
-    private double payment;
+    private BigDecimal payment;
 
     @OneToOne
     @JoinColumn(name = "student_id", referencedColumnName = "student_id")
@@ -32,7 +33,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(Long id, Date date, double price, double payment, Student student, Employee employee) {
+    public Event(Long id, Date date, BigDecimal price, BigDecimal payment, Student student, Employee employee) {
         this.id = id;
         this.date = date;
         this.price = price;
@@ -57,19 +58,19 @@ public class Event {
         this.date = date;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public double getPayment() {
+    public BigDecimal getPayment() {
         return payment;
     }
 
-    public void setPayment(double payment) {
+    public void setPayment(BigDecimal payment) {
         this.payment = payment;
     }
 

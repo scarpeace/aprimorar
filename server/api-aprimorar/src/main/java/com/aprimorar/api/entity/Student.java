@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ public class Student {
     private String email;
 
     @Column(name = "birthdate", nullable = false)
-    private Date birthdate;
+    private LocalDate birthdate;
 
     @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
@@ -43,7 +44,7 @@ public class Student {
     @Column(name = "active")
     private Boolean active = true;
 
-    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_id", referencedColumnName = "parent_id")
     private Parent parent;
 
@@ -59,7 +60,7 @@ public class Student {
     public Student() {
     }
 
-    public Student(UUID id, String name, String contact, String email, Date birthdate, String cpf, String school,
+    public Student(UUID id, String name, String contact, String email, LocalDate birthdate, String cpf, String school,
                    Activity activity, Boolean active, Parent parent, Address address, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
@@ -108,11 +109,11 @@ public class Student {
         this.email = email;
     }
 
-    public Date getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 
