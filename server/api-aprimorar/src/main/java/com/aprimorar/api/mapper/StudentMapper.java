@@ -1,11 +1,7 @@
 package com.aprimorar.api.mapper;
 
-import com.aprimorar.api.controller.dto.AddressResponseDto;
-import com.aprimorar.api.controller.dto.ParentResponseDto;
-import com.aprimorar.api.controller.dto.StudentReponseDto;
-import com.aprimorar.api.controller.dto.StudentRequestDto;
-import com.aprimorar.api.entity.Address;
-import com.aprimorar.api.entity.Parent;
+import com.aprimorar.api.controller.dto.StudentResponseDto;
+import com.aprimorar.api.controller.dto.CreateStudentDto;
 import com.aprimorar.api.entity.Student;
 import org.mapstruct.*;
 
@@ -13,17 +9,21 @@ import org.mapstruct.*;
 @Mapper(
         componentModel = "spring",
         uses = {ParentMapper.class, AddressMapper.class},
-        unmappedTargetPolicy = ReportingPolicy.IGNORE )
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        builder = @Builder(disableBuilder = true)
+)
+
 public interface StudentMapper {
 
-    Student toEntity(StudentRequestDto dto);
+    //Entity -> DTO
+    Student toEntity(CreateStudentDto dto);
 
-    StudentReponseDto toDto(Student entity);
+    //DTO - Entity
+    StudentResponseDto toDto(Student entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "active", ignore = true)
-    void updateFromDto(StudentRequestDto dto, @MappingTarget Student entity);
+    void updateFromDto(CreateStudentDto dto, @MappingTarget Student entity);
 }

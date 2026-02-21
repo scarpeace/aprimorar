@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.util.UUID;
 
+
 @Entity
 @Table(name = "tb_employee")
 public class Employee {

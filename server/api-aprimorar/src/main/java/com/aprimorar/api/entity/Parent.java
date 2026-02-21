@@ -1,6 +1,11 @@
 package com.aprimorar.api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -8,7 +13,16 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_parent")
+@Table(name = "tb_parent", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_parent_name", columnNames = {"name"}),
+        @UniqueConstraint(name = "uk_parent_contact", columnNames = {"contact"}),
+        @UniqueConstraint(name = "uk_parent_email", columnNames = {"email"}),
+        @UniqueConstraint(name = "uk_parent_cpf", columnNames = {"cpf"})
+})
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Parent {
 
     @Id
@@ -16,16 +30,16 @@ public class Parent {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @NotNull(message = "Parent name can't be null")
     private String name;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @NotNull(message = "Parent email can't be null")
     private String email;
 
-    @Column(name = "contact", unique = true, nullable = false)
+    @NotNull(message = "Parent contact can't be null")
     private String contact;
 
-    @Column(name = "cpf", unique = true, nullable = false)
+    @NotNull(message = "Parent CPF can't be null")
     private String cpf;
 
     @CreationTimestamp
@@ -36,72 +50,4 @@ public class Parent {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    public Parent() {
-    }
-
-    public Parent(UUID id, String name, String email, String contact, String cpf, Instant creationTimestamp, Instant updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.contact = contact;
-        this.cpf = cpf;
-        this.creationTimestamp = creationTimestamp;
-        this.updatedAt = updatedAt;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public Instant getCreationTimestamp() {
-        return creationTimestamp;
-    }
-
-    public void setCreationTimestamp(Instant creationTimestamp) {
-        this.creationTimestamp = creationTimestamp;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }
