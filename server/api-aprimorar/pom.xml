@@ -99,12 +99,6 @@
 							<version>1.5.5.Final</version>
 						</path>
 					</annotationProcessorPaths>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
