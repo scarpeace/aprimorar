@@ -3,7 +3,7 @@ package com.aprimorar.api.controller.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record AddressRequestDto(
+public record CreateAddressDto(
 
         @NotNull(message = "Address street can't be null")
         @NotBlank(message = "Address street can't be blank")

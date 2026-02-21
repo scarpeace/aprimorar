@@ -5,11 +5,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
-import java.util.Date;
 
-public record StudentRequestDto(
+public record CreateStudentDto(
         @NotNull(message = "Student name can't be null")
         String name,
 
@@ -18,6 +18,7 @@ public record StudentRequestDto(
         LocalDate birthdate,
 
         @NotNull(message = "Student CPF can't be null")
+        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF must be in format XXX.XXX.XXX-XX")
         String cpf,
 
         @NotBlank(message = "Student school can't be blank")
@@ -34,9 +35,9 @@ public record StudentRequestDto(
         Activity activity,
 
         @NotNull(message = "Student Address can't be null")
-        AddressRequestDto address,
+        CreateAddressDto address,
 
         @NotNull(message = "Student Parent can't be null")
-        ParentRequestDto parent
+        CreateParentDto parent
 ) {
 }

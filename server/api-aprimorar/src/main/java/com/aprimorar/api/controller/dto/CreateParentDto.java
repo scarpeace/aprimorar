@@ -3,7 +3,7 @@ package com.aprimorar.api.controller.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
-public record ParentRequestDto(
+public record CreateParentDto(
         @NotNull(message = "Parent name can't be null")
         String name,
 

@@ -1,7 +1,7 @@
 package com.aprimorar.api.service;
 
-import com.aprimorar.api.controller.dto.StudentReponseDto;
-import com.aprimorar.api.controller.dto.StudentRequestDto;
+import com.aprimorar.api.controller.dto.CreateStudentDto;
+import com.aprimorar.api.controller.dto.StudentResponseDto;
 import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
@@ -19,16 +19,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 
 import java.time.Instant;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
+
     @Mock
     private StudentRepository studentRepo;
+
     @Mock
     private StudentMapper studentMapper;
 
@@ -36,8 +40,8 @@ class StudentServiceTest {
     private StudentService studentService;
 
     private Student student;
-    private StudentRequestDto studentRequestDto;
-    private StudentReponseDto studentReponseDto;
+    private CreateStudentDto createStudentDto;
+    private StudentResponseDto studentResponseDto;
 
     @BeforeEach
     void setUp() {
@@ -46,138 +50,214 @@ class StudentServiceTest {
         student.setName("John Doe");
         student.setContact("123456789");
         student.setEmail("john.doe@email.com");
-        student.setBirthdate(new Date());
+        student.setBirthdate(LocalDate.of(2000, 1, 1));
         student.setCpf("12345678901");
         student.setSchool("School");
         student.setActivity(Activity.ENEM);
         student.setParent(new Parent());
         student.setAddress(new Address());
         student.setActive(true);
-        student.setCreatedAt(Instant.now());
-        student.setUpdatedAt(Instant.now());
+        student.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
+        student.setUpdatedAt(Instant.parse("2025-01-01T00:00:00Z"));
 
-        studentRequestDto = mock(StudentRequestDto.class);
-        studentReponseDto = mock(StudentReponseDto.class);
+        // CreateStudentDto is a record (final) so mocking it is brittle and not needed.
+        // Service only logs dto.name(), and mapper consumes the dto.
+        createStudentDto = new CreateStudentDto(
+                "John Doe",
+                LocalDate.of(2000, 1, 1),
+                "123.456.789-01",
+                "School",
+                "123456789",
+                "john.doe@email.com",
+                Activity.ENEM,
+                null,
+                null
+        );
+
+        studentResponseDto = mock(StudentResponseDto.class);
     }
 
     @Test
     @DisplayName("Should list page of students when success")
     void testListStudents() {
-        Pageable pageable = PageRequest.of(0,20, Sort.by("name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
-        Page<Student> students = new PageImpl<>(List.of(student));
+        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
         when(studentRepo.findAll(pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentReponseDto> result = studentService.listStudents(pageable);
+        Page<StudentResponseDto> result = studentService.listStudents(pageable);
+
         assertEquals(1, result.getTotalElements());
-        assertEquals(studentReponseDto, result.getContent().get(0));
+        assertEquals(1, result.getContent().size());
+        assertSame(studentResponseDto, result.getContent().getFirst());
+
+        verify(studentRepo).findAll(pageable);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
     }
 
     @Test
     @DisplayName("Should return empty page when there are no students in database")
-    void testEmptyStudentList(){
-        Pageable pageable = PageRequest.of(0,20, Sort.by("name"));
+    void testEmptyStudentList() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
-        Page<Student> students = new PageImpl<>(List.of());
+        Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
         when(studentRepo.findAll(pageable)).thenReturn(students);
 
-        Page<StudentReponseDto> result = studentService.listStudents(pageable);
+        Page<StudentResponseDto> result = studentService.listStudents(pageable);
+
         assertEquals(0, result.getTotalElements());
         assertTrue(result.getContent().isEmpty());
+
+        verify(studentRepo).findAll(pageable);
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
     }
 
     @Test
     @DisplayName("Should list active students page when success")
-    void testListActiveStudents(){
+    void testListActiveStudents() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
-        Page<Student> students = new PageImpl<>(List.of(student));
+        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
         when(studentRepo.findAllByActiveTrue(pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentReponseDto> result = studentService.listActiveStudents(pageable);
+        Page<StudentResponseDto> result = studentService.listActiveStudents(pageable);
+
         assertEquals(1, result.getTotalElements());
-        assertEquals(studentReponseDto, result.getContent().get(0));
+        assertEquals(1, result.getContent().size());
+        assertSame(studentResponseDto, result.getContent().getFirst());
 
+        verify(studentRepo).findAllByActiveTrue(pageable);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
     }
-
 
     @Test
     @DisplayName("Should get student when success")
     void testFindByIdFound() {
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        StudentReponseDto result = studentService.findById(student.getId());
-        assertEquals(studentReponseDto, result);
+        StudentResponseDto result = studentService.findById(student.getId());
+
+        assertSame(studentResponseDto, result);
+        verify(studentRepo).findById(student.getId());
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
     }
 
     @Test
     @DisplayName("Should throw exception when ID not found")
     void testFindByIdNotFound() {
-        when(studentRepo.findById(any(UUID.class))).thenReturn(Optional.empty());
-        assertThrows(StudentNotFoundException.class, () -> studentService.findById(UUID.randomUUID()));
+        UUID id = UUID.randomUUID();
+        when(studentRepo.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(StudentNotFoundException.class, () -> studentService.findById(id));
+
+        verify(studentRepo).findById(id);
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
     }
 
     @Test
     @DisplayName("Should create student when success")
     void testCreateStudent() {
-        when(studentMapper.toEntity(studentRequestDto)).thenReturn(student);
+        when(studentMapper.toEntity(createStudentDto)).thenReturn(student);
         when(studentRepo.save(student)).thenReturn(student);
-        when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        StudentReponseDto result = studentService.createStudent(studentRequestDto);
-        assertEquals(studentReponseDto, result);
+        StudentResponseDto result = studentService.createStudent(createStudentDto);
+
+        assertSame(studentResponseDto, result);
+        verify(studentMapper).toEntity(createStudentDto);
+        verify(studentRepo).save(student);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
     }
 
     @Test
     @DisplayName("Should deactivate student when student is active (Soft Delete)")
     void testDeleteStudentActive() {
         student.setActive(true);
+        Instant before = student.getUpdatedAt();
+
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
 
         studentService.softDeleteStudent(student.getId());
 
         assertFalse(student.getActive());
+        assertNotNull(student.getUpdatedAt());
+        assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
+
         verify(studentRepo).findById(student.getId());
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
     }
 
     @Test
-    @DisplayName("Should not deactivate when student is already inactive")
+    @DisplayName("Should not change updatedAt when student is already inactive")
     void testDeleteStudentInactive() {
         student.setActive(false);
+        Instant before = student.getUpdatedAt();
+
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
 
         studentService.softDeleteStudent(student.getId());
 
         assertFalse(student.getActive());
+        assertEquals(before, student.getUpdatedAt());
+
         verify(studentRepo).findById(student.getId());
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
     }
 
     @Test
     @DisplayName("Should throw exception when ID not found for deletion")
     void testDeleteStudentNotFound() {
-        when(studentRepo.findById(any(UUID.class))).thenReturn(Optional.empty());
-        assertThrows(StudentNotFoundException.class, () -> studentService.softDeleteStudent(UUID.randomUUID()));
+        UUID id = UUID.randomUUID();
+        when(studentRepo.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(StudentNotFoundException.class, () -> studentService.softDeleteStudent(id));
+
+        verify(studentRepo).findById(id);
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
     }
 
     @Test
     @DisplayName("Should update student when success")
     void testUpdateStudent() {
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        doAnswer(invocation -> null).when(studentMapper).updateFromDto(studentRequestDto, student);
-        when(studentMapper.toDto(student)).thenReturn(studentReponseDto);
+        Instant before = student.getUpdatedAt();
 
-        StudentReponseDto result = studentService.updateStudent(student.getId(), studentRequestDto);
-        assertEquals(studentReponseDto, result);
-        verify(studentMapper).updateFromDto(studentRequestDto, student);
+        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        StudentResponseDto result = studentService.updateStudent(student.getId(), createStudentDto);
+
+        assertSame(studentResponseDto, result);
+        verify(studentRepo).findById(student.getId());
+        verify(studentMapper).updateFromDto(createStudentDto, student);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
+
+        assertNotNull(student.getUpdatedAt());
+        assertNotEquals(before, student.getUpdatedAt());
     }
 
     @Test
     @DisplayName("Should not update student when student not found")
     void testUpdateStudentNotFound() {
-        when(studentRepo.findById(any(UUID.class))).thenReturn(Optional.empty());
-        assertThrows(StudentNotFoundException.class, () -> studentService.updateStudent(UUID.randomUUID(), studentRequestDto));
+        UUID id = UUID.randomUUID();
+        when(studentRepo.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(StudentNotFoundException.class, () -> studentService.updateStudent(id, createStudentDto));
+
+        verify(studentRepo).findById(id);
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
     }
 }
