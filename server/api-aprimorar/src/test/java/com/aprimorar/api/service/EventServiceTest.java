@@ -1,0 +1,466 @@
+package com.aprimorar.api.service;
+
+import com.aprimorar.api.controller.dto.CreateEventDto;
+import com.aprimorar.api.controller.dto.EventResponseDto;
+import com.aprimorar.api.entity.Employee;
+import com.aprimorar.api.entity.Event;
+import com.aprimorar.api.entity.Student;
+import com.aprimorar.api.exception.domain.EmployeeNotFoundException;
+import com.aprimorar.api.exception.domain.EventNotFoundException;
+import com.aprimorar.api.exception.domain.StudentNotFoundException;
+import com.aprimorar.api.mapper.EventMapper;
+import com.aprimorar.api.repository.EmployeeRepository;
+import com.aprimorar.api.repository.EventRepository;
+import com.aprimorar.api.repository.StudentRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class EventServiceTest {
+
+    @Mock
+    private EventRepository eventRepo;
+
+    @Mock
+    private StudentRepository studentRepo;
+
+    @Mock
+    private EmployeeRepository employeeRepo;
+
+    @Mock
+    private EventMapper eventMapper;
+
+    @InjectMocks
+    private EventService eventService;
+
+    private static final LocalDateTime VALID_START = LocalDateTime.of(2027, 6, 1, 10, 0);
+    private static final LocalDateTime VALID_END   = LocalDateTime.of(2027, 6, 1, 11, 0);
+
+    // ─── listEvents ───────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Should return paginated list of events when success")
+    void testListEvents() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("startDateTime"));
+
+        Event event = new Event();
+        EventResponseDto responseDto = mock(EventResponseDto.class);
+
+        Page<Event> eventPage = new PageImpl<>(List.of(event), pageable, 1);
+        when(eventRepo.findAll(pageable)).thenReturn(eventPage);
+        when(eventMapper.toDto(event)).thenReturn(responseDto);
+
+        Page<EventResponseDto> result = eventService.listEvents(pageable);
+
+        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.getContent().size());
+        assertSame(responseDto, result.getContent().getFirst());
+
+        verify(eventRepo).findAll(pageable);
+        verify(eventMapper).toDto(event);
+        verifyNoMoreInteractions(eventRepo, eventMapper);
+    }
+
+    @Test
+    @DisplayName("Should return empty page when there are no events in database")
+    void testEmptyEventList() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("startDateTime"));
+
+        Page<Event> eventPage = new PageImpl<>(List.of(), pageable, 0);
+        when(eventRepo.findAll(pageable)).thenReturn(eventPage);
+
+        Page<EventResponseDto> result = eventService.listEvents(pageable);
+
+        assertEquals(0, result.getTotalElements());
+        assertTrue(result.getContent().isEmpty());
+
+        verify(eventRepo).findAll(pageable);
+        verifyNoMoreInteractions(eventRepo);
+        verifyNoInteractions(eventMapper);
+    }
+
+    // ─── findById ─────────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Should return EventResponseDto when event is found by id")
+    void testFindByIdFound() {
+        Long eventId = 1L;
+        Event event = new Event();
+        EventResponseDto responseDto = mock(EventResponseDto.class);
+
+        when(eventRepo.findById(eventId)).thenReturn(Optional.of(event));
+        when(eventMapper.toDto(event)).thenReturn(responseDto);
+
+        EventResponseDto result = eventService.findById(eventId);
+
+        assertSame(responseDto, result);
+
+        verify(eventRepo).findById(eventId);
+        verify(eventMapper).toDto(event);
+        verifyNoMoreInteractions(eventRepo, eventMapper);
+    }
+
+    @Test
+    @DisplayName("Should throw EventNotFoundException when event is not found by id")
+    void testFindByIdNotFound() {
+        Long eventId = 99L;
+        when(eventRepo.findById(eventId)).thenReturn(Optional.empty());
+
+        assertThrows(EventNotFoundException.class, () -> eventService.findById(eventId));
+
+        verify(eventRepo).findById(eventId);
+        verifyNoMoreInteractions(eventRepo);
+        verifyNoInteractions(eventMapper);
+    }
+
+    // ─── createEvent ──────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Should create and return event when success")
+    void testCreateEvent() {
+        UUID studentId = UUID.randomUUID();
+        UUID employeeId = UUID.randomUUID();
+
+        CreateEventDto dto = new CreateEventDto(
+                VALID_START, VALID_END,
+                new BigDecimal("100.00"), new BigDecimal("50.00"),
+                studentId, employeeId
+        );
+
+        Student student = new Student();
+        Employee employee = new Employee();
+        Event newEvent = new Event();
+        Event savedEvent = new Event();
+        EventResponseDto responseDto = mock(EventResponseDto.class);
+
+        when(studentRepo.findById(studentId)).thenReturn(Optional.of(student));
+        when(employeeRepo.findById(employeeId)).thenReturn(Optional.of(employee));
+        when(eventMapper.toEntity(dto)).thenReturn(newEvent);
+        when(eventRepo.save(newEvent)).thenReturn(savedEvent);
+        when(eventMapper.toDto(savedEvent)).thenReturn(responseDto);
+
+        EventResponseDto result = eventService.createEvent(dto);
+
+        assertSame(responseDto, result);
+        assertSame(student, newEvent.getStudent());
+        assertSame(employee, newEvent.getEmployee());
+
+        verify(studentRepo).findById(studentId);
+        verify(employeeRepo).findById(employeeId);
+        verify(eventMapper).toEntity(dto);
+        verify(eventRepo).save(newEvent);
+        verify(eventMapper).toDto(savedEvent);
+        verifyNoMoreInteractions(studentRepo, employeeRepo, eventRepo, eventMapper);
+    }
+
+    @Test
+    @DisplayName("Should throw StudentNotFoundException when student is not found during event creation")
+    void testCreateEventStudentNotFound() {
+        UUID studentId = UUID.randomUUID();
+
+        CreateEventDto dto = new CreateEventDto(
+                VALID_START, VALID_END,
+                new BigDecimal("100.00"), new BigDecimal("50.00"),
+                studentId, UUID.randomUUID()
+        );
+
+        when(studentRepo.findById(studentId)).thenReturn(Optional.empty());
+
+        assertThrows(StudentNotFoundException.class, () -> eventService.createEvent(dto));
+
+        verify(studentRepo).findById(studentId);
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(employeeRepo, eventMapper, eventRepo);
+    }
+
+    @Test
+    @DisplayName("Should throw EmployeeNotFoundException when employee is not found during event creation")
+    void testCreateEventEmployeeNotFound() {
+        UUID studentId = UUID.randomUUID();
+        UUID employeeId = UUID.randomUUID();
+
+        CreateEventDto dto = new CreateEventDto(
+                VALID_START, VALID_END,
+                new BigDecimal("100.00"), new BigDecimal("50.00"),
+                studentId, employeeId
+        );
+
+        Student student = new Student();
+        when(studentRepo.findById(studentId)).thenReturn(Optional.of(student));
+        when(employeeRepo.findById(employeeId)).thenReturn(Optional.empty());
+
+        assertThrows(EmployeeNotFoundException.class, () -> eventService.createEvent(dto));
+
+        verify(studentRepo).findById(studentId);
+        verify(employeeRepo).findById(employeeId);
+        verifyNoMoreInteractions(studentRepo, employeeRepo);
+        verifyNoInteractions(eventMapper, eventRepo);
+    }
+
+    // ─── updateEvent ──────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Should update event without fetching student or employee when IDs are unchanged")
+    void testUpdateEvent_sameIds() {
+        Long eventId = 1L;
+        UUID studentId = UUID.randomUUID();
+        UUID employeeId = UUID.randomUUID();
+
+        CreateEventDto dto = new CreateEventDto(
+                VALID_START, VALID_END,
+                new BigDecimal("100.00"), new BigDecimal("50.00"),
+                studentId, employeeId
+        );
+
+        Student student = new Student();
+        student.setId(studentId);
+
+        Employee employee = new Employee();
+        employee.setId(employeeId);
+
+        Event foundEvent = new Event();
+        foundEvent.setStudent(student);
+        foundEvent.setEmployee(employee);
+
+        EventResponseDto responseDto = mock(EventResponseDto.class);
+
+        when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
+        when(eventMapper.toDto(foundEvent)).thenReturn(responseDto);
+
+        EventResponseDto result = eventService.updateEvent(eventId, dto);
+
+        assertSame(responseDto, result);
+
+        verify(eventRepo).findById(eventId);
+        verify(eventMapper).updateFromDto(dto, foundEvent);
+        verify(eventMapper).toDto(foundEvent);
+        verifyNoMoreInteractions(eventRepo, eventMapper);
+        verifyNoInteractions(studentRepo, employeeRepo);
+    }
+
+    @Test
+    @DisplayName("Should update event and fetch new student when student ID changes")
+    void testUpdateEvent_changedStudentId() {
+        Long eventId = 1L;
+        UUID newStudentId = UUID.randomUUID();
+        UUID employeeId = UUID.randomUUID();
+
+        CreateEventDto dto = new CreateEventDto(
+                VALID_START, VALID_END,
+                new BigDecimal("100.00"), new BigDecimal("50.00"),
+                newStudentId, employeeId
+        );
+
+        Student oldStudent = new Student();
+        oldStudent.setId(UUID.randomUUID()); // different from DTO
+
+        Employee employee = new Employee();
+        employee.setId(employeeId); // same as DTO
+
+        Student newStudent = new Student();
+        newStudent.setId(newStudentId);
+
+        Event foundEvent = new Event();
+        foundEvent.setStudent(oldStudent);
+        foundEvent.setEmployee(employee);
+
+        EventResponseDto responseDto = mock(EventResponseDto.class);
+
+        when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
+        when(studentRepo.findById(newStudentId)).thenReturn(Optional.of(newStudent));
+        when(eventMapper.toDto(foundEvent)).thenReturn(responseDto);
+
+        EventResponseDto result = eventService.updateEvent(eventId, dto);
+
+        assertSame(responseDto, result);
+        assertSame(newStudent, foundEvent.getStudent());
+
+        verify(eventRepo).findById(eventId);
+        verify(eventMapper).updateFromDto(dto, foundEvent);
+        verify(studentRepo).findById(newStudentId);
+        verify(eventMapper).toDto(foundEvent);
+        verifyNoMoreInteractions(eventRepo, eventMapper, studentRepo);
+        verifyNoInteractions(employeeRepo);
+    }
+
+    @Test
+    @DisplayName("Should update event and fetch new employee when employee ID changes")
+    void testUpdateEvent_changedEmployeeId() {
+        Long eventId = 1L;
+        UUID studentId = UUID.randomUUID();
+        UUID newEmployeeId = UUID.randomUUID();
+
+        CreateEventDto dto = new CreateEventDto(
+                VALID_START, VALID_END,
+                new BigDecimal("100.00"), new BigDecimal("50.00"),
+                studentId, newEmployeeId
+        );
+
+        Student student = new Student();
+        student.setId(studentId); // same as DTO
+
+        Employee oldEmployee = new Employee();
+        oldEmployee.setId(UUID.randomUUID()); // different from DTO
+
+        Employee newEmployee = new Employee();
+        newEmployee.setId(newEmployeeId);
+
+        Event foundEvent = new Event();
+        foundEvent.setStudent(student);
+        foundEvent.setEmployee(oldEmployee);
+
+        EventResponseDto responseDto = mock(EventResponseDto.class);
+
+        when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
+        when(employeeRepo.findById(newEmployeeId)).thenReturn(Optional.of(newEmployee));
+        when(eventMapper.toDto(foundEvent)).thenReturn(responseDto);
+
+        EventResponseDto result = eventService.updateEvent(eventId, dto);
+
+        assertSame(responseDto, result);
+        assertSame(newEmployee, foundEvent.getEmployee());
+
+        verify(eventRepo).findById(eventId);
+        verify(eventMapper).updateFromDto(dto, foundEvent);
+        verify(employeeRepo).findById(newEmployeeId);
+        verify(eventMapper).toDto(foundEvent);
+        verifyNoMoreInteractions(eventRepo, eventMapper, employeeRepo);
+        verifyNoInteractions(studentRepo);
+    }
+
+    @Test
+    @DisplayName("Should throw EventNotFoundException when event is not found during update")
+    void testUpdateEvent_eventNotFound() {
+        Long eventId = 99L;
+        CreateEventDto dto = new CreateEventDto(
+                VALID_START, VALID_END,
+                new BigDecimal("100.00"), new BigDecimal("50.00"),
+                UUID.randomUUID(), UUID.randomUUID()
+        );
+
+        when(eventRepo.findById(eventId)).thenReturn(Optional.empty());
+
+        assertThrows(EventNotFoundException.class, () -> eventService.updateEvent(eventId, dto));
+
+        verify(eventRepo).findById(eventId);
+        verifyNoMoreInteractions(eventRepo);
+        verifyNoInteractions(studentRepo, employeeRepo, eventMapper);
+    }
+
+    @Test
+    @DisplayName("Should throw StudentNotFoundException when new student is not found during update")
+    void testUpdateEvent_studentNotFound() {
+        Long eventId = 1L;
+        UUID newStudentId = UUID.randomUUID();
+        UUID employeeId = UUID.randomUUID();
+
+        CreateEventDto dto = new CreateEventDto(
+                VALID_START, VALID_END,
+                new BigDecimal("100.00"), new BigDecimal("50.00"),
+                newStudentId, employeeId
+        );
+
+        Student oldStudent = new Student();
+        oldStudent.setId(UUID.randomUUID()); // different from DTO
+
+        Employee employee = new Employee();
+        employee.setId(employeeId); // same as DTO
+
+        Event foundEvent = new Event();
+        foundEvent.setStudent(oldStudent);
+        foundEvent.setEmployee(employee);
+
+        when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
+        when(studentRepo.findById(newStudentId)).thenReturn(Optional.empty());
+
+        assertThrows(StudentNotFoundException.class, () -> eventService.updateEvent(eventId, dto));
+
+        verify(eventRepo).findById(eventId);
+        verify(eventMapper).updateFromDto(dto, foundEvent);
+        verify(studentRepo).findById(newStudentId);
+        verifyNoMoreInteractions(eventRepo, eventMapper, studentRepo);
+        verifyNoInteractions(employeeRepo);
+    }
+
+    @Test
+    @DisplayName("Should throw EmployeeNotFoundException when new employee is not found during update")
+    void testUpdateEvent_employeeNotFound() {
+        Long eventId = 1L;
+        UUID studentId = UUID.randomUUID();
+        UUID newEmployeeId = UUID.randomUUID();
+
+        CreateEventDto dto = new CreateEventDto(
+                VALID_START, VALID_END,
+                new BigDecimal("100.00"), new BigDecimal("50.00"),
+                studentId, newEmployeeId
+        );
+
+        Student student = new Student();
+        student.setId(studentId); // same as DTO
+
+        Employee oldEmployee = new Employee();
+        oldEmployee.setId(UUID.randomUUID()); // different from DTO
+
+        Event foundEvent = new Event();
+        foundEvent.setStudent(student);
+        foundEvent.setEmployee(oldEmployee);
+
+        when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
+        when(employeeRepo.findById(newEmployeeId)).thenReturn(Optional.empty());
+
+        assertThrows(EmployeeNotFoundException.class, () -> eventService.updateEvent(eventId, dto));
+
+        verify(eventRepo).findById(eventId);
+        verify(eventMapper).updateFromDto(dto, foundEvent);
+        verify(employeeRepo).findById(newEmployeeId);
+        verifyNoMoreInteractions(eventRepo, eventMapper, employeeRepo);
+        verifyNoInteractions(studentRepo);
+    }
+
+    // ─── deleteEvent ──────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Should delete event when success")
+    void testDeleteEvent() {
+        Long eventId = 1L;
+        Event event = new Event();
+
+        when(eventRepo.findById(eventId)).thenReturn(Optional.of(event));
+
+        eventService.deleteEvent(eventId);
+
+        verify(eventRepo).findById(eventId);
+        verify(eventRepo).delete(event);
+        verifyNoMoreInteractions(eventRepo);
+        verifyNoInteractions(studentRepo, employeeRepo, eventMapper);
+    }
+
+    @Test
+    @DisplayName("Should throw EventNotFoundException when trying to delete a non-existent event")
+    void testDeleteEventNotFound() {
+        Long eventId = 99L;
+
+        when(eventRepo.findById(eventId)).thenReturn(Optional.empty());
+
+        assertThrows(EventNotFoundException.class, () -> eventService.deleteEvent(eventId));
+
+        verify(eventRepo).findById(eventId);
+        verifyNoMoreInteractions(eventRepo);
+        verifyNoInteractions(studentRepo, employeeRepo, eventMapper);
+    }
+}
+

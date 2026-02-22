@@ -136,6 +136,24 @@ class StudentServiceTest {
     }
 
     @Test
+    @DisplayName("Should return empty page when there are no active students in database")
+    void testEmptyActiveStudentList() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
+        when(studentRepo.findAllByActiveTrue(pageable)).thenReturn(students);
+
+        Page<StudentResponseDto> result = studentService.listActiveStudents(pageable);
+
+        assertEquals(0, result.getTotalElements());
+        assertTrue(result.getContent().isEmpty());
+
+        verify(studentRepo).findAllByActiveTrue(pageable);
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
+    }
+
+    @Test
     @DisplayName("Should get student when success")
     void testFindByIdFound() {
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
