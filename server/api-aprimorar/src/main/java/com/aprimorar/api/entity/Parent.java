@@ -1,7 +1,6 @@
 package com.aprimorar.api.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,16 +29,12 @@ public class Parent {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull(message = "Parent name can't be null")
     private String name;
 
-    @NotNull(message = "Parent email can't be null")
     private String email;
 
-    @NotNull(message = "Parent contact can't be null")
     private String contact;
 
-    @NotNull(message = "Parent CPF can't be null")
     private String cpf;
 
     @CreationTimestamp

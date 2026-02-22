@@ -1,11 +1,12 @@
 package com.aprimorar.api.config;
 
 
-import com.aprimorar.api.entity.Address;
-import com.aprimorar.api.entity.Parent;
-import com.aprimorar.api.entity.Student;
+import com.aprimorar.api.entity.*;
 import com.aprimorar.api.enums.Activity;
 
+import com.aprimorar.api.enums.Role;
+import com.aprimorar.api.repository.EmployeeRepository;
+import com.aprimorar.api.repository.EventRepository;
 import com.aprimorar.api.repository.ParentRepository;
 import com.aprimorar.api.repository.StudentRepository;
 import org.slf4j.Logger;
@@ -15,8 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Configuration
 @Profile("dev")
@@ -26,16 +29,20 @@ public class DatabaseSeeder {
 
     private final StudentRepository studentRepo;
     private final ParentRepository parentRepo;
+    private final EmployeeRepository employeeRepo;
+    private final EventRepository eventRepo;
 
-    public DatabaseSeeder(StudentRepository studentRepo, ParentRepository parentRepo) {
+    public DatabaseSeeder(StudentRepository studentRepo, ParentRepository parentRepo, EmployeeRepository employeeRepo, EventRepository eventRepo) {
         this.studentRepo = studentRepo;
         this.parentRepo = parentRepo;
+        this.employeeRepo = employeeRepo;
+        this.eventRepo = eventRepo;
     }
 
     @Bean
     CommandLineRunner initDatabase(){
         return args -> {
-            if (studentRepo.count() == 0 && parentRepo.count() == 0) {
+            if (studentRepo.count() == 0 && parentRepo.count() == 0 && employeeRepo.count() == 0 && eventRepo.count() == 0) {
                 log.info("Iniciando SEED no Banco de dados");
                 System.out.println();
                 seedStudents();
@@ -113,6 +120,27 @@ public class DatabaseSeeder {
 
             studentRepo.save(student1);
             studentRepo.save(student2);
+
+            Employee employee1 = new Employee();
+            employee1.setName("Marcelo Carvalho");
+            employee1.setBirthdate("22-03-1992");
+            employee1.setContact("(61) 99963-5543");
+            employee1.setPix("023.205.102-23");
+            employee1.setCpf("023.205.102-23");
+            employee1.setRole(Role.EMPLOYEE);
+
+            employeeRepo.save(employee1);
+
+            Event event = new Event();
+            event.setStudent(student1);
+            event.setEmployee(employee1);
+            event.setPrice(BigDecimal.valueOf(250.75));
+            event.setPayment(BigDecimal.valueOf(200.00));
+            event.setStartDateTime(LocalDateTime.of(2026, 12, 11, 12, 30));
+            event.setEndDateTime(LocalDateTime.of(2026, 12, 11, 13, 30));
+
+            eventRepo.save(event);
+
 
         }catch (Exception e){
             log.error("ERRO ao popular banco de dados: {}", e.getMessage());
