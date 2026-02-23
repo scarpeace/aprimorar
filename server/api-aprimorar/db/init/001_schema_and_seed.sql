@@ -41,8 +41,20 @@ CREATE TABLE IF NOT EXISTS tb_student (
 
 INSERT INTO tb_parent (parent_id, name, email, contact, cpf, created_at, updated_at)
 VALUES
-    ('11111111-1111-1111-1111-111111111111', 'Joao Silva Sauro', 'joao_sauro@email.com', '61988881111', '11122233344', NOW(), NOW()),
-    ('22222222-2222-2222-2222-222222222222', 'Mauricio Pereira Souza', 'mauricio_souza@email.com', '11977772222', '55566677788', NOW(), NOW())
+    ('3f1c2d4e-5a6b-7c8d-9e01-23456789ab10',
+     'Joao Silva Sauro',
+     'joao_sauro@email.com',
+     '61988881111',
+     '11122233344',
+     NOW(),
+     NOW()),
+    ('7a8b9c0d-1e2f-3a4b-5c6d-7e8f9012ab34',
+     'Mauricio Pereira Souza',
+     'mauricio_souza@email.com',
+     '11977772222',
+     '55566677788',
+     NOW(),
+     NOW())
 ON CONFLICT (parent_id) DO NOTHING;
 
 INSERT INTO tb_student (
@@ -68,7 +80,7 @@ INSERT INTO tb_student (
 )
 VALUES
     (
-        '33333333-3333-3333-3333-333333333333',
+        'b12c3d4e-5f67-4890-9abc-def012345678',
         'Joao Silva',
         '61994562345',
         'joao.silva@email.com',
@@ -77,7 +89,7 @@ VALUES
         'Escola Estadual Sao Paulo',
         'ENEM',
         TRUE,
-        '11111111-1111-1111-1111-111111111111',
+        '3f1c2d4e-5a6b-7c8d-9e01-23456789ab10',
         'Rua das Flores',
         '123',
         'Centro',
@@ -89,7 +101,7 @@ VALUES
         NOW()
     ),
     (
-        '44444444-4444-4444-4444-444444444444',
+        'c98d7e6f-5a4b-3c2d-1e0f-abcdef123456',
         'Marcelo Carvalho',
         '61994354221',
         'marcelo.carvalho@email.com',
@@ -98,7 +110,7 @@ VALUES
         'Leonardo da Vinci',
         'MENTORIA',
         TRUE,
-        '22222222-2222-2222-2222-222222222222',
+        '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9012ab34',
         'Servidao Bertolina',
         '230',
         'Barra da Lagoa',
@@ -110,3 +122,49 @@ VALUES
         NOW()
     )
 ON CONFLICT (student_id) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS tb_employee (
+    employee_id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    birthdate VARCHAR(255),
+    pix VARCHAR(255),
+    contact VARCHAR(255),
+    cpf VARCHAR(255),
+    role VARCHAR(255),
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
+);
+
+CREATE TABLE IF NOT EXISTS tb_events (
+    id BIGSERIAL PRIMARY KEY,
+    start_date_time TIMESTAMP,
+    end_date_time TIMESTAMP,
+    price NUMERIC(19,2),
+    payment NUMERIC(19,2),
+    student_id UUID,
+    employee_id UUID,
+    CONSTRAINT fk_event_student FOREIGN KEY (student_id) REFERENCES tb_student(student_id),
+    CONSTRAINT fk_event_employee FOREIGN KEY (employee_id) REFERENCES tb_employee(employee_id)
+);
+
+INSERT INTO tb_employee (employee_id, name, birthdate, contact, pix, cpf, role, created_at, updated_at)
+VALUES
+    ('a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+     'Marcelo Carvalho',
+     '22-03-1992',
+     '(61) 99963-5543',
+     '023.205.102-23',
+     '023.205.102-23',
+     'EMPLOYEE',
+     NOW(),
+     NOW())
+ON CONFLICT (employee_id) DO NOTHING;
+
+INSERT INTO tb_events (start_date_time, end_date_time, price, payment, student_id, employee_id)
+VALUES
+    ('2026-12-11 12:30:00',
+     '2026-12-11 13:30:00',
+     250.75,
+     200.00,
+     'b12c3d4e-5f67-4890-9abc-def012345678',
+     'a1b2c3d4-e5f6-7890-abcd-ef1234567890');

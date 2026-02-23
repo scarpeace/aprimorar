@@ -32,6 +32,7 @@ public class Employee {
     private String cpf;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public Employee() {
