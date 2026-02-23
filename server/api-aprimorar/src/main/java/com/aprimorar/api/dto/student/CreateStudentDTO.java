@@ -30,7 +30,7 @@ public record CreateStudentDTO(
         String school,
 
         @NotBlank(message = "Student contact number can't be blank")
-        @Pattern(regexp = "^\\(\\d{2}\\)\\d{4,5}-\\d{4}$", message = "Contact must be in format (XX)XXXXX-XXXX")
+        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contact must be in format (XX)XXXXX-XXXX")
         String contact,
 
         @NotBlank(message = "Student email can't be blank")

@@ -129,6 +129,7 @@ CREATE TABLE IF NOT EXISTS tb_employee (
     birthdate VARCHAR(255),
     pix VARCHAR(255),
     contact VARCHAR(255),
+    email VARCHAR(255),
     cpf VARCHAR(255),
     role VARCHAR(255),
     created_at TIMESTAMPTZ,
@@ -147,14 +148,15 @@ CREATE TABLE IF NOT EXISTS tb_events (
     CONSTRAINT fk_event_employee FOREIGN KEY (employee_id) REFERENCES tb_employee(employee_id)
 );
 
-INSERT INTO tb_employee (employee_id, name, birthdate, contact, pix, cpf, role, created_at, updated_at)
+INSERT INTO tb_employee (employee_id, name, birthdate, contact, pix, cpf, email, role, created_at, updated_at)
 VALUES
     ('a1b2c3d4-e5f6-7890-abcd-ef1234567890',
      'Marcelo Carvalho',
      '22-03-1992',
      '(61) 99963-5543',
      '023.205.102-23',
-     '023.205.102-23',
+     '02320510223',
+     'marcelo@gmail.com',
      'EMPLOYEE',
      NOW(),
      NOW())

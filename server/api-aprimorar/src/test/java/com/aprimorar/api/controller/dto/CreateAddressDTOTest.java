@@ -158,11 +158,11 @@ class CreateAddressDTOTest {
         assertTrue(messages(violations).contains("Address state can't be blank"));
     }
 
-    // ─── zipCode ──────────────────────────────────────────────────────────────
+    // ─── zip ──────────────────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("Should have 1 violation when zipCode is null")
-    void nullZipCode() {
+    @DisplayName("Should have 1 violation when zip is null")
+    void nullZip() {
         CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "Downtown", "Cityville", "SP", null
         );
@@ -172,8 +172,8 @@ class CreateAddressDTOTest {
     }
 
     @Test
-    @DisplayName("Should have 1 violation when zipCode is blank")
-    void blankZipCode() {
+    @DisplayName("Should have 1 violation when zip is blank")
+    void blankZip() {
         CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "Downtown", "Cityville", "SP", ""
         );
@@ -204,4 +204,3 @@ class CreateAddressDTOTest {
         assertTrue(violations.isEmpty());
     }
 }
-

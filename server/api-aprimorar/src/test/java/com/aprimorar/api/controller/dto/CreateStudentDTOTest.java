@@ -167,6 +167,19 @@ class CreateStudentDTOTest {
         assertTrue(messages(violations).contains("Contact must be in format (XX)XXXXX-XXXX"));
     }
 
+    @Test
+    @DisplayName("Should have 1 violation when contact format has 4-digit middle")
+    void invalidContactWithFourDigits() {
+        CreateStudentDTO dto = new CreateStudentDTO(
+                "Student Name", VALID_BIRTHDATE, "123.456.789-01",
+                "Great School", "(11)9999-9999", "student@email.com",
+                Activity.ENEM, VALID_ADDRESS, VALID_PARENT
+        );
+        Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
+        assertFalse(violations.isEmpty());
+        assertTrue(messages(violations).contains("Contact must be in format (XX)XXXXX-XXXX"));
+    }
+
     // ─── email ────────────────────────────────────────────────────────────────
 
     @Test
@@ -273,4 +286,3 @@ class CreateStudentDTOTest {
         assertTrue(messages(violations).contains("Parent name can't be null"));
     }
 }
-

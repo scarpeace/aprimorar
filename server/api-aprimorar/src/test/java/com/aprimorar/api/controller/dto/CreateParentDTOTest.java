@@ -99,17 +99,23 @@ class CreateParentDTOTest {
     }
 
     @Test
-    @DisplayName("Should have 0 violations for both valid contact formats (5-digit and 4-digit)")
-    void validContactFormats() {
-        CreateParentDTO dto5Digits = new CreateParentDTO(
+    @DisplayName("Should have 0 violations when contact format is valid")
+    void validContactFormat() {
+        CreateParentDTO dto = new CreateParentDTO(
                 "Parent Name", "parent@email.com", "(11)99999-9999", "123.456.789-01"
         );
-        assertTrue(validator.validate(dto5Digits).isEmpty());
+        assertTrue(validator.validate(dto).isEmpty());
+    }
 
-        CreateParentDTO dto4Digits = new CreateParentDTO(
+    @Test
+    @DisplayName("Should have 1 violation when contact format has 4-digit middle")
+    void invalidContactWithFourDigits() {
+        CreateParentDTO dto = new CreateParentDTO(
                 "Parent Name", "parent@email.com", "(11)9999-9999", "123.456.789-01"
         );
-        assertTrue(validator.validate(dto4Digits).isEmpty());
+        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
+        assertFalse(violations.isEmpty());
+        assertTrue(messages(violations).contains("Contact must be in format (XX)XXXXX-XXXX"));
     }
 
     // ─── cpf ──────────────────────────────────────────────────────────────────
@@ -146,4 +152,3 @@ class CreateParentDTOTest {
         assertTrue(violations.isEmpty());
     }
 }
-

@@ -22,6 +22,6 @@ public record CreateAddressDTO(
         String state,
 
         @NotBlank(message = "Address zip code can't be blank")
-        String zipCode
+        String zip
 ) {
 }

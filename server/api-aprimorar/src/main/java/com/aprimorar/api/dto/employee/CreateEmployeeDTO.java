@@ -2,6 +2,7 @@ package com.aprimorar.api.dto.employee;
 
 import com.aprimorar.api.enums.Role;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 
 import java.time.LocalDate;
 
@@ -11,6 +12,7 @@ public record CreateEmployeeDTO (
         String name,
 
         @NotNull(message = "Employee birthdate can't be null")
+        @Past(message = "Employee birthdate should be in the past")
         LocalDate birthdate,
 
         @NotNull(message = "Employee pix can't be null")

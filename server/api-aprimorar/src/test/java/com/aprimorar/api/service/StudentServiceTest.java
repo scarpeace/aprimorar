@@ -48,7 +48,7 @@ class StudentServiceTest {
         student = new Student();
         student.setId(UUID.randomUUID());
         student.setName("John Doe");
-        student.setContact("123456789");
+        student.setContact("61999234523");
         student.setEmail("john.doe@email.com");
         student.setBirthdate(LocalDate.of(2000, 1, 1));
         student.setCpf("12345678901");
@@ -67,7 +67,7 @@ class StudentServiceTest {
                 LocalDate.of(2000, 1, 1),
                 "123.456.789-01",
                 "School",
-                "123456789",
+                "(61)99923-4523",
                 "john.doe@email.com",
                 Activity.ENEM,
                 null,

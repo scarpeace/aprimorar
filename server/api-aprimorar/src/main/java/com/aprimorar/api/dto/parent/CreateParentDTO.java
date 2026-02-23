@@ -13,7 +13,7 @@ public record CreateParentDTO(
         String email,
 
         @NotNull(message = "Parent contact can't be null")
-        @Pattern(regexp = "^\\(\\d{2}\\)\\d{4,5}-\\d{4}$", message = "Contact must be in format (XX)XXXXX-XXXX")
+        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contact must be in format (XX)XXXXX-XXXX")
         String contact,
 
         @NotNull(message = "Parent cpf can't be null")
