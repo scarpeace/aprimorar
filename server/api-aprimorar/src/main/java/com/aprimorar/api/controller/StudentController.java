@@ -1,7 +1,7 @@
 package com.aprimorar.api.controller;
 
-import com.aprimorar.api.controller.dto.StudentResponseDto;
-import com.aprimorar.api.controller.dto.CreateStudentDto;
+import com.aprimorar.api.dto.student.CreateStudentDTO;
+import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,33 +29,33 @@ public class StudentController {
 
     @Operation(summary = "List all STUDENTS", description = "Retrieves all students from database with pagination")
     @GetMapping()
-    public ResponseEntity<Page<StudentResponseDto>> listStudents(
+    public ResponseEntity<Page<StudentResponseDTO>> listStudents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "name") String sortBy
     ){
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<StudentResponseDto> allStudents = studentService.listStudents(pageable);
+        Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable);
         return ResponseEntity.ok(allStudents);
     }
 
     @Operation(summary = "List all active STUDENTS", description = "Retrieves all ACTIVE students from database with pagination")
     @GetMapping("/active")
-    public ResponseEntity<Page<StudentResponseDto>> listActiveStudents(
+    public ResponseEntity<Page<StudentResponseDTO>> listActiveStudents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "name") String sortBy
     ){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<StudentResponseDto> allActiveStudents = studentService.listActiveStudents(pageable);
+        Page<StudentResponseDTO> allActiveStudents = studentService.listActiveStudents(pageable);
         return ResponseEntity.ok(allActiveStudents);
 
     }
 
     @Operation(summary = "List single STUDENT", description = "Retrieves single student based on ID")
     @GetMapping("/{studentId}")
-    public ResponseEntity<StudentResponseDto> getStudentById(@PathVariable UUID studentId){
+    public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId){
         var foundStudent = studentService.findById(studentId);
 
        return ResponseEntity.ok(foundStudent);
@@ -63,8 +63,8 @@ public class StudentController {
 
     @Operation(summary = "Create STUDENT", description = "Creates student with student, address and parent data")
     @PostMapping()
-    public ResponseEntity<StudentResponseDto> createStudent(@RequestBody @Valid CreateStudentDto createStudentDto){
-        StudentResponseDto response = studentService.createStudent(createStudentDto);
+    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid CreateStudentDTO createStudentDto){
+        StudentResponseDTO response = studentService.createStudent(createStudentDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -79,11 +79,11 @@ public class StudentController {
 
     @Operation(summary = "Update STUDENT", description = "Updates student with full student data")
     @PatchMapping("/{studentId}")
-    public ResponseEntity<StudentResponseDto> updateStudent(
+    public ResponseEntity<StudentResponseDTO> updateStudent(
             @PathVariable UUID studentId ,
-            @RequestBody @Valid CreateStudentDto createStudentDto){
+            @RequestBody @Valid CreateStudentDTO createStudentDto){
 
-        StudentResponseDto updatedStudent = studentService.updateStudent(studentId, createStudentDto);
+        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, createStudentDto);
 
         return ResponseEntity.ok(updatedStudent);
     }
