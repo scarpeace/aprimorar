@@ -1,4 +1,4 @@
-package com.aprimorar.api.controller.dto;
+package com.aprimorar.api.dto.event;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMin;
@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record CreateEventDto(
+public record CreateEventDTO(
         @NotNull(message = "Event start date/time can't be null")
         @FutureOrPresent(message = "Event start must be in the future")
         LocalDateTime startDateTime,

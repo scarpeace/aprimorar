@@ -1,37 +1,39 @@
 package com.aprimorar.api.mapper;
 
-import com.aprimorar.api.dto.student.CreateStudentDTO;
-import com.aprimorar.api.dto.student.StudentResponseDTO;
-import com.aprimorar.api.entity.Student;
+import com.aprimorar.api.dto.employee.CreateEmployeeDTO;
+import com.aprimorar.api.dto.employee.EmployeeResponseDTO;
+import com.aprimorar.api.entity.Employee;
 import org.mapstruct.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @Mapper(
         componentModel = "spring",
-        uses = {ParentMapper.class, AddressMapper.class},
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         builder = @Builder(disableBuilder = true)
 )
+public interface EmployeeMapper {
 
-public interface StudentMapper {
-
-    //Entity -> DTO
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "birthdate", qualifiedByName = "formatBirthdate")
     @Mapping(target = "cpf", qualifiedByName = "sanitizeCpf")
-    @Mapping(target = "email", qualifiedByName = "sanitizeEmail")
     @Mapping(target = "contact", qualifiedByName = "sanitizeContact")
-    Student toEntity(CreateStudentDTO dto);
+    Employee toEntity(CreateEmployeeDTO dto);
 
-    //DTO - Entity
+    @Mapping(target = "birthdate", qualifiedByName = "parseBirthdate")
+    @Mapping(target = "cpf", qualifiedByName = "formatCpf")
     @Mapping(target = "contact", qualifiedByName = "formatContact")
-    StudentResponseDTO toDto(Student entity);
+    EmployeeResponseDTO toDto(Employee entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "birthdate", qualifiedByName = "formatBirthdate")
+    @Mapping(target = "cpf", qualifiedByName = "sanitizeCpf")
     @Mapping(target = "contact", qualifiedByName = "sanitizeContact")
-    void updateFromDto(CreateStudentDTO dto, @MappingTarget Student entity);
-
+    void updateFromDto(CreateEmployeeDTO dto, @MappingTarget Employee entity);
 
     // ========================================
     // SANITIZATION METHODS
@@ -56,18 +58,6 @@ public interface StudentMapper {
     }
 
     /**
-     * Sanitize email: trim and lowercase
-     */
-    @Named("sanitizeEmail")
-    default String sanitizeEmail(String email) {
-        if (email == null || email.isBlank()) {
-            return null;
-        }
-
-        return email.trim().toLowerCase();
-    }
-
-    /**
      * Sanitize contact: remove formatting, keep only digits
      */
     @Named("sanitizeContact")
@@ -88,6 +78,34 @@ public interface StudentMapper {
     // ========================================
     // TRANSFORMATION METHODS
     // ========================================
+
+    /**
+     * Format birthdate for persistence: dd/MM/yyyy
+     */
+    @Named("formatBirthdate")
+    default String formatBirthdate(LocalDate birthdate) {
+        if (birthdate == null) {
+            return null;
+        }
+
+        return birthdate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
+    /**
+     * Parse birthdate for response: dd/MM/yyyy
+     */
+    @Named("parseBirthdate")
+    default LocalDate parseBirthdate(String birthdate) {
+        if (birthdate == null || birthdate.isBlank()) {
+            return null;
+        }
+
+        try {
+            return LocalDate.parse(birthdate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } catch (DateTimeParseException ex) {
+            throw new IllegalArgumentException("Birthdate must be in format dd/MM/yyyy", ex);
+        }
+    }
 
     /**
      * Format CPF for display: 123.456.789-00
@@ -125,4 +143,5 @@ public interface StudentMapper {
                 contact.substring(7, 11)
         );
     }
+
 }

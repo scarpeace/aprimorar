@@ -3,12 +3,27 @@ package com.aprimorar.api.entity;
 
 import com.aprimorar.api.enums.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Instant;
 import java.util.UUID;
 
-
 @Entity
-@Table(name = "tb_employee")
+@Table(name = "tb_employee", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_employee_name", columnNames = {"name"}),
+        @UniqueConstraint(name = "uk_employee_contact", columnNames = {"contact"}),
+        @UniqueConstraint(name = "uk_employee_email", columnNames = {"email"}),
+        @UniqueConstraint(name = "uk_employee_cpf", columnNames = {"cpf"})
+})
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Employee {
 
     @Id
@@ -16,90 +31,25 @@ public class Employee {
     @Column(name = "employee_id")
     private UUID id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "birthdate")
     private String birthdate;
 
-    @Column(name = "pix")
     private String pix;
 
-    @Column(name = "contact")
     private String contact;
 
-    @Column(name = "cpf")
     private String cpf;
 
-    @Column(name = "role")
+    private String email;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
 
-    public Employee() {
-    }
+    @CreationTimestamp
+    private Instant createdAt;
 
-    public Employee(UUID id, String name, String birthdate, String pix, String contact, String cpf, Role role) {
-        this.id = id;
-        this.name = name;
-        this.birthdate = birthdate;
-        this.pix = pix;
-        this.contact = contact;
-        this.cpf = cpf;
-        this.role = role;
-    }
+    @UpdateTimestamp
+    private Instant updatedAt;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getBirthdate() {
-        return birthdate;
-    }
-
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
-    }
-
-    public String getPix() {
-        return pix;
-    }
-
-    public void setPix(String pix) {
-        this.pix = pix;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }

@@ -1,7 +1,7 @@
 package com.aprimorar.api.controller;
 
-import com.aprimorar.api.controller.dto.CreateEventDto;
-import com.aprimorar.api.controller.dto.EventResponseDto;
+import com.aprimorar.api.dto.event.CreateEventDTO;
+import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,36 +27,36 @@ public class EventController {
 
     @Operation(summary = "List all EVENTS", description = "Retrieves all events from database with pagination")
     @GetMapping
-    public ResponseEntity<Page<EventResponseDto>> listEvents(
+    public ResponseEntity<Page<EventResponseDTO>> listEvents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "startDateTime") String sortBy
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<EventResponseDto> allEvents = eventService.listEvents(pageable);
+        Page<EventResponseDTO> allEvents = eventService.listEvents(pageable);
         return ResponseEntity.ok(allEvents);
     }
 
     @Operation(summary = "List single EVENT", description = "Retrieves single event based on ID")
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventResponseDto> getEventById(@PathVariable Long eventId) {
+    public ResponseEntity<EventResponseDTO> getEventById(@PathVariable Long eventId) {
         var foundEvent = eventService.findById(eventId);
         return ResponseEntity.ok(foundEvent);
     }
 
     @Operation(summary = "Create EVENT", description = "Creates event with date, price, payment, student and employee data")
     @PostMapping
-    public ResponseEntity<EventResponseDto> createEvent(@RequestBody @Valid CreateEventDto createEventDto) {
-        EventResponseDto response = eventService.createEvent(createEventDto);
+    public ResponseEntity<EventResponseDTO> createEvent(@RequestBody @Valid CreateEventDTO createEventDto) {
+        EventResponseDTO response = eventService.createEvent(createEventDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "Update EVENT", description = "Updates event with full event data")
     @PatchMapping("/{eventId}")
-    public ResponseEntity<EventResponseDto> updateEvent(
+    public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable Long eventId,
-            @RequestBody @Valid CreateEventDto createEventDto) {
-        EventResponseDto updatedEvent = eventService.updateEvent(eventId, createEventDto);
+            @RequestBody @Valid CreateEventDTO createEventDto) {
+        EventResponseDTO updatedEvent = eventService.updateEvent(eventId, createEventDto);
         return ResponseEntity.ok(updatedEvent);
     }
 

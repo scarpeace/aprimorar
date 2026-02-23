@@ -1,7 +1,7 @@
 package com.aprimorar.api.service;
 
-import com.aprimorar.api.controller.dto.CreateStudentDto;
-import com.aprimorar.api.controller.dto.StudentResponseDto;
+import com.aprimorar.api.dto.student.CreateStudentDTO;
+import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
@@ -40,15 +40,15 @@ class StudentServiceTest {
     private StudentService studentService;
 
     private Student student;
-    private CreateStudentDto createStudentDto;
-    private StudentResponseDto studentResponseDto;
+    private CreateStudentDTO createStudentDto;
+    private StudentResponseDTO studentResponseDto;
 
     @BeforeEach
     void setUp() {
         student = new Student();
         student.setId(UUID.randomUUID());
         student.setName("John Doe");
-        student.setContact("123456789");
+        student.setContact("61999234523");
         student.setEmail("john.doe@email.com");
         student.setBirthdate(LocalDate.of(2000, 1, 1));
         student.setCpf("12345678901");
@@ -62,19 +62,19 @@ class StudentServiceTest {
 
         // CreateStudentDto is a record (final) so mocking it is brittle and not needed.
         // Service only logs dto.name(), and mapper consumes the dto.
-        createStudentDto = new CreateStudentDto(
+        createStudentDto = new CreateStudentDTO(
                 "John Doe",
                 LocalDate.of(2000, 1, 1),
                 "123.456.789-01",
                 "School",
-                "123456789",
+                "(61)99923-4523",
                 "john.doe@email.com",
                 Activity.ENEM,
                 null,
                 null
         );
 
-        studentResponseDto = mock(StudentResponseDto.class);
+        studentResponseDto = mock(StudentResponseDTO.class);
     }
 
     @Test
@@ -86,7 +86,7 @@ class StudentServiceTest {
         when(studentRepo.findAll(pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDto> result = studentService.listStudents(pageable);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable);
 
         assertEquals(1, result.getTotalElements());
         assertEquals(1, result.getContent().size());
@@ -105,7 +105,7 @@ class StudentServiceTest {
         Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
         when(studentRepo.findAll(pageable)).thenReturn(students);
 
-        Page<StudentResponseDto> result = studentService.listStudents(pageable);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable);
 
         assertEquals(0, result.getTotalElements());
         assertTrue(result.getContent().isEmpty());
@@ -124,7 +124,7 @@ class StudentServiceTest {
         when(studentRepo.findAllByActiveTrue(pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDto> result = studentService.listActiveStudents(pageable);
+        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable);
 
         assertEquals(1, result.getTotalElements());
         assertEquals(1, result.getContent().size());
@@ -136,12 +136,30 @@ class StudentServiceTest {
     }
 
     @Test
+    @DisplayName("Should return empty page when there are no active students in database")
+    void testEmptyActiveStudentList() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
+        when(studentRepo.findAllByActiveTrue(pageable)).thenReturn(students);
+
+        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable);
+
+        assertEquals(0, result.getTotalElements());
+        assertTrue(result.getContent().isEmpty());
+
+        verify(studentRepo).findAllByActiveTrue(pageable);
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
+    }
+
+    @Test
     @DisplayName("Should get student when success")
     void testFindByIdFound() {
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        StudentResponseDto result = studentService.findById(student.getId());
+        StudentResponseDTO result = studentService.findById(student.getId());
 
         assertSame(studentResponseDto, result);
         verify(studentRepo).findById(student.getId());
@@ -169,7 +187,7 @@ class StudentServiceTest {
         when(studentRepo.save(student)).thenReturn(student);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        StudentResponseDto result = studentService.createStudent(createStudentDto);
+        StudentResponseDTO result = studentService.createStudent(createStudentDto);
 
         assertSame(studentResponseDto, result);
         verify(studentMapper).toEntity(createStudentDto);
@@ -236,7 +254,7 @@ class StudentServiceTest {
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        StudentResponseDto result = studentService.updateStudent(student.getId(), createStudentDto);
+        StudentResponseDTO result = studentService.updateStudent(student.getId(), createStudentDto);
 
         assertSame(studentResponseDto, result);
         verify(studentRepo).findById(student.getId());

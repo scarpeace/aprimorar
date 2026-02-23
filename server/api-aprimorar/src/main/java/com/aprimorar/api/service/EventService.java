@@ -1,7 +1,7 @@
 package com.aprimorar.api.service;
 
-import com.aprimorar.api.controller.dto.CreateEventDto;
-import com.aprimorar.api.controller.dto.EventResponseDto;
+import com.aprimorar.api.dto.event.CreateEventDTO;
+import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.entity.Event;
 import com.aprimorar.api.entity.Student;
@@ -39,18 +39,18 @@ public class EventService {
         this.eventMapper = eventMapper;
     }
 
-    public Page<EventResponseDto> listEvents(Pageable pageable) {
+    public Page<EventResponseDTO> listEvents(Pageable pageable) {
         Page<Event> eventPage = eventRepo.findAll(pageable);
         return eventPage.map(eventMapper::toDto);
     }
 
-    public EventResponseDto findById(Long eventId) {
+    public EventResponseDTO findById(Long eventId) {
         Event foundEvent = eventRepo.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
         return eventMapper.toDto(foundEvent);
     }
 
-    public EventResponseDto createEvent(CreateEventDto createEventDto) {
+    public EventResponseDTO createEvent(CreateEventDTO createEventDto) {
         log.info("Creating event for student: {} with employee: {}",
                 createEventDto.studentId(), createEventDto.employeeId());
 
@@ -69,7 +69,7 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponseDto updateEvent(Long eventId, CreateEventDto createEventDto) {
+    public EventResponseDTO updateEvent(Long eventId, CreateEventDTO createEventDto) {
         Event foundEvent = eventRepo.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
 

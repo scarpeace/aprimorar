@@ -1,5 +1,7 @@
-package com.aprimorar.api.controller.dto;
+package com.aprimorar.api.dto.student;
 
+import com.aprimorar.api.dto.address.CreateAddressDTO;
+import com.aprimorar.api.dto.parent.CreateParentDTO;
 import com.aprimorar.api.enums.Activity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -12,7 +14,7 @@ import java.time.LocalDate;
 
 //TODO Adicionar validação da idade mínima do aluno.
 
-public record CreateStudentDto(
+public record CreateStudentDTO(
         @NotNull(message = "Student name can't be null")
         String name,
 
@@ -28,6 +30,7 @@ public record CreateStudentDto(
         String school,
 
         @NotBlank(message = "Student contact number can't be blank")
+        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contact must be in format (XX)XXXXX-XXXX")
         String contact,
 
         @NotBlank(message = "Student email can't be blank")
@@ -39,10 +42,10 @@ public record CreateStudentDto(
 
         @NotNull(message = "Student Address can't be null")
         @Valid
-        CreateAddressDto address,
+        CreateAddressDTO address,
 
         @NotNull(message = "Student Parent can't be null")
         @Valid
-        CreateParentDto parent
+        CreateParentDTO parent
 ) {
 }
