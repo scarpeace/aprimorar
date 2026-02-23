@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record EventResponseDto(
+public record EventResponseDTO(
         Long id,
         LocalDateTime startDateTime,
         LocalDateTime endDateTime,

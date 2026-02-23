@@ -1,8 +1,8 @@
 package com.aprimorar.api.mapper;
 
 
-import com.aprimorar.api.controller.dto.CreateParentDto;
-import com.aprimorar.api.controller.dto.ParentResponseDto;
+import com.aprimorar.api.dto.parent.CreateParentDTO;
+import com.aprimorar.api.dto.parent.ParentResponseDTO;
 import com.aprimorar.api.entity.Parent;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -12,11 +12,11 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring")
 public interface ParentMapper {
 
-    Parent toEntity(CreateParentDto dto);
+    Parent toEntity(CreateParentDTO dto);
 
-    ParentResponseDto toDto(Parent entity);
+    ParentResponseDTO toDto(Parent entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateFromDto(CreateParentDto dto, @MappingTarget Parent entity);
+    void updateFromDto(CreateParentDTO dto, @MappingTarget Parent entity);
 
 }

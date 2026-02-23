@@ -1,7 +1,7 @@
 package com.aprimorar.api.mapper;
 
-import com.aprimorar.api.controller.dto.StudentResponseDto;
-import com.aprimorar.api.controller.dto.CreateStudentDto;
+import com.aprimorar.api.dto.student.CreateStudentDTO;
+import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.entity.Student;
 import org.mapstruct.*;
 
@@ -16,11 +16,11 @@ import org.mapstruct.*;
 public interface StudentMapper {
 
     //Entity -> DTO
-    Student toEntity(CreateStudentDto dto);
+    Student toEntity(CreateStudentDTO dto);
 
     //DTO - Entity
-    StudentResponseDto toDto(Student entity);
+    StudentResponseDTO toDto(Student entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateFromDto(CreateStudentDto dto, @MappingTarget Student entity);
+    void updateFromDto(CreateStudentDTO dto, @MappingTarget Student entity);
 }

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record CreateParentDto(
+public record CreateParentDTO(
         @NotNull(message = "Parent name can't be null")
         String name,
 

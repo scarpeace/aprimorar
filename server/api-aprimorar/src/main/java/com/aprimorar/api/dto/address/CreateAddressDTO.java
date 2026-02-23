@@ -2,7 +2,7 @@ package com.aprimorar.api.dto.address;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record CreateAddressDto(
+public record CreateAddressDTO(
 
         @NotBlank(message = "Address street can't be blank")
         String street,

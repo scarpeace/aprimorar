@@ -1,14 +1,14 @@
 package com.aprimorar.api.dto.student;
 
 import com.aprimorar.api.dto.address.AddressResponseDTO;
-import com.aprimorar.api.dto.parent.ParentResponseDto;
+import com.aprimorar.api.dto.parent.ParentResponseDTO;
 import com.aprimorar.api.enums.Activity;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record StudentResponseDto(
+public record StudentResponseDTO(
         UUID id,
         String name,
         String contact,
@@ -19,7 +19,7 @@ public record StudentResponseDto(
         Activity activity,
         Boolean active,
         AddressResponseDTO address,
-        ParentResponseDto parent,
+        ParentResponseDTO parent,
         Instant createdAt,
         Instant updatedAt
 ) {
