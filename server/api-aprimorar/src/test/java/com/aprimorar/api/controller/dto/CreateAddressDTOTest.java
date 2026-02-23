@@ -1,5 +1,6 @@
 package com.aprimorar.api.controller.dto;
 
+import com.aprimorar.api.dto.address.CreateAddressDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CreateAddressDtoTest {
+class CreateAddressDTOTest {
 
     private static Validator validator;
 
@@ -21,7 +22,7 @@ class CreateAddressDtoTest {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
-    private Set<String> messages(Set<ConstraintViolation<CreateAddressDto>> violations) {
+    private Set<String> messages(Set<ConstraintViolation<CreateAddressDTO>> violations) {
         return violations.stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toSet());
@@ -30,10 +31,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have no violations when all fields are valid")
     void validDto() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "Downtown", "Cityville", "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
     }
 
@@ -42,10 +43,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when street is null")
     void nullStreet() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 null, "123", null, "Downtown", "Cityville", "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address street can't be blank"));
     }
@@ -53,10 +54,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when street is blank")
     void blankStreet() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "", "123", null, "Downtown", "Cityville", "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address street can't be blank"));
     }
@@ -66,10 +67,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when number is null")
     void nullNumber() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", null, null, "Downtown", "Cityville", "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address number can't be blank"));
     }
@@ -77,10 +78,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when number is blank")
     void blankNumber() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "", null, "Downtown", "Cityville", "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address number can't be blank"));
     }
@@ -90,10 +91,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when district is null")
     void nullDistrict() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, null, "Cityville", "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address district can't be blank"));
     }
@@ -101,10 +102,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when district is blank")
     void blankDistrict() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "", "Cityville", "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address district can't be blank"));
     }
@@ -114,10 +115,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when city is null")
     void nullCity() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "Downtown", null, "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address city can't be blank"));
     }
@@ -125,10 +126,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when city is blank")
     void blankCity() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "Downtown", "", "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address city can't be blank"));
     }
@@ -138,10 +139,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when state is null")
     void nullState() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "Downtown", "Cityville", null, "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address state can't be blank"));
     }
@@ -149,10 +150,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when state is blank")
     void blankState() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "Downtown", "Cityville", "", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address state can't be blank"));
     }
@@ -162,10 +163,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when zipCode is null")
     void nullZipCode() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "Downtown", "Cityville", "SP", null
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address zip code can't be blank"));
     }
@@ -173,10 +174,10 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 1 violation when zipCode is blank")
     void blankZipCode() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "Downtown", "Cityville", "SP", ""
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
         assertTrue(messages(violations).contains("Address zip code can't be blank"));
     }
@@ -186,20 +187,20 @@ class CreateAddressDtoTest {
     @Test
     @DisplayName("Should have 0 violations when complement is null (complement is optional)")
     void nullComplementAllowed() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", null, "Downtown", "Cityville", "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
     }
 
     @Test
     @DisplayName("Should have 0 violations when complement is blank (complement is optional)")
     void blankComplementAllowed() {
-        CreateAddressDto dto = new CreateAddressDto(
+        CreateAddressDTO dto = new CreateAddressDTO(
                 "Main Street", "123", "", "Downtown", "Cityville", "SP", "12345-678"
         );
-        Set<ConstraintViolation<CreateAddressDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
     }
 }

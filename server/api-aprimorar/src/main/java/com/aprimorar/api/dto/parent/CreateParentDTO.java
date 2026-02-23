@@ -1,4 +1,4 @@
-package com.aprimorar.api.controller.dto;
+package com.aprimorar.api.dto.parent;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

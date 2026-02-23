@@ -1,4 +1,4 @@
-package com.aprimorar.api.controller.dto;
+package com.aprimorar.api.dto.parent;
 
 public record ParentResponseDto(
         String name,

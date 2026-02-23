@@ -1,5 +1,7 @@
-package com.aprimorar.api.controller.dto;
+package com.aprimorar.api.dto.student;
 
+import com.aprimorar.api.dto.address.CreateAddressDTO;
+import com.aprimorar.api.dto.parent.CreateParentDto;
 import com.aprimorar.api.enums.Activity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -40,7 +42,7 @@ public record CreateStudentDto(
 
         @NotNull(message = "Student Address can't be null")
         @Valid
-        CreateAddressDto address,
+        CreateAddressDTO address,
 
         @NotNull(message = "Student Parent can't be null")
         @Valid

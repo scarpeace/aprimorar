@@ -1,4 +1,4 @@
-package com.aprimorar.api.controller.dto;
+package com.aprimorar.api.dto.event;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMin;

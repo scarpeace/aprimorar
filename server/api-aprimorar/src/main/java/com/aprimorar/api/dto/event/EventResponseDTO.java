@@ -1,4 +1,4 @@
-package com.aprimorar.api.controller.dto;
+package com.aprimorar.api.dto.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -1,5 +1,6 @@
 package com.aprimorar.api.controller.dto;
 
+import com.aprimorar.api.dto.parent.CreateParentDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CreateParentDtoTest {
+class CreateParentDTOTest {
 
     private static Validator validator;
 
@@ -21,7 +22,7 @@ class CreateParentDtoTest {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
-    private Set<String> messages(Set<ConstraintViolation<CreateParentDto>> violations) {
+    private Set<String> messages(Set<ConstraintViolation<CreateParentDTO>> violations) {
         return violations.stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toSet());
@@ -30,10 +31,10 @@ class CreateParentDtoTest {
     @Test
     @DisplayName("Should have no violations when all fields are valid")
     void validDto() {
-        CreateParentDto dto = new CreateParentDto(
+        CreateParentDTO dto = new CreateParentDTO(
                 "Parent Name", "parent@email.com", "(11)99999-9999", "123.456.789-01"
         );
-        Set<ConstraintViolation<CreateParentDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
     }
 
@@ -42,10 +43,10 @@ class CreateParentDtoTest {
     @Test
     @DisplayName("Should have 1 violation when name is null")
     void nullName() {
-        CreateParentDto dto = new CreateParentDto(
+        CreateParentDTO dto = new CreateParentDTO(
                 null, "parent@email.com", "(11)99999-9999", "123.456.789-01"
         );
-        Set<ConstraintViolation<CreateParentDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Parent name can't be null"));
     }
@@ -55,10 +56,10 @@ class CreateParentDtoTest {
     @Test
     @DisplayName("Should have 1 violation when email is null")
     void nullEmail() {
-        CreateParentDto dto = new CreateParentDto(
+        CreateParentDTO dto = new CreateParentDTO(
                 "Parent Name", null, "(11)99999-9999", "123.456.789-01"
         );
-        Set<ConstraintViolation<CreateParentDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Parent email can't be null"));
     }
@@ -66,10 +67,10 @@ class CreateParentDtoTest {
     @Test
     @DisplayName("Should have 1 violation when email format is invalid")
     void invalidEmail() {
-        CreateParentDto dto = new CreateParentDto(
+        CreateParentDTO dto = new CreateParentDTO(
                 "Parent Name", "not-an-email", "(11)99999-9999", "123.456.789-01"
         );
-        Set<ConstraintViolation<CreateParentDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
     }
 
@@ -78,10 +79,10 @@ class CreateParentDtoTest {
     @Test
     @DisplayName("Should have 1 violation when contact is null")
     void nullContact() {
-        CreateParentDto dto = new CreateParentDto(
+        CreateParentDTO dto = new CreateParentDTO(
                 "Parent Name", "parent@email.com", null, "123.456.789-01"
         );
-        Set<ConstraintViolation<CreateParentDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Parent contact can't be null"));
     }
@@ -89,10 +90,10 @@ class CreateParentDtoTest {
     @Test
     @DisplayName("Should have 1 violation when contact format is invalid")
     void invalidContact() {
-        CreateParentDto dto = new CreateParentDto(
+        CreateParentDTO dto = new CreateParentDTO(
                 "Parent Name", "parent@email.com", "123", "123.456.789-01"
         );
-        Set<ConstraintViolation<CreateParentDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Contact must be in format (XX)XXXXX-XXXX"));
     }
@@ -100,12 +101,12 @@ class CreateParentDtoTest {
     @Test
     @DisplayName("Should have 0 violations for both valid contact formats (5-digit and 4-digit)")
     void validContactFormats() {
-        CreateParentDto dto5Digits = new CreateParentDto(
+        CreateParentDTO dto5Digits = new CreateParentDTO(
                 "Parent Name", "parent@email.com", "(11)99999-9999", "123.456.789-01"
         );
         assertTrue(validator.validate(dto5Digits).isEmpty());
 
-        CreateParentDto dto4Digits = new CreateParentDto(
+        CreateParentDTO dto4Digits = new CreateParentDTO(
                 "Parent Name", "parent@email.com", "(11)9999-9999", "123.456.789-01"
         );
         assertTrue(validator.validate(dto4Digits).isEmpty());
@@ -116,10 +117,10 @@ class CreateParentDtoTest {
     @Test
     @DisplayName("Should have 1 violation when cpf is null")
     void nullCpf() {
-        CreateParentDto dto = new CreateParentDto(
+        CreateParentDTO dto = new CreateParentDTO(
                 "Parent Name", "parent@email.com", "(11)99999-9999", null
         );
-        Set<ConstraintViolation<CreateParentDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Parent cpf can't be null"));
     }
@@ -127,10 +128,10 @@ class CreateParentDtoTest {
     @Test
     @DisplayName("Should have 1 violation when cpf format is invalid")
     void invalidCpf() {
-        CreateParentDto dto = new CreateParentDto(
+        CreateParentDTO dto = new CreateParentDTO(
                 "Parent Name", "parent@email.com", "(11)99999-9999", "12345"
         );
-        Set<ConstraintViolation<CreateParentDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("CPF must be in format XXX.XXX.XXX-XX"));
     }
@@ -138,10 +139,10 @@ class CreateParentDtoTest {
     @Test
     @DisplayName("Should have 0 violations when cpf format is valid")
     void validCpfFormat() {
-        CreateParentDto dto = new CreateParentDto(
+        CreateParentDTO dto = new CreateParentDTO(
                 "Parent Name", "parent@email.com", "(11)99999-9999", "123.456.789-01"
         );
-        Set<ConstraintViolation<CreateParentDto>> violations = validator.validate(dto);
+        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
     }
 }

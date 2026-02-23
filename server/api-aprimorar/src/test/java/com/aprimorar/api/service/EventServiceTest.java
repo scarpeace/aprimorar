@@ -1,7 +1,7 @@
 package com.aprimorar.api.service;
 
-import com.aprimorar.api.controller.dto.CreateEventDto;
-import com.aprimorar.api.controller.dto.EventResponseDto;
+import com.aprimorar.api.dto.event.CreateEventDTO;
+import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.entity.Event;
 import com.aprimorar.api.entity.Student;
@@ -58,13 +58,13 @@ class EventServiceTest {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("startDateTime"));
 
         Event event = new Event();
-        EventResponseDto responseDto = mock(EventResponseDto.class);
+        EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
         Page<Event> eventPage = new PageImpl<>(List.of(event), pageable, 1);
         when(eventRepo.findAll(pageable)).thenReturn(eventPage);
         when(eventMapper.toDto(event)).thenReturn(responseDto);
 
-        Page<EventResponseDto> result = eventService.listEvents(pageable);
+        Page<EventResponseDTO> result = eventService.listEvents(pageable);
 
         assertEquals(1, result.getTotalElements());
         assertEquals(1, result.getContent().size());
@@ -83,7 +83,7 @@ class EventServiceTest {
         Page<Event> eventPage = new PageImpl<>(List.of(), pageable, 0);
         when(eventRepo.findAll(pageable)).thenReturn(eventPage);
 
-        Page<EventResponseDto> result = eventService.listEvents(pageable);
+        Page<EventResponseDTO> result = eventService.listEvents(pageable);
 
         assertEquals(0, result.getTotalElements());
         assertTrue(result.getContent().isEmpty());
@@ -100,12 +100,12 @@ class EventServiceTest {
     void testFindByIdFound() {
         Long eventId = 1L;
         Event event = new Event();
-        EventResponseDto responseDto = mock(EventResponseDto.class);
+        EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
         when(eventRepo.findById(eventId)).thenReturn(Optional.of(event));
         when(eventMapper.toDto(event)).thenReturn(responseDto);
 
-        EventResponseDto result = eventService.findById(eventId);
+        EventResponseDTO result = eventService.findById(eventId);
 
         assertSame(responseDto, result);
 
@@ -135,7 +135,7 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
 
-        CreateEventDto dto = new CreateEventDto(
+        CreateEventDTO dto = new CreateEventDTO(
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, employeeId
@@ -145,7 +145,7 @@ class EventServiceTest {
         Employee employee = new Employee();
         Event newEvent = new Event();
         Event savedEvent = new Event();
-        EventResponseDto responseDto = mock(EventResponseDto.class);
+        EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
         when(studentRepo.findById(studentId)).thenReturn(Optional.of(student));
         when(employeeRepo.findById(employeeId)).thenReturn(Optional.of(employee));
@@ -153,7 +153,7 @@ class EventServiceTest {
         when(eventRepo.save(newEvent)).thenReturn(savedEvent);
         when(eventMapper.toDto(savedEvent)).thenReturn(responseDto);
 
-        EventResponseDto result = eventService.createEvent(dto);
+        EventResponseDTO result = eventService.createEvent(dto);
 
         assertSame(responseDto, result);
         assertSame(student, newEvent.getStudent());
@@ -172,7 +172,7 @@ class EventServiceTest {
     void testCreateEventStudentNotFound() {
         UUID studentId = UUID.randomUUID();
 
-        CreateEventDto dto = new CreateEventDto(
+        CreateEventDTO dto = new CreateEventDTO(
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, UUID.randomUUID()
@@ -193,7 +193,7 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
 
-        CreateEventDto dto = new CreateEventDto(
+        CreateEventDTO dto = new CreateEventDTO(
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, employeeId
@@ -220,7 +220,7 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
 
-        CreateEventDto dto = new CreateEventDto(
+        CreateEventDTO dto = new CreateEventDTO(
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, employeeId
@@ -236,12 +236,12 @@ class EventServiceTest {
         foundEvent.setStudent(student);
         foundEvent.setEmployee(employee);
 
-        EventResponseDto responseDto = mock(EventResponseDto.class);
+        EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
         when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
         when(eventMapper.toDto(foundEvent)).thenReturn(responseDto);
 
-        EventResponseDto result = eventService.updateEvent(eventId, dto);
+        EventResponseDTO result = eventService.updateEvent(eventId, dto);
 
         assertSame(responseDto, result);
 
@@ -259,7 +259,7 @@ class EventServiceTest {
         UUID newStudentId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
 
-        CreateEventDto dto = new CreateEventDto(
+        CreateEventDTO dto = new CreateEventDTO(
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 newStudentId, employeeId
@@ -278,13 +278,13 @@ class EventServiceTest {
         foundEvent.setStudent(oldStudent);
         foundEvent.setEmployee(employee);
 
-        EventResponseDto responseDto = mock(EventResponseDto.class);
+        EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
         when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
         when(studentRepo.findById(newStudentId)).thenReturn(Optional.of(newStudent));
         when(eventMapper.toDto(foundEvent)).thenReturn(responseDto);
 
-        EventResponseDto result = eventService.updateEvent(eventId, dto);
+        EventResponseDTO result = eventService.updateEvent(eventId, dto);
 
         assertSame(responseDto, result);
         assertSame(newStudent, foundEvent.getStudent());
@@ -304,7 +304,7 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
         UUID newEmployeeId = UUID.randomUUID();
 
-        CreateEventDto dto = new CreateEventDto(
+        CreateEventDTO dto = new CreateEventDTO(
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, newEmployeeId
@@ -323,13 +323,13 @@ class EventServiceTest {
         foundEvent.setStudent(student);
         foundEvent.setEmployee(oldEmployee);
 
-        EventResponseDto responseDto = mock(EventResponseDto.class);
+        EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
         when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
         when(employeeRepo.findById(newEmployeeId)).thenReturn(Optional.of(newEmployee));
         when(eventMapper.toDto(foundEvent)).thenReturn(responseDto);
 
-        EventResponseDto result = eventService.updateEvent(eventId, dto);
+        EventResponseDTO result = eventService.updateEvent(eventId, dto);
 
         assertSame(responseDto, result);
         assertSame(newEmployee, foundEvent.getEmployee());
@@ -346,7 +346,7 @@ class EventServiceTest {
     @DisplayName("Should throw EventNotFoundException when event is not found during update")
     void testUpdateEvent_eventNotFound() {
         Long eventId = 99L;
-        CreateEventDto dto = new CreateEventDto(
+        CreateEventDTO dto = new CreateEventDTO(
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 UUID.randomUUID(), UUID.randomUUID()
@@ -368,7 +368,7 @@ class EventServiceTest {
         UUID newStudentId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
 
-        CreateEventDto dto = new CreateEventDto(
+        CreateEventDTO dto = new CreateEventDTO(
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 newStudentId, employeeId
@@ -403,7 +403,7 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
         UUID newEmployeeId = UUID.randomUUID();
 
-        CreateEventDto dto = new CreateEventDto(
+        CreateEventDTO dto = new CreateEventDTO(
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, newEmployeeId
