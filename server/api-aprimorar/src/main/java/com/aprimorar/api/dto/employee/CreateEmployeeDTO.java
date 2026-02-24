@@ -1,6 +1,7 @@
 package com.aprimorar.api.dto.employee;
 
 import com.aprimorar.api.enums.Role;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 

@@ -66,13 +66,6 @@ public class MapperUtils {
                 contact.substring(7, 11));
     }
 
-    /** Converts LocalDate to stored string format: dd/MM/yyyy */
-    @Named("formatBirthdate")
-    public String formatBirthdate(LocalDate birthdate) {
-        if (birthdate == null) return null;
-        return birthdate.format(DATE_FORMAT);
-    }
-
     /** Parses stored birthdate string back to LocalDate */
     @Named("parseBirthdate")
     public LocalDate parseBirthdate(String birthdate) {
