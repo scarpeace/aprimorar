@@ -60,8 +60,6 @@ class StudentServiceTest {
         student.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
         student.setUpdatedAt(Instant.parse("2025-01-01T00:00:00Z"));
 
-        // CreateStudentDto is a record (final) so mocking it is brittle and not needed.
-        // Service only logs dto.name(), and mapper consumes the dto.
         createStudentDto = new CreateStudentDto(
                 "John Doe",
                 LocalDate.of(2000, 1, 1),
