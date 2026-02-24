@@ -1,3 +1,6 @@
 spring:
   application:
     name: "aprimorar-api"
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
