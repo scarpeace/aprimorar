@@ -4,12 +4,12 @@ package com.aprimorar.api.mapper;
 import com.aprimorar.api.dto.address.CreateAddressDTO;
 import com.aprimorar.api.dto.address.AddressResponseDTO;
 import com.aprimorar.api.entity.Address;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
 public interface AddressMapper {
 
     Address toEntity(CreateAddressDTO dto);
@@ -18,5 +18,4 @@ public interface AddressMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateFromDto(CreateAddressDTO dto, @MappingTarget Address entity);
-
 }

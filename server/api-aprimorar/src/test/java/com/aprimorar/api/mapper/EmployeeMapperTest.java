@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.test.util.ReflectionTestUtils;
+import com.aprimorar.api.util.MapperUtils;
 
 import java.time.LocalDate;
 
@@ -20,6 +22,7 @@ class EmployeeMapperTest {
     @BeforeEach
     void setup() {
         mapper = Mappers.getMapper(EmployeeMapper.class);
+        ReflectionTestUtils.setField(mapper, "mapperUtils", new MapperUtils());
     }
 
     @Test
