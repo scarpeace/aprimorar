@@ -5,11 +5,13 @@ import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,10 +29,11 @@ public class EmployeeController {
     }
 
     @Operation(summary = "List all employees", description = "Retrieves all employees from database with pagination")
+    @Transactional(readOnly = true)
     @GetMapping
     public ResponseEntity<Page<EmployeeResponseDTO>> listEmployees(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "20") @Max(100) int size,
             @RequestParam(defaultValue = "name") String sortBy
     )
     {
