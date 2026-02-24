@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.test.util.ReflectionTestUtils;
+import com.aprimorar.api.util.MapperUtils;
 
 import java.time.LocalDate;
 
@@ -20,6 +22,7 @@ class EmployeeMapperTest {
     @BeforeEach
     void setup() {
         mapper = Mappers.getMapper(EmployeeMapper.class);
+        ReflectionTestUtils.setField(mapper, "mapperUtils", new MapperUtils());
     }
 
     @Test
@@ -46,7 +49,7 @@ class EmployeeMapperTest {
     void toDto_shouldParseBirthdateAndFormatFields() {
         Employee entity = new Employee();
         entity.setName("Employee Name");
-        entity.setBirthdate("03/02/1990");
+        entity.setBirthdate(LocalDate.of(1990,3, 2));
         entity.setPix("pix-key");
         entity.setContact("61999234523");
         entity.setCpf("12345678901");
@@ -62,7 +65,7 @@ class EmployeeMapperTest {
     @DisplayName("Should throw when birthdate format is invalid")
     void toDto_shouldThrowWhenBirthdateFormatIsInvalid() {
         Employee entity = new Employee();
-        entity.setBirthdate("1990-02-03");
+        entity.setBirthdate(LocalDate.parse("2002/11/03"));
         entity.setContact("61999234523");
         entity.setCpf("12345678901");
 

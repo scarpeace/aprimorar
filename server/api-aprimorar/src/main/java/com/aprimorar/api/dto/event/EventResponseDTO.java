@@ -1,6 +1,7 @@
 package com.aprimorar.api.dto.event;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ public record EventResponseDTO(
         UUID studentId,
         String studentName,
         UUID employeeId,
-        String employeeName
+        String employeeName,
+        Instant createdAt
 ) {
 }

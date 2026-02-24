@@ -6,13 +6,17 @@ import com.aprimorar.api.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+//TODO N+1 problem in queries
 
 @RestController
 @RequestMapping("/v1/events")
@@ -26,10 +30,11 @@ public class EventController {
     }
 
     @Operation(summary = "List all EVENTS", description = "Retrieves all events from database with pagination")
+    @Transactional(readOnly = true)
     @GetMapping
     public ResponseEntity<Page<EventResponseDTO>> listEvents(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "20") @Max(100) int size,
             @RequestParam(defaultValue = "startDateTime") String sortBy
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
@@ -38,6 +43,7 @@ public class EventController {
     }
 
     @Operation(summary = "List single EVENT", description = "Retrieves single event based on ID")
+    @Transactional(readOnly = true)
     @GetMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> getEventById(@PathVariable Long eventId) {
         var foundEvent = eventService.findById(eventId);

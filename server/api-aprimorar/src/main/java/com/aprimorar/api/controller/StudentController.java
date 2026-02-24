@@ -6,12 +6,14 @@ import com.aprimorar.api.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -28,10 +30,11 @@ public class StudentController {
     }
 
     @Operation(summary = "List all STUDENTS", description = "Retrieves all students from database with pagination")
+    @Transactional(readOnly = true)
     @GetMapping()
     public ResponseEntity<Page<StudentResponseDTO>> listStudents(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "20") @Max(100) int size,
             @RequestParam(defaultValue = "name") String sortBy
     ){
 
@@ -41,6 +44,7 @@ public class StudentController {
     }
 
     @Operation(summary = "List all active STUDENTS", description = "Retrieves all ACTIVE students from database with pagination")
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     public ResponseEntity<Page<StudentResponseDTO>> listActiveStudents(
             @RequestParam(defaultValue = "0") int page,
@@ -54,6 +58,7 @@ public class StudentController {
     }
 
     @Operation(summary = "List single STUDENT", description = "Retrieves single student based on ID")
+    @Transactional(readOnly = true)
     @GetMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId){
         var foundStudent = studentService.findById(studentId);

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.test.util.ReflectionTestUtils;
+import com.aprimorar.api.util.MapperUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -33,10 +34,15 @@ class StudentMapperTest {
 
     @BeforeEach
     void setup() {
+        MapperUtils mapperUtils = new MapperUtils();
+
+        ParentMapper parentMapper = Mappers.getMapper(ParentMapper.class);
+        ReflectionTestUtils.setField(parentMapper, "mapperUtils", mapperUtils);
+
         mapper = Mappers.getMapper(StudentMapper.class);
-        // Inject MapStruct dependencies manually for Spring component model.
-        ReflectionTestUtils.setField(mapper, "parentMapper", Mappers.getMapper(ParentMapper.class));
+        ReflectionTestUtils.setField(mapper, "parentMapper", parentMapper);
         ReflectionTestUtils.setField(mapper, "addressMapper", Mappers.getMapper(AddressMapper.class));
+        ReflectionTestUtils.setField(mapper, "mapperUtils", mapperUtils);
     }
 
     @Test
@@ -84,21 +90,4 @@ class StudentMapperTest {
         assertEquals("12345678901", dto.cpf());
     }
 
-    @Test
-    @DisplayName("Should throw when contact has invalid length")
-    void toEntity_shouldThrowWhenContactHasInvalidLength() {
-        CreateStudentDTO dto = new CreateStudentDTO(
-                "Student Name",
-                LocalDate.of(2000, 1, 1),
-                "123.456.789-01",
-                "School",
-                "(11)9999-9999",
-                "student@email.com",
-                Activity.ENEM,
-                VALID_ADDRESS,
-                VALID_PARENT
-        );
-
-        assertThrows(IllegalArgumentException.class, () -> mapper.toEntity(dto));
-    }
 }

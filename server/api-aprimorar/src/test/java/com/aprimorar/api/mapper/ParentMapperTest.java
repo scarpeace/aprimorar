@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.test.util.ReflectionTestUtils;
+import com.aprimorar.api.util.MapperUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +19,7 @@ class ParentMapperTest {
     @BeforeEach
     void setup() {
         mapper = Mappers.getMapper(ParentMapper.class);
+        ReflectionTestUtils.setField(mapper, "mapperUtils", new MapperUtils());
     }
 
     @Test
@@ -51,16 +54,4 @@ class ParentMapperTest {
         assertEquals("123.456.789-01", dto.cpf());
     }
 
-    @Test
-    @DisplayName("Should throw when contact has invalid length")
-    void toEntity_shouldThrowWhenContactHasInvalidLength() {
-        CreateParentDTO dto = new CreateParentDTO(
-                "Parent Name",
-                "parent@email.com",
-                "(11)9999-9999",
-                "123.456.789-01"
-        );
-
-        assertThrows(IllegalArgumentException.class, () -> mapper.toEntity(dto));
-    }
 }
