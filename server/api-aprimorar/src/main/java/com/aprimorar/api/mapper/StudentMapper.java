@@ -29,6 +29,8 @@ public interface StudentMapper {
     StudentResponseDTO toDto(Student entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "cpf", qualifiedByName = "sanitizeCpf")
+    @Mapping(target = "email", qualifiedByName = "sanitizeEmail")
     @Mapping(target = "contact", qualifiedByName = "sanitizeContact")
     void updateFromDto(CreateStudentDTO dto, @MappingTarget Student entity);
 
