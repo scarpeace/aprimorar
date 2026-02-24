@@ -60,6 +60,8 @@ CREATE TABLE IF NOT EXISTS tb_events (
     payment NUMERIC(19,2),
     student_id UUID,
     employee_id UUID,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ,
     CONSTRAINT fk_event_student FOREIGN KEY (student_id) REFERENCES tb_student(student_id),
     CONSTRAINT fk_event_employee FOREIGN KEY (employee_id) REFERENCES tb_employee(employee_id)
 );

@@ -102,11 +102,14 @@ VALUES
      NOW())
 ON CONFLICT (employee_id) DO NOTHING;
 
-INSERT INTO tb_events (start_date_time, end_date_time, price, payment, student_id, employee_id)
+INSERT INTO tb_events (start_date_time, end_date_time, price, payment, student_id, employee_id, created_at, updated_at)
 VALUES
     ('2026-12-11 12:30:00',
      '2026-12-11 13:30:00',
      250.75,
      200.00,
      'b12c3d4e-5f67-4890-9abc-def012345678',
-     'a1b2c3d4-e5f6-7890-abcd-ef1234567890');
+     'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+     NOW(),
+     NOW()
+     );

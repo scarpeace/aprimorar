@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 //TODO Adicionar o title, description e o googleCalendarEventId aqui
@@ -38,4 +41,10 @@ public class Event {
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
     private Employee employee;
+
+    @CreationTimestamp
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    private Instant updatedAt;
 }
