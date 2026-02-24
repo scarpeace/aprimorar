@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS tb_student (
 CREATE TABLE IF NOT EXISTS tb_employee (
     employee_id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    birthdate VARCHAR(255),
+    birthdate DATE,
     pix VARCHAR(255),
     contact VARCHAR(255),
     email VARCHAR(255),

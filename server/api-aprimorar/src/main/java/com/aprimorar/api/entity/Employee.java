@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -33,7 +34,7 @@ public class Employee {
 
     private String name;
 
-    private String birthdate;
+    private LocalDate birthdate;
 
     private String pix;
 

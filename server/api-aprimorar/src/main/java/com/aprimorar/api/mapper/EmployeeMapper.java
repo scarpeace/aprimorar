@@ -17,7 +17,6 @@ public interface EmployeeMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "birthdate", qualifiedByName = "formatBirthdate")
     @Mapping(target = "cpf", qualifiedByName = "sanitizeCpf")
     @Mapping(target = "contact", qualifiedByName = "sanitizeContact")
     Employee toEntity(CreateEmployeeDTO dto);

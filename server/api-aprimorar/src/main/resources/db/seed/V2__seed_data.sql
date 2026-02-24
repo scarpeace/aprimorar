@@ -92,7 +92,7 @@ INSERT INTO tb_employee (employee_id, name, birthdate, contact, pix, cpf, email,
 VALUES
     ('a1b2c3d4-e5f6-7890-abcd-ef1234567890',
      'Marcelo Carvalho',
-     '22-03-1992',
+     DATE '1992-03-22',
      '(61) 99963-5543',
      '023.205.102-23',
      '02320510223',
