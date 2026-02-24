@@ -9,6 +9,8 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+//TODO Adicionar o title, description e o googleCalendarEventId aqui
+
 @Entity
 @Table(name = "tb_events")
 @Getter

@@ -1,8 +1,8 @@
-package com.aprimorar.api.controller.dto;
+package com.aprimorar.api.dto.address;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record CreateAddressDto(
+public record CreateAddressDTO(
 
         @NotBlank(message = "Address street can't be blank")
         String street,
@@ -22,6 +22,6 @@ public record CreateAddressDto(
         String state,
 
         @NotBlank(message = "Address zip code can't be blank")
-        String zipCode
+        String zip
 ) {
 }

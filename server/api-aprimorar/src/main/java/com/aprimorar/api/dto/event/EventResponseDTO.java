@@ -1,10 +1,10 @@
-package com.aprimorar.api.controller.dto;
+package com.aprimorar.api.dto.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record EventResponseDto(
+public record EventResponseDTO(
         Long id,
         LocalDateTime startDateTime,
         LocalDateTime endDateTime,

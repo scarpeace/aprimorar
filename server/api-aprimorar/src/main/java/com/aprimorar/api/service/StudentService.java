@@ -1,7 +1,7 @@
 package com.aprimorar.api.service;
 
-import com.aprimorar.api.controller.dto.StudentResponseDto;
-import com.aprimorar.api.controller.dto.CreateStudentDto;
+import com.aprimorar.api.dto.student.CreateStudentDTO;
+import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
 import com.aprimorar.api.mapper.StudentMapper;
@@ -29,23 +29,23 @@ public class StudentService {
         this.studentMapper = studentMapper;
     }
 
-    public Page<StudentResponseDto> listStudents(Pageable pageable){
+    public Page<StudentResponseDTO> listStudents(Pageable pageable){
         Page<Student> studentPage = studentRepo.findAll(pageable);
         return studentPage.map(studentMapper::toDto);
     }
 
-    public Page<StudentResponseDto> listActiveStudents(Pageable pageable){
+    public Page<StudentResponseDTO> listActiveStudents(Pageable pageable){
         Page<Student> activeStudentsPage = studentRepo.findAllByActiveTrue(pageable);
         return activeStudentsPage.map(studentMapper::toDto);
     }
 
-    public StudentResponseDto findById(UUID studentId) {
+    public StudentResponseDTO findById(UUID studentId) {
          Student foundStudent = studentRepo.findById(studentId)
                  .orElseThrow(()-> new StudentNotFoundException(studentId));
          return studentMapper.toDto(foundStudent);
     }
 
-    public StudentResponseDto createStudent(CreateStudentDto createStudentDto) {
+    public StudentResponseDTO createStudent(CreateStudentDTO createStudentDto) {
         log.info("Creating student with name: {}", createStudentDto.name());
         Student newStudent = studentMapper.toEntity(createStudentDto);
         Student savedStudent = studentRepo.save(newStudent);
@@ -64,7 +64,7 @@ public class StudentService {
     }
 
     @Transactional
-    public StudentResponseDto updateStudent(UUID studentId, CreateStudentDto createStudentDto) {
+    public StudentResponseDTO updateStudent(UUID studentId, CreateStudentDTO createStudentDto) {
         Student foundStudent = studentRepo.findById(studentId)
                 .orElseThrow(()-> new StudentNotFoundException(studentId));
 

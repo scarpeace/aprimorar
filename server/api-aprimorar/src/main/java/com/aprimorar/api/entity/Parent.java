@@ -38,11 +38,9 @@ public class Parent {
     private String cpf;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private Instant creationTimestamp;
+    private Instant createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
     private Instant updatedAt;
 
 }
