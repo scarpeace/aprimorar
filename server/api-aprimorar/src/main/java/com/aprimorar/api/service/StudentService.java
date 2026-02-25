@@ -29,19 +29,16 @@ public class StudentService {
         this.studentMapper = studentMapper;
     }
 
-    @Transactional(readOnly = true)
     public Page<StudentResponseDTO> listStudents(Pageable pageable){
         Page<Student> studentPage = studentRepo.findAll(pageable);
         return studentPage.map(studentMapper::toDto);
     }
 
-    @Transactional(readOnly = true)
     public Page<StudentResponseDTO> listActiveStudents(Pageable pageable){
         Page<Student> activeStudentsPage = studentRepo.findAllByActiveTrue(pageable);
         return activeStudentsPage.map(studentMapper::toDto);
     }
 
-    @Transactional(readOnly = true)
     public StudentResponseDTO findById(UUID studentId) {
          Student foundStudent = studentRepo.findById(studentId)
                  .orElseThrow(()-> new StudentNotFoundException(studentId));
