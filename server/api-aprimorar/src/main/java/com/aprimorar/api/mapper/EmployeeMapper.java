@@ -26,7 +26,6 @@ public interface EmployeeMapper {
     EmployeeResponseDTO toDto(Employee entity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "birthdate", qualifiedByName = "parseBirthdate")
     @Mapping(target = "cpf", qualifiedByName = "sanitizeCpf")
     @Mapping(target = "contact", qualifiedByName = "sanitizeContact")
     void updateFromDto(CreateEmployeeDTO dto, @MappingTarget Employee entity);

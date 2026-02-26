@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS tb_employee (
     email VARCHAR(255),
     cpf VARCHAR(255),
     role VARCHAR(255),
+    active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
