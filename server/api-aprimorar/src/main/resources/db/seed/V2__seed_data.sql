@@ -102,9 +102,11 @@ VALUES
      NOW())
 ON CONFLICT (employee_id) DO NOTHING;
 
-INSERT INTO tb_events (start_date_time, end_date_time, price, payment, student_id, employee_id, created_at, updated_at)
+INSERT INTO tb_events (title, description, start_date_time, end_date_time, price, payment, student_id, employee_id, created_at, updated_at)
 VALUES
-    ('2026-12-11 12:30:00',
+    ('First Event of the Month',
+     'This is the first event that has been seeded',
+     '2026-12-11 12:30:00',
      '2026-12-11 13:30:00',
      250.75,
      200.00,

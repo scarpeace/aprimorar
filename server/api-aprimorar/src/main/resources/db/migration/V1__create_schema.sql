@@ -55,6 +55,8 @@ CREATE TABLE IF NOT EXISTS tb_employee (
 
 CREATE TABLE IF NOT EXISTS tb_events (
     id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255),
+    description TEXT,
     start_date_time TIMESTAMP,
     end_date_time TIMESTAMP,
     price NUMERIC(19,2),

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
-//TODO Adicionar o title, description e o googleCalendarEventId aqui
+//TODO Adicionar o googleCalendarEventId aqui
 
 @Entity
 @Table(name = "tb_events")
@@ -25,6 +25,10 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String title;
+
+    private String description;
 
     private LocalDateTime startDateTime;
 
