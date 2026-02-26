@@ -1,13 +1,17 @@
 package com.aprimorar.api.service;
 
+import com.aprimorar.api.dto.parent.CreateParentDTO;
 import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.enums.Activity;
+import com.aprimorar.api.exception.domain.ParentNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
+import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
+import com.aprimorar.api.repository.ParentRepository;
 import com.aprimorar.api.repository.StudentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +29,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,13 +39,23 @@ class StudentServiceTest {
     private StudentRepository studentRepo;
 
     @Mock
+    private ParentRepository parentRepo;
+
+    @Mock
     private StudentMapper studentMapper;
+
+    @Mock
+    private ParentMapper parentMapper;
 
     @InjectMocks
     private StudentService studentService;
 
     private Student student;
-    private CreateStudentDTO createStudentDto;
+    private Parent parent;
+    private CreateStudentDTO createStudentDtoWithNewParent;
+    private CreateStudentDTO createStudentDtoWithParentId;
+    private CreateStudentDTO createStudentDtoWithoutParent;
+    private CreateParentDTO createParentDto;
     private StudentResponseDTO studentResponseDto;
 
     @BeforeEach
@@ -54,13 +69,27 @@ class StudentServiceTest {
         student.setCpf("12345678901");
         student.setSchool("School");
         student.setActivity(Activity.ENEM);
-        student.setParent(new Parent());
         student.setAddress(new Address());
         student.setActive(true);
         student.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
         student.setUpdatedAt(Instant.parse("2025-01-01T00:00:00Z"));
 
-        createStudentDto = new CreateStudentDTO(
+        parent = new Parent();
+        parent.setId(UUID.randomUUID());
+        parent.setName("Jane Doe");
+        parent.setEmail("jane.doe@email.com");
+        parent.setContact("(61)99999-9999");
+        parent.setCpf("12345678900");
+        parent.setActive(true);
+
+        createParentDto = new CreateParentDTO(
+                "Jane Doe",
+                "jane.doe@email.com",
+                "(61)99999-9999",
+                "12345678900"
+        );
+
+        createStudentDtoWithNewParent = new CreateStudentDTO(
                 "John Doe",
                 LocalDate.of(2000, 1, 1),
                 "123.456.789-01",
@@ -68,6 +97,34 @@ class StudentServiceTest {
                 "(61)99923-4523",
                 "john.doe@email.com",
                 Activity.ENEM,
+                null,
+                null,
+                createParentDto
+        );
+
+        UUID parentId = parent.getId();
+        createStudentDtoWithParentId = new CreateStudentDTO(
+                "John Doe",
+                LocalDate.of(2000, 1, 1),
+                "123.456.789-01",
+                "School",
+                "(61)99923-4523",
+                "john.doe@email.com",
+                Activity.ENEM,
+                null,
+                parentId,
+                null
+        );
+
+        createStudentDtoWithoutParent = new CreateStudentDTO(
+                "John Doe",
+                LocalDate.of(2000, 1, 1),
+                "123.456.789-01",
+                "School",
+                "(61)99923-4523",
+                "john.doe@email.com",
+                Activity.ENEM,
+                null,
                 null,
                 null
         );
@@ -179,19 +236,83 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should create student when success")
-    void testCreateStudent() {
-        when(studentMapper.toEntity(createStudentDto)).thenReturn(student);
+    @DisplayName("Should create student with new parent when success")
+    void testCreateStudentWithNewParent() {
+        when(studentMapper.toEntity(createStudentDtoWithNewParent)).thenReturn(student);
+        when(parentMapper.toEntity(createParentDto)).thenReturn(parent);
+        when(parentRepo.save(parent)).thenReturn(parent);
         when(studentRepo.save(student)).thenReturn(student);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        StudentResponseDTO result = studentService.createStudent(createStudentDto);
+        StudentResponseDTO result = studentService.createStudent(createStudentDtoWithNewParent);
 
         assertSame(studentResponseDto, result);
-        verify(studentMapper).toEntity(createStudentDto);
+        assertNotNull(student.getParent());
+        verify(studentMapper).toEntity(createStudentDtoWithNewParent);
+        verify(parentMapper).toEntity(createParentDto);
+        verify(parentRepo).save(parent);
         verify(studentRepo).save(student);
         verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should create student with existing parent when parentId is provided")
+    void testCreateStudentWithExistingParent() {
+        when(studentMapper.toEntity(createStudentDtoWithParentId)).thenReturn(student);
+        when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
+        when(studentRepo.save(student)).thenReturn(student);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        StudentResponseDTO result = studentService.createStudent(createStudentDtoWithParentId);
+
+        assertSame(studentResponseDto, result);
+        assertNotNull(student.getParent());
+        verify(studentMapper).toEntity(createStudentDtoWithParentId);
+        verify(parentRepo).findByIdAndActiveTrue(parent.getId());
+        verify(studentRepo).save(student);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when creating student without parent")
+    void testCreateStudentWithoutParent() {
+        when(studentMapper.toEntity(createStudentDtoWithoutParent)).thenReturn(student);
+
+        assertThrows(IllegalArgumentException.class, () -> 
+                studentService.createStudent(createStudentDtoWithoutParent));
+
+        verify(studentMapper).toEntity(createStudentDtoWithoutParent);
+        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should throw ParentNotFoundException when parentId does not exist")
+    void testCreateStudentParentNotFound() {
+        UUID nonExistentParentId = UUID.randomUUID();
+        CreateStudentDTO dtoWithNonExistentParent = new CreateStudentDTO(
+                "John Doe",
+                LocalDate.of(2000, 1, 1),
+                "123.456.789-01",
+                "School",
+                "(61)99923-4523",
+                "john.doe@email.com",
+                Activity.ENEM,
+                null,
+                nonExistentParentId,
+                null
+        );
+
+        when(studentMapper.toEntity(dtoWithNonExistentParent)).thenReturn(student);
+        when(parentRepo.findByIdAndActiveTrue(nonExistentParentId)).thenReturn(Optional.empty());
+
+        assertThrows(ParentNotFoundException.class, () -> 
+                studentService.createStudent(dtoWithNonExistentParent));
+
+        verify(studentMapper).toEntity(dtoWithNonExistentParent);
+        verify(parentRepo).findByIdAndActiveTrue(nonExistentParentId);
+        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
     }
 
     @Test
@@ -245,20 +366,48 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should update student when success")
-    void testUpdateStudent() {
+    @DisplayName("Should update student with new parent when success")
+    void testUpdateStudentWithNewParent() {
         Instant before = student.getUpdatedAt();
 
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+        when(parentMapper.toEntity(createParentDto)).thenReturn(parent);
+        when(parentRepo.save(parent)).thenReturn(parent);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        StudentResponseDTO result = studentService.updateStudent(student.getId(), createStudentDto);
+        StudentResponseDTO result = studentService.updateStudent(student.getId(), createStudentDtoWithNewParent);
 
         assertSame(studentResponseDto, result);
+        assertNotNull(student.getParent());
         verify(studentRepo).findById(student.getId());
-        verify(studentMapper).updateFromDto(createStudentDto, student);
+        verify(studentMapper).updateFromDto(createStudentDtoWithNewParent, student);
+        verify(parentMapper).toEntity(createParentDto);
+        verify(parentRepo).save(parent);
         verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+
+        assertNotNull(student.getUpdatedAt());
+        assertNotEquals(before, student.getUpdatedAt());
+    }
+
+    @Test
+    @DisplayName("Should update student with existing parent when parentId is provided")
+    void testUpdateStudentWithExistingParent() {
+        Instant before = student.getUpdatedAt();
+
+        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+        when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        StudentResponseDTO result = studentService.updateStudent(student.getId(), createStudentDtoWithParentId);
+
+        assertSame(studentResponseDto, result);
+        assertNotNull(student.getParent());
+        verify(studentRepo).findById(student.getId());
+        verify(studentMapper).updateFromDto(createStudentDtoWithParentId, student);
+        verify(parentRepo).findByIdAndActiveTrue(parent.getId());
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
 
         assertNotNull(student.getUpdatedAt());
         assertNotEquals(before, student.getUpdatedAt());
@@ -270,7 +419,7 @@ class StudentServiceTest {
         UUID id = UUID.randomUUID();
         when(studentRepo.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(StudentNotFoundException.class, () -> studentService.updateStudent(id, createStudentDto));
+        assertThrows(StudentNotFoundException.class, () -> studentService.updateStudent(id, createStudentDtoWithNewParent));
 
         verify(studentRepo).findById(id);
         verifyNoMoreInteractions(studentRepo);

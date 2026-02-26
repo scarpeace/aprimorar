@@ -57,6 +57,7 @@ class StudentMapperTest {
                 "  STUDENT@EMAIL.COM ",
                 Activity.ENEM,
                 VALID_ADDRESS,
+                null,
                 VALID_PARENT
         );
 
