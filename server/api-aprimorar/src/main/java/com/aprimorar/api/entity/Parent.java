@@ -37,6 +37,8 @@ public class Parent {
 
     private String cpf;
 
+    private Boolean active = true;
+
     @CreationTimestamp
     private Instant createdAt;
 

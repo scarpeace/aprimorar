@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 //TODO Adicionar validação da idade mínima do aluno.
 
@@ -44,7 +45,8 @@ public record CreateStudentDTO(
         @Valid
         CreateAddressDTO address,
 
-        @NotNull(message = "Student Parent can't be null")
+        UUID parentId,
+
         @Valid
         CreateParentDTO parent
 ) {
