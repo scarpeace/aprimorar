@@ -21,12 +21,14 @@ public interface EventMapper {
     @Mapping(target = "student", ignore = true)
     @Mapping(target = "employee", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     Event toEntity(CreateEventDTO dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "student", ignore = true)
     @Mapping(target = "employee", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     void updateFromDto(CreateEventDTO dto, @MappingTarget Event entity);
 }
 

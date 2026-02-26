@@ -3,13 +3,22 @@ package com.aprimorar.api.dto.event;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record CreateEventDTO(
+        @NotBlank(message = "Event title can't be blank")
+        @Size(max = 100, message = "Title must be at most 100 characters")
+        String title,
+
+        @Size(max = 500, message = "Description must be at most 500 characters")
+        String description,
+
         @NotNull(message = "Event start date/time can't be null")
         @FutureOrPresent(message = "Event start must be in the future")
         LocalDateTime startDateTime,

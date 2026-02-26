@@ -40,6 +40,8 @@ class CreateEventDTOTest {
 
     private CreateEventDTO validDto() {
         return new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 VALID_PRICE, VALID_PAYMENT,
                 UUID.randomUUID(), UUID.randomUUID()
@@ -59,6 +61,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when startDateTime is null")
     void nullStartDateTime() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 null, VALID_END,
                 VALID_PRICE, VALID_PAYMENT,
                 UUID.randomUUID(), UUID.randomUUID()
@@ -72,6 +76,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when startDateTime is in the past")
     void pastStartDateTime() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 PAST_DT, VALID_END,
                 VALID_PRICE, VALID_PAYMENT,
                 UUID.randomUUID(), UUID.randomUUID()
@@ -87,6 +93,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when endDateTime is null")
     void nullEndDateTime() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, null,
                 VALID_PRICE, VALID_PAYMENT,
                 UUID.randomUUID(), UUID.randomUUID()
@@ -100,6 +108,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when endDateTime is in the past")
     void pastEndDateTime() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, LocalDateTime.of(2020, 1, 1, 11, 0),
                 VALID_PRICE, VALID_PAYMENT,
                 UUID.randomUUID(), UUID.randomUUID()
@@ -115,6 +125,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when price is null")
     void nullPrice() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 null, VALID_PAYMENT,
                 UUID.randomUUID(), UUID.randomUUID()
@@ -128,6 +140,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when price is negative")
     void negativePrice() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("-1.00"), VALID_PAYMENT,
                 UUID.randomUUID(), UUID.randomUUID()
@@ -142,6 +156,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when payment is null")
     void nullPayment() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 VALID_PRICE, null,
                 UUID.randomUUID(), UUID.randomUUID()
@@ -155,6 +171,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when payment is negative")
     void negativePayment() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 VALID_PRICE, new BigDecimal("-1.00"),
                 UUID.randomUUID(), UUID.randomUUID()
@@ -169,6 +187,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when studentId is null")
     void nullStudentId() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 VALID_PRICE, VALID_PAYMENT,
                 null, UUID.randomUUID()
@@ -184,6 +204,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when employeeId is null")
     void nullEmployeeId() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 VALID_PRICE, VALID_PAYMENT,
                 UUID.randomUUID(), null
@@ -199,6 +221,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when payment exceeds price")
     void paymentExceedsPrice() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("50.00"), new BigDecimal("100.00"),
                 UUID.randomUUID(), UUID.randomUUID()
@@ -212,6 +236,8 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when end date/time is before start date/time")
     void endBeforeStart() {
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 LocalDateTime.of(2027, 6, 1, 12, 0),
                 LocalDateTime.of(2027, 6, 1, 10, 0),
                 VALID_PRICE, VALID_PAYMENT,
@@ -227,6 +253,8 @@ class CreateEventDTOTest {
     void endEqualsStart() {
         LocalDateTime sameTime = LocalDateTime.of(2027, 6, 1, 10, 0);
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 sameTime, sameTime,
                 VALID_PRICE, VALID_PAYMENT,
                 UUID.randomUUID(), UUID.randomUUID()

@@ -47,6 +47,8 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private Boolean active = true;
+
     @CreationTimestamp
     private Instant createdAt;
 

@@ -1,0 +1,26 @@
+package com.aprimorar.api.service;
+
+import com.aprimorar.api.dto.parent.ParentSummaryDTO;
+import com.aprimorar.api.entity.Parent;
+import com.aprimorar.api.mapper.ParentMapper;
+import com.aprimorar.api.repository.ParentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ParentService {
+
+    private final ParentRepository parentRepo;
+    private final ParentMapper parentMapper;
+
+    public ParentService(ParentRepository parentRepo, ParentMapper parentMapper) {
+        this.parentRepo = parentRepo;
+        this.parentMapper = parentMapper;
+    }
+
+    public Page<ParentSummaryDTO> listActiveParents(Pageable pageable) {
+        Page<Parent> activeParentsPage = parentRepo.findAllByActiveTrue(pageable);
+        return activeParentsPage.map(parentMapper::toSummaryDto);
+    }
+}

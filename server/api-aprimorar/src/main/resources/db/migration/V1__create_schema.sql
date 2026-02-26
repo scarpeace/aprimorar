@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS tb_parent (
     email VARCHAR(255) NOT NULL,
     contact VARCHAR(255) NOT NULL,
     cpf VARCHAR(255) NOT NULL,
+    active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ,
     CONSTRAINT uk_parent_name UNIQUE (name),
@@ -48,12 +49,15 @@ CREATE TABLE IF NOT EXISTS tb_employee (
     email VARCHAR(255),
     cpf VARCHAR(255),
     role VARCHAR(255),
+    active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 );
 
 CREATE TABLE IF NOT EXISTS tb_events (
     id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255),
+    description TEXT,
     start_date_time TIMESTAMP,
     end_date_time TIMESTAMP,
     price NUMERIC(19,2),

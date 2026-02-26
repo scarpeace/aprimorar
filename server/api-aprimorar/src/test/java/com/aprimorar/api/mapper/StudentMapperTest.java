@@ -57,6 +57,7 @@ class StudentMapperTest {
                 "  STUDENT@EMAIL.COM ",
                 Activity.ENEM,
                 VALID_ADDRESS,
+                null,
                 VALID_PARENT
         );
 
@@ -87,7 +88,7 @@ class StudentMapperTest {
         StudentResponseDTO dto = mapper.toDto(entity);
 
         assertEquals("(61)99923-4523", dto.contact());
-        assertEquals("12345678901", dto.cpf());
+        assertEquals("123.456.789-01", dto.cpf());
     }
 
 }

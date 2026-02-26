@@ -7,6 +7,8 @@ import java.util.UUID;
 
 public record EventResponseDTO(
         Long id,
+        String title,
+        String description,
         LocalDateTime startDateTime,
         LocalDateTime endDateTime,
         BigDecimal price,
@@ -15,6 +17,7 @@ public record EventResponseDTO(
         String studentName,
         UUID employeeId,
         String employeeName,
-        Instant createdAt
+        Instant createdAt,
+        Instant updatedAt
 ) {
 }

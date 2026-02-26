@@ -34,12 +34,13 @@ class EmployeeMapperTest {
                 "pix-key",
                 "(61)99923-4523",
                 "123.456.789-01",
+                "email@email.com",
                 Role.ADMIN
         );
 
         Employee entity = mapper.toEntity(dto);
 
-        assertEquals("03/02/1990", entity.getBirthdate());
+        assertEquals(LocalDate.of(1990,02,03), entity.getBirthdate());
         assertEquals("61999234523", entity.getContact());
         assertEquals("12345678901", entity.getCpf());
     }
@@ -49,7 +50,7 @@ class EmployeeMapperTest {
     void toDto_shouldParseBirthdateAndFormatFields() {
         Employee entity = new Employee();
         entity.setName("Employee Name");
-        entity.setBirthdate(LocalDate.of(1990,3, 2));
+        entity.setBirthdate(LocalDate.of(1990,2, 3));
         entity.setPix("pix-key");
         entity.setContact("61999234523");
         entity.setCpf("12345678901");
@@ -61,14 +62,4 @@ class EmployeeMapperTest {
         assertEquals("123.456.789-01", dto.cpf());
     }
 
-    @Test
-    @DisplayName("Should throw when birthdate format is invalid")
-    void toDto_shouldThrowWhenBirthdateFormatIsInvalid() {
-        Employee entity = new Employee();
-        entity.setBirthdate(LocalDate.parse("2002/11/03"));
-        entity.setContact("61999234523");
-        entity.setCpf("12345678901");
-
-        assertThrows(IllegalArgumentException.class, () -> mapper.toDto(entity));
-    }
 }
