@@ -136,6 +136,8 @@ class EventServiceTest {
         UUID employeeId = UUID.randomUUID();
 
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, employeeId
@@ -173,6 +175,8 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
 
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, UUID.randomUUID()
@@ -194,6 +198,8 @@ class EventServiceTest {
         UUID employeeId = UUID.randomUUID();
 
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, employeeId
@@ -221,6 +227,8 @@ class EventServiceTest {
         UUID employeeId = UUID.randomUUID();
 
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, employeeId
@@ -260,6 +268,8 @@ class EventServiceTest {
         UUID employeeId = UUID.randomUUID();
 
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 newStudentId, employeeId
@@ -305,6 +315,8 @@ class EventServiceTest {
         UUID newEmployeeId = UUID.randomUUID();
 
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, newEmployeeId
@@ -347,6 +359,8 @@ class EventServiceTest {
     void testUpdateEvent_eventNotFound() {
         Long eventId = 99L;
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 UUID.randomUUID(), UUID.randomUUID()
@@ -369,6 +383,8 @@ class EventServiceTest {
         UUID employeeId = UUID.randomUUID();
 
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 newStudentId, employeeId
@@ -404,6 +420,8 @@ class EventServiceTest {
         UUID newEmployeeId = UUID.randomUUID();
 
         CreateEventDTO dto = new CreateEventDTO(
+                "This is the first event of the month",
+                "This is the description of the test event",
                 VALID_START, VALID_END,
                 new BigDecimal("100.00"), new BigDecimal("50.00"),
                 studentId, newEmployeeId
