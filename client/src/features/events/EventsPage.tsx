@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
 import {
@@ -8,16 +9,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import type { EventResponse } from "@/lib/schemas"
+import { eventsApi, type PageResponse } from "@/services/api"
 
 export function EventsPage() {
-  const events: Array<{
-    id: string
-    title: string
-    student: string
-    employee: string
-    dateTime: string
-    price: string
-  }> = []
+  const [eventList, setEventList] = useState<EventResponse[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const eventsRes = await eventsApi.list()
+        const eventsPage: PageResponse<EventResponse> = eventsRes.data
+        setEventList(eventsPage.content)
+      } catch (error) {
+        console.error("Failed to fetch events:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="space-y-6">
@@ -42,12 +59,12 @@ export function EventsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {events.map((event) => (
+            {eventList.map((event) => (
               <TableRow key={event.id}>
                 <TableCell>{event.title}</TableCell>
-                <TableCell>{event.student}</TableCell>
-                <TableCell>{event.employee}</TableCell>
-                <TableCell>{event.dateTime}</TableCell>
+                <TableCell>{event.studentName}</TableCell>
+                <TableCell>{event.employeeName}</TableCell>
+                <TableCell>{event.startDateTime}</TableCell>
                 <TableCell>{event.price}</TableCell>
                 <TableCell>Details</TableCell>
               </TableRow>
@@ -56,7 +73,7 @@ export function EventsPage() {
         </Table>
       </div>
 
-      {events.length === 0 ? (
+      {eventList.length === 0 ? (
         <EmptyState
           title="No events yet"
           description="When you add your first event, it will appear in the table above."

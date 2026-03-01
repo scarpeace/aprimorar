@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
 import {
@@ -8,16 +9,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import type { EmployeeResponse } from "@/lib/schemas"
+import { employeesApi, type PageResponse } from "@/services/api"
 
 export function EmployeesPage() {
-  const employees: Array<{
-    id: string
-    name: string
-    role: string
-    email: string
-    pix: string
-    active: boolean
-  }> = []
+  const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const employeesRes = await employeesApi.list()
+        const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
+        setEmployeeList(employeesPage.content)
+      } catch (error) {
+        console.error("Failed to fetch employees:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="space-y-6">
@@ -42,7 +59,7 @@ export function EmployeesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {employees.map((employee) => (
+            {employeeList.map((employee) => (
               <TableRow key={employee.id}>
                 <TableCell>{employee.name}</TableCell>
                 <TableCell>{employee.role}</TableCell>
@@ -56,7 +73,7 @@ export function EmployeesPage() {
         </Table>
       </div>
 
-      {employees.length === 0 ? (
+      {employeeList.length === 0 ? (
         <EmptyState
           title="No employees yet"
           description="When you add your first employee, they will appear in the table above."
