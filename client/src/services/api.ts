@@ -1,4 +1,4 @@
-import type { CreateEmployeeInput, CreateEventInput, CreateStudentInput, EmployeeResponse, StudentResponse } from "@/lib/schemas"
+import type { CreateEmployeeInput, CreateEventInput, CreateStudentInput, EmployeeResponse, EventResponse, StudentResponse } from "@/lib/schemas"
 import axios, { type AxiosResponse } from "axios"
 
 export type PageResponse<T> = {
@@ -35,8 +35,8 @@ export const studentsApi = {
     api.get(`/v1/students/active?page=${page}&size=${size}&sortBy=${sortBy}`),
   getById: (id: string): Promise<AxiosResponse<StudentResponse>> =>
     api.get(`/v1/students/${id}`),
-  create: (data: CreateStudentInput) => api.post("/v1/students", data),
-  update: (id: string, data: CreateStudentInput) => api.patch(`/v1/students/${id}`, data),
+  create: (data: CreateStudentInput): Promise<AxiosResponse<StudentResponse>> => api.post("/v1/students", data),
+  update: (id: string, data: CreateStudentInput): Promise<AxiosResponse<StudentResponse>> => api.patch(`/v1/students/${id}`, data),
   delete: (id: string) => api.delete(`/v1/students/${id}`),
 }
 
@@ -53,11 +53,11 @@ export const employeesApi = {
 }
 
 export const eventsApi = {
-  list: (page = 1, size = 20, sortBy = "startDateTime") =>
+  list: (page = 0, size = 20, sortBy = "startDateTime"): Promise<AxiosResponse<PageResponse<EventResponse>>> =>
     api.get(`/v1/events?page=${page}&size=${size}&sortBy=${sortBy}`),
-  getById: (id: number) => api.get(`/v1/events/${id}`),
-  create: (data: CreateEventInput) => api.post("/v1/events", data),
-  update: (id: number, data: CreateEventInput) => api.patch(`/v1/events/${id}`, data),
+  getById: (id: number): Promise<AxiosResponse<EventResponse>> => api.get(`/v1/events/${id}`),
+  create: (data: CreateEventInput): Promise<AxiosResponse<EventResponse>> => api.post("/v1/events", data),
+  update: (id: number, data: CreateEventInput): Promise<AxiosResponse<EventResponse>> => api.patch(`/v1/events/${id}`, data),
   delete: (id: number) => api.delete(`/v1/events/${id}`),
 }
 

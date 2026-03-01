@@ -23,7 +23,8 @@ export function DashboardPage() {
         const studentsPage: PageResponse<StudentResponse> = studentsRes.data
         const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
         const eventsPage: PageResponse<EventResponse> = eventsRes.data
-        console.log(studentsPage);
+
+        console.log(eventsPage);
 
         setStudentsCount(studentsPage.totalElements)
         setEmployeesCount(employeesPage.totalElements)
@@ -33,6 +34,7 @@ export function DashboardPage() {
           (sum, event) => sum + Number(event.payment),
           0
         )
+
         setRevenue(total)
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error)
