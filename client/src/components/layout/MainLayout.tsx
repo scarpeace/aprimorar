@@ -1,7 +1,6 @@
 import { Link, useLocation, Outlet } from "react-router-dom"
 import {
   LayoutDashboard,
-  Users,
   UserCog,
   Calendar,
   GraduationCap,
@@ -13,7 +12,6 @@ const navigation = [
   { name: "Students", href: "/students", icon: GraduationCap },
   { name: "Employees", href: "/employees", icon: UserCog },
   { name: "Events", href: "/events", icon: Calendar },
-  { name: "Parents", href: "/parents", icon: Users },
 ]
 
 
