@@ -3,6 +3,7 @@ package com.aprimorar.api.service;
 import com.aprimorar.api.dto.parent.CreateParentDTO;
 import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
+import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
@@ -55,6 +56,8 @@ class StudentServiceTest {
     private CreateStudentDTO createStudentDtoWithNewParent;
     private CreateStudentDTO createStudentDtoWithParentId;
     private CreateStudentDTO createStudentDtoWithoutParent;
+    private UpdateStudentDTO updateStudentDtoWithNewParent;
+    private UpdateStudentDTO updateStudentDtoWithParentId;
     private CreateParentDTO createParentDto;
     private StudentResponseDTO studentResponseDto;
 
@@ -126,6 +129,32 @@ class StudentServiceTest {
                 Activity.ENEM,
                 null,
                 null,
+                null
+        );
+
+        updateStudentDtoWithNewParent = new UpdateStudentDTO(
+                "John Doe",
+                LocalDate.of(2000, 1, 1),
+                "123.456.789-01",
+                "School",
+                "(61)99923-4523",
+                "john.doe@email.com",
+                Activity.ENEM,
+                null,
+                null,
+                createParentDto
+        );
+
+        updateStudentDtoWithParentId = new UpdateStudentDTO(
+                "John Doe",
+                LocalDate.of(2000, 1, 1),
+                "123.456.789-01",
+                "School",
+                "(61)99923-4523",
+                "john.doe@email.com",
+                Activity.ENEM,
+                null,
+                parent.getId(),
                 null
         );
 
@@ -375,12 +404,12 @@ class StudentServiceTest {
         when(parentRepo.save(parent)).thenReturn(parent);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        StudentResponseDTO result = studentService.updateStudent(student.getId(), createStudentDtoWithNewParent);
+        StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithNewParent);
 
         assertSame(studentResponseDto, result);
         assertNotNull(student.getParent());
         verify(studentRepo).findById(student.getId());
-        verify(studentMapper).updateFromDto(createStudentDtoWithNewParent, student);
+        verify(studentMapper).updateFromDto(updateStudentDtoWithNewParent, student);
         verify(parentMapper).toEntity(createParentDto);
         verify(parentRepo).save(parent);
         verify(studentMapper).toDto(student);
@@ -399,12 +428,12 @@ class StudentServiceTest {
         when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        StudentResponseDTO result = studentService.updateStudent(student.getId(), createStudentDtoWithParentId);
+        StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithParentId);
 
         assertSame(studentResponseDto, result);
         assertNotNull(student.getParent());
         verify(studentRepo).findById(student.getId());
-        verify(studentMapper).updateFromDto(createStudentDtoWithParentId, student);
+        verify(studentMapper).updateFromDto(updateStudentDtoWithParentId, student);
         verify(parentRepo).findByIdAndActiveTrue(parent.getId());
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
@@ -419,7 +448,7 @@ class StudentServiceTest {
         UUID id = UUID.randomUUID();
         when(studentRepo.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(StudentNotFoundException.class, () -> studentService.updateStudent(id, createStudentDtoWithNewParent));
+        assertThrows(StudentNotFoundException.class, () -> studentService.updateStudent(id, updateStudentDtoWithNewParent));
 
         verify(studentRepo).findById(id);
         verifyNoMoreInteractions(studentRepo);

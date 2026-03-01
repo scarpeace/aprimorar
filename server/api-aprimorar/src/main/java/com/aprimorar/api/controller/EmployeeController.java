@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("v1/employees")
+@RequestMapping("/v1/employees")
 @Tag(name = "Employees", description = "Employee management APIs")
 public class EmployeeController {
 
@@ -95,4 +95,5 @@ public class EmployeeController {
         employeeService.softDeleteEmployee(employeeId);
         return ResponseEntity.noContent().build();
     }
+
 }

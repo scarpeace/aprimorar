@@ -29,7 +29,7 @@ public class Student {
 
     private String email;
 
-    //TODO Qual a idade máxima e mínima dos alunos?
+    // TODO: Define minimum and maximum student age in business rules.
     private LocalDate birthdate;
 
     private String cpf;

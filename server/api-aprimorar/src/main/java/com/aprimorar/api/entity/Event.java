@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
-//TODO Adicionar o googleCalendarEventId aqui
+// TODO: Add googleCalendarEventId when calendar integration is enabled.
 
 @Entity
 @Table(name = "tb_events")

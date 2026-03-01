@@ -1,7 +1,9 @@
 package com.aprimorar.api.service;
 
+import com.aprimorar.api.dto.parent.CreateParentDTO;
 import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
+import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.exception.domain.ParentNotFoundException;
@@ -48,12 +50,9 @@ public class StudentService {
     }
 
     public StudentResponseDTO findById(UUID studentId) {
-         Student foundStudent = studentRepo.findById(studentId)
-                 .orElseThrow(()-> new StudentNotFoundException(studentId));
+         Student foundStudent = findStudentOrThrow(studentId);
          return studentMapper.toDto(foundStudent);
     }
-
-    //TODO Deve ter um jeito melhor de estruturar essa função aqui.Buscar Refatoração.
 
     public StudentResponseDTO createStudent(CreateStudentDTO createStudentDto) {
         log.info("Creating student with name: {}", createStudentDto.name());
@@ -61,12 +60,10 @@ public class StudentService {
         Student newStudent = studentMapper.toEntity(createStudentDto);
 
         if (createStudentDto.parentId() != null) {
-            Parent existingParent = parentRepo.findByIdAndActiveTrue(createStudentDto.parentId())
-                    .orElseThrow(() -> new ParentNotFoundException(createStudentDto.parentId()));
+            Parent existingParent = findActiveParentOrThrow(createStudentDto.parentId());
             newStudent.setParent(existingParent);
         } else if (createStudentDto.parent() != null) {
-            Parent newParent = parentMapper.toEntity(createStudentDto.parent());
-            Parent savedParent = parentRepo.save(newParent);
+            Parent savedParent = createParent(createStudentDto.parent());
             newStudent.setParent(savedParent);
         } else {
             throw new IllegalArgumentException("Parent is required: provide either parentId or parent");
@@ -78,34 +75,48 @@ public class StudentService {
 
     @Transactional
     public void softDeleteStudent(UUID studentId){
-        Student foundStudent = studentRepo.findById(studentId)
-                .orElseThrow(()->new StudentNotFoundException(studentId));
-
-        if(Boolean.TRUE.equals(foundStudent.getActive())){
-            foundStudent.setActive(false);
-            foundStudent.setUpdatedAt(Instant.now());
-        }
+        Student foundStudent = findStudentOrThrow(studentId);
+        deactivateIfActive(foundStudent);
     }
 
     @Transactional
-    public StudentResponseDTO updateStudent(UUID studentId, CreateStudentDTO createStudentDto) {
-        Student foundStudent = studentRepo.findById(studentId)
-                .orElseThrow(() -> new StudentNotFoundException(studentId));
+    public StudentResponseDTO updateStudent(UUID studentId, UpdateStudentDTO updateStudentDto) {
+        Student foundStudent = findStudentOrThrow(studentId);
 
-        studentMapper.updateFromDto(createStudentDto, foundStudent);
+        studentMapper.updateFromDto(updateStudentDto, foundStudent);
 
-        if (createStudentDto.parentId() != null) {
-            Parent existingParent = parentRepo.findByIdAndActiveTrue(createStudentDto.parentId())
-                    .orElseThrow(() -> new ParentNotFoundException(createStudentDto.parentId()));
+        if (updateStudentDto.parentId() != null) {
+            Parent existingParent = findActiveParentOrThrow(updateStudentDto.parentId());
             foundStudent.setParent(existingParent);
-        } else if (createStudentDto.parent() != null) {
-            Parent newParent = parentMapper.toEntity(createStudentDto.parent());
-            Parent savedParent = parentRepo.save(newParent);
+        } else if (updateStudentDto.parent() != null) {
+            Parent savedParent = createParent(updateStudentDto.parent());
             foundStudent.setParent(savedParent);
         }
 
         foundStudent.setUpdatedAt(Instant.now());
 
         return studentMapper.toDto(foundStudent);
+    }
+
+    private Student findStudentOrThrow(UUID studentId) {
+        return studentRepo.findById(studentId)
+                .orElseThrow(() -> new StudentNotFoundException(studentId));
+    }
+
+    private Parent findActiveParentOrThrow(UUID parentId) {
+        return parentRepo.findByIdAndActiveTrue(parentId)
+                .orElseThrow(() -> new ParentNotFoundException(parentId));
+    }
+
+    private Parent createParent(CreateParentDTO createParentDto) {
+        Parent newParent = parentMapper.toEntity(createParentDto);
+        return parentRepo.save(newParent);
+    }
+
+    private void deactivateIfActive(Student foundStudent) {
+        if (Boolean.TRUE.equals(foundStudent.getActive())) {
+            foundStudent.setActive(false);
+            foundStudent.setUpdatedAt(Instant.now());
+        }
     }
 }

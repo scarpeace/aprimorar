@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("v1/parents")
+@RequestMapping("/v1/parents")
 @Tag(name = "Parents", description = "Parent management APIs")
 public class ParentController {
 

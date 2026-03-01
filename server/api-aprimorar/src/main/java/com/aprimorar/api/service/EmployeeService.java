@@ -40,8 +40,7 @@ public class EmployeeService {
     }
 
     public EmployeeResponseDTO findById(UUID employeeId) {
-        Employee foundEmployee = employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
+        Employee foundEmployee = findEmployeeOrThrow(employeeId);
         return employeeMapper.toDto(foundEmployee);
     }
 
@@ -54,23 +53,29 @@ public class EmployeeService {
 
     @Transactional
     public void softDeleteEmployee(UUID employeeId) {
-        Employee foundEmployee = employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
-
-        if (Boolean.TRUE.equals(foundEmployee.getActive())) {
-            foundEmployee.setActive(false);
-            foundEmployee.setUpdatedAt(Instant.now());
-        }
+        Employee foundEmployee = findEmployeeOrThrow(employeeId);
+        deactivateIfActive(foundEmployee);
     }
 
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, CreateEmployeeDTO createEmployeeDto) {
-        Employee foundEmployee = employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
+        Employee foundEmployee = findEmployeeOrThrow(employeeId);
 
         employeeMapper.updateFromDto(createEmployeeDto, foundEmployee);
         foundEmployee.setUpdatedAt(Instant.now());
 
         return employeeMapper.toDto(foundEmployee);
+    }
+
+    private Employee findEmployeeOrThrow(UUID employeeId) {
+        return employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
+    }
+
+    private void deactivateIfActive(Employee foundEmployee) {
+        if (Boolean.TRUE.equals(foundEmployee.getActive())) {
+            foundEmployee.setActive(false);
+            foundEmployee.setUpdatedAt(Instant.now());
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.aprimorar.api.mapper;
 
 import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
+import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.util.MapperUtils;
 import org.springframework.stereotype.Component;
@@ -58,7 +59,7 @@ public class StudentMapper {
         );
     }
 
-    public void updateFromDto(CreateStudentDTO dto, Student entity) {
+    public void updateFromDto(UpdateStudentDTO dto, Student entity) {
         if (dto == null || entity == null) {
             return;
         }

@@ -19,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 public class EventService {
 
@@ -45,8 +47,7 @@ public class EventService {
     }
 
     public EventResponseDTO findById(Long eventId) {
-        Event foundEvent = eventRepo.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException(eventId));
+        Event foundEvent = findEventOrThrow(eventId);
         return eventMapper.toDto(foundEvent);
     }
 
@@ -54,11 +55,8 @@ public class EventService {
         log.info("Creating event for student: {} with employee: {}",
                 createEventDto.studentId(), createEventDto.employeeId());
 
-        Student student = studentRepo.findById(createEventDto.studentId())
-                .orElseThrow(() -> new StudentNotFoundException(createEventDto.studentId()));
-
-        Employee employee = employeeRepo.findById(createEventDto.employeeId())
-                .orElseThrow(() -> new EmployeeNotFoundException(createEventDto.employeeId()));
+        Student student = findStudentOrThrow(createEventDto.studentId());
+        Employee employee = findEmployeeOrThrow(createEventDto.employeeId());
 
         Event newEvent = eventMapper.toEntity(createEventDto);
         newEvent.setStudent(student);
@@ -70,8 +68,7 @@ public class EventService {
 
     @Transactional
     public EventResponseDTO updateEvent(Long eventId, CreateEventDTO createEventDto) {
-        Event foundEvent = eventRepo.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException(eventId));
+        Event foundEvent = findEventOrThrow(eventId);
 
         // Update scalar fields via mapper
         eventMapper.updateFromDto(createEventDto, foundEvent);
@@ -79,16 +76,14 @@ public class EventService {
         // Update student if changed
         if (createEventDto.studentId() != null
                 && !createEventDto.studentId().equals(foundEvent.getStudent().getId())) {
-            Student student = studentRepo.findById(createEventDto.studentId())
-                    .orElseThrow(() -> new StudentNotFoundException(createEventDto.studentId()));
+            Student student = findStudentOrThrow(createEventDto.studentId());
             foundEvent.setStudent(student);
         }
 
         // Update employee if changed
         if (createEventDto.employeeId() != null
                 && !createEventDto.employeeId().equals(foundEvent.getEmployee().getId())) {
-            Employee employee = employeeRepo.findById(createEventDto.employeeId())
-                    .orElseThrow(() -> new EmployeeNotFoundException(createEventDto.employeeId()));
+            Employee employee = findEmployeeOrThrow(createEventDto.employeeId());
             foundEvent.setEmployee(employee);
         }
 
@@ -96,8 +91,22 @@ public class EventService {
     }
 
     public void deleteEvent(Long eventId) {
-        Event foundEvent = eventRepo.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException(eventId));
+        Event foundEvent = findEventOrThrow(eventId);
         eventRepo.delete(foundEvent);
+    }
+
+    private Event findEventOrThrow(Long eventId) {
+        return eventRepo.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
+    }
+
+    private Student findStudentOrThrow(UUID studentId) {
+        return studentRepo.findById(studentId)
+                .orElseThrow(() -> new StudentNotFoundException(studentId));
+    }
+
+    private Employee findEmployeeOrThrow(UUID employeeId) {
+        return employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
     }
 }
