@@ -8,12 +8,10 @@ import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.enums.Activity;
+import com.aprimorar.api.util.MapperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
-import org.springframework.test.util.ReflectionTestUtils;
-import com.aprimorar.api.util.MapperUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -35,14 +33,10 @@ class StudentMapperTest {
     @BeforeEach
     void setup() {
         MapperUtils mapperUtils = new MapperUtils();
+        ParentMapper parentMapper = new ParentMapper(mapperUtils);
+        AddressMapper addressMapper = new AddressMapper();
 
-        ParentMapper parentMapper = Mappers.getMapper(ParentMapper.class);
-        ReflectionTestUtils.setField(parentMapper, "mapperUtils", mapperUtils);
-
-        mapper = Mappers.getMapper(StudentMapper.class);
-        ReflectionTestUtils.setField(mapper, "parentMapper", parentMapper);
-        ReflectionTestUtils.setField(mapper, "addressMapper", Mappers.getMapper(AddressMapper.class));
-        ReflectionTestUtils.setField(mapper, "mapperUtils", mapperUtils);
+        mapper = new StudentMapper(parentMapper, addressMapper, mapperUtils);
     }
 
     @Test

@@ -3,12 +3,10 @@ package com.aprimorar.api.mapper;
 import com.aprimorar.api.dto.parent.CreateParentDTO;
 import com.aprimorar.api.dto.parent.ParentResponseDTO;
 import com.aprimorar.api.entity.Parent;
+import com.aprimorar.api.util.MapperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
-import org.springframework.test.util.ReflectionTestUtils;
-import com.aprimorar.api.util.MapperUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,8 +16,7 @@ class ParentMapperTest {
 
     @BeforeEach
     void setup() {
-        mapper = Mappers.getMapper(ParentMapper.class);
-        ReflectionTestUtils.setField(mapper, "mapperUtils", new MapperUtils());
+        mapper = new ParentMapper(new MapperUtils());
     }
 
     @Test

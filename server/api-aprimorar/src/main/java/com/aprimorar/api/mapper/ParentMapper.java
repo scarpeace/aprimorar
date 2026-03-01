@@ -5,30 +5,67 @@ import com.aprimorar.api.dto.parent.ParentResponseDTO;
 import com.aprimorar.api.dto.parent.ParentSummaryDTO;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.util.MapperUtils;
-import org.mapstruct.*;
+import org.springframework.stereotype.Component;
 
-@Mapper(
-        componentModel = "spring",
-        uses = {MapperUtils.class},
-        unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        builder = @Builder(disableBuilder = true)
-)
-public interface ParentMapper {
+@Component
+public class ParentMapper {
 
-    @Mapping(target = "cpf", qualifiedByName = "sanitizeCpf")
-    @Mapping(target = "email", qualifiedByName = "sanitizeEmail")
-    @Mapping(target = "contact", qualifiedByName = "sanitizeContact")
-    Parent toEntity(CreateParentDTO dto);
+    private final MapperUtils mapperUtils;
 
-    @Mapping(target = "cpf", qualifiedByName = "formatCpf")
-    @Mapping(target = "contact", qualifiedByName = "formatContact")
-    ParentResponseDTO toDto(Parent entity);
+    public ParentMapper(MapperUtils mapperUtils) {
+        this.mapperUtils = mapperUtils;
+    }
 
-    ParentSummaryDTO toSummaryDto(Parent entity);
+    public Parent toEntity(CreateParentDTO dto) {
+        if (dto == null) {
+            return null;
+        }
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "cpf", qualifiedByName = "sanitizeCpf")
-    @Mapping(target = "email", qualifiedByName = "sanitizeEmail")
-    @Mapping(target = "contact", qualifiedByName = "sanitizeContact")
-    void updateFromDto(CreateParentDTO dto, @MappingTarget Parent entity);
+        Parent entity = new Parent();
+        entity.setName(dto.name());
+        entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
+        entity.setContact(mapperUtils.sanitizeContact(dto.contact()));
+        entity.setCpf(mapperUtils.sanitizeCpf(dto.cpf()));
+        return entity;
+    }
+
+    public ParentResponseDTO toDto(Parent entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return new ParentResponseDTO(
+                entity.getName(),
+                entity.getEmail(),
+                mapperUtils.formatContact(entity.getContact()),
+                mapperUtils.formatCpf(entity.getCpf())
+        );
+    }
+
+    public ParentSummaryDTO toSummaryDto(Parent entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return new ParentSummaryDTO(entity.getId(), entity.getName());
+    }
+
+    public void updateFromDto(CreateParentDTO dto, Parent entity) {
+        if (dto == null || entity == null) {
+            return;
+        }
+
+        if (dto.name() != null) {
+            entity.setName(dto.name());
+        }
+        if (dto.email() != null) {
+            entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
+        }
+        if (dto.contact() != null) {
+            entity.setContact(mapperUtils.sanitizeContact(dto.contact()));
+        }
+        if (dto.cpf() != null) {
+            entity.setCpf(mapperUtils.sanitizeCpf(dto.cpf()));
+        }
+    }
 }

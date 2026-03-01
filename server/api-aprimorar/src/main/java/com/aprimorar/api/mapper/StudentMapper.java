@@ -4,33 +4,91 @@ import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.util.MapperUtils;
-import org.mapstruct.*;
+import org.springframework.stereotype.Component;
 
-@Mapper(
-        componentModel = "spring",
-        uses = {ParentMapper.class, AddressMapper.class, MapperUtils.class},
-        unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        builder = @Builder(disableBuilder = true)
-)
-public interface StudentMapper {
+@Component
+public class StudentMapper {
 
-    //Entity -> DTO
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "cpf", qualifiedByName = "sanitizeCpf")
-    @Mapping(target = "email", qualifiedByName = "sanitizeEmail")
-    @Mapping(target = "contact", qualifiedByName = "sanitizeContact")
-    Student toEntity(CreateStudentDTO dto);
+    private final ParentMapper parentMapper;
+    private final AddressMapper addressMapper;
+    private final MapperUtils mapperUtils;
 
-    //DTO - Entity
-    @Mapping(target = "contact", qualifiedByName = "formatContact")
-    @Mapping(target = "cpf", qualifiedByName = "formatCpf")
-    StudentResponseDTO toDto(Student entity);
+    public StudentMapper(ParentMapper parentMapper, AddressMapper addressMapper, MapperUtils mapperUtils) {
+        this.parentMapper = parentMapper;
+        this.addressMapper = addressMapper;
+        this.mapperUtils = mapperUtils;
+    }
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "cpf", qualifiedByName = "sanitizeCpf")
-    @Mapping(target = "email", qualifiedByName = "sanitizeEmail")
-    @Mapping(target = "contact", qualifiedByName = "sanitizeContact")
-    void updateFromDto(CreateStudentDTO dto, @MappingTarget Student entity);
+    public Student toEntity(CreateStudentDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        Student entity = new Student();
+        entity.setName(dto.name());
+        entity.setBirthdate(dto.birthdate());
+        entity.setCpf(mapperUtils.sanitizeCpf(dto.cpf()));
+        entity.setSchool(dto.school());
+        entity.setContact(mapperUtils.sanitizeContact(dto.contact()));
+        entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
+        entity.setActivity(dto.activity());
+        entity.setAddress(addressMapper.toEntity(dto.address()));
+        entity.setParent(parentMapper.toEntity(dto.parent()));
+        return entity;
+    }
+
+    public StudentResponseDTO toDto(Student entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return new StudentResponseDTO(
+                entity.getId(),
+                entity.getName(),
+                mapperUtils.formatContact(entity.getContact()),
+                entity.getEmail(),
+                mapperUtils.formatCpf(entity.getCpf()),
+                entity.getBirthdate(),
+                entity.getSchool(),
+                entity.getActivity(),
+                entity.getActive(),
+                addressMapper.toDto(entity.getAddress()),
+                parentMapper.toDto(entity.getParent()),
+                entity.getCreatedAt()
+        );
+    }
+
+    public void updateFromDto(CreateStudentDTO dto, Student entity) {
+        if (dto == null || entity == null) {
+            return;
+        }
+
+        if (dto.name() != null) {
+            entity.setName(dto.name());
+        }
+        if (dto.birthdate() != null) {
+            entity.setBirthdate(dto.birthdate());
+        }
+        if (dto.cpf() != null) {
+            entity.setCpf(mapperUtils.sanitizeCpf(dto.cpf()));
+        }
+        if (dto.school() != null) {
+            entity.setSchool(dto.school());
+        }
+        if (dto.contact() != null) {
+            entity.setContact(mapperUtils.sanitizeContact(dto.contact()));
+        }
+        if (dto.email() != null) {
+            entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
+        }
+        if (dto.activity() != null) {
+            entity.setActivity(dto.activity());
+        }
+        if (dto.address() != null) {
+            entity.setAddress(addressMapper.toEntity(dto.address()));
+        }
+        if (dto.parent() != null) {
+            entity.setParent(parentMapper.toEntity(dto.parent()));
+        }
+    }
 }

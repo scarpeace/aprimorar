@@ -3,32 +3,70 @@ package com.aprimorar.api.mapper;
 import com.aprimorar.api.dto.event.CreateEventDTO;
 import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.entity.Event;
-import org.mapstruct.*;
+import org.springframework.stereotype.Component;
 
-@Mapper(
-        componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        builder = @Builder(disableBuilder = true)
-)
-public interface EventMapper {
+@Component
+public class EventMapper {
 
-    @Mapping(source = "student.id", target = "studentId")
-    @Mapping(source = "student.name", target = "studentName")
-    @Mapping(source = "employee.id", target = "employeeId")
-    @Mapping(source = "employee.name", target = "employeeName")
-    EventResponseDTO toDto(Event entity);
+    public EventResponseDTO toDto(Event entity) {
+        if (entity == null) {
+            return null;
+        }
 
-    @Mapping(target = "student", ignore = true)
-    @Mapping(target = "employee", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    Event toEntity(CreateEventDTO dto);
+        return new EventResponseDTO(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getDescription(),
+                entity.getStartDateTime(),
+                entity.getEndDateTime(),
+                entity.getPrice(),
+                entity.getPayment(),
+                entity.getStudent() != null ? entity.getStudent().getId() : null,
+                entity.getStudent() != null ? entity.getStudent().getName() : null,
+                entity.getEmployee() != null ? entity.getEmployee().getId() : null,
+                entity.getEmployee() != null ? entity.getEmployee().getName() : null,
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+        );
+    }
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "student", ignore = true)
-    @Mapping(target = "employee", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    void updateFromDto(CreateEventDTO dto, @MappingTarget Event entity);
+    public Event toEntity(CreateEventDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        Event entity = new Event();
+        entity.setTitle(dto.title());
+        entity.setDescription(dto.description());
+        entity.setStartDateTime(dto.startDateTime());
+        entity.setEndDateTime(dto.endDateTime());
+        entity.setPrice(dto.price());
+        entity.setPayment(dto.payment());
+        return entity;
+    }
+
+    public void updateFromDto(CreateEventDTO dto, Event entity) {
+        if (dto == null || entity == null) {
+            return;
+        }
+
+        if (dto.title() != null) {
+            entity.setTitle(dto.title());
+        }
+        if (dto.description() != null) {
+            entity.setDescription(dto.description());
+        }
+        if (dto.startDateTime() != null) {
+            entity.setStartDateTime(dto.startDateTime());
+        }
+        if (dto.endDateTime() != null) {
+            entity.setEndDateTime(dto.endDateTime());
+        }
+        if (dto.price() != null) {
+            entity.setPrice(dto.price());
+        }
+        if (dto.payment() != null) {
+            entity.setPayment(dto.payment());
+        }
+    }
 }
-

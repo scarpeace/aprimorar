@@ -4,12 +4,10 @@ import com.aprimorar.api.dto.employee.CreateEmployeeDTO;
 import com.aprimorar.api.dto.employee.EmployeeResponseDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.enums.Role;
+import com.aprimorar.api.util.MapperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
-import org.springframework.test.util.ReflectionTestUtils;
-import com.aprimorar.api.util.MapperUtils;
 
 import java.time.LocalDate;
 
@@ -21,8 +19,7 @@ class EmployeeMapperTest {
 
     @BeforeEach
     void setup() {
-        mapper = Mappers.getMapper(EmployeeMapper.class);
-        ReflectionTestUtils.setField(mapper, "mapperUtils", new MapperUtils());
+        mapper = new EmployeeMapper(new MapperUtils());
     }
 
     @Test
