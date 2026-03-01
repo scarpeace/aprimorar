@@ -1,4 +1,15 @@
-import axios from "axios"
+import type { CreateEmployeeInput, CreateEventInput, CreateStudentInput, EmployeeResponse, StudentResponse } from "@/lib/schemas"
+import axios, { type AxiosResponse } from "axios"
+
+export type PageResponse<T> = {
+  content: T[]
+  number: number
+  size: number
+  totalElements: number
+  totalPages: number
+  first: boolean
+  last: boolean
+}
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080"
 
@@ -18,33 +29,35 @@ api.interceptors.response.use(
 )
 
 export const studentsApi = {
-  list: (page = 0, size = 20, sortBy = "name") =>
+  list: (page = 0, size = 20, sortBy = "name"): Promise<AxiosResponse<PageResponse<StudentResponse>>> =>
     api.get(`/v1/students?page=${page}&size=${size}&sortBy=${sortBy}`),
-  listActive: (page = 0, size = 20, sortBy = "name") =>
+  listActive: (page = 0, size = 20, sortBy = "name"): Promise<AxiosResponse<PageResponse<StudentResponse>>> =>
     api.get(`/v1/students/active?page=${page}&size=${size}&sortBy=${sortBy}`),
-  getById: (id: string) => api.get(`/v1/students/${id}`),
-  create: (data: unknown) => api.post("/v1/students", data),
-  update: (id: string, data: unknown) => api.patch(`/v1/students/${id}`, data),
+  getById: (id: string): Promise<AxiosResponse<StudentResponse>> =>
+    api.get(`/v1/students/${id}`),
+  create: (data: CreateStudentInput) => api.post("/v1/students", data),
+  update: (id: string, data: CreateStudentInput) => api.patch(`/v1/students/${id}`, data),
   delete: (id: string) => api.delete(`/v1/students/${id}`),
 }
 
 export const employeesApi = {
-  list: (page = 0, size = 20, sortBy = "name") =>
+  list: (page = 0, size = 20, sortBy = "name"): Promise<AxiosResponse<PageResponse<EmployeeResponse>>> =>
     api.get(`/v1/employees?page=${page}&size=${size}&sortBy=${sortBy}`),
-  listActive: (page = 0, size = 20, sortBy = "name") =>
+  listActive: (page = 0, size = 20, sortBy = "name"): Promise<AxiosResponse<PageResponse<EmployeeResponse>>> =>
     api.get(`/v1/employees/active?page=${page}&size=${size}&sortBy=${sortBy}`),
-  getById: (id: string) => api.get(`/v1/employees/${id}`),
-  create: (data: unknown) => api.post("/v1/employees", data),
-  update: (id: string, data: unknown) => api.patch(`/v1/employees/${id}`, data),
+  getById: (id: string): Promise<AxiosResponse<EmployeeResponse>> =>
+    api.get(`/v1/employees/${id}`),
+  create: (data: CreateEmployeeInput): Promise<AxiosResponse<EmployeeResponse>> => api.post("/v1/employees", data),
+  update: (id: string, data: CreateEmployeeInput): Promise<AxiosResponse<EmployeeResponse>> => api.patch(`/v1/employees/${id}`, data),
   delete: (id: string) => api.delete(`/v1/employees/${id}`),
 }
 
 export const eventsApi = {
-  list: (page = 0, size = 20, sortBy = "startDateTime") =>
+  list: (page = 1, size = 20, sortBy = "startDateTime") =>
     api.get(`/v1/events?page=${page}&size=${size}&sortBy=${sortBy}`),
   getById: (id: number) => api.get(`/v1/events/${id}`),
-  create: (data: unknown) => api.post("/v1/events", data),
-  update: (id: number, data: unknown) => api.patch(`/v1/events/${id}`, data),
+  create: (data: CreateEventInput) => api.post("/v1/events", data),
+  update: (id: number, data: CreateEventInput) => api.patch(`/v1/events/${id}`, data),
   delete: (id: number) => api.delete(`/v1/events/${id}`),
 }
 
