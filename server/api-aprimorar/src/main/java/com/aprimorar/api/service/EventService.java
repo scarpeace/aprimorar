@@ -101,12 +101,12 @@ public class EventService {
     }
 
     private Student findStudentOrThrow(UUID studentId) {
-        return studentRepo.findById(studentId)
+        return studentRepo.findByIdAndActiveTrue(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(studentId));
     }
 
     private Employee findEmployeeOrThrow(UUID employeeId) {
-        return employeeRepo.findById(employeeId)
+        return employeeRepo.findByIdAndActiveTrue(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
     }
 }
