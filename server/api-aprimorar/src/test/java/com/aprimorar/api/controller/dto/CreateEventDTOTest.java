@@ -26,6 +26,8 @@ class CreateEventDTOTest {
 
     private static final BigDecimal VALID_PRICE   = new BigDecimal("100.00");
     private static final BigDecimal VALID_PAYMENT = new BigDecimal("50.00");
+    private static final String VALID_TITLE = "This is the first event of the month";
+    private static final String VALID_DESCRIPTION = "This is the description of the test event";
 
     @BeforeAll
     static void setup() {
@@ -39,13 +41,18 @@ class CreateEventDTOTest {
     }
 
     private CreateEventDTO validDto() {
-        return new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                VALID_PRICE, VALID_PAYMENT,
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        return eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
+    }
+
+    private CreateEventDTO eventDto(
+            LocalDateTime start,
+            LocalDateTime end,
+            BigDecimal price,
+            BigDecimal payment,
+            UUID studentId,
+            UUID employeeId
+    ) {
+        return new CreateEventDTO(VALID_TITLE, VALID_DESCRIPTION, start, end, price, payment, studentId, employeeId);
     }
 
     @Test
@@ -60,13 +67,7 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when startDateTime is null")
     void nullStartDateTime() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                null, VALID_END,
-                VALID_PRICE, VALID_PAYMENT,
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(null, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Event start date/time can't be null"));
@@ -75,13 +76,7 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when startDateTime is in the past")
     void pastStartDateTime() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                PAST_DT, VALID_END,
-                VALID_PRICE, VALID_PAYMENT,
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(PAST_DT, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Event start must be in the future"));
@@ -92,13 +87,7 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when endDateTime is null")
     void nullEndDateTime() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, null,
-                VALID_PRICE, VALID_PAYMENT,
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(VALID_START, null, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Event end date/time can't be null"));
@@ -107,13 +96,8 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when endDateTime is in the past")
     void pastEndDateTime() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, LocalDateTime.of(2020, 1, 1, 11, 0),
-                VALID_PRICE, VALID_PAYMENT,
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(VALID_START, LocalDateTime.of(2020, 1, 1, 11, 0), VALID_PRICE, VALID_PAYMENT,
+                UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Event end must be in the future"));
@@ -124,13 +108,7 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when price is null")
     void nullPrice() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                null, VALID_PAYMENT,
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, null, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Price can't be null"));
@@ -139,13 +117,8 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when price is negative")
     void negativePrice() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("-1.00"), VALID_PAYMENT,
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, new BigDecimal("-1.00"), VALID_PAYMENT,
+                UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
     }
@@ -155,13 +128,7 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when payment is null")
     void nullPayment() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                VALID_PRICE, null,
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, null, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Payment can't be null"));
@@ -170,13 +137,8 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when payment is negative")
     void negativePayment() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                VALID_PRICE, new BigDecimal("-1.00"),
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, new BigDecimal("-1.00"),
+                UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
     }
@@ -186,13 +148,7 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when studentId is null")
     void nullStudentId() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                VALID_PRICE, VALID_PAYMENT,
-                null, UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, null, UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Student ID can't be null"));
@@ -203,13 +159,7 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when employeeId is null")
     void nullEmployeeId() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                VALID_PRICE, VALID_PAYMENT,
-                UUID.randomUUID(), null
-        );
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), null);
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Employee ID can't be null"));
@@ -220,13 +170,8 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when payment exceeds price")
     void paymentExceedsPrice() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("50.00"), new BigDecimal("100.00"),
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, new BigDecimal("50.00"), new BigDecimal("100.00"),
+                UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Payment can't exceed price"));
@@ -235,14 +180,8 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when end date/time is before start date/time")
     void endBeforeStart() {
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                LocalDateTime.of(2027, 6, 1, 12, 0),
-                LocalDateTime.of(2027, 6, 1, 10, 0),
-                VALID_PRICE, VALID_PAYMENT,
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(LocalDateTime.of(2027, 6, 1, 12, 0), LocalDateTime.of(2027, 6, 1, 10, 0),
+                VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("End date/time must be after start date/time"));
@@ -252,17 +191,10 @@ class CreateEventDTOTest {
     @DisplayName("Should have 1 violation when end date/time equals start date/time")
     void endEqualsStart() {
         LocalDateTime sameTime = LocalDateTime.of(2027, 6, 1, 10, 0);
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                sameTime, sameTime,
-                VALID_PRICE, VALID_PAYMENT,
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = eventDto(sameTime, sameTime, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("End date/time must be after start date/time"));
     }
 }
-
 

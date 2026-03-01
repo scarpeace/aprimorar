@@ -36,6 +36,19 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
+    private static final String STUDENT_NAME = "John Doe";
+    private static final LocalDate STUDENT_BIRTHDATE = LocalDate.of(2000, 1, 1);
+    private static final String STUDENT_CPF_FORMATTED = "123.456.789-01";
+    private static final String STUDENT_CPF_RAW = "12345678901";
+    private static final String STUDENT_SCHOOL = "School";
+    private static final String STUDENT_CONTACT_FORMATTED = "(61)99923-4523";
+    private static final String STUDENT_CONTACT_RAW = "61999234523";
+    private static final String STUDENT_EMAIL = "john.doe@email.com";
+    private static final String PARENT_NAME = "Jane Doe";
+    private static final String PARENT_EMAIL = "jane.doe@email.com";
+    private static final String PARENT_CONTACT = "(61)99999-9999";
+    private static final String PARENT_CPF = "12345678900";
+
     @Mock
     private StudentRepository studentRepo;
 
@@ -63,100 +76,21 @@ class StudentServiceTest {
 
     @BeforeEach
     void setUp() {
-        student = new Student();
-        student.setId(UUID.randomUUID());
-        student.setName("John Doe");
-        student.setContact("61999234523");
-        student.setEmail("john.doe@email.com");
-        student.setBirthdate(LocalDate.of(2000, 1, 1));
-        student.setCpf("12345678901");
-        student.setSchool("School");
-        student.setActivity(Activity.ENEM);
-        student.setAddress(new Address());
-        student.setActive(true);
-        student.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
-        student.setUpdatedAt(Instant.parse("2025-01-01T00:00:00Z"));
+        student = validStudentEntity();
+        parent = validParentEntity();
 
-        parent = new Parent();
-        parent.setId(UUID.randomUUID());
-        parent.setName("Jane Doe");
-        parent.setEmail("jane.doe@email.com");
-        parent.setContact("(61)99999-9999");
-        parent.setCpf("12345678900");
-        parent.setActive(true);
+        createParentDto = validCreateParentDto();
 
-        createParentDto = new CreateParentDTO(
-                "Jane Doe",
-                "jane.doe@email.com",
-                "(61)99999-9999",
-                "12345678900"
-        );
-
-        createStudentDtoWithNewParent = new CreateStudentDTO(
-                "John Doe",
-                LocalDate.of(2000, 1, 1),
-                "123.456.789-01",
-                "School",
-                "(61)99923-4523",
-                "john.doe@email.com",
-                Activity.ENEM,
-                null,
-                null,
-                createParentDto
-        );
+        createStudentDtoWithNewParent = studentDtoWithParent(createParentDto);
 
         UUID parentId = parent.getId();
-        createStudentDtoWithParentId = new CreateStudentDTO(
-                "John Doe",
-                LocalDate.of(2000, 1, 1),
-                "123.456.789-01",
-                "School",
-                "(61)99923-4523",
-                "john.doe@email.com",
-                Activity.ENEM,
-                null,
-                parentId,
-                null
-        );
+        createStudentDtoWithParentId = studentDtoWithParentId(parentId);
 
-        createStudentDtoWithoutParent = new CreateStudentDTO(
-                "John Doe",
-                LocalDate.of(2000, 1, 1),
-                "123.456.789-01",
-                "School",
-                "(61)99923-4523",
-                "john.doe@email.com",
-                Activity.ENEM,
-                null,
-                null,
-                null
-        );
+        createStudentDtoWithoutParent = studentDtoWithoutParent();
 
-        updateStudentDtoWithNewParent = new UpdateStudentDTO(
-                "John Doe",
-                LocalDate.of(2000, 1, 1),
-                "123.456.789-01",
-                "School",
-                "(61)99923-4523",
-                "john.doe@email.com",
-                Activity.ENEM,
-                null,
-                null,
-                createParentDto
-        );
+        updateStudentDtoWithNewParent = updateStudentDtoWithParent(createParentDto);
 
-        updateStudentDtoWithParentId = new UpdateStudentDTO(
-                "John Doe",
-                LocalDate.of(2000, 1, 1),
-                "123.456.789-01",
-                "School",
-                "(61)99923-4523",
-                "john.doe@email.com",
-                Activity.ENEM,
-                null,
-                parent.getId(),
-                null
-        );
+        updateStudentDtoWithParentId = updateStudentDtoWithParentId(parent.getId());
 
         studentResponseDto = mock(StudentResponseDTO.class);
     }
@@ -320,18 +254,7 @@ class StudentServiceTest {
     @DisplayName("Should throw ParentNotFoundException when parentId does not exist")
     void testCreateStudentParentNotFound() {
         UUID nonExistentParentId = UUID.randomUUID();
-        CreateStudentDTO dtoWithNonExistentParent = new CreateStudentDTO(
-                "John Doe",
-                LocalDate.of(2000, 1, 1),
-                "123.456.789-01",
-                "School",
-                "(61)99923-4523",
-                "john.doe@email.com",
-                Activity.ENEM,
-                null,
-                nonExistentParentId,
-                null
-        );
+        CreateStudentDTO dtoWithNonExistentParent = studentDtoWithParentId(nonExistentParentId);
 
         when(studentMapper.toEntity(dtoWithNonExistentParent)).thenReturn(student);
         when(parentRepo.findByIdAndActiveTrue(nonExistentParentId)).thenReturn(Optional.empty());
@@ -453,5 +376,112 @@ class StudentServiceTest {
         verify(studentRepo).findById(id);
         verifyNoMoreInteractions(studentRepo);
         verifyNoInteractions(studentMapper);
+    }
+
+    private Student validStudentEntity() {
+        Student value = new Student();
+        value.setId(UUID.randomUUID());
+        value.setName(STUDENT_NAME);
+        value.setContact(STUDENT_CONTACT_RAW);
+        value.setEmail(STUDENT_EMAIL);
+        value.setBirthdate(STUDENT_BIRTHDATE);
+        value.setCpf(STUDENT_CPF_RAW);
+        value.setSchool(STUDENT_SCHOOL);
+        value.setActivity(Activity.ENEM);
+        value.setAddress(new Address());
+        value.setActive(true);
+        value.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
+        value.setUpdatedAt(Instant.parse("2025-01-01T00:00:00Z"));
+        return value;
+    }
+
+    private Parent validParentEntity() {
+        Parent value = new Parent();
+        value.setId(UUID.randomUUID());
+        value.setName(PARENT_NAME);
+        value.setEmail(PARENT_EMAIL);
+        value.setContact(PARENT_CONTACT);
+        value.setCpf(PARENT_CPF);
+        value.setActive(true);
+        return value;
+    }
+
+    private CreateParentDTO validCreateParentDto() {
+        return new CreateParentDTO(PARENT_NAME, PARENT_EMAIL, PARENT_CONTACT, PARENT_CPF);
+    }
+
+    private CreateStudentDTO studentDtoWithParent(CreateParentDTO createParentDTO) {
+        return new CreateStudentDTO(
+                STUDENT_NAME,
+                STUDENT_BIRTHDATE,
+                STUDENT_CPF_FORMATTED,
+                STUDENT_SCHOOL,
+                STUDENT_CONTACT_FORMATTED,
+                STUDENT_EMAIL,
+                Activity.ENEM,
+                null,
+                null,
+                createParentDTO
+        );
+    }
+
+    private CreateStudentDTO studentDtoWithParentId(UUID parentId) {
+        return new CreateStudentDTO(
+                STUDENT_NAME,
+                STUDENT_BIRTHDATE,
+                STUDENT_CPF_FORMATTED,
+                STUDENT_SCHOOL,
+                STUDENT_CONTACT_FORMATTED,
+                STUDENT_EMAIL,
+                Activity.ENEM,
+                null,
+                parentId,
+                null
+        );
+    }
+
+    private CreateStudentDTO studentDtoWithoutParent() {
+        return new CreateStudentDTO(
+                STUDENT_NAME,
+                STUDENT_BIRTHDATE,
+                STUDENT_CPF_FORMATTED,
+                STUDENT_SCHOOL,
+                STUDENT_CONTACT_FORMATTED,
+                STUDENT_EMAIL,
+                Activity.ENEM,
+                null,
+                null,
+                null
+        );
+    }
+
+    private UpdateStudentDTO updateStudentDtoWithParent(CreateParentDTO createParentDTO) {
+        return new UpdateStudentDTO(
+                STUDENT_NAME,
+                STUDENT_BIRTHDATE,
+                STUDENT_CPF_FORMATTED,
+                STUDENT_SCHOOL,
+                STUDENT_CONTACT_FORMATTED,
+                STUDENT_EMAIL,
+                Activity.ENEM,
+                null,
+                null,
+                createParentDTO
+        );
+    }
+
+    private UpdateStudentDTO updateStudentDtoWithParentId(UUID parentId) {
+        return new UpdateStudentDTO(
+                STUDENT_NAME,
+                STUDENT_BIRTHDATE,
+                STUDENT_CPF_FORMATTED,
+                STUDENT_SCHOOL,
+                STUDENT_CONTACT_FORMATTED,
+                STUDENT_EMAIL,
+                Activity.ENEM,
+                null,
+                parentId,
+                null
+        );
     }
 }
