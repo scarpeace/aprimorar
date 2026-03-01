@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
 import {
@@ -66,7 +67,11 @@ export function StudentsPage() {
                 <TableCell>{student.activity}</TableCell>
                 <TableCell>{student.school}</TableCell>
                 <TableCell>{student.active ? "Yes" : "No"}</TableCell>
-                <TableCell>Details</TableCell>
+                <TableCell>
+                  <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/students/${student.id}`}>
+                    Details
+                  </Link>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
