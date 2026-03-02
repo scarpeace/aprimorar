@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table"
 import type { StudentResponse } from "@/lib/schemas"
 import { getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
+import styles from "@/features/students/StudentsPage.module.css"
 
 export function StudentsPage() {
   const [studentList, setStudentList] = useState<StudentResponse[]>([])
@@ -43,7 +44,7 @@ export function StudentsPage() {
 
   if (error) {
     return (
-      <div className="space-y-4">
+      <div className={styles.page}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
           <p className="text-sm text-gray-600">Gerencie cadastros e matriculas.</p>
@@ -59,8 +60,8 @@ export function StudentsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+    <div className={styles.page}>
+      <div className={styles.header}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
           <p className="text-sm text-gray-600">Gerencie cadastros e matriculas.</p>
@@ -68,11 +69,11 @@ export function StudentsPage() {
         <Button type="button">Novo aluno</Button>
       </div>
 
-      <div className="rounded-md border bg-white">
+      <div className={styles.tableWrap}>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Nome</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Atividade</TableHead>
               <TableHead>Escola</TableHead>

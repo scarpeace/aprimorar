@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table"
 import type { EmployeeResponse } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
+import styles from "@/features/employees/EmployeesPage.module.css"
 
 export function EmployeesPage() {
   const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])
@@ -43,7 +44,7 @@ export function EmployeesPage() {
 
   if (error) {
     return (
-      <div className="space-y-4">
+      <div className={styles.page}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
           <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
@@ -59,8 +60,8 @@ export function EmployeesPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+    <div className={styles.page}>
+      <div className={styles.header}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
           <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
@@ -68,11 +69,11 @@ export function EmployeesPage() {
         <Button type="button">Novo colaborador</Button>
       </div>
 
-      <div className="rounded-md border bg-white">
+      <div className={styles.tableWrap}>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Nome</TableHead>
               <TableHead>Cargo</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>PIX</TableHead>

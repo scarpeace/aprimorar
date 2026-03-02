@@ -5,6 +5,7 @@ import { UserCog, Mail, CreditCard, Shield, CheckCircle } from "lucide-react"
 import { useEffect, useState } from "react"
 import type { EmployeeResponse } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
+import styles from "@/features/employees/EmployeeDetailPage.module.css"
 
 function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
   return (
@@ -54,29 +55,29 @@ export function EmployeeDetailPage() {
       if(!employee) return <div>Colaborador nao encontrado.</div>
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+    <div className={styles.page}>
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
             <UserCog className="h-6 w-6 text-green-600" />
           </div>
           <div>
-             <h1 className="text-2xl font-bold text-gray-900">Employee Details</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Detalhes do colaborador</h1>
              <p className="text-sm text-gray-500">Veja e gerencie as informacoes do colaborador</p>
-           </div>
-         </div>
-         <Button asChild type="button" variant="outline">
-           <Link to="/employees">
+          </div>
+        </div>
+        <Button asChild type="button" variant="outline">
+          <Link to="/employees">
              ← Voltar para colaboradores
-           </Link>
-         </Button>
-       </div>
+          </Link>
+        </Button>
+      </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className={styles.contentGrid}>
         <Card className="border-l-4 border-l-green-500">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
-               <UserCog className="h-5 w-5 text-green-500" />
+              <UserCog className="h-5 w-5 text-green-500" />
               Informacoes pessoais
             </CardTitle>
             <CardDescription>Dados principais do colaborador</CardDescription>

@@ -5,6 +5,7 @@ import { Calendar, User, GraduationCap, Clock, DollarSign } from "lucide-react"
 import type { EventResponse } from "@/lib/schemas"
 import { useEffect, useState } from "react"
 import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
+import styles from "@/features/events/EventDetailPage.module.css"
 
 //TODO Improve layout on this page/component + Translate labels + Errors to portuguese
 function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
@@ -66,9 +67,9 @@ export function EventDetailPage() {
 
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+    <div className={styles.page}>
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
             <Calendar className="h-6 w-6 text-purple-600" />
           </div>
@@ -84,7 +85,7 @@ export function EventDetailPage() {
         </Button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className={styles.contentGrid}>
         <Card className="border-l-4 border-l-purple-500">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
@@ -97,6 +98,7 @@ export function EventDetailPage() {
             <DetailField label="ID" value={id ?? "-"} />
             <DetailField label="Titulo" value={event.title} icon={Calendar} />
             <DetailField label="Descricao" value={event.description ?? "-"} />
+            <DetailField label="Data" value={event.startDateTime} icon={Clock} />
             <DetailField label="Inicio" value={event.startDateTime} icon={Clock} />
             <DetailField label="Fim" value={event.endDateTime} icon={Clock} />
           </CardContent>

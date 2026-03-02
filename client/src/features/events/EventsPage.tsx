@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table"
 import type { EventResponse } from "@/lib/schemas"
 import { eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
+import styles from "@/features/events/EventsPage.module.css"
 
 export function EventsPage() {
   const [eventList, setEventList] = useState<EventResponse[]>([])
@@ -43,7 +44,7 @@ export function EventsPage() {
 
   if (error) {
     return (
-      <div className="space-y-4">
+      <div className={styles.page}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
           <p className="text-sm text-gray-600">Gerencie horarios, precos e atribuicoes.</p>
@@ -59,8 +60,8 @@ export function EventsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+    <div className={styles.page}>
+      <div className={styles.header}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
           <p className="text-sm text-gray-600">Gerencie horarios, precos e atribuicoes.</p>
@@ -68,11 +69,11 @@ export function EventsPage() {
         <Button type="button">Novo evento</Button>
       </div>
 
-      <div className="rounded-md border bg-white">
+      <div className={styles.tableWrap}>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Title</TableHead>
+              <TableHead>Titulo</TableHead>
               <TableHead>Aluno</TableHead>
               <TableHead>Colaborador</TableHead>
               <TableHead>Data/Hora</TableHead>

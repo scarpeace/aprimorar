@@ -5,6 +5,7 @@ import { GraduationCap, Mail, School, MapPin, User, CheckCircle } from "lucide-r
 import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
 import { useEffect, useState } from "react"
 import type { StudentResponse } from "@/lib/schemas"
+import styles from "@/features/students/StudentDetailPage.module.css"
 
 //TODO Improve layout on this page/component + Translate labels + Errors to portuguese
 function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
@@ -55,9 +56,9 @@ export function StudentDetailPage() {
      if(!student) return <div>Aluno nao encontrado.</div>
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+    <div className={styles.page}>
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
             <GraduationCap className="h-6 w-6 text-blue-600" />
           </div>
@@ -73,7 +74,7 @@ export function StudentDetailPage() {
         </Button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className={styles.contentGrid}>
         <Card className="border-l-4 border-l-blue-500">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
