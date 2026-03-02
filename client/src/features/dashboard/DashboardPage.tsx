@@ -24,8 +24,6 @@ export function DashboardPage() {
         const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
         const eventsPage: PageResponse<EventResponse> = eventsRes.data
 
-        console.log(eventsPage);
-
         setStudentsCount(studentsPage.totalElements)
         setEmployeesCount(employeesPage.totalElements)
         setEventsCount(eventsPage.totalElements)
