@@ -2,6 +2,9 @@ import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { UserCog, Mail, CreditCard, Shield, CheckCircle } from "lucide-react"
+import { useEffect, useState } from "react";
+import type { EmployeeResponse } from "@/lib/schemas";
+import { employeesApi } from "@/services/api";
 
 function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
   return (
@@ -17,6 +20,37 @@ function DetailField({ label, value, icon: Icon }: { label: string; value: strin
 
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
+  const [employee, setEmployee] = useState<EmployeeResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+
+      if(!id){
+        setError("Missing student id")
+        setLoading(false)
+        return;
+      }
+  
+      const fetchStudent = async () =>{
+        try{
+          setLoading(true);
+          setError(null);
+  
+          const res = await employeesApi.getById(id);
+          setEmployee(res.data);
+        }catch (error) {
+            console.error("Failed to load student:", error)
+          } finally {
+            setLoading(false)
+          }
+      }
+        fetchStudent();
+      }, [id])
+  
+      if (loading) return <div>Loading...</div>
+      if(error) return <div>{error}</div>
+      if(!employee) return <div>Employee not Found</div>
 
   return (
     <div className="space-y-6">
@@ -47,10 +81,9 @@ export function EmployeeDetailPage() {
             <CardDescription>Core employee details</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <DetailField label="ID" value={id ?? "-"} />
-            <DetailField label="Full Name" value="-" icon={UserCog} />
-            <DetailField label="Email Address" value="-" icon={Mail} />
-            <DetailField label="Role" value="-" icon={Shield} />
+            <DetailField label="Full Name" value={employee.name} icon={UserCog} />
+            <DetailField label="Email Address" value={employee.email} icon={Mail} />
+            <DetailField label="Role" value={employee.role} icon={Shield} />
           </CardContent>
         </Card>
 
@@ -63,7 +96,7 @@ export function EmployeeDetailPage() {
             <CardDescription>PIX and account status</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <DetailField label="PIX Key" value="-" icon={CreditCard} />
+            <DetailField label="PIX Key" value={employee.pix} icon={CreditCard} />
             <DetailField label="Account Status" value="-" icon={CheckCircle} />
           </CardContent>
         </Card>

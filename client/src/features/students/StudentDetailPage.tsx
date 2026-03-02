@@ -2,7 +2,11 @@ import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { GraduationCap, Mail, School, MapPin, User, CheckCircle } from "lucide-react"
+import { studentsApi } from "@/services/api";
+import { useEffect, useState } from "react";
+import type { StudentResponse } from "@/lib/schemas";
 
+//TODO Improve layout on this page/component + Translate labels + Errors to portuguese
 function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
   return (
     <div className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
@@ -17,6 +21,37 @@ function DetailField({ label, value, icon: Icon }: { label: string; value: strin
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
+  const [student, setStudent] = useState<StudentResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+
+    if(!id){
+      setError("Missing student id")
+      setLoading(false)
+      return;
+    }
+
+    const fetchStudent = async () =>{
+      try{
+        setLoading(true);
+        setError(null);
+
+        const res = await studentsApi.getById(id);
+        setStudent(res.data);
+      }catch (error) {
+          console.error("Failed to load student:", error)
+        } finally {
+          setLoading(false)
+        }
+    }
+      fetchStudent();
+    }, [id])
+
+    if (loading) return <div>Loading...</div>
+    if(error) return <div>{error}</div>
+    if(!student) return <div>Student not Found</div>
 
   return (
     <div className="space-y-6">
@@ -47,10 +82,15 @@ export function StudentDetailPage() {
             <CardDescription>Core student details</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <DetailField label="ID" value={id ?? "-"} />
-            <DetailField label="Full Name" value="-" icon={User} />
-            <DetailField label="Email Address" value="-" icon={Mail} />
-            <DetailField label="Activity Type" value="-" icon={GraduationCap} />
+            <DetailField label="Nome Completo" value={student.name} icon={User} />
+            <DetailField label="CPF" value={student.cpf} icon={Mail} />
+            <DetailField label="Email" value={student.email} icon={GraduationCap} />
+            <DetailField label="Atividade" value={student.activity} icon={GraduationCap} />
+            <DetailField label="Contato" value={student.contact} icon={GraduationCap} />
+            <DetailField label="Data Nascimento" value={student.birthdate} icon={GraduationCap} />
+            <DetailField label="Matrícula" value={student.createdAt} icon={GraduationCap} />
+            <DetailField label="Escola" value={student.school} icon={GraduationCap} />
+            <DetailField label="Responsável" value={student.parent?.name ?? "-"} icon={GraduationCap} />
           </CardContent>
         </Card>
 
