@@ -1,6 +1,5 @@
 package com.aprimorar.api.util;
 
-import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -8,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Shared transformation and sanitization methods for all MapStruct mappers.
+ * Shared transformation and sanitization methods for all application mappers.
  * Single source of truth — eliminates duplication across StudentMapper, EmployeeMapper, ParentMapper.
  */
 @Component
@@ -21,21 +20,18 @@ public class MapperUtils {
     // ========================================
 
     /** Strips CPF formatting, keeps only digits. Input is guaranteed valid by DTO @Pattern. */
-    @Named("sanitizeCpf")
     public String sanitizeCpf(String cpf) {
         if (cpf == null || cpf.isBlank()) return null;
         return cpf.replaceAll("\\D", "");
     }
 
     /** Trims and lowercases email. */
-    @Named("sanitizeEmail")
     public String sanitizeEmail(String email) {
         if (email == null || email.isBlank()) return null;
         return email.trim().toLowerCase();
     }
 
     /** Strips contact formatting, keeps only digits. Input is guaranteed valid by DTO @Pattern. */
-    @Named("sanitizeContact")
     public String sanitizeContact(String contact) {
         if (contact == null || contact.isBlank()) return null;
         return contact.replaceAll("\\D", "");
@@ -46,7 +42,6 @@ public class MapperUtils {
     // ========================================
 
     /** Formats stored CPF digits to display format: 123.456.789-00 */
-    @Named("formatCpf")
     public String formatCpf(String cpf) {
         if (cpf == null || cpf.length() != 11) return cpf;
         return String.format("%s.%s.%s-%s",
@@ -57,7 +52,6 @@ public class MapperUtils {
     }
 
     /** Formats stored contact digits to display format: (61)99923-4523 */
-    @Named("formatContact")
     public String formatContact(String contact) {
         if (contact == null || contact.length() != 11) return contact;
         return String.format("(%s)%s-%s",
@@ -67,7 +61,6 @@ public class MapperUtils {
     }
 
     /** Parses stored birthdate string back to LocalDate */
-    @Named("parseBirthdate")
     public LocalDate parseBirthdate(String birthdate) {
         if (birthdate == null || birthdate.isBlank()) return null;
         try {
@@ -77,4 +70,3 @@ public class MapperUtils {
         }
     }
 }
-

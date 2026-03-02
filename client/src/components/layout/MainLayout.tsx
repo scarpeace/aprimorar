@@ -1,7 +1,6 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, Outlet } from "react-router-dom"
 import {
   LayoutDashboard,
-  Users,
   UserCog,
   Calendar,
   GraduationCap,
@@ -13,14 +12,10 @@ const navigation = [
   { name: "Students", href: "/students", icon: GraduationCap },
   { name: "Employees", href: "/employees", icon: UserCog },
   { name: "Events", href: "/events", icon: Calendar },
-  { name: "Parents", href: "/parents", icon: Users },
 ]
 
-interface MainLayoutProps {
-  children: React.ReactNode
-}
 
-export function MainLayout({ children }: MainLayoutProps) {
+export function MainLayout() {
   const location = useLocation()
 
   return (
@@ -51,7 +46,9 @@ export function MainLayout({ children }: MainLayoutProps) {
         </nav>
       </aside>
       <main className="flex-1 overflow-y-auto">
-        <div className="p-8">{children}</div>
+        <div className="p-8">
+          <Outlet/>
+        </div>
       </main>
     </div>
   )

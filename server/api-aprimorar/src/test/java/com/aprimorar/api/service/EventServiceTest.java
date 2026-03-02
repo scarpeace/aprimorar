@@ -49,6 +49,10 @@ class EventServiceTest {
 
     private static final LocalDateTime VALID_START = LocalDateTime.of(2027, 6, 1, 10, 0);
     private static final LocalDateTime VALID_END   = LocalDateTime.of(2027, 6, 1, 11, 0);
+    private static final String VALID_TITLE = "This is the first event of the month";
+    private static final String VALID_DESCRIPTION = "This is the description of the test event";
+    private static final BigDecimal VALID_PRICE = new BigDecimal("100.00");
+    private static final BigDecimal VALID_PAYMENT = new BigDecimal("50.00");
 
     // ─── listEvents ───────────────────────────────────────────────────────────
 
@@ -135,13 +139,7 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
 
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("100.00"), new BigDecimal("50.00"),
-                studentId, employeeId
-        );
+        CreateEventDTO dto = validCreateEventDto(studentId, employeeId);
 
         Student student = new Student();
         Employee employee = new Employee();
@@ -149,8 +147,8 @@ class EventServiceTest {
         Event savedEvent = new Event();
         EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
-        when(studentRepo.findById(studentId)).thenReturn(Optional.of(student));
-        when(employeeRepo.findById(employeeId)).thenReturn(Optional.of(employee));
+        when(studentRepo.findByIdAndActiveTrue(studentId)).thenReturn(Optional.of(student));
+        when(employeeRepo.findByIdAndActiveTrue(employeeId)).thenReturn(Optional.of(employee));
         when(eventMapper.toEntity(dto)).thenReturn(newEvent);
         when(eventRepo.save(newEvent)).thenReturn(savedEvent);
         when(eventMapper.toDto(savedEvent)).thenReturn(responseDto);
@@ -161,8 +159,8 @@ class EventServiceTest {
         assertSame(student, newEvent.getStudent());
         assertSame(employee, newEvent.getEmployee());
 
-        verify(studentRepo).findById(studentId);
-        verify(employeeRepo).findById(employeeId);
+        verify(studentRepo).findByIdAndActiveTrue(studentId);
+        verify(employeeRepo).findByIdAndActiveTrue(employeeId);
         verify(eventMapper).toEntity(dto);
         verify(eventRepo).save(newEvent);
         verify(eventMapper).toDto(savedEvent);
@@ -174,19 +172,13 @@ class EventServiceTest {
     void testCreateEventStudentNotFound() {
         UUID studentId = UUID.randomUUID();
 
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("100.00"), new BigDecimal("50.00"),
-                studentId, UUID.randomUUID()
-        );
+        CreateEventDTO dto = validCreateEventDto(studentId, UUID.randomUUID());
 
-        when(studentRepo.findById(studentId)).thenReturn(Optional.empty());
+        when(studentRepo.findByIdAndActiveTrue(studentId)).thenReturn(Optional.empty());
 
         assertThrows(StudentNotFoundException.class, () -> eventService.createEvent(dto));
 
-        verify(studentRepo).findById(studentId);
+        verify(studentRepo).findByIdAndActiveTrue(studentId);
         verifyNoMoreInteractions(studentRepo);
         verifyNoInteractions(employeeRepo, eventMapper, eventRepo);
     }
@@ -197,22 +189,16 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
 
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("100.00"), new BigDecimal("50.00"),
-                studentId, employeeId
-        );
+        CreateEventDTO dto = validCreateEventDto(studentId, employeeId);
 
         Student student = new Student();
-        when(studentRepo.findById(studentId)).thenReturn(Optional.of(student));
-        when(employeeRepo.findById(employeeId)).thenReturn(Optional.empty());
+        when(studentRepo.findByIdAndActiveTrue(studentId)).thenReturn(Optional.of(student));
+        when(employeeRepo.findByIdAndActiveTrue(employeeId)).thenReturn(Optional.empty());
 
         assertThrows(EmployeeNotFoundException.class, () -> eventService.createEvent(dto));
 
-        verify(studentRepo).findById(studentId);
-        verify(employeeRepo).findById(employeeId);
+        verify(studentRepo).findByIdAndActiveTrue(studentId);
+        verify(employeeRepo).findByIdAndActiveTrue(employeeId);
         verifyNoMoreInteractions(studentRepo, employeeRepo);
         verifyNoInteractions(eventMapper, eventRepo);
     }
@@ -226,23 +212,11 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
 
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("100.00"), new BigDecimal("50.00"),
-                studentId, employeeId
-        );
+        CreateEventDTO dto = validCreateEventDto(studentId, employeeId);
 
-        Student student = new Student();
-        student.setId(studentId);
-
-        Employee employee = new Employee();
-        employee.setId(employeeId);
-
-        Event foundEvent = new Event();
-        foundEvent.setStudent(student);
-        foundEvent.setEmployee(employee);
+        Student student = studentWithId(studentId);
+        Employee employee = employeeWithId(employeeId);
+        Event foundEvent = eventWithParticipants(student, employee);
 
         EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
@@ -267,31 +241,17 @@ class EventServiceTest {
         UUID newStudentId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
 
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("100.00"), new BigDecimal("50.00"),
-                newStudentId, employeeId
-        );
+        CreateEventDTO dto = validCreateEventDto(newStudentId, employeeId);
 
-        Student oldStudent = new Student();
-        oldStudent.setId(UUID.randomUUID()); // different from DTO
-
-        Employee employee = new Employee();
-        employee.setId(employeeId); // same as DTO
-
-        Student newStudent = new Student();
-        newStudent.setId(newStudentId);
-
-        Event foundEvent = new Event();
-        foundEvent.setStudent(oldStudent);
-        foundEvent.setEmployee(employee);
+        Student oldStudent = studentWithId(UUID.randomUUID());
+        Employee employee = employeeWithId(employeeId);
+        Student newStudent = studentWithId(newStudentId);
+        Event foundEvent = eventWithParticipants(oldStudent, employee);
 
         EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
         when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
-        when(studentRepo.findById(newStudentId)).thenReturn(Optional.of(newStudent));
+        when(studentRepo.findByIdAndActiveTrue(newStudentId)).thenReturn(Optional.of(newStudent));
         when(eventMapper.toDto(foundEvent)).thenReturn(responseDto);
 
         EventResponseDTO result = eventService.updateEvent(eventId, dto);
@@ -301,7 +261,7 @@ class EventServiceTest {
 
         verify(eventRepo).findById(eventId);
         verify(eventMapper).updateFromDto(dto, foundEvent);
-        verify(studentRepo).findById(newStudentId);
+        verify(studentRepo).findByIdAndActiveTrue(newStudentId);
         verify(eventMapper).toDto(foundEvent);
         verifyNoMoreInteractions(eventRepo, eventMapper, studentRepo);
         verifyNoInteractions(employeeRepo);
@@ -314,31 +274,17 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
         UUID newEmployeeId = UUID.randomUUID();
 
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("100.00"), new BigDecimal("50.00"),
-                studentId, newEmployeeId
-        );
+        CreateEventDTO dto = validCreateEventDto(studentId, newEmployeeId);
 
-        Student student = new Student();
-        student.setId(studentId); // same as DTO
-
-        Employee oldEmployee = new Employee();
-        oldEmployee.setId(UUID.randomUUID()); // different from DTO
-
-        Employee newEmployee = new Employee();
-        newEmployee.setId(newEmployeeId);
-
-        Event foundEvent = new Event();
-        foundEvent.setStudent(student);
-        foundEvent.setEmployee(oldEmployee);
+        Student student = studentWithId(studentId);
+        Employee oldEmployee = employeeWithId(UUID.randomUUID());
+        Employee newEmployee = employeeWithId(newEmployeeId);
+        Event foundEvent = eventWithParticipants(student, oldEmployee);
 
         EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
         when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
-        when(employeeRepo.findById(newEmployeeId)).thenReturn(Optional.of(newEmployee));
+        when(employeeRepo.findByIdAndActiveTrue(newEmployeeId)).thenReturn(Optional.of(newEmployee));
         when(eventMapper.toDto(foundEvent)).thenReturn(responseDto);
 
         EventResponseDTO result = eventService.updateEvent(eventId, dto);
@@ -348,7 +294,7 @@ class EventServiceTest {
 
         verify(eventRepo).findById(eventId);
         verify(eventMapper).updateFromDto(dto, foundEvent);
-        verify(employeeRepo).findById(newEmployeeId);
+        verify(employeeRepo).findByIdAndActiveTrue(newEmployeeId);
         verify(eventMapper).toDto(foundEvent);
         verifyNoMoreInteractions(eventRepo, eventMapper, employeeRepo);
         verifyNoInteractions(studentRepo);
@@ -358,13 +304,7 @@ class EventServiceTest {
     @DisplayName("Should throw EventNotFoundException when event is not found during update")
     void testUpdateEvent_eventNotFound() {
         Long eventId = 99L;
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("100.00"), new BigDecimal("50.00"),
-                UUID.randomUUID(), UUID.randomUUID()
-        );
+        CreateEventDTO dto = validCreateEventDto(UUID.randomUUID(), UUID.randomUUID());
 
         when(eventRepo.findById(eventId)).thenReturn(Optional.empty());
 
@@ -382,32 +322,20 @@ class EventServiceTest {
         UUID newStudentId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
 
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("100.00"), new BigDecimal("50.00"),
-                newStudentId, employeeId
-        );
+        CreateEventDTO dto = validCreateEventDto(newStudentId, employeeId);
 
-        Student oldStudent = new Student();
-        oldStudent.setId(UUID.randomUUID()); // different from DTO
-
-        Employee employee = new Employee();
-        employee.setId(employeeId); // same as DTO
-
-        Event foundEvent = new Event();
-        foundEvent.setStudent(oldStudent);
-        foundEvent.setEmployee(employee);
+        Student oldStudent = studentWithId(UUID.randomUUID());
+        Employee employee = employeeWithId(employeeId);
+        Event foundEvent = eventWithParticipants(oldStudent, employee);
 
         when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
-        when(studentRepo.findById(newStudentId)).thenReturn(Optional.empty());
+        when(studentRepo.findByIdAndActiveTrue(newStudentId)).thenReturn(Optional.empty());
 
         assertThrows(StudentNotFoundException.class, () -> eventService.updateEvent(eventId, dto));
 
         verify(eventRepo).findById(eventId);
         verify(eventMapper).updateFromDto(dto, foundEvent);
-        verify(studentRepo).findById(newStudentId);
+        verify(studentRepo).findByIdAndActiveTrue(newStudentId);
         verifyNoMoreInteractions(eventRepo, eventMapper, studentRepo);
         verifyNoInteractions(employeeRepo);
     }
@@ -419,32 +347,20 @@ class EventServiceTest {
         UUID studentId = UUID.randomUUID();
         UUID newEmployeeId = UUID.randomUUID();
 
-        CreateEventDTO dto = new CreateEventDTO(
-                "This is the first event of the month",
-                "This is the description of the test event",
-                VALID_START, VALID_END,
-                new BigDecimal("100.00"), new BigDecimal("50.00"),
-                studentId, newEmployeeId
-        );
+        CreateEventDTO dto = validCreateEventDto(studentId, newEmployeeId);
 
-        Student student = new Student();
-        student.setId(studentId); // same as DTO
-
-        Employee oldEmployee = new Employee();
-        oldEmployee.setId(UUID.randomUUID()); // different from DTO
-
-        Event foundEvent = new Event();
-        foundEvent.setStudent(student);
-        foundEvent.setEmployee(oldEmployee);
+        Student student = studentWithId(studentId);
+        Employee oldEmployee = employeeWithId(UUID.randomUUID());
+        Event foundEvent = eventWithParticipants(student, oldEmployee);
 
         when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
-        when(employeeRepo.findById(newEmployeeId)).thenReturn(Optional.empty());
+        when(employeeRepo.findByIdAndActiveTrue(newEmployeeId)).thenReturn(Optional.empty());
 
         assertThrows(EmployeeNotFoundException.class, () -> eventService.updateEvent(eventId, dto));
 
         verify(eventRepo).findById(eventId);
         verify(eventMapper).updateFromDto(dto, foundEvent);
-        verify(employeeRepo).findById(newEmployeeId);
+        verify(employeeRepo).findByIdAndActiveTrue(newEmployeeId);
         verifyNoMoreInteractions(eventRepo, eventMapper, employeeRepo);
         verifyNoInteractions(studentRepo);
     }
@@ -480,5 +396,36 @@ class EventServiceTest {
         verifyNoMoreInteractions(eventRepo);
         verifyNoInteractions(studentRepo, employeeRepo, eventMapper);
     }
-}
 
+    private CreateEventDTO validCreateEventDto(UUID studentId, UUID employeeId) {
+        return new CreateEventDTO(
+                VALID_TITLE,
+                VALID_DESCRIPTION,
+                VALID_START,
+                VALID_END,
+                VALID_PRICE,
+                VALID_PAYMENT,
+                studentId,
+                employeeId
+        );
+    }
+
+    private Student studentWithId(UUID studentId) {
+        Student student = new Student();
+        student.setId(studentId);
+        return student;
+    }
+
+    private Employee employeeWithId(UUID employeeId) {
+        Employee employee = new Employee();
+        employee.setId(employeeId);
+        return employee;
+    }
+
+    private Event eventWithParticipants(Student student, Employee employee) {
+        Event event = new Event();
+        event.setStudent(student);
+        event.setEmployee(employee);
+        return event;
+    }
+}

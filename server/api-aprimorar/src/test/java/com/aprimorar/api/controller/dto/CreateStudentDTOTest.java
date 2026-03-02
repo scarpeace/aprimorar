@@ -42,14 +42,33 @@ class CreateStudentDTOTest {
                 .collect(Collectors.toSet());
     }
 
-    @Test
-    @DisplayName("Should have no violations when all fields are valid")
-    void validDto() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+    private CreateStudentDTO studentDto(
+            String name,
+            LocalDate birthdate,
+            String cpf,
+            String school,
+            String contact,
+            String email,
+            Activity activity,
+            CreateAddressDTO address,
+            UUID parentId,
+            CreateParentDTO parent
+    ) {
+        return new CreateStudentDTO(name, birthdate, cpf, school, contact, email, activity, address, parentId, parent);
+    }
+
+    private CreateStudentDTO validStudentDto() {
+        return studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
         );
+    }
+
+    @Test
+    @DisplayName("Should have no violations when all fields are valid")
+    void validDto() {
+        CreateStudentDTO dto = validStudentDto();
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
     }
@@ -59,7 +78,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when name is null")
     void nullName() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 null, VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -74,7 +93,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when birthdate is null")
     void nullBirthdate() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", null, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -87,7 +106,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when birthdate is in the future")
     void futureBirthdate() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", FUTURE_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -102,7 +121,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when CPF is null")
     void nullCpf() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, null,
                 "Great School", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -115,7 +134,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when CPF format is invalid")
     void invalidCpf() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "12345",
                 "Great School", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -130,7 +149,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when school is blank")
     void blankSchool() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -145,7 +164,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when contact is blank")
     void blankContact() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -158,7 +177,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when contact format is invalid")
     void invalidContact() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "123", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -171,7 +190,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when contact format has 4-digit middle")
     void invalidContactWithFourDigits() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)9999-9999", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -186,7 +205,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when email is blank")
     void blankEmail() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -199,7 +218,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when email format is invalid")
     void invalidEmail() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "not-an-email",
                 Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
@@ -213,7 +232,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when activity is null")
     void nullActivity() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
                 null, VALID_ADDRESS, null, VALID_PARENT
@@ -228,7 +247,7 @@ class CreateStudentDTOTest {
     @Test
     @DisplayName("Should have 1 violation when address is null")
     void nullAddress() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, null, null, VALID_PARENT
@@ -241,16 +260,41 @@ class CreateStudentDTOTest {
     // ─── parent ───────────────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("Should have 1 violation when parent is null")
-    void nullParent() {
-        CreateStudentDTO dto = new CreateStudentDTO(
+    @DisplayName("Should have 1 violation when both parentId and parent are null")
+    void noParentReference() {
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, null
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student Parent can't be null"));
+        assertTrue(messages(violations).contains("Provide either parentId or parent"));
+    }
+
+    @Test
+    @DisplayName("Should have no violations when parentId is provided and parent is null")
+    void parentIdOnly() {
+        CreateStudentDTO dto = studentDto(
+                "Student Name", VALID_BIRTHDATE, "123.456.789-01",
+                "Great School", "(11)99999-9999", "student@email.com",
+                Activity.ENEM, VALID_ADDRESS, UUID.randomUUID(), null
+        );
+        Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should have 1 violation when both parentId and parent are provided")
+    void parentIdAndParentTogether() {
+        CreateStudentDTO dto = studentDto(
+                "Student Name", VALID_BIRTHDATE, "123.456.789-01",
+                "Great School", "(11)99999-9999", "student@email.com",
+                Activity.ENEM, VALID_ADDRESS, UUID.randomUUID(), VALID_PARENT
+        );
+        Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
+        assertFalse(violations.isEmpty());
+        assertTrue(messages(violations).contains("Provide either parentId or parent, not both"));
     }
 
     // ─── cascaded validations ─────────────────────────────────────────────────
@@ -261,7 +305,7 @@ class CreateStudentDTOTest {
         CreateAddressDTO invalidAddress =
                 new CreateAddressDTO("", "123", null, "District", "City", "ST", "12345-678");
 
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, invalidAddress, null, VALID_PARENT
@@ -277,7 +321,7 @@ class CreateStudentDTOTest {
         CreateParentDTO invalidParent =
                 new CreateParentDTO(null, "parent@email.com", "(11)99999-9999", "123.456.789-01");
 
-        CreateStudentDTO dto = new CreateStudentDTO(
+        CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
                 Activity.ENEM, VALID_ADDRESS, null, invalidParent

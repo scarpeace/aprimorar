@@ -2,6 +2,7 @@ package com.aprimorar.api.controller;
 
 import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
+import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,7 +38,6 @@ public class StudentController {
             @RequestParam(defaultValue = "20") @Max(100) int size,
             @RequestParam(defaultValue = "name") String sortBy
     ){
-
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable);
         return ResponseEntity.ok(allStudents);
@@ -48,7 +48,7 @@ public class StudentController {
     @GetMapping("/active")
     public ResponseEntity<Page<StudentResponseDTO>> listActiveStudents(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "20") @Max(100) int size,
             @RequestParam(defaultValue = "name") String sortBy
     ){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
@@ -86,9 +86,9 @@ public class StudentController {
     @PatchMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> updateStudent(
             @PathVariable UUID studentId ,
-            @RequestBody @Valid CreateStudentDTO createStudentDto){
+            @RequestBody @Valid UpdateStudentDTO updateStudentDto){
 
-        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, createStudentDto);
+        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, updateStudentDto);
 
         return ResponseEntity.ok(updatedStudent);
     }

@@ -8,12 +8,10 @@ import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.enums.Activity;
+import com.aprimorar.api.util.MapperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
-import org.springframework.test.util.ReflectionTestUtils;
-import com.aprimorar.api.util.MapperUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -32,34 +30,26 @@ class StudentMapperTest {
             "Parent Name", "PARENT@EMAIL.COM", "(61)99923-4523", "123.456.789-01"
     );
 
+    private static final String STUDENT_NAME = "Student Name";
+    private static final LocalDate STUDENT_BIRTHDATE = LocalDate.of(2000, 1, 1);
+    private static final String STUDENT_CPF_FORMATTED = "123.456.789-01";
+    private static final String STUDENT_CONTACT_FORMATTED = "(61)99923-4523";
+    private static final String STUDENT_CONTACT_RAW = "61999234523";
+    private static final String STUDENT_EMAIL = "student@email.com";
+
     @BeforeEach
     void setup() {
         MapperUtils mapperUtils = new MapperUtils();
+        ParentMapper parentMapper = new ParentMapper(mapperUtils);
+        AddressMapper addressMapper = new AddressMapper();
 
-        ParentMapper parentMapper = Mappers.getMapper(ParentMapper.class);
-        ReflectionTestUtils.setField(parentMapper, "mapperUtils", mapperUtils);
-
-        mapper = Mappers.getMapper(StudentMapper.class);
-        ReflectionTestUtils.setField(mapper, "parentMapper", parentMapper);
-        ReflectionTestUtils.setField(mapper, "addressMapper", Mappers.getMapper(AddressMapper.class));
-        ReflectionTestUtils.setField(mapper, "mapperUtils", mapperUtils);
+        mapper = new StudentMapper(parentMapper, addressMapper, mapperUtils);
     }
 
     @Test
     @DisplayName("Should sanitize contact, cpf, and email when mapping to entity")
     void toEntity_shouldSanitizeContactCpfAndEmail() {
-        CreateStudentDTO dto = new CreateStudentDTO(
-                "Student Name",
-                LocalDate.of(2000, 1, 1),
-                "123.456.789-01",
-                "School",
-                "(61)99923-4523",
-                "  STUDENT@EMAIL.COM ",
-                Activity.ENEM,
-                VALID_ADDRESS,
-                null,
-                VALID_PARENT
-        );
+        CreateStudentDTO dto = validCreateStudentDto("  STUDENT@EMAIL.COM ");
 
         Student entity = mapper.toEntity(dto);
 
@@ -71,12 +61,36 @@ class StudentMapperTest {
     @Test
     @DisplayName("Should format contact when mapping to DTO")
     void toDto_shouldFormatContact() {
+        Student entity = validStudentEntity();
+
+        StudentResponseDTO dto = mapper.toDto(entity);
+
+        assertEquals("(61)99923-4523", dto.contact());
+        assertEquals("123.456.789-01", dto.cpf());
+    }
+
+    private CreateStudentDTO validCreateStudentDto(String email) {
+        return new CreateStudentDTO(
+                STUDENT_NAME,
+                STUDENT_BIRTHDATE,
+                STUDENT_CPF_FORMATTED,
+                "School",
+                STUDENT_CONTACT_FORMATTED,
+                email,
+                Activity.ENEM,
+                VALID_ADDRESS,
+                null,
+                VALID_PARENT
+        );
+    }
+
+    private Student validStudentEntity() {
         Student entity = new Student();
         entity.setId(java.util.UUID.randomUUID());
-        entity.setName("Student Name");
-        entity.setContact("61999234523");
-        entity.setEmail("student@email.com");
-        entity.setBirthdate(LocalDate.of(2000, 1, 1));
+        entity.setName(STUDENT_NAME);
+        entity.setContact(STUDENT_CONTACT_RAW);
+        entity.setEmail(STUDENT_EMAIL);
+        entity.setBirthdate(STUDENT_BIRTHDATE);
         entity.setCpf("12345678901");
         entity.setSchool("School");
         entity.setActivity(Activity.ENEM);
@@ -84,11 +98,7 @@ class StudentMapperTest {
         entity.setAddress(new Address());
         entity.setActive(true);
         entity.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
-
-        StudentResponseDTO dto = mapper.toDto(entity);
-
-        assertEquals("(61)99923-4523", dto.contact());
-        assertEquals("123.456.789-01", dto.cpf());
+        return entity;
     }
 
 }

@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-//TODO N+1 problem in queries
+// TODO: Optimize event listing query to avoid N+1 selects.
 
 @RestController
 @RequestMapping("/v1/events")
@@ -57,8 +57,8 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "Update EVENT", description = "Updates event with full event data")
-    @PatchMapping("/{eventId}")
+    @Operation(summary = "Update EVENT", description = "Replaces event with full event data")
+    @PutMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable Long eventId,
             @RequestBody @Valid CreateEventDTO createEventDto) {
@@ -72,4 +72,5 @@ public class EventController {
         eventService.deleteEvent(eventId);
         return ResponseEntity.noContent().build();
     }
+
 }

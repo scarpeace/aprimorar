@@ -25,14 +25,7 @@ public class GlobalExceptionHandler {
             StudentNotFoundException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-
+        ErrorResponse error = buildError(HttpStatus.NOT_FOUND, ex.getMessage(), request);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -41,14 +34,8 @@ public class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                "Type Mismatch Exception: " + ex.getMessage(),
-                request.getRequestURI()
-        );
-
+        ErrorResponse error = buildError(HttpStatus.BAD_REQUEST,
+                "Type Mismatch Exception: " + ex.getMessage(), request);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -57,14 +44,8 @@ public class GlobalExceptionHandler {
             DataIntegrityViolationException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                "Conflict on DATA INTEGRITY: " + ex.getMostSpecificCause().getMessage(),
-                request.getRequestURI()
-        );
-
+        ErrorResponse error = buildError(HttpStatus.CONFLICT,
+                "Conflict on DATA INTEGRITY: " + ex.getMostSpecificCause().getMessage(), request);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
@@ -73,14 +54,7 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException ex,
             HttpServletRequest request
     ){
-        ErrorResponse error = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                ex.getMostSpecificCause().getMessage(),
-                request.getRequestURI()
-        );
-
+        ErrorResponse error = buildError(HttpStatus.BAD_REQUEST, ex.getMostSpecificCause().getMessage(), request);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -89,14 +63,7 @@ public class GlobalExceptionHandler {
             EventNotFoundException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-
+        ErrorResponse error = buildError(HttpStatus.NOT_FOUND, ex.getMessage(), request);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -105,14 +72,7 @@ public class GlobalExceptionHandler {
             EmployeeNotFoundException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-
+        ErrorResponse error = buildError(HttpStatus.NOT_FOUND, ex.getMessage(), request);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -125,16 +85,19 @@ public class GlobalExceptionHandler {
                 .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                 .collect(Collectors.joining("; "));
 
-        ErrorResponse error = new ErrorResponse(
-                Instant.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                message,
-                request.getRequestURI()
-        );
+        ErrorResponse error = buildError(HttpStatus.BAD_REQUEST, message, request);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-}
+    private ErrorResponse buildError(HttpStatus status, String message, HttpServletRequest request) {
+        return new ErrorResponse(
+                Instant.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                message,
+                request.getRequestURI()
+        );
+    }
 
+}
