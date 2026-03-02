@@ -2,9 +2,9 @@ import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, User, GraduationCap, Clock, DollarSign } from "lucide-react"
-import type { EventResponse } from "@/lib/schemas";
-import { useEffect, useState } from "react";
-import { eventsApi } from "@/services/api";
+import type { EventResponse } from "@/lib/schemas"
+import { useEffect, useState } from "react"
+import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
 
 //TODO Improve layout on this page/component + Translate labels + Errors to portuguese
 function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
@@ -21,27 +21,28 @@ function DetailField({ label, value, icon: Icon }: { label: string; value: strin
 
 export function EventDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const [event, setEvent] = useState<EventResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [event, setEvent] = useState<EventResponse | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
    
        if(!id){
-         setError("Missing student id")
+         setError("ID do evento nao informado.")
          setLoading(false)
          return;
        }
    
        const fetchEvent = async () =>{
          try{
-           setLoading(true);
-           setError(null);
+           setLoading(true)
+           setError(null)
 
-           const res = await eventsApi.getById(Number.parseInt(id));
+           const res = await eventsApi.getById(Number.parseInt(id))
            setEvent(res.data)
           }catch (error) {
-             console.error("Failed to load student:", error)
+             console.error("Falha ao carregar evento:", error)
+             setError(getFriendlyErrorMessage(error))
            } finally {
              setLoading(false)
            }
@@ -52,16 +53,16 @@ export function EventDetailPage() {
        //TODO Move this logic to the backend and return it on the DTO.
       const price = Number(event?.price)
       const teacherPayment = Number(event?.payment)
-      const profit = Number.isFinite(price) && Number.isFinite(teacherPayment) ? price - teacherPayment : 0;
+       const profit = Number.isFinite(price) && Number.isFinite(teacherPayment) ? price - teacherPayment : 0
           
-      const brl = new Intl.NumberFormat("pt-BR", {
-        style:"currency",
-        currency:"BRL",
+       const brl = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
         })
 
-       if(loading) return <div>Loading...</div>
+       if(loading) return <div>Carregando...</div>
        if(error) return <div>{error}</div>
-       if(!event) return <div>Event not found</div>
+       if(!event) return <div>Evento nao encontrado.</div>
 
 
   return (
@@ -72,13 +73,13 @@ export function EventDetailPage() {
             <Calendar className="h-6 w-6 text-purple-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Event Details</h1>
-            <p className="text-sm text-gray-500">View and manage session information</p>
+            <h1 className="text-2xl font-bold text-gray-900">Detalhes do evento</h1>
+            <p className="text-sm text-gray-500">Veja e gerencie as informacoes do evento</p>
           </div>
         </div>
         <Button asChild type="button" variant="outline">
           <Link to="/events">
-            ← Back to Events
+            ← Voltar para eventos
           </Link>
         </Button>
       </div>
@@ -94,13 +95,10 @@ export function EventDetailPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <DetailField label="ID" value={id ?? "-"} />
-            //TODO Title in weird position, align left
-            <DetailField label="Event Title" value={event.title} icon={Calendar} />
-            <DetailField label="Description" value={event.description ?? "-"} />
-            //TODO Simplify date format, move logic to backend
-            <DetailField label="Data" value={event.startDateTime} icon={Clock} />
-            <DetailField label="Horário Início" value={event.startDateTime} icon={Clock} />
-            <DetailField label="Horário Fim" value={event.endDateTime} icon={Clock} />
+            <DetailField label="Titulo" value={event.title} icon={Calendar} />
+            <DetailField label="Descricao" value={event.description ?? "-"} />
+            <DetailField label="Inicio" value={event.startDateTime} icon={Clock} />
+            <DetailField label="Fim" value={event.endDateTime} icon={Clock} />
           </CardContent>
         </Card>
 
@@ -108,16 +106,16 @@ export function EventDetailPage() {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <User className="h-5 w-5 text-indigo-500" />
-              Participants & Payment
+              Participantes e valores
             </CardTitle>
-            <CardDescription>Students, employees and financial details</CardDescription>
+            <CardDescription>Aluno, colaborador e valores do atendimento</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <DetailField label="Student" value={event.studentName} icon={GraduationCap} />
-            <DetailField label="Teacher" value={event.employeeName} icon={User} />
-            <DetailField label="Price" value={brl.format(price)} icon={DollarSign} />
-            <DetailField label="Payment Status" value={brl.format(teacherPayment)} icon={DollarSign} />
-            <DetailField label="Payment Status" value={brl.format(profit)} icon={DollarSign} />
+            <DetailField label="Aluno" value={event.studentName} icon={GraduationCap} />
+            <DetailField label="Colaborador" value={event.employeeName} icon={User} />
+            <DetailField label="Preco" value={brl.format(price)} icon={DollarSign} />
+            <DetailField label="Pagamento (custo)" value={brl.format(teacherPayment)} icon={DollarSign} />
+            <DetailField label="Lucro" value={brl.format(profit)} icon={DollarSign} />
           </CardContent>
         </Card>
       </div>

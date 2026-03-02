@@ -11,40 +11,61 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { StudentResponse } from "@/lib/schemas"
-import { studentsApi, type PageResponse } from "@/services/api"
+import { getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
 
 export function StudentsPage() {
   const [studentList, setStudentList] = useState<StudentResponse[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const loadStudents = async () => {
+    try {
+      setError(null)
+      setLoading(true)
+      const studentsRes = await studentsApi.list()
+      const studentsPage: PageResponse<StudentResponse> = studentsRes.data
+      setStudentList(studentsPage.content)
+    } catch (error) {
+      console.error("Falha ao carregar alunos:", error)
+      setError(getFriendlyErrorMessage(error))
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const studentsRes = await studentsApi.list()
-        const studentsPage: PageResponse<StudentResponse> = studentsRes.data
-        setStudentList(studentsPage.content)
-      } catch (error) {
-        console.error("Failed to fetch students:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
+    loadStudents()
   }, [])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Carregando...</div>
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
+          <p className="text-sm text-gray-600">Gerencie cadastros e matriculas.</p>
+        </div>
+        <EmptyState
+          title="Nao foi possivel carregar"
+          description={error}
+          actionLabel="Tentar novamente"
+          onAction={loadStudents}
+        />
+      </div>
+    )
   }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Students</h1>
-          <p className="text-sm text-gray-600">Manage student records and enrollments.</p>
+          <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
+          <p className="text-sm text-gray-600">Gerencie cadastros e matriculas.</p>
         </div>
-        <Button type="button">Add Student</Button>
+        <Button type="button">Novo aluno</Button>
       </div>
 
       <div className="rounded-md border bg-white">
@@ -53,10 +74,10 @@ export function StudentsPage() {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Activity</TableHead>
-              <TableHead>School</TableHead>
-              <TableHead>Active</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Atividade</TableHead>
+              <TableHead>Escola</TableHead>
+              <TableHead>Ativo</TableHead>
+              <TableHead>Acoes</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -66,10 +87,10 @@ export function StudentsPage() {
                 <TableCell>{student.email}</TableCell>
                 <TableCell>{student.activity}</TableCell>
                 <TableCell>{student.school}</TableCell>
-                <TableCell>{student.active ? "Yes" : "No"}</TableCell>
+                <TableCell>{student.active ? "Sim" : "Nao"}</TableCell>
                 <TableCell>
                   <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/students/${student.id}`}>
-                    Details
+                    Detalhes
                   </Link>
                 </TableCell>
               </TableRow>
@@ -80,9 +101,9 @@ export function StudentsPage() {
 
       {studentList.length === 0 ? (
         <EmptyState
-          title="No students yet"
-          description="When you add your first student, they will appear in the table above."
-          actionLabel="Add Student"
+          title="Nenhum aluno cadastrado"
+          description="Quando voce cadastrar o primeiro aluno, ele aparecera na tabela acima."
+          actionLabel="Novo aluno"
         />
       ) : null}
     </div>

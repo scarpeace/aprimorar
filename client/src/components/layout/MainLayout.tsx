@@ -8,10 +8,10 @@ import {
 import { cn } from "@/lib/utils"
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Students", href: "/students", icon: GraduationCap },
-  { name: "Employees", href: "/employees", icon: UserCog },
-  { name: "Events", href: "/events", icon: Calendar },
+  { name: "Painel", href: "/", icon: LayoutDashboard },
+  { name: "Alunos", href: "/students", icon: GraduationCap },
+  { name: "Colaboradores", href: "/employees", icon: UserCog },
+  { name: "Eventos", href: "/events", icon: Calendar },
 ]
 
 

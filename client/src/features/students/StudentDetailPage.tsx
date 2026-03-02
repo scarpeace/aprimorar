@@ -2,9 +2,9 @@ import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { GraduationCap, Mail, School, MapPin, User, CheckCircle } from "lucide-react"
-import { studentsApi } from "@/services/api";
-import { useEffect, useState } from "react";
-import type { StudentResponse } from "@/lib/schemas";
+import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
+import { useEffect, useState } from "react"
+import type { StudentResponse } from "@/lib/schemas"
 
 //TODO Improve layout on this page/component + Translate labels + Errors to portuguese
 function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
@@ -21,37 +21,38 @@ function DetailField({ label, value, icon: Icon }: { label: string; value: strin
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const [student, setStudent] = useState<StudentResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [student, setStudent] = useState<StudentResponse | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
 
-    if(!id){
-      setError("Missing student id")
+    if (!id) {
+      setError("ID do aluno nao informado.")
       setLoading(false)
       return;
     }
 
-    const fetchStudent = async () =>{
-      try{
-        setLoading(true);
-        setError(null);
+     const fetchStudent = async () => {
+       try {
+         setLoading(true)
+         setError(null)
 
-        const res = await studentsApi.getById(id);
-        setStudent(res.data);
-      }catch (error) {
-          console.error("Failed to load student:", error)
-        } finally {
-          setLoading(false)
-        }
-    }
-      fetchStudent();
-    }, [id])
+         const res = await studentsApi.getById(id)
+         setStudent(res.data)
+       } catch (error) {
+         console.error("Falha ao carregar aluno:", error)
+         setError(getFriendlyErrorMessage(error))
+         } finally {
+           setLoading(false)
+         }
+     }
+       fetchStudent();
+     }, [id])
 
-    if (loading) return <div>Loading...</div>
-    if(error) return <div>{error}</div>
-    if(!student) return <div>Student not Found</div>
+     if (loading) return <div>Carregando...</div>
+     if(error) return <div>{error}</div>
+     if(!student) return <div>Aluno nao encontrado.</div>
 
   return (
     <div className="space-y-6">
@@ -61,13 +62,13 @@ export function StudentDetailPage() {
             <GraduationCap className="h-6 w-6 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Student Details</h1>
-            <p className="text-sm text-gray-500">View and manage student information</p>
+            <h1 className="text-2xl font-bold text-gray-900">Detalhes do aluno</h1>
+            <p className="text-sm text-gray-500">Veja e gerencie as informacoes do aluno</p>
           </div>
         </div>
         <Button asChild type="button" variant="outline">
           <Link to="/students">
-            ← Back to Students
+            ← Voltar para alunos
           </Link>
         </Button>
       </div>
@@ -77,9 +78,9 @@ export function StudentDetailPage() {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <User className="h-5 w-5 text-blue-500" />
-              Personal Information
+              Informacoes pessoais
             </CardTitle>
-            <CardDescription>Core student details</CardDescription>
+            <CardDescription>Dados principais do aluno</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <DetailField label="Nome Completo" value={student.name} icon={User} />

@@ -7,22 +7,22 @@ export function StudentCreatePage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">New Student</h1>
-          <p className="text-sm text-gray-600">Create a new student record.</p>
+          <h1 className="text-3xl font-bold text-gray-900">Novo aluno</h1>
+          <p className="text-sm text-gray-600">Crie um novo cadastro de aluno.</p>
         </div>
         <Button asChild type="button" variant="outline">
-          <Link to="/students">← Back to Students</Link>
+          <Link to="/students">← Voltar para alunos</Link>
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Coming soon</CardTitle>
-          <CardDescription>This page is a placeholder for the student creation form.</CardDescription>
+          <CardTitle>Em breve</CardTitle>
+          <CardDescription>Esta pagina e um placeholder para o formulario de criacao de aluno.</CardDescription>
         </CardHeader>
         <CardContent>
           <Button asChild type="button">
-            <Link to="/students">View students</Link>
+            <Link to="/students">Ver alunos</Link>
           </Button>
         </CardContent>
       </Card>

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { StudentResponse, EmployeeResponse, EventResponse } from "@/lib/schemas"
-import { studentsApi, employeesApi, eventsApi, type PageResponse } from "@/services/api"
+import { studentsApi, employeesApi, eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
+import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 
 export function DashboardPage() {
@@ -10,10 +11,13 @@ export function DashboardPage() {
   const [eventsCount, setEventsCount] = useState(0)
   const [revenue, setRevenue] = useState(0)
   const [loading, setLoading] = useState(true)
-  
+  const [error, setError] = useState<string | null>(null)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setError(null)
+        setLoading(true)
         const [studentsRes, employeesRes, eventsRes] = await Promise.all([
           studentsApi.listActive(),
           employeesApi.listActive(),
@@ -35,24 +39,43 @@ export function DashboardPage() {
 
         setRevenue(total)
       } catch (error) {
-        console.error("Failed to fetch dashboard data:", error)
+        console.error("Falha ao carregar o painel:", error)
+        setError(getFriendlyErrorMessage(error))
       } finally {
         setLoading(false)
       }
     }
     fetchData()
   }, [])
-  if (loading) {
-    return <div>Loading...</div>
-  } 
+
+  if (loading) return <div>Carregando...</div>
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-3xl font-bold text-gray-900">Painel</h1>
+        <Card>
+          <CardHeader>
+            <CardTitle>Ops, nao foi possivel carregar</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-muted-foreground">{error}</p>
+            <Button type="button" onClick={() => window.location.reload()}>
+              Tentar novamente
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+      <h1 className="text-3xl font-bold text-gray-900">Painel</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+            <CardTitle className="text-sm font-medium">Alunos ativos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{studentsCount}</div>
@@ -60,7 +83,7 @@ export function DashboardPage() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Employees</CardTitle>
+            <CardTitle className="text-sm font-medium">Colaboradores ativos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{employeesCount}</div>
@@ -68,7 +91,7 @@ export function DashboardPage() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Upcoming Events</CardTitle>
+            <CardTitle className="text-sm font-medium">Eventos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{eventsCount}</div>
@@ -76,7 +99,7 @@ export function DashboardPage() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">Custo (pagamentos)</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">R$ {revenue}</div>
