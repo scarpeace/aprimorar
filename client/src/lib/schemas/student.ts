@@ -11,7 +11,6 @@ export const addressSchema = z.object({
   zip: z.string().min(1, "Address zip code is required"),
 })
 
-
 export const createStudentSchema = z.object({
   name: z.string().min(1, "Student name is required"),
   birthdate: z.string().refine((date) => {
