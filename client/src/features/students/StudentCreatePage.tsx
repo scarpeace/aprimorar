@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import styles from "@/features/students/StudentCreatePage.module.css"
 import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
+import { useHookFormMask } from "use-mask-input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createStudentSchema, type CreateStudentInput, type ParentSummary } from "@/lib/schemas"
 import { getFriendlyErrorMessage, parentsApi, studentsApi, type PageResponse } from "@/services/api"
@@ -57,6 +58,7 @@ export function StudentCreatePage() {
   }, [])
 
   const parentIdField = register("parentId")
+  const registerWithMask = useHookFormMask(register)
   const selectedParentId = watch("parentId")
   const selectedParentName = useMemo(() => {
     const p = parents.find((x) => x.id === selectedParentId)
@@ -123,8 +125,11 @@ export function StudentCreatePage() {
                 <label className={styles.label} htmlFor="cpf">
                   CPF
                 </label>
-                <Input id="cpf" placeholder="000.000.000-00" {...register("cpf")} />
-                <p className={styles.help}>Formato: XXX.XXX.XXX-XX</p>
+                <Input
+                  id="cpf"
+                  placeholder="000.000.000-00"
+                  {...registerWithMask("cpf", "999.999.999-99")}
+                />
                 {errors.cpf?.message ? <p className={styles.error}>{errors.cpf.message}</p> : null}
               </div>
 
@@ -132,8 +137,11 @@ export function StudentCreatePage() {
                 <label className={styles.label} htmlFor="contact">
                   Contato
                 </label>
-                <Input id="contact" placeholder="(11)99999-9999" {...register("contact")} />
-                <p className={styles.help}>Formato: (XX)XXXXX-XXXX</p>
+                <Input
+                  id="contact"
+                  placeholder="(11) 99999-9999"
+                  {...registerWithMask("contact", ["(99) 9999-9999", "(99) 99999-9999"])}
+                />
                 {errors.contact?.message ? <p className={styles.error}>{errors.contact.message}</p> : null}
               </div>
 
@@ -345,8 +353,11 @@ export function StudentCreatePage() {
                     <label className={styles.label} htmlFor="parent.contact">
                       Contato do responsavel
                     </label>
-                    <Input id="parent.contact" placeholder="(11)99999-9999" {...register("parent.contact")} />
-                    <p className={styles.help}>Formato: (XX)XXXXX-XXXX</p>
+                    <Input
+                      id="parent.contact"
+                      placeholder="(11) 99999-9999"
+                      {...registerWithMask("parent.contact", ["(99) 9999-9999", "(99) 99999-9999"])}
+                    />
                     {errors.parent?.contact?.message ? (
                       <p className={styles.error}>{errors.parent.contact.message}</p>
                     ) : null}
@@ -356,8 +367,11 @@ export function StudentCreatePage() {
                     <label className={styles.label} htmlFor="parent.cpf">
                       CPF do responsavel
                     </label>
-                    <Input id="parent.cpf" placeholder="000.000.000-00" {...register("parent.cpf")} />
-                    <p className={styles.help}>Formato: XXX.XXX.XXX-XX</p>
+                    <Input
+                      id="parent.cpf"
+                      placeholder="000.000.000-00"
+                      {...registerWithMask("parent.cpf", "999.999.999-99")}
+                    />
                     {errors.parent?.cpf?.message ? (
                       <p className={styles.error}>{errors.parent.cpf.message}</p>
                     ) : null}

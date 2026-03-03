@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import styles from "@/features/employees/EmployeeCreatePage.module.css"
 import { useForm } from "react-hook-form"
+import { useHookFormMask } from "use-mask-input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createEmployeeSchema, type CreateEmployeeInput } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
@@ -35,6 +36,8 @@ export function EmployeeCreatePage() {
       setSubmitError(getFriendlyErrorMessage(error))
     }
   }
+
+  const registerWithMask = useHookFormMask(register)
 
   return (
     <div className={styles.page}>
@@ -86,7 +89,11 @@ export function EmployeeCreatePage() {
                 <label className={styles.label} htmlFor="contact">
                   Contato
                 </label>
-                <Input id="contact" placeholder="(11)99999-9999" {...register("contact")} />
+                <Input
+                  id="contact"
+                  placeholder="(11) 99999-9999"
+                  {...registerWithMask("contact", ["(99) 9999-9999", "(99) 99999-9999"])}
+                />
                 {errors.contact?.message ? <p className={styles.error}>{errors.contact.message}</p> : null}
               </div>
 
@@ -94,7 +101,11 @@ export function EmployeeCreatePage() {
                 <label className={styles.label} htmlFor="cpf">
                   CPF
                 </label>
-                <Input id="cpf" placeholder="000.000.000-00" {...register("cpf")} />
+                <Input
+                  id="cpf"
+                  placeholder="000.000.000-00"
+                  {...registerWithMask("cpf", "999.999.999-99")}
+                />
                 {errors.cpf?.message ? <p className={styles.error}>{errors.cpf.message}</p> : null}
               </div>
 

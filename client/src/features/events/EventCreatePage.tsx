@@ -177,23 +177,23 @@ export function EventCreatePage() {
                 </div>
 
                 <div className={styles.field}>
-                  <label className={styles.label} htmlFor="startDateTime">
-                    Inicio
-                  </label>
-                  <Input id="startDateTime" type="datetime-local" {...register("startDateTime")} />
-                  {errors.startDateTime?.message ? (
-                    <p className={styles.error}>{errors.startDateTime.message}</p>
-                  ) : null}
+                <label className={styles.label} htmlFor="startDateTime">
+                  Inicio
+                </label>
+                <Input id="startDateTime" type="datetime-local" {...register("startDateTime")} />
+                {errors.startDateTime?.message ? (
+                  <p className={styles.error}>{errors.startDateTime.message}</p>
+                ) : null}
                 </div>
 
                 <div className={styles.field}>
-                  <label className={styles.label} htmlFor="endDateTime">
-                    Fim
-                  </label>
-                  <Input id="endDateTime" type="datetime-local" {...register("endDateTime")} />
-                  {errors.endDateTime?.message ? (
-                    <p className={styles.error}>{errors.endDateTime.message}</p>
-                  ) : null}
+                <label className={styles.label} htmlFor="endDateTime">
+                  Fim
+                </label>
+                <Input id="endDateTime" type="datetime-local" {...register("endDateTime")} />
+                {errors.endDateTime?.message ? (
+                  <p className={styles.error}>{errors.endDateTime.message}</p>
+                ) : null}
                 </div>
 
                 <div className={styles.field}>

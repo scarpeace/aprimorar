@@ -5,7 +5,10 @@ export const parentSchema = z.object({
   email: z.email("Email do responsavel invalido"),
   contact: z
     .string()
-    .regex(/^\(\d{2}\)\d{5}-\d{4}$/, "Contato do responsavel deve estar no formato (XX)XXXXX-XXXX"),
+    .regex(
+      /^\(\d{2}\)\s?\d{4,5}-\d{4}$/,
+      "Contato do responsavel deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"
+    ),
   cpf: z
     .string()
     .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF do responsavel deve estar no formato XXX.XXX.XXX-XX"),

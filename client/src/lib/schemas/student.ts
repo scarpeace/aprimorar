@@ -19,7 +19,12 @@ export const createStudentSchema = z.object({
   }, "Data de nascimento deve estar no passado"),
   cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF deve estar no formato XXX.XXX.XXX-XX"),
   school: z.string().min(1, "Escola e obrigatoria"),
-  contact: z.string().regex(/^\(\d{2}\)\d{5}-\d{4}$/, "Contato deve estar no formato (XX)XXXXX-XXXX"),
+  contact: z
+    .string()
+    .regex(
+      /^\(\d{2}\)\s?\d{4,5}-\d{4}$/,
+      "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"
+    ),
   email: z.email("Email invalido"),
   activity: z.enum(["ENEM", "MENTORIA"]),
   address: addressSchema,
