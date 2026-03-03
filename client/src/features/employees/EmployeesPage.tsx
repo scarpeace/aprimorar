@@ -18,6 +18,8 @@ export function EmployeesPage() {
   const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const loadEmployees = async () => {
     try {
@@ -37,6 +39,24 @@ export function EmployeesPage() {
   useEffect(() => {
     loadEmployees()
   }, [])
+
+  const handleDelete = async (employee: EmployeeResponse) => {
+    if (!window.confirm(`Excluir colaborador "${employee.name}"? Essa acao nao pode ser desfeita.`)) {
+      return
+    }
+
+    try {
+      setDeleteError(null)
+      setDeletingId(employee.id)
+      await employeesApi.delete(employee.id)
+      setEmployeeList((prev) => prev.filter((item) => item.id !== employee.id))
+    } catch (error) {
+      console.error("Falha ao excluir colaborador:", error)
+      setDeleteError(getFriendlyErrorMessage(error))
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   if (loading) {
     return <div>Carregando...</div>
@@ -71,6 +91,12 @@ export function EmployeesPage() {
         </Button>
       </div>
 
+      {deleteError ? (
+        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
+          {deleteError}
+        </div>
+      ) : null}
+
       <div className={styles.tableWrap}>
         <Table>
           <TableHeader>
@@ -92,9 +118,23 @@ export function EmployeesPage() {
                 <TableCell>{employee.pix}</TableCell>
                 <TableCell>{employee.active ? "Sim" : "Nao"}</TableCell>
                 <TableCell>
-                  <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/employees/${employee.id}`}>
-                    Detalhes
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      className="text-sm font-medium text-blue-600 hover:underline"
+                      to={`/employees/${employee.id}`}
+                    >
+                      Detalhes
+                    </Link>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(employee)}
+                      disabled={deletingId === employee.id}
+                    >
+                      {deletingId === employee.id ? "Excluindo..." : "Excluir"}
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

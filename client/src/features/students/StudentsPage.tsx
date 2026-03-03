@@ -18,6 +18,8 @@ export function StudentsPage() {
   const [studentList, setStudentList] = useState<StudentResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const loadStudents = async () => {
     try {
@@ -37,6 +39,24 @@ export function StudentsPage() {
   useEffect(() => {
     loadStudents()
   }, [])
+
+  const handleDelete = async (student: StudentResponse) => {
+    if (!window.confirm(`Excluir aluno "${student.name}"? Essa acao nao pode ser desfeita.`)) {
+      return
+    }
+
+    try {
+      setDeleteError(null)
+      setDeletingId(student.id)
+      await studentsApi.delete(student.id)
+      setStudentList((prev) => prev.filter((item) => item.id !== student.id))
+    } catch (error) {
+      console.error("Falha ao excluir aluno:", error)
+      setDeleteError(getFriendlyErrorMessage(error))
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   if (loading) {
     return <div>Carregando...</div>
@@ -71,6 +91,12 @@ export function StudentsPage() {
         </Button>
       </div>
 
+      {deleteError ? (
+        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
+          {deleteError}
+        </div>
+      ) : null}
+
       <div className={styles.tableWrap}>
         <Table>
           <TableHeader>
@@ -92,9 +118,23 @@ export function StudentsPage() {
                 <TableCell>{student.school}</TableCell>
                 <TableCell>{student.active ? "Sim" : "Nao"}</TableCell>
                 <TableCell>
-                  <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/students/${student.id}`}>
-                    Detalhes
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      className="text-sm font-medium text-blue-600 hover:underline"
+                      to={`/students/${student.id}`}
+                    >
+                      Detalhes
+                    </Link>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(student)}
+                      disabled={deletingId === student.id}
+                    >
+                      {deletingId === student.id ? "Excluindo..." : "Excluir"}
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

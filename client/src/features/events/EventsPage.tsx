@@ -18,6 +18,8 @@ export function EventsPage() {
   const [eventList, setEventList] = useState<EventResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
 
   const loadEvents = async () => {
     try {
@@ -37,6 +39,24 @@ export function EventsPage() {
   useEffect(() => {
     loadEvents()
   }, [])
+
+  const handleDelete = async (event: EventResponse) => {
+    if (!window.confirm(`Excluir evento "${event.title}"? Essa acao nao pode ser desfeita.`)) {
+      return
+    }
+
+    try {
+      setDeleteError(null)
+      setDeletingId(event.id)
+      await eventsApi.delete(event.id)
+      setEventList((prev) => prev.filter((item) => item.id !== event.id))
+    } catch (error) {
+      console.error("Falha ao excluir evento:", error)
+      setDeleteError(getFriendlyErrorMessage(error))
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   if (loading) {
     return <div>Carregando...</div>
@@ -71,6 +91,12 @@ export function EventsPage() {
         </Button>
       </div>
 
+      {deleteError ? (
+        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
+          {deleteError}
+        </div>
+      ) : null}
+
       <div className={styles.tableWrap}>
         <Table>
           <TableHeader>
@@ -92,9 +118,20 @@ export function EventsPage() {
                 <TableCell>{event.startDateTime}</TableCell>
                 <TableCell>{event.price}</TableCell>
                 <TableCell>
-                  <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/events/${event.id}`}>
-                    Detalhes
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/events/${event.id}`}>
+                      Detalhes
+                    </Link>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(event)}
+                      disabled={deletingId === event.id}
+                    >
+                      {deletingId === event.id ? "Excluindo..." : "Excluir"}
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
