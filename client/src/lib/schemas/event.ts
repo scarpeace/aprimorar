@@ -1,19 +1,19 @@
 import { z } from "zod"
 
 export const createEventSchema = z.object({
-  title: z.string().min(1, "Event title is required").max(100, "Title must be at most 100 characters"),
-  description: z.string().max(500, "Description must be at most 500 characters").optional(),
-  startDateTime: z.string().min(1, "Start date/time is required"),
-  endDateTime: z.string().min(1, "End date/time is required"),
-  price: z.number().min(0, "Price must be >= 0"),
-  payment: z.number().min(0, "Payment must be >= 0"),
-  studentId: z.uuid("Invalid student ID"),
-  employeeId: z.uuid("Invalid employee ID"),
+  title: z.string().min(1, "Titulo e obrigatorio").max(100, "Titulo deve ter no maximo 100 caracteres"),
+  description: z.string().max(500, "Descricao deve ter no maximo 500 caracteres").optional(),
+  startDateTime: z.string().min(1, "Data/hora de inicio e obrigatoria"),
+  endDateTime: z.string().min(1, "Data/hora de fim e obrigatoria"),
+  price: z.number().min(0, "Preco deve ser maior ou igual a 0"),
+  payment: z.number().min(0, "Pagamento deve ser maior ou igual a 0"),
+  studentId: z.uuid("ID do aluno invalido"),
+  employeeId: z.uuid("ID do colaborador invalido"),
 }).refine((data) => data.payment <= data.price, {
-  message: "Payment can't exceed price",
+  message: "Pagamento nao pode ser maior que o preco",
   path: ["payment"],
 }).refine((data) => new Date(data.endDateTime) > new Date(data.startDateTime), {
-  message: "End date/time must be after start date/time",
+  message: "Fim deve ser depois do inicio",
   path: ["endDateTime"],
 })
 

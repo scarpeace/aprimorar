@@ -1,15 +1,15 @@
 import { z } from "zod"
 
 export const createEmployeeSchema = z.object({
-  name: z.string().min(1, "Employee name is required"),
+  name: z.string().min(1, "Nome e obrigatorio").max(200, "Nome muito grande"),
   birthdate: z.string().refine((date) => {
     const d = new Date(date)
     return d < new Date()
-  }, "Birthdate must be in the past"),
-  pix: z.string().min(1, "PIX is required"),
-  contact: z.string().regex(/^\(\d{2}\)\d{5}-\d{4}$/, "Contact must be in format (XX)XXXXX-XXXX"),
-  cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF must be in format XXX.XXX.XXX-XX"),
-  email: z.email("Invalid email address"),
+  }, "Data de nascimento deve estar no passado"),
+  pix: z.string().min(1, "Chave PIX e obrigatoria"),
+  contact: z.string().regex(/^\(\d{2}\)\d{5}-\d{4}$/, "Contato deve estar no formato (XX)XXXXX-XXXX"),
+  cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF deve estar no formato XXX.XXX.XXX-XX"),
+  email: z.email("Email invalido"),
   role: z.enum(["ADMIN", "EMPLOYEE", "STUDENT", "PARENT"]),
 })
 

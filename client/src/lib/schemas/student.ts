@@ -2,29 +2,32 @@ import { z } from "zod"
 import { parentSchema } from "./parent"
 
 export const addressSchema = z.object({
-  street: z.string().min(1, "Address street is required"),
-  number: z.string().min(1, "Address number is required"),
+  street: z.string().min(1, "Rua e obrigatoria"),
+  number: z.string().min(1, "Numero e obrigatorio"),
   complement: z.string().optional(),
-  district: z.string().min(1, "Address district is required"),
-  city: z.string().min(1, "Address city is required"),
-  state: z.string().min(1, "Address state is required"),
-  zip: z.string().min(1, "Address zip code is required"),
+  district: z.string().min(1, "Bairro e obrigatorio"),
+  city: z.string().min(1, "Cidade e obrigatoria"),
+  state: z.string().min(1, "Estado e obrigatorio"),
+  zip: z.string().min(1, "CEP e obrigatorio"),
 })
 
 export const createStudentSchema = z.object({
-  name: z.string().min(1, "Student name is required"),
+  name: z.string().min(1, "Nome e obrigatorio"),
   birthdate: z.string().refine((date) => {
     const d = new Date(date)
     return d < new Date()
-  }, "Birthdate must be in the past"),
-  cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF must be in format XXX.XXX.XXX-XX"),
-  school: z.string().min(1, "School is required"),
-  contact: z.string().regex(/^\(\d{2}\)\d{5}-\d{4}$/, "Contact must be in format (XX)XXXXX-XXXX"),
-  email: z.email("Invalid email address"),
+  }, "Data de nascimento deve estar no passado"),
+  cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF deve estar no formato XXX.XXX.XXX-XX"),
+  school: z.string().min(1, "Escola e obrigatoria"),
+  contact: z.string().regex(/^\(\d{2}\)\d{5}-\d{4}$/, "Contato deve estar no formato (XX)XXXXX-XXXX"),
+  email: z.email("Email invalido"),
   activity: z.enum(["ENEM", "MENTORIA"]),
   address: addressSchema,
-  parentId: z.uuid().optional(),
+  parentId: z.uuid("Selecione um responsavel").optional(),
   parent: parentSchema.optional(),
+}).refine((data) => (data.parentId ? !data.parent : !!data.parent), {
+  message: "Informe um responsavel (existente ou novo)",
+  path: ["parentId"],
 })
 
 export const studentResponseSchema = z.object({
