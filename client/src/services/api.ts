@@ -1,4 +1,12 @@
-import type { CreateEmployeeInput, CreateEventInput, CreateStudentInput, EmployeeResponse, EventResponse, StudentResponse } from "@/lib/schemas"
+import type {
+  CreateEmployeeInput,
+  CreateEventInput,
+  CreateStudentInput,
+  EmployeeResponse,
+  EventResponse,
+  ParentSummary,
+  StudentResponse,
+} from "@/lib/schemas"
 import axios, { type AxiosResponse } from "axios"
 
 export function getFriendlyErrorMessage(error: unknown) {
@@ -81,6 +89,10 @@ export const eventsApi = {
 }
 
 export const parentsApi = {
-  listActive: (page = 0, size = 20, sortBy = "name") =>
+  listActive: (
+    page = 0,
+    size = 20,
+    sortBy = "name"
+  ): Promise<AxiosResponse<PageResponse<ParentSummary>>> =>
     api.get(`/v1/parents/active?page=${page}&size=${size}&sortBy=${sortBy}`),
 }
