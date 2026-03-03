@@ -66,7 +66,9 @@ export function EmployeesPage() {
           <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
           <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
         </div>
-        <Button type="button">Novo colaborador</Button>
+        <Button asChild type="button">
+          <Link to="/employees/new">Novo colaborador</Link>
+        </Button>
       </div>
 
       <div className={styles.tableWrap}>

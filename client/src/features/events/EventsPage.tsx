@@ -66,7 +66,9 @@ export function EventsPage() {
           <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
           <p className="text-sm text-gray-600">Gerencie horarios, precos e atribuicoes.</p>
         </div>
-        <Button type="button">Novo evento</Button>
+        <Button asChild type="button">
+          <Link to="/events/new">Novo evento</Link>
+        </Button>
       </div>
 
       <div className={styles.tableWrap}>

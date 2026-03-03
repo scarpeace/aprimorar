@@ -17,3 +17,71 @@
     justify-content: space-between;
   }
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sectionTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.divider {
+  height: 1px;
+  background: hsl(var(--border));
+}
+
+.formGrid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .formGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.span2 {
+  grid-column: 1 / -1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.help {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.error {
+  font-size: 0.75rem;
+  color: hsl(var(--destructive));
+}
+
+.actions {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}

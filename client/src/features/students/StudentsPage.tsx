@@ -66,7 +66,9 @@ export function StudentsPage() {
           <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
           <p className="text-sm text-gray-600">Gerencie cadastros e matriculas.</p>
         </div>
-        <Button type="button">Novo aluno</Button>
+        <Button asChild type="button">
+          <Link to="/students/new">Novo aluno</Link>
+        </Button>
       </div>
 
       <div className={styles.tableWrap}>
