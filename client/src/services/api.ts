@@ -1,5 +1,32 @@
-import type { CreateEmployeeInput, CreateEventInput, CreateStudentInput, EmployeeResponse, EventResponse, StudentResponse } from "@/lib/schemas"
+import type {
+  CreateEmployeeInput,
+  CreateEventInput,
+  CreateStudentInput,
+  EmployeeResponse,
+  EventResponse,
+  ParentSummary,
+  StudentResponse,
+} from "@/lib/schemas"
 import axios, { type AxiosResponse } from "axios"
+
+export function getFriendlyErrorMessage(error: unknown) {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status
+
+    if (!status) {
+      return "Nao foi possivel conectar ao servidor. Verifique se a API esta rodando e tente novamente."
+    }
+
+    if (status === 400) return "Dados invalidos. Revise as informacoes e tente novamente."
+    if (status === 404) return "Nao encontramos o recurso solicitado."
+    if (status === 409) return "Conflito de dados. Verifique se ja existe um registro com essas informacoes."
+    if (status >= 500) return "Erro no servidor. Tente novamente em instantes."
+
+    return "Nao foi possivel concluir a solicitacao. Tente novamente."
+  }
+
+  return "Ocorreu um erro inesperado. Tente novamente."
+}
 
 export type PageResponse<T> = {
   content: T[]
@@ -62,6 +89,10 @@ export const eventsApi = {
 }
 
 export const parentsApi = {
-  listActive: (page = 0, size = 20, sortBy = "name") =>
+  listActive: (
+    page = 0,
+    size = 20,
+    sortBy = "name"
+  ): Promise<AxiosResponse<PageResponse<ParentSummary>>> =>
     api.get(`/v1/parents/active?page=${page}&size=${size}&sortBy=${sortBy}`),
 }

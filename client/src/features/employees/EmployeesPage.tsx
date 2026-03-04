@@ -11,52 +11,102 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { EmployeeResponse } from "@/lib/schemas"
-import { employeesApi, type PageResponse } from "@/services/api"
+import { employeesApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
+import styles from "@/features/employees/EmployeesPage.module.css"
 
 export function EmployeesPage() {
   const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+
+  const loadEmployees = async () => {
+    try {
+      setError(null)
+      setLoading(true)
+      const employeesRes = await employeesApi.list()
+      const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
+      setEmployeeList(employeesPage.content)
+    } catch (error) {
+      console.error("Falha ao carregar colaboradores:", error)
+      setError(getFriendlyErrorMessage(error))
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const employeesRes = await employeesApi.list()
-        const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
-        setEmployeeList(employeesPage.content)
-      } catch (error) {
-        console.error("Failed to fetch employees:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
+    loadEmployees()
   }, [])
 
+  const handleDelete = async (employee: EmployeeResponse) => {
+    if (!window.confirm(`Excluir colaborador "${employee.name}"? Essa acao nao pode ser desfeita.`)) {
+      return
+    }
+
+    try {
+      setDeleteError(null)
+      setDeletingId(employee.id)
+      await employeesApi.delete(employee.id)
+      setEmployeeList((prev) => prev.filter((item) => item.id !== employee.id))
+    } catch (error) {
+      console.error("Falha ao excluir colaborador:", error)
+      setDeleteError(getFriendlyErrorMessage(error))
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Carregando...</div>
+  }
+
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
+          <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
+        </div>
+        <EmptyState
+          title="Nao foi possivel carregar"
+          description={error}
+          actionLabel="Tentar novamente"
+          onAction={loadEmployees}
+        />
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+    <div className={styles.page}>
+      <div className={styles.header}>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Employees</h1>
-          <p className="text-sm text-gray-600">Manage teachers and staff accounts.</p>
+          <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
+          <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
         </div>
-        <Button type="button">Add Employee</Button>
+        <Button asChild type="button">
+          <Link to="/employees/new">Novo colaborador</Link>
+        </Button>
       </div>
 
-      <div className="rounded-md border bg-white">
+      {deleteError ? (
+        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
+          {deleteError}
+        </div>
+      ) : null}
+
+      <div className={styles.tableWrap}>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Role</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>Cargo</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>PIX</TableHead>
-              <TableHead>Active</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Ativo</TableHead>
+              <TableHead>Acoes</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -66,11 +116,25 @@ export function EmployeesPage() {
                 <TableCell>{employee.role}</TableCell>
                 <TableCell>{employee.email}</TableCell>
                 <TableCell>{employee.pix}</TableCell>
-                <TableCell>{employee.active ? "Yes" : "No"}</TableCell>
+                <TableCell>{employee.active ? "Sim" : "Nao"}</TableCell>
                 <TableCell>
-                  <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/employees/${employee.id}`}>
-                    Details
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      className="text-sm font-medium text-blue-600 hover:underline"
+                      to={`/employees/${employee.id}`}
+                    >
+                      Detalhes
+                    </Link>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(employee)}
+                      disabled={deletingId === employee.id}
+                    >
+                      {deletingId === employee.id ? "Excluindo..." : "Excluir"}
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -80,9 +144,9 @@ export function EmployeesPage() {
 
       {employeeList.length === 0 ? (
         <EmptyState
-          title="No employees yet"
-          description="When you add your first employee, they will appear in the table above."
-          actionLabel="Add Employee"
+          title="Nenhum colaborador cadastrado"
+          description="Quando voce cadastrar o primeiro colaborador, ele aparecera na tabela acima."
+          actionLabel="Novo colaborador"
         />
       ) : null}
     </div>

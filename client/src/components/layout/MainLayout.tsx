@@ -6,12 +6,13 @@ import {
   GraduationCap,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import styles from "@/components/layout/MainLayout.module.css"
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Students", href: "/students", icon: GraduationCap },
-  { name: "Employees", href: "/employees", icon: UserCog },
-  { name: "Events", href: "/events", icon: Calendar },
+  { name: "Painel", href: "/", icon: LayoutDashboard },
+  { name: "Alunos", href: "/students", icon: GraduationCap },
+  { name: "Colaboradores", href: "/employees", icon: UserCog },
+  { name: "Eventos", href: "/events", icon: Calendar },
 ]
 
 
@@ -19,12 +20,12 @@ export function MainLayout() {
   const location = useLocation()
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <aside className="w-64 bg-white border-r border-gray-200">
-        <div className="flex h-16 items-center border-b border-gray-200 px-6">
+    <div className={styles.layout}>
+      <aside className={styles.sidebar}>
+        <div className={styles.brand}>
           <h1 className="text-xl font-bold text-gray-900">Aprimorar</h1>
         </div>
-        <nav className="space-y-1 px-3 py-4">
+        <nav className={styles.nav}>
           {navigation.map((item) => {
             const isActive = location.pathname === item.href
             return (
@@ -32,10 +33,8 @@ export function MainLayout() {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  isActive
-                    ? "bg-gray-100 text-gray-900"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  styles.navLink,
+                  isActive ? styles.navLinkActive : undefined
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -45,8 +44,8 @@ export function MainLayout() {
           })}
         </nav>
       </aside>
-      <main className="flex-1 overflow-y-auto">
-        <div className="p-8">
+      <main className={styles.main}>
+        <div className={styles.mainInner}>
           <Outlet/>
         </div>
       </main>

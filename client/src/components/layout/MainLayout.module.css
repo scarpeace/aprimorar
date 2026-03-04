@@ -1,0 +1,86 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f9fafb;
+}
+
+@media (min-width: 768px) {
+  .layout {
+    height: 100vh;
+    flex-direction: row;
+  }
+}
+
+.sidebar {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    width: 16rem;
+    border-bottom: 0;
+    border-right: 1px solid #e5e7eb;
+  }
+}
+
+.brand {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.nav {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  overflow-x: auto;
+}
+
+@media (min-width: 768px) {
+  .nav {
+    flex-direction: column;
+    overflow-x: visible;
+  }
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 150ms ease, color 150ms ease;
+  white-space: nowrap;
+  color: #4b5563;
+}
+
+.navLink:hover {
+  background: #f9fafb;
+  color: #111827;
+}
+
+.navLinkActive {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.mainInner {
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .mainInner {
+    padding: 2rem;
+  }
+}
