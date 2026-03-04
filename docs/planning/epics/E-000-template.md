@@ -13,8 +13,8 @@
 **As a** <user> **I want** <capability> **so that** <benefit>
 
 **Acceptance Criteria**
-- [ ] AC1
-- [ ] AC2
+- [ ] AC-<XYZ>-01 AC1
+- [ ] AC-<XYZ>-02 AC2
 
 **Test Plan**
 - Backend:

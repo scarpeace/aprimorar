@@ -10,10 +10,10 @@
 
 ### Phase 1 - Foundation (Weeks 1-4)
 - Goal: complete core CRUD + event types + performance + basic reporting APIs
-- Status: TODO
+- Status: IN_PROGRESS
 - Epics:
   - E-002 - Core data management
-  - Notes: includes Student age validation (ST-023)
+  - Notes: includes Student age validation (T-015 / ST-023)
 
 ### Phase 2 - Security (Weeks 5-8)
 - Goal: authentication, RBAC, and basic hardening
@@ -44,7 +44,7 @@
 | Epic ID | Name | Status | File |
 |---|---|---|---|
 | E-001 | Planning docs migration | DONE | docs/planning/epics/E-001-planning-structure-migration.md |
-| E-002 | Core data management | TODO | docs/planning/epics/E-002-core-data-management.md |
+| E-002 | Core data management | IN_PROGRESS | docs/planning/epics/E-002-core-data-management.md |
 | E-003 | Authentication and authorization | TODO | docs/planning/epics/E-003-authentication-and-authorization.md |
 | E-004 | Frontend development | TODO | docs/planning/epics/E-004-frontend-development.md |
 | E-005 | Calendar and scheduling | TODO | docs/planning/epics/E-005-calendar-and-scheduling.md |

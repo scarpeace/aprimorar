@@ -19,10 +19,12 @@
 ### Story: S-001 — Migrate project documentation
 **As a** maintainer **I want** the project documentation in `docs/project.md` **so that** product/tech context is in a single canonical place.
 
+**Links:** T-001 (DONE) — ST-001, ST-002, ST-003, ST-004, ST-005, ST-006
+
 **Acceptance Criteria**
-- [x] `docs/project.md` includes: Overview, Tech Stack, Architecture, Data Model, API, Diagrams, Decisions
-- [x] Content from `docs/archive/PROJECT.md` is preserved (tables/diagrams/endpoints/decisions)
-- [x] No legacy files are removed
+- [x] AC-001-01 `docs/project.md` includes: Overview, Tech Stack, Architecture, Data Model, API, Diagrams, Decisions
+- [x] AC-001-02 Content from `docs/archive/PROJECT.md` is preserved (tables/diagrams/endpoints/decisions)
+- [x] AC-001-03 No legacy files are removed
 
 **Test Plan**
 - Backend:
@@ -36,10 +38,12 @@
 ### Story: S-002 — Extract epics into the new planning index
 **As a** maintainer **I want** legacy epics mapped to stable epic IDs **so that** future planning work is file-based and indexed.
 
+**Links:** T-002 (DONE) — ST-007, ST-008, ST-009; T-003 (DONE) — ST-010, ST-011, ST-012, ST-013, ST-014
+
 **Acceptance Criteria**
-- [x] Legacy epics are identified from `docs/archive/PLANNING.md`
-- [x] Stable epic IDs E-002..E-006 are reserved for the extracted epics
-- [x] `docs/planning/roadmap.md` lists the extracted epics in the epic index
+- [x] AC-002-01 Legacy epics are identified from `docs/archive/PLANNING.md`
+- [x] AC-002-02 Stable epic IDs E-002..E-006 are reserved for the extracted epics
+- [x] AC-002-03 `docs/planning/roadmap.md` lists the extracted epics in the epic index
 
 **Test Plan**
 - Backend:
@@ -53,9 +57,11 @@
 ### Story: S-003 — Roadmap file is canonical
 **As a** contributor **I want** a canonical roadmap in `docs/planning/roadmap.md` **so that** planning is easy to discover and keep current.
 
+**Links:** T-002 (DONE) — ST-007, ST-008, ST-009
+
 **Acceptance Criteria**
-- [x] `docs/planning/roadmap.md` contains phases and an epic index table
-- [x] Epic index includes a file path for every epic file that exists
+- [x] AC-003-01 `docs/planning/roadmap.md` contains phases and an epic index table
+- [x] AC-003-02 Epic index includes a file path for every epic file that exists
 
 **Test Plan**
 - Backend:
@@ -68,10 +74,12 @@
 ### Story: S-004 — Planning docs consistency pass
 **As a** contributor **I want** planning docs to follow the current story/task template **so that** future work stays consistent and easy to execute.
 
+**Links:** T-004 (DONE) — ST-015, ST-016, ST-017
+
 **Acceptance Criteria**
-- [x] Stories include Acceptance Criteria and a Test Plan with Backend/Frontend/Manual sections
-- [x] Tasks include the standard task structure (Type, Status, Depends on, Description, Files, DoD, Verification, Notes)
-- [x] No existing IDs (E-/S-/T-/ST-) are renumbered
+- [x] AC-004-01 Stories include Acceptance Criteria and a Test Plan with Backend/Frontend/Manual sections
+- [x] AC-004-02 Tasks include the standard task structure (Type, Status, Depends on, Description, Files, DoD, Verification, Notes)
+- [x] AC-004-03 No existing IDs (E-/S-/T-/ST-) are renumbered
 
 **Test Plan**
 - Backend:

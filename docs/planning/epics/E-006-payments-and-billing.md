@@ -17,11 +17,13 @@
 ### Story: S-050 — Payment Tracking
 **As a** administrator **I want** to track payments for events **so that** I can manage billing.
 
+**Links:** T-050 (TODO) — ST-150, ST-151, ST-152, ST-153
+
 **Acceptance Criteria**
-- [ ] Payment fields support required tracking needs
-- [ ] Outstanding balance can be derived
-- [ ] Payment reports can be generated
-- [ ] Payment history is available (if required)
+- [ ] AC-050-01 Payment fields support required tracking needs
+- [ ] AC-050-02 Outstanding balance can be derived
+- [ ] AC-050-03 Payment reports can be generated
+- [ ] AC-050-04 Payment history is available (if required)
 
 **Test Plan**
 - Backend:
@@ -34,10 +36,12 @@
 ### Story: S-051 — Payment Gateway Integration
 **As a** student/parent **I want** to pay online **so that** I don't need to pay in person.
 
+**Links:** T-051 (TODO) — ST-154, ST-155, ST-156, ST-157, ST-158
+
 **Acceptance Criteria**
-- [ ] Gateway option selected and documented
-- [ ] Webhooks are handled safely and idempotently
-- [ ] Receipts/invoices are generated when payment succeeds
+- [ ] AC-051-01 Gateway option selected and documented
+- [ ] AC-051-02 Webhooks are handled safely and idempotently
+- [ ] AC-051-03 Receipts/invoices are generated when payment succeeds
 
 **Test Plan**
 - Backend:

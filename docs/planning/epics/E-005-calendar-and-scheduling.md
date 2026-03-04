@@ -16,10 +16,12 @@
 ### Story: S-040 — Google Calendar Integration
 **As a** employee **I want** events synced with Google Calendar **so that** I can manage schedules externally.
 
+**Links:** T-040 (TODO) — ST-130, ST-131, ST-132, ST-133, ST-134, ST-135
+
 **Acceptance Criteria**
-- [ ] Credentials are configured securely for dev/prod
-- [ ] Events are created/updated/deleted in Google Calendar
-- [ ] Sync conflicts are handled deterministically
+- [ ] AC-040-01 Credentials are configured securely for dev/prod
+- [ ] AC-040-02 Events are created/updated/deleted in Google Calendar
+- [ ] AC-040-03 Sync conflicts are handled deterministically
 
 **Test Plan**
 - Backend:
@@ -32,10 +34,12 @@
 ### Story: S-041 — Calendar Views
 **As a** user **I want** to view events in calendar format **so that** scheduling is visual.
 
+**Links:** T-041 (TODO) — ST-136, ST-137, ST-138, ST-139
+
 **Acceptance Criteria**
-- [ ] Monthly calendar view exists
-- [ ] Weekly calendar view exists
-- [ ] Daily schedule view exists
+- [ ] AC-041-01 Monthly calendar view exists
+- [ ] AC-041-02 Weekly calendar view exists
+- [ ] AC-041-03 Daily schedule view exists
 
 **Test Plan**
 - Backend:

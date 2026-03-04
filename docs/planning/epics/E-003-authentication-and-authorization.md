@@ -19,12 +19,14 @@
 ### Story: S-020 — User Authentication
 **As a** user **I want** to log in securely **so that** I can access the system.
 
+**Links:** T-020 (TODO) — ST-050, ST-051, ST-052, ST-053, ST-054, ST-055, ST-056
+
 **Acceptance Criteria**
-- [ ] Login endpoint authenticates credentials and returns JWT
-- [ ] Passwords are stored hashed (BCrypt)
-- [ ] Refresh token flow exists (if required for UX/security)
-- [ ] Logout invalidates refresh tokens (if implemented)
-- [ ] HTTPS/TLS and CORS policies are configured for deployment and local dev
+- [ ] AC-020-01 Login endpoint authenticates credentials and returns JWT
+- [ ] AC-020-02 Passwords are stored hashed (BCrypt)
+- [ ] AC-020-03 Refresh token flow exists (if required for UX/security)
+- [ ] AC-020-04 Logout invalidates refresh tokens (if implemented)
+- [ ] AC-020-05 HTTPS/TLS and CORS policies are configured for deployment and local dev
 
 **Test Plan**
 - Backend:
@@ -37,9 +39,11 @@
 ### Story: S-021 — Role-Based Access Control
 **As a** administrator **I want** role-based permissions **so that** users can only perform authorized actions.
 
+**Links:** T-021 (TODO) — ST-057, ST-058, ST-059, ST-060, ST-061
+
 **Acceptance Criteria**
-- [ ] Permission matrix exists and is documented
-- [ ] RBAC enforced via Spring Security (`@PreAuthorize` or equivalent)
+- [ ] AC-021-01 Permission matrix exists and is documented
+- [ ] AC-021-02 RBAC enforced via Spring Security (`@PreAuthorize` or equivalent)
 
 **Test Plan**
 - Backend:
@@ -52,10 +56,12 @@
 ### Story: S-022 — Security Hardening
 **As a** security engineer **I want** baseline hardening applied **so that** the system meets security best practices.
 
+**Links:** T-022 (TODO) — ST-062, ST-063, ST-064, ST-065
+
 **Acceptance Criteria**
-- [ ] Rate limiting is in place
-- [ ] Security headers configured
-- [ ] Audit logging exists for sensitive operations
+- [ ] AC-022-01 Rate limiting is in place
+- [ ] AC-022-02 Security headers configured
+- [ ] AC-022-03 Audit logging exists for sensitive operations
 
 **Test Plan**
 - Backend:
@@ -68,10 +74,12 @@
 ### Story: S-023 — Privacy Hardening for Confidential Session Types
 **As a** administrator **I want** confidential session types restricted and audited **so that** mentorship and psychological consulting data is protected.
 
+**Links:** T-023 (TODO) — ST-066, ST-067, ST-068, ST-069
+
 **Acceptance Criteria**
-- [ ] Access restricted to ADMIN and assigned employee (at minimum)
-- [ ] Reads of confidential events are audit logged
-- [ ] List views optionally redact sensitive fields for non-privileged roles
+- [ ] AC-023-01 Access restricted to ADMIN and assigned employee (at minimum)
+- [ ] AC-023-02 Reads of confidential events are audit logged
+- [ ] AC-023-03 List views optionally redact sensitive fields for non-privileged roles
 
 **Test Plan**
 - Backend:

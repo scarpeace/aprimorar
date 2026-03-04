@@ -19,9 +19,11 @@
 ### Story: S-030 — Dashboard and Navigation
 **As a** user **I want** to navigate the application **so that** I can access different features easily.
 
+**Links:** T-030 (DONE) — ST-100
+
 **Acceptance Criteria**
-- [ ] Main navigation links to core entity pages
-- [ ] Dashboard shows the agreed MVP widgets (KPIs + upcoming list, as available)
+- [ ] AC-030-01 Main navigation links to core entity pages
+- [ ] AC-030-02 Dashboard shows the agreed MVP widgets (KPIs + upcoming list, as available)
 
 **Test Plan**
 - Backend:
@@ -34,10 +36,12 @@
 ### Story: S-031 — Student Management UI
 **As a** administrator **I want** to manage students through the UI **so that** I don't need to use API directly.
 
+**Links:** T-031 (TODO) — ST-101, ST-102, ST-103, ST-104, ST-105
+
 **Acceptance Criteria**
-- [ ] Student list supports pagination
-- [ ] Search/filter available where backend supports it
-- [ ] Delete/deactivate flows are safe (confirmations, no races)
+- [ ] AC-031-01 Student list supports pagination
+- [ ] AC-031-02 Search/filter available where backend supports it
+- [ ] AC-031-03 Delete/deactivate flows are safe (confirmations, no races)
 
 **Test Plan**
 - Backend:
@@ -50,10 +54,12 @@
 ### Story: S-032 — Event Management UI
 **As a** employee **I want** to manage events through the UI **so that** scheduling is intuitive.
 
+**Links:** T-032 (TODO) — ST-106, ST-107, ST-108, ST-109, ST-110, ST-111
+
 **Acceptance Criteria**
-- [ ] Event form supports date/time selection and validation
-- [ ] Student/employee dropdowns work and are performant
-- [ ] Pricing/payment fields are visible and editable
+- [ ] AC-032-01 Event form supports date/time selection and validation
+- [ ] AC-032-02 Student/employee dropdowns work and are performant
+- [ ] AC-032-03 Pricing/payment fields are visible and editable
 
 **Test Plan**
 - Backend:

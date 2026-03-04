@@ -1,6 +1,6 @@
 # Epic: E-002 — Core Data Management
 **Goal:** Provide complete, performant CRUD and management for core entities (Students, Employees, Parents, Events).
-**Status:** TODO
+**Status:** IN_PROGRESS
 **Owner:** Gu
 **Related milestone/phase:** Phase 1
 
@@ -20,11 +20,15 @@
 ### Story: S-010 — Student Management Enhancements
 **As a** administrator **I want** improved student search and validation **so that** I can manage student records efficiently at scale.
 
+**Status:** IN_PROGRESS
+**Links:** T-010 (DONE), T-015 (TODO)
+
 **Acceptance Criteria**
-- [x] Student list supports searching/filtering by name
-- [x] Student list supports filtering by activity type
-- [ ] Student age is validated on create/update using a defined min/max range (ST-023)
-- [ ] Validation errors return 400 with a clear message indicating the allowed range
+- [x] AC-010-01 Student list supports searching/filtering by name
+- [x] AC-010-02 Student list supports filtering by activity type
+- [ ] AC-010-03 Student age is validated on create/update using a defined min/max range (ST-023)
+- [ ] AC-010-04 Validation errors return 400 with a clear, stable message indicating the allowed range
+- [ ] AC-010-05 Boundary cases are covered by automated tests (exact min/max, just outside min/max)
 
 **Test Plan**
 - Backend:
@@ -35,11 +39,19 @@
   - [ ] Verify student list filters work with pagination
   - [ ] Try creating/updating a student with an out-of-range birthdate and confirm a 400 response
 
+**Review Notes (append-only)**
+- 2026-03-04
+  - Quality: Story is partially complete; search/filter is done via T-010, but age validation + boundary tests are still outstanding via T-015.
+  - Security: Ensure validation error messages are stable and do not leak internal details; enforce server-side regardless of client inputs.
+  - Performance: Student name search should remain index-friendly (avoid leading-wildcard patterns where possible); confirm pagination + filters compose without full table scans.
+
 ### Story: S-011 — Employee Management
 **As a** administrator **I want** employee records managed **so that** I can track teachers and staff.
 
+**Links:** T-013 (DONE) — ST-033
+
 **Acceptance Criteria**
-- [ ] Employee CRUD works and remains stable
+- [ ] AC-011-01 Employee CRUD works and remains stable
 
 **Test Plan**
 - Backend:
@@ -52,11 +64,13 @@
 ### Story: S-012 — Event/Class Management Improvements
 **As a** employee **I want** event listing to be performant and filterable **so that** scheduling and follow-ups are efficient.
 
+**Links:** T-011 (TODO) — ST-024, ST-025, ST-026, ST-027
+
 **Acceptance Criteria**
-- [ ] Event list avoids N+1 query patterns
-- [ ] Event list supports filtering by date range
-- [ ] Event list supports filtering by student
-- [ ] Event list supports filtering by employee
+- [ ] AC-012-01 Event list avoids N+1 query patterns
+- [ ] AC-012-02 Event list supports filtering by date range
+- [ ] AC-012-03 Event list supports filtering by student
+- [ ] AC-012-04 Event list supports filtering by employee
 
 **Test Plan**
 - Backend:
@@ -69,11 +83,13 @@
 ### Story: S-013 — Parent/Guardian Management
 **As a** administrator **I want** parent records available in student create/edit **so that** I can keep guardian contact data up to date.
 
+**Links:** T-014 (DONE) — ST-034
+
 **Acceptance Criteria**
-- [ ] Parents can be created inline during student create/edit
-- [ ] Existing parent can be assigned to a student via dropdown
-- [ ] Parent dropdown lists only active parents (id + name)
-- [ ] Parents are soft-deleted
+- [ ] AC-013-01 Parents can be created inline during student create/edit
+- [ ] AC-013-02 Existing parent can be assigned to a student via dropdown
+- [ ] AC-013-03 Parent dropdown lists only active parents (id + name)
+- [ ] AC-013-04 Parents are soft-deleted
 
 **Test Plan**
 - Backend:
@@ -86,10 +102,12 @@
 ### Story: S-014 — Event Session Types
 **As a** employee **I want** events classified by session type **so that** scheduling and reporting are consistent across services.
 
+**Links:** T-012 (TODO) — ST-028, ST-029, ST-030, ST-031, ST-032
+
 **Acceptance Criteria**
-- [ ] `sessionType` is required for events and validated
-- [ ] Database stores `sessionType` and existing data is migrated safely
-- [ ] GET `/v1/events` supports filtering by `sessionType`
+- [ ] AC-014-01 `sessionType` is required for events and validated
+- [ ] AC-014-02 Database stores `sessionType` and existing data is migrated safely
+- [ ] AC-014-03 GET `/v1/events` supports filtering by `sessionType`
 
 **Test Plan**
 - Backend:
@@ -144,6 +162,14 @@
 - Define the allowed age range (min/max) and enforce it for student create and update flows.
 - Reject out-of-range birthdates with a 400 validation error and a clear, stable message.
 - Cover boundary conditions with automated tests (exact min, exact max, below min, above max).
+- Keep the implementation minimal: server-side validation only (no UI work) and no new persistence.
+
+**Subtasks**
+- [ ] ST-035 — Confirm min/max age requirements and document as constants (MVP: code constants)
+- [ ] ST-036 — Implement server-side validation for create student (400 + message)
+- [ ] ST-037 — Implement server-side validation for update student (400 + message)
+- [ ] ST-038 — Add unit tests for min/max boundary conditions and error message
+- [ ] ST-039 — If tests/seed data fails: fix any out-of-range fixtures (keep changes minimal)
 
 **Files likely affected (best guess)**
 - server/api-aprimorar/src/main/java/com/aprimorar/api/validation/StudentAgeRules.java
@@ -165,6 +191,11 @@
 **Notes**
 - Risks: Existing seed/test data may become invalid once validation is enforced
 - Open questions: What exact min/max ages should be enforced, and should the age be computed as-of "today" (request time) or as-of the first scheduled event?
+
+#### Complexity Explanation
+- What: compute age from `birthDate` and validate it against min/max bounds.
+- Why: prevents invalid student records and avoids downstream scheduling/reporting edge cases.
+- Simplest approach: define 2 constants (MIN_AGE, MAX_AGE), validate on DTOs for create/update, and write deterministic tests for boundary dates.
 
 ### Task: T-011 — Event list performance and filters
 **Type:** backend
@@ -290,3 +321,7 @@
 
 **Review Notes (append-only)**
 - Reviewer notes:
+  - 2026-03-04
+    - Quality: Consider adding a `**Status:**` line to each Story for faster triage and to avoid Story/Task completion mismatches.
+    - Security: For validation-related tasks, standardize error payload shape and message stability for clients.
+    - Performance: For list/filter stories, add an explicit check for pagination+filters query plans (indexes) as part of DoD.
