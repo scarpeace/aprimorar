@@ -64,7 +64,7 @@
 ### Story: S-012 — Event/Class Management Improvements
 **As a** employee **I want** event listing to be performant and filterable **so that** scheduling and follow-ups are efficient.
 
-**Links:** T-011 (TODO) — ST-024, ST-025, ST-026, ST-027
+**Links:** T-011 (IN_PROGRESS) — ST-024, ST-025, ST-026, ST-027
 
 **Acceptance Criteria**
 - [ ] AC-012-01 Event list avoids N+1 query patterns
@@ -199,7 +199,7 @@
 
 ### Task: T-011 — Event list performance and filters
 **Type:** backend
-**Status:** TODO
+**Status:** IN_PROGRESS
 **Depends on:** None
 
 **Description**
@@ -228,6 +228,9 @@
 - Source: `docs/archive/PLANNING.md` Epic 1 / User Story 1.3
 - Risks: Performance regressions if new filters prevent index usage
 - Open questions: None
+
+**Implementation Notes**
+- 2026-03-04: Updated event filter query to use `COALESCE` for optional `start`, `end`, `studentId`, and `employeeId` params while keeping eager loading via `@EntityGraph`.
 
 ### Task: T-012 — Add `sessionType` to events
 **Type:** fullstack
