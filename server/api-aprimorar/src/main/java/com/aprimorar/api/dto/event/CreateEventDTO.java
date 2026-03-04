@@ -12,36 +12,36 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record CreateEventDTO(
-        @NotBlank(message = "Event title can't be blank")
-        @Size(max = 100, message = "Title must be at most 100 characters")
+        @NotBlank(message = "Título do evento é obrigatório")
+        @Size(max = 100, message = "Título deve ter no máximo 100 caracteres")
         String title,
 
-        @Size(max = 500, message = "Description must be at most 500 characters")
+        @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")
         String description,
 
-        @NotNull(message = "Event start date/time can't be null")
-        @FutureOrPresent(message = "Event start must be in the future")
+        @NotNull(message = "Data/hora de início do evento é obrigatória")
+        @FutureOrPresent(message = "Data/hora de início do evento deve ser no presente ou futuro")
         LocalDateTime startDateTime,
 
-        @NotNull(message = "Event end date/time can't be null")
-        @FutureOrPresent(message = "Event end must be in the future")
+        @NotNull(message = "Data/hora de fim do evento é obrigatória")
+        @FutureOrPresent(message = "Data/hora de fim do evento deve ser no presente ou futuro")
         LocalDateTime endDateTime,
 
-        @NotNull(message = "Price can't be null")
-        @DecimalMin(value = "0.0", message = "Price must be >= 0")
+        @NotNull(message = "Preço é obrigatório")
+        @DecimalMin(value = "0.0", message = "Preço deve ser maior ou igual a 0")
         BigDecimal price,
 
-        @NotNull(message = "Payment can't be null")
-        @DecimalMin(value = "0.0", message = "Payment must be >= 0")
+        @NotNull(message = "Pagamento é obrigatório")
+        @DecimalMin(value = "0.0", message = "Pagamento deve ser maior ou igual a 0")
         BigDecimal payment,
 
-        @NotNull(message = "Student ID can't be null")
+        @NotNull(message = "ID do estudante é obrigatório")
         UUID studentId,
 
-        @NotNull(message = "Employee ID can't be null")
+        @NotNull(message = "ID do funcionário é obrigatório")
         UUID employeeId
 ) {
-    @AssertTrue(message = "Payment can't exceed price")
+    @AssertTrue(message = "Pagamento não pode ser maior que o preço")
     public boolean isPaymentValid() {
         if (payment == null || price == null) {
             return true;
@@ -49,7 +49,7 @@ public record CreateEventDTO(
         return payment.compareTo(price) <= 0;
     }
 
-    @AssertTrue(message = "End date/time must be after start date/time")
+    @AssertTrue(message = "Data/hora de fim deve ser após a data/hora de início")
     public boolean isEndAfterStart() {
         if (startDateTime == null || endDateTime == null) {
             return true;

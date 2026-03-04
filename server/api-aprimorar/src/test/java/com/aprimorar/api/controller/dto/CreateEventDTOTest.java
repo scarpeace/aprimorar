@@ -70,7 +70,7 @@ class CreateEventDTOTest {
         CreateEventDTO dto = eventDto(null, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Event start date/time can't be null"));
+        assertTrue(messages(violations).contains("Data/hora de início do evento é obrigatória"));
     }
 
     @Test
@@ -79,7 +79,7 @@ class CreateEventDTOTest {
         CreateEventDTO dto = eventDto(PAST_DT, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Event start must be in the future"));
+        assertTrue(messages(violations).contains("Data/hora de início do evento deve ser no presente ou futuro"));
     }
 
     // ─── endDateTime ──────────────────────────────────────────────────────────
@@ -90,7 +90,7 @@ class CreateEventDTOTest {
         CreateEventDTO dto = eventDto(VALID_START, null, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Event end date/time can't be null"));
+        assertTrue(messages(violations).contains("Data/hora de fim do evento é obrigatória"));
     }
 
     @Test
@@ -100,7 +100,7 @@ class CreateEventDTOTest {
                 UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Event end must be in the future"));
+        assertTrue(messages(violations).contains("Data/hora de fim do evento deve ser no presente ou futuro"));
     }
 
     // ─── price ────────────────────────────────────────────────────────────────
@@ -111,7 +111,7 @@ class CreateEventDTOTest {
         CreateEventDTO dto = eventDto(VALID_START, VALID_END, null, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Price can't be null"));
+        assertTrue(messages(violations).contains("Preço é obrigatório"));
     }
 
     @Test
@@ -131,7 +131,7 @@ class CreateEventDTOTest {
         CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, null, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Payment can't be null"));
+        assertTrue(messages(violations).contains("Pagamento é obrigatório"));
     }
 
     @Test
@@ -151,7 +151,7 @@ class CreateEventDTOTest {
         CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, null, UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student ID can't be null"));
+        assertTrue(messages(violations).contains("ID do estudante é obrigatório"));
     }
 
     // ─── employeeId ───────────────────────────────────────────────────────────
@@ -162,7 +162,7 @@ class CreateEventDTOTest {
         CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), null);
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Employee ID can't be null"));
+        assertTrue(messages(violations).contains("ID do funcionário é obrigatório"));
     }
 
     // ─── cross-field constraints ──────────────────────────────────────────────
@@ -174,7 +174,7 @@ class CreateEventDTOTest {
                 UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Payment can't exceed price"));
+        assertTrue(messages(violations).contains("Pagamento não pode ser maior que o preço"));
     }
 
     @Test
@@ -184,7 +184,7 @@ class CreateEventDTOTest {
                 VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("End date/time must be after start date/time"));
+        assertTrue(messages(violations).contains("Data/hora de fim deve ser após a data/hora de início"));
     }
 
     @Test
@@ -194,7 +194,6 @@ class CreateEventDTOTest {
         CreateEventDTO dto = eventDto(sameTime, sameTime, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("End date/time must be after start date/time"));
+        assertTrue(messages(violations).contains("Data/hora de fim deve ser após a data/hora de início"));
     }
 }
-

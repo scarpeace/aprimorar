@@ -85,7 +85,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student name can't be null"));
+        assertTrue(messages(violations).contains("Nome do estudante é obrigatório"));
     }
 
     // ─── birthdate ────────────────────────────────────────────────────────────
@@ -100,7 +100,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("A data de nascimento do estudante e obrigatoria"));
+        assertTrue(messages(violations).contains("A data de nascimento do estudante é obrigatória"));
     }
 
     @Test
@@ -128,7 +128,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student CPF can't be null"));
+        assertTrue(messages(violations).contains("CPF do estudante é obrigatório"));
     }
 
     @Test
@@ -141,7 +141,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("CPF must be in format XXX.XXX.XXX-XX"));
+        assertTrue(messages(violations).contains("CPF deve estar no formato XXX.XXX.XXX-XX"));
     }
 
     // ─── school ───────────────────────────────────────────────────────────────
@@ -156,7 +156,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student school can't be blank"));
+        assertTrue(messages(violations).contains("Escola do estudante é obrigatória"));
     }
 
     // ─── contact ──────────────────────────────────────────────────────────────
@@ -171,7 +171,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student contact number can't be blank"));
+        assertTrue(messages(violations).contains("Contato do estudante é obrigatório"));
     }
 
     @Test
@@ -184,7 +184,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Contact must be in format (XX)XXXXX-XXXX"));
+        assertTrue(messages(violations).contains("Contato deve estar no formato (XX)XXXXX-XXXX"));
     }
 
     @Test
@@ -197,7 +197,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Contact must be in format (XX)XXXXX-XXXX"));
+        assertTrue(messages(violations).contains("Contato deve estar no formato (XX)XXXXX-XXXX"));
     }
 
     // ─── email ────────────────────────────────────────────────────────────────
@@ -212,7 +212,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student email can't be blank"));
+        assertTrue(messages(violations).contains("Email do estudante é obrigatório"));
     }
 
     @Test
@@ -239,7 +239,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student activity can't be null"));
+        assertTrue(messages(violations).contains("Atividade do estudante é obrigatória"));
     }
 
     // ─── address ──────────────────────────────────────────────────────────────
@@ -254,7 +254,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student Address can't be null"));
+        assertTrue(messages(violations).contains("Endereço do estudante é obrigatório"));
     }
 
     // ─── parent ───────────────────────────────────────────────────────────────
@@ -269,7 +269,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Provide either parentId or parent"));
+        assertTrue(messages(violations).contains("Informe parentId ou parent"));
     }
 
     @Test
@@ -294,7 +294,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Provide either parentId or parent, not both"));
+        assertTrue(messages(violations).contains("Informe somente um entre parentId e parent"));
     }
 
     // ─── cascaded validations ─────────────────────────────────────────────────
@@ -312,7 +312,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Address street can't be blank"));
+        assertTrue(messages(violations).contains("Rua do endereço é obrigatória"));
     }
 
     @Test
@@ -328,6 +328,6 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Parent name can't be null"));
+        assertTrue(messages(violations).contains("Nome do responsável é obrigatório"));
     }
 }

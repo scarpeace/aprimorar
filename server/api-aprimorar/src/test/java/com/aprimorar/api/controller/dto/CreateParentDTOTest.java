@@ -52,7 +52,7 @@ class CreateParentDTOTest {
         CreateParentDTO dto = parentDto(null, "parent@email.com", "(11)99999-9999", "123.456.789-01");
         Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Parent name can't be null"));
+        assertTrue(messages(violations).contains("Nome do responsável é obrigatório"));
     }
 
     // ─── email ────────────────────────────────────────────────────────────────
@@ -63,7 +63,7 @@ class CreateParentDTOTest {
         CreateParentDTO dto = parentDto("Parent Name", null, "(11)99999-9999", "123.456.789-01");
         Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Parent email can't be null"));
+        assertTrue(messages(violations).contains("Email do responsável é obrigatório"));
     }
 
     @Test
@@ -82,7 +82,7 @@ class CreateParentDTOTest {
         CreateParentDTO dto = parentDto("Parent Name", "parent@email.com", null, "123.456.789-01");
         Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Parent contact can't be null"));
+        assertTrue(messages(violations).contains("Contato do responsável é obrigatório"));
     }
 
     @Test
@@ -91,7 +91,7 @@ class CreateParentDTOTest {
         CreateParentDTO dto = parentDto("Parent Name", "parent@email.com", "123", "123.456.789-01");
         Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Contact must be in format (XX)XXXXX-XXXX"));
+        assertTrue(messages(violations).contains("Contato deve estar no formato (XX)XXXXX-XXXX"));
     }
 
     @Test
@@ -107,7 +107,7 @@ class CreateParentDTOTest {
         CreateParentDTO dto = parentDto("Parent Name", "parent@email.com", "(11)9999-9999", "123.456.789-01");
         Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Contact must be in format (XX)XXXXX-XXXX"));
+        assertTrue(messages(violations).contains("Contato deve estar no formato (XX)XXXXX-XXXX"));
     }
 
     // ─── cpf ──────────────────────────────────────────────────────────────────
@@ -118,7 +118,7 @@ class CreateParentDTOTest {
         CreateParentDTO dto = parentDto("Parent Name", "parent@email.com", "(11)99999-9999", null);
         Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Parent cpf can't be null"));
+        assertTrue(messages(violations).contains("CPF do responsável é obrigatório"));
     }
 
     @Test
@@ -127,7 +127,7 @@ class CreateParentDTOTest {
         CreateParentDTO dto = parentDto("Parent Name", "parent@email.com", "(11)99999-9999", "12345");
         Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("CPF must be in format XXX.XXX.XXX-XX"));
+        assertTrue(messages(violations).contains("CPF deve estar no formato XXX.XXX.XXX-XX"));
     }
 
     @Test

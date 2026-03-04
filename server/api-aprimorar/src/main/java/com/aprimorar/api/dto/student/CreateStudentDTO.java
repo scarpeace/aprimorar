@@ -14,35 +14,33 @@ import jakarta.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.UUID;
 
-// TODO: Add minimum student age validation based on business rules.
-
 public record CreateStudentDTO(
-        @NotNull(message = "Student name can't be null")
+        @NotNull(message = "Nome do estudante é obrigatório")
         String name,
 
-        @NotNull(message = "A data de nascimento do estudante e obrigatoria")
+        @NotNull(message = "A data de nascimento do estudante é obrigatória")
         @Past(message = "A data de nascimento do estudante deve estar no passado")
         LocalDate birthdate,
 
-        @NotNull(message = "Student CPF can't be null")
-        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF must be in format XXX.XXX.XXX-XX")
+        @NotNull(message = "CPF do estudante é obrigatório")
+        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF deve estar no formato XXX.XXX.XXX-XX")
         String cpf,
 
-        @NotBlank(message = "Student school can't be blank")
+        @NotBlank(message = "Escola do estudante é obrigatória")
         String school,
 
-        @NotBlank(message = "Student contact number can't be blank")
-        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contact must be in format (XX)XXXXX-XXXX")
+        @NotBlank(message = "Contato do estudante é obrigatório")
+        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contato deve estar no formato (XX)XXXXX-XXXX")
         String contact,
 
-        @NotBlank(message = "Student email can't be blank")
-        @Email
+        @NotBlank(message = "Email do estudante é obrigatório")
+        @Email(message = "Email deve ser um endereço de email válido")
         String email,
 
-        @NotNull(message = "Student activity can't be null")
+        @NotNull(message = "Atividade do estudante é obrigatória")
         Activity activity,
 
-        @NotNull(message = "Student Address can't be null")
+        @NotNull(message = "Endereço do estudante é obrigatório")
         @Valid
         CreateAddressDTO address,
 
@@ -52,12 +50,12 @@ public record CreateStudentDTO(
         CreateParentDTO parent
 ) {
 
-    @AssertTrue(message = "Provide either parentId or parent")
+    @AssertTrue(message = "Informe parentId ou parent")
     public boolean hasParentReference() {
         return parentId != null || parent != null;
     }
 
-    @AssertTrue(message = "Provide either parentId or parent, not both")
+    @AssertTrue(message = "Informe somente um entre parentId e parent")
     public boolean isParentReferenceConsistent() {
         return parentId == null || parent == null;
     }
