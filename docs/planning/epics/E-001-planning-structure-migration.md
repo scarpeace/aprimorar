@@ -26,12 +26,12 @@
 
 **Test Plan**
 - Backend:
-  - [ ] N/A (docs-only)
+  - [x] N/A (docs-only)
 - Frontend:
-  - [ ] N/A (docs-only)
+  - [x] N/A (docs-only)
 - Manual:
-  - [ ] Render `docs/project.md` in a Markdown viewer; verify headings, tables, and mermaid blocks
-  - [ ] Spot-check key sections against `docs/archive/PROJECT.md` (tech stack, endpoints, decisions)
+  - [x] Render `docs/project.md` in a Markdown viewer; verify headings, tables, and mermaid blocks
+  - [x] Spot-check key sections against `docs/archive/PROJECT.md` (tech stack, endpoints, decisions)
 
 ### Story: S-002 — Extract epics into the new planning index
 **As a** maintainer **I want** legacy epics mapped to stable epic IDs **so that** future planning work is file-based and indexed.
@@ -43,12 +43,12 @@
 
 **Test Plan**
 - Backend:
-  - [ ] N/A (docs-only)
+  - [x] N/A (docs-only)
 - Frontend:
-  - [ ] N/A (docs-only)
+  - [x] N/A (docs-only)
 - Manual:
-  - [ ] Verify `docs/planning/roadmap.md` reflects the phases from `docs/archive/PLANNING.md`
-  - [ ] Verify epic ID/name mapping matches the legacy epic titles
+  - [x] Verify `docs/planning/roadmap.md` reflects the phases from `docs/archive/PLANNING.md`
+  - [x] Verify epic ID/name mapping matches the legacy epic titles
 
 ### Story: S-003 — Roadmap file is canonical
 **As a** contributor **I want** a canonical roadmap in `docs/planning/roadmap.md` **so that** planning is easy to discover and keep current.
@@ -59,11 +59,11 @@
 
 **Test Plan**
 - Backend:
-  - [ ] N/A (docs-only)
+  - [x] N/A (docs-only)
 - Frontend:
-  - [ ] N/A (docs-only)
+  - [x] N/A (docs-only)
 - Manual:
-  - [ ] Open `docs/planning/roadmap.md` and confirm epic index links resolve for existing files
+  - [x] Open `docs/planning/roadmap.md` and confirm epic index links resolve for existing files
 
 ### Story: S-004 — Planning docs consistency pass
 **As a** contributor **I want** planning docs to follow the current story/task template **so that** future work stays consistent and easy to execute.
@@ -75,12 +75,12 @@
 
 **Test Plan**
 - Backend:
-  - [ ] N/A (docs-only)
+  - [x] N/A (docs-only)
 - Frontend:
-  - [ ] N/A (docs-only)
+  - [x] N/A (docs-only)
 - Manual:
-  - [ ] Review `docs/planning/epics/E-001-planning-structure-migration.md` for template compliance
-  - [ ] Review `docs/planning/roadmap.md` for accurate Phase 0 / E-001 status
+  - [x] Review `docs/planning/epics/E-001-planning-structure-migration.md` for template compliance
+  - [x] Review `docs/planning/roadmap.md` for accurate Phase 0 / E-001 status
 
 ## Tasks
 
