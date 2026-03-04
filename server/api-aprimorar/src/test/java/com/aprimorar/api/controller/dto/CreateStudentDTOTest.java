@@ -100,7 +100,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student birthdate can't be null"));
+        assertTrue(messages(violations).contains("A data de nascimento do estudante e obrigatoria"));
     }
 
     @Test
@@ -113,7 +113,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student birthdate should be in the past"));
+        assertTrue(messages(violations).contains("A data de nascimento do estudante deve estar no passado"));
     }
 
     // ─── cpf ──────────────────────────────────────────────────────────────────

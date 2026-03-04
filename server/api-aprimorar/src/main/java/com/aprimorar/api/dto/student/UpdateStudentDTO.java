@@ -15,7 +15,7 @@ import java.util.UUID;
 public record UpdateStudentDTO(
         String name,
 
-        @Past(message = "Student birthdate should be in the past")
+        @Past(message = "A data de nascimento do estudante deve estar no passado")
         LocalDate birthdate,
 
         @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF must be in format XXX.XXX.XXX-XX")

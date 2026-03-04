@@ -26,6 +26,7 @@ import org.springframework.data.domain.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,8 +38,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
+    private static final ZoneId SAO_PAULO_ZONE = ZoneId.of("America/Sao_Paulo");
+    private static final String AGE_RANGE_ERROR_MESSAGE = "A data de nascimento deve resultar em idade entre 10 e 18 anos";
     private static final String STUDENT_NAME = "John Doe";
-    private static final LocalDate STUDENT_BIRTHDATE = LocalDate.now().minusYears(15);
+    private static final LocalDate STUDENT_BIRTHDATE = LocalDate.now(SAO_PAULO_ZONE).minusYears(15);
     private static final String STUDENT_CPF_FORMATTED = "123.456.789-01";
     private static final String STUDENT_CPF_RAW = "12345678901";
     private static final String STUDENT_SCHOOL = "School";
@@ -402,7 +405,7 @@ class StudentServiceTest {
     void testCreateStudentAgeBelowMinimum() {
         CreateStudentDTO tooYoungStudentDto = new CreateStudentDTO(
                 STUDENT_NAME,
-                LocalDate.now().minusYears(9),
+                todayInSaoPaulo().minusYears(9),
                 STUDENT_CPF_FORMATTED,
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
@@ -416,8 +419,70 @@ class StudentServiceTest {
         StudentValidationException ex = assertThrows(StudentValidationException.class,
                 () -> studentService.createStudent(tooYoungStudentDto));
 
-        assertEquals("Student age must be between 10 and 20 years", ex.getMessage());
+        assertEquals(AGE_RANGE_ERROR_MESSAGE, ex.getMessage());
         verifyNoInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should create student when student age is exactly minimum allowed age")
+    void testCreateStudentAgeAtMinimumBoundary() {
+        CreateStudentDTO minimumAgeStudentDto = new CreateStudentDTO(
+                STUDENT_NAME,
+                todayInSaoPaulo().minusYears(10),
+                STUDENT_CPF_FORMATTED,
+                STUDENT_SCHOOL,
+                STUDENT_CONTACT_FORMATTED,
+                STUDENT_EMAIL,
+                Activity.ENEM,
+                null,
+                parent.getId(),
+                null
+        );
+
+        when(studentMapper.toEntity(minimumAgeStudentDto)).thenReturn(student);
+        when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
+        when(studentRepo.save(student)).thenReturn(student);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        StudentResponseDTO result = studentService.createStudent(minimumAgeStudentDto);
+
+        assertSame(studentResponseDto, result);
+        verify(studentMapper).toEntity(minimumAgeStudentDto);
+        verify(parentRepo).findByIdAndActiveTrue(parent.getId());
+        verify(studentRepo).save(student);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should create student when student age is exactly maximum allowed age")
+    void testCreateStudentAgeAtMaximumBoundary() {
+        CreateStudentDTO maximumAgeStudentDto = new CreateStudentDTO(
+                STUDENT_NAME,
+                todayInSaoPaulo().minusYears(18),
+                STUDENT_CPF_FORMATTED,
+                STUDENT_SCHOOL,
+                STUDENT_CONTACT_FORMATTED,
+                STUDENT_EMAIL,
+                Activity.ENEM,
+                null,
+                parent.getId(),
+                null
+        );
+
+        when(studentMapper.toEntity(maximumAgeStudentDto)).thenReturn(student);
+        when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
+        when(studentRepo.save(student)).thenReturn(student);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        StudentResponseDTO result = studentService.createStudent(maximumAgeStudentDto);
+
+        assertSame(studentResponseDto, result);
+        verify(studentMapper).toEntity(maximumAgeStudentDto);
+        verify(parentRepo).findByIdAndActiveTrue(parent.getId());
+        verify(studentRepo).save(student);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
     }
 
     @Test
@@ -553,7 +618,7 @@ class StudentServiceTest {
     void testUpdateStudentAgeAboveMaximum() {
         UpdateStudentDTO tooOldStudentDto = new UpdateStudentDTO(
                 null,
-                LocalDate.now().minusYears(21),
+                todayInSaoPaulo().minusYears(19),
                 null,
                 null,
                 null,
@@ -569,10 +634,73 @@ class StudentServiceTest {
         StudentValidationException ex = assertThrows(StudentValidationException.class,
                 () -> studentService.updateStudent(student.getId(), tooOldStudentDto));
 
-        assertEquals("Student age must be between 10 and 20 years", ex.getMessage());
+        assertEquals(AGE_RANGE_ERROR_MESSAGE, ex.getMessage());
         verify(studentRepo).findById(student.getId());
         verifyNoMoreInteractions(studentRepo);
         verifyNoInteractions(studentMapper, parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should update student when age is exactly maximum allowed age")
+    void testUpdateStudentAgeAtMaximumBoundary() {
+        UpdateStudentDTO maximumAgeStudentDto = new UpdateStudentDTO(
+                null,
+                todayInSaoPaulo().minusYears(18),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        StudentResponseDTO result = studentService.updateStudent(student.getId(), maximumAgeStudentDto);
+
+        assertSame(studentResponseDto, result);
+        verify(studentRepo).findById(student.getId());
+        verify(studentMapper).updateFromDto(maximumAgeStudentDto, student);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoInteractions(parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should update non-birthdate fields for legacy student with out-of-range age")
+    void testUpdateStudentWithoutBirthdateAllowsLegacyOutOfRangeStudent() {
+        student.setBirthdate(todayInSaoPaulo().minusYears(25));
+        UpdateStudentDTO updateNameOnlyDto = new UpdateStudentDTO(
+                "Updated name",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        StudentResponseDTO result = studentService.updateStudent(student.getId(), updateNameOnlyDto);
+
+        assertSame(studentResponseDto, result);
+        verify(studentRepo).findById(student.getId());
+        verify(studentMapper).updateFromDto(updateNameOnlyDto, student);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoInteractions(parentRepo, parentMapper);
+    }
+
+    private LocalDate todayInSaoPaulo() {
+        return LocalDate.now(SAO_PAULO_ZONE);
     }
 
     private Student validStudentEntity() {

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
 import java.util.UUID;
 
 @Service
@@ -31,8 +32,9 @@ public class StudentService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentService.class);
     private static final int MIN_AGE = 10;
-    private static final int MAX_AGE = 20;
-    private static final String AGE_RANGE_MESSAGE = "Student age must be between 10 and 20 years";
+    private static final int MAX_AGE = 18;
+    private static final ZoneId AGE_CALCULATION_ZONE = ZoneId.of("America/Sao_Paulo");
+    private static final String AGE_RANGE_MESSAGE = "A data de nascimento deve resultar em idade entre " + MIN_AGE + " e " + MAX_AGE + " anos";
 
     private final StudentRepository studentRepo;
     private final ParentRepository parentRepo;
@@ -183,7 +185,8 @@ public class StudentService {
     }
 
     private void validateStudentAge(LocalDate birthdate) {
-        int age = Period.between(birthdate, LocalDate.now()).getYears();
+        LocalDate todayInSaoPaulo = LocalDate.now(AGE_CALCULATION_ZONE);
+        int age = Period.between(birthdate, todayInSaoPaulo).getYears();
         if (age < MIN_AGE || age > MAX_AGE) {
             throw new StudentValidationException(AGE_RANGE_MESSAGE);
         }

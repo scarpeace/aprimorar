@@ -20,8 +20,8 @@ public record CreateStudentDTO(
         @NotNull(message = "Student name can't be null")
         String name,
 
-        @NotNull(message = "Student birthdate can't be null")
-        @Past(message = "Student birthdate should be in the past")
+        @NotNull(message = "A data de nascimento do estudante e obrigatoria")
+        @Past(message = "A data de nascimento do estudante deve estar no passado")
         LocalDate birthdate,
 
         @NotNull(message = "Student CPF can't be null")
