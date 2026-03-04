@@ -134,6 +134,87 @@ class StudentServiceTest {
     }
 
     @Test
+    @DisplayName("Should list students when filtering by name")
+    void testListStudentsByNameFilter() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
+        when(studentRepo.findByNameContainingIgnoreCase("John", pageable)).thenReturn(students);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, " John ", null);
+
+        assertEquals(1, result.getTotalElements());
+        assertSame(studentResponseDto, result.getContent().getFirst());
+
+        verify(studentRepo).findByNameContainingIgnoreCase("John", pageable);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoInteractions(parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should list students when filtering by activity")
+    void testListStudentsByActivityFilter() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
+        when(studentRepo.findByActivity(Activity.MENTORIA, pageable)).thenReturn(students);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, Activity.MENTORIA);
+
+        assertEquals(1, result.getTotalElements());
+        assertSame(studentResponseDto, result.getContent().getFirst());
+
+        verify(studentRepo).findByActivity(Activity.MENTORIA, pageable);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoInteractions(parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should list students when filtering by name and activity")
+    void testListStudentsByNameAndActivityFilters() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
+        when(studentRepo.findByNameContainingIgnoreCaseAndActivity("John", Activity.ENEM, pageable))
+                .thenReturn(students);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "John", Activity.ENEM);
+
+        assertEquals(1, result.getTotalElements());
+        assertSame(studentResponseDto, result.getContent().getFirst());
+
+        verify(studentRepo).findByNameContainingIgnoreCaseAndActivity("John", Activity.ENEM, pageable);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoInteractions(parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should ignore blank name filter when listing students")
+    void testListStudentsWithBlankNameFilter() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
+        when(studentRepo.findAll(pageable)).thenReturn(students);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "   ", null);
+
+        assertEquals(1, result.getTotalElements());
+        assertSame(studentResponseDto, result.getContent().getFirst());
+
+        verify(studentRepo).findAll(pageable);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoInteractions(parentRepo, parentMapper);
+    }
+
+    @Test
     @DisplayName("Should list active students page when success")
     void testListActiveStudents() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
@@ -151,6 +232,67 @@ class StudentServiceTest {
         verify(studentRepo).findAllByActiveTrue(pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
+    }
+
+    @Test
+    @DisplayName("Should list active students when filtering by name")
+    void testListActiveStudentsByNameFilter() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
+        when(studentRepo.findAllByActiveTrueAndNameContainingIgnoreCase("John", pageable)).thenReturn(students);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, "John", null);
+
+        assertEquals(1, result.getTotalElements());
+        assertSame(studentResponseDto, result.getContent().getFirst());
+
+        verify(studentRepo).findAllByActiveTrueAndNameContainingIgnoreCase("John", pageable);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoInteractions(parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should list active students when filtering by activity")
+    void testListActiveStudentsByActivityFilter() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
+        when(studentRepo.findAllByActiveTrueAndActivity(Activity.ENEM, pageable)).thenReturn(students);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, null, Activity.ENEM);
+
+        assertEquals(1, result.getTotalElements());
+        assertSame(studentResponseDto, result.getContent().getFirst());
+
+        verify(studentRepo).findAllByActiveTrueAndActivity(Activity.ENEM, pageable);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoInteractions(parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should list active students when filtering by name and activity")
+    void testListActiveStudentsByNameAndActivityFilters() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+
+        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
+        when(studentRepo.findAllByActiveTrueAndNameContainingIgnoreCaseAndActivity("John", Activity.MENTORIA, pageable))
+                .thenReturn(students);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, "John", Activity.MENTORIA);
+
+        assertEquals(1, result.getTotalElements());
+        assertSame(studentResponseDto, result.getContent().getFirst());
+
+        verify(studentRepo).findAllByActiveTrueAndNameContainingIgnoreCaseAndActivity("John", Activity.MENTORIA, pageable);
+        verify(studentMapper).toDto(student);
+        verifyNoMoreInteractions(studentRepo, studentMapper);
+        verifyNoInteractions(parentRepo, parentMapper);
     }
 
     @Test

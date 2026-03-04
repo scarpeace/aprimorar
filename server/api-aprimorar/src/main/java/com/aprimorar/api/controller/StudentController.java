@@ -3,6 +3,7 @@ package com.aprimorar.api.controller;
 import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.dto.student.UpdateStudentDTO;
+import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,10 +37,12 @@ public class StudentController {
     public ResponseEntity<Page<StudentResponseDTO>> listStudents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") @Max(100) int size,
-            @RequestParam(defaultValue = "name") String sortBy
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Activity activity
     ){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable);
+        Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable, name, activity);
         return ResponseEntity.ok(allStudents);
     }
 
@@ -49,10 +52,12 @@ public class StudentController {
     public ResponseEntity<Page<StudentResponseDTO>> listActiveStudents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") @Max(100) int size,
-            @RequestParam(defaultValue = "name") String sortBy
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Activity activity
     ){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<StudentResponseDTO> allActiveStudents = studentService.listActiveStudents(pageable);
+        Page<StudentResponseDTO> allActiveStudents = studentService.listActiveStudents(pageable, name, activity);
         return ResponseEntity.ok(allActiveStudents);
 
     }

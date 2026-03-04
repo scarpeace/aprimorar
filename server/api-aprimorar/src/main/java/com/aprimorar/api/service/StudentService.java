@@ -6,6 +6,7 @@ import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
+import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.exception.domain.ParentNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
 import com.aprimorar.api.mapper.ParentMapper;
@@ -44,9 +45,51 @@ public class StudentService {
         return studentPage.map(studentMapper::toDto);
     }
 
+    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, Activity activity) {
+        String normalizedName = normalizeNameFilter(name);
+
+        if (normalizedName != null && activity != null) {
+            return studentRepo.findByNameContainingIgnoreCaseAndActivity(normalizedName, activity, pageable)
+                    .map(studentMapper::toDto);
+        }
+
+        if (normalizedName != null) {
+            return studentRepo.findByNameContainingIgnoreCase(normalizedName, pageable)
+                    .map(studentMapper::toDto);
+        }
+
+        if (activity != null) {
+            return studentRepo.findByActivity(activity, pageable)
+                    .map(studentMapper::toDto);
+        }
+
+        return listStudents(pageable);
+    }
+
     public Page<StudentResponseDTO> listActiveStudents(Pageable pageable){
         Page<Student> activeStudentsPage = studentRepo.findAllByActiveTrue(pageable);
         return activeStudentsPage.map(studentMapper::toDto);
+    }
+
+    public Page<StudentResponseDTO> listActiveStudents(Pageable pageable, String name, Activity activity) {
+        String normalizedName = normalizeNameFilter(name);
+
+        if (normalizedName != null && activity != null) {
+            return studentRepo.findAllByActiveTrueAndNameContainingIgnoreCaseAndActivity(normalizedName, activity, pageable)
+                    .map(studentMapper::toDto);
+        }
+
+        if (normalizedName != null) {
+            return studentRepo.findAllByActiveTrueAndNameContainingIgnoreCase(normalizedName, pageable)
+                    .map(studentMapper::toDto);
+        }
+
+        if (activity != null) {
+            return studentRepo.findAllByActiveTrueAndActivity(activity, pageable)
+                    .map(studentMapper::toDto);
+        }
+
+        return listActiveStudents(pageable);
     }
 
     public StudentResponseDTO findById(UUID studentId) {
@@ -118,5 +161,14 @@ public class StudentService {
             foundStudent.setActive(false);
             foundStudent.setUpdatedAt(Instant.now());
         }
+    }
+
+    private String normalizeNameFilter(String name) {
+        if (name == null) {
+            return null;
+        }
+
+        String trimmed = name.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 }
