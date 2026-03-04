@@ -21,18 +21,18 @@
 **As a** administrator **I want** improved student search and validation **so that** I can manage student records efficiently at scale.
 
 **Status:** IN_PROGRESS
-**Links:** T-010 (DONE), T-015 (TODO)
+**Links:** T-010 (DONE), T-015 (DONE)
 
 **Acceptance Criteria**
 - [x] AC-010-01 Student list supports searching/filtering by name
 - [x] AC-010-02 Student list supports filtering by activity type
-- [ ] AC-010-03 Student age is validated on create/update using a defined min/max range (ST-023)
-- [ ] AC-010-04 Validation errors return 400 with a clear, stable message indicating the allowed range
-- [ ] AC-010-05 Boundary cases are covered by automated tests (exact min/max, just outside min/max)
+- [x] AC-010-03 Student age is validated on create/update using a defined min/max range (ST-023)
+- [x] AC-010-04 Validation errors return 400 with a clear, stable message indicating the allowed range
+- [x] AC-010-05 Boundary cases are covered by automated tests (exact min/max, just outside min/max)
 
 **Test Plan**
 - Backend:
-  - [ ] Add DTO/service tests for student age boundaries (min/max) and error messages
+- [x] Add DTO/service tests for student age boundaries (min/max) and error messages
 - Frontend:
   - [x] N/A (backend capability)
 - Manual:
@@ -155,7 +155,7 @@
 
 ### Task: T-015 — Student age validation (min/max) (ST-023)
 **Type:** backend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** None
 
 **Description**
@@ -165,11 +165,11 @@
 - Keep the implementation minimal: server-side validation only (no UI work) and no new persistence.
 
 **Subtasks**
-- [ ] ST-035 — Confirm min/max age requirements and document as constants (MVP: code constants)
-- [ ] ST-036 — Implement server-side validation for create student (400 + message)
-- [ ] ST-037 — Implement server-side validation for update student (400 + message)
-- [ ] ST-038 — Add unit tests for min/max boundary conditions and error message
-- [ ] ST-039 — If tests/seed data fails: fix any out-of-range fixtures (keep changes minimal)
+- [x] ST-035 — Confirm min/max age requirements and document as constants (MVP: code constants)
+- [x] ST-036 — Implement server-side validation for create student (400 + message)
+- [x] ST-037 — Implement server-side validation for update student (400 + message)
+- [x] ST-038 — Add unit tests for min/max boundary conditions and error message
+- [x] ST-039 — If tests/seed data fails: fix any out-of-range fixtures (keep changes minimal)
 
 **Files likely affected (best guess)**
 - server/api-aprimorar/src/main/java/com/aprimorar/api/validation/StudentAgeRules.java
@@ -178,10 +178,10 @@
 - server/api-aprimorar/src/test/java/com/aprimorar/api/controller/dto/CreateStudentDTOTest.java
 
 **DoD (Definition of Done)**
-- [ ] Min/max age bounds are defined (constants or configuration) and referenced by validation logic
-- [ ] POST `/v1/students` rejects out-of-range ages with 400
-- [ ] PATCH `/v1/students/{id}` rejects out-of-range ages with 400
-- [ ] Unit tests cover boundary cases and pass locally
+- [x] Min/max age bounds are defined (constants or configuration) and referenced by validation logic
+- [x] POST `/v1/students` rejects out-of-range ages with 400
+- [x] PATCH `/v1/students/{id}` rejects out-of-range ages with 400
+- [x] Unit tests cover boundary cases and pass locally
 
 **Verification**
 - Backend: cd server/api-aprimorar && ./mvnw test
@@ -189,8 +189,8 @@
 - Manual: POST/PATCH a student with an out-of-range birthdate and confirm a 400 with the expected message
 
 **Notes**
-- Risks: Existing seed/test data may become invalid once validation is enforced
-- Open questions: What exact min/max ages should be enforced, and should the age be computed as-of "today" (request time) or as-of the first scheduled event?
+- Risks: None
+- Open questions: None
 
 #### Complexity Explanation
 - What: compute age from `birthDate` and validate it against min/max bounds.
