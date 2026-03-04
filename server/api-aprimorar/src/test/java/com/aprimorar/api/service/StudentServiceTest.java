@@ -10,6 +10,7 @@ import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.exception.domain.ParentNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
+import com.aprimorar.api.exception.domain.StudentValidationException;
 import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.ParentRepository;
@@ -37,7 +38,7 @@ import static org.mockito.Mockito.*;
 class StudentServiceTest {
 
     private static final String STUDENT_NAME = "John Doe";
-    private static final LocalDate STUDENT_BIRTHDATE = LocalDate.of(2000, 1, 1);
+    private static final LocalDate STUDENT_BIRTHDATE = LocalDate.now().minusYears(15);
     private static final String STUDENT_CPF_FORMATTED = "123.456.789-01";
     private static final String STUDENT_CPF_RAW = "12345678901";
     private static final String STUDENT_SCHOOL = "School";
@@ -381,15 +382,42 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception when creating student without parent")
+    @DisplayName("Should create student when parent data is not validated at service boundary")
     void testCreateStudentWithoutParent() {
         when(studentMapper.toEntity(createStudentDtoWithoutParent)).thenReturn(student);
+        when(studentRepo.save(student)).thenReturn(student);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        assertThrows(IllegalArgumentException.class, () -> 
-                studentService.createStudent(createStudentDtoWithoutParent));
+        StudentResponseDTO result = studentService.createStudent(createStudentDtoWithoutParent);
 
+        assertSame(studentResponseDto, result);
         verify(studentMapper).toEntity(createStudentDtoWithoutParent);
+        verify(studentRepo).save(student);
+        verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when creating student younger than minimum age")
+    void testCreateStudentAgeBelowMinimum() {
+        CreateStudentDTO tooYoungStudentDto = new CreateStudentDTO(
+                STUDENT_NAME,
+                LocalDate.now().minusYears(9),
+                STUDENT_CPF_FORMATTED,
+                STUDENT_SCHOOL,
+                STUDENT_CONTACT_FORMATTED,
+                STUDENT_EMAIL,
+                Activity.ENEM,
+                null,
+                parent.getId(),
+                null
+        );
+
+        StudentValidationException ex = assertThrows(StudentValidationException.class,
+                () -> studentService.createStudent(tooYoungStudentDto));
+
+        assertEquals("Student age must be between 10 and 20 years", ex.getMessage());
+        verifyNoInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
     }
 
     @Test
@@ -518,6 +546,33 @@ class StudentServiceTest {
         verify(studentRepo).findById(id);
         verifyNoMoreInteractions(studentRepo);
         verifyNoInteractions(studentMapper);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when updating student older than maximum age")
+    void testUpdateStudentAgeAboveMaximum() {
+        UpdateStudentDTO tooOldStudentDto = new UpdateStudentDTO(
+                null,
+                LocalDate.now().minusYears(21),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+
+        StudentValidationException ex = assertThrows(StudentValidationException.class,
+                () -> studentService.updateStudent(student.getId(), tooOldStudentDto));
+
+        assertEquals("Student age must be between 10 and 20 years", ex.getMessage());
+        verify(studentRepo).findById(student.getId());
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper, parentRepo, parentMapper);
     }
 
     private Student validStudentEntity() {

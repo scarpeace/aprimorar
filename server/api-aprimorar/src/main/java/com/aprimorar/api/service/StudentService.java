@@ -9,6 +9,7 @@ import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.exception.domain.ParentNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
+import com.aprimorar.api.exception.domain.StudentValidationException;
 import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.ParentRepository;
@@ -21,12 +22,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.UUID;
 
 @Service
 public class StudentService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentService.class);
+    private static final int MIN_AGE = 10;
+    private static final int MAX_AGE = 20;
+    private static final String AGE_RANGE_MESSAGE = "Student age must be between 10 and 20 years";
 
     private final StudentRepository studentRepo;
     private final ParentRepository parentRepo;
@@ -97,8 +103,10 @@ public class StudentService {
          return studentMapper.toDto(foundStudent);
     }
 
+    @Transactional
     public StudentResponseDTO createStudent(CreateStudentDTO createStudentDto) {
         log.info("Creating student with name: {}", createStudentDto.name());
+        validateStudentAge(createStudentDto.birthdate());
 
         Student newStudent = studentMapper.toEntity(createStudentDto);
 
@@ -108,8 +116,6 @@ public class StudentService {
         } else if (createStudentDto.parent() != null) {
             Parent savedParent = createParent(createStudentDto.parent());
             newStudent.setParent(savedParent);
-        } else {
-            throw new IllegalArgumentException("Parent is required: provide either parentId or parent");
         }
 
         Student savedStudent = studentRepo.save(newStudent);
@@ -125,6 +131,10 @@ public class StudentService {
     @Transactional
     public StudentResponseDTO updateStudent(UUID studentId, UpdateStudentDTO updateStudentDto) {
         Student foundStudent = findStudentOrThrow(studentId);
+
+        if (updateStudentDto.birthdate() != null) {
+            validateStudentAge(updateStudentDto.birthdate());
+        }
 
         studentMapper.updateFromDto(updateStudentDto, foundStudent);
 
@@ -170,5 +180,12 @@ public class StudentService {
 
         String trimmed = name.trim();
         return trimmed.isEmpty() ? null : trimmed;
+    }
+
+    private void validateStudentAge(LocalDate birthdate) {
+        int age = Period.between(birthdate, LocalDate.now()).getYears();
+        if (age < MIN_AGE || age > MAX_AGE) {
+            throw new StudentValidationException(AGE_RANGE_MESSAGE);
+        }
     }
 }

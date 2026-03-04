@@ -3,6 +3,7 @@ package com.aprimorar.api.exception.handler;
 import com.aprimorar.api.exception.domain.EmployeeNotFoundException;
 import com.aprimorar.api.exception.domain.EventNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
+import com.aprimorar.api.exception.domain.StudentValidationException;
 import com.aprimorar.api.exception.errors.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -87,6 +88,15 @@ public class GlobalExceptionHandler {
 
         ErrorResponse error = buildError(HttpStatus.BAD_REQUEST, message, request);
 
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(StudentValidationException.class)
+    public ResponseEntity<ErrorResponse> handleStudentValidation(
+            StudentValidationException ex,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = buildError(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 

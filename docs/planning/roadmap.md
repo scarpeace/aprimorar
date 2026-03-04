@@ -13,6 +13,7 @@
 - Status: TODO
 - Epics:
   - E-002 - Core data management
+  - Notes: includes Student age validation (ST-023)
 
 ### Phase 2 - Security (Weeks 5-8)
 - Goal: authentication, RBAC, and basic hardening

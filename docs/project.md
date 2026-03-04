@@ -149,6 +149,7 @@ Out of scope (future phases):
 | FR-008.3 | Email Validation | Email format validation |
 | FR-008.4 | Date Validation | Birthdate must be in the past |
 | FR-008.5 | Required Fields | Mandatory fields validated |
+| FR-008.6 | Student Age Range | Student age must be within a defined min/max range |
 
 #### Error Handling (FR-009)
 

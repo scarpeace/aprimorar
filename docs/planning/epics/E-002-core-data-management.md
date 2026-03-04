@@ -23,15 +23,17 @@
 **Acceptance Criteria**
 - [x] Student list supports searching/filtering by name
 - [x] Student list supports filtering by activity type
-- [ ] Student age validation rules are enforced (min/max defined)
+- [ ] Student age is validated on create/update using a defined min/max range (ST-023)
+- [ ] Validation errors return 400 with a clear message indicating the allowed range
 
 **Test Plan**
 - Backend:
-  - [ ] Add service/controller tests for filters and validation
+  - [ ] Add DTO/service tests for student age boundaries (min/max) and error messages
 - Frontend:
   - [x] N/A (backend capability)
 - Manual:
   - [ ] Verify student list filters work with pagination
+  - [ ] Try creating/updating a student with an out-of-range birthdate and confirm a 400 response
 
 ### Story: S-011 — Employee Management
 **As a** administrator **I want** employee records managed **so that** I can track teachers and staff.
@@ -101,35 +103,68 @@
 
 ### Task: T-010 — Student listing/search and validation
 **Type:** backend
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Depends on:** None
 
 **Description**
-- Add filters/search and define and enforce age validation.
+- Add student list filters/search (name + activity).
 
 **Subtasks**
 - [x] ST-020 — Add student search/filter by name (legacy: T-1.1.2)
 - [x] ST-021 — Add student search/filter by activity type (legacy: T-1.1.3)
-- [ ] ST-022 — Add bulk import/export (CSV) (legacy: T-1.1.4) (de-scoped)
-- [ ] ST-023 — Student age validation (min/max) (legacy: T-1.1.5)
+- [ ] ST-022 — Add bulk import/export (CSV) (legacy: T-1.1.4) (BLOCKED - de-scoped)
+- [ ] ST-023 — Student age validation (min/max) (legacy: T-1.1.5) (moved to T-015)
 
 **Files likely affected (best guess)**
 - server/
 
-**DoD**
+**DoD (Definition of Done)**
 - [ ] Implementation completed
 - [ ] Tests updated/added when applicable
 - [ ] Local verification done
 
 **Verification**
-- Backend: Add/adjust tests for filters/validation and run them
+- Backend: cd server/api-aprimorar && ./mvnw test
 - Frontend: N/A
-- Manual: Verify search/filter and CSV flows in a dev environment
+- Manual: Call GET `/v1/students` and GET `/v1/students/active` with `name` and `activity` query params and confirm results
 
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 1 / User Story 1.1
 - Added `name` and `activity` query params to GET `/v1/students` and `/v1/students/active`.
 - ST-022 (CSV import/export) de-scoped per request on 2026-03-04.
+- Risks: None
+- Open questions: None
+
+### Task: T-015 — Student age validation (min/max) (ST-023)
+**Type:** backend
+**Status:** TODO
+**Depends on:** None
+
+**Description**
+- Define the allowed age range (min/max) and enforce it for student create and update flows.
+- Reject out-of-range birthdates with a 400 validation error and a clear, stable message.
+- Cover boundary conditions with automated tests (exact min, exact max, below min, above max).
+
+**Files likely affected (best guess)**
+- server/api-aprimorar/src/main/java/com/aprimorar/api/validation/StudentAgeRules.java
+- server/api-aprimorar/src/main/java/com/aprimorar/api/controller/dto/CreateStudentDTO.java
+- server/api-aprimorar/src/main/java/com/aprimorar/api/controller/dto/UpdateStudentDTO.java
+- server/api-aprimorar/src/test/java/com/aprimorar/api/controller/dto/CreateStudentDTOTest.java
+
+**DoD (Definition of Done)**
+- [ ] Min/max age bounds are defined (constants or configuration) and referenced by validation logic
+- [ ] POST `/v1/students` rejects out-of-range ages with 400
+- [ ] PATCH `/v1/students/{id}` rejects out-of-range ages with 400
+- [ ] Unit tests cover boundary cases and pass locally
+
+**Verification**
+- Backend: cd server/api-aprimorar && ./mvnw test
+- Frontend: N/A
+- Manual: POST/PATCH a student with an out-of-range birthdate and confirm a 400 with the expected message
+
+**Notes**
+- Risks: Existing seed/test data may become invalid once validation is enforced
+- Open questions: What exact min/max ages should be enforced, and should the age be computed as-of "today" (request time) or as-of the first scheduled event?
 
 ### Task: T-011 — Event list performance and filters
 **Type:** backend
@@ -148,18 +183,20 @@
 **Files likely affected (best guess)**
 - server/
 
-**DoD**
+**DoD (Definition of Done)**
 - [ ] Implementation completed
 - [ ] Tests updated/added when applicable
 - [ ] Local verification done
 
 **Verification**
-- Backend: Add tests for query behavior; validate no N+1 in list endpoints
+- Backend: cd server/api-aprimorar && ./mvnw test
 - Frontend: N/A
-- Manual: Exercise filters with pagination/sorting
+- Manual: Exercise filters with pagination/sorting in a dev environment
 
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 1 / User Story 1.3
+- Risks: Performance regressions if new filters prevent index usage
+- Open questions: None
 
 ### Task: T-012 — Add `sessionType` to events
 **Type:** fullstack
@@ -180,18 +217,20 @@
 - server/
 - client/
 
-**DoD**
+**DoD (Definition of Done)**
 - [ ] Implementation completed
 - [ ] Tests updated/added when applicable
 - [ ] Local verification done
 
 **Verification**
-- Backend: Create and filter events by `sessionType` via API
-- Frontend: Ensure dropdown exists and persists `sessionType`
-- Manual: Create events with each `sessionType` end-to-end
+- Backend: cd server/api-aprimorar && ./mvnw test
+- Frontend: cd client && npm run lint && npm run build
+- Manual: Create events with each `sessionType`, then filter GET `/v1/events` by `sessionType`
 
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 1 / User Story 1.5
+- Risks: Backfill/migration strategy for existing events may be non-trivial if `sessionType` becomes required
+- Open questions: Should existing events get a default `sessionType` during migration, or should they remain nullable until edited?
 
 ### Task: T-013 — Employee management is complete and stable
 **Type:** backend
@@ -207,7 +246,7 @@
 **Files likely affected (best guess)**
 - server/
 
-**DoD**
+**DoD (Definition of Done)**
 - [x] Implementation completed
 - [x] Local verification done
 
@@ -218,6 +257,8 @@
 
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 1 / User Story 1.2
+- Risks: None
+- Open questions: None
 
 ### Task: T-014 — Parent management is complete and stable
 **Type:** backend
@@ -233,7 +274,7 @@
 **Files likely affected (best guess)**
 - server/
 
-**DoD**
+**DoD (Definition of Done)**
 - [x] Implementation completed
 - [x] Local verification done
 
@@ -244,6 +285,8 @@
 
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 1 / User Story 1.4
+- Risks: None
+- Open questions: None
 
 **Review Notes (append-only)**
 - Reviewer notes:
