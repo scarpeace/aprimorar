@@ -21,15 +21,15 @@
 **As a** administrator **I want** improved student search and validation **so that** I can manage student records efficiently at scale.
 
 **Acceptance Criteria**
-- [ ] Student list supports searching/filtering by name
-- [ ] Student list supports filtering by activity type
+- [x] Student list supports searching/filtering by name
+- [x] Student list supports filtering by activity type
 - [ ] Student age validation rules are enforced (min/max defined)
 
 **Test Plan**
 - Backend:
   - [ ] Add service/controller tests for filters and validation
 - Frontend:
-  - [ ] N/A (backend capability)
+  - [x] N/A (backend capability)
 - Manual:
   - [ ] Verify student list filters work with pagination
 
@@ -101,16 +101,16 @@
 
 ### Task: T-010 — Student listing/search and validation
 **Type:** backend
-**Status:** TODO
+**Status:** IN_PROGRESS
 **Depends on:** None
 
 **Description**
-- Add filters/search and CSV import/export; define and enforce age validation.
+- Add filters/search and define and enforce age validation.
 
 **Subtasks**
-- [ ] ST-020 — Add student search/filter by name (legacy: T-1.1.2)
-- [ ] ST-021 — Add student search/filter by activity type (legacy: T-1.1.3)
-- [ ] ST-022 — Add bulk import/export (CSV) (legacy: T-1.1.4)
+- [x] ST-020 — Add student search/filter by name (legacy: T-1.1.2)
+- [x] ST-021 — Add student search/filter by activity type (legacy: T-1.1.3)
+- [ ] ST-022 — Add bulk import/export (CSV) (legacy: T-1.1.4) (de-scoped)
 - [ ] ST-023 — Student age validation (min/max) (legacy: T-1.1.5)
 
 **Files likely affected (best guess)**
@@ -128,6 +128,8 @@
 
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 1 / User Story 1.1
+- Added `name` and `activity` query params to GET `/v1/students` and `/v1/students/active`.
+- ST-022 (CSV import/export) de-scoped per request on 2026-03-04.
 
 ### Task: T-011 — Event list performance and filters
 **Type:** backend
