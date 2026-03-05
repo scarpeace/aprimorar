@@ -103,7 +103,7 @@ export function StudentsPage() {
             <TableRow>
               <TableHead>Nome</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Atividade</TableHead>
+              <TableHead>Idade</TableHead>
               <TableHead>Escola</TableHead>
               <TableHead>Ativo</TableHead>
               <TableHead>Acoes</TableHead>
@@ -114,7 +114,7 @@ export function StudentsPage() {
               <TableRow key={student.id}>
                 <TableCell>{student.name}</TableCell>
                 <TableCell>{student.email}</TableCell>
-                <TableCell>{student.activity}</TableCell>
+                <TableCell>{student.age}</TableCell>
                 <TableCell>{student.school}</TableCell>
                 <TableCell>{student.active ? "Sim" : "Nao"}</TableCell>
                 <TableCell>

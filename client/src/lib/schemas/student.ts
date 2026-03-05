@@ -26,7 +26,6 @@ export const createStudentSchema = z.object({
       "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"
     ),
   email: z.email("Email invalido"),
-  activity: z.enum(["ENEM", "MENTORIA"]),
   address: addressSchema,
   parentId: z.uuid("Selecione um responsavel").optional(),
   parent: parentSchema.optional(),
@@ -42,8 +41,8 @@ export const studentResponseSchema = z.object({
   email: z.email(),
   cpf: z.string(),
   birthdate: z.string(),
+  age: z.number().int().nonnegative(),
   school: z.string(),
-  activity: z.enum(["ENEM", "MENTORIA"]),
   active: z.boolean(),
   address: addressSchema.nullable(),
   parent: parentSchema.nullable(),

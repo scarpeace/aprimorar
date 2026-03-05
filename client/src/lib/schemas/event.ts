@@ -1,13 +1,14 @@
 import { z } from "zod"
 
-export const eventContentValues = ["FISICA", "MATEMATICA", "TERAPIA", "MENTORIA", "ENEM", "OUTRO"] as const
+export const eventContentValues = ["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"] as const
 
 export const eventContentLabels: Record<EventContent, string> = {
-  FISICA: "Física",
-  MATEMATICA: "Matematica",
+  AULA: "Aula",
   TERAPIA: "Terapia",
   MENTORIA: "Mentoria",
+  ORIENTACAO_VOCACIONAL: "Orientacao vocacional",
   ENEM: "Enem",
+  PAS: "PAS",
   OUTRO: "Outro",
 }
 
