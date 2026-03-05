@@ -22,26 +22,26 @@
 ## Stories
 ### Story: S-020 — User Authentication
 **Status:** TODO
-**Links:** T-020 (TODO)
+**Links:** T-033 (TODO)
 **Intent:** Enable secure login and token-based access.
 
 ### Story: S-021 — Role-Based Access Control
 **Status:** TODO
-**Links:** T-021 (TODO)
+**Links:** T-034 (TODO)
 **Intent:** Ensure users can only perform authorized actions.
 
 ### Story: S-022 — Security Hardening
 **Status:** TODO
-**Links:** T-022 (TODO)
+**Links:** T-035 (TODO)
 **Intent:** Reduce common attack surfaces with baseline controls.
 
 ### Story: S-023 — Privacy Hardening for Sensitive Content
 **Status:** TODO
-**Links:** T-023 (TODO)
+**Links:** T-036 (TODO)
 **Intent:** Restrict/audit access to sensitive event categories.
 
 ## Tasks
-### Task: T-020 — Implement JWT authentication
+### Task: T-033 — Implement JWT authentication
 **Type:** backend
 **Status:** TODO
 **Depends on:** None
@@ -71,10 +71,10 @@
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.1
 
-### Task: T-021 — Implement RBAC
+### Task: T-034 — Implement RBAC
 **Type:** backend
 **Status:** TODO
-**Depends on:** T-020
+**Depends on:** T-033
 
 **Description**
 - Define and enforce role permissions across endpoints.
@@ -99,10 +99,10 @@
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.2
 
-### Task: T-022 — Security hardening baseline
+### Task: T-035 — Security hardening baseline
 **Type:** backend
 **Status:** TODO
-**Depends on:** T-020
+**Depends on:** T-033
 
 **Description**
 - Add hardening controls (rate limiting, headers, CSRF decisions, audit logging).
@@ -126,10 +126,10 @@
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.3
 
-### Task: T-023 — Privacy hardening for sensitive content
+### Task: T-036 — Privacy hardening for sensitive content
 **Type:** backend
 **Status:** TODO
-**Depends on:** T-021
+**Depends on:** T-034
 
 **Description**
 - Restrict and audit access to sensitive event content.

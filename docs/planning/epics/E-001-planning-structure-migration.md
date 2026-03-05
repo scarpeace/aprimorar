@@ -36,7 +36,7 @@
 
 ### Story: S-004 — Planning docs consistency pass
 **Status:** DONE
-**Links:** T-004 (DONE)
+**Links:** T-004 (DONE), T-005 (DONE)
 **Intent:** Keep stories/tasks in a consistent, executable format.
 
 ## Tasks
@@ -65,6 +65,12 @@
 - Status: DONE
 - Scope: Standardized planning structure and status consistency.
 - Verification: Manual template compliance review completed.
+- Commit: not recorded in this epic history.
+
+### Task: T-005 — Normalize duplicate task IDs across epics
+- Status: DONE
+- Scope: Renumbered duplicated `T-020..T-023` in E-003 to unique IDs and updated story/task links.
+- Verification: manual grep check confirms unique task IDs across epic files.
 - Commit: not recorded in this epic history.
 
 ## Review Notes (append-only)

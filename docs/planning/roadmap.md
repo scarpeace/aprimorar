@@ -26,6 +26,7 @@
 - Status: TODO
 - Epics:
   - E-004 - Frontend development
+  - Notes: includes UX polish like UTF-8/accents normalization for validation and error messages
 
 ### Phase 4 - Integrations (Weeks 15-18)
 - Goal: calendar integration and calendar UI views; payment tracking enhancements
