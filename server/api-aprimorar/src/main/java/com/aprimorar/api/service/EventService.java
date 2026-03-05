@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -41,8 +42,14 @@ public class EventService {
         this.eventMapper = eventMapper;
     }
 
-    public Page<EventResponseDTO> listEvents(Pageable pageable) {
-        Page<Event> eventPage = eventRepo.findAll(pageable);
+    public Page<EventResponseDTO> listEvents(
+            Pageable pageable,
+            LocalDateTime start,
+            LocalDateTime end,
+            UUID studentId,
+            UUID employeeId
+    ) {
+        Page<Event> eventPage = eventRepo.findAllWithFilters(start, end, studentId, employeeId, pageable);
         return eventPage.map(eventMapper::toDto);
     }
 

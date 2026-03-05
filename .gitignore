@@ -1,2 +1,8 @@
-.opencode/
+.opencode/*
+!.opencode/opencode.jsonc
+!.opencode/agents/
+!.opencode/agents/*.md
+.opencode/node_modules/
+.opencode/bun.lock
+.opencode/package.json
 .vscode

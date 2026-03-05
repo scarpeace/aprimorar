@@ -15,6 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 // TODO: Optimize event listing query to avoid N+1 selects.
 
@@ -35,10 +39,14 @@ public class EventController {
     public ResponseEntity<Page<EventResponseDTO>> listEvents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") @Max(100) int size,
-            @RequestParam(defaultValue = "startDateTime") String sortBy
+            @RequestParam(defaultValue = "startDateTime") String sortBy,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(required = false) UUID studentId,
+            @RequestParam(required = false) UUID employeeId
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<EventResponseDTO> allEvents = eventService.listEvents(pageable);
+        Page<EventResponseDTO> allEvents = eventService.listEvents(pageable, start, end, studentId, employeeId);
         return ResponseEntity.ok(allEvents);
     }
 
@@ -57,8 +65,8 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "Update EVENT", description = "Replaces event with full event data")
-    @PutMapping("/{eventId}")
+    @Operation(summary = "Update EVENT", description = "Updates event with event data")
+    @PatchMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable Long eventId,
             @RequestBody @Valid CreateEventDTO createEventDto) {

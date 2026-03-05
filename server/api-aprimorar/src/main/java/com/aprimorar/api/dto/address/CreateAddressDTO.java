@@ -4,24 +4,24 @@ import jakarta.validation.constraints.NotBlank;
 
 public record CreateAddressDTO(
 
-        @NotBlank(message = "Address street can't be blank")
+        @NotBlank(message = "Rua do endereço é obrigatória")
         String street,
 
-        @NotBlank(message = "Address number can't be blank")
+        @NotBlank(message = "Número do endereço é obrigatório")
         String number,
 
         String complement,
 
-        @NotBlank(message = "Address district can't be blank")
+        @NotBlank(message = "Bairro do endereço é obrigatório")
         String district,
 
-        @NotBlank(message = "Address city can't be blank")
+        @NotBlank(message = "Cidade do endereço é obrigatória")
         String city,
 
-        @NotBlank(message = "Address state can't be blank")
+        @NotBlank(message = "Estado do endereço é obrigatório")
         String state,
 
-        @NotBlank(message = "Address zip code can't be blank")
+        @NotBlank(message = "CEP do endereço é obrigatório")
         String zip
 ) {
 }

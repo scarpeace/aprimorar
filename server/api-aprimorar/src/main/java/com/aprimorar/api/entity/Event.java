@@ -1,5 +1,6 @@
 package com.aprimorar.api.entity;
 
+import com.aprimorar.api.enums.EventContent;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -30,6 +31,10 @@ public class Event {
 
     private BigDecimal payment;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EventContent content;
+
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "student_id", referencedColumnName = "student_id")
     private Student student;
@@ -48,7 +53,7 @@ public class Event {
     }
 
     public Event(Long id, String title, String description, LocalDateTime startDateTime, LocalDateTime endDateTime,
-                 BigDecimal price, BigDecimal payment, Student student, Employee employee, Instant createdAt,
+                 BigDecimal price, BigDecimal payment, EventContent content, Student student, Employee employee, Instant createdAt,
                  Instant updatedAt) {
         this.id = id;
         this.title = title;
@@ -57,6 +62,7 @@ public class Event {
         this.endDateTime = endDateTime;
         this.price = price;
         this.payment = payment;
+        this.content = content;
         this.student = student;
         this.employee = employee;
         this.createdAt = createdAt;
@@ -117,6 +123,14 @@ public class Event {
 
     public void setPayment(BigDecimal payment) {
         this.payment = payment;
+    }
+
+    public EventContent getContent() {
+        return content;
+    }
+
+    public void setContent(EventContent content) {
+        this.content = content;
     }
 
     public Student getStudent() {

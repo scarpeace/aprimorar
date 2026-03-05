@@ -40,6 +40,7 @@ The MVP focuses on operational management and financial control (not pedagogical
 7. Automatically calculate profit per class/event
 8. Track institutional expenses
 9. Provide a financial overview dashboard (revenue, costs, net profit)
+10. Generate monthly financial reports (and yearly reports in a later phase)
 
 ### Stakeholders and Access Model
 
@@ -52,6 +53,16 @@ Notes:
 
 - Student portal and parent/guardian portal are out of scope for the MVP.
 - Only administrative staff have access in the MVP.
+
+### Financial Reporting Rules (MVP)
+
+- Monthly report is required in MVP; yearly report is a later phase.
+- Event `price` is revenue (amount paid by student).
+- Event `payment` is cost/expense (amount paid to employee).
+- Monthly report outputs:
+  - Total paid by each student (sum of `price` by student in the month)
+  - Total owed to each employee (sum of `payment` by employee in the month)
+  - Overall revenue, overall expenses, and net profit (revenue - expenses)
 
 ### Scope
 
@@ -109,14 +120,14 @@ Out of scope (future phases):
 | FR-003.5 | Delete Event | Delete events (see Decisions for MVP semantics) |
 | FR-003.6 | Event Validation | Ensure end datetime is after start datetime |
 | FR-003.7 | Payment Validation | Ensure payment does not exceed price |
-| FR-003.8 | Event Session Type | Event must include a required `sessionType` enum (CLASS_1ON1, CLASS_GROUP, MENTORSHIP_1ON1, PSYCHOLOGICAL_CONSULTING) |
+| FR-003.8 | Event Content | Event must include a required `content` enum (`FISICA`, `MATEMATICA`, `TERAPIA`, `MENTORIA`, `ENEM`, `OUTRO`) |
 
 #### Activity Types (FR-004)
 
 | ID | Requirement | Description |
 |---|---|---|
-| FR-004.1 | ENEM Activity | Support ENEM preparation activity type |
-| FR-004.2 | Mentoria Activity | Support mentoring (Mentoria) activity type |
+| FR-004.1 | Student Activity (Deprecated) | DEPRECATED: Student `activity` removed; use Event `content` classification instead (see FR-003.8) |
+| FR-004.2 | Legacy Compatibility | If any legacy inputs still reference activity, map/handle at the API edge during transition (optional) |
 
 #### Parent/Guardian Management (FR-005)
 
@@ -147,8 +158,9 @@ Out of scope (future phases):
 | FR-008.1 | CPF Validation | CPF follows XXX.XXX.XXX-XX |
 | FR-008.2 | Contact Validation | Contact follows (XX)XXXXX-XXXX |
 | FR-008.3 | Email Validation | Email format validation |
-| FR-008.4 | Date Validation | Birthdate must be in the past |
+| FR-008.4 | Date Validation | Birthdate cannot be in the future (today is allowed) |
 | FR-008.5 | Required Fields | Mandatory fields validated |
+| FR-008.6 | Student Age Range (Deprecated) | DEPRECATED: min/max age range validation removed; keep only future-date validation |
 
 #### Error Handling (FR-009)
 
@@ -338,7 +350,7 @@ Conceptual notes aligned with current backend modeling:
 - A Parent can be linked to many Students (Student has a many-to-one reference to Parent).
 - Address is an embedded value object inside Student.
 - Activity and Role are enums.
-- Event includes a `sessionType` enum (service provided), distinct from Student `activity`.
+- Event includes a required `content` enum (`FISICA`, `MATEMATICA`, `TERAPIA`, `MENTORIA`, `ENEM`, `OUTRO`).
 
 ```mermaid
 erDiagram
@@ -471,7 +483,7 @@ flowchart TD
 3. Authorization matrix: define which roles can do what (admin vs employee). Student/parent roles exist as enums but are out of scope for MVP access.
 4. Uniqueness constraints: current schema enforces unique `name` for Student/Parent/Employee; this is risky in real domains and should be revisited.
 5. Frontend placement: `client/` exists and contains the Vite + React + TypeScript app.
-6. Privacy hardening: confidential session types (MENTORSHIP_1ON1, PSYCHOLOGICAL_CONSULTING) are treated as normal events for MVP; add stricter access controls and audit logging as a follow-up.
+6. Privacy hardening: sensitive content categories (especially `TERAPIA`) are treated as normal events for MVP; add stricter access controls and audit logging as a follow-up.
 
 ### MVP Decisions (Locked)
 

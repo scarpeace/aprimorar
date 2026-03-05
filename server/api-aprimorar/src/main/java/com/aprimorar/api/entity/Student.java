@@ -1,6 +1,5 @@
 package com.aprimorar.api.entity;
 
-import com.aprimorar.api.enums.Activity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -36,9 +35,6 @@ public class Student {
 
     private String school;
 
-    @Enumerated(EnumType.STRING)
-    private Activity activity;
-
     private Boolean active = true;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -58,7 +54,7 @@ public class Student {
     }
 
     public Student(UUID id, String name, String contact, String email, LocalDate birthdate, String cpf, String school,
-                   Activity activity, Boolean active, Parent parent, Address address, Instant createdAt, Instant updatedAt) {
+                   Boolean active, Parent parent, Address address, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.contact = contact;
@@ -66,7 +62,6 @@ public class Student {
         this.birthdate = birthdate;
         this.cpf = cpf;
         this.school = school;
-        this.activity = activity;
         this.active = active;
         this.parent = parent;
         this.address = address;
@@ -128,14 +123,6 @@ public class Student {
 
     public void setSchool(String school) {
         this.school = school;
-    }
-
-    public Activity getActivity() {
-        return activity;
-    }
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
     }
 
     public Boolean getActive() {

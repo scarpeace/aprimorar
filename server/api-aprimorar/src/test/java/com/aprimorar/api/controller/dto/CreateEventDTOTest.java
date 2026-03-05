@@ -1,6 +1,7 @@
 package com.aprimorar.api.controller.dto;
 
 import com.aprimorar.api.dto.event.CreateEventDTO;
+import com.aprimorar.api.enums.EventContent;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -41,7 +42,7 @@ class CreateEventDTOTest {
     }
 
     private CreateEventDTO validDto() {
-        return eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
+        return eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, EventContent.ENEM, UUID.randomUUID(), UUID.randomUUID());
     }
 
     private CreateEventDTO eventDto(
@@ -49,10 +50,11 @@ class CreateEventDTOTest {
             LocalDateTime end,
             BigDecimal price,
             BigDecimal payment,
+            EventContent content,
             UUID studentId,
             UUID employeeId
     ) {
-        return new CreateEventDTO(VALID_TITLE, VALID_DESCRIPTION, start, end, price, payment, studentId, employeeId);
+        return new CreateEventDTO(VALID_TITLE, VALID_DESCRIPTION, start, end, price, payment, content, studentId, employeeId);
     }
 
     @Test
@@ -67,19 +69,19 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when startDateTime is null")
     void nullStartDateTime() {
-        CreateEventDTO dto = eventDto(null, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
+        CreateEventDTO dto = eventDto(null, VALID_END, VALID_PRICE, VALID_PAYMENT, EventContent.ENEM, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Event start date/time can't be null"));
+        assertTrue(messages(violations).contains("Data/hora de início do evento é obrigatória"));
     }
 
     @Test
     @DisplayName("Should have 1 violation when startDateTime is in the past")
     void pastStartDateTime() {
-        CreateEventDTO dto = eventDto(PAST_DT, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
+        CreateEventDTO dto = eventDto(PAST_DT, VALID_END, VALID_PRICE, VALID_PAYMENT, EventContent.ENEM, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Event start must be in the future"));
+        assertTrue(messages(violations).contains("Data/hora de início do evento deve ser no presente ou futuro"));
     }
 
     // ─── endDateTime ──────────────────────────────────────────────────────────
@@ -87,20 +89,20 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when endDateTime is null")
     void nullEndDateTime() {
-        CreateEventDTO dto = eventDto(VALID_START, null, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
+        CreateEventDTO dto = eventDto(VALID_START, null, VALID_PRICE, VALID_PAYMENT, EventContent.ENEM, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Event end date/time can't be null"));
+        assertTrue(messages(violations).contains("Data/hora de fim do evento é obrigatória"));
     }
 
     @Test
     @DisplayName("Should have 1 violation when endDateTime is in the past")
     void pastEndDateTime() {
-        CreateEventDTO dto = eventDto(VALID_START, LocalDateTime.of(2020, 1, 1, 11, 0), VALID_PRICE, VALID_PAYMENT,
+        CreateEventDTO dto = eventDto(VALID_START, LocalDateTime.of(2020, 1, 1, 11, 0), VALID_PRICE, VALID_PAYMENT, EventContent.ENEM,
                 UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Event end must be in the future"));
+        assertTrue(messages(violations).contains("Data/hora de fim do evento deve ser no presente ou futuro"));
     }
 
     // ─── price ────────────────────────────────────────────────────────────────
@@ -108,16 +110,16 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when price is null")
     void nullPrice() {
-        CreateEventDTO dto = eventDto(VALID_START, VALID_END, null, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, null, VALID_PAYMENT, EventContent.ENEM, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Price can't be null"));
+        assertTrue(messages(violations).contains("Preço é obrigatório"));
     }
 
     @Test
     @DisplayName("Should have 1 violation when price is negative")
     void negativePrice() {
-        CreateEventDTO dto = eventDto(VALID_START, VALID_END, new BigDecimal("-1.00"), VALID_PAYMENT,
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, new BigDecimal("-1.00"), VALID_PAYMENT, EventContent.ENEM,
                 UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -128,19 +130,28 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when payment is null")
     void nullPayment() {
-        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, null, UUID.randomUUID(), UUID.randomUUID());
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, null, EventContent.ENEM, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Payment can't be null"));
+        assertTrue(messages(violations).contains("Pagamento é obrigatório"));
     }
 
     @Test
     @DisplayName("Should have 1 violation when payment is negative")
     void negativePayment() {
-        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, new BigDecimal("-1.00"),
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, new BigDecimal("-1.00"), EventContent.ENEM,
                 UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should have 1 violation when content is null")
+    void nullContent() {
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, null, UUID.randomUUID(), UUID.randomUUID());
+        Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
+        assertFalse(violations.isEmpty());
+        assertTrue(messages(violations).contains("Conteúdo do evento é obrigatório"));
     }
 
     // ─── studentId ────────────────────────────────────────────────────────────
@@ -148,10 +159,10 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when studentId is null")
     void nullStudentId() {
-        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, null, UUID.randomUUID());
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, EventContent.ENEM, null, UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Student ID can't be null"));
+        assertTrue(messages(violations).contains("ID do estudante é obrigatório"));
     }
 
     // ─── employeeId ───────────────────────────────────────────────────────────
@@ -159,10 +170,10 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when employeeId is null")
     void nullEmployeeId() {
-        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), null);
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, VALID_PRICE, VALID_PAYMENT, EventContent.ENEM, UUID.randomUUID(), null);
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Employee ID can't be null"));
+        assertTrue(messages(violations).contains("ID do funcionário é obrigatório"));
     }
 
     // ─── cross-field constraints ──────────────────────────────────────────────
@@ -170,31 +181,30 @@ class CreateEventDTOTest {
     @Test
     @DisplayName("Should have 1 violation when payment exceeds price")
     void paymentExceedsPrice() {
-        CreateEventDTO dto = eventDto(VALID_START, VALID_END, new BigDecimal("50.00"), new BigDecimal("100.00"),
+        CreateEventDTO dto = eventDto(VALID_START, VALID_END, new BigDecimal("50.00"), new BigDecimal("100.00"), EventContent.ENEM,
                 UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Payment can't exceed price"));
+        assertTrue(messages(violations).contains("Pagamento não pode ser maior que o preço"));
     }
 
     @Test
     @DisplayName("Should have 1 violation when end date/time is before start date/time")
     void endBeforeStart() {
         CreateEventDTO dto = eventDto(LocalDateTime.of(2027, 6, 1, 12, 0), LocalDateTime.of(2027, 6, 1, 10, 0),
-                VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
+                VALID_PRICE, VALID_PAYMENT, EventContent.ENEM, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("End date/time must be after start date/time"));
+        assertTrue(messages(violations).contains("Data/hora de fim deve ser após a data/hora de início"));
     }
 
     @Test
     @DisplayName("Should have 1 violation when end date/time equals start date/time")
     void endEqualsStart() {
         LocalDateTime sameTime = LocalDateTime.of(2027, 6, 1, 10, 0);
-        CreateEventDTO dto = eventDto(sameTime, sameTime, VALID_PRICE, VALID_PAYMENT, UUID.randomUUID(), UUID.randomUUID());
+        CreateEventDTO dto = eventDto(sameTime, sameTime, VALID_PRICE, VALID_PAYMENT, EventContent.ENEM, UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("End date/time must be after start date/time"));
+        assertTrue(messages(violations).contains("Data/hora de fim deve ser após a data/hora de início"));
     }
 }
-

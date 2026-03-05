@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, User, GraduationCap, Clock, DollarSign } from "lucide-react"
-import type { EventResponse } from "@/lib/schemas"
+import { eventContentLabels, type EventResponse } from "@/lib/schemas"
 import { useEffect, useState } from "react"
 import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
 import styles from "@/features/events/EventDetailPage.module.css"
@@ -98,6 +98,7 @@ export function EventDetailPage() {
             <DetailField label="ID" value={id ?? "-"} />
             <DetailField label="Titulo" value={event.title} icon={Calendar} />
             <DetailField label="Descricao" value={event.description ?? "-"} />
+            <DetailField label="Conteudo" value={eventContentLabels[event.content]} />
             <DetailField label="Data" value={event.startDateTime} icon={Clock} />
             <DetailField label="Inicio" value={event.startDateTime} icon={Clock} />
             <DetailField label="Fim" value={event.endDateTime} icon={Clock} />

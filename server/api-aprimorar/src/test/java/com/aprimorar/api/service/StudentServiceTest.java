@@ -7,7 +7,6 @@ import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
-import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.exception.domain.ParentNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
 import com.aprimorar.api.mapper.ParentMapper;
@@ -25,19 +24,20 @@ import org.springframework.data.domain.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
+    private static final ZoneId SAO_PAULO_ZONE = ZoneId.of("America/Sao_Paulo");
     private static final String STUDENT_NAME = "John Doe";
-    private static final LocalDate STUDENT_BIRTHDATE = LocalDate.of(2000, 1, 1);
+    private static final LocalDate STUDENT_BIRTHDATE = LocalDate.now(SAO_PAULO_ZONE).minusYears(15);
     private static final String STUDENT_CPF_FORMATTED = "123.456.789-01";
     private static final String STUDENT_CPF_RAW = "12345678901";
     private static final String STUDENT_SCHOOL = "School";
@@ -142,53 +142,12 @@ class StudentServiceTest {
         when(studentRepo.findByNameContainingIgnoreCase("John", pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, " John ", null);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, " John ");
 
         assertEquals(1, result.getTotalElements());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
         verify(studentRepo).findByNameContainingIgnoreCase("John", pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should list students when filtering by activity")
-    void testListStudentsByActivityFilter() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByActivity(Activity.MENTORIA, pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, Activity.MENTORIA);
-
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
-
-        verify(studentRepo).findByActivity(Activity.MENTORIA, pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should list students when filtering by name and activity")
-    void testListStudentsByNameAndActivityFilters() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByNameContainingIgnoreCaseAndActivity("John", Activity.ENEM, pageable))
-                .thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "John", Activity.ENEM);
-
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
-
-        verify(studentRepo).findByNameContainingIgnoreCaseAndActivity("John", Activity.ENEM, pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
         verifyNoInteractions(parentRepo, parentMapper);
@@ -203,7 +162,7 @@ class StudentServiceTest {
         when(studentRepo.findAll(pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "   ", null);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "   ");
 
         assertEquals(1, result.getTotalElements());
         assertSame(studentResponseDto, result.getContent().getFirst());
@@ -215,21 +174,21 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should list active students page when success")
+    @DisplayName("Should list students when filtering by active=true")
     void testListActiveStudents() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAllByActiveTrue(pageable)).thenReturn(students);
+        when(studentRepo.findByActive(true, pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, true);
 
         assertEquals(1, result.getTotalElements());
         assertEquals(1, result.getContent().size());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
-        verify(studentRepo).findAllByActiveTrue(pageable);
+        verify(studentRepo).findByActive(true, pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
     }
@@ -240,75 +199,34 @@ class StudentServiceTest {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAllByActiveTrueAndNameContainingIgnoreCase("John", pageable)).thenReturn(students);
+        when(studentRepo.findByActiveAndNameContainingIgnoreCase(true, "John", pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, "John", null);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "John", true);
 
         assertEquals(1, result.getTotalElements());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
-        verify(studentRepo).findAllByActiveTrueAndNameContainingIgnoreCase("John", pageable);
+        verify(studentRepo).findByActiveAndNameContainingIgnoreCase(true, "John", pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
         verifyNoInteractions(parentRepo, parentMapper);
     }
 
     @Test
-    @DisplayName("Should list active students when filtering by activity")
-    void testListActiveStudentsByActivityFilter() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAllByActiveTrueAndActivity(Activity.ENEM, pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, null, Activity.ENEM);
-
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
-
-        verify(studentRepo).findAllByActiveTrueAndActivity(Activity.ENEM, pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should list active students when filtering by name and activity")
-    void testListActiveStudentsByNameAndActivityFilters() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAllByActiveTrueAndNameContainingIgnoreCaseAndActivity("John", Activity.MENTORIA, pageable))
-                .thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, "John", Activity.MENTORIA);
-
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
-
-        verify(studentRepo).findAllByActiveTrueAndNameContainingIgnoreCaseAndActivity("John", Activity.MENTORIA, pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should return empty page when there are no active students in database")
+    @DisplayName("Should return empty page when filtering by active=true and there are no matches")
     void testEmptyActiveStudentList() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
-        when(studentRepo.findAllByActiveTrue(pageable)).thenReturn(students);
+        when(studentRepo.findByActive(true, pageable)).thenReturn(students);
 
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, true);
 
         assertEquals(0, result.getTotalElements());
         assertTrue(result.getContent().isEmpty());
 
-        verify(studentRepo).findAllByActiveTrue(pageable);
+        verify(studentRepo).findByActive(true, pageable);
         verifyNoMoreInteractions(studentRepo);
         verifyNoInteractions(studentMapper);
     }
@@ -381,14 +299,18 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception when creating student without parent")
+    @DisplayName("Should create student when parent data is not validated at service boundary")
     void testCreateStudentWithoutParent() {
         when(studentMapper.toEntity(createStudentDtoWithoutParent)).thenReturn(student);
+        when(studentRepo.save(student)).thenReturn(student);
+        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        assertThrows(IllegalArgumentException.class, () -> 
-                studentService.createStudent(createStudentDtoWithoutParent));
+        StudentResponseDTO result = studentService.createStudent(createStudentDtoWithoutParent);
 
+        assertSame(studentResponseDto, result);
         verify(studentMapper).toEntity(createStudentDtoWithoutParent);
+        verify(studentRepo).save(student);
+        verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
     }
 
@@ -529,7 +451,6 @@ class StudentServiceTest {
         value.setBirthdate(STUDENT_BIRTHDATE);
         value.setCpf(STUDENT_CPF_RAW);
         value.setSchool(STUDENT_SCHOOL);
-        value.setActivity(Activity.ENEM);
         value.setAddress(new Address());
         value.setActive(true);
         value.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
@@ -560,7 +481,6 @@ class StudentServiceTest {
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
                 STUDENT_EMAIL,
-                Activity.ENEM,
                 null,
                 null,
                 createParentDTO
@@ -575,7 +495,6 @@ class StudentServiceTest {
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
                 STUDENT_EMAIL,
-                Activity.ENEM,
                 null,
                 parentId,
                 null
@@ -590,7 +509,6 @@ class StudentServiceTest {
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
                 STUDENT_EMAIL,
-                Activity.ENEM,
                 null,
                 null,
                 null
@@ -605,7 +523,6 @@ class StudentServiceTest {
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
                 STUDENT_EMAIL,
-                Activity.ENEM,
                 null,
                 null,
                 createParentDTO
@@ -620,7 +537,6 @@ class StudentServiceTest {
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
                 STUDENT_EMAIL,
-                Activity.ENEM,
                 null,
                 parentId,
                 null

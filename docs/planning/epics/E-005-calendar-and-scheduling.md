@@ -1,80 +1,58 @@
 # Epic: E-005 — Calendar and Scheduling
-**Goal:** Integrate scheduling workflows with Google Calendar and provide calendar-style views in the UI.
+**Goal:** Integrate scheduling workflows with Google Calendar and provide calendar-style UI views.
 **Status:** TODO
 **Owner:** Gu
 **Related milestone/phase:** Phase 4
 
 ## Scope
 - In scope:
-  - Google Calendar integration (create/update/delete events, sync conflict handling)
-  - Calendar views (month/week/day) in the UI
+  - Google Calendar integration (create/update/delete + conflict handling)
+  - Calendar views (month/week/day)
 - Out of scope:
   - Payment gateway integration (E-006)
 
+## Workboard
+- Current focus: None started
+- Blocked: None
+- Next up: T-040 (Google Calendar integration)
+
 ## Stories
-
 ### Story: S-040 — Google Calendar Integration
-**As a** employee **I want** events synced with Google Calendar **so that** I can manage schedules externally.
-
-**Acceptance Criteria**
-- [ ] Credentials are configured securely for dev/prod
-- [ ] Events are created/updated/deleted in Google Calendar
-- [ ] Sync conflicts are handled deterministically
-
-**Test Plan**
-- Backend:
-  - [ ] Unit tests for calendar service logic
-- Frontend:
-  - [ ] N/A
-- Manual:
-  - [ ] Verify a real Google Calendar event is created and updated
+**Status:** TODO
+**Links:** T-040 (TODO)
+**Intent:** Sync event lifecycle with Google Calendar reliably.
 
 ### Story: S-041 — Calendar Views
-**As a** user **I want** to view events in calendar format **so that** scheduling is visual.
-
-**Acceptance Criteria**
-- [ ] Monthly calendar view exists
-- [ ] Weekly calendar view exists
-- [ ] Daily schedule view exists
-
-**Test Plan**
-- Backend:
-  - [ ] N/A
-- Frontend:
-  - [ ] Add basic view tests where feasible
-- Manual:
-  - [ ] Verify timezone handling and display correctness
+**Status:** TODO
+**Links:** T-041 (TODO)
+**Intent:** Provide visual scheduling views in the frontend.
 
 ## Tasks
-
 ### Task: T-040 — Google Calendar integration
 **Type:** backend
 **Status:** TODO
 **Depends on:** None
 
 **Description**
-- Add a calendar service and manage lifecycle of external calendar events.
+- Add calendar service and manage lifecycle of external calendar events.
 
 **Subtasks**
-- [ ] ST-130 — Set up Google Calendar API credentials (legacy: T-4.1.1)
-- [ ] ST-131 — Implement calendar service (legacy: T-4.1.2)
-- [ ] ST-132 — Create events in Google Calendar (legacy: T-4.1.3)
-- [ ] ST-133 — Update calendar events on change (legacy: T-4.1.4)
-- [ ] ST-134 — Delete calendar events on cancellation (legacy: T-4.1.5)
-- [ ] ST-135 — Handle calendar sync conflicts (legacy: T-4.1.6)
+- [ ] ST-130 — Set up Google Calendar API credentials
+- [ ] ST-131 — Implement calendar service
+- [ ] ST-132 — Create events in Google Calendar
+- [ ] ST-133 — Update calendar events on change
+- [ ] ST-134 — Delete calendar events on cancellation
+- [ ] ST-135 — Handle calendar sync conflicts
 
-**Files likely affected (best guess)**
-- server/
-
-**DoD**
+**DoD (Definition of Done)**
 - [ ] Implementation completed
 - [ ] Tests updated/added when applicable
 - [ ] Local verification done
 
 **Verification**
-- Backend: Exercise create/update/delete against a sandbox calendar
+- Backend: exercise create/update/delete against sandbox calendar
 - Frontend: N/A
-- Manual: Confirm sync behavior and logs in a dev environment
+- Manual: confirm sync behavior and logs in dev
 
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 4 / User Story 4.1
@@ -88,26 +66,26 @@
 - Implement calendar-style UI views for events.
 
 **Subtasks**
-- [ ] ST-136 — Implement monthly calendar view (legacy: T-4.2.1)
-- [ ] ST-137 — Implement weekly calendar view (legacy: T-4.2.2)
-- [ ] ST-138 — Implement daily schedule view (legacy: T-4.2.3)
-- [ ] ST-139 — Create event calendar view (legacy: T-3.3.1; moved from Epic 3)
+- [ ] ST-136 — Implement monthly calendar view
+- [ ] ST-137 — Implement weekly calendar view
+- [ ] ST-138 — Implement daily schedule view
+- [ ] ST-139 — Create event calendar view (moved from E-004)
 
-**Files likely affected (best guess)**
-- client/
-
-**DoD**
+**DoD (Definition of Done)**
 - [ ] Implementation completed
 - [ ] Tests updated/added when applicable
 - [ ] Local verification done
 
 **Verification**
 - Backend: N/A
-- Frontend: Validate view rendering and navigation
-- Manual: Verify month/week/day views match API data and timezone
+- Frontend: validate view rendering and navigation
+- Manual: verify month/week/day views match API data/timezone
 
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 4 / User Story 4.2
 
-**Review Notes (append-only)**
+## Archive (DONE)
+- No DONE tasks archived yet.
+
+## Review Notes (append-only)
 - Reviewer notes:

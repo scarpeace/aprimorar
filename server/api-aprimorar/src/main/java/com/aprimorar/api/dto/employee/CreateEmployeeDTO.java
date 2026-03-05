@@ -11,28 +11,28 @@ import java.time.LocalDate;
 
 public record CreateEmployeeDTO (
 
-        @NotBlank(message = "Employee name can't be blank")
+        @NotBlank(message = "Nome do funcionário é obrigatório")
         String name,
 
-        @NotNull(message = "Employee birthdate can't be null")
-        @Past(message = "Employee birthdate should be in the past")
+        @NotNull(message = "A data de nascimento do funcionário é obrigatória")
+        @Past(message = "A data de nascimento do funcionário deve estar no passado")
         LocalDate birthdate,
 
-        @NotBlank(message = "Employee pix can't be blank")
+        @NotBlank(message = "Chave PIX do funcionário é obrigatória")
         String pix,
 
-        @NotBlank(message = "Employee contact can't be blank")
-        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contact must be in format (XX)XXXXX-XXXX")
+        @NotBlank(message = "Contato do funcionário é obrigatório")
+        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contato deve estar no formato (XX)XXXXX-XXXX")
         String contact,
 
-        @NotBlank(message = "Employee CPF can't be blank")
-        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF must be in format XXX.XXX.XXX-XX")
+        @NotBlank(message = "CPF do funcionário é obrigatório")
+        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF deve estar no formato XXX.XXX.XXX-XX")
         String cpf,
 
-        @NotBlank(message = "Employee email can't be blank")
-        @Email(message = "Email must be a valid email address")
+        @NotBlank(message = "Email do funcionário é obrigatório")
+        @Email(message = "Email deve ser um endereço de email válido")
         String email,
 
-        @NotNull(message = "Employee Role can't be null")
+        @NotNull(message = "Papel do funcionário é obrigatório")
         Role role) {
 }

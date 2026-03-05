@@ -29,9 +29,6 @@ export function StudentCreatePage() {
   } = useForm<CreateStudentInput>({
     resolver: zodResolver(createStudentSchema),
     shouldUnregister: true,
-    defaultValues: {
-      activity: "ENEM",
-    },
   })
 
   const loadParents = async () => {
@@ -161,20 +158,6 @@ export function StudentCreatePage() {
                 {errors.school?.message ? <p className={styles.error}>{errors.school.message}</p> : null}
               </div>
 
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="activity">
-                  Atividade
-                </label>
-                <select
-                  id="activity"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                  {...register("activity")}
-                >
-                  <option value="ENEM">ENEM</option>  
-                  <option value="MENTORIA">Mentoria</option>
-                </select>
-                {errors.activity?.message ? <p className={styles.error}>{errors.activity.message}</p> : null}
-              </div>
             </div>
 
             <div className={styles.divider} />

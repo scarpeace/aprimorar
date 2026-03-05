@@ -1,0 +1,153 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "agent": {
+        "orchestrator": {
+            "mode": "primary",
+            "model": "openai/gpt-5.3-codex",
+            "prompt": "{file:./agents/orchestrator.md}",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true,
+                "bash": true
+            }
+        },
+        "explore": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.3-codex",
+            "prompt": "{file:./agents/explore.md}",
+            "tools": {
+                "read": true,
+                "bash": true
+            }
+        },
+        "planner": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.2",
+            "prompt": "{file:./agents/planner.md}",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true
+            }
+        },
+        "developer": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.3-codex",
+            "prompt": "{file:./agents/developer.md}",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true,
+                "bash": true
+            }
+        },
+        "qa": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.3-codex",
+            "prompt": "{file:./agents/qa.md}",
+            "tools": {
+                "read": true,
+                "bash": true
+            }
+        },
+        "reviewer": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.2",
+            "prompt": "{file:./agents/reviewer.md}",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true,
+                "bash": true
+            }
+        },
+        "tracker": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.2",
+            "prompt": "{file:./agents/tracker.md}",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true,
+                "bash": true
+            }
+        },
+        "devops": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.3-codex",
+            "prompt": "{file:./agents/devops.md}",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true,
+                "bash": true
+            }
+        },
+        "navigator": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.2",
+            "prompt": "{file:./agents/navigator.md}",
+            "tools": {
+                "read": true,
+                "bash": true
+            }
+        }
+    },
+    "command": {
+        "scan": {
+            "description": "Read-only codebase exploration and orientation",
+            "agent": "explore",
+            "subtask": true,
+            "template": "Read-only exploration request: {{input}}. Search the repository and return a concise map of relevant files, current patterns, and implementation hints. No edits. Include file paths and where to start as a beginner. If questions are needed, number them and use numbered options for fixed choices."
+        },
+        "plan": {
+            "description": "Generate/update roadmap + one epic plan and ask 3-8 questions",
+            "agent": "planner",
+            "subtask": true,
+            "template": "Create or update planning docs for this feature: {{input}}. Always update docs/planning/roadmap.md and create/update exactly one Epic file in docs/planning/epics/. Keep IDs stable (E-xxx, S-xxx, T-xxx, ST-xxx). Avoid overengineering and keep tasks small, verifiable, and beginner-friendly. ALWAYS ask between 3 and 8 objective clarification questions, each with a recommended default. Number all questions and use numbered options for fixed choices; for multi-select, explicitly say choose all that apply. If complexity increases, include a short explanation of what will be implemented and why. Include suggested git branch command using feat/<slug> from base main."
+        },
+        "do": {
+            "description": "Implement one task by ID with strict complexity guard",
+            "agent": "developer",
+            "subtask": true,
+            "template": "Implement exactly ONE task by ID from docs/planning/epics/*.md. Task ID: {{input}}. First run strict complexity validation. If task is too large or unclear, DO NOT implement; emit a complexity alert, propose a smaller split, and instruct next commands: /update-plan {{input}} and /plan Refine task {{input}}. If valid but blocking ambiguity exists, ask numbered clarification questions with recommended defaults and numbered options when applicable, then wait for answers. If valid, implement minimal clean code without overengineering, update the Epic task status and implementation notes, and suggest branch/commit commands using feat/<slug> and plain commit messages. Do not auto-run checks; only suggest /check-backend or /check-frontend based on touched area."
+        },
+        "review": {
+            "description": "Single consolidated review (quality + security + performance)",
+            "agent": "reviewer",
+            "subtask": true,
+            "template": "Review the current git diff. Provide one consolidated review covering code quality, security basics, and performance basics. If there are findings, create a markdown file under docs/reviews/ with small checkbox tasks grouped by P0/P1/P2 and by quality/security/performance. If there are no findings, do not create a file. If decisions are ambiguous, ask numbered questions with recommended defaults and numbered options. Output prioritized fixes only."
+        },
+        "update-plan": {
+            "description": "Update roadmap/epic status and review notes for a task",
+            "agent": "tracker",
+            "subtask": true,
+            "template": "Update planning docs for Task ID: {{input}}. Find the Epic containing the task, update status, append review notes (quality/security/performance), and add follow-up subtasks if needed. If there is a complexity alert or split proposal, mark task BLOCKED and register the split in the same Epic. Update roadmap Epic Index if required. If ambiguity remains, ask one numbered question with recommended default and numbered options."
+        },
+        "devops": {
+            "description": "DevOps help (manual use only)",
+            "agent": "devops",
+            "subtask": true,
+            "template": "Provide DevOps help for this request: {{input}}. Keep it simple. Ask only objective questions if required. Output steps, files, and commands."
+        },
+        "next": {
+            "description": "Suggest the next task by roadmap, epic progress, and recent git activity",
+            "agent": "navigator",
+            "subtask": true,
+            "template": "Analyze docs/planning/roadmap.md, docs/planning/epics/*.md, and recent git activity to recommend the next task. Respect dependencies and avoid DONE/BLOCKED tasks. If multiple equivalent choices exist, ask a numbered selection question with numbered options."
+        },
+        "check-backend": {
+            "description": "Run backend unit tests on demand",
+            "agent": "qa",
+            "subtask": true,
+            "template": "Run backend checks on demand for this request: {{input}}. Execute ./mvnw test in server/api-aprimorar. Summarize results concisely, including failures and beginner-friendly next fixes."
+        },
+        "check-frontend": {
+            "description": "Run frontend lint and build on demand",
+            "agent": "qa",
+            "subtask": true,
+            "template": "Run frontend checks on demand for this request: {{input}}. Execute npm -C client run lint && npm -C client run build from repo root. Summarize results concisely, including failures and beginner-friendly next fixes."
+        }
+    }
+}

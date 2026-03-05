@@ -87,7 +87,7 @@ export function StudentDetailPage() {
             <DetailField label="Nome Completo" value={student.name} icon={User} />
             <DetailField label="CPF" value={student.cpf} icon={Mail} />
             <DetailField label="Email" value={student.email} icon={GraduationCap} />
-            <DetailField label="Atividade" value={student.activity} icon={GraduationCap} />
+            <DetailField label="Idade" value={String(student.age)} icon={GraduationCap} />
             <DetailField label="Contato" value={student.contact} icon={GraduationCap} />
             <DetailField label="Data Nascimento" value={student.birthdate} icon={GraduationCap} />
             <DetailField label="Matrícula" value={student.createdAt} icon={GraduationCap} />

@@ -5,6 +5,7 @@ import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.entity.Event;
 import com.aprimorar.api.entity.Student;
+import com.aprimorar.api.enums.EventContent;
 import com.aprimorar.api.exception.domain.EmployeeNotFoundException;
 import com.aprimorar.api.exception.domain.EventNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
@@ -65,16 +66,16 @@ class EventServiceTest {
         EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
         Page<Event> eventPage = new PageImpl<>(List.of(event), pageable, 1);
-        when(eventRepo.findAll(pageable)).thenReturn(eventPage);
+        when(eventRepo.findAllWithFilters(null, null, null, null, pageable)).thenReturn(eventPage);
         when(eventMapper.toDto(event)).thenReturn(responseDto);
 
-        Page<EventResponseDTO> result = eventService.listEvents(pageable);
+        Page<EventResponseDTO> result = eventService.listEvents(pageable, null, null, null, null);
 
         assertEquals(1, result.getTotalElements());
         assertEquals(1, result.getContent().size());
         assertSame(responseDto, result.getContent().getFirst());
 
-        verify(eventRepo).findAll(pageable);
+        verify(eventRepo).findAllWithFilters(null, null, null, null, pageable);
         verify(eventMapper).toDto(event);
         verifyNoMoreInteractions(eventRepo, eventMapper);
     }
@@ -85,16 +86,64 @@ class EventServiceTest {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("startDateTime"));
 
         Page<Event> eventPage = new PageImpl<>(List.of(), pageable, 0);
-        when(eventRepo.findAll(pageable)).thenReturn(eventPage);
+        when(eventRepo.findAllWithFilters(null, null, null, null, pageable)).thenReturn(eventPage);
 
-        Page<EventResponseDTO> result = eventService.listEvents(pageable);
+        Page<EventResponseDTO> result = eventService.listEvents(pageable, null, null, null, null);
 
         assertEquals(0, result.getTotalElements());
         assertTrue(result.getContent().isEmpty());
 
-        verify(eventRepo).findAll(pageable);
+        verify(eventRepo).findAllWithFilters(null, null, null, null, pageable);
         verifyNoMoreInteractions(eventRepo);
         verifyNoInteractions(eventMapper);
+    }
+
+    @Test
+    @DisplayName("Should apply date range filters when listing events")
+    void testListEventsWithDateRangeFilter() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("startDateTime"));
+        LocalDateTime start = LocalDateTime.of(2027, 6, 1, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2027, 6, 30, 23, 59);
+
+        Event event = new Event();
+        EventResponseDTO responseDto = mock(EventResponseDTO.class);
+        Page<Event> eventPage = new PageImpl<>(List.of(event), pageable, 1);
+
+        when(eventRepo.findAllWithFilters(start, end, null, null, pageable)).thenReturn(eventPage);
+        when(eventMapper.toDto(event)).thenReturn(responseDto);
+
+        Page<EventResponseDTO> result = eventService.listEvents(pageable, start, end, null, null);
+
+        assertEquals(1, result.getTotalElements());
+        assertSame(responseDto, result.getContent().getFirst());
+
+        verify(eventRepo).findAllWithFilters(start, end, null, null, pageable);
+        verify(eventMapper).toDto(event);
+        verifyNoMoreInteractions(eventRepo, eventMapper);
+    }
+
+    @Test
+    @DisplayName("Should apply student and employee filters when listing events")
+    void testListEventsWithStudentAndEmployeeFilter() {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("startDateTime"));
+        UUID studentId = UUID.randomUUID();
+        UUID employeeId = UUID.randomUUID();
+
+        Event event = new Event();
+        EventResponseDTO responseDto = mock(EventResponseDTO.class);
+        Page<Event> eventPage = new PageImpl<>(List.of(event), pageable, 1);
+
+        when(eventRepo.findAllWithFilters(null, null, studentId, employeeId, pageable)).thenReturn(eventPage);
+        when(eventMapper.toDto(event)).thenReturn(responseDto);
+
+        Page<EventResponseDTO> result = eventService.listEvents(pageable, null, null, studentId, employeeId);
+
+        assertEquals(1, result.getTotalElements());
+        assertSame(responseDto, result.getContent().getFirst());
+
+        verify(eventRepo).findAllWithFilters(null, null, studentId, employeeId, pageable);
+        verify(eventMapper).toDto(event);
+        verifyNoMoreInteractions(eventRepo, eventMapper);
     }
 
     // ─── findById ─────────────────────────────────────────────────────────────
@@ -405,6 +454,7 @@ class EventServiceTest {
                 VALID_END,
                 VALID_PRICE,
                 VALID_PAYMENT,
+                EventContent.ENEM,
                 studentId,
                 employeeId
         );

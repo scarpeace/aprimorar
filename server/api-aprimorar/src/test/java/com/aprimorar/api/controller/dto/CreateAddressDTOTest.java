@@ -60,7 +60,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto(null, "123", null, "Downtown", "Cityville", "SP", "12345-678");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address street can't be blank"));
+        assertTrue(messages(violations).contains("Rua do endereço é obrigatória"));
     }
 
     @Test
@@ -69,7 +69,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("", "123", null, "Downtown", "Cityville", "SP", "12345-678");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address street can't be blank"));
+        assertTrue(messages(violations).contains("Rua do endereço é obrigatória"));
     }
 
     // ─── number ───────────────────────────────────────────────────────────────
@@ -80,7 +80,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("Main Street", null, null, "Downtown", "Cityville", "SP", "12345-678");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address number can't be blank"));
+        assertTrue(messages(violations).contains("Número do endereço é obrigatório"));
     }
 
     @Test
@@ -89,7 +89,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("Main Street", "", null, "Downtown", "Cityville", "SP", "12345-678");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address number can't be blank"));
+        assertTrue(messages(violations).contains("Número do endereço é obrigatório"));
     }
 
     // ─── district ─────────────────────────────────────────────────────────────
@@ -100,7 +100,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("Main Street", "123", null, null, "Cityville", "SP", "12345-678");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address district can't be blank"));
+        assertTrue(messages(violations).contains("Bairro do endereço é obrigatório"));
     }
 
     @Test
@@ -109,7 +109,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("Main Street", "123", null, "", "Cityville", "SP", "12345-678");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address district can't be blank"));
+        assertTrue(messages(violations).contains("Bairro do endereço é obrigatório"));
     }
 
     // ─── city ─────────────────────────────────────────────────────────────────
@@ -120,7 +120,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("Main Street", "123", null, "Downtown", null, "SP", "12345-678");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address city can't be blank"));
+        assertTrue(messages(violations).contains("Cidade do endereço é obrigatória"));
     }
 
     @Test
@@ -129,7 +129,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("Main Street", "123", null, "Downtown", "", "SP", "12345-678");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address city can't be blank"));
+        assertTrue(messages(violations).contains("Cidade do endereço é obrigatória"));
     }
 
     // ─── state ────────────────────────────────────────────────────────────────
@@ -140,7 +140,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("Main Street", "123", null, "Downtown", "Cityville", null, "12345-678");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address state can't be blank"));
+        assertTrue(messages(violations).contains("Estado do endereço é obrigatório"));
     }
 
     @Test
@@ -149,7 +149,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("Main Street", "123", null, "Downtown", "Cityville", "", "12345-678");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address state can't be blank"));
+        assertTrue(messages(violations).contains("Estado do endereço é obrigatório"));
     }
 
     // ─── zip ──────────────────────────────────────────────────────────────────
@@ -160,7 +160,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("Main Street", "123", null, "Downtown", "Cityville", "SP", null);
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address zip code can't be blank"));
+        assertTrue(messages(violations).contains("CEP do endereço é obrigatório"));
     }
 
     @Test
@@ -169,7 +169,7 @@ class CreateAddressDTOTest {
         CreateAddressDTO dto = addressDto("Main Street", "123", null, "Downtown", "Cityville", "SP", "");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
         assertEquals(1, violations.size());
-        assertTrue(messages(violations).contains("Address zip code can't be blank"));
+        assertTrue(messages(violations).contains("CEP do endereço é obrigatório"));
     }
 
     // ─── complement (optional) ────────────────────────────────────────────────

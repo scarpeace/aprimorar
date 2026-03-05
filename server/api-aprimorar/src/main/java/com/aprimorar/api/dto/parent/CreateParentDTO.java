@@ -5,19 +5,19 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record CreateParentDTO(
-        @NotNull(message = "Parent name can't be null")
+        @NotNull(message = "Nome do responsável é obrigatório")
         String name,
 
-        @NotNull(message = "Parent email can't be null")
-        @Email
+        @NotNull(message = "Email do responsável é obrigatório")
+        @Email(message = "Email deve ser um endereço de email válido")
         String email,
 
-        @NotNull(message = "Parent contact can't be null")
-        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contact must be in format (XX)XXXXX-XXXX")
+        @NotNull(message = "Contato do responsável é obrigatório")
+        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contato deve estar no formato (XX)XXXXX-XXXX")
         String contact,
 
-        @NotNull(message = "Parent cpf can't be null")
-        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF must be in format XXX.XXX.XXX-XX")
+        @NotNull(message = "CPF do responsável é obrigatório")
+        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF deve estar no formato XXX.XXX.XXX-XX")
         String cpf
 ) {
 }

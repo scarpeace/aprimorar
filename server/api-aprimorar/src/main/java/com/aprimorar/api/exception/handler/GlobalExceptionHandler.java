@@ -2,6 +2,7 @@ package com.aprimorar.api.exception.handler;
 
 import com.aprimorar.api.exception.domain.EmployeeNotFoundException;
 import com.aprimorar.api.exception.domain.EventNotFoundException;
+import com.aprimorar.api.exception.domain.ParentNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
 import com.aprimorar.api.exception.errors.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,12 @@ public class GlobalExceptionHandler {
             StudentNotFoundException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = buildError(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+        ErrorResponse error = buildError(
+                HttpStatus.NOT_FOUND,
+                "STUDENT_NOT_FOUND",
+                "Estudante não encontrado",
+                request
+        );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -34,8 +40,12 @@ public class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = buildError(HttpStatus.BAD_REQUEST,
-                "Type Mismatch Exception: " + ex.getMessage(), request);
+        ErrorResponse error = buildError(
+                HttpStatus.BAD_REQUEST,
+                "TYPE_MISMATCH",
+                "Parâmetro de requisição inválido",
+                request
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -44,8 +54,12 @@ public class GlobalExceptionHandler {
             DataIntegrityViolationException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = buildError(HttpStatus.CONFLICT,
-                "Conflict on DATA INTEGRITY: " + ex.getMostSpecificCause().getMessage(), request);
+        ErrorResponse error = buildError(
+                HttpStatus.CONFLICT,
+                "DATA_INTEGRITY_CONFLICT",
+                "Conflito de integridade de dados",
+                request
+        );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
@@ -54,7 +68,12 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException ex,
             HttpServletRequest request
     ){
-        ErrorResponse error = buildError(HttpStatus.BAD_REQUEST, ex.getMostSpecificCause().getMessage(), request);
+        ErrorResponse error = buildError(
+                HttpStatus.BAD_REQUEST,
+                "MALFORMED_REQUEST",
+                "Corpo da requisição inválido",
+                request
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -63,7 +82,12 @@ public class GlobalExceptionHandler {
             EventNotFoundException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = buildError(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+        ErrorResponse error = buildError(
+                HttpStatus.NOT_FOUND,
+                "EVENT_NOT_FOUND",
+                "Evento não encontrado",
+                request
+        );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -72,7 +96,26 @@ public class GlobalExceptionHandler {
             EmployeeNotFoundException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = buildError(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+        ErrorResponse error = buildError(
+                HttpStatus.NOT_FOUND,
+                "EMPLOYEE_NOT_FOUND",
+                "Funcionário não encontrado",
+                request
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(ParentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleParentNotFound(
+            ParentNotFoundException ex,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = buildError(
+                HttpStatus.NOT_FOUND,
+                "PARENT_NOT_FOUND",
+                "Responsável não encontrado",
+                request
+        );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -85,16 +128,31 @@ public class GlobalExceptionHandler {
                 .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                 .collect(Collectors.joining("; "));
 
-        ErrorResponse error = buildError(HttpStatus.BAD_REQUEST, message, request);
+        ErrorResponse error = buildError(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", message, request);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    private ErrorResponse buildError(HttpStatus status, String message, HttpServletRequest request) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleUnexpectedError(
+            Exception ex,
+            HttpServletRequest request
+    ) {
+        ErrorResponse error = buildError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "INTERNAL_ERROR",
+                "Erro interno do servidor",
+                request
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    private ErrorResponse buildError(HttpStatus status, String code, String message, HttpServletRequest request) {
         return new ErrorResponse(
                 Instant.now(),
                 status.value(),
                 status.getReasonPhrase(),
+                code,
                 message,
                 request.getRequestURI()
         );

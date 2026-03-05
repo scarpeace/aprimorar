@@ -56,10 +56,10 @@ api.interceptors.response.use(
 )
 
 export const studentsApi = {
-  list: (page = 0, size = 20, sortBy = "name"): Promise<AxiosResponse<PageResponse<StudentResponse>>> =>
-    api.get(`/v1/students?page=${page}&size=${size}&sortBy=${sortBy}`),
-  listActive: (page = 0, size = 20, sortBy = "name"): Promise<AxiosResponse<PageResponse<StudentResponse>>> =>
-    api.get(`/v1/students/active?page=${page}&size=${size}&sortBy=${sortBy}`),
+  list: (page = 0, size = 20, sortBy = "name", active?: boolean): Promise<AxiosResponse<PageResponse<StudentResponse>>> => {
+    const activeParam = active === undefined ? "" : `&active=${active}`
+    return api.get(`/v1/students?page=${page}&size=${size}&sortBy=${sortBy}${activeParam}`)
+  },
   getById: (id: string): Promise<AxiosResponse<StudentResponse>> =>
     api.get(`/v1/students/${id}`),
   create: (data: CreateStudentInput): Promise<AxiosResponse<StudentResponse>> => api.post("/v1/students", data),

@@ -20,7 +20,7 @@ export function DashboardPage() {
         setError(null)
         setLoading(true)
         const [studentsRes, employeesRes, eventsRes] = await Promise.all([
-          studentsApi.listActive(),
+          studentsApi.list(0, 20, "name", true),
           employeesApi.listActive(),
           eventsApi.list(),
         ])
@@ -32,6 +32,7 @@ export function DashboardPage() {
         setStudentsCount(studentsPage.totalElements)
         setEmployeesCount(employeesPage.totalElements)
         setEventsCount(eventsPage.totalElements)
+        //TODO Move this logic to the backend
         // Calculate revenue from events
         const total = eventsPage.content.reduce(
           (sum, event) => sum + Number(event.payment),

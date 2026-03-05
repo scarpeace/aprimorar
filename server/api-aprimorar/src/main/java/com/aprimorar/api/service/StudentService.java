@@ -6,7 +6,6 @@ import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
-import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.exception.domain.ParentNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
 import com.aprimorar.api.mapper.ParentMapper;
@@ -45,11 +44,20 @@ public class StudentService {
         return studentPage.map(studentMapper::toDto);
     }
 
-    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, Activity activity) {
+    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name) {
+        return listStudents(pageable, name, null);
+    }
+
+    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, Boolean active) {
         String normalizedName = normalizeNameFilter(name);
 
-        if (normalizedName != null && activity != null) {
-            return studentRepo.findByNameContainingIgnoreCaseAndActivity(normalizedName, activity, pageable)
+        if (active != null && normalizedName != null) {
+            return studentRepo.findByActiveAndNameContainingIgnoreCase(active, normalizedName, pageable)
+                    .map(studentMapper::toDto);
+        }
+
+        if (active != null) {
+            return studentRepo.findByActive(active, pageable)
                     .map(studentMapper::toDto);
         }
 
@@ -58,38 +66,7 @@ public class StudentService {
                     .map(studentMapper::toDto);
         }
 
-        if (activity != null) {
-            return studentRepo.findByActivity(activity, pageable)
-                    .map(studentMapper::toDto);
-        }
-
         return listStudents(pageable);
-    }
-
-    public Page<StudentResponseDTO> listActiveStudents(Pageable pageable){
-        Page<Student> activeStudentsPage = studentRepo.findAllByActiveTrue(pageable);
-        return activeStudentsPage.map(studentMapper::toDto);
-    }
-
-    public Page<StudentResponseDTO> listActiveStudents(Pageable pageable, String name, Activity activity) {
-        String normalizedName = normalizeNameFilter(name);
-
-        if (normalizedName != null && activity != null) {
-            return studentRepo.findAllByActiveTrueAndNameContainingIgnoreCaseAndActivity(normalizedName, activity, pageable)
-                    .map(studentMapper::toDto);
-        }
-
-        if (normalizedName != null) {
-            return studentRepo.findAllByActiveTrueAndNameContainingIgnoreCase(normalizedName, pageable)
-                    .map(studentMapper::toDto);
-        }
-
-        if (activity != null) {
-            return studentRepo.findAllByActiveTrueAndActivity(activity, pageable)
-                    .map(studentMapper::toDto);
-        }
-
-        return listActiveStudents(pageable);
     }
 
     public StudentResponseDTO findById(UUID studentId) {
@@ -97,6 +74,7 @@ public class StudentService {
          return studentMapper.toDto(foundStudent);
     }
 
+    @Transactional
     public StudentResponseDTO createStudent(CreateStudentDTO createStudentDto) {
         log.info("Creating student with name: {}", createStudentDto.name());
 
@@ -108,8 +86,6 @@ public class StudentService {
         } else if (createStudentDto.parent() != null) {
             Parent savedParent = createParent(createStudentDto.parent());
             newStudent.setParent(savedParent);
-        } else {
-            throw new IllegalArgumentException("Parent is required: provide either parentId or parent");
         }
 
         Student savedStudent = studentRepo.save(newStudent);
