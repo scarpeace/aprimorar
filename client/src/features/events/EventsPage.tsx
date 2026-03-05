@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import type { EventResponse } from "@/lib/schemas"
+import { eventContentLabels, type EventResponse } from "@/lib/schemas"
 import { eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
 import styles from "@/features/events/EventsPage.module.css"
 
@@ -105,6 +105,7 @@ export function EventsPage() {
               <TableHead>Aluno</TableHead>
               <TableHead>Colaborador</TableHead>
               <TableHead>Data/Hora</TableHead>
+              <TableHead>Conteudo</TableHead>
               <TableHead>Preco</TableHead>
               <TableHead>Acoes</TableHead>
             </TableRow>
@@ -116,6 +117,7 @@ export function EventsPage() {
                 <TableCell>{event.studentName}</TableCell>
                 <TableCell>{event.employeeName}</TableCell>
                 <TableCell>{event.startDateTime}</TableCell>
+                <TableCell>{eventContentLabels[event.content]}</TableCell>
                 <TableCell>{event.price}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">

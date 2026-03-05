@@ -43,7 +43,7 @@
 
 ### Story: S-014 — Event Content Classification
 **Status:** IN_PROGRESS
-**Links:** T-012-A (DONE), T-012-B (DONE), T-012-C (IN_PROGRESS), T-016 (TODO)
+**Links:** T-012-A (DONE), T-012-B (DONE), T-012-C (IN_PROGRESS), T-016 (DONE)
 **Intent:** Make `content` required and visible across event create/update/list/detail flows.
 
 ## Tasks
@@ -76,7 +76,7 @@
 
 ### Task: T-016 — (Frontend) Event `content` dropdown and display
 **Type:** frontend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** T-012-B
 
 **Description**
@@ -85,12 +85,12 @@
 - Render `content` on event list/detail.
 
 **Subtasks**
-- [ ] ST-032 — Add required content dropdown and display labels
+- [x] ST-032 — Add required content dropdown and display labels
 
 **DoD (Definition of Done)**
-- [ ] Event create/edit includes required `content` dropdown
-- [ ] Submit payload includes `content` and succeeds
-- [ ] Event list/detail displays `content`
+- [x] Event create/edit includes required `content` dropdown
+- [x] Submit payload includes `content` and succeeds
+- [x] Event list/detail displays `content`
 
 **Verification**
 - Backend: N/A
@@ -100,6 +100,11 @@
 **Notes**
 - Risks: minor UI refactor may be needed depending on current form structure.
 - Open questions: dropdown label ordering in UI.
+
+**Implementation Notes**
+- Added `content` to event schema/request/response typings in frontend.
+- Added required `content` dropdown in event create form with API enum values + friendly labels.
+- Added `content` rendering in events list and event detail pages.
 
 ### Task: T-017 — Manual regression verification for core list filters
 **Type:** manual/qa

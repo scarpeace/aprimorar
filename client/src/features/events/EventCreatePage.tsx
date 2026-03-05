@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import type { EmployeeResponse, StudentResponse } from "@/lib/schemas"
-import { createEventSchema, type CreateEventInput } from "@/lib/schemas"
+import { createEventSchema, eventContentLabels, eventContentValues, type CreateEventInput } from "@/lib/schemas"
 import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
 
 export function EventCreatePage() {
@@ -174,6 +174,28 @@ export function EventCreatePage() {
                   </select>
                   {selectedEmployeeName ? <p className={styles.help}>Selecionado: {selectedEmployeeName}</p> : null}
                   {errors.employeeId?.message ? <p className={styles.error}>{errors.employeeId.message}</p> : null}
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label} htmlFor="content">
+                    Conteudo
+                  </label>
+                  <select
+                    id="content"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    {...register("content")}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Selecione um conteudo
+                    </option>
+                    {eventContentValues.map((content) => (
+                      <option key={content} value={content}>
+                        {eventContentLabels[content]}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.content?.message ? <p className={styles.error}>{errors.content.message}</p> : null}
                 </div>
 
                 <div className={styles.field}>
