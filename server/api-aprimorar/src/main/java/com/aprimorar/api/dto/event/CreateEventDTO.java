@@ -1,5 +1,6 @@
 package com.aprimorar.api.dto.event;
 
+import com.aprimorar.api.enums.EventContent;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -34,6 +35,9 @@ public record CreateEventDTO(
         @NotNull(message = "Pagamento é obrigatório")
         @DecimalMin(value = "0.0", message = "Pagamento deve ser maior ou igual a 0")
         BigDecimal payment,
+
+        @NotNull(message = "Conteúdo do evento é obrigatório")
+        EventContent content,
 
         @NotNull(message = "ID do estudante é obrigatório")
         UUID studentId,

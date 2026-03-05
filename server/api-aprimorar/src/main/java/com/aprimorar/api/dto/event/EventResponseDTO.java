@@ -9,6 +9,7 @@ public record EventResponseDTO(
         Long id,
         String title,
         String description,
+        String content,
         LocalDateTime startDateTime,
         LocalDateTime endDateTime,
         BigDecimal price,

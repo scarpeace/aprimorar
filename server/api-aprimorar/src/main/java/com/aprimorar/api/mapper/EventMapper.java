@@ -1,9 +1,10 @@
 package com.aprimorar.api.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.aprimorar.api.dto.event.CreateEventDTO;
 import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.entity.Event;
-import org.springframework.stereotype.Component;
 
 @Component
 public class EventMapper {
@@ -16,6 +17,7 @@ public class EventMapper {
         return new EventResponseDTO(
                 entity.getId(),
                 entity.getTitle(),
+                entity.getContent().toString(),
                 entity.getDescription(),
                 entity.getStartDateTime(),
                 entity.getEndDateTime(),
@@ -42,6 +44,7 @@ public class EventMapper {
         entity.setEndDateTime(dto.endDateTime());
         entity.setPrice(dto.price());
         entity.setPayment(dto.payment());
+        entity.setContent(dto.content());
         return entity;
     }
 
@@ -67,6 +70,9 @@ public class EventMapper {
         }
         if (dto.payment() != null) {
             entity.setPayment(dto.payment());
+        }
+        if (dto.content() != null) {
+            entity.setContent(dto.content());
         }
     }
 }

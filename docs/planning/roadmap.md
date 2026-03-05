@@ -13,7 +13,7 @@
 - Status: IN_PROGRESS
 - Epics:
   - E-002 - Core data management
-  - Notes: includes Student age validation (T-015 / ST-023)
+  - Notes: includes Student age validation (T-015 / ST-023) and Event `content` required field rollout (T-012-A, T-012-B, T-012-C)
 
 ### Phase 2 - Security (Weeks 5-8)
 - Goal: authentication, RBAC, and basic hardening

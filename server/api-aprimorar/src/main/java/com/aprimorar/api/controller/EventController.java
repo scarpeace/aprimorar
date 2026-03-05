@@ -65,8 +65,8 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "Update EVENT", description = "Replaces event with full event data")
-    @PutMapping("/{eventId}")
+    @Operation(summary = "Update EVENT", description = "Updates event with event data")
+    @PatchMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable Long eventId,
             @RequestBody @Valid CreateEventDTO createEventDto) {

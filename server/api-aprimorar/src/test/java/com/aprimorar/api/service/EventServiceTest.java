@@ -5,6 +5,7 @@ import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.entity.Event;
 import com.aprimorar.api.entity.Student;
+import com.aprimorar.api.enums.EventContent;
 import com.aprimorar.api.exception.domain.EmployeeNotFoundException;
 import com.aprimorar.api.exception.domain.EventNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
@@ -453,6 +454,7 @@ class EventServiceTest {
                 VALID_END,
                 VALID_PRICE,
                 VALID_PAYMENT,
+                EventContent.ENEM,
                 studentId,
                 employeeId
         );
