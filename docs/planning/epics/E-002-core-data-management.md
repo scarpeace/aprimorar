@@ -9,7 +9,7 @@
   - Student management enhancements (search/filter, validation, import/export)
   - Event listing performance and filters
   - Parent management rules used by Student flows
-  - Event session type classification (backend + API + migrations)
+  - Event content classification (backend + API + migrations)
 - Out of scope:
   - Authentication/RBAC (E-003)
   - Calendar integration (E-005)
@@ -64,17 +64,17 @@
 ### Story: S-012 — Event/Class Management Improvements
 **As a** employee **I want** event listing to be performant and filterable **so that** scheduling and follow-ups are efficient.
 
-**Links:** T-011 (IN_PROGRESS) — ST-024, ST-025, ST-026, ST-027
+**Links:** T-011 (DONE) — ST-024, ST-025, ST-026, ST-027
 
 **Acceptance Criteria**
-- [ ] AC-012-01 Event list avoids N+1 query patterns
-- [ ] AC-012-02 Event list supports filtering by date range
-- [ ] AC-012-03 Event list supports filtering by student
-- [ ] AC-012-04 Event list supports filtering by employee
+- [x] AC-012-01 Event list avoids N+1 query patterns
+- [x] AC-012-02 Event list supports filtering by date range
+- [x] AC-012-03 Event list supports filtering by student
+- [x] AC-012-04 Event list supports filtering by employee
 
 **Test Plan**
 - Backend:
-  - [ ] Add repository/service tests for query behavior and filters
+- [x] Add repository/service tests for query behavior and filters
 - Frontend:
   - [ ] N/A (backend capability)
 - Manual:
@@ -99,23 +99,23 @@
 - Manual:
   - [ ] Create student with new parent, then reassign to existing parent
 
-### Story: S-014 — Event Session Types
-**As a** employee **I want** events classified by session type **so that** scheduling and reporting are consistent across services.
+### Story: S-014 — Event Content Classification
+**As a** employee **I want** events classified by content **so that** scheduling and reporting are consistent across services.
 
 **Links:** T-012 (TODO) — ST-028, ST-029, ST-030, ST-031, ST-032
 
 **Acceptance Criteria**
-- [ ] AC-014-01 `sessionType` is required for events and validated
-- [ ] AC-014-02 Database stores `sessionType` and existing data is migrated safely
-- [ ] AC-014-03 GET `/v1/events` supports filtering by `sessionType`
+- [ ] AC-014-01 `content` is required for events and validated
+- [ ] AC-014-02 Database stores `content` and existing data is migrated safely
+- [ ] AC-014-03 GET `/v1/events` and GET `/v1/events/{id}` include `content` in responses
 
 **Test Plan**
 - Backend:
-  - [ ] Add DTO validation tests for required `sessionType`
+  - [ ] Add DTO validation tests for required `content`
 - Frontend:
-  - [ ] Update event create/edit form to require and display `sessionType`
+  - [ ] Update event create/edit form to require and display `content`
 - Manual:
-  - [ ] Create event with each session type and filter by it
+  - [ ] Create event with each content type and verify list/detail responses
 
 ## Tasks
 
@@ -130,8 +130,8 @@
 **Subtasks**
 - [x] ST-020 — Add student search/filter by name (legacy: T-1.1.2)
 - [x] ST-021 — Add student search/filter by activity type (legacy: T-1.1.3)
-- [ ] ST-022 — Add bulk import/export (CSV) (legacy: T-1.1.4) (BLOCKED - de-scoped)
-- [ ] ST-023 — Student age validation (min/max) (legacy: T-1.1.5) (moved to T-015)
+- [x] ST-022 — Add bulk import/export (CSV) (legacy: T-1.1.4) (BLOCKED - de-scoped)
+- [x] ST-023 — Student age validation (min/max) (legacy: T-1.1.5) (moved to T-015)
 
 **Files likely affected (best guess)**
 - server/
@@ -199,25 +199,25 @@
 
 ### Task: T-011 — Event list performance and filters
 **Type:** backend
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Depends on:** None
 
 **Description**
 - Fix N+1 and add filters for common operational queries.
 
 **Subtasks**
-- [ ] ST-024 — Fix N+1 query problem (legacy: T-1.3.3)
-- [ ] ST-025 — Add event filtering by date range (legacy: T-1.3.4)
-- [ ] ST-026 — Add event filtering by student (legacy: T-1.3.5)
-- [ ] ST-027 — Add event filtering by employee (legacy: T-1.3.6)
+- [x] ST-024 — Fix N+1 query problem (legacy: T-1.3.3)
+- [x] ST-025 — Add event filtering by date range (legacy: T-1.3.4)
+- [x] ST-026 — Add event filtering by student (legacy: T-1.3.5)
+- [x] ST-027 — Add event filtering by employee (legacy: T-1.3.6)
 
 **Files likely affected (best guess)**
 - server/
 
 **DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
-- [ ] Local verification done
+- [x] Implementation completed
+- [x] Tests updated/added when applicable
+- [x] Local verification done
 
 **Verification**
 - Backend: cd server/api-aprimorar && ./mvnw test
@@ -231,21 +231,22 @@
 
 **Implementation Notes**
 - 2026-03-04: Updated event filter query to use `COALESCE` for optional `start`, `end`, `studentId`, and `employeeId` params while keeping eager loading via `@EntityGraph`.
+- 2026-03-04: Added optional filter params to `GET /v1/events` (`start`, `end`, `studentId`, `employeeId`) and updated `EventServiceTest` coverage for combined filter paths.
 
-### Task: T-012 — Add `sessionType` to events
+### Task: T-012 — Add required `content` to events
 **Type:** fullstack
 **Status:** TODO
 **Depends on:** None
 
 **Description**
-- Persist and validate event `sessionType`; expose it via API; add filtering; update UI fields when available.
+- Persist and validate event `content`; expose it via API; update UI fields when available.
 
 **Subtasks**
-- [ ] ST-028 — Add `sessionType` enum values (legacy: T-1.5.1)
-- [ ] ST-029 — Add `sessionType` to Event entity/DTOs and validate required (legacy: T-1.5.2)
-- [ ] ST-030 — Add DB migration for `session_type` on events (legacy: T-1.5.3)
-- [ ] ST-031 — Add `sessionType` filtering on GET `/v1/events` (legacy: T-1.5.4)
-- [ ] ST-032 — (Frontend) Add session type dropdown + filters (legacy: T-1.5.5)
+- [ ] ST-028 — Add `content` enum values: `FISICA`, `MATEMATICA`, `TERAPIA`, `MENTORIA`, `ENEM`, `OUTRO` (legacy: T-1.5.1)
+- [ ] ST-029 — Add required `content` to Event entity/DTOs and validate required (legacy: T-1.5.2)
+- [ ] ST-030 — Add DB migration for `content` on events with backfill for existing rows (legacy: T-1.5.3)
+- [ ] ST-031 — Include `content` in GET `/v1/events` and GET `/v1/events/{id}` responses (legacy: T-1.5.4)
+- [ ] ST-032 — (Frontend) Add required content dropdown and display labels (legacy: T-1.5.5)
 
 **Files likely affected (best guess)**
 - server/
@@ -259,12 +260,17 @@
 **Verification**
 - Backend: cd server/api-aprimorar && ./mvnw test
 - Frontend: cd client && npm run lint && npm run build
-- Manual: Create events with each `sessionType`, then filter GET `/v1/events` by `sessionType`
+- Manual: Create events with each `content` value and confirm list/detail show the saved content
 
 **Notes**
 - Source: `docs/archive/PLANNING.md` Epic 1 / User Story 1.5
-- Risks: Backfill/migration strategy for existing events may be non-trivial if `sessionType` becomes required
-- Open questions: Should existing events get a default `sessionType` during migration, or should they remain nullable until edited?
+- Risks: Backfill quality depends on title/description heuristics for historical events
+- Open questions: None
+
+**Implementation Notes**
+- 2026-03-04: Planned execution order for MVP: (1) backend enum + DTO/entity + migration, (2) API response contract update, (3) frontend dropdown wiring.
+- 2026-03-04: Enum values remain ASCII in API/DB (`FISICA`, etc); frontend may render accented labels.
+- 2026-03-04: Migration backfill strategy: infer from title/description (`ENEM`, `FISICA`, `MATEMATICA`, `MENTORIA`, `TERAPIA`), fallback to `OUTRO`.
 
 ### Task: T-013 — Employee management is complete and stable
 **Type:** backend
