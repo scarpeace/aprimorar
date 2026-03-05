@@ -27,6 +27,8 @@ Rules:
   - keep a single `## Review Notes (append-only)` section at file end
 - If unclear which Epic contains T-xxx, search for it.
 - Ask one objective question only if still ambiguous.
+- When asking, use a numbered format (1) and include a recommended default.
+- For fixed options, provide numbered choices.
 
 When called with a task ID (T-xxx):
 1) Find the epic file containing that task.

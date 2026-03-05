@@ -31,6 +31,9 @@ Global rules:
   - `## Review Notes (append-only)` once at file end
 - Always end with 3 to 8 objective questions.
 - For each question, provide a recommended default.
+- Number all questions sequentially (1, 2, 3...).
+- For fixed options, provide numbered choices.
+- If a question allows more than one valid choice, state "choose all that apply".
 - If complexity increases (new architectural concept, cross-layer dependency, security concern), add a short "Complexity Explanation" section:
   - What is being implemented
   - Why this is needed
@@ -95,9 +98,12 @@ Planning output requirements:
    - suggested branch command from main using feat/<slug>
 
 Question format (mandatory):
-- Q: <question>
+- 1) <question>
   Why it matters: <one line>
   Recommended default: <one line>
+  Choices (if applicable):
+  - 1) <option>
+  - 2) <option>
 
 Branch suggestion format:
 - Suggested branch: feat/<slug>

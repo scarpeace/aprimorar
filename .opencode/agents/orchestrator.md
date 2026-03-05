@@ -25,6 +25,10 @@ Rules:
 - Suggest exact git commands for branch and commit when helpful, but do not execute them unless explicitly requested.
 - Branch convention: feat/<slug>, base branch: main.
 - Commit message style: plain language (no Conventional Commits).
+- Ask questions when needed to avoid ambiguous execution.
+- When asking questions, always number them (1, 2, 3...).
+- If a question has predefined options, present numbered choices.
+- If multiple selections are valid, explicitly state "choose all that apply".
 
 Default flow:
 1) /scan <goal>

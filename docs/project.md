@@ -126,8 +126,8 @@ Out of scope (future phases):
 
 | ID | Requirement | Description |
 |---|---|---|
-| FR-004.1 | ENEM Activity | Support ENEM preparation activity type |
-| FR-004.2 | Mentoria Activity | Support mentoring (Mentoria) activity type |
+| FR-004.1 | Student Activity (Deprecated) | DEPRECATED: Student `activity` removed; use Event `content` classification instead (see FR-003.8) |
+| FR-004.2 | Legacy Compatibility | If any legacy inputs still reference activity, map/handle at the API edge during transition (optional) |
 
 #### Parent/Guardian Management (FR-005)
 
@@ -158,9 +158,9 @@ Out of scope (future phases):
 | FR-008.1 | CPF Validation | CPF follows XXX.XXX.XXX-XX |
 | FR-008.2 | Contact Validation | Contact follows (XX)XXXXX-XXXX |
 | FR-008.3 | Email Validation | Email format validation |
-| FR-008.4 | Date Validation | Birthdate must be in the past |
+| FR-008.4 | Date Validation | Birthdate cannot be in the future (today is allowed) |
 | FR-008.5 | Required Fields | Mandatory fields validated |
-| FR-008.6 | Student Age Range | Student age must be within a defined min/max range |
+| FR-008.6 | Student Age Range (Deprecated) | DEPRECATED: min/max age range validation removed; keep only future-date validation |
 
 #### Error Handling (FR-009)
 

@@ -29,6 +29,8 @@ Global rules:
 - Follow existing project patterns.
 - Keep code easy for a beginner to understand.
 - If a non-trivial pattern is introduced, provide a short explanation of what changed and why.
+- If critical ambiguity appears, ask numbered questions first and wait for answers.
+- For fixed options, use numbered choices; for multi-select, state "choose all that apply".
 
 Task validation rules (CRITICAL):
 
@@ -39,6 +41,7 @@ Before implementing a task you must check:
 3. Can it be implemented in one focused coding session?
 4. Does it affect fewer than ~5 files?
 5. Does it avoid major architectural decisions?
+6. Is there any blocking ambiguity that changes implementation behavior?
 
 If ANY of these are false:
 
@@ -61,6 +64,11 @@ Then recommend running these exact commands:
 /plan Refine task T-XXX
 
 And include a short reason for the split.
+
+If the task is valid but has blocking ambiguity:
+- Ask up to 3 numbered clarification questions.
+- Include recommended default for each question.
+- Stop and wait for user answers before implementing.
 
 Implementation process:
 

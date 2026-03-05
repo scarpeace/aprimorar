@@ -99,31 +99,31 @@
             "description": "Read-only codebase exploration and orientation",
             "agent": "explore",
             "subtask": true,
-            "template": "Read-only exploration request: {{input}}. Search the repository and return a concise map of relevant files, current patterns, and implementation hints. No edits. Include file paths and where to start as a beginner."
+            "template": "Read-only exploration request: {{input}}. Search the repository and return a concise map of relevant files, current patterns, and implementation hints. No edits. Include file paths and where to start as a beginner. If questions are needed, number them and use numbered options for fixed choices."
         },
         "plan": {
             "description": "Generate/update roadmap + one epic plan and ask 3-8 questions",
             "agent": "planner",
             "subtask": true,
-            "template": "Create or update planning docs for this feature: {{input}}. Always update docs/planning/roadmap.md and create/update exactly one Epic file in docs/planning/epics/. Keep IDs stable (E-xxx, S-xxx, T-xxx, ST-xxx). Avoid overengineering and keep tasks small, verifiable, and beginner-friendly. ALWAYS ask between 3 and 8 objective clarification questions, each with a recommended default. If complexity increases, include a short explanation of what will be implemented and why. Include suggested git branch command using feat/<slug> from base main."
+            "template": "Create or update planning docs for this feature: {{input}}. Always update docs/planning/roadmap.md and create/update exactly one Epic file in docs/planning/epics/. Keep IDs stable (E-xxx, S-xxx, T-xxx, ST-xxx). Avoid overengineering and keep tasks small, verifiable, and beginner-friendly. ALWAYS ask between 3 and 8 objective clarification questions, each with a recommended default. Number all questions and use numbered options for fixed choices; for multi-select, explicitly say choose all that apply. If complexity increases, include a short explanation of what will be implemented and why. Include suggested git branch command using feat/<slug> from base main."
         },
         "do": {
             "description": "Implement one task by ID with strict complexity guard",
             "agent": "developer",
             "subtask": true,
-            "template": "Implement exactly ONE task by ID from docs/planning/epics/*.md. Task ID: {{input}}. First run strict complexity validation. If task is too large or unclear, DO NOT implement; emit a complexity alert, propose a smaller split, and instruct next commands: /update-plan {{input}} and /plan Refine task {{input}}. If valid, implement minimal clean code without overengineering, update the Epic task status and implementation notes, and suggest branch/commit commands using feat/<slug> and plain commit messages. Do not auto-run checks; only suggest /check-backend or /check-frontend based on touched area."
+            "template": "Implement exactly ONE task by ID from docs/planning/epics/*.md. Task ID: {{input}}. First run strict complexity validation. If task is too large or unclear, DO NOT implement; emit a complexity alert, propose a smaller split, and instruct next commands: /update-plan {{input}} and /plan Refine task {{input}}. If valid but blocking ambiguity exists, ask numbered clarification questions with recommended defaults and numbered options when applicable, then wait for answers. If valid, implement minimal clean code without overengineering, update the Epic task status and implementation notes, and suggest branch/commit commands using feat/<slug> and plain commit messages. Do not auto-run checks; only suggest /check-backend or /check-frontend based on touched area."
         },
         "review": {
             "description": "Single consolidated review (quality + security + performance)",
             "agent": "reviewer",
             "subtask": true,
-            "template": "Review the current git diff. Provide one consolidated review covering code quality, security basics, and performance basics. If there are findings, create a markdown file under docs/reviews/ with small checkbox tasks grouped by P0/P1/P2 and by quality/security/performance. If there are no findings, do not create a file. Output prioritized fixes only."
+            "template": "Review the current git diff. Provide one consolidated review covering code quality, security basics, and performance basics. If there are findings, create a markdown file under docs/reviews/ with small checkbox tasks grouped by P0/P1/P2 and by quality/security/performance. If there are no findings, do not create a file. If decisions are ambiguous, ask numbered questions with recommended defaults and numbered options. Output prioritized fixes only."
         },
         "update-plan": {
             "description": "Update roadmap/epic status and review notes for a task",
             "agent": "tracker",
             "subtask": true,
-            "template": "Update planning docs for Task ID: {{input}}. Find the Epic containing the task, update status, append review notes (quality/security/performance), and add follow-up subtasks if needed. If there is a complexity alert or split proposal, mark task BLOCKED and register the split in the same Epic. Update roadmap Epic Index if required."
+            "template": "Update planning docs for Task ID: {{input}}. Find the Epic containing the task, update status, append review notes (quality/security/performance), and add follow-up subtasks if needed. If there is a complexity alert or split proposal, mark task BLOCKED and register the split in the same Epic. Update roadmap Epic Index if required. If ambiguity remains, ask one numbered question with recommended default and numbered options."
         },
         "devops": {
             "description": "DevOps help (manual use only)",
@@ -135,7 +135,7 @@
             "description": "Suggest the next task by roadmap, epic progress, and recent git activity",
             "agent": "navigator",
             "subtask": true,
-            "template": "Analyze docs/planning/roadmap.md, docs/planning/epics/*.md, and recent git activity to recommend the next task. Respect dependencies and avoid DONE/BLOCKED tasks."
+            "template": "Analyze docs/planning/roadmap.md, docs/planning/epics/*.md, and recent git activity to recommend the next task. Respect dependencies and avoid DONE/BLOCKED tasks. If multiple equivalent choices exist, ask a numbered selection question with numbered options."
         },
         "check-backend": {
             "description": "Run backend unit tests on demand",

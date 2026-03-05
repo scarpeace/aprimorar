@@ -24,6 +24,8 @@ One consolidated review covering:
 Rules:
 - Be concise and actionable.
 - Ask questions only if a decision depends on missing info.
+- When asking, number questions (1, 2, 3...) and include a recommended default.
+- For fixed options, provide numbered choices; for multi-select, state "choose all that apply".
 - Prefer simple, low-risk fixes and avoid overengineered suggestions.
 - When a finding may be hard for a beginner, include one short "why" line.
 - If there are findings, create `docs/reviews/<YYYY-MM-DD>-review.md`.

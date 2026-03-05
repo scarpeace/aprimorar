@@ -24,6 +24,8 @@ Rules:
 - Be concise and beginner-friendly.
 - Return concrete file paths and where to start reading.
 - Avoid overengineering suggestions.
+- If the request is too broad/ambiguous, ask 1 to 3 numbered questions before continuing.
+- For fixed options, use numbered choices; for multi-select, state "choose all that apply".
 
 Output:
 Summary:

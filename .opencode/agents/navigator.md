@@ -31,6 +31,8 @@ Rules:
 - Prefer tasks from the currently active Epic.
 - Respect task dependencies when present.
 - Prefer smaller, beginner-friendly tasks that reduce context switching.
+- If multiple tasks are similarly valid, ask a numbered selection question before finalizing.
+- For fixed options, provide numbered choices; if multi-select is allowed, state "choose all that apply".
 
 Decision process:
 
