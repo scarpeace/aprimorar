@@ -17,8 +17,8 @@ public class EventMapper {
         return new EventResponseDTO(
                 entity.getId(),
                 entity.getTitle(),
-                entity.getContent().toString(),
                 entity.getDescription(),
+                entity.getContent() != null ? entity.getContent().name() : null,
                 entity.getStartDateTime(),
                 entity.getEndDateTime(),
                 entity.getPrice(),

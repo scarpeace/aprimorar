@@ -318,7 +318,7 @@
 
 ### Task: T-012-B — Response contract wiring for event `content`
 **Type:** backend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** T-012-A
 
 **Description**
@@ -333,9 +333,9 @@
 - server/api-aprimorar/src/main/java/com/aprimorar/api/controller/EventController.java
 
 **DoD (Definition of Done)**
-- [ ] GET `/v1/events` response items include `content`
-- [ ] GET `/v1/events/{id}` response includes `content`
-- [ ] Mapping is covered by at least one automated test (can be expanded in T-012-C)
+- [x] GET `/v1/events` response items include `content`
+- [x] GET `/v1/events/{id}` response includes `content`
+- [x] Mapping is covered by at least one automated test (can be expanded in T-012-C)
 
 **Verification**
 - Backend: cd server/api-aprimorar && ./mvnw test
@@ -346,9 +346,14 @@
 - Risks: If there is a separate list DTO (not `EventResponseDTO`), update that DTO too while keeping the public contract consistent.
 - Open questions: None.
 
+**Implementation Notes**
+- 2026-03-05: Fixed `EventMapper#toDto` field order so `description` and `content` map into the correct `EventResponseDTO` fields.
+- 2026-03-05: Standardized response mapping to enum `name()` to keep API `content` values ASCII and aligned with the contract.
+- 2026-03-05: Added `EventMapperTest` coverage asserting list/detail response mapping includes `content` and keeps `description` intact.
+
 ### Task: T-012-C — Backend tests + release-safety checklist for event `content`
 **Type:** backend
-**Status:** TODO
+**Status:** IN_PROGRESS
 **Depends on:** T-012-B
 
 **Description**
@@ -384,6 +389,7 @@
 - [ ] Run a quick smoke test in the deployed environment: POST event with `content`, then GET list/detail and confirm `content` is present
 
 **Implementation Notes**
+- 2026-03-05: Added `EventControllerTest` with coverage for missing `content` (POST/PATCH -> 400), invalid enum payloads (`MALFORMED_REQUEST`), and assertions that list/detail responses include `content`.
 - 2026-03-04: Planned execution order for MVP: (1) backend enum + DTO/entity + migration, (2) API response contract update, (3) frontend dropdown wiring.
 - 2026-03-04: Enum values remain ASCII in API/DB (`FISICA`, etc); frontend may render accented labels.
 - 2026-03-04: Migration backfill strategy: infer from title/description (`ENEM`, `FISICA`, `MATEMATICA`, `MENTORIA`, `TERAPIA`), fallback to `OUTRO`.
