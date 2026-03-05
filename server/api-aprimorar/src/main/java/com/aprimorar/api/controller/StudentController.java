@@ -37,26 +37,12 @@ public class StudentController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") @Max(100) int size,
             @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(required = false) String name
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Boolean active
     ){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable, name);
+        Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable, name, active);
         return ResponseEntity.ok(allStudents);
-    }
-
-    @Operation(summary = "List all active STUDENTS", description = "Retrieves all ACTIVE students from database with pagination")
-    @Transactional(readOnly = true)
-    @GetMapping("/active")
-    public ResponseEntity<Page<StudentResponseDTO>> listActiveStudents(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") @Max(100) int size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(required = false) String name
-    ){
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<StudentResponseDTO> allActiveStudents = studentService.listActiveStudents(pageable, name);
-        return ResponseEntity.ok(allActiveStudents);
-
     }
 
     @Operation(summary = "List single STUDENT", description = "Retrieves single student based on ID")

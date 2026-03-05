@@ -174,21 +174,21 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should list active students page when success")
+    @DisplayName("Should list students when filtering by active=true")
     void testListActiveStudents() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAllByActiveTrue(pageable)).thenReturn(students);
+        when(studentRepo.findByActive(true, pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, true);
 
         assertEquals(1, result.getTotalElements());
         assertEquals(1, result.getContent().size());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
-        verify(studentRepo).findAllByActiveTrue(pageable);
+        verify(studentRepo).findByActive(true, pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
     }
@@ -199,34 +199,34 @@ class StudentServiceTest {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAllByActiveTrueAndNameContainingIgnoreCase("John", pageable)).thenReturn(students);
+        when(studentRepo.findByActiveAndNameContainingIgnoreCase(true, "John", pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, "John");
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "John", true);
 
         assertEquals(1, result.getTotalElements());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
-        verify(studentRepo).findAllByActiveTrueAndNameContainingIgnoreCase("John", pageable);
+        verify(studentRepo).findByActiveAndNameContainingIgnoreCase(true, "John", pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
         verifyNoInteractions(parentRepo, parentMapper);
     }
 
     @Test
-    @DisplayName("Should return empty page when there are no active students in database")
+    @DisplayName("Should return empty page when filtering by active=true and there are no matches")
     void testEmptyActiveStudentList() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
-        when(studentRepo.findAllByActiveTrue(pageable)).thenReturn(students);
+        when(studentRepo.findByActive(true, pageable)).thenReturn(students);
 
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, true);
 
         assertEquals(0, result.getTotalElements());
         assertTrue(result.getContent().isEmpty());
 
-        verify(studentRepo).findAllByActiveTrue(pageable);
+        verify(studentRepo).findByActive(true, pageable);
         verifyNoMoreInteractions(studentRepo);
         verifyNoInteractions(studentMapper);
     }

@@ -51,7 +51,7 @@ export function EventCreatePage() {
       setOptionsError(null)
       setLoadingOptions(true)
       const [studentsRes, employeesRes] = await Promise.all([
-        studentsApi.listActive(0, 100, "name"),
+        studentsApi.list(0, 100, "name", true),
         employeesApi.listActive(0, 100, "name"),
       ])
 

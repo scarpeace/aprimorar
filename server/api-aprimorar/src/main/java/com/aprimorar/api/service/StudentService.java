@@ -45,7 +45,21 @@ public class StudentService {
     }
 
     public Page<StudentResponseDTO> listStudents(Pageable pageable, String name) {
+        return listStudents(pageable, name, null);
+    }
+
+    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, Boolean active) {
         String normalizedName = normalizeNameFilter(name);
+
+        if (active != null && normalizedName != null) {
+            return studentRepo.findByActiveAndNameContainingIgnoreCase(active, normalizedName, pageable)
+                    .map(studentMapper::toDto);
+        }
+
+        if (active != null) {
+            return studentRepo.findByActive(active, pageable)
+                    .map(studentMapper::toDto);
+        }
 
         if (normalizedName != null) {
             return studentRepo.findByNameContainingIgnoreCase(normalizedName, pageable)
@@ -53,22 +67,6 @@ public class StudentService {
         }
 
         return listStudents(pageable);
-    }
-
-    public Page<StudentResponseDTO> listActiveStudents(Pageable pageable){
-        Page<Student> activeStudentsPage = studentRepo.findAllByActiveTrue(pageable);
-        return activeStudentsPage.map(studentMapper::toDto);
-    }
-
-    public Page<StudentResponseDTO> listActiveStudents(Pageable pageable, String name) {
-        String normalizedName = normalizeNameFilter(name);
-
-        if (normalizedName != null) {
-            return studentRepo.findAllByActiveTrueAndNameContainingIgnoreCase(normalizedName, pageable)
-                    .map(studentMapper::toDto);
-        }
-
-        return listActiveStudents(pageable);
     }
 
     public StudentResponseDTO findById(UUID studentId) {
