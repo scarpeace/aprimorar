@@ -25,7 +25,7 @@ class EventMapperTest {
         event.setId(1L);
         event.setTitle("Physics class");
         event.setDescription("Kinematics review");
-        event.setContent(EventContent.FISICA);
+        event.setContent(EventContent.AULA);
         event.setStartDateTime(LocalDateTime.of(2027, 6, 1, 10, 0));
         event.setEndDateTime(LocalDateTime.of(2027, 6, 1, 11, 0));
         event.setPrice(new BigDecimal("100.00"));
@@ -44,6 +44,6 @@ class EventMapperTest {
         EventResponseDTO dto = mapper.toDto(event);
 
         assertEquals("Kinematics review", dto.description());
-        assertEquals("FISICA", dto.content());
+        assertEquals("AULA", dto.content());
     }
 }

@@ -1,10 +1,11 @@
 package com.aprimorar.api.enums;
 
 public enum EventContent {
-    FISICA,
-    MATEMATICA,
-    TERAPIA,
+    AULA,
     MENTORIA,
+    TERAPIA,
+    ORIENTACAO_VOCACIONAL,
     ENEM,
+    PAS,
     OUTRO
 }
