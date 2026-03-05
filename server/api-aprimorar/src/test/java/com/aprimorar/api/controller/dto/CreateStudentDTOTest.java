@@ -3,7 +3,6 @@ package com.aprimorar.api.controller.dto;
 import com.aprimorar.api.dto.address.CreateAddressDTO;
 import com.aprimorar.api.dto.parent.CreateParentDTO;
 import com.aprimorar.api.dto.student.CreateStudentDTO;
-import com.aprimorar.api.enums.Activity;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -49,19 +48,18 @@ class CreateStudentDTOTest {
             String school,
             String contact,
             String email,
-            Activity activity,
             CreateAddressDTO address,
             UUID parentId,
             CreateParentDTO parent
     ) {
-        return new CreateStudentDTO(name, birthdate, cpf, school, contact, email, activity, address, parentId, parent);
+        return new CreateStudentDTO(name, birthdate, cpf, school, contact, email, address, parentId, parent);
     }
 
     private CreateStudentDTO validStudentDto() {
         return studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
     }
 
@@ -81,7 +79,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 null, VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -96,7 +94,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", null, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -109,11 +107,11 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", FUTURE_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("A data de nascimento do estudante deve estar no passado"));
+        assertTrue(messages(violations).contains("A data de nascimento do estudante não pode ser no futuro"));
     }
 
     // ─── cpf ──────────────────────────────────────────────────────────────────
@@ -124,7 +122,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, null,
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -137,7 +135,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "12345",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -152,7 +150,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -167,7 +165,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -180,7 +178,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "123", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -193,7 +191,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)9999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -208,7 +206,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -221,25 +219,10 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "not-an-email",
-                Activity.ENEM, VALID_ADDRESS, null, VALID_PARENT
+                VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-    }
-
-    // ─── activity ─────────────────────────────────────────────────────────────
-
-    @Test
-    @DisplayName("Should have 1 violation when activity is null")
-    void nullActivity() {
-        CreateStudentDTO dto = studentDto(
-                "Student Name", VALID_BIRTHDATE, "123.456.789-01",
-                "Great School", "(11)99999-9999", "student@email.com",
-                null, VALID_ADDRESS, null, VALID_PARENT
-        );
-        Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
-        assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Atividade do estudante é obrigatória"));
     }
 
     // ─── address ──────────────────────────────────────────────────────────────
@@ -250,7 +233,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, null, null, VALID_PARENT
+                null, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -265,7 +248,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, null
+                VALID_ADDRESS, null, null
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -278,7 +261,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, UUID.randomUUID(), null
+                VALID_ADDRESS, UUID.randomUUID(), null
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
@@ -290,7 +273,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, UUID.randomUUID(), VALID_PARENT
+                VALID_ADDRESS, UUID.randomUUID(), VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -308,7 +291,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, invalidAddress, null, VALID_PARENT
+                invalidAddress, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -324,7 +307,7 @@ class CreateStudentDTOTest {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)99999-9999", "student@email.com",
-                Activity.ENEM, VALID_ADDRESS, null, invalidParent
+                VALID_ADDRESS, null, invalidParent
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());

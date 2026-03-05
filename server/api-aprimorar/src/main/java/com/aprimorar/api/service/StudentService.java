@@ -6,10 +6,8 @@ import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
-import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.exception.domain.ParentNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
-import com.aprimorar.api.exception.domain.StudentValidationException;
 import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.ParentRepository;
@@ -22,19 +20,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.UUID;
 
 @Service
 public class StudentService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentService.class);
-    private static final int MIN_AGE = 10;
-    private static final int MAX_AGE = 18;
-    private static final ZoneId AGE_CALCULATION_ZONE = ZoneId.of("America/Sao_Paulo");
-    private static final String AGE_RANGE_MESSAGE = "A data de nascimento deve resultar em idade entre " + MIN_AGE + " e " + MAX_AGE + " anos";
 
     private final StudentRepository studentRepo;
     private final ParentRepository parentRepo;
@@ -53,21 +44,11 @@ public class StudentService {
         return studentPage.map(studentMapper::toDto);
     }
 
-    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, Activity activity) {
+    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name) {
         String normalizedName = normalizeNameFilter(name);
-
-        if (normalizedName != null && activity != null) {
-            return studentRepo.findByNameContainingIgnoreCaseAndActivity(normalizedName, activity, pageable)
-                    .map(studentMapper::toDto);
-        }
 
         if (normalizedName != null) {
             return studentRepo.findByNameContainingIgnoreCase(normalizedName, pageable)
-                    .map(studentMapper::toDto);
-        }
-
-        if (activity != null) {
-            return studentRepo.findByActivity(activity, pageable)
                     .map(studentMapper::toDto);
         }
 
@@ -79,21 +60,11 @@ public class StudentService {
         return activeStudentsPage.map(studentMapper::toDto);
     }
 
-    public Page<StudentResponseDTO> listActiveStudents(Pageable pageable, String name, Activity activity) {
+    public Page<StudentResponseDTO> listActiveStudents(Pageable pageable, String name) {
         String normalizedName = normalizeNameFilter(name);
-
-        if (normalizedName != null && activity != null) {
-            return studentRepo.findAllByActiveTrueAndNameContainingIgnoreCaseAndActivity(normalizedName, activity, pageable)
-                    .map(studentMapper::toDto);
-        }
 
         if (normalizedName != null) {
             return studentRepo.findAllByActiveTrueAndNameContainingIgnoreCase(normalizedName, pageable)
-                    .map(studentMapper::toDto);
-        }
-
-        if (activity != null) {
-            return studentRepo.findAllByActiveTrueAndActivity(activity, pageable)
                     .map(studentMapper::toDto);
         }
 
@@ -108,7 +79,6 @@ public class StudentService {
     @Transactional
     public StudentResponseDTO createStudent(CreateStudentDTO createStudentDto) {
         log.info("Creating student with name: {}", createStudentDto.name());
-        validateStudentAge(createStudentDto.birthdate());
 
         Student newStudent = studentMapper.toEntity(createStudentDto);
 
@@ -133,10 +103,6 @@ public class StudentService {
     @Transactional
     public StudentResponseDTO updateStudent(UUID studentId, UpdateStudentDTO updateStudentDto) {
         Student foundStudent = findStudentOrThrow(studentId);
-
-        if (updateStudentDto.birthdate() != null) {
-            validateStudentAge(updateStudentDto.birthdate());
-        }
 
         studentMapper.updateFromDto(updateStudentDto, foundStudent);
 
@@ -182,13 +148,5 @@ public class StudentService {
 
         String trimmed = name.trim();
         return trimmed.isEmpty() ? null : trimmed;
-    }
-
-    private void validateStudentAge(LocalDate birthdate) {
-        LocalDate todayInSaoPaulo = LocalDate.now(AGE_CALCULATION_ZONE);
-        int age = Period.between(birthdate, todayInSaoPaulo).getYears();
-        if (age < MIN_AGE || age > MAX_AGE) {
-            throw new StudentValidationException(AGE_RANGE_MESSAGE);
-        }
     }
 }

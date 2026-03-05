@@ -2,7 +2,6 @@ package com.aprimorar.api.dto.student;
 
 import com.aprimorar.api.dto.address.AddressResponseDTO;
 import com.aprimorar.api.dto.parent.ParentResponseDTO;
-import com.aprimorar.api.enums.Activity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.Instant;
@@ -20,7 +19,7 @@ public record StudentResponseDTO(
         LocalDate birthdate,
 
         String school,
-        Activity activity,
+        Integer age,
         Boolean active,
         AddressResponseDTO address,
         ParentResponseDTO parent,

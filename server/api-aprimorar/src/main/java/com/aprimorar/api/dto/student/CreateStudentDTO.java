@@ -1,25 +1,25 @@
 package com.aprimorar.api.dto.student;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
 import com.aprimorar.api.dto.address.CreateAddressDTO;
 import com.aprimorar.api.dto.parent.CreateParentDTO;
-import com.aprimorar.api.enums.Activity;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
-
-import java.time.LocalDate;
-import java.util.UUID;
 
 public record CreateStudentDTO(
         @NotNull(message = "Nome do estudante é obrigatório")
         String name,
 
         @NotNull(message = "A data de nascimento do estudante é obrigatória")
-        @Past(message = "A data de nascimento do estudante deve estar no passado")
+        @PastOrPresent(message = "A data de nascimento do estudante não pode ser no futuro")
         LocalDate birthdate,
 
         @NotNull(message = "CPF do estudante é obrigatório")
@@ -37,9 +37,6 @@ public record CreateStudentDTO(
         @Email(message = "Email deve ser um endereço de email válido")
         String email,
 
-        @NotNull(message = "Atividade do estudante é obrigatória")
-        Activity activity,
-
         @NotNull(message = "Endereço do estudante é obrigatório")
         @Valid
         CreateAddressDTO address,
@@ -50,6 +47,8 @@ public record CreateStudentDTO(
         CreateParentDTO parent
 ) {
 
+    //TODO Essa validação também ocorre no service. Preciso verificar se a validação do service é realmente necessária.
+    //Pode haver uma chance de grande refatoração para manter o service mais limpo e com funções mais organizadas.
     @AssertTrue(message = "Informe parentId ou parent")
     public boolean hasParentReference() {
         return parentId != null || parent != null;

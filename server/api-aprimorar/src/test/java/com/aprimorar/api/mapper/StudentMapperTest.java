@@ -7,7 +7,6 @@ import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
-import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.util.MapperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +14,9 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,6 +71,32 @@ class StudentMapperTest {
         assertEquals("123.456.789-01", dto.cpf());
     }
 
+    @Test
+    @DisplayName("Should return computed age when mapping to DTO")
+    void toDto_shouldReturnComputedAge() {
+        Student entity = validStudentEntity();
+
+        StudentResponseDTO dto = mapper.toDto(entity);
+
+        int expectedAge = Period.between(
+                STUDENT_BIRTHDATE,
+                LocalDate.now(ZoneId.of("America/Sao_Paulo"))
+        ).getYears();
+
+        assertEquals(expectedAge, dto.age());
+    }
+
+    @Test
+    @DisplayName("Should not expose activity in student entity and response DTO")
+    void studentContract_shouldNotExposeActivity() {
+        assertThrows(NoSuchFieldException.class, () -> Student.class.getDeclaredField("activity"));
+
+        boolean hasActivityInResponse = Arrays.stream(StudentResponseDTO.class.getRecordComponents())
+                .anyMatch(component -> component.getName().equals("activity"));
+
+        assertFalse(hasActivityInResponse);
+    }
+
     private CreateStudentDTO validCreateStudentDto(String email) {
         return new CreateStudentDTO(
                 STUDENT_NAME,
@@ -77,7 +105,6 @@ class StudentMapperTest {
                 "School",
                 STUDENT_CONTACT_FORMATTED,
                 email,
-                Activity.ENEM,
                 VALID_ADDRESS,
                 null,
                 VALID_PARENT
@@ -93,7 +120,6 @@ class StudentMapperTest {
         entity.setBirthdate(STUDENT_BIRTHDATE);
         entity.setCpf("12345678901");
         entity.setSchool("School");
-        entity.setActivity(Activity.ENEM);
         entity.setParent(new Parent());
         entity.setAddress(new Address());
         entity.setActive(true);

@@ -95,7 +95,7 @@
 
 ### Story: S-015 — Simplify Student Domain (Remove `activity`, Add `age`)
 **Status:** TODO
-**Links:** T-019 (TODO), T-020 (TODO), T-021 (TODO), T-022 (TODO), T-023 (TODO), T-024 (TODO), T-025 (TODO)
+**Links:** T-019 (DONE), T-020 (TODO), T-021 (DONE), T-022 (DONE), T-023 (TODO), T-024 (DONE), T-025 (TODO)
 **Intent:** Remove redundant Student `activity`, relax student age-range rules, and expose computed `age` in responses.
 
 **Acceptance Criteria**
@@ -144,20 +144,21 @@
 
 ### Task: T-019 — DB migration: drop Student `activity` column
 **Type:** backend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** None
 
 **Description**
-- Add a Flyway migration to remove the `activity` column from the `students` table.
-- Update seed data so local/dev environments still boot and tests can run.
+- Consolidate schema migrations into a single clean baseline for local/dev.
+- Remove `students.activity` from schema and align seed with current model.
 
 **Files likely affected (best guess)**
-- server/api-aprimorar/src/main/resources/db/migration/V*__drop_student_activity.sql
+- server/api-aprimorar/src/main/resources/db/migration/V1__create_schema.sql
 - server/api-aprimorar/src/main/resources/db/seed/V2__seed_data.sql
 
 **DoD (Definition of Done)**
-- [ ] App starts with Flyway applying the new migration cleanly
-- [ ] Seed data loads without referencing `students.activity`
+- [x] `tb_student.activity` removed from baseline schema
+- [x] `tb_events.content` is present and required in baseline schema
+- [x] Seed data matches consolidated schema
 
 **Verification**
 - Backend: `cd server/api-aprimorar && ./mvnw test`
@@ -168,9 +169,15 @@
 - Risks: dropping a column is a breaking DB change; ensure prod rollout sequencing is understood.
 - Open questions: whether historical activity values should be migrated/archived.
 
+**Implementation Notes**
+- Consolidated migrations into `V1__create_schema.sql` for clean local/dev bootstrap.
+- Removed incremental migration files no longer needed in clean bootstrap (`V3`, `V4`, `V5`).
+- Updated `V2__seed_data.sql` to include `tb_events.content` values and keep student rows without `activity`.
+- Important: requires fresh DB/container after migration-history rewrite.
+
 ### Task: T-020 — Update student DTO contract (remove `activity`, add `age`)
 **Type:** backend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** T-019
 
 **Description**
@@ -197,9 +204,14 @@
 - Risks: API contract breaking change for any existing client.
 - Open questions: exact JSON field ordering/naming expectations for `age`.
 
+**Implementation Notes**
+- Removed `activity` from `CreateStudentDTO` and `UpdateStudentDTO` request contracts.
+- Switched DTO birthdate validation to `@PastOrPresent` (future dates invalid, today allowed).
+- Updated `StudentResponseDTO` to expose `age` and removed `activity`; wired `StudentMapper` to compute age server-side using `America/Sao_Paulo`.
+
 ### Task: T-021 — Update Student entity + mapper (remove `activity`, compute `age`)
 **Type:** backend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** T-020
 
 **Description**
@@ -226,9 +238,14 @@
 - Risks: timezone affects age boundaries on birthdays.
 - Open questions: which timezone to use for age calculation (keep consistent with existing rules).
 
+**Implementation Notes**
+- Removed `activity` field, constructor argument, and accessors from `Student` entity.
+- Kept `StudentMapper` age computation as implemented in T-020 (`America/Sao_Paulo`) and without `activity` mapping.
+- Updated `V2__seed_data.sql` student inserts to match schema after `V5__drop_student_activity.sql`.
+
 ### Task: T-022 — Remove student `activity` filtering + remove age-range service validation
 **Type:** backend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** T-021
 
 **Description**
@@ -258,9 +275,15 @@
 - Risks: potential breaking change for query-string clients.
 - Open questions: compatibility strategy for `activity` query param (reject vs ignore).
 
+**Implementation Notes**
+- Removed `activity` request params from `GET /v1/students` and `GET /v1/students/active`; incoming `activity` query params are now ignored silently.
+- Removed `activity`-based repository methods and service filtering branches; list filtering now only uses `name`.
+- Removed service-level min/max age checks; create/update rely on DTO validation (`@PastOrPresent`) for birthdate errors.
+- Removed `StudentValidationException` and its global exception handler mapping since it was only used for age-range validation.
+
 ### Task: T-023 — Update mapper tests for `age` response
 **Type:** backend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** T-021
 
 **Description**
@@ -281,9 +304,14 @@
 - Risks: flaky tests if age depends on current date; use fixed clock or relative assertions.
 - Open questions: whether to inject a clock/zone for deterministic tests.
 
+**Implementation Notes**
+- Updated `StudentMapperTest` to remove the last `Activity` enum usage and align fixtures with the new student create/entity contracts.
+- Added mapper assertions for computed `age` using `America/Sao_Paulo` and contract checks that `activity` is absent from both `Student` and `StudentResponseDTO`.
+- Removed the now-unused `Activity` enum file from backend sources.
+
 ### Task: T-024 — Update DTO/service tests for removed `activity` and relaxed birthdate rules
 **Type:** backend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** T-022
 
 **Description**
@@ -295,8 +323,8 @@
 - server/api-aprimorar/src/test/java/com/aprimorar/api/service/StudentServiceTest.java
 
 **DoD (Definition of Done)**
-- [ ] Student-related backend tests pass after contract change
-- [ ] Test coverage remains for rejecting future birthdates
+- [x] Student-related backend tests pass after contract change
+- [x] Test coverage remains for rejecting future birthdates
 
 **Verification**
 - Backend: `cd server/api-aprimorar && ./mvnw test`
@@ -306,6 +334,10 @@
 **Notes**
 - Risks: test suite assumptions about Activity enum values.
 - Open questions: whether to add a small integration test for `GET /v1/students` response shape.
+
+**Implementation Notes**
+- Updated `CreateStudentDTOTest` to remove `activity` field assumptions and assert the current future-birthdate validation message.
+- Updated `StudentServiceTest` to remove `activity` filter test branches and service-level age-range assertions; tests now match name-only list filters and current DTO contracts.
 
 ### Task: T-025 — Frontend: remove student `activity` usage; show `age`
 **Type:** frontend

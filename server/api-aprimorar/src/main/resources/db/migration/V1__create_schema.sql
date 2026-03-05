@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS tb_student (
     birthdate DATE NOT NULL,
     cpf VARCHAR(255) NOT NULL,
     school VARCHAR(255) NOT NULL,
-    activity VARCHAR(255) NOT NULL,
     active BOOLEAN NOT NULL DEFAULT TRUE,
     parent_id UUID NOT NULL,
     street VARCHAR(255) NOT NULL,
@@ -51,7 +50,11 @@ CREATE TABLE IF NOT EXISTS tb_employee (
     role VARCHAR(255),
     active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ,
-    updated_at TIMESTAMPTZ
+    updated_at TIMESTAMPTZ,
+    CONSTRAINT uk_employee_name UNIQUE (name),
+    CONSTRAINT uk_employee_contact UNIQUE (contact),
+    CONSTRAINT uk_employee_email UNIQUE (email),
+    CONSTRAINT uk_employee_cpf UNIQUE (cpf)
 );
 
 CREATE TABLE IF NOT EXISTS tb_events (
@@ -62,6 +65,7 @@ CREATE TABLE IF NOT EXISTS tb_events (
     end_date_time TIMESTAMP,
     price NUMERIC(19,2),
     payment NUMERIC(19,2),
+    content VARCHAR(50) NOT NULL,
     student_id UUID,
     employee_id UUID,
     created_at TIMESTAMPTZ,

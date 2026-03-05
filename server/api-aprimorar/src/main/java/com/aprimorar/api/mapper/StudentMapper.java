@@ -7,8 +7,14 @@ import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.util.MapperUtils;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+
 @Component
 public class StudentMapper {
+
+    private static final ZoneId AGE_CALCULATION_ZONE = ZoneId.of("America/Sao_Paulo");
 
     private final ParentMapper parentMapper;
     private final AddressMapper addressMapper;
@@ -32,7 +38,6 @@ public class StudentMapper {
         entity.setSchool(dto.school());
         entity.setContact(mapperUtils.sanitizeContact(dto.contact()));
         entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
-        entity.setActivity(dto.activity());
         entity.setAddress(addressMapper.toEntity(dto.address()));
         entity.setParent(parentMapper.toEntity(dto.parent()));
         return entity;
@@ -51,7 +56,7 @@ public class StudentMapper {
                 mapperUtils.formatCpf(entity.getCpf()),
                 entity.getBirthdate(),
                 entity.getSchool(),
-                entity.getActivity(),
+                calculateAge(entity.getBirthdate()),
                 entity.getActive(),
                 addressMapper.toDto(entity.getAddress()),
                 parentMapper.toDto(entity.getParent()),
@@ -82,14 +87,20 @@ public class StudentMapper {
         if (dto.email() != null) {
             entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
         }
-        if (dto.activity() != null) {
-            entity.setActivity(dto.activity());
-        }
         if (dto.address() != null) {
             entity.setAddress(addressMapper.toEntity(dto.address()));
         }
         if (dto.parent() != null) {
             entity.setParent(parentMapper.toEntity(dto.parent()));
         }
+    }
+
+    private Integer calculateAge(LocalDate birthdate) {
+        if (birthdate == null) {
+            return null;
+        }
+
+        LocalDate todayInSaoPaulo = LocalDate.now(AGE_CALCULATION_ZONE);
+        return Period.between(birthdate, todayInSaoPaulo).getYears();
     }
 }

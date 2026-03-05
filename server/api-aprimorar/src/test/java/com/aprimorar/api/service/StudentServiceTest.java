@@ -7,10 +7,8 @@ import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
-import com.aprimorar.api.enums.Activity;
 import com.aprimorar.api.exception.domain.ParentNotFoundException;
 import com.aprimorar.api.exception.domain.StudentNotFoundException;
-import com.aprimorar.api.exception.domain.StudentValidationException;
 import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.ParentRepository;
@@ -32,14 +30,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
     private static final ZoneId SAO_PAULO_ZONE = ZoneId.of("America/Sao_Paulo");
-    private static final String AGE_RANGE_ERROR_MESSAGE = "A data de nascimento deve resultar em idade entre 10 e 18 anos";
     private static final String STUDENT_NAME = "John Doe";
     private static final LocalDate STUDENT_BIRTHDATE = LocalDate.now(SAO_PAULO_ZONE).minusYears(15);
     private static final String STUDENT_CPF_FORMATTED = "123.456.789-01";
@@ -146,53 +142,12 @@ class StudentServiceTest {
         when(studentRepo.findByNameContainingIgnoreCase("John", pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, " John ", null);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, " John ");
 
         assertEquals(1, result.getTotalElements());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
         verify(studentRepo).findByNameContainingIgnoreCase("John", pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should list students when filtering by activity")
-    void testListStudentsByActivityFilter() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByActivity(Activity.MENTORIA, pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, Activity.MENTORIA);
-
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
-
-        verify(studentRepo).findByActivity(Activity.MENTORIA, pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should list students when filtering by name and activity")
-    void testListStudentsByNameAndActivityFilters() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByNameContainingIgnoreCaseAndActivity("John", Activity.ENEM, pageable))
-                .thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "John", Activity.ENEM);
-
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
-
-        verify(studentRepo).findByNameContainingIgnoreCaseAndActivity("John", Activity.ENEM, pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
         verifyNoInteractions(parentRepo, parentMapper);
@@ -207,7 +162,7 @@ class StudentServiceTest {
         when(studentRepo.findAll(pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "   ", null);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "   ");
 
         assertEquals(1, result.getTotalElements());
         assertSame(studentResponseDto, result.getContent().getFirst());
@@ -247,53 +202,12 @@ class StudentServiceTest {
         when(studentRepo.findAllByActiveTrueAndNameContainingIgnoreCase("John", pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, "John", null);
+        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, "John");
 
         assertEquals(1, result.getTotalElements());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
         verify(studentRepo).findAllByActiveTrueAndNameContainingIgnoreCase("John", pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should list active students when filtering by activity")
-    void testListActiveStudentsByActivityFilter() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAllByActiveTrueAndActivity(Activity.ENEM, pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, null, Activity.ENEM);
-
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
-
-        verify(studentRepo).findAllByActiveTrueAndActivity(Activity.ENEM, pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should list active students when filtering by name and activity")
-    void testListActiveStudentsByNameAndActivityFilters() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAllByActiveTrueAndNameContainingIgnoreCaseAndActivity("John", Activity.MENTORIA, pageable))
-                .thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        Page<StudentResponseDTO> result = studentService.listActiveStudents(pageable, "John", Activity.MENTORIA);
-
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
-
-        verify(studentRepo).findAllByActiveTrueAndNameContainingIgnoreCaseAndActivity("John", Activity.MENTORIA, pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
         verifyNoInteractions(parentRepo, parentMapper);
@@ -395,91 +309,6 @@ class StudentServiceTest {
 
         assertSame(studentResponseDto, result);
         verify(studentMapper).toEntity(createStudentDtoWithoutParent);
-        verify(studentRepo).save(student);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should throw exception when creating student younger than minimum age")
-    void testCreateStudentAgeBelowMinimum() {
-        CreateStudentDTO tooYoungStudentDto = new CreateStudentDTO(
-                STUDENT_NAME,
-                todayInSaoPaulo().minusYears(9),
-                STUDENT_CPF_FORMATTED,
-                STUDENT_SCHOOL,
-                STUDENT_CONTACT_FORMATTED,
-                STUDENT_EMAIL,
-                Activity.ENEM,
-                null,
-                parent.getId(),
-                null
-        );
-
-        StudentValidationException ex = assertThrows(StudentValidationException.class,
-                () -> studentService.createStudent(tooYoungStudentDto));
-
-        assertEquals(AGE_RANGE_ERROR_MESSAGE, ex.getMessage());
-        verifyNoInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should create student when student age is exactly minimum allowed age")
-    void testCreateStudentAgeAtMinimumBoundary() {
-        CreateStudentDTO minimumAgeStudentDto = new CreateStudentDTO(
-                STUDENT_NAME,
-                todayInSaoPaulo().minusYears(10),
-                STUDENT_CPF_FORMATTED,
-                STUDENT_SCHOOL,
-                STUDENT_CONTACT_FORMATTED,
-                STUDENT_EMAIL,
-                Activity.ENEM,
-                null,
-                parent.getId(),
-                null
-        );
-
-        when(studentMapper.toEntity(minimumAgeStudentDto)).thenReturn(student);
-        when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
-        when(studentRepo.save(student)).thenReturn(student);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        StudentResponseDTO result = studentService.createStudent(minimumAgeStudentDto);
-
-        assertSame(studentResponseDto, result);
-        verify(studentMapper).toEntity(minimumAgeStudentDto);
-        verify(parentRepo).findByIdAndActiveTrue(parent.getId());
-        verify(studentRepo).save(student);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should create student when student age is exactly maximum allowed age")
-    void testCreateStudentAgeAtMaximumBoundary() {
-        CreateStudentDTO maximumAgeStudentDto = new CreateStudentDTO(
-                STUDENT_NAME,
-                todayInSaoPaulo().minusYears(18),
-                STUDENT_CPF_FORMATTED,
-                STUDENT_SCHOOL,
-                STUDENT_CONTACT_FORMATTED,
-                STUDENT_EMAIL,
-                Activity.ENEM,
-                null,
-                parent.getId(),
-                null
-        );
-
-        when(studentMapper.toEntity(maximumAgeStudentDto)).thenReturn(student);
-        when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
-        when(studentRepo.save(student)).thenReturn(student);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        StudentResponseDTO result = studentService.createStudent(maximumAgeStudentDto);
-
-        assertSame(studentResponseDto, result);
-        verify(studentMapper).toEntity(maximumAgeStudentDto);
-        verify(parentRepo).findByIdAndActiveTrue(parent.getId());
         verify(studentRepo).save(student);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
@@ -613,96 +442,6 @@ class StudentServiceTest {
         verifyNoInteractions(studentMapper);
     }
 
-    @Test
-    @DisplayName("Should throw exception when updating student older than maximum age")
-    void testUpdateStudentAgeAboveMaximum() {
-        UpdateStudentDTO tooOldStudentDto = new UpdateStudentDTO(
-                null,
-                todayInSaoPaulo().minusYears(19),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-
-        StudentValidationException ex = assertThrows(StudentValidationException.class,
-                () -> studentService.updateStudent(student.getId(), tooOldStudentDto));
-
-        assertEquals(AGE_RANGE_ERROR_MESSAGE, ex.getMessage());
-        verify(studentRepo).findById(student.getId());
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper, parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should update student when age is exactly maximum allowed age")
-    void testUpdateStudentAgeAtMaximumBoundary() {
-        UpdateStudentDTO maximumAgeStudentDto = new UpdateStudentDTO(
-                null,
-                todayInSaoPaulo().minusYears(18),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        StudentResponseDTO result = studentService.updateStudent(student.getId(), maximumAgeStudentDto);
-
-        assertSame(studentResponseDto, result);
-        verify(studentRepo).findById(student.getId());
-        verify(studentMapper).updateFromDto(maximumAgeStudentDto, student);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should update non-birthdate fields for legacy student with out-of-range age")
-    void testUpdateStudentWithoutBirthdateAllowsLegacyOutOfRangeStudent() {
-        student.setBirthdate(todayInSaoPaulo().minusYears(25));
-        UpdateStudentDTO updateNameOnlyDto = new UpdateStudentDTO(
-                "Updated name",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        StudentResponseDTO result = studentService.updateStudent(student.getId(), updateNameOnlyDto);
-
-        assertSame(studentResponseDto, result);
-        verify(studentRepo).findById(student.getId());
-        verify(studentMapper).updateFromDto(updateNameOnlyDto, student);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    private LocalDate todayInSaoPaulo() {
-        return LocalDate.now(SAO_PAULO_ZONE);
-    }
-
     private Student validStudentEntity() {
         Student value = new Student();
         value.setId(UUID.randomUUID());
@@ -712,7 +451,6 @@ class StudentServiceTest {
         value.setBirthdate(STUDENT_BIRTHDATE);
         value.setCpf(STUDENT_CPF_RAW);
         value.setSchool(STUDENT_SCHOOL);
-        value.setActivity(Activity.ENEM);
         value.setAddress(new Address());
         value.setActive(true);
         value.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
@@ -743,7 +481,6 @@ class StudentServiceTest {
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
                 STUDENT_EMAIL,
-                Activity.ENEM,
                 null,
                 null,
                 createParentDTO
@@ -758,7 +495,6 @@ class StudentServiceTest {
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
                 STUDENT_EMAIL,
-                Activity.ENEM,
                 null,
                 parentId,
                 null
@@ -773,7 +509,6 @@ class StudentServiceTest {
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
                 STUDENT_EMAIL,
-                Activity.ENEM,
                 null,
                 null,
                 null
@@ -788,7 +523,6 @@ class StudentServiceTest {
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
                 STUDENT_EMAIL,
-                Activity.ENEM,
                 null,
                 null,
                 createParentDTO
@@ -803,7 +537,6 @@ class StudentServiceTest {
                 STUDENT_SCHOOL,
                 STUDENT_CONTACT_FORMATTED,
                 STUDENT_EMAIL,
-                Activity.ENEM,
                 null,
                 parentId,
                 null
