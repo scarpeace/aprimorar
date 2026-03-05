@@ -7,23 +7,28 @@ import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.util.MapperUtils;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
 
 @Component
 public class StudentMapper {
 
-    private static final ZoneId AGE_CALCULATION_ZONE = ZoneId.of("America/Sao_Paulo");
-
     private final ParentMapper parentMapper;
     private final AddressMapper addressMapper;
     private final MapperUtils mapperUtils;
+    private final Clock ageCalculationClock;
 
-    public StudentMapper(ParentMapper parentMapper, AddressMapper addressMapper, MapperUtils mapperUtils) {
+    public StudentMapper(
+            ParentMapper parentMapper,
+            AddressMapper addressMapper,
+            MapperUtils mapperUtils,
+            Clock ageCalculationClock
+    ) {
         this.parentMapper = parentMapper;
         this.addressMapper = addressMapper;
         this.mapperUtils = mapperUtils;
+        this.ageCalculationClock = ageCalculationClock;
     }
 
     public Student toEntity(CreateStudentDTO dto) {
@@ -100,7 +105,7 @@ public class StudentMapper {
             return null;
         }
 
-        LocalDate todayInSaoPaulo = LocalDate.now(AGE_CALCULATION_ZONE);
+        LocalDate todayInSaoPaulo = LocalDate.now(ageCalculationClock);
         return Period.between(birthdate, todayInSaoPaulo).getYears();
     }
 }

@@ -12,10 +12,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +25,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class StudentMapperTest {
 
     private StudentMapper mapper;
+    private ParentMapper parentMapper;
+    private AddressMapper addressMapper;
+    private MapperUtils mapperUtils;
+
+    private static final Instant FIXED_INSTANT = Instant.parse("2025-01-01T02:30:00Z");
+    private static final ZoneId SAO_PAULO_ZONE = ZoneId.of("America/Sao_Paulo");
 
     private static final CreateAddressDTO VALID_ADDRESS = new CreateAddressDTO(
             "Street", "123", null, "District", "City", "ST", "12345-678"
@@ -41,11 +49,12 @@ class StudentMapperTest {
 
     @BeforeEach
     void setup() {
-        MapperUtils mapperUtils = new MapperUtils();
-        ParentMapper parentMapper = new ParentMapper(mapperUtils);
-        AddressMapper addressMapper = new AddressMapper();
+        mapperUtils = new MapperUtils();
+        parentMapper = new ParentMapper(mapperUtils);
+        addressMapper = new AddressMapper();
 
-        mapper = new StudentMapper(parentMapper, addressMapper, mapperUtils);
+        Clock fixedClock = Clock.fixed(FIXED_INSTANT, SAO_PAULO_ZONE);
+        mapper = new StudentMapper(parentMapper, addressMapper, mapperUtils, fixedClock);
     }
 
     @Test
@@ -80,10 +89,28 @@ class StudentMapperTest {
 
         int expectedAge = Period.between(
                 STUDENT_BIRTHDATE,
-                LocalDate.now(ZoneId.of("America/Sao_Paulo"))
+                LocalDate.now(Clock.fixed(FIXED_INSTANT, SAO_PAULO_ZONE))
         ).getYears();
 
         assertEquals(expectedAge, dto.age());
+    }
+
+    @Test
+    @DisplayName("Should use clock zone explicitly when computing age")
+    void toDto_shouldUseClockZoneForAge() {
+        Student entity = validStudentEntity();
+        StudentMapper utcMapper = new StudentMapper(
+                parentMapper,
+                addressMapper,
+                mapperUtils,
+                Clock.fixed(FIXED_INSTANT, ZoneOffset.UTC)
+        );
+
+        StudentResponseDTO saoPauloDto = mapper.toDto(entity);
+        StudentResponseDTO utcDto = utcMapper.toDto(entity);
+
+        assertEquals(24, saoPauloDto.age());
+        assertEquals(25, utcDto.age());
     }
 
     @Test
