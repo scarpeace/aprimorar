@@ -108,7 +108,7 @@ public class EventService {
     }
 
     private Student findStudentOrThrow(UUID studentId) {
-        return studentRepo.findByIdAndActiveTrue(studentId)
+        return studentRepo.findByIdAndArchivedAtIsNull(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(studentId));
     }
 

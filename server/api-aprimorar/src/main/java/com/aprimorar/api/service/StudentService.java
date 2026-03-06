@@ -40,29 +40,30 @@ public class StudentService {
     }
 
     public Page<StudentResponseDTO> listStudents(Pageable pageable){
-        Page<Student> studentPage = studentRepo.findAll(pageable);
+        Page<Student> studentPage = studentRepo.findByArchivedAtIsNull(pageable);
         return studentPage.map(studentMapper::toDto);
     }
 
     public Page<StudentResponseDTO> listStudents(Pageable pageable, String name) {
-        return listStudents(pageable, name, null);
+        return listStudents(pageable, name, false);
     }
 
-    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, Boolean active) {
+    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, Boolean includeArchived) {
         String normalizedName = normalizeNameFilter(name);
-
-        if (active != null && normalizedName != null) {
-            return studentRepo.findByActiveAndNameContainingIgnoreCase(active, normalizedName, pageable)
-                    .map(studentMapper::toDto);
-        }
-
-        if (active != null) {
-            return studentRepo.findByActive(active, pageable)
-                    .map(studentMapper::toDto);
-        }
+        boolean shouldIncludeArchived = Boolean.TRUE.equals(includeArchived);
 
         if (normalizedName != null) {
-            return studentRepo.findByNameContainingIgnoreCase(normalizedName, pageable)
+            if (shouldIncludeArchived) {
+                return studentRepo.findByNameContainingIgnoreCase(normalizedName, pageable)
+                        .map(studentMapper::toDto);
+            }
+
+            return studentRepo.findByNameContainingIgnoreCaseAndArchivedAtIsNull(normalizedName, pageable)
+                    .map(studentMapper::toDto);
+        }
+
+        if (shouldIncludeArchived) {
+            return studentRepo.findAll(pageable)
                     .map(studentMapper::toDto);
         }
 
@@ -93,9 +94,19 @@ public class StudentService {
     }
 
     @Transactional
-    public void softDeleteStudent(UUID studentId){
+    public void archiveStudent(UUID studentId) {
         Student foundStudent = findStudentOrThrow(studentId);
-        deactivateIfActive(foundStudent);
+        archiveIfNotArchived(foundStudent);
+    }
+
+    @Transactional
+    public void unarchiveStudent(UUID studentId) {
+        Student foundStudent = findStudentOrThrow(studentId);
+        Instant now = Instant.now();
+
+        foundStudent.setArchivedAt(null);
+        foundStudent.setLastReactivatedAt(now);
+        foundStudent.setUpdatedAt(now);
     }
 
     @Transactional
@@ -132,10 +143,11 @@ public class StudentService {
         return parentRepo.save(newParent);
     }
 
-    private void deactivateIfActive(Student foundStudent) {
-        if (Boolean.TRUE.equals(foundStudent.getActive())) {
-            foundStudent.setActive(false);
-            foundStudent.setUpdatedAt(Instant.now());
+    private void archiveIfNotArchived(Student foundStudent) {
+        if (foundStudent.getArchivedAt() == null) {
+            Instant now = Instant.now();
+            foundStudent.setArchivedAt(now);
+            foundStudent.setUpdatedAt(now);
         }
     }
 

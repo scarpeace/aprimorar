@@ -73,11 +73,17 @@ class StudentMapperTest {
     @DisplayName("Should format contact when mapping to DTO")
     void toDto_shouldFormatContact() {
         Student entity = validStudentEntity();
+        Instant archivedAt = Instant.parse("2025-01-02T00:00:00Z");
+        Instant lastReactivatedAt = Instant.parse("2025-01-03T00:00:00Z");
+        entity.setArchivedAt(archivedAt);
+        entity.setLastReactivatedAt(lastReactivatedAt);
 
         StudentResponseDTO dto = mapper.toDto(entity);
 
         assertEquals("(61)99923-4523", dto.contact());
         assertEquals("123.456.789-01", dto.cpf());
+        assertEquals(archivedAt, dto.archivedAt());
+        assertEquals(lastReactivatedAt, dto.lastReactivatedAt());
     }
 
     @Test
@@ -114,14 +120,18 @@ class StudentMapperTest {
     }
 
     @Test
-    @DisplayName("Should not expose activity in student entity and response DTO")
-    void studentContract_shouldNotExposeActivity() {
+    @DisplayName("Should not expose activity/active in student entity and response DTO")
+    void studentContract_shouldNotExposeLegacyFields() {
         assertThrows(NoSuchFieldException.class, () -> Student.class.getDeclaredField("activity"));
+        assertThrows(NoSuchFieldException.class, () -> Student.class.getDeclaredField("active"));
 
         boolean hasActivityInResponse = Arrays.stream(StudentResponseDTO.class.getRecordComponents())
                 .anyMatch(component -> component.getName().equals("activity"));
+        boolean hasActiveInResponse = Arrays.stream(StudentResponseDTO.class.getRecordComponents())
+                .anyMatch(component -> component.getName().equals("active"));
 
         assertFalse(hasActivityInResponse);
+        assertFalse(hasActiveInResponse);
     }
 
     private CreateStudentDTO validCreateStudentDto(String email) {
@@ -149,7 +159,6 @@ class StudentMapperTest {
         entity.setSchool("School");
         entity.setParent(new Parent());
         entity.setAddress(new Address());
-        entity.setActive(true);
         entity.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
         return entity;
     }

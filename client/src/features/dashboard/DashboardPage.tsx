@@ -20,7 +20,7 @@ export function DashboardPage() {
         setError(null)
         setLoading(true)
         const [studentsRes, employeesRes, eventsRes] = await Promise.all([
-          studentsApi.list(0, 20, "name", true),
+          studentsApi.list(0, 20, "name"),
           employeesApi.listActive(),
           eventsApi.list(),
         ])

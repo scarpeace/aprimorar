@@ -38,10 +38,10 @@ public class StudentController {
             @RequestParam(defaultValue = "20") @Max(100) int size,
             @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) Boolean active
+            @RequestParam(defaultValue = "false") Boolean includeArchived
     ){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable, name, active);
+        Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable, name, includeArchived);
         return ResponseEntity.ok(allStudents);
     }
 
@@ -62,10 +62,26 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "Delete STUDENT", description = "Soft delete single student based on ID")
+    @Operation(summary = "Archive STUDENT (DELETE alias)", description = "Archives a single student based on ID using DELETE for REST compatibility")
     @DeleteMapping("/{studentId}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable UUID studentId){
-        studentService.softDeleteStudent(studentId);
+    public ResponseEntity<Void> archiveStudentByDeleteAlias(@PathVariable UUID studentId){
+        studentService.archiveStudent(studentId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Archive STUDENT", description = "Archives a single student based on ID")
+    @PatchMapping("/{studentId}/archive")
+    public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
+        studentService.archiveStudent(studentId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Unarchive STUDENT", description = "Unarchives a single student based on ID")
+    @PatchMapping("/{studentId}/unarchive")
+    public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {
+        studentService.unarchiveStudent(studentId);
 
         return ResponseEntity.noContent().build();
     }

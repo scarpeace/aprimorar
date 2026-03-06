@@ -10,11 +10,11 @@ import java.util.UUID;
 
 public interface StudentRepository extends JpaRepository<Student, UUID>{
 
-    Page<Student> findByActive(Boolean active, Pageable pageable);
+    Page<Student> findByArchivedAtIsNull(Pageable pageable);
 
     Page<Student> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    Page<Student> findByActiveAndNameContainingIgnoreCase(Boolean active, String name, Pageable pageable);
+    Page<Student> findByNameContainingIgnoreCaseAndArchivedAtIsNull(String name, Pageable pageable);
 
-    Optional<Student> findByIdAndActiveTrue(UUID id);
+    Optional<Student> findByIdAndArchivedAtIsNull(UUID id);
 }

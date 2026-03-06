@@ -62,7 +62,8 @@ public class StudentMapper {
                 entity.getBirthdate(),
                 entity.getSchool(),
                 calculateAge(entity.getBirthdate()),
-                entity.getActive(),
+                entity.getArchivedAt(),
+                entity.getLastReactivatedAt(),
                 addressMapper.toDto(entity.getAddress()),
                 parentMapper.toDto(entity.getParent()),
                 entity.getCreatedAt()

@@ -101,7 +101,7 @@ class StudentServiceTest {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAll(pageable)).thenReturn(students);
+        when(studentRepo.findByArchivedAtIsNull(pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
         Page<StudentResponseDTO> result = studentService.listStudents(pageable);
@@ -110,7 +110,7 @@ class StudentServiceTest {
         assertEquals(1, result.getContent().size());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
-        verify(studentRepo).findAll(pageable);
+        verify(studentRepo).findByArchivedAtIsNull(pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
     }
@@ -121,14 +121,14 @@ class StudentServiceTest {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
-        when(studentRepo.findAll(pageable)).thenReturn(students);
+        when(studentRepo.findByArchivedAtIsNull(pageable)).thenReturn(students);
 
         Page<StudentResponseDTO> result = studentService.listStudents(pageable);
 
         assertEquals(0, result.getTotalElements());
         assertTrue(result.getContent().isEmpty());
 
-        verify(studentRepo).findAll(pageable);
+        verify(studentRepo).findByArchivedAtIsNull(pageable);
         verifyNoMoreInteractions(studentRepo);
         verifyNoInteractions(studentMapper);
     }
@@ -139,7 +139,7 @@ class StudentServiceTest {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByNameContainingIgnoreCase("John", pageable)).thenReturn(students);
+        when(studentRepo.findByNameContainingIgnoreCaseAndArchivedAtIsNull("John", pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
         Page<StudentResponseDTO> result = studentService.listStudents(pageable, " John ");
@@ -147,7 +147,7 @@ class StudentServiceTest {
         assertEquals(1, result.getTotalElements());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
-        verify(studentRepo).findByNameContainingIgnoreCase("John", pageable);
+        verify(studentRepo).findByNameContainingIgnoreCaseAndArchivedAtIsNull("John", pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
         verifyNoInteractions(parentRepo, parentMapper);
@@ -159,7 +159,7 @@ class StudentServiceTest {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAll(pageable)).thenReturn(students);
+        when(studentRepo.findByArchivedAtIsNull(pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
         Page<StudentResponseDTO> result = studentService.listStudents(pageable, "   ");
@@ -167,19 +167,19 @@ class StudentServiceTest {
         assertEquals(1, result.getTotalElements());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
-        verify(studentRepo).findAll(pageable);
+        verify(studentRepo).findByArchivedAtIsNull(pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
         verifyNoInteractions(parentRepo, parentMapper);
     }
 
     @Test
-    @DisplayName("Should list students when filtering by active=true")
-    void testListActiveStudents() {
+    @DisplayName("Should list all students when includeArchived=true")
+    void testListStudentsIncludingArchived() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByActive(true, pageable)).thenReturn(students);
+        when(studentRepo.findAll(pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
         Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, true);
@@ -188,45 +188,45 @@ class StudentServiceTest {
         assertEquals(1, result.getContent().size());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
-        verify(studentRepo).findByActive(true, pageable);
+        verify(studentRepo).findAll(pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
     }
 
     @Test
-    @DisplayName("Should list active students when filtering by name")
-    void testListActiveStudentsByNameFilter() {
+    @DisplayName("Should list non-archived students when filtering by name")
+    void testListStudentsByNameExcludingArchived() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByActiveAndNameContainingIgnoreCase(true, "John", pageable)).thenReturn(students);
+        when(studentRepo.findByNameContainingIgnoreCaseAndArchivedAtIsNull("John", pageable)).thenReturn(students);
         when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "John", true);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "John", false);
 
         assertEquals(1, result.getTotalElements());
         assertSame(studentResponseDto, result.getContent().getFirst());
 
-        verify(studentRepo).findByActiveAndNameContainingIgnoreCase(true, "John", pageable);
+        verify(studentRepo).findByNameContainingIgnoreCaseAndArchivedAtIsNull("John", pageable);
         verify(studentMapper).toDto(student);
         verifyNoMoreInteractions(studentRepo, studentMapper);
         verifyNoInteractions(parentRepo, parentMapper);
     }
 
     @Test
-    @DisplayName("Should return empty page when filtering by active=true and there are no matches")
-    void testEmptyActiveStudentList() {
+    @DisplayName("Should return empty page when includeArchived=false and there are no matches")
+    void testEmptyNonArchivedStudentList() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
 
         Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
-        when(studentRepo.findByActive(true, pageable)).thenReturn(students);
+        when(studentRepo.findByArchivedAtIsNull(pageable)).thenReturn(students);
 
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, true);
+        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, false);
 
         assertEquals(0, result.getTotalElements());
         assertTrue(result.getContent().isEmpty());
 
-        verify(studentRepo).findByActive(true, pageable);
+        verify(studentRepo).findByArchivedAtIsNull(pageable);
         verifyNoMoreInteractions(studentRepo);
         verifyNoInteractions(studentMapper);
     }
@@ -332,16 +332,16 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should deactivate student when student is active (Soft Delete)")
-    void testDeleteStudentActive() {
-        student.setActive(true);
+    @DisplayName("Should archive student when student is not archived")
+    void testDeleteStudentNotArchived() {
+        student.setArchivedAt(null);
         Instant before = student.getUpdatedAt();
 
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
 
-        studentService.softDeleteStudent(student.getId());
+        studentService.archiveStudent(student.getId());
 
-        assertFalse(student.getActive());
+        assertNotNull(student.getArchivedAt());
         assertNotNull(student.getUpdatedAt());
         assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
 
@@ -351,16 +351,17 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should not change updatedAt when student is already inactive")
-    void testDeleteStudentInactive() {
-        student.setActive(false);
+    @DisplayName("Should not change updatedAt when archive is requested on already archived student")
+    void testDeleteStudentAlreadyArchived() {
+        Instant archivedAt = Instant.parse("2025-01-02T00:00:00Z");
+        student.setArchivedAt(archivedAt);
         Instant before = student.getUpdatedAt();
 
         when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
 
-        studentService.softDeleteStudent(student.getId());
+        studentService.archiveStudent(student.getId());
 
-        assertFalse(student.getActive());
+        assertEquals(archivedAt, student.getArchivedAt());
         assertEquals(before, student.getUpdatedAt());
 
         verify(studentRepo).findById(student.getId());
@@ -369,14 +370,81 @@ class StudentServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception when ID not found for deletion")
+    @DisplayName("Should throw exception when ID not found for archiving")
     void testDeleteStudentNotFound() {
         UUID id = UUID.randomUUID();
         when(studentRepo.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(StudentNotFoundException.class, () -> studentService.softDeleteStudent(id));
+        assertThrows(StudentNotFoundException.class, () -> studentService.archiveStudent(id));
 
         verify(studentRepo).findById(id);
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
+    }
+
+    @Test
+    @DisplayName("Should archive student through archive endpoint semantics")
+    void testArchiveStudentNotArchived() {
+        student.setArchivedAt(null);
+        Instant before = student.getUpdatedAt();
+
+        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+
+        studentService.archiveStudent(student.getId());
+
+        assertNotNull(student.getArchivedAt());
+        assertNotNull(student.getUpdatedAt());
+        assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
+
+        verify(studentRepo).findById(student.getId());
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
+    }
+
+    @Test
+    @DisplayName("Should unarchive student and set lastReactivatedAt")
+    void testUnarchiveStudent() {
+        Instant archivedAt = Instant.parse("2025-01-02T00:00:00Z");
+        Instant before = student.getUpdatedAt();
+        student.setArchivedAt(archivedAt);
+        student.setLastReactivatedAt(null);
+
+        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+
+        studentService.unarchiveStudent(student.getId());
+
+        assertNull(student.getArchivedAt());
+        assertNotNull(student.getLastReactivatedAt());
+        assertNotNull(student.getUpdatedAt());
+        assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
+
+        verify(studentRepo).findById(student.getId());
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
+    }
+
+    @Test
+    @DisplayName("Should keep DELETE alias and archive endpoint behavior aligned")
+    void testDeleteAliasAndArchiveEndpointConsistency() {
+        Student deleteAliasStudent = validStudentEntity();
+        Student archiveEndpointStudent = validStudentEntity();
+
+        when(studentRepo.findById(deleteAliasStudent.getId())).thenReturn(Optional.of(deleteAliasStudent));
+        when(studentRepo.findById(archiveEndpointStudent.getId())).thenReturn(Optional.of(archiveEndpointStudent));
+
+        studentService.archiveStudent(deleteAliasStudent.getId());
+        studentService.archiveStudent(archiveEndpointStudent.getId());
+
+        assertNotNull(deleteAliasStudent.getArchivedAt());
+        assertNotNull(deleteAliasStudent.getUpdatedAt());
+        assertNull(deleteAliasStudent.getLastReactivatedAt());
+
+        assertNotNull(archiveEndpointStudent.getArchivedAt());
+        assertNotNull(archiveEndpointStudent.getUpdatedAt());
+        assertNull(archiveEndpointStudent.getLastReactivatedAt());
+
+        verify(studentRepo).findById(deleteAliasStudent.getId());
+        verify(studentRepo).findById(archiveEndpointStudent.getId());
         verifyNoMoreInteractions(studentRepo);
         verifyNoInteractions(studentMapper);
     }
@@ -452,7 +520,6 @@ class StudentServiceTest {
         value.setCpf(STUDENT_CPF_RAW);
         value.setSchool(STUDENT_SCHOOL);
         value.setAddress(new Address());
-        value.setActive(true);
         value.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
         value.setUpdatedAt(Instant.parse("2025-01-01T00:00:00Z"));
         return value;
