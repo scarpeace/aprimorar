@@ -1,185 +1,77 @@
 {
     "$schema": "https://opencode.ai/config.json",
     "agent": {
-        "orchestrator": {
-            "mode": "primary",
-            "model": "openai/gpt-5.3-codex",
-            "prompt": "{file:./agents/orchestrator.md}",
-            "tools": {
-                "read": true,
-                "write": true,
-                "edit": true,
-                "bash": true
-            }
-        },
-        "explore": {
-            "mode": "subagent",
-            "model": "openai/gpt-5.3-codex",
-            "prompt": "{file:./agents/explore.md}",
-            "tools": {
-                "read": true,
-                "bash": true
-            }
-        },
         "planner": {
+            "description": "Product manager and software architect for discovery and planning",
             "mode": "subagent",
             "model": "openai/gpt-5.2",
             "prompt": "{file:./agents/planner.md}",
-            "tools": {
-                "read": true,
-                "write": true,
-                "edit": true
+            "permission": {
+                "edit": "ask",
+                "bash": "deny",
+                "webfetch": "deny"
             }
         },
-        "developer": {
+        "do": {
+            "description": "Senior full-stack implementation and static quality reviews",
             "mode": "subagent",
             "model": "openai/gpt-5.3-codex",
-            "prompt": "{file:./agents/developer.md}",
-            "tools": {
-                "read": true,
-                "write": true,
-                "edit": true,
-                "bash": true
-            }
-        },
-        "qa": {
-            "mode": "subagent",
-            "model": "openai/gpt-5.3-codex",
-            "prompt": "{file:./agents/qa.md}",
-            "tools": {
-                "read": true,
-                "bash": true
-            }
-        },
-        "reviewer": {
-            "mode": "subagent",
-            "model": "openai/gpt-5.2",
-            "prompt": "{file:./agents/reviewer.md}",
-            "tools": {
-                "read": true,
-                "write": true,
-                "edit": true,
-                "bash": true
-            }
-        },
-        "refactor_reviewer": {
-            "mode": "subagent",
-            "model": "openai/gpt-5.3-codex",
-            "prompt": "{file:./agents/refactor-reviewer.md}",
-            "tools": {
-                "read": true,
-                "write": true,
-                "edit": true,
-                "bash": true
-            }
-        },
-        "refactor_reviewer_quick": {
-            "mode": "subagent",
-            "model": "openai/gpt-5.3-codex",
-            "prompt": "{file:./agents/refactor-reviewer-quick.md}",
-            "tools": {
-                "read": true,
-                "bash": true
-            }
-        },
-        "tracker": {
-            "mode": "subagent",
-            "model": "openai/gpt-5.2",
-            "prompt": "{file:./agents/tracker.md}",
-            "tools": {
-                "read": true,
-                "write": true,
-                "edit": true,
-                "bash": true
-            }
-        },
-        "devops": {
-            "mode": "subagent",
-            "model": "openai/gpt-5.3-codex",
-            "prompt": "{file:./agents/devops.md}",
-            "tools": {
-                "read": true,
-                "write": true,
-                "edit": true,
-                "bash": true
-            }
-        },
-        "navigator": {
-            "mode": "subagent",
-            "model": "openai/gpt-5.2",
-            "prompt": "{file:./agents/navigator.md}",
-            "tools": {
-                "read": true,
-                "bash": true
+            "prompt": "{file:./agents/do.md}",
+            "permission": {
+                "edit": "allow",
+                "bash": {
+                    "*": "ask",
+                    "git status*": "allow",
+                    "git diff*": "allow",
+                    "git log*": "allow",
+                    "ls*": "allow"
+                },
+                "webfetch": "deny"
             }
         }
     },
     "command": {
-        "scan": {
-            "description": "Read-only codebase exploration and orientation",
-            "agent": "explore",
-            "subtask": true,
-            "template": "Read-only exploration request: {{input}}. Search the repository and return a concise map of relevant files, current patterns, and implementation hints. No edits. Include file paths and where to start as a beginner. If questions are needed, number them and use numbered options for fixed choices."
-        },
-        "plan": {
-            "description": "Generate/update roadmap + one epic plan and ask 3-8 questions",
+        "feature": {
+            "description": "Start feature discovery with structured requirements",
             "agent": "planner",
             "subtask": true,
-            "template": "Create or update planning docs for this feature: {{input}}. Always update docs/planning/roadmap.md and create/update exactly one Epic file in docs/planning/epics/. Keep IDs stable (E-xxx, S-xxx, T-xxx, ST-xxx). Avoid overengineering and keep tasks small, verifiable, and beginner-friendly. ALWAYS ask between 3 and 8 objective clarification questions, each with a recommended default. Number all questions and use numbered options for fixed choices; for multi-select, explicitly say choose all that apply. If complexity increases, include a short explanation of what will be implemented and why. Include suggested git branch command using feat/<slug> from base main."
+            "template": "Start a feature discovery process for: {{input}}.\n\nBehavior:\n- Ask questions to fully understand the feature.\n- Identify functional requirements.\n- Identify non-functional requirements.\n- Suggest improvements to the feature.\n- Suggest implementation approaches.\n- If the description is incomplete, ask multiple questions before proceeding.\n- Never assume unclear requirements.\n\nOutput structure:\n1. Feature Summary\n2. Functional Requirements\n3. Non-Functional Requirements\n4. Suggested Improvements\n5. Possible Implementation Approaches\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /feature if clarification is still required.\n- Use /organize if requirements are clear.\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
+        },
+        "organize": {
+            "description": "Break approved feature into epics, tasks, and subtasks",
+            "agent": "planner",
+            "subtask": true,
+            "template": "Break this approved feature into implementation work: {{input}}.\n\nBehavior:\n- Convert the feature into epics, tasks, and subtasks.\n- Determine execution order.\n- Identify dependencies.\n- Highlight risky or complex tasks.\n- Never assume unclear requirements; ask clarifying questions first if needed.\n\nOutput structure:\n1. Epics\n2. Tasks\n3. Subtasks\n4. Execution Order\n5. Dependencies\n6. Risk Areas\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /organize if clarification is still required.\n- Use /docs when the plan is approved and ready to document.\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
+        },
+        "docs": {
+            "description": "Update planning docs based on approved decisions",
+            "agent": "planner",
+            "subtask": true,
+            "template": "Update documentation to reflect the current approved project state for: {{input}}.\n\nRules:\n- Never invent completed work.\n- Only document approved decisions.\n- Reflect the real state of the project.\n- Keep the canonical structure in docs/:\n  - docs/project.md\n  - docs/planning/project.md\n  - docs/planning/roadmap.md\n  - docs/planning/epics/E-XXX-*.md\n- For epics, follow docs/planning/epics/E-000-template.md patterns.\n- Keep docs/planning/prompt-style-guide.md short and practical for this workflow.\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /do when there is an approved task ID ready for implementation.\n- Use /feature if decisions are not yet approved.\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
         },
         "do": {
-            "description": "Implement one task by ID with strict complexity guard",
-            "agent": "developer",
+            "description": "Implement exactly one selected task by ID",
+            "agent": "do",
             "subtask": true,
-            "template": "Implement exactly ONE task by ID from docs/planning/epics/*.md. Task ID: {{input}}. First run strict complexity validation. If task is too large or unclear, DO NOT implement; emit a complexity alert, propose a smaller split, and instruct next commands: /update-plan {{input}} and /plan Refine task {{input}}. If valid but blocking ambiguity exists, ask numbered clarification questions with recommended defaults and numbered options when applicable, then wait for answers. If valid, implement minimal clean code without overengineering, update the Epic task status and implementation notes, and suggest branch/commit commands using feat/<slug> and plain commit messages. Do not auto-run checks; only suggest /check-backend or /check-frontend based on touched area."
-        },
-        "review": {
-            "description": "Single consolidated review (quality + security + performance)",
-            "agent": "reviewer",
-            "subtask": true,
-            "template": "Review the current git diff. Provide one consolidated review covering code quality, security basics, and performance basics. If there are findings, create a markdown file under docs/reviews/ with small checkbox tasks grouped by P0/P1/P2 and by quality/security/performance. If there are no findings, do not create a file. If decisions are ambiguous, ask numbered questions with recommended defaults and numbered options. Output prioritized fixes only."
-        },
-        "refactor-review": {
-            "description": "Review one or more paths and write ordered refactor suggestions",
-            "agent": "refactor_reviewer",
-            "subtask": true,
-            "template": "Review one or more paths for refactoring opportunities: {{input}}. Input may be comma-separated paths or one path per line. Include maintainability, testability, and relevant security/performance considerations. Ask clarifying numbered questions when needed, with numbered options; for multiple choice, say choose all that apply. Do not edit source code. Always create a report in docs/refactor/YYYY-MM-DD-<slug>.md containing an ordered numbered list of suggestions grouped by P0/P1/P2, and return a concise summary plus report path."
-        },
-        "refactor-review-quick": {
-            "description": "Quick path refactor review in batches of five",
-            "agent": "refactor_reviewer_quick",
-            "subtask": true,
-            "template": "Review exactly one path for refactoring opportunities: {{input}}. Include maintainability, testability, and relevant security/performance considerations. Do not edit source code and do not create files. Return only the top 5 improvements in this response, then ask exactly: 1) Do you want 5 more? with options 1) No (default) and 2) Yes. If the user answers Yes, continue with the next 5 without repeating. Ask clarifying numbered questions when needed, with numbered options; for multi-select, say choose all that apply."
-        },
-        "update-plan": {
-            "description": "Update roadmap/epic status and review notes for a task",
-            "agent": "tracker",
-            "subtask": true,
-            "template": "Update planning docs for Task ID: {{input}}. Find the Epic containing the task, update status, append review notes (quality/security/performance), and add follow-up subtasks if needed. If there is a complexity alert or split proposal, mark task BLOCKED and register the split in the same Epic. Update roadmap Epic Index if required. If ambiguity remains, ask one numbered question with recommended default and numbered options. At the end, perform a cleanup on the file containing the Task if possible"
-        },
-        "devops": {
-            "description": "DevOps help (manual use only)",
-            "agent": "devops",
-            "subtask": true,
-            "template": "Provide DevOps help for this request: {{input}}. Keep it simple. Ask only objective questions if required. Output steps, files, and commands."
-        },
-        "next": {
-            "description": "Suggest the next task by roadmap, epic progress, and recent git activity",
-            "agent": "navigator",
-            "subtask": true,
-            "template": "Analyze docs/planning/roadmap.md, docs/planning/epics/*.md, and recent git activity to recommend the next task. Respect dependencies and avoid DONE/BLOCKED tasks. If multiple equivalent choices exist, ask a numbered selection question with numbered options."
+            "template": "Implement the selected task ID: {{input}}.\n\nBehavior:\n- Follow the implementation plan from docs/planning/epics/.\n- Write clean and readable code.\n- Avoid unnecessary complexity.\n- Explain important decisions.\n- Suggest improvements when relevant.\n- If requirements are unclear, ask clarifying questions before coding.\n\nOutput structure:\n1. Task being implemented\n2. Implementation steps\n3. Code changes\n4. Suggested improvements (optional)\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /check-backend for backend-focused review.\n- Use /check-frontend for frontend-focused review.\n- Use /docs after implementation is approved and reflected in planning docs.\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
         },
         "check-backend": {
-            "description": "Run backend unit tests on demand",
-            "agent": "qa",
+            "description": "Static backend quality review only (no code changes)",
+            "agent": "do",
             "subtask": true,
-            "template": "Run backend checks on demand for this request: {{input}}. Execute ./mvnw test in server/api-aprimorar. Summarize results concisely, including failures and beginner-friendly next fixes."
+            "template": "Review backend implementation quality for: {{input}}.\n\nBehavior:\n- Detect bugs, architecture issues, and code smells.\n- Suggest improvements and missing tests.\n- Never implement tests automatically.\n- Never implement any code changes in this command.\n\nImportant:\n- This is static review only.\n- Ask for explicit user approval before any future test implementation.\n- Tell the user to run /do as the go command if they want changes applied.\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /do for approved fixes (go command).\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
         },
         "check-frontend": {
-            "description": "Run frontend lint and build on demand",
-            "agent": "qa",
+            "description": "Static frontend quality review only (no code changes)",
+            "agent": "do",
             "subtask": true,
-            "template": "Run frontend checks on demand for this request: {{input}}. Execute npm -C client run lint && npm -C client run build from repo root. Summarize results concisely, including failures and beginner-friendly next fixes."
+            "template": "Review frontend implementation quality for: {{input}}.\n\nBehavior:\n- Detect UI/UX issues, architecture issues, and code smells.\n- Suggest improvements and missing tests.\n- Never implement tests automatically.\n- Never implement any code changes in this command.\n\nImportant:\n- This is static review only.\n- Ask for explicit user approval before any future test implementation.\n- Tell the user to run /do as the go command if they want changes applied.\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /do for approved fixes (go command).\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
+        },
+        "tests": {
+            "description": "Suggest unit, integration, and edge-case tests",
+            "agent": "do",
+            "subtask": true,
+            "template": "Suggest test coverage improvements for: {{input}}.\n\nBehavior:\n- Suggest unit tests.\n- Suggest integration tests.\n- Suggest edge cases.\n- Never implement tests without explicit user confirmation.\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /do only if the user explicitly approves implementing tests.\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
         }
     }
 }
