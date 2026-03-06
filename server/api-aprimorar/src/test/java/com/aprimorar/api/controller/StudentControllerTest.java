@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -77,6 +78,33 @@ class StudentControllerTest {
                 .andExpect(status().isOk());
 
         verify(studentService).listStudents(any(Pageable.class), eq("John"), eq(true));
+    }
+
+    @Test
+    @DisplayName("Should return 400 for invalid sortBy")
+    void listStudentsShouldReturnBadRequestForInvalidSortBy() throws Exception {
+        mockMvc.perform(get("/v1/students").param("sortBy", "archivedAt"))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(studentService);
+    }
+
+    @Test
+    @DisplayName("Should return 400 for negative page")
+    void listStudentsShouldReturnBadRequestForNegativePage() throws Exception {
+        mockMvc.perform(get("/v1/students").param("page", "-1"))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(studentService);
+    }
+
+    @Test
+    @DisplayName("Should return 400 for size less than 1")
+    void listStudentsShouldReturnBadRequestForInvalidSize() throws Exception {
+        mockMvc.perform(get("/v1/students").param("size", "0"))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(studentService);
     }
 
     @Test

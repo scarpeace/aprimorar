@@ -16,13 +16,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/students")
 @Tag(name = "Students", description = "Student management APIs")
 public class StudentController {
+
+    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("name", "createdAt");
 
     private final StudentService studentService;
 
@@ -40,7 +44,7 @@ public class StudentController {
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "false") Boolean includeArchived
     ){
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Pageable pageable = buildPageable(page, size, sortBy);
         Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable, name, includeArchived);
         return ResponseEntity.ok(allStudents);
     }
@@ -95,6 +99,23 @@ public class StudentController {
         StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, updateStudentDto);
 
         return ResponseEntity.ok(updatedStudent);
+    }
+
+    private Pageable buildPageable(int page, int size, String sortBy) {
+        if (page < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametro 'page' deve ser >= 0");
+        }
+
+        if (size < 1 || size > 100) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametro 'size' deve estar entre 1 e 100");
+        }
+
+        String normalizedSortBy = sortBy == null ? "name" : sortBy.trim();
+        if (!ALLOWED_SORT_FIELDS.contains(normalizedSortBy)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametro 'sortBy' invalido");
+        }
+
+        return PageRequest.of(page, size, Sort.by(normalizedSortBy));
     }
 
 }

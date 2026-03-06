@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
@@ -131,6 +132,22 @@ public class GlobalExceptionHandler {
         ErrorResponse error = buildError(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", message, request);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponse> handleResponseStatusException(
+            ResponseStatusException ex,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
+        ErrorResponse error = buildError(
+                status,
+                "REQUEST_ERROR",
+                ex.getReason() == null ? "Requisição inválida" : ex.getReason(),
+                request
+        );
+
+        return ResponseEntity.status(status).body(error);
     }
 
     @ExceptionHandler(Exception.class)

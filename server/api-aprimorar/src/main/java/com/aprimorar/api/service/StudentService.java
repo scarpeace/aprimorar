@@ -102,11 +102,12 @@ public class StudentService {
     @Transactional
     public void unarchiveStudent(UUID studentId) {
         Student foundStudent = findStudentOrThrow(studentId);
-        Instant now = Instant.now();
-
-        foundStudent.setArchivedAt(null);
-        foundStudent.setLastReactivatedAt(now);
-        foundStudent.setUpdatedAt(now);
+        if (foundStudent.getArchivedAt() != null) {
+            Instant now = Instant.now();
+            foundStudent.setArchivedAt(null);
+            foundStudent.setLastReactivatedAt(now);
+            foundStudent.setUpdatedAt(now);
+        }
     }
 
     @Transactional

@@ -424,6 +424,28 @@ class StudentServiceTest {
     }
 
     @Test
+    @DisplayName("Should keep unarchive idempotent when student is already active")
+    void testUnarchiveStudentAlreadyActiveDoesNotChangeTimestamps() {
+        Instant previousReactivation = Instant.parse("2025-01-03T00:00:00Z");
+        Instant before = student.getUpdatedAt();
+
+        student.setArchivedAt(null);
+        student.setLastReactivatedAt(previousReactivation);
+
+        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+
+        studentService.unarchiveStudent(student.getId());
+
+        assertNull(student.getArchivedAt());
+        assertEquals(previousReactivation, student.getLastReactivatedAt());
+        assertEquals(before, student.getUpdatedAt());
+
+        verify(studentRepo).findById(student.getId());
+        verifyNoMoreInteractions(studentRepo);
+        verifyNoInteractions(studentMapper);
+    }
+
+    @Test
     @DisplayName("Should keep DELETE alias and archive endpoint behavior aligned")
     void testDeleteAliasAndArchiveEndpointConsistency() {
         Student deleteAliasStudent = validStudentEntity();
