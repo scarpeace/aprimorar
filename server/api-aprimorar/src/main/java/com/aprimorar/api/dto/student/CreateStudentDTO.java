@@ -46,9 +46,6 @@ public record CreateStudentDTO(
         @Valid
         CreateParentDTO parent
 ) {
-
-    //TODO Essa validação também ocorre no service. Preciso verificar se a validação do service é realmente necessária.
-    //Pode haver uma chance de grande refatoração para manter o service mais limpo e com funções mais organizadas.
     @AssertTrue(message = "Informe parentId ou parent")
     public boolean hasParentReference() {
         return parentId != null || parent != null;

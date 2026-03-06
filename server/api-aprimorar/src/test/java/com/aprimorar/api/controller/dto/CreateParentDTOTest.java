@@ -72,6 +72,7 @@ class CreateParentDTOTest {
         CreateParentDTO dto = parentDto("Parent Name", "not-an-email", "(11)99999-9999", "123.456.789-01");
         Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
+        assertTrue(messages(violations).contains("Email deve ser um endereço de email válido"));
     }
 
     // ─── contact ──────────────────────────────────────────────────────────────
@@ -92,13 +93,6 @@ class CreateParentDTOTest {
         Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("Contato deve estar no formato (XX)XXXXX-XXXX"));
-    }
-
-    @Test
-    @DisplayName("Should have 0 violations when contact format is valid")
-    void validContactFormat() {
-        CreateParentDTO dto = validParentDto();
-        assertTrue(validator.validate(dto).isEmpty());
     }
 
     @Test
@@ -130,11 +124,4 @@ class CreateParentDTOTest {
         assertTrue(messages(violations).contains("CPF deve estar no formato XXX.XXX.XXX-XX"));
     }
 
-    @Test
-    @DisplayName("Should have 0 violations when cpf format is valid")
-    void validCpfFormat() {
-        CreateParentDTO dto = validParentDto();
-        Set<ConstraintViolation<CreateParentDTO>> violations = validator.validate(dto);
-        assertTrue(violations.isEmpty());
-    }
 }

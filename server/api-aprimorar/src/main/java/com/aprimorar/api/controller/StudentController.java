@@ -4,19 +4,16 @@ import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.service.StudentService;
+import com.aprimorar.api.util.PageableUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Set;
 import java.util.UUID;
@@ -35,22 +32,20 @@ public class StudentController {
     }
 
     @Operation(summary = "List all STUDENTS", description = "Retrieves all students from database with pagination")
-    @Transactional(readOnly = true)
     @GetMapping()
     public ResponseEntity<Page<StudentResponseDTO>> listStudents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") @Max(100) int size,
             @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(required = false) String name,
-            @RequestParam(defaultValue = "false") Boolean includeArchived
+        @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "false") boolean includeArchived
     ){
-        Pageable pageable = buildPageable(page, size, sortBy);
+        Pageable pageable = PageableUtils.buildPageable(page, size, sortBy, "name", ALLOWED_SORT_FIELDS);
         Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable, name, includeArchived);
         return ResponseEntity.ok(allStudents);
     }
 
     @Operation(summary = "List single STUDENT", description = "Retrieves single student based on ID")
-    @Transactional(readOnly = true)
     @GetMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId){
         var foundStudent = studentService.findById(studentId);
@@ -99,23 +94,6 @@ public class StudentController {
         StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, updateStudentDto);
 
         return ResponseEntity.ok(updatedStudent);
-    }
-
-    private Pageable buildPageable(int page, int size, String sortBy) {
-        if (page < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametro 'page' deve ser >= 0");
-        }
-
-        if (size < 1 || size > 100) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametro 'size' deve estar entre 1 e 100");
-        }
-
-        String normalizedSortBy = sortBy == null ? "name" : sortBy.trim();
-        if (!ALLOWED_SORT_FIELDS.contains(normalizedSortBy)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametro 'sortBy' invalido");
-        }
-
-        return PageRequest.of(page, size, Sort.by(normalizedSortBy));
     }
 
 }

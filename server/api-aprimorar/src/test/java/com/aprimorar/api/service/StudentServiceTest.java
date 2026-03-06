@@ -15,12 +15,18 @@ import com.aprimorar.api.repository.ParentRepository;
 import com.aprimorar.api.repository.StudentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -29,8 +35,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
@@ -80,456 +98,382 @@ class StudentServiceTest {
         parent = validParentEntity();
 
         createParentDto = validCreateParentDto();
-
         createStudentDtoWithNewParent = studentDtoWithParent(createParentDto);
-
-        UUID parentId = parent.getId();
-        createStudentDtoWithParentId = studentDtoWithParentId(parentId);
-
+        createStudentDtoWithParentId = studentDtoWithParentId(parent.getId());
         createStudentDtoWithoutParent = studentDtoWithoutParent();
-
         updateStudentDtoWithNewParent = updateStudentDtoWithParent(createParentDto);
-
         updateStudentDtoWithParentId = updateStudentDtoWithParentId(parent.getId());
 
         studentResponseDto = mock(StudentResponseDTO.class);
     }
 
-    @Test
-    @DisplayName("Should list page of students when success")
-    void testListStudents() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+    @Nested
+    @DisplayName("listStudents")
+    class ListStudents {
 
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByArchivedAtIsNull(pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+        @Test
+        @DisplayName("returns active students page by default")
+        void listDefault() {
+            Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+            Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
 
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable);
+            when(studentRepo.findAll(any(Specification.class), eq(pageable))).thenReturn(students);
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        assertEquals(1, result.getTotalElements());
-        assertEquals(1, result.getContent().size());
-        assertSame(studentResponseDto, result.getContent().getFirst());
+            Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, false);
 
-        verify(studentRepo).findByArchivedAtIsNull(pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
+            assertEquals(1, result.getTotalElements());
+            assertSame(studentResponseDto, result.getContent().getFirst());
+            verify(studentRepo).findAll(any(Specification.class), eq(pageable));
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper);
+        }
+
+        @Test
+        @DisplayName("returns empty page when no students match")
+        void listEmpty() {
+            Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+            Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
+
+            when(studentRepo.findAll(any(Specification.class), eq(pageable))).thenReturn(students);
+
+            Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, false);
+
+            assertEquals(0, result.getTotalElements());
+            assertTrue(result.getContent().isEmpty());
+            verify(studentRepo).findAll(any(Specification.class), eq(pageable));
+            verifyNoMoreInteractions(studentRepo);
+            verifyNoInteractions(studentMapper, parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("applies trimmed name filter")
+        void listWithNameFilter() {
+            Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+            Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
+
+            when(studentRepo.findAll(any(Specification.class), eq(pageable))).thenReturn(students);
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+            Page<StudentResponseDTO> result = studentService.listStudents(pageable, " John ", false);
+
+            assertEquals(1, result.getTotalElements());
+            assertSame(studentResponseDto, result.getContent().getFirst());
+            verify(studentRepo).findAll(any(Specification.class), eq(pageable));
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper);
+            verifyNoInteractions(parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("ignores blank name filter")
+        void listWithBlankNameFilter() {
+            Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+            Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
+
+            when(studentRepo.findAll(any(Specification.class), eq(pageable))).thenReturn(students);
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+            Page<StudentResponseDTO> result = studentService.listStudents(pageable, "   ", false);
+
+            assertEquals(1, result.getTotalElements());
+            assertSame(studentResponseDto, result.getContent().getFirst());
+            verify(studentRepo).findAll(any(Specification.class), eq(pageable));
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper);
+            verifyNoInteractions(parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("includes archived students when includeArchived=true")
+        void listIncludingArchived() {
+            Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+            Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
+
+            when(studentRepo.findAll(any(Specification.class), eq(pageable))).thenReturn(students);
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+            Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, true);
+
+            assertEquals(1, result.getTotalElements());
+            assertSame(studentResponseDto, result.getContent().getFirst());
+            verify(studentRepo).findAll(any(Specification.class), eq(pageable));
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper);
+        }
     }
 
-    @Test
-    @DisplayName("Should return empty page when there are no students in database")
-    void testEmptyStudentList() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+    @Nested
+    @DisplayName("findById")
+    class FindById {
 
-        Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
-        when(studentRepo.findByArchivedAtIsNull(pageable)).thenReturn(students);
+        @Test
+        @DisplayName("returns student when found")
+        void findByIdFound() {
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable);
+            StudentResponseDTO result = studentService.findById(student.getId());
 
-        assertEquals(0, result.getTotalElements());
-        assertTrue(result.getContent().isEmpty());
+            assertSame(studentResponseDto, result);
+            verify(studentRepo).findById(student.getId());
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper);
+        }
 
-        verify(studentRepo).findByArchivedAtIsNull(pageable);
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
+        @Test
+        @DisplayName("throws StudentNotFoundException when id does not exist")
+        void findByIdNotFound() {
+            UUID id = UUID.randomUUID();
+            when(studentRepo.findById(id)).thenReturn(Optional.empty());
+
+            assertThrows(StudentNotFoundException.class, () -> studentService.findById(id));
+
+            verify(studentRepo).findById(id);
+            verifyNoMoreInteractions(studentRepo);
+            verifyNoInteractions(studentMapper);
+        }
     }
 
-    @Test
-    @DisplayName("Should list students when filtering by name")
-    void testListStudentsByNameFilter() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+    @Nested
+    @DisplayName("createStudent")
+    class CreateStudent {
 
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByNameContainingIgnoreCaseAndArchivedAtIsNull("John", pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+        @Test
+        @DisplayName("creates student with new parent")
+        void createWithNewParent() {
+            when(studentMapper.toEntity(createStudentDtoWithNewParent)).thenReturn(student);
+            when(parentMapper.toEntity(createParentDto)).thenReturn(parent);
+            when(parentRepo.save(parent)).thenReturn(parent);
+            when(studentRepo.save(student)).thenReturn(student);
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, " John ");
+            StudentResponseDTO result = studentService.createStudent(createStudentDtoWithNewParent);
 
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
+            assertSame(studentResponseDto, result);
+            assertNotNull(student.getParent());
+            verify(studentMapper).toEntity(createStudentDtoWithNewParent);
+            verify(parentMapper).toEntity(createParentDto);
+            verify(parentRepo).save(parent);
+            verify(studentRepo).save(student);
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+        }
 
-        verify(studentRepo).findByNameContainingIgnoreCaseAndArchivedAtIsNull("John", pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
+        @Test
+        @DisplayName("creates student with existing parent by id")
+        void createWithParentId() {
+            when(studentMapper.toEntity(createStudentDtoWithParentId)).thenReturn(student);
+            when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
+            when(studentRepo.save(student)).thenReturn(student);
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+            StudentResponseDTO result = studentService.createStudent(createStudentDtoWithParentId);
+
+            assertSame(studentResponseDto, result);
+            assertNotNull(student.getParent());
+            verify(studentMapper).toEntity(createStudentDtoWithParentId);
+            verify(parentRepo).findByIdAndActiveTrue(parent.getId());
+            verify(studentRepo).save(student);
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("creates student without parent reference")
+        void createWithoutParent() {
+            when(studentMapper.toEntity(createStudentDtoWithoutParent)).thenReturn(student);
+            when(studentRepo.save(student)).thenReturn(student);
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+            StudentResponseDTO result = studentService.createStudent(createStudentDtoWithoutParent);
+
+            assertSame(studentResponseDto, result);
+            verify(studentMapper).toEntity(createStudentDtoWithoutParent);
+            verify(studentRepo).save(student);
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("throws ParentNotFoundException when parentId does not exist")
+        void createParentNotFound() {
+            UUID nonExistentParentId = UUID.randomUUID();
+            CreateStudentDTO dtoWithNonExistentParent = studentDtoWithParentId(nonExistentParentId);
+
+            when(studentMapper.toEntity(dtoWithNonExistentParent)).thenReturn(student);
+            when(parentRepo.findByIdAndActiveTrue(nonExistentParentId)).thenReturn(Optional.empty());
+
+            assertThrows(ParentNotFoundException.class,
+                    () -> studentService.createStudent(dtoWithNonExistentParent));
+
+            verify(studentMapper).toEntity(dtoWithNonExistentParent);
+            verify(parentRepo).findByIdAndActiveTrue(nonExistentParentId);
+            verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+        }
     }
 
-    @Test
-    @DisplayName("Should ignore blank name filter when listing students")
-    void testListStudentsWithBlankNameFilter() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
+    @Nested
+    @DisplayName("archive/unarchive")
+    class ArchiveAndUnarchive {
 
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByArchivedAtIsNull(pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+        @Test
+        @DisplayName("archives active student and updates timestamp")
+        void archiveNotArchived() {
+            student.setArchivedAt(null);
+            Instant before = student.getUpdatedAt();
 
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "   ");
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
 
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
+            studentService.archiveStudent(student.getId());
 
-        verify(studentRepo).findByArchivedAtIsNull(pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
+            assertNotNull(student.getArchivedAt());
+            assertNotNull(student.getUpdatedAt());
+            assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
+            verify(studentRepo).findById(student.getId());
+            verifyNoMoreInteractions(studentRepo);
+            verifyNoInteractions(studentMapper);
+        }
+
+        @Test
+        @DisplayName("keeps archive idempotent for already archived student")
+        void archiveAlreadyArchived() {
+            Instant archivedAt = Instant.parse("2025-01-02T00:00:00Z");
+            student.setArchivedAt(archivedAt);
+            Instant before = student.getUpdatedAt();
+
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+
+            studentService.archiveStudent(student.getId());
+
+            assertEquals(archivedAt, student.getArchivedAt());
+            assertEquals(before, student.getUpdatedAt());
+            verify(studentRepo).findById(student.getId());
+            verifyNoMoreInteractions(studentRepo);
+            verifyNoInteractions(studentMapper);
+        }
+
+        @Test
+        @DisplayName("throws StudentNotFoundException when archiving unknown id")
+        void archiveNotFound() {
+            UUID id = UUID.randomUUID();
+            when(studentRepo.findById(id)).thenReturn(Optional.empty());
+
+            assertThrows(StudentNotFoundException.class, () -> studentService.archiveStudent(id));
+
+            verify(studentRepo).findById(id);
+            verifyNoMoreInteractions(studentRepo);
+            verifyNoInteractions(studentMapper);
+        }
+
+        @Test
+        @DisplayName("unarchives student and sets lastReactivatedAt")
+        void unarchiveStudent() {
+            Instant archivedAt = Instant.parse("2025-01-02T00:00:00Z");
+            Instant before = student.getUpdatedAt();
+            student.setArchivedAt(archivedAt);
+            student.setLastReactivatedAt(null);
+
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+
+            studentService.unarchiveStudent(student.getId());
+
+            assertNull(student.getArchivedAt());
+            assertNotNull(student.getLastReactivatedAt());
+            assertNotNull(student.getUpdatedAt());
+            assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
+            verify(studentRepo).findById(student.getId());
+            verifyNoMoreInteractions(studentRepo);
+            verifyNoInteractions(studentMapper);
+        }
+
+        @Test
+        @DisplayName("keeps unarchive idempotent when student already active")
+        void unarchiveAlreadyActive() {
+            Instant previousReactivation = Instant.parse("2025-01-03T00:00:00Z");
+            Instant before = student.getUpdatedAt();
+
+            student.setArchivedAt(null);
+            student.setLastReactivatedAt(previousReactivation);
+
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+
+            studentService.unarchiveStudent(student.getId());
+
+            assertNull(student.getArchivedAt());
+            assertEquals(previousReactivation, student.getLastReactivatedAt());
+            assertEquals(before, student.getUpdatedAt());
+            verify(studentRepo).findById(student.getId());
+            verifyNoMoreInteractions(studentRepo);
+            verifyNoInteractions(studentMapper);
+        }
     }
 
-    @Test
-    @DisplayName("Should list all students when includeArchived=true")
-    void testListStudentsIncludingArchived() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findAll(pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, true);
-
-        assertEquals(1, result.getTotalElements());
-        assertEquals(1, result.getContent().size());
-        assertSame(studentResponseDto, result.getContent().getFirst());
-
-        verify(studentRepo).findAll(pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should list non-archived students when filtering by name")
-    void testListStudentsByNameExcludingArchived() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(student), pageable, 1);
-        when(studentRepo.findByNameContainingIgnoreCaseAndArchivedAtIsNull("John", pageable)).thenReturn(students);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, "John", false);
-
-        assertEquals(1, result.getTotalElements());
-        assertSame(studentResponseDto, result.getContent().getFirst());
-
-        verify(studentRepo).findByNameContainingIgnoreCaseAndArchivedAtIsNull("John", pageable);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-        verifyNoInteractions(parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should return empty page when includeArchived=false and there are no matches")
-    void testEmptyNonArchivedStudentList() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("name"));
-
-        Page<Student> students = new PageImpl<>(List.of(), pageable, 0);
-        when(studentRepo.findByArchivedAtIsNull(pageable)).thenReturn(students);
-
-        Page<StudentResponseDTO> result = studentService.listStudents(pageable, null, false);
-
-        assertEquals(0, result.getTotalElements());
-        assertTrue(result.getContent().isEmpty());
-
-        verify(studentRepo).findByArchivedAtIsNull(pageable);
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should get student when success")
-    void testFindByIdFound() {
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        StudentResponseDTO result = studentService.findById(student.getId());
-
-        assertSame(studentResponseDto, result);
-        verify(studentRepo).findById(student.getId());
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should throw exception when ID not found")
-    void testFindByIdNotFound() {
-        UUID id = UUID.randomUUID();
-        when(studentRepo.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(StudentNotFoundException.class, () -> studentService.findById(id));
-
-        verify(studentRepo).findById(id);
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should create student with new parent when success")
-    void testCreateStudentWithNewParent() {
-        when(studentMapper.toEntity(createStudentDtoWithNewParent)).thenReturn(student);
-        when(parentMapper.toEntity(createParentDto)).thenReturn(parent);
-        when(parentRepo.save(parent)).thenReturn(parent);
-        when(studentRepo.save(student)).thenReturn(student);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        StudentResponseDTO result = studentService.createStudent(createStudentDtoWithNewParent);
-
-        assertSame(studentResponseDto, result);
-        assertNotNull(student.getParent());
-        verify(studentMapper).toEntity(createStudentDtoWithNewParent);
-        verify(parentMapper).toEntity(createParentDto);
-        verify(parentRepo).save(parent);
-        verify(studentRepo).save(student);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should create student with existing parent when parentId is provided")
-    void testCreateStudentWithExistingParent() {
-        when(studentMapper.toEntity(createStudentDtoWithParentId)).thenReturn(student);
-        when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
-        when(studentRepo.save(student)).thenReturn(student);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        StudentResponseDTO result = studentService.createStudent(createStudentDtoWithParentId);
-
-        assertSame(studentResponseDto, result);
-        assertNotNull(student.getParent());
-        verify(studentMapper).toEntity(createStudentDtoWithParentId);
-        verify(parentRepo).findByIdAndActiveTrue(parent.getId());
-        verify(studentRepo).save(student);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should create student when parent data is not validated at service boundary")
-    void testCreateStudentWithoutParent() {
-        when(studentMapper.toEntity(createStudentDtoWithoutParent)).thenReturn(student);
-        when(studentRepo.save(student)).thenReturn(student);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        StudentResponseDTO result = studentService.createStudent(createStudentDtoWithoutParent);
-
-        assertSame(studentResponseDto, result);
-        verify(studentMapper).toEntity(createStudentDtoWithoutParent);
-        verify(studentRepo).save(student);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should throw ParentNotFoundException when parentId does not exist")
-    void testCreateStudentParentNotFound() {
-        UUID nonExistentParentId = UUID.randomUUID();
-        CreateStudentDTO dtoWithNonExistentParent = studentDtoWithParentId(nonExistentParentId);
-
-        when(studentMapper.toEntity(dtoWithNonExistentParent)).thenReturn(student);
-        when(parentRepo.findByIdAndActiveTrue(nonExistentParentId)).thenReturn(Optional.empty());
-
-        assertThrows(ParentNotFoundException.class, () -> 
-                studentService.createStudent(dtoWithNonExistentParent));
-
-        verify(studentMapper).toEntity(dtoWithNonExistentParent);
-        verify(parentRepo).findByIdAndActiveTrue(nonExistentParentId);
-        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
-    }
-
-    @Test
-    @DisplayName("Should archive student when student is not archived")
-    void testDeleteStudentNotArchived() {
-        student.setArchivedAt(null);
-        Instant before = student.getUpdatedAt();
-
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-
-        studentService.archiveStudent(student.getId());
-
-        assertNotNull(student.getArchivedAt());
-        assertNotNull(student.getUpdatedAt());
-        assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
-
-        verify(studentRepo).findById(student.getId());
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should not change updatedAt when archive is requested on already archived student")
-    void testDeleteStudentAlreadyArchived() {
-        Instant archivedAt = Instant.parse("2025-01-02T00:00:00Z");
-        student.setArchivedAt(archivedAt);
-        Instant before = student.getUpdatedAt();
-
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-
-        studentService.archiveStudent(student.getId());
-
-        assertEquals(archivedAt, student.getArchivedAt());
-        assertEquals(before, student.getUpdatedAt());
-
-        verify(studentRepo).findById(student.getId());
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should throw exception when ID not found for archiving")
-    void testDeleteStudentNotFound() {
-        UUID id = UUID.randomUUID();
-        when(studentRepo.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(StudentNotFoundException.class, () -> studentService.archiveStudent(id));
-
-        verify(studentRepo).findById(id);
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should archive student through archive endpoint semantics")
-    void testArchiveStudentNotArchived() {
-        student.setArchivedAt(null);
-        Instant before = student.getUpdatedAt();
-
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-
-        studentService.archiveStudent(student.getId());
-
-        assertNotNull(student.getArchivedAt());
-        assertNotNull(student.getUpdatedAt());
-        assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
-
-        verify(studentRepo).findById(student.getId());
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should unarchive student and set lastReactivatedAt")
-    void testUnarchiveStudent() {
-        Instant archivedAt = Instant.parse("2025-01-02T00:00:00Z");
-        Instant before = student.getUpdatedAt();
-        student.setArchivedAt(archivedAt);
-        student.setLastReactivatedAt(null);
-
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-
-        studentService.unarchiveStudent(student.getId());
-
-        assertNull(student.getArchivedAt());
-        assertNotNull(student.getLastReactivatedAt());
-        assertNotNull(student.getUpdatedAt());
-        assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
-
-        verify(studentRepo).findById(student.getId());
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should keep unarchive idempotent when student is already active")
-    void testUnarchiveStudentAlreadyActiveDoesNotChangeTimestamps() {
-        Instant previousReactivation = Instant.parse("2025-01-03T00:00:00Z");
-        Instant before = student.getUpdatedAt();
-
-        student.setArchivedAt(null);
-        student.setLastReactivatedAt(previousReactivation);
-
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-
-        studentService.unarchiveStudent(student.getId());
-
-        assertNull(student.getArchivedAt());
-        assertEquals(previousReactivation, student.getLastReactivatedAt());
-        assertEquals(before, student.getUpdatedAt());
-
-        verify(studentRepo).findById(student.getId());
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should keep DELETE alias and archive endpoint behavior aligned")
-    void testDeleteAliasAndArchiveEndpointConsistency() {
-        Student deleteAliasStudent = validStudentEntity();
-        Student archiveEndpointStudent = validStudentEntity();
-
-        when(studentRepo.findById(deleteAliasStudent.getId())).thenReturn(Optional.of(deleteAliasStudent));
-        when(studentRepo.findById(archiveEndpointStudent.getId())).thenReturn(Optional.of(archiveEndpointStudent));
-
-        studentService.archiveStudent(deleteAliasStudent.getId());
-        studentService.archiveStudent(archiveEndpointStudent.getId());
-
-        assertNotNull(deleteAliasStudent.getArchivedAt());
-        assertNotNull(deleteAliasStudent.getUpdatedAt());
-        assertNull(deleteAliasStudent.getLastReactivatedAt());
-
-        assertNotNull(archiveEndpointStudent.getArchivedAt());
-        assertNotNull(archiveEndpointStudent.getUpdatedAt());
-        assertNull(archiveEndpointStudent.getLastReactivatedAt());
-
-        verify(studentRepo).findById(deleteAliasStudent.getId());
-        verify(studentRepo).findById(archiveEndpointStudent.getId());
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
-    }
-
-    @Test
-    @DisplayName("Should update student with new parent when success")
-    void testUpdateStudentWithNewParent() {
-        Instant before = student.getUpdatedAt();
-
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        when(parentMapper.toEntity(createParentDto)).thenReturn(parent);
-        when(parentRepo.save(parent)).thenReturn(parent);
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithNewParent);
-
-        assertSame(studentResponseDto, result);
-        assertNotNull(student.getParent());
-        verify(studentRepo).findById(student.getId());
-        verify(studentMapper).updateFromDto(updateStudentDtoWithNewParent, student);
-        verify(parentMapper).toEntity(createParentDto);
-        verify(parentRepo).save(parent);
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
-
-        assertNotNull(student.getUpdatedAt());
-        assertNotEquals(before, student.getUpdatedAt());
-    }
-
-    @Test
-    @DisplayName("Should update student with existing parent when parentId is provided")
-    void testUpdateStudentWithExistingParent() {
-        Instant before = student.getUpdatedAt();
-
-        when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-        when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
-        when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
-
-        StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithParentId);
-
-        assertSame(studentResponseDto, result);
-        assertNotNull(student.getParent());
-        verify(studentRepo).findById(student.getId());
-        verify(studentMapper).updateFromDto(updateStudentDtoWithParentId, student);
-        verify(parentRepo).findByIdAndActiveTrue(parent.getId());
-        verify(studentMapper).toDto(student);
-        verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
-
-        assertNotNull(student.getUpdatedAt());
-        assertNotEquals(before, student.getUpdatedAt());
-    }
-
-    @Test
-    @DisplayName("Should not update student when student not found")
-    void testUpdateStudentNotFound() {
-        UUID id = UUID.randomUUID();
-        when(studentRepo.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(StudentNotFoundException.class, () -> studentService.updateStudent(id, updateStudentDtoWithNewParent));
-
-        verify(studentRepo).findById(id);
-        verifyNoMoreInteractions(studentRepo);
-        verifyNoInteractions(studentMapper);
+    @Nested
+    @DisplayName("updateStudent")
+    class UpdateStudent {
+
+        @Test
+        @DisplayName("updates student with new parent")
+        void updateWithNewParent() {
+            Instant before = student.getUpdatedAt();
+
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+            when(parentMapper.toEntity(createParentDto)).thenReturn(parent);
+            when(parentRepo.save(parent)).thenReturn(parent);
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+            StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithNewParent);
+
+            assertSame(studentResponseDto, result);
+            assertNotNull(student.getParent());
+            assertNotNull(student.getUpdatedAt());
+            assertNotEquals(before, student.getUpdatedAt());
+
+            verify(studentRepo).findById(student.getId());
+            verify(studentMapper).updateFromDto(updateStudentDtoWithNewParent, student);
+            verify(parentMapper).toEntity(createParentDto);
+            verify(parentRepo).save(parent);
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("updates student with existing parent by id")
+        void updateWithParentId() {
+            Instant before = student.getUpdatedAt();
+
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+            when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+            StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithParentId);
+
+            assertSame(studentResponseDto, result);
+            assertNotNull(student.getParent());
+            assertNotNull(student.getUpdatedAt());
+            assertNotEquals(before, student.getUpdatedAt());
+
+            verify(studentRepo).findById(student.getId());
+            verify(studentMapper).updateFromDto(updateStudentDtoWithParentId, student);
+            verify(parentRepo).findByIdAndActiveTrue(parent.getId());
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("throws StudentNotFoundException when updating unknown id")
+        void updateNotFound() {
+            UUID id = UUID.randomUUID();
+            when(studentRepo.findById(id)).thenReturn(Optional.empty());
+
+            assertThrows(StudentNotFoundException.class,
+                    () -> studentService.updateStudent(id, updateStudentDtoWithNewParent));
+
+            verify(studentRepo).findById(id);
+            verifyNoMoreInteractions(studentRepo);
+            verifyNoInteractions(studentMapper, parentRepo, parentMapper);
+        }
     }
 
     private Student validStudentEntity() {

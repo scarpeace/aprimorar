@@ -42,6 +42,7 @@ public class EventService {
         this.eventMapper = eventMapper;
     }
 
+    @Transactional(readOnly = true)
     public Page<EventResponseDTO> listEvents(
             Pageable pageable,
             LocalDateTime start,
@@ -53,11 +54,13 @@ public class EventService {
         return eventPage.map(eventMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
     public EventResponseDTO findById(Long eventId) {
         Event foundEvent = findEventOrThrow(eventId);
         return eventMapper.toDto(foundEvent);
     }
 
+    @Transactional
     public EventResponseDTO createEvent(CreateEventDTO createEventDto) {
         log.info("Creating event for student: {} with employee: {}",
                 createEventDto.studentId(), createEventDto.employeeId());
@@ -97,6 +100,7 @@ public class EventService {
         return eventMapper.toDto(foundEvent);
     }
 
+    @Transactional
     public void deleteEvent(Long eventId) {
         Event foundEvent = findEventOrThrow(eventId);
         eventRepo.delete(foundEvent);

@@ -5,6 +5,7 @@ import com.aprimorar.api.exception.handler.GlobalExceptionHandler;
 import com.aprimorar.api.service.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -48,10 +50,124 @@ class EventControllerTest {
                 .build();
     }
 
+    @Nested
+    @DisplayName("request validation")
+    class RequestValidation {
+
+        @Test
+        @DisplayName("returns 400 when creating event without content")
+        void createWithoutContent() throws Exception {
+            mockMvc.perform(post("/v1/events")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(validBodyWithoutContent()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.message", containsString("content")));
+
+            verifyNoInteractions(eventService);
+        }
+
+        @Test
+        @DisplayName("returns 400 when updating event without content")
+        void updateWithoutContent() throws Exception {
+            mockMvc.perform(patch("/v1/events/{eventId}", 1L)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(validBodyWithoutContent()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                    .andExpect(jsonPath("$.message", containsString("content")));
+
+            verifyNoInteractions(eventService);
+        }
+
+        @Test
+        @DisplayName("returns 400 when content enum value is invalid")
+        void invalidEnumContent() throws Exception {
+            mockMvc.perform(post("/v1/events")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(bodyWithInvalidContent()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value("MALFORMED_REQUEST"));
+
+            verifyNoInteractions(eventService);
+        }
+    }
+
+    @Nested
+    @DisplayName("listEvents")
+    class ListEvents {
+
+        @Test
+        @DisplayName("includes content field in list response")
+        void includesContentInList() throws Exception {
+            when(eventService.listEvents(any(Pageable.class), isNull(), isNull(), isNull(), isNull()))
+                    .thenReturn(new PageImpl<>(List.of(eventResponseWithContent()), PageRequest.of(0, 20), 1));
+
+            mockMvc.perform(get("/v1/events"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.content[0].content").value("ENEM"));
+
+            verify(eventService).listEvents(any(Pageable.class), isNull(), isNull(), isNull(), isNull());
+        }
+
+        @Test
+        @DisplayName("returns 400 for invalid sortBy")
+        void invalidSortBy() throws Exception {
+            mockMvc.perform(get("/v1/events").param("sortBy", "studentId"))
+                    .andExpect(status().isBadRequest());
+
+            verifyNoInteractions(eventService);
+        }
+
+        @Test
+        @DisplayName("returns 400 for negative page")
+        void negativePage() throws Exception {
+            mockMvc.perform(get("/v1/events").param("page", "-1"))
+                    .andExpect(status().isBadRequest());
+
+            verifyNoInteractions(eventService);
+        }
+
+        @Test
+        @DisplayName("returns 400 for size less than 1")
+        void invalidSize() throws Exception {
+            mockMvc.perform(get("/v1/events").param("size", "0"))
+                    .andExpect(status().isBadRequest());
+
+            verifyNoInteractions(eventService);
+        }
+
+        @Test
+        @DisplayName("passes filters to service")
+        void forwardsFiltersToService() throws Exception {
+            when(eventService.listEvents(any(Pageable.class), any(), any(), any(), any()))
+                    .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
+
+            mockMvc.perform(get("/v1/events")
+                            .param("studentId", UUID.randomUUID().toString())
+                            .param("employeeId", UUID.randomUUID().toString())
+                            .param("start", "2027-06-01T10:00:00")
+                            .param("end", "2027-06-01T11:00:00"))
+                    .andExpect(status().isOk());
+
+            verify(eventService).listEvents(any(Pageable.class), any(), any(), any(), any());
+        }
+    }
+
     @Test
-    @DisplayName("Should return 400 when creating event without content")
-    void createEventWithoutContentShouldReturnBadRequest() throws Exception {
-        String requestBody = """
+    @DisplayName("includes content field in detail response")
+    void getByIdIncludesContent() throws Exception {
+        when(eventService.findById(eq(1L))).thenReturn(eventResponseWithContent());
+
+        mockMvc.perform(get("/v1/events/{eventId}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").value("ENEM"));
+
+        verify(eventService).findById(1L);
+    }
+
+    private String validBodyWithoutContent() {
+        return """
                 {
                   "title": "Physics class",
                   "description": "Kinematics review",
@@ -63,47 +179,10 @@ class EventControllerTest {
                   "employeeId": "756ecad4-adf8-457f-9188-cbc2c48f3cb8"
                 }
                 """;
-
-        mockMvc.perform(post("/v1/events")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                .andExpect(jsonPath("$.message", containsString("content")));
-
-        verifyNoInteractions(eventService);
     }
 
-    @Test
-    @DisplayName("Should return 400 when updating event without content")
-    void updateEventWithoutContentShouldReturnBadRequest() throws Exception {
-        String requestBody = """
-                {
-                  "title": "Physics class",
-                  "description": "Kinematics review",
-                  "startDateTime": "2027-06-01T10:00:00",
-                  "endDateTime": "2027-06-01T11:00:00",
-                  "price": 100.00,
-                  "payment": 50.00,
-                  "studentId": "d320b9db-9e72-42ce-b62f-3dc4fbe6d7eb",
-                  "employeeId": "756ecad4-adf8-457f-9188-cbc2c48f3cb8"
-                }
-                """;
-
-        mockMvc.perform(patch("/v1/events/{eventId}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                .andExpect(jsonPath("$.message", containsString("content")));
-
-        verifyNoInteractions(eventService);
-    }
-
-    @Test
-    @DisplayName("Should return 400 when content enum value is invalid")
-    void createEventWithInvalidContentShouldReturnBadRequest() throws Exception {
-        String requestBody = """
+    private String bodyWithInvalidContent() {
+        return """
                 {
                   "title": "Physics class",
                   "description": "Kinematics review",
@@ -116,39 +195,6 @@ class EventControllerTest {
                   "employeeId": "756ecad4-adf8-457f-9188-cbc2c48f3cb8"
                 }
                 """;
-
-        mockMvc.perform(post("/v1/events")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("MALFORMED_REQUEST"));
-
-        verifyNoInteractions(eventService);
-    }
-
-    @Test
-    @DisplayName("Should include content in events list response")
-    void listEventsShouldIncludeContent() throws Exception {
-        when(eventService.listEvents(any(Pageable.class), isNull(), isNull(), isNull(), isNull()))
-                .thenReturn(new PageImpl<>(List.of(eventResponseWithContent()), PageRequest.of(0, 20), 1));
-
-        mockMvc.perform(get("/v1/events"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].content").value("ENEM"));
-
-        verify(eventService).listEvents(any(Pageable.class), isNull(), isNull(), isNull(), isNull());
-    }
-
-    @Test
-    @DisplayName("Should include content in event detail response")
-    void getEventByIdShouldIncludeContent() throws Exception {
-        when(eventService.findById(1L)).thenReturn(eventResponseWithContent());
-
-        mockMvc.perform(get("/v1/events/{eventId}", 1L))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").value("ENEM"));
-
-        verify(eventService).findById(1L);
     }
 
     private EventResponseDTO eventResponseWithContent() {

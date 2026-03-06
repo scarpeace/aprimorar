@@ -223,6 +223,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
+        assertTrue(messages(violations).contains("Email deve ser um endereço de email válido"));
     }
 
     // ─── address ──────────────────────────────────────────────────────────────
