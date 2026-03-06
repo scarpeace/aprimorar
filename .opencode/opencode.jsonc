@@ -62,6 +62,26 @@
                 "bash": true
             }
         },
+        "refactor_reviewer": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.3-codex",
+            "prompt": "{file:./agents/refactor-reviewer.md}",
+            "tools": {
+                "read": true,
+                "write": true,
+                "edit": true,
+                "bash": true
+            }
+        },
+        "refactor_reviewer_quick": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.3-codex",
+            "prompt": "{file:./agents/refactor-reviewer-quick.md}",
+            "tools": {
+                "read": true,
+                "bash": true
+            }
+        },
         "tracker": {
             "mode": "subagent",
             "model": "openai/gpt-5.2",
@@ -119,11 +139,23 @@
             "subtask": true,
             "template": "Review the current git diff. Provide one consolidated review covering code quality, security basics, and performance basics. If there are findings, create a markdown file under docs/reviews/ with small checkbox tasks grouped by P0/P1/P2 and by quality/security/performance. If there are no findings, do not create a file. If decisions are ambiguous, ask numbered questions with recommended defaults and numbered options. Output prioritized fixes only."
         },
+        "refactor-review": {
+            "description": "Review one or more paths and write ordered refactor suggestions",
+            "agent": "refactor_reviewer",
+            "subtask": true,
+            "template": "Review one or more paths for refactoring opportunities: {{input}}. Input may be comma-separated paths or one path per line. Include maintainability, testability, and relevant security/performance considerations. Ask clarifying numbered questions when needed, with numbered options; for multiple choice, say choose all that apply. Do not edit source code. Always create a report in docs/refactor/YYYY-MM-DD-<slug>.md containing an ordered numbered list of suggestions grouped by P0/P1/P2, and return a concise summary plus report path."
+        },
+        "refactor-review-quick": {
+            "description": "Quick path refactor review in batches of five",
+            "agent": "refactor_reviewer_quick",
+            "subtask": true,
+            "template": "Review exactly one path for refactoring opportunities: {{input}}. Include maintainability, testability, and relevant security/performance considerations. Do not edit source code and do not create files. Return only the top 5 improvements in this response, then ask exactly: 1) Do you want 5 more? with options 1) No (default) and 2) Yes. If the user answers Yes, continue with the next 5 without repeating. Ask clarifying numbered questions when needed, with numbered options; for multi-select, say choose all that apply."
+        },
         "update-plan": {
             "description": "Update roadmap/epic status and review notes for a task",
             "agent": "tracker",
             "subtask": true,
-            "template": "Update planning docs for Task ID: {{input}}. Find the Epic containing the task, update status, append review notes (quality/security/performance), and add follow-up subtasks if needed. If there is a complexity alert or split proposal, mark task BLOCKED and register the split in the same Epic. Update roadmap Epic Index if required. If ambiguity remains, ask one numbered question with recommended default and numbered options."
+            "template": "Update planning docs for Task ID: {{input}}. Find the Epic containing the task, update status, append review notes (quality/security/performance), and add follow-up subtasks if needed. If there is a complexity alert or split proposal, mark task BLOCKED and register the split in the same Epic. Update roadmap Epic Index if required. If ambiguity remains, ask one numbered question with recommended default and numbered options. At the end, perform a cleanup on the file containing the Task if possible"
         },
         "devops": {
             "description": "DevOps help (manual use only)",

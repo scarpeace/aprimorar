@@ -52,6 +52,51 @@ Template:
 /review "Review current diff for code quality, security basics, and performance basics. Return prioritized fixes (P0/P1/P2) with beginner-friendly rationale."
 ```
 
+### `/refactor-review`
+
+Use to review one or more file/folder paths and get refactoring suggestions.
+
+Template:
+
+```text
+/refactor-review "<path1>, <path2>"
+```
+
+Examples:
+
+```text
+/refactor-review "server/api-aprimorar/src/main/java/com/aprimorar/api/service"
+/refactor-review "client/src/pages/EventsPage.tsx"
+/refactor-review "client/src/pages/EventsPage.tsx, client/src/components/EventForm.tsx"
+```
+
+Notes:
+- The agent may ask numbered clarification questions before reviewing.
+- It always creates a report under `docs/refactor/`.
+- The report contains an ordered (numbered) list of suggestions grouped by priority.
+
+### `/refactor-review-quick`
+
+Use to review exactly one file or folder path, but keep chat output compact.
+
+Template:
+
+```text
+/refactor-review-quick "<path>"
+```
+
+Examples:
+
+```text
+/refactor-review-quick "server/api-aprimorar/src/main/java/com/aprimorar/api/service"
+/refactor-review-quick "client/src/pages/EventsPage.tsx"
+```
+
+Notes:
+- Returns top 5 improvements at a time.
+- If more exist, it asks: `Do you want 5 more?`
+- This quick mode never creates files.
+
 ### `/update-plan`
 
 Use to keep planning docs synchronized.
@@ -119,6 +164,12 @@ git checkout -b feat/expense-categories main
 # 6) Review and update planning docs
 /review
 /update-plan "T-021"
+
+# Optional: path-based refactor review for one area
+/refactor-review "server/api-aprimorar/src/main/java/com/aprimorar/api/service"
+
+# Optional: quick refactor review in batches of 5
+/refactor-review-quick "server/api-aprimorar/src/main/java/com/aprimorar/api/service"
 
 # 7) Commit with plain message
 git status
