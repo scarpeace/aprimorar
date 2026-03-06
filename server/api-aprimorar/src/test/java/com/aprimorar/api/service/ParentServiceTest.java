@@ -6,6 +6,7 @@ import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.repository.ParentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,8 +21,13 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ParentServiceTest {
@@ -53,37 +59,40 @@ class ParentServiceTest {
         parentSummaryDto = new ParentSummaryDTO(parent.getId(), parent.getName());
     }
 
-    @Test
-    @DisplayName("Should list active parents when success")
-    void testListActiveParents() {
-        Page<Parent> parents = new PageImpl<>(List.of(parent), DEFAULT_PAGEABLE, 1);
-        when(parentRepo.findAllByActiveTrue(DEFAULT_PAGEABLE)).thenReturn(parents);
-        when(parentMapper.toSummaryDto(parent)).thenReturn(parentSummaryDto);
+    @Nested
+    @DisplayName("listActiveParents")
+    class ListActiveParents {
 
-        Page<ParentSummaryDTO> result = parentService.listActiveParents(DEFAULT_PAGEABLE);
+        @Test
+        @DisplayName("returns active parents when data exists")
+        void listActiveParentsSuccess() {
+            Page<Parent> parents = new PageImpl<>(List.of(parent), DEFAULT_PAGEABLE, 1);
+            when(parentRepo.findAllByActiveTrue(DEFAULT_PAGEABLE)).thenReturn(parents);
+            when(parentMapper.toSummaryDto(parent)).thenReturn(parentSummaryDto);
 
-        assertEquals(1, result.getTotalElements());
-        assertEquals(1, result.getContent().size());
-        assertSame(parentSummaryDto, result.getContent().getFirst());
+            Page<ParentSummaryDTO> result = parentService.listActiveParents(DEFAULT_PAGEABLE);
 
-        verify(parentRepo).findAllByActiveTrue(DEFAULT_PAGEABLE);
-        verify(parentMapper).toSummaryDto(parent);
-        verifyNoMoreInteractions(parentRepo, parentMapper);
-    }
+            assertEquals(1, result.getTotalElements());
+            assertEquals(1, result.getContent().size());
+            assertSame(parentSummaryDto, result.getContent().getFirst());
+            verify(parentRepo).findAllByActiveTrue(DEFAULT_PAGEABLE);
+            verify(parentMapper).toSummaryDto(parent);
+            verifyNoMoreInteractions(parentRepo, parentMapper);
+        }
 
-    @Test
-    @DisplayName("Should return empty page when there are no active parents")
-    void testEmptyActiveParentList() {
-        Page<Parent> parents = new PageImpl<>(List.of(), DEFAULT_PAGEABLE, 0);
-        when(parentRepo.findAllByActiveTrue(DEFAULT_PAGEABLE)).thenReturn(parents);
+        @Test
+        @DisplayName("returns empty page when no active parents exist")
+        void listActiveParentsEmpty() {
+            Page<Parent> parents = new PageImpl<>(List.of(), DEFAULT_PAGEABLE, 0);
+            when(parentRepo.findAllByActiveTrue(DEFAULT_PAGEABLE)).thenReturn(parents);
 
-        Page<ParentSummaryDTO> result = parentService.listActiveParents(DEFAULT_PAGEABLE);
+            Page<ParentSummaryDTO> result = parentService.listActiveParents(DEFAULT_PAGEABLE);
 
-        assertEquals(0, result.getTotalElements());
-        assertTrue(result.getContent().isEmpty());
-
-        verify(parentRepo).findAllByActiveTrue(DEFAULT_PAGEABLE);
-        verifyNoMoreInteractions(parentRepo);
-        verifyNoInteractions(parentMapper);
+            assertEquals(0, result.getTotalElements());
+            assertTrue(result.getContent().isEmpty());
+            verify(parentRepo).findAllByActiveTrue(DEFAULT_PAGEABLE);
+            verifyNoMoreInteractions(parentRepo);
+            verifyNoInteractions(parentMapper);
+        }
     }
 }

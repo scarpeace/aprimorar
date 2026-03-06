@@ -29,21 +29,25 @@ public class EmployeeService {
         this.employeeMapper = employeeMapper;
     }
 
+    @Transactional(readOnly = true)
     public Page<EmployeeResponseDTO> listEmployees(Pageable pageable) {
         Page<Employee> employeePage =  employeeRepo.findAll(pageable);
         return employeePage.map(employeeMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
     public Page<EmployeeResponseDTO> listActiveEmployees(Pageable pageable) {
         Page<Employee> activeEmployeesPage = employeeRepo.findAllByActiveTrue(pageable);
         return activeEmployeesPage.map(employeeMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
     public EmployeeResponseDTO findById(UUID employeeId) {
         Employee foundEmployee = findEmployeeOrThrow(employeeId);
         return employeeMapper.toDto(foundEmployee);
     }
 
+    @Transactional
     public EmployeeResponseDTO createEmployee(CreateEmployeeDTO createEmployeeDto) {
         log.info("Creating employee with name: {}", createEmployeeDto.name());
         Employee newEmployee = employeeMapper.toEntity(createEmployeeDto);

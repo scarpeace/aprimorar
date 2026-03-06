@@ -123,6 +123,7 @@ class CreateEventDTOTest {
                 UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
+        assertTrue(messages(violations).contains("Preço deve ser maior ou igual a 0"));
     }
 
     // ─── payment ──────────────────────────────────────────────────────────────
@@ -143,6 +144,7 @@ class CreateEventDTOTest {
                 UUID.randomUUID(), UUID.randomUUID());
         Set<ConstraintViolation<CreateEventDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
+        assertTrue(messages(violations).contains("Pagamento deve ser maior ou igual a 0"));
     }
 
     @Test

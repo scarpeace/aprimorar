@@ -37,6 +37,12 @@ public class MapperUtils {
         return contact.replaceAll("\\D", "");
     }
 
+    /** Strips CEP formatting, keeps only digits. Input is guaranteed valid by DTO @Pattern. */
+    public String sanitizeZip(String zip) {
+        if (zip == null || zip.isBlank()) return null;
+        return zip.replaceAll("\\D", "");
+    }
+
     // ========================================
     // FORMATTING METHODS
     // ========================================
@@ -58,6 +64,12 @@ public class MapperUtils {
                 contact.substring(0, 2),
                 contact.substring(2, 7),
                 contact.substring(7, 11));
+    }
+
+    /** Formats stored CEP digits to display format: 12345-678 */
+    public String formatZip(String zip) {
+        if (zip == null || zip.length() != 8) return zip;
+        return String.format("%s-%s", zip.substring(0, 5), zip.substring(5, 8));
     }
 
     /** Parses stored birthdate string back to LocalDate */

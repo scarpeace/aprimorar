@@ -3,29 +3,28 @@ package com.aprimorar.api.controller;
 import com.aprimorar.api.dto.event.CreateEventDTO;
 import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.service.EventService;
+import com.aprimorar.api.util.PageableUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
-
-// TODO: Optimize event listing query to avoid N+1 selects.
 
 @RestController
 @RequestMapping("/v1/events")
 @Tag(name = "Events", description = "Event management APIs")
 public class EventController {
+
+    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("startDateTime", "endDateTime", "createdAt", "updatedAt");
 
     private final EventService eventService;
 
@@ -34,7 +33,6 @@ public class EventController {
     }
 
     @Operation(summary = "List all EVENTS", description = "Retrieves all events from database with pagination")
-    @Transactional(readOnly = true)
     @GetMapping
     public ResponseEntity<Page<EventResponseDTO>> listEvents(
             @RequestParam(defaultValue = "0") int page,
@@ -45,13 +43,12 @@ public class EventController {
             @RequestParam(required = false) UUID studentId,
             @RequestParam(required = false) UUID employeeId
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Pageable pageable = PageableUtils.buildPageable(page, size, sortBy, "startDateTime", ALLOWED_SORT_FIELDS);
         Page<EventResponseDTO> allEvents = eventService.listEvents(pageable, start, end, studentId, employeeId);
         return ResponseEntity.ok(allEvents);
     }
 
     @Operation(summary = "List single EVENT", description = "Retrieves single event based on ID")
-    @Transactional(readOnly = true)
     @GetMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> getEventById(@PathVariable Long eventId) {
         var foundEvent = eventService.findById(eventId);

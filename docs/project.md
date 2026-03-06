@@ -93,10 +93,10 @@ Out of scope (future phases):
 |---|---|---|
 | FR-001.1 | Create Student | Create a new student with personal details, address, and parent/guardian information |
 | FR-001.2 | List Students | Display all students with pagination support |
-| FR-001.3 | List Active Students | Display only active (non-deleted) students with pagination |
+| FR-001.3 | List Students with Archive Filter | Display students with pagination, hiding archived by default and allowing include-all when requested |
 | FR-001.4 | Get Student by ID | Retrieve a specific student by their unique identifier |
 | FR-001.5 | Update Student | Update student information including address and parent details |
-| FR-001.6 | Soft Delete Student | Soft delete (set active=false) instead of physical deletion |
+| FR-001.6 | Archive Student | Archive/unarchive student records instead of physical deletion |
 | FR-001.7 | Student Validation | Validate CPF (XXX.XXX.XXX-XX), contact ((XX)XXXXX-XXXX), and email |
 
 #### Employee Management (FR-002)
@@ -373,12 +373,13 @@ Students
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/v1/students` | List all students (paginated) |
-| GET | `/v1/students/active` | List active students |
+| GET | `/v1/students` | List all students (paginated). Use `includeArchived=true` to include archived students |
 | GET | `/v1/students/{id}` | Get student by ID |
 | POST | `/v1/students` | Create new student |
 | PATCH | `/v1/students/{id}` | Update student |
-| DELETE | `/v1/students/{id}` | Soft delete student |
+| PATCH | `/v1/students/{id}/archive` | Archive student |
+| PATCH | `/v1/students/{id}/unarchive` | Unarchive student |
+| DELETE | `/v1/students/{id}` | Archive student (alias) |
 
 Employees
 

@@ -93,6 +93,11 @@ export function StudentDetailPage() {
             <DetailField label="Matrícula" value={student.createdAt} icon={GraduationCap} />
             <DetailField label="Escola" value={student.school} icon={GraduationCap} />
             <DetailField label="Responsável" value={student.parent?.name ?? "-"} icon={GraduationCap} />
+            <DetailField
+              label="Status"
+              value={student.archivedAt ? "Arquivado" : "Ativo"}
+              icon={CheckCircle}
+            />
           </CardContent>
         </Card>
 

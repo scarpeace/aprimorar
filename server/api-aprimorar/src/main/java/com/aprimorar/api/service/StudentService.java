@@ -1,5 +1,16 @@
 package com.aprimorar.api.service;
 
+import java.time.Instant;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.aprimorar.api.dto.parent.CreateParentDTO;
 import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
@@ -12,15 +23,7 @@ import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.ParentRepository;
 import com.aprimorar.api.repository.StudentRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.util.UUID;
+import com.aprimorar.api.repository.specification.StudentSpecifications;
 
 @Service
 public class StudentService {
@@ -39,36 +42,24 @@ public class StudentService {
         this.parentMapper = parentMapper;
     }
 
-    public Page<StudentResponseDTO> listStudents(Pageable pageable){
-        Page<Student> studentPage = studentRepo.findAll(pageable);
-        return studentPage.map(studentMapper::toDto);
-    }
-
-    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name) {
-        return listStudents(pageable, name, null);
-    }
-
-    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, Boolean active) {
+    @Transactional(readOnly = true)
+    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, boolean includeArchived) {
         String normalizedName = normalizeNameFilter(name);
+        Specification<Student> filters = Specification.unrestricted();
 
-        if (active != null && normalizedName != null) {
-            return studentRepo.findByActiveAndNameContainingIgnoreCase(active, normalizedName, pageable)
-                    .map(studentMapper::toDto);
-        }
-
-        if (active != null) {
-            return studentRepo.findByActive(active, pageable)
-                    .map(studentMapper::toDto);
+        if (!includeArchived) {
+            filters = filters.and(StudentSpecifications.notArchived());
         }
 
         if (normalizedName != null) {
-            return studentRepo.findByNameContainingIgnoreCase(normalizedName, pageable)
-                    .map(studentMapper::toDto);
+            filters = filters.and(StudentSpecifications.nameContainsIgnoreCase(normalizedName));
         }
 
-        return listStudents(pageable);
+        return studentRepo.findAll(filters, pageable)
+                .map(studentMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
     public StudentResponseDTO findById(UUID studentId) {
          Student foundStudent = findStudentOrThrow(studentId);
          return studentMapper.toDto(foundStudent);
@@ -76,26 +67,31 @@ public class StudentService {
 
     @Transactional
     public StudentResponseDTO createStudent(CreateStudentDTO createStudentDto) {
-        log.info("Creating student with name: {}", createStudentDto.name());
+        log.debug("Creating student");
 
         Student newStudent = studentMapper.toEntity(createStudentDto);
 
-        if (createStudentDto.parentId() != null) {
-            Parent existingParent = findActiveParentOrThrow(createStudentDto.parentId());
-            newStudent.setParent(existingParent);
-        } else if (createStudentDto.parent() != null) {
-            Parent savedParent = createParent(createStudentDto.parent());
-            newStudent.setParent(savedParent);
-        }
+        assignParentReference(newStudent, createStudentDto.parentId(), createStudentDto.parent());
 
         Student savedStudent = studentRepo.save(newStudent);
         return studentMapper.toDto(savedStudent);
     }
 
     @Transactional
-    public void softDeleteStudent(UUID studentId){
+    public void archiveStudent(UUID studentId) {
         Student foundStudent = findStudentOrThrow(studentId);
-        deactivateIfActive(foundStudent);
+        archiveIfNotArchived(foundStudent);
+    }
+
+    @Transactional
+    public void unarchiveStudent(UUID studentId) {
+        Student foundStudent = findStudentOrThrow(studentId);
+        if (foundStudent.getArchivedAt() != null) {
+            Instant now = Instant.now();
+            foundStudent.setArchivedAt(null);
+            foundStudent.setLastReactivatedAt(now);
+            foundStudent.setUpdatedAt(now);
+        }
     }
 
     @Transactional
@@ -104,13 +100,7 @@ public class StudentService {
 
         studentMapper.updateFromDto(updateStudentDto, foundStudent);
 
-        if (updateStudentDto.parentId() != null) {
-            Parent existingParent = findActiveParentOrThrow(updateStudentDto.parentId());
-            foundStudent.setParent(existingParent);
-        } else if (updateStudentDto.parent() != null) {
-            Parent savedParent = createParent(updateStudentDto.parent());
-            foundStudent.setParent(savedParent);
-        }
+        assignParentReference(foundStudent, updateStudentDto.parentId(), updateStudentDto.parent());
 
         foundStudent.setUpdatedAt(Instant.now());
 
@@ -132,10 +122,24 @@ public class StudentService {
         return parentRepo.save(newParent);
     }
 
-    private void deactivateIfActive(Student foundStudent) {
-        if (Boolean.TRUE.equals(foundStudent.getActive())) {
-            foundStudent.setActive(false);
-            foundStudent.setUpdatedAt(Instant.now());
+    private void assignParentReference(Student student, UUID parentId, CreateParentDTO parentDto) {
+        if (parentId != null) {
+            Parent existingParent = findActiveParentOrThrow(parentId);
+            student.setParent(existingParent);
+            return;
+        }
+
+        if (parentDto != null) {
+            Parent savedParent = createParent(parentDto);
+            student.setParent(savedParent);
+        }
+    }
+
+    private void archiveIfNotArchived(Student foundStudent) {
+        if (foundStudent.getArchivedAt() == null) {
+            Instant now = Instant.now();
+            foundStudent.setArchivedAt(now);
+            foundStudent.setUpdatedAt(now);
         }
     }
 

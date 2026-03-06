@@ -8,7 +8,7 @@ export const addressSchema = z.object({
   district: z.string().min(1, "Bairro e obrigatorio"),
   city: z.string().min(1, "Cidade e obrigatoria"),
   state: z.string().min(1, "Estado e obrigatorio"),
-  zip: z.string().min(1, "CEP e obrigatorio"),
+  zip: z.string().regex(/^\d{5}-?\d{3}$/, "CEP deve estar no formato 00000-000 ou 00000000"),
 })
 
 export const createStudentSchema = z.object({
@@ -43,7 +43,8 @@ export const studentResponseSchema = z.object({
   birthdate: z.string(),
   age: z.number().int().nonnegative(),
   school: z.string(),
-  active: z.boolean(),
+  archivedAt: z.string().nullable(),
+  lastReactivatedAt: z.string().nullable(),
   address: addressSchema.nullable(),
   parent: parentSchema.nullable(),
   createdAt: z.string(),

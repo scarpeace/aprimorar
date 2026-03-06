@@ -20,7 +20,11 @@ public record StudentResponseDTO(
 
         String school,
         Integer age,
-        Boolean active,
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
+        Instant archivedAt,
+
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
+        Instant lastReactivatedAt,
         AddressResponseDTO address,
         ParentResponseDTO parent,
 

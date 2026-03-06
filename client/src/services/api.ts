@@ -56,15 +56,16 @@ api.interceptors.response.use(
 )
 
 export const studentsApi = {
-  list: (page = 0, size = 20, sortBy = "name", active?: boolean): Promise<AxiosResponse<PageResponse<StudentResponse>>> => {
-    const activeParam = active === undefined ? "" : `&active=${active}`
-    return api.get(`/v1/students?page=${page}&size=${size}&sortBy=${sortBy}${activeParam}`)
+  list: (page = 0, size = 20, sortBy = "name", includeArchived?: boolean): Promise<AxiosResponse<PageResponse<StudentResponse>>> => {
+    const includeArchivedParam = includeArchived ? "&includeArchived=true" : ""
+    return api.get(`/v1/students?page=${page}&size=${size}&sortBy=${sortBy}${includeArchivedParam}`)
   },
   getById: (id: string): Promise<AxiosResponse<StudentResponse>> =>
     api.get(`/v1/students/${id}`),
   create: (data: CreateStudentInput): Promise<AxiosResponse<StudentResponse>> => api.post("/v1/students", data),
   update: (id: string, data: CreateStudentInput): Promise<AxiosResponse<StudentResponse>> => api.patch(`/v1/students/${id}`, data),
-  delete: (id: string) => api.delete(`/v1/students/${id}`),
+  archive: (id: string) => api.delete(`/v1/students/${id}`),
+  unarchive: (id: string) => api.patch(`/v1/students/${id}/unarchive`),
 }
 
 export const employeesApi = {

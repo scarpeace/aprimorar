@@ -168,8 +168,33 @@ class CreateAddressDTOTest {
     void blankZip() {
         CreateAddressDTO dto = addressDto("Main Street", "123", null, "Downtown", "Cityville", "SP", "");
         Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
-        assertEquals(1, violations.size());
+        assertFalse(violations.isEmpty());
         assertTrue(messages(violations).contains("CEP do endereço é obrigatório"));
+    }
+
+    @Test
+    @DisplayName("Should have 0 violations when zip format is valid with dash")
+    void validZipWithDash() {
+        CreateAddressDTO dto = addressDto("Main Street", "123", null, "Downtown", "Cityville", "SP", "12345-678");
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should have 0 violations when zip format is valid with digits only")
+    void validZipDigitsOnly() {
+        CreateAddressDTO dto = addressDto("Main Street", "123", null, "Downtown", "Cityville", "SP", "12345678");
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should have 1 violation when zip format is invalid")
+    void invalidZipFormat() {
+        CreateAddressDTO dto = addressDto("Main Street", "123", null, "Downtown", "Cityville", "SP", "1234-567");
+        Set<ConstraintViolation<CreateAddressDTO>> violations = validator.validate(dto);
+        assertEquals(1, violations.size());
+        assertTrue(messages(violations).contains("CEP deve estar no formato 00000-000 ou 00000000"));
     }
 
     // ─── complement (optional) ────────────────────────────────────────────────

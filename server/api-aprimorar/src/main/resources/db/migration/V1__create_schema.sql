@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS tb_student (
     birthdate DATE NOT NULL,
     cpf VARCHAR(255) NOT NULL,
     school VARCHAR(255) NOT NULL,
-    active BOOLEAN NOT NULL DEFAULT TRUE,
+    archived_at TIMESTAMPTZ,
+    last_reactivated_at TIMESTAMPTZ,
     parent_id UUID NOT NULL,
     street VARCHAR(255) NOT NULL,
     number VARCHAR(255) NOT NULL,
@@ -73,3 +74,5 @@ CREATE TABLE IF NOT EXISTS tb_events (
     CONSTRAINT fk_event_student FOREIGN KEY (student_id) REFERENCES tb_student(student_id),
     CONSTRAINT fk_event_employee FOREIGN KEY (employee_id) REFERENCES tb_employee(employee_id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_tb_student_archived_at ON tb_student (archived_at);

@@ -6,9 +6,11 @@ import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.util.MapperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ParentMapperTest {
 
@@ -26,27 +28,52 @@ class ParentMapperTest {
         mapper = new ParentMapper(new MapperUtils());
     }
 
-    @Test
-    @DisplayName("Should sanitize contact, cpf, and email when mapping to entity")
-    void toEntity_shouldSanitizeContactCpfAndEmail() {
-        CreateParentDTO dto = createParentDto("  Parent@Email.Com ");
+    @Nested
+    @DisplayName("toEntity")
+    class ToEntity {
 
-        Parent entity = mapper.toEntity(dto);
+        @Test
+        @DisplayName("sanitizes contact cpf and email")
+        void sanitizesFields() {
+            CreateParentDTO dto = createParentDto("  Parent@Email.Com ");
 
-        assertEquals("parent@email.com", entity.getEmail());
-        assertEquals("61999234523", entity.getContact());
-        assertEquals("12345678901", entity.getCpf());
+            Parent entity = mapper.toEntity(dto);
+
+            assertEquals("parent@email.com", entity.getEmail());
+            assertEquals("61999234523", entity.getContact());
+            assertEquals("12345678901", entity.getCpf());
+            assertEquals(PARENT_NAME, entity.getName());
+        }
+
+        @Test
+        @DisplayName("returns null when input is null")
+        void returnsNullWhenInputNull() {
+            assertNull(mapper.toEntity(null));
+        }
     }
 
-    @Test
-    @DisplayName("Should format contact and cpf when mapping to DTO")
-    void toDto_shouldFormatContactAndCpf() {
-        Parent entity = parentEntity();
+    @Nested
+    @DisplayName("toDto")
+    class ToDto {
 
-        ParentResponseDTO dto = mapper.toDto(entity);
+        @Test
+        @DisplayName("formats contact and cpf")
+        void formatsContactAndCpf() {
+            Parent entity = parentEntity();
 
-        assertEquals("(61)99923-4523", dto.contact());
-        assertEquals("123.456.789-01", dto.cpf());
+            ParentResponseDTO dto = mapper.toDto(entity);
+
+            assertEquals("(61)99923-4523", dto.contact());
+            assertEquals("123.456.789-01", dto.cpf());
+            assertEquals(PARENT_EMAIL, dto.email());
+            assertEquals(PARENT_NAME, dto.name());
+        }
+
+        @Test
+        @DisplayName("returns null when input is null")
+        void returnsNullWhenInputNull() {
+            assertNull(mapper.toDto(null));
+        }
     }
 
     private CreateParentDTO createParentDto(String email) {
@@ -61,5 +88,4 @@ class ParentMapperTest {
         entity.setCpf(PARENT_CPF_RAW);
         return entity;
     }
-
 }

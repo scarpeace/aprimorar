@@ -7,11 +7,13 @@ import com.aprimorar.api.enums.Role;
 import com.aprimorar.api.util.MapperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class EmployeeMapperTest {
 
@@ -30,28 +32,53 @@ class EmployeeMapperTest {
         mapper = new EmployeeMapper(new MapperUtils());
     }
 
-    @Test
-    @DisplayName("Should format birthdate and sanitize fields when mapping to entity")
-    void toEntity_shouldFormatBirthdateAndSanitizeFields() {
-        CreateEmployeeDTO dto = validCreateEmployeeDto();
+    @Nested
+    @DisplayName("toEntity")
+    class ToEntity {
 
-        Employee entity = mapper.toEntity(dto);
+        @Test
+        @DisplayName("sanitizes mapped fields")
+        void sanitizesFields() {
+            CreateEmployeeDTO dto = validCreateEmployeeDto();
 
-        assertEquals(EMPLOYEE_BIRTHDATE, entity.getBirthdate());
-        assertEquals("61999234523", entity.getContact());
-        assertEquals("12345678901", entity.getCpf());
+            Employee entity = mapper.toEntity(dto);
+
+            assertEquals(EMPLOYEE_BIRTHDATE, entity.getBirthdate());
+            assertEquals("61999234523", entity.getContact());
+            assertEquals("12345678901", entity.getCpf());
+            assertEquals("email@email.com", entity.getEmail());
+            assertEquals(Role.ADMIN, entity.getRole());
+        }
+
+        @Test
+        @DisplayName("returns null when input is null")
+        void returnsNullWhenInputNull() {
+            assertNull(mapper.toEntity(null));
+        }
     }
 
-    @Test
-    @DisplayName("Should parse birthdate and format fields when mapping to DTO")
-    void toDto_shouldParseBirthdateAndFormatFields() {
-        Employee entity = validEmployeeEntity();
+    @Nested
+    @DisplayName("toDto")
+    class ToDto {
 
-        EmployeeResponseDTO dto = mapper.toDto(entity);
+        @Test
+        @DisplayName("formats contact and cpf")
+        void formatsContactAndCpf() {
+            Employee entity = validEmployeeEntity();
 
-        assertEquals(EMPLOYEE_BIRTHDATE, dto.birthdate());
-        assertEquals("(61)99923-4523", dto.contact());
-        assertEquals("123.456.789-01", dto.cpf());
+            EmployeeResponseDTO dto = mapper.toDto(entity);
+
+            assertEquals(EMPLOYEE_BIRTHDATE, dto.birthdate());
+            assertEquals("(61)99923-4523", dto.contact());
+            assertEquals("123.456.789-01", dto.cpf());
+            assertEquals(Role.ADMIN, dto.role());
+        }
+
+        @Test
+        @DisplayName("returns null when input is null")
+        void returnsNullWhenInputNull() {
+            assertNull(mapper.toDto(null));
+        }
     }
 
     private CreateEmployeeDTO validCreateEmployeeDto() {
@@ -73,7 +100,7 @@ class EmployeeMapperTest {
         entity.setPix(EMPLOYEE_PIX);
         entity.setContact(EMPLOYEE_CONTACT_RAW);
         entity.setCpf(EMPLOYEE_CPF_RAW);
+        entity.setRole(Role.ADMIN);
         return entity;
     }
-
 }

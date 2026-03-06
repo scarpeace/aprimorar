@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
@@ -20,12 +20,13 @@ export function StudentsPage() {
   const [error, setError] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [hideArchived, setHideArchived] = useState(true)
 
-  const loadStudents = async () => {
+  const loadStudents = useCallback(async () => {
     try {
       setError(null)
       setLoading(true)
-      const studentsRes = await studentsApi.list()
+      const studentsRes = await studentsApi.list(0, 20, "name", !hideArchived)
       const studentsPage: PageResponse<StudentResponse> = studentsRes.data
       setStudentList(studentsPage.content)
     } catch (error) {
@@ -34,24 +35,36 @@ export function StudentsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [hideArchived])
 
   useEffect(() => {
     loadStudents()
-  }, [])
+  }, [loadStudents])
 
-  const handleDelete = async (student: StudentResponse) => {
-    if (!window.confirm(`Excluir aluno "${student.name}"? Essa acao nao pode ser desfeita.`)) {
+  const handleArchiveToggle = async (student: StudentResponse) => {
+    const isArchived = !!student.archivedAt
+    const verb = isArchived ? "Reativar" : "Arquivar"
+    const confirmText = isArchived
+      ? `Reativar aluno "${student.name}"?`
+      : `Arquivar aluno "${student.name}"?`
+
+    if (!window.confirm(confirmText)) {
       return
     }
 
     try {
       setDeleteError(null)
       setDeletingId(student.id)
-      await studentsApi.delete(student.id)
-      setStudentList((prev) => prev.filter((item) => item.id !== student.id))
+
+      if (isArchived) {
+        await studentsApi.unarchive(student.id)
+      } else {
+        await studentsApi.archive(student.id)
+      }
+
+      await loadStudents()
     } catch (error) {
-      console.error("Falha ao excluir aluno:", error)
+      console.error(`Falha ao ${verb.toLowerCase()} aluno:`, error)
       setDeleteError(getFriendlyErrorMessage(error))
     } finally {
       setDeletingId(null)
@@ -85,6 +98,14 @@ export function StudentsPage() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
           <p className="text-sm text-gray-600">Gerencie cadastros e matriculas.</p>
+          <label className="mt-3 flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              checked={hideArchived}
+              onChange={(e) => setHideArchived(e.target.checked)}
+            />
+            Ocultar arquivados
+          </label>
         </div>
         <Button asChild type="button">
           <Link to="/students/new">Novo aluno</Link>
@@ -105,7 +126,7 @@ export function StudentsPage() {
               <TableHead>Email</TableHead>
               <TableHead>Idade</TableHead>
               <TableHead>Escola</TableHead>
-              <TableHead>Ativo</TableHead>
+              <TableHead>Arquivado</TableHead>
               <TableHead>Acoes</TableHead>
             </TableRow>
           </TableHeader>
@@ -116,7 +137,7 @@ export function StudentsPage() {
                 <TableCell>{student.email}</TableCell>
                 <TableCell>{student.age}</TableCell>
                 <TableCell>{student.school}</TableCell>
-                <TableCell>{student.active ? "Sim" : "Nao"}</TableCell>
+                <TableCell>{student.archivedAt ? "Sim" : "Nao"}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Link
@@ -127,12 +148,16 @@ export function StudentsPage() {
                     </Link>
                     <Button
                       type="button"
-                      variant="destructive"
+                      variant={student.archivedAt ? "outline" : "destructive"}
                       size="sm"
-                      onClick={() => handleDelete(student)}
+                      onClick={() => handleArchiveToggle(student)}
                       disabled={deletingId === student.id}
                     >
-                      {deletingId === student.id ? "Excluindo..." : "Excluir"}
+                      {deletingId === student.id
+                        ? "Salvando..."
+                        : student.archivedAt
+                          ? "Reativar"
+                          : "Arquivar"}
                     </Button>
                   </div>
                 </TableCell>

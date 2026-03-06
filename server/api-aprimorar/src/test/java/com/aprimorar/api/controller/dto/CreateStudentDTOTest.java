@@ -182,20 +182,19 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Contato deve estar no formato (XX)XXXXX-XXXX"));
+        assertTrue(messages(violations).contains("Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"));
     }
 
     @Test
-    @DisplayName("Should have 1 violation when contact format has 4-digit middle")
-    void invalidContactWithFourDigits() {
+    @DisplayName("Should have 0 violations when contact format has 4-digit middle")
+    void validContactWithFourDigits() {
         CreateStudentDTO dto = studentDto(
                 "Student Name", VALID_BIRTHDATE, "123.456.789-01",
                 "Great School", "(11)9999-9999", "student@email.com",
                 VALID_ADDRESS, null, VALID_PARENT
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
-        assertFalse(violations.isEmpty());
-        assertTrue(messages(violations).contains("Contato deve estar no formato (XX)XXXXX-XXXX"));
+        assertTrue(violations.isEmpty());
     }
 
     // ─── email ────────────────────────────────────────────────────────────────
@@ -223,6 +222,7 @@ class CreateStudentDTOTest {
         );
         Set<ConstraintViolation<CreateStudentDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
+        assertTrue(messages(violations).contains("Email deve ser um endereço de email válido"));
     }
 
     // ─── address ──────────────────────────────────────────────────────────────

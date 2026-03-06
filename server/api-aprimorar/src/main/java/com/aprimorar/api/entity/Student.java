@@ -35,7 +35,9 @@ public class Student {
 
     private String school;
 
-    private Boolean active = true;
+    private Instant archivedAt;
+
+    private Instant lastReactivatedAt;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "parent_id", referencedColumnName = "parent_id")
@@ -54,7 +56,8 @@ public class Student {
     }
 
     public Student(UUID id, String name, String contact, String email, LocalDate birthdate, String cpf, String school,
-                   Boolean active, Parent parent, Address address, Instant createdAt, Instant updatedAt) {
+                   Instant archivedAt, Instant lastReactivatedAt, Parent parent, Address address, Instant createdAt,
+                   Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.contact = contact;
@@ -62,7 +65,8 @@ public class Student {
         this.birthdate = birthdate;
         this.cpf = cpf;
         this.school = school;
-        this.active = active;
+        this.archivedAt = archivedAt;
+        this.lastReactivatedAt = lastReactivatedAt;
         this.parent = parent;
         this.address = address;
         this.createdAt = createdAt;
@@ -125,12 +129,20 @@ public class Student {
         this.school = school;
     }
 
-    public Boolean getActive() {
-        return active;
+    public Instant getArchivedAt() {
+        return archivedAt;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setArchivedAt(Instant archivedAt) {
+        this.archivedAt = archivedAt;
+    }
+
+    public Instant getLastReactivatedAt() {
+        return lastReactivatedAt;
+    }
+
+    public void setLastReactivatedAt(Instant lastReactivatedAt) {
+        this.lastReactivatedAt = lastReactivatedAt;
     }
 
     public Parent getParent() {

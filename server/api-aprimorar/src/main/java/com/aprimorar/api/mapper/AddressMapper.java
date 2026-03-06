@@ -3,10 +3,17 @@ package com.aprimorar.api.mapper;
 import com.aprimorar.api.dto.address.AddressResponseDTO;
 import com.aprimorar.api.dto.address.CreateAddressDTO;
 import com.aprimorar.api.entity.Address;
+import com.aprimorar.api.util.MapperUtils;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AddressMapper {
+
+    private final MapperUtils mapperUtils;
+
+    public AddressMapper(MapperUtils mapperUtils) {
+        this.mapperUtils = mapperUtils;
+    }
 
     public Address toEntity(CreateAddressDTO dto) {
         if (dto == null) {
@@ -20,7 +27,7 @@ public class AddressMapper {
         entity.setDistrict(dto.district());
         entity.setCity(dto.city());
         entity.setState(dto.state());
-        entity.setZip(dto.zip());
+        entity.setZip(mapperUtils.sanitizeZip(dto.zip()));
         return entity;
     }
 
@@ -36,7 +43,7 @@ public class AddressMapper {
                 entity.getDistrict(),
                 entity.getCity(),
                 entity.getState(),
-                entity.getZip()
+                mapperUtils.formatZip(entity.getZip())
         );
     }
 
@@ -64,7 +71,7 @@ public class AddressMapper {
             entity.setState(dto.state());
         }
         if (dto.zip() != null) {
-            entity.setZip(dto.zip());
+            entity.setZip(mapperUtils.sanitizeZip(dto.zip()));
         }
     }
 }

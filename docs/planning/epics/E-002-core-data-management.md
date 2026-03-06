@@ -6,7 +6,7 @@
 
 ## Scope
 - In scope:
-  - Student search/filter (name/active) and response contract stabilization
+  - Student search/filter (name/includeArchived) and response contract stabilization
   - Student birthdate validation (reject future dates) and response `age` field
   - Removal of Student `activity` (use Event `content` where classification is needed)
   - Event listing performance and core filters
@@ -20,7 +20,7 @@
 ## Workboard
 - Current focus: None
 - Blocked: S-013 frontend parent inline flow depends on E-004
-- Next up: S-015 student contract/domain simplification
+- Next up: S-016 name uniqueness constraints cleanup (low priority)
 
 ## Stories
 ### Story: S-010 — Student Management Enhancements
@@ -94,8 +94,8 @@
 - Manual: POST/PATCH/GET events in Swagger and verify `content`
 
 ### Story: S-015 — Simplify Student Domain (Remove `activity`, Add `age`)
-**Status:** IN_PROGRESS
-**Links:** T-019 (DONE), T-020 (DONE), T-021 (DONE), T-022 (DONE), T-023 (DONE), T-024 (DONE), T-025 (DONE), T-026 (TODO)
+**Status:** DONE
+**Links:** T-019 (DONE), T-020 (DONE), T-021 (DONE), T-022 (DONE), T-023 (DONE), T-024 (DONE), T-025 (DONE), T-026 (DONE)
 **Intent:** Remove redundant Student `activity`, relax student age-range rules, and expose computed `age` in responses.
 
 **Acceptance Criteria**
@@ -108,93 +108,80 @@
 - Frontend: `cd client && npm run lint && npm run build`
 - Manual: Create/update a student and verify `age` field in responses
 
-## Tasks
-### Task: T-018 — Unify student list endpoint with `active` filter
-**Type:** fullstack
-**Status:** TODO
-**Depends on:** None
-
-**Description**
-- Add optional `active` query param to `GET /v1/students`.
-- Keep `GET /v1/students/active` working for compatibility during transition.
-- Update client to consume the unified route and handle change implications in one release.
-- Mark `/v1/students/active` as deprecated in API/docs.
-- Keep subtasks/IDs for tracking: ST-046, ST-047, ST-048, ST-049, ST-050.
-
-**Files likely affected (best guess)**
-- server/api-aprimorar/src/main/java/com/aprimorar/api/controller/StudentController.java
-- server/api-aprimorar/src/main/java/com/aprimorar/api/service/StudentService.java
-- server/api-aprimorar/src/main/java/com/aprimorar/api/repository/StudentRepository.java
-- client/src/features/students/StudentsPage.tsx
-
-**DoD (Definition of Done)**
-- [ ] `GET /v1/students` supports optional `active` filter without breaking existing filters
-- [ ] Client list flows use unified route (`/v1/students?...`) successfully
-- [ ] `/v1/students/active` still works for compatibility
-- [ ] Deprecation note is documented
-
-**Verification**
-- Backend: `cd server/api-aprimorar && ./mvnw test`
-- Frontend: `cd client && npm run lint && npm run build`
-- Manual: Compare `/v1/students?active=true` with `/v1/students/active` and validate UI list behavior
-
-**Notes**
-- Risks: temporary dual-route period can drift if both paths are not kept aligned.
-- Open questions: removal date for deprecated route (define in a later release note).
-
-### Task: T-025 — Frontend: remove student `activity` usage; show `age`
-**Type:** frontend
+### Story: S-017 — Student Archiving (`archivedAt`) and Return Flow
 **Status:** DONE
-**Depends on:** T-020
+**Links:** T-028 (DONE)
+**Intent:** Replace `active` semantics with `archivedAt` to keep default UI clean while preserving history and allowing student return without re-registration.
 
-**Description**
-- Update client student schema/types to remove `activity` and accept `age`.
-- Remove activity input from student create page.
-- Update student list/detail pages to stop rendering `activity` and display `age` instead.
+**Acceptance Criteria**
+- Student model uses `archivedAt` and `lastReactivatedAt` (no `active` field).
+- `GET /v1/students` defaults to active-only; `includeArchived=true` returns all.
+- Students can be archived/unarchived without re-registration.
+- `DELETE /v1/students/{id}` remains archive alias during transition.
 
-**Files likely affected (best guess)**
-- client/src/lib/schemas/student.ts
-- client/src/features/students/StudentCreatePage.tsx
-- client/src/features/students/StudentsPage.tsx
-- client/src/features/students/StudentDetailPage.tsx
-
-**DoD (Definition of Done)**
-- [ ] Frontend builds against the new student API contract
-- [ ] Student pages no longer reference `activity`
-- [ ] Student pages render `age` where helpful
-
-**Verification**
-- Backend: N/A
-- Frontend: `cd client && npm run lint && npm run build`
-- Manual: Create a student and confirm list/detail show `age`
-
-**Notes**
-- Risks: API and frontend may be deployed out-of-sync; coordinate release.
-- Open questions: whether to show `age` on list table or only in detail view.
-
-**Implementation Notes**
-- Removed `activity` from student create/request schema and response schema usage in frontend.
-- Updated student create form to stop collecting `activity`.
-- Updated student list/detail pages to render `age` instead of `activity`.
-
-### Task: T-026 — Stabilize `age`-related tests with deterministic clock/zone
-**Type:** backend
-**Status:** TODO
-**Depends on:** T-023
-
-**Description**
-- Ensure `age` computation tests cannot become date-dependent (e.g., around birthdays or timezone boundaries).
-- Prefer injecting a `Clock` (or equivalent) into the mapper/service layer and using a fixed clock in tests.
-
-**DoD (Definition of Done)**
-- [ ] All `age`-related unit tests are deterministic (no reliance on the current date)
-- [ ] Zone used for `age` calculation is explicit and covered by tests
-
-**Verification**
+**Test Plan**
 - Backend: `cd server/api-aprimorar && ./mvnw test`
-- Frontend: N/A
+- Frontend: `cd client && npm run lint && npm run build`
+- Manual: archive/unarchive student and validate list behavior with/without `includeArchived`
 
+## Tasks
+No active tasks listed here. See `## Archive (DONE)` for completed work and `## Stories` for next priorities.
 ## Archive (DONE)
+### Task: T-018 — Unify student list endpoint with `active` filter
+- Status: CANCELLED
+- Scope: Superseded by T-028 (`archivedAt` + `includeArchived`); the `active` list contract should not be reintroduced.
+- Verification: N/A
+
+### Task: T-028 — Students: migrate from `active` to `archivedAt`
+- Status: DONE
+- Scope: Replaced student `active` with `archivedAt` + `lastReactivatedAt`, added `includeArchived` list param, and implemented archive/unarchive endpoints while keeping DELETE as archive alias.
+- Verification: `cd server/api-aprimorar && ./mvnw test`; `cd client && npm run lint && npm run build`.
+- Notes: Auth/tenant scoping tests are pending until E-003 exists.
+
+### Task: T-028-A-A — DB migration: add archive columns and backfill
+- Status: DONE
+- Scope: Flyway migration `V6__add_student_archive_columns.sql` adds `archived_at` and `last_reactivated_at` to `tb_student`.
+- Backfill: legacy `active=false` sets `archived_at=COALESCE(updated_at, created_at)`; otherwise `archived_at=NULL`.
+- Verification: `cd server/api-aprimorar && ./mvnw test`; manual inspect `tb_student` after migration.
+
+### Task: T-028-A — Students archive model + migration (backend)
+- Status: DONE
+- Scope: Completed via T-028-A-A (add/backfill columns), T-028-A-B (drop `active` + seed alignment), and T-028-A-C (entity/DTO/service alignment).
+- Notes: Original task was split due to complexity.
+
+### Task: T-028-A-B — DB migration: drop `active` and align seed
+- Status: DONE
+- Scope: Dropped `tb_student.active` via `V7__drop_student_active_column.sql`; seed no longer writes `active`.
+- Verification: `cd server/api-aprimorar && ./mvnw test`; manual recreate DB/container and start app successfully.
+
+### Task: T-028-A-C — Backend model alignment with archive columns
+- Status: DONE
+- Scope: Replaced `Student.active` with `archivedAt`/`lastReactivatedAt`; aligned `StudentResponseDTO`/`StudentMapper` and repository queries.
+- Notes: Preserved `DELETE /v1/students/{id}` as archive alias; removed `active`-based derived queries and aligned `EventService`/tests.
+- Verification: `cd server/api-aprimorar && ./mvnw test`.
+
+### Task: T-028-B-A — List contract migration to `includeArchived`
+- Status: DONE
+- Scope: Replaced list query param `active` with `includeArchived` (default `false`) on `GET /v1/students` and routed service queries accordingly.
+- Notes: Default list returns non-archived; `includeArchived=true` returns archived + non-archived.
+- Verification: `cd server/api-aprimorar && ./mvnw test`.
+
+### Task: T-028-B-B — Archive/unarchive endpoints
+- Status: DONE
+- Scope: Added `PATCH /v1/students/{studentId}/archive` (idempotent) and `PATCH /v1/students/{studentId}/unarchive` (clears `archivedAt`, sets `lastReactivatedAt`); kept `DELETE /v1/students/{studentId}` as archive alias.
+- Verification: `cd server/api-aprimorar && ./mvnw test`.
+
+### Task: T-028-B-C — DELETE alias + API behavior tests
+- Status: DONE
+- Scope: Preserved `DELETE /v1/students/{id}` as archive alias and expanded controller/service integration coverage for list defaults, `includeArchived=true`, archive/unarchive, and DELETE alias behavior.
+
+### Task: ST-166 — DB index for `archived_at`
+- Status: DONE
+- Scope: Added `idx_tb_student_archived_at` via `V8__add_student_archived_at_index.sql`.
+- Verification: app boots and list queries remain stable.
+- Notes: Auth/tenant-scoping coverage is tracked under ST-169.
+- Verification: `cd server/api-aprimorar && ./mvnw test`.
+
 ### Task: T-010 — Student listing/search and validation
 - Status: DONE
 - Scope: Added student filters by name/activity and stabilized list endpoints.
@@ -296,6 +283,16 @@
 - Scope: Updated student DTO/service tests to reflect removed `activity` and relaxed birthdate rules.
 - Verification: `cd server/api-aprimorar && ./mvnw test`.
 
+### Task: T-025 — Frontend: remove student `activity` usage; show `age`
+- Status: DONE
+- Scope: Updated student frontend schemas/pages to remove `activity` and render `age` in create/list/detail flows.
+- Verification: `cd client && npm run lint && npm run build`.
+
+### Task: T-026 — Stabilize `age`-related tests with deterministic clock/zone
+- Status: DONE
+- Scope: Injected `Clock` into student age mapping and made age tests deterministic with fixed date/zone coverage.
+- Verification: `cd server/api-aprimorar && ./mvnw test`.
+
 ## Review Notes (append-only)
 - 2026-03-05:
   - Quality: Epic cleaned to active-vs-archive format to reduce planning drift and status mismatches.
@@ -306,3 +303,43 @@
   - Quality: Mapper tests now assert `age` presence and `activity` absence; add a deterministic-clock follow-up to prevent date-boundary flakiness.
   - Security: No new surface area; keep DTO error messages consistent after contract changes.
   - Performance: No runtime impact (test-only); avoid adding heavyweight time utilities in hot paths.
+
+- 2026-03-06 (T-028):
+  - Quality: Keep transition tight (backfill, drop `active`, and preserve DELETE-as-archive behavior); confirm how this interacts with T-018 so contracts don't drift.
+  - Security: Ensure `includeArchived` never bypasses auth/tenant scoping; default list must not leak archived records.
+  - Performance: Prefer `WHERE archived_at IS NULL` for default list; add an index on `archived_at` and re-check list/pagination query plans.
+
+- 2026-03-06 (T-028 follow-ups):
+  - Quality: Track a single source of truth for list semantics (either `includeArchived` or legacy `active`) and document the transition plan to avoid UI/API mismatch.
+  - Security: Add tests that `includeArchived=true` does not widen scope beyond the caller's allowed tenant/user context.
+  - Performance: Validate that the `archived_at` index is used under typical filters/sorts and that pagination remains stable.
+
+- 2026-03-06 (T-028-A-A):
+  - Quality: Migration/backfill logic is centralized in Flyway; confirm behavior when legacy `active` is NULL/unexpected and when `updated_at` is NULL.
+  - Security: Migration should not emit row contents to logs; keep schema changes additive until `active` is dropped.
+  - Performance: Column add/backfill is one-time; ensure downstream list queries can use ST-166 `archived_at` index.
+
+- 2026-03-06 (T-028-A-C):
+  - Quality: Ensure DTO/mapper field names and nullability match the API contract; add/adjust unit coverage for `archivedAt`/`lastReactivatedAt` serialization.
+  - Security: Double-check archive-aware queries still enforce any tenant/user scoping and that `includeArchived` cannot widen results beyond authorization.
+  - Performance: Confirm default list uses `archived_at IS NULL` (index-friendly) and that pagination/sort behavior remains stable after query changes.
+
+- 2026-03-06 (T-028-B):
+  - Quality: `includeArchived` list semantics are in place; remaining gap is explicit unarchive (return flow) and end-to-end controller integration coverage.
+  - Security: Verify archived filtering cannot be used to enumerate records outside auth/tenant scope; keep archive/unarchive endpoints scoped and idempotent.
+  - Performance: Confirm the default list path stays on `archived_at IS NULL` and that `includeArchived=true` remains paginated and stable under typical sorts.
+
+- 2026-03-06 (T-028-B-B):
+  - Quality: Endpoints exist; ensure contract-level tests cover idempotency and verify `lastReactivatedAt` behavior on repeated unarchive calls.
+  - Security: Add explicit negative tests for cross-tenant/cross-user access on archive/unarchive and `includeArchived=true` paths.
+  - Performance: No expected hot-path impact; keep archive/unarchive updates index-friendly and verify list/pagination remains stable after status toggles.
+
+- 2026-03-06 (T-028-B-C):
+  - Quality: Controller/service test coverage verifies default list behavior, `includeArchived=true`, and DELETE-as-archive consistency; keep checks aligned with any future contract tweaks.
+  - Security: Ensure auth/tenant scoping is explicitly covered (tracked under ST-169) so `includeArchived` and archive/unarchive cannot widen access.
+  - Performance: No runtime impact (tests only); keep default list on `archived_at IS NULL` and re-check query plans after index/filters change.
+
+- 2026-03-06 (T-028-C):
+  - Quality: Ensure checkbox defaults match backend defaults (`includeArchived` false/omitted) and remove any lingering `active`-based list wiring in the client.
+  - Security: Do not expose archived records by default in UI; treat "show archived" as a visibility toggle only (still fully scoped by API auth/tenant rules).
+  - Performance: Avoid extra client-side filtering; rely on backend paging/filtering and keep query params stable to prevent cache misses.

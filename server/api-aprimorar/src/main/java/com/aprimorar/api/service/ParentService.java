@@ -7,6 +7,7 @@ import com.aprimorar.api.repository.ParentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ParentService {
@@ -19,6 +20,7 @@ public class ParentService {
         this.parentMapper = parentMapper;
     }
 
+    @Transactional(readOnly = true)
     public Page<ParentSummaryDTO> listActiveParents(Pageable pageable) {
         Page<Parent> activeParentsPage = parentRepo.findAllByActiveTrue(pageable);
         return activeParentsPage.map(parentMapper::toSummaryDto);

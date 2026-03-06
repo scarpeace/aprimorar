@@ -10,6 +10,7 @@ import com.aprimorar.api.entity.Student;
 import com.aprimorar.api.util.MapperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
@@ -19,8 +20,11 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StudentMapperTest {
 
@@ -51,77 +55,102 @@ class StudentMapperTest {
     void setup() {
         mapperUtils = new MapperUtils();
         parentMapper = new ParentMapper(mapperUtils);
-        addressMapper = new AddressMapper();
+        addressMapper = new AddressMapper(mapperUtils);
 
         Clock fixedClock = Clock.fixed(FIXED_INSTANT, SAO_PAULO_ZONE);
         mapper = new StudentMapper(parentMapper, addressMapper, mapperUtils, fixedClock);
     }
 
-    @Test
-    @DisplayName("Should sanitize contact, cpf, and email when mapping to entity")
-    void toEntity_shouldSanitizeContactCpfAndEmail() {
-        CreateStudentDTO dto = validCreateStudentDto("  STUDENT@EMAIL.COM ");
+    @Nested
+    @DisplayName("toEntity")
+    class ToEntity {
 
-        Student entity = mapper.toEntity(dto);
+        @Test
+        @DisplayName("sanitizes contact cpf and email")
+        void sanitizesFields() {
+            CreateStudentDTO dto = validCreateStudentDto("  STUDENT@EMAIL.COM ");
 
-        assertEquals("61999234523", entity.getContact());
-        assertEquals("12345678901", entity.getCpf());
-        assertEquals("student@email.com", entity.getEmail());
+            Student entity = mapper.toEntity(dto);
+
+            assertEquals("61999234523", entity.getContact());
+            assertEquals("12345678901", entity.getCpf());
+            assertEquals("student@email.com", entity.getEmail());
+        }
     }
 
-    @Test
-    @DisplayName("Should format contact when mapping to DTO")
-    void toDto_shouldFormatContact() {
-        Student entity = validStudentEntity();
+    @Nested
+    @DisplayName("toDto")
+    class ToDto {
 
-        StudentResponseDTO dto = mapper.toDto(entity);
+        @Test
+        @DisplayName("formats contact cpf and archive fields")
+        void formatsAndMapsArchiveFields() {
+            Student entity = validStudentEntity();
+            Instant archivedAt = Instant.parse("2025-01-02T00:00:00Z");
+            Instant lastReactivatedAt = Instant.parse("2025-01-03T00:00:00Z");
+            entity.setArchivedAt(archivedAt);
+            entity.setLastReactivatedAt(lastReactivatedAt);
 
-        assertEquals("(61)99923-4523", dto.contact());
-        assertEquals("123.456.789-01", dto.cpf());
+            StudentResponseDTO dto = mapper.toDto(entity);
+
+            assertEquals("(61)99923-4523", dto.contact());
+            assertEquals("123.456.789-01", dto.cpf());
+            assertEquals(archivedAt, dto.archivedAt());
+            assertEquals(lastReactivatedAt, dto.lastReactivatedAt());
+        }
+
+        @Test
+        @DisplayName("computes age using mapper clock")
+        void computesAge() {
+            Student entity = validStudentEntity();
+
+            StudentResponseDTO dto = mapper.toDto(entity);
+
+            int expectedAge = Period.between(
+                    STUDENT_BIRTHDATE,
+                    LocalDate.now(Clock.fixed(FIXED_INSTANT, SAO_PAULO_ZONE))
+            ).getYears();
+
+            assertEquals(expectedAge, dto.age());
+        }
+
+        @Test
+        @DisplayName("uses clock zone for age calculation")
+        void usesClockZone() {
+            Student entity = validStudentEntity();
+            StudentMapper utcMapper = new StudentMapper(
+                    parentMapper,
+                    addressMapper,
+                    mapperUtils,
+                    Clock.fixed(FIXED_INSTANT, ZoneOffset.UTC)
+            );
+
+            StudentResponseDTO saoPauloDto = mapper.toDto(entity);
+            StudentResponseDTO utcDto = utcMapper.toDto(entity);
+
+            assertEquals(24, saoPauloDto.age());
+            assertEquals(25, utcDto.age());
+        }
     }
 
-    @Test
-    @DisplayName("Should return computed age when mapping to DTO")
-    void toDto_shouldReturnComputedAge() {
-        Student entity = validStudentEntity();
+    @Nested
+    @DisplayName("contract")
+    class Contract {
 
-        StudentResponseDTO dto = mapper.toDto(entity);
+        @Test
+        @DisplayName("student contract does not expose legacy activity fields")
+        void noLegacyActivityFields() {
+            assertThrows(NoSuchFieldException.class, () -> Student.class.getDeclaredField("activity"));
+            assertThrows(NoSuchFieldException.class, () -> Student.class.getDeclaredField("active"));
 
-        int expectedAge = Period.between(
-                STUDENT_BIRTHDATE,
-                LocalDate.now(Clock.fixed(FIXED_INSTANT, SAO_PAULO_ZONE))
-        ).getYears();
+            boolean hasActivityInResponse = Arrays.stream(StudentResponseDTO.class.getRecordComponents())
+                    .anyMatch(component -> component.getName().equals("activity"));
+            boolean hasActiveInResponse = Arrays.stream(StudentResponseDTO.class.getRecordComponents())
+                    .anyMatch(component -> component.getName().equals("active"));
 
-        assertEquals(expectedAge, dto.age());
-    }
-
-    @Test
-    @DisplayName("Should use clock zone explicitly when computing age")
-    void toDto_shouldUseClockZoneForAge() {
-        Student entity = validStudentEntity();
-        StudentMapper utcMapper = new StudentMapper(
-                parentMapper,
-                addressMapper,
-                mapperUtils,
-                Clock.fixed(FIXED_INSTANT, ZoneOffset.UTC)
-        );
-
-        StudentResponseDTO saoPauloDto = mapper.toDto(entity);
-        StudentResponseDTO utcDto = utcMapper.toDto(entity);
-
-        assertEquals(24, saoPauloDto.age());
-        assertEquals(25, utcDto.age());
-    }
-
-    @Test
-    @DisplayName("Should not expose activity in student entity and response DTO")
-    void studentContract_shouldNotExposeActivity() {
-        assertThrows(NoSuchFieldException.class, () -> Student.class.getDeclaredField("activity"));
-
-        boolean hasActivityInResponse = Arrays.stream(StudentResponseDTO.class.getRecordComponents())
-                .anyMatch(component -> component.getName().equals("activity"));
-
-        assertFalse(hasActivityInResponse);
+            assertFalse(hasActivityInResponse);
+            assertFalse(hasActiveInResponse);
+        }
     }
 
     private CreateStudentDTO validCreateStudentDto(String email) {
@@ -140,7 +169,7 @@ class StudentMapperTest {
 
     private Student validStudentEntity() {
         Student entity = new Student();
-        entity.setId(java.util.UUID.randomUUID());
+        entity.setId(UUID.randomUUID());
         entity.setName(STUDENT_NAME);
         entity.setContact(STUDENT_CONTACT_RAW);
         entity.setEmail(STUDENT_EMAIL);
@@ -149,9 +178,7 @@ class StudentMapperTest {
         entity.setSchool("School");
         entity.setParent(new Parent());
         entity.setAddress(new Address());
-        entity.setActive(true);
         entity.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
         return entity;
     }
-
 }
