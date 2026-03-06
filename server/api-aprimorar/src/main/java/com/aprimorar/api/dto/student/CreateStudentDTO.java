@@ -30,7 +30,7 @@ public record CreateStudentDTO(
         String school,
 
         @NotBlank(message = "Contato do estudante é obrigatório")
-        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contato deve estar no formato (XX)XXXXX-XXXX")
+        @Pattern(regexp = "^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$", message = "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX")
         String contact,
 
         @NotBlank(message = "Email do estudante é obrigatório")

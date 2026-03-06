@@ -22,7 +22,7 @@ public record CreateEmployeeDTO (
         String pix,
 
         @NotBlank(message = "Contato do funcionário é obrigatório")
-        @Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Contato deve estar no formato (XX)XXXXX-XXXX")
+        @Pattern(regexp = "^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$", message = "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX")
         String contact,
 
         @NotBlank(message = "CPF do funcionário é obrigatório")

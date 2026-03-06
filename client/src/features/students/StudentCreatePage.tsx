@@ -227,7 +227,11 @@ export function StudentCreatePage() {
                 <label className={styles.label} htmlFor="address.zip">
                   CEP
                 </label>
-                <Input id="address.zip" placeholder="00000-000" {...register("address.zip")} />
+                <Input
+                  id="address.zip"
+                  placeholder="00000-000"
+                  {...registerWithMask("address.zip", "99999-999")}
+                />
                 {errors.address?.zip?.message ? (
                   <p className={styles.error}>{errors.address.zip.message}</p>
                 ) : null}

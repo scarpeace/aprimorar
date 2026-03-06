@@ -55,7 +55,7 @@ class StudentMapperTest {
     void setup() {
         mapperUtils = new MapperUtils();
         parentMapper = new ParentMapper(mapperUtils);
-        addressMapper = new AddressMapper();
+        addressMapper = new AddressMapper(mapperUtils);
 
         Clock fixedClock = Clock.fixed(FIXED_INSTANT, SAO_PAULO_ZONE);
         mapper = new StudentMapper(parentMapper, addressMapper, mapperUtils, fixedClock);
