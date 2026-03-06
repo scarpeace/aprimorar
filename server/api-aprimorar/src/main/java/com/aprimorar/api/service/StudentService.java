@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import com.aprimorar.api.mapper.ParentMapper;
 import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.ParentRepository;
 import com.aprimorar.api.repository.StudentRepository;
+import com.aprimorar.api.repository.specification.StudentSpecifications;
 
 @Service
 public class StudentService {
@@ -43,23 +45,17 @@ public class StudentService {
     @Transactional(readOnly = true)
     public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, boolean includeArchived) {
         String normalizedName = normalizeNameFilter(name);
+        Specification<Student> filters = Specification.unrestricted();
+
+        if (!includeArchived) {
+            filters = filters.and(StudentSpecifications.notArchived());
+        }
 
         if (normalizedName != null) {
-            if (includeArchived) {
-                return studentRepo.findByNameContainingIgnoreCase(normalizedName, pageable)
-                        .map(studentMapper::toDto);
-            }
-
-            return studentRepo.findByNameContainingIgnoreCaseAndArchivedAtIsNull(normalizedName, pageable)
-                    .map(studentMapper::toDto);
+            filters = filters.and(StudentSpecifications.nameContainsIgnoreCase(normalizedName));
         }
 
-        if (includeArchived) {
-            return studentRepo.findAll(pageable)
-                    .map(studentMapper::toDto);
-        }
-
-        return studentRepo.findByArchivedAtIsNull(pageable)
+        return studentRepo.findAll(filters, pageable)
                 .map(studentMapper::toDto);
     }
 
