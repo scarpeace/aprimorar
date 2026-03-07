@@ -1,160 +1,222 @@
-# Epic: E-003 — Authentication and Authorization
-**Goal:** Require authenticated access and enforce role-based authorization across API and UI.
+# Epic: E-003 - Authentication and Authorization
+
+**Goal:** Require authenticated access and enforce simple, practical role-based permissions.
 **Status:** TODO
-**Owner:** Gu
-**Related milestone/phase:** Phase 2
+**Phase:** Phase 2
 
 ## Scope
+
 - In scope:
-  - JWT authentication (login, token issuance, refresh, logout)
-  - Password hashing (BCrypt)
-  - RBAC enforcement
-  - Security hardening baseline (rate limiting, headers, audit)
-  - Privacy hardening for sensitive event content
+  - login flow and token issuance
+  - password hashing and credential storage rules
+  - route and endpoint protection
+  - baseline RBAC
+  - basic security hardening needed for MVP
 - Out of scope:
-  - Full parent portal product scope
+  - parent portal product work
+  - advanced enterprise security features
 
 ## Workboard
-- Current focus: None started
-- Blocked: None
-- Next up: T-033 (JWT authentication baseline)
+
+- Current focus: none
+- Blocked: none
+- Next up: login/auth skeleton before broader RBAC work
 
 ## Stories
-### Story: S-020 — User Authentication
-**Status:** TODO
-**Links:** T-033 (TODO)
-**Intent:** Enable secure login and token-based access.
 
-### Story: S-021 — Role-Based Access Control
-**Status:** TODO
-**Links:** T-034 (TODO)
-**Intent:** Ensure users can only perform authorized actions.
+### Story: S-020 - Login and Session Baseline
 
-### Story: S-022 — Security Hardening
 **Status:** TODO
-**Links:** T-035 (TODO)
-**Intent:** Reduce common attack surfaces with baseline controls.
+**Intent:** Let staff sign in safely and let the app call protected endpoints.
+**Links:** T-033, T-034, T-035
 
-### Story: S-023 — Privacy Hardening for Sensitive Content
+**Acceptance Criteria**
+
+- Users can log in with stored credentials.
+- Protected endpoints reject unauthenticated requests.
+
+### Story: S-021 - Role-Based Access Control
+
 **Status:** TODO
-**Links:** T-036 (TODO)
-**Intent:** Restrict/audit access to sensitive event categories.
+**Intent:** Keep permissions simple and explicit for admin and employee roles.
+**Links:** T-036, T-037
+
+**Acceptance Criteria**
+
+- Core endpoints have a documented permission matrix.
+- Forbidden access returns the expected HTTP status.
+
+### Story: S-022 - Security Hardening Baseline
+
+**Status:** TODO
+**Intent:** Add the minimum hardening needed so auth does not ship as a thin shell.
+**Links:** T-038, T-039
+
+**Acceptance Criteria**
+
+- Passwords are hashed.
+- CORS, headers, and audit basics are in place.
 
 ## Tasks
-### Task: T-033 — Implement JWT authentication
+
+### Task: T-033 - Add authentication domain and login endpoint
+
 **Type:** backend
 **Status:** TODO
 **Depends on:** None
 
-**Description**
-- Implement login, JWT issuance, refresh, logout, and base security config.
+**Outcome**
 
-**Subtasks**
-- [ ] ST-050 — Implement JWT token generation
-- [ ] ST-051 — Implement login endpoint
-- [ ] ST-052 — Implement password hashing (BCrypt)
-- [ ] ST-053 — Configure HTTPS/TLS
-- [ ] ST-054 — Configure CORS policy
-- [ ] ST-055 — Implement refresh token mechanism
-- [ ] ST-056 — Implement logout functionality
+- Introduce the minimal user/auth pieces needed for login and token issuance.
 
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
-- [ ] Local verification done
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
 
 **Verification**
-- Backend: integration tests for login + protected endpoint
-- Frontend: token usage smoke test
-- Manual: log in via UI and verify authenticated requests
 
-**Notes**
-- Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.1
+- Backend: `./mvnw test`
+- Frontend: N/A
+- Manual: Log in with a seeded or local admin account
 
-### Task: T-034 — Implement RBAC
+### Task: T-034 - Protect backend routes with auth middleware/config
+
 **Type:** backend
 **Status:** TODO
 **Depends on:** T-033
 
-**Description**
-- Define and enforce role permissions across endpoints.
+**Outcome**
 
-**Subtasks**
-- [ ] ST-057 — Define permission matrix
-- [ ] ST-058 — Implement `@PreAuthorize` rules
-- [ ] ST-059 — Create admin-only endpoints
-- [ ] ST-060 — Implement employee self-service
-- [ ] ST-061 — Implement parent read-only portal
+- Require authentication for non-public endpoints and return clear 401 responses.
 
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
-- [ ] Local verification done
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
 
 **Verification**
-- Backend: security tests for ADMIN vs EMPLOYEE on key endpoints
+
+- Backend: `./mvnw test`
 - Frontend: N/A
-- Manual: attempt forbidden actions and confirm 403
+- Manual: Call protected endpoints with and without a token
 
-**Notes**
-- Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.2
+### Task: T-035 - Add frontend auth shell
 
-### Task: T-035 — Security hardening baseline
-**Type:** backend
+**Type:** fullstack
 **Status:** TODO
 **Depends on:** T-033
 
-**Description**
-- Add hardening controls (rate limiting, headers, CSRF decisions, audit logging).
+**Outcome**
 
-**Subtasks**
-- [ ] ST-062 — Implement rate limiting
-- [ ] ST-063 — Add CSRF protection
-- [ ] ST-064 — Implement audit logging
-- [ ] ST-065 — Add security headers
+- Add a basic login screen, token storage strategy, and protected-route behavior.
 
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
-- [ ] Local verification done
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
 
 **Verification**
-- Backend: verify headers/rate limiting behavior
-- Frontend: N/A
-- Manual: confirm controls in dev deployment
 
-**Notes**
-- Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.3
+- Backend: N/A
+- Frontend: `npm run lint && npm run build`
+- Manual: Log in and navigate to a protected screen
 
-### Task: T-036 — Privacy hardening for sensitive content
+### Task: T-036 - Define and implement the MVP permission matrix
+
 **Type:** backend
 **Status:** TODO
 **Depends on:** T-034
 
-**Description**
-- Restrict and audit access to sensitive event content.
+**Outcome**
 
-**Subtasks**
-- [ ] ST-066 — Define sensitive-content permission matrix
-- [ ] ST-067 — Restrict list/detail access to ADMIN and assigned employee
-- [ ] ST-068 — Add audit logs for sensitive reads
-- [ ] ST-069 — Evaluate redaction in list views for non-privileged roles
+- Document and enforce a practical admin/employee permission model.
 
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
-- [ ] Local verification done
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
 
 **Verification**
-- Backend: authorization tests for sensitive list/detail
-- Frontend: verify redaction behavior (if applied)
-- Manual: confirm audit logging for sensitive reads
 
-**Notes**
-- Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.4
+- Backend: `./mvnw test`
+- Frontend: N/A
+- Manual: Confirm a forbidden action returns 403
 
-## Archive (DONE)
-- No DONE tasks archived yet.
+### Task: T-037 - Add authorization tests for core entities
 
-## Review Notes (append-only)
-- Reviewer notes:
+**Type:** backend
+**Status:** TODO
+**Depends on:** T-036
+
+**Outcome**
+
+- Add focused security tests around students, employees, events, and dashboard endpoints.
+
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
+
+**Verification**
+
+- Backend: `./mvnw test`
+- Frontend: N/A
+- Manual: Spot-check one allowed and one forbidden path per role
+
+### Task: T-038 - Add password hashing and credential safety basics
+
+**Type:** backend
+**Status:** TODO
+**Depends on:** T-033
+
+**Outcome**
+
+- Store credentials safely and avoid plain-text password handling.
+
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
+
+**Verification**
+
+- Backend: `./mvnw test`
+- Frontend: N/A
+- Manual: Verify stored credentials are hashed
+
+### Task: T-039 - Add baseline CORS, headers, and audit logging
+
+**Type:** backend
+**Status:** TODO
+**Depends on:** T-034
+
+**Outcome**
+
+- Add lightweight hardening that matches the chosen auth model.
+
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
+
+**Verification**
+
+- Backend: `./mvnw test`
+- Frontend: N/A
+- Manual: Inspect response headers and auth-related audit entries in dev
+
+## Archive
+
+- No completed auth tasks yet.
+
+## Review Notes
+
+- 2026-03-07: Split auth work into smaller slices so login can land before broader RBAC and hardening follow-ups.

@@ -1,31 +1,35 @@
-# Planning Project Hub
+# Planning Hub
 
-This file is the planning hub for the guided workflow.
+This folder is the canonical planning area for incremental delivery.
 
-## Canonical Planning Files
+## Canonical Files
 
-- Product and domain context: `docs/project.md`
+- Product overview: `docs/project.md`
+- AI scan context: `docs/project-ai-context.md`
+- Planning hub: `docs/planning/project.md`
 - Roadmap and epic index: `docs/planning/roadmap.md`
-- Epic plans: `docs/planning/epics/E-XXX-*.md`
 - Epic template: `docs/planning/epics/E-000-template.md`
+- Active epics: `docs/planning/epics/E-XXX-*.md`
 - Prompt quick reference: `docs/planning/prompt-style-guide.md`
+- Frontend conventions: `docs/refactor/frontend-conventions.md`
 
-## Workflow
+## Working Rules
 
-Feature Discovery -> Planning -> Implementation -> Review -> Documentation
+- Keep docs beginner-friendly and concrete.
+- Prefer small executable tasks over broad vague tasks.
+- Keep `docs/project.md` concise and human-readable.
+- Put high-context implementation details in `docs/project-ai-context.md`.
+- Only mark work done when code or docs actually changed.
+- Keep IDs stable once published.
 
-## Command Pipeline
+## Delivery Flow
 
-1. `/feature` for discovery and requirement clarification.
-2. `/organize` to break approved scope into epics, tasks, subtasks, order, and dependencies.
-3. `/docs` to reflect approved decisions in docs.
-4. `/do <T-XXX>` to implement one selected task.
-5. `/check-backend` or `/check-frontend` for static quality review.
-6. `/tests` to suggest test coverage improvements (implementation only with explicit approval).
+1. Clarify the feature or issue.
+2. Update planning docs if scope or priorities changed.
+3. Implement one task at a time.
+4. Review and verify the slice.
+5. Reflect any approved decisions back into docs.
 
-## Rules
+## Practical Rule of Thumb
 
-- Never invent completed work.
-- Only document approved decisions.
-- Keep epic structures aligned to the template.
-- Keep IDs stable in epic files.
+If a task feels too big to finish confidently in one focused implementation pass, split it again.

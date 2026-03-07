@@ -1,60 +1,70 @@
-# Epic: E-000 — <Epic Name>
-**Goal:** <1 line>
+# Epic: E-000 - <Epic Name>
+
+**Goal:** <one-sentence outcome>
 **Status:** TODO | IN_PROGRESS | DONE | BLOCKED
-**Owner:** Gu
-**Related milestone/phase:** <Phase X>
+**Phase:** <Phase>
 
 ## Scope
+
 - In scope:
 - Out of scope:
 
 ## Workboard
+
 - Current focus:
 - Blocked:
 - Next up:
 
 ## Stories
-### Story: S-001 — <Story title>
+
+### Story: S-000 - <Story Name>
+
 **Status:** TODO | IN_PROGRESS | DONE | BLOCKED
-**Links:** T-001 (TODO)
-**Intent:** <1 line>
+**Intent:** <why this story exists>
+**Links:** T-000, T-001
+
+**Acceptance Criteria**
+
+- <observable result>
+- <observable result>
 
 ## Tasks
-### Task: T-001 — <Task title>
-**Type:** backend | frontend | fullstack
-**Status:** TODO | IN_PROGRESS | BLOCKED
+
+### Task: T-000 - <Task Name>
+
+**Type:** backend | frontend | fullstack | docs
+**Status:** TODO | IN_PROGRESS | DONE | BLOCKED
 **Depends on:** None | T-XXX
 
-**Description**
-- <1-3 bullets>
+**Outcome**
 
-**Subtasks**
-- [ ] ST-001 — <subtask>
-- [ ] ST-002 — <subtask>
+- <small slice that can be finished in one pass>
 
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
-- [ ] Local verification done
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
 
 **Verification**
-- Backend: <exact command or N/A>
-- Frontend: <exact command or N/A>
-- Manual: <short steps>
+
+- Backend: <command or N/A>
+- Frontend: <command or N/A>
+- Manual: <short check>
 
 **Notes**
+
 - Risks:
-- Open questions:
+- Follow-ups:
 
-## Archive (DONE)
-### Task: T-099 — <Done task title>
+## Archive
+
+### Task: T-099 - <Done Task>
+
 - Status: DONE
-- Scope: <1 line>
-- Verification: <1 line>
-- Commit: <hash if available>
+- Scope: <what shipped>
+- Verification: <how it was checked>
 
-## Review Notes (append-only)
-- YYYY-MM-DD:
-  - Quality:
-  - Security:
-  - Performance:
+## Review Notes
+
+- YYYY-MM-DD: <important review note>

@@ -1,52 +1,55 @@
 # Roadmap
 
-## Development Roadmap
+## Delivery Order
 
-### Phase 0 - Planning Structure Migration
-- Goal: migrate legacy docs into `docs/` planning structure and stabilize IDs
-- Status: DONE
-- Epics:
-  - E-001 - Planning docs migration
+### Phase 0 - Planning Cleanup
 
-### Phase 1 - Foundation (Weeks 1-4)
-- Goal: complete core CRUD + event types + performance + basic reporting APIs
-- Status: IN_PROGRESS
-- Epics:
-  - E-002 - Core data management
-  - Notes: includes Event `content` required field rollout (T-012-A, T-012-B, T-012-C) and student domain simplification (remove Student `activity`, relax age-range validation to only prevent future birthdates)
+- Canonicalize docs
+- Keep roadmap and epics aligned
+- Remove migrated archive material
 
-### Phase 2 - Security (Weeks 5-8)
-- Goal: authentication, RBAC, and basic hardening
-- Status: TODO
-- Epics:
-  - E-003 - Authentication and authorization
+### Phase 1 - Core Data and Finance Baseline
 
-### Phase 3 - Frontend (Weeks 9-14)
-- Goal: management UI for all core entities and dashboard
-- Status: IN_PROGRESS
-- Epics:
-  - E-004 - Frontend development
-  - Notes: includes UX polish like UTF-8/accents normalization for validation and error messages
+- Close backend consistency gaps for students, parents, events, and dashboard data
+- Finish parent flow support needed by operations
+- Improve event response shape for finance/dashboard use
 
-### Phase 4 - Integrations (Weeks 15-18)
-- Goal: calendar integration and calendar UI views; payment tracking enhancements
-- Status: TODO
-- Epics:
-  - E-005 - Calendar and scheduling
+### Phase 2 - Authentication and Authorization
 
-### Phase 5 - Payments (Weeks 19-22)
-- Goal: gateway integration, invoices, and financial reports
-- Status: TODO
-- Epics:
-  - E-006 - Payments and billing
+- Add login and password handling
+- Protect API and UI routes
+- Add baseline RBAC and security hardening
+
+### Phase 3 - Frontend Operations Polish
+
+- Finish dashboard data flow
+- Finish remaining core workflow polish
+- Close parent inline flow and remaining UX cleanup
+
+### Phase 4 - Scheduling Expansion
+
+- Google Calendar sync
+- Calendar-oriented views
+
+### Phase 5 - Reporting and Billing Expansion
+
+- Monthly finance reporting improvements
+- Payment tracking enhancements
+- Payment gateway only after core reporting is stable
 
 ## Epic Index
 
-| Epic ID | Name | Status | File |
+| Epic | Status | Intent | Next practical slice |
 |---|---|---|---|
-| E-001 | Planning docs migration | DONE | docs/planning/epics/E-001-planning-structure-migration.md |
-| E-002 | Core data management | IN_PROGRESS | docs/planning/epics/E-002-core-data-management.md |
-| E-003 | Authentication and authorization | TODO | docs/planning/epics/E-003-authentication-and-authorization.md |
-| E-004 | Frontend development | IN_PROGRESS | docs/planning/epics/E-004-frontend-development.md |
-| E-005 | Calendar and scheduling | TODO | docs/planning/epics/E-005-calendar-and-scheduling.md |
-| E-006 | Payments and billing | TODO | docs/planning/epics/E-006-payments-and-billing.md |
+| `E-001` | DONE | Keep docs/planning canonical and current | keep epics synced as work lands |
+| `E-002` | IN_PROGRESS | Close core data and backend ops/finance gaps | dashboard summary + event response improvements |
+| `E-003` | TODO | Add auth, RBAC, and security baseline | login/auth skeleton |
+| `E-004` | IN_PROGRESS | Polish operational frontend flows | parent inline flow + dashboard integration |
+| `E-005` | TODO | Expand scheduling with sync and calendar views | calendar sync foundation |
+| `E-006` | TODO | Expand reporting, payment tracking, and billing | monthly finance reporting endpoint |
+
+## Priority Notes
+
+- MVP priority is operations plus monthly finance visibility.
+- Calendar UI and payment gateway work stay behind auth and reporting correctness.
+- When a task can be split into backend contract first and frontend usage second, prefer that order.

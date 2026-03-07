@@ -1,91 +1,165 @@
-# Epic: E-005 — Calendar and Scheduling
-**Goal:** Integrate scheduling workflows with Google Calendar and provide calendar-style UI views.
+# Epic: E-005 - Calendar and Scheduling Expansion
+
+**Goal:** Expand scheduling beyond basic CRUD with external calendar sync and dedicated calendar views.
 **Status:** TODO
-**Owner:** Gu
-**Related milestone/phase:** Phase 4
+**Phase:** Phase 4
 
 ## Scope
+
 - In scope:
-  - Google Calendar integration (create/update/delete + conflict handling)
-  - Calendar views (month/week/day)
+  - Google Calendar sync foundation
+  - sync lifecycle and conflict handling
+  - calendar-oriented frontend views
 - Out of scope:
-  - Payment gateway integration (E-006)
+  - core dashboard work
+  - payment gateway work
 
 ## Workboard
-- Current focus: None started
-- Blocked: None
-- Next up: T-040 (Google Calendar integration)
+
+- Current focus: none
+- Blocked: none
+- Next up: start with external sync before calendar UI
 
 ## Stories
-### Story: S-040 — Google Calendar Integration
-**Status:** TODO
-**Links:** T-040 (TODO)
-**Intent:** Sync event lifecycle with Google Calendar reliably.
 
-### Story: S-041 — Calendar Views
+### Story: S-040 - External Calendar Sync
+
 **Status:** TODO
-**Links:** T-041 (TODO)
-**Intent:** Provide visual scheduling views in the frontend.
+**Intent:** Keep event lifecycle capable of syncing with Google Calendar.
+**Links:** T-040, T-041, T-042
+
+**Acceptance Criteria**
+
+- Event create/update/delete can sync to a sandbox calendar.
+- Sync failures are visible and recoverable.
+
+### Story: S-041 - Calendar Views
+
+**Status:** TODO
+**Intent:** Add visual scheduling views after sync foundations are understood.
+**Links:** T-043, T-044
+
+**Acceptance Criteria**
+
+- Users can navigate month and week views without breaking core event workflows.
+- Timezone behavior is consistent with backend event data.
 
 ## Tasks
-### Task: T-040 — Google Calendar integration
+
+### Task: T-040 - Add Google Calendar integration skeleton
+
 **Type:** backend
 **Status:** TODO
 **Depends on:** None
 
-**Description**
-- Add calendar service and manage lifecycle of external calendar events.
+**Outcome**
 
-**Subtasks**
-- [ ] ST-130 — Set up Google Calendar API credentials
-- [ ] ST-131 — Implement calendar service
-- [ ] ST-132 — Create events in Google Calendar
-- [ ] ST-133 — Update calendar events on change
-- [ ] ST-134 — Delete calendar events on cancellation
-- [ ] ST-135 — Handle calendar sync conflicts
+- Add credentials/config wiring and a minimal calendar service abstraction.
 
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
-- [ ] Local verification done
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
 
 **Verification**
-- Backend: exercise create/update/delete against sandbox calendar
+
+- Backend: `./mvnw test`
 - Frontend: N/A
-- Manual: confirm sync behavior and logs in dev
+- Manual: Load config and initialize the calendar integration in dev
 
-**Notes**
-- Source: `docs/archive/PLANNING.md` Epic 4 / User Story 4.1
+### Task: T-041 - Sync event create/update/delete to sandbox calendar
 
-### Task: T-041 — Calendar views
+**Type:** backend
+**Status:** TODO
+**Depends on:** T-040
+
+**Outcome**
+
+- Sync the basic event lifecycle to Google Calendar for a dev or sandbox setup.
+
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
+
+**Verification**
+
+- Backend: `./mvnw test`
+- Frontend: N/A
+- Manual: Create, update, and delete an event and confirm external sync behavior
+
+### Task: T-042 - Handle sync errors and conflict recovery
+
+**Type:** backend
+**Status:** TODO
+**Depends on:** T-041
+
+**Outcome**
+
+- Keep failures explicit and avoid silently drifting event state.
+
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
+
+**Verification**
+
+- Backend: `./mvnw test`
+- Frontend: N/A
+- Manual: Simulate a failed sync and verify logs or recovery behavior
+
+### Task: T-043 - Build month/week calendar views
+
 **Type:** frontend
 **Status:** TODO
 **Depends on:** None
 
-**Description**
-- Implement calendar-style UI views for events.
+**Outcome**
 
-**Subtasks**
-- [ ] ST-136 — Implement monthly calendar view
-- [ ] ST-137 — Implement weekly calendar view
-- [ ] ST-138 — Implement daily schedule view
-- [ ] ST-139 — Create event calendar view (moved from E-004)
+- Add calendar views for browsing events without replacing the simpler list view.
 
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
-- [ ] Local verification done
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
 
 **Verification**
+
 - Backend: N/A
-- Frontend: validate view rendering and navigation
-- Manual: verify month/week/day views match API data/timezone
+- Frontend: `npm run lint && npm run build`
+- Manual: Navigate month/week views with real event data
 
-**Notes**
-- Source: `docs/archive/PLANNING.md` Epic 4 / User Story 4.2
+### Task: T-044 - Add calendar navigation and event detail handoff
 
-## Archive (DONE)
-- No DONE tasks archived yet.
+**Type:** frontend
+**Status:** TODO
+**Depends on:** T-043
 
-## Review Notes (append-only)
-- Reviewer notes:
+**Outcome**
+
+- Make calendar views practical by linking clearly into event detail/edit flows.
+
+**Definition of Done**
+
+- [ ] Code or docs updated
+- [ ] Verification completed
+- [ ] Relevant epic notes updated
+
+**Verification**
+
+- Backend: N/A
+- Frontend: `npm run lint && npm run build`
+- Manual: Open an event from the calendar and move into detail or edit flows
+
+## Archive
+
+- No completed calendar tasks yet.
+
+## Review Notes
+
+- 2026-03-07: Split calendar sync from calendar UI so the integration can land independently of the visual scheduler.

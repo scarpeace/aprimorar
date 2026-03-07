@@ -1,77 +1,180 @@
-# Epic: E-001 — Planning Structure Migration
-**Goal:** Migrate legacy project/planning docs into the `docs/` planning structure with stable IDs.
+# Epic: E-001 - Planning and Documentation Canonicalization
+
+**Goal:** Keep project and planning docs concise, current, and safe for incremental AI-assisted delivery.
 **Status:** DONE
-**Owner:** Gu
-**Related milestone/phase:** Phase 0
+**Phase:** Phase 0
 
 ## Scope
+
 - In scope:
-  - Migrate legacy docs into canonical files under `docs/`
-  - Create roadmap and epic index
-  - Standardize planning template usage
+  - canonical project docs
+  - roadmap and epic hygiene
+  - archive migration into `docs/`
+  - stable planning structure for small tasks
 - Out of scope:
-  - Product requirement changes
-  - Deleting legacy files in `docs/archive/`
+  - feature implementation outside docs
 
 ## Workboard
-- Current focus: None (epic complete)
-- Blocked: None
-- Next up: Maintain template consistency in future epic updates
+
+- Current focus: none
+- Blocked: none
+- Next up: keep epics synced as implementation moves
 
 ## Stories
-### Story: S-001 — Migrate project documentation
-**Status:** DONE
-**Links:** T-001 (DONE)
-**Intent:** Keep `docs/project.md` as the canonical product/tech reference.
 
-### Story: S-002 — Extract epics into the planning index
-**Status:** DONE
-**Links:** T-002 (DONE), T-003 (DONE)
-**Intent:** Move planning from legacy monolith into stable epic files.
+### Story: S-001 - Canonical project docs
 
-### Story: S-003 — Roadmap file is canonical
 **Status:** DONE
-**Links:** T-002 (DONE)
-**Intent:** Keep one roadmap with phases and epic index.
+**Intent:** Keep one concise human doc and one high-context AI doc.
+**Links:** T-001, T-002
 
-### Story: S-004 — Planning docs consistency pass
+**Acceptance Criteria**
+
+- `docs/project.md` is concise and current.
+- `docs/project-ai-context.md` exists and captures implementation-relevant context.
+
+### Story: S-002 - Canonical planning structure
+
 **Status:** DONE
-**Links:** T-004 (DONE), T-005 (DONE)
-**Intent:** Keep stories/tasks in a consistent, executable format.
+**Intent:** Keep roadmap, template, and epic files aligned to small executable slices.
+**Links:** T-003, T-004
+
+**Acceptance Criteria**
+
+- `docs/planning/roadmap.md` is present and current.
+- Epics use smaller task slices and clearer next steps.
+
+### Story: S-003 - Archive retirement
+
+**Status:** DONE
+**Intent:** Move useful archive knowledge into canonical docs, then delete archive content.
+**Links:** T-005
+
+**Acceptance Criteria**
+
+- Useful archive information is reflected in canonical docs.
+- `docs/archive/` no longer contains stale planning/reference files.
 
 ## Tasks
-- No active tasks in this epic.
 
-## Archive (DONE)
-### Task: T-001 — Migrate `PROJECT.md` to `docs/project.md`
+### Task: T-001 - Rewrite human-facing project doc
+
+**Type:** docs
+**Status:** DONE
+**Depends on:** None
+
+**Outcome**
+
+- Replace the long mixed `docs/project.md` with a concise canonical project overview.
+
+**Definition of Done**
+
+- [x] Code or docs updated
+- [x] Verification completed
+- [x] Relevant epic notes updated
+
+**Verification**
+
+- Backend: N/A
+- Frontend: N/A
+- Manual: Review for concise scope, MVP truths, diagrams, and decisions
+
+### Task: T-002 - Create AI context project doc
+
+**Type:** docs
+**Status:** DONE
+**Depends on:** None
+
+**Outcome**
+
+- Add `docs/project-ai-context.md` with implementation-relevant context and known gaps.
+
+**Definition of Done**
+
+- [x] Code or docs updated
+- [x] Verification completed
+- [x] Relevant epic notes updated
+
+**Verification**
+
+- Backend: N/A
+- Frontend: N/A
+- Manual: Confirm document captures architecture, current state, conventions, and gaps
+
+### Task: T-003 - Refresh roadmap and planning hub
+
+**Type:** docs
+**Status:** DONE
+**Depends on:** T-001
+
+**Outcome**
+
+- Recreate `docs/planning/roadmap.md` and align `docs/planning/project.md`.
+
+**Definition of Done**
+
+- [x] Code or docs updated
+- [x] Verification completed
+- [x] Relevant epic notes updated
+
+**Verification**
+
+- Backend: N/A
+- Frontend: N/A
+- Manual: Check roadmap links and planning guidance for consistency
+
+### Task: T-004 - Normalize epic template and active epics
+
+**Type:** docs
+**Status:** DONE
+**Depends on:** T-003
+
+**Outcome**
+
+- Update the template and active epics so next work is split into smaller practical slices.
+
+**Definition of Done**
+
+- [x] Code or docs updated
+- [x] Verification completed
+- [x] Relevant epic notes updated
+
+**Verification**
+
+- Backend: N/A
+- Frontend: N/A
+- Manual: Spot-check all active epics for clear next slices and consistent format
+
+### Task: T-005 - Retire archive files after migration
+
+**Type:** docs
+**Status:** DONE
+**Depends on:** T-004
+
+**Outcome**
+
+- Delete migrated archive docs after confirming useful content was preserved.
+
+**Definition of Done**
+
+- [x] Code or docs updated
+- [x] Verification completed
+- [x] Relevant epic notes updated
+
+**Verification**
+
+- Backend: N/A
+- Frontend: N/A
+- Manual: Confirm no needed archive-only knowledge remains
+
+## Archive
+
+### Task: T-010 - Original planning structure migration
+
 - Status: DONE
-- Scope: Migrated and normalized canonical project documentation structure.
-- Verification: Manual markdown rendering and legacy spot-checks completed.
-- Commit: not recorded in this epic history.
+- Scope: Earlier work created the canonical `docs/planning/` structure and split planning into epic files.
+- Verification: Legacy files were mapped into the new planning layout.
 
-### Task: T-002 — Generate canonical roadmap and epic index
-- Status: DONE
-- Scope: Created `docs/planning/roadmap.md` with phases and epic index.
-- Verification: Links and phase mapping validated manually.
-- Commit: not recorded in this epic history.
+## Review Notes
 
-### Task: T-003 — Migrate legacy planning epics into individual files
-- Status: DONE
-- Scope: Created E-002..E-006 with stable IDs.
-- Verification: Epic files spot-checked against legacy plan.
-- Commit: not recorded in this epic history.
-
-### Task: T-004 — Refine planning docs for template compliance
-- Status: DONE
-- Scope: Standardized planning structure and status consistency.
-- Verification: Manual template compliance review completed.
-- Commit: not recorded in this epic history.
-
-### Task: T-005 — Normalize duplicate task IDs across epics
-- Status: DONE
-- Scope: Renumbered duplicated `T-020..T-023` in E-003 to unique IDs and updated story/task links.
-- Verification: manual grep check confirms unique task IDs across epic files.
-- Commit: not recorded in this epic history.
-
-## Review Notes (append-only)
-- Reviewer notes:
+- 2026-03-07: Reframed this epic from one-time migration to ongoing canonicalization so docs hygiene stays trackable.
