@@ -1,12 +1,12 @@
 import { z } from "zod"
 
 export const createEmployeeSchema = z.object({
-  name: z.string().min(1, "Nome e obrigatorio").max(200, "Nome muito grande"),
+  name: z.string().min(1, "Nome é obrigatório").max(200, "Nome muito grande"),
   birthdate: z.string().refine((date) => {
     const d = new Date(date)
     return d < new Date()
   }, "Data de nascimento deve estar no passado"),
-  pix: z.string().min(1, "Chave PIX e obrigatoria"),
+  pix: z.string().min(1, "Chave PIX é obrigatória"),
   contact: z
     .string()
     .regex(
@@ -14,7 +14,7 @@ export const createEmployeeSchema = z.object({
       "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"
     ),
   cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF deve estar no formato XXX.XXX.XXX-XX"),
-  email: z.email("Email invalido"),
+  email: z.email("Email inválido"),
   role: z.enum(["ADMIN", "EMPLOYEE", "STUDENT", "PARENT"]),
 })
 
