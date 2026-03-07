@@ -4,12 +4,14 @@ import { DashboardPage } from "@/features/dashboard/DashboardPage"
 import { StudentsPage } from "@/features/students/StudentsPage"
 import { StudentDetailPage } from "@/features/students/StudentDetailPage"
 import { StudentCreatePage } from "@/features/students/StudentCreatePage"
+import { StudentEditPage } from "@/features/students/StudentEditPage"
 import { EmployeesPage } from "@/features/employees/EmployeesPage"
 import { EmployeeDetailPage } from "@/features/employees/EmployeeDetailPage"
 import { EmployeeCreatePage } from "@/features/employees/EmployeeCreatePage"
 import { EventsPage } from "@/features/events/EventsPage"
 import { EventDetailPage } from "@/features/events/EventDetailPage"
 import { EventCreatePage } from "@/features/events/EventCreatePage"
+import { EventEditPage } from "@/features/events/EventEditPage"
 
 function App() {
   return (
@@ -19,12 +21,14 @@ function App() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/students" element={<StudentsPage />} />
           <Route path="/students/new" element={<StudentCreatePage />} />
+          <Route path="/students/:id/edit" element={<StudentEditPage />} />
           <Route path="/students/:id" element={<StudentDetailPage />} />
           <Route path="/employees" element={<EmployeesPage />} />
           <Route path="/employees/new" element={<EmployeeCreatePage />} />
           <Route path="/employees/:id" element={<EmployeeDetailPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/events/new" element={<EventCreatePage />} />
+          <Route path="/events/:id/edit" element={<EventEditPage />} />
           <Route path="/events/:id" element={<EventDetailPage />} />
         </Route>
       </Routes>
