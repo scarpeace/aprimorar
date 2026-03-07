@@ -1,8 +1,5 @@
 import type { CreateStudentInput, StudentResponse } from "@/lib/schemas"
 
-export type StudentCreateParentMode = "existing" | "new"
-export type StudentEditParentMode = "editCurrent" | "switchExisting"
-
 function toDateInputValue(value: string | undefined) {
   if (!value) return ""
   if (value.includes("T")) {
@@ -39,16 +36,4 @@ export function mapStudentResponseToFormValues(student: StudentResponse): Create
         }
       : undefined,
   }
-}
-
-export function buildCreateStudentPayload(data: CreateStudentInput, parentMode: StudentCreateParentMode): CreateStudentInput {
-  return parentMode === "existing"
-    ? { ...data, parent: undefined }
-    : { ...data, parentId: undefined }
-}
-
-export function buildEditStudentPayload(data: CreateStudentInput, parentMode: StudentEditParentMode): CreateStudentInput {
-  return parentMode === "switchExisting"
-    ? { ...data, parent: undefined }
-    : { ...data, parentId: undefined }
 }

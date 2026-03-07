@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button"
-import { StudentForm } from "@/features/students/components/StudentForm"
-import { buildEditStudentPayload, mapStudentResponseToFormValues, type StudentEditParentMode } from "@/features/students/utils/studentFormUtils"
-import type { CreateStudentInput, StudentResponse } from "@/lib/schemas"
-import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
-import { useEffect, useState } from "react"
+import { StudentForm, type StudentParentMode } from "@/features/students/components/StudentForm"
+import { mapStudentResponseToFormValues } from "@/features/students/utils/studentFormUtils"
+import type { CreateStudentInput, ParentSummary, StudentResponse } from "@/lib/schemas"
+import { getFriendlyErrorMessage, parentsApi, studentsApi, type PageResponse } from "@/services/api"
+import { useCallback, useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 
 export function StudentEditPage() {
@@ -14,7 +14,28 @@ export function StudentEditPage() {
   const [initialError, setInitialError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [initialValues, setInitialValues] = useState<CreateStudentInput | undefined>(undefined)
-  const [initialParentMode, setInitialParentMode] = useState<StudentEditParentMode>("editCurrent")
+  const [parentMode, setParentMode] = useState<StudentParentMode>("editCurrent")
+  const [parents, setParents] = useState<ParentSummary[]>([])
+  const [parentsLoading, setParentsLoading] = useState(true)
+  const [parentsError, setParentsError] = useState<string | null>(null)
+
+  const loadParents = useCallback(async () => {
+    try {
+      setParentsLoading(true)
+      setParentsError(null)
+
+      const res = await parentsApi.listActive(0, 100, "name")
+      const page: PageResponse<ParentSummary> = res.data
+
+      setParents(page.content)
+    } catch (error) {
+      console.error("Falha ao carregar responsáveis:", error)
+      setParents([])
+      setParentsError(getFriendlyErrorMessage(error))
+    } finally {
+      setParentsLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     if (!id) {
@@ -28,11 +49,15 @@ export function StudentEditPage() {
         setInitialError(null)
         setInitialLoading(true)
 
-        const res = await studentsApi.getById(id)
-        const student: StudentResponse = res.data
+        const [studentRes] = await Promise.all([
+          studentsApi.getById(id),
+          loadParents(),
+        ])
+
+        const student: StudentResponse = studentRes.data
 
         setInitialValues(mapStudentResponseToFormValues(student))
-        setInitialParentMode("editCurrent")
+        setParentMode("editCurrent")
       } catch (error) {
         console.error("Falha ao carregar dados do aluno:", error)
         setInitialError(getFriendlyErrorMessage(error))
@@ -42,9 +67,9 @@ export function StudentEditPage() {
     }
 
     loadStudent()
-  }, [id])
+  }, [id, loadParents])
 
-  const handleSubmit = async (data: CreateStudentInput, parentMode: StudentEditParentMode) => {
+  const handleSubmit = async (data: CreateStudentInput, currentParentMode: StudentParentMode) => {
     if (!id) {
       setSubmitError("ID do aluno não informado.")
       return
@@ -53,7 +78,10 @@ export function StudentEditPage() {
     try {
       setSubmitError(null)
 
-      const payload = buildEditStudentPayload(data, parentMode)
+      const payload = currentParentMode === "switchExisting"
+        ? { ...data, parent: undefined }
+        : { ...data, parentId: undefined }
+
       const res = await studentsApi.update(id, payload)
 
       navigate(`/students/${res.data.id}`)
@@ -92,7 +120,13 @@ export function StudentEditPage() {
       cardDescription="Atualize os dados pessoais, endereço e responsável."
       submitLabel="Salvar alterações"
       initialValues={initialValues}
-      initialParentMode={initialParentMode}
+      parentMode={parentMode}
+      onParentModeChange={setParentMode}
+      parents={parents}
+      parentsLoading={parentsLoading}
+      parentsError={parentsError}
+      onReloadParents={loadParents}
+      parentWarning="As alterações neste responsável também serão refletidas em outros alunos vinculados a ele."
       submitError={submitError}
       onSubmit={handleSubmit}
     />
