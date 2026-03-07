@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
 import {
@@ -15,6 +15,7 @@ import { eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/service
 import styles from "@/features/events/EventsPage.module.css"
 
 export function EventsPage() {
+  const navigate = useNavigate()
   const [eventList, setEventList] = useState<EventResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -41,7 +42,7 @@ export function EventsPage() {
   }, [])
 
   const handleDelete = async (event: EventResponse) => {
-    if (!window.confirm(`Excluir evento "${event.title}"? Essa acao nao pode ser desfeita.`)) {
+    if (!window.confirm(`Excluir evento "${event.title}"? Essa ação não pode ser desfeita.`)) {
       return
     }
 
@@ -59,7 +60,7 @@ export function EventsPage() {
   }
 
   if (loading) {
-    return <div>Carregando...</div>
+    return <div>Carregando eventos...</div>
   }
 
   if (error) {
@@ -67,10 +68,10 @@ export function EventsPage() {
       <div className={styles.page}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
-          <p className="text-sm text-gray-600">Gerencie horarios, precos e atribuicoes.</p>
+          <p className="text-sm text-gray-600">Gerencie horários, preços e atribuições.</p>
         </div>
         <EmptyState
-          title="Nao foi possivel carregar"
+          title="Não foi possível carregar"
           description={error}
           actionLabel="Tentar novamente"
           onAction={loadEvents}
@@ -84,7 +85,7 @@ export function EventsPage() {
       <div className={styles.header}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
-          <p className="text-sm text-gray-600">Gerencie horarios, precos e atribuicoes.</p>
+          <p className="text-sm text-gray-600">Gerencie horários, preços e atribuições.</p>
         </div>
         <Button asChild type="button">
           <Link to="/events/new">Novo evento</Link>
@@ -101,13 +102,13 @@ export function EventsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Titulo</TableHead>
+              <TableHead>Título</TableHead>
               <TableHead>Aluno</TableHead>
               <TableHead>Colaborador</TableHead>
               <TableHead>Data/Hora</TableHead>
-              <TableHead>Conteudo</TableHead>
-              <TableHead>Preco</TableHead>
-              <TableHead>Acoes</TableHead>
+              <TableHead>Conteúdo</TableHead>
+              <TableHead>Preço</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -123,6 +124,9 @@ export function EventsPage() {
                   <div className="flex items-center gap-3">
                     <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/events/${event.id}`}>
                       Detalhes
+                    </Link>
+                    <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/events/${event.id}/edit`}>
+                      Editar
                     </Link>
                     <Button
                       type="button"
@@ -144,8 +148,9 @@ export function EventsPage() {
       {eventList.length === 0 ? (
         <EmptyState
           title="Nenhum evento cadastrado"
-          description="Quando voce cadastrar o primeiro evento, ele aparecera na tabela acima."
+          description="Quando você cadastrar o primeiro evento, ele aparecerá na tabela acima."
           actionLabel="Novo evento"
+          onAction={() => navigate("/events/new")}
         />
       ) : null}
     </div>
