@@ -22,7 +22,7 @@ export function StudentsPage() {
   const [nameFilterInput, setNameFilterInput] = useState("")
   const [nameFilter, setNameFilter] = useState("")
   const [page, setPage] = useState(0)
-  const [size, setSize] = useState(20)
+  const [size, setSize] = useState(10)
   const [sortBy] = useState("name")
   const [totalElements, setTotalElements] = useState(0)
   const [totalPages, setTotalPages] = useState(0)

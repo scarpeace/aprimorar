@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { useCallback, useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
+import { ListPagination } from "@/components/ui/list-pagination"
 import {
   Table,
   TableBody,
@@ -15,33 +16,51 @@ import { employeesApi, getFriendlyErrorMessage, type PageResponse } from "@/serv
 import styles from "@/features/employees/EmployeesPage.module.css"
 
 export function EmployeesPage() {
+  const navigate = useNavigate()
   const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [page, setPage] = useState(0)
+  const [size, setSize] = useState(10)
+  const [totalElements, setTotalElements] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
+  const [isFirstPage, setIsFirstPage] = useState(true)
+  const [isLastPage, setIsLastPage] = useState(true)
 
-  const loadEmployees = async () => {
+  const loadEmployees = useCallback(async () => {
     try {
       setError(null)
       setLoading(true)
-      const employeesRes = await employeesApi.list()
+
+      const employeesRes = await employeesApi.list(page, size)
       const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
+
+      if (page > 0 && employeesPage.totalPages > 0 && page >= employeesPage.totalPages) {
+        setPage(employeesPage.totalPages - 1)
+        return
+      }
+
       setEmployeeList(employeesPage.content)
+      setTotalElements(employeesPage.totalElements)
+      setTotalPages(employeesPage.totalPages)
+      setIsFirstPage(employeesPage.first)
+      setIsLastPage(employeesPage.last)
     } catch (error) {
       console.error("Falha ao carregar colaboradores:", error)
       setError(getFriendlyErrorMessage(error))
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, size])
 
   useEffect(() => {
     loadEmployees()
-  }, [])
+  }, [loadEmployees])
 
   const handleDelete = async (employee: EmployeeResponse) => {
-    if (!window.confirm(`Excluir colaborador "${employee.name}"? Essa acao nao pode ser desfeita.`)) {
+    if (!window.confirm(`Excluir colaborador "${employee.name}"? Essa ação não pode ser desfeita.`)) {
       return
     }
 
@@ -49,7 +68,7 @@ export function EmployeesPage() {
       setDeleteError(null)
       setDeletingId(employee.id)
       await employeesApi.delete(employee.id)
-      setEmployeeList((prev) => prev.filter((item) => item.id !== employee.id))
+      await loadEmployees()
     } catch (error) {
       console.error("Falha ao excluir colaborador:", error)
       setDeleteError(getFriendlyErrorMessage(error))
@@ -59,7 +78,7 @@ export function EmployeesPage() {
   }
 
   if (loading) {
-    return <div>Carregando...</div>
+    return <div>Carregando colaboradores...</div>
   }
 
   if (error) {
@@ -70,7 +89,7 @@ export function EmployeesPage() {
           <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
         </div>
         <EmptyState
-          title="Nao foi possivel carregar"
+          title="Não foi possível carregar"
           description={error}
           actionLabel="Tentar novamente"
           onAction={loadEmployees}
@@ -105,8 +124,8 @@ export function EmployeesPage() {
               <TableHead>Cargo</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>PIX</TableHead>
-              <TableHead>Ativo</TableHead>
-              <TableHead>Acoes</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -116,7 +135,7 @@ export function EmployeesPage() {
                 <TableCell>{employee.role}</TableCell>
                 <TableCell>{employee.email}</TableCell>
                 <TableCell>{employee.pix}</TableCell>
-                <TableCell>{employee.active ? "Sim" : "Nao"}</TableCell>
+                <TableCell>{employee.active ? "Ativo" : "Inativo"}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Link
@@ -142,11 +161,28 @@ export function EmployeesPage() {
         </Table>
       </div>
 
+      <ListPagination
+        page={page}
+        size={size}
+        totalPages={totalPages}
+        totalElements={totalElements}
+        isFirstPage={isFirstPage}
+        isLastPage={isLastPage}
+        summaryLabel={`${totalElements} colaborador(es)`}
+        selectId="employees-page-size"
+        onPageChange={setPage}
+        onSizeChange={(nextSize) => {
+          setSize(nextSize)
+          setPage(0)
+        }}
+      />
+
       {employeeList.length === 0 ? (
         <EmptyState
           title="Nenhum colaborador cadastrado"
-          description="Quando voce cadastrar o primeiro colaborador, ele aparecera na tabela acima."
+          description="Quando você cadastrar o primeiro colaborador, ele aparecerá na tabela acima."
           actionLabel="Novo colaborador"
+          onAction={() => navigate("/employees/new")}
         />
       ) : null}
     </div>

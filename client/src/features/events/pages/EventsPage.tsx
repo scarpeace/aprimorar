@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
+import { ListPagination } from "@/components/ui/list-pagination"
 import {
   Table,
   TableBody,
@@ -21,25 +22,42 @@ export function EventsPage() {
   const [error, setError] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [page, setPage] = useState(0)
+  const [size, setSize] = useState(20)
+  const [totalElements, setTotalElements] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
+  const [isFirstPage, setIsFirstPage] = useState(true)
+  const [isLastPage, setIsLastPage] = useState(true)
 
-  const loadEvents = async () => {
+  const loadEvents = useCallback(async () => {
     try {
       setError(null)
       setLoading(true)
-      const eventsRes = await eventsApi.list()
+
+      const eventsRes = await eventsApi.list(page, size)
       const eventsPage: PageResponse<EventResponse> = eventsRes.data
+
+      if (page > 0 && eventsPage.totalPages > 0 && page >= eventsPage.totalPages) {
+        setPage(eventsPage.totalPages - 1)
+        return
+      }
+
       setEventList(eventsPage.content)
+      setTotalElements(eventsPage.totalElements)
+      setTotalPages(eventsPage.totalPages)
+      setIsFirstPage(eventsPage.first)
+      setIsLastPage(eventsPage.last)
     } catch (error) {
       console.error("Falha ao carregar eventos:", error)
       setError(getFriendlyErrorMessage(error))
     } finally {
       setLoading(false)
     }
-  }
+  }, [page, size])
 
   useEffect(() => {
     loadEvents()
-  }, [])
+  }, [loadEvents])
 
   const handleDelete = async (event: EventResponse) => {
     if (!window.confirm(`Excluir evento "${event.title}"? Essa ação não pode ser desfeita.`)) {
@@ -50,7 +68,7 @@ export function EventsPage() {
       setDeleteError(null)
       setDeletingId(event.id)
       await eventsApi.delete(event.id)
-      setEventList((prev) => prev.filter((item) => item.id !== event.id))
+      await loadEvents()
     } catch (error) {
       console.error("Falha ao excluir evento:", error)
       setDeleteError(getFriendlyErrorMessage(error))
@@ -144,6 +162,22 @@ export function EventsPage() {
           </TableBody>
         </Table>
       </div>
+
+      <ListPagination
+        page={page}
+        size={size}
+        totalPages={totalPages}
+        totalElements={totalElements}
+        isFirstPage={isFirstPage}
+        isLastPage={isLastPage}
+        summaryLabel={`${totalElements} evento(s)`}
+        selectId="events-page-size"
+        onPageChange={setPage}
+        onSizeChange={(nextSize) => {
+          setSize(nextSize)
+          setPage(0)
+        }}
+      />
 
       {eventList.length === 0 ? (
         <EmptyState
