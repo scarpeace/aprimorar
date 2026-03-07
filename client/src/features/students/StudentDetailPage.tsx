@@ -1,17 +1,25 @@
-import { Link, useParams } from "react-router-dom"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { GraduationCap, Mail, School, MapPin, User, CheckCircle } from "lucide-react"
-import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
-import { useEffect, useState } from "react"
-import type { StudentResponse } from "@/lib/schemas"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import styles from "@/features/students/StudentDetailPage.module.css"
+import type { StudentResponse } from "@/lib/schemas"
+import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
+import { CheckCircle, GraduationCap, Mail, MapPin, School, User } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
+import { Link, useParams } from "react-router-dom"
 
-//TODO Improve layout on this page/component + Translate labels + Errors to portuguese
+function formatDate(value: string) {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+
+  return new Intl.DateTimeFormat("pt-BR").format(date)
+}
+
 function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
   return (
     <div className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      {Icon && <Icon className="mt-0.5 h-5 w-5 text-gray-400" />}
+      {Icon ? <Icon className="mt-0.5 h-5 w-5 text-gray-400" /> : null}
       <div className="flex-1">
         <p className="text-xs font-medium uppercase tracking-wide text-gray-500">{label}</p>
         <p className="mt-1 text-sm font-semibold text-gray-900">{value}</p>
@@ -27,33 +35,42 @@ export function StudentDetailPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-
     if (!id) {
-      setError("ID do aluno nao informado.")
+      setError("ID do aluno não informado.")
       setLoading(false)
-      return;
+      return
     }
 
-     const fetchStudent = async () => {
-       try {
-         setLoading(true)
-         setError(null)
+    const fetchStudent = async () => {
+      try {
+        setLoading(true)
+        setError(null)
 
-         const res = await studentsApi.getById(id)
-         setStudent(res.data)
-       } catch (error) {
-         console.error("Falha ao carregar aluno:", error)
-         setError(getFriendlyErrorMessage(error))
-         } finally {
-           setLoading(false)
-         }
-     }
-       fetchStudent();
-     }, [id])
+        const res = await studentsApi.getById(id)
+        setStudent(res.data)
+      } catch (requestError) {
+        console.error("Falha ao carregar aluno:", requestError)
+        setError(getFriendlyErrorMessage(requestError))
+      } finally {
+        setLoading(false)
+      }
+    }
 
-     if (loading) return <div>Carregando...</div>
-     if(error) return <div>{error}</div>
-     if(!student) return <div>Aluno nao encontrado.</div>
+    fetchStudent()
+  }, [id])
+
+  const addressLabel = useMemo(() => {
+    if (!student?.address) {
+      return "Endereço não informado"
+    }
+
+    const { street, number, complement, district, city, state, zip } = student.address
+    return [street, number, complement, district, city, state, zip].filter(Boolean).join(", ")
+  }, [student?.address])
+
+  if (loading) return <div>Carregando dados do aluno...</div>
+  if (error) return <div>{error}</div>
+  if (!student) return <div>Aluno não encontrado.</div>
 
   return (
     <div className={styles.page}>
@@ -64,14 +81,17 @@ export function StudentDetailPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Detalhes do aluno</h1>
-            <p className="text-sm text-gray-500">Veja e gerencie as informacoes do aluno</p>
+            <p className="text-sm text-gray-500">Veja e gerencie as informações do cadastro do aluno.</p>
           </div>
         </div>
-        <Button asChild type="button" variant="outline">
-          <Link to="/students">
-            ← Voltar para alunos
-          </Link>
-        </Button>
+        <div className={styles.headerActions}>
+          <Button asChild type="button" variant="outline">
+            <Link to="/students">← Voltar para alunos</Link>
+          </Button>
+          <Button asChild type="button">
+            <Link to={`/students/${student.id}/edit`}>Editar aluno</Link>
+          </Button>
+        </div>
       </div>
 
       <div className={styles.contentGrid}>
@@ -79,40 +99,48 @@ export function StudentDetailPage() {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <User className="h-5 w-5 text-blue-500" />
-              Informacoes pessoais
+              Informações pessoais
             </CardTitle>
-            <CardDescription>Dados principais do aluno</CardDescription>
+            <CardDescription>Dados principais do aluno.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <DetailField label="Nome Completo" value={student.name} icon={User} />
+            <DetailField label="Nome completo" value={student.name} icon={User} />
             <DetailField label="CPF" value={student.cpf} icon={Mail} />
-            <DetailField label="Email" value={student.email} icon={GraduationCap} />
-            <DetailField label="Idade" value={String(student.age)} icon={GraduationCap} />
-            <DetailField label="Contato" value={student.contact} icon={GraduationCap} />
-            <DetailField label="Data Nascimento" value={student.birthdate} icon={GraduationCap} />
-            <DetailField label="Matrícula" value={student.createdAt} icon={GraduationCap} />
-            <DetailField label="Escola" value={student.school} icon={GraduationCap} />
-            <DetailField label="Responsável" value={student.parent?.name ?? "-"} icon={GraduationCap} />
-            <DetailField
-              label="Status"
-              value={student.archivedAt ? "Arquivado" : "Ativo"}
-              icon={CheckCircle}
-            />
+            <DetailField label="Email" value={student.email} icon={Mail} />
+            <DetailField label="Contato" value={student.contact} icon={User} />
+            <DetailField label="Data de nascimento" value={formatDate(student.birthdate)} icon={GraduationCap} />
+            <DetailField label="Idade" value={`${student.age} anos`} icon={GraduationCap} />
+            <DetailField label="Matrícula" value={formatDate(student.createdAt)} icon={CheckCircle} />
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-purple-500">
+        <Card className="border-l-4 border-l-emerald-500">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
-              <School className="h-5 w-5 text-purple-500" />
-              Academic & Status
+              <School className="h-5 w-5 text-emerald-500" />
+              Escola e responsável
             </CardTitle>
-            <CardDescription>School and enrollment details</CardDescription>
+            <CardDescription>Dados acadêmicos e vínculo familiar.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <DetailField label="School" value="-" icon={School} />
-            <DetailField label="Address" value="-" icon={MapPin} />
-            <DetailField label="Status" value="-" icon={CheckCircle} />
+            <DetailField label="Escola" value={student.school || "Não informada"} icon={School} />
+            <DetailField label="Responsável" value={student.parent?.name ?? "Não informado"} icon={User} />
+            <DetailField label="Email do responsável" value={student.parent?.email ?? "Não informado"} icon={Mail} />
+            <DetailField label="Contato do responsável" value={student.parent?.contact ?? "Não informado"} icon={User} />
+            <DetailField label="Status" value={student.archivedAt ? "Arquivado" : "Ativo"} icon={CheckCircle} />
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-amber-500">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <MapPin className="h-5 w-5 text-amber-500" />
+              Endereço
+            </CardTitle>
+            <CardDescription>Endereço residencial cadastrado.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <DetailField label="Endereço completo" value={addressLabel} icon={MapPin} />
           </CardContent>
         </Card>
       </div>
