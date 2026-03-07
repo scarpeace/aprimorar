@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { parentSchema } from "./parent"
+import { parentInputSchema, parentResponseSchema } from "./parent"
 
 export const addressSchema = z.object({
   street: z.string().min(1, "Rua é obrigatória"),
@@ -28,7 +28,7 @@ export const createStudentSchema = z.object({
   email: z.email("Email inválido"),
   address: addressSchema,
   parentId: z.uuid("Selecione um responsável").optional(),
-  parent: parentSchema.optional(),
+  parent: parentInputSchema.optional(),
 }).refine((data) => (data.parentId ? !data.parent : !!data.parent), {
   message: "Informe um responsável (existente ou novo)",
   path: ["parentId"],
@@ -46,7 +46,7 @@ export const studentResponseSchema = z.object({
   archivedAt: z.string().nullable(),
   lastReactivatedAt: z.string().nullable(),
   address: addressSchema.nullable(),
-  parent: parentSchema.nullable(),
+  parent: parentResponseSchema.nullable(),
   createdAt: z.string(),
 })
 

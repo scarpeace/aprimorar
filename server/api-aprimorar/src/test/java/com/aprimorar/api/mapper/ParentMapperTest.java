@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -63,6 +65,7 @@ class ParentMapperTest {
 
             ParentResponseDTO dto = mapper.toDto(entity);
 
+            assertEquals(entity.getId(), dto.id());
             assertEquals("(61)99923-4523", dto.contact());
             assertEquals("123.456.789-01", dto.cpf());
             assertEquals(PARENT_EMAIL, dto.email());
@@ -82,6 +85,7 @@ class ParentMapperTest {
 
     private Parent parentEntity() {
         Parent entity = new Parent();
+        entity.setId(UUID.randomUUID());
         entity.setName(PARENT_NAME);
         entity.setEmail(PARENT_EMAIL);
         entity.setContact(PARENT_CONTACT_RAW);

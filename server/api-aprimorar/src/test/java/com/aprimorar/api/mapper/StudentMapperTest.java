@@ -97,6 +97,7 @@ class StudentMapperTest {
             assertEquals("123.456.789-01", dto.cpf());
             assertEquals(archivedAt, dto.archivedAt());
             assertEquals(lastReactivatedAt, dto.lastReactivatedAt());
+            assertEquals(entity.getParent().getId(), dto.parent().id());
         }
 
         @Test
@@ -176,7 +177,9 @@ class StudentMapperTest {
         entity.setBirthdate(STUDENT_BIRTHDATE);
         entity.setCpf("12345678901");
         entity.setSchool("School");
-        entity.setParent(new Parent());
+        Parent parent = new Parent();
+        parent.setId(UUID.randomUUID());
+        entity.setParent(parent);
         entity.setAddress(new Address());
         entity.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
         return entity;

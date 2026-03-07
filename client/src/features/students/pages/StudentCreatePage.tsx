@@ -1,5 +1,5 @@
 import { StudentForm } from "@/features/students/components/StudentForm"
-import { buildStudentPayload } from "@/features/students/utils/studentFormUtils"
+import { buildCreateStudentPayload, type StudentCreateParentMode } from "@/features/students/utils/studentFormUtils"
 import type { CreateStudentInput } from "@/lib/schemas"
 import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
 import { useState } from "react"
@@ -9,11 +9,11 @@ export function StudentCreatePage() {
   const navigate = useNavigate()
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const handleSubmit = async (data: CreateStudentInput, parentMode: "existing" | "new") => {
+  const handleSubmit = async (data: CreateStudentInput, parentMode: StudentCreateParentMode) => {
     try {
       setSubmitError(null)
 
-      const payload = buildStudentPayload(data, parentMode)
+      const payload = buildCreateStudentPayload(data, parentMode)
       const res = await studentsApi.create(payload)
 
       navigate(`/students/${res.data.id}`)
@@ -25,6 +25,7 @@ export function StudentCreatePage() {
 
   return (
     <StudentForm
+      mode="create"
       title="Novo aluno"
       description="Crie um novo cadastro de aluno."
       cardDescription="Preencha os dados pessoais, endereço e responsável."

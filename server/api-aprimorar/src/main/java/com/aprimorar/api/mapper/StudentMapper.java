@@ -96,9 +96,6 @@ public class StudentMapper {
         if (dto.address() != null) {
             entity.setAddress(addressMapper.toEntity(dto.address()));
         }
-        if (dto.parent() != null) {
-            entity.setParent(parentMapper.toEntity(dto.parent()));
-        }
     }
 
     private Integer calculateAge(LocalDate birthdate) {

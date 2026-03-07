@@ -17,33 +17,47 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
-import type { StudentParentMode } from "@/features/students/utils/studentFormUtils"
+import type { StudentCreateParentMode, StudentEditParentMode } from "@/features/students/utils/studentFormUtils"
 
-type StudentFormProps = {
+type BaseStudentFormProps = {
+  mode: "create" | "edit"
   title: string
   description: string
   cardDescription: string
   submitLabel: string
   initialValues?: CreateStudentInput
-  initialParentMode?: StudentParentMode
   submitError: string | null
-  onSubmit: (data: CreateStudentInput, parentMode: StudentParentMode) => Promise<void>
 }
 
+type CreateStudentFormProps = BaseStudentFormProps & {
+  mode: "create"
+  initialParentMode?: StudentCreateParentMode
+  onSubmit: (data: CreateStudentInput, parentMode: StudentCreateParentMode) => Promise<void>
+}
+
+type EditStudentFormProps = BaseStudentFormProps & {
+  mode: "edit"
+  initialParentMode?: StudentEditParentMode
+  onSubmit: (data: CreateStudentInput, parentMode: StudentEditParentMode) => Promise<void>
+}
+
+type StudentFormProps = CreateStudentFormProps | EditStudentFormProps
+
 export function StudentForm({
+  mode,
   title,
   description,
   cardDescription,
   submitLabel,
   initialValues,
-  initialParentMode = "new",
+  initialParentMode = mode === "create" ? "new" : "editCurrent",
   submitError,
   onSubmit,
 }: StudentFormProps) {
   const [parents, setParents] = useState<ParentSummary[]>([])
   const [parentsLoading, setParentsLoading] = useState(true)
   const [parentsError, setParentsError] = useState<string | null>(null)
-  const [parentMode, setParentMode] = useState<StudentParentMode>(initialParentMode)
+  const [parentMode, setParentMode] = useState<StudentCreateParentMode | StudentEditParentMode>(initialParentMode)
 
   const {
     register,
@@ -82,17 +96,17 @@ export function StudentForm({
 
       setParents(page.content)
       if (page.content.length === 0) {
-        setParentMode("new")
+        setParentMode(mode === "create" ? "new" : "editCurrent")
       }
     } catch (error) {
       console.error("Falha ao carregar responsáveis:", error)
       setParents([])
       setParentsError(getFriendlyErrorMessage(error))
-      setParentMode("new")
+      setParentMode(mode === "create" ? "new" : "editCurrent")
     } finally {
       setParentsLoading(false)
     }
-  }, [])
+  }, [mode])
 
   useEffect(() => {
     loadParents()
@@ -103,6 +117,17 @@ export function StudentForm({
     return parent?.name ?? ""
   }, [parents, selectedParentId])
 
+  const isCreateMode = mode === "create"
+  const isExistingParentMode = isCreateMode ? parentMode === "existing" : parentMode === "switchExisting"
+  const isEditableCurrentParentMode = !isCreateMode && parentMode === "editCurrent"
+  const handleFormSubmit = (data: CreateStudentInput) => {
+    if (isCreateMode) {
+      return onSubmit(data, parentMode as StudentCreateParentMode)
+    }
+
+    return onSubmit(data, parentMode as StudentEditParentMode)
+  }
+
   return (
     <FormPageShell
       title={title}
@@ -112,7 +137,7 @@ export function StudentForm({
       cardTitle="Dados do aluno"
       cardDescription={cardDescription}
     >
-      <form className={styles.form} onSubmit={handleSubmit((data) => onSubmit(data, parentMode))}>
+      <form className={styles.form} onSubmit={handleSubmit(handleFormSubmit)}>
             <div className={styles.sectionTitle}>Aluno</div>
             <div className={styles.formGrid}>
               <FormField label="Nome completo" htmlFor="name" error={errors.name?.message}>
@@ -179,14 +204,27 @@ export function StudentForm({
             <div className={styles.formGrid}>
               {parents.length > 0 ? (
                 <FormField label="Tipo de responsável" htmlFor="parentMode" help={parentsLoading ? "Carregando lista..." : undefined} className={styles.span2}>
-                  <SelectInput id="parentMode" value={parentMode} onChange={(event) => setParentMode(event.target.value as StudentParentMode)} disabled={parentsLoading}>
-                    <option value="new">Novo responsável</option>
-                    <option value="existing">Responsável existente</option>
+                  <SelectInput id="parentMode" value={parentMode} onChange={(event) => setParentMode(event.target.value as StudentCreateParentMode | StudentEditParentMode)} disabled={parentsLoading}>
+                    {isCreateMode ? (
+                      <>
+                        <option value="new">Novo responsável</option>
+                        <option value="existing">Responsável existente</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="editCurrent">Editar responsável atual</option>
+                        <option value="switchExisting">Trocar para responsável existente</option>
+                      </>
+                    )}
                   </SelectInput>
                 </FormField>
               ) : (
                 <div className={styles.span2}>
-                  <p className={styles.help}>Nenhum responsável ativo encontrado. Cadastre um novo responsável abaixo.</p>
+                  <p className={styles.help}>
+                    {isCreateMode
+                      ? "Nenhum responsável ativo encontrado. Cadastre um novo responsável abaixo."
+                      : "Não foi possível carregar outros responsáveis. Você ainda pode editar o responsável atual abaixo."}
+                  </p>
                   {!parentsLoading ? (
                     <Button type="button" variant="outline" onClick={loadParents}>
                       Recarregar responsáveis
@@ -195,7 +233,7 @@ export function StudentForm({
                 </div>
               )}
 
-              {parentMode === "existing" && parents.length > 0 ? (
+              {isExistingParentMode && parents.length > 0 ? (
                 <FormField label="Responsável" htmlFor="parentId" error={errors.parentId?.message} help={selectedParentName ? `Selecionado: ${selectedParentName}` : undefined} className={styles.span2}>
                   <SelectInput
                     id="parentId"
@@ -219,8 +257,13 @@ export function StudentForm({
                 </FormField>
               ) : null}
 
-              {parentMode === "new" ? (
+              {!isExistingParentMode ? (
                 <>
+                  {isEditableCurrentParentMode ? (
+                    <p className={`${styles.help} ${styles.warning} ${styles.span2}`}>
+                      As alterações neste responsável também serão refletidas em outros alunos vinculados a ele.
+                    </p>
+                  ) : null}
                   <FormField label="Nome do responsável" htmlFor="parent.name" error={errors.parent?.name?.message}>
                     <Input id="parent.name" placeholder="Ex: Ana Souza" {...register("parent.name")} />
                   </FormField>

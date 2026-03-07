@@ -35,3 +35,7 @@
   font-size: 0.75rem;
   color: hsl(var(--muted-foreground));
 }
+
+.warning {
+  color: #92400e;
+}

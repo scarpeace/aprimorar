@@ -35,6 +35,7 @@ public class ParentMapper {
         }
 
         return new ParentResponseDTO(
+                entity.getId(),
                 entity.getName(),
                 entity.getEmail(),
                 mapperUtils.formatContact(entity.getContact()),

@@ -24,6 +24,8 @@ import com.aprimorar.api.mapper.StudentMapper;
 import com.aprimorar.api.repository.ParentRepository;
 import com.aprimorar.api.repository.StudentRepository;
 import com.aprimorar.api.repository.specification.StudentSpecifications;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 @Service
 public class StudentService {
@@ -100,7 +102,7 @@ public class StudentService {
 
         studentMapper.updateFromDto(updateStudentDto, foundStudent);
 
-        assignParentReference(foundStudent, updateStudentDto.parentId(), updateStudentDto.parent());
+        updateParentReference(foundStudent, updateStudentDto.parentId(), updateStudentDto.parent());
 
         foundStudent.setUpdatedAt(Instant.now());
 
@@ -133,6 +135,28 @@ public class StudentService {
             Parent savedParent = createParent(parentDto);
             student.setParent(savedParent);
         }
+    }
+
+    private void updateParentReference(Student student, UUID parentId, CreateParentDTO parentDto) {
+        if (parentId != null) {
+            Parent existingParent = findActiveParentOrThrow(parentId);
+            student.setParent(existingParent);
+            return;
+        }
+
+        if (parentDto == null) {
+            return;
+        }
+
+        Parent currentParent = student.getParent();
+        if (currentParent == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "O aluno precisa ter um responsável vinculado antes de editar os dados do responsável"
+            );
+        }
+
+        parentMapper.updateFromDto(parentDto, currentParent);
     }
 
     private void archiveIfNotArchived(Student foundStudent) {

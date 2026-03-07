@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { StudentForm } from "@/features/students/components/StudentForm"
-import { buildStudentPayload, mapStudentResponseToFormValues } from "@/features/students/utils/studentFormUtils"
+import { buildEditStudentPayload, mapStudentResponseToFormValues, type StudentEditParentMode } from "@/features/students/utils/studentFormUtils"
 import type { CreateStudentInput, StudentResponse } from "@/lib/schemas"
 import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
 import { useEffect, useState } from "react"
@@ -14,7 +14,7 @@ export function StudentEditPage() {
   const [initialError, setInitialError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [initialValues, setInitialValues] = useState<CreateStudentInput | undefined>(undefined)
-  const [initialParentMode, setInitialParentMode] = useState<"existing" | "new">("new")
+  const [initialParentMode, setInitialParentMode] = useState<StudentEditParentMode>("editCurrent")
 
   useEffect(() => {
     if (!id) {
@@ -32,7 +32,7 @@ export function StudentEditPage() {
         const student: StudentResponse = res.data
 
         setInitialValues(mapStudentResponseToFormValues(student))
-        setInitialParentMode(student.parent ? "new" : "existing")
+        setInitialParentMode("editCurrent")
       } catch (error) {
         console.error("Falha ao carregar dados do aluno:", error)
         setInitialError(getFriendlyErrorMessage(error))
@@ -44,7 +44,7 @@ export function StudentEditPage() {
     loadStudent()
   }, [id])
 
-  const handleSubmit = async (data: CreateStudentInput, parentMode: "existing" | "new") => {
+  const handleSubmit = async (data: CreateStudentInput, parentMode: StudentEditParentMode) => {
     if (!id) {
       setSubmitError("ID do aluno não informado.")
       return
@@ -53,7 +53,7 @@ export function StudentEditPage() {
     try {
       setSubmitError(null)
 
-      const payload = buildStudentPayload(data, parentMode)
+      const payload = buildEditStudentPayload(data, parentMode)
       const res = await studentsApi.update(id, payload)
 
       navigate(`/students/${res.data.id}`)
@@ -86,6 +86,7 @@ export function StudentEditPage() {
 
   return (
     <StudentForm
+      mode="edit"
       title="Editar aluno"
       description="Atualize os dados do cadastro do aluno."
       cardDescription="Atualize os dados pessoais, endereço e responsável."

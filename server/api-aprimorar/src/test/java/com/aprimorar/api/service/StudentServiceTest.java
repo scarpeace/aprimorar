@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -89,6 +90,7 @@ class StudentServiceTest {
     private CreateStudentDTO createStudentDtoWithoutParent;
     private UpdateStudentDTO updateStudentDtoWithNewParent;
     private UpdateStudentDTO updateStudentDtoWithParentId;
+    private UpdateStudentDTO updateStudentDtoWithoutParentChange;
     private CreateParentDTO createParentDto;
     private StudentResponseDTO studentResponseDto;
 
@@ -103,6 +105,7 @@ class StudentServiceTest {
         createStudentDtoWithoutParent = studentDtoWithoutParent();
         updateStudentDtoWithNewParent = updateStudentDtoWithParent(createParentDto);
         updateStudentDtoWithParentId = updateStudentDtoWithParentId(parent.getId());
+        updateStudentDtoWithoutParentChange = updateStudentDtoWithoutParentChange();
 
         studentResponseDto = mock(StudentResponseDTO.class);
     }
@@ -414,26 +417,46 @@ class StudentServiceTest {
     class UpdateStudent {
 
         @Test
-        @DisplayName("updates student with new parent")
+        @DisplayName("updates current linked parent in place")
         void updateWithNewParent() {
             Instant before = student.getUpdatedAt();
+            student.setParent(parent);
 
             when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-            when(parentMapper.toEntity(createParentDto)).thenReturn(parent);
-            when(parentRepo.save(parent)).thenReturn(parent);
             when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
             StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithNewParent);
 
             assertSame(studentResponseDto, result);
-            assertNotNull(student.getParent());
+            assertSame(parent, student.getParent());
             assertNotNull(student.getUpdatedAt());
             assertNotEquals(before, student.getUpdatedAt());
 
             verify(studentRepo).findById(student.getId());
             verify(studentMapper).updateFromDto(updateStudentDtoWithNewParent, student);
-            verify(parentMapper).toEntity(createParentDto);
-            verify(parentRepo).save(parent);
+            verify(parentMapper).updateFromDto(createParentDto, parent);
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("keeps current parent when update payload has no parent fields")
+        void updateWithoutParentChange() {
+            Instant before = student.getUpdatedAt();
+            student.setParent(parent);
+
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+            StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithoutParentChange);
+
+            assertSame(studentResponseDto, result);
+            assertSame(parent, student.getParent());
+            assertNotNull(student.getUpdatedAt());
+            assertNotEquals(before, student.getUpdatedAt());
+
+            verify(studentRepo).findById(student.getId());
+            verify(studentMapper).updateFromDto(updateStudentDtoWithoutParentChange, student);
             verify(studentMapper).toDto(student);
             verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
         }
@@ -442,6 +465,8 @@ class StudentServiceTest {
         @DisplayName("updates student with existing parent by id")
         void updateWithParentId() {
             Instant before = student.getUpdatedAt();
+            Parent currentParent = validParentEntity();
+            student.setParent(currentParent);
 
             when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
             when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
@@ -458,6 +483,41 @@ class StudentServiceTest {
             verify(studentMapper).updateFromDto(updateStudentDtoWithParentId, student);
             verify(parentRepo).findByIdAndActiveTrue(parent.getId());
             verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("throws bad request when editing parent data without a linked parent")
+        void updateParentDataWithoutCurrentParent() {
+            student.setParent(null);
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+
+            ResponseStatusException ex = assertThrows(
+                    ResponseStatusException.class,
+                    () -> studentService.updateStudent(student.getId(), updateStudentDtoWithNewParent)
+            );
+
+            assertEquals(400, ex.getStatusCode().value());
+            verify(studentRepo).findById(student.getId());
+            verify(studentMapper).updateFromDto(updateStudentDtoWithNewParent, student);
+            verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("throws ParentNotFoundException when updating with unknown parent id")
+        void updateWithUnknownParentId() {
+            UUID unknownParentId = UUID.randomUUID();
+            UpdateStudentDTO dto = updateStudentDtoWithParentId(unknownParentId);
+
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+            when(parentRepo.findByIdAndActiveTrue(unknownParentId)).thenReturn(Optional.empty());
+
+            assertThrows(ParentNotFoundException.class,
+                    () -> studentService.updateStudent(student.getId(), dto));
+
+            verify(studentRepo).findById(student.getId());
+            verify(studentMapper).updateFromDto(dto, student);
+            verify(parentRepo).findByIdAndActiveTrue(unknownParentId);
             verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
         }
 
@@ -572,6 +632,20 @@ class StudentServiceTest {
                 STUDENT_EMAIL,
                 null,
                 parentId,
+                null
+        );
+    }
+
+    private UpdateStudentDTO updateStudentDtoWithoutParentChange() {
+        return new UpdateStudentDTO(
+                STUDENT_NAME,
+                null,
+                null,
+                "Updated School",
+                null,
+                null,
+                null,
+                null,
                 null
         );
     }
