@@ -1,73 +1,82 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { PageErrorState } from "@/components/ui/page-error-state"
+import { PageLoadingState } from "@/components/ui/page-loading-state"
 import type { StudentResponse, EmployeeResponse, EventResponse } from "@/lib/schemas"
 import { studentsApi, employeesApi, eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
-import { Button } from "@/components/ui/button"
-import { useState, useEffect } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import styles from "@/features/dashboard/DashboardPage.module.css"
 
 export function DashboardPage() {
-
   const [studentsCount, setStudentsCount] = useState(0)
   const [employeesCount, setEmployeesCount] = useState(0)
   const [eventsCount, setEventsCount] = useState(0)
-  const [revenue, setRevenue] = useState(0)
+  const [totalPayments, setTotalPayments] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setError(null)
-        setLoading(true)
-        const [studentsRes, employeesRes, eventsRes] = await Promise.all([
-          studentsApi.list(0, 20, "name"),
-          employeesApi.listActive(),
-          eventsApi.list(),
-        ])
+  const currencyFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }),
+    []
+  )
 
-        const studentsPage: PageResponse<StudentResponse> = studentsRes.data
-        const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
+  const fetchDashboardData = useCallback(async () => {
+    try {
+      setError(null)
+      setLoading(true)
+
+      const [studentsRes, employeesRes] = await Promise.all([
+        studentsApi.list(0, 1, "name"),
+        employeesApi.listActive(0, 1, "name"),
+      ])
+
+      const studentsPage: PageResponse<StudentResponse> = studentsRes.data
+      const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
+
+      let currentPage = 0
+      let lastPage = false
+      let totalEventPayments = 0
+      let totalEventCount = 0
+
+      while (!lastPage) {
+        const eventsRes = await eventsApi.list(currentPage, 100)
         const eventsPage: PageResponse<EventResponse> = eventsRes.data
 
-        setStudentsCount(studentsPage.totalElements)
-        setEmployeesCount(employeesPage.totalElements)
-        setEventsCount(eventsPage.totalElements)
-        //TODO Move this logic to the backend
-        // Calculate revenue from events
-        const total = eventsPage.content.reduce(
-          (sum, event) => sum + Number(event.payment),
-          0
-        )
-
-        setRevenue(total)
-      } catch (error) {
-        console.error("Falha ao carregar o painel:", error)
-        setError(getFriendlyErrorMessage(error))
-      } finally {
-        setLoading(false)
+        totalEventCount = eventsPage.totalElements
+        totalEventPayments += eventsPage.content.reduce((sum, event) => sum + Number(event.payment), 0)
+        lastPage = eventsPage.last
+        currentPage += 1
       }
+
+      setStudentsCount(studentsPage.totalElements)
+      setEmployeesCount(employeesPage.totalElements)
+      setEventsCount(totalEventCount)
+      setTotalPayments(totalEventPayments)
+    } catch (error) {
+      console.error("Falha ao carregar o painel:", error)
+      setError(getFriendlyErrorMessage(error))
+    } finally {
+      setLoading(false)
     }
-    fetchData()
   }, [])
 
-  if (loading) return <div>Carregando...</div>
+  useEffect(() => {
+    fetchDashboardData()
+  }, [fetchDashboardData])
+
+  if (loading) return <PageLoadingState label="Carregando painel..." />
 
   if (error) {
     return (
-      <div className={styles.errorWrap}>
-        <h1 className="text-3xl font-bold text-gray-900">Painel</h1>
-        <Card>
-          <CardHeader>
-            <CardTitle>Ops, nao foi possivel carregar</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">{error}</p>
-            <Button type="button" onClick={() => window.location.reload()}>
-              Tentar novamente
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      <PageErrorState
+        title="Painel"
+        description="Acompanhe o panorama geral do sistema."
+        errorMessage={error}
+        onRetry={fetchDashboardData}
+      />
     )
   }
 
@@ -104,7 +113,7 @@ export function DashboardPage() {
             <CardTitle className="text-sm font-medium">Custo (pagamentos)</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ {revenue}</div>
+            <div className="text-2xl font-bold">{currencyFormatter.format(totalPayments)}</div>
           </CardContent>
         </Card>
       </div>

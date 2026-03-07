@@ -38,6 +38,20 @@ export type PageResponse<T> = {
   last: boolean
 }
 
+function buildQueryString(params: Record<string, string | number | boolean | undefined>) {
+  const searchParams = new URLSearchParams()
+
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined) {
+      continue
+    }
+
+    searchParams.set(key, String(value))
+  }
+
+  return searchParams.toString()
+}
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080"
 
 export const api = axios.create({
@@ -63,23 +77,16 @@ export const studentsApi = {
     includeArchived?: boolean,
     name?: string
   ): Promise<AxiosResponse<PageResponse<StudentResponse>>> => {
-    const params = new URLSearchParams({
+    const normalizedName = name?.trim()
+    const queryString = buildQueryString({
       page: String(page),
       size: String(size),
       sortBy,
+      includeArchived: includeArchived ? true : undefined,
+      name: normalizedName || undefined,
     })
 
-    if (includeArchived) {
-      params.set("includeArchived", "true")
-    }
-
-    //TODO Normalization happening twice (here and in the server) where should we keep it?
-    const normalizedName = name?.trim()
-    if (normalizedName) {
-      params.set("name", normalizedName)
-    }
-
-    return api.get(`/v1/students?${params.toString()}`)
+    return api.get(`/v1/students?${queryString}`)
   },
   getById: (id: string): Promise<AxiosResponse<StudentResponse>> =>
     api.get(`/v1/students/${id}`),
@@ -91,9 +98,9 @@ export const studentsApi = {
 
 export const employeesApi = {
   list: (page = 0, size = 20, sortBy = "name"): Promise<AxiosResponse<PageResponse<EmployeeResponse>>> =>
-    api.get(`/v1/employees?page=${page}&size=${size}&sortBy=${sortBy}`),
+    api.get(`/v1/employees?${buildQueryString({ page, size, sortBy })}`),
   listActive: (page = 0, size = 20, sortBy = "name"): Promise<AxiosResponse<PageResponse<EmployeeResponse>>> =>
-    api.get(`/v1/employees/active?page=${page}&size=${size}&sortBy=${sortBy}`),
+    api.get(`/v1/employees/active?${buildQueryString({ page, size, sortBy })}`),
   getById: (id: string): Promise<AxiosResponse<EmployeeResponse>> =>
     api.get(`/v1/employees/${id}`),
   create: (data: CreateEmployeeInput): Promise<AxiosResponse<EmployeeResponse>> => api.post("/v1/employees", data),
@@ -103,7 +110,7 @@ export const employeesApi = {
 
 export const eventsApi = {
   list: (page = 0, size = 20, sortBy = "startDateTime"): Promise<AxiosResponse<PageResponse<EventResponse>>> =>
-    api.get(`/v1/events?page=${page}&size=${size}&sortBy=${sortBy}`),
+    api.get(`/v1/events?${buildQueryString({ page, size, sortBy })}`),
   getById: (id: number): Promise<AxiosResponse<EventResponse>> => api.get(`/v1/events/${id}`),
   create: (data: CreateEventInput): Promise<AxiosResponse<EventResponse>> => api.post("/v1/events", data),
   update: (id: number, data: CreateEventInput): Promise<AxiosResponse<EventResponse>> => api.patch(`/v1/events/${id}`, data),
@@ -116,5 +123,5 @@ export const parentsApi = {
     size = 20,
     sortBy = "name"
   ): Promise<AxiosResponse<PageResponse<ParentSummary>>> =>
-    api.get(`/v1/parents/active?page=${page}&size=${size}&sortBy=${sortBy}`),
+    api.get(`/v1/parents/active?${buildQueryString({ page, size, sortBy })}`),
 }

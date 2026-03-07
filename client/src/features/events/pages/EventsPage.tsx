@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { ActionErrorBanner } from "@/components/ui/action-error-banner"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
 import { ListPagination } from "@/components/ui/list-pagination"
+import { ListPageHeader } from "@/components/ui/list-page-header"
+import { PageErrorState } from "@/components/ui/page-error-state"
+import { PageLoadingState } from "@/components/ui/page-loading-state"
 import {
   Table,
   TableBody,
@@ -78,43 +82,25 @@ export function EventsPage() {
   }
 
   if (loading) {
-    return <div>Carregando eventos...</div>
+    return <PageLoadingState label="Carregando eventos..." />
   }
 
   if (error) {
     return (
-      <div className={styles.page}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
-          <p className="text-sm text-gray-600">Gerencie horários, preços e atribuições.</p>
-        </div>
-        <EmptyState
-          title="Não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadEvents}
-        />
-      </div>
+      <PageErrorState
+        title="Eventos"
+        description="Gerencie horários, preços e atribuições."
+        errorMessage={error}
+        onRetry={loadEvents}
+      />
     )
   }
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
-          <p className="text-sm text-gray-600">Gerencie horários, preços e atribuições.</p>
-        </div>
-        <Button asChild type="button">
-          <Link to="/events/new">Novo evento</Link>
-        </Button>
-      </div>
+      <ListPageHeader title="Eventos" description="Gerencie horários, preços e atribuições." actionLabel="Novo evento" actionTo="/events/new" />
 
-      {deleteError ? (
-        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-          {deleteError}
-        </div>
-      ) : null}
+      <ActionErrorBanner message={deleteError} />
 
       <div className={styles.tableWrap}>
         <Table>

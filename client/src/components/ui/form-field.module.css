@@ -1,0 +1,21 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.help {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.error {
+  font-size: 0.75rem;
+  color: hsl(var(--destructive));
+}

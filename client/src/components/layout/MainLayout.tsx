@@ -27,7 +27,9 @@ export function MainLayout() {
         </div>
         <nav className={styles.nav}>
           {navigation.map((item) => {
-            const isActive = location.pathname === item.href
+            const isActive = item.href === "/"
+              ? location.pathname === item.href
+              : location.pathname.startsWith(item.href)
             return (
               <Link
                 key={item.name}

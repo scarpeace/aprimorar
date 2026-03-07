@@ -1,7 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod"
+import { ActionErrorBanner } from "@/components/ui/action-error-banner"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { FormActions } from "@/components/ui/form-actions"
+import { FormField } from "@/components/ui/form-field"
+import { FormPageShell } from "@/components/ui/form-page-shell"
 import { Input } from "@/components/ui/input"
+import { SelectInput } from "@/components/ui/select-input"
 import { Textarea } from "@/components/ui/textarea"
 import styles from "@/features/events/components/EventForm.module.css"
 import {
@@ -101,178 +105,118 @@ export function EventForm({
   }, [employees, selectedEmployeeId])
 
   return (
-    <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-          <p className="text-sm text-gray-600">{description}</p>
+    <FormPageShell
+      title={title}
+      description={description}
+      backTo="/events"
+      backLabel="← Voltar para eventos"
+      cardTitle="Dados do evento"
+      cardDescription={cardDescription}
+    >
+      {loadingOptions ? (
+        <div className="text-sm text-muted-foreground">Carregando opções...</div>
+      ) : optionsError ? (
+        <div className="space-y-3">
+          <ActionErrorBanner message={optionsError} />
+          <Button type="button" onClick={loadOptions}>
+            Tentar novamente
+          </Button>
         </div>
-        <Button asChild type="button" variant="outline">
-          <Link to="/events">← Voltar para eventos</Link>
-        </Button>
-      </div>
+      ) : (
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.formGrid}>
+            <FormField label="Título" htmlFor="title" error={errors.title?.message}>
+              <Input id="title" placeholder="Ex: Aula de matemática" {...register("title")} />
+            </FormField>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Dados do evento</CardTitle>
-          <CardDescription>{cardDescription}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loadingOptions ? (
-            <div className="text-sm text-muted-foreground">Carregando opções...</div>
-          ) : optionsError ? (
-            <div className="space-y-3">
-              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-                {optionsError}
-              </div>
-              <Button type="button" onClick={loadOptions}>
-                Tentar novamente
-              </Button>
-            </div>
-          ) : (
-            <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-              <div className={styles.formGrid}>
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="title">
-                    Título
-                  </label>
-                  <Input id="title" placeholder="Ex: Aula de matemática" {...register("title")} />
-                  {errors.title?.message ? <p className={styles.error}>{errors.title.message}</p> : null}
-                </div>
+            <FormField label="Aluno" htmlFor="studentId" error={errors.studentId?.message} help={selectedStudentName ? `Selecionado: ${selectedStudentName}` : undefined}>
+              <SelectInput
+                id="studentId"
+                {...studentIdField}
+                onChange={(event) => {
+                  studentIdField.onChange(event)
+                  setValue("studentId", event.target.value, { shouldValidate: true })
+                }}
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Selecione um aluno
+                </option>
+                {students.map((student) => (
+                  <option key={student.id} value={student.id}>
+                    {student.name}
+                  </option>
+                ))}
+              </SelectInput>
+            </FormField>
 
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="studentId">
-                    Aluno
-                  </label>
-                  <select
-                    id="studentId"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    {...studentIdField}
-                    onChange={(event) => {
-                      studentIdField.onChange(event)
-                      setValue("studentId", event.target.value, { shouldValidate: true })
-                    }}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Selecione um aluno
-                    </option>
-                    {students.map((student) => (
-                      <option key={student.id} value={student.id}>
-                        {student.name}
-                      </option>
-                    ))}
-                  </select>
-                  {selectedStudentName ? <p className={styles.help}>Selecionado: {selectedStudentName}</p> : null}
-                  {errors.studentId?.message ? <p className={styles.error}>{errors.studentId.message}</p> : null}
-                </div>
+            <FormField label="Colaborador" htmlFor="employeeId" error={errors.employeeId?.message} help={selectedEmployeeName ? `Selecionado: ${selectedEmployeeName}` : undefined}>
+              <SelectInput
+                id="employeeId"
+                {...employeeIdField}
+                onChange={(event) => {
+                  employeeIdField.onChange(event)
+                  setValue("employeeId", event.target.value, { shouldValidate: true })
+                }}
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Selecione um colaborador
+                </option>
+                {employees.map((employee) => (
+                  <option key={employee.id} value={employee.id}>
+                    {employee.name}
+                  </option>
+                ))}
+              </SelectInput>
+            </FormField>
 
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="employeeId">
-                    Colaborador
-                  </label>
-                  <select
-                    id="employeeId"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    {...employeeIdField}
-                    onChange={(event) => {
-                      employeeIdField.onChange(event)
-                      setValue("employeeId", event.target.value, { shouldValidate: true })
-                    }}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Selecione um colaborador
-                    </option>
-                    {employees.map((employee) => (
-                      <option key={employee.id} value={employee.id}>
-                        {employee.name}
-                      </option>
-                    ))}
-                  </select>
-                  {selectedEmployeeName ? <p className={styles.help}>Selecionado: {selectedEmployeeName}</p> : null}
-                  {errors.employeeId?.message ? <p className={styles.error}>{errors.employeeId.message}</p> : null}
-                </div>
+            <FormField label="Conteúdo" htmlFor="content" error={errors.content?.message}>
+              <SelectInput id="content" {...register("content")} defaultValue="">
+                <option value="" disabled>
+                  Selecione um conteúdo
+                </option>
+                {eventContentValues.map((content) => (
+                  <option key={content} value={content}>
+                    {eventContentLabels[content]}
+                  </option>
+                ))}
+              </SelectInput>
+            </FormField>
 
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="content">
-                    Conteúdo
-                  </label>
-                  <select
-                    id="content"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    {...register("content")}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Selecione um conteúdo
-                    </option>
-                    {eventContentValues.map((content) => (
-                      <option key={content} value={content}>
-                        {eventContentLabels[content]}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.content?.message ? <p className={styles.error}>{errors.content.message}</p> : null}
-                </div>
+            <FormField label="Início" htmlFor="startDateTime" error={errors.startDateTime?.message}>
+              <Input id="startDateTime" type="datetime-local" {...register("startDateTime")} />
+            </FormField>
 
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="startDateTime">
-                    Início
-                  </label>
-                  <Input id="startDateTime" type="datetime-local" {...register("startDateTime")} />
-                  {errors.startDateTime?.message ? <p className={styles.error}>{errors.startDateTime.message}</p> : null}
-                </div>
+            <FormField label="Fim" htmlFor="endDateTime" error={errors.endDateTime?.message}>
+              <Input id="endDateTime" type="datetime-local" {...register("endDateTime")} />
+            </FormField>
 
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="endDateTime">
-                    Fim
-                  </label>
-                  <Input id="endDateTime" type="datetime-local" {...register("endDateTime")} />
-                  {errors.endDateTime?.message ? <p className={styles.error}>{errors.endDateTime.message}</p> : null}
-                </div>
+            <FormField label="Preço (receita)" htmlFor="price" error={errors.price?.message}>
+              <Input id="price" type="number" step="0.01" min="0" {...register("price", { valueAsNumber: true })} />
+            </FormField>
 
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="price">
-                    Preço (receita)
-                  </label>
-                  <Input id="price" type="number" step="0.01" min="0" {...register("price", { valueAsNumber: true })} />
-                  {errors.price?.message ? <p className={styles.error}>{errors.price.message}</p> : null}
-                </div>
+            <FormField label="Pagamento (custo)" htmlFor="payment" error={errors.payment?.message}>
+              <Input id="payment" type="number" step="0.01" min="0" {...register("payment", { valueAsNumber: true })} />
+            </FormField>
 
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="payment">
-                    Pagamento (custo)
-                  </label>
-                  <Input id="payment" type="number" step="0.01" min="0" {...register("payment", { valueAsNumber: true })} />
-                  {errors.payment?.message ? <p className={styles.error}>{errors.payment.message}</p> : null}
-                </div>
+            <FormField label="Descrição (opcional)" htmlFor="description" error={errors.description?.message} className={styles.span2}>
+              <Textarea id="description" placeholder="Observações do atendimento" {...register("description")} />
+            </FormField>
+          </div>
 
-                <div className={styles.field + " " + styles.span2}>
-                  <label className={styles.label} htmlFor="description">
-                    Descrição (opcional)
-                  </label>
-                  <Textarea id="description" placeholder="Observações do atendimento" {...register("description")} />
-                  {errors.description?.message ? <p className={styles.error}>{errors.description.message}</p> : null}
-                </div>
-              </div>
+          <ActionErrorBanner message={submitError} />
 
-              {submitError ? (
-                <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">{submitError}</div>
-              ) : null}
-
-              <div className={styles.actions}>
-                <Button asChild type="button" variant="outline">
-                  <Link to="/events">Cancelar</Link>
-                </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Salvando..." : submitLabel}
-                </Button>
-              </div>
-            </form>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+          <FormActions>
+            <Button asChild type="button" variant="outline">
+              <Link to="/events">Cancelar</Link>
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Salvando..." : submitLabel}
+            </Button>
+          </FormActions>
+        </form>
+      )}
+    </FormPageShell>
   )
 }

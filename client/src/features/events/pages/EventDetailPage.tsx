@@ -1,11 +1,15 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { DetailField } from "@/components/ui/detail-field"
+import { EmptyState } from "@/components/ui/empty-state"
+import { PageErrorState } from "@/components/ui/page-error-state"
+import { PageLoadingState } from "@/components/ui/page-loading-state"
 import styles from "@/features/events/pages/EventDetailPage.module.css"
 import { eventContentLabels, type EventResponse } from "@/lib/schemas"
 import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
 import { Calendar, Clock, DollarSign, GraduationCap, User } from "lucide-react"
-import { useMemo, useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { useCallback, useMemo, useEffect, useState } from "react"
+import { Link, useNavigate, useParams } from "react-router-dom"
 
 function formatDateTime(value: string) {
   const date = new Date(value)
@@ -19,48 +23,37 @@ function formatDateTime(value: string) {
   }).format(date)
 }
 
-function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
-  return (
-    <div className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      {Icon ? <Icon className="mt-0.5 h-5 w-5 text-gray-400" /> : null}
-      <div className="flex-1">
-        <p className="text-xs font-medium uppercase tracking-wide text-gray-500">{label}</p>
-        <p className="mt-1 text-sm font-semibold text-gray-900">{value}</p>
-      </div>
-    </div>
-  )
-}
-
 export function EventDetailPage() {
+  const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const [event, setEvent] = useState<EventResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const loadEvent = useCallback(async () => {
     if (!id) {
       setError("ID do evento não informado.")
       setLoading(false)
       return
     }
 
-    const fetchEvent = async () => {
-      try {
-        setLoading(true)
-        setError(null)
+    try {
+      setLoading(true)
+      setError(null)
 
-        const res = await eventsApi.getById(Number(id))
-        setEvent(res.data)
-      } catch (requestError) {
-        console.error("Falha ao carregar evento:", requestError)
-        setError(getFriendlyErrorMessage(requestError))
-      } finally {
-        setLoading(false)
-      }
+      const res = await eventsApi.getById(Number(id))
+      setEvent(res.data)
+    } catch (requestError) {
+      console.error("Falha ao carregar evento:", requestError)
+      setError(getFriendlyErrorMessage(requestError))
+    } finally {
+      setLoading(false)
     }
-
-    fetchEvent()
   }, [id])
+
+  useEffect(() => {
+    loadEvent()
+  }, [loadEvent])
 
   const currencyFormatter = useMemo(
     () =>
@@ -71,9 +64,29 @@ export function EventDetailPage() {
     []
   )
 
-  if (loading) return <div>Carregando dados do evento...</div>
-  if (error) return <div>{error}</div>
-  if (!event) return <div>Evento não encontrado.</div>
+  if (loading) return <PageLoadingState label="Carregando dados do evento..." />
+  if (error) {
+    return (
+      <PageErrorState
+        title="Detalhes do evento"
+        description="Veja e gerencie as informações do atendimento."
+        errorMessage={error}
+        onRetry={loadEvent}
+      />
+    )
+  }
+  if (!event) {
+    return (
+      <div className={styles.page}>
+        <EmptyState
+          title="Evento não encontrado"
+          description="Não encontramos um evento com os dados informados."
+          actionLabel="Voltar para eventos"
+          onAction={() => navigate("/events")}
+        />
+      </div>
+    )
+  }
 
   const price = Number(event.price)
   const payment = Number(event.payment)

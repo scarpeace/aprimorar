@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import styles from "@/components/ui/list-pagination.module.css"
 
 type ListPaginationProps = {
   page: number
@@ -34,17 +35,17 @@ export function ListPagination({
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="text-xs text-muted-foreground">
+    <div className={styles.pagination}>
+      <div className={styles.summary}>
         Página {page + 1} de {Math.max(totalPages, 1)} • {summaryLabel}
       </div>
-      <div className="flex flex-wrap items-center gap-2">
-        <label className="text-xs text-muted-foreground" htmlFor={selectId}>
+      <div className={styles.actions}>
+        <label className={styles.label} htmlFor={selectId}>
           Itens por página
         </label>
         <select
           id={selectId}
-          className="h-10 min-w-[4.5rem] rounded-md border border-input bg-background px-2 text-sm"
+          className={styles.select}
           value={size}
           onChange={(event) => onSizeChange(Number(event.target.value))}
         >

@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { ActionErrorBanner } from "@/components/ui/action-error-banner"
 import { EmptyState } from "@/components/ui/empty-state"
+import { ListPagination } from "@/components/ui/list-pagination"
+import { PageErrorState } from "@/components/ui/page-error-state"
+import { PageLoadingState } from "@/components/ui/page-loading-state"
 import { StudentsListToolbar } from "@/features/students/components/StudentsListToolbar"
-import { StudentsPagination } from "@/features/students/components/StudentsPagination"
 import { StudentsTable } from "@/features/students/components/StudentsTable"
 import { buildStudentFiltersLabel } from "@/features/students/utils/studentListUtils"
 import type { StudentResponse } from "@/lib/schemas"
@@ -18,7 +21,7 @@ export function StudentsPage() {
   const [error, setError] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [hideArchived, setHideArchived] = useState(true)
+  const [hideArchived, setHideArchived] = useState(false)
   const [nameFilterInput, setNameFilterInput] = useState("")
   const [nameFilter, setNameFilter] = useState("")
   const [page, setPage] = useState(0)
@@ -120,23 +123,17 @@ export function StudentsPage() {
   }
 
   if (loading) {
-    return <div>Carregando alunos...</div>
+    return <PageLoadingState label="Carregando alunos..." />
   }
 
   if (error) {
     return (
-      <div className={styles.page}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
-          <p className="text-sm text-gray-600">Gerencie cadastros e matrículas.</p>
-        </div>
-        <EmptyState
-          title="Não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadStudents}
-        />
-      </div>
+      <PageErrorState
+        title="Alunos"
+        description="Gerencie cadastros e matrículas."
+        errorMessage={error}
+        onRetry={loadStudents}
+      />
     )
   }
 
@@ -150,23 +147,24 @@ export function StudentsPage() {
         onNameFilterInputChange={setNameFilterInput}
       />
 
-      {deleteError ? (
-        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-          {deleteError}
-        </div>
-      ) : null}
+      <ActionErrorBanner message={deleteError} />
 
       <StudentsTable students={studentList} deletingId={deletingId} onToggleArchive={handleArchiveToggle} />
 
-      <StudentsPagination
+      <ListPagination
         page={page}
         size={size}
         totalPages={totalPages}
         totalElements={totalElements}
         isFirstPage={isFirstPage}
         isLastPage={isLastPage}
+        summaryLabel={`${totalElements} aluno(s)`}
+        selectId="students-page-size"
         onPageChange={setPage}
-        onSizeChange={setSize}
+        onSizeChange={(nextSize) => {
+          setSize(nextSize)
+          setPage(0)
+        }}
       />
 
       {studentList.length === 0 ? (

@@ -1,0 +1,11 @@
+.loading {
+  display: flex;
+  min-height: 8rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  border: 1px dashed hsl(var(--border));
+  background: hsl(var(--muted) / 0.2);
+  padding: 1.5rem;
+  color: hsl(var(--muted-foreground));
+}

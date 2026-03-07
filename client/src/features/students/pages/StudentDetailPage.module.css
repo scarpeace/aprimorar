@@ -41,9 +41,3 @@
   gap: 1.5rem;
   grid-template-columns: 1fr;
 }
-
-@media (min-width: 768px) {
-  .contentGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}

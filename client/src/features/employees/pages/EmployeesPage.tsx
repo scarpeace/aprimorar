@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { ActionErrorBanner } from "@/components/ui/action-error-banner"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
 import { ListPagination } from "@/components/ui/list-pagination"
+import { ListPageHeader } from "@/components/ui/list-page-header"
+import { PageErrorState } from "@/components/ui/page-error-state"
+import { PageLoadingState } from "@/components/ui/page-loading-state"
 import {
   Table,
   TableBody,
@@ -11,9 +15,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { EMPLOYEE_ROLE_LABELS } from "@/features/employees/utils/employeeFormUtils"
 import type { EmployeeResponse } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
-import styles from "@/features/employees/EmployeesPage.module.css"
+import styles from "@/features/employees/pages/EmployeesPage.module.css"
 
 export function EmployeesPage() {
   const navigate = useNavigate()
@@ -78,43 +83,25 @@ export function EmployeesPage() {
   }
 
   if (loading) {
-    return <div>Carregando colaboradores...</div>
+    return <PageLoadingState label="Carregando colaboradores..." />
   }
 
   if (error) {
     return (
-      <div className={styles.page}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
-          <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
-        </div>
-        <EmptyState
-          title="Não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadEmployees}
-        />
-      </div>
+      <PageErrorState
+        title="Colaboradores"
+        description="Gerencie professores e equipe."
+        errorMessage={error}
+        onRetry={loadEmployees}
+      />
     )
   }
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
-          <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
-        </div>
-        <Button asChild type="button">
-          <Link to="/employees/new">Novo colaborador</Link>
-        </Button>
-      </div>
+      <ListPageHeader title="Colaboradores" description="Gerencie professores e equipe." actionLabel="Novo colaborador" actionTo="/employees/new" />
 
-      {deleteError ? (
-        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-          {deleteError}
-        </div>
-      ) : null}
+      <ActionErrorBanner message={deleteError} />
 
       <div className={styles.tableWrap}>
         <Table>
@@ -132,16 +119,13 @@ export function EmployeesPage() {
             {employeeList.map((employee) => (
               <TableRow key={employee.id}>
                 <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.role}</TableCell>
+                <TableCell>{EMPLOYEE_ROLE_LABELS[employee.role]}</TableCell>
                 <TableCell>{employee.email}</TableCell>
                 <TableCell>{employee.pix}</TableCell>
                 <TableCell>{employee.active ? "Ativo" : "Inativo"}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <Link
-                      className="text-sm font-medium text-blue-600 hover:underline"
-                      to={`/employees/${employee.id}`}
-                    >
+                    <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/employees/${employee.id}`}>
                       Detalhes
                     </Link>
                     <Button

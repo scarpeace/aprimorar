@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import styles from "@/features/students/pages/StudentsPage.module.css"
+import styles from "@/features/students/components/StudentsTable.module.css"
 import type { StudentResponse } from "@/lib/schemas"
 import { Link } from "react-router-dom"
 
@@ -40,7 +40,7 @@ export function StudentsTable({ students, deletingId, onToggleArchive }: Student
               <TableCell>{student.school}</TableCell>
               <TableCell>{student.archivedAt ? "Arquivado" : "Ativo"}</TableCell>
               <TableCell>
-                <div className="flex items-center gap-3">
+                <div className={styles.actions}>
                   <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/students/${student.id}`}>
                     Detalhes
                   </Link>

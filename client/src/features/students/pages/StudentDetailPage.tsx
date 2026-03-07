@@ -1,11 +1,15 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { DetailField } from "@/components/ui/detail-field"
+import { EmptyState } from "@/components/ui/empty-state"
+import { PageErrorState } from "@/components/ui/page-error-state"
+import { PageLoadingState } from "@/components/ui/page-loading-state"
 import styles from "@/features/students/pages/StudentDetailPage.module.css"
 import type { StudentResponse } from "@/lib/schemas"
 import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
-import { CheckCircle, GraduationCap, Mail, MapPin, School, User } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { CheckCircle, GraduationCap, Hash, Mail, MapPin, MapPinned, School, User } from "lucide-react"
+import { useCallback, useEffect, useState } from "react"
+import { Link, useNavigate, useParams } from "react-router-dom"
 
 function formatDate(value: string) {
   const date = new Date(value)
@@ -16,61 +20,65 @@ function formatDate(value: string) {
   return new Intl.DateTimeFormat("pt-BR").format(date)
 }
 
-function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
-  return (
-    <div className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      {Icon ? <Icon className="mt-0.5 h-5 w-5 text-gray-400" /> : null}
-      <div className="flex-1">
-        <p className="text-xs font-medium uppercase tracking-wide text-gray-500">{label}</p>
-        <p className="mt-1 text-sm font-semibold text-gray-900">{value}</p>
-      </div>
-    </div>
-  )
+function formatOptionalValue(value: string | null | undefined) {
+  return value?.trim() ? value : "Não informado"
 }
 
 export function StudentDetailPage() {
+  const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const [student, setStudent] = useState<StudentResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const loadStudent = useCallback(async () => {
     if (!id) {
       setError("ID do aluno não informado.")
       setLoading(false)
       return
     }
 
-    const fetchStudent = async () => {
-      try {
-        setLoading(true)
-        setError(null)
+    try {
+      setLoading(true)
+      setError(null)
 
-        const res = await studentsApi.getById(id)
-        setStudent(res.data)
-      } catch (requestError) {
-        console.error("Falha ao carregar aluno:", requestError)
-        setError(getFriendlyErrorMessage(requestError))
-      } finally {
-        setLoading(false)
-      }
+      const res = await studentsApi.getById(id)
+      setStudent(res.data)
+    } catch (requestError) {
+      console.error("Falha ao carregar aluno:", requestError)
+      setError(getFriendlyErrorMessage(requestError))
+    } finally {
+      setLoading(false)
     }
-
-    fetchStudent()
   }, [id])
 
-  const addressLabel = useMemo(() => {
-    if (!student?.address) {
-      return "Endereço não informado"
-    }
+  useEffect(() => {
+    loadStudent()
+  }, [loadStudent])
 
-    const { street, number, complement, district, city, state, zip } = student.address
-    return [street, number, complement, district, city, state, zip].filter(Boolean).join(", ")
-  }, [student?.address])
-
-  if (loading) return <div>Carregando dados do aluno...</div>
-  if (error) return <div>{error}</div>
-  if (!student) return <div>Aluno não encontrado.</div>
+  if (loading) return <PageLoadingState label="Carregando dados do aluno..." />
+  if (error) {
+    return (
+      <PageErrorState
+        title="Detalhes do aluno"
+        description="Veja e gerencie as informações do cadastro do aluno."
+        errorMessage={error}
+        onRetry={loadStudent}
+      />
+    )
+  }
+  if (!student) {
+    return (
+      <div className={styles.page}>
+        <EmptyState
+          title="Aluno não encontrado"
+          description="Não encontramos um cadastro de aluno com os dados informados."
+          actionLabel="Voltar para alunos"
+          onAction={() => navigate("/students")}
+        />
+      </div>
+    )
+  }
 
   return (
     <div className={styles.page}>
@@ -124,9 +132,9 @@ export function StudentDetailPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <DetailField label="Escola" value={student.school || "Não informada"} icon={School} />
-            <DetailField label="Responsável" value={student.parent?.name ?? "Não informado"} icon={User} />
-            <DetailField label="Email do responsável" value={student.parent?.email ?? "Não informado"} icon={Mail} />
-            <DetailField label="Contato do responsável" value={student.parent?.contact ?? "Não informado"} icon={User} />
+            <DetailField label="Responsável" value={formatOptionalValue(student.parent?.name)} icon={User} />
+            <DetailField label="Email do responsável" value={formatOptionalValue(student.parent?.email)} icon={Mail} />
+            <DetailField label="Contato do responsável" value={formatOptionalValue(student.parent?.contact)} icon={User} />
             <DetailField label="Status" value={student.archivedAt ? "Arquivado" : "Ativo"} icon={CheckCircle} />
           </CardContent>
         </Card>
@@ -140,7 +148,13 @@ export function StudentDetailPage() {
             <CardDescription>Endereço residencial cadastrado.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <DetailField label="Endereço completo" value={addressLabel} icon={MapPin} />
+            <DetailField label="Rua" value={formatOptionalValue(student.address?.street)} icon={MapPin} />
+            <DetailField label="Número" value={formatOptionalValue(student.address?.number)} icon={Hash} />
+            <DetailField label="Complemento" value={formatOptionalValue(student.address?.complement)} icon={MapPinned} />
+            <DetailField label="Bairro" value={formatOptionalValue(student.address?.district)} icon={MapPin} />
+            <DetailField label="Cidade" value={formatOptionalValue(student.address?.city)} icon={MapPin} />
+            <DetailField label="Estado" value={formatOptionalValue(student.address?.state)} icon={MapPin} />
+            <DetailField label="CEP" value={formatOptionalValue(student.address?.zip)} icon={MapPinned} />
           </CardContent>
         </Card>
       </div>

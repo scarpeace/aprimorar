@@ -1,5 +1,3 @@
-export const STUDENT_PAGE_SIZE_OPTIONS = [10, 20, 50] as const
-
 export function buildStudentFiltersLabel(nameFilter: string, hideArchived: boolean) {
   const filters: string[] = []
 

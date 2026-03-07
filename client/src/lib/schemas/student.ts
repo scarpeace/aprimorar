@@ -52,5 +52,3 @@ export const studentResponseSchema = z.object({
 
 export type CreateStudentInput = z.infer<typeof createStudentSchema>
 export type StudentResponse = z.infer<typeof studentResponseSchema>
-export type AddressInput = z.infer<typeof addressSchema>
-export type ParentInput = z.infer<typeof parentSchema>

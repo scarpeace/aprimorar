@@ -1,11 +1,11 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
 .tableWrap {
   border-radius: 0.375rem;
   border: 1px solid hsl(var(--border));
   background: #ffffff;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
