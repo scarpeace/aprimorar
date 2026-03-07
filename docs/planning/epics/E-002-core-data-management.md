@@ -20,14 +20,14 @@
 ## Workboard
 
 - Current focus: dashboard summary and event response contract improvements
-- Blocked: parent inline UX depends on E-004 after backend support is confirmed
+- Blocked: none
 - Next up: uniqueness cleanup and query consistency follow-ups
 
 ## Stories
 
 ### Story: S-010 - Student and Parent Operations
 
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Intent:** Keep student management practical for staff, including parent assignment flows.
 **Links:** T-029, T-030
 
@@ -75,7 +75,7 @@
 ### Task: T-029 - Confirm parent endpoints and contracts for inline student flows
 
 **Type:** backend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** None
 
 **Outcome**
@@ -84,9 +84,9 @@
 
 **Definition of Done**
 
-- [ ] Code or docs updated
-- [ ] Verification completed
-- [ ] Relevant epic notes updated
+- [x] Code or docs updated
+- [x] Verification completed
+- [x] Relevant epic notes updated
 
 **Verification**
 
@@ -97,7 +97,7 @@
 ### Task: T-030 - Decide and document parent management path in student edit flows
 
 **Type:** docs
-**Status:** TODO
+**Status:** DONE
 **Depends on:** T-029
 
 **Outcome**
@@ -106,9 +106,9 @@
 
 **Definition of Done**
 
-- [ ] Code or docs updated
-- [ ] Verification completed
-- [ ] Relevant epic notes updated
+- [x] Code or docs updated
+- [x] Verification completed
+- [x] Relevant epic notes updated
 
 **Verification**
 
@@ -281,3 +281,4 @@
 ## Review Notes
 
 - 2026-03-07: Reframed the epic around the remaining MVP ops/finance gaps instead of preserving a long historical task ledger.
+- 2026-03-07: Locked the student/parent flow: create requires either existing-parent selection or inline parent creation; edit supports current-parent updates or reassignment to another existing parent.
