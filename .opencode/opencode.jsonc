@@ -4,7 +4,7 @@
         "planner": {
             "description": "Product manager and software architect for discovery and planning",
             "mode": "subagent",
-            "model": "openai/gpt-5.2",
+            "model": "openai/gpt-5.4",
             "prompt": "{file:./agents/planner.md}",
             "permission": {
                 "edit": "ask",
@@ -15,7 +15,7 @@
         "do": {
             "description": "Senior full-stack implementation and static quality reviews",
             "mode": "subagent",
-            "model": "openai/gpt-5.3-codex",
+            "model": "openai/gpt-5.4",
             "prompt": "{file:./agents/do.md}",
             "permission": {
                 "edit": "allow",
