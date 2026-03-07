@@ -1,4 +1,4 @@
-import { EventForm } from "@/features/events/EventForm"
+import { EventForm } from "@/features/events/components/EventForm"
 import type { CreateEventInput } from "@/lib/schemas"
 import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
 import { useState } from "react"

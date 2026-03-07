@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
-import { EventForm } from "@/features/events/EventForm"
-import { mapEventResponseToFormValues } from "@/features/events/eventFormUtils"
+import { EventForm } from "@/features/events/components/EventForm"
+import { mapEventResponseToFormValues } from "@/features/events/utils/eventFormUtils"
 import type { CreateEventInput, EventResponse } from "@/lib/schemas"
 import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
 import { useEffect, useState } from "react"

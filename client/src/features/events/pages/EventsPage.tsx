@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table"
 import { eventContentLabels, type EventResponse } from "@/lib/schemas"
 import { eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
-import styles from "@/features/events/EventsPage.module.css"
+import styles from "@/features/events/pages/EventsPage.module.css"
 
 export function EventsPage() {
   const navigate = useNavigate()

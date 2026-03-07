@@ -73,6 +73,7 @@ export const studentsApi = {
       params.set("includeArchived", "true")
     }
 
+    //TODO Normalization happening twice (here and in the server) where should we keep it?
     const normalizedName = name?.trim()
     if (normalizedName) {
       params.set("name", normalizedName)

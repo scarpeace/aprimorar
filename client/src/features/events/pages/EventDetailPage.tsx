@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import styles from "@/features/events/EventDetailPage.module.css"
+import styles from "@/features/events/pages/EventDetailPage.module.css"
 import { eventContentLabels, type EventResponse } from "@/lib/schemas"
 import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
 import { Calendar, Clock, DollarSign, GraduationCap, User } from "lucide-react"

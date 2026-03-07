@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import styles from "@/features/students/StudentCreatePage.module.css"
+import styles from "@/features/students/components/StudentForm.module.css"
 import {
   createStudentSchema,
   type CreateStudentInput,
@@ -13,7 +13,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
-import type { StudentParentMode } from "@/features/students/studentFormUtils"
+import type { StudentParentMode } from "@/features/students/utils/studentFormUtils"
 
 type StudentFormProps = {
   title: string

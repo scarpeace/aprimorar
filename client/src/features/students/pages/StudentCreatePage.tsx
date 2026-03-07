@@ -1,5 +1,5 @@
-import { StudentForm } from "@/features/students/StudentForm"
-import { buildStudentPayload } from "@/features/students/studentFormUtils"
+import { StudentForm } from "@/features/students/components/StudentForm"
+import { buildStudentPayload } from "@/features/students/utils/studentFormUtils"
 import type { CreateStudentInput } from "@/lib/schemas"
 import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
 import { useState } from "react"

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
-import { StudentForm } from "@/features/students/StudentForm"
-import { buildStudentPayload, mapStudentResponseToFormValues } from "@/features/students/studentFormUtils"
+import { StudentForm } from "@/features/students/components/StudentForm"
+import { buildStudentPayload, mapStudentResponseToFormValues } from "@/features/students/utils/studentFormUtils"
 import type { CreateStudentInput, StudentResponse } from "@/lib/schemas"
 import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
 import { useEffect, useState } from "react"

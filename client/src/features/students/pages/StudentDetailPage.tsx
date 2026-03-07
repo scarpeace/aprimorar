@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import styles from "@/features/students/StudentDetailPage.module.css"
+import styles from "@/features/students/pages/StudentDetailPage.module.css"
 import type { StudentResponse } from "@/lib/schemas"
 import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
 import { CheckCircle, GraduationCap, Mail, MapPin, School, User } from "lucide-react"
