@@ -1,6 +1,6 @@
 # Epic: E-004 — Frontend Development
 **Goal:** Deliver a React UI for core day-to-day operational workflows.
-**Status:** TODO
+**Status:** IN_PROGRESS
 **Owner:** Gu
 **Related milestone/phase:** Phase 3
 
@@ -16,9 +16,9 @@
   - Auth UX (E-003)
 
 ## Workboard
-- Current focus: T-031 student list UX (delete/pagination/search/validation feedback)
+- Current focus: T-055 UTF-8 sweep on core UI strings
 - Blocked: Parent inline create/edit for student flow (backend ready in E-002 / S-013)
-- Next up: T-032 event management UI, then S-033 UTF-8 validation/error message polish
+- Next up: Story closeout and manual QA pass across students/events/employees
 
 ## Stories
 ### Story: S-030 — Dashboard and Navigation
@@ -27,7 +27,7 @@
 **Intent:** Provide base navigation between core modules.
 
 **Acceptance Criteria**
-- User can navigate between dashboard, students, employees, parents, and events modules.
+- User can navigate between dashboard, students, employees, and events modules.
 - Base layout renders on mobile and desktop without broken routing.
 
 **Test Plan**
@@ -36,8 +36,8 @@
 - Manual: Click through primary nav links and refresh on each route
 
 ### Story: S-031 — Student Management UI
-**Status:** TODO
-**Links:** T-031 (IN_PROGRESS)
+**Status:** DONE
+**Links:** T-031 (DONE)
 **Intent:** Manage students from UI with pagination/filter/delete safety.
 
 **Acceptance Criteria**
@@ -51,8 +51,8 @@
 - Manual: Create/edit/delete a student and verify list updates and errors render
 
 ### Story: S-032 — Event Management UI
-**Status:** TODO
-**Links:** T-032 (TODO)
+**Status:** DONE
+**Links:** T-032 (DONE)
 **Intent:** Support event create/update flows with usable form controls.
 
 **Acceptance Criteria**
@@ -66,8 +66,8 @@
 - Manual: Create/update an event and verify list/detail reflect changes
 
 ### Story: S-033 — UTF-8 Validation and Error Messages
-**Status:** TODO
-**Links:** T-052 (TODO), T-053 (TODO), T-054 (TODO), T-055 (TODO)
+**Status:** IN_PROGRESS
+**Links:** T-052 (DONE), T-053 (DONE), T-054 (DONE), T-055 (TODO)
 **Intent:** Ensure user-facing validation and error messages use correct Portuguese accents and UTF-8 characters.
 
 **Acceptance Criteria**
@@ -83,7 +83,7 @@
 ## Tasks
 ### Task: T-031 — Student list UX baseline (delete/pagination/search/validation feedback)
 **Type:** frontend
-**Status:** IN_PROGRESS
+**Status:** DONE
 **Depends on:** None
 
 **Description**
@@ -97,9 +97,9 @@
 - client/src/lib/
 
 **DoD (Definition of Done)**
-- [ ] Student list supports pagination and basic search/filter without UI regressions
-- [ ] Delete flow uses a consistent confirm + refresh pattern (shared where practical)
-- [ ] Form validation errors are visible and actionable
+- [x] Student list supports pagination and basic search/filter without UI regressions
+- [x] Delete flow uses a consistent confirm + refresh pattern (shared where practical)
+- [x] Form validation errors are visible and actionable
 
 **Verification**
 - Backend: N/A
@@ -110,9 +110,15 @@
 - Risks: inconsistent error rendering across forms if validation mapping differs per page.
 - Open questions: final UX for filters (free-text only vs structured filters).
 
+**Implementation Notes**
+- Added list pagination and free-text name filter to `client/src/features/students/StudentsPage.tsx`.
+- Added stale-request protection for list refresh and extended `studentsApi.list` filter params in `client/src/services/api.ts`.
+- Added student edit route/page (`/students/:id/edit`) and detail-page shortcut in `client/src/App.tsx`, `client/src/features/students/StudentEditPage.tsx`, and `client/src/features/students/StudentDetailPage.tsx`.
+- Refactored shared student create/edit form logic into `client/src/features/students/StudentForm.tsx` and `client/src/features/students/studentFormUtils.ts`; also polished the student detail view copy/layout.
+
 ### Task: T-032 — Event management UI
 **Type:** frontend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** None
 
 **Description**
@@ -125,9 +131,9 @@
 - client/src/components/
 
 **DoD (Definition of Done)**
-- [ ] Event create/edit form is usable (date/time, student/employee selects)
-- [ ] Validation feedback is visible for required fields and refine rules
-- [ ] Event list reflects create/update results without stale state
+- [x] Event create/edit form is usable (date/time, student/employee selects)
+- [x] Validation feedback is visible for required fields and refine rules
+- [x] Event list reflects create/update results without stale state
 
 **Verification**
 - Backend: N/A
@@ -137,6 +143,12 @@
 **Notes**
 - Risks: date/time picker behavior can be inconsistent across locales; keep it simple.
 - Open questions: whether to add a date/time picker library vs native inputs.
+
+**Implementation Notes**
+- Extracted a shared event form component in `client/src/features/events/EventForm.tsx` and shared mapping helpers in `client/src/features/events/eventFormUtils.ts`.
+- Refactored `client/src/features/events/EventCreatePage.tsx` into a thin create wrapper and added `client/src/features/events/EventEditPage.tsx` for updates.
+- Added the `/events/:id/edit` route in `client/src/App.tsx` and edit shortcuts on `client/src/features/events/EventsPage.tsx` and `client/src/features/events/EventDetailPage.tsx`.
+- Polished event list/detail copy to accented pt-BR and improved list empty-state navigation.
 
 ### Task: T-052 — UTF-8: update event schema labels and validation messages
 **Type:** frontend
@@ -169,7 +181,7 @@
 
 ### Task: T-053 — UTF-8: update student schema validation messages
 **Type:** frontend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** None
 
 **Description**
@@ -179,8 +191,8 @@
 - client/src/lib/schemas/student.ts
 
 **DoD (Definition of Done)**
-- [ ] All user-facing strings in `client/src/lib/schemas/student.ts` use the chosen accented Portuguese spelling
-- [ ] Frontend lint/build passes
+- [x] All user-facing strings in `client/src/lib/schemas/student.ts` use the chosen accented Portuguese spelling
+- [x] Frontend lint/build passes
 
 **Verification**
 - Backend: N/A
@@ -191,9 +203,12 @@
 - Risks: mismatch between backend error messages and frontend validation messages.
 - Open questions: whether to align field names exactly with UI labels.
 
+**Implementation Notes**
+- Updated user-facing student schema messages to UTF-8 accented pt-BR in `client/src/lib/schemas/student.ts`.
+
 ### Task: T-054 — UTF-8: update employee/parent schema validation messages
 **Type:** frontend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** None
 
 **Description**
@@ -205,9 +220,9 @@
 - client/src/lib/schemas/index.ts
 
 **DoD (Definition of Done)**
-- [ ] All user-facing strings in `client/src/lib/schemas/employee.ts` use the chosen accented Portuguese spelling
-- [ ] All user-facing strings in `client/src/lib/schemas/parent.ts` use the chosen accented Portuguese spelling
-- [ ] Frontend lint/build passes
+- [x] All user-facing strings in `client/src/lib/schemas/employee.ts` use the chosen accented Portuguese spelling
+- [x] All user-facing strings in `client/src/lib/schemas/parent.ts` use the chosen accented Portuguese spelling
+- [x] Frontend lint/build passes
 
 **Verification**
 - Backend: N/A
@@ -217,6 +232,9 @@
 **Notes**
 - Risks: some strings may be shared via re-exports; ensure no duplication.
 - Open questions: whether to centralize common phrases (not required for this polish pass).
+
+**Implementation Notes**
+- Updated user-facing employee and parent schema messages to UTF-8 accented pt-BR in `client/src/lib/schemas/employee.ts` and `client/src/lib/schemas/parent.ts`.
 
 ### Task: T-055 — UTF-8: sweep UI error/toast/empty-state strings (core screens)
 **Type:** frontend
@@ -257,3 +275,5 @@
 ## Review Notes (append-only)
 - Reviewer notes:
 - 2026-03-05: Added S-033 and T-052..T-055 for UTF-8/accents normalization in frontend validation and error messages.
+- 2026-03-06: Updated navigation acceptance to exclude parents module; marked T-031, T-053, and T-054 as DONE with implementation notes and verification (`cd client && npm run lint && npm run build`).
+- 2026-03-06: Marked T-032 as DONE after shared event create/edit form refactor, edit route wiring, and event list/detail polish; verified with `cd client && npm run lint && npm run build`.

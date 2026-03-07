@@ -17,7 +17,7 @@
 ## Workboard
 - Current focus: None started
 - Blocked: None
-- Next up: T-020 (JWT authentication baseline)
+- Next up: T-033 (JWT authentication baseline)
 
 ## Stories
 ### Story: S-020 — User Authentication

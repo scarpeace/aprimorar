@@ -492,5 +492,5 @@ flowchart TD
 2. Dashboard windowing: KPIs are based on event start date, for the current month in America/Sao_Paulo, and include all scheduled events in that month.
 3. Upcoming list: next 15 days, limited to 10 items, with date, start time, title, student, employee, price, and profit.
 4. Profit definition: profit = price - payment. If price or payment is missing, profit is null.
-5. DTO formatting: Event responses add formatted date/time fields (dd/MM/yyyy, HH:mm) while keeping startDateTime/endDateTime for compatibility.
+5. DTO formatting (approved; pending implementation): Event responses will add formatted date/time fields (dd/MM/yyyy, HH:mm) while keeping startDateTime/endDateTime for compatibility.
 6. Frontend responsiveness: page-level responsive/layout rules live in a colocated CSS Module (e.g. `SomePage.tsx` + `SomePage.module.css`).

@@ -140,9 +140,9 @@ No active tasks listed here. See `## Archive (DONE)` for completed work and `## 
 
 ### Task: T-028-A-A — DB migration: add archive columns and backfill
 - Status: DONE
-- Scope: Flyway migration `V6__add_student_archive_columns.sql` adds `archived_at` and `last_reactivated_at` to `tb_student`.
-- Backfill: legacy `active=false` sets `archived_at=COALESCE(updated_at, created_at)`; otherwise `archived_at=NULL`.
-- Verification: `cd server/api-aprimorar && ./mvnw test`; manual inspect `tb_student` after migration.
+- Scope: Student archive fields exist in the current baseline schema (`server/api-aprimorar/src/main/resources/db/migration/V1__create_schema.sql`): `tb_student.archived_at` and `tb_student.last_reactivated_at`.
+- Backfill: was relevant during the original transition from legacy `active`; current repo no longer carries incremental migration files for that step.
+- Verification: `cd server/api-aprimorar && ./mvnw test`; manual inspect `tb_student` columns after app startup.
 
 ### Task: T-028-A — Students archive model + migration (backend)
 - Status: DONE
@@ -151,7 +151,7 @@ No active tasks listed here. See `## Archive (DONE)` for completed work and `## 
 
 ### Task: T-028-A-B — DB migration: drop `active` and align seed
 - Status: DONE
-- Scope: Dropped `tb_student.active` via `V7__drop_student_active_column.sql`; seed no longer writes `active`.
+- Scope: Current baseline schema does not include `tb_student.active` (see `server/api-aprimorar/src/main/resources/db/migration/V1__create_schema.sql`); seed no longer writes legacy `active`.
 - Verification: `cd server/api-aprimorar && ./mvnw test`; manual recreate DB/container and start app successfully.
 
 ### Task: T-028-A-C — Backend model alignment with archive columns
@@ -177,14 +177,14 @@ No active tasks listed here. See `## Archive (DONE)` for completed work and `## 
 
 ### Task: ST-166 — DB index for `archived_at`
 - Status: DONE
-- Scope: Added `idx_tb_student_archived_at` via `V8__add_student_archived_at_index.sql`.
+- Scope: `idx_tb_student_archived_at` exists in the current baseline schema (`server/api-aprimorar/src/main/resources/db/migration/V1__create_schema.sql`).
 - Verification: app boots and list queries remain stable.
 - Notes: Auth/tenant-scoping coverage is tracked under ST-169.
 - Verification: `cd server/api-aprimorar && ./mvnw test`.
 
 ### Task: T-010 — Student listing/search and validation
 - Status: DONE
-- Scope: Added student filters by name/activity and stabilized list endpoints.
+- Scope: Added student filtering by name and stabilized list endpoints (legacy `activity` filtering removed later in T-022).
 - Verification: backend tests + manual API checks.
 - Commit: not recorded in this epic history.
 
@@ -250,9 +250,9 @@ No active tasks listed here. See `## Archive (DONE)` for completed work and `## 
 
 ### Task: T-019 — DB migration: drop Student `activity` column
 - Status: DONE
-- Scope: Removed `tb_student.activity` from baseline schema; aligned seed data for the simplified student model.
+- Scope: Current baseline schema does not include `tb_student.activity`; seed data aligns with the simplified student model.
 - Verification: `cd server/api-aprimorar && ./mvnw test` + Flyway local startup.
-- Notes: Migration-history rewrite requires fresh DB/container.
+- Notes: If upgrading an older local DB that had `activity`, recreate the DB/container to align with the current baseline schema.
 
 ### Task: T-020 — Update student DTO contract (remove `activity`, add `age`)
 - Status: DONE
