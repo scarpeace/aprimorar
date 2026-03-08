@@ -4,6 +4,14 @@ Review date: 2026-03-08
 
 Second pass notes: this review was revisited after the first draft to look for more refactor opportunities before opening the dedicated branch.
 
+Implementation tracking notes:
+
+- 2026-03-08: item 1 completed (`PATCH /archive` added and tests fixed).
+- 2026-03-08: item 2 completed (employee and event PATCH endpoints now use dedicated update DTOs).
+- 2026-03-08: item 3 completed (student nested address/parent updates now update existing objects in place when possible).
+- 2026-03-08: item 4 completed (shared application `Clock` now drives business timestamps and error timestamps).
+- 2026-03-08: item 9 completed (service lookup helpers now use more explicit names for any vs schedulable records).
+
 ## What is already working well
 
 - Clear Spring layering: controller -> service -> repository.
@@ -21,6 +29,8 @@ Scale used in this document:
 
 ### 1) Fix the student archive API contract mismatch
 
+- Status: Completed on 2026-03-08
+
 - Complexity: 1/5
 - Impact: 5/5
 - Importance: 5/5
@@ -31,6 +41,8 @@ Scale used in this document:
   - `server/api-aprimorar/src/test/java/com/aprimorar/api/controller/StudentControllerTest.java:137`
 
 ### 2) Stop using create DTOs for PATCH endpoints
+
+- Status: Completed on 2026-03-08
 
 - Complexity: 2/5
 - Impact: 5/5
@@ -47,6 +59,8 @@ Scale used in this document:
 
 ### 3) Make student nested updates truly partial
 
+- Status: Completed on 2026-03-08
+
 - Complexity: 3/5
 - Impact: 4/5
 - Importance: 5/5
@@ -59,6 +73,8 @@ Scale used in this document:
   - `server/api-aprimorar/src/main/java/com/aprimorar/api/service/StudentService.java:103`
 
 ### 4) Inject one application clock for business timestamps
+
+- Status: Completed on 2026-03-08
 
 - Complexity: 2/5
 - Impact: 4/5
@@ -125,6 +141,8 @@ NOTE: The integrations tests will be part of a future implementation, when execu
   - `server/api-aprimorar/src/main/java/com/aprimorar/api/controller/ParentController.java:19`
 
 ### 9) Make active/archive lookup rules more explicit
+
+- Status: Completed on 2026-03-08
 
 - Complexity: 2/5
 - Impact: 3/5
@@ -215,7 +233,7 @@ NOTE: The integrations tests will be part of a future implementation, when execu
 
 ## Extra notes from the review
 
-- `./mvnw test` currently fails because of the student archive endpoint mismatch described in item 1.
+- `./mvnw test` was failing before item 1 was implemented; this is no longer a known issue.
 - `spring.jpa.open-in-view` is not configured in `server/api-aprimorar/src/main/resources/application.yml:1`; consider turning it off explicitly once service/repository boundaries are stable.
 - There is only one migration file right now. Once the refactor branch starts changing constraints and lifecycle rules, add new Flyway migrations instead of editing `V1__create_schema.sql` directly.
 - The codebase is still small enough that most of these refactors can be done one by one without introducing a large architecture layer.
@@ -249,6 +267,8 @@ Use this section as the implementation roadmap for the dedicated refactor branch
 
 ### Phase 0 - Stabilize the branch first
 
+- Status: Completed on 2026-03-08
+
 - Scope:
   - item 1: student archive API contract mismatch
   - item 8 partially: add or fix tests around the archive route behavior
@@ -263,6 +283,8 @@ Use this section as the implementation roadmap for the dedicated refactor branch
 
 ### Phase 1 - Make update flows honest and safe
 
+- Status: In progress
+
 - Scope:
   - item 2: dedicated update DTOs for employee and event
   - item 3: truly partial nested updates for student address/parent
@@ -274,12 +296,18 @@ Use this section as the implementation roadmap for the dedicated refactor branch
   - `UpdateEventDTO`
   - mapper methods that clearly support partial updates
   - service helper names that describe the lookup rule in business terms
+- Progress so far:
+  - dedicated employee/event update DTOs implemented
+  - student nested partial updates implemented
+  - lifecycle-aware helper names implemented in services
 - Suggested commit shape:
   - `refactor employee and event patch contracts`
   - `refactor student nested partial updates`
   - `rename service lookup helpers for clarity`
 
 ### Phase 2 - Reduce repetition without over-abstracting
+
+- Status: In progress
 
 - Scope:
   - item 4: shared `Clock`
@@ -293,6 +321,8 @@ Use this section as the implementation roadmap for the dedicated refactor branch
   - a tiny reusable pagination input pattern
   - lighter `MapperUtils`
   - shared regex constants or small validation building blocks
+- Progress so far:
+  - shared application `Clock` now used for service timestamp writes and global error timestamps
 - Suggested commit shape:
   - `refactor application time handling`
   - `refactor pagination request inputs`

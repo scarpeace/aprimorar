@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.Clock;
 import java.util.UUID;
 
 @Service
@@ -24,10 +25,12 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepo;
     private final EmployeeMapper employeeMapper;
+    private final Clock applicationClock;
 
-    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper) {
+    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, Clock applicationClock) {
         this.employeeRepo = employeeRepo;
         this.employeeMapper = employeeMapper;
+        this.applicationClock = applicationClock;
     }
 
     @Transactional(readOnly = true)
@@ -44,7 +47,7 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public EmployeeResponseDTO findById(UUID employeeId) {
-        Employee foundEmployee = findEmployeeOrThrow(employeeId);
+        Employee foundEmployee = findAnyEmployeeOrThrow(employeeId);
         return employeeMapper.toDto(foundEmployee);
     }
 
@@ -58,21 +61,21 @@ public class EmployeeService {
 
     @Transactional
     public void softDeleteEmployee(UUID employeeId) {
-        Employee foundEmployee = findEmployeeOrThrow(employeeId);
+        Employee foundEmployee = findAnyEmployeeOrThrow(employeeId);
         deactivateIfActive(foundEmployee);
     }
 
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, UpdateEmployeeDTO updateEmployeeDto) {
-        Employee foundEmployee = findEmployeeOrThrow(employeeId);
+        Employee foundEmployee = findAnyEmployeeOrThrow(employeeId);
 
         employeeMapper.updateFromDto(updateEmployeeDto, foundEmployee);
-        foundEmployee.setUpdatedAt(Instant.now());
+        foundEmployee.setUpdatedAt(Instant.now(applicationClock));
 
         return employeeMapper.toDto(foundEmployee);
     }
 
-    private Employee findEmployeeOrThrow(UUID employeeId) {
+    private Employee findAnyEmployeeOrThrow(UUID employeeId) {
         return employeeRepo.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
     }
@@ -80,7 +83,7 @@ public class EmployeeService {
     private void deactivateIfActive(Employee foundEmployee) {
         if (Boolean.TRUE.equals(foundEmployee.getActive())) {
             foundEmployee.setActive(false);
-            foundEmployee.setUpdatedAt(Instant.now());
+            foundEmployee.setUpdatedAt(Instant.now(applicationClock));
         }
     }
 }

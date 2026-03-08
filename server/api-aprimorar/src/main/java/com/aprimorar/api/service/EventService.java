@@ -58,7 +58,7 @@ public class EventService {
 
     @Transactional(readOnly = true)
     public EventResponseDTO findById(Long eventId) {
-        Event foundEvent = findEventOrThrow(eventId);
+        Event foundEvent = findAnyEventOrThrow(eventId);
         return eventMapper.toDto(foundEvent);
     }
 
@@ -67,8 +67,8 @@ public class EventService {
         log.info("Creating event for student: {} with employee: {}",
                 createEventDto.studentId(), createEventDto.employeeId());
 
-        Student student = findStudentOrThrow(createEventDto.studentId());
-        Employee employee = findEmployeeOrThrow(createEventDto.employeeId());
+        Student student = findSchedulableStudentOrThrow(createEventDto.studentId());
+        Employee employee = findSchedulableEmployeeOrThrow(createEventDto.employeeId());
 
         Event newEvent = eventMapper.toEntity(createEventDto);
         newEvent.setStudent(student);
@@ -80,19 +80,19 @@ public class EventService {
 
     @Transactional
     public EventResponseDTO updateEvent(Long eventId, UpdateEventDTO updateEventDto) {
-        Event foundEvent = findEventOrThrow(eventId);
+        Event foundEvent = findAnyEventOrThrow(eventId);
 
         eventMapper.updateFromDto(updateEventDto, foundEvent);
 
         if (updateEventDto.studentId() != null
                 && !updateEventDto.studentId().equals(foundEvent.getStudent().getId())) {
-            Student student = findStudentOrThrow(updateEventDto.studentId());
+            Student student = findSchedulableStudentOrThrow(updateEventDto.studentId());
             foundEvent.setStudent(student);
         }
 
         if (updateEventDto.employeeId() != null
                 && !updateEventDto.employeeId().equals(foundEvent.getEmployee().getId())) {
-            Employee employee = findEmployeeOrThrow(updateEventDto.employeeId());
+            Employee employee = findSchedulableEmployeeOrThrow(updateEventDto.employeeId());
             foundEvent.setEmployee(employee);
         }
 
@@ -101,21 +101,21 @@ public class EventService {
 
     @Transactional
     public void deleteEvent(Long eventId) {
-        Event foundEvent = findEventOrThrow(eventId);
+        Event foundEvent = findAnyEventOrThrow(eventId);
         eventRepo.delete(foundEvent);
     }
 
-    private Event findEventOrThrow(Long eventId) {
+    private Event findAnyEventOrThrow(Long eventId) {
         return eventRepo.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
     }
 
-    private Student findStudentOrThrow(UUID studentId) {
+    private Student findSchedulableStudentOrThrow(UUID studentId) {
         return studentRepo.findByIdAndArchivedAtIsNull(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(studentId));
     }
 
-    private Employee findEmployeeOrThrow(UUID employeeId) {
+    private Employee findSchedulableEmployeeOrThrow(UUID employeeId) {
         return employeeRepo.findByIdAndActiveTrue(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
     }

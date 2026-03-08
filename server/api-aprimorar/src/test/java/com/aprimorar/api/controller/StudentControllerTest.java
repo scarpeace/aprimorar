@@ -18,6 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,8 +47,9 @@ class StudentControllerTest {
     @BeforeEach
     void setup() {
         StudentController controller = new StudentController(studentService);
+        Clock fixedClock = Clock.fixed(Instant.parse("2026-03-08T12:00:00Z"), ZoneOffset.UTC);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(fixedClock))
                 .build();
     }
 

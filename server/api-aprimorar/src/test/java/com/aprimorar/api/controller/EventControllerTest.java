@@ -18,6 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,8 +48,9 @@ class EventControllerTest {
     @BeforeEach
     void setup() {
         EventController controller = new EventController(eventService);
+        Clock fixedClock = Clock.fixed(Instant.parse("2026-03-08T12:00:00Z"), ZoneOffset.UTC);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(fixedClock))
                 .build();
     }
 

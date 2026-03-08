@@ -16,11 +16,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final Clock applicationClock;
+
+    public GlobalExceptionHandler(Clock applicationClock) {
+        this.applicationClock = applicationClock;
+    }
 
     @ExceptionHandler(StudentNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleStudentNotFound(
@@ -166,7 +173,7 @@ public class GlobalExceptionHandler {
 
     private ErrorResponse buildError(HttpStatus status, String code, String message, HttpServletRequest request) {
         return new ErrorResponse(
-                Instant.now(),
+                Instant.now(applicationClock),
                 status.value(),
                 status.getReasonPhrase(),
                 code,
