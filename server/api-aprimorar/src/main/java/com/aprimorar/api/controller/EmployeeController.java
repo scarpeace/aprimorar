@@ -2,6 +2,7 @@ package com.aprimorar.api.controller;
 
 import com.aprimorar.api.dto.employee.CreateEmployeeDTO;
 import com.aprimorar.api.dto.employee.EmployeeResponseDTO;
+import com.aprimorar.api.dto.employee.UpdateEmployeeDTO;
 import com.aprimorar.api.service.EmployeeService;
 import com.aprimorar.api.util.PageableUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,12 +79,12 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "Update employee", description = "Updates an existing employee with provided data")
+    @Operation(summary = "Update employee", description = "Partially updates an existing employee with provided data")
     @PatchMapping("/{employeeId}")
     public ResponseEntity<EmployeeResponseDTO> updateEmployee(
             @PathVariable UUID employeeId,
-            @RequestBody @Valid CreateEmployeeDTO createEmployeeDto) {
-        EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(employeeId, createEmployeeDto);
+            @RequestBody @Valid UpdateEmployeeDTO updateEmployeeDto) {
+        EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(employeeId, updateEmployeeDto);
         return ResponseEntity.ok(updatedEmployee);
     }
 

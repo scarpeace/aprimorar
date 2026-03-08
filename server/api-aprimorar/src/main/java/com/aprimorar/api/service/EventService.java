@@ -1,7 +1,18 @@
 package com.aprimorar.api.service;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.aprimorar.api.dto.event.CreateEventDTO;
 import com.aprimorar.api.dto.event.EventResponseDTO;
+import com.aprimorar.api.dto.event.UpdateEventDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.entity.Event;
 import com.aprimorar.api.entity.Student;
@@ -12,15 +23,6 @@ import com.aprimorar.api.mapper.EventMapper;
 import com.aprimorar.api.repository.EmployeeRepository;
 import com.aprimorar.api.repository.EventRepository;
 import com.aprimorar.api.repository.StudentRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 public class EventService {
@@ -33,9 +35,9 @@ public class EventService {
     private final EventMapper eventMapper;
 
     public EventService(EventRepository eventRepo,
-                        StudentRepository studentRepo,
-                        EmployeeRepository employeeRepo,
-                        EventMapper eventMapper) {
+            StudentRepository studentRepo,
+            EmployeeRepository employeeRepo,
+            EventMapper eventMapper) {
         this.eventRepo = eventRepo;
         this.studentRepo = studentRepo;
         this.employeeRepo = employeeRepo;
@@ -77,23 +79,20 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponseDTO updateEvent(Long eventId, CreateEventDTO createEventDto) {
+    public EventResponseDTO updateEvent(Long eventId, UpdateEventDTO updateEventDto) {
         Event foundEvent = findEventOrThrow(eventId);
 
-        // Update scalar fields via mapper
-        eventMapper.updateFromDto(createEventDto, foundEvent);
+        eventMapper.updateFromDto(updateEventDto, foundEvent);
 
-        // Update student if changed
-        if (createEventDto.studentId() != null
-                && !createEventDto.studentId().equals(foundEvent.getStudent().getId())) {
-            Student student = findStudentOrThrow(createEventDto.studentId());
+        if (updateEventDto.studentId() != null
+                && !updateEventDto.studentId().equals(foundEvent.getStudent().getId())) {
+            Student student = findStudentOrThrow(updateEventDto.studentId());
             foundEvent.setStudent(student);
         }
 
-        // Update employee if changed
-        if (createEventDto.employeeId() != null
-                && !createEventDto.employeeId().equals(foundEvent.getEmployee().getId())) {
-            Employee employee = findEmployeeOrThrow(createEventDto.employeeId());
+        if (updateEventDto.employeeId() != null
+                && !updateEventDto.employeeId().equals(foundEvent.getEmployee().getId())) {
+            Employee employee = findEmployeeOrThrow(updateEventDto.employeeId());
             foundEvent.setEmployee(employee);
         }
 

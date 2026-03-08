@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.dto.event.CreateEventDTO;
 import com.aprimorar.api.dto.event.EventResponseDTO;
+import com.aprimorar.api.dto.event.UpdateEventDTO;
 import com.aprimorar.api.service.EventService;
 import com.aprimorar.api.util.PageableUtils;
 
@@ -72,12 +73,12 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "Update EVENT", description = "Updates event with event data")
+    @Operation(summary = "Update EVENT", description = "Partially updates event data")
     @PatchMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable Long eventId,
-            @RequestBody @Valid CreateEventDTO createEventDto) {
-        EventResponseDTO updatedEvent = eventService.updateEvent(eventId, createEventDto);
+            @RequestBody @Valid UpdateEventDTO updateEventDto) {
+        EventResponseDTO updatedEvent = eventService.updateEvent(eventId, updateEventDto);
         return ResponseEntity.ok(updatedEvent);
     }
 

@@ -2,6 +2,7 @@ package com.aprimorar.api.mapper;
 
 import com.aprimorar.api.dto.employee.CreateEmployeeDTO;
 import com.aprimorar.api.dto.employee.EmployeeResponseDTO;
+import com.aprimorar.api.dto.employee.UpdateEmployeeDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.enums.Role;
 import com.aprimorar.api.util.MapperUtils;
@@ -79,6 +80,29 @@ class EmployeeMapperTest {
         void returnsNullWhenInputNull() {
             assertNull(mapper.toDto(null));
         }
+    }
+
+    @Test
+    @DisplayName("updateFromDto updates only provided fields")
+    void updateFromDtoUpdatesOnlyProvidedFields() {
+        Employee entity = validEmployeeEntity();
+        entity.setEmail("old@email.com");
+        UpdateEmployeeDTO dto = new UpdateEmployeeDTO(
+                null,
+                null,
+                "new-pix",
+                null,
+                null,
+                "NEW@EMAIL.COM",
+                null
+        );
+
+        mapper.updateFromDto(dto, entity);
+
+        assertEquals(EMPLOYEE_NAME, entity.getName());
+        assertEquals("new-pix", entity.getPix());
+        assertEquals("new@email.com", entity.getEmail());
+        assertEquals(EMPLOYEE_CONTACT_RAW, entity.getContact());
     }
 
     private CreateEmployeeDTO validCreateEmployeeDto() {

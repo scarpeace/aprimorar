@@ -68,16 +68,17 @@ class EventControllerTest {
         }
 
         @Test
-        @DisplayName("returns 400 when updating event without content")
+        @DisplayName("allows partial update when content is omitted")
         void updateWithoutContent() throws Exception {
+            when(eventService.updateEvent(eq(1L), any())).thenReturn(eventResponseWithContent());
+
             mockMvc.perform(patch("/v1/events/{eventId}", 1L)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(validBodyWithoutContent()))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                    .andExpect(jsonPath("$.message", containsString("content")));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.content").value("ENEM"));
 
-            verifyNoInteractions(eventService);
+            verify(eventService).updateEvent(eq(1L), any());
         }
 
         @Test

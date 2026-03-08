@@ -2,6 +2,7 @@ package com.aprimorar.api.service;
 
 import com.aprimorar.api.dto.employee.CreateEmployeeDTO;
 import com.aprimorar.api.dto.employee.EmployeeResponseDTO;
+import com.aprimorar.api.dto.employee.UpdateEmployeeDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.exception.domain.EmployeeNotFoundException;
 import com.aprimorar.api.mapper.EmployeeMapper;
@@ -62,10 +63,10 @@ public class EmployeeService {
     }
 
     @Transactional
-    public EmployeeResponseDTO updateEmployee(UUID employeeId, CreateEmployeeDTO createEmployeeDto) {
+    public EmployeeResponseDTO updateEmployee(UUID employeeId, UpdateEmployeeDTO updateEmployeeDto) {
         Employee foundEmployee = findEmployeeOrThrow(employeeId);
 
-        employeeMapper.updateFromDto(createEmployeeDto, foundEmployee);
+        employeeMapper.updateFromDto(updateEmployeeDto, foundEmployee);
         foundEmployee.setUpdatedAt(Instant.now());
 
         return employeeMapper.toDto(foundEmployee);

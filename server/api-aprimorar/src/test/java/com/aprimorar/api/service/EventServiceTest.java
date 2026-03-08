@@ -2,6 +2,7 @@ package com.aprimorar.api.service;
 
 import com.aprimorar.api.dto.event.CreateEventDTO;
 import com.aprimorar.api.dto.event.EventResponseDTO;
+import com.aprimorar.api.dto.event.UpdateEventDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.entity.Event;
 import com.aprimorar.api.entity.Student;
@@ -270,7 +271,7 @@ class EventServiceTest {
             Long eventId = 1L;
             UUID studentId = UUID.randomUUID();
             UUID employeeId = UUID.randomUUID();
-            CreateEventDTO dto = validCreateEventDto(studentId, employeeId);
+            UpdateEventDTO dto = validUpdateEventDto(studentId, employeeId);
             Student student = studentWithId(studentId);
             Employee employee = employeeWithId(employeeId);
             Event foundEvent = eventWithParticipants(student, employee);
@@ -295,7 +296,7 @@ class EventServiceTest {
             Long eventId = 1L;
             UUID newStudentId = UUID.randomUUID();
             UUID employeeId = UUID.randomUUID();
-            CreateEventDTO dto = validCreateEventDto(newStudentId, employeeId);
+            UpdateEventDTO dto = validUpdateEventDto(newStudentId, employeeId);
             Student oldStudent = studentWithId(UUID.randomUUID());
             Employee employee = employeeWithId(employeeId);
             Student newStudent = studentWithId(newStudentId);
@@ -324,7 +325,7 @@ class EventServiceTest {
             Long eventId = 1L;
             UUID studentId = UUID.randomUUID();
             UUID newEmployeeId = UUID.randomUUID();
-            CreateEventDTO dto = validCreateEventDto(studentId, newEmployeeId);
+            UpdateEventDTO dto = validUpdateEventDto(studentId, newEmployeeId);
             Student student = studentWithId(studentId);
             Employee oldEmployee = employeeWithId(UUID.randomUUID());
             Employee newEmployee = employeeWithId(newEmployeeId);
@@ -351,7 +352,7 @@ class EventServiceTest {
         @DisplayName("throws EventNotFoundException when target event does not exist")
         void updateEventNotFound() {
             Long eventId = 99L;
-            CreateEventDTO dto = validCreateEventDto(UUID.randomUUID(), UUID.randomUUID());
+            UpdateEventDTO dto = validUpdateEventDto(UUID.randomUUID(), UUID.randomUUID());
 
             when(eventRepo.findById(eventId)).thenReturn(Optional.empty());
 
@@ -368,7 +369,7 @@ class EventServiceTest {
             Long eventId = 1L;
             UUID newStudentId = UUID.randomUUID();
             UUID employeeId = UUID.randomUUID();
-            CreateEventDTO dto = validCreateEventDto(newStudentId, employeeId);
+            UpdateEventDTO dto = validUpdateEventDto(newStudentId, employeeId);
             Student oldStudent = studentWithId(UUID.randomUUID());
             Employee employee = employeeWithId(employeeId);
             Event foundEvent = eventWithParticipants(oldStudent, employee);
@@ -391,7 +392,7 @@ class EventServiceTest {
             Long eventId = 1L;
             UUID studentId = UUID.randomUUID();
             UUID newEmployeeId = UUID.randomUUID();
-            CreateEventDTO dto = validCreateEventDto(studentId, newEmployeeId);
+            UpdateEventDTO dto = validUpdateEventDto(studentId, newEmployeeId);
             Student student = studentWithId(studentId);
             Employee oldEmployee = employeeWithId(UUID.randomUUID());
             Event foundEvent = eventWithParticipants(student, oldEmployee);
@@ -446,6 +447,20 @@ class EventServiceTest {
 
     private CreateEventDTO validCreateEventDto(UUID studentId, UUID employeeId) {
         return new CreateEventDTO(
+                VALID_TITLE,
+                VALID_DESCRIPTION,
+                VALID_START,
+                VALID_END,
+                VALID_PRICE,
+                VALID_PAYMENT,
+                EventContent.ENEM,
+                studentId,
+                employeeId
+        );
+    }
+
+    private UpdateEventDTO validUpdateEventDto(UUID studentId, UUID employeeId) {
+        return new UpdateEventDTO(
                 VALID_TITLE,
                 VALID_DESCRIPTION,
                 VALID_START,

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.aprimorar.api.dto.event.CreateEventDTO;
 import com.aprimorar.api.dto.event.EventResponseDTO;
+import com.aprimorar.api.dto.event.UpdateEventDTO;
 import com.aprimorar.api.entity.Event;
 
 @Component
@@ -48,7 +49,7 @@ public class EventMapper {
         return entity;
     }
 
-    public void updateFromDto(CreateEventDTO dto, Event entity) {
+    public void updateFromDto(UpdateEventDTO dto, Event entity) {
         if (dto == null || entity == null) {
             return;
         }

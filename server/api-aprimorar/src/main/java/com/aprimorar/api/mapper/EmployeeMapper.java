@@ -2,6 +2,7 @@ package com.aprimorar.api.mapper;
 
 import com.aprimorar.api.dto.employee.CreateEmployeeDTO;
 import com.aprimorar.api.dto.employee.EmployeeResponseDTO;
+import com.aprimorar.api.dto.employee.UpdateEmployeeDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.util.MapperUtils;
 import org.springframework.stereotype.Component;
@@ -51,7 +52,7 @@ public class EmployeeMapper {
         );
     }
 
-    public void updateFromDto(CreateEmployeeDTO dto, Employee entity) {
+    public void updateFromDto(UpdateEmployeeDTO dto, Employee entity) {
         if (dto == null || entity == null) {
             return;
         }
@@ -72,7 +73,7 @@ public class EmployeeMapper {
             entity.setCpf(mapperUtils.sanitizeCpf(dto.cpf()));
         }
         if (dto.email() != null) {
-            entity.setEmail(dto.email());
+            entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
         }
         if (dto.role() != null) {
             entity.setRole(dto.role());
