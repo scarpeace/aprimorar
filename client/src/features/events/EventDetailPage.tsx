@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
+import { ErrorState } from "@/components/ui/error-state"
 import { LoadingState } from "@/components/ui/loading-state"
 import { Calendar } from "lucide-react"
 import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
@@ -52,7 +53,7 @@ export function EventDetailPage() {
   if (error) {
     return (
       <div className={styles.page}>
-        <EmptyState
+        <ErrorState
           title="Não foi possível carregar"
           description={error}
           actionLabel="Tentar novamente"

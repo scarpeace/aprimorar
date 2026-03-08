@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { EmptyState } from "@/components/ui/empty-state"
+import { ErrorState } from "@/components/ui/error-state"
 import { LoadingState } from "@/components/ui/loading-state"
 import type { StudentResponse, EmployeeResponse, EventResponse } from "@/lib/schemas"
 import { studentsApi, employeesApi, eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
@@ -57,7 +57,7 @@ export function DashboardPage() {
     return (
       <div className={styles.errorWrap}>
         <h1 className="text-3xl font-bold text-gray-900">Painel</h1>
-        <EmptyState
+        <ErrorState
           title="Ops, não foi possível carregar"
           description={error}
           actionLabel="Tentar novamente"
