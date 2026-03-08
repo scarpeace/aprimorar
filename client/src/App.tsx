@@ -3,6 +3,7 @@ import { PageLoadingState } from "@/components/ui/page-loading-state"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { MainLayout } from "@/components/layout/MainLayout"
 
+
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage").then((module) => ({ default: module.DashboardPage })))
 const StudentsPage = lazy(() => import("@/features/students/pages/StudentsPage").then((module) => ({ default: module.StudentsPage })))
 const StudentDetailPage = lazy(() => import("@/features/students/pages/StudentDetailPage").then((module) => ({ default: module.StudentDetailPage })))
@@ -37,6 +38,7 @@ function App() {
           <Route path="/events/new" element={withPageFallback(<EventCreatePage />)} />
           <Route path="/events/:id/edit" element={withPageFallback(<EventEditPage />)} />
           <Route path="/events/:id" element={withPageFallback(<EventDetailPage />)} />
+
         </Route>
       </Routes>
     </BrowserRouter>
