@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { InlineLoading } from "@/components/ui/inline-loading"
 import { Input } from "@/components/ui/input"
 import styles from "@/features/students/StudentCreatePage.module.css"
 import { useEffect, useMemo, useState } from "react"
@@ -262,7 +263,7 @@ export function StudentCreatePage() {
                     <option value="new">Novo responsável</option>
                     <option value="existing">Responsável existente</option>
                   </select>
-                  {parentsLoading ? <p className={styles.help}>Carregando lista...</p> : null}
+                  {parentsLoading ? <InlineLoading message="Carregando lista..." /> : null}
                 </div>
               ) : (
                 <div className={styles.field + " " + styles.span2}>

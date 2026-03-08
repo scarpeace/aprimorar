@@ -1,23 +1,33 @@
 package com.aprimorar.api.controller;
 
+import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.aprimorar.api.dto.event.CreateEventDTO;
 import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.service.EventService;
 import com.aprimorar.api.util.PageableUtils;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/events")
@@ -32,7 +42,7 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @Operation(summary = "List all EVENTS", description = "Retrieves all events from database with pagination")
+    @Operation(summary = "List all EVENTS and/or Filtered", description = "Retrieves all events from database with pagination and filters if needed")
     @GetMapping
     public ResponseEntity<Page<EventResponseDTO>> listEvents(
             @RequestParam(defaultValue = "0") int page,

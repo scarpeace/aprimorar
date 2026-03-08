@@ -1,21 +1,22 @@
 import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { GraduationCap, Mail, School, MapPin, User, CheckCircle } from "lucide-react"
-import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
-import { useEffect, useState } from "react"
-import type { StudentResponse } from "@/lib/schemas"
+import { EmptyState } from "@/components/ui/empty-state"
+import { ErrorState } from "@/components/ui/error-state"
+import { LoadingState } from "@/components/ui/loading-state"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { GraduationCap } from "lucide-react"
+import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
+import type { StudentResponse } from "@/lib/schemas/student"
+import { eventsApi, getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
+import { useCallback, useEffect, useState } from "react"
 import styles from "@/features/students/StudentDetailPage.module.css"
 
-//TODO Improve layout on this page/component + Translate labels + Errors to portuguese
-function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
+function SummaryField({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      {Icon && <Icon className="mt-0.5 h-5 w-5 text-gray-400" />}
-      <div className="flex-1">
-        <p className="text-xs font-medium uppercase tracking-wide text-gray-500">{label}</p>
-        <p className="mt-1 text-sm font-semibold text-gray-900">{value}</p>
-      </div>
+    <div className={styles.summaryItem}>
+      <p className={styles.summaryLabel}>{label}</p>
+      <p className={styles.summaryValue}>{value}</p>
     </div>
   )
 }
@@ -23,37 +24,76 @@ function DetailField({ label, value, icon: Icon }: { label: string; value: strin
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [student, setStudent] = useState<StudentResponse | null>(null)
+  const [linkedEvents, setLinkedEvents] = useState<EventResponse[]>([])
+  const [studentEventsCount, setStudentEventsCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-
+  const loadStudentData = useCallback(async () => {
     if (!id) {
       setError("ID do aluno não informado.")
-      setLoading(false)
-      return;
+      return
     }
 
-     const fetchStudent = async () => {
-       try {
-         setLoading(true)
-         setError(null)
+    try {
+      setLoading(true)
+      setError(null)
 
-         const res = await studentsApi.getById(id)
-         setStudent(res.data)
-       } catch (error) {
-         console.error("Falha ao carregar aluno:", error)
-         setError(getFriendlyErrorMessage(error))
-         } finally {
-           setLoading(false)
-         }
-     }
-       fetchStudent();
-     }, [id])
+      const [studentRes, eventsRes] = await Promise.all([
+        studentsApi.getById(id),
+        eventsApi.listByStudent(id, 0, 100, "startDateTime"),
+      ])
 
-     if (loading) return <div>Carregando...</div>
-     if(error) return <div>{error}</div>
-     if(!student) return <div>Aluno não encontrado.</div>
+      const eventsPage: PageResponse<EventResponse> = eventsRes.data
+
+      setStudent(studentRes.data)
+      setLinkedEvents(eventsPage.content)
+      setStudentEventsCount(eventsPage.totalElements)
+    } catch (loadError) {
+      console.error("Falha ao carregar aluno:", loadError)
+      setError(getFriendlyErrorMessage(loadError))
+    } finally {
+      setLoading(false)
+    }
+  }, [id])
+
+  useEffect(() => {
+    loadStudentData()
+  }, [loadStudentData])
+
+  if (loading) return <LoadingState message="Carregando aluno..." />
+
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <ErrorState
+          title="Não foi possível carregar"
+          description={error}
+          actionLabel="Tentar novamente"
+          onAction={loadStudentData}
+        />
+      </div>
+    )
+  }
+
+  if (!student) {
+    return (
+      <div className={styles.page}>
+        <EmptyState title="Aluno não encontrado" description="Não encontramos os dados deste aluno." />
+      </div>
+    )
+  }
+
+  const parentName = student.parent?.name ?? "-"
+  const parentEmail = student.parent?.email ?? "-"
+  const parentContact = student.parent?.contact ?? "-"
+  const parentCpf = student.parent?.cpf ?? "-"
+
+  const address = student.address
+    ? `${student.address.street}, ${student.address.number} - ${student.address.district}, ${student.address.city}/${student.address.state}`
+    : "-"
+  const addressComplement = student.address?.complement ?? "-"
+  const addressZip = student.address?.zip ?? "-"
 
   return (
     <div className={styles.page}>
@@ -68,54 +108,81 @@ export function StudentDetailPage() {
           </div>
         </div>
         <Button asChild type="button" variant="outline">
-          <Link to="/students">
-            ← Voltar para alunos
-          </Link>
+          <Link to="/students">← Voltar para alunos</Link>
         </Button>
       </div>
 
-      <div className={styles.contentGrid}>
-        <Card className="border-l-4 border-l-blue-500">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <User className="h-5 w-5 text-blue-500" />
-              Informações pessoais
-            </CardTitle>
-            <CardDescription>Dados principais do aluno</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <DetailField label="Nome Completo" value={student.name} icon={User} />
-            <DetailField label="CPF" value={student.cpf} icon={Mail} />
-            <DetailField label="Email" value={student.email} icon={GraduationCap} />
-            <DetailField label="Idade" value={String(student.age)} icon={GraduationCap} />
-            <DetailField label="Contato" value={student.contact} icon={GraduationCap} />
-            <DetailField label="Data Nascimento" value={student.birthdate} icon={GraduationCap} />
-            <DetailField label="Matrícula" value={student.createdAt} icon={GraduationCap} />
-            <DetailField label="Escola" value={student.school} icon={GraduationCap} />
-            <DetailField label="Responsável" value={student.parent?.name ?? "-"} icon={GraduationCap} />
-            <DetailField
-              label="Status"
-              value={student.archivedAt ? "Arquivado" : "Ativo"}
-              icon={CheckCircle}
-            />
-          </CardContent>
-        </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Resumo do aluno</CardTitle>
+          <CardDescription>Dados de aluno, responsável e endereço em um único resumo.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className={styles.summaryGrid}>
+            <SummaryField label="Nome completo" value={student.name} />
+            <SummaryField label="CPF" value={student.cpf} />
+            <SummaryField label="E-mail" value={student.email} />
+            <SummaryField label="Idade" value={String(student.age)} />
+            <SummaryField label="Contato" value={student.contact} />
+            <SummaryField label="Data de nascimento" value={student.birthdate} />
+            <SummaryField label="Data de matrícula" value={student.createdAt} />
+            <SummaryField label="Escola" value={student.school} />
+            <SummaryField label="Status" value={student.archivedAt ? "Arquivado" : "Ativo"} />
+            <SummaryField label="Responsável" value={parentName} />
+            <SummaryField label="E-mail do responsável" value={parentEmail} />
+            <SummaryField label="Contato do responsável" value={parentContact} />
+            <SummaryField label="CPF do responsável" value={parentCpf} />
+            <SummaryField label="Endereço" value={address} />
+            <SummaryField label="Complemento" value={addressComplement} />
+            <SummaryField label="CEP" value={addressZip} />
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card className="border-l-4 border-l-purple-500">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <School className="h-5 w-5 text-purple-500" />
-              Academic & Status
-            </CardTitle>
-            <CardDescription>School and enrollment details</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <DetailField label="School" value="-" icon={School} />
-            <DetailField label="Address" value="-" icon={MapPin} />
-            <DetailField label="Status" value="-" icon={CheckCircle} />
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Eventos vinculados</CardTitle>
+          <CardDescription>Total de eventos vinculados a este aluno: {studentEventsCount}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {linkedEvents.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Este aluno ainda não possui eventos vinculados.</p>
+          ) : (
+            <div className={styles.tableWrap}>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Título</TableHead>
+                    <TableHead>Conteúdo</TableHead>
+                    <TableHead>Início</TableHead>
+                    <TableHead>Fim</TableHead>
+                    <TableHead>Colaborador</TableHead>
+                    <TableHead>Preço</TableHead>
+                    <TableHead>Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {linkedEvents.map((event) => (
+                    <TableRow key={event.id}>
+                      <TableCell>{event.title}</TableCell>
+                      <TableCell>{eventContentLabels[event.content]}</TableCell>
+                      <TableCell>{event.startDateTime}</TableCell>
+                      <TableCell>{event.endDateTime}</TableCell>
+                      <TableCell>{event.employeeName}</TableCell>
+                      <TableCell>{event.price}</TableCell>
+                      <TableCell>
+                        <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/events/${event.id}`}>
+                          Ver evento
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

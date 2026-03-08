@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
+import { ErrorState } from "@/components/ui/error-state"
+import { LoadingState } from "@/components/ui/loading-state"
 import {
   Table,
   TableBody,
@@ -20,7 +22,7 @@ export function StudentsPage() {
   const [error, setError] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [hideArchived, setHideArchived] = useState(true)
+  const [hideArchived, setHideArchived] = useState(false)
 
   const loadStudents = useCallback(async () => {
     try {
@@ -72,7 +74,7 @@ export function StudentsPage() {
   }
 
   if (loading) {
-    return <div>Carregando...</div>
+    return <LoadingState message="Carregando alunos..." />
   }
 
   if (error) {
@@ -82,7 +84,7 @@ export function StudentsPage() {
           <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
           <p className="text-sm text-gray-600">Gerencie cadastros e matrículas.</p>
         </div>
-        <EmptyState
+        <ErrorState
           title="Não foi possível carregar"
           description={error}
           actionLabel="Tentar novamente"

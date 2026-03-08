@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { InlineLoading } from "@/components/ui/inline-loading"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import styles from "@/features/events/EventCreatePage.module.css"
@@ -101,7 +102,7 @@ export function EventCreatePage() {
         </CardHeader>
         <CardContent>
           {loadingOptions ? (
-            <div className="text-sm text-muted-foreground">Carregando opções...</div>
+            <InlineLoading message="Carregando opções..." />
           ) : optionsError ? (
             <div className="space-y-3">
               <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">

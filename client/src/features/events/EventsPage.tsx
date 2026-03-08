@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
+import { ErrorState } from "@/components/ui/error-state"
+import { LoadingState } from "@/components/ui/loading-state"
 import {
   Table,
   TableBody,
@@ -59,7 +61,7 @@ export function EventsPage() {
   }
 
   if (loading) {
-    return <div>Carregando...</div>
+    return <LoadingState message="Carregando eventos..." />
   }
 
   if (error) {
@@ -69,7 +71,7 @@ export function EventsPage() {
           <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
           <p className="text-sm text-gray-600">Gerencie horários, preços e atribuições.</p>
         </div>
-        <EmptyState
+        <ErrorState
           title="Não foi possível carregar"
           description={error}
           actionLabel="Tentar novamente"
@@ -106,7 +108,7 @@ export function EventsPage() {
               <TableHead>Colaborador</TableHead>
               <TableHead>Data/Hora</TableHead>
               <TableHead>Conteúdo</TableHead>
-              <TableHead>Preço</TableHead>
+              <TableHead>Valor</TableHead>
               <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -118,7 +120,7 @@ export function EventsPage() {
                 <TableCell>{event.employeeName}</TableCell>
                 <TableCell>{event.startDateTime}</TableCell>
                 <TableCell>{eventContentLabels[event.content]}</TableCell>
-                <TableCell>{event.price}</TableCell>
+                <TableCell>R$ {event.price}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/events/${event.id}`}>
