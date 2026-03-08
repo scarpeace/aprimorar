@@ -83,6 +83,13 @@ export const employeesApi = {
 export const eventsApi = {
   list: (page = 0, size = 20, sortBy = "startDateTime"): Promise<AxiosResponse<PageResponse<EventResponse>>> =>
     api.get(`/v1/events?page=${page}&size=${size}&sortBy=${sortBy}`),
+  listByStudent: (
+    studentId: string,
+    page = 0,
+    size = 20,
+    sortBy = "startDateTime"
+  ): Promise<AxiosResponse<PageResponse<EventResponse>>> =>
+    api.get(`/v1/events?page=${page}&size=${size}&sortBy=${sortBy}&studentId=${studentId}`),
   listByEmployee: (
     employeeId: string,
     page = 0,
