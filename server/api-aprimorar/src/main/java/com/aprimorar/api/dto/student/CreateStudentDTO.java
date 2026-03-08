@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.aprimorar.api.dto.address.CreateAddressDTO;
 import com.aprimorar.api.dto.parent.CreateParentDTO;
+import com.aprimorar.api.validation.ValidationPatterns;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
@@ -23,14 +24,14 @@ public record CreateStudentDTO(
         LocalDate birthdate,
 
         @NotNull(message = "CPF do estudante é obrigatório")
-        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF deve estar no formato XXX.XXX.XXX-XX")
+        @Pattern(regexp = ValidationPatterns.CPF, message = ValidationPatterns.CPF_MESSAGE)
         String cpf,
 
         @NotBlank(message = "Escola do estudante é obrigatória")
         String school,
 
         @NotBlank(message = "Contato do estudante é obrigatório")
-        @Pattern(regexp = "^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$", message = "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX")
+        @Pattern(regexp = ValidationPatterns.PHONE_BR, message = ValidationPatterns.PHONE_BR_MESSAGE)
         String contact,
 
         @NotBlank(message = "Email do estudante é obrigatório")

@@ -1,5 +1,6 @@
 package com.aprimorar.api.dto.address;
 
+import com.aprimorar.api.validation.ValidationPatterns;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
@@ -23,7 +24,7 @@ public record CreateAddressDTO(
         String state,
 
         @NotBlank(message = "CEP do endereço é obrigatório")
-        @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "CEP deve estar no formato 00000-000 ou 00000000")
+        @Pattern(regexp = ValidationPatterns.ZIP_CODE_BR, message = ValidationPatterns.ZIP_CODE_BR_MESSAGE)
         String zip
 ) {
 }
