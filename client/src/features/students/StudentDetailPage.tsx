@@ -1,6 +1,8 @@
 import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { EmptyState } from "@/components/ui/empty-state"
+import { LoadingState } from "@/components/ui/loading-state"
 import { GraduationCap, Mail, School, MapPin, User, CheckCircle } from "lucide-react"
 import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
 import { useEffect, useState } from "react"
@@ -51,9 +53,21 @@ export function StudentDetailPage() {
        fetchStudent();
      }, [id])
 
-     if (loading) return <div>Carregando...</div>
-     if(error) return <div>{error}</div>
-     if(!student) return <div>Aluno não encontrado.</div>
+     if (loading) return <LoadingState message="Carregando aluno..." />
+     if(error) {
+      return (
+        <div className={styles.page}>
+          <EmptyState title="Não foi possível carregar" description={error} actionLabel="Tentar novamente" onAction={() => window.location.reload()} />
+        </div>
+      )
+     }
+     if(!student) {
+      return (
+        <div className={styles.page}>
+          <EmptyState title="Aluno não encontrado" description="Não encontramos os dados deste aluno." />
+        </div>
+      )
+     }
 
   return (
     <div className={styles.page}>

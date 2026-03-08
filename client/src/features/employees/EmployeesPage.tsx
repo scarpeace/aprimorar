@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
+import { LoadingState } from "@/components/ui/loading-state"
 import {
   Table,
   TableBody,
@@ -59,7 +60,7 @@ export function EmployeesPage() {
   }
 
   if (loading) {
-    return <div>Carregando...</div>
+    return <LoadingState message="Carregando colaboradores..." />
   }
 
   if (error) {

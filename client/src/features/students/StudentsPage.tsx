@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
+import { LoadingState } from "@/components/ui/loading-state"
 import {
   Table,
   TableBody,
@@ -72,7 +73,7 @@ export function StudentsPage() {
   }
 
   if (loading) {
-    return <div>Carregando...</div>
+    return <LoadingState message="Carregando alunos..." />
   }
 
   if (error) {
