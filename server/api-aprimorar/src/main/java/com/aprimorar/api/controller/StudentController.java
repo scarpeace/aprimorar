@@ -79,6 +79,14 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Archive STUDENT", description = "Archives a single student based on ID")
+    @PatchMapping("/{studentId}/archive")
+    public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
+        studentService.archiveStudent(studentId);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @Operation(summary = "Unarchive STUDENT", description = "Unarchives a single student based on ID")
     @PatchMapping("/{studentId}/unarchive")
     public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {

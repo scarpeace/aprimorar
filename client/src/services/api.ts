@@ -64,7 +64,7 @@ export const studentsApi = {
     api.get(`/v1/students/${id}`),
   create: (data: CreateStudentInput): Promise<AxiosResponse<StudentResponse>> => api.post("/v1/students", data),
   update: (id: string, data: CreateStudentInput): Promise<AxiosResponse<StudentResponse>> => api.patch(`/v1/students/${id}`, data),
-  archive: (id: string) => api.delete(`/v1/students/${id}`),
+  archive: (id: string) => api.patch(`/v1/students/${id}/archive`),
   unarchive: (id: string) => api.patch(`/v1/students/${id}/unarchive`),
 }
 
