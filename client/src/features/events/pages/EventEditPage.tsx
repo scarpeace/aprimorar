@@ -1,19 +1,46 @@
 import { Button } from "@/components/ui/button"
 import { EventForm } from "@/features/events/components/EventForm"
 import { mapEventResponseToFormValues } from "@/features/events/utils/eventFormUtils"
-import type { CreateEventInput, EventResponse } from "@/lib/schemas"
-import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
-import { useEffect, useState } from "react"
+import type { CreateEventInput, EmployeeResponse, EventResponse, StudentResponse } from "@/lib/schemas"
+import { eventsApi, employeesApi, getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
+import { useCallback, useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 
 export function EventEditPage() {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const [students, setStudents] = useState<StudentResponse[]>([])
+  const [employees, setEmployees] = useState<EmployeeResponse[]>([])
+  const [optionsLoading, setOptionsLoading] = useState(true)
+  const [optionsError, setOptionsError] = useState<string | null>(null)
 
   const [initialLoading, setInitialLoading] = useState(true)
   const [initialError, setInitialError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [initialValues, setInitialValues] = useState<CreateEventInput | undefined>(undefined)
+
+  const loadOptions = useCallback(async () => {
+    try {
+      setOptionsError(null)
+      setOptionsLoading(true)
+
+      const [studentsRes, employeesRes] = await Promise.all([
+        studentsApi.list(0, 100, "name"),
+        employeesApi.listActive(0, 100, "name"),
+      ])
+
+      const studentsPage: PageResponse<StudentResponse> = studentsRes.data
+      const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
+
+      setStudents(studentsPage.content)
+      setEmployees(employeesPage.content)
+    } catch (error) {
+      console.error("Falha ao carregar opções:", error)
+      setOptionsError(getFriendlyErrorMessage(error))
+    } finally {
+      setOptionsLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     if (!id) {
@@ -27,8 +54,12 @@ export function EventEditPage() {
         setInitialError(null)
         setInitialLoading(true)
 
-        const res = await eventsApi.getById(Number(id))
-        const event: EventResponse = res.data
+        const [eventRes] = await Promise.all([
+          eventsApi.getById(Number(id)),
+          loadOptions(),
+        ])
+
+        const event: EventResponse = eventRes.data
         setInitialValues(mapEventResponseToFormValues(event))
       } catch (error) {
         console.error("Falha ao carregar dados do evento:", error)
@@ -39,7 +70,7 @@ export function EventEditPage() {
     }
 
     loadEvent()
-  }, [id])
+  }, [id, loadOptions])
 
   const handleSubmit = async (data: CreateEventInput) => {
     if (!id) {
@@ -85,6 +116,13 @@ export function EventEditPage() {
       cardDescription="Revise data, valores e participantes do evento."
       submitLabel="Salvar alterações"
       initialValues={initialValues}
+      options={{
+        students,
+        employees,
+        loading: optionsLoading,
+        error: optionsError,
+        onReload: loadOptions,
+      }}
       submitError={submitError}
       onSubmit={handleSubmit}
     />

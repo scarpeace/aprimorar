@@ -12,12 +12,11 @@ import {
   type CreateStudentInput,
   type ParentSummary,
 } from "@/lib/schemas"
+import type { StudentParentMode } from "@/features/students/types/studentParentMode"
 import { useEffect, useMemo } from "react"
 import { useForm, useWatch } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
-
-export type StudentParentMode = "new" | "existing" | "editCurrent" | "switchExisting"
 
 type StudentFormProps = {
   mode: "create" | "edit"
@@ -28,10 +27,12 @@ type StudentFormProps = {
   initialValues?: CreateStudentInput
   parentMode: StudentParentMode
   onParentModeChange: (mode: StudentParentMode) => void
-  parents: ParentSummary[]
-  parentsLoading: boolean
-  parentsError: string | null
-  onReloadParents: () => Promise<void>
+  parentOptions: {
+    parents: ParentSummary[]
+    loading: boolean
+    error: string | null
+    onReload: () => Promise<void>
+  }
   parentWarning?: string
   submitError: string | null
   onSubmit: (data: CreateStudentInput, parentMode: StudentParentMode) => Promise<void>
@@ -46,14 +47,13 @@ export function StudentForm({
   initialValues,
   parentMode,
   onParentModeChange,
-  parents,
-  parentsLoading,
-  parentsError,
-  onReloadParents,
+  parentOptions,
   parentWarning,
   submitError,
   onSubmit,
 }: StudentFormProps) {
+  const { parents, loading: parentsLoading, error: parentsError, onReload: onReloadParents } = parentOptions
+
   const {
     register,
     handleSubmit,

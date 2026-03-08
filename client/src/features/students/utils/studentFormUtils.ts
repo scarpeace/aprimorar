@@ -1,4 +1,5 @@
 import type { CreateStudentInput, StudentResponse } from "@/lib/schemas"
+import type { StudentParentMode } from "@/features/students/types/studentParentMode"
 
 function toDateInputValue(value: string | undefined) {
   if (!value) return ""
@@ -36,4 +37,10 @@ export function mapStudentResponseToFormValues(student: StudentResponse): Create
         }
       : undefined,
   }
+}
+
+export function buildStudentPayload(data: CreateStudentInput, parentMode: StudentParentMode): CreateStudentInput {
+  return parentMode === "existing" || parentMode === "switchExisting"
+    ? { ...data, parent: undefined }
+    : { ...data, parentId: undefined }
 }

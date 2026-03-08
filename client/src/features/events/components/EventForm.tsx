@@ -16,9 +16,8 @@ import {
   type EmployeeResponse,
   type StudentResponse,
 } from "@/lib/schemas"
-import { employeesApi, getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
+import { useEffect, useMemo } from "react"
+import { useForm, useWatch } from "react-hook-form"
 import { Link } from "react-router-dom"
 
 type EventFormProps = {
@@ -27,6 +26,13 @@ type EventFormProps = {
   cardDescription: string
   submitLabel: string
   initialValues?: CreateEventInput
+  options: {
+    students: StudentResponse[]
+    employees: EmployeeResponse[]
+    loading: boolean
+    error: string | null
+    onReload: () => Promise<void>
+  }
   submitError: string | null
   onSubmit: (data: CreateEventInput) => Promise<void>
 }
@@ -37,20 +43,18 @@ export function EventForm({
   cardDescription,
   submitLabel,
   initialValues,
+  options,
   submitError,
   onSubmit,
 }: EventFormProps) {
-  const [students, setStudents] = useState<StudentResponse[]>([])
-  const [employees, setEmployees] = useState<EmployeeResponse[]>([])
-  const [loadingOptions, setLoadingOptions] = useState(true)
-  const [optionsError, setOptionsError] = useState<string | null>(null)
+  const { students, employees, loading, error, onReload } = options
 
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<CreateEventInput>({
     resolver: zodResolver(createEventSchema),
@@ -59,40 +63,14 @@ export function EventForm({
 
   const studentIdField = register("studentId")
   const employeeIdField = register("employeeId")
-  const selectedStudentId = watch("studentId")
-  const selectedEmployeeId = watch("employeeId")
+  const selectedStudentId = useWatch({ control, name: "studentId" })
+  const selectedEmployeeId = useWatch({ control, name: "employeeId" })
 
   useEffect(() => {
     if (initialValues) {
       reset(initialValues)
     }
   }, [initialValues, reset])
-
-  const loadOptions = useCallback(async () => {
-    try {
-      setOptionsError(null)
-      setLoadingOptions(true)
-
-      const [studentsRes, employeesRes] = await Promise.all([
-        studentsApi.list(0, 100, "name"),
-        employeesApi.listActive(0, 100, "name"),
-      ])
-
-      const studentsPage: PageResponse<StudentResponse> = studentsRes.data
-      const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
-      setStudents(studentsPage.content)
-      setEmployees(employeesPage.content)
-    } catch (error) {
-      console.error("Falha ao carregar opções:", error)
-      setOptionsError(getFriendlyErrorMessage(error))
-    } finally {
-      setLoadingOptions(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    loadOptions()
-  }, [loadOptions])
 
   const selectedStudentName = useMemo(() => {
     const student = students.find((item) => item.id === selectedStudentId)
@@ -113,12 +91,12 @@ export function EventForm({
       cardTitle="Dados do evento"
       cardDescription={cardDescription}
     >
-      {loadingOptions ? (
+      {loading ? (
         <div className="text-sm text-muted-foreground">Carregando opções...</div>
-      ) : optionsError ? (
+      ) : error ? (
         <div className="space-y-3">
-          <ActionErrorBanner message={optionsError} />
-          <Button type="button" onClick={loadOptions}>
+          <ActionErrorBanner message={error} />
+          <Button type="button" onClick={onReload}>
             Tentar novamente
           </Button>
         </div>

@@ -1,4 +1,6 @@
-import { StudentForm, type StudentParentMode } from "@/features/students/components/StudentForm"
+import { StudentForm } from "@/features/students/components/StudentForm"
+import type { StudentParentMode } from "@/features/students/types/studentParentMode"
+import { buildStudentPayload } from "@/features/students/utils/studentFormUtils"
 import type { CreateStudentInput, ParentSummary } from "@/lib/schemas"
 import { getFriendlyErrorMessage, parentsApi, studentsApi, type PageResponse } from "@/services/api"
 import { useCallback, useEffect, useState } from "react"
@@ -40,10 +42,7 @@ export function StudentCreatePage() {
     try {
       setSubmitError(null)
 
-      const payload = currentParentMode === "existing"
-        ? { ...data, parent: undefined }
-        : { ...data, parentId: undefined }
-
+      const payload = buildStudentPayload(data, currentParentMode)
       const res = await studentsApi.create(payload)
 
       navigate(`/students/${res.data.id}`)
@@ -62,10 +61,12 @@ export function StudentCreatePage() {
       submitLabel="Criar aluno"
       parentMode={parentMode}
       onParentModeChange={setParentMode}
-      parents={parents}
-      parentsLoading={parentsLoading}
-      parentsError={parentsError}
-      onReloadParents={loadParents}
+      parentOptions={{
+        parents,
+        loading: parentsLoading,
+        error: parentsError,
+        onReload: loadParents,
+      }}
       submitError={submitError}
       onSubmit={handleSubmit}
     />
