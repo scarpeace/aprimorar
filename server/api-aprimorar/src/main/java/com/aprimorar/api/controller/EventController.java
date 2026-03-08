@@ -2,11 +2,9 @@ package com.aprimorar.api.controller;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.dto.common.PageQuery;
 import com.aprimorar.api.dto.event.CreateEventDTO;
+import com.aprimorar.api.dto.event.EventFilter;
 import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.dto.event.UpdateEventDTO;
 import com.aprimorar.api.service.EventService;
@@ -48,13 +47,10 @@ public class EventController {
     @GetMapping
     public ResponseEntity<Page<EventResponseDTO>> listEvents(
             @Valid @ModelAttribute PageQuery pageQuery,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-            @RequestParam(required = false) UUID studentId,
-            @RequestParam(required = false) UUID employeeId
+            @ModelAttribute EventFilter eventFilter
     ) {
         Pageable pageable = PageableUtils.buildPageable(pageQuery, "startDateTime", ALLOWED_SORT_FIELDS);
-        Page<EventResponseDTO> allEvents = eventService.listEvents(pageable, start, end, studentId, employeeId);
+        Page<EventResponseDTO> allEvents = eventService.listEvents(pageable, eventFilter);
         return ResponseEntity.ok(allEvents);
     }
 

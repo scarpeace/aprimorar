@@ -1,6 +1,7 @@
 package com.aprimorar.api.controller;
 
 import com.aprimorar.api.dto.event.EventResponseDTO;
+import com.aprimorar.api.dto.event.EventFilter;
 import com.aprimorar.api.exception.handler.GlobalExceptionHandler;
 import com.aprimorar.api.service.EventService;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,6 @@ import java.util.UUID;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -102,17 +102,17 @@ class EventControllerTest {
     @DisplayName("listEvents")
     class ListEvents {
 
-        @Test
+            @Test
         @DisplayName("includes content field in list response")
         void includesContentInList() throws Exception {
-            when(eventService.listEvents(any(Pageable.class), isNull(), isNull(), isNull(), isNull()))
+            when(eventService.listEvents(any(Pageable.class), any(EventFilter.class)))
                     .thenReturn(new PageImpl<>(List.of(eventResponseWithContent()), PageRequest.of(0, 20), 1));
 
             mockMvc.perform(get("/v1/events"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.content[0].content").value("ENEM"));
 
-            verify(eventService).listEvents(any(Pageable.class), isNull(), isNull(), isNull(), isNull());
+            verify(eventService).listEvents(any(Pageable.class), any(EventFilter.class));
         }
 
         @Test
@@ -145,7 +145,7 @@ class EventControllerTest {
         @Test
         @DisplayName("passes filters to service")
         void forwardsFiltersToService() throws Exception {
-            when(eventService.listEvents(any(Pageable.class), any(), any(), any(), any()))
+            when(eventService.listEvents(any(Pageable.class), any(EventFilter.class)))
                     .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
             mockMvc.perform(get("/v1/events")
@@ -155,7 +155,7 @@ class EventControllerTest {
                             .param("end", "2027-06-01T11:00:00"))
                     .andExpect(status().isOk());
 
-            verify(eventService).listEvents(any(Pageable.class), any(), any(), any(), any());
+            verify(eventService).listEvents(any(Pageable.class), any(EventFilter.class));
         }
     }
 

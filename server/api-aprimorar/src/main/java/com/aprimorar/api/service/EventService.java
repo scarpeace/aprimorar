@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aprimorar.api.dto.event.CreateEventDTO;
+import com.aprimorar.api.dto.event.EventFilter;
 import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.dto.event.UpdateEventDTO;
 import com.aprimorar.api.entity.Employee;
@@ -47,12 +48,15 @@ public class EventService {
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> listEvents(
             Pageable pageable,
-            LocalDateTime start,
-            LocalDateTime end,
-            UUID studentId,
-            UUID employeeId
+            EventFilter filter
     ) {
-        Page<Event> eventPage = eventRepo.findAllWithFilters(start, end, studentId, employeeId, pageable);
+        Page<Event> eventPage = eventRepo.findAllWithFilter(
+                filter.getStart(),
+                filter.getEnd(),
+                filter.getStudentId(),
+                filter.getEmployeeId(),
+                pageable
+        );
         return eventPage.map(eventMapper::toDto);
     }
 

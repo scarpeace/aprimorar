@@ -17,12 +17,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("""
             SELECT e
             FROM Event e
-            WHERE e.startDateTime >= COALESCE(:start, e.startDateTime)
-              AND e.startDateTime <= COALESCE(:end, e.startDateTime)
-              AND e.student.id = COALESCE(:studentId, e.student.id)
-              AND e.employee.id = COALESCE(:employeeId, e.employee.id)
+            WHERE (:start IS NULL OR e.startDateTime >= :start)
+              AND (:end IS NULL OR e.startDateTime <= :end)
+              AND (:studentId IS NULL OR e.student.id = :studentId)
+              AND (:employeeId IS NULL OR e.employee.id = :employeeId)
             """)
-    Page<Event> findAllWithFilters(
+    Page<Event> findAllWithFilter(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             @Param("studentId") UUID studentId,
