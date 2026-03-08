@@ -41,7 +41,7 @@ export function EventsPage() {
   }, [])
 
   const handleDelete = async (event: EventResponse) => {
-    if (!window.confirm(`Excluir evento "${event.title}"? Essa acao nao pode ser desfeita.`)) {
+    if (!window.confirm(`Excluir evento "${event.title}"? Essa ação não pode ser desfeita.`)) {
       return
     }
 
@@ -67,10 +67,10 @@ export function EventsPage() {
       <div className={styles.page}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
-          <p className="text-sm text-gray-600">Gerencie horarios, precos e atribuicoes.</p>
+          <p className="text-sm text-gray-600">Gerencie horários, preços e atribuições.</p>
         </div>
         <EmptyState
-          title="Nao foi possivel carregar"
+          title="Não foi possível carregar"
           description={error}
           actionLabel="Tentar novamente"
           onAction={loadEvents}
@@ -84,7 +84,7 @@ export function EventsPage() {
       <div className={styles.header}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
-          <p className="text-sm text-gray-600">Gerencie horarios, precos e atribuicoes.</p>
+          <p className="text-sm text-gray-600">Gerencie horários, preços e atribuições.</p>
         </div>
         <Button asChild type="button">
           <Link to="/events/new">Novo evento</Link>
@@ -101,13 +101,13 @@ export function EventsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Titulo</TableHead>
+              <TableHead>Título</TableHead>
               <TableHead>Aluno</TableHead>
               <TableHead>Colaborador</TableHead>
               <TableHead>Data/Hora</TableHead>
-              <TableHead>Conteudo</TableHead>
-              <TableHead>Preco</TableHead>
-              <TableHead>Acoes</TableHead>
+              <TableHead>Conteúdo</TableHead>
+              <TableHead>Preço</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -144,7 +144,7 @@ export function EventsPage() {
       {eventList.length === 0 ? (
         <EmptyState
           title="Nenhum evento cadastrado"
-          description="Quando voce cadastrar o primeiro evento, ele aparecera na tabela acima."
+          description="Quando você cadastrar o primeiro evento, ele aparecerá na tabela acima."
           actionLabel="Novo evento"
         />
       ) : null}

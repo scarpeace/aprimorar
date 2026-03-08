@@ -28,7 +28,7 @@ export function EmployeeDetailPage() {
   useEffect(() => {
 
       if(!id){
-        setError("ID do colaborador nao informado.")
+        setError("ID do colaborador não informado.")
         setLoading(false)
         return;
       }
@@ -52,7 +52,7 @@ export function EmployeeDetailPage() {
   
       if (loading) return <div>Carregando...</div>
       if(error) return <div>{error}</div>
-      if(!employee) return <div>Colaborador nao encontrado.</div>
+      if(!employee) return <div>Colaborador não encontrado.</div>
 
   return (
     <div className={styles.page}>
@@ -63,7 +63,7 @@ export function EmployeeDetailPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Detalhes do colaborador</h1>
-             <p className="text-sm text-gray-500">Veja e gerencie as informacoes do colaborador</p>
+             <p className="text-sm text-gray-500">Veja e gerencie as informações do colaborador</p>
           </div>
         </div>
         <Button asChild type="button" variant="outline">
@@ -78,7 +78,7 @@ export function EmployeeDetailPage() {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <UserCog className="h-5 w-5 text-green-500" />
-              Informacoes pessoais
+              Informações pessoais
             </CardTitle>
             <CardDescription>Dados principais do colaborador</CardDescription>
           </CardHeader>

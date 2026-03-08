@@ -41,7 +41,7 @@ export function EmployeesPage() {
   }, [])
 
   const handleDelete = async (employee: EmployeeResponse) => {
-    if (!window.confirm(`Excluir colaborador "${employee.name}"? Essa acao nao pode ser desfeita.`)) {
+    if (!window.confirm(`Excluir colaborador "${employee.name}"? Essa ação não pode ser desfeita.`)) {
       return
     }
 
@@ -70,7 +70,7 @@ export function EmployeesPage() {
           <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
         </div>
         <EmptyState
-          title="Nao foi possivel carregar"
+          title="Não foi possível carregar"
           description={error}
           actionLabel="Tentar novamente"
           onAction={loadEmployees}
@@ -106,7 +106,7 @@ export function EmployeesPage() {
               <TableHead>Email</TableHead>
               <TableHead>PIX</TableHead>
               <TableHead>Ativo</TableHead>
-              <TableHead>Acoes</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -116,7 +116,7 @@ export function EmployeesPage() {
                 <TableCell>{employee.role}</TableCell>
                 <TableCell>{employee.email}</TableCell>
                 <TableCell>{employee.pix}</TableCell>
-                <TableCell>{employee.active ? "Sim" : "Nao"}</TableCell>
+                <TableCell>{employee.active ? "Sim" : "Não"}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Link
@@ -145,7 +145,7 @@ export function EmployeesPage() {
       {employeeList.length === 0 ? (
         <EmptyState
           title="Nenhum colaborador cadastrado"
-          description="Quando voce cadastrar o primeiro colaborador, ele aparecera na tabela acima."
+          description="Quando você cadastrar o primeiro colaborador, ele aparecerá na tabela acima."
           actionLabel="Novo colaborador"
         />
       ) : null}

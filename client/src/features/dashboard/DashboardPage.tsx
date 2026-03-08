@@ -58,7 +58,7 @@ export function DashboardPage() {
         <h1 className="text-3xl font-bold text-gray-900">Painel</h1>
         <Card>
           <CardHeader>
-            <CardTitle>Ops, nao foi possivel carregar</CardTitle>
+            <CardTitle>Ops, não foi possível carregar</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-sm text-muted-foreground">{error}</p>

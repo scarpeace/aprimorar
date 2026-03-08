@@ -54,7 +54,7 @@ export function EmployeeCreatePage() {
       <Card>
         <CardHeader>
           <CardTitle>Dados do colaborador</CardTitle>
-          <CardDescription>Preencha as informacoes abaixo para criar o cadastro.</CardDescription>
+          <CardDescription>Preencha as informações abaixo para criar o cadastro.</CardDescription>
         </CardHeader>
         <CardContent>
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)} autoComplete="off">

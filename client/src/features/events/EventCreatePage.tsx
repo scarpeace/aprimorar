@@ -60,7 +60,7 @@ export function EventCreatePage() {
       setStudents(studentsPage.content)
       setEmployees(employeesPage.content)
     } catch (error) {
-      console.error("Falha ao carregar opcoes:", error)
+      console.error("Falha ao carregar opções:", error)
       setOptionsError(getFriendlyErrorMessage(error))
     } finally {
       setLoadingOptions(false)
@@ -101,7 +101,7 @@ export function EventCreatePage() {
         </CardHeader>
         <CardContent>
           {loadingOptions ? (
-            <div className="text-sm text-muted-foreground">Carregando opcoes...</div>
+            <div className="text-sm text-muted-foreground">Carregando opções...</div>
           ) : optionsError ? (
             <div className="space-y-3">
               <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
@@ -116,9 +116,9 @@ export function EventCreatePage() {
               <div className={styles.formGrid}>
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor="title">
-                    Titulo
+                    Título
                   </label>
-                  <Input id="title" placeholder="Ex: Aula de matematica" {...register("title")} />
+                  <Input id="title" placeholder="Ex: Aula de matemática" {...register("title")} />
                   {errors.title?.message ? <p className={styles.error}>{errors.title.message}</p> : null}
                 </div>
 
@@ -178,7 +178,7 @@ export function EventCreatePage() {
 
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor="content">
-                    Conteudo
+                    Conteúdo
                   </label>
                   <select
                     id="content"
@@ -187,7 +187,7 @@ export function EventCreatePage() {
                     defaultValue=""
                   >
                     <option value="" disabled>
-                      Selecione um conteudo
+                      Selecione um conteúdo
                     </option>
                     {eventContentValues.map((content) => (
                       <option key={content} value={content}>
@@ -200,7 +200,7 @@ export function EventCreatePage() {
 
                 <div className={styles.field}>
                 <label className={styles.label} htmlFor="startDateTime">
-                  Inicio
+                  Início
                 </label>
                 <Input id="startDateTime" type="datetime-local" {...register("startDateTime")} />
                 {errors.startDateTime?.message ? (
@@ -220,7 +220,7 @@ export function EventCreatePage() {
 
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor="price">
-                    Preco (receita)
+                    Preço (receita)
                   </label>
                   <Input
                     id="price"
@@ -229,7 +229,7 @@ export function EventCreatePage() {
                     min="0"
                     {...register("price", {
                       valueAsNumber: true,
-                      required: "Preco e obrigatorio",
+                      required: "Preço é obrigatório",
                     })}
                   />
                   {errors.price?.message ? <p className={styles.error}>{errors.price.message}</p> : null}
@@ -246,7 +246,7 @@ export function EventCreatePage() {
                     min="0"
                     {...register("payment", {
                       valueAsNumber: true,
-                      required: "Pagamento e obrigatorio",
+                      required: "Pagamento é obrigatório",
                     })}
                   />
                   {errors.payment?.message ? <p className={styles.error}>{errors.payment.message}</p> : null}
@@ -254,9 +254,9 @@ export function EventCreatePage() {
 
                 <div className={styles.field + " " + styles.span2}>
                   <label className={styles.label} htmlFor="description">
-                    Descricao (opcional)
+                    Descrição (opcional)
                   </label>
-                  <Textarea id="description" placeholder="Observacoes do atendimento" {...register("description")} />
+                  <Textarea id="description" placeholder="Observações do atendimento" {...register("description")} />
                   {errors.description?.message ? (
                     <p className={styles.error}>{errors.description.message}</p>
                   ) : null}

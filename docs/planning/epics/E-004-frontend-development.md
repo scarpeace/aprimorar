@@ -66,7 +66,7 @@
 - Manual: Create/update an event and verify list/detail reflect changes
 
 ### Story: S-033 — UTF-8 Validation and Error Messages
-**Status:** TODO
+**Status:** DONE
 **Links:** T-052 (TODO), T-053 (TODO), T-054 (TODO), T-055 (TODO)
 **Intent:** Ensure user-facing validation and error messages use correct Portuguese accents and UTF-8 characters.
 
@@ -169,7 +169,7 @@
 
 ### Task: T-053 — UTF-8: update student schema validation messages
 **Type:** frontend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** None
 
 **Description**
@@ -193,7 +193,7 @@
 
 ### Task: T-054 — UTF-8: update employee/parent schema validation messages
 **Type:** frontend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** None
 
 **Description**
@@ -220,7 +220,7 @@
 
 ### Task: T-055 — UTF-8: sweep UI error/toast/empty-state strings (core screens)
 **Type:** frontend
-**Status:** TODO
+**Status:** DONE
 **Depends on:** T-052
 
 **Description**
@@ -257,3 +257,4 @@
 ## Review Notes (append-only)
 - Reviewer notes:
 - 2026-03-05: Added S-033 and T-052..T-055 for UTF-8/accents normalization in frontend validation and error messages.
+- 2026-03-07: Completed S-033 (T-053, T-054, T-055) with UTF-8 accents in student/employee/parent schemas and core UI error/empty-state strings; frontend lint and build passed.

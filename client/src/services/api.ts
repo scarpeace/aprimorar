@@ -14,15 +14,15 @@ export function getFriendlyErrorMessage(error: unknown) {
     const status = error.response?.status
 
     if (!status) {
-      return "Nao foi possivel conectar ao servidor. Verifique se a API esta rodando e tente novamente."
+      return "Não foi possível conectar ao servidor. Verifique se a API está rodando e tente novamente."
     }
 
-    if (status === 400) return "Dados invalidos. Revise as informacoes e tente novamente."
-    if (status === 404) return "Nao encontramos o recurso solicitado."
-    if (status === 409) return "Conflito de dados. Verifique se ja existe um registro com essas informacoes."
+    if (status === 400) return "Dados inválidos. Revise as informações e tente novamente."
+    if (status === 404) return "Não encontramos o recurso solicitado."
+    if (status === 409) return "Conflito de dados. Verifique se já existe um registro com essas informações."
     if (status >= 500) return "Erro no servidor. Tente novamente em instantes."
 
-    return "Nao foi possivel concluir a solicitacao. Tente novamente."
+    return "Não foi possível concluir a solicitação. Tente novamente."
   }
 
   return "Ocorreu um erro inesperado. Tente novamente."

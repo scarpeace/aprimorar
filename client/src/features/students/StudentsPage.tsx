@@ -80,10 +80,10 @@ export function StudentsPage() {
       <div className={styles.page}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
-          <p className="text-sm text-gray-600">Gerencie cadastros e matriculas.</p>
+          <p className="text-sm text-gray-600">Gerencie cadastros e matrículas.</p>
         </div>
         <EmptyState
-          title="Nao foi possivel carregar"
+          title="Não foi possível carregar"
           description={error}
           actionLabel="Tentar novamente"
           onAction={loadStudents}
@@ -97,7 +97,7 @@ export function StudentsPage() {
       <div className={styles.header}>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
-          <p className="text-sm text-gray-600">Gerencie cadastros e matriculas.</p>
+          <p className="text-sm text-gray-600">Gerencie cadastros e matrículas.</p>
           <label className="mt-3 flex items-center gap-2 text-sm text-gray-700">
             <input
               type="checkbox"
@@ -127,7 +127,7 @@ export function StudentsPage() {
               <TableHead>Idade</TableHead>
               <TableHead>Escola</TableHead>
               <TableHead>Arquivado</TableHead>
-              <TableHead>Acoes</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -137,7 +137,7 @@ export function StudentsPage() {
                 <TableCell>{student.email}</TableCell>
                 <TableCell>{student.age}</TableCell>
                 <TableCell>{student.school}</TableCell>
-                <TableCell>{student.archivedAt ? "Sim" : "Nao"}</TableCell>
+                <TableCell>{student.archivedAt ? "Sim" : "Não"}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Link
@@ -170,7 +170,7 @@ export function StudentsPage() {
       {studentList.length === 0 ? (
         <EmptyState
           title="Nenhum aluno cadastrado"
-          description="Quando voce cadastrar o primeiro aluno, ele aparecera na tabela acima."
+          description="Quando você cadastrar o primeiro aluno, ele aparecerá na tabela acima."
           actionLabel="Novo aluno"
         />
       ) : null}
