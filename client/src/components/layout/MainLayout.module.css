@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f9fafb;
+  background: hsl(var(--background));
 }
 
 @media (min-width: 768px) {
@@ -13,15 +13,15 @@
 }
 
 .sidebar {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 @media (min-width: 768px) {
   .sidebar {
     width: 16rem;
     border-bottom: 0;
-    border-right: 1px solid #e5e7eb;
+    border-right: 1px solid hsl(var(--border));
   }
 }
 
@@ -30,7 +30,7 @@
   display: flex;
   align-items: center;
   padding: 0 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 .nav {
@@ -57,17 +57,17 @@
   font-weight: 500;
   transition: background-color 150ms ease, color 150ms ease;
   white-space: nowrap;
-  color: #4b5563;
+  color: hsl(var(--muted-foreground));
 }
 
 .navLink:hover {
-  background: #f9fafb;
-  color: #111827;
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
 }
 
 .navLinkActive {
-  background: #f3f4f6;
-  color: #111827;
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
 }
 
 .main {
