@@ -41,7 +41,7 @@ export function StudentCreatePage() {
       setParents(page.content)
       if (page.content.length === 0) setParentMode("new")
     } catch (error) {
-      console.error("Falha ao carregar responsaveis:", error)
+      console.error("Falha ao carregar responsáveis:", error)
       setParents([])
       setParentsError(getFriendlyErrorMessage(error))
       setParentMode("new")
@@ -94,7 +94,7 @@ export function StudentCreatePage() {
       <Card>
         <CardHeader>
           <CardTitle>Dados do aluno</CardTitle>
-          <CardDescription>Preencha os dados pessoais, endereco e responsavel.</CardDescription>
+          <CardDescription>Preencha os dados pessoais, endereço e responsável.</CardDescription>
         </CardHeader>
         <CardContent>
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -104,7 +104,7 @@ export function StudentCreatePage() {
                 <label className={styles.label} htmlFor="name">
                   Nome completo
                 </label>
-                <Input id="name" placeholder="Ex: Joao Pedro" {...register("name")} />
+                <Input id="name" placeholder="Ex: João Pedro" {...register("name")} />
                 {errors.name?.message ? <p className={styles.error}>{errors.name.message}</p> : null}
               </div>
 
@@ -161,7 +161,7 @@ export function StudentCreatePage() {
             </div>
 
             <div className={styles.divider} />
-            <div className={styles.sectionTitle}>Endereco</div>
+            <div className={styles.sectionTitle}>Endereço</div>
             <div className={styles.formGrid}>
               <div className={styles.field + " " + styles.span2}>
                 <label className={styles.label} htmlFor="address.street">
@@ -175,7 +175,7 @@ export function StudentCreatePage() {
 
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="address.number">
-                  Numero
+                  Número
                 </label>
                 <Input id="address.number" placeholder="Ex: 123" {...register("address.number")} />
                 {errors.address?.number?.message ? (
@@ -207,7 +207,7 @@ export function StudentCreatePage() {
                 <label className={styles.label} htmlFor="address.city">
                   Cidade
                 </label>
-                <Input id="address.city" placeholder="Ex: Sao Paulo" {...register("address.city")} />
+                <Input id="address.city" placeholder="Ex: São Paulo" {...register("address.city")} />
                 {errors.address?.city?.message ? (
                   <p className={styles.error}>{errors.address.city.message}</p>
                 ) : null}
@@ -239,7 +239,7 @@ export function StudentCreatePage() {
             </div>
 
             <div className={styles.divider} />
-            <div className={styles.sectionTitle}>Responsavel</div>
+            <div className={styles.sectionTitle}>Responsável</div>
             {parentsError ? (
               <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
                 {parentsError}
@@ -250,7 +250,7 @@ export function StudentCreatePage() {
               {parents.length > 0 ? (
                 <div className={styles.field + " " + styles.span2}>
                   <label className={styles.label} htmlFor="parentMode">
-                    Tipo de responsavel
+                    Tipo de responsável
                   </label>
                   <select
                     id="parentMode"
@@ -259,19 +259,19 @@ export function StudentCreatePage() {
                     onChange={(e) => setParentMode(e.target.value as "existing" | "new")}
                     disabled={parentsLoading}
                   >
-                    <option value="new">Novo responsavel</option>
-                    <option value="existing">Responsavel existente</option>
+                    <option value="new">Novo responsável</option>
+                    <option value="existing">Responsável existente</option>
                   </select>
                   {parentsLoading ? <p className={styles.help}>Carregando lista...</p> : null}
                 </div>
               ) : (
                 <div className={styles.field + " " + styles.span2}>
                   <p className={styles.help}>
-                    Nenhum responsavel ativo encontrado. Cadastre um novo responsavel abaixo.
+                    Nenhum responsável ativo encontrado. Cadastre um novo responsável abaixo.
                   </p>
                   {!parentsLoading ? (
                     <Button type="button" variant="outline" onClick={loadParents}>
-                      Recarregar responsaveis
+                      Recarregar responsáveis
                     </Button>
                   ) : null}
                 </div>
@@ -280,7 +280,7 @@ export function StudentCreatePage() {
               {parentMode === "existing" && parents.length > 0 ? (
                 <div className={styles.field + " " + styles.span2}>
                   <label className={styles.label} htmlFor="parentId">
-                    Responsavel
+                    Responsável
                   </label>
                   <select
                     id="parentId"
@@ -294,7 +294,7 @@ export function StudentCreatePage() {
                     disabled={parentsLoading}
                   >
                     <option value="" disabled>
-                      Selecione um responsavel
+                      Selecione um responsável
                     </option>
                     {parents.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -313,7 +313,7 @@ export function StudentCreatePage() {
                 <>
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor="parent.name">
-                      Nome do responsavel
+                      Nome do responsável
                     </label>
                     <Input id="parent.name" placeholder="Ex: Ana Souza" {...register("parent.name")} />
                     {errors.parent?.name?.message ? (
@@ -323,7 +323,7 @@ export function StudentCreatePage() {
 
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor="parent.email">
-                      Email do responsavel
+                      E-mail do responsável
                     </label>
                     <Input
                       id="parent.email"
@@ -338,7 +338,7 @@ export function StudentCreatePage() {
 
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor="parent.contact">
-                      Contato do responsavel
+                      Contato do responsável
                     </label>
                     <Input
                       id="parent.contact"
@@ -352,7 +352,7 @@ export function StudentCreatePage() {
 
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor="parent.cpf">
-                      CPF do responsavel
+                      CPF do responsável
                     </label>
                     <Input
                       id="parent.cpf"

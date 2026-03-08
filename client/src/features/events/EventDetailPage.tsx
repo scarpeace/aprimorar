@@ -29,7 +29,7 @@ export function EventDetailPage() {
     useEffect(() => {
    
        if(!id){
-         setError("ID do evento nao informado.")
+         setError("ID do evento não informado.")
          setLoading(false)
          return;
        }
@@ -63,7 +63,7 @@ export function EventDetailPage() {
 
        if(loading) return <div>Carregando...</div>
        if(error) return <div>{error}</div>
-       if(!event) return <div>Evento nao encontrado.</div>
+       if(!event) return <div>Evento não encontrado.</div>
 
 
   return (
@@ -75,7 +75,7 @@ export function EventDetailPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Detalhes do evento</h1>
-            <p className="text-sm text-gray-500">Veja e gerencie as informacoes do evento</p>
+            <p className="text-sm text-gray-500">Veja e gerencie as informações do evento</p>
           </div>
         </div>
         <Button asChild type="button" variant="outline">
@@ -96,11 +96,11 @@ export function EventDetailPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <DetailField label="ID" value={id ?? "-"} />
-            <DetailField label="Titulo" value={event.title} icon={Calendar} />
-            <DetailField label="Descricao" value={event.description ?? "-"} />
-            <DetailField label="Conteudo" value={eventContentLabels[event.content]} />
+            <DetailField label="Título" value={event.title} icon={Calendar} />
+            <DetailField label="Descrição" value={event.description ?? "-"} />
+            <DetailField label="Conteúdo" value={eventContentLabels[event.content]} />
             <DetailField label="Data" value={event.startDateTime} icon={Clock} />
-            <DetailField label="Inicio" value={event.startDateTime} icon={Clock} />
+            <DetailField label="Início" value={event.startDateTime} icon={Clock} />
             <DetailField label="Fim" value={event.endDateTime} icon={Clock} />
           </CardContent>
         </Card>
@@ -116,7 +116,7 @@ export function EventDetailPage() {
           <CardContent className="space-y-3">
             <DetailField label="Aluno" value={event.studentName} icon={GraduationCap} />
             <DetailField label="Colaborador" value={event.employeeName} icon={User} />
-            <DetailField label="Preco" value={brl.format(price)} icon={DollarSign} />
+            <DetailField label="Preço" value={brl.format(price)} icon={DollarSign} />
             <DetailField label="Pagamento (custo)" value={brl.format(teacherPayment)} icon={DollarSign} />
             <DetailField label="Lucro" value={brl.format(profit)} icon={DollarSign} />
           </CardContent>

@@ -29,7 +29,7 @@ export function StudentDetailPage() {
   useEffect(() => {
 
     if (!id) {
-      setError("ID do aluno nao informado.")
+      setError("ID do aluno não informado.")
       setLoading(false)
       return;
     }
@@ -53,7 +53,7 @@ export function StudentDetailPage() {
 
      if (loading) return <div>Carregando...</div>
      if(error) return <div>{error}</div>
-     if(!student) return <div>Aluno nao encontrado.</div>
+     if(!student) return <div>Aluno não encontrado.</div>
 
   return (
     <div className={styles.page}>
@@ -64,7 +64,7 @@ export function StudentDetailPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Detalhes do aluno</h1>
-            <p className="text-sm text-gray-500">Veja e gerencie as informacoes do aluno</p>
+            <p className="text-sm text-gray-500">Veja e gerencie as informações do aluno</p>
           </div>
         </div>
         <Button asChild type="button" variant="outline">
@@ -79,7 +79,7 @@ export function StudentDetailPage() {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <User className="h-5 w-5 text-blue-500" />
-              Informacoes pessoais
+              Informações pessoais
             </CardTitle>
             <CardDescription>Dados principais do aluno</CardDescription>
           </CardHeader>
