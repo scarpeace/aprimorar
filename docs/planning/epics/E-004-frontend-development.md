@@ -247,6 +247,30 @@
 - Risks: broad sweep can balloon; keep to core screens only.
 - Open questions: whether to also normalize button labels and helper text (out of scope unless clearly an error message).
 
+### Task: T-056 — Replace full page reload retry with local fetch callbacks
+**Type:** frontend
+**Status:** TODO
+**Depends on:** None
+
+**Description**
+- Replace `window.location.reload()` retry actions with page-local reload callbacks (`loadX`/`fetchX`) so retry only refetches data instead of reloading the whole app.
+
+**Files likely affected (best guess)**
+- client/src/features/dashboard/DashboardPage.tsx
+- client/src/features/students/StudentDetailPage.tsx
+- client/src/features/events/EventDetailPage.tsx
+- client/src/features/employees/EmployeeDetailPage.tsx
+
+**DoD (Definition of Done)**
+- [ ] No retry action in feature pages uses `window.location.reload()`
+- [ ] Retry actions call local data-loading callback reused by `useEffect`
+- [ ] Frontend lint/build passes
+
+**Verification**
+- Backend: N/A
+- Frontend: `cd client && npm run lint && npm run build`
+- Manual: Trigger API error state and confirm "Tentar novamente" refetches without full page reload
+
 ## Archive (DONE)
 ### Task: T-030 — Dashboard and navigation UI
 - Status: DONE
