@@ -20,7 +20,7 @@ export function StudentsPage() {
   const [error, setError] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [hideArchived, setHideArchived] = useState(true)
+  const [hideArchived, setHideArchived] = useState(false)
 
   const loadStudents = useCallback(async () => {
     try {

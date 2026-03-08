@@ -1,20 +1,20 @@
 import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { UserCog, Mail, CreditCard, Shield, CheckCircle } from "lucide-react"
-import { useEffect, useState } from "react"
-import type { EmployeeResponse } from "@/lib/schemas"
-import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
+import { EmptyState } from "@/components/ui/empty-state"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { UserCog } from "lucide-react"
+import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
+import type { EmployeeResponse } from "@/lib/schemas/employee"
+import { employeesApi, eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
+import { useCallback, useEffect, useState } from "react"
 import styles from "@/features/employees/EmployeeDetailPage.module.css"
 
-function DetailField({ label, value, icon: Icon }: { label: string; value: string; icon?: React.ElementType }) {
+function SummaryField({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      {Icon && <Icon className="mt-0.5 h-5 w-5 text-gray-400" />}
-      <div className="flex-1">
-        <p className="text-xs font-medium uppercase tracking-wide text-gray-500">{label}</p>
-        <p className="mt-1 text-sm font-semibold text-gray-900">{value}</p>
-      </div>
+    <div className={styles.summaryItem}>
+      <p className={styles.summaryLabel}>{label}</p>
+      <p className={styles.summaryValue}>{value}</p>
     </div>
   )
 }
@@ -22,37 +22,68 @@ function DetailField({ label, value, icon: Icon }: { label: string; value: strin
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [employee, setEmployee] = useState<EmployeeResponse | null>(null)
+  const [linkedEvents, setLinkedEvents] = useState<EventResponse[]>([])
+  const [employeeEventsCount, setEmployeeEventsCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const loadEmployeeData = useCallback(async () => {
+    if (!id) {
+      setError("ID do colaborador não informado.")
+      return
+    }
 
-      if(!id){
-        setError("ID do colaborador não informado.")
-        setLoading(false)
-        return;
-      }
-  
-      const fetchEmployee = async () =>{
-        try{
-          setLoading(true)
-          setError(null)
-  
-          const res = await employeesApi.getById(id)
-          setEmployee(res.data)
-        }catch (error) {
-            console.error("Falha ao carregar colaborador:", error)
-            setError(getFriendlyErrorMessage(error))
-          } finally {
-            setLoading(false)
-          }
-      }
-        fetchEmployee();
-      }, [id])
-  
-      if (loading) return <div>Carregando...</div>
-      if(error) return <div>{error}</div>
-      if(!employee) return <div>Colaborador não encontrado.</div>
+    try {
+      setLoading(true)
+      setError(null)
+
+      const [employeeRes, eventsRes] = await Promise.all([
+        employeesApi.getById(id),
+        eventsApi.listByEmployee(id, 0, 100, "startDateTime"),
+      ])
+
+      const eventsPage: PageResponse<EventResponse> = eventsRes.data
+
+      setEmployee(employeeRes.data)
+      setLinkedEvents(eventsPage.content)
+      setEmployeeEventsCount(eventsPage.totalElements)
+    } catch (loadError) {
+      console.error("Falha ao carregar colaborador:", loadError)
+      setError(getFriendlyErrorMessage(loadError))
+    } finally {
+      setLoading(false)
+    }
+  }, [id])
+
+  useEffect(() => {
+    loadEmployeeData()
+  }, [loadEmployeeData])
+
+  if (loading) return <div>Carregando...</div>
+
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <EmptyState
+          title="Não foi possível carregar"
+          description={error}
+          actionLabel="Tentar novamente"
+          onAction={loadEmployeeData}
+        />
+      </div>
+    )
+  }
+
+  if (!employee) {
+    return (
+      <div className={styles.page}>
+        <EmptyState
+          title="Colaborador não encontrado"
+          description="Não encontramos os dados deste colaborador."
+        />
+      </div>
+    )
+  }
 
   return (
     <div className={styles.page}>
@@ -63,46 +94,78 @@ export function EmployeeDetailPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Detalhes do colaborador</h1>
-             <p className="text-sm text-gray-500">Veja e gerencie as informações do colaborador</p>
+            <p className="text-sm text-gray-500">Veja e gerencie as informações do colaborador</p>
           </div>
         </div>
         <Button asChild type="button" variant="outline">
-          <Link to="/employees">
-             ← Voltar para colaboradores
-          </Link>
+          <Link to="/employees">← Voltar para colaboradores</Link>
         </Button>
       </div>
 
-      <div className={styles.contentGrid}>
-        <Card className="border-l-4 border-l-green-500">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <UserCog className="h-5 w-5 text-green-500" />
-              Informações pessoais
-            </CardTitle>
-            <CardDescription>Dados principais do colaborador</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <DetailField label="Nome completo" value={employee.name} icon={UserCog} />
-            <DetailField label="Email" value={employee.email} icon={Mail} />
-            <DetailField label="Cargo" value={employee.role} icon={Shield} />
-          </CardContent>
-        </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Resumo do colaborador</CardTitle>
+          <CardDescription>Dados completos de cadastro, contato e status.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className={styles.summaryGrid}>
+            <SummaryField label="Nome completo" value={employee.name} />
+            <SummaryField label="E-mail" value={employee.email} />
+            <SummaryField label="Cargo" value={employee.role} />
+            <SummaryField label="Contato" value={employee.contact} />
+            <SummaryField label="CPF" value={employee.cpf} />
+            <SummaryField label="Chave PIX" value={employee.pix} />
+            <SummaryField label="Data de nascimento" value={employee.birthdate} />
+            <SummaryField label="Status" value={employee.active ? "Ativo" : "Inativo"} />
+            <SummaryField label="Criado em" value={employee.createdAt} />
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card className="border-l-4 border-l-orange-500">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
-               <CreditCard className="h-5 w-5 text-orange-500" />
-              Pagamento e status
-            </CardTitle>
-            <CardDescription>PIX e status da conta</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <DetailField label="Chave PIX" value={employee.pix} icon={CreditCard} />
-            <DetailField label="Status" value={employee.active ? "Ativo" : "Inativo"} icon={CheckCircle} />
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Eventos vinculados</CardTitle>
+          <CardDescription>Total de eventos vinculados a este colaborador: {employeeEventsCount}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {linkedEvents.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Este colaborador ainda não possui eventos vinculados.</p>
+          ) : (
+            <div className={styles.tableWrap}>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Título</TableHead>
+                    <TableHead>Aluno</TableHead>
+                    <TableHead>Conteúdo</TableHead>
+                    <TableHead>Início</TableHead>
+                    <TableHead>Fim</TableHead>
+                    <TableHead>Preço</TableHead>
+                    <TableHead>Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {linkedEvents.map((event) => (
+                    <TableRow key={event.id}>
+                      <TableCell>{event.title}</TableCell>
+                      <TableCell>{event.studentName}</TableCell>
+                      <TableCell>{eventContentLabels[event.content]}</TableCell>
+                      <TableCell>{event.startDateTime}</TableCell>
+                      <TableCell>{event.endDateTime}</TableCell>
+                      <TableCell>{event.price}</TableCell>
+                      <TableCell>
+                        <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/events/${event.id}`}>
+                          Ver evento
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }
