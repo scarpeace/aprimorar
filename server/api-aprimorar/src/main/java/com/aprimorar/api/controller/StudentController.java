@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.dto.common.PageQuery;
 import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
 import com.aprimorar.api.dto.student.UpdateStudentDTO;
@@ -26,7 +28,6 @@ import com.aprimorar.api.util.PageableUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 
 @RestController
 @RequestMapping("/v1/students")
@@ -44,13 +45,11 @@ public class StudentController {
     @Operation(summary = "List all STUDENTS", description = "Retrieves all students from database with pagination")
     @GetMapping()
     public ResponseEntity<Page<StudentResponseDTO>> listStudents(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") @Max(100) int size,
-            @RequestParam(defaultValue = "name") String sortBy,
+            @Valid @ModelAttribute PageQuery pageQuery,
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "false") boolean includeArchived
     ) {
-        Pageable pageable = PageableUtils.buildPageable(page, size, sortBy, "name", ALLOWED_SORT_FIELDS);
+        Pageable pageable = PageableUtils.buildPageable(pageQuery, "name", ALLOWED_SORT_FIELDS);
         Page<StudentResponseDTO> allStudents = studentService.listStudents(pageable, name, includeArchived);
         return ResponseEntity.ok(allStudents);
     }

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.dto.common.PageQuery;
 import com.aprimorar.api.dto.event.CreateEventDTO;
 import com.aprimorar.api.dto.event.EventResponseDTO;
 import com.aprimorar.api.dto.event.UpdateEventDTO;
@@ -28,7 +30,6 @@ import com.aprimorar.api.util.PageableUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 
 @RestController
 @RequestMapping("/v1/events")
@@ -46,15 +47,13 @@ public class EventController {
     @Operation(summary = "List all EVENTS and/or Filtered", description = "Retrieves all events from database with pagination and filters if needed")
     @GetMapping
     public ResponseEntity<Page<EventResponseDTO>> listEvents(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") @Max(100) int size,
-            @RequestParam(defaultValue = "startDateTime") String sortBy,
+            @Valid @ModelAttribute PageQuery pageQuery,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
             @RequestParam(required = false) UUID studentId,
             @RequestParam(required = false) UUID employeeId
     ) {
-        Pageable pageable = PageableUtils.buildPageable(page, size, sortBy, "startDateTime", ALLOWED_SORT_FIELDS);
+        Pageable pageable = PageableUtils.buildPageable(pageQuery, "startDateTime", ALLOWED_SORT_FIELDS);
         Page<EventResponseDTO> allEvents = eventService.listEvents(pageable, start, end, studentId, employeeId);
         return ResponseEntity.ok(allEvents);
     }

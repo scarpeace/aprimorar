@@ -116,6 +116,15 @@ class StudentControllerTest {
 
             verifyNoInteractions(studentService);
         }
+
+        @Test
+        @DisplayName("returns 400 for size greater than 100")
+        void sizeAboveLimit() throws Exception {
+            mockMvc.perform(get("/v1/students").param("size", "101"))
+                    .andExpect(status().isBadRequest());
+
+            verifyNoInteractions(studentService);
+        }
     }
 
     @Nested
