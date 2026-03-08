@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { eventContentLabels, type EventResponse } from "@/lib/schemas"
+import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
 import { eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
 import styles from "@/features/events/EventsPage.module.css"
 
@@ -21,7 +21,7 @@ export function EventsPage() {
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<number | null>(null)
 
-  const loadEvents = async () => {
+  const loadEvents = useCallback(async () => {
     try {
       setError(null)
       setLoading(true)
@@ -34,11 +34,11 @@ export function EventsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     loadEvents()
-  }, [])
+  }, [loadEvents])
 
   const handleDelete = async (event: EventResponse) => {
     if (!window.confirm(`Excluir evento "${event.title}"? Essa ação não pode ser desfeita.`)) {

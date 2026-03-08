@@ -1,9 +1,10 @@
 import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { EmptyState } from "@/components/ui/empty-state"
 import { UserCog, Mail, CreditCard, Shield, CheckCircle } from "lucide-react"
-import { useEffect, useState } from "react"
-import type { EmployeeResponse } from "@/lib/schemas"
+import { useCallback, useEffect, useState } from "react"
+import type { EmployeeResponse } from "@/lib/schemas/employee"
 import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
 import styles from "@/features/employees/EmployeeDetailPage.module.css"
 
@@ -25,34 +26,51 @@ export function EmployeeDetailPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const loadEmployee = useCallback(async () => {
+    if (!id) {
+      setError("ID do colaborador não informado.")
+      setLoading(false)
+      return
+    }
 
-      if(!id){
-        setError("ID do colaborador não informado.")
-        setLoading(false)
-        return;
-      }
-  
-      const fetchEmployee = async () =>{
-        try{
-          setLoading(true)
-          setError(null)
-  
-          const res = await employeesApi.getById(id)
-          setEmployee(res.data)
-        }catch (error) {
-            console.error("Falha ao carregar colaborador:", error)
-            setError(getFriendlyErrorMessage(error))
-          } finally {
-            setLoading(false)
-          }
-      }
-        fetchEmployee();
-      }, [id])
+    try {
+      setLoading(true)
+      setError(null)
+
+      const res = await employeesApi.getById(id)
+      setEmployee(res.data)
+    } catch (error) {
+      console.error("Falha ao carregar colaborador:", error)
+      setError(getFriendlyErrorMessage(error))
+    } finally {
+      setLoading(false)
+    }
+  }, [id])
+
+  useEffect(() => {
+    loadEmployee()
+  }, [loadEmployee])
   
       if (loading) return <div>Carregando...</div>
-      if(error) return <div>{error}</div>
-      if(!employee) return <div>Colaborador não encontrado.</div>
+      if(error) {
+        return (
+          <div className={styles.page}>
+            <EmptyState
+              title="Não foi possível carregar"
+              description={error}
+              actionLabel="Tentar novamente"
+              onAction={loadEmployee}
+            />
+          </div>
+        )
+      }
+      if(!employee) {
+        return (
+          <div className={styles.page}>
+            <EmptyState title="Colaborador não encontrado" description="Não encontramos os dados deste colaborador." />
+          </div>
+        )
+      }
 
   return (
     <div className={styles.page}>
@@ -84,7 +102,7 @@ export function EmployeeDetailPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <DetailField label="Nome completo" value={employee.name} icon={UserCog} />
-            <DetailField label="Email" value={employee.email} icon={Mail} />
+            <DetailField label="E-mail" value={employee.email} icon={Mail} />
             <DetailField label="Cargo" value={employee.role} icon={Shield} />
           </CardContent>
         </Card>

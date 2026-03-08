@@ -1,12 +1,10 @@
 import type {
   CreateEmployeeInput,
-  CreateEventInput,
-  CreateStudentInput,
   EmployeeResponse,
-  EventResponse,
-  ParentSummary,
-  StudentResponse,
-} from "@/lib/schemas"
+} from "@/lib/schemas/employee"
+import type { CreateEventInput, EventResponse } from "@/lib/schemas/event"
+import type { ParentSummary } from "@/lib/schemas/parent"
+import type { CreateStudentInput, StudentResponse } from "@/lib/schemas/student"
 import axios, { type AxiosResponse } from "axios"
 
 export function getFriendlyErrorMessage(error: unknown) {

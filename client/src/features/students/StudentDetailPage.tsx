@@ -1,11 +1,13 @@
 import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { EmptyState } from "@/components/ui/empty-state"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { GraduationCap } from "lucide-react"
-import { eventContentLabels, type EventResponse, type StudentResponse } from "@/lib/schemas"
+import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
+import type { StudentResponse } from "@/lib/schemas/student"
 import { eventsApi, getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import styles from "@/features/students/StudentDetailPage.module.css"
 
 function SummaryField({ label, value }: { label: string; value: string }) {
@@ -25,42 +27,60 @@ export function StudentDetailPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const loadStudentData = useCallback(async () => {
     if (!id) {
       setError("ID do aluno não informado.")
       setLoading(false)
       return
     }
 
-    const fetchStudent = async () => {
-      try {
-        setLoading(true)
-        setError(null)
+    try {
+      setLoading(true)
+      setError(null)
 
-        const [studentRes, eventsRes] = await Promise.all([
-          studentsApi.getById(id),
-          eventsApi.listByStudent(id, 0, 100, "startDateTime"),
-        ])
+      const [studentRes, eventsRes] = await Promise.all([
+        studentsApi.getById(id),
+        eventsApi.listByStudent(id, 0, 100, "startDateTime"),
+      ])
 
-        const eventsPage: PageResponse<EventResponse> = eventsRes.data
+      const eventsPage: PageResponse<EventResponse> = eventsRes.data
 
-        setStudent(studentRes.data)
-        setLinkedEvents(eventsPage.content)
-        setStudentEventsCount(eventsPage.totalElements)
-      } catch (error) {
-        console.error("Falha ao carregar aluno:", error)
-        setError(getFriendlyErrorMessage(error))
-      } finally {
-        setLoading(false)
-      }
+      setStudent(studentRes.data)
+      setLinkedEvents(eventsPage.content)
+      setStudentEventsCount(eventsPage.totalElements)
+    } catch (error) {
+      console.error("Falha ao carregar aluno:", error)
+      setError(getFriendlyErrorMessage(error))
+    } finally {
+      setLoading(false)
     }
-
-    fetchStudent()
   }, [id])
 
+  useEffect(() => {
+    loadStudentData()
+  }, [loadStudentData])
+
   if (loading) return <div>Carregando...</div>
-  if (error) return <div>{error}</div>
-  if (!student) return <div>Aluno não encontrado.</div>
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <EmptyState
+          title="Não foi possível carregar"
+          description={error}
+          actionLabel="Tentar novamente"
+          onAction={loadStudentData}
+        />
+      </div>
+    )
+  }
+
+  if (!student) {
+    return (
+      <div className={styles.page}>
+        <EmptyState title="Aluno não encontrado" description="Não encontramos os dados deste aluno." />
+      </div>
+    )
+  }
 
   const address = student.address
     ? `${student.address.street}, ${student.address.number} - ${student.address.district}, ${student.address.city}/${student.address.state}`

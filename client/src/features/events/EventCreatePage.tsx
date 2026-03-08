@@ -5,11 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import styles from "@/features/events/EventCreatePage.module.css"
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import type { EmployeeResponse, StudentResponse } from "@/lib/schemas"
-import { createEventSchema, eventContentLabels, eventContentValues, type CreateEventInput } from "@/lib/schemas"
+import type { EmployeeResponse } from "@/lib/schemas/employee"
+import { createEventSchema, eventContentLabels, eventContentValues, type CreateEventInput } from "@/lib/schemas/event"
+import type { StudentResponse } from "@/lib/schemas/student"
 import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
 
 export function EventCreatePage() {
@@ -36,17 +37,10 @@ export function EventCreatePage() {
   const selectedStudentId = watch("studentId")
   const selectedEmployeeId = watch("employeeId")
 
-  const selectedStudentName = useMemo(() => {
-    const s = students.find((x) => x.id === selectedStudentId)
-    return s?.name ?? ""
-  }, [students, selectedStudentId])
+  const selectedStudentName = students.find((student) => student.id === selectedStudentId)?.name ?? ""
+  const selectedEmployeeName = employees.find((employee) => employee.id === selectedEmployeeId)?.name ?? ""
 
-  const selectedEmployeeName = useMemo(() => {
-    const e = employees.find((x) => x.id === selectedEmployeeId)
-    return e?.name ?? ""
-  }, [employees, selectedEmployeeId])
-
-  const loadOptions = async () => {
+  const loadOptions = useCallback(async () => {
     try {
       setOptionsError(null)
       setLoadingOptions(true)
@@ -65,11 +59,11 @@ export function EventCreatePage() {
     } finally {
       setLoadingOptions(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     loadOptions()
-  }, [])
+  }, [loadOptions])
 
   const onSubmit = async (data: CreateEventInput) => {
     try {
@@ -120,6 +114,28 @@ export function EventCreatePage() {
                   </label>
                   <Input id="title" placeholder="Ex: Aula de matemática" {...register("title")} />
                   {errors.title?.message ? <p className={styles.error}>{errors.title.message}</p> : null}
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label} htmlFor="content">
+                    Conteúdo
+                  </label>
+                  <select
+                    id="content"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    {...register("content")}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Selecione um conteúdo
+                    </option>
+                    {eventContentValues.map((content) => (
+                      <option key={content} value={content}>
+                        {eventContentLabels[content]}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.content?.message ? <p className={styles.error}>{errors.content.message}</p> : null}
                 </div>
 
                 <div className={styles.field}>
@@ -176,46 +192,25 @@ export function EventCreatePage() {
                   {errors.employeeId?.message ? <p className={styles.error}>{errors.employeeId.message}</p> : null}
                 </div>
 
+
                 <div className={styles.field}>
-                  <label className={styles.label} htmlFor="content">
-                    Conteúdo
+                  <label className={styles.label} htmlFor="startDateTime">
+                    Início
                   </label>
-                  <select
-                    id="content"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    {...register("content")}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Selecione um conteúdo
-                    </option>
-                    {eventContentValues.map((content) => (
-                      <option key={content} value={content}>
-                        {eventContentLabels[content]}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.content?.message ? <p className={styles.error}>{errors.content.message}</p> : null}
+                  <Input id="startDateTime" type="datetime-local" {...register("startDateTime")} />
+                  {errors.startDateTime?.message ? (
+                    <p className={styles.error}>{errors.startDateTime.message}</p>
+                  ) : null}
                 </div>
 
                 <div className={styles.field}>
-                <label className={styles.label} htmlFor="startDateTime">
-                  Início
-                </label>
-                <Input id="startDateTime" type="datetime-local" {...register("startDateTime")} />
-                {errors.startDateTime?.message ? (
-                  <p className={styles.error}>{errors.startDateTime.message}</p>
-                ) : null}
-                </div>
-
-                <div className={styles.field}>
-                <label className={styles.label} htmlFor="endDateTime">
-                  Fim
-                </label>
-                <Input id="endDateTime" type="datetime-local" {...register("endDateTime")} />
-                {errors.endDateTime?.message ? (
-                  <p className={styles.error}>{errors.endDateTime.message}</p>
-                ) : null}
+                  <label className={styles.label} htmlFor="endDateTime">
+                    Fim
+                  </label>
+                  <Input id="endDateTime" type="datetime-local" {...register("endDateTime")} />
+                  {errors.endDateTime?.message ? (
+                    <p className={styles.error}>{errors.endDateTime.message}</p>
+                  ) : null}
                 </div>
 
                 <div className={styles.field}>

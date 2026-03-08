@@ -1,8 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import type { StudentResponse, EmployeeResponse, EventResponse } from "@/lib/schemas"
+import { EmptyState } from "@/components/ui/empty-state"
+import type { EmployeeResponse } from "@/lib/schemas/employee"
+import type { EventResponse } from "@/lib/schemas/event"
+import type { StudentResponse } from "@/lib/schemas/student"
 import { studentsApi, employeesApi, eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
-import { Button } from "@/components/ui/button"
-import { useState, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import styles from "@/features/dashboard/DashboardPage.module.css"
 
 export function DashboardPage() {
@@ -14,41 +16,42 @@ export function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setError(null)
-        setLoading(true)
-        const [studentsRes, employeesRes, eventsRes] = await Promise.all([
-          studentsApi.list(0, 20, "name"),
-          employeesApi.listActive(),
-          eventsApi.list(),
-        ])
+  const fetchData = useCallback(async () => {
+    try {
+      setError(null)
+      setLoading(true)
+      const [studentsRes, employeesRes, eventsRes] = await Promise.all([
+        studentsApi.list(0, 20, "name"),
+        employeesApi.listActive(),
+        eventsApi.list(),
+      ])
 
-        const studentsPage: PageResponse<StudentResponse> = studentsRes.data
-        const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
-        const eventsPage: PageResponse<EventResponse> = eventsRes.data
+      const studentsPage: PageResponse<StudentResponse> = studentsRes.data
+      const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
+      const eventsPage: PageResponse<EventResponse> = eventsRes.data
 
-        setStudentsCount(studentsPage.totalElements)
-        setEmployeesCount(employeesPage.totalElements)
-        setEventsCount(eventsPage.totalElements)
-        //TODO Move this logic to the backend
-        // Calculate revenue from events
-        const total = eventsPage.content.reduce(
-          (sum, event) => sum + Number(event.payment),
-          0
-        )
+      setStudentsCount(studentsPage.totalElements)
+      setEmployeesCount(employeesPage.totalElements)
+      setEventsCount(eventsPage.totalElements)
+      //TODO Move this logic to the backend
+      // Calculate revenue from events
+      const total = eventsPage.content.reduce(
+        (sum, event) => sum + Number(event.payment),
+        0
+      )
 
-        setRevenue(total)
-      } catch (error) {
-        console.error("Falha ao carregar o painel:", error)
-        setError(getFriendlyErrorMessage(error))
-      } finally {
-        setLoading(false)
-      }
+      setRevenue(total)
+    } catch (error) {
+      console.error("Falha ao carregar o painel:", error)
+      setError(getFriendlyErrorMessage(error))
+    } finally {
+      setLoading(false)
     }
-    fetchData()
   }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   if (loading) return <div>Carregando...</div>
 
@@ -56,17 +59,12 @@ export function DashboardPage() {
     return (
       <div className={styles.errorWrap}>
         <h1 className="text-3xl font-bold text-gray-900">Painel</h1>
-        <Card>
-          <CardHeader>
-            <CardTitle>Ops, não foi possível carregar</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">{error}</p>
-            <Button type="button" onClick={() => window.location.reload()}>
-              Tentar novamente
-            </Button>
-          </CardContent>
-        </Card>
+        <EmptyState
+          title="Ops, não foi possível carregar"
+          description={error}
+          actionLabel="Tentar novamente"
+          onAction={fetchData}
+        />
       </div>
     )
   }

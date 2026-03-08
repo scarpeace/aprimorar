@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import styles from "@/features/students/StudentCreatePage.module.css"
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useHookFormMask } from "use-mask-input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createStudentSchema, type CreateStudentInput, type ParentSummary } from "@/lib/schemas"
+import { createStudentSchema, type CreateStudentInput } from "@/lib/schemas/student"
+import type { ParentSummary } from "@/lib/schemas/parent"
 import { getFriendlyErrorMessage, parentsApi, studentsApi, type PageResponse } from "@/services/api"
 
 export function StudentCreatePage() {
@@ -31,7 +32,7 @@ export function StudentCreatePage() {
     shouldUnregister: true,
   })
 
-  const loadParents = async () => {
+  const loadParents = useCallback(async () => {
     try {
       setParentsError(null)
       setParentsLoading(true)
@@ -48,19 +49,16 @@ export function StudentCreatePage() {
     } finally {
       setParentsLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     loadParents()
-  }, [])
+  }, [loadParents])
 
   const parentIdField = register("parentId")
   const registerWithMask = useHookFormMask(register)
   const selectedParentId = watch("parentId")
-  const selectedParentName = useMemo(() => {
-    const p = parents.find((x) => x.id === selectedParentId)
-    return p?.name ?? ""
-  }, [parents, selectedParentId])
+  const selectedParentName = parents.find((parent) => parent.id === selectedParentId)?.name ?? ""
 
   const onSubmit = async (data: CreateStudentInput) => {
     try {
@@ -144,7 +142,7 @@ export function StudentCreatePage() {
 
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="email">
-                  Email
+                  E-mail
                 </label>
                 <Input id="email" type="email" placeholder="exemplo@dominio.com" {...register("email")} />
                 {errors.email?.message ? <p className={styles.error}>{errors.email.message}</p> : null}

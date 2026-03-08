@@ -7,7 +7,7 @@ import styles from "@/features/employees/EmployeeCreatePage.module.css"
 import { useForm } from "react-hook-form"
 import { useHookFormMask } from "use-mask-input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createEmployeeSchema, type CreateEmployeeInput } from "@/lib/schemas"
+import { createEmployeeSchema, type CreateEmployeeInput } from "@/lib/schemas/employee"
 import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
 import { useState } from "react"
 
@@ -79,7 +79,7 @@ export function EmployeeCreatePage() {
 
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="email">
-                  Email
+                  E-mail
                 </label>
                 <Input id="email" type="email" placeholder="exemplo@dominio.com" {...register("email")} />
                 {errors.email?.message ? <p className={styles.error}>{errors.email.message}</p> : null}

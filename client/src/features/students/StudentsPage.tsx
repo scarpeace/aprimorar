@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import type { StudentResponse } from "@/lib/schemas"
+import type { StudentResponse } from "@/lib/schemas/student"
 import { getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
 import styles from "@/features/students/StudentsPage.module.css"
 
@@ -123,7 +123,7 @@ export function StudentsPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead>E-mail</TableHead>
               <TableHead>Idade</TableHead>
               <TableHead>Escola</TableHead>
               <TableHead>Arquivado</TableHead>

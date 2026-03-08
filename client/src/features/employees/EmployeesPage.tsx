@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import type { EmployeeResponse } from "@/lib/schemas"
+import type { EmployeeResponse } from "@/lib/schemas/employee"
 import { employeesApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
 import styles from "@/features/employees/EmployeesPage.module.css"
 
@@ -21,7 +21,7 @@ export function EmployeesPage() {
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
-  const loadEmployees = async () => {
+  const loadEmployees = useCallback(async () => {
     try {
       setError(null)
       setLoading(true)
@@ -34,11 +34,11 @@ export function EmployeesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     loadEmployees()
-  }, [])
+  }, [loadEmployees])
 
   const handleDelete = async (employee: EmployeeResponse) => {
     if (!window.confirm(`Excluir colaborador "${employee.name}"? Essa ação não pode ser desfeita.`)) {
@@ -103,7 +103,7 @@ export function EmployeesPage() {
             <TableRow>
               <TableHead>Nome</TableHead>
               <TableHead>Cargo</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead>E-mail</TableHead>
               <TableHead>PIX</TableHead>
               <TableHead>Ativo</TableHead>
               <TableHead>Ações</TableHead>

@@ -1,9 +1,10 @@
 import { Link, useParams } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { EmptyState } from "@/components/ui/empty-state"
 import { Calendar, User, GraduationCap, Clock, DollarSign } from "lucide-react"
-import { eventContentLabels, type EventResponse } from "@/lib/schemas"
-import { useEffect, useState } from "react"
+import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
+import { useCallback, useEffect, useState } from "react"
 import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
 import styles from "@/features/events/EventDetailPage.module.css"
 
@@ -26,44 +27,61 @@ export function EventDetailPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-    useEffect(() => {
-   
-       if(!id){
-         setError("ID do evento não informado.")
-         setLoading(false)
-         return;
-       }
-   
-       const fetchEvent = async () =>{
-         try{
-           setLoading(true)
-           setError(null)
+  const loadEvent = useCallback(async () => {
+    if (!id) {
+      setError("ID do evento não informado.")
+      setLoading(false)
+      return
+    }
 
-           const res = await eventsApi.getById(Number.parseInt(id))
-           setEvent(res.data)
-          }catch (error) {
-             console.error("Falha ao carregar evento:", error)
-             setError(getFriendlyErrorMessage(error))
-           } finally {
-             setLoading(false)
-           }
-       }
-         fetchEvent();
-       }, [id])
+    try {
+      setLoading(true)
+      setError(null)
 
-       //TODO Move this logic to the backend and return it on the DTO.
-      const price = Number(event?.price)
-      const teacherPayment = Number(event?.payment)
-       const profit = Number.isFinite(price) && Number.isFinite(teacherPayment) ? price - teacherPayment : 0
-          
-       const brl = new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-        })
+      const res = await eventsApi.getById(Number.parseInt(id))
+      setEvent(res.data)
+    } catch (error) {
+      console.error("Falha ao carregar evento:", error)
+      setError(getFriendlyErrorMessage(error))
+    } finally {
+      setLoading(false)
+    }
+  }, [id])
 
-       if(loading) return <div>Carregando...</div>
-       if(error) return <div>{error}</div>
-       if(!event) return <div>Evento não encontrado.</div>
+  useEffect(() => {
+    loadEvent()
+  }, [loadEvent])
+
+  //TODO Move this logic to the backend and return it on the DTO.
+  const price = Number(event?.price)
+  const teacherPayment = Number(event?.payment)
+  const profit = Number.isFinite(price) && Number.isFinite(teacherPayment) ? price - teacherPayment : 0
+
+  const brl = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  })
+
+  if (loading) return <div>Carregando...</div>
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <EmptyState
+          title="Não foi possível carregar"
+          description={error}
+          actionLabel="Tentar novamente"
+          onAction={loadEvent}
+        />
+      </div>
+    )
+  }
+  if (!event) {
+    return (
+      <div className={styles.page}>
+        <EmptyState title="Evento não encontrado" description="Não encontramos os dados deste evento." />
+      </div>
+    )
+  }
 
 
   return (
