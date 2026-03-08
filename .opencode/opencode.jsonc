@@ -1,22 +1,17 @@
 {
     "$schema": "https://opencode.ai/config.json",
     "agent": {
-        "planner": {
-            "description": "Product manager and software architect for discovery and planning",
-            "mode": "subagent",
-            "model": "openai/gpt-5.2",
-            "prompt": "{file:./agents/planner.md}",
-            "permission": {
-                "edit": "ask",
-                "bash": "deny",
-                "webfetch": "deny"
-            }
-        },
-        "do": {
-            "description": "Senior full-stack implementation and static quality reviews",
-            "mode": "subagent",
-            "model": "openai/gpt-5.3-codex",
-            "prompt": "{file:./agents/do.md}",
+        "plan": {
+            "mode": "primary",
+            "model": "openai/gpt-5.4",
+            "temperature": 0.2,
+            "steps": 20,
+            "prompt": "{file:./agents/plan.md}",
+            "tools": {
+                "write": true,
+                "edit": true,
+                "bash": true
+            },
             "permission": {
                 "edit": "allow",
                 "bash": {
@@ -26,52 +21,25 @@
                     "git log*": "allow",
                     "ls*": "allow"
                 },
-                "webfetch": "deny"
+                "webfetch": "ask"
             }
-        }
-    },
-    "command": {
-        "feature": {
-            "description": "Start feature discovery with structured requirements",
-            "agent": "planner",
-            "subtask": true,
-            "template": "Start a feature discovery process for: {{input}}.\n\nBehavior:\n- Ask questions to fully understand the feature.\n- Identify functional requirements.\n- Identify non-functional requirements.\n- Suggest improvements to the feature.\n- Suggest implementation approaches.\n- If the description is incomplete, ask multiple questions before proceeding.\n- Never assume unclear requirements.\n\nOutput structure:\n1. Feature Summary\n2. Functional Requirements\n3. Non-Functional Requirements\n4. Suggested Improvements\n5. Possible Implementation Approaches\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /feature if clarification is still required.\n- Use /organize if requirements are clear.\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
         },
-        "organize": {
-            "description": "Break approved feature into epics, tasks, and subtasks",
-            "agent": "planner",
-            "subtask": true,
-            "template": "Break this approved feature into implementation work: {{input}}.\n\nBehavior:\n- Convert the feature into epics, tasks, and subtasks.\n- Determine execution order.\n- Identify dependencies.\n- Highlight risky or complex tasks.\n- Never assume unclear requirements; ask clarifying questions first if needed.\n\nOutput structure:\n1. Epics\n2. Tasks\n3. Subtasks\n4. Execution Order\n5. Dependencies\n6. Risk Areas\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /organize if clarification is still required.\n- Use /docs when the plan is approved and ready to document.\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
-        },
-        "docs": {
-            "description": "Update planning docs based on approved decisions",
-            "agent": "planner",
-            "subtask": true,
-            "template": "Update documentation to reflect the current approved project state for: {{input}}.\n\nRules:\n- Never invent completed work.\n- Only document approved decisions.\n- Reflect the real state of the project.\n- Keep the canonical structure in docs/:\n  - docs/project.md\n  - docs/planning/project.md\n  - docs/planning/roadmap.md\n  - docs/planning/epics/E-XXX-*.md\n- For epics, follow docs/planning/epics/E-000-template.md patterns.\n- Keep docs/planning/prompt-style-guide.md short and practical for this workflow.\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /do when there is an approved task ID ready for implementation.\n- Use /feature if decisions are not yet approved.\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
-        },
-        "do": {
-            "description": "Implement exactly one selected task by ID",
-            "agent": "do",
-            "subtask": true,
-            "template": "Implement the selected task ID: {{input}}.\n\nBehavior:\n- Follow the implementation plan from docs/planning/epics/.\n- Write clean and readable code.\n- Avoid unnecessary complexity.\n- Explain important decisions.\n- Suggest improvements when relevant.\n- If requirements are unclear, ask clarifying questions before coding.\n\nOutput structure:\n1. Task being implemented\n2. Implementation steps\n3. Code changes\n4. Suggested improvements (optional)\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /check-backend for backend-focused review.\n- Use /check-frontend for frontend-focused review.\n- Use /docs after implementation is approved and reflected in planning docs.\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
-        },
-        "check-backend": {
-            "description": "Static backend quality review only (no code changes)",
-            "agent": "do",
-            "subtask": true,
-            "template": "Review backend implementation quality for: {{input}}.\n\nBehavior:\n- Detect bugs, architecture issues, and code smells.\n- Suggest improvements and missing tests.\n- Never implement tests automatically.\n- Never implement any code changes in this command.\n\nImportant:\n- This is static review only.\n- Ask for explicit user approval before any future test implementation.\n- Tell the user to run /do as the go command if they want changes applied.\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /do for approved fixes (go command).\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
-        },
-        "check-frontend": {
-            "description": "Static frontend quality review only (no code changes)",
-            "agent": "do",
-            "subtask": true,
-            "template": "Review frontend implementation quality for: {{input}}.\n\nBehavior:\n- Detect UI/UX issues, architecture issues, and code smells.\n- Suggest improvements and missing tests.\n- Never implement tests automatically.\n- Never implement any code changes in this command.\n\nImportant:\n- This is static review only.\n- Ask for explicit user approval before any future test implementation.\n- Tell the user to run /do as the go command if they want changes applied.\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /do for approved fixes (go command).\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
-        },
-        "tests": {
-            "description": "Suggest unit, integration, and edge-case tests",
-            "agent": "do",
-            "subtask": true,
-            "template": "Suggest test coverage improvements for: {{input}}.\n\nBehavior:\n- Suggest unit tests.\n- Suggest integration tests.\n- Suggest edge cases.\n- Never implement tests without explicit user confirmation.\n\nAlways end with this exact section:\nNext Step\n\nNext command:\n- Use /do only if the user explicitly approves implementing tests.\n\nWhy:\n- One short reason.\n\nSuggested prompt:\n- A ready-to-use prompt the user can send next."
-        }
+            "build": {
+                "description": "Senior full-stack implementation agent for Java and React with clean code and explicit clarification behavior",
+                "mode": "primary",
+                "model": "openai/gpt-5.4",
+                "prompt": "{file:./agents/build.md}",
+                "permission": {
+                    "edit": "allow",
+                    "bash": {
+                        "*": "ask",
+                        "git status*": "allow",
+                        "git diff*": "allow",
+                        "git log*": "allow",
+                        "ls*": "allow"
+                    },
+                    "webfetch": "ask"
+                }
+            }
     }
 }
