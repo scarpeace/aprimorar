@@ -53,7 +53,7 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeResponseDTO createEmployee(CreateEmployeeDTO createEmployeeDto) {
-        log.info("Creating employee with name: {}", createEmployeeDto.name());
+        log.info("Creating employee");
         Employee newEmployee = employeeMapper.toEntity(createEmployeeDto);
         Employee savedEmployee = employeeRepo.save(newEmployee);
         return employeeMapper.toDto(savedEmployee);
@@ -62,12 +62,14 @@ public class EmployeeService {
     @Transactional
     public void softDeleteEmployee(UUID employeeId) {
         Employee foundEmployee = findAnyEmployeeOrThrow(employeeId);
+        log.info("Deactivating employeeId={}", employeeId);
         deactivateIfActive(foundEmployee);
     }
 
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, UpdateEmployeeDTO updateEmployeeDto) {
         Employee foundEmployee = findAnyEmployeeOrThrow(employeeId);
+        log.info("Updating employeeId={}", employeeId);
 
         employeeMapper.updateFromDto(updateEmployeeDto, foundEmployee);
         foundEmployee.setUpdatedAt(Instant.now(applicationClock));

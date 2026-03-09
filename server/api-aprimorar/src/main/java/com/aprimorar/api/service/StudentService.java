@@ -70,7 +70,7 @@ public class StudentService {
 
     @Transactional
     public StudentResponseDTO createStudent(CreateStudentDTO createStudentDto) {
-        log.debug("Creating student");
+        log.info("Creating student");
 
         Student newStudent = studentMapper.toEntity(createStudentDto);
 
@@ -83,12 +83,14 @@ public class StudentService {
     @Transactional
     public void archiveStudent(UUID studentId) {
         Student foundStudent = findAnyStudentOrThrow(studentId);
+        log.info("Archiving studentId={}", studentId);
         archiveIfNotArchived(foundStudent);
     }
 
     @Transactional
     public void unarchiveStudent(UUID studentId) {
         Student foundStudent = findAnyStudentOrThrow(studentId);
+        log.info("Unarchiving studentId={}", studentId);
         if (foundStudent.getArchivedAt() != null) {
             Instant now = Instant.now(applicationClock);
             foundStudent.setArchivedAt(null);
@@ -100,6 +102,7 @@ public class StudentService {
     @Transactional
     public StudentResponseDTO updateStudent(UUID studentId, UpdateStudentDTO updateStudentDto) {
         Student foundStudent = findAnyStudentOrThrow(studentId);
+        log.info("Updating studentId={}", studentId);
 
         studentMapper.updateFromDto(updateStudentDto, foundStudent);
 

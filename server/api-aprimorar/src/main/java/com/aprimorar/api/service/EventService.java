@@ -68,7 +68,7 @@ public class EventService {
 
     @Transactional
     public EventResponseDTO createEvent(CreateEventDTO createEventDto) {
-        log.info("Creating event for student: {} with employee: {}",
+        log.info("Creating event for studentId={} employeeId={}",
                 createEventDto.studentId(), createEventDto.employeeId());
 
         Student student = findSchedulableStudentOrThrow(createEventDto.studentId());
@@ -85,6 +85,7 @@ public class EventService {
     @Transactional
     public EventResponseDTO updateEvent(Long eventId, UpdateEventDTO updateEventDto) {
         Event foundEvent = findAnyEventOrThrow(eventId);
+        log.info("Updating eventId={}", eventId);
 
         eventMapper.updateFromDto(updateEventDto, foundEvent);
 
@@ -106,6 +107,7 @@ public class EventService {
     @Transactional
     public void deleteEvent(Long eventId) {
         Event foundEvent = findAnyEventOrThrow(eventId);
+        log.info("Deleting eventId={}", eventId);
         eventRepo.delete(foundEvent);
     }
 
