@@ -63,20 +63,33 @@ class EmployeeControllerTest {
         @Test
         @DisplayName("uses default pagination for list endpoint")
         void defaultPagination() throws Exception {
-            when(employeeService.listEmployees(any(Pageable.class)))
+            when(employeeService.listEmployees(any(Pageable.class), eq(false)))
                     .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
             mockMvc.perform(get("/v1/employees"))
                     .andExpect(status().isOk());
 
             ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-            verify(employeeService).listEmployees(pageableCaptor.capture());
+            verify(employeeService).listEmployees(pageableCaptor.capture(), eq(false));
 
             Pageable pageable = pageableCaptor.getValue();
             Sort.Order sortOrder = pageable.getSort().getOrderFor("name");
             assertEquals(0, pageable.getPageNumber());
             assertEquals(20, pageable.getPageSize());
             assertNotNull(sortOrder);
+        }
+
+        @Test
+        @DisplayName("includes archived employees when requested")
+        void includeArchivedEmployees() throws Exception {
+            when(employeeService.listEmployees(any(Pageable.class), eq(true)))
+                    .thenReturn(new PageImpl<>(List.of(employeeResponse()), PageRequest.of(0, 20), 1));
+
+            mockMvc.perform(get("/v1/employees").param("includeArchived", "true"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.content[0].name").value("Ana"));
+
+            verify(employeeService).listEmployees(any(Pageable.class), eq(true));
         }
 
         @Test

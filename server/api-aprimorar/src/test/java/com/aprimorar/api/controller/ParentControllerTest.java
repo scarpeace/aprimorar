@@ -26,6 +26,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -51,17 +52,17 @@ class ParentControllerTest {
     }
 
     @Test
-    @DisplayName("lists active parents with default pagination")
-    void listActiveParents() throws Exception {
-        when(parentService.listActiveParents(any(Pageable.class)))
+    @DisplayName("lists parents with default pagination and active-only default")
+    void listParents() throws Exception {
+        when(parentService.listParents(any(Pageable.class), eq(false)))
                 .thenReturn(new PageImpl<>(List.of(new ParentSummaryDTO(UUID.randomUUID(), "Maria")), PageRequest.of(0, 20), 1));
 
-        mockMvc.perform(get("/v1/parents/active"))
+        mockMvc.perform(get("/v1/parents"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].name").value("Maria"));
 
         ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-        verify(parentService).listActiveParents(pageableCaptor.capture());
+        verify(parentService).listParents(pageableCaptor.capture(), eq(false));
 
         Pageable pageable = pageableCaptor.getValue();
         Sort.Order sortOrder = pageable.getSort().getOrderFor("name");
@@ -71,9 +72,33 @@ class ParentControllerTest {
     }
 
     @Test
+    @DisplayName("lists parents including archived when requested")
+    void listParentsIncludingArchived() throws Exception {
+        when(parentService.listParents(any(Pageable.class), eq(true)))
+                .thenReturn(new PageImpl<>(List.of(new ParentSummaryDTO(UUID.randomUUID(), "Maria")), PageRequest.of(0, 20), 1));
+
+        mockMvc.perform(get("/v1/parents").param("includeArchived", "true"))
+                .andExpect(status().isOk());
+
+        verify(parentService).listParents(any(Pageable.class), eq(true));
+    }
+
+    @Test
+    @DisplayName("keeps active alias temporarily")
+    void listActiveParentsAlias() throws Exception {
+        when(parentService.listActiveParents(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(new ParentSummaryDTO(UUID.randomUUID(), "Maria")), PageRequest.of(0, 20), 1));
+
+        mockMvc.perform(get("/v1/parents/active"))
+                .andExpect(status().isOk());
+
+        verify(parentService).listActiveParents(any(Pageable.class));
+    }
+
+    @Test
     @DisplayName("returns 400 for invalid pagination input")
     void invalidPagination() throws Exception {
-        mockMvc.perform(get("/v1/parents/active").param("size", "0"))
+        mockMvc.perform(get("/v1/parents").param("size", "0"))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(parentService);
@@ -82,7 +107,7 @@ class ParentControllerTest {
     @Test
     @DisplayName("returns 400 for invalid sort field")
     void invalidSortBy() throws Exception {
-        mockMvc.perform(get("/v1/parents/active").param("sortBy", "email"))
+        mockMvc.perform(get("/v1/parents").param("sortBy", "email"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("REQUEST_ERROR"));
 

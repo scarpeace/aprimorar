@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface ParentRepository extends JpaRepository<Parent, UUID> {
 
-    Page<Parent> findAllByActiveTrue(Pageable pageable);
+    Page<Parent> findAllByArchivedAtIsNull(Pageable pageable);
 
-    Optional<Parent> findByIdAndActiveTrue(UUID id);
+    Optional<Parent> findByIdAndArchivedAtIsNull(UUID id);
 }

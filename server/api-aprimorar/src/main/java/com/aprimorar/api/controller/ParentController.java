@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
@@ -30,7 +31,19 @@ public class ParentController {
         this.parentService = parentService;
     }
 
-    @Operation(summary = "List all active parents", description = "Retrieves all ACTIVE parents from database with pagination (id + name only)")
+    @Operation(summary = "List all parents", description = "Retrieves parents from database with pagination and optional archived records")
+    @GetMapping
+    public ResponseEntity<Page<ParentSummaryDTO>> listParents(
+            @Valid @ModelAttribute PageQuery pageQuery,
+            @RequestParam(defaultValue = "false") boolean includeArchived
+    )
+    {
+        Pageable pageable = PageableUtils.buildPageable(pageQuery, "name", ALLOWED_SORT_FIELDS);
+        Page<ParentSummaryDTO> parents = parentService.listParents(pageable, includeArchived);
+        return ResponseEntity.ok(parents);
+    }
+
+    @Operation(summary = "List all active parents", description = "Temporary alias that retrieves only active parents")
     @GetMapping("/active")
     public ResponseEntity<Page<ParentSummaryDTO>> listActiveParents(
             @Valid @ModelAttribute PageQuery pageQuery

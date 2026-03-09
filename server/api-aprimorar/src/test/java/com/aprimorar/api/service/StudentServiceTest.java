@@ -274,7 +274,7 @@ class StudentServiceTest {
         @DisplayName("creates student with existing parent by id")
         void createWithParentId() {
             when(studentMapper.toEntity(createStudentDtoWithParentId)).thenReturn(student);
-            when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
+            when(parentRepo.findByIdAndArchivedAtIsNull(parent.getId())).thenReturn(Optional.of(parent));
             when(studentRepo.save(student)).thenReturn(student);
             when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
@@ -283,7 +283,7 @@ class StudentServiceTest {
             assertSame(studentResponseDto, result);
             assertNotNull(student.getParent());
             verify(studentMapper).toEntity(createStudentDtoWithParentId);
-            verify(parentRepo).findByIdAndActiveTrue(parent.getId());
+            verify(parentRepo).findByIdAndArchivedAtIsNull(parent.getId());
             verify(studentRepo).save(student);
             verify(studentMapper).toDto(student);
             verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
@@ -312,13 +312,13 @@ class StudentServiceTest {
             CreateStudentDTO dtoWithNonExistentParent = studentDtoWithParentId(nonExistentParentId);
 
             when(studentMapper.toEntity(dtoWithNonExistentParent)).thenReturn(student);
-            when(parentRepo.findByIdAndActiveTrue(nonExistentParentId)).thenReturn(Optional.empty());
+            when(parentRepo.findByIdAndArchivedAtIsNull(nonExistentParentId)).thenReturn(Optional.empty());
 
             assertThrows(ParentNotFoundException.class,
                     () -> studentService.createStudent(dtoWithNonExistentParent));
 
             verify(studentMapper).toEntity(dtoWithNonExistentParent);
-            verify(parentRepo).findByIdAndActiveTrue(nonExistentParentId);
+            verify(parentRepo).findByIdAndArchivedAtIsNull(nonExistentParentId);
             verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
         }
     }
@@ -451,7 +451,7 @@ class StudentServiceTest {
             Instant before = student.getUpdatedAt();
 
             when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-            when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
+            when(parentRepo.findByIdAndArchivedAtIsNull(parent.getId())).thenReturn(Optional.of(parent));
             when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
             StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithParentId);
@@ -462,7 +462,7 @@ class StudentServiceTest {
 
             verify(studentRepo).findById(student.getId());
             verify(studentMapper).updateFromDto(updateStudentDtoWithParentId, student);
-            verify(parentRepo).findByIdAndActiveTrue(parent.getId());
+            verify(parentRepo).findByIdAndArchivedAtIsNull(parent.getId());
             verify(studentMapper).toDto(student);
             verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
         }
@@ -525,7 +525,7 @@ class StudentServiceTest {
         value.setEmail(PARENT_EMAIL);
         value.setContact(PARENT_CONTACT);
         value.setCpf(PARENT_CPF);
-        value.setActive(true);
+        value.setArchivedAt(null);
         return value;
     }
 

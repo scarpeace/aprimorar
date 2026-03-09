@@ -37,7 +37,9 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Boolean active = true;
+    private Instant archivedAt;
+
+    private Instant lastReactivatedAt;
 
     @CreationTimestamp
     private Instant createdAt;
@@ -49,7 +51,7 @@ public class Employee {
     }
 
     public Employee(UUID id, String name, LocalDate birthdate, String pix, String contact, String cpf, String email, Role role,
-                    Boolean active, Instant createdAt, Instant updatedAt) {
+                     Instant archivedAt, Instant lastReactivatedAt, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.birthdate = birthdate;
@@ -58,7 +60,8 @@ public class Employee {
         this.cpf = cpf;
         this.email = email;
         this.role = role;
-        this.active = active;
+        this.archivedAt = archivedAt;
+        this.lastReactivatedAt = lastReactivatedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -127,12 +130,20 @@ public class Employee {
         this.role = role;
     }
 
-    public Boolean getActive() {
-        return active;
+    public Instant getArchivedAt() {
+        return archivedAt;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setArchivedAt(Instant archivedAt) {
+        this.archivedAt = archivedAt;
+    }
+
+    public Instant getLastReactivatedAt() {
+        return lastReactivatedAt;
+    }
+
+    public void setLastReactivatedAt(Instant lastReactivatedAt) {
+        this.lastReactivatedAt = lastReactivatedAt;
     }
 
     public Instant getCreatedAt() {

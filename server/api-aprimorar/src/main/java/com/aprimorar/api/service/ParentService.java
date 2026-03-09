@@ -21,8 +21,15 @@ public class ParentService {
     }
 
     @Transactional(readOnly = true)
+    public Page<ParentSummaryDTO> listParents(Pageable pageable, boolean includeArchived) {
+        Page<Parent> parentPage = includeArchived
+                ? parentRepo.findAll(pageable)
+                : parentRepo.findAllByArchivedAtIsNull(pageable);
+        return parentPage.map(parentMapper::toSummaryDto);
+    }
+
+    @Transactional(readOnly = true)
     public Page<ParentSummaryDTO> listActiveParents(Pageable pageable) {
-        Page<Parent> activeParentsPage = parentRepo.findAllByActiveTrue(pageable);
-        return activeParentsPage.map(parentMapper::toSummaryDto);
+        return listParents(pageable, false);
     }
 }

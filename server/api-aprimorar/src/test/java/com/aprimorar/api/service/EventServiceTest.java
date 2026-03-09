@@ -213,7 +213,7 @@ class EventServiceTest {
             EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
             when(studentRepo.findByIdAndArchivedAtIsNull(studentId)).thenReturn(Optional.of(student));
-            when(employeeRepo.findByIdAndActiveTrue(employeeId)).thenReturn(Optional.of(employee));
+            when(employeeRepo.findByIdAndArchivedAtIsNull(employeeId)).thenReturn(Optional.of(employee));
             when(eventMapper.toEntity(dto)).thenReturn(newEvent);
             when(eventRepo.save(newEvent)).thenReturn(savedEvent);
             when(eventMapper.toDto(savedEvent)).thenReturn(responseDto);
@@ -224,7 +224,7 @@ class EventServiceTest {
             assertSame(student, newEvent.getStudent());
             assertSame(employee, newEvent.getEmployee());
             verify(studentRepo).findByIdAndArchivedAtIsNull(studentId);
-            verify(employeeRepo).findByIdAndActiveTrue(employeeId);
+            verify(employeeRepo).findByIdAndArchivedAtIsNull(employeeId);
             verify(eventMapper).toEntity(dto);
             verify(eventRepo).save(newEvent);
             verify(eventMapper).toDto(savedEvent);
@@ -255,12 +255,12 @@ class EventServiceTest {
             Student student = new Student();
 
             when(studentRepo.findByIdAndArchivedAtIsNull(studentId)).thenReturn(Optional.of(student));
-            when(employeeRepo.findByIdAndActiveTrue(employeeId)).thenReturn(Optional.empty());
+            when(employeeRepo.findByIdAndArchivedAtIsNull(employeeId)).thenReturn(Optional.empty());
 
             assertThrows(EmployeeNotFoundException.class, () -> eventService.createEvent(dto));
 
             verify(studentRepo).findByIdAndArchivedAtIsNull(studentId);
-            verify(employeeRepo).findByIdAndActiveTrue(employeeId);
+            verify(employeeRepo).findByIdAndArchivedAtIsNull(employeeId);
             verifyNoMoreInteractions(studentRepo, employeeRepo);
             verifyNoInteractions(eventMapper, eventRepo);
         }
@@ -338,7 +338,7 @@ class EventServiceTest {
             EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
             when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
-            when(employeeRepo.findByIdAndActiveTrue(newEmployeeId)).thenReturn(Optional.of(newEmployee));
+            when(employeeRepo.findByIdAndArchivedAtIsNull(newEmployeeId)).thenReturn(Optional.of(newEmployee));
             when(eventMapper.toDto(foundEvent)).thenReturn(responseDto);
 
             EventResponseDTO result = eventService.updateEvent(eventId, dto);
@@ -347,7 +347,7 @@ class EventServiceTest {
             assertSame(newEmployee, foundEvent.getEmployee());
             verify(eventRepo).findById(eventId);
             verify(eventMapper).updateFromDto(dto, foundEvent);
-            verify(employeeRepo).findByIdAndActiveTrue(newEmployeeId);
+            verify(employeeRepo).findByIdAndArchivedAtIsNull(newEmployeeId);
             verify(eventMapper).toDto(foundEvent);
             verifyNoMoreInteractions(eventRepo, eventMapper, employeeRepo);
             verifyNoInteractions(studentRepo);
@@ -403,13 +403,13 @@ class EventServiceTest {
             Event foundEvent = eventWithParticipants(student, oldEmployee);
 
             when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
-            when(employeeRepo.findByIdAndActiveTrue(newEmployeeId)).thenReturn(Optional.empty());
+            when(employeeRepo.findByIdAndArchivedAtIsNull(newEmployeeId)).thenReturn(Optional.empty());
 
             assertThrows(EmployeeNotFoundException.class, () -> eventService.updateEvent(eventId, dto));
 
             verify(eventRepo).findById(eventId);
             verify(eventMapper).updateFromDto(dto, foundEvent);
-            verify(employeeRepo).findByIdAndActiveTrue(newEmployeeId);
+            verify(employeeRepo).findByIdAndArchivedAtIsNull(newEmployeeId);
             verifyNoMoreInteractions(eventRepo, eventMapper, employeeRepo);
             verifyNoInteractions(studentRepo);
         }

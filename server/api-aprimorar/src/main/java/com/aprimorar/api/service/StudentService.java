@@ -119,7 +119,7 @@ public class StudentService {
     }
 
     private Parent findActiveParentOrThrow(UUID parentId) {
-        return parentRepo.findByIdAndActiveTrue(parentId)
+        return parentRepo.findByIdAndArchivedAtIsNull(parentId)
                 .orElseThrow(() -> new ParentNotFoundException(parentId));
     }
 

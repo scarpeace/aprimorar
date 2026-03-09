@@ -122,7 +122,7 @@ public class EventService {
     }
 
     private Employee findSchedulableEmployeeOrThrow(UUID employeeId) {
-        return employeeRepo.findByIdAndActiveTrue(employeeId)
+        return employeeRepo.findByIdAndArchivedAtIsNull(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
     }
 }

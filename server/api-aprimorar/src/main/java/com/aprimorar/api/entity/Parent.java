@@ -27,7 +27,9 @@ public class Parent {
 
     private String cpf;
 
-    private Boolean active = true;
+    private Instant archivedAt;
+
+    private Instant lastReactivatedAt;
 
     @CreationTimestamp
     private Instant createdAt;
@@ -38,13 +40,14 @@ public class Parent {
     public Parent() {
     }
 
-    public Parent(UUID id, String name, String email, String contact, String cpf, Boolean active, Instant createdAt, Instant updatedAt) {
+    public Parent(UUID id, String name, String email, String contact, String cpf, Instant archivedAt, Instant lastReactivatedAt, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.contact = contact;
         this.cpf = cpf;
-        this.active = active;
+        this.archivedAt = archivedAt;
+        this.lastReactivatedAt = lastReactivatedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -89,12 +92,20 @@ public class Parent {
         this.cpf = cpf;
     }
 
-    public Boolean getActive() {
-        return active;
+    public Instant getArchivedAt() {
+        return archivedAt;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setArchivedAt(Instant archivedAt) {
+        this.archivedAt = archivedAt;
+    }
+
+    public Instant getLastReactivatedAt() {
+        return lastReactivatedAt;
+    }
+
+    public void setLastReactivatedAt(Instant lastReactivatedAt) {
+        this.lastReactivatedAt = lastReactivatedAt;
     }
 
     public Instant getCreatedAt() {

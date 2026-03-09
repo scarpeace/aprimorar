@@ -46,7 +46,7 @@ public class EmployeeMapper {
                 mapperUtils.formatCpf(entity.getCpf()),
                 entity.getEmail(),
                 entity.getRole(),
-                entity.getActive(),
+                entity.getArchivedAt() == null,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

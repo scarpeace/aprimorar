@@ -43,11 +43,12 @@ public class EmployeeController {
     @Operation(summary = "List all employees", description = "Retrieves all employees from database with pagination")
     @GetMapping
     public ResponseEntity<Page<EmployeeResponseDTO>> listEmployees(
-            @Valid @ModelAttribute PageQuery pageQuery
+            @Valid @ModelAttribute PageQuery pageQuery,
+            @RequestParam(defaultValue = "false") boolean includeArchived
     )
     {
         Pageable pageable = PageableUtils.buildPageable(pageQuery, "name", ALLOWED_SORT_FIELDS);
-        Page<EmployeeResponseDTO> allEmployees = employeeService.listEmployees(pageable);
+        Page<EmployeeResponseDTO> allEmployees = employeeService.listEmployees(pageable, includeArchived);
         return ResponseEntity.ok(allEmployees);
     }
 

@@ -34,15 +34,16 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public Page<EmployeeResponseDTO> listEmployees(Pageable pageable) {
-        Page<Employee> employeePage =  employeeRepo.findAll(pageable);
+    public Page<EmployeeResponseDTO> listEmployees(Pageable pageable, boolean includeArchived) {
+        Page<Employee> employeePage = includeArchived
+                ? employeeRepo.findAll(pageable)
+                : employeeRepo.findAllByArchivedAtIsNull(pageable);
         return employeePage.map(employeeMapper::toDto);
     }
 
     @Transactional(readOnly = true)
     public Page<EmployeeResponseDTO> listActiveEmployees(Pageable pageable) {
-        Page<Employee> activeEmployeesPage = employeeRepo.findAllByActiveTrue(pageable);
-        return activeEmployeesPage.map(employeeMapper::toDto);
+        return listEmployees(pageable, false);
     }
 
     @Transactional(readOnly = true)
@@ -83,9 +84,10 @@ public class EmployeeService {
     }
 
     private void deactivateIfActive(Employee foundEmployee) {
-        if (Boolean.TRUE.equals(foundEmployee.getActive())) {
-            foundEmployee.setActive(false);
-            foundEmployee.setUpdatedAt(Instant.now(applicationClock));
+        if (foundEmployee.getArchivedAt() == null) {
+            Instant now = Instant.now(applicationClock);
+            foundEmployee.setArchivedAt(now);
+            foundEmployee.setUpdatedAt(now);
         }
     }
 }
