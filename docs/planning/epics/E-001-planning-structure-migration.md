@@ -1,77 +1,69 @@
 # Epic: E-001 — Planning Structure Migration
-**Goal:** Migrate legacy project/planning docs into the `docs/` planning structure with stable IDs.
+**Goal:** Consolidate project, planning, and agent guidance into a stable docs structure.
 **Status:** DONE
 **Owner:** Gu
 **Related milestone/phase:** Phase 0
 
 ## Scope
 - In scope:
-  - Migrate legacy docs into canonical files under `docs/`
-  - Create roadmap and epic index
-  - Standardize planning template usage
+  - Establish canonical planning files under `docs/planning/`
+  - Consolidate repo guidance into `AGENTS.md`
+  - Normalize epic/task IDs and templates
 - Out of scope:
-  - Product requirement changes
-  - Deleting legacy files in `docs/archive/`
+  - Product feature changes
 
 ## Workboard
-- Current focus: None (epic complete)
+- Current focus: None
 - Blocked: None
-- Next up: Maintain template consistency in future epic updates
+- Next up: Keep future epic updates aligned with the concise template
 
 ## Stories
-### Story: S-001 — Migrate project documentation
+### Story: S-001 — Canonical project guidance
 **Status:** DONE
 **Links:** T-001 (DONE)
-**Intent:** Keep `docs/project.md` as the canonical product/tech reference.
+**Intent:** Keep one canonical repository guide for agents and project context.
 
-### Story: S-002 — Extract epics into the planning index
+### Story: S-002 — Stable planning structure
 **Status:** DONE
 **Links:** T-002 (DONE), T-003 (DONE)
-**Intent:** Move planning from legacy monolith into stable epic files.
+**Intent:** Keep roadmap and epic planning in dedicated files with stable IDs.
 
-### Story: S-003 — Roadmap file is canonical
-**Status:** DONE
-**Links:** T-002 (DONE)
-**Intent:** Keep one roadmap with phases and epic index.
-
-### Story: S-004 — Planning docs consistency pass
+### Story: S-003 — Planning consistency pass
 **Status:** DONE
 **Links:** T-004 (DONE), T-005 (DONE)
-**Intent:** Keep stories/tasks in a consistent, executable format.
+**Intent:** Keep planning docs short, consistent, and executable.
 
 ## Tasks
-- No active tasks in this epic.
+- No active tasks.
 
 ## Archive (DONE)
-### Task: T-001 — Migrate `PROJECT.md` to `docs/project.md`
+### Task: T-001 — Consolidate project docs
 - Status: DONE
-- Scope: Migrated and normalized canonical project documentation structure.
-- Verification: Manual markdown rendering and legacy spot-checks completed.
-- Commit: not recorded in this epic history.
+- Scope: Moved product and agent guidance into canonical repository docs, later finalized in `AGENTS.md`.
+- Verification: Manual markdown review and legacy spot checks.
 
-### Task: T-002 — Generate canonical roadmap and epic index
+### Task: T-002 — Create roadmap and epic index
 - Status: DONE
-- Scope: Created `docs/planning/roadmap.md` with phases and epic index.
-- Verification: Links and phase mapping validated manually.
-- Commit: not recorded in this epic history.
+- Scope: Created `docs/planning/roadmap.md` and phase/epic indexing.
+- Verification: Manual link and phase validation.
 
-### Task: T-003 — Migrate legacy planning epics into individual files
+### Task: T-003 — Split legacy planning into epic files
 - Status: DONE
-- Scope: Created E-002..E-006 with stable IDs.
-- Verification: Epic files spot-checked against legacy plan.
-- Commit: not recorded in this epic history.
+- Scope: Created `E-002` through `E-006` with stable IDs.
+- Verification: Manual spot checks against migrated planning notes.
 
-### Task: T-004 — Refine planning docs for template compliance
+### Task: T-004 — Normalize planning template usage
 - Status: DONE
-- Scope: Standardized planning structure and status consistency.
-- Verification: Manual template compliance review completed.
-- Commit: not recorded in this epic history.
+- Scope: Standardized epic structure and concise planning fields.
+- Verification: Manual template compliance review.
 
-### Task: T-005 — Normalize duplicate task IDs across epics
+### Task: T-005 — Normalize duplicate task IDs
 - Status: DONE
-- Scope: Renumbered duplicated `T-020..T-023` in E-003 to unique IDs and updated story/task links.
-- Verification: manual grep check confirms unique task IDs across epic files.
-- Commit: not recorded in this epic history.
+- Scope: Removed duplicated IDs across epic files.
+- Verification: Manual grep-based uniqueness check.
 
 ## Review Notes (append-only)
-- Reviewer notes:
+- 2026-03-08:
+  - Quality: Canonical guidance now lives in `AGENTS.md`; legacy archive and project hubs were removed.
+  - Security: No runtime impact.
+  - Performance: No runtime impact.

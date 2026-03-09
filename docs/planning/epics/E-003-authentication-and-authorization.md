@@ -6,39 +6,39 @@
 
 ## Scope
 - In scope:
-  - JWT authentication (login, token issuance, refresh, logout)
-  - Password hashing (BCrypt)
+  - JWT authentication, login, refresh, and logout
+  - Password hashing
   - RBAC enforcement
-  - Security hardening baseline (rate limiting, headers, audit)
-  - Privacy hardening for sensitive event content
+  - Baseline hardening: headers, rate limiting, CSRF decisions, audit logging
+  - Privacy controls for sensitive event content
 - Out of scope:
   - Full parent portal product scope
 
 ## Workboard
-- Current focus: None started
+- Current focus: None
 - Blocked: None
-- Next up: T-020 (JWT authentication baseline)
+- Next up: T-033 JWT authentication baseline
 
 ## Stories
-### Story: S-020 — User Authentication
+### Story: S-020 — User authentication
 **Status:** TODO
 **Links:** T-033 (TODO)
 **Intent:** Enable secure login and token-based access.
 
-### Story: S-021 — Role-Based Access Control
+### Story: S-021 — Role-based access control
 **Status:** TODO
 **Links:** T-034 (TODO)
-**Intent:** Ensure users can only perform authorized actions.
+**Intent:** Restrict operations by role and ownership.
 
-### Story: S-022 — Security Hardening
+### Story: S-022 — Security hardening
 **Status:** TODO
 **Links:** T-035 (TODO)
 **Intent:** Reduce common attack surfaces with baseline controls.
 
-### Story: S-023 — Privacy Hardening for Sensitive Content
+### Story: S-023 — Privacy hardening for sensitive content
 **Status:** TODO
 **Links:** T-036 (TODO)
-**Intent:** Restrict/audit access to sensitive event categories.
+**Intent:** Restrict and audit access to sensitive event categories.
 
 ## Tasks
 ### Task: T-033 — Implement JWT authentication
@@ -47,29 +47,20 @@
 **Depends on:** None
 
 **Description**
-- Implement login, JWT issuance, refresh, logout, and base security config.
+- Implement login, token issuance, refresh, logout, and base security config.
 
-**Subtasks**
-- [ ] ST-050 — Implement JWT token generation
-- [ ] ST-051 — Implement login endpoint
-- [ ] ST-052 — Implement password hashing (BCrypt)
-- [ ] ST-053 — Configure HTTPS/TLS
-- [ ] ST-054 — Configure CORS policy
-- [ ] ST-055 — Implement refresh token mechanism
-- [ ] ST-056 — Implement logout functionality
-
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
+**DoD**
+- [ ] Auth flow works for protected endpoints
+- [ ] Tests or verification updated
 - [ ] Local verification done
 
 **Verification**
-- Backend: integration tests for login + protected endpoint
-- Frontend: token usage smoke test
+- Backend: add integration tests for login and one protected endpoint
+- Frontend: smoke test token usage
 - Manual: log in via UI and verify authenticated requests
 
 **Notes**
-- Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.1
+- Risks: token lifecycle and secret management decisions can create contract churn.
 
 ### Task: T-034 — Implement RBAC
 **Type:** backend
@@ -77,18 +68,11 @@
 **Depends on:** T-033
 
 **Description**
-- Define and enforce role permissions across endpoints.
+- Define permission matrix and enforce it across endpoints.
 
-**Subtasks**
-- [ ] ST-057 — Define permission matrix
-- [ ] ST-058 — Implement `@PreAuthorize` rules
-- [ ] ST-059 — Create admin-only endpoints
-- [ ] ST-060 — Implement employee self-service
-- [ ] ST-061 — Implement parent read-only portal
-
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
+**DoD**
+- [ ] Permission matrix defined
+- [ ] Authorization enforced on key endpoints
 - [ ] Local verification done
 
 **Verification**
@@ -96,35 +80,23 @@
 - Frontend: N/A
 - Manual: attempt forbidden actions and confirm 403
 
-**Notes**
-- Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.2
-
 ### Task: T-035 — Security hardening baseline
 **Type:** backend
 **Status:** TODO
 **Depends on:** T-033
 
 **Description**
-- Add hardening controls (rate limiting, headers, CSRF decisions, audit logging).
+- Add headers, rate limiting, audit logging, and CSRF/TLS decisions.
 
-**Subtasks**
-- [ ] ST-062 — Implement rate limiting
-- [ ] ST-063 — Add CSRF protection
-- [ ] ST-064 — Implement audit logging
-- [ ] ST-065 — Add security headers
-
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
+**DoD**
+- [ ] Baseline controls implemented
+- [ ] Verification updated
 - [ ] Local verification done
 
 **Verification**
-- Backend: verify headers/rate limiting behavior
+- Backend: verify headers and rate-limiting behavior
 - Frontend: N/A
 - Manual: confirm controls in dev deployment
-
-**Notes**
-- Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.3
 
 ### Task: T-036 — Privacy hardening for sensitive content
 **Type:** backend
@@ -132,29 +104,23 @@
 **Depends on:** T-034
 
 **Description**
-- Restrict and audit access to sensitive event content.
+- Restrict and audit sensitive event content access.
 
-**Subtasks**
-- [ ] ST-066 — Define sensitive-content permission matrix
-- [ ] ST-067 — Restrict list/detail access to ADMIN and assigned employee
-- [ ] ST-068 — Add audit logs for sensitive reads
-- [ ] ST-069 — Evaluate redaction in list views for non-privileged roles
-
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
+**DoD**
+- [ ] Sensitive access rules implemented
+- [ ] Authorization/audit verification updated
 - [ ] Local verification done
 
 **Verification**
-- Backend: authorization tests for sensitive list/detail
-- Frontend: verify redaction behavior (if applied)
+- Backend: authorization tests for sensitive list/detail access
+- Frontend: verify redaction behavior if applied
 - Manual: confirm audit logging for sensitive reads
 
-**Notes**
-- Source: `docs/archive/PLANNING.md` Epic 2 / User Story 2.4
-
 ## Archive (DONE)
-- No DONE tasks archived yet.
+- None.
 
 ## Review Notes (append-only)
-- Reviewer notes:
+- 2026-03-08:
+  - Quality: Kept epic intentionally concise; details should be added only when implementation decisions are approved.
+  - Security: This epic gates meaningful auth-aware hardening elsewhere.
+  - Performance: Keep security middleware lightweight on hot paths.

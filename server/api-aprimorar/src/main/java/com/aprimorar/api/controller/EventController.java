@@ -2,15 +2,14 @@ package com.aprimorar.api.controller;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,15 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.dto.common.PageQuery;
 import com.aprimorar.api.dto.event.CreateEventDTO;
+import com.aprimorar.api.dto.event.EventFilter;
 import com.aprimorar.api.dto.event.EventResponseDTO;
+import com.aprimorar.api.dto.event.UpdateEventDTO;
 import com.aprimorar.api.service.EventService;
 import com.aprimorar.api.util.PageableUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 
 @RestController
 @RequestMapping("/v1/events")
@@ -45,16 +46,11 @@ public class EventController {
     @Operation(summary = "List all EVENTS and/or Filtered", description = "Retrieves all events from database with pagination and filters if needed")
     @GetMapping
     public ResponseEntity<Page<EventResponseDTO>> listEvents(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") @Max(100) int size,
-            @RequestParam(defaultValue = "startDateTime") String sortBy,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-            @RequestParam(required = false) UUID studentId,
-            @RequestParam(required = false) UUID employeeId
+            @Valid @ModelAttribute PageQuery pageQuery,
+            @ModelAttribute EventFilter eventFilter
     ) {
-        Pageable pageable = PageableUtils.buildPageable(page, size, sortBy, "startDateTime", ALLOWED_SORT_FIELDS);
-        Page<EventResponseDTO> allEvents = eventService.listEvents(pageable, start, end, studentId, employeeId);
+        Pageable pageable = PageableUtils.buildPageable(pageQuery, "startDateTime", ALLOWED_SORT_FIELDS);
+        Page<EventResponseDTO> allEvents = eventService.listEvents(pageable, eventFilter);
         return ResponseEntity.ok(allEvents);
     }
 
@@ -72,12 +68,12 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "Update EVENT", description = "Updates event with event data")
+    @Operation(summary = "Update EVENT", description = "Partially updates event data")
     @PatchMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> updateEvent(
             @PathVariable Long eventId,
-            @RequestBody @Valid CreateEventDTO createEventDto) {
-        EventResponseDTO updatedEvent = eventService.updateEvent(eventId, createEventDto);
+            @RequestBody @Valid UpdateEventDTO updateEventDto) {
+        EventResponseDTO updatedEvent = eventService.updateEvent(eventId, updateEventDto);
         return ResponseEntity.ok(updatedEvent);
     }
 

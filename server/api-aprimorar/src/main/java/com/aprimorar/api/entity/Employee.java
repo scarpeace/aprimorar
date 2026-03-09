@@ -12,8 +12,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_employee", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_employee_name", columnNames = {"name"}),
-        @UniqueConstraint(name = "uk_employee_contact", columnNames = {"contact"}),
         @UniqueConstraint(name = "uk_employee_email", columnNames = {"email"}),
         @UniqueConstraint(name = "uk_employee_cpf", columnNames = {"cpf"})
 })
@@ -24,6 +22,7 @@ public class Employee {
     @Column(name = "employee_id")
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
     private LocalDate birthdate;
@@ -39,11 +38,17 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Boolean active = true;
+    @Column(name = "archived_at")
+    private Instant archivedAt;
 
+    @Column(name = "last_reactivated_at")
+    private Instant lastReactivatedAt;
+
+    @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
 
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
 
@@ -51,7 +56,7 @@ public class Employee {
     }
 
     public Employee(UUID id, String name, LocalDate birthdate, String pix, String contact, String cpf, String email, Role role,
-                    Boolean active, Instant createdAt, Instant updatedAt) {
+                     Instant archivedAt, Instant lastReactivatedAt, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.birthdate = birthdate;
@@ -60,7 +65,8 @@ public class Employee {
         this.cpf = cpf;
         this.email = email;
         this.role = role;
-        this.active = active;
+        this.archivedAt = archivedAt;
+        this.lastReactivatedAt = lastReactivatedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -129,12 +135,20 @@ public class Employee {
         this.role = role;
     }
 
-    public Boolean getActive() {
-        return active;
+    public Instant getArchivedAt() {
+        return archivedAt;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setArchivedAt(Instant archivedAt) {
+        this.archivedAt = archivedAt;
+    }
+
+    public Instant getLastReactivatedAt() {
+        return lastReactivatedAt;
+    }
+
+    public void setLastReactivatedAt(Instant lastReactivatedAt) {
+        this.lastReactivatedAt = lastReactivatedAt;
     }
 
     public Instant getCreatedAt() {

@@ -18,6 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,8 +47,9 @@ class StudentControllerTest {
     @BeforeEach
     void setup() {
         StudentController controller = new StudentController(studentService);
+        Clock fixedClock = Clock.fixed(Instant.parse("2026-03-08T12:00:00Z"), ZoneOffset.UTC);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(fixedClock))
                 .build();
     }
 
@@ -108,6 +112,15 @@ class StudentControllerTest {
         @DisplayName("returns 400 for size less than 1")
         void invalidSize() throws Exception {
             mockMvc.perform(get("/v1/students").param("size", "0"))
+                    .andExpect(status().isBadRequest());
+
+            verifyNoInteractions(studentService);
+        }
+
+        @Test
+        @DisplayName("returns 400 for size greater than 100")
+        void sizeAboveLimit() throws Exception {
+            mockMvc.perform(get("/v1/students").param("size", "101"))
                     .andExpect(status().isBadRequest());
 
             verifyNoInteractions(studentService);

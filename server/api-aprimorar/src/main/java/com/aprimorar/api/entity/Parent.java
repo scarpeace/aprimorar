@@ -9,8 +9,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_parent", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_parent_name", columnNames = {"name"}),
-        @UniqueConstraint(name = "uk_parent_contact", columnNames = {"contact"}),
         @UniqueConstraint(name = "uk_parent_email", columnNames = {"email"}),
         @UniqueConstraint(name = "uk_parent_cpf", columnNames = {"cpf"})
 })
@@ -21,32 +19,43 @@ public class Parent {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String contact;
 
+    @Column(nullable = false)
     private String cpf;
 
-    private Boolean active = true;
+    @Column(name = "archived_at")
+    private Instant archivedAt;
 
+    @Column(name = "last_reactivated_at")
+    private Instant lastReactivatedAt;
+
+    @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
 
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
 
     public Parent() {
     }
 
-    public Parent(UUID id, String name, String email, String contact, String cpf, Boolean active, Instant createdAt, Instant updatedAt) {
+    public Parent(UUID id, String name, String email, String contact, String cpf, Instant archivedAt, Instant lastReactivatedAt, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.contact = contact;
         this.cpf = cpf;
-        this.active = active;
+        this.archivedAt = archivedAt;
+        this.lastReactivatedAt = lastReactivatedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -91,12 +100,20 @@ public class Parent {
         this.cpf = cpf;
     }
 
-    public Boolean getActive() {
-        return active;
+    public Instant getArchivedAt() {
+        return archivedAt;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setArchivedAt(Instant archivedAt) {
+        this.archivedAt = archivedAt;
+    }
+
+    public Instant getLastReactivatedAt() {
+        return lastReactivatedAt;
+    }
+
+    public void setLastReactivatedAt(Instant lastReactivatedAt) {
+        this.lastReactivatedAt = lastReactivatedAt;
     }
 
     public Instant getCreatedAt() {

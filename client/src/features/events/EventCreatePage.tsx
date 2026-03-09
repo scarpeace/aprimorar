@@ -53,7 +53,7 @@ export function EventCreatePage() {
       setLoadingOptions(true)
       const [studentsRes, employeesRes] = await Promise.all([
         studentsApi.list(0, 100, "name"),
-        employeesApi.listActive(0, 100, "name"),
+        employeesApi.list(0, 100, "name"),
       ])
 
       const studentsPage: PageResponse<StudentResponse> = studentsRes.data

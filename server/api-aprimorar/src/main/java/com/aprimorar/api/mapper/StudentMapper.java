@@ -94,11 +94,29 @@ public class StudentMapper {
             entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
         }
         if (dto.address() != null) {
-            entity.setAddress(addressMapper.toEntity(dto.address()));
+            updateAddress(dto, entity);
         }
         if (dto.parent() != null) {
-            entity.setParent(parentMapper.toEntity(dto.parent()));
+            updateParent(dto, entity);
         }
+    }
+
+    private void updateAddress(UpdateStudentDTO dto, Student entity) {
+        if (entity.getAddress() == null) {
+            entity.setAddress(addressMapper.toEntity(dto.address()));
+            return;
+        }
+
+        addressMapper.updateFromDto(dto.address(), entity.getAddress());
+    }
+
+    private void updateParent(UpdateStudentDTO dto, Student entity) {
+        if (entity.getParent() == null) {
+            entity.setParent(parentMapper.toEntity(dto.parent()));
+            return;
+        }
+
+        parentMapper.updateFromDto(dto.parent(), entity.getParent());
     }
 
     private Integer calculateAge(LocalDate birthdate) {

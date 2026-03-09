@@ -2,6 +2,7 @@ package com.aprimorar.api.mapper;
 
 import com.aprimorar.api.dto.event.CreateEventDTO;
 import com.aprimorar.api.dto.event.EventResponseDTO;
+import com.aprimorar.api.dto.event.UpdateEventDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.entity.Event;
 import com.aprimorar.api.entity.Student;
@@ -72,6 +73,30 @@ class EventMapperTest {
         void returnsNullWhenInputNull() {
             assertNull(mapper.toEntity(null));
         }
+    }
+
+    @Test
+    @DisplayName("updateFromDto updates only provided scalar fields")
+    void updateFromDtoUpdatesOnlyProvidedFields() {
+        Event entity = validEventEntity();
+        UpdateEventDTO dto = new UpdateEventDTO(
+                null,
+                "Updated description",
+                null,
+                null,
+                null,
+                new BigDecimal("80.00"),
+                null,
+                null,
+                null
+        );
+
+        mapper.updateFromDto(dto, entity);
+
+        assertEquals("Physics class", entity.getTitle());
+        assertEquals("Updated description", entity.getDescription());
+        assertEquals(new BigDecimal("80.00"), entity.getPayment());
+        assertEquals(new BigDecimal("100.00"), entity.getPrice());
     }
 
     private Event validEventEntity() {

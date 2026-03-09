@@ -1,6 +1,7 @@
 package com.aprimorar.api.service;
 
 import java.time.Instant;
+import java.time.Clock;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -34,12 +35,14 @@ public class StudentService {
     private final ParentRepository parentRepo;
     private final StudentMapper studentMapper;
     private final ParentMapper parentMapper;
+    private final Clock applicationClock;
 
-    public StudentService(StudentRepository studentRepo, ParentRepository parentRepo, StudentMapper studentMapper, ParentMapper parentMapper) {
+    public StudentService(StudentRepository studentRepo, ParentRepository parentRepo, StudentMapper studentMapper, ParentMapper parentMapper, Clock applicationClock) {
         this.studentRepo = studentRepo;
         this.parentRepo = parentRepo;
         this.studentMapper = studentMapper;
         this.parentMapper = parentMapper;
+        this.applicationClock = applicationClock;
     }
 
     @Transactional(readOnly = true)
@@ -61,13 +64,13 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public StudentResponseDTO findById(UUID studentId) {
-         Student foundStudent = findStudentOrThrow(studentId);
+         Student foundStudent = findAnyStudentOrThrow(studentId);
          return studentMapper.toDto(foundStudent);
-    }
+     }
 
     @Transactional
     public StudentResponseDTO createStudent(CreateStudentDTO createStudentDto) {
-        log.debug("Creating student");
+        log.info("Creating student");
 
         Student newStudent = studentMapper.toEntity(createStudentDto);
 
@@ -79,15 +82,17 @@ public class StudentService {
 
     @Transactional
     public void archiveStudent(UUID studentId) {
-        Student foundStudent = findStudentOrThrow(studentId);
+        Student foundStudent = findAnyStudentOrThrow(studentId);
+        log.info("Archiving studentId={}", studentId);
         archiveIfNotArchived(foundStudent);
     }
 
     @Transactional
     public void unarchiveStudent(UUID studentId) {
-        Student foundStudent = findStudentOrThrow(studentId);
+        Student foundStudent = findAnyStudentOrThrow(studentId);
+        log.info("Unarchiving studentId={}", studentId);
         if (foundStudent.getArchivedAt() != null) {
-            Instant now = Instant.now();
+            Instant now = Instant.now(applicationClock);
             foundStudent.setArchivedAt(null);
             foundStudent.setLastReactivatedAt(now);
             foundStudent.setUpdatedAt(now);
@@ -96,24 +101,25 @@ public class StudentService {
 
     @Transactional
     public StudentResponseDTO updateStudent(UUID studentId, UpdateStudentDTO updateStudentDto) {
-        Student foundStudent = findStudentOrThrow(studentId);
+        Student foundStudent = findAnyStudentOrThrow(studentId);
+        log.info("Updating studentId={}", studentId);
 
         studentMapper.updateFromDto(updateStudentDto, foundStudent);
 
-        assignParentReference(foundStudent, updateStudentDto.parentId(), updateStudentDto.parent());
+        resolveParentReferenceForUpdate(foundStudent, updateStudentDto.parentId(), updateStudentDto.parent());
 
-        foundStudent.setUpdatedAt(Instant.now());
+        foundStudent.setUpdatedAt(Instant.now(applicationClock));
 
         return studentMapper.toDto(foundStudent);
     }
 
-    private Student findStudentOrThrow(UUID studentId) {
+    private Student findAnyStudentOrThrow(UUID studentId) {
         return studentRepo.findById(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(studentId));
     }
 
     private Parent findActiveParentOrThrow(UUID parentId) {
-        return parentRepo.findByIdAndActiveTrue(parentId)
+        return parentRepo.findByIdAndArchivedAtIsNull(parentId)
                 .orElseThrow(() -> new ParentNotFoundException(parentId));
     }
 
@@ -135,9 +141,22 @@ public class StudentService {
         }
     }
 
+    private void resolveParentReferenceForUpdate(Student student, UUID parentId, CreateParentDTO parentDto) {
+        if (parentId != null) {
+            Parent existingParent = findActiveParentOrThrow(parentId);
+            student.setParent(existingParent);
+            return;
+        }
+
+        if (parentDto != null && student.getParent() == null) {
+            Parent savedParent = createParent(parentDto);
+            student.setParent(savedParent);
+        }
+    }
+
     private void archiveIfNotArchived(Student foundStudent) {
         if (foundStudent.getArchivedAt() == null) {
-            Instant now = Instant.now();
+            Instant now = Instant.now(applicationClock);
             foundStudent.setArchivedAt(now);
             foundStudent.setUpdatedAt(now);
         }

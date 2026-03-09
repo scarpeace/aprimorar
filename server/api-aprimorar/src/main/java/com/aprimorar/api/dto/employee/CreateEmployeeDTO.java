@@ -1,6 +1,7 @@
 package com.aprimorar.api.dto.employee;
 
 import com.aprimorar.api.enums.Role;
+import com.aprimorar.api.validation.ValidationPatterns;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,11 +23,11 @@ public record CreateEmployeeDTO (
         String pix,
 
         @NotBlank(message = "Contato do funcionário é obrigatório")
-        @Pattern(regexp = "^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$", message = "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX")
+        @Pattern(regexp = ValidationPatterns.PHONE_BR, message = ValidationPatterns.PHONE_BR_MESSAGE)
         String contact,
 
         @NotBlank(message = "CPF do funcionário é obrigatório")
-        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF deve estar no formato XXX.XXX.XXX-XX")
+        @Pattern(regexp = ValidationPatterns.CPF, message = ValidationPatterns.CPF_MESSAGE)
         String cpf,
 
         @NotBlank(message = "Email do funcionário é obrigatório")

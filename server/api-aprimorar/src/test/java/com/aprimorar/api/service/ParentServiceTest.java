@@ -54,28 +54,28 @@ class ParentServiceTest {
         parent.setEmail("jane.doe@email.com");
         parent.setContact("(61)99999-9999");
         parent.setCpf("12345678900");
-        parent.setActive(true);
+        parent.setArchivedAt(null);
 
         parentSummaryDto = new ParentSummaryDTO(parent.getId(), parent.getName());
     }
 
     @Nested
-    @DisplayName("listActiveParents")
-    class ListActiveParents {
+    @DisplayName("listParents")
+    class ListParents {
 
         @Test
-        @DisplayName("returns active parents when data exists")
+        @DisplayName("returns active parents when includeArchived is false")
         void listActiveParentsSuccess() {
             Page<Parent> parents = new PageImpl<>(List.of(parent), DEFAULT_PAGEABLE, 1);
-            when(parentRepo.findAllByActiveTrue(DEFAULT_PAGEABLE)).thenReturn(parents);
+            when(parentRepo.findAllByArchivedAtIsNull(DEFAULT_PAGEABLE)).thenReturn(parents);
             when(parentMapper.toSummaryDto(parent)).thenReturn(parentSummaryDto);
 
-            Page<ParentSummaryDTO> result = parentService.listActiveParents(DEFAULT_PAGEABLE);
+            Page<ParentSummaryDTO> result = parentService.listParents(DEFAULT_PAGEABLE, false);
 
             assertEquals(1, result.getTotalElements());
             assertEquals(1, result.getContent().size());
             assertSame(parentSummaryDto, result.getContent().getFirst());
-            verify(parentRepo).findAllByActiveTrue(DEFAULT_PAGEABLE);
+            verify(parentRepo).findAllByArchivedAtIsNull(DEFAULT_PAGEABLE);
             verify(parentMapper).toSummaryDto(parent);
             verifyNoMoreInteractions(parentRepo, parentMapper);
         }
@@ -84,15 +84,37 @@ class ParentServiceTest {
         @DisplayName("returns empty page when no active parents exist")
         void listActiveParentsEmpty() {
             Page<Parent> parents = new PageImpl<>(List.of(), DEFAULT_PAGEABLE, 0);
-            when(parentRepo.findAllByActiveTrue(DEFAULT_PAGEABLE)).thenReturn(parents);
+            when(parentRepo.findAllByArchivedAtIsNull(DEFAULT_PAGEABLE)).thenReturn(parents);
 
-            Page<ParentSummaryDTO> result = parentService.listActiveParents(DEFAULT_PAGEABLE);
+            Page<ParentSummaryDTO> result = parentService.listParents(DEFAULT_PAGEABLE, false);
 
             assertEquals(0, result.getTotalElements());
             assertTrue(result.getContent().isEmpty());
-            verify(parentRepo).findAllByActiveTrue(DEFAULT_PAGEABLE);
+            verify(parentRepo).findAllByArchivedAtIsNull(DEFAULT_PAGEABLE);
             verifyNoMoreInteractions(parentRepo);
             verifyNoInteractions(parentMapper);
+        }
+
+        @Test
+        @DisplayName("returns all parents when includeArchived is true")
+        void listAllParentsIncludingArchived() {
+            Parent archivedParent = new Parent();
+            archivedParent.setId(UUID.randomUUID());
+            archivedParent.setName("Archived Parent");
+            archivedParent.setArchivedAt(java.time.Instant.parse("2026-03-08T10:00:00Z"));
+
+            Page<Parent> parents = new PageImpl<>(List.of(parent, archivedParent), DEFAULT_PAGEABLE, 2);
+            when(parentRepo.findAll(DEFAULT_PAGEABLE)).thenReturn(parents);
+            when(parentMapper.toSummaryDto(parent)).thenReturn(parentSummaryDto);
+            when(parentMapper.toSummaryDto(archivedParent)).thenReturn(new ParentSummaryDTO(archivedParent.getId(), archivedParent.getName()));
+
+            Page<ParentSummaryDTO> result = parentService.listParents(DEFAULT_PAGEABLE, true);
+
+            assertEquals(2, result.getTotalElements());
+            verify(parentRepo).findAll(DEFAULT_PAGEABLE);
+            verify(parentMapper).toSummaryDto(parent);
+            verify(parentMapper).toSummaryDto(archivedParent);
+            verifyNoMoreInteractions(parentRepo, parentMapper);
         }
     }
 }

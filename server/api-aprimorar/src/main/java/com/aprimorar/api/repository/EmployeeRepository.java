@@ -10,8 +10,7 @@ import java.util.UUID;
 
 public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
 
-    Optional<Employee> findByIdAndActiveTrue(UUID id);
+    Optional<Employee> findByIdAndArchivedAtIsNull(UUID id);
 
-    Page<Employee> findAllByActiveTrue(Pageable pageable);
+    Page<Employee> findAllByArchivedAtIsNull(Pageable pageable);
 }
-

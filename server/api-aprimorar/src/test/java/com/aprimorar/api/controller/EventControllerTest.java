@@ -1,6 +1,7 @@
 package com.aprimorar.api.controller;
 
 import com.aprimorar.api.dto.event.EventResponseDTO;
+import com.aprimorar.api.dto.event.EventFilter;
 import com.aprimorar.api.exception.handler.GlobalExceptionHandler;
 import com.aprimorar.api.service.EventService;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +19,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -45,8 +48,9 @@ class EventControllerTest {
     @BeforeEach
     void setup() {
         EventController controller = new EventController(eventService);
+        Clock fixedClock = Clock.fixed(Instant.parse("2026-03-08T12:00:00Z"), ZoneOffset.UTC);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(fixedClock))
                 .build();
     }
 
@@ -68,16 +72,17 @@ class EventControllerTest {
         }
 
         @Test
-        @DisplayName("returns 400 when updating event without content")
+        @DisplayName("allows partial update when content is omitted")
         void updateWithoutContent() throws Exception {
+            when(eventService.updateEvent(eq(1L), any())).thenReturn(eventResponseWithContent());
+
             mockMvc.perform(patch("/v1/events/{eventId}", 1L)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(validBodyWithoutContent()))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                    .andExpect(jsonPath("$.message", containsString("content")));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.content").value("ENEM"));
 
-            verifyNoInteractions(eventService);
+            verify(eventService).updateEvent(eq(1L), any());
         }
 
         @Test
@@ -97,17 +102,17 @@ class EventControllerTest {
     @DisplayName("listEvents")
     class ListEvents {
 
-        @Test
+            @Test
         @DisplayName("includes content field in list response")
         void includesContentInList() throws Exception {
-            when(eventService.listEvents(any(Pageable.class), isNull(), isNull(), isNull(), isNull()))
+            when(eventService.listEvents(any(Pageable.class), any(EventFilter.class)))
                     .thenReturn(new PageImpl<>(List.of(eventResponseWithContent()), PageRequest.of(0, 20), 1));
 
             mockMvc.perform(get("/v1/events"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.content[0].content").value("ENEM"));
 
-            verify(eventService).listEvents(any(Pageable.class), isNull(), isNull(), isNull(), isNull());
+            verify(eventService).listEvents(any(Pageable.class), any(EventFilter.class));
         }
 
         @Test
@@ -140,7 +145,7 @@ class EventControllerTest {
         @Test
         @DisplayName("passes filters to service")
         void forwardsFiltersToService() throws Exception {
-            when(eventService.listEvents(any(Pageable.class), any(), any(), any(), any()))
+            when(eventService.listEvents(any(Pageable.class), any(EventFilter.class)))
                     .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 20), 0));
 
             mockMvc.perform(get("/v1/events")
@@ -150,7 +155,7 @@ class EventControllerTest {
                             .param("end", "2027-06-01T11:00:00"))
                     .andExpect(status().isOk());
 
-            verify(eventService).listEvents(any(Pageable.class), any(), any(), any(), any());
+            verify(eventService).listEvents(any(Pageable.class), any(EventFilter.class));
         }
     }
 
@@ -161,7 +166,11 @@ class EventControllerTest {
 
         mockMvc.perform(get("/v1/events/{eventId}", 1L))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").value("ENEM"));
+                .andExpect(jsonPath("$.content").value("ENEM"))
+                .andExpect(jsonPath("$.startDateTime").value("01/06/2027 10:00:00"))
+                .andExpect(jsonPath("$.endDateTime").value("01/06/2027 11:00:00"))
+                .andExpect(jsonPath("$.createdAt").value("08/03/2026 10:00:00"))
+                .andExpect(jsonPath("$.updatedAt").value("08/03/2026 11:00:00"));
 
         verify(eventService).findById(1L);
     }
@@ -203,16 +212,16 @@ class EventControllerTest {
                 "Physics class",
                 "Kinematics review",
                 "ENEM",
-                null,
-                null,
+                java.time.LocalDateTime.of(2027, 6, 1, 10, 0),
+                java.time.LocalDateTime.of(2027, 6, 1, 11, 0),
                 new BigDecimal("100.00"),
                 new BigDecimal("50.00"),
                 UUID.randomUUID(),
                 "Student Name",
                 UUID.randomUUID(),
                 "Employee Name",
-                null,
-                null
+                Instant.parse("2026-03-08T10:00:00Z"),
+                Instant.parse("2026-03-08T11:00:00Z")
         );
     }
 }

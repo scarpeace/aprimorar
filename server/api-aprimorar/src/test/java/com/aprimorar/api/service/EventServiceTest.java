@@ -1,7 +1,9 @@
 package com.aprimorar.api.service;
 
 import com.aprimorar.api.dto.event.CreateEventDTO;
+import com.aprimorar.api.dto.event.EventFilter;
 import com.aprimorar.api.dto.event.EventResponseDTO;
+import com.aprimorar.api.dto.event.UpdateEventDTO;
 import com.aprimorar.api.entity.Employee;
 import com.aprimorar.api.entity.Event;
 import com.aprimorar.api.entity.Student;
@@ -32,6 +34,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -79,15 +83,15 @@ class EventServiceTest {
             EventResponseDTO responseDto = mock(EventResponseDTO.class);
             Page<Event> eventPage = new PageImpl<>(List.of(event), pageable, 1);
 
-            when(eventRepo.findAllWithFilters(null, null, null, null, pageable)).thenReturn(eventPage);
+            when(eventRepo.findAllWithFilter(null, null, null, null, pageable)).thenReturn(eventPage);
             when(eventMapper.toDto(event)).thenReturn(responseDto);
 
-            Page<EventResponseDTO> result = eventService.listEvents(pageable, null, null, null, null);
+            Page<EventResponseDTO> result = eventService.listEvents(pageable, new EventFilter());
 
             assertEquals(1, result.getTotalElements());
             assertEquals(1, result.getContent().size());
             assertSame(responseDto, result.getContent().getFirst());
-            verify(eventRepo).findAllWithFilters(null, null, null, null, pageable);
+            verify(eventRepo).findAllWithFilter(null, null, null, null, pageable);
             verify(eventMapper).toDto(event);
             verifyNoMoreInteractions(eventRepo, eventMapper);
         }
@@ -98,13 +102,13 @@ class EventServiceTest {
             Pageable pageable = PageRequest.of(0, 20, Sort.by("startDateTime"));
             Page<Event> eventPage = new PageImpl<>(List.of(), pageable, 0);
 
-            when(eventRepo.findAllWithFilters(null, null, null, null, pageable)).thenReturn(eventPage);
+            when(eventRepo.findAllWithFilter(null, null, null, null, pageable)).thenReturn(eventPage);
 
-            Page<EventResponseDTO> result = eventService.listEvents(pageable, null, null, null, null);
+            Page<EventResponseDTO> result = eventService.listEvents(pageable, new EventFilter());
 
             assertEquals(0, result.getTotalElements());
             assertTrue(result.getContent().isEmpty());
-            verify(eventRepo).findAllWithFilters(null, null, null, null, pageable);
+            verify(eventRepo).findAllWithFilter(null, null, null, null, pageable);
             verifyNoMoreInteractions(eventRepo);
             verifyNoInteractions(eventMapper);
         }
@@ -115,18 +119,19 @@ class EventServiceTest {
             Pageable pageable = PageRequest.of(0, 20, Sort.by("startDateTime"));
             LocalDateTime start = LocalDateTime.of(2027, 6, 1, 0, 0);
             LocalDateTime end = LocalDateTime.of(2027, 6, 30, 23, 59);
+            EventFilter filter = eventFilter(start, end, null, null);
             Event event = new Event();
             EventResponseDTO responseDto = mock(EventResponseDTO.class);
             Page<Event> eventPage = new PageImpl<>(List.of(event), pageable, 1);
 
-            when(eventRepo.findAllWithFilters(start, end, null, null, pageable)).thenReturn(eventPage);
+            when(eventRepo.findAllWithFilter(start, end, null, null, pageable)).thenReturn(eventPage);
             when(eventMapper.toDto(event)).thenReturn(responseDto);
 
-            Page<EventResponseDTO> result = eventService.listEvents(pageable, start, end, null, null);
+            Page<EventResponseDTO> result = eventService.listEvents(pageable, filter);
 
             assertEquals(1, result.getTotalElements());
             assertSame(responseDto, result.getContent().getFirst());
-            verify(eventRepo).findAllWithFilters(start, end, null, null, pageable);
+            verify(eventRepo).findAllWithFilter(start, end, null, null, pageable);
             verify(eventMapper).toDto(event);
             verifyNoMoreInteractions(eventRepo, eventMapper);
         }
@@ -137,18 +142,19 @@ class EventServiceTest {
             Pageable pageable = PageRequest.of(0, 20, Sort.by("startDateTime"));
             UUID studentId = UUID.randomUUID();
             UUID employeeId = UUID.randomUUID();
+            EventFilter filter = eventFilter(null, null, studentId, employeeId);
             Event event = new Event();
             EventResponseDTO responseDto = mock(EventResponseDTO.class);
             Page<Event> eventPage = new PageImpl<>(List.of(event), pageable, 1);
 
-            when(eventRepo.findAllWithFilters(null, null, studentId, employeeId, pageable)).thenReturn(eventPage);
+            when(eventRepo.findAllWithFilter(null, null, studentId, employeeId, pageable)).thenReturn(eventPage);
             when(eventMapper.toDto(event)).thenReturn(responseDto);
 
-            Page<EventResponseDTO> result = eventService.listEvents(pageable, null, null, studentId, employeeId);
+            Page<EventResponseDTO> result = eventService.listEvents(pageable, filter);
 
             assertEquals(1, result.getTotalElements());
             assertSame(responseDto, result.getContent().getFirst());
-            verify(eventRepo).findAllWithFilters(null, null, studentId, employeeId, pageable);
+            verify(eventRepo).findAllWithFilter(null, null, studentId, employeeId, pageable);
             verify(eventMapper).toDto(event);
             verifyNoMoreInteractions(eventRepo, eventMapper);
         }
@@ -207,7 +213,7 @@ class EventServiceTest {
             EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
             when(studentRepo.findByIdAndArchivedAtIsNull(studentId)).thenReturn(Optional.of(student));
-            when(employeeRepo.findByIdAndActiveTrue(employeeId)).thenReturn(Optional.of(employee));
+            when(employeeRepo.findByIdAndArchivedAtIsNull(employeeId)).thenReturn(Optional.of(employee));
             when(eventMapper.toEntity(dto)).thenReturn(newEvent);
             when(eventRepo.save(newEvent)).thenReturn(savedEvent);
             when(eventMapper.toDto(savedEvent)).thenReturn(responseDto);
@@ -218,7 +224,7 @@ class EventServiceTest {
             assertSame(student, newEvent.getStudent());
             assertSame(employee, newEvent.getEmployee());
             verify(studentRepo).findByIdAndArchivedAtIsNull(studentId);
-            verify(employeeRepo).findByIdAndActiveTrue(employeeId);
+            verify(employeeRepo).findByIdAndArchivedAtIsNull(employeeId);
             verify(eventMapper).toEntity(dto);
             verify(eventRepo).save(newEvent);
             verify(eventMapper).toDto(savedEvent);
@@ -249,12 +255,12 @@ class EventServiceTest {
             Student student = new Student();
 
             when(studentRepo.findByIdAndArchivedAtIsNull(studentId)).thenReturn(Optional.of(student));
-            when(employeeRepo.findByIdAndActiveTrue(employeeId)).thenReturn(Optional.empty());
+            when(employeeRepo.findByIdAndArchivedAtIsNull(employeeId)).thenReturn(Optional.empty());
 
             assertThrows(EmployeeNotFoundException.class, () -> eventService.createEvent(dto));
 
             verify(studentRepo).findByIdAndArchivedAtIsNull(studentId);
-            verify(employeeRepo).findByIdAndActiveTrue(employeeId);
+            verify(employeeRepo).findByIdAndArchivedAtIsNull(employeeId);
             verifyNoMoreInteractions(studentRepo, employeeRepo);
             verifyNoInteractions(eventMapper, eventRepo);
         }
@@ -270,7 +276,7 @@ class EventServiceTest {
             Long eventId = 1L;
             UUID studentId = UUID.randomUUID();
             UUID employeeId = UUID.randomUUID();
-            CreateEventDTO dto = validCreateEventDto(studentId, employeeId);
+            UpdateEventDTO dto = validUpdateEventDto(studentId, employeeId);
             Student student = studentWithId(studentId);
             Employee employee = employeeWithId(employeeId);
             Event foundEvent = eventWithParticipants(student, employee);
@@ -295,7 +301,7 @@ class EventServiceTest {
             Long eventId = 1L;
             UUID newStudentId = UUID.randomUUID();
             UUID employeeId = UUID.randomUUID();
-            CreateEventDTO dto = validCreateEventDto(newStudentId, employeeId);
+            UpdateEventDTO dto = validUpdateEventDto(newStudentId, employeeId);
             Student oldStudent = studentWithId(UUID.randomUUID());
             Employee employee = employeeWithId(employeeId);
             Student newStudent = studentWithId(newStudentId);
@@ -324,7 +330,7 @@ class EventServiceTest {
             Long eventId = 1L;
             UUID studentId = UUID.randomUUID();
             UUID newEmployeeId = UUID.randomUUID();
-            CreateEventDTO dto = validCreateEventDto(studentId, newEmployeeId);
+            UpdateEventDTO dto = validUpdateEventDto(studentId, newEmployeeId);
             Student student = studentWithId(studentId);
             Employee oldEmployee = employeeWithId(UUID.randomUUID());
             Employee newEmployee = employeeWithId(newEmployeeId);
@@ -332,7 +338,7 @@ class EventServiceTest {
             EventResponseDTO responseDto = mock(EventResponseDTO.class);
 
             when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
-            when(employeeRepo.findByIdAndActiveTrue(newEmployeeId)).thenReturn(Optional.of(newEmployee));
+            when(employeeRepo.findByIdAndArchivedAtIsNull(newEmployeeId)).thenReturn(Optional.of(newEmployee));
             when(eventMapper.toDto(foundEvent)).thenReturn(responseDto);
 
             EventResponseDTO result = eventService.updateEvent(eventId, dto);
@@ -341,7 +347,7 @@ class EventServiceTest {
             assertSame(newEmployee, foundEvent.getEmployee());
             verify(eventRepo).findById(eventId);
             verify(eventMapper).updateFromDto(dto, foundEvent);
-            verify(employeeRepo).findByIdAndActiveTrue(newEmployeeId);
+            verify(employeeRepo).findByIdAndArchivedAtIsNull(newEmployeeId);
             verify(eventMapper).toDto(foundEvent);
             verifyNoMoreInteractions(eventRepo, eventMapper, employeeRepo);
             verifyNoInteractions(studentRepo);
@@ -351,7 +357,7 @@ class EventServiceTest {
         @DisplayName("throws EventNotFoundException when target event does not exist")
         void updateEventNotFound() {
             Long eventId = 99L;
-            CreateEventDTO dto = validCreateEventDto(UUID.randomUUID(), UUID.randomUUID());
+            UpdateEventDTO dto = validUpdateEventDto(UUID.randomUUID(), UUID.randomUUID());
 
             when(eventRepo.findById(eventId)).thenReturn(Optional.empty());
 
@@ -368,7 +374,7 @@ class EventServiceTest {
             Long eventId = 1L;
             UUID newStudentId = UUID.randomUUID();
             UUID employeeId = UUID.randomUUID();
-            CreateEventDTO dto = validCreateEventDto(newStudentId, employeeId);
+            UpdateEventDTO dto = validUpdateEventDto(newStudentId, employeeId);
             Student oldStudent = studentWithId(UUID.randomUUID());
             Employee employee = employeeWithId(employeeId);
             Event foundEvent = eventWithParticipants(oldStudent, employee);
@@ -391,19 +397,19 @@ class EventServiceTest {
             Long eventId = 1L;
             UUID studentId = UUID.randomUUID();
             UUID newEmployeeId = UUID.randomUUID();
-            CreateEventDTO dto = validCreateEventDto(studentId, newEmployeeId);
+            UpdateEventDTO dto = validUpdateEventDto(studentId, newEmployeeId);
             Student student = studentWithId(studentId);
             Employee oldEmployee = employeeWithId(UUID.randomUUID());
             Event foundEvent = eventWithParticipants(student, oldEmployee);
 
             when(eventRepo.findById(eventId)).thenReturn(Optional.of(foundEvent));
-            when(employeeRepo.findByIdAndActiveTrue(newEmployeeId)).thenReturn(Optional.empty());
+            when(employeeRepo.findByIdAndArchivedAtIsNull(newEmployeeId)).thenReturn(Optional.empty());
 
             assertThrows(EmployeeNotFoundException.class, () -> eventService.updateEvent(eventId, dto));
 
             verify(eventRepo).findById(eventId);
             verify(eventMapper).updateFromDto(dto, foundEvent);
-            verify(employeeRepo).findByIdAndActiveTrue(newEmployeeId);
+            verify(employeeRepo).findByIdAndArchivedAtIsNull(newEmployeeId);
             verifyNoMoreInteractions(eventRepo, eventMapper, employeeRepo);
             verifyNoInteractions(studentRepo);
         }
@@ -456,6 +462,29 @@ class EventServiceTest {
                 studentId,
                 employeeId
         );
+    }
+
+    private UpdateEventDTO validUpdateEventDto(UUID studentId, UUID employeeId) {
+        return new UpdateEventDTO(
+                VALID_TITLE,
+                VALID_DESCRIPTION,
+                VALID_START,
+                VALID_END,
+                VALID_PRICE,
+                VALID_PAYMENT,
+                EventContent.ENEM,
+                studentId,
+                employeeId
+        );
+    }
+
+    private EventFilter eventFilter(LocalDateTime start, LocalDateTime end, UUID studentId, UUID employeeId) {
+        EventFilter filter = new EventFilter();
+        filter.setStart(start);
+        filter.setEnd(end);
+        filter.setStudentId(studentId);
+        filter.setEmployeeId(employeeId);
+        return filter;
     }
 
     private Student studentWithId(UUID studentId) {

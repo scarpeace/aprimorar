@@ -29,8 +29,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -54,6 +57,7 @@ import static org.mockito.Mockito.when;
 class StudentServiceTest {
 
     private static final ZoneId SAO_PAULO_ZONE = ZoneId.of("America/Sao_Paulo");
+    private static final Instant FIXED_NOW = Instant.parse("2026-03-08T12:00:00Z");
     private static final String STUDENT_NAME = "John Doe";
     private static final LocalDate STUDENT_BIRTHDATE = LocalDate.now(SAO_PAULO_ZONE).minusYears(15);
     private static final String STUDENT_CPF_FORMATTED = "123.456.789-01";
@@ -79,6 +83,9 @@ class StudentServiceTest {
     @Mock
     private ParentMapper parentMapper;
 
+    @Mock
+    private Clock applicationClock;
+
     @InjectMocks
     private StudentService studentService;
 
@@ -94,6 +101,9 @@ class StudentServiceTest {
 
     @BeforeEach
     void setUp() {
+        lenient().when(applicationClock.instant()).thenReturn(FIXED_NOW);
+        lenient().when(applicationClock.getZone()).thenReturn(ZoneOffset.UTC);
+
         student = validStudentEntity();
         parent = validParentEntity();
 
@@ -264,7 +274,7 @@ class StudentServiceTest {
         @DisplayName("creates student with existing parent by id")
         void createWithParentId() {
             when(studentMapper.toEntity(createStudentDtoWithParentId)).thenReturn(student);
-            when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
+            when(parentRepo.findByIdAndArchivedAtIsNull(parent.getId())).thenReturn(Optional.of(parent));
             when(studentRepo.save(student)).thenReturn(student);
             when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
@@ -273,7 +283,7 @@ class StudentServiceTest {
             assertSame(studentResponseDto, result);
             assertNotNull(student.getParent());
             verify(studentMapper).toEntity(createStudentDtoWithParentId);
-            verify(parentRepo).findByIdAndActiveTrue(parent.getId());
+            verify(parentRepo).findByIdAndArchivedAtIsNull(parent.getId());
             verify(studentRepo).save(student);
             verify(studentMapper).toDto(student);
             verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
@@ -302,13 +312,13 @@ class StudentServiceTest {
             CreateStudentDTO dtoWithNonExistentParent = studentDtoWithParentId(nonExistentParentId);
 
             when(studentMapper.toEntity(dtoWithNonExistentParent)).thenReturn(student);
-            when(parentRepo.findByIdAndActiveTrue(nonExistentParentId)).thenReturn(Optional.empty());
+            when(parentRepo.findByIdAndArchivedAtIsNull(nonExistentParentId)).thenReturn(Optional.empty());
 
             assertThrows(ParentNotFoundException.class,
                     () -> studentService.createStudent(dtoWithNonExistentParent));
 
             verify(studentMapper).toEntity(dtoWithNonExistentParent);
-            verify(parentRepo).findByIdAndActiveTrue(nonExistentParentId);
+            verify(parentRepo).findByIdAndArchivedAtIsNull(nonExistentParentId);
             verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
         }
     }
@@ -327,9 +337,8 @@ class StudentServiceTest {
 
             studentService.archiveStudent(student.getId());
 
-            assertNotNull(student.getArchivedAt());
-            assertNotNull(student.getUpdatedAt());
-            assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
+            assertEquals(FIXED_NOW, student.getArchivedAt());
+            assertEquals(FIXED_NOW, student.getUpdatedAt());
             verify(studentRepo).findById(student.getId());
             verifyNoMoreInteractions(studentRepo);
             verifyNoInteractions(studentMapper);
@@ -379,9 +388,8 @@ class StudentServiceTest {
             studentService.unarchiveStudent(student.getId());
 
             assertNull(student.getArchivedAt());
-            assertNotNull(student.getLastReactivatedAt());
-            assertNotNull(student.getUpdatedAt());
-            assertTrue(student.getUpdatedAt().isAfter(before) || !student.getUpdatedAt().equals(before));
+            assertEquals(FIXED_NOW, student.getLastReactivatedAt());
+            assertEquals(FIXED_NOW, student.getUpdatedAt());
             verify(studentRepo).findById(student.getId());
             verifyNoMoreInteractions(studentRepo);
             verifyNoInteractions(studentMapper);
@@ -427,8 +435,7 @@ class StudentServiceTest {
 
             assertSame(studentResponseDto, result);
             assertNotNull(student.getParent());
-            assertNotNull(student.getUpdatedAt());
-            assertNotEquals(before, student.getUpdatedAt());
+            assertEquals(FIXED_NOW, student.getUpdatedAt());
 
             verify(studentRepo).findById(student.getId());
             verify(studentMapper).updateFromDto(updateStudentDtoWithNewParent, student);
@@ -444,19 +451,39 @@ class StudentServiceTest {
             Instant before = student.getUpdatedAt();
 
             when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
-            when(parentRepo.findByIdAndActiveTrue(parent.getId())).thenReturn(Optional.of(parent));
+            when(parentRepo.findByIdAndArchivedAtIsNull(parent.getId())).thenReturn(Optional.of(parent));
             when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
 
             StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithParentId);
 
             assertSame(studentResponseDto, result);
             assertNotNull(student.getParent());
-            assertNotNull(student.getUpdatedAt());
-            assertNotEquals(before, student.getUpdatedAt());
+            assertEquals(FIXED_NOW, student.getUpdatedAt());
 
             verify(studentRepo).findById(student.getId());
             verify(studentMapper).updateFromDto(updateStudentDtoWithParentId, student);
-            verify(parentRepo).findByIdAndActiveTrue(parent.getId());
+            verify(parentRepo).findByIdAndArchivedAtIsNull(parent.getId());
+            verify(studentMapper).toDto(student);
+            verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
+        }
+
+        @Test
+        @DisplayName("keeps current parent reference when patching nested parent fields")
+        void updateExistingNestedParentWithoutCreatingAnotherParent() {
+            Instant before = student.getUpdatedAt();
+            student.setParent(parent);
+
+            when(studentRepo.findById(student.getId())).thenReturn(Optional.of(student));
+            when(studentMapper.toDto(student)).thenReturn(studentResponseDto);
+
+            StudentResponseDTO result = studentService.updateStudent(student.getId(), updateStudentDtoWithNewParent);
+
+            assertSame(studentResponseDto, result);
+            assertSame(parent, student.getParent());
+            assertEquals(FIXED_NOW, student.getUpdatedAt());
+
+            verify(studentRepo).findById(student.getId());
+            verify(studentMapper).updateFromDto(updateStudentDtoWithNewParent, student);
             verify(studentMapper).toDto(student);
             verifyNoMoreInteractions(studentRepo, studentMapper, parentRepo, parentMapper);
         }
@@ -498,7 +525,7 @@ class StudentServiceTest {
         value.setEmail(PARENT_EMAIL);
         value.setContact(PARENT_CONTACT);
         value.setCpf(PARENT_CPF);
-        value.setActive(true);
+        value.setArchivedAt(null);
         return value;
     }
 

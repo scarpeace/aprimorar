@@ -10,7 +10,7 @@ import java.time.ZoneId;
 public class ClockConfig {
 
     @Bean
-    public Clock ageCalculationClock() {
+    public Clock applicationClock() {
         return Clock.system(ZoneId.of("America/Sao_Paulo"));
     }
 }

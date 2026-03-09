@@ -1,5 +1,6 @@
 package com.aprimorar.api.util;
 
+import com.aprimorar.api.dto.common.PageQuery;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,14 +21,6 @@ public final class PageableUtils {
             String defaultSortBy,
             Set<String> allowedSortFields
     ) {
-        if (page < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametro 'page' deve ser >= 0");
-        }
-
-        if (size < 1 || size > 100) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametro 'size' deve estar entre 1 e 100");
-        }
-
         String normalizedSortBy = sortBy == null ? defaultSortBy : sortBy.trim();
         if (normalizedSortBy.isEmpty()) {
             normalizedSortBy = defaultSortBy;
@@ -38,5 +31,15 @@ public final class PageableUtils {
         }
 
         return PageRequest.of(page, size, Sort.by(normalizedSortBy));
+    }
+
+    public static Pageable buildPageable(PageQuery pageQuery, String defaultSortBy, Set<String> allowedSortFields) {
+        return buildPageable(
+                pageQuery.getPage(),
+                pageQuery.getSize(),
+                pageQuery.getSortBy(),
+                defaultSortBy,
+                allowedSortFields
+        );
     }
 }

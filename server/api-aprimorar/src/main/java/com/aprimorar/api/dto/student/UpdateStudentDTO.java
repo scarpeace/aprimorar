@@ -2,6 +2,7 @@ package com.aprimorar.api.dto.student;
 
 import com.aprimorar.api.dto.address.CreateAddressDTO;
 import com.aprimorar.api.dto.parent.CreateParentDTO;
+import com.aprimorar.api.validation.ValidationPatterns;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
@@ -17,12 +18,12 @@ public record UpdateStudentDTO(
         @PastOrPresent(message = "A data de nascimento do estudante não pode ser futura")
         LocalDate birthdate,
 
-        @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "CPF deve estar no formato XXX.XXX.XXX-XX")
+        @Pattern(regexp = ValidationPatterns.CPF, message = ValidationPatterns.CPF_MESSAGE)
         String cpf,
 
         String school,
 
-        @Pattern(regexp = "^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$", message = "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX")
+        @Pattern(regexp = ValidationPatterns.PHONE_BR, message = ValidationPatterns.PHONE_BR_MESSAGE)
         String contact,
 
         @Email(message = "Email deve ser um endereço de email válido")

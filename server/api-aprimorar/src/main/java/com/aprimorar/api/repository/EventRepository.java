@@ -1,6 +1,8 @@
 package com.aprimorar.api.repository;
 
-import com.aprimorar.api.entity.Event;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -8,8 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import com.aprimorar.api.entity.Event;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
@@ -22,7 +23,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
               AND e.student.id = COALESCE(:studentId, e.student.id)
               AND e.employee.id = COALESCE(:employeeId, e.employee.id)
             """)
-    Page<Event> findAllWithFilters(
+    Page<Event> findAllWithFilter(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             @Param("studentId") UUID studentId,

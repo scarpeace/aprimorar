@@ -4,6 +4,7 @@ import com.aprimorar.api.dto.address.CreateAddressDTO;
 import com.aprimorar.api.dto.parent.CreateParentDTO;
 import com.aprimorar.api.dto.student.CreateStudentDTO;
 import com.aprimorar.api.dto.student.StudentResponseDTO;
+import com.aprimorar.api.dto.student.UpdateStudentDTO;
 import com.aprimorar.api.entity.Address;
 import com.aprimorar.api.entity.Parent;
 import com.aprimorar.api.entity.Student;
@@ -24,6 +25,8 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StudentMapperTest {
@@ -153,6 +156,68 @@ class StudentMapperTest {
         }
     }
 
+    @Nested
+    @DisplayName("updateFromDto")
+    class UpdateFromDto {
+
+        @Test
+        @DisplayName("updates existing nested address and parent in place")
+        void updatesNestedObjectsInPlace() {
+            Student entity = validStudentEntity();
+            Address existingAddress = validAddressEntity();
+            Parent existingParent = validParentEntity();
+            entity.setAddress(existingAddress);
+            entity.setParent(existingParent);
+
+            UpdateStudentDTO dto = new UpdateStudentDTO(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    new CreateAddressDTO("New Street", null, null, null, null, null, "87654-321"),
+                    null,
+                    new CreateParentDTO(null, "NEW@EMAIL.COM", null, null)
+            );
+
+            mapper.updateFromDto(dto, entity);
+
+            assertSame(existingAddress, entity.getAddress());
+            assertSame(existingParent, entity.getParent());
+            assertEquals("New Street", entity.getAddress().getStreet());
+            assertEquals("87654321", entity.getAddress().getZip());
+            assertEquals("new@email.com", entity.getParent().getEmail());
+        }
+
+        @Test
+        @DisplayName("creates nested address and parent when student does not have them yet")
+        void createsNestedObjectsWhenMissing() {
+            Student entity = validStudentEntity();
+            entity.setAddress(null);
+            entity.setParent(null);
+
+            UpdateStudentDTO dto = new UpdateStudentDTO(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    VALID_ADDRESS,
+                    null,
+                    VALID_PARENT
+            );
+
+            mapper.updateFromDto(dto, entity);
+
+            assertNotNull(entity.getAddress());
+            assertNotNull(entity.getParent());
+            assertEquals("Street", entity.getAddress().getStreet());
+            assertEquals("parent@email.com", entity.getParent().getEmail());
+        }
+    }
+
     private CreateStudentDTO validCreateStudentDto(String email) {
         return new CreateStudentDTO(
                 STUDENT_NAME,
@@ -180,5 +245,19 @@ class StudentMapperTest {
         entity.setAddress(new Address());
         entity.setCreatedAt(Instant.parse("2025-01-01T00:00:00Z"));
         return entity;
+    }
+
+    private Address validAddressEntity() {
+        Address address = new Address();
+        address.setStreet("Old Street");
+        address.setZip("12345678");
+        return address;
+    }
+
+    private Parent validParentEntity() {
+        Parent parent = new Parent();
+        parent.setName("Old Parent");
+        parent.setEmail("old@email.com");
+        return parent;
     }
 }

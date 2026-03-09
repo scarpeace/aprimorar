@@ -10,8 +10,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_student", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_student_name", columnNames = {"name"}),
-        @UniqueConstraint(name = "uk_student_contact", columnNames = {"contact"}),
         @UniqueConstraint(name = "uk_student_email", columnNames = {"email"}),
         @UniqueConstraint(name = "uk_student_cpf", columnNames = {"cpf"})
 })
@@ -22,33 +20,43 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String contact;
 
+    @Column(nullable = false)
     private String email;
 
     // TODO: Define minimum and maximum student age in business rules.
+    @Column(nullable = false)
     private LocalDate birthdate;
 
+    @Column(nullable = false)
     private String cpf;
 
+    @Column(nullable = false)
     private String school;
 
+    @Column(name = "archived_at")
     private Instant archivedAt;
 
+    @Column(name = "last_reactivated_at")
     private Instant lastReactivatedAt;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "parent_id", referencedColumnName = "parent_id")
+    @JoinColumn(name = "parent_id", referencedColumnName = "parent_id", nullable = false)
     private Parent parent;
 
     @Embedded
     private Address address;
 
+    @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
 
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
 
