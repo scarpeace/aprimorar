@@ -1,79 +1,48 @@
-# Prompt Style Guide (Quick)
+# Prompt Style Guide
 
-Use this as a compact reference for the current command workflow.
+Use this guide when updating planning docs or asking an agent to do structured project work.
 
-## Core Rules
+## Canonical files
 
-- Start with the goal in one sentence.
-- Add scope and constraints.
-- Reference concrete IDs and files when possible (`T-XXX`, `docs/planning/epics/E-XXX-*.md`).
-- If anything is unclear, ask clarifying questions before final output.
+- `AGENTS.md`: repo, product, workflow, and coding guidance.
+- `docs/planning/roadmap.md`: phases and epic index.
+- `docs/planning/epics/E-XXX-*.md`: epic execution docs.
+- `docs/planning/epics/E-000-template.md`: template for new epics.
+- `docs/planning/diagrams.md`: shared Mermaid diagrams.
 
-## Commands
+## Typical command flow
 
-### `/feature`
+1. `/feature` to clarify scope and constraints.
+2. `/organize` to split approved work into epics, tasks, and dependencies.
+3. `/docs` to update canonical docs for approved decisions.
+4. `/do <T-XXX>` to implement one focused task.
+5. `/check-backend` or `/check-frontend` to review quality.
+6. `/tests` to identify missing coverage.
 
-Purpose: discover the feature and define requirements.
+## Writing rules
 
-```text
-/feature "Feature: <short description>. In scope: <...>. Out of scope: <...>. Constraints: keep it simple."
-```
+- Keep docs factual, short, and current.
+- Never invent completed work.
+- Only document approved decisions.
+- Keep IDs stable once created.
+- Prefer exact commands over generic verification notes.
+- Prefer links to canonical files over repeated context dumps.
 
-### `/organize`
+## Doc update checklist
 
-Purpose: break approved scope into epics, tasks, subtasks, order, dependencies, and risks.
+When a feature changes behavior, review these files:
+- `AGENTS.md`
+- `docs/planning/roadmap.md`
+- relevant `docs/planning/epics/E-XXX-*.md`
+- `docs/planning/diagrams.md` if flows or architecture changed
 
-```text
-/organize "Approved feature: <description>. Break into epics, tasks, subtasks, execution order, dependencies, and risk areas."
-```
+Update only what changed:
+- commands
+- API contracts
+- architecture or workflow
+- task/story status
+- verification steps
 
-### `/docs`
+## Example `/docs` prompt
 
-Purpose: update planning documentation using approved decisions only.
-
-```text
-/docs "Update docs/project.md, docs/planning/project.md, docs/planning/roadmap.md, and relevant docs/planning/epics/E-XXX-*.md for this approved feature."
-```
-
-### `/do`
-
-Purpose: implement one selected task ID.
-
-```text
-/do "T-XXX"
-```
-
-### `/check-backend`
-
-Purpose: static backend review only (no code changes).
-
-```text
-/check-backend "Review T-XXX backend changes. Detect bugs, architecture issues, code smells, and suggest tests only."
-```
-
-### `/check-frontend`
-
-Purpose: static frontend review only (no code changes).
-
-```text
-/check-frontend "Review T-XXX frontend changes. Detect UI/UX issues, architecture issues, code smells, and suggest tests only."
-```
-
-### `/tests`
-
-Purpose: suggest test coverage improvements only.
-
-```text
-/tests "For T-XXX, suggest unit tests, integration tests, and edge cases. Do not implement without explicit approval."
-```
-
-## Suggested Flow
-
-```text
-/feature "..."
-/organize "..."
-/docs "..."
-/do "T-XXX"
-/check-backend "..."  or  /check-frontend "..."
-/tests "..."
-```
+`/docs "Update AGENTS.md, docs/planning/roadmap.md, docs/planning/diagrams.md, and the relevant epic files for this approved change. Keep updates concise and remove stale references."`

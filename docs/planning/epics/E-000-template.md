@@ -1,7 +1,7 @@
 # Epic: E-000 — <Epic Name>
 **Goal:** <1 line>
 **Status:** TODO | IN_PROGRESS | DONE | BLOCKED
-**Owner:** Gu
+**Owner:** <name>
 **Related milestone/phase:** <Phase X>
 
 ## Scope
@@ -19,22 +19,26 @@
 **Links:** T-001 (TODO)
 **Intent:** <1 line>
 
+**Acceptance Criteria**
+- <observable outcome>
+
+**Test Plan**
+- Backend: <exact command or N/A>
+- Frontend: <exact command or N/A>
+- Manual: <short steps>
+
 ## Tasks
 ### Task: T-001 — <Task title>
 **Type:** backend | frontend | fullstack
-**Status:** TODO | IN_PROGRESS | BLOCKED
+**Status:** TODO | IN_PROGRESS | DONE | BLOCKED | CANCELLED
 **Depends on:** None | T-XXX
 
 **Description**
-- <1-3 bullets>
+- <1-2 bullets>
 
-**Subtasks**
-- [ ] ST-001 — <subtask>
-- [ ] ST-002 — <subtask>
-
-**DoD (Definition of Done)**
-- [ ] Implementation completed
-- [ ] Tests updated/added when applicable
+**DoD**
+- [ ] Scope implemented
+- [ ] Tests or verification updated
 - [ ] Local verification done
 
 **Verification**
@@ -43,15 +47,15 @@
 - Manual: <short steps>
 
 **Notes**
-- Risks:
-- Open questions:
+- Risks: <optional>
+- Open questions: <optional>
 
 ## Archive (DONE)
 ### Task: T-099 — <Done task title>
 - Status: DONE
 - Scope: <1 line>
 - Verification: <1 line>
-- Commit: <hash if available>
+- Notes: <optional>
 
 ## Review Notes (append-only)
 - YYYY-MM-DD:
