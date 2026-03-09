@@ -10,8 +10,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_student", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_student_name", columnNames = {"name"}),
-        @UniqueConstraint(name = "uk_student_contact", columnNames = {"contact"}),
         @UniqueConstraint(name = "uk_student_email", columnNames = {"email"}),
         @UniqueConstraint(name = "uk_student_cpf", columnNames = {"cpf"})
 })
