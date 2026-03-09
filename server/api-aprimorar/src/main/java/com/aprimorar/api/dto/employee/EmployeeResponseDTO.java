@@ -19,7 +19,11 @@ public record EmployeeResponseDTO(
         String email,
         Role role,
         Boolean active,
+
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
         Instant createdAt,
+
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
         Instant updatedAt
 ) {
 }

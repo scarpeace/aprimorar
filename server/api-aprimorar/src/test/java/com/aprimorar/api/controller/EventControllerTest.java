@@ -166,7 +166,11 @@ class EventControllerTest {
 
         mockMvc.perform(get("/v1/events/{eventId}", 1L))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").value("ENEM"));
+                .andExpect(jsonPath("$.content").value("ENEM"))
+                .andExpect(jsonPath("$.startDateTime").value("01/06/2027 10:00:00"))
+                .andExpect(jsonPath("$.endDateTime").value("01/06/2027 11:00:00"))
+                .andExpect(jsonPath("$.createdAt").value("08/03/2026 10:00:00"))
+                .andExpect(jsonPath("$.updatedAt").value("08/03/2026 11:00:00"));
 
         verify(eventService).findById(1L);
     }
@@ -208,16 +212,16 @@ class EventControllerTest {
                 "Physics class",
                 "Kinematics review",
                 "ENEM",
-                null,
-                null,
+                java.time.LocalDateTime.of(2027, 6, 1, 10, 0),
+                java.time.LocalDateTime.of(2027, 6, 1, 11, 0),
                 new BigDecimal("100.00"),
                 new BigDecimal("50.00"),
                 UUID.randomUUID(),
                 "Student Name",
                 UUID.randomUUID(),
                 "Employee Name",
-                null,
-                null
+                Instant.parse("2026-03-08T10:00:00Z"),
+                Instant.parse("2026-03-08T11:00:00Z")
         );
     }
 }

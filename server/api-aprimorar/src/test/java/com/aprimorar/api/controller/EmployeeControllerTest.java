@@ -115,7 +115,10 @@ class EmployeeControllerTest {
         mockMvc.perform(get("/v1/employees/{employeeId}", employeeId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Ana"))
-                .andExpect(jsonPath("$.role").value("ADMIN"));
+                .andExpect(jsonPath("$.role").value("ADMIN"))
+                .andExpect(jsonPath("$.birthdate").value("10/05/1990"))
+                .andExpect(jsonPath("$.createdAt").value("08/03/2026 10:00:00"))
+                .andExpect(jsonPath("$.updatedAt").value("08/03/2026 11:00:00"));
 
         verify(employeeService).findById(employeeId);
     }
