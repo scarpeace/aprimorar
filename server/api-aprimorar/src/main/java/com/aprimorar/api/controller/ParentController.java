@@ -43,14 +43,4 @@ public class ParentController {
         return ResponseEntity.ok(parents);
     }
 
-    @Operation(summary = "List all active parents", description = "Temporary alias that retrieves only active parents")
-    @GetMapping("/active")
-    public ResponseEntity<Page<ParentSummaryDTO>> listActiveParents(
-            @Valid @ModelAttribute PageQuery pageQuery
-    )
-    {
-        Pageable pageable = PageableUtils.buildPageable(pageQuery, "name", ALLOWED_SORT_FIELDS);
-        Page<ParentSummaryDTO> activeParents = parentService.listActiveParents(pageable);
-        return ResponseEntity.ok(activeParents);
-    }
 }

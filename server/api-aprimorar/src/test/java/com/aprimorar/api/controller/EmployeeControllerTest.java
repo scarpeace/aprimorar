@@ -102,21 +102,6 @@ class EmployeeControllerTest {
             verifyNoInteractions(employeeService);
         }
 
-        @Test
-        @DisplayName("lists active employees with provided pagination")
-        void listActiveEmployees() throws Exception {
-            when(employeeService.listActiveEmployees(any(Pageable.class)))
-                    .thenReturn(new PageImpl<>(List.of(employeeResponse()), PageRequest.of(1, 10), 1));
-
-            mockMvc.perform(get("/v1/employees/active")
-                            .param("page", "1")
-                            .param("size", "10")
-                            .param("sortBy", "updatedAt"))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.content[0].name").value("Ana"));
-
-            verify(employeeService).listActiveEmployees(any(Pageable.class));
-        }
     }
 
     @Test

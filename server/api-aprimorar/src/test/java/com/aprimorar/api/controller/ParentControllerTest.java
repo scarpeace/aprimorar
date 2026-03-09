@@ -84,18 +84,6 @@ class ParentControllerTest {
     }
 
     @Test
-    @DisplayName("keeps active alias temporarily")
-    void listActiveParentsAlias() throws Exception {
-        when(parentService.listActiveParents(any(Pageable.class)))
-                .thenReturn(new PageImpl<>(List.of(new ParentSummaryDTO(UUID.randomUUID(), "Maria")), PageRequest.of(0, 20), 1));
-
-        mockMvc.perform(get("/v1/parents/active"))
-                .andExpect(status().isOk());
-
-        verify(parentService).listActiveParents(any(Pageable.class));
-    }
-
-    @Test
     @DisplayName("returns 400 for invalid pagination input")
     void invalidPagination() throws Exception {
         mockMvc.perform(get("/v1/parents").param("size", "0"))

@@ -42,11 +42,6 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public Page<EmployeeResponseDTO> listActiveEmployees(Pageable pageable) {
-        return listEmployees(pageable, false);
-    }
-
-    @Transactional(readOnly = true)
     public EmployeeResponseDTO findById(UUID employeeId) {
         Employee foundEmployee = findAnyEmployeeOrThrow(employeeId);
         return employeeMapper.toDto(foundEmployee);

@@ -27,9 +27,4 @@ public class ParentService {
                 : parentRepo.findAllByArchivedAtIsNull(pageable);
         return parentPage.map(parentMapper::toSummaryDto);
     }
-
-    @Transactional(readOnly = true)
-    public Page<ParentSummaryDTO> listActiveParents(Pageable pageable) {
-        return listParents(pageable, false);
-    }
 }

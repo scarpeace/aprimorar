@@ -52,17 +52,6 @@ public class EmployeeController {
         return ResponseEntity.ok(allEmployees);
     }
 
-    @Operation(summary = "List all active employees", description = "Retrieves all ACTIVE employees from database with pagination")
-    @GetMapping("/active")
-    public ResponseEntity<Page<EmployeeResponseDTO>> listActiveEmployees(
-            @Valid @ModelAttribute PageQuery pageQuery
-    )
-    {
-        Pageable pageable = PageableUtils.buildPageable(pageQuery, "name", ALLOWED_SORT_FIELDS);
-        Page<EmployeeResponseDTO> activeEmployees = employeeService.listActiveEmployees(pageable);
-        return ResponseEntity.ok(activeEmployees);
-    }
-
     @Operation(summary = "Get employee by ID", description = "Retrieves a single employee based on ID")
     @GetMapping("/{employeeId}")
     public ResponseEntity<EmployeeResponseDTO> getEmployeeById(@PathVariable UUID employeeId) {
