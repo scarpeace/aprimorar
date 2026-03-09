@@ -22,6 +22,7 @@ public class Employee {
     @Column(name = "employee_id")
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
     private LocalDate birthdate;
@@ -37,13 +38,17 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "archived_at")
     private Instant archivedAt;
 
+    @Column(name = "last_reactivated_at")
     private Instant lastReactivatedAt;
 
+    @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
 
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
 

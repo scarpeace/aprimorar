@@ -19,21 +19,29 @@ public class Parent {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String contact;
 
+    @Column(nullable = false)
     private String cpf;
 
+    @Column(name = "archived_at")
     private Instant archivedAt;
 
+    @Column(name = "last_reactivated_at")
     private Instant lastReactivatedAt;
 
+    @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
 
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
 

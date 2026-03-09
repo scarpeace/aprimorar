@@ -19,16 +19,22 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "title")
     private String title;
 
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "start_date_time")
     private LocalDateTime startDateTime;
 
+    @Column(name = "end_date_time")
     private LocalDateTime endDateTime;
 
+    @Column(name = "price", precision = 19, scale = 2)
     private BigDecimal price;
 
+    @Column(name = "payment", precision = 19, scale = 2)
     private BigDecimal payment;
 
     @Enumerated(EnumType.STRING)
@@ -43,9 +49,11 @@ public class Event {
     @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
     private Employee employee;
 
+    @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
 
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
 

@@ -5,16 +5,22 @@ import jakarta.persistence.*;
 @Embeddable
 public class Address {
 
+    @Column(nullable = false)
     private String street;
 
+    @Column(nullable = false)
     private String number;
 
+    @Column(nullable = false)
     private String district;
 
+    @Column(nullable = false)
     private String city;
 
+    @Column(nullable = false)
     private String state;
 
+    @Column(nullable = false)
     private String zip;
 
     private String complement;
