@@ -1,6 +1,5 @@
 package com.aprimorar.api.service;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.slf4j.Logger;

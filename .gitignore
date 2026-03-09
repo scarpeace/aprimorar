@@ -6,3 +6,4 @@
 .opencode/bun.lock
 .opencode/package.json
 .vscode
+.gemini
