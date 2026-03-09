@@ -69,10 +69,15 @@ export const studentsApi = {
 }
 
 export const employeesApi = {
-  list: (page = 0, size = 20, sortBy = "name"): Promise<AxiosResponse<PageResponse<EmployeeResponse>>> =>
-    api.get(`/v1/employees?page=${page}&size=${size}&sortBy=${sortBy}`),
-  listActive: (page = 0, size = 20, sortBy = "name"): Promise<AxiosResponse<PageResponse<EmployeeResponse>>> =>
-    api.get(`/v1/employees/active?page=${page}&size=${size}&sortBy=${sortBy}`),
+  list: (
+    page = 0,
+    size = 20,
+    sortBy = "name",
+    includeArchived = false
+  ): Promise<AxiosResponse<PageResponse<EmployeeResponse>>> => {
+    const includeArchivedParam = includeArchived ? "&includeArchived=true" : ""
+    return api.get(`/v1/employees?page=${page}&size=${size}&sortBy=${sortBy}${includeArchivedParam}`)
+  },
   getById: (id: string): Promise<AxiosResponse<EmployeeResponse>> =>
     api.get(`/v1/employees/${id}`),
   create: (data: CreateEmployeeInput): Promise<AxiosResponse<EmployeeResponse>> => api.post("/v1/employees", data),
@@ -104,10 +109,13 @@ export const eventsApi = {
 }
 
 export const parentsApi = {
-  listActive: (
+  list: (
     page = 0,
     size = 20,
-    sortBy = "name"
-  ): Promise<AxiosResponse<PageResponse<ParentSummary>>> =>
-    api.get(`/v1/parents/active?page=${page}&size=${size}&sortBy=${sortBy}`),
+    sortBy = "name",
+    includeArchived = false
+  ): Promise<AxiosResponse<PageResponse<ParentSummary>>> => {
+    const includeArchivedParam = includeArchived ? "&includeArchived=true" : ""
+    return api.get(`/v1/parents?page=${page}&size=${size}&sortBy=${sortBy}${includeArchivedParam}`)
+  },
 }

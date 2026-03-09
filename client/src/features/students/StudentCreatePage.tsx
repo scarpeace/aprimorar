@@ -37,7 +37,7 @@ export function StudentCreatePage() {
       setParentsError(null)
       setParentsLoading(true)
 
-      const res = await parentsApi.listActive(0, 100, "name")
+      const res = await parentsApi.list(0, 100, "name")
       const page: PageResponse<ParentSummary> = res.data
       setParents(page.content)
       if (page.content.length === 0) setParentMode("new")
