@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aprimorar.api.requests.common.PageQuery;
 import com.aprimorar.api.domain.student.dto.CreateStudentDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.domain.student.dto.UpdateStudentDTO;
-import com.aprimorar.api.util.PageableUtils;
+import com.aprimorar.api.requests.common.PageQuery;
+import com.aprimorar.api.shared.PageableUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

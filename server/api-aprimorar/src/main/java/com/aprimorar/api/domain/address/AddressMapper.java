@@ -1,9 +1,10 @@
 package com.aprimorar.api.domain.address;
 
+import org.springframework.stereotype.Component;
+
 import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
 import com.aprimorar.api.domain.address.dto.CreateAddressDTO;
-import com.aprimorar.api.util.MapperUtils;
-import org.springframework.stereotype.Component;
+import com.aprimorar.api.shared.MapperUtils;
 
 @Component
 public class AddressMapper {

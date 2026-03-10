@@ -1,10 +1,11 @@
 package com.aprimorar.api.domain.parent;
 
+import org.springframework.stereotype.Component;
+
 import com.aprimorar.api.domain.parent.dto.CreateParentDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
-import com.aprimorar.api.util.MapperUtils;
-import org.springframework.stereotype.Component;
+import com.aprimorar.api.shared.MapperUtils;
 
 @Component
 public class ParentMapper {

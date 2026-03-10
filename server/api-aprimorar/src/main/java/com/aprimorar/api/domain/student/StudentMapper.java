@@ -1,16 +1,17 @@
 package com.aprimorar.api.domain.student;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.Period;
+
+import org.springframework.stereotype.Component;
+
 import com.aprimorar.api.domain.address.AddressMapper;
 import com.aprimorar.api.domain.parent.ParentMapper;
 import com.aprimorar.api.domain.student.dto.CreateStudentDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.domain.student.dto.UpdateStudentDTO;
-import com.aprimorar.api.util.MapperUtils;
-import org.springframework.stereotype.Component;
-
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.Period;
+import com.aprimorar.api.shared.MapperUtils;
 
 @Component
 public class StudentMapper {

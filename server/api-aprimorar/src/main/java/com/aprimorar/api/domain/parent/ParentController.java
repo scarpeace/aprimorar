@@ -1,11 +1,7 @@
 package com.aprimorar.api.domain.parent;
 
-import com.aprimorar.api.requests.common.PageQuery;
-import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
-import com.aprimorar.api.util.PageableUtils;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
+import com.aprimorar.api.requests.common.PageQuery;
+import com.aprimorar.api.shared.PageableUtils;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/parents")

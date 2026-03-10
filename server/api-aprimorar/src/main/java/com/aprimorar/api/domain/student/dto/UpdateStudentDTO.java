@@ -1,42 +1,35 @@
 package com.aprimorar.api.domain.student.dto;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
 import com.aprimorar.api.domain.address.dto.CreateAddressDTO;
 import com.aprimorar.api.domain.parent.dto.CreateParentDTO;
-import com.aprimorar.api.validation.ValidationPatterns;
+import com.aprimorar.api.shared.MapperUtils;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 
-import java.time.LocalDate;
-import java.util.UUID;
-
 public record UpdateStudentDTO(
         String name,
-
         @PastOrPresent(message = "A data de nascimento do estudante não pode ser futura")
         LocalDate birthdate,
-
-        @Pattern(regexp = ValidationPatterns.CPF, message = ValidationPatterns.CPF_MESSAGE)
+        @Pattern(regexp = MapperUtils.CPF, message = MapperUtils.CPF_MESSAGE)
         String cpf,
-
         String school,
-
-        @Pattern(regexp = ValidationPatterns.PHONE_BR, message = ValidationPatterns.PHONE_BR_MESSAGE)
+        @Pattern(regexp = MapperUtils.PHONE_BR, message = MapperUtils.PHONE_BR_MESSAGE)
         String contact,
-
         @Email(message = "Email deve ser um endereço de email válido")
         String email,
-
         @Valid
         CreateAddressDTO address,
-
         UUID parentId,
-
         @Valid
         CreateParentDTO parent
-) {
+        ) {
 
     @AssertTrue(message = "Pelo menos um campo deve ser informado para atualização")
     public boolean hasAnyFieldToUpdate() {

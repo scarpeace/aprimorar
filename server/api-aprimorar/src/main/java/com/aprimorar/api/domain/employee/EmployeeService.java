@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +15,7 @@ import com.aprimorar.api.domain.employee.dto.UpdateEmployeeDTO;
 import com.aprimorar.api.domain.employee.entity.Employee;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.exception.EmployeeServiceBusinessException;
+import com.aprimorar.api.shared.MapperUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,32 +24,62 @@ import lombok.extern.slf4j.Slf4j;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepo;
-    private final EmployeeMapper employeeMapper;
     private final Clock applicationClock;
 
     public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, Clock applicationClock) {
         this.employeeRepo = employeeRepo;
-        this.employeeMapper = employeeMapper;
         this.applicationClock = applicationClock;
     }
 
-    @Transactional(readOnly = true)
-    public Page<EmployeeResponseDTO> listEmployees(Pageable pageable, boolean includeArchived) {
-        Page<Employee> employeePage = employeeRepo.findAll(pageable);
-        return employeePage.map(employeeMapper::toDto);
+    @Transactional
+    public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) throws EmployeeServiceBusinessException {
+        EmployeeResponseDTO response;
+        
+        try {
+            log.info("EmployeeService:createEmployee execution started.");
+            Employee employee = EmployeeMapper.convertToEntity(employeeRequestDto);
+            log.debug("EmployeeService:createEmployee request parameters {}", MapperUtils.jsonAsString(employeeRequestDto));
+
+            Employee savedEmployee = employeeRepo.save(employee);
+            response = EmployeeMapper.convertToDto(savedEmployee);
+            log.debug("EmployeeService:createEmployee received response from Database {}", MapperUtils.jsonAsString(response));
+
+        } catch (Exception ex) {
+            log.error("Exception occurred while persisting employee to database , Exception message {}", ex.getMessage());
+            throw new EmployeeServiceBusinessException("Exception occurred while create a new employee");
+        }
+        log.info("EmployeeService:createEmployee execution ended.");
+        return response;
     }
 
     @Transactional(readOnly = true)
-    public EmployeeResponseDTO findById(UUID employeeId) {
+    public Page<EmployeeResponseDTO> getEmployees(PageRequest pr) throws EmployeeServiceBusinessException {
+       
+        try {
+            log.info("EmployeeService:getEmployees execution started");
+
+            Page<Employee> employeePage = employeeRepo.findAll(pr);
+
+            log.info("EmployeeService:getEmployees execution ended");
+            return employeePage.map(EmployeeMapper::convertToDto);
+        } catch (Exception ex) {
+            log.info("Ocorreu um erro ao buscar os funcionários do banco de dados. Mensagem de erro: {}", ex.getMessage());
+            throw new EmployeeServiceBusinessException("Ocorreu um erro ao buscar os funcionários do Banco de Dados");
+        }
+
+    }
+
+    @Transactional(readOnly = true)
+    public EmployeeResponseDTO getById(UUID employeeId) {
         EmployeeResponseDTO employeeResponseDTO;
         try {
             log.info("ProductService:getProductById execution started");
-            
+
             Employee employee = employeeRepo.findById(employeeId)
                     .orElseThrow(() -> new EmployeeNotFoundException("Funcionário com o ID não encontrado:" + employeeId));
-            employeeResponseDTO = employeeMapper.toDto(employee);
+            employeeResponseDTO = EmployeeMapper.convertToDto(employee);
 
-            log.debug("EmployeeService:getProductById retrieving product from database for id {} {}", employee, employeeMapper.jsonAsString(employeeResponseDTO));
+            log.debug("EmployeeService:getProductById retrieving product from database for id {} {}", employee, MapperUtils.jsonAsString(employeeResponseDTO));
 
         } catch (Exception ex) {
             log.info("Ocorreu um erro ao buscar o funcionário {} do banco de dados. Mensagem de erro: {}", employeeId, ex.getMessage());
@@ -57,14 +88,6 @@ public class EmployeeService {
 
         log.info("EmployeeService:getProductById execution ended");
         return employeeResponseDTO;
-    }
-
-    @Transactional
-    public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
-        log.info("Creating employee");
-        Employee newEmployee = employeeMapper.toEntity(employeeRequestDto);
-        Employee savedEmployee = employeeRepo.save(newEmployee);
-        return employeeMapper.toDto(savedEmployee);
     }
 
     @Transactional
@@ -79,10 +102,10 @@ public class EmployeeService {
         Employee foundEmployee = findAnyEmployeeOrThrow(employeeId);
         log.info("Updating employeeId={}", employeeId);
 
-        employeeMapper.updateFromDto(updateEmployeeDto, foundEmployee);
+        EmployeeMapper.updateFromDto(updateEmployeeDto, foundEmployee);
         foundEmployee.setUpdatedAt(Instant.now(applicationClock));
 
-        return employeeMapper.toDto(foundEmployee);
+        return EmployeeMapper.convertToDto(foundEmployee);
     }
 
     private Employee findAnyEmployeeOrThrow(UUID employeeId) {

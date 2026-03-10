@@ -1,13 +1,14 @@
-package com.aprimorar.api.util;
+package com.aprimorar.api.shared;
 
-import com.aprimorar.api.requests.common.PageQuery;
+import java.util.Set;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Set;
+import com.aprimorar.api.requests.common.PageQuery;
 
 public final class PageableUtils {
 
