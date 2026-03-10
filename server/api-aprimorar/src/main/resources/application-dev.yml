@@ -1,4 +1,6 @@
 spring:
+  main:
+    lazy-initialization: true
   datasource:
     url: jdbc:postgresql://localhost:5432/aprimorar
     username: myuser

@@ -19,7 +19,7 @@ public class ParentService {
 
     @Transactional(readOnly = true)
     public Page<ParentSummaryDTO> listParents(Pageable pageable, boolean includeArchived) {
-        Page<ParentEntity> parentPage = includeArchived
+        Page<Parent> parentPage = includeArchived
                 ? parentRepo.findAll(pageable)
                 : parentRepo.findAllByArchivedAtIsNull(pageable);
         return parentPage.map(parentMapper::toSummaryDto);

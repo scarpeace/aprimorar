@@ -1,7 +1,7 @@
 package com.aprimorar.api.domain.student;
 
 import com.aprimorar.api.domain.address.AddressEntity;
-import com.aprimorar.api.domain.parent.ParentEntity;
+import com.aprimorar.api.domain.parent.Parent;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -49,7 +49,7 @@ public class StudentEntity {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "parent_id", referencedColumnName = "parent_id", nullable = false)
-    private ParentEntity parentEntity;
+    private Parent parent;
 
     @Embedded
     private AddressEntity addressEntity;
@@ -66,7 +66,7 @@ public class StudentEntity {
     }
 
     public StudentEntity(UUID id, String name, String contact, String email, LocalDate birthdate, String cpf, String school,
-                         Instant archivedAt, Instant lastReactivatedAt, ParentEntity parentEntity, AddressEntity addressEntity, Instant createdAt,
+                         Instant archivedAt, Instant lastReactivatedAt, Parent parent, AddressEntity addressEntity, Instant createdAt,
                          Instant updatedAt) {
         this.id = id;
         this.name = name;
@@ -77,7 +77,7 @@ public class StudentEntity {
         this.school = school;
         this.archivedAt = archivedAt;
         this.lastReactivatedAt = lastReactivatedAt;
-        this.parentEntity = parentEntity;
+        this.parent = parent;
         this.addressEntity = addressEntity;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -155,12 +155,12 @@ public class StudentEntity {
         this.lastReactivatedAt = lastReactivatedAt;
     }
 
-    public ParentEntity getParent() {
-        return parentEntity;
+    public Parent getParent() {
+        return parent;
     }
 
-    public void setParent(ParentEntity parentEntity) {
-        this.parentEntity = parentEntity;
+    public void setParent(Parent parent) {
+        this.parent = parent;
     }
 
     public AddressEntity getAddress() {

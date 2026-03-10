@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ParentRepository extends JpaRepository<ParentEntity, UUID> {
+public interface ParentRepository extends JpaRepository<Parent, UUID> {
 
-    Page<ParentEntity> findAllByArchivedAtIsNull(Pageable pageable);
+    Page<Parent> findAllByArchivedAtIsNull(Pageable pageable);
 
-    Optional<ParentEntity> findByIdAndArchivedAtIsNull(UUID id);
+    Optional<Parent> findByIdAndArchivedAtIsNull(UUID id);
 }

@@ -20,7 +20,7 @@ import com.aprimorar.api.domain.event.dto.CreateEventDTO;
 import com.aprimorar.api.domain.event.dto.EventFilter;
 import com.aprimorar.api.domain.event.dto.EventResponseDTO;
 import com.aprimorar.api.domain.event.dto.UpdateEventDTO;
-import com.aprimorar.api.requests.common.PageQuery;
+import com.aprimorar.api.shared.PageQuery;
 import com.aprimorar.api.shared.PageableUtils;
 
 import io.swagger.v3.oas.annotations.Operation;

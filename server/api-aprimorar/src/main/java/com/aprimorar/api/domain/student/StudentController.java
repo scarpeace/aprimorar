@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aprimorar.api.domain.student.dto.CreateStudentDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.domain.student.dto.UpdateStudentDTO;
-import com.aprimorar.api.requests.common.PageQuery;
+import com.aprimorar.api.shared.PageQuery;
 import com.aprimorar.api.shared.PageableUtils;
 
 import io.swagger.v3.oas.annotations.Operation;

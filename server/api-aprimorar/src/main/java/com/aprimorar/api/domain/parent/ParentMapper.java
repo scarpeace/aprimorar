@@ -16,12 +16,12 @@ public class ParentMapper {
         this.mapperUtils = mapperUtils;
     }
 
-    public ParentEntity toEntity(CreateParentDTO dto) {
+    public Parent toEntity(CreateParentDTO dto) {
         if (dto == null) {
             return null;
         }
 
-        ParentEntity entity = new ParentEntity();
+        Parent entity = new Parent();
         entity.setName(dto.name());
         entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
         entity.setContact(mapperUtils.sanitizeContact(dto.contact()));
@@ -29,7 +29,7 @@ public class ParentMapper {
         return entity;
     }
 
-    public ParentResponseDTO toDto(ParentEntity entity) {
+    public ParentResponseDTO toDto(Parent entity) {
         if (entity == null) {
             return null;
         }
@@ -42,7 +42,7 @@ public class ParentMapper {
         );
     }
 
-    public ParentSummaryDTO toSummaryDto(ParentEntity entity) {
+    public ParentSummaryDTO toSummaryDto(Parent entity) {
         if (entity == null) {
             return null;
         }
@@ -50,7 +50,7 @@ public class ParentMapper {
         return new ParentSummaryDTO(entity.getId(), entity.getName());
     }
 
-    public void updateFromDto(CreateParentDTO dto, ParentEntity entity) {
+    public void updateFromDto(CreateParentDTO dto, Parent entity) {
         if (dto == null || entity == null) {
             return;
         }

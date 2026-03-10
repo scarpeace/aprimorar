@@ -8,8 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.aprimorar.api.requests.common.PageQuery;
-
 public final class PageableUtils {
 
     private PageableUtils() {

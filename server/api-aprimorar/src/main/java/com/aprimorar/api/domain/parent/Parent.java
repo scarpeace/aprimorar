@@ -12,7 +12,7 @@ import java.util.UUID;
         @UniqueConstraint(name = "uk_parent_email", columnNames = {"email"}),
         @UniqueConstraint(name = "uk_parent_cpf", columnNames = {"cpf"})
 })
-public class ParentEntity {
+public class Parent {
 
     @Id
     @Column(name = "parent_id")
@@ -45,10 +45,10 @@ public class ParentEntity {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    public ParentEntity() {
+    public Parent() {
     }
 
-    public ParentEntity(UUID id, String name, String email, String contact, String cpf, Instant archivedAt, Instant lastReactivatedAt, Instant createdAt, Instant updatedAt) {
+    public Parent(UUID id, String name, String email, String contact, String cpf, Instant archivedAt, Instant lastReactivatedAt, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;

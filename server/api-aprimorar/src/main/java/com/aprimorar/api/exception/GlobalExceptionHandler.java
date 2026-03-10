@@ -4,13 +4,16 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.stream.Collectors;
 
+import com.aprimorar.api.requests.APIResponse;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,9 +24,10 @@ import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.exception.errors.ErrorResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final Clock applicationClock;
 
@@ -112,20 +116,6 @@ public class GlobalExceptionHandler {
                 request
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationErrors(
-            MethodArgumentNotValidException ex,
-            HttpServletRequest request
-    ) {
-        String message = ex.getBindingResult().getFieldErrors().stream()
-                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                .collect(Collectors.joining("; "));
-
-        ErrorResponse error = buildError(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", message, request);
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(ResponseStatusException.class)

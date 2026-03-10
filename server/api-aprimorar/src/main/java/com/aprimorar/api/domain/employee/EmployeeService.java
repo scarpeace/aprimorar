@@ -81,8 +81,7 @@ public class EmployeeService {
         }
 
         log.info("EmployeeService:getEmployees execucao finalizada");
-        return responseDto;
-    }
+        return responseDto;    }
 
     @Transactional(readOnly = true)
     public EmployeeResponseDTO getById(UUID employeeId) throws EmployeeServiceBusinessException {

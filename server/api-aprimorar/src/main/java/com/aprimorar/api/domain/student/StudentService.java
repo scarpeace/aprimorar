@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.Clock;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.parent.ParentEntity;
+import com.aprimorar.api.domain.parent.Parent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -114,39 +114,39 @@ public class StudentService {
                 .orElseThrow(() -> new StudentNotFoundException(studentId));
     }
 
-    private ParentEntity findActiveParentOrThrow(UUID parentId) {
+    private Parent findActiveParentOrThrow(UUID parentId) {
         return parentRepo.findByIdAndArchivedAtIsNull(parentId)
                 .orElseThrow(() -> new ParentNotFoundException(parentId));
     }
 
-    private ParentEntity createParent(CreateParentDTO createParentDto) {
-        ParentEntity newParentEntity = parentMapper.toEntity(createParentDto);
-        return parentRepo.save(newParentEntity);
+    private Parent createParent(CreateParentDTO createParentDto) {
+        Parent newParent = parentMapper.toEntity(createParentDto);
+        return parentRepo.save(newParent);
     }
 
     private void assignParentReference(StudentEntity studentEntity, UUID parentId, CreateParentDTO parentDto) {
         if (parentId != null) {
-            ParentEntity existingParentEntity = findActiveParentOrThrow(parentId);
-            studentEntity.setParent(existingParentEntity);
+            Parent existingParent = findActiveParentOrThrow(parentId);
+            studentEntity.setParent(existingParent);
             return;
         }
 
         if (parentDto != null) {
-            ParentEntity savedParentEntity = createParent(parentDto);
-            studentEntity.setParent(savedParentEntity);
+            Parent savedParent = createParent(parentDto);
+            studentEntity.setParent(savedParent);
         }
     }
 
     private void resolveParentReferenceForUpdate(StudentEntity studentEntity, UUID parentId, CreateParentDTO parentDto) {
         if (parentId != null) {
-            ParentEntity existingParentEntity = findActiveParentOrThrow(parentId);
-            studentEntity.setParent(existingParentEntity);
+            Parent existingParent = findActiveParentOrThrow(parentId);
+            studentEntity.setParent(existingParent);
             return;
         }
 
         if (parentDto != null && studentEntity.getParent() == null) {
-            ParentEntity savedParentEntity = createParent(parentDto);
-            studentEntity.setParent(savedParentEntity);
+            Parent savedParent = createParent(parentDto);
+            studentEntity.setParent(savedParent);
         }
     }
 

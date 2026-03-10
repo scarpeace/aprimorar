@@ -4,6 +4,6 @@ import java.util.UUID;
 
 public class ParentNotFoundException extends RuntimeException {
     public ParentNotFoundException(UUID id) {
-        super("Parent not found with id: " + id);
+        super("Responsável com o ID informado não foi encontrado no Bando de Dados:  " + id);
     }
 }

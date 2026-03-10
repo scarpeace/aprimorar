@@ -1,4 +1,4 @@
-package com.aprimorar.api.requests.common;
+package com.aprimorar.api.shared;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
