@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.aprimorar.api.domain.employee.entity.Employee;
+import com.aprimorar.api.domain.employee.Employee;
 import com.aprimorar.api.domain.student.StudentEntity;
 import com.aprimorar.api.enums.EventContent;
 

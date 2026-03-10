@@ -2,6 +2,7 @@ package com.aprimorar.api.domain.employee;
 
 import java.util.UUID;
 
+import com.aprimorar.api.domain.employee.dto.UpdateEmployeeDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
-import com.aprimorar.api.domain.employee.dto.UpdateEmployeeDTO;
 import com.aprimorar.api.shared.MapperUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,19 +33,21 @@ import lombok.extern.slf4j.Slf4j;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final MapperUtils mapperUtils;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, MapperUtils mapperUtils) {
         this.employeeService = employeeService;
+        this.mapperUtils = mapperUtils;
     }
 
     @Operation(summary = "Create employee", description = "Creates a new employee with provided data")
     @PostMapping
     public ResponseEntity<EmployeeResponseDTO> createEmployee(@RequestBody @Valid EmployeeRequestDTO employeeRequestDto) {
 
-        log.info("EmployeeController::createEmployee request body {}", MapperUtils.jsonAsString(employeeRequestDto));
+        log.info("EmployeeController::createEmployee request body {}", mapperUtils.jsonAsString(employeeRequestDto));
         EmployeeResponseDTO response = employeeService.createEmployee(employeeRequestDto);
 
-        log.info("EmployeeController::createEmployee response body {}", MapperUtils.jsonAsString(response));
+        log.info("EmployeeController::createEmployee response body {}", mapperUtils.jsonAsString(response));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -69,7 +71,7 @@ public class EmployeeController {
 
         EmployeeResponseDTO foundEmployee = employeeService.getById(employeeId);
 
-        log.info("EmployeeController::getEmployeeById by id  {} response {}", employeeId, MapperUtils.jsonAsString(foundEmployee));
+        log.info("EmployeeController::getEmployeeById by id  {} response {}", employeeId, mapperUtils.jsonAsString(foundEmployee));
         return ResponseEntity.ok(foundEmployee);
     }
 
@@ -77,15 +79,16 @@ public class EmployeeController {
     @PatchMapping("/{employeeId}")
     public ResponseEntity<EmployeeResponseDTO> updateEmployee(
             @PathVariable UUID employeeId,
-            @RequestBody @Valid UpdateEmployeeDTO updateEmployeeDto) {
-        EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(employeeId, updateEmployeeDto);
+            @RequestBody @Valid UpdateEmployeeDTO updateEmployeeDTO) {
+        EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(employeeId, updateEmployeeDTO);
         return ResponseEntity.ok(updatedEmployee);
     }
 
     @Operation(summary = "Delete employee", description = "Soft deletes an employee based on ID")
     @DeleteMapping("/{employeeId}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable UUID employeeId) {
-        employeeService.softDeleteEmployee(employeeId);
+    public ResponseEntity<Void> archive(@PathVariable UUID employeeId) {
+        log.info("EmployeeController::archive by id  {}", employeeId);
+        employeeService.archiveEmployee(employeeId);
         return ResponseEntity.noContent().build();
     }
 

@@ -18,7 +18,7 @@ public record EmployeeResponseDTO(
         String cpf,
         String email,
         Role role,
-        Boolean active,
+        Boolean archived,
 
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
         Instant createdAt,

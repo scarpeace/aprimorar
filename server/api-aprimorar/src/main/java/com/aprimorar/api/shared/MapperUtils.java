@@ -7,6 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class MapperUtils {
+    private final ObjectMapper objectMapper;
+
+    public MapperUtils(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
 
     public static final String CPF = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$";
     public static final String PHONE_BR = "^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$";
@@ -59,12 +65,11 @@ public class MapperUtils {
         return String.format("%s-%s", zip.substring(0, 5), zip.substring(5, 8));
     }
 
-    public static String jsonAsString(Object obj){
+    public String jsonAsString(Object obj) {
         try {
-            return new ObjectMapper().writeValueAsString(obj);
+            return objectMapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            return "{\"logSerializationError\":\"" + e.getMessage() + "\"}";
         }
-        return null;
     }
 }

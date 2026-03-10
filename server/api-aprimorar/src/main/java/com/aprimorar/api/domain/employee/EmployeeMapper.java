@@ -1,39 +1,41 @@
 package com.aprimorar.api.domain.employee;
 
+import com.aprimorar.api.enums.Role;
 import org.springframework.stereotype.Component;
 
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
 import com.aprimorar.api.domain.employee.dto.UpdateEmployeeDTO;
-import com.aprimorar.api.domain.employee.entity.Employee;
 import com.aprimorar.api.shared.MapperUtils;
 
-//TODO Apply sanitization on way in
+import java.time.Clock;
+import java.time.Instant;
+
 
 @Component
 public class EmployeeMapper {
 
-    private final MapperUtils mapperUtils;
+    private final Clock applicationClock;
 
-    public EmployeeMapper(MapperUtils mapperUtils) {
-        this.mapperUtils = mapperUtils;
+    public EmployeeMapper(Clock applicationClock){
+        this.applicationClock = applicationClock;
     }
 
-    public static Employee convertToEntity(EmployeeRequestDTO employeeRequestDTO) {
+    public Employee convertToEntity(EmployeeRequestDTO updateEmployeeDTO) {
         Employee employee = new Employee();
 
-        employee.setName(employeeRequestDTO.name());
-        employee.setBirthdate(employeeRequestDTO.birthdate());
-        employee.setPix(employeeRequestDTO.pix());
-        employee.setContact(employeeRequestDTO.contact());
-        employee.setCpf(employeeRequestDTO.contact());
-        employee.setEmail(employeeRequestDTO.email());
-        employee.setRole(employeeRequestDTO.role());
+        employee.setName(updateEmployeeDTO.name());
+        employee.setBirthdate(updateEmployeeDTO.birthdate());
+        employee.setPix(updateEmployeeDTO.pix().trim());
+        employee.setContact(MapperUtils.sanitizeContact(updateEmployeeDTO.contact()));
+        employee.setCpf(MapperUtils.sanitizeCpf(updateEmployeeDTO.cpf()));
+        employee.setEmail(updateEmployeeDTO.email().trim());
+        employee.setRole(Role.EMPLOYEE);
+        employee.setCreatedAt(applicationClock.instant());
         return employee;
     }
 
-
-    public static EmployeeResponseDTO convertToDto(Employee entity) {
+    public EmployeeResponseDTO convertToDto(Employee entity) {
 
         return new EmployeeResponseDTO(
                 entity.getId(),
@@ -50,31 +52,17 @@ public class EmployeeMapper {
         );
     }
 
-    public static void updateFromDto(UpdateEmployeeDTO dto, Employee entity) {
-        if (dto == null || entity == null) {
-            return;
-        }
+    public Employee updateToEntity(UpdateEmployeeDTO updateEmployeeDTO) {
+        Employee updatedEmployee = new Employee();
 
-        if (dto.name() != null) {
-            entity.setName(dto.name());
-        }
-        if (dto.birthdate() != null) {
-            entity.setBirthdate(dto.birthdate());
-        }
-        if (dto.pix() != null) {
-            entity.setPix(dto.pix());
-        }
-        if (dto.contact() != null) {
-            entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
-        }
-        if (dto.cpf() != null) {
-            entity.setCpf(MapperUtils.sanitizeCpf(dto.cpf()));
-        }
-        if (dto.email() != null) {
-            entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
-        }
-        if (dto.role() != null) {
-            entity.setRole(dto.role());
-        }
+        updatedEmployee.setName(updateEmployeeDTO.name());
+        updatedEmployee.setBirthdate(updateEmployeeDTO.birthdate());
+        updatedEmployee.setPix(updateEmployeeDTO.pix());
+        updatedEmployee.setContact(updateEmployeeDTO.contact());
+        updatedEmployee.setCpf(updateEmployeeDTO.cpf());
+        updatedEmployee.setEmail(updateEmployeeDTO.email());
+        updatedEmployee.setUpdatedAt(applicationClock.instant());
+        return updatedEmployee;
     }
+
 }

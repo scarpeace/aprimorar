@@ -1,18 +1,30 @@
-package com.aprimorar.api.domain.employee.entity;
+package com.aprimorar.api.domain.employee;
 
-
-import com.aprimorar.api.enums.Role;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.aprimorar.api.enums.Role;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+//TODO Eu preciso adicionar um novo campo no employee que é o employeeRole, vou deixar o role para autenticação e acesso
 
 @Entity
 @Table(name = "tb_employee", uniqueConstraints = {
@@ -49,6 +61,7 @@ public class Employee {
     @Column(name = "archived_at")
     private Instant archivedAt;
 
+    //TODO isso aqui vai poder tirar lá na frente
     @Column(name = "last_reactivated_at")
     private Instant lastReactivatedAt;
 

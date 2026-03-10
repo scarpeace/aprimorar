@@ -1,4 +1,4 @@
-package com.aprimorar.api.exception.handler;
+package com.aprimorar.api.exception;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -33,7 +33,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(StudentNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleStudentNotFound(
-            StudentNotFoundException ex,
             HttpServletRequest request
     ) {
         ErrorResponse error = buildError(
@@ -96,20 +95,6 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 "EVENT_NOT_FOUND",
                 "Evento não encontrado",
-                request
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
-    @ExceptionHandler(EmployeeNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleEmployeeNotFound(
-            EmployeeNotFoundException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse error = buildError(
-                HttpStatus.NOT_FOUND,
-                "EMPLOYEE_NOT_FOUND",
-                "Funcionário não encontrado",
                 request
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);

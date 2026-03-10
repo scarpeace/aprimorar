@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aprimorar.api.domain.employee.EmployeeRepository;
-import com.aprimorar.api.domain.employee.entity.Employee;
+import com.aprimorar.api.domain.employee.Employee;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.event.dto.CreateEventDTO;
 import com.aprimorar.api.domain.event.dto.EventFilter;
@@ -119,6 +119,6 @@ public class EventService {
 
     private Employee findSchedulableEmployeeOrThrow(UUID employeeId) {
         return employeeRepo.findByIdAndArchivedAtIsNull(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException(employeeId.toString()));
+                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
     }
 }
