@@ -1,71 +1,52 @@
 package com.aprimorar.api.domain.parent;
 
+import java.time.Clock;
+
 import org.springframework.stereotype.Component;
 
 import com.aprimorar.api.domain.parent.dto.CreateParentDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
-import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
+import com.aprimorar.api.domain.parent.dto.UpdateParentDTO;
 import com.aprimorar.api.shared.MapperUtils;
 
 @Component
 public class ParentMapper {
 
-    private final MapperUtils mapperUtils;
+    private final Clock applicationClock;
 
-    public ParentMapper(MapperUtils mapperUtils) {
-        this.mapperUtils = mapperUtils;
+    public ParentMapper(Clock applicationClock) {
+        this.applicationClock = applicationClock;
     }
 
-    public Parent toEntity(CreateParentDTO dto) {
-        if (dto == null) {
-            return null;
-        }
+    public Parent convertToEntity(CreateParentDTO dto) {
 
         Parent entity = new Parent();
         entity.setName(dto.name());
-        entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
-        entity.setContact(mapperUtils.sanitizeContact(dto.contact()));
-        entity.setCpf(mapperUtils.sanitizeCpf(dto.cpf()));
+        entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
+        entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
+        entity.setCpf(MapperUtils.sanitizeCpf(dto.cpf()));
+        entity.setCreatedAt(applicationClock.instant());
         return entity;
     }
 
-    public ParentResponseDTO toDto(Parent entity) {
-        if (entity == null) {
-            return null;
-        }
+    public ParentResponseDTO convertToDto(Parent entity) {
 
         return new ParentResponseDTO(
                 entity.getName(),
                 entity.getEmail(),
-                mapperUtils.formatContact(entity.getContact()),
-                mapperUtils.formatCpf(entity.getCpf())
+                MapperUtils.formatContact(entity.getContact()),
+                MapperUtils.formatCpf(entity.getCpf())
         );
     }
 
-    public ParentSummaryDTO toSummaryDto(Parent entity) {
-        if (entity == null) {
-            return null;
-        }
+    public Parent updateToEnity(UpdateParentDTO updateParentDTO) {
 
-        return new ParentSummaryDTO(entity.getId(), entity.getName());
-    }
-
-    public void updateFromDto(CreateParentDTO dto, Parent entity) {
-        if (dto == null || entity == null) {
-            return;
-        }
-
-        if (dto.name() != null) {
-            entity.setName(dto.name());
-        }
-        if (dto.email() != null) {
-            entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
-        }
-        if (dto.contact() != null) {
-            entity.setContact(mapperUtils.sanitizeContact(dto.contact()));
-        }
-        if (dto.cpf() != null) {
-            entity.setCpf(mapperUtils.sanitizeCpf(dto.cpf()));
-        }
+        Parent entity = new Parent();
+        entity.setName(updateParentDTO.name());
+        entity.setEmail(MapperUtils.sanitizeEmail(updateParentDTO.email()));
+        entity.setContact(MapperUtils.sanitizeContact(updateParentDTO.contact()));
+        entity.setCpf(MapperUtils.sanitizeCpf(updateParentDTO.cpf()));
+        entity.setUpdatedAt(applicationClock.instant());
+        return entity;
     }
 }

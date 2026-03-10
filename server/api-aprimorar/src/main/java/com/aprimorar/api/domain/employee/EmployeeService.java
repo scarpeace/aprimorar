@@ -3,7 +3,6 @@ package com.aprimorar.api.domain.employee;
 import java.time.Clock;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.employee.dto.UpdateEmployeeDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.employee.dto.UpdateEmployeeDTO;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.exception.EmployeeServiceBusinessException;
 import com.aprimorar.api.shared.MapperUtils;
@@ -52,7 +52,6 @@ public class EmployeeService {
             responseDto = employeeMapper.convertToDto(savedEmployee);
             log.debug("EmployeeService:createEmployee colaborador criado com sucesso {}", mapperUtils.jsonAsString(responseDto));
 
-
         } catch (Exception ex) {
             log.error("Ocorreu um erro ao salvar o colaborador no banco de dados. Mensagem: {}", ex.getMessage(), ex);
             throw new EmployeeServiceBusinessException("Ocorreu um erro ao criar o colaborador");
@@ -60,7 +59,6 @@ public class EmployeeService {
 
         log.info("EmployeeService:createEmployee execucao finalizada");
         return responseDto;
-
 
     }
 
@@ -81,7 +79,8 @@ public class EmployeeService {
         }
 
         log.info("EmployeeService:getEmployees execucao finalizada");
-        return responseDto;    }
+        return responseDto;
+    }
 
     @Transactional(readOnly = true)
     public EmployeeResponseDTO getById(UUID employeeId) throws EmployeeServiceBusinessException {
@@ -97,7 +96,6 @@ public class EmployeeService {
 
             log.info("EmployeeService:getEmployeeById execucao finalizada");
             return responseDto;
-
 
         } catch (EmployeeNotFoundException ex) {
             log.info("EmployeeService:getEmployeeById colaborador nao encontrado. id={}", employeeId);
@@ -115,7 +113,7 @@ public class EmployeeService {
         EmployeeResponseDTO responseDto;
         log.info("EmployeeService:updateEmployee execucao iniciada");
 
-        try{
+        try {
             Employee foundEmployee = employeeRepo.findById(employeeId)
                     .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
 
@@ -140,8 +138,7 @@ public class EmployeeService {
             throw new EmployeeServiceBusinessException("Ocorreu um erro ao atualizar o colaborador no banco de dados");
         }
 
-            }
-
+    }
 
     @Transactional
     public void archiveEmployee(UUID employeeId) throws EmployeeServiceBusinessException {

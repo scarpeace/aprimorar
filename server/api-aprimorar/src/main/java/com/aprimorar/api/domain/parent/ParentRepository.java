@@ -1,15 +1,9 @@
 package com.aprimorar.api.domain.parent;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public interface ParentRepository extends JpaRepository<Parent, UUID> {
 
-    Page<Parent> findAllByArchivedAtIsNull(Pageable pageable);
-
-    Optional<Parent> findByIdAndArchivedAtIsNull(UUID id);
 }

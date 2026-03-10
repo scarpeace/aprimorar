@@ -2,7 +2,6 @@ package com.aprimorar.api.domain.employee;
 
 import java.util.UUID;
 
-import com.aprimorar.api.domain.employee.dto.UpdateEmployeeDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.employee.dto.UpdateEmployeeDTO;
 import com.aprimorar.api.shared.MapperUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,10 +26,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/employees")
 @Tag(name = "Employees", description = "Employee management APIs")
-@Slf4j
 public class EmployeeController {
 
     private final EmployeeService employeeService;

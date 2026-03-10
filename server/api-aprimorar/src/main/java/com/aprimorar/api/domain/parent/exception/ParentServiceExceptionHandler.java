@@ -1,7 +1,6 @@
 package com.aprimorar.api.domain.parent.exception;
 
 import com.aprimorar.api.domain.employee.Employee;
-import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.exception.EmployeeServiceBusinessException;
 import com.aprimorar.api.requests.APIResponse;
 import com.aprimorar.api.requests.ErrorDTO;

@@ -1,11 +1,16 @@
 package com.aprimorar.api.domain.parent;
 
-import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.aprimorar.api.domain.employee.exception.EmployeeServiceBusinessException;
+import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class ParentService {
 
@@ -18,10 +23,22 @@ public class ParentService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ParentSummaryDTO> listParents(Pageable pageable, boolean includeArchived) {
-        Page<Parent> parentPage = includeArchived
-                ? parentRepo.findAll(pageable)
-                : parentRepo.findAllByArchivedAtIsNull(pageable);
-        return parentPage.map(parentMapper::toSummaryDto);
+    public Page<ParentResponseDTO> getParents(PageRequest pr) {
+       Page<ParentResponseDTO> responseDto;
+        log.info("ParentService:getParents execucao iniciada");
+    
+        try {
+            Page<Parent> parentPage = parentRepo.findAll(pr);
+
+            responseDto = parentPage.map(parentMapper::convertToDto);
+            log.info("ParentService:getParents resumo da consulta: totalPaginas= {}, totalElementos= {}", responseDto.getTotalPages(), responseDto.getTotalElements());
+
+        } catch (Exception ex) {
+            log.error("Ocorreu um erro ao buscar os responsáveis no banco de dados. Mensagem: {}", ex.getMessage(), ex);
+            throw new EmployeeServiceBusinessException("Ocorreu um erro ao buscar os responsáveis no banco de dados");
+        }
+
+        log.info("ParentService:getParents execucao finalizada");
+        return responseDto;
     }
 }

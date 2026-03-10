@@ -115,12 +115,12 @@ public class StudentService {
     }
 
     private Parent findActiveParentOrThrow(UUID parentId) {
-        return parentRepo.findByIdAndArchivedAtIsNull(parentId)
+        return parentRepo.findById(parentId)
                 .orElseThrow(() -> new ParentNotFoundException(parentId));
     }
 
     private Parent createParent(CreateParentDTO createParentDto) {
-        Parent newParent = parentMapper.toEntity(createParentDto);
+        Parent newParent = parentMapper.convertToEntity(createParentDto);
         return parentRepo.save(newParent);
     }
 

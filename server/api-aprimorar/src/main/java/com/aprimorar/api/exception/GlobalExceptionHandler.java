@@ -2,32 +2,25 @@ package com.aprimorar.api.exception;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.stream.Collectors;
 
-import com.aprimorar.api.requests.APIResponse;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventNotFoundException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.exception.errors.ErrorResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler {
 
     private final Clock applicationClock;
 

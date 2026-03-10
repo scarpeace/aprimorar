@@ -1,30 +1,24 @@
 package com.aprimorar.api.domain.parent;
 
-import java.util.Set;
-
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
-import com.aprimorar.api.shared.PageQuery;
-import com.aprimorar.api.shared.PageableUtils;
+import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/parents")
 @Tag(name = "Parents", description = "Parent management APIs")
 public class ParentController {
-
-    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("name", "createdAt", "updatedAt");
 
     private final ParentService parentService;
 
@@ -34,13 +28,15 @@ public class ParentController {
 
     @Operation(summary = "List all parents", description = "Retrieves parents from database with pagination and optional archived records")
     @GetMapping
-    public ResponseEntity<Page<ParentSummaryDTO>> listParents(
-            @Valid @ModelAttribute PageQuery pageQuery,
-            @RequestParam(defaultValue = "false") boolean includeArchived
+    public ResponseEntity<Page<ParentResponseDTO>> listParents(
+             @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     )
     {
-        Pageable pageable = PageableUtils.buildPageable(pageQuery, "name", ALLOWED_SORT_FIELDS);
-        Page<ParentSummaryDTO> parents = parentService.listParents(pageable, includeArchived);
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<ParentResponseDTO> parents = parentService.getParents(pageRequest);
+
+        log.info("ParentController:listParents execution completed. Page: {}, Size: {}, Total Elements: {}", page, size, parents.getTotalElements());
         return ResponseEntity.ok(parents);
     }
 
