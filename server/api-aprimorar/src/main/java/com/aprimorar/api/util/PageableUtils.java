@@ -1,6 +1,6 @@
 package com.aprimorar.api.util;
 
-import com.aprimorar.api.dto.common.PageQuery;
+import com.aprimorar.api.requests.common.PageQuery;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
