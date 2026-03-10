@@ -3,7 +3,7 @@ package com.aprimorar.api.domain.student.dto;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.address.dto.CreateAddressDTO;
+import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
 import com.aprimorar.api.domain.parent.dto.CreateParentDTO;
 import com.aprimorar.api.shared.MapperUtils;
 
@@ -34,7 +34,7 @@ public record CreateStudentDTO(
         String email,
         @NotNull(message = "Endereço do estudante é obrigatório")
         @Valid
-        CreateAddressDTO address,
+        AddressRequestDTO address,
         UUID parentId,
         @Valid
         CreateParentDTO parent

@@ -41,10 +41,10 @@ public class StudentMapper {
         StudentEntity entity = new StudentEntity();
         entity.setName(dto.name());
         entity.setBirthdate(dto.birthdate());
-        entity.setCpf(mapperUtils.sanitizeCpf(dto.cpf()));
+        entity.setCpf(MapperUtils.sanitizeCpf(dto.cpf()));
         entity.setSchool(dto.school());
-        entity.setContact(mapperUtils.sanitizeContact(dto.contact()));
-        entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
+        entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
+        entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
         entity.setAddress(addressMapper.toEntity(dto.address()));
         entity.setParent(parentMapper.convertToEntity(dto.parent()));
         return entity;
@@ -58,9 +58,9 @@ public class StudentMapper {
         return new StudentResponseDTO(
                 entity.getId(),
                 entity.getName(),
-                mapperUtils.formatContact(entity.getContact()),
+                MapperUtils.formatContact(entity.getContact()),
                 entity.getEmail(),
-                mapperUtils.formatCpf(entity.getCpf()),
+                MapperUtils.formatCpf(entity.getCpf()),
                 entity.getBirthdate(),
                 entity.getSchool(),
                 calculateAge(entity.getBirthdate()),
@@ -95,18 +95,7 @@ public class StudentMapper {
         if (dto.email() != null) {
             entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
         }
-        if (dto.address() != null) {
-            updateAddress(dto, entity);
-        } 
-    }
-
-    private void updateAddress(UpdateStudentDTO dto, StudentEntity entity) {
-        if (entity.getAddress() == null) {
-            entity.setAddress(addressMapper.toEntity(dto.address()));
-            return;
-        }
-
-        addressMapper.updateFromDto(dto.address(), entity.getAddress());
+      
     }
 
     private Integer calculateAge(LocalDate birthdate) {

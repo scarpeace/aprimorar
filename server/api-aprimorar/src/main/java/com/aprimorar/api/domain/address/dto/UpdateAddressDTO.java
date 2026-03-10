@@ -5,7 +5,7 @@ import com.aprimorar.api.shared.MapperUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public record CreateAddressDTO(
+public record UpdateAddressDTO(
         @NotBlank(message = "Rua do endereço é obrigatória")
         String street,
         @NotBlank(message = "Número do endereço é obrigatório")
@@ -20,6 +20,4 @@ public record CreateAddressDTO(
         @NotBlank(message = "CEP do endereço é obrigatório")
         @Pattern(regexp = MapperUtils.ZIP_CODE_BR, message = MapperUtils.ZIP_CODE_BR_MESSAGE)
         String zip
-        ) {
-
-}
+        ) {}
