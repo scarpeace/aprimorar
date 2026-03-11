@@ -29,6 +29,7 @@ public class EmployeeMapper {
         employee.setCpf(MapperUtils.sanitizeCpf(updateEmployeeDTO.cpf()));
         employee.setEmail(updateEmployeeDTO.email().trim());
         employee.setRole(Role.EMPLOYEE);
+        //TODO Mover essa criação da data para a camada de serviço em todos os mappers
         employee.setCreatedAt(applicationClock.instant());
         return employee;
     }

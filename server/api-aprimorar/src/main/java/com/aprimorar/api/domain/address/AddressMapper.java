@@ -10,7 +10,7 @@ import com.aprimorar.api.shared.MapperUtils;
 @Component
 public class AddressMapper {
 
-    public AddressEntity toEntity(AddressRequestDTO dto) {
+    public AddressEntity convertToEntity(AddressRequestDTO dto) {
 
         AddressEntity entity = new AddressEntity();
         entity.setStreet(dto.street());
@@ -23,7 +23,7 @@ public class AddressMapper {
         return entity;
     }
 
-    public AddressResponseDTO toDto(AddressEntity entity) {
+    public AddressResponseDTO convertToDto(AddressEntity entity) {
 
         return new AddressResponseDTO(
                 entity.getStreet(),

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record CreateParentDTO(
+public record ParentRequestDTO(
         @NotNull(message = "Nome do responsável é obrigatório")
         String name,
 

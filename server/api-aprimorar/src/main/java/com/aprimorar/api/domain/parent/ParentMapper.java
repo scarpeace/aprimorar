@@ -4,7 +4,7 @@ import java.time.Clock;
 
 import org.springframework.stereotype.Component;
 
-import com.aprimorar.api.domain.parent.dto.CreateParentDTO;
+import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 import com.aprimorar.api.domain.parent.dto.UpdateParentDTO;
 import com.aprimorar.api.shared.MapperUtils;
@@ -18,7 +18,7 @@ public class ParentMapper {
         this.applicationClock = applicationClock;
     }
 
-    public Parent convertToEntity(CreateParentDTO dto) {
+    public Parent convertToEntity(ParentRequestDTO dto) {
 
         Parent entity = new Parent();
         entity.setName(dto.name());

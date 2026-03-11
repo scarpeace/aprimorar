@@ -6,9 +6,6 @@ import com.aprimorar.api.domain.event.dto.EventRequestDTO;
 import com.aprimorar.api.domain.event.dto.EventResponseDTO;
 import com.aprimorar.api.domain.event.dto.UpdateEventDTO;
 
-
-
-
 @Component
 public class EventMapper {
 

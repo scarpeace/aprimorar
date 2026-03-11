@@ -1,26 +1,26 @@
 package com.aprimorar.api.domain.student;
 
-import java.time.Instant;
 import java.time.Clock;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.parent.Parent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aprimorar.api.domain.parent.dto.CreateParentDTO;
-import com.aprimorar.api.domain.student.dto.CreateStudentDTO;
-import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.dto.UpdateStudentDTO;
-import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
-import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.address.AddressEntity;
+import com.aprimorar.api.domain.address.AddressMapper;
+import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.parent.ParentMapper;
 import com.aprimorar.api.domain.parent.ParentRepository;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.UpdateStudentDTO;
+import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.student.exception.StudentServiceBusinessException;
+import com.aprimorar.api.shared.MapperUtils;
 
 @Service
 public class StudentService {
@@ -30,140 +30,164 @@ public class StudentService {
     private final StudentRepository studentRepo;
     private final ParentRepository parentRepo;
     private final StudentMapper studentMapper;
+    private final AddressMapper addressMapper;
     private final ParentMapper parentMapper;
+    private final MapperUtils mapperUtils;
     private final Clock applicationClock;
 
     public StudentService(StudentRepository studentRepo, ParentRepository parentRepo, StudentMapper studentMapper, ParentMapper parentMapper, Clock applicationClock) {
         this.studentRepo = studentRepo;
         this.parentRepo = parentRepo;
         this.studentMapper = studentMapper;
+        this.addressMapper = new AddressMapper();
         this.parentMapper = parentMapper;
+        this.mapperUtils = null;
         this.applicationClock = applicationClock;
     }
 
+    @Transactional
+    public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) throws StudentServiceBusinessException {
+        log.info("StudentService:createStudent execucao iniciada");
+        StudentResponseDTO responseDto;
+
+        try {
+            log.debug("StudentService:createStudent dados recebidos {}", mapperUtils.jsonAsString(studentRequestDto));
+            StudentEntity student = studentMapper.convertToEntity(studentRequestDto);
+
+            //TODO: Investigar melhor essa necessidade das anotações @NotNull
+            StudentEntity savedStudent = studentRepo.save(student);
+
+            responseDto = studentMapper.convertToDto(savedStudent);
+            log.debug("StudentService:createStudent estudante criado com sucesso {}", mapperUtils.jsonAsString(responseDto));
+
+        } catch (Exception ex) {
+            log.error("Ocorreu um erro ao salvar o estudante no banco de dados. Mensagem: {}", ex.getMessage());
+            throw new StudentServiceBusinessException("Ocorreu um erro ao criar o estudante");
+        }
+
+        log.info("StudentService:createStudent execucao finalizada");
+        return responseDto;
+
+    }
+
     @Transactional(readOnly = true)
-    public Page<StudentResponseDTO> listStudents(Pageable pageable, String name, boolean includeArchived) {
-        String normalizedName = normalizeNameFilter(name);
-        Specification<StudentEntity> filters = Specification.unrestricted();
+    public Page<StudentResponseDTO> getStudents(PageRequest pr) {
+        Page<StudentResponseDTO> responseDto;
+        log.info("StudentService:getStudents execucao iniciada");
 
-        if (!includeArchived) {
-            filters = filters.and(StudentSpecifications.notArchived());
+        try {
+            Page<StudentEntity> studentPage = studentRepo.findAll(pr);
+
+            responseDto = studentPage.map(studentMapper::convertToDto);
+            log.info("StudentService:getStudents resumo da consulta: totalPaginas={}, totalElementos={}", responseDto.getTotalPages(), responseDto.getTotalElements());
+
+        } catch (Exception ex) {
+            log.error("Ocorreu um erro ao buscar os estudantes no banco de dados. Mensagem: {}", ex.getMessage());
+            throw new StudentServiceBusinessException("Ocorreu um erro ao buscar os estudantes no banco de dados: " + ex.getMessage());
         }
 
-        if (normalizedName != null) {
-            filters = filters.and(StudentSpecifications.nameContainsIgnoreCase(normalizedName));
-        }
-
-        return studentRepo.findAll(filters, pageable)
-                .map(studentMapper::toDto);
+        log.info("StudentService:getStudents execucao finalizada");
+        return responseDto;
     }
 
     @Transactional(readOnly = true)
-    public StudentResponseDTO findById(UUID studentId) {
-         StudentEntity foundStudentEntity = findAnyStudentOrThrow(studentId);
-         return studentMapper.toDto(foundStudentEntity);
-     }
+    public StudentResponseDTO getById(UUID studentId) throws StudentServiceBusinessException {
+        StudentResponseDTO responseDto;
+        log.info("StudentService:getStudentById execucao iniciada");
 
-    @Transactional
-    public StudentResponseDTO createStudent(CreateStudentDTO createStudentDto) {
-        log.info("Creating student");
+        try {
+            StudentEntity student = findStudentOrThrow(studentId);
+            responseDto = studentMapper.convertToDto(student);
+            log.debug("StudentService:getStudentById estudante encontrado para o id {} {}", studentId, mapperUtils.jsonAsString(responseDto));
 
-        StudentEntity newStudentEntity = studentMapper.toEntity(createStudentDto);
+            log.info("StudentService:getStudentById execucao finalizada");
+            return responseDto;
 
-        assignParentReference(newStudentEntity, createStudentDto.parentId(), createStudentDto.parent());
-
-        StudentEntity savedStudentEntity = studentRepo.save(newStudentEntity);
-        return studentMapper.toDto(savedStudentEntity);
-    }
-
-    @Transactional
-    public void archiveStudent(UUID studentId) {
-        StudentEntity foundStudentEntity = findAnyStudentOrThrow(studentId);
-        log.info("Archiving studentId={}", studentId);
-        archiveIfNotArchived(foundStudentEntity);
-    }
-
-    @Transactional
-    public void unarchiveStudent(UUID studentId) {
-        StudentEntity foundStudentEntity = findAnyStudentOrThrow(studentId);
-        log.info("Unarchiving studentId={}", studentId);
-        if (foundStudentEntity.getArchivedAt() != null) {
-            Instant now = Instant.now(applicationClock);
-            foundStudentEntity.setArchivedAt(null);
-            foundStudentEntity.setLastReactivatedAt(now);
-            foundStudentEntity.setUpdatedAt(now);
+        } catch (Exception ex) {
+            log.error("Ocorreu um erro ao buscar o estudante {} no banco de dados. Mensagem: {}", studentId, ex.getMessage());
+            throw new StudentServiceBusinessException("Ocorreu um erro ao buscar o estudante no banco de dados: " + ex.getMessage());
         }
     }
 
     @Transactional
-    public StudentResponseDTO updateStudent(UUID studentId, UpdateStudentDTO updateStudentDto) {
-        StudentEntity foundStudentEntity = findAnyStudentOrThrow(studentId);
-        log.info("Updating studentId={}", studentId);
+    public void archiveStudent(UUID studentId) throws StudentServiceBusinessException {
+        log.info("StudentService:archiveStudent execucao iniciada");
 
-        studentMapper.updateFromDto(updateStudentDto, foundStudentEntity);
+        try {
+            log.debug("StudentService:archiveStudent buscando estudante no banco de dados pelo id {}", studentId);
+            StudentEntity student = studentRepo.findById(studentId)
+                    .orElseThrow(() -> new StudentNotFoundException(studentId));
 
-        resolveParentReferenceForUpdate(foundStudentEntity, updateStudentDto.parentId(), updateStudentDto.parent());
+            student.setArchivedAt(applicationClock.instant());
+            log.info("StudentService:archiveStudent estudante arquivado com sucesso. id={}", student.getId());
 
-        foundStudentEntity.setUpdatedAt(Instant.now(applicationClock));
-
-        return studentMapper.toDto(foundStudentEntity);
+        } catch (StudentNotFoundException ex) {
+            log.info("StudentService:archiveStudent estudante nao encontrado. id={}", studentId);
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Ocorreu um erro ao arquivar o estudante {} no banco de dados. Mensagem: {}", studentId, ex.getMessage(), ex);
+            throw new StudentServiceBusinessException("Ocorreu um erro ao arquivar o estudante no banco de dados");
+        }
     }
 
-    private StudentEntity findAnyStudentOrThrow(UUID studentId) {
+    @Transactional
+    public void unarchiveStudent(UUID studentId) throws StudentServiceBusinessException {
+        log.info("StudentService:unarchiveStudent execucao iniciada");
+        try {
+            log.debug("StudentService:unarchiveStudent buscando estudante no banco de dados pelo id {}", studentId);
+            StudentEntity student = findStudentOrThrow(studentId);
+            student.setArchivedAt(null);
+            log.info("StudentService:unarchiveStudent estudante desarquivado com sucesso. id={}", student.getId());
+
+        } catch (StudentNotFoundException ex) {
+            log.info("StudentService:unarchiveStudent estudante nao encontrado. id={}", studentId);
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Ocorreu um erro ao desarquivar o estudante {} no banco de dados. Mensagem: {}", studentId, ex.getMessage(), ex);
+            throw new StudentServiceBusinessException("Ocorreu um erro ao desarquivar o estudante no banco de dados");
+
+        }
+    }
+
+    //TODO: Precisa testar isso aqui pra ver se tá funcionando.
+    @Transactional
+    public StudentResponseDTO updateStudent(UUID studentId, UpdateStudentDTO updateStudentDto) throws StudentServiceBusinessException {
+        StudentResponseDTO responseDto;
+        log.info("StudentService:updateStudent execucao iniciada");
+
+        try {
+            StudentEntity foundStudent = findStudentOrThrow(studentId);
+
+            log.info("StudentService:updateStudent atualizando estudando com responsável recebido: {}", updateStudentDto.parent());
+            Parent newParent = parentMapper.convertToEntity(updateStudentDto.parent());
+            foundStudent.setParent(newParent);
+            log.info("StudentService:updateStudent responsável mapeado e associado ao aluno: {}", newParent.getId());
+
+            //TODO mudar todas as ocorrências de AdressEntity para Address
+            AddressEntity newAddress = addressMapper.convertToEntity(updateStudentDto.address());
+
+            foundStudent.setName(updateStudentDto.name());
+            foundStudent.setContact(updateStudentDto.contact());
+            foundStudent.setEmail(updateStudentDto.email());
+            foundStudent.setCpf(updateStudentDto.cpf());
+            foundStudent.setBirthdate(updateStudentDto.birthdate());
+            foundStudent.setSchool(updateStudentDto.school());
+            foundStudent.setAddress(newAddress);
+
+            responseDto = studentMapper.convertToDto(foundStudent);
+            log.debug("StudentService:updateStudent estudante atualizado. id={}, dados={}", studentId, mapperUtils.jsonAsString(responseDto));
+
+            log.info("StudentService:updateStudent execucao finalizada");
+
+        } catch (Exception ex) {
+            log.error("Ocorreu um erro ao atualizar o estudante {} no banco de dados. Mensagem: {}", studentId, ex.getMessage(), ex);
+            throw new StudentServiceBusinessException("Ocorreu um erro ao atualizar o estudante no banco de dados");
+        }
+        return responseDto;
+    }
+
+    private StudentEntity findStudentOrThrow(UUID studentId) {
         return studentRepo.findById(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(studentId));
-    }
-
-    private Parent findActiveParentOrThrow(UUID parentId) {
-        return parentRepo.findById(parentId)
-                .orElseThrow(() -> new ParentNotFoundException(parentId));
-    }
-
-    private Parent createParent(CreateParentDTO createParentDto) {
-        Parent newParent = parentMapper.convertToEntity(createParentDto);
-        return parentRepo.save(newParent);
-    }
-
-    private void assignParentReference(StudentEntity studentEntity, UUID parentId, CreateParentDTO parentDto) {
-        if (parentId != null) {
-            Parent existingParent = findActiveParentOrThrow(parentId);
-            studentEntity.setParent(existingParent);
-            return;
-        }
-
-        if (parentDto != null) {
-            Parent savedParent = createParent(parentDto);
-            studentEntity.setParent(savedParent);
-        }
-    }
-
-    private void resolveParentReferenceForUpdate(StudentEntity studentEntity, UUID parentId, CreateParentDTO parentDto) {
-        if (parentId != null) {
-            Parent existingParent = findActiveParentOrThrow(parentId);
-            studentEntity.setParent(existingParent);
-            return;
-        }
-
-        if (parentDto != null && studentEntity.getParent() == null) {
-            Parent savedParent = createParent(parentDto);
-            studentEntity.setParent(savedParent);
-        }
-    }
-
-    private void archiveIfNotArchived(StudentEntity foundStudentEntity) {
-        if (foundStudentEntity.getArchivedAt() == null) {
-            Instant now = Instant.now(applicationClock);
-            foundStudentEntity.setArchivedAt(now);
-            foundStudentEntity.setUpdatedAt(now);
-        }
-    }
-
-    private String normalizeNameFilter(String name) {
-        if (name == null) {
-            return null;
-        }
-
-        String trimmed = name.trim();
-        return trimmed.isEmpty() ? null : trimmed;
     }
 }

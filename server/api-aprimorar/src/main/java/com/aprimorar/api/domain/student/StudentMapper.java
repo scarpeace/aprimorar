@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.aprimorar.api.domain.address.AddressMapper;
 import com.aprimorar.api.domain.parent.ParentMapper;
-import com.aprimorar.api.domain.student.dto.CreateStudentDTO;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.domain.student.dto.UpdateStudentDTO;
 import com.aprimorar.api.shared.MapperUtils;
@@ -19,25 +19,22 @@ public class StudentMapper {
     private final ParentMapper parentMapper;
     private final AddressMapper addressMapper;
     private final MapperUtils mapperUtils;
-    private final Clock ageCalculationClock;
+    private final Clock applicationClock;
 
     public StudentMapper(
             ParentMapper parentMapper,
             AddressMapper addressMapper,
             MapperUtils mapperUtils,
-            Clock ageCalculationClock
+            Clock applicationClock
     ) {
         this.parentMapper = parentMapper;
         this.addressMapper = addressMapper;
         this.mapperUtils = mapperUtils;
-        this.ageCalculationClock = ageCalculationClock;
+        this.applicationClock = applicationClock;
     }
 
-    public StudentEntity toEntity(CreateStudentDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-
+    public StudentEntity convertToEntity(StudentRequestDTO dto) {
+ 
         StudentEntity entity = new StudentEntity();
         entity.setName(dto.name());
         entity.setBirthdate(dto.birthdate());
@@ -45,15 +42,12 @@ public class StudentMapper {
         entity.setSchool(dto.school());
         entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
         entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
-        entity.setAddress(addressMapper.toEntity(dto.address()));
+        entity.setAddress(addressMapper.convertToEntity(dto.address()));
         entity.setParent(parentMapper.convertToEntity(dto.parent()));
         return entity;
     }
 
-    public StudentResponseDTO toDto(StudentEntity entity) {
-        if (entity == null) {
-            return null;
-        }
+    public StudentResponseDTO convertToDto(StudentEntity entity) {
 
         return new StudentResponseDTO(
                 entity.getId(),
@@ -64,38 +58,26 @@ public class StudentMapper {
                 entity.getBirthdate(),
                 entity.getSchool(),
                 calculateAge(entity.getBirthdate()),
-                entity.getArchivedAt(),
-                entity.getLastReactivatedAt(),
-                addressMapper.toDto(entity.getAddress()),
+                addressMapper.convertToDto(entity.getAddress()),
                 parentMapper.convertToDto(entity.getParent()),
-                entity.getCreatedAt()
+                entity.getCreatedAt(),
+                entity.getArchivedAt()
         );
     }
 
-    public void updateFromDto(UpdateStudentDTO dto, StudentEntity entity) {
-        if (dto == null || entity == null) {
-            return;
-        }
 
-        if (dto.name() != null) {
-            entity.setName(dto.name());
-        }
-        if (dto.birthdate() != null) {
-            entity.setBirthdate(dto.birthdate());
-        }
-        if (dto.cpf() != null) {
-            entity.setCpf(mapperUtils.sanitizeCpf(dto.cpf()));
-        }
-        if (dto.school() != null) {
-            entity.setSchool(dto.school());
-        }
-        if (dto.contact() != null) {
-            entity.setContact(mapperUtils.sanitizeContact(dto.contact()));
-        }
-        if (dto.email() != null) {
-            entity.setEmail(mapperUtils.sanitizeEmail(dto.email()));
-        }
-      
+    public StudentEntity updateToEntity(UpdateStudentDTO dto) {
+       
+        StudentEntity entity = new StudentEntity();
+        entity.setName(dto.name());
+        entity.setBirthdate(dto.birthdate());
+        entity.setCpf(MapperUtils.sanitizeCpf(dto.cpf()));
+        entity.setSchool(dto.school());
+        entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
+        entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
+        entity.setAddress(addressMapper.convertToEntity(dto.address()));
+        entity.setParent(parentMapper.convertToEntity(dto.parent()));
+        return entity;
     }
 
     private Integer calculateAge(LocalDate birthdate) {
@@ -103,7 +85,7 @@ public class StudentMapper {
             return null;
         }
 
-        LocalDate todayInSaoPaulo = LocalDate.now(ageCalculationClock);
+        LocalDate todayInSaoPaulo = LocalDate.now(applicationClock);
         return Period.between(birthdate, todayInSaoPaulo).getYears();
     }
 }

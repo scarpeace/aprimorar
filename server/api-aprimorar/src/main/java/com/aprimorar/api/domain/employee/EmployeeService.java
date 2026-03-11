@@ -101,7 +101,6 @@ public class EmployeeService {
             log.error("Ocorreu um erro ao buscar o colaborador {} no banco de dados. Mensagem: {}", employeeId, ex.getMessage());
             throw new EmployeeServiceBusinessException("Ocorreu um erro ao buscar o colaborador no banco de dados: " + ex.getMessage());
         }
-
     }
 
     @Transactional
