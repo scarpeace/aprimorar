@@ -21,4 +21,14 @@ public class StudentServiceExceptionHandler {
         return serviceResponse;
     }
 
+    //TODO Ver como está o EmployeeExceptionHandler e padronizar tudo
+    @ExceptionHandler
+    public APIResponse<StudentEntity> handleStudentAlreadyExistException(StudentAlreadyExistException exception) {
+        APIResponse<StudentEntity> serviceResponse = new APIResponse<>();
+        serviceResponse.setStatus("FAILED");
+        serviceResponse.setErrors(Collections.singletonList(new ErrorDTO("", exception.getMessage())));
+
+        return serviceResponse;
+    }
+
 }

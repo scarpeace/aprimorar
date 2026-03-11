@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface StudentRepository extends JpaRepository<StudentEntity, UUID>, JpaSpecificationExecutor<StudentEntity> {
 
     Optional<StudentEntity> findByIdAndArchivedAtIsNull(UUID id);
+    boolean existsByCpfOrEmail(String cpf, String email);
 }

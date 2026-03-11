@@ -35,7 +35,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Employee {
+public class EmployeeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -74,4 +74,15 @@ public class Employee {
     private Instant updatedAt;
 
 
+    public void archive(){
+        if(archivedAt == null){
+            archivedAt = Instant.now();
+        }
+    }
+
+    public void unarchive(){
+        if(archivedAt != null){
+            archivedAt = null;
+        }
+    }
 }

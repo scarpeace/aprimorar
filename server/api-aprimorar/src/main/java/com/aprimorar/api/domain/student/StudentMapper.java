@@ -18,18 +18,15 @@ public class StudentMapper {
 
     private final ParentMapper parentMapper;
     private final AddressMapper addressMapper;
-    private final MapperUtils mapperUtils;
     private final Clock applicationClock;
 
     public StudentMapper(
             ParentMapper parentMapper,
             AddressMapper addressMapper,
-            MapperUtils mapperUtils,
             Clock applicationClock
     ) {
         this.parentMapper = parentMapper;
         this.addressMapper = addressMapper;
-        this.mapperUtils = mapperUtils;
         this.applicationClock = applicationClock;
     }
 
@@ -42,7 +39,7 @@ public class StudentMapper {
         entity.setSchool(dto.school());
         entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
         entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
-        entity.setAddress(addressMapper.convertToEntity(dto.address()));
+        entity.setAddressEntity(addressMapper.convertToEntity(dto.address()));
         entity.setParent(parentMapper.convertToEntity(dto.parent()));
         return entity;
     }
@@ -58,7 +55,7 @@ public class StudentMapper {
                 entity.getBirthdate(),
                 entity.getSchool(),
                 calculateAge(entity.getBirthdate()),
-                addressMapper.convertToDto(entity.getAddress()),
+                addressMapper.convertToDto(entity.getAddressEntity()),
                 parentMapper.convertToDto(entity.getParent()),
                 entity.getCreatedAt(),
                 entity.getArchivedAt()
@@ -75,7 +72,7 @@ public class StudentMapper {
         entity.setSchool(dto.school());
         entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
         entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
-        entity.setAddress(addressMapper.convertToEntity(dto.address()));
+        entity.setAddressEntity(addressMapper.convertToEntity(dto.address()));
         entity.setParent(parentMapper.convertToEntity(dto.parent()));
         return entity;
     }

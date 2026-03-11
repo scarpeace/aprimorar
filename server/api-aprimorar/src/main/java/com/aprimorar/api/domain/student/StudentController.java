@@ -63,7 +63,7 @@ public class StudentController {
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId) {
         
         log.info("StudentController::getStudentById by id {}", studentId);
-        StudentResponseDTO foundStudent = studentService.getById(studentId);
+        StudentResponseDTO foundStudent = studentService.findById(studentId);
         
         log.info("StudentController::getStudentById completed for id={}", studentId);
         return ResponseEntity.ok(foundStudent);

@@ -4,10 +4,13 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
+import com.aprimorar.api.domain.event.exception.EventWithArchivedEmployeeException;
+import com.aprimorar.api.domain.event.exception.EventWithArchivedStudentException;
+import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.domain.employee.EmployeeEntity;
 import com.aprimorar.api.domain.student.StudentEntity;
 import com.aprimorar.api.enums.EventContent;
 
@@ -35,7 +38,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_events")
-public class Event {
+public class EventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,8 +72,9 @@ public class Event {
 
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
-    private Employee employee;
+    private EmployeeEntity employeeEntity;
 
+    //TODO Investigar porque esses aqui não estão funcionando
     @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
@@ -78,5 +82,38 @@ public class Event {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
+
+    public void assignParticipants(StudentEntity student, EmployeeEntity employee) {
+        if(student == null || employee == null){
+            throw new InvalidEventException("Ambos os participantes são obrigatórios no evento");
+        }
+
+        if(student.getArchivedAt() != null){
+            throw new EventWithArchivedStudentException("Evento não pode ter estudantes arquivados");
+        }
+
+        if(employee.getArchivedAt() != null){
+            throw new EventWithArchivedEmployeeException("Evento não pode ter colaboradores arquivados");
+        }
+
+        this.studentEntity = student;
+        this.employeeEntity = employee;
+    }
+
+    public void validateDates(LocalDateTime now) {
+        if (endDateTime == null) {
+            throw new InvalidEventException("Data de fim do evento e obrigatória");
+        }
+        if (startDateTime == null) {
+            throw new InvalidEventException("Data de início do evento e obrigatória");
+        }
+        if (endDateTime.isBefore(now)) {
+            throw new InvalidEventException("Data de fim do evento nao pode estar no passado");
+        }
+        if (endDateTime.isBefore(startDateTime)) {
+            throw new InvalidEventException("Data de fim do evento nao pode ser anterior a data de inicio");
+        }
+    }
+
 
 }

@@ -9,9 +9,9 @@ import com.aprimorar.api.domain.event.dto.UpdateEventDTO;
 @Component
 public class EventMapper {
 
-    public Event convertToEntity(EventRequestDTO dto) {
+    public EventEntity convertToEntity(EventRequestDTO dto) {
      
-        Event entity = new Event();
+        EventEntity entity = new EventEntity();
         entity.setTitle(dto.title());
         entity.setDescription(dto.description());
         entity.setStartDateTime(dto.startDateTime());
@@ -22,7 +22,7 @@ public class EventMapper {
         return entity;
     }
 
-    public EventResponseDTO convertToDto(Event entity) {
+    public EventResponseDTO convertToDto(EventEntity entity) {
 
         return new EventResponseDTO(
                 entity.getId(),
@@ -35,16 +35,16 @@ public class EventMapper {
                 entity.getPayment(),
                 entity.getStudentEntity().getId(),
                 entity.getStudentEntity().getName(),
-                entity.getEmployee().getId(),
-                entity.getEmployee().getName(),
+                entity.getEmployeeEntity().getId(),
+                entity.getEmployeeEntity().getName(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );
     }
 
-    public Event convertToEntity(UpdateEventDTO updateEventDTO) {
+    public EventEntity convertToEntity(UpdateEventDTO updateEventDTO) {
      
-        Event entity = new Event();
+        EventEntity entity = new EventEntity();
         entity.setTitle(updateEventDTO.title());
         entity.setDescription(updateEventDTO.description());
         entity.setStartDateTime(updateEventDTO.startDateTime());
