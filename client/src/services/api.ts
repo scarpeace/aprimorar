@@ -81,7 +81,7 @@ export const employeesApi = {
   getById: (id: string): Promise<AxiosResponse<EmployeeResponse>> =>
     api.get(`/v1/employees/${id}`),
   create: (data: CreateEmployeeInput): Promise<AxiosResponse<EmployeeResponse>> => api.post("/v1/employees", data),
-  update: (id: string, data: CreateEmployeeInput): Promise<AxiosResponse<EmployeeResponse>> => api.patch(`/v1/employees/${id}`, data),
+  update: (id: string, data: CreateEmployeeInput): Promise<AxiosResponse<EmployeeResponse>> => api.put(`/v1/employees/${id}`, data),
   delete: (id: string) => api.delete(`/v1/employees/${id}`),
 }
 
