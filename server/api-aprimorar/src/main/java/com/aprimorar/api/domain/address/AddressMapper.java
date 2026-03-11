@@ -10,12 +10,6 @@ import com.aprimorar.api.shared.MapperUtils;
 @Component
 public class AddressMapper {
 
-    private final MapperUtils mapperUtils;
-
-    public AddressMapper(MapperUtils mapperUtils) {
-        this.mapperUtils = mapperUtils;
-    }
-
     public AddressEntity toEntity(AddressRequestDTO dto) {
 
         AddressEntity entity = new AddressEntity();

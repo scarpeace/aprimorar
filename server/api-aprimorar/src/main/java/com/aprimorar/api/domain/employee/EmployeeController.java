@@ -44,7 +44,7 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeResponseDTO> createEmployee(@RequestBody @Valid EmployeeRequestDTO employeeRequestDto) {
 
-        log.info("EmployeeController::createEmployee request body {}", mapperUtils.jsonAsString(employeeRequestDto));
+        log.info("EmployeeController::createEmployee started with body {}", mapperUtils.jsonAsString(employeeRequestDto));
         EmployeeResponseDTO response = employeeService.createEmployee(employeeRequestDto);
 
         log.info("EmployeeController::createEmployee response body {}", mapperUtils.jsonAsString(response));
@@ -53,25 +53,26 @@ public class EmployeeController {
 
     @Operation(summary = "List all employees", description = "Retrieves all employees from database with pagination")
     @GetMapping
-    public ResponseEntity<Page<EmployeeResponseDTO>> listEmployees(
+    public ResponseEntity<Page<EmployeeResponseDTO>> getEmployees(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
+        log.info("EmployeeController::getEmployees execution started. Page: {}, Size: {}", page, size);
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<EmployeeResponseDTO> employees = employeeService.getEmployees(pageRequest);
 
-        log.info("EmployeeController:listEmployees execution completed. Page: {}, Size: {}, Total Elements: {}", page, size, employees.getTotalElements());
+        log.info("EmployeeController::getEmployees execution completed. Page: {}, Size: {}, Total Elements: {}", employees.getTotalPages(), employees.getSize(), employees.getTotalElements());
         return ResponseEntity.ok(employees);
     }
 
     @Operation(summary = "Get employee by ID", description = "Retrieves a single employee based on ID")
     @GetMapping("/{employeeId}")
     public ResponseEntity<EmployeeResponseDTO> getEmployeeById(@PathVariable UUID employeeId) {
-        log.info("EmployeeController::getEmployeeById by id  {}", employeeId);
+        log.info("EmployeeController::getEmployeeById by id started with ID  {}", employeeId);
 
         EmployeeResponseDTO foundEmployee = employeeService.getById(employeeId);
 
-        log.info("EmployeeController::getEmployeeById by id  {} response {}", employeeId, mapperUtils.jsonAsString(foundEmployee));
+        log.info("EmployeeController::getEmployeeById by id  {} response {}", foundEmployee.id(), mapperUtils.jsonAsString(foundEmployee));
         return ResponseEntity.ok(foundEmployee);
     }
 
@@ -80,16 +81,22 @@ public class EmployeeController {
     public ResponseEntity<EmployeeResponseDTO> updateEmployee(
             @PathVariable UUID employeeId,
             @RequestBody @Valid UpdateEmployeeDTO updateEmployeeDTO) {
+        log.info("EmployeeController::updateEmployee by id started with ID  {}", employeeId);
+
         EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(employeeId, updateEmployeeDTO);
+        log.info("EmployeeController::updateEmployee by id  {} response {}", updatedEmployee.id(), mapperUtils.jsonAsString(updatedEmployee));
+
         return ResponseEntity.ok(updatedEmployee);
     }
 
     @Operation(summary = "Delete employee", description = "Soft deletes an employee based on ID")
     @DeleteMapping("/{employeeId}")
-    public ResponseEntity<Void> archive(@PathVariable UUID employeeId) {
-        log.info("EmployeeController::archive by id  {}", employeeId);
+    public ResponseEntity<Void> archiveEmployee(@PathVariable UUID employeeId) {
+        log.info("EmployeeController::archive employee started with ID  {}", employeeId);
         employeeService.archiveEmployee(employeeId);
+        log.info("EmployeeController::archiveEmployee by id  {}", employeeId);
         return ResponseEntity.noContent().build();
     }
 
+    //TODO implementar o desarquivamento do colaborador
 }

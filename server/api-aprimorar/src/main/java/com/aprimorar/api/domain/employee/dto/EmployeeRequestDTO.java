@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import com.aprimorar.api.enums.Role;
 import com.aprimorar.api.shared.MapperUtils;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

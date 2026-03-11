@@ -53,7 +53,7 @@ public class EmployeeService {
             log.debug("EmployeeService:createEmployee colaborador criado com sucesso {}", mapperUtils.jsonAsString(responseDto));
 
         } catch (Exception ex) {
-            log.error("Ocorreu um erro ao salvar o colaborador no banco de dados. Mensagem: {}", ex.getMessage(), ex);
+            log.error("Ocorreu um erro ao salvar o colaborador no banco de dados. Mensagem: {}", ex.getMessage());
             throw new EmployeeServiceBusinessException("Ocorreu um erro ao criar o colaborador");
         }
 
@@ -74,8 +74,8 @@ public class EmployeeService {
             log.info("EmployeeService:getEmployees resumo da consulta: totalPaginas={}, totalElementos={}", responseDto.getTotalPages(), responseDto.getTotalElements());
 
         } catch (Exception ex) {
-            log.error("Ocorreu um erro ao buscar os colaboradores no banco de dados. Mensagem: {}", ex.getMessage(), ex);
-            throw new EmployeeServiceBusinessException("Ocorreu um erro ao buscar os colaboradores no banco de dados");
+            log.error("Ocorreu um erro ao buscar os colaboradores no banco de dados. Mensagem: {}", ex.getMessage());
+            throw new EmployeeServiceBusinessException("Ocorreu um erro ao buscar os colaboradores no banco de dados: " + ex.getMessage());
         }
 
         log.info("EmployeeService:getEmployees execucao finalizada");
@@ -97,13 +97,9 @@ public class EmployeeService {
             log.info("EmployeeService:getEmployeeById execucao finalizada");
             return responseDto;
 
-        } catch (EmployeeNotFoundException ex) {
-            log.info("EmployeeService:getEmployeeById colaborador nao encontrado. id={}", employeeId);
-            throw ex;
-
         } catch (Exception ex) {
-            log.error("Ocorreu um erro ao buscar o colaborador {} no banco de dados. Mensagem: {}", employeeId, ex.getMessage(), ex);
-            throw new EmployeeServiceBusinessException("Ocorreu um erro ao buscar o colaborador no banco de dados: " + ex.getCause());
+            log.error("Ocorreu um erro ao buscar o colaborador {} no banco de dados. Mensagem: {}", employeeId, ex.getMessage());
+            throw new EmployeeServiceBusinessException("Ocorreu um erro ao buscar o colaborador no banco de dados: " + ex.getMessage());
         }
 
     }
@@ -130,9 +126,6 @@ public class EmployeeService {
             log.info("EmployeeService:updateEmployee execucao finalizada");
             return employeeMapper.convertToDto(foundEmployee);
 
-        } catch (EmployeeNotFoundException ex) {
-            log.info("EmployeeService:updateEmployee colaborador nao encontrado. id={}", employeeId);
-            throw ex;
         } catch (Exception ex) {
             log.error("Ocorreu um erro ao atualizar o colaborador {} no banco de dados. Mensagem: {}", employeeId, ex.getMessage(), ex);
             throw new EmployeeServiceBusinessException("Ocorreu um erro ao atualizar o colaborador no banco de dados");

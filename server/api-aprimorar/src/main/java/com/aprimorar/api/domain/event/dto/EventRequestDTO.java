@@ -13,7 +13,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record CreateEventDTO(
+
+public record EventRequestDTO(
         @NotBlank(message = "Título do evento é obrigatório")
         @Size(max = 100, message = "Título deve ter no máximo 100 caracteres")
         String title,
