@@ -1,27 +1,16 @@
 {
-  // OpenCode workspace runtime settings.
   "$schema": "https://opencode.ai/config.json",
-
-  "model": "openai/gpt-5.4",
-
-  // Permission controls replace the older approval config.
-  "permission": {
-    "*": "allow",
-    "bash": "ask",
-    "edit": "ask",
-    "external_directory": "ask",
-    "doom_loop": "ask"
-  },
-
-  // Legacy tool toggles are still supported, but permission is preferred.
-  "tools": {
-    "bash": true,
-    "read": true,
-    "write": true,
-    "edit": true,
-    "webfetch": true
-  },
-
-  "share": "manual",
-  "autoupdate": "notify"
+  "agent": {
+    "java-reviewer": {
+      "description": "Reviews code for best practices and potential issues",
+      "mode": "subagent",
+      "model": "openai/gpt-5.4",
+      "prompt": "Use the `springboot-patterns` skill and the `java-coding-standards` skill. Review backend service/controller/repository changes for architecture, validation, and transaction issues. DO NOT PERFOM ANY CODE CHANGES WITHOUT FIRST CHECKING WITH THE USER.",
+      "tools": {
+        "write": true,
+        "edit": true
+      },
+      "color": "success"
+    }
+  }
 }
