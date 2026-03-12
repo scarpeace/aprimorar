@@ -29,16 +29,16 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public Page<EmployeeResponseDTO> getEmployees(Pageable pageable) {
-        Page<EmployeeEntity> employeePage = employeeRepo.findAll(pageable);
+        Page<Employee> employeePage = employeeRepo.findAll(pageable);
 
         return employeePage.map(employeeMapper::convertToDto);
     }
 
     @Transactional(readOnly = true)
     public EmployeeResponseDTO findById(UUID employeeId) {
-        EmployeeEntity employeeEntity = findEmployeeOrThrow(employeeId);
+        Employee employee = findEmployeeOrThrow(employeeId);
 
-        return employeeMapper.convertToDto(employeeEntity);
+        return employeeMapper.convertToDto(employee);
     }
 
     /*
@@ -47,49 +47,49 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
-        EmployeeEntity employeeEntity = employeeMapper.convertToEntity(employeeRequestDto);
-        EmployeeEntity savedEmployeeEntity = employeeRepo.save(employeeEntity);
+        Employee employee = employeeMapper.convertToEntity(employeeRequestDto);
+        Employee savedEmployee = employeeRepo.save(employee);
 
-        return employeeMapper.convertToDto(savedEmployeeEntity);
+        return employeeMapper.convertToDto(savedEmployee);
     }
 
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, UpdateEmployeeDTO updateEmployeeDto) {
-        EmployeeEntity foundEmployeeEntity = findEmployeeOrThrow(employeeId);
+        Employee foundEmployee = findEmployeeOrThrow(employeeId);
 
-        foundEmployeeEntity.setName(updateEmployeeDto.name());
-        foundEmployeeEntity.setEmail(updateEmployeeDto.email());
-        foundEmployeeEntity.setBirthdate(updateEmployeeDto.birthdate());
-        foundEmployeeEntity.setPix(updateEmployeeDto.pix());
-        foundEmployeeEntity.setContact(updateEmployeeDto.contact());
-        foundEmployeeEntity.setCpf(updateEmployeeDto.cpf());
+        foundEmployee.setName(updateEmployeeDto.name());
+        foundEmployee.setEmail(updateEmployeeDto.email());
+        foundEmployee.setBirthdate(updateEmployeeDto.birthdate());
+        foundEmployee.setPix(updateEmployeeDto.pix());
+        foundEmployee.setContact(updateEmployeeDto.contact());
+        foundEmployee.setCpf(updateEmployeeDto.cpf());
 
-        return employeeMapper.convertToDto(foundEmployeeEntity);
+        return employeeMapper.convertToDto(foundEmployee);
     }
 
     @Transactional
     public void deleteEmployee(UUID employeeId) {
-        EmployeeEntity employeeEntity = findEmployeeOrThrow(employeeId);
-        employeeRepo.delete(employeeEntity);
+        Employee employee = findEmployeeOrThrow(employeeId);
+        employeeRepo.delete(employee);
     }
 
     @Transactional
     public void archiveEmployee(UUID employeeId) {
-        EmployeeEntity employeeEntity = findEmployeeOrThrow(employeeId);
-        employeeEntity.archive();
+        Employee employee = findEmployeeOrThrow(employeeId);
+        employee.archive();
     }
 
     @Transactional
     public void unarchiveEmployee(UUID employeeId) {
-        EmployeeEntity employeeEntity = findEmployeeOrThrow(employeeId);
-        employeeEntity.unarchive();
+        Employee employee = findEmployeeOrThrow(employeeId);
+        employee.unarchive();
     }
 
     /*
       ------------------------ HELPER METHODS ------------------------
      */
 
-    private EmployeeEntity findEmployeeOrThrow(UUID employeeId) {
+    private Employee findEmployeeOrThrow(UUID employeeId) {
         return employeeRepo.findById(employeeId).orElseThrow(EmployeeNotFoundException::new);
     }
 }

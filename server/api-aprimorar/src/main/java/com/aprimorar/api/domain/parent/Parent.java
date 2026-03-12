@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
         @UniqueConstraint(name = "uk_parent_email", columnNames = {"email"}),
         @UniqueConstraint(name = "uk_parent_cpf", columnNames = {"cpf"})
 })
-public class ParentEntity {
+public class Parent {
 
     @Id
     @Column(name = "parent_id")

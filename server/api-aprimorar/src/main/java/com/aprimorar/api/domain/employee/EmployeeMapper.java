@@ -19,22 +19,22 @@ public class EmployeeMapper {
         this.applicationClock = applicationClock;
     }
 
-    public EmployeeEntity convertToEntity(EmployeeRequestDTO employeeRequestDTO) {
-        EmployeeEntity employeeEntity = new EmployeeEntity();
+    public Employee convertToEntity(EmployeeRequestDTO employeeRequestDTO) {
+        Employee employee = new Employee();
 
-        employeeEntity.setName(employeeRequestDTO.name());
-        employeeEntity.setBirthdate(employeeRequestDTO.birthdate());
-        employeeEntity.setPix(employeeRequestDTO.pix().trim());
-        employeeEntity.setContact(MapperUtils.normalizeContact(employeeRequestDTO.contact()));
-        employeeEntity.setCpf(MapperUtils.normalizeCpf(employeeRequestDTO.cpf()));
-        employeeEntity.setEmail(employeeRequestDTO.email().trim());
-        employeeEntity.setRole(Role.EMPLOYEE);
+        employee.setName(employeeRequestDTO.name());
+        employee.setBirthdate(employeeRequestDTO.birthdate());
+        employee.setPix(employeeRequestDTO.pix().trim());
+        employee.setContact(MapperUtils.normalizeContact(employeeRequestDTO.contact()));
+        employee.setCpf(MapperUtils.normalizeCpf(employeeRequestDTO.cpf()));
+        employee.setEmail(employeeRequestDTO.email().trim());
+        employee.setRole(Role.EMPLOYEE);
         //TODO Mover essa criação da data para a camada de serviço em todos os mappers
-        employeeEntity.setCreatedAt(applicationClock.instant());
-        return employeeEntity;
+        employee.setCreatedAt(applicationClock.instant());
+        return employee;
     }
 
-    public EmployeeResponseDTO convertToDto(EmployeeEntity entity) {
+    public EmployeeResponseDTO convertToDto(Employee entity) {
 
         return new EmployeeResponseDTO(
                 entity.getId(),
@@ -51,17 +51,17 @@ public class EmployeeMapper {
         );
     }
 
-    public EmployeeEntity updateToEntity(UpdateEmployeeDTO updateEmployeeDTO) {
-        EmployeeEntity updatedEmployeeEntity = new EmployeeEntity();
+    public Employee updateToEntity(UpdateEmployeeDTO updateEmployeeDTO) {
+        Employee updatedEmployee = new Employee();
 
-        updatedEmployeeEntity.setName(updateEmployeeDTO.name());
-        updatedEmployeeEntity.setBirthdate(updateEmployeeDTO.birthdate());
-        updatedEmployeeEntity.setPix(updateEmployeeDTO.pix().trim());
-        updatedEmployeeEntity.setContact(MapperUtils.normalizeContact(updateEmployeeDTO.contact()));
-        updatedEmployeeEntity.setCpf(MapperUtils.normalizeCpf(updateEmployeeDTO.cpf()));
-        updatedEmployeeEntity.setEmail(updateEmployeeDTO.email().trim());
-        updatedEmployeeEntity.setUpdatedAt(applicationClock.instant());
-        return updatedEmployeeEntity;
+        updatedEmployee.setName(updateEmployeeDTO.name());
+        updatedEmployee.setBirthdate(updateEmployeeDTO.birthdate());
+        updatedEmployee.setPix(updateEmployeeDTO.pix().trim());
+        updatedEmployee.setContact(MapperUtils.normalizeContact(updateEmployeeDTO.contact()));
+        updatedEmployee.setCpf(MapperUtils.normalizeCpf(updateEmployeeDTO.cpf()));
+        updatedEmployee.setEmail(updateEmployeeDTO.email().trim());
+        updatedEmployee.setUpdatedAt(applicationClock.instant());
+        return updatedEmployee;
     }
 
 }

@@ -10,9 +10,9 @@ import com.aprimorar.api.shared.MapperUtils;
 @Component
 public class ParentMapper {
 
-    public ParentEntity convertToEntity(ParentRequestDTO dto) {
+    public Parent convertToEntity(ParentRequestDTO dto) {
         ParentCommand command = convertToCommand(dto);
-        ParentEntity entity = new ParentEntity();
+        Parent entity = new Parent();
         entity.create(command);
         return entity;
     }
@@ -26,7 +26,13 @@ public class ParentMapper {
         );
     }
 
-    public ParentResponseDTO convertToDto(ParentEntity entity) {
+    public Parent convertToEntity(ParentCommand command) {
+        Parent entity = new Parent();
+        entity.create(command);
+        return entity;
+    }
+
+    public ParentResponseDTO convertToDto(Parent entity) {
 
         return new ParentResponseDTO(
                 entity.getId(),

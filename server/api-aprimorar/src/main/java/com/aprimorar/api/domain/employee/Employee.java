@@ -35,7 +35,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeEntity {
+public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

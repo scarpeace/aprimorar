@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.enums.EventContent;
 
 import jakarta.validation.constraints.*;
@@ -35,8 +37,8 @@ public record EventRequestDTO(
         EventContent content,
 
         @NotNull(message = "ID do estudante é obrigatório")
-        UUID studentId,
+        Student student,
 
         @NotNull(message = "ID do funcionário é obrigatório")
-        UUID employeeId
+        Employee employee
 ) {}

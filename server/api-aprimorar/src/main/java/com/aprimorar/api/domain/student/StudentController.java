@@ -3,7 +3,9 @@ package com.aprimorar.api.domain.student;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,14 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.dto.UpdateStudentDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,24 +38,19 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @Operation(summary = "Create STUDENT", description = "Creates student with student, address and parent data")
+    @Operation(summary = "Create STUDENT", description = "Creates student with student data, address, and parent reference")
     @PostMapping
     public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
-        log.info("StudentController::createStudent request received");
         StudentResponseDTO response = studentService.createStudent(createStudentDto);
-        log.info("StudentController::createStudent created studentId={}", response.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "List all STUDENTS", description = "Retrieves all students from database with pagination")
     @GetMapping
     public ResponseEntity<Page<StudentResponseDTO>> listStudents(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<StudentResponseDTO> students = studentService.getStudents(pageRequest);
-
+        Page<StudentResponseDTO> students = studentService.getStudents(pageable);
         return ResponseEntity.ok(students);
     }
 
@@ -69,14 +65,14 @@ public class StudentController {
         return ResponseEntity.ok(foundStudent);
     }
 
-    @Operation(summary = "Update STUDENT", description = "Updates student with full student data")
-    @PatchMapping("/{studentId}")
+    @Operation(summary = "Update STUDENT", description = "Fully updates student data and parent reference")
+    @PutMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> updateStudent(
             @PathVariable UUID studentId,
-            @RequestBody @Valid UpdateStudentDTO updateStudentDto) {
+            @RequestBody @Valid StudentRequestDTO studentRequestDto) {
         
         log.info("StudentController::updateStudent started for id={}", studentId);
-        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, updateStudentDto);
+        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, studentRequestDto);
         
         log.info("StudentController::updateStudent completed for id={}", studentId);
         return ResponseEntity.ok(updatedStudent);

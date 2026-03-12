@@ -1,6 +1,7 @@
 package com.aprimorar.api.domain.student.dto;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
@@ -33,8 +34,7 @@ public record StudentRequestDTO(
         @NotNull(message = "Endereço do estudante é obrigatório")
         @Valid
         AddressRequestDTO address,
-        @NotNull(message = "Informações do responsável são obrigatórias")
-        @Valid
-        ParentRequestDTO parent
+        @NotNull(message = "Responsável do estudante é obrigatório")
+        ParentRequestDTO parentRequestDTO
         ) {
 }

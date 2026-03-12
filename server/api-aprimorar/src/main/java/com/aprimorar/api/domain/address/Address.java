@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
-public class AddressEntity {
+public class Address {
 
     @Column(nullable = false)
     private String street;
@@ -30,7 +30,7 @@ public class AddressEntity {
 
     private String complement;
 
-    public AddressEntity(
+    public Address(
             String street,
             String number,
             String district,

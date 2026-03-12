@@ -29,14 +29,14 @@ public class ParentService {
 
     @Transactional(readOnly = true)
     public Page<ParentResponseDTO> getParents(Pageable pageable) {
-        Page<ParentEntity> parentPage = parentRepo.findAll(pageable);
+        Page<Parent> parentPage = parentRepo.findAll(pageable);
         return parentPage.map(parentMapper::convertToDto);
     }
 
     @Transactional(readOnly = true)
     public ParentResponseDTO findById(UUID parentId) {
-        ParentEntity parentEntity = findParentByIdOrThrow(parentId);
-        return parentMapper.convertToDto(parentEntity);
+        Parent parent = findParentByIdOrThrow(parentId);
+        return parentMapper.convertToDto(parent);
     }
 
     /*
@@ -46,35 +46,35 @@ public class ParentService {
     @Transactional
     public ParentResponseDTO createParent(ParentRequestDTO parentRequestDTO) {
         ParentCommand command = parentMapper.convertToCommand(parentRequestDTO);
-        ParentEntity parentEntity = new ParentEntity();
-        parentEntity.create(command);
+        Parent parent = new Parent();
+        parent.create(command);
 
-        ParentEntity savedParentEntity = parentRepo.save(parentEntity);
-        return parentMapper.convertToDto(savedParentEntity);
+        Parent savedParent = parentRepo.save(parent);
+        return parentMapper.convertToDto(savedParent);
     }
 
     @Transactional
     public ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO parentRequestDTO) {
-        ParentEntity foundParentEntity = findParentByIdOrThrow(parentId);
+        Parent foundParent = findParentByIdOrThrow(parentId);
         ParentCommand command = parentMapper.convertToCommand(parentRequestDTO);
 
-        foundParentEntity.updateDetails(command);
+        foundParent.updateDetails(command);
 
-        return parentMapper.convertToDto(foundParentEntity);
+        return parentMapper.convertToDto(foundParent);
     }
 
     @Transactional
     public void deleteParent(UUID parentId) {
-        ParentEntity parentEntity = findParentByIdOrThrow(parentId);
-        parentRepo.delete(parentEntity);
+        Parent parent = findParentByIdOrThrow(parentId);
+        parentRepo.delete(parent);
     }
 
     /*
       ------------------------ HELPER METHODS ------------------------
      */
 
-    private ParentEntity findParentByIdOrThrow(UUID parentId) {
+    private Parent findParentByIdOrThrow(UUID parentId) {
         return parentRepo.findById(parentId)
-                .orElseThrow(() -> new ParentNotFoundException(parentId));
+                .orElseThrow(() -> new ParentNotFoundException("Responsável com o CPF informado não existe no banco de dados"));
     }
 }

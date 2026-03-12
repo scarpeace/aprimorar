@@ -10,6 +10,7 @@ import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.parent.exception.InvalidParentException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
+import com.aprimorar.api.domain.student.exception.InvalidStudentException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -57,7 +58,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             InvalidEventException.class,
-            InvalidParentException.class
+            InvalidParentException.class,
+            InvalidStudentException.class
     })
     public ResponseEntity<ApiError> handleInvalidDomainException(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, request);
