@@ -40,7 +40,7 @@ public class StudentMapper {
         entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
         entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
         entity.setAddressEntity(addressMapper.convertToEntity(dto.address()));
-        entity.setParent(parentMapper.convertToEntity(dto.parent()));
+        entity.setParentEntity(parentMapper.convertToEntity(dto.parent()));
         return entity;
     }
 
@@ -56,7 +56,7 @@ public class StudentMapper {
                 entity.getSchool(),
                 calculateAge(entity.getBirthdate()),
                 addressMapper.convertToDto(entity.getAddressEntity()),
-                parentMapper.convertToDto(entity.getParent()),
+                parentMapper.convertToDto(entity.getParentEntity()),
                 entity.getCreatedAt(),
                 entity.getArchivedAt()
         );
@@ -73,7 +73,7 @@ public class StudentMapper {
         entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
         entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
         entity.setAddressEntity(addressMapper.convertToEntity(dto.address()));
-        entity.setParent(parentMapper.convertToEntity(dto.parent()));
+        entity.setParentEntity(parentMapper.convertToEntity(dto.parent()));
         return entity;
     }
 

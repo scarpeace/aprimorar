@@ -27,7 +27,7 @@ public class ParentService {
 
     @Transactional(readOnly = true)
     public Page<ParentResponseDTO> getParents(Pageable pageable) {
-        Page<Parent> parentPage = parentRepo.findAll(pageable);
+        Page<ParentEntity> parentPage = parentRepo.findAll(pageable);
         return parentPage.map(parentMapper::convertToDto);
     }
 }

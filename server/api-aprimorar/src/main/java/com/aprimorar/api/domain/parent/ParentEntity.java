@@ -27,7 +27,7 @@ import lombok.Setter;
         @UniqueConstraint(name = "uk_parent_email", columnNames = {"email"}),
         @UniqueConstraint(name = "uk_parent_cpf", columnNames = {"cpf"})
 })
-public class Parent {
+public class ParentEntity {
 
     @Id
     @Column(name = "parent_id")

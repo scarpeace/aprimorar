@@ -1,22 +1,25 @@
 package com.aprimorar.api.exception;
 
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
 
 @Getter
-@Setter
 public class ApiError {
 
+    private final int status;
+    private final String error;
+    private final String code;
     private final String message;
-    private final HttpStatus httpStatus;
+    private final String path;
     private final Instant timestamp;
 
-    public ApiError(String message, HttpStatus httpStatus, Instant timestamp) {
+    public ApiError(int status, String error, String code, String message, String path, Instant timestamp) {
+        this.status = status;
+        this.error = error;
+        this.code = code;
         this.message = message;
-        this.httpStatus = httpStatus;
+        this.path = path;
         this.timestamp = timestamp;
     }
 }

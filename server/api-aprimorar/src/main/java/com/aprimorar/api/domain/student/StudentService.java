@@ -54,8 +54,13 @@ public class StudentService {
     @Transactional
     public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
 
-        var studentExists = studentRepo.existsByCpfOrEmail(studentRequestDto.cpf(),studentRequestDto.email());
-        if (studentExists) throw new StudentAlreadyExistException();
+        if(studentRepo.existsByCpf(studentRequestDto.cpf())){
+            throw new StudentAlreadyExistException("Aluno com o CPF informado já existe no banco de dados");
+        }
+
+        if(studentRepo.existsByEmail(studentRequestDto.email())){
+            throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
+        }
 
         StudentEntity student = studentMapper.convertToEntity(studentRequestDto);
         StudentEntity savedStudent = studentRepo.save(student);
@@ -90,7 +95,7 @@ public class StudentService {
         foundStudent.setBirthdate(newStudent.getBirthdate());
         foundStudent.setSchool(newStudent.getSchool());
         foundStudent.setAddressEntity(newStudent.getAddressEntity());
-        foundStudent.assingParent(newStudent.getParent());
+        foundStudent.setParentEntity(newStudent.getParentEntity());
 
         return studentMapper.convertToDto(foundStudent);
     }

@@ -5,7 +5,7 @@ import com.aprimorar.api.enums.EventContent;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record CreateEventCommand(
+public record EventCommand(
         String title,
         String description,
         LocalDateTime startDateTime,

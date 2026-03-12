@@ -1,10 +1,12 @@
 package com.aprimorar.api.domain.event;
 
-import java.time.Instant;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.employee.EmployeeEntity;
+import com.aprimorar.api.domain.event.command.EventCommand;
+import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,6 @@ import com.aprimorar.api.domain.employee.EmployeeRepository;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.event.dto.EventRequestDTO;
 import com.aprimorar.api.domain.event.dto.EventResponseDTO;
-import com.aprimorar.api.domain.event.dto.UpdateEventDTO;
 import com.aprimorar.api.domain.event.exception.EventNotFoundException;
 import com.aprimorar.api.domain.student.StudentEntity;
 import com.aprimorar.api.domain.student.StudentRepository;
@@ -23,16 +24,19 @@ import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 @Service
 public class EventService {
 
+
     private final EventRepository eventRepo;
     private final StudentRepository studentRepo;
     private final EmployeeRepository employeeRepo;
     private final EventMapper eventMapper;
+    private final Clock applicationClock;
 
-    public EventService(EventRepository eventRepo, StudentRepository studentRepo, EmployeeRepository employeeRepo, EventMapper eventMapper) {
+    public EventService(EventRepository eventRepo, StudentRepository studentRepo, EmployeeRepository employeeRepo, EventMapper eventMapper, Clock applicationClock) {
         this.eventRepo = eventRepo;
         this.studentRepo = studentRepo;
         this.employeeRepo = employeeRepo;
         this.eventMapper = eventMapper;
+        this.applicationClock = applicationClock;
     }
 
     /*
@@ -57,60 +61,63 @@ public class EventService {
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> getEventsByEmployeeId(Pageable pageable, UUID employeeId) {
 
-        EmployeeEntity employeeEntity = findEmployeeOrThrow(employeeId);
-        Page<EventEntity> eventPage = eventRepo.findAllByEmployeeEntityId(employeeEntity.getId(), pageable);
+        findEmployeeOrThrow(employeeId);
+        Page<EventEntity> eventPage = eventRepo.findAllByEmployeeEntityId(employeeId, pageable);
         return eventPage.map(eventMapper::convertToDto);
     }
 
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> getEventsByStudentId(Pageable pageable, UUID studentId) {
 
-        StudentEntity student = findStudentOrThrow(studentId);
-        Page<EventEntity> eventPage = eventRepo.findAllByStudentEntityId(student.getId(), pageable);
+        findStudentOrThrow(studentId);
+        Page<EventEntity> eventPage = eventRepo.findAllByStudentEntityId(studentId, pageable);
         return eventPage.map(eventMapper::convertToDto);
     }
 
     /*
-          ------------------------ INSERT METHODS METHODS ------------------------
+          ------------------------ INSERT METHODS ------------------------
      */
 
-    //TODO adicionar mais regras de validação de datas (Não pode evento duplicado e etc)
     @Transactional
     public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
+        StudentEntity newStudent = findStudentOrThrow(eventRequestDTO.studentId());
+        EmployeeEntity newEmployee = findEmployeeOrThrow(eventRequestDTO.employeeId());
 
-        EventEntity eventEntity = eventMapper.convertToEntity(eventRequestDTO);
+        EventCommand command = eventMapper.convertToCommand(eventRequestDTO);
 
-        StudentEntity student = studentRepo.findById(eventRequestDTO.studentId()).orElseThrow(StudentNotFoundException::new);
+        validateParticipantAvailability(
+                null,
+                eventRequestDTO.studentId(),
+                eventRequestDTO.employeeId(),
+                command.startDateTime(),
+                command.endDateTime()
+        );
 
-        EmployeeEntity employee = employeeRepo.findById(eventRequestDTO.employeeId()).orElseThrow(EmployeeNotFoundException::new);
-
-        eventEntity.assignParticipants(student, employee);
-        eventEntity.validateDates(LocalDateTime.now());
-        eventEntity.setCreatedAt(Instant.now());
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.create(command, newStudent, newEmployee, LocalDateTime.now(applicationClock));
 
         EventEntity savedEventEntity = eventRepo.save(eventEntity);
 
         return eventMapper.convertToDto(savedEventEntity);
     }
 
-    //TODO: Tranformar isso em um PUT ao invés de PATCH
     @Transactional
-    public EventResponseDTO updateEvent(Long eventId, UpdateEventDTO updateEventDto) {
+    public EventResponseDTO updateEvent(Long eventId, EventRequestDTO eventRequestDTO) {
         EventEntity foundEventEntity = findEventOrThrow(eventId);
-        StudentEntity newStudent = findStudentOrThrow(updateEventDto.studentId());
-        EmployeeEntity newEmployee = findEmployeeOrThrow(updateEventDto.employeeId());
+        StudentEntity updatedStudent = findStudentOrThrow(eventRequestDTO.studentId());
+        EmployeeEntity updatedEmployee = findEmployeeOrThrow(eventRequestDTO.employeeId());
 
-        foundEventEntity.setTitle(updateEventDto.title());
-        foundEventEntity.setDescription(updateEventDto.description());
-        foundEventEntity.setStartDateTime(updateEventDto.startDateTime());
-        foundEventEntity.setEndDateTime(updateEventDto.endDateTime());
-        foundEventEntity.setPrice(updateEventDto.price());
-        foundEventEntity.setPayment(updateEventDto.payment());
-        foundEventEntity.setContent(updateEventDto.content());
+        EventCommand command = eventMapper.convertToCommand(eventRequestDTO);
 
-        foundEventEntity.assignParticipants(newStudent, newEmployee);
-        foundEventEntity.validateDates(LocalDateTime.now());
-        foundEventEntity.setUpdatedAt(Instant.now());
+        validateParticipantAvailability(
+                eventId,
+                eventRequestDTO.studentId(),
+                eventRequestDTO.employeeId(),
+                command.startDateTime(),
+                command.endDateTime()
+        );
+
+        foundEventEntity.update(command, updatedStudent, updatedEmployee, LocalDateTime.now(applicationClock));
 
         return eventMapper.convertToDto(foundEventEntity);
     }
@@ -135,6 +142,52 @@ public class EventService {
 
     private EmployeeEntity findEmployeeOrThrow(UUID employeeId) {
         return employeeRepo.findById(employeeId).orElseThrow(EmployeeNotFoundException::new);
+    }
+
+    private void validateParticipantAvailability(
+            Long eventId,
+            UUID studentId,
+            UUID employeeId,
+            LocalDateTime startDateTime,
+            LocalDateTime endDateTime
+    ) {
+        boolean studentConflict = hasStudentConflict(eventId, studentId, startDateTime, endDateTime);
+        if (studentConflict) {
+            throw new EventScheduleConflictException(
+                    "O estudante informado ja possui evento no intervalo"
+            );
+        }
+
+        boolean employeeConflict = hasEmployeeConflict(eventId, employeeId, startDateTime, endDateTime);
+        if (employeeConflict) {
+            throw new EventScheduleConflictException(
+                    "O colaborador informado ja possui evento no intervalo"
+            );
+        }
+    }
+
+    private boolean hasStudentConflict(
+            Long eventId,
+            UUID studentId,
+            LocalDateTime startDateTime,
+            LocalDateTime endDateTime
+    ) {
+        if (eventId != null) {
+            return eventRepo.existsStudentConflictForUpdate(eventId,studentId,startDateTime,endDateTime);
+        }
+        return eventRepo.existsStudentConflict(studentId,startDateTime,endDateTime);
+    }
+
+    private boolean hasEmployeeConflict(
+            Long eventId,
+            UUID employeeId,
+            LocalDateTime startDateTime,
+            LocalDateTime endDateTime
+    ) {
+        if (eventId != null) {
+            return eventRepo.existsEmployeeConflictForUpdate(eventId,employeeId,startDateTime,endDateTime);
+        }
+        return eventRepo.existsEmployeeConflict(employeeId,startDateTime,endDateTime);
     }
 
 }

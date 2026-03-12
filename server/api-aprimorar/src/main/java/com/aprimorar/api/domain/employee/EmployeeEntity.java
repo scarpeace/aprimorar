@@ -85,4 +85,8 @@ public class EmployeeEntity {
             archivedAt = null;
         }
     }
+
+    public boolean isArchived() {
+        return archivedAt != null;
+    }
 }

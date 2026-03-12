@@ -1,25 +1,25 @@
 package com.aprimorar.api.domain.event;
 
+import com.aprimorar.api.domain.event.command.EventCommand;
+import com.aprimorar.api.shared.MapperUtils;
 import org.springframework.stereotype.Component;
 
 import com.aprimorar.api.domain.event.dto.EventRequestDTO;
 import com.aprimorar.api.domain.event.dto.EventResponseDTO;
-import com.aprimorar.api.domain.event.dto.UpdateEventDTO;
 
 @Component
 public class EventMapper {
 
-    public EventEntity convertToEntity(EventRequestDTO dto) {
-     
-        EventEntity entity = new EventEntity();
-        entity.setTitle(dto.title());
-        entity.setDescription(dto.description());
-        entity.setStartDateTime(dto.startDateTime());
-        entity.setEndDateTime(dto.endDateTime());
-        entity.setPrice(dto.price());
-        entity.setPayment(dto.payment());
-        entity.setContent(dto.content());
-        return entity;
+    public EventCommand convertToCommand(EventRequestDTO dto) {
+        return new EventCommand(
+                dto.title().trim(),
+                dto.description(),
+                dto.startDateTime(),
+                dto.endDateTime(),
+                dto.price(),
+                dto.payment(),
+                dto.content()
+        );
     }
 
     public EventResponseDTO convertToDto(EventEntity entity) {
@@ -42,16 +42,5 @@ public class EventMapper {
         );
     }
 
-    public EventEntity convertToEntity(UpdateEventDTO updateEventDTO) {
-     
-        EventEntity entity = new EventEntity();
-        entity.setTitle(updateEventDTO.title());
-        entity.setDescription(updateEventDTO.description());
-        entity.setStartDateTime(updateEventDTO.startDateTime());
-        entity.setEndDateTime(updateEventDTO.endDateTime());
-        entity.setPrice(updateEventDTO.price());
-        entity.setPayment(updateEventDTO.payment());
-        entity.setContent(updateEventDTO.content());
-        return entity;
-    }
+
 }

@@ -18,9 +18,9 @@ public class ParentMapper {
         this.applicationClock = applicationClock;
     }
 
-    public Parent convertToEntity(ParentRequestDTO dto) {
+    public ParentEntity convertToEntity(ParentRequestDTO dto) {
 
-        Parent entity = new Parent();
+        ParentEntity entity = new ParentEntity();
         entity.setName(dto.name());
         entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
         entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
@@ -29,7 +29,7 @@ public class ParentMapper {
         return entity;
     }
 
-    public ParentResponseDTO convertToDto(Parent entity) {
+    public ParentResponseDTO convertToDto(ParentEntity entity) {
 
         return new ParentResponseDTO(
                 entity.getName(),
@@ -39,9 +39,9 @@ public class ParentMapper {
         );
     }
 
-    public Parent updateToEnity(UpdateParentDTO updateParentDTO) {
+    public ParentEntity updateToEnity(UpdateParentDTO updateParentDTO) {
 
-        Parent entity = new Parent();
+        ParentEntity entity = new ParentEntity();
         entity.setName(updateParentDTO.name());
         entity.setEmail(MapperUtils.sanitizeEmail(updateParentDTO.email()));
         entity.setContact(MapperUtils.sanitizeContact(updateParentDTO.contact()));

@@ -12,7 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.aprimorar.api.domain.address.AddressEntity;
-import com.aprimorar.api.domain.parent.Parent;
+import com.aprimorar.api.domain.parent.ParentEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -52,7 +52,6 @@ public class StudentEntity {
     @Column(nullable = false)
     private String email;
 
-    // TODO: Define minimum and maximum student age in business rules.
     @Column(nullable = false)
     private LocalDate birthdate;
 
@@ -70,7 +69,7 @@ public class StudentEntity {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "parent_id", referencedColumnName = "parent_id", nullable = false)
-    private Parent parent;
+    private ParentEntity parentEntity;
 
     @Embedded
     private AddressEntity addressEntity;
@@ -95,8 +94,8 @@ public class StudentEntity {
         }
     }
 
-    public void assingParent(Parent parent){
-       this.parent = parent;
+    public boolean isArchived() {
+        return archivedAt != null;
     }
 
 }

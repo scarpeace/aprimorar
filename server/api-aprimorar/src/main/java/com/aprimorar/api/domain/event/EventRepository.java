@@ -1,6 +1,7 @@
 package com.aprimorar.api.domain.event;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -12,10 +13,20 @@ import org.springframework.data.repository.query.Param;
 
 public interface EventRepository extends JpaRepository<EventEntity, Long> {
 
+    @Override
+    @EntityGraph(attributePaths = {"studentEntity", "employeeEntity"})
+    Page<EventEntity> findAll(Pageable pageable);
+
+    @EntityGraph(attributePaths = {"studentEntity", "employeeEntity"})
+    Page<EventEntity> findAllByEmployeeEntityId(UUID employeeId, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"studentEntity", "employeeEntity"})
+    Page<EventEntity> findAllByStudentEntityId(UUID studentId, Pageable pageable);
+
     @EntityGraph(attributePaths = {"studentEntity", "employeeEntity"})
     @Query("""
             SELECT e
-            FROM Event e
+            FROM EventEntity e
             WHERE e.startDateTime >= COALESCE(:start, e.startDateTime)
               AND e.startDateTime <= COALESCE(:end, e.startDateTime)
               AND e.studentEntity.id = COALESCE(:studentId, e.studentEntity.id)
@@ -29,6 +40,60 @@ public interface EventRepository extends JpaRepository<EventEntity, Long> {
             Pageable pageable
     );
 
-    Page<EventEntity> findAllByEmployeeEntityId(UUID employeeId, Pageable pageable);
-    Page<EventEntity> findAllByStudentEntityId(UUID studentId, Pageable pageable);
+    @Query("""
+                select count(e) > 0
+                from EventEntity e
+                where e.studentEntity.id = :studentId
+                  and e.startDateTime < :endDateTime
+                  and e.endDateTime > :startDateTime
+            """)
+    boolean existsStudentConflict(
+            @Param("studentId") UUID studentId,
+            @Param("startDateTime") LocalDateTime startDateTime,
+            @Param("endDateTime") LocalDateTime endDateTime
+    );
+
+    @Query("""
+                select count(e) > 0
+                from EventEntity e
+                where e.employeeEntity.id = :employeeId
+                  and e.startDateTime < :endDateTime
+                  and e.endDateTime > :startDateTime
+            """)
+    boolean existsEmployeeConflict(
+            @Param("employeeId") UUID employeeId,
+            @Param("startDateTime") LocalDateTime startDateTime,
+            @Param("endDateTime") LocalDateTime endDateTime
+    );
+
+    @Query("""
+                select count(e) > 0
+                from EventEntity e
+                where e.id <> :eventId
+                  and e.studentEntity.id = :studentId
+                  and e.startDateTime < :endDateTime
+                  and e.endDateTime > :startDateTime
+            """)
+    boolean existsStudentConflictForUpdate(
+            @Param("eventId") Long eventId,
+            @Param("studentId") UUID studentId,
+            @Param("startDateTime") LocalDateTime startDateTime,
+            @Param("endDateTime") LocalDateTime endDateTime
+    );
+
+    @Query("""
+                select count(e) > 0
+                from EventEntity e
+                where e.id <> :eventId
+                  and e.employeeEntity.id = :employeeId
+                  and e.startDateTime < :endDateTime
+                  and e.endDateTime > :startDateTime
+            """)
+    boolean existsEmployeeConflictForUpdate(
+            @Param("eventId") Long eventId,
+            @Param("employeeId") UUID employeeId,
+            @Param("startDateTime") LocalDateTime startDateTime,
+            @Param("endDateTime") LocalDateTime endDateTime
+    );
+
 }

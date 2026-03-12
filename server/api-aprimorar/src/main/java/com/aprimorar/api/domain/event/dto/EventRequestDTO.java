@@ -6,12 +6,7 @@ import java.util.UUID;
 
 import com.aprimorar.api.enums.EventContent;
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 
 public record EventRequestDTO(
@@ -23,19 +18,17 @@ public record EventRequestDTO(
         String description,
 
         @NotNull(message = "Data/hora de início do evento é obrigatória")
-        @FutureOrPresent(message = "Data/hora de início do evento deve ser no presente ou futuro")
         LocalDateTime startDateTime,
 
         @NotNull(message = "Data/hora de fim do evento é obrigatória")
-        @FutureOrPresent(message = "Data/hora de fim do evento deve ser no presente ou futuro")
         LocalDateTime endDateTime,
 
         @NotNull(message = "Preço é obrigatório")
-        @DecimalMin(value = "0.0", message = "Preço deve ser maior ou igual a 0")
+        @PositiveOrZero(message = "Preço deve ser maior ou igual a 0")
         BigDecimal price,
 
         @NotNull(message = "Pagamento é obrigatório")
-        @DecimalMin(value = "0.0", message = "Pagamento deve ser maior ou igual a 0")
+        @PositiveOrZero(message = "Pagamento deve ser maior ou igual a 0")
         BigDecimal payment,
 
         @NotNull(message = "Conteúdo do evento é obrigatório")
@@ -46,20 +39,4 @@ public record EventRequestDTO(
 
         @NotNull(message = "ID do funcionário é obrigatório")
         UUID employeeId
-) {
-    @AssertTrue(message = "Pagamento não pode ser maior que o preço")
-    public boolean isPaymentValid() {
-        if (payment == null || price == null) {
-            return true;
-        }
-        return payment.compareTo(price) <= 0;
-    }
-
-    @AssertTrue(message = "Data/hora de fim deve ser após a data/hora de início")
-    public boolean isEndAfterStart() {
-        if (startDateTime == null || endDateTime == null) {
-            return true;
-        }
-        return endDateTime.isAfter(startDateTime);
-    }
-}
+) {}
