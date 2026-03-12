@@ -35,10 +35,10 @@ public class StudentMapper {
         StudentEntity entity = new StudentEntity();
         entity.setName(dto.name());
         entity.setBirthdate(dto.birthdate());
-        entity.setCpf(MapperUtils.sanitizeCpf(dto.cpf()));
+        entity.setCpf(MapperUtils.normalizeCpf(dto.cpf()));
         entity.setSchool(dto.school());
-        entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
-        entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
+        entity.setContact(MapperUtils.normalizeContact(dto.contact()));
+        entity.setEmail(MapperUtils.normalizeEmail(dto.email()));
         entity.setAddressEntity(addressMapper.convertToEntity(dto.address()));
         entity.setParentEntity(parentMapper.convertToEntity(dto.parent()));
         return entity;
@@ -68,10 +68,10 @@ public class StudentMapper {
         StudentEntity entity = new StudentEntity();
         entity.setName(dto.name());
         entity.setBirthdate(dto.birthdate());
-        entity.setCpf(MapperUtils.sanitizeCpf(dto.cpf()));
+        entity.setCpf(MapperUtils.normalizeCpf(dto.cpf()));
         entity.setSchool(dto.school());
-        entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
-        entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
+        entity.setContact(MapperUtils.normalizeContact(dto.contact()));
+        entity.setEmail(MapperUtils.normalizeEmail(dto.email()));
         entity.setAddressEntity(addressMapper.convertToEntity(dto.address()));
         entity.setParentEntity(parentMapper.convertToEntity(dto.parent()));
         return entity;

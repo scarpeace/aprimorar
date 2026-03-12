@@ -22,9 +22,9 @@ public class ParentMapper {
 
         ParentEntity entity = new ParentEntity();
         entity.setName(dto.name());
-        entity.setEmail(MapperUtils.sanitizeEmail(dto.email()));
-        entity.setContact(MapperUtils.sanitizeContact(dto.contact()));
-        entity.setCpf(MapperUtils.sanitizeCpf(dto.cpf()));
+        entity.setEmail(MapperUtils.normalizeEmail(dto.email()));
+        entity.setContact(MapperUtils.normalizeContact(dto.contact()));
+        entity.setCpf(MapperUtils.normalizeCpf(dto.cpf()));
         entity.setCreatedAt(applicationClock.instant());
         return entity;
     }
@@ -43,9 +43,9 @@ public class ParentMapper {
 
         ParentEntity entity = new ParentEntity();
         entity.setName(updateParentDTO.name());
-        entity.setEmail(MapperUtils.sanitizeEmail(updateParentDTO.email()));
-        entity.setContact(MapperUtils.sanitizeContact(updateParentDTO.contact()));
-        entity.setCpf(MapperUtils.sanitizeCpf(updateParentDTO.cpf()));
+        entity.setEmail(MapperUtils.normalizeEmail(updateParentDTO.email()));
+        entity.setContact(MapperUtils.normalizeContact(updateParentDTO.contact()));
+        entity.setCpf(MapperUtils.normalizeCpf(updateParentDTO.cpf()));
         entity.setUpdatedAt(applicationClock.instant());
         return entity;
     }

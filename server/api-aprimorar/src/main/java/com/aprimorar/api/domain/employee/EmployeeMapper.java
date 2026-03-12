@@ -25,8 +25,8 @@ public class EmployeeMapper {
         employeeEntity.setName(employeeRequestDTO.name());
         employeeEntity.setBirthdate(employeeRequestDTO.birthdate());
         employeeEntity.setPix(employeeRequestDTO.pix().trim());
-        employeeEntity.setContact(MapperUtils.sanitizeContact(employeeRequestDTO.contact()));
-        employeeEntity.setCpf(MapperUtils.sanitizeCpf(employeeRequestDTO.cpf()));
+        employeeEntity.setContact(MapperUtils.normalizeContact(employeeRequestDTO.contact()));
+        employeeEntity.setCpf(MapperUtils.normalizeCpf(employeeRequestDTO.cpf()));
         employeeEntity.setEmail(employeeRequestDTO.email().trim());
         employeeEntity.setRole(Role.EMPLOYEE);
         //TODO Mover essa criação da data para a camada de serviço em todos os mappers
@@ -57,8 +57,8 @@ public class EmployeeMapper {
         updatedEmployeeEntity.setName(updateEmployeeDTO.name());
         updatedEmployeeEntity.setBirthdate(updateEmployeeDTO.birthdate());
         updatedEmployeeEntity.setPix(updateEmployeeDTO.pix().trim());
-        updatedEmployeeEntity.setContact(MapperUtils.sanitizeContact(updateEmployeeDTO.contact()));
-        updatedEmployeeEntity.setCpf(MapperUtils.sanitizeCpf(updateEmployeeDTO.cpf()));
+        updatedEmployeeEntity.setContact(MapperUtils.normalizeContact(updateEmployeeDTO.contact()));
+        updatedEmployeeEntity.setCpf(MapperUtils.normalizeCpf(updateEmployeeDTO.cpf()));
         updatedEmployeeEntity.setEmail(updateEmployeeDTO.email().trim());
         updatedEmployeeEntity.setUpdatedAt(applicationClock.instant());
         return updatedEmployeeEntity;

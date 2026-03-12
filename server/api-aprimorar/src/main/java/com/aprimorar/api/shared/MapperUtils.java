@@ -13,7 +13,6 @@ public class MapperUtils {
         this.objectMapper = objectMapper;
     }
 
-
     public static final String CPF = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$";
     public static final String PHONE_BR = "^\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}$";
     public static final String ZIP_CODE_BR = "^\\d{5}-?\\d{3}$";
@@ -23,22 +22,22 @@ public class MapperUtils {
     public static final String ZIP_CODE_BR_MESSAGE = "CEP deve estar no formato 00000-000 ou 00000000";
 
 
-    public static String sanitizeCpf(String cpf) {
+    public static String normalizeCpf(String cpf) {
         if (cpf == null || cpf.isBlank()) return null;
         return cpf.replaceAll("\\D", "");
     }
 
-    public static String sanitizeEmail(String email) {
+    public static String normalizeEmail(String email) {
         if (email == null || email.isBlank()) return null;
         return email.trim().toLowerCase();
     }
 
-    public static String sanitizeContact(String contact) {
+    public static String normalizeContact(String contact) {
         if (contact == null || contact.isBlank()) return null;
         return contact.replaceAll("\\D", "");
     }
 
-    public static String sanitizeZip(String zip) {
+    public static String normalizeZip(String zip) {
         if (zip == null || zip.isBlank()) return null;
         return zip.replaceAll("\\D", "");
     }

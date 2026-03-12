@@ -1,26 +1,24 @@
 package com.aprimorar.api.domain.address;
 
+import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
 import org.springframework.stereotype.Component;
 
-import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
 import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
-import com.aprimorar.api.domain.address.dto.UpdateAddressDTO;
 import com.aprimorar.api.shared.MapperUtils;
 
 @Component
 public class AddressMapper {
 
     public AddressEntity convertToEntity(AddressRequestDTO dto) {
-
-        AddressEntity entity = new AddressEntity();
-        entity.setStreet(dto.street());
-        entity.setNumber(dto.number());
-        entity.setComplement(dto.complement());
-        entity.setDistrict(dto.district());
-        entity.setCity(dto.city());
-        entity.setState(dto.state());
-        entity.setZip(MapperUtils.sanitizeZip(dto.zip()));
-        return entity;
+        return new AddressEntity(
+                dto.street().trim(),
+                dto.number().trim(),
+                dto.district().trim(),
+                dto.city().trim(),
+                dto.state().trim(),
+                MapperUtils.normalizeZip(dto.zip()),
+                dto.complement().trim()
+        );
     }
 
     public AddressResponseDTO convertToDto(AddressEntity entity) {
@@ -34,18 +32,5 @@ public class AddressMapper {
                 entity.getState(),
                 MapperUtils.formatZip(entity.getZip())
         );
-    }
-
-   public AddressEntity updateToEntity(UpdateAddressDTO dto) {
-
-        AddressEntity entity = new AddressEntity();
-        entity.setStreet(dto.street());
-        entity.setNumber(dto.number());
-        entity.setComplement(dto.complement());
-        entity.setDistrict(dto.district());
-        entity.setCity(dto.city());
-        entity.setState(dto.state());
-        entity.setZip(MapperUtils.sanitizeZip(dto.zip()));
-        return entity;
     }
 }

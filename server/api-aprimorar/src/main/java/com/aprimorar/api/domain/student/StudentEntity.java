@@ -98,4 +98,8 @@ public class StudentEntity {
         return archivedAt != null;
     }
 
+    public void updateAddress(AddressEntity addressEntity) {
+        this.addressEntity = addressEntity;
+    }
+
 }

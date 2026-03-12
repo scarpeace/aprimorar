@@ -94,7 +94,7 @@ public class StudentService {
         foundStudent.setCpf(newStudent.getCpf());
         foundStudent.setBirthdate(newStudent.getBirthdate());
         foundStudent.setSchool(newStudent.getSchool());
-        foundStudent.setAddressEntity(newStudent.getAddressEntity());
+        foundStudent.updateAddress(newStudent.getAddressEntity());
         foundStudent.setParentEntity(newStudent.getParentEntity());
 
         return studentMapper.convertToDto(foundStudent);
