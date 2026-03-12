@@ -11,13 +11,13 @@ public class AddressMapper {
 
     public AddressEntity convertToEntity(AddressRequestDTO dto) {
         return new AddressEntity(
-                dto.street().trim(),
-                dto.number().trim(),
-                dto.district().trim(),
-                dto.city().trim(),
-                dto.state().trim(),
+                dto.street(),
+                dto.number(),
+                dto.district(),
+                dto.city(),
+                dto.state(),
                 MapperUtils.normalizeZip(dto.zip()),
-                dto.complement().trim()
+                dto.complement()
         );
     }
 

@@ -1,15 +1,12 @@
 package com.aprimorar.api.domain.address;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class AddressEntity {
 
@@ -32,5 +29,23 @@ public class AddressEntity {
     private String zip;
 
     private String complement;
+
+    public AddressEntity(
+            String street,
+            String number,
+            String district,
+            String city,
+            String state,
+            String zip,
+            String complement
+    ) {
+        this.street = street;
+        this.number = number;
+        this.district = district;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+        this.complement = complement;
+    }
 
 }
