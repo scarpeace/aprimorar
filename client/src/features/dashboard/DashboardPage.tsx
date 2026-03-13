@@ -3,7 +3,7 @@ import { ErrorState } from "@/components/ui/error-state"
 import { LoadingState } from "@/components/ui/loading-state"
 import type { StudentResponse, EmployeeResponse, EventResponse } from "@/lib/schemas"
 import { studentsApi, employeesApi, eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
-import { useState, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import styles from "@/features/dashboard/DashboardPage.module.css"
 
 export function DashboardPage() {
@@ -15,41 +15,42 @@ export function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setError(null)
-        setLoading(true)
-        const [studentsRes, employeesRes, eventsRes] = await Promise.all([
-          studentsApi.list(0, 20, "name"),
-          employeesApi.list(),
-          eventsApi.list(),
-        ])
+  const loadDashboard = useCallback(async () => {
+    try {
+      setError(null)
+      setLoading(true)
+      const [studentsRes, employeesRes, eventsRes] = await Promise.all([
+        studentsApi.list(0, 20, "name"),
+        employeesApi.list(),
+        eventsApi.list(),
+      ])
 
-        const studentsPage: PageResponse<StudentResponse> = studentsRes.data
-        const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
-        const eventsPage: PageResponse<EventResponse> = eventsRes.data
+      const studentsPage: PageResponse<StudentResponse> = studentsRes.data
+      const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
+      const eventsPage: PageResponse<EventResponse> = eventsRes.data
 
-        setStudentsCount(studentsPage.totalElements)
-        setEmployeesCount(employeesPage.totalElements)
-        setEventsCount(eventsPage.totalElements)
-        //TODO Move this logic to the backend
-        // Calculate revenue from events
-        const total = eventsPage.content.reduce(
-          (sum, event) => sum + Number(event.payment),
-          0
-        )
+      setStudentsCount(studentsPage.totalElements)
+      setEmployeesCount(employeesPage.totalElements)
+      setEventsCount(eventsPage.totalElements)
+      //TODO Move this logic to the backend
+      // Calculate revenue from events
+      const total = eventsPage.content.reduce(
+        (sum, event) => sum + Number(event.payment),
+        0
+      )
 
-        setRevenue(total)
-      } catch (error) {
-        console.error("Falha ao carregar o painel:", error)
-        setError(getFriendlyErrorMessage(error))
-      } finally {
-        setLoading(false)
-      }
+      setRevenue(total)
+    } catch (error) {
+      console.error("Falha ao carregar o painel:", error)
+      setError(getFriendlyErrorMessage(error))
+    } finally {
+      setLoading(false)
     }
-    fetchData()
   }, [])
+
+  useEffect(() => {
+    loadDashboard()
+  }, [loadDashboard])
 
   if (loading) return <LoadingState message="Carregando painel..." />
 
@@ -61,7 +62,7 @@ export function DashboardPage() {
           title="Ops, não foi possível carregar"
           description={error}
           actionLabel="Tentar novamente"
-          onAction={() => window.location.reload()}
+          onAction={loadDashboard}
         />
       </div>
     )
