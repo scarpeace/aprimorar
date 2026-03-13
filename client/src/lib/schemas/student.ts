@@ -44,10 +44,10 @@ export const studentResponseSchema = z.object({
   age: z.number().int().nonnegative(),
   school: z.string(),
   archivedAt: z.string().nullable(),
-  lastReactivatedAt: z.string().nullable(),
   address: addressSchema.nullable(),
   parent: parentSchema.nullable(),
   createdAt: z.string(),
+  updatedAt: z.string().nullable(),
 })
 
 export type CreateStudentInput = z.infer<typeof createStudentSchema>

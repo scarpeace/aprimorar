@@ -2,18 +2,10 @@ package com.aprimorar.api.domain.parent;
 
 
 import com.aprimorar.api.shared.BaseEntity;
-import jakarta.persistence.AttributeOverride;
-import lombok.Setter;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-@NoArgsConstructor()
 @Entity
 @Table(name = "tb_parent")
 public class Parent extends BaseEntity {
@@ -30,4 +22,38 @@ public class Parent extends BaseEntity {
     @Column(name = "cpf",nullable = false, unique = true)
     private String cpf;
 
+    public Parent() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
 }

@@ -7,7 +7,8 @@ import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.parent.ParentRepository;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,9 @@ import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 
 @Service
-@Slf4j
 public class StudentService {
+
+    private static final Logger log = LoggerFactory.getLogger(StudentService.class);
 
     private final ParentRepository parentRepo;
     private final StudentRepository studentRepo;

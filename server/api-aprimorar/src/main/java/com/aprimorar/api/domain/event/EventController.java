@@ -48,7 +48,7 @@ public class EventController {
 
     @Operation(summary = "List single event by ID", description = "Retrieves single event based on ID")
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventResponseDTO> getEventById(@PathVariable Long eventId) {
+    public ResponseEntity<EventResponseDTO> getEventById(@PathVariable UUID eventId) {
 
         EventResponseDTO foundEvent = eventService.findById(eventId);
         return ResponseEntity.ok(foundEvent);
@@ -72,7 +72,7 @@ public class EventController {
 
     @Operation(summary = "Update EVENT", description = "Fully updates event data")
     @PutMapping("/{eventId}")
-    public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable Long eventId, @RequestBody @Valid EventRequestDTO eventRequestDTO) {
+    public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable UUID eventId, @RequestBody @Valid EventRequestDTO eventRequestDTO) {
 
         EventResponseDTO updatedEvent = eventService.updateEvent(eventId, eventRequestDTO);
         return ResponseEntity.ok(updatedEvent);
@@ -80,7 +80,7 @@ public class EventController {
 
     @Operation(summary = "Delete EVENT", description = "Deletes single event based on ID")
     @DeleteMapping("/{eventId}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId) {
+    public ResponseEntity<Void> deleteEvent(@PathVariable UUID eventId) {
         eventService.deleteEvent(eventId);
         return ResponseEntity.noContent().build();
     }

@@ -27,7 +27,10 @@ public class ParentMapper {
                 parent.getName(),
                 parent.getEmail(),
                 MapperUtils.formatContact(parent.getContact()),
-                MapperUtils.formatCpf(parent.getCpf())
+                MapperUtils.formatCpf(parent.getCpf()),
+                parent.getArchivedAt(),
+                parent.getCreatedAt(),
+                parent.getUpdatedAt()
         );
     }
 }

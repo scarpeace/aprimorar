@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +46,7 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public EventResponseDTO findById(Long eventId) {
+    public EventResponseDTO findById(UUID eventId) {
 
         Event event = eventRepo.findById(eventId).orElseThrow(EventNotFoundException::new);
         return eventMapper.convertToDto(event);
@@ -54,13 +55,13 @@ public class EventService {
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> getEventsByEmployeeId(Pageable pageable, UUID employeeId) {
 
-        Page<Event> eventPage = eventRepo.findAllByEmployeeEntityId(employeeId, pageable);
+        Page<Event> eventPage = eventRepo.findAllByEmployeeId(employeeId, pageable);
         return eventPage.map(eventMapper::convertToDto);
     }
 
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> getEventsByStudentId(Pageable pageable, UUID studentId) {
-        Page<Event> eventPage = eventRepo.findAllByStudentEntityId(studentId, pageable);
+        Page<Event> eventPage = eventRepo.findAllByStudentId(studentId, pageable);
         return eventPage.map(eventMapper::convertToDto);
     }
 
@@ -74,6 +75,7 @@ public class EventService {
         Event event = eventMapper.convertToEntity(eventRequestDTO);
 
         EventRules.validate(event);
+        validateParticipantsExistence(event.getStudent(), event.getEmployee());
         validateParticipantAvailability(
                 event.getStudent(),
                 event.getEmployee(),
@@ -87,18 +89,19 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponseDTO updateEvent(Long id, EventRequestDTO request) {
+    public EventResponseDTO updateEvent(UUID id, EventRequestDTO request) {
         Event event = eventMapper.convertToEntity(request);
+        event.setId(id);
 
-        EventRules.validate(event);
         findEventOrThrow(id);
-        validateParticipantsExistence(request.student(), request.employee());
+        validateParticipantsExistence(event.getStudent(), event.getEmployee());
         validateParticipantAvailability(
-                request.student(),
-                request.employee(),
-                request.startDateTime(),
-                request.endDateTime()
+                event.getStudent(),
+                event.getEmployee(),
+                event.getStartDateTime(),
+                event.getEndDateTime()
         );
+        EventRules.validate(event);
 
         Event updatedEvent = eventRepo.save(event);
 
@@ -106,7 +109,7 @@ public class EventService {
     }
 
     @Transactional
-    public void deleteEvent(Long eventId) {
+    public void deleteEvent(UUID eventId) {
         Event foundEvent = findEventOrThrow(eventId);
         eventRepo.delete(foundEvent);
     }
@@ -115,7 +118,7 @@ public class EventService {
       ------------------------ HELPER METHODS ------------------------
      */
 
-    private Event findEventOrThrow(Long eventId) {
+    private Event findEventOrThrow(UUID eventId) {
         return eventRepo.findById(eventId).orElseThrow(EventNotFoundException::new);
     }
 
@@ -145,19 +148,17 @@ public class EventService {
             Employee employee
     ) {
         boolean studentExists = studentRepo.existsById(student.getId());
-        if (studentExists) {
+        if (!studentExists) {
             throw new StudentNotFoundException("Estudante com o ID informado não encontrado no banco de dados");
         }
 
         boolean employeeExists = employeeRepo.existsById(employee.getId());
-        if (employeeExists) {
-            throw new StudentNotFoundException("Colaborador com o ID informado não encontrado no banco de dados");
+        if (!employeeExists) {
+            throw new EmployeeNotFoundException("Colaborador com o ID informado não encontrado no banco de dados");
         }
     }
 
 }
-
-
 
 
 

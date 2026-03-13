@@ -10,25 +10,25 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface EventRepository extends JpaRepository<Event, Long> {
+public interface EventRepository extends JpaRepository<Event, UUID> {
 
     @Override
-    @EntityGraph(attributePaths = {"studentEntity", "employee"})
+    @EntityGraph(attributePaths = {"student", "employee"})
     Page<Event> findAll(Pageable pageable);
 
-    @EntityGraph(attributePaths = {"studentEntity", "employee"})
-    Page<Event> findAllByEmployeeEntityId(UUID employeeId, Pageable pageable);
+    @EntityGraph(attributePaths = {"student", "employee"})
+    Page<Event> findAllByEmployeeId(UUID employeeId, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"studentEntity", "employee"})
-    Page<Event> findAllByStudentEntityId(UUID studentId, Pageable pageable);
+    @EntityGraph(attributePaths = {"student", "employee"})
+    Page<Event> findAllByStudentId(UUID studentId, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"studentEntity", "employee"})
+    @EntityGraph(attributePaths = {"student", "employee"})
     @Query("""
             SELECT e
-            FROM EventEntity e
+            FROM Event e
             WHERE e.startDateTime >= COALESCE(:start, e.startDateTime)
               AND e.startDateTime <= COALESCE(:end, e.startDateTime)
-              AND e.studentEntity.id = COALESCE(:studentId, e.studentEntity.id)
+              AND e.student.id = COALESCE(:studentId, e.student.id)
               AND e.employee.id = COALESCE(:employeeId, e.employee.id)
             """)
     Page<Event> findAllWithFilter(
@@ -54,7 +54,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("""
                 select count(e) > 0
-                from EventEntity e
+                from Event e
                 where e.employee.id = :employeeId
                   and e.startDateTime < :endDateTime
                   and e.endDateTime > :startDateTime

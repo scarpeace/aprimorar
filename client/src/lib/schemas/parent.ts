@@ -20,10 +20,14 @@ export const parentSummarySchema = z.object({
 })
 
 export const parentResponseSchema = z.object({
+  id: z.uuid(),
   name: z.string(),
   email: z.string(),
   contact: z.string(),
   cpf: z.string(),
+  archivedAt: z.string().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string().nullable(),
 })
 
 export type ParentSummary = z.infer<typeof parentSummarySchema>

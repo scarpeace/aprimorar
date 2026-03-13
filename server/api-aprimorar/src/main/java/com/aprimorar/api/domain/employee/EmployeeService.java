@@ -101,11 +101,13 @@ public class EmployeeService {
     }
 
     private void validateEmployeeUniqueness(String cpf, String email) {
-        employeeRepo.finByCpf(cpf)
-                .orElseThrow(()-> new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados"));
+        if (employeeRepo.existsByCpf(cpf)) {
+            throw new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados");
+        }
 
-        employeeRepo.findByEmail(email)
-                .orElseThrow(()-> new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados"));
+        if (employeeRepo.existsByEmail(email)) {
+            throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
+        }
 
     }
 }

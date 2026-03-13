@@ -8,5 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
     Optional<Employee> findByEmail(String email);
-    Optional<Employee> finByCpf(String cpf);
+    Optional<Employee> findByCpf(String cpf);
+
+    boolean existsByCpf(String cpf);
+    boolean existsByEmail(String email);
 }

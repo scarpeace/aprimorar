@@ -1,4 +1,4 @@
-package com.aprimorar.api.requests;
+package com.aprimorar.api.shared;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

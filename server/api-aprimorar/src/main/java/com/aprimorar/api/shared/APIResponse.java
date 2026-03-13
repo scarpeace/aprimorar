@@ -1,4 +1,4 @@
-package com.aprimorar.api.requests;
+package com.aprimorar.api.shared;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
