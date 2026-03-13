@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
 import { ErrorState } from "@/components/ui/error-state"
 import { LoadingState } from "@/components/ui/loading-state"
+import { SummaryField } from "@/components/ui/summary-field"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { GraduationCap } from "lucide-react"
 import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
@@ -11,15 +12,6 @@ import type { StudentResponse } from "@/lib/schemas/student"
 import { eventsApi, getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
 import { useCallback, useEffect, useState } from "react"
 import styles from "@/features/students/StudentDetailPage.module.css"
-
-function SummaryField({ label, value }: { label: string; value: string }) {
-  return (
-    <div className={styles.summaryItem}>
-      <p className={styles.summaryLabel}>{label}</p>
-      <p className={styles.summaryValue}>{value}</p>
-    </div>
-  )
-}
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -119,22 +111,22 @@ export function StudentDetailPage() {
         </CardHeader>
         <CardContent>
           <div className={styles.summaryGrid}>
-            <SummaryField label="Nome completo" value={student.name} />
-            <SummaryField label="CPF" value={student.cpf} />
-            <SummaryField label="E-mail" value={student.email} />
-            <SummaryField label="Idade" value={String(student.age)} />
-            <SummaryField label="Contato" value={student.contact} />
-            <SummaryField label="Data de nascimento" value={student.birthdate} />
-            <SummaryField label="Data de matrícula" value={student.createdAt} />
-            <SummaryField label="Escola" value={student.school} />
-            <SummaryField label="Status" value={student.archivedAt ? "Arquivado" : "Ativo"} />
-            <SummaryField label="Responsável" value={parentName} />
-            <SummaryField label="E-mail do responsável" value={parentEmail} />
-            <SummaryField label="Contato do responsável" value={parentContact} />
-            <SummaryField label="CPF do responsável" value={parentCpf} />
-            <SummaryField label="Endereço" value={address} />
-            <SummaryField label="Complemento" value={addressComplement} />
-            <SummaryField label="CEP" value={addressZip} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Nome completo" value={student.name} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CPF" value={student.cpf} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="E-mail" value={student.email} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Idade" value={String(student.age)} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Contato" value={student.contact} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Data de nascimento" value={student.birthdate} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Data de matrícula" value={student.createdAt} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Escola" value={student.school} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Status" value={student.archivedAt ? "Arquivado" : "Ativo"} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Responsável" value={parentName} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="E-mail do responsável" value={parentEmail} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Contato do responsável" value={parentContact} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CPF do responsável" value={parentCpf} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Endereço" value={address} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Complemento" value={addressComplement} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CEP" value={addressZip} />
           </div>
         </CardContent>
       </Card>

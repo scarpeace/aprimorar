@@ -13,23 +13,23 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { eventContentLabels, type EventResponse } from "@/lib/schemas"
-import { eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
+import { eventsApi, getFriendlyErrorMessage} from "@/services/api"
 import styles from "@/features/events/EventsPage.module.css"
+import type { PageResponse } from "@/lib/schemas/page-response"
 
 export function EventsPage() {
   const [eventList, setEventList] = useState<EventResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [deleteError, setDeleteError] = useState<string | null>(null)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [archiveError, setArchiveError] = useState<string | null>(null)
+  const [archiveId, setArchivingId] = useState<string | null>(null)
 
   const loadEvents = async () => {
     try {
       setError(null)
       setLoading(true)
-      const eventsRes = await eventsApi.list()
-      const eventsPage: PageResponse<EventResponse> = eventsRes.data
-      setEventList(eventsPage.content)
+      const eventsRes: PageResponse<EventResponse> = await eventsApi.list()
+      setEventList(eventsRes.content)
     } catch (error) {
       console.error("Falha ao carregar eventos:", error)
       setError(getFriendlyErrorMessage(error))
@@ -42,21 +42,21 @@ export function EventsPage() {
     loadEvents()
   }, [])
 
-  const handleDelete = async (event: EventResponse) => {
+  const handleArchive = async (event: EventResponse) => {
     if (!window.confirm(`Excluir evento "${event.title}"? Essa ação não pode ser desfeita.`)) {
       return
     }
 
     try {
-      setDeleteError(null)
-      setDeletingId(event.id)
-      await eventsApi.delete(event.id)
+      setArchiveError(null)
+      setArchivingId(event.id)
+      await eventsApi.archive(event.id)
       setEventList((prev) => prev.filter((item) => item.id !== event.id))
     } catch (error) {
       console.error("Falha ao excluir evento:", error)
-      setDeleteError(getFriendlyErrorMessage(error))
+      setArchiveError(getFriendlyErrorMessage(error))
     } finally {
-      setDeletingId(null)
+      setArchivingId(null)
     }
   }
 
@@ -93,9 +93,9 @@ export function EventsPage() {
         </Button>
       </div>
 
-      {deleteError ? (
+      {archiveError ? (
         <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-          {deleteError}
+          {archiveError}
         </div>
       ) : null}
 
@@ -118,7 +118,7 @@ export function EventsPage() {
                 <TableCell>{event.title}</TableCell>
                 <TableCell>{event.studentName}</TableCell>
                 <TableCell>{event.employeeName}</TableCell>
-                <TableCell>{event.startDateTime}</TableCell>
+                <TableCell>{event.startDate}</TableCell>
                 <TableCell>{eventContentLabels[event.content]}</TableCell>
                 <TableCell>R$ {event.price}</TableCell>
                 <TableCell>
@@ -130,10 +130,10 @@ export function EventsPage() {
                       type="button"
                       variant="destructive"
                       size="sm"
-                      onClick={() => handleDelete(event)}
-                      disabled={deletingId === event.id}
+                      onClick={() => handleArchive(event)}
+                      disabled={archiveId === event.id}
                     >
-                      {deletingId === event.id ? "Excluindo..." : "Excluir"}
+                      {archiveId === event.id ? "Excluindo..." : "Excluir"}
                     </Button>
                   </div>
                 </TableCell>

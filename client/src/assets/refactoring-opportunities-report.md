@@ -1,8 +1,8 @@
-# Refactoring Opportunities Report
+# Relatorio de Oportunidades de Refatoracao
 
-This document reviews the current React/Vite frontend against the Vercel React best practices and highlights the highest-value refactoring opportunities found in the project.
+Este documento revisa o frontend React/Vite atual com base nas boas praticas de React da Vercel e destaca as oportunidades de refatoracao de maior valor encontradas no projeto.
 
-## Scope Reviewed
+## Escopo Revisado
 
 - `src/App.tsx`
 - `src/services/api.ts`
@@ -12,15 +12,15 @@ This document reviews the current React/Vite frontend against the Vercel React b
 - `src/features/employees/*.tsx`
 - `src/features/events/*.tsx`
 
-## Priority 1: Route-Based Code Splitting
+## Prioridade 1: Divisao de Codigo por Rota
 
-Related rule: `bundle-dynamic-imports`
+Regra relacionada: `bundle-dynamic-imports`
 
-### Why this matters
+### Por que isso importa
 
-`src/App.tsx` eagerly imports every page. As the app grows, each new route increases the initial bundle and makes first load slower.
+`src/App.tsx` importa todas as paginas de forma antecipada. Conforme a aplicacao cresce, cada nova rota aumenta o bundle inicial e deixa o primeiro carregamento mais lento.
 
-### Current pattern
+### Padrao atual
 
 ```tsx
 import { DashboardPage } from "@/features/dashboard/DashboardPage"
@@ -35,11 +35,11 @@ import { EventDetailPage } from "@/features/events/EventDetailPage"
 import { EventCreatePage } from "@/features/events/EventCreatePage"
 ```
 
-### Refactor direction
+### Direcao de refatoracao
 
-Use `React.lazy` with `Suspense`, or React Router lazy routes, so each screen loads on demand.
+Use `React.lazy` com `Suspense`, ou rotas lazy do React Router, para que cada tela seja carregada sob demanda.
 
-### Example
+### Exemplo
 
 ```tsx
 import { Suspense, lazy } from "react"
@@ -68,19 +68,19 @@ export default function App() {
 }
 ```
 
-### Project files affected
+### Arquivos do projeto afetados
 
 - `src/App.tsx`
 
-## Priority 2: Replace Repeated `useEffect + useState` Fetching
+## Prioridade 2: Substituir o Padrao Repetido de `useEffect + useState` para Busca de Dados
 
-Related rules: `async-parallel`, `client-swr-dedup`, `rerender-functional-setstate`
+Regras relacionadas: `async-parallel`, `client-swr-dedup`, `rerender-functional-setstate`
 
-### Why this matters
+### Por que isso importa
 
-The project repeats the same pattern for loading state, error state, retries, and API calls. This increases maintenance cost and creates inconsistent behavior.
+O projeto repete o mesmo padrao para estado de carregamento, estado de erro, tentativas novamente e chamadas de API. Isso aumenta o custo de manutencao e cria comportamentos inconsistentes.
 
-Examples:
+Exemplos:
 
 - `src/features/students/StudentsPage.tsx`
 - `src/features/employees/EmployeesPage.tsx`
@@ -89,7 +89,7 @@ Examples:
 - `src/features/employees/EmployeeDetailPage.tsx`
 - `src/features/dashboard/DashboardPage.tsx`
 
-### Current pattern
+### Padrao atual
 
 ```tsx
 const [loading, setLoading] = useState(true)
@@ -114,14 +114,14 @@ useEffect(() => {
 }, [])
 ```
 
-### Refactor direction
+### Direcao de refatoracao
 
-Two good options:
+Duas boas opcoes:
 
-1. Introduce TanStack Query for caching, deduping, invalidation, and retries
-2. Move route data loading into React Router loaders if you want route-owned fetching
+1. Introduzir TanStack Query para cache, deduplicacao, invalidacao e tentativas novamente
+2. Mover o carregamento de dados das rotas para loaders do React Router, se a ideia for deixar a busca de dados sob responsabilidade da rota
 
-### Example with a feature hook
+### Exemplo com hook de feature
 
 ```tsx
 import { useQuery } from "@tanstack/react-query"
@@ -155,7 +155,7 @@ if (error) {
 }
 ```
 
-### Project files affected
+### Arquivos do projeto afetados
 
 - `src/features/students/StudentsPage.tsx`
 - `src/features/employees/EmployeesPage.tsx`
@@ -167,15 +167,15 @@ if (error) {
 - `src/features/students/StudentCreatePage.tsx`
 - `src/features/events/EventCreatePage.tsx`
 
-## Priority 3: Validate API Responses with Zod at Runtime
+## Prioridade 3: Validar Respostas da API com Zod em Tempo de Execucao
 
-Related rule: `server-serialization`
+Regra relacionada: `server-serialization`
 
-### Why this matters
+### Por que isso importa
 
-The code already defines Zod schemas in `src/lib/schemas`, but API responses are treated as trusted TypeScript values. If backend DTOs drift, the UI can fail later and in more confusing places.
+O codigo ja define schemas Zod em `src/lib/schemas`, mas as respostas da API sao tratadas como valores confiaveis do TypeScript. Se os DTOs do backend mudarem, a interface pode falhar depois e de forma mais dificil de diagnosticar.
 
-### Current pattern
+### Padrao atual
 
 ```ts
 const eventsRes = await eventsApi.list()
@@ -183,11 +183,11 @@ const eventsPage: PageResponse<EventResponse> = eventsRes.data
 setEventList(eventsPage.content)
 ```
 
-### Refactor direction
+### Direcao de refatoracao
 
-Parse responses inside the service layer so invalid payloads fail near the network boundary.
+Fazer o parse das respostas dentro da camada de servico para que cargas invalidas falhem perto da fronteira de rede.
 
-### Example
+### Exemplo
 
 ```ts
 import { z } from "zod"
@@ -212,7 +212,7 @@ export const eventsApi = {
 }
 ```
 
-### Project files affected
+### Arquivos do projeto afetados
 
 - `src/services/api.ts`
 - `src/lib/schemas/student.ts`
@@ -220,15 +220,15 @@ export const eventsApi = {
 - `src/lib/schemas/event.ts`
 - `src/lib/schemas/parent.ts`
 
-## Priority 4: Fix Dashboard KPI Correctness
+## Prioridade 4: Corrigir a Confiabilidade dos KPIs do Dashboard
 
-Related rules: `async-parallel`, `js-early-exit`
+Regras relacionadas: `async-parallel`, `js-early-exit`
 
-### Why this matters
+### Por que isso importa
 
-`src/features/dashboard/DashboardPage.tsx` uses paginated list endpoints and calculates revenue from `eventsPage.content`, which only includes the first page. The count values use `totalElements`, but the revenue value becomes wrong when there are more than 20 events.
+`src/features/dashboard/DashboardPage.tsx` usa endpoints paginados de listagem e calcula a receita com base em `eventsPage.content`, que inclui apenas a primeira pagina. Os contadores usam `totalElements`, mas a receita fica incorreta quando existem mais de 20 eventos.
 
-### Current pattern
+### Padrao atual
 
 ```tsx
 const [studentsRes, employeesRes, eventsRes] = await Promise.all([
@@ -240,11 +240,11 @@ const [studentsRes, employeesRes, eventsRes] = await Promise.all([
 const total = eventsPage.content.reduce((sum, event) => sum + Number(event.payment), 0)
 ```
 
-### Refactor direction
+### Direcao de refatoracao
 
-Prefer a dedicated backend aggregate endpoint, for example `/v1/dashboard/summary`, instead of reconstructing KPIs on the client.
+Prefira um endpoint agregado no backend, por exemplo `/v1/dashboard/summary`, em vez de remontar os KPIs no cliente.
 
-### Example DTO shape
+### Exemplo de formato de DTO
 
 ```ts
 type DashboardSummary = {
@@ -263,35 +263,35 @@ setEventsCount(summary.eventsCount)
 setRevenue(summary.totalPayment)
 ```
 
-### Project files affected
+### Arquivos do projeto afetados
 
 - `src/features/dashboard/DashboardPage.tsx`
-- backend counterpart recommended in `server/api-aprimorar/`
+- contraparte de backend recomendada em `server/api-aprimorar/`
 
-## Priority 5: Remove Silent Truncation from `size = 100` Screens
+## Prioridade 5: Remover Truncamento Silencioso nas Telas com `size = 100`
 
-Related rules: `client-swr-dedup`, `js-early-exit`
+Regras relacionadas: `client-swr-dedup`, `js-early-exit`
 
-### Why this matters
+### Por que isso importa
 
-Several screens assume `100` records is enough for related data or select options. That works in small datasets but will silently cut results as the project grows.
+Varias telas assumem que `100` registros sao suficientes para dados relacionados ou opcoes de selecao. Isso funciona com bases pequenas, mas vai cortar resultados silenciosamente conforme o projeto crescer.
 
-Examples:
+Exemplos:
 
-- `src/features/students/StudentDetailPage.tsx` uses `eventsApi.listByStudent(id, 0, 100, ...)`
-- `src/features/employees/EmployeeDetailPage.tsx` uses `eventsApi.listByEmployee(id, 0, 100, ...)`
-- `src/features/events/EventCreatePage.tsx` uses `studentsApi.list(0, 100, ...)` and `employeesApi.list(0, 100, ...)`
-- `src/features/students/StudentCreatePage.tsx` uses `parentsApi.list(0, 100, ...)`
+- `src/features/students/StudentDetailPage.tsx` usa `eventsApi.listByStudent(id, 0, 100, ...)`
+- `src/features/employees/EmployeeDetailPage.tsx` usa `eventsApi.listByEmployee(id, 0, 100, ...)`
+- `src/features/events/EventCreatePage.tsx` usa `studentsApi.list(0, 100, ...)` e `employeesApi.list(0, 100, ...)`
+- `src/features/students/StudentCreatePage.tsx` usa `parentsApi.list(0, 100, ...)`
 
-### Refactor direction
+### Direcao de refatoracao
 
-Use one of these approaches:
+Use uma destas abordagens:
 
-1. Add true paginated tables and searchable selectors
-2. Add dedicated lightweight endpoints for select options
-3. For linked-event sections, add pagination controls instead of pulling an arbitrary cap
+1. Adicionar tabelas realmente paginadas e seletores pesquisaveis
+2. Adicionar endpoints dedicados e leves para opcoes de selecao
+3. Nas secoes de eventos vinculados, adicionar controles de paginacao em vez de usar um limite arbitrario
 
-### Example option endpoint contract
+### Exemplo de contrato para endpoint de opcoes
 
 ```ts
 type SelectOption = {
@@ -304,37 +304,37 @@ type SelectOption = {
 const students = await studentOptionsApi.list({ query: search, page: 0, size: 20 })
 ```
 
-### Project files affected
+### Arquivos do projeto afetados
 
 - `src/features/events/EventCreatePage.tsx`
 - `src/features/students/StudentCreatePage.tsx`
 - `src/features/students/StudentDetailPage.tsx`
 - `src/features/employees/EmployeeDetailPage.tsx`
 
-## Priority 6: Extract Shared Presentation Helpers
+## Prioridade 6: Extrair Helpers Compartilhados de Apresentacao
 
-Related rules: `rerender-memo`, `rendering-hoist-jsx`
+Regras relacionadas: `rerender-memo`, `rendering-hoist-jsx`
 
-### Why this matters
+### Por que isso importa
 
-There is clear duplication in small presentational helpers and lookup maps.
+Existe duplicacao clara em pequenos helpers de apresentacao e mapas de dominio.
 
-Examples found:
+Exemplos encontrados:
 
-- `SummaryField` duplicated in:
+- `SummaryField` duplicado em:
   - `src/features/students/StudentDetailPage.tsx`
   - `src/features/employees/EmployeeDetailPage.tsx`
   - `src/features/events/EventDetailPage.tsx`
-- `dutyLabels` duplicated in:
+- `dutyLabels` duplicado em:
   - `src/features/employees/EmployeeCreatePage.tsx`
   - `src/features/employees/EmployeesPage.tsx`
   - `src/features/employees/EmployeeDetailPage.tsx`
 
-### Refactor direction
+### Direcao de refatoracao
 
-Move reusable UI and domain helpers into shared modules.
+Mover UI reutilizavel e helpers de dominio para modulos compartilhados.
 
-### Example
+### Exemplo
 
 ```tsx
 type SummaryFieldProps = {
@@ -362,20 +362,20 @@ export const dutyLabels = {
 } as const
 ```
 
-### Suggested destination
+### Destino sugerido
 
 - `src/components/ui/summary-field.tsx`
 - `src/features/employees/dutyLabels.ts`
 
-## Priority 7: Replace Full Page Reload Retry Behavior
+## Prioridade 7: Substituir Tentativa com Recarregamento Total da Pagina
 
-Related rule: `rerender-move-effect-to-event`
+Regra relacionada: `rerender-move-effect-to-event`
 
-### Why this matters
+### Por que isso importa
 
-`src/features/dashboard/DashboardPage.tsx` retries by calling `window.location.reload()`. This throws away app state, causes a full document reload, and is inconsistent with the retry behavior used elsewhere.
+`src/features/dashboard/DashboardPage.tsx` faz nova tentativa usando `window.location.reload()`. Isso descarta o estado da aplicacao, causa um recarregamento completo do documento e fica inconsistente com o comportamento de tentativa usado no restante do projeto.
 
-### Current pattern
+### Padrao atual
 
 ```tsx
 <ErrorState
@@ -386,11 +386,11 @@ Related rule: `rerender-move-effect-to-event`
 />
 ```
 
-### Better pattern
+### Padrao melhor
 
 ```tsx
 const loadDashboard = useCallback(async () => {
-  // current fetch logic
+  // logica atual de busca
 }, [])
 
 useEffect(() => {
@@ -405,36 +405,36 @@ useEffect(() => {
 />
 ```
 
-### Project files affected
+### Arquivos do projeto afetados
 
 - `src/features/dashboard/DashboardPage.tsx`
 
-## Suggested Refactor Order
+## Ordem Sugerida de Refatoracao
 
-### High impact, low effort
+### Alto impacto, baixo esforco
 
-1. Extract shared `dutyLabels` and `SummaryField`
-2. Replace `window.location.reload()` with local refetch
-3. Remove `size = 100` assumptions from critical screens
+1. Extrair `dutyLabels` e `SummaryField` compartilhados
+2. Substituir `window.location.reload()` por nova busca local
+3. Remover suposicoes de `size = 100` das telas criticas
 
-### High impact, medium effort
+### Alto impacto, esforco medio
 
-1. Introduce route-based lazy loading in `src/App.tsx`
-2. Start validating API responses in `src/services/api.ts`
-3. Create a shared data-fetching layer for pages
+1. Introduzir lazy loading por rota em `src/App.tsx`
+2. Comecar a validar respostas de API em `src/services/api.ts`
+3. Criar uma camada compartilhada de busca de dados para as paginas
 
-### High impact, higher effort
+### Alto impacto, maior esforco
 
-1. Add dedicated dashboard aggregate endpoints
-2. Replace ad hoc selectors with searchable paginated option endpoints
+1. Adicionar endpoints agregados dedicados para o dashboard
+2. Substituir seletores ad hoc por endpoints paginados e pesquisaveis para opcoes
 
-## Practical First Milestone
+## Primeiro Marco Pratico
 
-If the project wants the best return quickly, a good first milestone would be:
+Se o projeto quiser o melhor retorno rapidamente, um bom primeiro marco seria:
 
-1. Lazy load all route pages
-2. Add a query library or route loaders for shared fetching behavior
-3. Parse API responses with Zod in `src/services/api.ts`
-4. Introduce a dedicated dashboard summary endpoint
+1. Carregar todas as paginas por lazy loading
+2. Adicionar uma biblioteca de query ou loaders de rota para comportamento compartilhado de busca
+3. Fazer parse das respostas da API com Zod em `src/services/api.ts`
+4. Introduzir um endpoint dedicado de resumo do dashboard
 
-This set would improve bundle size, reduce duplicated code, make data fetching more reliable, and remove one correctness issue in the dashboard.
+Esse conjunto melhora o tamanho do bundle, reduz codigo duplicado, torna a busca de dados mais confiavel e remove um problema de corretude no dashboard.

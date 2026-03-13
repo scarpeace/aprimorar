@@ -4,29 +4,15 @@ import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/ui/empty-state"
 import { ErrorState } from "@/components/ui/error-state"
 import { LoadingState } from "@/components/ui/loading-state"
+import { SummaryField } from "@/components/ui/summary-field"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { UserCog } from "lucide-react"
 import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
 import type { EmployeeResponse } from "@/lib/schemas/employee"
+import { dutyLabels } from "@/features/employees/dutyLabels"
 import { employeesApi, eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
 import { useCallback, useEffect, useState } from "react"
 import styles from "@/features/employees/EmployeeDetailPage.module.css"
-
-const dutyLabels = {
-  TEACHER: "Professor(a)",
-  ADM: "Administrativo",
-  THERAPIST: "Terapeuta",
-  MENTOR: "Mentor(a)",
-} as const
-
-function SummaryField({ label, value }: { label: string; value: string }) {
-  return (
-    <div className={styles.summaryItem}>
-      <p className={styles.summaryLabel}>{label}</p>
-      <p className={styles.summaryValue}>{value}</p>
-    </div>
-  )
-}
 
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -118,15 +104,15 @@ export function EmployeeDetailPage() {
         </CardHeader>
         <CardContent>
           <div className={styles.summaryGrid}>
-            <SummaryField label="Nome completo" value={employee.name} />
-            <SummaryField label="E-mail" value={employee.email} />
-            <SummaryField label="Cargo" value={dutyLabels[employee.duty]} />
-            <SummaryField label="Contato" value={employee.contact} />
-            <SummaryField label="CPF" value={employee.cpf} />
-            <SummaryField label="Chave PIX" value={employee.pix} />
-            <SummaryField label="Data de nascimento" value={employee.birthdate} />
-            <SummaryField label="Status" value={employee.archivedAt ? "Arquivado" : "Ativo"} />
-            <SummaryField label="Criado em" value={employee.createdAt} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Nome completo" value={employee.name} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="E-mail" value={employee.email} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Cargo" value={dutyLabels[employee.duty]} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Contato" value={employee.contact} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CPF" value={employee.cpf} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Chave PIX" value={employee.pix} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Data de nascimento" value={employee.birthdate} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Status" value={employee.archivedAt ? "Arquivado" : "Ativo"} />
+            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Criado em" value={employee.createdAt} />
           </div>
         </CardContent>
       </Card>
