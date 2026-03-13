@@ -12,16 +12,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { dutyLabels } from "@/features/employees/dutyLabels"
 import type { EmployeeResponse } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
 import styles from "@/features/employees/EmployeesPage.module.css"
-
-const dutyLabels = {
-  TEACHER: "Professor(a)",
-  ADM: "Administrativo",
-  THERAPIST: "Terapeuta",
-  MENTOR: "Mentor(a)",
-} as const
 
 export function EmployeesPage() {
   const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])

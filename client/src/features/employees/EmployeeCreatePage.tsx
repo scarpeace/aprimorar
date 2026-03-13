@@ -4,19 +4,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import styles from "@/features/employees/EmployeeCreatePage.module.css"
+import { dutyLabels } from "@/features/employees/dutyLabels"
 import { useForm } from "react-hook-form"
 import { useHookFormMask } from "use-mask-input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createEmployeeSchema, type CreateEmployeeInput } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
 import { useState } from "react"
-
-const dutyLabels = {
-  TEACHER: "Professor(a)",
-  ADM: "Administrativo",
-  THERAPIST: "Terapeuta",
-  MENTOR: "Mentor(a)",
-} as const
 
 export function EmployeeCreatePage() {
   const navigate = useNavigate()
