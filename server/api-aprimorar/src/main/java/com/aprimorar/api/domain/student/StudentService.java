@@ -43,11 +43,10 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public Page<StudentResponseDTO> getStudents(Pageable pageable) {
-        log.info("StudentService:getStudents buscando por todos os alunos paginados");
 
         Page<Student> page = studentRepo.findAll(pageable);
 
-        log.info("StudentService:getStudents consulta finalizada,  {} registros no banco  ", page.getTotalElements());
+        log.info("Consulta de alunos finalizada, {} registros encontrados.", page.getTotalElements());
         return page.map(studentMapper::convertToDto);
     }
 
@@ -55,6 +54,7 @@ public class StudentService {
     public StudentResponseDTO findById(UUID studentId) {
 
         Student student = findStudentOrThrow(studentId);
+        log.info("Aluno {} consultado com sucesso.", student.getName().toUpperCase());
         return studentMapper.convertToDto(student);
     }
 
@@ -71,6 +71,7 @@ public class StudentService {
         ensureStudentUniqueness(student);
         Student savedStudent = studentRepo.save(student);
 
+        log.info("Aluno {} cadastrado com sucesso.", savedStudent.getName().toUpperCase());
         return studentMapper.convertToDto(savedStudent);
     }
 
@@ -83,6 +84,7 @@ public class StudentService {
         ensureParentExists(request.parent());
         Student updatedStudent = studentRepo.save(student);
 
+        log.info("Aluno {} atualizado com sucesso.", updatedStudent.getName().toUpperCase());
         return studentMapper.convertToDto(updatedStudent);
     }
 
@@ -90,12 +92,14 @@ public class StudentService {
     public void archiveStudent(UUID studentId) {
         Student student = findStudentOrThrow(studentId);
         student.setArchivedAt(Instant.now());
+        log.info("Aluno {} arquivado com sucesso.", student.getName().toUpperCase());
     }
 
     @Transactional
     public void unarchiveStudent(UUID studentId) {
         Student student = findStudentOrThrow(studentId);
         student.setArchivedAt(null);
+        log.info("Aluno {} desarquivado com sucesso.", student.getName().toUpperCase());
     }
 
 
@@ -103,6 +107,7 @@ public class StudentService {
     public void deleteStudent(UUID studentId) {
         Student student = findStudentOrThrow(studentId);
         studentRepo.delete(student);
+        log.info("Aluno {} deletado com sucesso.", student.getName().toUpperCase());
     }
     /*
       ------------------------ HELPER METHODS ------------------------

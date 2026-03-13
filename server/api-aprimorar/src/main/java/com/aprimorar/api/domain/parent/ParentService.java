@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 
 @Service
 public class ParentService {
+
+    private static final Logger log = LoggerFactory.getLogger(ParentService.class);
 
     private final ParentRepository parentRepo;
     private final ParentMapper parentMapper;
@@ -33,12 +37,14 @@ public class ParentService {
     @Transactional(readOnly = true)
     public Page<ParentResponseDTO> getParents(Pageable pageable) {
         Page<Parent> page = parentRepo.findAll(pageable);
+        log.info("Consulta de responsáveis finalizada, {} registros encontrados.", page.getTotalElements());
         return page.map(parentMapper::convertToDto);
     }
 
     @Transactional(readOnly = true)
     public ParentResponseDTO findById(UUID parentId) {
         Parent parent = findParentOrThrow(parentId);
+        log.info("Responsável {} consultado com sucesso.", parent.getName().toUpperCase());
         return parentMapper.convertToDto(parent);
     }
 
@@ -58,6 +64,7 @@ public class ParentService {
         ParentRules.validate(parent);
         Parent savedParent = parentRepo.save(parent);
 
+        log.info("Responsável {} cadastrado com sucesso.", savedParent.getName().toUpperCase());
         return parentMapper.convertToDto(savedParent);
     }
 
@@ -77,6 +84,7 @@ public class ParentService {
         oldParent.setCpf(newParent.getCpf());
         ParentRules.validate(oldParent);
 
+        log.info("Responsável {} atualizado com sucesso.", oldParent.getName().toUpperCase());
         return parentMapper.convertToDto(oldParent);
     }
 
@@ -84,18 +92,21 @@ public class ParentService {
     public void archiveParent(UUID id) {
         Parent parent = findParentOrThrow(id);
         parent.setArchivedAt(Instant.now());
+        log.info("Responsável {} arquivado com sucesso.", parent.getName().toUpperCase());
     }
 
     @Transactional
     public void unarchiveParent(UUID id) {
         Parent parent = findParentOrThrow(id);
         parent.setArchivedAt(null);
+        log.info("Responsável {} desarquivado com sucesso.", parent.getName().toUpperCase());
     }
 
     @Transactional
     public void deleteParent(UUID id) {
         Parent parent = findParentOrThrow(id);
         parentRepo.delete(parent);
+        log.info("Responsável {} deletado com sucesso.", parent.getName().toUpperCase());
     }
 
     /*

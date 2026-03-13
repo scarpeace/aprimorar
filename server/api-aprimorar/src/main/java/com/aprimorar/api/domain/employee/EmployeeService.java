@@ -1,10 +1,11 @@
 package com.aprimorar.api.domain.employee;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 
 @Service
 public class EmployeeService {
+
+    private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
     private final EmployeeRepository employeeRepo;
     private final EmployeeMapper employeeMapper;
@@ -33,6 +36,7 @@ public class EmployeeService {
     public Page<EmployeeResponseDTO> getEmployees(Pageable pageable) {
 
         Page<Employee> page = employeeRepo.findAll(pageable);
+        log.info("Consulta de colaboradores finalizada, {} registros encontrados.", page.getTotalElements());
         return page.map(employeeMapper::convertToDto);
     }
 
@@ -40,6 +44,7 @@ public class EmployeeService {
     public EmployeeResponseDTO findById(UUID employeeId) {
 
         Employee employee = findEmployeeOrThrow(employeeId);
+        log.info("Colaborador {} consultado com sucesso.", employee.getName().toUpperCase());
         return employeeMapper.convertToDto(employee);
     }
 
@@ -57,6 +62,7 @@ public class EmployeeService {
 
         Employee savedEmployee = employeeRepo.save(employee);
 
+        log.info("Colaborador {} cadastrado com sucesso.", savedEmployee.getName().toUpperCase());
         return employeeMapper.convertToDto(savedEmployee);
     }
 
@@ -70,6 +76,7 @@ public class EmployeeService {
 
         Employee updatedEmployee = employeeRepo.save(employee);
 
+        log.info("Colaborador {} atualizado com sucesso.", updatedEmployee.getName().toUpperCase());
         return employeeMapper.convertToDto(updatedEmployee);
     }
 
@@ -77,18 +84,21 @@ public class EmployeeService {
     public void deleteEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
         employeeRepo.delete(employee);
+        log.info("Colaborador {} deletado com sucesso.", employee.getName().toUpperCase());
     }
 
     @Transactional
     public void archiveEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
         employee.setArchivedAt(Instant.now());
+        log.info("Colaborador {} arquivado com sucesso.", employee.getName().toUpperCase());
     }
 
     @Transactional
     public void unarchiveEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
         employee.setArchivedAt(null);
+        log.info("Colaborador {} desarquivado com sucesso.", employee.getName().toUpperCase());
     }
 
     /*

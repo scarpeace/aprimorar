@@ -6,6 +6,8 @@ import java.util.UUID;
 import com.aprimorar.api.domain.employee.Employee;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 
 @Service
 public class EventService {
+
+    private static final Logger log = LoggerFactory.getLogger(EventService.class);
 
     private final EventRepository eventRepo;
     private final StudentRepository studentRepo;
@@ -42,6 +46,7 @@ public class EventService {
     public Page<EventResponseDTO> getEvents(Pageable pageable) {
 
         Page<Event> eventPage = eventRepo.findAll(pageable);
+        log.info("Consulta de eventos finalizada, {} registros encontrados.", eventPage.getTotalElements());
         return eventPage.map(eventMapper::convertToDto);
     }
 
@@ -49,6 +54,7 @@ public class EventService {
     public EventResponseDTO findById(UUID eventId) {
 
         Event event = eventRepo.findById(eventId).orElseThrow(EventNotFoundException::new);
+        log.info("Evento {} consultado com sucesso.", event.getTitle().toUpperCase());
         return eventMapper.convertToDto(event);
     }
 
@@ -56,12 +62,22 @@ public class EventService {
     public Page<EventResponseDTO> getEventsByEmployeeId(Pageable pageable, UUID employeeId) {
 
         Page<Event> eventPage = eventRepo.findAllByEmployeeId(employeeId, pageable);
+        log.info(
+                "Consulta de eventos do colaborador {} finalizada, {} registros encontrados.",
+                employeeId,
+                eventPage.getTotalElements()
+        );
         return eventPage.map(eventMapper::convertToDto);
     }
 
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> getEventsByStudentId(Pageable pageable, UUID studentId) {
         Page<Event> eventPage = eventRepo.findAllByStudentId(studentId, pageable);
+        log.info(
+                "Consulta de eventos do aluno {} finalizada, {} registros encontrados.",
+                studentId,
+                eventPage.getTotalElements()
+        );
         return eventPage.map(eventMapper::convertToDto);
     }
 
@@ -85,6 +101,7 @@ public class EventService {
 
         Event savedEvent = eventRepo.save(event);
 
+        log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
         return eventMapper.convertToDto(savedEvent);
     }
 
@@ -105,6 +122,7 @@ public class EventService {
 
         Event updatedEvent = eventRepo.save(event);
 
+        log.info("Evento {} atualizado com sucesso.", updatedEvent.getTitle().toUpperCase());
         return eventMapper.convertToDto(updatedEvent);
     }
 
@@ -112,6 +130,7 @@ public class EventService {
     public void deleteEvent(UUID eventId) {
         Event foundEvent = findEventOrThrow(eventId);
         eventRepo.delete(foundEvent);
+        log.info("Evento {} deletado com sucesso.", foundEvent.getTitle().toUpperCase());
     }
 
     /*
@@ -159,7 +178,6 @@ public class EventService {
     }
 
 }
-
 
 
 
