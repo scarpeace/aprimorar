@@ -5,12 +5,9 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.address.Address;
-import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
 import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-//TODO Formatar bonitinhos os responses pra ter menos trabalho no front
 public record StudentResponseDTO(
         UUID id,
         String name,
@@ -23,9 +20,11 @@ public record StudentResponseDTO(
         Integer age,
         Address address,
         Parent parent,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
+        Instant archivedAt,
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant createdAt,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
-        Instant archivedAt
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
+        Instant updatedAt
 ) {
 }

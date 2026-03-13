@@ -1,6 +1,6 @@
 package com.aprimorar.api.enums;
 
-public enum EmployeeRole {
+public enum Duty {
     TEACHER,
     ADM,
     THERAPIST,

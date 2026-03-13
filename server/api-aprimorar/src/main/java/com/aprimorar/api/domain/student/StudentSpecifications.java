@@ -12,6 +12,6 @@ public final class StudentSpecifications {
     }
 
     public static Specification<Student> notArchived() {
-        return (root, query, cb) -> cb.isNull(root.get("archivedAt"));
+        return (root, query, cb) -> cb.isNull(root.get("updatedAt"));
     }
 }

@@ -54,10 +54,10 @@ public class EventRules {
     }
 
     private static void validateParticipants(Student student, Employee employee) {
-        if (student.isArchived()) {
+        if (student.getArchivedAt() != null) {
             throw new InvalidEventException("Evento não pode ter estudantes arquivados");
         }
-        if (employee.isArchived()) {
+        if (employee.getArchivedAt() != null) {
             throw new InvalidEventException("Evento não pode ter colaboradores arquivados");
         }
     }

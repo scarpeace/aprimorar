@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
-    Optional<Employee> findByIdAndArchivedAtIsNull(UUID id);
+    Optional<Employee> findByEmail(String email);
+    Optional<Employee> finByCpf(String cpf);
 }

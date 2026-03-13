@@ -2,7 +2,7 @@ package com.aprimorar.api.domain.employee.dto;
 
 import java.time.LocalDate;
 
-import com.aprimorar.api.enums.Role;
+import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.shared.MapperUtils;
 
 import jakarta.validation.constraints.Email;
@@ -29,5 +29,5 @@ public record EmployeeRequestDTO(
         @Email(message = "Email deve ser um endereço de email válido")
         String email,
         @NotNull(message = "Papel do funcionário é obrigatório")
-        Role role) {
+        Duty duty) {
 }

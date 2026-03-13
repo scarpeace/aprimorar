@@ -3,11 +3,14 @@ package com.aprimorar.api.exception;
 import java.time.Clock;
 import java.util.Locale;
 
+import com.aprimorar.api.domain.address.exception.InvalidAddressException;
+import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
 import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.parent.exception.InvalidParentException;
+import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.InvalidStudentException;
@@ -49,6 +52,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             EventScheduleConflictException.class,
+            ParentAlreadyExistsException.class,
+            EmployeeAlreadyExistsException.class,
             StudentAlreadyExistException.class,
             DataIntegrityViolationException.class
     })
@@ -59,7 +64,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             InvalidEventException.class,
             InvalidParentException.class,
-            InvalidStudentException.class
+            InvalidStudentException.class,
+            InvalidAddressException.class
     })
     public ResponseEntity<ApiError> handleInvalidDomainException(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, request);

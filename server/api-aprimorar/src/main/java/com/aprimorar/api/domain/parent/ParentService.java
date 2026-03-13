@@ -1,8 +1,9 @@
 package com.aprimorar.api.domain.parent;
 
+import java.time.Instant;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.parent.command.ParentCommand;
+import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,13 @@ public class ParentService {
 
     @Transactional(readOnly = true)
     public Page<ParentResponseDTO> getParents(Pageable pageable) {
-        Page<Parent> parentPage = parentRepo.findAll(pageable);
-        return parentPage.map(parentMapper::convertToDto);
+        Page<Parent> page = parentRepo.findAll(pageable);
+        return page.map(parentMapper::convertToDto);
     }
 
     @Transactional(readOnly = true)
     public ParentResponseDTO findById(UUID parentId) {
-        Parent parent = findParentByIdOrThrow(parentId);
+        Parent parent = findParentOrThrow(parentId);
         return parentMapper.convertToDto(parent);
     }
 
@@ -44,28 +45,54 @@ public class ParentService {
      */
 
     @Transactional
-    public ParentResponseDTO createParent(ParentRequestDTO parentRequestDTO) {
-        ParentCommand command = parentMapper.convertToCommand(parentRequestDTO);
-        Parent parent = new Parent();
-        parent.create(command);
+    public ParentResponseDTO createParent(ParentRequestDTO request) {
 
+        Parent parent = parentMapper.convertToEntity(request);
+
+        verifyParentUniquenessForCreate(
+                request.cpf(),
+                request.email()
+        );
+        ParentRules.validate(parent);
         Parent savedParent = parentRepo.save(parent);
+
         return parentMapper.convertToDto(savedParent);
     }
 
     @Transactional
-    public ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO parentRequestDTO) {
-        Parent foundParent = findParentByIdOrThrow(parentId);
-        ParentCommand command = parentMapper.convertToCommand(parentRequestDTO);
+    public ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO request) {
 
-        foundParent.updateDetails(command);
+        Parent newParent = parentMapper.convertToEntity(request);
+        Parent oldParent = findParentOrThrow(parentId);
+        verifyParentUniquenessForUpdate(
+                newParent.getCpf(),
+                newParent.getEmail(),
+                parentId
+        );
+        oldParent.setName(newParent.getName());
+        oldParent.setEmail(newParent.getEmail());
+        oldParent.setContact(newParent.getContact());
+        oldParent.setCpf(newParent.getCpf());
+        ParentRules.validate(oldParent);
 
-        return parentMapper.convertToDto(foundParent);
+        return parentMapper.convertToDto(oldParent);
     }
 
     @Transactional
-    public void deleteParent(UUID parentId) {
-        Parent parent = findParentByIdOrThrow(parentId);
+    public void archiveParent(UUID id) {
+        Parent parent = findParentOrThrow(id);
+        parent.setArchivedAt(Instant.now());
+    }
+
+    @Transactional
+    public void unarchiveParent(UUID id) {
+        Parent parent = findParentOrThrow(id);
+        parent.setArchivedAt(null);
+    }
+
+    @Transactional
+    public void deleteParent(UUID id) {
+        Parent parent = findParentOrThrow(id);
         parentRepo.delete(parent);
     }
 
@@ -73,8 +100,39 @@ public class ParentService {
       ------------------------ HELPER METHODS ------------------------
      */
 
-    private Parent findParentByIdOrThrow(UUID parentId) {
+    private Parent findParentOrThrow(UUID parentId) {
         return parentRepo.findById(parentId)
-                .orElseThrow(() -> new ParentNotFoundException("Responsável com o CPF informado não existe no banco de dados"));
+                .orElseThrow(() -> new ParentNotFoundException("Responsável não encontrado no banco de dados"));
+    }
+
+
+    private void verifyParentUniquenessForUpdate(String cpf, String email, UUID id) {
+
+        if(id != null) {
+            if (parentRepo.existsByCpfAndIdNot(cpf, id)) {
+                throw new ParentAlreadyExistsException(
+                        "Responsável com o CPF informado já existe no banco de dados"
+                );
+            }
+            if (parentRepo.existsByEmailAndIdNot(email, id)) {
+                throw new ParentAlreadyExistsException(
+                        "Responsável com o Email informado já existe no banco de dados"
+                );
+            }
+        }
+    }
+
+    private void verifyParentUniquenessForCreate(String cpf, String email) {
+
+        boolean existsByCpf = parentRepo.existsByCpf(cpf);
+        boolean existsByEmail = parentRepo.existsByEmail(email);
+
+        if(existsByCpf){
+            throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
+        }
+
+        if(existsByEmail){
+            throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
+        }
     }
 }

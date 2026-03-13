@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
-import com.aprimorar.api.domain.employee.dto.UpdateEmployeeDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -65,9 +64,9 @@ public class EmployeeController {
 
     @Operation(summary = "Update employee", description = "Partially updates an existing employee with provided data")
     @PatchMapping("/{employeeId}")
-    public ResponseEntity<EmployeeResponseDTO> updateEmployee(@PathVariable UUID employeeId, @RequestBody @Valid UpdateEmployeeDTO updateEmployeeDTO) {
+    public ResponseEntity<EmployeeResponseDTO> updateEmployee(@PathVariable UUID employeeId, @RequestBody @Valid EmployeeRequestDTO request) {
 
-        EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(employeeId, updateEmployeeDTO);
+        EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(employeeId, request);
         return ResponseEntity.ok(updatedEmployee);
     }
 

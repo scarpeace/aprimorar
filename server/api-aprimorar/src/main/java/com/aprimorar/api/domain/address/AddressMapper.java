@@ -10,15 +10,15 @@ import com.aprimorar.api.shared.MapperUtils;
 public class AddressMapper {
 
     public Address convertToEntity(AddressRequestDTO dto) {
-        return new Address(
-                dto.street(),
-                dto.number(),
-                dto.district(),
-                dto.city(),
-                dto.state(),
-                MapperUtils.normalizeZip(dto.zip()),
-                dto.complement()
-        );
+        Address address = new Address();
+        address.setStreet(dto.street());
+        address.setNumber(dto.number());
+        address.setDistrict(dto.district());
+        address.setCity(dto.city());
+        address.setState(dto.state());
+        address.setZip(MapperUtils.normalizeZip(dto.zip()));
+
+        return address;
     }
 
     public AddressResponseDTO convertToDto(Address entity) {

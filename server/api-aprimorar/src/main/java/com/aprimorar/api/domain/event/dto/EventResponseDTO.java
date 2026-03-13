@@ -8,7 +8,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public record EventResponseDTO(
-        Long id,
+        UUID id,
         String title,
         String description,
         String content,
@@ -25,10 +25,10 @@ public record EventResponseDTO(
         UUID employeeId,
         String employeeName,
 
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant createdAt,
 
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant updatedAt
 ) {
 }

@@ -1,6 +1,5 @@
 package com.aprimorar.api.domain.student;
 
-import java.time.Clock;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -53,7 +52,7 @@ public class StudentService {
     @Transactional(readOnly = true)
     public StudentResponseDTO findById(UUID studentId) {
 
-        Student student = ensureStudentExists(studentId);
+        Student student = findStudentOrThrow(studentId);
         return studentMapper.convertToDto(student);
     }
 
@@ -78,7 +77,7 @@ public class StudentService {
 
         Student student = studentMapper.convertToEntity(request);
 
-        ensureStudentExists(id);
+        findStudentOrThrow(id);
         ensureParentExists(request.parent());
         Student updatedStudent = studentRepo.save(student);
 
@@ -87,26 +86,27 @@ public class StudentService {
 
     @Transactional
     public void archiveStudent(UUID studentId) {
-        Student student = ensureStudentExists(studentId);
+        Student student = findStudentOrThrow(studentId);
         student.setArchivedAt(Instant.now());
     }
 
     @Transactional
     public void unarchiveStudent(UUID studentId) {
-        Student student = ensureStudentExists(studentId);
+        Student student = findStudentOrThrow(studentId);
         student.setArchivedAt(null);
     }
 
+
     @Transactional
     public void deleteStudent(UUID studentId) {
-        Student student = ensureStudentExists(studentId);
+        Student student = findStudentOrThrow(studentId);
         studentRepo.delete(student);
     }
     /*
       ------------------------ HELPER METHODS ------------------------
      */
 
-    private Student ensureStudentExists(UUID studentId) {
+    private Student findStudentOrThrow(UUID studentId) {
         return studentRepo.findById(studentId)
                 .orElseThrow(()-> new StudentNotFoundException("Aluno não encontrado no banco de dados"));
     }

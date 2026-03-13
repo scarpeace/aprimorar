@@ -87,10 +87,11 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponseDTO updateEvent(EventRequestDTO request) {
+    public EventResponseDTO updateEvent(Long id, EventRequestDTO request) {
         Event event = eventMapper.convertToEntity(request);
 
         EventRules.validate(event);
+        findEventOrThrow(id);
         validateParticipantsExistence(request.student(), request.employee());
         validateParticipantAvailability(
                 request.student(),

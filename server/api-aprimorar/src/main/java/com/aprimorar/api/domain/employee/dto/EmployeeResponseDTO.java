@@ -1,5 +1,6 @@
 package com.aprimorar.api.domain.employee.dto;
 
+import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -17,13 +18,13 @@ public record EmployeeResponseDTO(
         String contact,
         String cpf,
         String email,
-        Role role,
-        Boolean archived,
+        Duty duty,
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
+        Instant archivedAt,
 
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant createdAt,
-
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant updatedAt
-) {
+        ) {
 }

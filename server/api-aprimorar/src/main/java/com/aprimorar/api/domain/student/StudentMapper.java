@@ -50,8 +50,9 @@ public class StudentMapper {
                 calculateAge(entity.getBirthdate()),
                 entity.getAddress(),
                 entity.getParent(),
-                entity.getCreatedAt(),
-                entity.getArchivedAt()
+                entity.getArchivedAt(),
+                entity.getUpdatedAt(),
+                entity.getCreatedAt()
         );
     }
 

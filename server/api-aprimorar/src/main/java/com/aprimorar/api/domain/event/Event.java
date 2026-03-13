@@ -3,8 +3,10 @@ package com.aprimorar.api.domain.event;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.shared.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,7 +15,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.enums.EventContent;
 
-// TODO: Add googleCalendarEventId when calendar integration is enabled.
+// TODO: Adicionar campos do google calendar para a implementação
 
 @Getter
 @Setter
@@ -21,11 +23,7 @@ import com.aprimorar.api.enums.EventContent;
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_events")
-public class Event {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Event extends BaseEntity {
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -50,19 +48,11 @@ public class Event {
     private EventContent content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id", referencedColumnName = "student_id", nullable = false)
+    @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
     private Student student;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", referencedColumnName = "employee_id", nullable = false)
+    @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @CreationTimestamp
-    private Instant createdAt;
-
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    private Instant updatedAt;
 
 }

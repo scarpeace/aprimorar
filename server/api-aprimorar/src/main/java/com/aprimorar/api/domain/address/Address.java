@@ -1,51 +1,38 @@
 package com.aprimorar.api.domain.address;
 
+import com.aprimorar.api.enums.BrazilianState;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor
 @Embeddable
 public class Address {
 
-    @Column(nullable = false)
+    @Column(name = "street", nullable = false)
     private String street;
 
-    @Column(nullable = false)
+    @Column(name = "number",nullable = false)
     private String number;
 
-    @Column(nullable = false)
+    @Column(name = "district",nullable = false)
     private String district;
 
-    @Column(nullable = false)
+    @Column(name = "city",nullable = false)
     private String city;
 
-    @Column(nullable = false)
-    private String state;
+    @Column(name = "state",nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BrazilianState state;
 
-    @Column(nullable = false)
+    @Column(name = "zip",nullable = false)
     private String zip;
 
     private String complement;
 
-    public Address(
-            String street,
-            String number,
-            String district,
-            String city,
-            String state,
-            String zip,
-            String complement
-    ) {
-        this.street = street;
-        this.number = number;
-        this.district = district;
-        this.city = city;
-        this.state = state;
-        this.zip = zip;
-        this.complement = complement;
-    }
 
 }
