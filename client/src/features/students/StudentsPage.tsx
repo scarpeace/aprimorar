@@ -13,8 +13,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { StudentResponse } from "@/lib/schemas"
-import { getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
+import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
 import styles from "@/features/students/StudentsPage.module.css"
+import type { PageResponse } from "@/lib/schemas/page-response"
 
 export function StudentsPage() {
   const [studentList, setStudentList] = useState<StudentResponse[]>([])
@@ -28,8 +29,8 @@ export function StudentsPage() {
     try {
       setError(null)
       setLoading(true)
-      const studentsRes = await studentsApi.list(0, 20, "name", !hideArchived)
-      const studentsPage: PageResponse<StudentResponse> = studentsRes.data
+      const studentsRes = await studentsApi.list(0, 20, "name")
+      const studentsPage: PageResponse<StudentResponse> = studentsRes
       setStudentList(studentsPage.content)
     } catch (error) {
       console.error("Falha ao carregar alunos:", error)
@@ -37,7 +38,7 @@ export function StudentsPage() {
     } finally {
       setLoading(false)
     }
-  }, [hideArchived])
+  }, [])
 
   useEffect(() => {
     loadStudents()

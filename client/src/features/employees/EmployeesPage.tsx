@@ -14,23 +14,23 @@ import {
 } from "@/components/ui/table"
 import { dutyLabels } from "@/features/employees/dutyLabels"
 import type { EmployeeResponse } from "@/lib/schemas"
-import { employeesApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
+import { employeesApi, getFriendlyErrorMessage, } from "@/services/api"
 import styles from "@/features/employees/EmployeesPage.module.css"
+import type { PageResponse } from "@/lib/schemas/page-response"
 
 export function EmployeesPage() {
   const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [deleteError, setDeleteError] = useState<string | null>(null)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [archiveError, setArchivedError] = useState<string | null>(null)
+  const [archivingId, setarchivingId] = useState<string | null>(null)
 
   const loadEmployees = async () => {
     try {
       setError(null)
       setLoading(true)
-      const employeesRes = await employeesApi.list()
-      const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
-      setEmployeeList(employeesPage.content)
+      const employeesRes : PageResponse<EmployeeResponse> = await employeesApi.list()
+      setEmployeeList(employeesRes.content)
     } catch (error) {
       console.error("Falha ao carregar colaboradores:", error)
       setError(getFriendlyErrorMessage(error))
@@ -43,21 +43,21 @@ export function EmployeesPage() {
     loadEmployees()
   }, [])
 
-  const handleDelete = async (employee: EmployeeResponse) => {
-    if (!window.confirm(`Excluir colaborador "${employee.name}"? Essa ação não pode ser desfeita.`)) {
+  const handleArchive = async (employee: EmployeeResponse) => {
+    if (!window.confirm(`Arquivar colaborador "${employee.name}"?`)) {
       return
     }
 
     try {
-      setDeleteError(null)
-      setDeletingId(employee.id)
-      await employeesApi.delete(employee.id)
+      setArchivedError(null)
+      setarchivingId(employee.id)
+      await employeesApi.archive(employee.id)
       setEmployeeList((prev) => prev.filter((item) => item.id !== employee.id))
     } catch (error) {
       console.error("Falha ao excluir colaborador:", error)
-      setDeleteError(getFriendlyErrorMessage(error))
+      setArchivedError(getFriendlyErrorMessage(error))
     } finally {
-      setDeletingId(null)
+      setarchivingId(null)
     }
   }
 
@@ -94,9 +94,9 @@ export function EmployeesPage() {
         </Button>
       </div>
 
-      {deleteError ? (
+      {archiveError ? (
         <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-          {deleteError}
+          {archiveError}
         </div>
       ) : null}
 
@@ -132,10 +132,10 @@ export function EmployeesPage() {
                       type="button"
                       variant="destructive"
                       size="sm"
-                      onClick={() => handleDelete(employee)}
-                      disabled={deletingId === employee.id}
+                      onClick={() => handleArchive(employee)}
+                      disabled={archivingId === employee.id}
                     >
-                      {deletingId === employee.id ? "Excluindo..." : "Excluir"}
+                      {archivingId === employee.id ? "Arquivando..." : "Arquivar"}
                     </Button>
                   </div>
                 </TableCell>
