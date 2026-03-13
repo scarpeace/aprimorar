@@ -68,8 +68,12 @@ export function StudentCreatePage() {
       setSubmitError(null)
 
       const payload: CreateStudentInput =
-        parentMode === "existing"
-          ? { ...data, parent: undefined }
+        parentMode === "existing" && data.parentId
+          ? {
+              ...data,
+              parent: (await parentsApi.getById(data.parentId)).data,
+              parentId: undefined,
+            }
           : { ...data, parentId: undefined }
 
       const res = await studentsApi.create(payload)

@@ -11,6 +11,13 @@ import { createEmployeeSchema, type CreateEmployeeInput } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
 import { useState } from "react"
 
+const dutyLabels = {
+  TEACHER: "Professor(a)",
+  ADM: "Administrativo",
+  THERAPIST: "Terapeuta",
+  MENTOR: "Mentor(a)",
+} as const
+
 export function EmployeeCreatePage() {
   const navigate = useNavigate()
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -22,7 +29,7 @@ export function EmployeeCreatePage() {
   } = useForm<CreateEmployeeInput>({
     resolver: zodResolver(createEmployeeSchema),
     defaultValues: {
-      role: "EMPLOYEE",
+      duty: "TEACHER",
     },
   })
 
@@ -118,18 +125,20 @@ export function EmployeeCreatePage() {
               </div>
 
               <div className={styles.field}>
-                <label className={styles.label} htmlFor="role">
-                  Perfil
+                <label className={styles.label} htmlFor="duty">
+                  Função
                 </label>
                 <select
-                  id="role"
+                  id="duty"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  {...register("role")}
+                  {...register("duty")}
                 >
-                  <option value="EMPLOYEE">Colaborador</option>
-                  <option value="ADMIN">Administrador</option>
+                  <option value="TEACHER">{dutyLabels.TEACHER}</option>
+                  <option value="ADM">{dutyLabels.ADM}</option>
+                  <option value="THERAPIST">{dutyLabels.THERAPIST}</option>
+                  <option value="MENTOR">{dutyLabels.MENTOR}</option>
                 </select>
-                {errors.role?.message ? <p className={styles.error}>{errors.role.message}</p> : null}
+                {errors.duty?.message ? <p className={styles.error}>{errors.duty.message}</p> : null}
               </div>
             </div>
 

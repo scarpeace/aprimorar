@@ -12,6 +12,13 @@ import { employeesApi, eventsApi, getFriendlyErrorMessage, type PageResponse } f
 import { useCallback, useEffect, useState } from "react"
 import styles from "@/features/employees/EmployeeDetailPage.module.css"
 
+const dutyLabels = {
+  TEACHER: "Professor(a)",
+  ADM: "Administrativo",
+  THERAPIST: "Terapeuta",
+  MENTOR: "Mentor(a)",
+} as const
+
 function SummaryField({ label, value }: { label: string; value: string }) {
   return (
     <div className={styles.summaryItem}>
@@ -113,12 +120,12 @@ export function EmployeeDetailPage() {
           <div className={styles.summaryGrid}>
             <SummaryField label="Nome completo" value={employee.name} />
             <SummaryField label="E-mail" value={employee.email} />
-            <SummaryField label="Cargo" value={employee.role} />
+            <SummaryField label="Cargo" value={dutyLabels[employee.duty]} />
             <SummaryField label="Contato" value={employee.contact} />
             <SummaryField label="CPF" value={employee.cpf} />
             <SummaryField label="Chave PIX" value={employee.pix} />
             <SummaryField label="Data de nascimento" value={employee.birthdate} />
-            <SummaryField label="Status" value={employee.active ? "Ativo" : "Inativo"} />
+            <SummaryField label="Status" value={employee.archivedAt ? "Arquivado" : "Ativo"} />
             <SummaryField label="Criado em" value={employee.createdAt} />
           </div>
         </CardContent>

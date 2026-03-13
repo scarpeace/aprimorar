@@ -1,213 +1,157 @@
 # AGENTS.md
+Operational guide for coding agents working in this repository.
 
-This is the canonical guide for coding agents working in this repository.
-
-## Project overview
-
-Aprimorar is an educational course management system for internal administrative use.
-
-Core flows:
-- student registration and profile management
-- employee management
-- event and class scheduling
-- dashboard and operational workflows
-- planned financial and reporting features
-
-Current scope:
-- in scope: operations, scheduling, CRUD flows, API-first architecture, PostgreSQL persistence
-- out of scope for now: student portal, parent portal, LMS features, advanced pedagogy analytics, SaaS multi-tenancy
-
-## Repository structure
-
-This repository has two apps:
-- `client/`: React 19 + TypeScript + Vite frontend
-- `server/api-aprimorar/`: Java 21 + Spring Boot 3.5 backend
-
-Important paths:
-- `client/src/features/**`: feature pages
-- `client/src/components/ui/**`: reusable UI primitives
-- `client/src/components/layout/**`: layout and navigation
-- `client/src/lib/schemas/**`: Zod schemas and inferred types
-- `client/src/services/api.ts`: frontend API client
-- `server/api-aprimorar/src/main/java/com/aprimorar/api/controller/**`: REST controllers
-- `server/api-aprimorar/src/main/java/com/aprimorar/api/service/**`: business services
-- `server/api-aprimorar/src/main/java/com/aprimorar/api/repository/**`: repositories and specifications
-- `server/api-aprimorar/src/main/java/com/aprimorar/api/dto/**`: request/response DTOs
-- `server/api-aprimorar/src/main/java/com/aprimorar/api/exception/**`: exceptions and handlers
-- `server/api-aprimorar/src/main/resources/db/migration/**`: Flyway migrations
-- `docs/planning/**`: roadmap, epics, diagrams, planning guides
-- `docs/refactor/**`: refactor review notes
-
-There is no root-level build orchestration. Run commands from the correct subproject directory.
-
-## Architecture summary
-
-- Frontend is a React SPA using React Router, Axios, Zod, and React Hook Form patterns.
-- Backend is a Spring Boot REST API using Spring MVC, JPA/Hibernate, Jakarta Validation, and Flyway.
+## Product and scope
+- Aprimorar is an internal educational operations system.
+- Main workflows: student registration, employee management, parent records, event scheduling, dashboard flows.
+- Current architecture is API-first: React frontend talks directly to the Spring Boot backend.
 - PostgreSQL is the runtime database.
-- Frontend talks directly to backend endpoints; no BFF layer exists.
-- Validation is intentionally duplicated across layers: Zod in frontend, Jakarta Validation in backend DTOs.
+- Keep user-facing strings and validation messages in Portuguese unless the surrounding feature is already English.
 
-## Tooling and environment
+## Repository layout
+- `client/`: React 19 + TypeScript + Vite SPA.
+- `server/api-aprimorar/`: Java 21 + Spring Boot 3.5 backend.
+- `docs/planning/`: roadmap, epic plans, prompt style guide, shared diagrams.
+- `docs/refactor/`: refactor notes and review docs.
+- There is no root build command; run commands from the correct app directory.
+Important frontend paths:
+- `client/src/features/**`: route-level screens such as `StudentsPage.tsx`.
+- `client/src/components/ui/**`: shared UI primitives.
+- `client/src/components/layout/**`: layout and navigation.
+- `client/src/lib/schemas/**`: Zod schemas and inferred types.
+- `client/src/services/api.ts`: Axios client, API wrappers, shared frontend error mapping.
+Important backend paths:
+- `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/**`: domain packages containing controllers, services, repositories, DTOs, rules, mappers, exceptions.
+- `server/api-aprimorar/src/main/java/com/aprimorar/api/config/**`: Spring configuration.
+- `server/api-aprimorar/src/main/java/com/aprimorar/api/exception/**`: shared API error handling.
+- `server/api-aprimorar/src/main/resources/db/migration/**`: Flyway SQL migrations.
+- `server/api-aprimorar/src/test/java/**`: backend tests.
 
-- Frontend uses Node/npm with `package-lock.json` committed.
-- Frontend alias: `@/* -> client/src/*`.
-- Frontend TypeScript is `strict` and enables `noUnusedLocals` and `noUnusedParameters`.
-- Frontend linting is ESLint-based.
-- Backend uses Maven Wrapper (`./mvnw`), not Gradle.
-- Backend targets Java 21.
-- Backend uses PostgreSQL and Flyway.
-- Local database helper: `server/api-aprimorar/docker-compose.yml` starts Postgres 15.
+## Agent rules discovered
+- `.cursorrules`: not present.
+- `.cursor/rules/`: not present.
+- `.github/copilot-instructions.md`: not present.
 
 ## Canonical docs
-
-Use these files as the current sources of truth:
-- `AGENTS.md`: repo, product, workflow, and coding guidance
-- `docs/planning/roadmap.md`: phase order and epic index
-- `docs/planning/epics/E-XXX-*.md`: epic plans and task tracking
-- `docs/planning/epics/E-000-template.md`: epic template
-- `docs/planning/prompt-style-guide.md`: planning/doc update guide
-- `docs/planning/diagrams.md`: shared Mermaid diagrams
-- `docs/refactor/server-refactor-review.md`: backend refactor outcomes
-
+Use these as source-of-truth before making planning or architecture changes:
+- `AGENTS.md`
+- `docs/planning/roadmap.md`
+- `docs/planning/epics/E-000-template.md`
+- `docs/planning/epics/*.md`
+- `docs/planning/prompt-style-guide.md`
+- `docs/planning/diagrams.md`
+- `docs/refactor/*.md`
 Documentation rules:
-- never invent completed work
-- only document approved decisions
-- keep epic and task IDs stable
-- update docs when commands, contracts, workflow, or architecture meaningfully change
+- Do not invent completed work.
+- Keep epic and task IDs stable.
+- Update docs when contracts, workflows, commands, or architecture meaningfully change.
 
-## Planning workflow
-
-Preferred flow:
-1. clarify scope
-2. organize work into epics/tasks
-3. update docs for approved decisions
-4. implement one focused task at a time
-5. review quality and tests
-
-## Commands
-
+## Build, lint, and test commands
 ### Frontend (`client/`)
-
-- install deps: `npm install`
-- dev server: `npm run dev`
-- build: `npm run build`
-- lint: `npm run lint`
-- preview: `npm run preview`
+- Install dependencies: `npm install`
+- Start dev server: `npm run dev`
+- Lint: `npm run lint`
+- Build: `npm run build`
+- Preview production build: `npm run preview`
+Frontend testing notes:
+- There is currently no `test` script in `client/package.json`.
+- Do not invent a frontend test command in automation.
+- `npm run build` runs `tsc -b` before Vite build, so it also validates TypeScript compilation.
 
 ### Backend (`server/api-aprimorar/`)
-
-- start local DB: `docker compose up -d db`
-- stop local DB: `docker compose down`
-- run app: `./mvnw spring-boot:run`
-- package: `./mvnw package`
-- verify: `./mvnw verify`
-- all tests: `./mvnw test`
-
-### Single test commands
-
-- single backend test class: `./mvnw -Dtest=StudentServiceTest test`
-- single backend test method: `./mvnw -Dtest=StudentServiceTest#findByIdFound test`
-- another example: `./mvnw -Dtest=EventControllerTest test`
-
-Frontend test status:
-- there is currently no frontend `test` script in `client/package.json`
-- do not invent a frontend test command in automation
+- Start local database: `docker compose up -d db`
+- Stop local database: `docker compose down`
+- Run application: `./mvnw spring-boot:run`
+- Run all tests: `./mvnw test`
+- Run full verification: `./mvnw verify`
+- Build package: `./mvnw package`
+Single-test commands:
+- Single backend test class: `./mvnw -Dtest=ApiAprimorarApplicationTests test`
+- Single backend test method: `./mvnw -Dtest=ApiAprimorarApplicationTests#contextLoads test`
+- Replace the class and method names with the target test you add.
 
 ## Verification expectations
+- Prefer the narrowest command that proves the change.
+- Frontend UI or schema change: run `npm run lint` and `npm run build`.
+- Backend logic change: run at least `./mvnw test`.
+- Backend API contract change: run `./mvnw test` and `npm run build`.
+- Migration or persistence change: start Postgres with Docker and run backend tests.
 
-- frontend linting: `npm run lint`
-- frontend build also type-checks: `npm run build`
-- backend validation: `./mvnw test` or `./mvnw verify`
-- prefer the narrowest command that proves the change
-
-Typical verification:
-- frontend UI change: `npm run lint` and `npm run build`
-- backend logic change: `./mvnw test`
-- backend API contract change: `./mvnw test` plus frontend `npm run build`
-- migration or data model change: `docker compose up -d db` and `./mvnw test`
-
-## Frontend conventions
-
-- use TypeScript everywhere; do not add plain `.js` or `.jsx` app code
-- prefer named exports for components and helpers; `App` is the main exception
-- keep route screens in feature folders with `*Page.tsx` naming
-- keep component-local styling in `*.module.css`
-- keep shared primitives under `client/src/components/ui/`
-- keep validation schemas in `client/src/lib/schemas/`
-- derive TS types with `z.infer` instead of duplicating interfaces
-- use the `@/` alias instead of deep relative imports
-- prefer `import type` for type-only imports
-- match the formatting style of the file you edit; do not reformat unrelated files
-
+## Frontend coding conventions
+Language and structure:
+- Use TypeScript everywhere; do not add app code in `.js` or `.jsx`.
+- Prefer named exports for components and helpers.
+- Keep route screens in feature folders and use `*Page.tsx` naming.
+- Keep feature-local styling in `*.module.css`.
+- Put reusable primitives under `client/src/components/ui/`.
+- Put schemas in `client/src/lib/schemas/` and derive types with `z.infer`.
+Imports:
+- Use the `@/` alias instead of deep relative imports.
+- Use `import type` for type-only imports when possible.
+- Keep imports grouped logically: React/router, shared UI, schemas/services, local modules.
+- Match the file's existing quote and import ordering style; do not reformat unrelated files.
+Formatting and types:
+- Follow the existing semicolon-free style in frontend files.
+- Prefer explicit state types when inference is unclear, for example `useState<string | null>(null)`.
+- Keep schema names descriptive, such as `createStudentSchema` and `studentResponseSchema`.
+- Reuse shared API types like `PageResponse<T>` instead of duplicating shapes.
+- Let TypeScript strictness guide the implementation; the app uses `strict`, `noUnusedLocals`, and `noUnusedParameters`.
 Naming and UX:
-- components: PascalCase
-- hooks, functions, variables: camelCase
-- constants: UPPER_SNAKE_CASE only for true constants
-- CSS module class names: camelCase
-- keep user-facing strings in Portuguese unless the surrounding UI is already English
-- keep code identifiers in English unless a local convention clearly differs
-
+- Components: PascalCase.
+- Hooks, functions, variables: camelCase.
+- True constants: UPPER_SNAKE_CASE.
+- CSS module class names: camelCase.
+- Keep identifiers in English unless a local domain convention clearly uses Portuguese.
+- Keep user-facing copy in Portuguese unless the feature already uses English.
 State and error handling:
-- follow the existing `loading / error / data` page pattern
-- wrap async page loads in `try/catch/finally`
-- reset stale error state before retrying requests
-- use `getFriendlyErrorMessage(error)` for API-facing errors
-- keep `console.error(...)` for developer diagnostics on failures
-- prefer explicit loading, empty, and error states over silent failures
-- reuse existing UI states such as `LoadingState`, `ErrorState`, and `EmptyState`
+- Follow the established `loading / error / data` page pattern.
+- Wrap async loads and submissions in `try/catch/finally`.
+- Reset stale error state before retries.
+- Use `getFriendlyErrorMessage(error)` for API-facing errors.
+- Keep `console.error(...)` for developer diagnostics.
+- Prefer explicit loading, empty, and error states over silent failures.
+- Reuse existing UI helpers such as `LoadingState`, `ErrorState`, and `EmptyState`.
 
-## Backend conventions
-
-- follow package layering: controller -> service -> repository/mapper
-- keep HTTP concerns in controllers and business rules in services
-- prefer constructor injection with `private final` fields
-- use DTO records for request and response payloads when appropriate
-- keep validation annotations on DTOs, not scattered across controllers
-- use `ResponseEntity` in controllers to make status codes explicit
-- keep pagination and sorting defaults centralized
-- use `UUID` for entity identifiers where the model already does
-- inject `Clock` for time-sensitive logic instead of calling system time directly
-- keep persistence details in repositories/specifications, not controllers
-
-Naming and validation:
-- classes: PascalCase
-- methods, fields, locals: camelCase
-- exception classes should use precise suffixes such as `NotFoundException`
-- DTO names use `Create*DTO`, `Update*DTO`, `*ResponseDTO`, `*SummaryDTO`
-- repositories end with `Repository`
-- mappers end with `Mapper`
-- specification helpers should use descriptive predicate names
-
+## Backend coding conventions
+Architecture and layering:
+- Follow the current package layout under `domain/<area>/`.
+- Keep HTTP concerns in controllers.
+- Keep business rules in services and `*Rules` helpers.
+- Keep persistence concerns in repositories and specifications.
+- Keep shared exception translation in `GlobalExceptionHandler`.
+Spring and Java patterns:
+- Prefer constructor injection with `private final` fields.
+- Use `ResponseEntity` in controllers to make status codes explicit.
+- Use DTO records for request and response payloads where appropriate.
+- Put Jakarta Validation annotations on DTO fields instead of scattering checks across controllers.
+- Use `UUID` where the domain model already uses it.
+- Inject `Clock` for time-sensitive shared logic instead of calling the system clock directly.
+Naming:
+- Classes and records: PascalCase.
+- Methods, fields, locals: camelCase.
+- Repositories end with `Repository`.
+- Mappers end with `Mapper`.
+- Exception classes use precise names such as `StudentNotFoundException`.
+- Validation helpers and domain policies use descriptive names such as `StudentRules` and `AddressRules`.
 Error handling:
-- throw specific domain exceptions such as `StudentNotFoundException`
-- let `GlobalExceptionHandler` translate exceptions into API responses
-- do not swallow exceptions with empty catch blocks
-- do not catch broad `Exception` in services unless real recovery or translation is needed
-- preserve the existing structured error response format
+- Throw specific domain exceptions instead of generic runtime failures.
+- Let `GlobalExceptionHandler` map exceptions into the API error response.
+- Preserve the existing structured error format from `ApiError`.
+- Do not swallow exceptions with empty catch blocks.
+- Do not catch broad `Exception` in services unless you are translating or recovering intentionally.
+- Preserve Portuguese validation and domain error messages unless the task explicitly changes them.
 
 ## Testing conventions
-
-- backend tests use JUnit 5, Mockito, and Spring test support
-- service tests commonly use `@ExtendWith(MockitoExtension.class)`
-- group related tests with `@Nested` classes and `@DisplayName`
-- use fixed timestamps and `Clock` stubbing for deterministic assertions
-- verify repository and mapper interactions when behavior matters
-- keep test names descriptive and behavior-oriented
-- add tests next to the layer you changed
+- Backend tests use JUnit 5 and Spring Boot test support.
+- Use `@DisplayName` for readable test intent.
+- Add tests near the layer you changed.
+- When adding service tests, prefer deterministic inputs and fixed timestamps.
+- If you introduce clock-sensitive logic, stub or inject `Clock` so assertions stay stable.
 
 ## Change discipline
-
-- keep changes scoped; avoid drive-by cleanup
-- preserve Portuguese validation and API messages unless the task requires changing them
-- do not rename files, endpoints, DTOs, or schema fields without checking full-stack impact
-- for backend API changes, inspect both `server/api-aprimorar/` and `client/src/services/api.ts` plus affected schemas/pages
-- for new backend fields, update migration, entity, DTO, mapper, tests, and frontend consumers as needed
-- for frontend-only changes, confirm backend contracts already exist before inventing payload shapes
-- when docs become stale because of your change, update them in the same task
-
-## Repo-specific rules discovered
-
-- no `.cursorrules` file was found
-- no `.cursor/rules/` directory was found
-- no Copilot instruction file is currently present in the repository
+- Keep changes scoped; avoid drive-by cleanup.
+- Do not rename endpoints, DTO fields, or schema fields without checking full-stack impact.
+- For backend API changes, inspect both `server/api-aprimorar/` and `client/src/services/api.ts` plus affected schemas/pages.
+- For new persisted fields, update migration, entity, DTO, mapper, validation, and frontend consumers together.
+- For frontend-only changes, confirm the backend contract already exists before inventing payload shapes.
+- If a code change makes docs stale, update the docs in the same task.

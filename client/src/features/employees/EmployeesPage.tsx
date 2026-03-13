@@ -16,6 +16,13 @@ import type { EmployeeResponse } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
 import styles from "@/features/employees/EmployeesPage.module.css"
 
+const dutyLabels = {
+  TEACHER: "Professor(a)",
+  ADM: "Administrativo",
+  THERAPIST: "Terapeuta",
+  MENTOR: "Mentor(a)",
+} as const
+
 export function EmployeesPage() {
   const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])
   const [loading, setLoading] = useState(true)
@@ -115,10 +122,10 @@ export function EmployeesPage() {
             {employeeList.map((employee) => (
               <TableRow key={employee.id}>
                 <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.role}</TableCell>
+                <TableCell>{dutyLabels[employee.duty]}</TableCell>
                 <TableCell>{employee.email}</TableCell>
                 <TableCell>{employee.pix}</TableCell>
-                <TableCell>{employee.active ? "Sim" : "Não"}</TableCell>
+                <TableCell>{employee.archivedAt ? "Não" : "Sim"}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Link

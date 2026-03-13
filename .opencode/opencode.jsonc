@@ -1,0 +1,51 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "java-reviewer": {
+      "description": "Reviews code for best practices and potential issues",
+      "mode": "subagent",
+      "model": "openai/gpt-5.4",
+      "prompt": "Use the `springboot-patterns` skill and the `java-coding-standards` skill. Review backend service/controller/repository changes for architecture, validation, and transaction issues. DO NOT PERFOM ANY CODE CHANGES WITHOUT FIRST CHECKING WITH THE USER.",
+      "tools": {
+        "write": true,
+        "edit": true
+      },
+      "color": "success"
+    },
+    "tester-tdd": {
+      "description": "Reviews code for best practices and potential issues",
+      "mode": "subagent",
+      "model": "openai/gpt-5.4",
+      "prompt": "Use the `springboot-patterns` skill and the `java-coding-standards` skill. Review backend service/controller/repository changes for architecture, validation, and transaction issues. DO NOT PERFOM ANY CODE CHANGES WITHOUT FIRST CHECKING WITH THE USER.",
+      "tools": {
+        "write": true,
+        "edit": true
+      },
+      "color": "secondary"
+    },
+    "springboot-tdd": {
+      "description": "Implements Spring Boot backend work with strict TDD",
+      "mode": "subagent",
+      "model": "openai/gpt-5.4",
+      "prompt": "{file:./prompts/tdd-springboot.md}",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true
+      },
+      "color": "info"
+    },
+    "react-tdd": {
+      "description": "Implements React frontend work with disciplined TDD",
+      "mode": "subagent",
+      "model": "openai/gpt-5.4",
+      "prompt": "{file:./prompts/tdd-react.md}",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true
+      },
+      "color": "accent"
+    }
+  }
+}

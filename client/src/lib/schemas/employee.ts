@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+export const dutyValues = ["TEACHER", "ADM", "THERAPIST", "MENTOR"] as const
+
 export const createEmployeeSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(200, "Nome muito grande"),
   birthdate: z.string().refine((date) => {
@@ -15,7 +17,7 @@ export const createEmployeeSchema = z.object({
     ),
   cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF deve estar no formato XXX.XXX.XXX-XX"),
   email: z.email("E-mail inválido"),
-  role: z.enum(["ADMIN", "EMPLOYEE", "STUDENT", "PARENT"]),
+  duty: z.enum(dutyValues),
 })
 
 export const employeeResponseSchema = z.object({
@@ -26,8 +28,8 @@ export const employeeResponseSchema = z.object({
   contact: z.string(),
   cpf: z.string(),
   email: z.email(),
-  role: z.enum(["ADMIN", "EMPLOYEE", "STUDENT", "PARENT"]),
-  active: z.boolean(),
+  duty: z.enum(dutyValues),
+  archivedAt: z.string().nullable(),
   createdAt: z.string(),
   updatedAt: z.string().nullable(),
 })

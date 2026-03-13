@@ -31,7 +31,7 @@ export const createEventSchema = z.object({
 })
 
 export const eventResponseSchema = z.object({
-  id: z.number(),
+  id: z.uuid(),
   title: z.string(),
   description: z.string().nullable(),
   startDateTime: z.string(),

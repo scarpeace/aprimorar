@@ -34,7 +34,7 @@ export function EventDetailPage() {
     try {
       setLoading(true)
       setError(null)
-      const res = await eventsApi.getById(Number.parseInt(id))
+      const res = await eventsApi.getById(id)
       setEvent(res.data)
     } catch (loadError) {
       console.error("Falha ao carregar evento:", loadError)
