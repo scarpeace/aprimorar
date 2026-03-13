@@ -55,7 +55,6 @@ public class EventService {
     public Page<EventResponseDTO> getEventsByEmployeeId(Pageable pageable, UUID employeeId) {
 
         Page<Event> eventPage = eventRepo.findAllByEmployeeEntityId(employeeId, pageable);
-
         return eventPage.map(eventMapper::convertToDto);
     }
 

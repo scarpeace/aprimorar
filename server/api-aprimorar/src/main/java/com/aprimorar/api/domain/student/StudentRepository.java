@@ -8,9 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface StudentRepository extends JpaRepository<Student, UUID>, JpaSpecificationExecutor<Student> {
 
-    Optional<Student> findByIdAndArchivedAtIsNull(UUID id);
     boolean existsByCpf(String cpf);
     boolean existsByEmail(String email);
-    boolean existsByCpfAndIdNot(String cpf, UUID id);
-    boolean existsByEmailAndIdNot(String email, UUID id);
 }

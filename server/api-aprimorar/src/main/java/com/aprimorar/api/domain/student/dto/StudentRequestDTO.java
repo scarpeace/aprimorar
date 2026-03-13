@@ -1,10 +1,9 @@
 package com.aprimorar.api.domain.student.dto;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
-import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
-import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
+import com.aprimorar.api.domain.address.Address;
+import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.shared.MapperUtils;
 
 import jakarta.validation.Valid;
@@ -33,8 +32,8 @@ public record StudentRequestDTO(
         String email,
         @NotNull(message = "Endereço do estudante é obrigatório")
         @Valid
-        AddressRequestDTO address,
+        Address address,
         @NotNull(message = "Responsável do estudante é obrigatório")
-        ParentRequestDTO parentRequestDTO
+        Parent parent
         ) {
 }

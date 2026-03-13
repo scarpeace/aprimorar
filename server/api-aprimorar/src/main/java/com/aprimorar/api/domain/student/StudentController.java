@@ -41,6 +41,7 @@ public class StudentController {
     @Operation(summary = "Create STUDENT", description = "Creates student with student data, address, and parent reference")
     @PostMapping
     public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
+
         StudentResponseDTO response = studentService.createStudent(createStudentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -58,10 +59,7 @@ public class StudentController {
     @GetMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId) {
         
-        log.info("StudentController::getStudentById by id {}", studentId);
         StudentResponseDTO foundStudent = studentService.findById(studentId);
-        
-        log.info("StudentController::getStudentById completed for id={}", studentId);
         return ResponseEntity.ok(foundStudent);
     }
 
@@ -71,21 +69,15 @@ public class StudentController {
             @PathVariable UUID studentId,
             @RequestBody @Valid StudentRequestDTO studentRequestDto) {
         
-        log.info("StudentController::updateStudent started for id={}", studentId);
         StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, studentRequestDto);
-        
-        log.info("StudentController::updateStudent completed for id={}", studentId);
         return ResponseEntity.ok(updatedStudent);
     }
 
-    @Operation(summary = "Archive STUDENT (DELETE alias)", description = "Archives a single student based on ID using DELETE for REST compatibility")
+    @Operation(summary = "Delete Student", description = "Deletes a student from the database")
     @DeleteMapping("/{studentId}")
-    public ResponseEntity<Void> archiveStudentByDeleteAlias(@PathVariable UUID studentId) {
+    public ResponseEntity<Void> deleteStudent(@PathVariable UUID studentId) {
         
-        log.info("StudentController::archiveStudentByDeleteAlias started for id={}", studentId);
-        studentService.archiveStudent(studentId);
-        
-        log.info("StudentController::archiveStudentByDeleteAlias completed for id={}", studentId);
+        studentService.deleteStudent(studentId);
         return ResponseEntity.noContent().build();
     }
 
@@ -93,10 +85,7 @@ public class StudentController {
     @PatchMapping("/{studentId}/archive")
     public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
         
-        log.info("StudentController::archiveStudent started for id={}", studentId);
         studentService.archiveStudent(studentId);
-        
-        log.info("StudentController::archiveStudent completed for id={}", studentId);
         return ResponseEntity.noContent().build();
     }
 
@@ -104,10 +93,7 @@ public class StudentController {
     @PatchMapping("/{studentId}/unarchive")
     public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {
         
-        log.info("StudentController::unarchiveStudent started for id={}", studentId);
         studentService.unarchiveStudent(studentId);
-        
-        log.info("StudentController::unarchiveStudent completed for id={}", studentId);
         return ResponseEntity.noContent().build();
     }
 

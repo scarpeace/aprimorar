@@ -6,9 +6,6 @@ import java.time.Period;
 
 import org.springframework.stereotype.Component;
 
-import com.aprimorar.api.domain.address.AddressMapper;
-import com.aprimorar.api.domain.parent.ParentMapper;
-import com.aprimorar.api.domain.student.command.StudentCommand;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.shared.MapperUtils;
@@ -16,33 +13,29 @@ import com.aprimorar.api.shared.MapperUtils;
 @Component
 public class StudentMapper {
 
-    private final ParentMapper parentMapper;
-    private final AddressMapper addressMapper;
     private final Clock applicationClock;
 
     public StudentMapper(
-            ParentMapper parentMapper,
-            AddressMapper addressMapper,
             Clock applicationClock
     ) {
-        this.parentMapper = parentMapper;
-        this.addressMapper = addressMapper;
         this.applicationClock = applicationClock;
     }
 
-    public StudentCommand convertToCommand(StudentRequestDTO dto) {
-        return new StudentCommand(
-                dto.name(),
-                dto.birthdate(),
-                dto.cpf(),
-                dto.school(),
-                dto.contact(),
-                dto.email(),
-                addressMapper.convertToEntity(dto.address()),
-                dto.parentRequestDTO()
-        );
-    }
+    public Student convertToEntity(StudentRequestDTO dto) {
+        Student student = new Student();
 
+        student.setName(dto.name());
+        student.setBirthdate(dto.birthdate());
+        student.setCpf(MapperUtils.normalizeCpf(dto.cpf()));
+        student.setSchool(dto.school());
+        student.setContact(MapperUtils.normalizeContact(dto.contact()));
+        student.setEmail(MapperUtils.normalizeEmail(dto.email()));
+        student.setAddress(dto.address());
+        student.setParent(dto.parent());
+
+        return student;
+
+    }
 
     public StudentResponseDTO convertToDto(Student entity) {
 
@@ -55,18 +48,14 @@ public class StudentMapper {
                 entity.getBirthdate(),
                 entity.getSchool(),
                 calculateAge(entity.getBirthdate()),
-                addressMapper.convertToDto(entity.getAddress()),
-                parentMapper.convertToDto(entity.getParent()),
+                entity.getAddress(),
+                entity.getParent(),
                 entity.getCreatedAt(),
                 entity.getArchivedAt()
         );
     }
 
     private Integer calculateAge(LocalDate birthdate) {
-        if (birthdate == null) {
-            return null;
-        }
-
         LocalDate today = LocalDate.now(applicationClock);
         return Period.between(birthdate, today).getYears();
     }

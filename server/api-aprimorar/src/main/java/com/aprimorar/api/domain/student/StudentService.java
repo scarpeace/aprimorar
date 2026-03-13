@@ -1,17 +1,14 @@
 package com.aprimorar.api.domain.student;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.address.Address;
-import com.aprimorar.api.domain.address.AddressMapper;
 import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.ParentMapper;
 import com.aprimorar.api.domain.parent.ParentRepository;
-import com.aprimorar.api.domain.parent.command.ParentCommand;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
-import com.aprimorar.api.domain.student.command.StudentCommand;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,27 +19,21 @@ import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 
 @Service
+@Slf4j
 public class StudentService {
 
     private final ParentRepository parentRepo;
     private final StudentRepository studentRepo;
     private final StudentMapper studentMapper;
-    private final AddressMapper addressMapper;
-    private final Clock applicationClock;
-    private final ParentMapper parentMapper;
 
     public StudentService(
             ParentRepository parentRepo,
             StudentRepository studentRepo,
-            StudentMapper studentMapper, AddressMapper addressMapper,
-            Clock applicationClock, ParentMapper parentMapper
+            StudentMapper studentMapper
     ) {
         this.parentRepo = parentRepo;
         this.studentRepo = studentRepo;
         this.studentMapper = studentMapper;
-        this.addressMapper = addressMapper;
-        this.applicationClock = applicationClock;
-        this.parentMapper = parentMapper;
     }
 
     /*
@@ -51,87 +42,88 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public Page<StudentResponseDTO> getStudents(Pageable pageable) {
+        log.info("StudentService:getStudents buscando por todos os alunos paginados");
 
-        Page<Student> studentPage = studentRepo.findAll(pageable);
-        return studentPage.map(studentMapper::convertToDto);
+        Page<Student> page = studentRepo.findAll(pageable);
+
+        log.info("StudentService:getStudents consulta finalizada,  {} registros no banco  ", page.getTotalElements());
+        return page.map(studentMapper::convertToDto);
     }
 
     @Transactional(readOnly = true)
     public StudentResponseDTO findById(UUID studentId) {
-        Student student = findStudentByIdOrThrow(studentId);
+
+        Student student = ensureStudentExists(studentId);
         return studentMapper.convertToDto(student);
     }
 
     /*
-      ------------------------ COMMAND METHODS ------------------------
+      ------------------------ INSERT METHODS ------------------------
      */
 
     @Transactional
     public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
-        StudentCommand command = studentMapper.convertToCommand(studentRequestDto);
-        Student newStudent = new Student();
 
-        ensureStudentUniqueness(command);
-        newStudent.create(command);
+        Student student = studentMapper.convertToEntity(studentRequestDto);
 
-        Student savedStudent = studentRepo.save(newStudent);
+        StudentRules.validate(student);
+        ensureStudentUniqueness(student);
+        Student savedStudent = studentRepo.save(student);
+
         return studentMapper.convertToDto(savedStudent);
     }
 
     @Transactional
+    public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO request) {
+
+        Student student = studentMapper.convertToEntity(request);
+
+        ensureStudentExists(id);
+        ensureParentExists(request.parent());
+        Student updatedStudent = studentRepo.save(student);
+
+        return studentMapper.convertToDto(updatedStudent);
+    }
+
+    @Transactional
     public void archiveStudent(UUID studentId) {
-        Student student = findStudentByIdOrThrow(studentId);
-        student.archive(applicationClock.instant());
+        Student student = ensureStudentExists(studentId);
+        student.setArchivedAt(Instant.now());
     }
 
     @Transactional
     public void unarchiveStudent(UUID studentId) {
-        Student student = findStudentByIdOrThrow(studentId);
-        student.unarchive(applicationClock.instant());
+        Student student = ensureStudentExists(studentId);
+        student.setArchivedAt(null);
     }
 
     @Transactional
-    public StudentResponseDTO updateStudent(UUID studentId, StudentRequestDTO studentRequestDto) {
-        ParentEntity parent = parentMapper.convertToCommand(studentRequestDto.parentRequestDTO());
-        StudentCommand command = studentMapper.convertToCommand(studentRequestDto);
-
-        //Doesn't have a lot of validation yet, just normalization
-        Address address = addressMapper.convertToEntity(studentRequestDto.address());
-
-        Student student = findStudentByIdOrThrow(studentId);
-
-        ensureStudentUniqueness(command);
-        student.update(command, parent, address);
-
-        return studentMapper.convertToDto(student);
+    public void deleteStudent(UUID studentId) {
+        Student student = ensureStudentExists(studentId);
+        studentRepo.delete(student);
     }
-
     /*
       ------------------------ HELPER METHODS ------------------------
      */
 
-    private Student findStudentByIdOrThrow(UUID studentId) {
-        return studentRepo.findById(studentId).orElseThrow(StudentNotFoundException::new);
+    private Student ensureStudentExists(UUID studentId) {
+        return studentRepo.findById(studentId)
+                .orElseThrow(()-> new StudentNotFoundException("Aluno não encontrado no banco de dados"));
     }
 
-    private Parent findParentCpfIdOrThrow(String cpf) {
-                return parentRepo.findByCpf(cpf)
+    private void ensureParentExists(Parent parent) {
+            parentRepo.findByCpf(parent.getCpf())
                 .orElseThrow(() -> new ParentNotFoundException("Responsável com o CPF informado não existe no banco de dados"));
     }
 
-    private void ensureStudentUniqueness(StudentCommand command) {
-        if (studentRepo.existsByCpf(command.cpf())) {
+    private void ensureStudentUniqueness(Student student) {
+        if (studentRepo.existsByCpf(student.getCpf())) {
             throw new StudentAlreadyExistException("Aluno com o CPF informado já existe no banco de dados");
         }
 
-        if (studentRepo.existsByEmail(command.email())) {
+        if (studentRepo.existsByEmail(student.getEmail())) {
             throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
         }
     }
 
-    }
-
-    private void validate(){
-        if()
-    }
 }
