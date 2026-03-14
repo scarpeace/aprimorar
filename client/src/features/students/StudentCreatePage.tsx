@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
@@ -10,10 +10,34 @@ import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/students/StudentCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { createStudentSchema, type CreateStudentInput } from "@/lib/schemas"
+import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
 
 const PARENTS_LIST_PARAMS = { page: 0, size: 100, sortBy: "name" }
 const EMPTY_PARENTS: Awaited<ReturnType<typeof parentsApi.list>>["content"] = []
+const STUDENT_CREATE_DEFAULT_VALUES: CreateStudentInput = {
+  name: "Marina Oliveira",
+  birthdate: "2013-08-21",
+  cpf: "123.456.789-10",
+  contact: "(11) 98888-7766",
+  email: "marina.oliveira@exemplo.com",
+  school: "Escola Municipal Monte Azul",
+  address: {
+    street: "Rua das Acacias",
+    number: "245",
+    complement: "Casa 2",
+    district: "Jardim Primavera",
+    city: "Sao Paulo",
+    state: "SP",
+    zip: "04711-230",
+  },
+  parent: {
+    name: "Ana Oliveira",
+    email: "ana.oliveira@exemplo.com",
+    contact: "(11) 97777-6655",
+    cpf: "987.654.321-00",
+  },
+}
 
 export function StudentCreatePage() {
   const navigate = useNavigate()
@@ -22,14 +46,18 @@ export function StudentCreatePage() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [parentMode, setParentMode] = useState<"existing" | "new">("new")
   const [selectedParentId, setSelectedParentId] = useState("")
+  const [isParentReadOnly, setIsParentReadOnly] = useState(true)
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<CreateStudentInput>({
     resolver: zodResolver(createStudentSchema),
+    mode:"onBlur",
     shouldUnregister: true,
+    defaultValues: STUDENT_CREATE_DEFAULT_VALUES,
   })
 
   const {
@@ -54,6 +82,26 @@ export function StudentCreatePage() {
     const parent = parents.find((item) => item.id === selectedParentId)
     return parent?.name ?? ""
   }, [parents, selectedParentId])
+
+  useEffect(() => {
+    if (effectiveParentMode !== "existing") {
+      return
+    }
+
+    const selectedParent = parents.find((item) => item.id === selectedParentId)
+    if (!selectedParent) {
+      return
+    }
+
+    setValue("parent.name", selectedParent.name, { shouldDirty: true, shouldValidate: true })
+    setValue("parent.email", selectedParent.email, { shouldDirty: true, shouldValidate: true })
+    setValue("parent.contact", selectedParent.contact, { shouldDirty: true, shouldValidate: true })
+    setValue("parent.cpf", selectedParent.cpf, { shouldDirty: true, shouldValidate: true })
+  }, [effectiveParentMode, parents, selectedParentId, setValue])
+
+  useEffect(() => {
+    setIsParentReadOnly(effectiveParentMode === "existing")
+  }, [effectiveParentMode])
 
   const createStudentMutation = useMutation({
     mutationFn: async (data: CreateStudentInput) => {
@@ -104,8 +152,8 @@ export function StudentCreatePage() {
         }
       />
 
-      <SectionCard title="Dados do aluno" description="Preencha os dados pessoais, endereço e responsável.">
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <SectionCard title="Dados do aluno" description="Preencha os dados pessoais e endereço.">
           <div className={styles.sectionTitle}>Aluno</div>
 
           <div className={styles.formGrid}>
@@ -210,12 +258,14 @@ export function StudentCreatePage() {
             </FormField>
 
             <FormField className={styles.field} label="Estado" htmlFor="address.state" error={errors.address?.state?.message}>
-              <input
-                className="app-input"
-                id="address.state"
-                placeholder="Ex: SP"
-                {...register("address.state")}
-              />
+              <select className="app-select" id="address.state" {...register("address.state")}>
+                <option value="">Selecione um estado</option>
+                {BRAZILIAN_STATES.map((state) => (
+                  <option key={state.value} value={state.value}>
+                    {state.label}
+                  </option>
+                ))}
+              </select>
             </FormField>
 
             <FormField className={styles.field} label="CEP" htmlFor="address.zip" error={errors.address?.zip?.message}>
@@ -227,10 +277,23 @@ export function StudentCreatePage() {
               />
             </FormField>
           </div>
+        </SectionCard>
 
-          <div className={styles.divider} />
-          <div className={styles.sectionTitle}>Responsável</div>
-
+        <SectionCard
+          title="Responsável"
+          description="Selecione um responsável existente ou cadastre um novo."
+          headerAction={
+            effectiveParentMode === "existing" ? (
+              <button
+                className="btn btn-outline btn-sm"
+                type="button"
+                onClick={() => setIsParentReadOnly((current) => !current)}
+              >
+                {isParentReadOnly ? "Desbloquear edição" : "Bloquear edição"}
+              </button>
+            ) : null
+          }
+        >
           {parentsError ? <div className="alert alert-error text-sm">{parentsError}</div> : null}
 
           <div className={styles.formGrid}>
@@ -300,7 +363,7 @@ export function StudentCreatePage() {
               </FormField>
             ) : null}
 
-            {effectiveParentMode === "new" ? (
+            {effectiveParentMode === "new" || effectiveParentMode === "existing" ? (
               <>
                 <FormField
                   className={styles.field}
@@ -308,7 +371,13 @@ export function StudentCreatePage() {
                   htmlFor="parent.name"
                   error={errors.parent?.name?.message}
                 >
-                  <input className="app-input" id="parent.name" placeholder="Ex: Ana Souza" {...register("parent.name")} />
+                  <input
+                    className="app-input"
+                    id="parent.name"
+                    placeholder="Ex: Ana Souza"
+                    readOnly={isParentReadOnly}
+                    {...register("parent.name")}
+                  />
                 </FormField>
 
                 <FormField
@@ -322,6 +391,7 @@ export function StudentCreatePage() {
                     id="parent.email"
                     type="email"
                     placeholder="exemplo@dominio.com"
+                    readOnly={isParentReadOnly}
                     {...register("parent.email")}
                   />
                 </FormField>
@@ -336,6 +406,7 @@ export function StudentCreatePage() {
                     className="app-input"
                     id="parent.contact"
                     placeholder="(11) 99999-9999"
+                    readOnly={isParentReadOnly}
                     {...registerWithMask("parent.contact", ["(99) 9999-9999", "(99) 99999-9999"])}
                   />
                 </FormField>
@@ -350,25 +421,26 @@ export function StudentCreatePage() {
                     className="app-input"
                     id="parent.cpf"
                     placeholder="000.000.000-00"
+                    readOnly={isParentReadOnly}
                     {...registerWithMask("parent.cpf", "999.999.999-99")}
                   />
                 </FormField>
               </>
             ) : null}
           </div>
+        </SectionCard>
 
-          {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
+        {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
 
-          <div className={styles.actions}>
-            <Link className="btn btn-outline" to="/students">
-              Cancelar
-            </Link>
-            <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Salvando..." : "Criar aluno"}
-            </button>
-          </div>
-        </form>
-      </SectionCard>
+        <div className={styles.actions}>
+          <Link className="btn btn-outline" to="/students">
+            Cancelar
+          </Link>
+          <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Salvando..." : "Criar aluno"}
+          </button>
+        </div>
+      </form>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import z from "zod";
+import { BRAZILIAN_STATE_VALUES } from "../shared/enums/brazilianStates";
 import { formatZip } from "../shared/formatter";
 
 export const createAddressSchema = z.object({
@@ -7,7 +8,10 @@ export const createAddressSchema = z.object({
     complement: z.string().optional(),
     district: z.string().min(1, "Bairro é obrigatório"),
     city: z.string().min(1, "Cidade é obrigatória"),
-    state: z.string().min(1, "Estado é obrigatório"),
+    state: z
+        .string()
+        .min(1, "Estado é obrigatório")
+        .refine((value) => BRAZILIAN_STATE_VALUES.includes(value as (typeof BRAZILIAN_STATE_VALUES)[number]), "Estado inválido"),
     zip: z.string().regex(/^\d{5}-?\d{3}$/, "CEP inválido"),
 })
 

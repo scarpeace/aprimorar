@@ -52,20 +52,15 @@ export function StudentsPage() {
   return (
     <div className={styles.page}>
       <PageHeader
-        action={
-          <Link className="btn btn-success" to="/students/new">
-            Novo aluno
-          </Link>
-        }
         description="Gerencie cadastros e matrículas."
         title="Alunos"
       >
-        <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput
             placeholder="Buscar aluno por nome, email ou escola"
             ariaLabel="Buscar aluno"
           />
-          <label className="app-text-muted flex items-center gap-2 text-sm">
+          <label className="app-text-muted flex items-center gap-2 whitespace-nowrap text-sm">
             <input
               className="checkbox checkbox-sm"
               type="checkbox"
@@ -74,6 +69,9 @@ export function StudentsPage() {
             />
             Ocultar arquivados
           </label>
+          <Link className="btn btn-success sm:ml-auto" to="/students/new">
+            Novo aluno
+          </Link>
         </div>
       </PageHeader>
 
@@ -83,7 +81,7 @@ export function StudentsPage() {
             <thead className="bg-base-200">
               <tr>
                 <th className="app-th">Nome</th>
-                <th className="app-th">Email</th>
+                <th className="app-th hidden lg:block">Email</th>
                 <th className="app-th">Escola</th>
                 <th className="app-th">Ações</th>
                 <th className="app-th">Status</th>
@@ -93,8 +91,8 @@ export function StudentsPage() {
               {visibleStudents.map((student) => (
                 <tr key={student.id}>
                   <td>{student.name}</td>
-                  <td>{student.email}</td>
-                  <td>{student.school}</td>
+                  <td className="hidden lg:block">{student.email}</td>
+                  <td> {student.school}</td>
                   <td>
                     <Link className="btn btn-ghost btn-sm" to={`/students/${student.id}`}>
                       Detalhes

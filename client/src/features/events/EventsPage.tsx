@@ -47,19 +47,16 @@ export function EventsPage() {
 
   return (
     <div className={styles.page}>
-      <PageHeader
-        action={
-          <Link className="btn btn-success" to="/events/new">
+      <PageHeader description="Gerencie horários, preços e atribuições." title="Eventos">
+        <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
+          <ListSearchInput
+            placeholder="Buscar evento por aluno, colaborador ou conteúdo"
+            ariaLabel="Buscar evento"
+          />
+          <Link className="btn btn-success sm:ml-auto" to="/events/new">
             Novo evento
           </Link>
-        }
-        description="Gerencie horários, preços e atribuições."
-        title="Eventos"
-      >
-        <ListSearchInput
-          placeholder="Buscar evento por aluno, colaborador ou conteúdo"
-          ariaLabel="Buscar evento"
-        />
+        </div>
       </PageHeader>
 
       <div className="app-table-wrap">

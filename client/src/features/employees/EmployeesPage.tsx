@@ -53,20 +53,15 @@ export function EmployeesPage() {
   return (
     <div className={styles.page}>
       <PageHeader
-        action={
-          <Link className="btn btn-success" to="/employees/new">
-            Novo colaborador
-          </Link>
-        }
         description="Gerencie professores e equipe."
         title="Colaboradores"
       >
-        <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput
             placeholder="Buscar colaborador por nome, função ou email"
             ariaLabel="Buscar colaborador"
           />
-          <label className="app-text-muted flex items-center gap-2 text-sm">
+          <label className="app-text-muted flex items-center gap-2 whitespace-nowrap text-sm">
             <input
               className="checkbox checkbox-sm"
               type="checkbox"
@@ -75,6 +70,9 @@ export function EmployeesPage() {
             />
             Ocultar arquivados
           </label>
+          <Link className="btn btn-success sm:ml-auto" to="/employees/new">
+            Novo colaborador
+          </Link>
         </div>
       </PageHeader>
 

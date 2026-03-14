@@ -21,8 +21,8 @@
 
 .divider {
   height: 1px;
+  margin: 1rem 0 0.5rem;
   background: var(--app-border);
-  margin: 0.1rem 0;
 }
 
 .formGrid {
