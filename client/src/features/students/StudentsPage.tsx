@@ -94,7 +94,7 @@ export function StudentsPage() {
                   <td className="hidden lg:table-cell">{student.email}</td>
                   <td> {student.school}</td>
                   <td>
-                    <ButtonLink size="sm" to={`/students/${student.id}`} variant="ghost">
+                    <ButtonLink size="sm" to={`/students/${student.id}`} variant="outline">
                       Detalhes
                     </ButtonLink>
                   </td>

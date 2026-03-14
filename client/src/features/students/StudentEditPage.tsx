@@ -14,6 +14,7 @@ import styles from "@/features/students/StudentCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { studentFormSchema, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
+import { formatDateInputValue } from "@/lib/shared/formatter"
 import { getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
 
 function createEmptyStudentValues(): StudentFormInput {
@@ -53,7 +54,7 @@ export function StudentEditPage() {
   const {
     register,
     handleSubmit,
-    reset,
+    setValue,
     formState: { errors },
   } = useForm<StudentFormInput>({
     resolver: zodResolver(studentFormSchema),
@@ -65,7 +66,7 @@ export function StudentEditPage() {
   const registerWithMask = useHookFormMask(register)
 
   const studentQuery = useQuery({
-    queryKey: queryKeys.students.detail(studentId),
+    queryKey: queryKeys.students.editDetail(studentId),
     queryFn: () => studentsApi.getByIdForEdit(studentId),
     enabled: Boolean(id),
   })
@@ -75,30 +76,24 @@ export function StudentEditPage() {
       return
     }
 
-    reset({
-      name: studentQuery.data.name,
-      birthdate: studentQuery.data.birthdate.slice(0, 10),
-      cpf: studentQuery.data.cpf,
-      contact: studentQuery.data.contact,
-      email: studentQuery.data.email,
-      school: studentQuery.data.school,
-      address: {
-        street: studentQuery.data.address.street,
-        number: studentQuery.data.address.number,
-        complement: studentQuery.data.address.complement ?? "",
-        district: studentQuery.data.address.district,
-        city: studentQuery.data.address.city,
-        state: studentQuery.data.address.state,
-        zip: studentQuery.data.address.zip,
-      },
-      parent: {
-        name: studentQuery.data.parent.name,
-        email: studentQuery.data.parent.email,
-        contact: studentQuery.data.parent.contact,
-        cpf: studentQuery.data.parent.cpf,
-      },
-    })
-  }, [reset, studentQuery.data])
+    setValue("name", studentQuery.data.name)
+    setValue("birthdate", formatDateInputValue(studentQuery.data.birthdate))
+    setValue("cpf", studentQuery.data.cpf)
+    setValue("contact", studentQuery.data.contact)
+    setValue("email", studentQuery.data.email)
+    setValue("school", studentQuery.data.school)
+    setValue("address.street", studentQuery.data.address.street)
+    setValue("address.number", studentQuery.data.address.number)
+    setValue("address.complement", studentQuery.data.address.complement ?? "")
+    setValue("address.district", studentQuery.data.address.district)
+    setValue("address.city", studentQuery.data.address.city)
+    setValue("address.state", studentQuery.data.address.state)
+    setValue("address.zip", studentQuery.data.address.zip)
+    setValue("parent.name", studentQuery.data.parent.name)
+    setValue("parent.email", studentQuery.data.parent.email)
+    setValue("parent.contact", studentQuery.data.parent.contact)
+    setValue("parent.cpf", studentQuery.data.parent.cpf)
+  }, [setValue, studentQuery.data])
 
   const updateStudentMutation = useMutation({
     mutationFn: async (data: StudentFormInput) => {
@@ -125,6 +120,7 @@ export function StudentEditPage() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() }),
         queryClient.invalidateQueries({ queryKey: queryKeys.students.detail(studentId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.students.editDetail(studentId) }),
         queryClient.invalidateQueries({ queryKey: queryKeys.parents.lists() }),
         queryClient.invalidateQueries({ queryKey: queryKeys.parents.detail(studentQuery.data?.parent.id ?? "") }),
         queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),

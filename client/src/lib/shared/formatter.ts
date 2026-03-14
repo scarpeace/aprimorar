@@ -106,6 +106,38 @@ export function formatDateShortYear(value: string | Date): string {
     }).format(date)
 }
 
+export function formatDateInputValue(value: string | Date): string {
+    if (typeof value === "string") {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            return value
+        }
+
+        if (/^\d{4}-\d{2}-\d{2}T/.test(value)) {
+            return value.slice(0, 10)
+        }
+
+        const brazilianDateMatch = value.match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})$/)
+
+        if (brazilianDateMatch) {
+            const [, day, month, year] = brazilianDateMatch
+            const normalizedYear = year.length === 2 ? `20${year}` : year
+            return `${normalizedYear}-${month}-${day}`
+        }
+    }
+
+    const date = toValidDate(value)
+
+    if (!date) {
+        return ""
+    }
+
+    return [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0"),
+    ].join("-")
+}
+
 export function formatDateMonth(value: string | Date): string {
     const date = toValidDate(value)
 

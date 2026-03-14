@@ -11,6 +11,8 @@ export const queryKeys = {
     list: (params: ListParams) => [...queryKeys.students.lists(), params] as const,
     details: () => [...queryKeys.students.all, "detail"] as const,
     detail: (id: string) => [...queryKeys.students.details(), id] as const,
+    editDetails: () => [...queryKeys.students.all, "editDetail"] as const,
+    editDetail: (id: string) => [...queryKeys.students.editDetails(), id] as const,
   },
   employees: {
     all: ["employees"] as const,
@@ -18,6 +20,8 @@ export const queryKeys = {
     list: (params: ListParams) => [...queryKeys.employees.lists(), params] as const,
     details: () => [...queryKeys.employees.all, "detail"] as const,
     detail: (id: string) => [...queryKeys.employees.details(), id] as const,
+    editDetails: () => [...queryKeys.employees.all, "editDetail"] as const,
+    editDetail: (id: string) => [...queryKeys.employees.editDetails(), id] as const,
   },
   parents: {
     all: ["parents"] as const,

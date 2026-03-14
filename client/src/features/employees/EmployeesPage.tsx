@@ -97,7 +97,7 @@ export function EmployeesPage() {
                   <td className="hidden whitespace-normal break-all md:table-cell">{employee.email}</td>
                   <td className="hidden whitespace-normal break-all lg:table-cell">{employee.pix}</td>
                   <td>
-                    <ButtonLink size="sm" to={`/employees/${employee.id}`} variant="ghost">
+                    <ButtonLink size="sm" to={`/employees/${employee.id}`} variant="outline">
                       Detalhes
                     </ButtonLink>
                   </td>

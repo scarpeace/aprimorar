@@ -40,7 +40,7 @@ export function EventsTable({ events, variant = "eventsPage" }: EventsTableProps
               {showPrice ? <td>{brl.format(event.price)}</td> : null}
               {showPayment ? <td>{brl.format(event.payment)}</td> : null}
               <td>
-                <ButtonLink size="sm" to={`/events/${event.id}`} variant="ghost">
+                <ButtonLink size="sm" to={`/events/${event.id}`} variant="outline">
                   Detalhes
                 </ButtonLink>
               </td>

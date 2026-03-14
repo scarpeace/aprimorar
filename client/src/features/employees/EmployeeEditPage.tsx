@@ -14,6 +14,7 @@ import styles from "@/features/employees/EmployeeCreatePage.module.css"
 import { dutyLabels } from "@/features/employees/dutyLabels"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { employeeFormSchema, type EmployeeFormInput } from "@/lib/schemas"
+import { formatDateInputValue } from "@/lib/shared/formatter"
 import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
 
 function createEmptyEmployeeValues(): EmployeeFormInput {
@@ -39,6 +40,7 @@ export function EmployeeEditPage() {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<EmployeeFormInput>({
     resolver: zodResolver(employeeFormSchema),
@@ -48,7 +50,7 @@ export function EmployeeEditPage() {
   const registerWithMask = useHookFormMask(register)
 
   const employeeQuery = useQuery({
-    queryKey: queryKeys.employees.detail(employeeId),
+    queryKey: queryKeys.employees.editDetail(employeeId),
     queryFn: () => employeesApi.getByIdForEdit(employeeId),
     enabled: Boolean(id),
   })
@@ -60,14 +62,18 @@ export function EmployeeEditPage() {
 
     reset({
       name: employeeQuery.data.name,
-      birthdate: employeeQuery.data.birthdate.slice(0, 10),
+      birthdate: formatDateInputValue(employeeQuery.data.birthdate),
       pix: employeeQuery.data.pix,
       contact: employeeQuery.data.contact,
       cpf: employeeQuery.data.cpf,
       email: employeeQuery.data.email,
       duty: employeeQuery.data.duty,
     })
-  }, [employeeQuery.data, reset])
+
+    // Campos com máscara podem não ser reidratados corretamente só com reset.
+    setValue("contact", employeeQuery.data.contact)
+    setValue("cpf", employeeQuery.data.cpf)
+  }, [employeeQuery.data, reset, setValue])
 
   const updateEmployeeMutation = useMutation({
     mutationFn: (data: EmployeeFormInput) => employeesApi.update(employeeId, data),
@@ -78,6 +84,7 @@ export function EmployeeEditPage() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() }),
         queryClient.invalidateQueries({ queryKey: queryKeys.employees.detail(employeeId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.employees.editDetail(employeeId) }),
         queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
         queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
       ])

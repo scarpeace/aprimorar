@@ -16,7 +16,7 @@ export const studentFormSchema = z.object({
     .regex(
       /^\(\d{2}\)\s?\d{4,5}-\d{4}$/,
       "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"
-  ),
+    ).min(1, "O telefone é obrigatório"),
   email: z.email("E-mail inválido"),
   address: addressFormSchema,
   parent: parentFormSchema.optional(),
