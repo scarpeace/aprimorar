@@ -137,7 +137,7 @@ export function EmployeeDetailPage() {
               variant={employee.archivedAt ? "warning" : "error"}
               size="sm"
             >
-              {employee.archivedAt ? "Arquivado" : "Arquivar"}
+              {employee.archivedAt ? "Ativar colaborador" : "Arquivar colaborador"}
             </Button>
           </div>
         }

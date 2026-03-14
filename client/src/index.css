@@ -102,6 +102,10 @@
     @apply text-left font-semibold text-base-content/80;
   }
 
+  .app-th-center {
+    @apply text-center font-semibold text-base-content/80;
+  }
+
   .app-inline-loading {
     @apply flex items-center gap-2 text-sm;
     color: var(--app-text-muted);

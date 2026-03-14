@@ -34,6 +34,7 @@ export function StudentDetailPage() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() }),
         queryClient.invalidateQueries({ queryKey: queryKeys.students.detail(studentId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
         queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
       ])
     },

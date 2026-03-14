@@ -91,6 +91,11 @@ export function EventDetailPage() {
       />
 
       <SectionCard title="Resumo do evento" description="Dados completos do atendimento, participantes e valores.">
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row">
+          <ButtonLink size="sm" to={`/events/${event.id}/edit`} variant="primary">
+            Editar evento
+          </ButtonLink>
+        </div>
         <div className={styles.summaryGrid}>
           {summaryItems.map((item) => (
             <SummaryItem key={item.label} label={item.label} value={item.value} />

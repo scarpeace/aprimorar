@@ -12,7 +12,7 @@ export const parentFormSchema = z.object({
     .refine(isValidCpf, "CPF Inválido, confira os números informados")
 })
 
-//TODO esse parent sumary é realmente necessário?
+// TODO este resumo de responsável é realmente necessário?
 export const parentSummarySchema = z.object({
   id: z.uuid(),
   name: z.string(),

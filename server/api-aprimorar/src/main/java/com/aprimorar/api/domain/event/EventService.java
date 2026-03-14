@@ -99,14 +99,18 @@ public class EventService {
     public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
 
         Event event = eventMapper.convertToEntity(eventRequestDTO);
+        Student student = resolveStudentOrThrow(event.getStudent().getId());
+        Employee employee = resolveEmployeeOrThrow(event.getEmployee().getId());
 
+        event.setStudent(student);
+        event.setEmployee(employee);
         EventRules.validate(event);
-        validateParticipantsExistence(event.getStudent(), event.getEmployee());
         validateParticipantAvailability(
-                event.getStudent(),
-                event.getEmployee(),
+                student,
+                employee,
                 event.getStartDate(),
-                event.getEndDateTime()
+                event.getEndDateTime(),
+                null
         );
 
         Event savedEvent = eventRepo.save(event);
@@ -117,23 +121,34 @@ public class EventService {
 
     @Transactional
     public EventResponseDTO updateEvent(UUID id, EventRequestDTO request) {
-        Event event = eventMapper.convertToEntity(request);
-        event.setId(id);
+        Event newEvent = eventMapper.convertToEntity(request);
+        Event existingEvent = findEventOrThrow(id);
+        Student student = resolveStudentOrThrow(newEvent.getStudent().getId());
+        Employee employee = resolveEmployeeOrThrow(newEvent.getEmployee().getId());
 
-        findEventOrThrow(id);
-        validateParticipantsExistence(event.getStudent(), event.getEmployee());
+        newEvent.setStudent(student);
+        newEvent.setEmployee(employee);
+        EventRules.validate(newEvent);
         validateParticipantAvailability(
-                event.getStudent(),
-                event.getEmployee(),
-                event.getStartDate(),
-                event.getEndDateTime()
+                student,
+                employee,
+                newEvent.getStartDate(),
+                newEvent.getEndDateTime(),
+                id
         );
-        EventRules.validate(event);
 
-        Event updatedEvent = eventRepo.save(event);
+        existingEvent.setTitle(newEvent.getTitle());
+        existingEvent.setDescription(newEvent.getDescription());
+        existingEvent.setStartDate(newEvent.getStartDate());
+        existingEvent.setEndDateTime(newEvent.getEndDateTime());
+        existingEvent.setPrice(newEvent.getPrice());
+        existingEvent.setPayment(newEvent.getPayment());
+        existingEvent.setContent(newEvent.getContent());
+        existingEvent.setStudent(student);
+        existingEvent.setEmployee(employee);
 
-        log.info("Evento {} atualizado com sucesso.", updatedEvent.getTitle().toUpperCase());
-        return eventMapper.convertToDto(updatedEvent);
+        log.info("Evento {} atualizado com sucesso.", existingEvent.getTitle().toUpperCase());
+        return eventMapper.convertToDto(existingEvent);
     }
 
     @Transactional
@@ -149,20 +164,31 @@ public class EventService {
         return eventRepo.findById(eventId).orElseThrow(EventNotFoundException::new);
     }
 
+    private Student resolveStudentOrThrow(UUID studentId) {
+        return studentRepo.findById(studentId)
+                .orElseThrow(() -> new StudentNotFoundException("Estudante com o ID informado não encontrado no banco de dados"));
+    }
+
+    private Employee resolveEmployeeOrThrow(UUID employeeId) {
+        return employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException("Colaborador com o ID informado não encontrado no banco de dados"));
+    }
+
     private void validateParticipantAvailability(
             Student student,
             Employee employee,
             LocalDateTime startDate,
-            LocalDateTime endDate
+            LocalDateTime endDate,
+            UUID ignoredEventId
     ) {
-        boolean studentConflict = eventRepo.studentHasConflictingEvent(student.getId(), startDate, endDate);
+        boolean studentConflict = eventRepo.studentHasConflictingEvent(student.getId(), startDate, endDate, ignoredEventId);
         if (studentConflict) {
             throw new EventScheduleConflictException(
                     "O estudante informado já possui evento no intervalo"
             );
         }
 
-        boolean employeeConflict = eventRepo.employeeHasConflictingEvent(employee.getId(), startDate, endDate);
+        boolean employeeConflict = eventRepo.employeeHasConflictingEvent(employee.getId(), startDate, endDate, ignoredEventId);
         if (employeeConflict) {
             throw new EventScheduleConflictException(
                     "O colaborador informado já possui evento no intervalo"
@@ -170,23 +196,4 @@ public class EventService {
         }
     }
 
-    private void validateParticipantsExistence(
-            Student student,
-            Employee employee
-    ) {
-        boolean studentExists = studentRepo.existsById(student.getId());
-        if (!studentExists) {
-            throw new StudentNotFoundException("Estudante com o ID informado não encontrado no banco de dados");
-        }
-
-        boolean employeeExists = employeeRepo.existsById(employee.getId());
-        if (!employeeExists) {
-            throw new EmployeeNotFoundException("Colaborador com o ID informado não encontrado no banco de dados");
-        }
-    }
-
 }
-
-
-
-

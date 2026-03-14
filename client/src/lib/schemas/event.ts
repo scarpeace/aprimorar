@@ -2,7 +2,7 @@ import { z } from "zod"
 import { eventContentValues } from "@/lib/shared/enums"
 import { formatDateShortYear } from "../shared/formatter"
 
-//TODO Evento não vai precisar de título, ele vai ser gerado automaticamente no backend. Remover num futuro próximo do front
+// TODO Evento não vai precisar de título, ele vai ser gerado automaticamente no backend. Remover num futuro próximo do front.
 export const eventFormSchema = z.object({
   title: z.string().min(1, "Título é obrigatório").max(100, "Título deve ter no máximo 100 caracteres"),
   description: z.string().max(500, "Descrição deve ter no máximo 500 caracteres").optional(),
@@ -20,6 +20,22 @@ export const eventFormSchema = z.object({
   message: "Fim deve ser depois do início",
   path: ["endDate"],
 })
+
+export const eventRequestSchema = eventFormSchema.transform((data) => ({
+  title: data.title,
+  description: data.description,
+  startDate: data.startDate,
+  endDate: data.endDate,
+  price: data.price,
+  payment: data.payment,
+  content: data.content,
+  student: {
+    id: data.studentId,
+  },
+  employee: {
+    id: data.employeeId,
+  },
+}))
 
 export const eventApiSchema = z.object({
   id: z.uuid(),
@@ -44,5 +60,6 @@ export const eventResponseSchema = eventApiSchema.transform((event) => ({
 }))
 
 export type EventFormInput = z.infer<typeof eventFormSchema>
+export type EventRequestPayload = z.output<typeof eventRequestSchema>
 export type EventApiResponse = z.infer<typeof eventApiSchema>
 export type EventResponse = z.infer<typeof eventResponseSchema>

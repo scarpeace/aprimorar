@@ -15,6 +15,7 @@ const EmployeeEditPage = lazy(() => import("@/features/employees/EmployeeEditPag
 const EventsPage = lazy(() => import("@/features/events/EventsPage").then((module) => ({ default: module.EventsPage })))
 const EventDetailPage = lazy(() => import("@/features/events/EventDetailPage").then((module) => ({ default: module.EventDetailPage })))
 const EventCreatePage = lazy(() => import("@/features/events/EventCreatePage").then((module) => ({ default: module.EventCreatePage })))
+const EventEditPage = lazy(() => import("@/features/events/EventEditPage").then((module) => ({ default: module.EventEditPage })))
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/employees/:id" element={<EmployeeDetailPage />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/new" element={<EventCreatePage />} />
+            <Route path="/events/:id/edit" element={<EventEditPage />} />
             <Route path="/events/:id" element={<EventDetailPage />} />
           </Route>
         </Routes>

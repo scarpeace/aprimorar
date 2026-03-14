@@ -2,6 +2,8 @@ import {
   studentApiSchema,
   employeeApiSchema,
   employeeResponseSchema,
+  eventApiSchema,
+  eventRequestSchema,
   eventResponseSchema,
   parentResponseSchema,
   studentResponseSchema,
@@ -9,7 +11,9 @@ import {
 import type {
   ParentFormInput,
   EmployeeFormInput,
+  EventApiResponse,
   EventFormInput,
+  EventRequestPayload,
   StudentFormInput,
   EmployeeApiResponse,
   EmployeeResponse,
@@ -21,17 +25,36 @@ import type {
 import { pageResponseSchema, type PageResponse } from "@/lib/schemas/page-response"
 import axios from "axios"
 
+type ApiErrorResponse = {
+  status?: number
+  error?: string
+  code?: string
+  message?: string
+  path?: string
+  timestamp?: string
+}
+
+function getApiErrorMessage(data: unknown) {
+  if (!data || typeof data !== "object") {
+    return null
+  }
+
+  const apiError = data as ApiErrorResponse
+  return typeof apiError.message === "string" && apiError.message.trim() ? apiError.message : null
+}
+
 export function getFriendlyErrorMessage(error: unknown) {
   if (axios.isAxiosError(error)) {
     const status = error.response?.status
+    const apiMessage = getApiErrorMessage(error.response?.data)
 
     if (!status) {
       return "Não foi possível conectar ao servidor. Verifique se a API está rodando e tente novamente."
     }
 
-    if (status === 400) return "Dados inválidos. Revise as informações e tente novamente."
-    if (status === 404) return "Não encontramos o recurso solicitado."
-    if (status === 409) return "Conflito de dados. Verifique se já existe um registro com essas informações."
+    if (status === 400) return apiMessage ?? "Dados inválidos. Revise as informações e tente novamente."
+    if (status === 404) return apiMessage ?? "Não encontramos o recurso solicitado."
+    if (status === 409) return apiMessage ?? "Conflito de dados. Verifique se já existe um registro com essas informações."
     if (status >= 500) return "Erro no servidor. Tente novamente em instantes."
 
     return "Não foi possível concluir a solicitação. Tente novamente."
@@ -78,6 +101,7 @@ export const studentsApi = {
     const { data } = await api.put<StudentResponse>(`/v1/students/${id}`, input)
     return studentResponseSchema.parse(data)
   },
+  delete: (id: string) => api.delete(`/v1/students/${id}`),
   archive: (id: string) => api.patch(`/v1/students/${id}/archive`),
   unarchive: (id: string) => api.patch(`/v1/students/${id}/unarchive`),
 }
@@ -100,9 +124,10 @@ export const employeesApi = {
     return employeeResponseSchema.parse(data)
   },
   async update(id: string, input: EmployeeFormInput): Promise<EmployeeResponse> {
-    const { data } = await api.put<EmployeeResponse>(`/v1/employees/${id}`, input)
+    const { data } = await api.patch<EmployeeResponse>(`/v1/employees/${id}`, input)
     return employeeResponseSchema.parse(data)
   },
+  delete: (id: string) => api.delete(`/v1/employees/${id}`),
   archive: (id: string) => api.patch(`/v1/employees/${id}/archive`),
   unarchive: (id: string) => api.patch(`/v1/employees/${id}/unarchive`),
 }
@@ -128,6 +153,7 @@ export const parentsApi = {
   unarchive: (id: string) => api.patch(`/v1/parents/${id}/unarchive`),
 }
 
+//TODO Implementar arquivamento e desarquivamento de eventos quando o backend expor esse suporte.
 export const eventsApi = {
   async list(page = 0, size = 20, sortBy = "startDate",): Promise<PageResponse<EventResponse>> {
     const { data } = await api.get<PageResponse<EventResponse>>(`/v1/events?page=${page}&size=${size}&sort=${sortBy}`)
@@ -147,16 +173,23 @@ export const eventsApi = {
     const { data } = await api.get<EventResponse>(`/v1/events/${id}`)
     return eventResponseSchema.parse(data)
   },
+  async getByIdForEdit(id: string): Promise<EventApiResponse> {
+    const { data } = await api.get<EventApiResponse>(`/v1/events/${id}`)
+    return eventApiSchema.parse(data)
+  },
   async create(input: EventFormInput): Promise<EventResponse> {
-    const { data } = await api.post<EventResponse>("/v1/events", input)
+    const payload = eventRequestSchema.parse(input)
+    const { data } = await api.post<EventResponse, { data: EventResponse }, EventRequestPayload>("/v1/events", payload)
     return eventResponseSchema.parse(data)
   },
 
   async update(id: string, input: EventFormInput): Promise<EventResponse> {
-    const { data } = await api.put<EventResponse>(`/v1/events/${id}`, input)
+    const payload = eventRequestSchema.parse(input)
+    const { data } = await api.put<EventResponse, { data: EventResponse }, EventRequestPayload>(`/v1/events/${id}`, payload)
     return eventResponseSchema.parse(data)
   },
 
+  delete: (id: string) => api.delete(`/v1/events/${id}`),
   archive: (id: string) => api.patch(`/v1/events/${id}/archive`),
   unarchive: (id: string) => api.patch(`/v1/events/${id}/unarchive`),
 }

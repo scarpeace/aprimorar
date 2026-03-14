@@ -45,11 +45,13 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
                 where e.student.id = :studentId
                   and e.startDate < :endDate
                   and e.endDate > :startDate
+                  and (:ignoredEventId is null or e.id <> :ignoredEventId)
             """)
     boolean studentHasConflictingEvent(
             @Param("studentId") UUID studentId,
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate
+            @Param("endDate") LocalDateTime endDate,
+            @Param("ignoredEventId") UUID ignoredEventId
     );
 
     @Query("""
@@ -58,11 +60,13 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
                 where e.employee.id = :employeeId
                   and e.startDate < :endDate
                   and e.endDate > :startDate
+                  and (:ignoredEventId is null or e.id <> :ignoredEventId)
             """)
     boolean employeeHasConflictingEvent(
             @Param("employeeId") UUID employeeId,
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate
+            @Param("endDate") LocalDateTime endDate,
+            @Param("ignoredEventId") UUID ignoredEventId
     );
 
 

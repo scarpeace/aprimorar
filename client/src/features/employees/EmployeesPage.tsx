@@ -83,10 +83,10 @@ export function EmployeesPage() {
               <tr>
                 <th className="app-th">Nome</th>
                 <th className="app-th">Função</th>
-                <th className="app-th hidden md:table-cell">Email</th>
+                <th className="app-th hidden lg:table-cell">Email</th>
                 <th className="app-th hidden lg:table-cell">PIX</th>
                 <th className="app-th">Ações</th>
-                <th className="app-th">Status</th>
+                <th className="app-th-center">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -94,7 +94,7 @@ export function EmployeesPage() {
                 <tr className="transition-colors hover:bg-base-200/70" key={employee.id}>
                   <td>{employee.name}</td>
                   <td>{dutyLabels[employee.duty]}</td>
-                  <td className="hidden whitespace-normal break-all md:table-cell">{employee.email}</td>
+                  <td className="hidden whitespace-normal break-all lg:table-cell">{employee.email}</td>
                   <td className="hidden whitespace-normal break-all lg:table-cell">{employee.pix}</td>
                   <td>
                     <ButtonLink size="sm" to={`/employees/${employee.id}`} variant="outline">

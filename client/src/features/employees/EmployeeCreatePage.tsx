@@ -112,7 +112,7 @@ export function EmployeeCreatePage() {
               <input
                 className="app-input"
                 id="pix"
-                placeholder="cpf/email/telefone/chave aleatoria"
+                placeholder="cpf/email/telefone/chave aleatória"
                 {...register("pix")}
               />
             </FormField>

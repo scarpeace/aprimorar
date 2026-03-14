@@ -84,7 +84,7 @@ export function StudentsPage() {
                 <th className="app-th hidden lg:table-cell">Email</th>
                 <th className="app-th">Escola</th>
                 <th className="app-th">Ações</th>
-                <th className="app-th">Status</th>
+                <th className="app-th-center">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -98,7 +98,7 @@ export function StudentsPage() {
                       Detalhes
                     </ButtonLink>
                   </td>
-                  <td>
+                  <td className="text-center">
                     <span className={`badge ${student.archivedAt ? "badge-warning" : "badge-success"}`}>
                       {student.archivedAt ? "Arquivado" : "Ativo"}
                     </span>

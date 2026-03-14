@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
-import { useForm, useWatch } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { FormField } from "@/components/ui/form-field"
@@ -33,7 +33,6 @@ export function EventCreatePage() {
   const {
     register,
     handleSubmit,
-    control,
     setValue,
     formState: { errors },
   } = useForm<EventFormInput>({
@@ -42,9 +41,6 @@ export function EventCreatePage() {
 
   const studentIdField = register("studentId")
   const employeeIdField = register("employeeId")
-
-  const selectedStudentId = useWatch({ control, name: "studentId" })
-  const selectedEmployeeId = useWatch({ control, name: "employeeId" })
 
   const optionsQuery = useQuery({
     queryKey: queryKeys.events.createOptions(),
@@ -62,11 +58,8 @@ export function EventCreatePage() {
     staleTime: 5 * 60_000,
   })
 
-  const students = optionsQuery.data?.students ?? EMPTY_OPTIONS.students
-  const employees = optionsQuery.data?.employees ?? EMPTY_OPTIONS.employees
-
-  const selectedStudentName = students.find((item) => item.id === selectedStudentId)?.name ?? ""
-  const selectedEmployeeName = employees.find((item) => item.id === selectedEmployeeId)?.name ?? ""
+  const students = (optionsQuery.data?.students ?? EMPTY_OPTIONS.students).filter((student) => !student.archivedAt)
+  const employees = (optionsQuery.data?.employees ?? EMPTY_OPTIONS.employees).filter((employee) => !employee.archivedAt)
 
   const createEventMutation = useMutation({
     mutationFn: (data: EventFormInput) => eventsApi.create(data),
@@ -132,7 +125,6 @@ export function EventCreatePage() {
                 label="Aluno"
                 htmlFor="studentId"
                 error={errors.studentId?.message}
-                hint={selectedStudentName ? `Selecionado: ${selectedStudentName}` : undefined}
               >
                 <select
                   id="studentId"
@@ -160,7 +152,6 @@ export function EventCreatePage() {
                 label="Colaborador"
                 htmlFor="employeeId"
                 error={errors.employeeId?.message}
-                hint={selectedEmployeeName ? `Selecionado: ${selectedEmployeeName}` : undefined}
               >
                 <select
                   id="employeeId"

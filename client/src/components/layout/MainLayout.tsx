@@ -24,7 +24,7 @@ export function MainLayout() {
         <div className={styles.brand}>
           <div>
             <h1 className="app-text text-xl font-extrabold tracking-tight">Aprimorar</h1>
-            <p className={styles.brandCaption}>Gestao educacional</p>
+            <p className={styles.brandCaption}>Gestão educacional</p>
           </div>
         </div>
         <nav className={styles.nav}>

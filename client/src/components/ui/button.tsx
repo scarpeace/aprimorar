@@ -7,6 +7,7 @@ type ButtonVariant =
   | "success"
   | "warning"
   | "error"
+  | "danger"
   | "outline"
   | "outlineError"
   | "ghost"
@@ -25,6 +26,7 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   success: "btn-success",
   warning: "btn-warning",
   error: "btn-error",
+  danger: "btn-error",
   outline: "btn-outline",
   outlineError: "btn-outline btn-error",
   ghost: "btn-ghost",

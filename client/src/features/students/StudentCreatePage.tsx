@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
@@ -77,11 +77,6 @@ export function StudentCreatePage() {
   const effectiveParentMode = parents.length > 0 ? parentMode : "new"
 
   const registerWithMask = useHookFormMask(register)
-
-  const selectedParentName = useMemo(() => {
-    const parent = parents.find((item) => item.id === selectedParentId)
-    return parent?.name ?? ""
-  }, [parents, selectedParentId])
 
   useEffect(() => {
     if (effectiveParentMode !== "existing") {
@@ -324,7 +319,6 @@ export function StudentCreatePage() {
                 className={`${styles.field} ${styles.span2}`}
                 label="Responsável"
                 htmlFor="parentId"
-                hint={selectedParentName ? `Selecionado: ${selectedParentName}` : undefined}
               >
                 <select
                   id="parentId"

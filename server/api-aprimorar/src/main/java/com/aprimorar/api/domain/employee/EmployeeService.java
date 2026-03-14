@@ -68,7 +68,7 @@ public class EmployeeService {
         Employee employee = employeeMapper.convertToEntity(employeeRequestDto);
 
         EmployeeRules.validate(employee);
-        validateEmployeeUniqueness(employee.getCpf(), employee.getEmail());
+        validateEmployeeUniquenessForCreate(employee.getCpf(), employee.getEmail());
 
         Employee savedEmployee = employeeRepo.save(employee);
 
@@ -79,15 +79,22 @@ public class EmployeeService {
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
 
-        Employee employee = employeeMapper.convertToEntity(request);
+        Employee newEmployee = employeeMapper.convertToEntity(request);
+        Employee oldEmployee = findEmployeeOrThrow(employeeId);
 
-        EmployeeRules.validate(employee);
-        findEmployeeOrThrow(employeeId);
+        validateEmployeeUniquenessForUpdate(newEmployee.getCpf(), newEmployee.getEmail(), employeeId);
 
-        Employee updatedEmployee = employeeRepo.save(employee);
+        oldEmployee.setName(newEmployee.getName());
+        oldEmployee.setBirthdate(newEmployee.getBirthdate());
+        oldEmployee.setPix(newEmployee.getPix());
+        oldEmployee.setContact(newEmployee.getContact());
+        oldEmployee.setCpf(newEmployee.getCpf());
+        oldEmployee.setEmail(newEmployee.getEmail());
+        oldEmployee.setDuty(newEmployee.getDuty());
+        EmployeeRules.validate(oldEmployee);
 
-        log.info("Colaborador {} atualizado com sucesso.", updatedEmployee.getName().toUpperCase());
-        return employeeMapper.convertToDto(updatedEmployee);
+        log.info("Colaborador {} atualizado com sucesso.", oldEmployee.getName().toUpperCase());
+        return employeeMapper.convertToDto(oldEmployee);
     }
 
     @Transactional
@@ -118,7 +125,7 @@ public class EmployeeService {
                 .orElseThrow(() -> new EmployeeNotFoundException("Colaborador não encontrado no Banco de Dados"));
     }
 
-    private void validateEmployeeUniqueness(String cpf, String email) {
+    private void validateEmployeeUniquenessForCreate(String cpf, String email) {
         if (employeeRepo.existsByCpf(cpf)) {
             throw new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados");
         }
@@ -126,6 +133,15 @@ public class EmployeeService {
         if (employeeRepo.existsByEmail(email)) {
             throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
         }
+    }
 
+    private void validateEmployeeUniquenessForUpdate(String cpf, String email, UUID employeeId) {
+        if (employeeRepo.existsByCpfAndIdNot(cpf, employeeId)) {
+            throw new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados");
+        }
+
+        if (employeeRepo.existsByEmailAndIdNot(email, employeeId)) {
+            throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
+        }
     }
 }

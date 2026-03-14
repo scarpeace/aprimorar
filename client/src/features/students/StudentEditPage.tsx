@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
+import { Trash2 } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { ErrorCard } from "@/components/ui/error-card"
 import { FormField } from "@/components/ui/form-field"
@@ -15,7 +17,9 @@ import { queryKeys } from "@/lib/query/queryKeys"
 import { studentFormSchema, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { formatDateInputValue } from "@/lib/shared/formatter"
-import { getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
+import { eventsApi, getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
+
+const DELETE_BLOCKING_EVENTS_PARAMS = { page: 0, size: 1, sortBy: "startDate" }
 
 function createEmptyStudentValues(): StudentFormInput {
   return {
@@ -68,6 +72,18 @@ export function StudentEditPage() {
   const studentQuery = useQuery({
     queryKey: queryKeys.students.editDetail(studentId),
     queryFn: () => studentsApi.getByIdForEdit(studentId),
+    enabled: Boolean(id),
+  })
+
+  const studentEventsQuery = useQuery({
+    queryKey: queryKeys.events.byStudent(studentId, DELETE_BLOCKING_EVENTS_PARAMS),
+    queryFn: () =>
+      eventsApi.listByStudent(
+        studentId,
+        DELETE_BLOCKING_EVENTS_PARAMS.page,
+        DELETE_BLOCKING_EVENTS_PARAMS.size,
+        DELETE_BLOCKING_EVENTS_PARAMS.sortBy
+      ),
     enabled: Boolean(id),
   })
 
@@ -134,8 +150,55 @@ export function StudentEditPage() {
     },
   })
 
+  const deleteStudentMutation = useMutation({
+    mutationFn: () => studentsApi.delete(studentId),
+    onMutate: () => {
+      setSubmitError(null)
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.students.detail(studentId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.students.editDetail(studentId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+      ])
+
+      navigate("/students")
+    },
+    onError: (error) => {
+      console.error("Falha ao excluir aluno:", error)
+      setSubmitError(getFriendlyErrorMessage(error))
+    },
+  })
+
   const onSubmit = (data: StudentFormInput) => {
     updateStudentMutation.mutate(data)
+  }
+
+  const handleDeleteStudent = () => {
+    if (studentEventsQuery.isLoading) {
+      window.alert("Ainda estamos verificando se este aluno possui eventos vinculados. Tente novamente em instantes.")
+      return
+    }
+
+    if (studentEventsQuery.isError) {
+      window.alert("Não foi possível verificar se existem eventos vinculados a este aluno. Tente novamente.")
+      return
+    }
+
+    if ((studentEventsQuery.data?.page.totalElements ?? 0) > 0) {
+      window.alert("Este aluno possui eventos vinculados e não pode ser excluído. Arquive o aluno em vez de excluí-lo.")
+      return
+    }
+
+    const confirmed = window.confirm("Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita.")
+
+    if (!confirmed) {
+      return
+    }
+
+    deleteStudentMutation.mutate()
   }
 
   if (!id) {
@@ -150,13 +213,18 @@ export function StudentEditPage() {
     return <PageLoading message="Carregando aluno para edição..." />
   }
 
-  if (studentQuery.isError || !studentQuery.data) {
+  if (studentQuery.isError || studentEventsQuery.isError || !studentQuery.data) {
     return (
       <div className={styles.page}>
-        <ErrorCard description={getFriendlyErrorMessage(studentQuery.error)} onAction={studentQuery.refetch} />
+        <ErrorCard
+          description={getFriendlyErrorMessage(studentQuery.error ?? studentEventsQuery.error)}
+          onAction={() => Promise.all([studentQuery.refetch(), studentEventsQuery.refetch()])}
+        />
       </div>
     )
   }
+
+  const studentHasLinkedEvents = (studentEventsQuery.data?.page.totalElements ?? 0) > 0
 
   return (
     <div className={styles.page}>
@@ -314,12 +382,27 @@ export function StudentEditPage() {
         </SectionCard>
 
         {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
+        {studentHasLinkedEvents ? (
+          <Badge variant="warning">
+            Este aluno possui eventos vinculados e não pode ser excluído. Use o arquivamento para desativar o cadastro ou exclua todos os eventos relacionados a esse aluno.
+          </Badge>
+        ) : null}
 
         <div className={styles.actions}>
+          <Button
+            type="button"
+            onClick={handleDeleteStudent}
+            disabled={updateStudentMutation.isPending || deleteStudentMutation.isPending}
+            variant="danger"
+            className="sm:mr-auto"
+          >
+            <Trash2 className="h-4 w-4" />
+            Excluir aluno
+          </Button>
           <ButtonLink to={`/students/${studentId}`} variant="outline">
             Cancelar
           </ButtonLink>
-          <Button type="submit" disabled={updateStudentMutation.isPending} variant="primary">
+          <Button type="submit" disabled={updateStudentMutation.isPending || deleteStudentMutation.isPending} variant="primary">
             {updateStudentMutation.isPending ? "Salvando..." : "Salvar alterações"}
           </Button>
         </div>

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
+import { Trash2 } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { ErrorCard } from "@/components/ui/error-card"
 import { FormField } from "@/components/ui/form-field"
@@ -15,7 +17,9 @@ import { dutyLabels } from "@/features/employees/dutyLabels"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { employeeFormSchema, type EmployeeFormInput } from "@/lib/schemas"
 import { formatDateInputValue } from "@/lib/shared/formatter"
-import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
+import { employeesApi, eventsApi, getFriendlyErrorMessage } from "@/services/api"
+
+const DELETE_BLOCKING_EVENTS_PARAMS = { page: 0, size: 1, sortBy: "startDate" }
 
 function createEmptyEmployeeValues(): EmployeeFormInput {
   return {
@@ -52,6 +56,18 @@ export function EmployeeEditPage() {
   const employeeQuery = useQuery({
     queryKey: queryKeys.employees.editDetail(employeeId),
     queryFn: () => employeesApi.getByIdForEdit(employeeId),
+    enabled: Boolean(id),
+  })
+
+  const employeeEventsQuery = useQuery({
+    queryKey: queryKeys.events.byEmployee(employeeId, DELETE_BLOCKING_EVENTS_PARAMS),
+    queryFn: () =>
+      eventsApi.listByEmployee(
+        employeeId,
+        DELETE_BLOCKING_EVENTS_PARAMS.page,
+        DELETE_BLOCKING_EVENTS_PARAMS.size,
+        DELETE_BLOCKING_EVENTS_PARAMS.sortBy
+      ),
     enabled: Boolean(id),
   })
 
@@ -97,8 +113,55 @@ export function EmployeeEditPage() {
     },
   })
 
+  const deleteEmployeeMutation = useMutation({
+    mutationFn: () => employeesApi.delete(employeeId),
+    onMutate: () => {
+      setSubmitError(null)
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.employees.detail(employeeId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.employees.editDetail(employeeId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+      ])
+
+      navigate("/employees")
+    },
+    onError: (error) => {
+      console.error("Falha ao excluir colaborador:", error)
+      setSubmitError(getFriendlyErrorMessage(error))
+    },
+  })
+
   const onSubmit = (data: EmployeeFormInput) => {
     updateEmployeeMutation.mutate(data)
+  }
+
+  const handleDeleteEmployee = () => {
+    if (employeeEventsQuery.isLoading) {
+      window.alert("Ainda estamos verificando se este colaborador possui eventos vinculados. Tente novamente em instantes.")
+      return
+    }
+
+    if (employeeEventsQuery.isError) {
+      window.alert("Não foi possível verificar se existem eventos vinculados a este colaborador. Tente novamente.")
+      return
+    }
+
+    if ((employeeEventsQuery.data?.page.totalElements ?? 0) > 0) {
+      window.alert("Este colaborador possui eventos vinculados e não pode ser excluído. Arquive o colaborador em vez de excluí-lo.")
+      return
+    }
+
+    const confirmed = window.confirm("Tem certeza que deseja excluir este colaborador? Esta ação não pode ser desfeita.")
+
+    if (!confirmed) {
+      return
+    }
+
+    deleteEmployeeMutation.mutate()
   }
 
   if (!id) {
@@ -113,13 +176,18 @@ export function EmployeeEditPage() {
     return <PageLoading message="Carregando colaborador para edição..." />
   }
 
-  if (employeeQuery.isError || !employeeQuery.data) {
+  if (employeeQuery.isError || employeeEventsQuery.isError || !employeeQuery.data) {
     return (
       <div className={styles.page}>
-        <ErrorCard description={getFriendlyErrorMessage(employeeQuery.error)} onAction={employeeQuery.refetch} />
+        <ErrorCard
+          description={getFriendlyErrorMessage(employeeQuery.error ?? employeeEventsQuery.error)}
+          onAction={() => Promise.all([employeeQuery.refetch(), employeeEventsQuery.refetch()])}
+        />
       </div>
     )
   }
+
+  const employeeHasLinkedEvents = (employeeEventsQuery.data?.page.totalElements ?? 0) > 0
 
   return (
     <div className={styles.page}>
@@ -176,7 +244,7 @@ export function EmployeeEditPage() {
               <input
                 className="app-input"
                 id="pix"
-                placeholder="cpf/email/telefone/chave aleatoria"
+                placeholder="cpf/email/telefone/chave aleatória"
                 {...register("pix")}
               />
             </FormField>
@@ -192,12 +260,27 @@ export function EmployeeEditPage() {
           </div>
 
           {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
+          {employeeHasLinkedEvents ? (
+            <Badge variant="warning">
+              Este colaborador possui eventos vinculados e não pode ser excluído. Use o arquivamento para desativar o cadastro ou exclua todos os eventos vinculados a este colaborador.
+            </Badge>
+          ) : null}
 
           <div className={styles.actions}>
+            <Button
+              type="button"
+              onClick={handleDeleteEmployee}
+              disabled={updateEmployeeMutation.isPending || deleteEmployeeMutation.isPending}
+              variant="danger"
+              className="sm:mr-auto"
+            >
+              <Trash2 className="h-4 w-4" />
+              Excluir colaborador
+            </Button>
             <ButtonLink to={`/employees/${employeeId}`} variant="outline">
               Cancelar
             </ButtonLink>
-            <Button type="submit" disabled={updateEmployeeMutation.isPending} variant="primary">
+            <Button type="submit" disabled={updateEmployeeMutation.isPending || deleteEmployeeMutation.isPending} variant="primary">
               {updateEmployeeMutation.isPending ? "Salvando..." : "Salvar alterações"}
             </Button>
           </div>

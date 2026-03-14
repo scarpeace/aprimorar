@@ -15,18 +15,18 @@ export function EventsTable({ events, variant = "eventsPage" }: EventsTableProps
   const showPayment = variant === "employeePage"
 
   return (
-    <div className="overflow-x-auto">
+    <div className="app-table-wrap">
       <table className="table table-zebra w-full">
         <thead className="bg-base-200/90">
           <tr>
             <th className="app-th">Aluno</th>
             <th className="app-th">Colaborador</th>
             <th className="app-th">Data</th>
-            <th className="app-th">Horario</th>
-            <th className="app-th">Conteudo</th>
-            {showPrice ? <th className="app-th">Valor</th> : null}
-            {showPayment ? <th className="app-th">Pagamento</th> : null}
-            <th className="app-th">Acoes</th>
+            <th className="app-th">Horário</th>
+            <th className="app-th">Conteúdo</th>
+            {showPrice ? <th className="app-th hidden lg:table-cell">Valor</th> : null}
+            {showPayment ? <th className="app-th hidden lg:table-cell">Pagamento</th> : null}
+            <th className="app-th">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -35,10 +35,10 @@ export function EventsTable({ events, variant = "eventsPage" }: EventsTableProps
               <td>{event.studentName}</td>
               <td>{event.employeeName}</td>
               <td>{formatDateShortYear(event.startDate)}</td>
-              <td>{formatTime(event.startDate)} as {formatTime(event.endDate)}</td>
+              <td>{formatTime(event.startDate)} às {formatTime(event.endDate)}</td>
               <td>{eventContentLabels[event.content]}</td>
-              {showPrice ? <td>{brl.format(event.price)}</td> : null}
-              {showPayment ? <td>{brl.format(event.payment)}</td> : null}
+              {showPrice ? <td className="hidden lg:table-cell">{brl.format(event.price)}</td> : null}
+              {showPayment ? <td className="hidden lg:table-cell">{brl.format(event.payment)}</td> : null}
               <td>
                 <ButtonLink size="sm" to={`/events/${event.id}`} variant="outline">
                   Detalhes
