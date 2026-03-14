@@ -42,6 +42,10 @@ Use these as source-of-truth before planning or architecture changes:
 - `docs/planning/epics/*.md`
 - `docs/planning/prompt-style-guide.md`
 - `docs/planning/diagrams.md`
+- `docs/planning/sprint-automation-guide.md`
+- `docs/planning/sprint-automation-quickstart.md`
+- `.opencode/prompts/scrum-agent-mcp.md`
+- `docs/planning/sprint-template.md`
 - `docs/refactor/*.md`
 
 Documentation discipline:
@@ -81,6 +85,9 @@ Single-test commands (backend):
 - Apply sync to GitHub: `python3 ops/sprint.py sync --file sprint.md --apply`
 - Requires `gh` auth scopes: `repo`, `read:project`, `project`
 - If scope is missing: `gh auth refresh -s repo -s read:project -s project`
+- Full workflow guide: `docs/planning/sprint-automation-guide.md`
+- Quick onboarding: `docs/planning/sprint-automation-quickstart.md`
+- Scrum MCP prompt: `.opencode/prompts/scrum-agent-mcp.md`
 
 ## Verification expectations
 - Prefer the narrowest command that proves the change.

@@ -1,34 +1,40 @@
-import { Link } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { InlineLoading } from "@/components/ui/inline-loading"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import styles from "@/features/events/EventCreatePage.module.css"
-import { useEffect, useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
-import type { EmployeeResponse, StudentResponse } from "@/lib/schemas"
+import { useState } from "react"
+import { useForm, useWatch } from "react-hook-form"
+import { Link, useNavigate } from "react-router-dom"
+import { FormField } from "@/components/ui/form-field"
+import { PageHeader } from "@/components/ui/page-header"
+import { SectionCard } from "@/components/ui/section-card"
+import styles from "@/features/events/EventCreatePage.module.css"
+import { queryKeys } from "@/lib/query/queryKeys"
 import { createEventSchema, type CreateEventInput } from "@/lib/schemas"
-import type { PageResponse } from "@/lib/schemas/page-response"
 import { eventContentLabels, eventContentValues } from "@/lib/shared/enums"
 import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
 
+const EVENT_OPTIONS_PARAMS = { page: 0, size: 100, sortBy: "name" }
+const EMPTY_OPTIONS: EventCreateOptions = {
+  students: [],
+  employees: [],
+}
+
+type EventCreateOptions = {
+  students: Awaited<ReturnType<typeof studentsApi.list>>["content"]
+  employees: Awaited<ReturnType<typeof employeesApi.list>>["content"]
+}
+
 export function EventCreatePage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [students, setStudents] = useState<StudentResponse[]>([])
-  const [employees, setEmployees] = useState<EmployeeResponse[]>([])
-  const [loadingOptions, setLoadingOptions] = useState(true)
-  const [optionsError, setOptionsError] = useState<string | null>(null)
 
   const {
     register,
     handleSubmit,
+    control,
     setValue,
-    watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<CreateEventInput>({
     resolver: zodResolver(createEventSchema),
   })
@@ -36,254 +42,223 @@ export function EventCreatePage() {
   const studentIdField = register("studentId")
   const employeeIdField = register("employeeId")
 
-  const selectedStudentId = watch("studentId")
-  const selectedEmployeeId = watch("employeeId")
+  const selectedStudentId = useWatch({ control, name: "studentId" })
+  const selectedEmployeeId = useWatch({ control, name: "employeeId" })
 
-  const selectedStudentName = useMemo(() => {
-    const s = students.find((x) => x.id === selectedStudentId)
-    return s?.name ?? ""
-  }, [students, selectedStudentId])
-
-  const selectedEmployeeName = useMemo(() => {
-    const e = employees.find((x) => x.id === selectedEmployeeId)
-    return e?.name ?? ""
-  }, [employees, selectedEmployeeId])
-
-  const loadOptions = async () => {
-    try {
-      setOptionsError(null)
-      setLoadingOptions(true)
+  const optionsQuery = useQuery({
+    queryKey: queryKeys.events.createOptions(),
+    queryFn: async (): Promise<EventCreateOptions> => {
       const [studentsRes, employeesRes] = await Promise.all([
-        studentsApi.list(0, 100, "name"),
-        employeesApi.list(0, 100, "name"),
+        studentsApi.list(EVENT_OPTIONS_PARAMS.page, EVENT_OPTIONS_PARAMS.size, EVENT_OPTIONS_PARAMS.sortBy),
+        employeesApi.list(EVENT_OPTIONS_PARAMS.page, EVENT_OPTIONS_PARAMS.size, EVENT_OPTIONS_PARAMS.sortBy),
       ])
 
-      const studentsPage: PageResponse<StudentResponse> = studentsRes
-      const employeesPage: PageResponse<EmployeeResponse> = employeesRes
-      setStudents(studentsPage.content)
-      setEmployees(employeesPage.content)
-    } catch (error) {
-      console.error("Falha ao carregar opções:", error)
-      setOptionsError(getFriendlyErrorMessage(error))
-    } finally {
-      setLoadingOptions(false)
-    }
-  }
+      return {
+        students: studentsRes.content,
+        employees: employeesRes.content,
+      }
+    },
+    staleTime: 5 * 60_000,
+  })
 
-  useEffect(() => {
-    loadOptions()
-  }, [])
+  const students = optionsQuery.data?.students ?? EMPTY_OPTIONS.students
+  const employees = optionsQuery.data?.employees ?? EMPTY_OPTIONS.employees
 
-  const onSubmit = async (data: CreateEventInput) => {
-    try {
+  const selectedStudentName = students.find((item) => item.id === selectedStudentId)?.name ?? ""
+  const selectedEmployeeName = employees.find((item) => item.id === selectedEmployeeId)?.name ?? ""
+
+  const createEventMutation = useMutation({
+    mutationFn: (data: CreateEventInput) => eventsApi.create(data),
+    onMutate: () => {
       setSubmitError(null)
-      const res = await eventsApi.create(data)
-      navigate(`/events/${res.id}`)
-    } catch (error) {
+    },
+    onSuccess: async (createdEvent, data) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.lists() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.byStudentRoot(data.studentId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.byEmployeeRoot(data.employeeId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+      ])
+
+      navigate(`/events/${createdEvent.id}`)
+    },
+    onError: (error) => {
       console.error("Falha ao criar evento:", error)
       setSubmitError(getFriendlyErrorMessage(error))
-    }
+    },
+  })
+
+  const onSubmit = (data: CreateEventInput) => {
+    createEventMutation.mutate(data)
   }
+
+  const isSubmitting = createEventMutation.isPending
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Novo evento</h1>
-          <p className="text-sm text-gray-600">Crie um novo atendimento/aula.</p>
-        </div>
-        <Button asChild type="button" variant="outline">
-          <Link to="/events">← Voltar para eventos</Link>
-        </Button>
-      </div>
+      <PageHeader
+        title="Novo evento"
+        description="Crie um novo atendimento/aula."
+        action={
+          <Link className="btn btn-outline" to="/events">
+            Voltar para eventos
+          </Link>
+        }
+      />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Dados do evento</CardTitle>
-          <CardDescription>Informe data, valores e participantes do atendimento.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loadingOptions ? (
-            <InlineLoading message="Carregando opções..." />
-          ) : optionsError ? (
-            <div className="space-y-3">
-              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-                {optionsError}
-              </div>
-              <Button type="button" onClick={loadOptions}>
-                Tentar novamente
-              </Button>
+      <SectionCard title="Dados do evento" description="Informe data, valores e participantes do atendimento.">
+        {optionsQuery.isLoading ? (
+          <div className="app-inline-loading">
+            <span className="loading loading-spinner loading-sm text-primary" />
+            <span>Carregando opções...</span>
+          </div>
+        ) : optionsQuery.isError ? (
+          <div className="space-y-3">
+            <div className="alert alert-error text-sm">{getFriendlyErrorMessage(optionsQuery.error)}</div>
+            <button className="btn btn-primary" type="button" onClick={() => void optionsQuery.refetch()}>
+              Tentar novamente
+            </button>
+          </div>
+        ) : (
+          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+            <div className={styles.formGrid}>
+              <FormField className={styles.field} label="Título" htmlFor="title" error={errors.title?.message}>
+                <input className="app-input" id="title" placeholder="Ex: Aula de matemática" {...register("title")} />
+              </FormField>
+
+              <FormField
+                className={styles.field}
+                label="Aluno"
+                htmlFor="studentId"
+                error={errors.studentId?.message}
+                hint={selectedStudentName ? `Selecionado: ${selectedStudentName}` : undefined}
+              >
+                <select
+                  id="studentId"
+                  className="app-select"
+                  {...studentIdField}
+                  onChange={(event) => {
+                    studentIdField.onChange(event)
+                    setValue("studentId", event.target.value, { shouldValidate: true })
+                  }}
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Selecione um aluno
+                  </option>
+                  {students.map((student) => (
+                    <option key={student.id} value={student.id}>
+                      {student.name}
+                    </option>
+                  ))}
+                </select>
+              </FormField>
+
+              <FormField
+                className={styles.field}
+                label="Colaborador"
+                htmlFor="employeeId"
+                error={errors.employeeId?.message}
+                hint={selectedEmployeeName ? `Selecionado: ${selectedEmployeeName}` : undefined}
+              >
+                <select
+                  id="employeeId"
+                  className="app-select"
+                  {...employeeIdField}
+                  onChange={(event) => {
+                    employeeIdField.onChange(event)
+                    setValue("employeeId", event.target.value, { shouldValidate: true })
+                  }}
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Selecione um colaborador
+                  </option>
+                  {employees.map((employee) => (
+                    <option key={employee.id} value={employee.id}>
+                      {employee.name}
+                    </option>
+                  ))}
+                </select>
+              </FormField>
+
+              <FormField className={styles.field} label="Conteúdo" htmlFor="content" error={errors.content?.message}>
+                <select id="content" className="app-select" {...register("content")} defaultValue="">
+                  <option value="" disabled>
+                    Selecione um conteúdo
+                  </option>
+                  {eventContentValues.map((content) => (
+                    <option key={content} value={content}>
+                      {eventContentLabels[content]}
+                    </option>
+                  ))}
+                </select>
+              </FormField>
+
+              <FormField className={styles.field} label="Início" htmlFor="startDate" error={errors.startDate?.message}>
+                <input className="app-input" id="startDate" type="datetime-local" {...register("startDate")} />
+              </FormField>
+
+              <FormField className={styles.field} label="Fim" htmlFor="endDate" error={errors.endDate?.message}>
+                <input className="app-input" id="endDate" type="datetime-local" {...register("endDate")} />
+              </FormField>
+
+              <FormField className={styles.field} label="Preço (receita)" htmlFor="price" error={errors.price?.message}>
+                <input
+                  className="app-input"
+                  id="price"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  {...register("price", {
+                    valueAsNumber: true,
+                    required: "Preço é obrigatório",
+                  })}
+                />
+              </FormField>
+
+              <FormField className={styles.field} label="Pagamento (custo)" htmlFor="payment" error={errors.payment?.message}>
+                <input
+                  className="app-input"
+                  id="payment"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  {...register("payment", {
+                    valueAsNumber: true,
+                    required: "Pagamento é obrigatório",
+                  })}
+                />
+              </FormField>
+
+              <FormField
+                className={`${styles.field} ${styles.span2}`}
+                label="Descrição (opcional)"
+                htmlFor="description"
+                error={errors.description?.message}
+              >
+                <textarea
+                  className="app-textarea"
+                  id="description"
+                  placeholder="Observações do atendimento"
+                  {...register("description")}
+                />
+              </FormField>
             </div>
-          ) : (
-            <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-              <div className={styles.formGrid}>
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="title">
-                    Título
-                  </label>
-                  <Input id="title" placeholder="Ex: Aula de matemática" {...register("title")} />
-                  {errors.title?.message ? <p className={styles.error}>{errors.title.message}</p> : null}
-                </div>
 
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="studentId">
-                    Aluno
-                  </label>
-                  <select
-                    id="studentId"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    {...studentIdField}
-                    onChange={(e) => {
-                      studentIdField.onChange(e)
-                      setValue("studentId", e.target.value, { shouldValidate: true })
-                    }}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Selecione um aluno
-                    </option>
-                    {students.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                  {selectedStudentName ? <p className={styles.help}>Selecionado: {selectedStudentName}</p> : null}
-                  {errors.studentId?.message ? <p className={styles.error}>{errors.studentId.message}</p> : null}
-                </div>
+            {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
 
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="employeeId">
-                    Colaborador
-                  </label>
-                  <select
-                    id="employeeId"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    {...employeeIdField}
-                    onChange={(e) => {
-                      employeeIdField.onChange(e)
-                      setValue("employeeId", e.target.value, { shouldValidate: true })
-                    }}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Selecione um colaborador
-                    </option>
-                    {employees.map((e) => (
-                      <option key={e.id} value={e.id}>
-                        {e.name}
-                      </option>
-                    ))}
-                  </select>
-                  {selectedEmployeeName ? <p className={styles.help}>Selecionado: {selectedEmployeeName}</p> : null}
-                  {errors.employeeId?.message ? <p className={styles.error}>{errors.employeeId.message}</p> : null}
-                </div>
-
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="content">
-                    Conteúdo
-                  </label>
-                  <select
-                    id="content"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    {...register("content")}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Selecione um conteúdo
-                    </option>
-                    {eventContentValues.map((content) => (
-                      <option key={content} value={content}>
-                        {eventContentLabels[content]}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.content?.message ? <p className={styles.error}>{errors.content.message}</p> : null}
-                </div>
-
-                <div className={styles.field}>
-                <label className={styles.label} htmlFor="startDate">
-                  Início
-                </label>
-                <Input id="startDate" type="datetime-local" {...register("startDate")} />
-                {errors.startDate?.message ? (
-                  <p className={styles.error}>{errors.startDate.message}</p>
-                ) : null}
-                </div>
-
-                <div className={styles.field}>
-                <label className={styles.label} htmlFor="endDate">
-                  Fim
-                </label>
-                <Input id="endDate" type="datetime-local" {...register("endDate")} />
-                {errors.endDate?.message ? (
-                  <p className={styles.error}>{errors.endDate.message}</p>
-                ) : null}
-                </div>
-
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="price">
-                    Preço (receita)
-                  </label>
-                  <Input
-                    id="price"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    {...register("price", {
-                      valueAsNumber: true,
-                      required: "Preço é obrigatório",
-                    })}
-                  />
-                  {errors.price?.message ? <p className={styles.error}>{errors.price.message}</p> : null}
-                </div>
-
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="payment">
-                    Pagamento (custo)
-                  </label>
-                  <Input
-                    id="payment"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    {...register("payment", {
-                      valueAsNumber: true,
-                      required: "Pagamento é obrigatório",
-                    })}
-                  />
-                  {errors.payment?.message ? <p className={styles.error}>{errors.payment.message}</p> : null}
-                </div>
-
-                <div className={styles.field + " " + styles.span2}>
-                  <label className={styles.label} htmlFor="description">
-                    Descrição (opcional)
-                  </label>
-                  <Textarea id="description" placeholder="Observações do atendimento" {...register("description")} />
-                  {errors.description?.message ? (
-                    <p className={styles.error}>{errors.description.message}</p>
-                  ) : null}
-                </div>
-              </div>
-
-              {submitError ? (
-                <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-                  {submitError}
-                </div>
-              ) : null}
-
-              <div className={styles.actions}>
-                <Button asChild type="button" variant="outline">
-                  <Link to="/events">Cancelar</Link>
-                </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Salvando..." : "Criar evento"}
-                </Button>
-              </div>
-            </form>
-          )}
-        </CardContent>
-      </Card>
+            <div className={styles.actions}>
+              <Link className="btn btn-outline" to="/events">
+                Cancelar
+              </Link>
+              <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Salvando..." : "Criar evento"}
+              </button>
+            </div>
+          </form>
+        )}
+      </SectionCard>
     </div>
   )
 }

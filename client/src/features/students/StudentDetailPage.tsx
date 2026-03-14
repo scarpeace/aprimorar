@@ -1,145 +1,138 @@
-import { Link, useParams } from "react-router-dom"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { EmptyState } from "@/components/ui/empty-state"
-import { ErrorState } from "@/components/ui/error-state"
-import { LoadingState } from "@/components/ui/loading-state"
-import { SummaryField } from "@/components/ui/summary-field"
+import { useQuery } from "@tanstack/react-query"
+import type { ReactNode } from "react"
 import { GraduationCap } from "lucide-react"
-import type { EventResponse } from "@/lib/schemas/event"
-import type { StudentResponse } from "@/lib/schemas/student"
-import { eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
-import { useCallback, useEffect, useState } from "react"
+import { Link, useParams } from "react-router-dom"
+import { EmptyCard } from "@/components/ui/empty-card"
+import { ErrorCard } from "@/components/ui/error-card"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageLoading } from "@/components/ui/page-loading"
+import { SectionCard } from "@/components/ui/section-card"
+import { SummaryItem } from "@/components/ui/summary-item"
+import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/students/StudentDetailPage.module.css"
-import type { PageResponse } from "@/lib/schemas/page-response"
-import { EventsTable } from "@/components/ui/events-table"
+import { queryKeys } from "@/lib/query/queryKeys"
+import { eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
+
+const STUDENT_EVENTS_PARAMS = { page: 0, size: 100, sortBy: "startDate" }
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const [student, setStudent] = useState<StudentResponse | null>(null)
-  const [linkedEvents, setLinkedEvents] = useState<EventResponse[]>([])
-  const [studentEventsCount, setStudentEventsCount] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const studentId = id ?? ""
 
-  const loadStudentData = useCallback(async () => {
-    if (!id) {
-      setError("ID do aluno não informado.")
-      return
-    }
+  const studentQuery = useQuery({
+    queryKey: queryKeys.students.detail(studentId),
+    queryFn: () => studentsApi.getById(studentId),
+    enabled: Boolean(id),
+  })
 
-    try {
-      setLoading(true)
-      setError(null)
+  const studentEventsQuery = useQuery({
+    queryKey: queryKeys.events.byStudent(studentId, STUDENT_EVENTS_PARAMS),
+    queryFn: () =>
+      eventsApi.listByStudent(
+        studentId,
+        STUDENT_EVENTS_PARAMS.page,
+        STUDENT_EVENTS_PARAMS.size,
+        STUDENT_EVENTS_PARAMS.sortBy
+      ),
+    enabled: Boolean(id),
+  })
 
-      const [studentRes, eventsRes] = await Promise.all([
-        studentsApi.getById(id),
-        eventsApi.listByStudent(id, 0, 100, "startDate"),
-      ])
-
-      const eventsPage: PageResponse<EventResponse> = eventsRes
-
-      setStudent(studentRes)
-      setLinkedEvents(eventsRes.content)
-      setStudentEventsCount(eventsPage.page.totalElements)
-    } catch (loadError) {
-      console.error("Falha ao carregar aluno:", loadError)
-      setError(getFriendlyErrorMessage(loadError))
-    } finally {
-      setLoading(false)
-    }
-  }, [id])
-
-  useEffect(() => {
-    loadStudentData()
-  }, [loadStudentData])
-
-  if (loading) return <LoadingState message="Carregando aluno..." />
-
-  if (error) {
+  if (!id) {
     return (
       <div className={styles.page}>
-        <ErrorState
-          title="Não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadStudentData}
-        />
+        <ErrorCard description="ID do aluno não informado." />
       </div>
     )
   }
+
+  const refetchAll = async () => {
+    await Promise.all([studentQuery.refetch(), studentEventsQuery.refetch()])
+  }
+
+  if (studentQuery.isLoading || studentEventsQuery.isLoading) {
+    return <PageLoading message="Carregando aluno..." />
+  }
+
+  if (studentQuery.isError || studentEventsQuery.isError) {
+    const queryError = studentQuery.error ?? studentEventsQuery.error
+
+    return (
+      <div className={styles.page}>
+        <ErrorCard description={getFriendlyErrorMessage(queryError)} onAction={refetchAll} />
+      </div>
+    )
+  }
+
+  const student = studentQuery.data
 
   if (!student) {
     return (
       <div className={styles.page}>
-        <EmptyState title="Aluno não encontrado" description="Não encontramos os dados deste aluno." />
+        <EmptyCard title="Aluno não encontrado" description="Não encontramos os dados deste aluno." />
       </div>
     )
   }
 
+  const linkedEvents = studentEventsQuery.data?.content ?? []
+  const studentEventsCount = studentEventsQuery.data?.page.totalElements ?? 0
+
+  const summaryItems: Array<{ label: string; value: ReactNode }> = [
+    { label: "Nome completo", value: student.name },
+    { label: "CPF", value: student.cpf },
+    { label: "E-mail", value: student.email },
+    { label: "Idade", value: String(student.age) },
+    { label: "Contato", value: student.contact },
+    { label: "Data de nascimento", value: student.birthdate },
+    { label: "Data de matrícula", value: student.createdAt },
+    { label: "Escola", value: student.school },
+    { label: "Status", value: student.archivedAt ? "Arquivado" : "Ativo" },
+    { label: "Responsável", value: student.parent.name },
+    { label: "E-mail do responsável", value: student.parent.email },
+    { label: "Contato do responsável", value: student.parent.contact },
+    { label: "CPF do responsável", value: student.parent.cpf },
+    { label: "Endereço", value: student.address.street },
+    { label: "Complemento", value: student.address.complement ?? "Sem complemento" },
+    { label: "CEP", value: student.address.zip },
+  ]
+
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div className={styles.headerLeft}>
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-            <GraduationCap className="h-6 w-6 text-blue-600" />
+      <PageHeader
+        action={
+          <Link className="btn btn-outline" to="/students">
+            Voltar para alunos
+          </Link>
+        }
+        description="Veja e gerencie as informações do aluno"
+        leading={
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/15">
+            <GraduationCap className="h-6 w-6 text-primary" />
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Detalhes do aluno</h1>
-            <p className="text-sm text-gray-500">Veja e gerencie as informações do aluno</p>
-          </div>
+        }
+        title="Detalhes do aluno"
+        titleClassName="text-2xl font-bold app-text"
+      />
+
+      <SectionCard title="Resumo do aluno" description="Dados de aluno, responsável e endereço em um único resumo.">
+        <div className={styles.summaryGrid}>
+          {summaryItems.map((item) => (
+            <SummaryItem key={item.label} label={item.label} value={item.value} />
+          ))}
         </div>
-        <Button asChild type="button" variant="outline">
-          <Link to="/students">← Voltar para alunos</Link>
-        </Button>
-      </div>
+      </SectionCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Resumo do aluno</CardTitle>
-          <CardDescription>Dados de aluno, responsável e endereço em um único resumo.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className={styles.summaryGrid}>
-            <SummaryField title="Nome completo">{student.name}</SummaryField>
-            <SummaryField title="CPF">{student.cpf}</SummaryField>
-            <SummaryField title="E-mail">{student.email}</SummaryField>
-            <SummaryField title="Idade">{String(student.age)}</SummaryField>
-            <SummaryField title="Contato">{student.contact}</SummaryField>
-            <SummaryField title="Data de nascimento">{student.birthdate}</SummaryField>
-            <SummaryField title="Data de matrícula">{student.createdAt}</SummaryField>
-            <SummaryField title="Escola">{student.school}</SummaryField>
-            <SummaryField title="Status">{student.archivedAt ? "Arquivado" : "Ativo"}</SummaryField>
-            <SummaryField title="Responsável">{student.parent.name}</SummaryField>
-            <SummaryField title="E-mail do responsável">{student.parent.email}</SummaryField>
-            <SummaryField title="Contato do responsável">{student.parent.contact}</SummaryField>
-            <SummaryField title="CPF do responsável">{student.parent.cpf}</SummaryField>
-            <SummaryField title="Endereço">{student.address.street}</SummaryField>
-
-            {student.address.complement != null ?
-            <SummaryField title="Complemento">{student.address.complement ? student.address.complement : null}</SummaryField>
-              :"Sem complemento"
-            }
-            <SummaryField title="CEP">{student.address.zip}</SummaryField>
+      <SectionCard
+        title="Eventos vinculados"
+        description={`Total de eventos vinculados a este aluno: ${studentEventsCount}`}
+      >
+        {linkedEvents.length === 0 ? (
+          <p className="text-sm app-text-muted">Este aluno ainda não possui eventos vinculados.</p>
+        ) : (
+          <div className="app-table-wrap">
+            <EventsTable variant="studentPage" events={linkedEvents} />
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Eventos vinculados</CardTitle>
-          <CardDescription>Total de eventos vinculados a este aluno: {studentEventsCount}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {linkedEvents.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Este aluno ainda não possui eventos vinculados.</p>
-          ) : (
-            <div className={styles.tableWrap}>
-              <EventsTable variant="studentPage" events={linkedEvents} />
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        )}
+      </SectionCard>
     </div>
   )
 }

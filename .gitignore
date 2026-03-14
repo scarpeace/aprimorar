@@ -2,6 +2,8 @@
 !.opencode/opencode.jsonc
 !.opencode/agents/
 !.opencode/agents/*.md
+!.opencode/prompts/
+!.opencode/prompts/*.md
 .opencode/node_modules/
 .opencode/bun.lock
 .opencode/package.json

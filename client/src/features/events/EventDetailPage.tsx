@@ -1,113 +1,101 @@
-import { Link, useParams } from "react-router-dom"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { EmptyState } from "@/components/ui/empty-state"
-import { ErrorState } from "@/components/ui/error-state"
-import { LoadingState } from "@/components/ui/loading-state"
-import { SummaryField } from "@/components/ui/summary-field"
+import { useQuery } from "@tanstack/react-query"
+import type { ReactNode } from "react"
 import { Calendar } from "lucide-react"
-import type { EventResponse } from "@/lib/schemas/event"
+import { Link, useParams } from "react-router-dom"
+import { EmptyCard } from "@/components/ui/empty-card"
+import { ErrorCard } from "@/components/ui/error-card"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageLoading } from "@/components/ui/page-loading"
+import { SectionCard } from "@/components/ui/section-card"
+import { SummaryItem } from "@/components/ui/summary-item"
+import styles from "@/features/events/EventDetailPage.module.css"
+import { queryKeys } from "@/lib/query/queryKeys"
 import { eventContentLabels } from "@/lib/shared/enums"
 import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter"
-import { useCallback, useEffect, useState } from "react"
 import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
-import styles from "@/features/events/EventDetailPage.module.css"
 
 export function EventDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const [event, setEvent] = useState<EventResponse | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const eventId = id ?? ""
 
-  const loadEvent = useCallback(async () => {
-    if (!id) {
-      setError("ID do evento não informado.")
-      return
-    }
+  const eventQuery = useQuery({
+    queryKey: queryKeys.events.detail(eventId),
+    queryFn: () => eventsApi.getById(eventId),
+    enabled: Boolean(id),
+  })
 
-    try {
-      setLoading(true)
-      setError(null)
-      const res: EventResponse = await eventsApi.getById(id)
-      setEvent(res)
-    } catch (loadError) {
-      console.error("Falha ao carregar evento:", loadError)
-      setError(getFriendlyErrorMessage(loadError))
-    } finally {
-      setLoading(false)
-    }
-  }, [id])
-
-  useEffect(() => {
-    loadEvent()
-  }, [loadEvent])
-
-  const profit = Number(event?.price ?? 0) - Number(event?.payment ?? 0)
-
-
-  if (loading) return <LoadingState message="Carregando evento..." />
-
-  if (error) {
+  if (!id) {
     return (
       <div className={styles.page}>
-        <ErrorState
-          title="Não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadEvent}
-        />
+        <ErrorCard description="ID do evento não informado." />
       </div>
     )
   }
+
+  if (eventQuery.isLoading) {
+    return <PageLoading message="Carregando evento..." />
+  }
+
+  if (eventQuery.isError) {
+    return (
+      <div className={styles.page}>
+        <ErrorCard description={getFriendlyErrorMessage(eventQuery.error)} onAction={eventQuery.refetch} />
+      </div>
+    )
+  }
+
+  const event = eventQuery.data
 
   if (!event) {
     return (
       <div className={styles.page}>
-        <EmptyState title="Evento não encontrado" description="Não encontramos os dados deste evento." />
+        <EmptyCard title="Evento não encontrado" description="Não encontramos os dados deste evento." />
       </div>
     )
   }
 
+  const profit = Number(event.price) - Number(event.payment)
+
+  const summaryItems: Array<{ label: string; value: ReactNode }> = [
+    { label: "ID", value: String(event.id) },
+    { label: "Título", value: event.title },
+    { label: "Descrição", value: event.description ?? "-" },
+    { label: "Conteúdo", value: eventContentLabels[event.content] },
+    { label: "Aluno", value: event.studentName },
+    { label: "Colaborador", value: event.employeeName },
+    { label: "Data", value: formatDateShortYear(event.startDate) },
+    { label: "Horário", value: `${formatTime(event.startDate)} : ${formatTime(event.endDate)}` },
+    { label: "Preço", value: brl.format(event.price) },
+    { label: "Pagamento (custo)", value: brl.format(event.payment) },
+    { label: "Lucro", value: brl.format(profit) },
+    { label: "Criado em", value: formatDateShortYear(event.createdAt) },
+  ]
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div className={styles.headerLeft}>
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
-            <Calendar className="h-6 w-6 text-purple-600" />
+      <PageHeader
+        action={
+          <Link className="btn btn-outline" to="/events">
+            Voltar para eventos
+          </Link>
+        }
+        description="Veja e gerencie as informações do evento"
+        leading={
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/20">
+            <Calendar className="h-6 w-6 text-accent" />
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Detalhes do evento</h1>
-            <p className="text-sm text-gray-500">Veja e gerencie as informações do evento</p>
-          </div>
-        </div>
-        <Button asChild type="button" variant="outline">
-          <Link to="/events">← Voltar para eventos</Link>
-        </Button>
-      </div>
+        }
+        title="Detalhes do evento"
+        titleClassName="text-2xl font-bold app-text"
+      />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Resumo do evento</CardTitle>
-          <CardDescription>Dados completos do atendimento, participantes e valores.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className={styles.summaryGrid}>
-            <SummaryField title="ID">{String(event.id)}</SummaryField>
-            <SummaryField title="Título">{event.title}</SummaryField>
-            <SummaryField title="Descrição">{event.description ?? "-"}</SummaryField>
-            <SummaryField title="Conteúdo">{eventContentLabels[event.content]}</SummaryField>
-            <SummaryField title="Aluno">{event.studentName}</SummaryField>
-            <SummaryField title="Colaborador">{event.employeeName}</SummaryField>
-            <SummaryField title="Data">{formatDateShortYear(event.startDate)}</SummaryField>
-            <SummaryField title="Horário">{`${formatTime(event.startDate)} : ${formatTime(event.endDate)}`}</SummaryField>
-            <SummaryField title="Preço">{brl.format(event.price)}</SummaryField>
-            <SummaryField title="Pagamento (custo)">{brl.format(event.payment)}</SummaryField>
-            <SummaryField title="Lucro">{brl.format(profit)}</SummaryField>
-            <SummaryField title="Criado em">{formatDateShortYear(event.createdAt)}</SummaryField>
-          </div>
-        </CardContent>
-      </Card>
+      <SectionCard title="Resumo do evento" description="Dados completos do atendimento, participantes e valores.">
+        <div className={styles.summaryGrid}>
+          {summaryItems.map((item) => (
+            <SummaryItem key={item.label} label={item.label} value={item.value} />
+          ))}
+        </div>
+      </SectionCard>
     </div>
   )
 }

@@ -1,80 +1,80 @@
-import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { EmptyState } from "@/components/ui/empty-state"
-import { ErrorState } from "@/components/ui/error-state"
-import { LoadingState } from "@/components/ui/loading-state"
-import type { EventResponse } from "@/lib/schemas"
-import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
+import { EmptyCard } from "@/components/ui/empty-card"
+import { ErrorCard } from "@/components/ui/error-card"
+import { ListSearchInput } from "@/components/ui/list-search-input"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageLoading } from "@/components/ui/page-loading"
+import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/events/EventsPage.module.css"
-import type { PageResponse } from "@/lib/schemas/page-response"
-import { EventsTable } from "@/components/ui/events-table"
+import { queryKeys } from "@/lib/query/queryKeys"
+import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
+
+const EVENTS_LIST_PARAMS = { page: 0, size: 20, sortBy: "startDate" }
 
 export function EventsPage() {
-  const [eventList, setEventList] = useState<EventResponse[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const {
+    data: eventList = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.events.list(EVENTS_LIST_PARAMS),
+    queryFn: async () => {
+      const eventsRes = await eventsApi.list(
+        EVENTS_LIST_PARAMS.page,
+        EVENTS_LIST_PARAMS.size,
+        EVENTS_LIST_PARAMS.sortBy
+      )
 
-  const loadEvents = async () => {
-    try {
-      setError(null)
-      setLoading(true)
-      const eventsRes: PageResponse<EventResponse> = await eventsApi.list()
-      setEventList(eventsRes.content)
-    } catch (error) {
-      console.error("Falha ao carregar eventos:", error)
-      setError(getFriendlyErrorMessage(error))
-    } finally {
-      setLoading(false)
-    }
+      return eventsRes.content
+    },
+  })
+
+  if (isLoading) {
+    return <PageLoading message="Carregando eventos..." />
   }
 
-  useEffect(() => {
-    loadEvents()
-  }, [])
-
-  if (loading) {
-    return <LoadingState message="Carregando eventos..." />
-  }
-
-  if (error) {
+  if (isError) {
     return (
       <div className={styles.page}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
-          <p className="text-sm text-gray-600">Gerencie horários, preços e atribuições.</p>
-        </div>
-        <ErrorState
-          title="Não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadEvents}
-        />
+        <PageHeader title="Eventos" description="Gerencie horários, preços e atribuições." />
+        <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
       </div>
     )
   }
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Eventos</h1>
-          <p className="text-sm text-gray-600">Gerencie horários, preços e atribuições.</p>
-        </div>
-        <Button asChild variant="success">
-          <Link to="/events/new">Novo evento</Link>
-        </Button>
-      </div>
+      <PageHeader
+        action={
+          <Link className="btn btn-success" to="/events/new">
+            Novo evento
+          </Link>
+        }
+        description="Gerencie horários, preços e atribuições."
+        title="Eventos"
+      >
+        <ListSearchInput
+          placeholder="Buscar evento por aluno, colaborador ou conteúdo"
+          ariaLabel="Buscar evento"
+        />
+      </PageHeader>
 
-      <div className={styles.tableWrap}>
-        <EventsTable variant="studentPage" events={eventList} />
+      <div className="app-table-wrap">
+        <EventsTable variant="eventsPage" events={eventList} />
       </div>
 
       {eventList.length === 0 ? (
-        <EmptyState
+        <EmptyCard
           title="Nenhum evento cadastrado"
           description="Quando você cadastrar o primeiro evento, ele aparecerá na tabela acima."
-          actionLabel="Novo evento"
+          action={
+            <Link className="btn btn-secondary" to="/events/new">
+              Novo evento
+            </Link>
+          }
         />
       ) : null}
     </div>

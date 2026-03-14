@@ -1,5 +1,20 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "chrome-devtools": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--headless",
+        "--isolated",
+        "--no-usage-statistics",
+        "--executablePath=/snap/bin/brave"
+      ],
+      "enabled": true
+    }
+  },
   "agent": {
     "java-reviewer": {
       "description": "Reviews code for best practices and potential issues",
@@ -46,6 +61,28 @@
         "bash": true
       },
       "color": "accent"
+    },
+    "react-reviewer": {
+      "description": "Reviews React code for performance and maintainability",
+      "mode": "subagent",
+      "model": "openai/gpt-5.4",
+      "prompt": "{file:./prompts/react-reviewer.md}",
+      "tools": {
+        "write": true,
+        "edit": true
+      },
+      "color": "warning"
+    },
+    "scrum-master": {
+      "description": "Plans sprint.md from GitHub backlog context",
+      "mode": "subagent",
+      "model": "openai/gpt-5.4",
+      "prompt": "{file:./prompts/scrum-agent-mcp.md}",
+      "tools": {
+        "write": true,
+        "edit": true
+      },
+      "color": "primary"
     }
   }
 }

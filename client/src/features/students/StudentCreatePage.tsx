@@ -1,395 +1,374 @@
-import { Link } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { InlineLoading } from "@/components/ui/inline-loading"
-import { Input } from "@/components/ui/input"
-import styles from "@/features/students/StudentCreatePage.module.css"
-import { useEffect, useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
-import { useHookFormMask } from "use-mask-input"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createStudentSchema, type CreateStudentInput, type ParentSummary } from "@/lib/schemas"
-import type { PageResponse } from "@/lib/schemas/page-response"
+import { useMemo, useState } from "react"
+import { useForm } from "react-hook-form"
+import { Link, useNavigate } from "react-router-dom"
+import { useHookFormMask } from "use-mask-input"
+import { FormField } from "@/components/ui/form-field"
+import { PageHeader } from "@/components/ui/page-header"
+import { SectionCard } from "@/components/ui/section-card"
+import styles from "@/features/students/StudentCreatePage.module.css"
+import { queryKeys } from "@/lib/query/queryKeys"
+import { createStudentSchema, type CreateStudentInput } from "@/lib/schemas"
 import { getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
+
+const PARENTS_LIST_PARAMS = { page: 0, size: 100, sortBy: "name" }
+const EMPTY_PARENTS: Awaited<ReturnType<typeof parentsApi.list>>["content"] = []
 
 export function StudentCreatePage() {
   const navigate = useNavigate()
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const queryClient = useQueryClient()
 
-  const [parents, setParents] = useState<ParentSummary[]>([])
-  const [parentsLoading, setParentsLoading] = useState(true)
-  const [parentsError, setParentsError] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [parentMode, setParentMode] = useState<"existing" | "new">("new")
+  const [selectedParentId, setSelectedParentId] = useState("")
 
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<CreateStudentInput>({
     resolver: zodResolver(createStudentSchema),
     shouldUnregister: true,
   })
 
-  const loadParents = async () => {
-    try {
-      setParentsError(null)
-      setParentsLoading(true)
+  const {
+    data: parentsPage,
+    isLoading: parentsLoading,
+    isError: isParentsError,
+    error: parentsQueryError,
+    refetch: refetchParents,
+  } = useQuery({
+    queryKey: queryKeys.parents.list(PARENTS_LIST_PARAMS),
+    queryFn: () =>
+      parentsApi.list(PARENTS_LIST_PARAMS.page, PARENTS_LIST_PARAMS.size, PARENTS_LIST_PARAMS.sortBy),
+  })
 
-      const res = await parentsApi.list(0, 100, "name")
-      const page: PageResponse<ParentSummary> = res
-      setParents(page.content)
-      if (page.content.length === 0) setParentMode("new")
-    } catch (error) {
-      console.error("Falha ao carregar responsáveis:", error)
-      setParents([])
-      setParentsError(getFriendlyErrorMessage(error))
-      setParentMode("new")
-    } finally {
-      setParentsLoading(false)
-    }
-  }
+  const parents = parentsPage?.content ?? EMPTY_PARENTS
+  const parentsError = isParentsError ? getFriendlyErrorMessage(parentsQueryError) : null
+  const effectiveParentMode = parents.length > 0 ? parentMode : "new"
 
-  useEffect(() => {
-    loadParents()
-  }, [])
-
-  const parentIdField = register("parentId")
   const registerWithMask = useHookFormMask(register)
-  const selectedParentId = watch("parentId")
+
   const selectedParentName = useMemo(() => {
-    const p = parents.find((x) => x.id === selectedParentId)
-    return p?.name ?? ""
+    const parent = parents.find((item) => item.id === selectedParentId)
+    return parent?.name ?? ""
   }, [parents, selectedParentId])
 
-  const onSubmit = async (data: CreateStudentInput) => {
-    try {
-      setSubmitError(null)
-
+  const createStudentMutation = useMutation({
+    mutationFn: async (data: CreateStudentInput) => {
       const payload: CreateStudentInput =
-        parentMode === "existing" && data.parentId
+        effectiveParentMode === "existing" && selectedParentId
           ? {
               ...data,
-              parent: await parentsApi.getById(data.parentId),
-              parentId: undefined,
+              parent: await parentsApi.getById(selectedParentId),
             }
-          : { ...data, parentId: undefined }
+          : data
 
-      const res = await studentsApi.create(payload)
-      navigate(`/students/${res.id}`)
-    } catch (error) {
+      return studentsApi.create(payload)
+    },
+    onMutate: () => {
+      setSubmitError(null)
+    },
+    onSuccess: async (createdStudent) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.parents.lists() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+      ])
+
+      navigate(`/students/${createdStudent.id}`)
+    },
+    onError: (error) => {
       console.error("Falha ao criar aluno:", error)
       setSubmitError(getFriendlyErrorMessage(error))
-    }
+    },
+  })
+
+  const onSubmit = (data: CreateStudentInput) => {
+    createStudentMutation.mutate(data)
   }
+
+  const isSubmitting = createStudentMutation.isPending
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Novo aluno</h1>
-          <p className="text-sm text-gray-600">Crie um novo cadastro de aluno.</p>
-        </div>
-        <Button asChild type="button" variant="outline">
-          <Link to="/students">← Voltar para alunos</Link>
-        </Button>
-      </div>
+      <PageHeader
+        title="Novo aluno"
+        description="Crie um novo cadastro de aluno."
+        action={
+          <Link className="btn btn-outline" to="/students">
+            Voltar para alunos
+          </Link>
+        }
+      />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Dados do aluno</CardTitle>
-          <CardDescription>Preencha os dados pessoais, endereço e responsável.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-            <div className={styles.sectionTitle}>Aluno</div>
-            <div className={styles.formGrid}>
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="name">
-                  Nome completo
-                </label>
-                <Input id="name" placeholder="Ex: João Pedro" {...register("name")} />
-                {errors.name?.message ? <p className={styles.error}>{errors.name.message}</p> : null}
-              </div>
+      <SectionCard title="Dados do aluno" description="Preencha os dados pessoais, endereço e responsável.">
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.sectionTitle}>Aluno</div>
 
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="birthdate">
-                  Data de nascimento
-                </label>
-                <Input id="birthdate" type="date" {...register("birthdate")} />
-                {errors.birthdate?.message ? (
-                  <p className={styles.error}>{errors.birthdate.message}</p>
+          <div className={styles.formGrid}>
+            <FormField className={styles.field} label="Nome completo" htmlFor="name" error={errors.name?.message}>
+              <input className="app-input" id="name" placeholder="Ex: João Pedro" {...register("name")} />
+            </FormField>
+
+            <FormField className={styles.field} label="Data de nascimento" htmlFor="birthdate" error={errors.birthdate?.message}>
+              <input className="app-input" id="birthdate" type="date" {...register("birthdate")} />
+            </FormField>
+
+            <FormField className={styles.field} label="CPF" htmlFor="cpf" error={errors.cpf?.message}>
+              <input
+                className="app-input"
+                id="cpf"
+                placeholder="000.000.000-00"
+                {...registerWithMask("cpf", "999.999.999-99")}
+              />
+            </FormField>
+
+            <FormField className={styles.field} label="Contato" htmlFor="contact" error={errors.contact?.message}>
+              <input
+                className="app-input"
+                id="contact"
+                placeholder="(11) 99999-9999"
+                {...registerWithMask("contact", ["(99) 9999-9999", "(99) 99999-9999"])}
+              />
+            </FormField>
+
+            <FormField className={styles.field} label="Email" htmlFor="email" error={errors.email?.message}>
+              <input
+                className="app-input"
+                id="email"
+                type="email"
+                placeholder="exemplo@dominio.com"
+                {...register("email")}
+              />
+            </FormField>
+
+            <FormField className={styles.field} label="Escola" htmlFor="school" error={errors.school?.message}>
+              <input className="app-input" id="school" placeholder="Ex: Escola Estadual X" {...register("school")} />
+            </FormField>
+          </div>
+
+          <div className={styles.divider} />
+          <div className={styles.sectionTitle}>Endereço</div>
+
+          <div className={styles.formGrid}>
+            <FormField
+              className={`${styles.field} ${styles.span2}`}
+              label="Rua"
+              htmlFor="address.street"
+              error={errors.address?.street?.message}
+            >
+              <input
+                className="app-input"
+                id="address.street"
+                placeholder="Ex: Rua das Flores"
+                {...register("address.street")}
+              />
+            </FormField>
+
+            <FormField className={styles.field} label="Número" htmlFor="address.number" error={errors.address?.number?.message}>
+              <input
+                className="app-input"
+                id="address.number"
+                placeholder="Ex: 123"
+                {...register("address.number")}
+              />
+            </FormField>
+
+            <FormField
+              className={styles.field}
+              label="Complemento (opcional)"
+              htmlFor="address.complement"
+              error={errors.address?.complement?.message}
+            >
+              <input
+                className="app-input"
+                id="address.complement"
+                placeholder="Apto, bloco, etc"
+                {...register("address.complement")}
+              />
+            </FormField>
+
+            <FormField className={styles.field} label="Bairro" htmlFor="address.district" error={errors.address?.district?.message}>
+              <input
+                className="app-input"
+                id="address.district"
+                placeholder="Ex: Centro"
+                {...register("address.district")}
+              />
+            </FormField>
+
+            <FormField className={styles.field} label="Cidade" htmlFor="address.city" error={errors.address?.city?.message}>
+              <input
+                className="app-input"
+                id="address.city"
+                placeholder="Ex: São Paulo"
+                {...register("address.city")}
+              />
+            </FormField>
+
+            <FormField className={styles.field} label="Estado" htmlFor="address.state" error={errors.address?.state?.message}>
+              <input
+                className="app-input"
+                id="address.state"
+                placeholder="Ex: SP"
+                {...register("address.state")}
+              />
+            </FormField>
+
+            <FormField className={styles.field} label="CEP" htmlFor="address.zip" error={errors.address?.zip?.message}>
+              <input
+                className="app-input"
+                id="address.zip"
+                placeholder="00000-000"
+                {...registerWithMask("address.zip", "99999-999")}
+              />
+            </FormField>
+          </div>
+
+          <div className={styles.divider} />
+          <div className={styles.sectionTitle}>Responsável</div>
+
+          {parentsError ? <div className="alert alert-error text-sm">{parentsError}</div> : null}
+
+          <div className={styles.formGrid}>
+            {parents.length > 0 ? (
+              <FormField
+                className={`${styles.field} ${styles.span2}`}
+                label="Tipo de responsável"
+                htmlFor="parentMode"
+                hint={
+                  parentsLoading ? (
+                    <span className="app-inline-loading">
+                      <span className="loading loading-spinner loading-sm text-primary" />
+                      <span>Carregando lista...</span>
+                    </span>
+                  ) : undefined
+                }
+              >
+                <select
+                  id="parentMode"
+                  className="app-select"
+                  value={parentMode}
+                  onChange={(event) => {
+                    const mode = event.target.value as "existing" | "new"
+                    setParentMode(mode)
+                    if (mode === "new") setSelectedParentId("")
+                  }}
+                  disabled={parentsLoading}
+                >
+                  <option value="new">Novo responsável</option>
+                  <option value="existing">Responsável existente</option>
+                </select>
+              </FormField>
+            ) : (
+              <div className={`${styles.field} ${styles.span2}`}>
+                <p className={styles.help}>Nenhum responsável ativo encontrado. Cadastre um novo responsável abaixo.</p>
+                {!parentsLoading ? (
+                  <button className="btn btn-outline" type="button" onClick={() => void refetchParents()}>
+                    Recarregar responsáveis
+                  </button>
                 ) : null}
               </div>
+            )}
 
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="cpf">
-                  CPF
-                </label>
-                <Input
-                  id="cpf"
-                  placeholder="000.000.000-00"
-                  {...registerWithMask("cpf", "999.999.999-99")}
-                />
-                {errors.cpf?.message ? <p className={styles.error}>{errors.cpf.message}</p> : null}
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="contact">
-                  Contato
-                </label>
-                <Input
-                  id="contact"
-                  placeholder="(11) 99999-9999"
-                  {...registerWithMask("contact", ["(99) 9999-9999", "(99) 99999-9999"])}
-                />
-                {errors.contact?.message ? <p className={styles.error}>{errors.contact.message}</p> : null}
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="email">
-                  Email
-                </label>
-                <Input id="email" type="email" placeholder="exemplo@dominio.com" {...register("email")} />
-                {errors.email?.message ? <p className={styles.error}>{errors.email.message}</p> : null}
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="school">
-                  Escola
-                </label>
-                <Input id="school" placeholder="Ex: Escola Estadual X" {...register("school")} />
-                {errors.school?.message ? <p className={styles.error}>{errors.school.message}</p> : null}
-              </div>
-
-            </div>
-
-            <div className={styles.divider} />
-            <div className={styles.sectionTitle}>Endereço</div>
-            <div className={styles.formGrid}>
-              <div className={styles.field + " " + styles.span2}>
-                <label className={styles.label} htmlFor="address.street">
-                  Rua
-                </label>
-                <Input id="address.street" placeholder="Ex: Rua das Flores" {...register("address.street")} />
-                {errors.address?.street?.message ? (
-                  <p className={styles.error}>{errors.address.street.message}</p>
-                ) : null}
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="address.number">
-                  Número
-                </label>
-                <Input id="address.number" placeholder="Ex: 123" {...register("address.number")} />
-                {errors.address?.number?.message ? (
-                  <p className={styles.error}>{errors.address.number.message}</p>
-                ) : null}
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="address.complement">
-                  Complemento (opcional)
-                </label>
-                <Input id="address.complement" placeholder="Apto, bloco, etc" {...register("address.complement")} />
-                {errors.address?.complement?.message ? (
-                  <p className={styles.error}>{errors.address.complement.message}</p>
-                ) : null}
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="address.district">
-                  Bairro
-                </label>
-                <Input id="address.district" placeholder="Ex: Centro" {...register("address.district")} />
-                {errors.address?.district?.message ? (
-                  <p className={styles.error}>{errors.address.district.message}</p>
-                ) : null}
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="address.city">
-                  Cidade
-                </label>
-                <Input id="address.city" placeholder="Ex: São Paulo" {...register("address.city")} />
-                {errors.address?.city?.message ? (
-                  <p className={styles.error}>{errors.address.city.message}</p>
-                ) : null}
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="address.state">
-                  Estado
-                </label>
-                <Input id="address.state" placeholder="Ex: SP" {...register("address.state")} />
-                {errors.address?.state?.message ? (
-                  <p className={styles.error}>{errors.address.state.message}</p>
-                ) : null}
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="address.zip">
-                  CEP
-                </label>
-                <Input
-                  id="address.zip"
-                  placeholder="00000-000"
-                  {...registerWithMask("address.zip", "99999-999")}
-                />
-                {errors.address?.zip?.message ? (
-                  <p className={styles.error}>{errors.address.zip.message}</p>
-                ) : null}
-              </div>
-            </div>
-
-            <div className={styles.divider} />
-            <div className={styles.sectionTitle}>Responsável</div>
-            {parentsError ? (
-              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-                {parentsError}
-              </div>
-            ) : null}
-
-            <div className={styles.formGrid}>
-              {parents.length > 0 ? (
-                <div className={styles.field + " " + styles.span2}>
-                  <label className={styles.label} htmlFor="parentMode">
-                    Tipo de responsável
-                  </label>
-                  <select
-                    id="parentMode"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
-                    value={parentMode}
-                    onChange={(e) => setParentMode(e.target.value as "existing" | "new")}
-                    disabled={parentsLoading}
-                  >
-                    <option value="new">Novo responsável</option>
-                    <option value="existing">Responsável existente</option>
-                  </select>
-                  {parentsLoading ? <InlineLoading message="Carregando lista..." /> : null}
-                </div>
-              ) : (
-                <div className={styles.field + " " + styles.span2}>
-                  <p className={styles.help}>
-                    Nenhum responsável ativo encontrado. Cadastre um novo responsável abaixo.
-                  </p>
-                  {!parentsLoading ? (
-                    <Button type="button" variant="outline" onClick={loadParents}>
-                      Recarregar responsáveis
-                    </Button>
-                  ) : null}
-                </div>
-              )}
-
-              {parentMode === "existing" && parents.length > 0 ? (
-                <div className={styles.field + " " + styles.span2}>
-                  <label className={styles.label} htmlFor="parentId">
-                    Responsável
-                  </label>
-                  <select
-                    id="parentId"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    {...parentIdField}
-                    onChange={(e) => {
-                      parentIdField.onChange(e)
-                      setValue("parentId", e.target.value, { shouldValidate: true })
-                    }}
-                    defaultValue=""
-                    disabled={parentsLoading}
-                  >
-                    <option value="" disabled>
-                      Selecione um responsável
+            {effectiveParentMode === "existing" && parents.length > 0 ? (
+              <FormField
+                className={`${styles.field} ${styles.span2}`}
+                label="Responsável"
+                htmlFor="parentId"
+                hint={selectedParentName ? `Selecionado: ${selectedParentName}` : undefined}
+              >
+                <select
+                  id="parentId"
+                  className="app-select"
+                  value={selectedParentId}
+                  onChange={(event) => setSelectedParentId(event.target.value)}
+                  disabled={parentsLoading}
+                >
+                  <option value="" disabled>
+                    Selecione um responsável
+                  </option>
+                  {parents.map((parent) => (
+                    <option key={parent.id} value={parent.id}>
+                      {parent.name}
                     </option>
-                    {parents.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-                  {selectedParentName ? (
-                    <p className={styles.help}>Selecionado: {selectedParentName}</p>
-                  ) : null}
-                  {errors.parentId?.message ? <p className={styles.error}>{errors.parentId.message}</p> : null}
-                </div>
-              ) : null}
-
-              {parentMode === "new" ? (
-                <>
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="parent.name">
-                      Nome do responsável
-                    </label>
-                    <Input id="parent.name" placeholder="Ex: Ana Souza" {...register("parent.name")} />
-                    {errors.parent?.name?.message ? (
-                      <p className={styles.error}>{errors.parent.name.message}</p>
-                    ) : null}
-                  </div>
-
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="parent.email">
-                      E-mail do responsável
-                    </label>
-                    <Input
-                      id="parent.email"
-                      type="email"
-                      placeholder="exemplo@dominio.com"
-                      {...register("parent.email")}
-                    />
-                    {errors.parent?.email?.message ? (
-                      <p className={styles.error}>{errors.parent.email.message}</p>
-                    ) : null}
-                  </div>
-
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="parent.contact">
-                      Contato do responsável
-                    </label>
-                    <Input
-                      id="parent.contact"
-                      placeholder="(11) 99999-9999"
-                      {...registerWithMask("parent.contact", ["(99) 9999-9999", "(99) 99999-9999"])}
-                    />
-                    {errors.parent?.contact?.message ? (
-                      <p className={styles.error}>{errors.parent.contact.message}</p>
-                    ) : null}
-                  </div>
-
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="parent.cpf">
-                      CPF do responsável
-                    </label>
-                    <Input
-                      id="parent.cpf"
-                      placeholder="000.000.000-00"
-                      {...registerWithMask("parent.cpf", "999.999.999-99")}
-                    />
-                    {errors.parent?.cpf?.message ? (
-                      <p className={styles.error}>{errors.parent.cpf.message}</p>
-                    ) : null}
-                  </div>
-                </>
-              ) : null}
-            </div>
-
-            {submitError ? (
-              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-                {submitError}
-              </div>
+                  ))}
+                </select>
+              </FormField>
             ) : null}
 
-            <div className={styles.actions}>
-              <Button asChild type="button" variant="outline">
-                <Link to="/students">Cancelar</Link>
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Salvando..." : "Criar aluno"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+            {effectiveParentMode === "new" ? (
+              <>
+                <FormField
+                  className={styles.field}
+                  label="Nome do responsável"
+                  htmlFor="parent.name"
+                  error={errors.parent?.name?.message}
+                >
+                  <input className="app-input" id="parent.name" placeholder="Ex: Ana Souza" {...register("parent.name")} />
+                </FormField>
+
+                <FormField
+                  className={styles.field}
+                  label="E-mail do responsável"
+                  htmlFor="parent.email"
+                  error={errors.parent?.email?.message}
+                >
+                  <input
+                    className="app-input"
+                    id="parent.email"
+                    type="email"
+                    placeholder="exemplo@dominio.com"
+                    {...register("parent.email")}
+                  />
+                </FormField>
+
+                <FormField
+                  className={styles.field}
+                  label="Contato do responsável"
+                  htmlFor="parent.contact"
+                  error={errors.parent?.contact?.message}
+                >
+                  <input
+                    className="app-input"
+                    id="parent.contact"
+                    placeholder="(11) 99999-9999"
+                    {...registerWithMask("parent.contact", ["(99) 9999-9999", "(99) 99999-9999"])}
+                  />
+                </FormField>
+
+                <FormField
+                  className={styles.field}
+                  label="CPF do responsável"
+                  htmlFor="parent.cpf"
+                  error={errors.parent?.cpf?.message}
+                >
+                  <input
+                    className="app-input"
+                    id="parent.cpf"
+                    placeholder="000.000.000-00"
+                    {...registerWithMask("parent.cpf", "999.999.999-99")}
+                  />
+                </FormField>
+              </>
+            ) : null}
+          </div>
+
+          {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
+
+          <div className={styles.actions}>
+            <Link className="btn btn-outline" to="/students">
+              Cancelar
+            </Link>
+            <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Salvando..." : "Criar aluno"}
+            </button>
+          </div>
+        </form>
+      </SectionCard>
     </div>
   )
 }

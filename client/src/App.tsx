@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { MainLayout } from "@/components/layout/MainLayout"
-import { LoadingState } from "@/components/ui/loading-state"
+import { PageLoading } from "@/components/ui/page-loading"
 
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage").then((module) => ({ default: module.DashboardPage })))
 const StudentsPage = lazy(() => import("@/features/students/StudentsPage").then((module) => ({ default: module.StudentsPage })))
@@ -17,7 +17,7 @@ const EventCreatePage = lazy(() => import("@/features/events/EventCreatePage").t
 function App() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<LoadingState message="Carregando tela..." />}>
+      <Suspense fallback={<PageLoading message="Carregando tela..." />}>
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<DashboardPage />} />

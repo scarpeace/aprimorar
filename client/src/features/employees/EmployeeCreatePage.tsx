@@ -1,25 +1,27 @@
-import { Link } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { Link, useNavigate } from "react-router-dom"
+import { useHookFormMask } from "use-mask-input"
+import { FormField } from "@/components/ui/form-field"
+import { PageHeader } from "@/components/ui/page-header"
+import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/employees/EmployeeCreatePage.module.css"
 import { dutyLabels } from "@/features/employees/dutyLabels"
-import { useForm } from "react-hook-form"
-import { useHookFormMask } from "use-mask-input"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { queryKeys } from "@/lib/query/queryKeys"
 import { createEmployeeSchema, type CreateEmployeeInput } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
-import { useState } from "react"
 
 export function EmployeeCreatePage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<CreateEmployeeInput>({
     resolver: zodResolver(createEmployeeSchema),
     defaultValues: {
@@ -27,132 +29,115 @@ export function EmployeeCreatePage() {
     },
   })
 
-  const onSubmit = async (data: CreateEmployeeInput) => {
-    try {
+  const createEmployeeMutation = useMutation({
+    mutationFn: (data: CreateEmployeeInput) => employeesApi.create(data),
+    onMutate: () => {
       setSubmitError(null)
-      const res = await employeesApi.create(data)
-      navigate(`/employees/${res.id}`)
-    } catch (error) {
+    },
+    onSuccess: async (createdEmployee) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+      ])
+
+      navigate(`/employees/${createdEmployee.id}`)
+    },
+    onError: (error) => {
       console.error("Falha ao criar colaborador:", error)
       setSubmitError(getFriendlyErrorMessage(error))
-    }
+    },
+  })
+
+  const onSubmit = (data: CreateEmployeeInput) => {
+    createEmployeeMutation.mutate(data)
   }
 
   const registerWithMask = useHookFormMask(register)
+  const isSubmitting = createEmployeeMutation.isPending
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Novo colaborador</h1>
-          <p className="text-sm text-gray-600">Crie um novo cadastro de colaborador.</p>
-        </div>
-        <Button asChild type="button" variant="outline">
-          <Link to="/employees">← Voltar para colaboradores</Link>
-        </Button>
-      </div>
+      <PageHeader
+        title="Novo colaborador"
+        description="Crie um novo cadastro de colaborador."
+        action={
+          <Link className="btn btn-outline" to="/employees">
+            Voltar para colaboradores
+          </Link>
+        }
+      />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Dados do colaborador</CardTitle>
-          <CardDescription>Preencha as informações abaixo para criar o cadastro.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form className={styles.form} onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-            <div className={styles.formGrid}>
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="name">
-                  Nome completo
-                </label>
-                <Input id="name" placeholder="Ex: Maria Silva" {...register("name")} />
-                {errors.name?.message ? <p className={styles.error}>{errors.name.message}</p> : null}
-              </div>
+      <SectionCard title="Dados do colaborador" description="Preencha as informações abaixo para criar o cadastro.">
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+          <div className={styles.formGrid}>
+            <FormField className={styles.field} label="Nome completo" htmlFor="name" error={errors.name?.message}>
+              <input className="app-input" id="name" placeholder="Ex: Maria Silva" {...register("name")} />
+            </FormField>
 
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="birthdate">
-                  Data de nascimento
-                </label>
-                <Input id="birthdate" type="date" {...register("birthdate")} />
-                {errors.birthdate?.message ? (
-                  <p className={styles.error}>{errors.birthdate.message}</p>
-                ) : null}
-              </div>
+            <FormField className={styles.field} label="Data de nascimento" htmlFor="birthdate" error={errors.birthdate?.message}>
+              <input className="app-input" id="birthdate" type="date" {...register("birthdate")} />
+            </FormField>
 
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="email">
-                  Email
-                </label>
-                <Input id="email" type="email" placeholder="exemplo@dominio.com" {...register("email")} />
-                {errors.email?.message ? <p className={styles.error}>{errors.email.message}</p> : null}
-              </div>
+            <FormField className={styles.field} label="Email" htmlFor="email" error={errors.email?.message}>
+              <input
+                className="app-input"
+                id="email"
+                type="email"
+                placeholder="exemplo@dominio.com"
+                {...register("email")}
+              />
+            </FormField>
 
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="contact">
-                  Contato
-                </label>
-                <Input
-                  id="contact"
-                  placeholder="(11) 99999-9999"
-                  {...registerWithMask("contact", ["(99) 9999-9999", "(99) 99999-9999"])}
-                />
-                {errors.contact?.message ? <p className={styles.error}>{errors.contact.message}</p> : null}
-              </div>
+            <FormField className={styles.field} label="Contato" htmlFor="contact" error={errors.contact?.message}>
+              <input
+                className="app-input"
+                id="contact"
+                placeholder="(11) 99999-9999"
+                {...registerWithMask("contact", ["(99) 9999-9999", "(99) 99999-9999"])}
+              />
+            </FormField>
 
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="cpf">
-                  CPF
-                </label>
-                <Input
-                  id="cpf"
-                  placeholder="000.000.000-00"
-                  {...registerWithMask("cpf", "999.999.999-99")}
-                />
-                {errors.cpf?.message ? <p className={styles.error}>{errors.cpf.message}</p> : null}
-              </div>
+            <FormField className={styles.field} label="CPF" htmlFor="cpf" error={errors.cpf?.message}>
+              <input
+                className="app-input"
+                id="cpf"
+                placeholder="000.000.000-00"
+                {...registerWithMask("cpf", "999.999.999-99")}
+              />
+            </FormField>
 
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="pix">
-                  Chave PIX
-                </label>
-                <Input id="pix" placeholder="cpf/email/telefone/chave aleatoria" {...register("pix")} />
-                {errors.pix?.message ? <p className={styles.error}>{errors.pix.message}</p> : null}
-              </div>
+            <FormField className={styles.field} label="Chave PIX" htmlFor="pix" error={errors.pix?.message}>
+              <input
+                className="app-input"
+                id="pix"
+                placeholder="cpf/email/telefone/chave aleatoria"
+                {...register("pix")}
+              />
+            </FormField>
 
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="duty">
-                  Função
-                </label>
-                <select
-                  id="duty"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  {...register("duty")}
-                >
-                  <option value="TEACHER">{dutyLabels.TEACHER}</option>
-                  <option value="ADM">{dutyLabels.ADM}</option>
-                  <option value="THERAPIST">{dutyLabels.THERAPIST}</option>
-                  <option value="MENTOR">{dutyLabels.MENTOR}</option>
-                </select>
-                {errors.duty?.message ? <p className={styles.error}>{errors.duty.message}</p> : null}
-              </div>
-            </div>
+            <FormField className={styles.field} label="Função" htmlFor="duty" error={errors.duty?.message}>
+              <select id="duty" className="app-select" {...register("duty")}>
+                <option value="TEACHER">{dutyLabels.TEACHER}</option>
+                <option value="ADM">{dutyLabels.ADM}</option>
+                <option value="THERAPIST">{dutyLabels.THERAPIST}</option>
+                <option value="MENTOR">{dutyLabels.MENTOR}</option>
+              </select>
+            </FormField>
+          </div>
 
-            {submitError ? (
-              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-                {submitError}
-              </div>
-            ) : null}
+          {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
 
-            <div className={styles.actions}>
-              <Button asChild type="button" variant="outline">
-                <Link to="/employees">Cancelar</Link>
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Salvando..." : "Criar colaborador"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+          <div className={styles.actions}>
+            <Link className="btn btn-outline" to="/employees">
+              Cancelar
+            </Link>
+            <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Salvando..." : "Criar colaborador"}
+            </button>
+          </div>
+        </form>
+      </SectionCard>
     </div>
   )
 }

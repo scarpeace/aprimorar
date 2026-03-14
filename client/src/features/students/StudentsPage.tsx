@@ -1,129 +1,126 @@
-import { useCallback, useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
 import { Link } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { EmptyState } from "@/components/ui/empty-state"
-import { ErrorState } from "@/components/ui/error-state"
-import { LoadingState } from "@/components/ui/loading-state"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import type { StudentResponse } from "@/lib/schemas"
-import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
+import { EmptyCard } from "@/components/ui/empty-card"
+import { ErrorCard } from "@/components/ui/error-card"
+import { ListSearchInput } from "@/components/ui/list-search-input"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageLoading } from "@/components/ui/page-loading"
 import styles from "@/features/students/StudentsPage.module.css"
-import type { PageResponse } from "@/lib/schemas/page-response"
-import { Badge } from "@/components/ui/badge"
+import { queryKeys } from "@/lib/query/queryKeys"
+import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
+
+const STUDENTS_LIST_PARAMS = { page: 0, size: 20, sortBy: "name" }
 
 export function StudentsPage() {
-  const [studentList, setStudentList] = useState<StudentResponse[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [hideArchived, setHideArchived] = useState(false)
 
-  const loadStudents = useCallback(async () => {
-    try {
-      setError(null)
-      setLoading(true)
-      const studentsRes : PageResponse<StudentResponse> = await studentsApi.list(0, 20, "name")
-      setStudentList(studentsRes.content)
-    } catch (error) {
-      console.error("Falha ao carregar alunos:", error)
-      setError(getFriendlyErrorMessage(error))
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const {
+    data: studentList = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.students.list(STUDENTS_LIST_PARAMS),
+    queryFn: async () => {
+      const studentsRes = await studentsApi.list(
+        STUDENTS_LIST_PARAMS.page,
+        STUDENTS_LIST_PARAMS.size,
+        STUDENTS_LIST_PARAMS.sortBy
+      )
 
-  useEffect(() => {
-    loadStudents()
-  }, [loadStudents])
+      return studentsRes.content
+    },
+  })
 
-  if (loading) {
-    return <LoadingState message="Carregando alunos..." />
+  const visibleStudents = hideArchived ? studentList.filter((student) => !student.archivedAt) : studentList
+
+  if (isLoading) {
+    return <PageLoading message="Carregando alunos..." />
   }
 
-  if (error) {
+  if (isError) {
     return (
       <div className={styles.page}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
-          <p className="text-sm text-gray-600">Gerencie cadastros e matrículas.</p>
-        </div>
-        <ErrorState
-          title="Não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadStudents}
-        />
+        <PageHeader title="Alunos" description="Gerencie cadastros e matrículas." />
+        <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
       </div>
     )
   }
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Alunos</h1>
-          <p className="text-sm text-gray-600">Gerencie cadastros e matrículas.</p>
-          <label className="mt-3 flex items-center gap-2 text-sm text-gray-700">
+      <PageHeader
+        action={
+          <Link className="btn btn-success" to="/students/new">
+            Novo aluno
+          </Link>
+        }
+        description="Gerencie cadastros e matrículas."
+        title="Alunos"
+      >
+        <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <ListSearchInput
+            placeholder="Buscar aluno por nome, email ou escola"
+            ariaLabel="Buscar aluno"
+          />
+          <label className="app-text-muted flex items-center gap-2 text-sm">
             <input
+              className="checkbox checkbox-sm"
               type="checkbox"
               checked={hideArchived}
-              onChange={(e) => setHideArchived(e.target.checked)}
+              onChange={(event) => setHideArchived(event.target.checked)}
             />
             Ocultar arquivados
           </label>
         </div>
-        <Button variant="success" asChild>
-          <Link to="/students/new">Novo aluno</Link>
-        </Button>
-      </div>
-      
-      <div className={styles.tableWrap}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Escola</TableHead>
-              <TableHead>Ações</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {studentList.map((student) => (
-              <TableRow key={student.id}>
-                <TableCell>{student.name}</TableCell>
-                <TableCell>{student.email}</TableCell>
-                <TableCell>{student.school}</TableCell>
-                <TableCell>
-                  <Button variant="default" asChild>
-                    <Link
-                      className="text-sm font-medium text-blue-600 hover:underline"
-                      to={`/students/${student.id}`}
-                    >
+      </PageHeader>
+
+      <div className="app-table-wrap">
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <thead className="bg-base-200">
+              <tr>
+                <th className="app-th">Nome</th>
+                <th className="app-th">Email</th>
+                <th className="app-th">Escola</th>
+                <th className="app-th">Ações</th>
+                <th className="app-th">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visibleStudents.map((student) => (
+                <tr key={student.id}>
+                  <td>{student.name}</td>
+                  <td>{student.email}</td>
+                  <td>{student.school}</td>
+                  <td>
+                    <Link className="btn btn-ghost btn-sm" to={`/students/${student.id}`}>
                       Detalhes
                     </Link>
-                    </Button>
-                </TableCell>
-                <TableCell>
-                  {student.archivedAt ? <Badge variant="warn">Arquivado</Badge> : <Badge variant="success">Ativo</Badge>}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                  </td>
+                  <td>
+                    <span className={`badge ${student.archivedAt ? "badge-warning" : "badge-success"}`}>
+                      {student.archivedAt ? "Arquivado" : "Ativo"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {studentList.length === 0 ? (
-        <EmptyState
+      {visibleStudents.length === 0 ? (
+        <EmptyCard
           title="Nenhum aluno cadastrado"
           description="Quando você cadastrar o primeiro aluno, ele aparecerá na tabela acima."
-          actionLabel="Novo aluno"
+          action={
+            <Link className="btn btn-secondary" to="/students/new">
+              Novo aluno
+            </Link>
+          }
         />
       ) : null}
     </div>

@@ -441,6 +441,12 @@ def ensure_scopes(apply_mode: bool) -> None:
     output = run_gh(["auth", "status"])
     scopes = parse_scopes_from_auth_status(output)
 
+    # In practice, `project` scope is sufficient for read/write project operations.
+    # Some gh outputs may not list `read:project` explicitly when `project` is present.
+    if "project" in scopes:
+        scopes = set(scopes)
+        scopes.add("read:project")
+
     required = {"repo", "read:project"}
     if apply_mode:
         required.add("project")
@@ -591,44 +597,10 @@ def ensure_assignees_assignable(repo: str, assignees: set[str]) -> None:
         raise SyncError("Assignees sem permissao no repositorio: " + ", ".join(invalid))
 
 
-PROJECT_QUERY = """
-query($owner: String!, $number: Int!) {
-  user(login: $owner) {
-    projectV2(number: $number) {
-      id
-      title
-      fields(first: 100) {
-        nodes {
-          __typename
-          ... on ProjectV2Field {
-            id
-            name
-          }
-          ... on ProjectV2SingleSelectField {
-            id
-            name
-            options {
-              id
-              name
-            }
-          }
-          ... on ProjectV2IterationField {
-            id
-            name
-            configuration {
-              iterations {
-                id
-                title
-                startDate
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  organization(login: $owner) {
-    projectV2(number: $number) {
+PROJECT_FIELDS_BY_ID_QUERY = """
+query($projectId: ID!) {
+  node(id: $projectId) {
+    ... on ProjectV2 {
       id
       title
       fields(first: 100) {
@@ -666,30 +638,29 @@ query($owner: String!, $number: Int!) {
 
 
 def get_project_metadata(owner: str, number: int) -> tuple[str, dict[str, FieldMeta]]:
-    payload = run_graphql(PROJECT_QUERY, {"owner": owner, "number": number})
+    project_view = run_gh_json(
+        ["project", "view", str(number), "--owner", owner, "--format", "json"]
+    )
+    if not isinstance(project_view, dict):
+        raise SyncError(
+            f"Nao foi possivel carregar project owner={owner} number={number}"
+        )
+
+    project_id = project_view.get("id")
+    if not isinstance(project_id, str) or not project_id.strip():
+        raise SyncError(
+            f"Projeto invalido: owner={owner}, number={number} (sem id retornado)"
+        )
+
+    payload = run_graphql(PROJECT_FIELDS_BY_ID_QUERY, {"projectId": project_id})
     data = payload.get("data")
     if not isinstance(data, dict):
         raise SyncError("Resposta GraphQL sem campo data")
 
-    project = None
-    user_block = data.get("user")
-    if isinstance(user_block, dict):
-        project = user_block.get("projectV2")
-
-    if project is None:
-        org_block = data.get("organization")
-        if isinstance(org_block, dict):
-            project = org_block.get("projectV2")
+    project = data.get("node")
 
     if not isinstance(project, dict):
-        raise SyncError(
-            f"Projeto nao encontrado: owner={owner}, number={number}."
-            " Verifique owner/number e escopo read:project"
-        )
-
-    project_id = project.get("id")
-    if not isinstance(project_id, str) or not project_id.strip():
-        raise SyncError("Project ID invalido retornado pela API")
+        raise SyncError("Projeto nao encontrado ao consultar campos por ID")
 
     fields_block = project.get("fields", {})
     nodes = []

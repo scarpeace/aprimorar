@@ -1,122 +1,129 @@
-import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
 import { Link } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { EmptyState } from "@/components/ui/empty-state"
-import { ErrorState } from "@/components/ui/error-state"
-import { LoadingState } from "@/components/ui/loading-state"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { EmptyCard } from "@/components/ui/empty-card"
+import { ErrorCard } from "@/components/ui/error-card"
+import { ListSearchInput } from "@/components/ui/list-search-input"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageLoading } from "@/components/ui/page-loading"
 import { dutyLabels } from "@/features/employees/dutyLabels"
-import type { EmployeeResponse } from "@/lib/schemas"
-import { employeesApi, getFriendlyErrorMessage, } from "@/services/api"
 import styles from "@/features/employees/EmployeesPage.module.css"
-import type { PageResponse } from "@/lib/schemas/page-response"
-import { Badge } from "@/components/ui/badge"
+import { queryKeys } from "@/lib/query/queryKeys"
+import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
+
+const EMPLOYEES_LIST_PARAMS = { page: 0, size: 20, sortBy: "name" }
 
 export function EmployeesPage() {
-  const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [hideArchived, setHideArchived] = useState(false)
 
-  const loadEmployees = async () => {
-    try {
-      setError(null)
-      setLoading(true)
-      const employeesRes : PageResponse<EmployeeResponse> = await employeesApi.list()
-      setEmployeeList(employeesRes.content)
-    } catch (error) {
-      console.error("Falha ao carregar colaboradores:", error)
-      setError(getFriendlyErrorMessage(error))
-    } finally {
-      setLoading(false)
-    }
+  const {
+    data: employeeList = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.employees.list(EMPLOYEES_LIST_PARAMS),
+    queryFn: async () => {
+      const employeesRes = await employeesApi.list(
+        EMPLOYEES_LIST_PARAMS.page,
+        EMPLOYEES_LIST_PARAMS.size,
+        EMPLOYEES_LIST_PARAMS.sortBy
+      )
+
+      return employeesRes.content
+    },
+  })
+
+  const visibleEmployees = hideArchived ? employeeList.filter((employee) => !employee.archivedAt) : employeeList
+
+  if (isLoading) {
+    return <PageLoading message="Carregando colaboradores..." />
   }
 
-  useEffect(() => {
-    loadEmployees()
-  }, [])
-
-  if (loading) {
-    return <LoadingState message="Carregando colaboradores..." />
-  }
-
-  if (error) {
+  if (isError) {
     return (
       <div className={styles.page}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
-          <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
-        </div>
-        <ErrorState
-          title="Não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadEmployees}
-        />
+        <PageHeader title="Colaboradores" description="Gerencie professores e equipe." />
+        <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
       </div>
     )
   }
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
-          <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
+      <PageHeader
+        action={
+          <Link className="btn btn-success" to="/employees/new">
+            Novo colaborador
+          </Link>
+        }
+        description="Gerencie professores e equipe."
+        title="Colaboradores"
+      >
+        <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <ListSearchInput
+            placeholder="Buscar colaborador por nome, função ou email"
+            ariaLabel="Buscar colaborador"
+          />
+          <label className="app-text-muted flex items-center gap-2 text-sm">
+            <input
+              className="checkbox checkbox-sm"
+              type="checkbox"
+              checked={hideArchived}
+              onChange={(event) => setHideArchived(event.target.checked)}
+            />
+            Ocultar arquivados
+          </label>
         </div>
-        <Button asChild variant="success">
-          <Link to="/employees/new">Novo colaborador</Link>
-        </Button>
-      </div>
+      </PageHeader>
 
-      <div className={styles.tableWrap}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Função</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>PIX</TableHead>
-              <TableHead>Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {employeeList.map((employee) => (
-              <TableRow key={employee.id}>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{dutyLabels[employee.duty]}</TableCell>
-                <TableCell>{employee.email}</TableCell>
-                <TableCell>{employee.pix}</TableCell>
-                <TableCell>
-                   <Button variant="default" asChild>
-                    <Link
-                      className="text-sm font-medium text-blue-600 hover:underline"
-                      to={`/employees/${employee.id}`}
-                    >
+      <div className="app-table-wrap">
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <thead className="bg-base-200">
+              <tr>
+                <th className="app-th">Nome</th>
+                <th className="app-th">Função</th>
+                <th className="app-th">Email</th>
+                <th className="app-th">PIX</th>
+                <th className="app-th">Ações</th>
+                <th className="app-th">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visibleEmployees.map((employee) => (
+                <tr key={employee.id}>
+                  <td>{employee.name}</td>
+                  <td>{dutyLabels[employee.duty]}</td>
+                  <td>{employee.email}</td>
+                  <td>{employee.pix}</td>
+                  <td>
+                    <Link className="btn btn-ghost btn-sm" to={`/employees/${employee.id}`}>
                       Detalhes
                     </Link>
-                    </Button>
-                </TableCell>
-                <TableCell>
-                  {employee.archivedAt ? <Badge variant="warn">Arquivado</Badge> : <Badge variant="success">Ativo</Badge>}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                  </td>
+                  <td>
+                    <span className={`badge ${employee.archivedAt ? "badge-warning" : "badge-success"}`}>
+                      {employee.archivedAt ? "Arquivado" : "Ativo"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {employeeList.length === 0 ? (
-        <EmptyState
+      {visibleEmployees.length === 0 ? (
+        <EmptyCard
           title="Nenhum colaborador cadastrado"
           description="Quando você cadastrar o primeiro colaborador, ele aparecerá na tabela acima."
-          actionLabel="Novo colaborador"
+          action={
+            <Link className="btn btn-secondary" to="/employees/new">
+              Novo colaborador
+            </Link>
+          }
         />
       ) : null}
     </div>
