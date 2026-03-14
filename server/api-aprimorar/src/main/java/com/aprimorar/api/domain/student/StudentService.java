@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.parent.Parent;
+import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.ParentRepository;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
@@ -66,8 +67,8 @@ public class StudentService {
     public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
 
         Student student = studentMapper.convertToEntity(studentRequestDto);
-
         StudentRules.validate(student);
+        student.setParent(resolveParentAssociation(student.getParent()));
         ensureStudentUniqueness(student);
         Student savedStudent = studentRepo.save(student);
 
@@ -131,6 +132,28 @@ public class StudentService {
         if (studentRepo.existsByEmail(student.getEmail())) {
             throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
         }
+    }
+
+    private Parent resolveParentAssociation(Parent requestedParent) {
+        if (requestedParent.getId() != null) {
+            return parentRepo.findById(requestedParent.getId())
+                    .orElseThrow(() -> new ParentNotFoundException("Responsável não encontrado no banco de dados"));
+        }
+
+        return parentRepo.findByCpf(requestedParent.getCpf())
+                .orElseGet(() -> {
+                    if (parentRepo.existsByEmail(requestedParent.getEmail())) {
+                        throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
+                    }
+
+                    Parent parentToPersist = new Parent();
+                    parentToPersist.setName(requestedParent.getName());
+                    parentToPersist.setCpf(requestedParent.getCpf());
+                    parentToPersist.setEmail(requestedParent.getEmail());
+                    parentToPersist.setContact(requestedParent.getContact());
+
+                    return parentRepo.save(parentToPersist);
+                });
     }
 
 }

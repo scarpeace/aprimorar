@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.Period;
 
+import com.aprimorar.api.domain.parent.Parent;
 import org.springframework.stereotype.Component;
 
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
@@ -31,7 +32,7 @@ public class StudentMapper {
         student.setContact(MapperUtils.normalizeContact(dto.contact()));
         student.setEmail(MapperUtils.normalizeEmail(dto.email()));
         student.setAddress(dto.address());
-        student.setParent(dto.parent());
+        student.setParent(normalizeParent(dto.parent()));
 
         return student;
 
@@ -59,5 +60,19 @@ public class StudentMapper {
     private Integer calculateAge(LocalDate birthdate) {
         LocalDate today = LocalDate.now(applicationClock);
         return Period.between(birthdate, today).getYears();
+    }
+
+    private Parent normalizeParent(Parent source) {
+        if (source == null) {
+            return null;
+        }
+
+        Parent parent = new Parent();
+        parent.setId(source.getId());
+        parent.setName(source.getName());
+        parent.setCpf(MapperUtils.normalizeCpf(source.getCpf()));
+        parent.setEmail(MapperUtils.normalizeEmail(source.getEmail()));
+        parent.setContact(MapperUtils.normalizeContact(source.getContact()));
+        return parent;
     }
 }
