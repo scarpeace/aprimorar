@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { ButtonLink } from "@/components/ui/button"
 import type { EventResponse } from "@/lib/schemas/event"
 import { eventContentLabels } from "@/lib/shared/enums"
 import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter"
@@ -40,9 +40,9 @@ export function EventsTable({ events, variant = "eventsPage" }: EventsTableProps
               {showPrice ? <td>{brl.format(event.price)}</td> : null}
               {showPayment ? <td>{brl.format(event.payment)}</td> : null}
               <td>
-                <Link className="btn btn-ghost btn-sm" to={`/events/${event.id}`}>
+                <ButtonLink size="sm" to={`/events/${event.id}`} variant="ghost">
                   Detalhes
-                </Link>
+                </ButtonLink>
               </td>
             </tr>
           ))}

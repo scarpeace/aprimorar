@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { Calendar } from "lucide-react"
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
+import { ButtonLink } from "@/components/ui/button"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { PageHeader } from "@/components/ui/page-header"
@@ -75,9 +76,9 @@ export function EventDetailPage() {
     <div className={styles.page}>
       <PageHeader
         action={
-          <Link className="btn btn-outline" to="/events">
+          <ButtonLink to="/events" variant="outline">
             Voltar para eventos
-          </Link>
+          </ButtonLink>
         }
         description="Veja e gerencie as informações do evento"
         leading={

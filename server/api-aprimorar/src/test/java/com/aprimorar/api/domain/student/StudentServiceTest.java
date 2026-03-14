@@ -99,6 +99,36 @@ class StudentServiceTest {
             verify(parentRepo, never()).save(detachedParent);
             verify(studentRepo).save(mappedStudent);
         }
+
+        @Test
+        @DisplayName("should update existing student and resolve existing parent association")
+        void shouldUpdateExistingStudentAndResolveExistingParentAssociation() {
+            StudentRequestDTO input = request(parent(PARENT_ID, "Ana Souza", "ana@email.com", "(11) 97777-6655", "123.456.789-01"));
+            Parent updatedParent = parent(PARENT_ID, "Ana Souza", "ana@email.com", "11977776655", "12345678901");
+            Parent existingParent = parent(PARENT_ID, "Ana Souza", "ana@email.com", "11977776655", "12345678901");
+            Student mappedStudent = student(updatedParent);
+            Student existingStudent = student(existingParent);
+            existingStudent.setId(STUDENT_ID);
+            existingStudent.setName("Aluno Antigo");
+            StudentResponseDTO expected = response(existingStudent);
+
+            when(studentMapper.convertToEntity(input)).thenReturn(mappedStudent);
+            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(existingStudent));
+            when(studentRepo.existsByCpfAndIdNot("12345678901", STUDENT_ID)).thenReturn(false);
+            when(studentRepo.existsByEmailAndIdNot("aluno@email.com", STUDENT_ID)).thenReturn(false);
+            when(parentRepo.findById(PARENT_ID)).thenReturn(Optional.of(existingParent));
+            when(studentMapper.convertToDto(existingStudent)).thenReturn(expected);
+
+            StudentResponseDTO actual = studentService.updateStudent(STUDENT_ID, input);
+
+            assertThat(actual).isEqualTo(expected);
+            assertThat(existingStudent.getName()).isEqualTo("Aluno Teste");
+            assertThat(existingStudent.getParent()).isEqualTo(existingParent);
+            verify(studentRepo).findById(STUDENT_ID);
+            verify(studentRepo).existsByCpfAndIdNot("12345678901", STUDENT_ID);
+            verify(studentRepo).existsByEmailAndIdNot("aluno@email.com", STUDENT_ID);
+            verify(studentRepo, never()).save(any(Student.class));
+        }
     }
 
     private static StudentRequestDTO request(Parent parent) {

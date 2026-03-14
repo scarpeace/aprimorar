@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { formatPhone, formatCpf, isValidCpf, isValidBrazilianPhone } from '../shared/formatter';
 
-export const createParentSchema = z.object({
+export const parentFormSchema = z.object({
   name: z.string().min(1, "Nome do responsável é obrigatório"),
   email: z.email("E-mail do responsável inválido").min(1, "Email é obrigatório"),
   contact: z.string()
@@ -12,6 +12,7 @@ export const createParentSchema = z.object({
     .refine(isValidCpf, "CPF Inválido, confira os números informados")
 })
 
+//TODO esse parent sumary é realmente necessário?
 export const parentSummarySchema = z.object({
   id: z.uuid(),
   name: z.string(),
@@ -30,4 +31,4 @@ export const parentResponseSchema = z.object({
 
 export type ParentSummary = z.infer<typeof parentSummarySchema>
 export type ParentResponse = z.infer<typeof parentResponseSchema>
-export type CreateParentInput = z.infer<typeof createParentSchema>
+export type ParentFormInput = z.infer<typeof parentFormSchema>

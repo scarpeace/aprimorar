@@ -2,13 +2,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
 import { useForm, useWatch } from "react-hook-form"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import { Button, ButtonLink } from "@/components/ui/button"
 import { FormField } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/events/EventCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
-import { createEventSchema, type CreateEventInput } from "@/lib/schemas"
+import { eventFormSchema, type EventFormInput } from "@/lib/schemas"
 import { eventContentLabels, eventContentValues } from "@/lib/shared/enums"
 import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
 
@@ -35,8 +36,8 @@ export function EventCreatePage() {
     control,
     setValue,
     formState: { errors },
-  } = useForm<CreateEventInput>({
-    resolver: zodResolver(createEventSchema),
+  } = useForm<EventFormInput>({
+    resolver: zodResolver(eventFormSchema),
   })
 
   const studentIdField = register("studentId")
@@ -68,7 +69,7 @@ export function EventCreatePage() {
   const selectedEmployeeName = employees.find((item) => item.id === selectedEmployeeId)?.name ?? ""
 
   const createEventMutation = useMutation({
-    mutationFn: (data: CreateEventInput) => eventsApi.create(data),
+    mutationFn: (data: EventFormInput) => eventsApi.create(data),
     onMutate: () => {
       setSubmitError(null)
     },
@@ -88,7 +89,7 @@ export function EventCreatePage() {
     },
   })
 
-  const onSubmit = (data: CreateEventInput) => {
+  const onSubmit = (data: EventFormInput) => {
     createEventMutation.mutate(data)
   }
 
@@ -100,9 +101,9 @@ export function EventCreatePage() {
         title="Novo evento"
         description="Crie um novo atendimento/aula."
         action={
-          <Link className="btn btn-outline" to="/events">
+          <ButtonLink to="/events" variant="outline">
             Voltar para eventos
-          </Link>
+          </ButtonLink>
         }
       />
 
@@ -115,9 +116,9 @@ export function EventCreatePage() {
         ) : optionsQuery.isError ? (
           <div className="space-y-3">
             <div className="alert alert-error text-sm">{getFriendlyErrorMessage(optionsQuery.error)}</div>
-            <button className="btn btn-primary" type="button" onClick={() => void optionsQuery.refetch()}>
+            <Button type="button" onClick={() => void optionsQuery.refetch()} variant="primary">
               Tentar novamente
-            </button>
+            </Button>
           </div>
         ) : (
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -249,12 +250,12 @@ export function EventCreatePage() {
             {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
 
             <div className={styles.actions}>
-              <Link className="btn btn-outline" to="/events">
+              <ButtonLink to="/events" variant="outline">
                 Cancelar
-              </Link>
-              <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+              </ButtonLink>
+              <Button type="submit" disabled={isSubmitting} variant="primary">
                 {isSubmitting ? "Salvando..." : "Criar evento"}
-              </button>
+              </Button>
             </div>
           </form>
         )}

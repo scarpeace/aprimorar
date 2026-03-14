@@ -19,6 +19,20 @@ import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 
+/**
+ * Centraliza as regras de negócio do aluno.
+ *
+ * <p>Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
+ * Também é esse service que garante que CPF e email não se repitam e que o aluno
+ * sempre fique associado a um responsável válido.
+ *
+ * <p>Quando o responsável vem no request, o service decide se ele já existe e deve
+ * ser reaproveitado ou se precisa ser persistido antes de associar ao aluno.
+ *
+ * @author scarpellini
+ * @version 1.0
+ * @since 2026-03-14
+ */
 @Service
 public class StudentService {
 
@@ -38,9 +52,7 @@ public class StudentService {
         this.studentMapper = studentMapper;
     }
 
-    /*
-      ------------------------ QUERY METHODS ------------------------
-     */
+    /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
     public Page<StudentResponseDTO> getStudents(Pageable pageable) {
@@ -59,9 +71,7 @@ public class StudentService {
         return studentMapper.convertToDto(student);
     }
 
-    /*
-      ------------------------ INSERT METHODS ------------------------
-     */
+    /* ----- Command Methods ----- */
 
     @Transactional
     public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
@@ -79,14 +89,23 @@ public class StudentService {
     @Transactional
     public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO request) {
 
-        Student student = studentMapper.convertToEntity(request);
+        Student updatedData = studentMapper.convertToEntity(request);
+        Student existingStudent = findStudentOrThrow(id);
 
-        findStudentOrThrow(id);
-        ensureParentExists(request.parent());
-        Student updatedStudent = studentRepo.save(student);
+        StudentRules.validate(updatedData);
+        ensureStudentUniquenessForUpdate(updatedData, id);
 
-        log.info("Aluno {} atualizado com sucesso.", updatedStudent.getName().toUpperCase());
-        return studentMapper.convertToDto(updatedStudent);
+        existingStudent.setName(updatedData.getName());
+        existingStudent.setBirthdate(updatedData.getBirthdate());
+        existingStudent.setCpf(updatedData.getCpf());
+        existingStudent.setSchool(updatedData.getSchool());
+        existingStudent.setContact(updatedData.getContact());
+        existingStudent.setEmail(updatedData.getEmail());
+        existingStudent.setAddress(updatedData.getAddress());
+        existingStudent.setParent(resolveParentAssociation(updatedData.getParent()));
+
+        log.info("Aluno {} atualizado com sucesso.", existingStudent.getName().toUpperCase());
+        return studentMapper.convertToDto(existingStudent);
     }
 
     @Transactional
@@ -103,25 +122,18 @@ public class StudentService {
         log.info("Aluno {} desarquivado com sucesso.", student.getName().toUpperCase());
     }
 
-
     @Transactional
     public void deleteStudent(UUID studentId) {
         Student student = findStudentOrThrow(studentId);
         studentRepo.delete(student);
         log.info("Aluno {} deletado com sucesso.", student.getName().toUpperCase());
     }
-    /*
-      ------------------------ HELPER METHODS ------------------------
-     */
+
+    /* ----- Helper Methods ----- */
 
     private Student findStudentOrThrow(UUID studentId) {
         return studentRepo.findById(studentId)
                 .orElseThrow(()-> new StudentNotFoundException("Aluno não encontrado no banco de dados"));
-    }
-
-    private void ensureParentExists(Parent parent) {
-            parentRepo.findByCpf(parent.getCpf())
-                .orElseThrow(() -> new ParentNotFoundException("Responsável com o CPF informado não existe no banco de dados"));
     }
 
     private void ensureStudentUniqueness(Student student) {
@@ -134,25 +146,29 @@ public class StudentService {
         }
     }
 
-    private Parent resolveParentAssociation(Parent requestedParent) {
-        if (requestedParent.getId() != null) {
-            return parentRepo.findById(requestedParent.getId())
+    private void ensureStudentUniquenessForUpdate(Student student, UUID studentId) {
+        if (studentRepo.existsByCpfAndIdNot(student.getCpf(), studentId)) {
+            throw new StudentAlreadyExistException("Aluno com o CPF informado já existe no banco de dados");
+        }
+
+        if (studentRepo.existsByEmailAndIdNot(student.getEmail(), studentId)) {
+            throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
+        }
+    }
+
+    private Parent resolveParentAssociation(Parent parent) {
+        if (parent.getId() != null) {
+            return parentRepo.findById(parent.getId())
                     .orElseThrow(() -> new ParentNotFoundException("Responsável não encontrado no banco de dados"));
         }
 
-        return parentRepo.findByCpf(requestedParent.getCpf())
+        return parentRepo.findByCpf(parent.getCpf())
                 .orElseGet(() -> {
-                    if (parentRepo.existsByEmail(requestedParent.getEmail())) {
+                    if (parentRepo.existsByEmail(parent.getEmail())) {
                         throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
                     }
 
-                    Parent parentToPersist = new Parent();
-                    parentToPersist.setName(requestedParent.getName());
-                    parentToPersist.setCpf(requestedParent.getCpf());
-                    parentToPersist.setEmail(requestedParent.getEmail());
-                    parentToPersist.setContact(requestedParent.getContact());
-
-                    return parentRepo.save(parentToPersist);
+                    return parentRepo.save(parent);
                 });
     }
 

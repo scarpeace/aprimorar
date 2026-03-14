@@ -1,16 +1,21 @@
 import {
+  studentApiSchema,
+  employeeApiSchema,
   employeeResponseSchema,
   eventResponseSchema,
   parentResponseSchema,
   studentResponseSchema,
 } from "@/lib/schemas"
 import type {
-  CreateEmployeeInput,
-  CreateEventInput,
-  CreateStudentInput,
+  ParentFormInput,
+  EmployeeFormInput,
+  EventFormInput,
+  StudentFormInput,
+  EmployeeApiResponse,
   EmployeeResponse,
   EventResponse,
   ParentResponse,
+  StudentApiResponse,
   StudentResponse,
 } from "@/lib/schemas"
 import { pageResponseSchema, type PageResponse } from "@/lib/schemas/page-response"
@@ -61,11 +66,15 @@ export const studentsApi = {
     const { data } = await api.get<StudentResponse>(`/v1/students/${id}`)
     return studentResponseSchema.parse(data)
   },
-  async create(input: CreateStudentInput): Promise<StudentResponse> {
+  async getByIdForEdit(id: string): Promise<StudentApiResponse> {
+    const { data } = await api.get<StudentApiResponse>(`/v1/students/${id}`)
+    return studentApiSchema.parse(data)
+  },
+  async create(input: StudentFormInput): Promise<StudentResponse> {
     const { data } = await api.post<StudentResponse>("/v1/students", input)
     return studentResponseSchema.parse(data)
   },
-  async update(id: string, input: CreateStudentInput): Promise<StudentResponse> {
+  async update(id: string, input: StudentFormInput): Promise<StudentResponse> {
     const { data } = await api.put<StudentResponse>(`/v1/students/${id}`, input)
     return studentResponseSchema.parse(data)
   },
@@ -82,11 +91,15 @@ export const employeesApi = {
     const { data } = await api.get<EmployeeResponse>(`/v1/employees/${id}`)
     return employeeResponseSchema.parse(data)
   },
-  async create(input: CreateEmployeeInput): Promise<EmployeeResponse> {
+  async getByIdForEdit(id: string): Promise<EmployeeApiResponse> {
+    const { data } = await api.get<EmployeeApiResponse>(`/v1/employees/${id}`)
+    return employeeApiSchema.parse(data)
+  },
+  async create(input: EmployeeFormInput): Promise<EmployeeResponse> {
     const { data } = await api.post<EmployeeResponse>("/v1/employees", input)
     return employeeResponseSchema.parse(data)
   },
-  async update(id: string, input: CreateEmployeeInput): Promise<EmployeeResponse> {
+  async update(id: string, input: EmployeeFormInput): Promise<EmployeeResponse> {
     const { data } = await api.put<EmployeeResponse>(`/v1/employees/${id}`, input)
     return employeeResponseSchema.parse(data)
   },
@@ -103,13 +116,13 @@ export const parentsApi = {
     const { data } = await api.get<ParentResponse>(`/v1/parents/${id}`)
     return parentResponseSchema.parse(data)
   },
-  async create(input: CreateEmployeeInput): Promise<ParentResponse> {
+  async create(input: ParentFormInput): Promise<ParentResponse> {
     const { data } = await api.post<ParentResponse>("/v1/parents", input)
     return parentResponseSchema.parse(data)
   },
-  async update(id: string, input: CreateEmployeeInput): Promise<ParentResponse> {
+  async update(id: string, input: ParentFormInput): Promise<ParentResponse> {
     const { data } = await api.put<ParentResponse>(`/v1/parents/${id}`, input)
-    return data
+    return parentResponseSchema.parse(data)
   },
   archive: (id: string) => api.patch(`/v1/parents/${id}/archive`),
   unarchive: (id: string) => api.patch(`/v1/parents/${id}/unarchive`),
@@ -134,12 +147,12 @@ export const eventsApi = {
     const { data } = await api.get<EventResponse>(`/v1/events/${id}`)
     return eventResponseSchema.parse(data)
   },
-  async create(input: CreateEventInput): Promise<EventResponse> {
+  async create(input: EventFormInput): Promise<EventResponse> {
     const { data } = await api.post<EventResponse>("/v1/events", input)
     return eventResponseSchema.parse(data)
   },
 
-  async update(id: string, input: CreateEventInput): Promise<EventResponse> {
+  async update(id: string, input: EventFormInput): Promise<EventResponse> {
     const { data } = await api.put<EventResponse>(`/v1/events/${id}`, input)
     return eventResponseSchema.parse(data)
   },

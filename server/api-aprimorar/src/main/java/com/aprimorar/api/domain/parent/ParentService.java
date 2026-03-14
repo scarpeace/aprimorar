@@ -15,8 +15,20 @@ import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 
-//TODO O MODELO É ESSE AQUI
-
+/**
+ * Centraliza as regras de negócio do responsável.
+ *
+ * <p>Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
+ * Também é esse service que garante que CPF e email não se repitam antes de salvar
+ * ou atualizar um responsável.
+ *
+ * <p>Quando um responsável é alterado, o service reaproveita a entidade já persistida,
+ * aplica as validações necessárias e devolve a resposta em formato DTO.
+ *
+ * @author scarpellini
+ * @version 1.0
+ * @since 2026-03-14
+ */
 @Service
 public class ParentService {
 
@@ -30,9 +42,7 @@ public class ParentService {
         this.parentMapper = parentMapper;
     }
 
-    /*
-      ------------------------ QUERY METHODS ------------------------
-     */
+    /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
     public Page<ParentResponseDTO> getParents(Pageable pageable) {
@@ -48,9 +58,7 @@ public class ParentService {
         return parentMapper.convertToDto(parent);
     }
 
-    /*
-      ------------------------ COMMAND METHODS ------------------------
-     */
+    /* ----- Command Methods ----- */
 
     @Transactional
     public ParentResponseDTO createParent(ParentRequestDTO request) {
@@ -109,9 +117,7 @@ public class ParentService {
         log.info("Responsável {} deletado com sucesso.", parent.getName().toUpperCase());
     }
 
-    /*
-      ------------------------ HELPER METHODS ------------------------
-     */
+    /* ----- Helper Methods ----- */
 
     private Parent findParentOrThrow(UUID parentId) {
         return parentRepo.findById(parentId)

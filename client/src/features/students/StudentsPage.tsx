@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
-import { Link } from "react-router-dom"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
+import { ButtonLink } from "@/components/ui/button"
 import styles from "@/features/students/StudentsPage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
@@ -69,19 +69,19 @@ export function StudentsPage() {
             />
             Ocultar arquivados
           </label>
-          <Link className="btn btn-success sm:ml-auto" to="/students/new">
+          <ButtonLink className="sm:ml-auto" to="/students/new" variant="success">
             Novo aluno
-          </Link>
+          </ButtonLink>
         </div>
       </PageHeader>
 
       <div className="app-table-wrap">
         <div className="overflow-x-auto">
-          <table className="table w-full">
-            <thead className="bg-base-200">
+          <table className="table table-zebra w-full">
+            <thead className="bg-base-200/90">
               <tr>
                 <th className="app-th">Nome</th>
-                <th className="app-th hidden lg:block">Email</th>
+                <th className="app-th hidden lg:table-cell">Email</th>
                 <th className="app-th">Escola</th>
                 <th className="app-th">Ações</th>
                 <th className="app-th">Status</th>
@@ -89,14 +89,14 @@ export function StudentsPage() {
             </thead>
             <tbody>
               {visibleStudents.map((student) => (
-                <tr key={student.id}>
+                <tr className="transition-colors hover:bg-base-200/70" key={student.id}>
                   <td>{student.name}</td>
-                  <td className="hidden lg:block">{student.email}</td>
+                  <td className="hidden lg:table-cell">{student.email}</td>
                   <td> {student.school}</td>
                   <td>
-                    <Link className="btn btn-ghost btn-sm" to={`/students/${student.id}`}>
+                    <ButtonLink size="sm" to={`/students/${student.id}`} variant="ghost">
                       Detalhes
-                    </Link>
+                    </ButtonLink>
                   </td>
                   <td>
                     <span className={`badge ${student.archivedAt ? "badge-warning" : "badge-success"}`}>
@@ -115,9 +115,9 @@ export function StudentsPage() {
           title="Nenhum aluno cadastrado"
           description="Quando você cadastrar o primeiro aluno, ele aparecerá na tabela acima."
           action={
-            <Link className="btn btn-secondary" to="/students/new">
+            <ButtonLink to="/students/new" variant="secondary">
               Novo aluno
-            </Link>
+            </ButtonLink>
           }
         />
       ) : null}

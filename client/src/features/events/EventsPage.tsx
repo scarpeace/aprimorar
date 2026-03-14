@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
-import { Link } from "react-router-dom"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
+import { ButtonLink } from "@/components/ui/button"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/events/EventsPage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
@@ -53,9 +53,9 @@ export function EventsPage() {
             placeholder="Buscar evento por aluno, colaborador ou conteúdo"
             ariaLabel="Buscar evento"
           />
-          <Link className="btn btn-success sm:ml-auto" to="/events/new">
+          <ButtonLink className="sm:ml-auto" to="/events/new" variant="success">
             Novo evento
-          </Link>
+          </ButtonLink>
         </div>
       </PageHeader>
 
@@ -68,9 +68,9 @@ export function EventsPage() {
           title="Nenhum evento cadastrado"
           description="Quando você cadastrar o primeiro evento, ele aparecerá na tabela acima."
           action={
-            <Link className="btn btn-secondary" to="/events/new">
+            <ButtonLink to="/events/new" variant="secondary">
               Novo evento
-            </Link>
+            </ButtonLink>
           }
         />
       ) : null}

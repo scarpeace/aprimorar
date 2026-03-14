@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
-import { Link } from "react-router-dom"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
+import { ButtonLink } from "@/components/ui/button"
 import { dutyLabels } from "@/features/employees/dutyLabels"
 import styles from "@/features/employees/EmployeesPage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
@@ -70,38 +70,38 @@ export function EmployeesPage() {
             />
             Ocultar arquivados
           </label>
-          <Link className="btn btn-success sm:ml-auto" to="/employees/new">
+          <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">
             Novo colaborador
-          </Link>
+          </ButtonLink>
         </div>
       </PageHeader>
 
       <div className="app-table-wrap">
         <div className="overflow-x-auto">
-          <table className="table w-full">
-            <thead className="bg-base-200">
+          <table className="table table-zebra w-full">
+            <thead className="bg-base-200/90">
               <tr>
                 <th className="app-th">Nome</th>
                 <th className="app-th">Função</th>
-                <th className="app-th">Email</th>
-                <th className="app-th">PIX</th>
+                <th className="app-th hidden md:table-cell">Email</th>
+                <th className="app-th hidden lg:table-cell">PIX</th>
                 <th className="app-th">Ações</th>
                 <th className="app-th">Status</th>
               </tr>
             </thead>
             <tbody>
               {visibleEmployees.map((employee) => (
-                <tr key={employee.id}>
+                <tr className="transition-colors hover:bg-base-200/70" key={employee.id}>
                   <td>{employee.name}</td>
                   <td>{dutyLabels[employee.duty]}</td>
-                  <td>{employee.email}</td>
-                  <td>{employee.pix}</td>
+                  <td className="hidden whitespace-normal break-all md:table-cell">{employee.email}</td>
+                  <td className="hidden whitespace-normal break-all lg:table-cell">{employee.pix}</td>
                   <td>
-                    <Link className="btn btn-ghost btn-sm" to={`/employees/${employee.id}`}>
+                    <ButtonLink size="sm" to={`/employees/${employee.id}`} variant="ghost">
                       Detalhes
-                    </Link>
+                    </ButtonLink>
                   </td>
-                  <td>
+                  <td className="text-center">
                     <span className={`badge ${employee.archivedAt ? "badge-warning" : "badge-success"}`}>
                       {employee.archivedAt ? "Arquivado" : "Ativo"}
                     </span>
@@ -118,9 +118,9 @@ export function EmployeesPage() {
           title="Nenhum colaborador cadastrado"
           description="Quando você cadastrar o primeiro colaborador, ele aparecerá na tabela acima."
           action={
-            <Link className="btn btn-secondary" to="/employees/new">
+            <ButtonLink to="/employees/new" variant="secondary">
               Novo colaborador
-            </Link>
+            </ButtonLink>
           }
         />
       ) : null}

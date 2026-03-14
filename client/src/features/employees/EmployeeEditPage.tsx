@@ -1,12 +1,14 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
 import { Button, ButtonLink } from "@/components/ui/button"
+import { ErrorCard } from "@/components/ui/error-card"
 import { FormField } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/ui/page-header"
+import { PageLoading } from "@/components/ui/page-loading"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/employees/EmployeeCreatePage.module.css"
 import { dutyLabels } from "@/features/employees/dutyLabels"
@@ -14,7 +16,21 @@ import { queryKeys } from "@/lib/query/queryKeys"
 import { employeeFormSchema, type EmployeeFormInput } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
 
-export function EmployeeCreatePage() {
+function createEmptyEmployeeValues(): EmployeeFormInput {
+  return {
+    name: "",
+    birthdate: "",
+    pix: "",
+    contact: "",
+    cpf: "",
+    email: "",
+    duty: "TEACHER",
+  }
+}
+
+export function EmployeeEditPage() {
+  const { id } = useParams<{ id: string }>()
+  const employeeId = id ?? ""
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -22,54 +38,95 @@ export function EmployeeCreatePage() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<EmployeeFormInput>({
     resolver: zodResolver(employeeFormSchema),
-    defaultValues: {
-      duty: "TEACHER",
-    },
+    defaultValues: createEmptyEmployeeValues(),
   })
 
-  const createEmployeeMutation = useMutation({
-    mutationFn: (data: EmployeeFormInput) => employeesApi.create(data),
+  const registerWithMask = useHookFormMask(register)
+
+  const employeeQuery = useQuery({
+    queryKey: queryKeys.employees.detail(employeeId),
+    queryFn: () => employeesApi.getByIdForEdit(employeeId),
+    enabled: Boolean(id),
+  })
+
+  useEffect(() => {
+    if (!employeeQuery.data) {
+      return
+    }
+
+    reset({
+      name: employeeQuery.data.name,
+      birthdate: employeeQuery.data.birthdate.slice(0, 10),
+      pix: employeeQuery.data.pix,
+      contact: employeeQuery.data.contact,
+      cpf: employeeQuery.data.cpf,
+      email: employeeQuery.data.email,
+      duty: employeeQuery.data.duty,
+    })
+  }, [employeeQuery.data, reset])
+
+  const updateEmployeeMutation = useMutation({
+    mutationFn: (data: EmployeeFormInput) => employeesApi.update(employeeId, data),
     onMutate: () => {
       setSubmitError(null)
     },
-    onSuccess: async (createdEmployee) => {
+    onSuccess: async (updatedEmployee) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.employees.detail(employeeId) }),
         queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
         queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
       ])
 
-      navigate(`/employees/${createdEmployee.id}`)
+      navigate(`/employees/${updatedEmployee.id}`)
     },
     onError: (error) => {
-      console.error("Falha ao criar colaborador:", error)
+      console.error("Falha ao atualizar colaborador:", error)
       setSubmitError(getFriendlyErrorMessage(error))
     },
   })
 
   const onSubmit = (data: EmployeeFormInput) => {
-    createEmployeeMutation.mutate(data)
+    updateEmployeeMutation.mutate(data)
   }
 
-  const registerWithMask = useHookFormMask(register)
-  const isSubmitting = createEmployeeMutation.isPending
+  if (!id) {
+    return (
+      <div className={styles.page}>
+        <ErrorCard description="ID do colaborador não informado." />
+      </div>
+    )
+  }
+
+  if (employeeQuery.isLoading) {
+    return <PageLoading message="Carregando colaborador para edição..." />
+  }
+
+  if (employeeQuery.isError || !employeeQuery.data) {
+    return (
+      <div className={styles.page}>
+        <ErrorCard description={getFriendlyErrorMessage(employeeQuery.error)} onAction={employeeQuery.refetch} />
+      </div>
+    )
+  }
 
   return (
     <div className={styles.page}>
       <PageHeader
-        title="Novo colaborador"
-        description="Crie um novo cadastro de colaborador."
+        title="Editar colaborador"
+        description="Atualize os dados do colaborador."
         action={
-          <ButtonLink to="/employees" variant="outline">
-            Voltar para colaboradores
+          <ButtonLink to={`/employees/${employeeId}`} variant="outline">
+            Voltar para detalhes
           </ButtonLink>
         }
       />
 
-      <SectionCard title="Dados do colaborador" description="Preencha as informações abaixo para criar o cadastro.">
+      <SectionCard title="Dados do colaborador" description="Atualize as informações de cadastro e contato.">
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)} autoComplete="off">
           <div className={styles.formGrid}>
             <FormField className={styles.field} label="Nome completo" htmlFor="name" error={errors.name?.message}>
@@ -130,11 +187,11 @@ export function EmployeeCreatePage() {
           {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
 
           <div className={styles.actions}>
-            <ButtonLink to="/employees" variant="outline">
+            <ButtonLink to={`/employees/${employeeId}`} variant="outline">
               Cancelar
             </ButtonLink>
-            <Button type="submit" disabled={isSubmitting} variant="primary">
-              {isSubmitting ? "Salvando..." : "Criar colaborador"}
+            <Button type="submit" disabled={updateEmployeeMutation.isPending} variant="primary">
+              {updateEmployeeMutation.isPending ? "Salvando..." : "Salvar alterações"}
             </Button>
           </div>
         </form>

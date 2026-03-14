@@ -2,20 +2,21 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
+import { Button, ButtonLink } from "@/components/ui/button"
 import { FormField } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/students/StudentCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
-import { createStudentSchema, type CreateStudentInput } from "@/lib/schemas"
+import { studentFormSchema, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
 
 const PARENTS_LIST_PARAMS = { page: 0, size: 100, sortBy: "name" }
 const EMPTY_PARENTS: Awaited<ReturnType<typeof parentsApi.list>>["content"] = []
-const STUDENT_CREATE_DEFAULT_VALUES: CreateStudentInput = {
+const STUDENT_CREATE_DEFAULT_VALUES: StudentFormInput = {
   name: "Marina Oliveira",
   birthdate: "2013-08-21",
   cpf: "123.456.789-10",
@@ -46,15 +47,14 @@ export function StudentCreatePage() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [parentMode, setParentMode] = useState<"existing" | "new">("new")
   const [selectedParentId, setSelectedParentId] = useState("")
-  const [isParentReadOnly, setIsParentReadOnly] = useState(true)
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<CreateStudentInput>({
-    resolver: zodResolver(createStudentSchema),
+  } = useForm<StudentFormInput>({
+    resolver: zodResolver(studentFormSchema),
     mode:"onBlur",
     shouldUnregister: true,
     defaultValues: STUDENT_CREATE_DEFAULT_VALUES,
@@ -99,13 +99,9 @@ export function StudentCreatePage() {
     setValue("parent.cpf", selectedParent.cpf, { shouldDirty: true, shouldValidate: true })
   }, [effectiveParentMode, parents, selectedParentId, setValue])
 
-  useEffect(() => {
-    setIsParentReadOnly(effectiveParentMode === "existing")
-  }, [effectiveParentMode])
-
   const createStudentMutation = useMutation({
-    mutationFn: async (data: CreateStudentInput) => {
-      const payload: CreateStudentInput =
+    mutationFn: async (data: StudentFormInput) => {
+      const payload: StudentFormInput =
         effectiveParentMode === "existing" && selectedParentId
           ? {
               ...data,
@@ -134,7 +130,7 @@ export function StudentCreatePage() {
     },
   })
 
-  const onSubmit = (data: CreateStudentInput) => {
+  const onSubmit = (data: StudentFormInput) => {
     createStudentMutation.mutate(data)
   }
 
@@ -146,9 +142,9 @@ export function StudentCreatePage() {
         title="Novo aluno"
         description="Crie um novo cadastro de aluno."
         action={
-          <Link className="btn btn-outline" to="/students">
+          <ButtonLink to="/students" variant="outline">
             Voltar para alunos
-          </Link>
+          </ButtonLink>
         }
       />
 
@@ -279,21 +275,7 @@ export function StudentCreatePage() {
           </div>
         </SectionCard>
 
-        <SectionCard
-          title="Responsável"
-          description="Selecione um responsável existente ou cadastre um novo."
-          headerAction={
-            effectiveParentMode === "existing" ? (
-              <button
-                className="btn btn-outline btn-sm"
-                type="button"
-                onClick={() => setIsParentReadOnly((current) => !current)}
-              >
-                {isParentReadOnly ? "Desbloquear edição" : "Bloquear edição"}
-              </button>
-            ) : null
-          }
-        >
+        <SectionCard title="Responsável" description="Selecione um responsável existente ou cadastre um novo.">
           {parentsError ? <div className="alert alert-error text-sm">{parentsError}</div> : null}
 
           <div className={styles.formGrid}>
@@ -330,9 +312,9 @@ export function StudentCreatePage() {
               <div className={`${styles.field} ${styles.span2}`}>
                 <p className={styles.help}>Nenhum responsável ativo encontrado. Cadastre um novo responsável abaixo.</p>
                 {!parentsLoading ? (
-                  <button className="btn btn-outline" type="button" onClick={() => void refetchParents()}>
+                  <Button type="button" onClick={() => void refetchParents()} variant="outline">
                     Recarregar responsáveis
-                  </button>
+                  </Button>
                 ) : null}
               </div>
             )}
@@ -375,7 +357,7 @@ export function StudentCreatePage() {
                     className="app-input"
                     id="parent.name"
                     placeholder="Ex: Ana Souza"
-                    readOnly={isParentReadOnly}
+                    readOnly={effectiveParentMode === "existing"}
                     {...register("parent.name")}
                   />
                 </FormField>
@@ -391,7 +373,7 @@ export function StudentCreatePage() {
                     id="parent.email"
                     type="email"
                     placeholder="exemplo@dominio.com"
-                    readOnly={isParentReadOnly}
+                    readOnly={effectiveParentMode === "existing"}
                     {...register("parent.email")}
                   />
                 </FormField>
@@ -406,7 +388,7 @@ export function StudentCreatePage() {
                     className="app-input"
                     id="parent.contact"
                     placeholder="(11) 99999-9999"
-                    readOnly={isParentReadOnly}
+                    readOnly={effectiveParentMode === "existing"}
                     {...registerWithMask("parent.contact", ["(99) 9999-9999", "(99) 99999-9999"])}
                   />
                 </FormField>
@@ -421,7 +403,7 @@ export function StudentCreatePage() {
                     className="app-input"
                     id="parent.cpf"
                     placeholder="000.000.000-00"
-                    readOnly={isParentReadOnly}
+                    readOnly={effectiveParentMode === "existing"}
                     {...registerWithMask("parent.cpf", "999.999.999-99")}
                   />
                 </FormField>
@@ -433,12 +415,12 @@ export function StudentCreatePage() {
         {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
 
         <div className={styles.actions}>
-          <Link className="btn btn-outline" to="/students">
+          <ButtonLink to="/students" variant="outline">
             Cancelar
-          </Link>
-          <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+          </ButtonLink>
+          <Button type="submit" disabled={isSubmitting} variant="primary">
             {isSubmitting ? "Salvando..." : "Criar aluno"}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

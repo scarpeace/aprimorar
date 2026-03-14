@@ -3,7 +3,7 @@ import { eventContentValues } from "@/lib/shared/enums"
 import { formatDateShortYear } from "../shared/formatter"
 
 //TODO Evento não vai precisar de título, ele vai ser gerado automaticamente no backend. Remover num futuro próximo do front
-export const createEventSchema = z.object({
+export const eventFormSchema = z.object({
   title: z.string().min(1, "Título é obrigatório").max(100, "Título deve ter no máximo 100 caracteres"),
   description: z.string().max(500, "Descrição deve ter no máximo 500 caracteres").optional(),
   startDate: z.string().min(1, "Data/hora de início é obrigatório"),
@@ -21,7 +21,7 @@ export const createEventSchema = z.object({
   path: ["endDate"],
 })
 
-export const eventResponseSchema = z.object({
+export const eventApiSchema = z.object({
   id: z.uuid(),
   title: z.string(),
   description: z.string().nullable(),
@@ -34,9 +34,15 @@ export const eventResponseSchema = z.object({
   studentName: z.string(),
   employeeId: z.uuid(),
   employeeName: z.string(),
-  createdAt: z.coerce.date().transform(formatDateShortYear),
+  createdAt: z.coerce.date(),
   updatedAt: z.coerce.date().nullable(),
 })
 
-export type CreateEventInput = z.infer<typeof createEventSchema>
+export const eventResponseSchema = eventApiSchema.transform((event) => ({
+  ...event,
+  createdAt: formatDateShortYear(event.createdAt),
+}))
+
+export type EventFormInput = z.infer<typeof eventFormSchema>
+export type EventApiResponse = z.infer<typeof eventApiSchema>
 export type EventResponse = z.infer<typeof eventResponseSchema>

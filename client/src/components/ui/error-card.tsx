@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button"
+
 type ErrorCardProps = {
   description: string
   title?: string
@@ -19,15 +21,16 @@ export function ErrorCard({
 
         {onAction ? (
           <div className="card-actions justify-start">
-            <button
-              className="btn btn-outline btn-error btn-sm"
+            <Button
               onClick={() => {
                 void onAction()
               }}
               type="button"
+              variant="outlineError"
+              size="sm"
             >
               {actionLabel}
-            </button>
+            </Button>
           </div>
         ) : null}
       </div>

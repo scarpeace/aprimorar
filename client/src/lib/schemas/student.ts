@@ -1,9 +1,9 @@
 import { z } from "zod"
-import { createParentSchema, parentResponseSchema } from "./parent"
-import { addressResponseSchema, createAddressSchema } from "./address"
+import { parentFormSchema, parentResponseSchema } from "./parent"
+import { addressResponseSchema, addressFormSchema } from "./address"
 import { formatCpf, formatDateShortYear, formatPhone } from "../shared/formatter"
 
-export const createStudentSchema = z.object({
+export const studentFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   birthdate: z.string().refine((date) => {
     const d = new Date(date)
@@ -18,25 +18,32 @@ export const createStudentSchema = z.object({
       "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"
   ),
   email: z.email("E-mail inválido"),
-  address: createAddressSchema,
-  parent: createParentSchema.optional(),
+  address: addressFormSchema,
+  parent: parentFormSchema.optional(),
 })
 
-export const studentResponseSchema = z.object({
+export const studentApiSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   contact: z.string().transform(formatPhone),
   email: z.email(),
   cpf: z.string().transform(formatCpf),
-  birthdate: z.coerce.date().transform(formatDateShortYear),
+  birthdate: z.string(),
   age: z.number().int().nonnegative(),
   school: z.string(),
   archivedAt: z.coerce.date().nullable(),
   address: addressResponseSchema,
   parent: parentResponseSchema,
-  createdAt: z.coerce.date().transform(formatDateShortYear),
+  createdAt: z.coerce.date(),
   updatedAt: z.coerce.date().nullable(),
 })
 
-export type CreateStudentInput = z.infer<typeof createStudentSchema>
+export const studentResponseSchema = studentApiSchema.transform((student) => ({
+  ...student,
+  birthdate: formatDateShortYear(student.birthdate),
+  createdAt: formatDateShortYear(student.createdAt),
+}))
+
+export type StudentFormInput = z.infer<typeof studentFormSchema>
+export type StudentApiResponse = z.infer<typeof studentApiSchema>
 export type StudentResponse = z.infer<typeof studentResponseSchema>

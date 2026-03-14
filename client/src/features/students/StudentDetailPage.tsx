@@ -1,7 +1,8 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { GraduationCap } from "lucide-react"
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
+import { Button, ButtonLink } from "@/components/ui/button"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { PageHeader } from "@/components/ui/page-header"
@@ -18,11 +19,24 @@ const STUDENT_EVENTS_PARAMS = { page: 0, size: 100, sortBy: "startDate" }
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
   const studentId = id ?? ""
+  const queryClient = useQueryClient()
 
   const studentQuery = useQuery({
     queryKey: queryKeys.students.detail(studentId),
     queryFn: () => studentsApi.getById(studentId),
     enabled: Boolean(id),
+  })
+
+  const archiveStudentMutation = useMutation({
+    mutationFn: () =>
+      studentQuery.data?.archivedAt ? studentsApi.unarchive(studentId) : studentsApi.archive(studentId),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.students.detail(studentId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+      ])
+    },
   })
 
   const studentEventsQuery = useQuery({
@@ -99,9 +113,9 @@ export function StudentDetailPage() {
     <div className={styles.page}>
       <PageHeader
         action={
-          <Link className="btn btn-outline" to="/students">
+          <ButtonLink to="/students" variant="outline">
             Voltar para alunos
-          </Link>
+          </ButtonLink>
         }
         description="Veja e gerencie as informações do aluno"
         leading={
@@ -113,7 +127,31 @@ export function StudentDetailPage() {
         titleClassName="text-2xl font-bold app-text"
       />
 
-      <SectionCard title="Resumo do aluno" description="Dados de aluno, responsável e endereço em um único resumo.">
+      <SectionCard
+        title="Resumo do aluno"
+        description="Dados de aluno, responsável e endereço em um único resumo."
+        headerAction={
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <ButtonLink size="sm" to={`/students/${student.id}/edit`} variant="primary">
+              Editar Aluno
+            </ButtonLink>
+            <Button
+              type="button"
+              onClick={() => archiveStudentMutation.mutate()}
+              disabled={archiveStudentMutation.isPending}
+              variant={student.archivedAt ? "warning" : "error"}
+              size="sm"
+            >
+              {student.archivedAt ? "Ativar Aluno" : "Arquivar Aluno"}
+            </Button>
+          </div>
+        }
+      >
+        {archiveStudentMutation.isError ? (
+          <div className="alert alert-error text-sm">
+            {getFriendlyErrorMessage(archiveStudentMutation.error)}
+          </div>
+        ) : null}
         <div className={styles.summaryGrid}>
           {summaryItems.map((item) => (
             <SummaryItem key={item.label} label={item.label} value={item.value} />

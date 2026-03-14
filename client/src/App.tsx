@@ -7,9 +7,11 @@ const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage").th
 const StudentsPage = lazy(() => import("@/features/students/StudentsPage").then((module) => ({ default: module.StudentsPage })))
 const StudentDetailPage = lazy(() => import("@/features/students/StudentDetailPage").then((module) => ({ default: module.StudentDetailPage })))
 const StudentCreatePage = lazy(() => import("@/features/students/StudentCreatePage").then((module) => ({ default: module.StudentCreatePage })))
+const StudentEditPage = lazy(() => import("@/features/students/StudentEditPage").then((module) => ({ default: module.StudentEditPage })))
 const EmployeesPage = lazy(() => import("@/features/employees/EmployeesPage").then((module) => ({ default: module.EmployeesPage })))
 const EmployeeDetailPage = lazy(() => import("@/features/employees/EmployeeDetailPage").then((module) => ({ default: module.EmployeeDetailPage })))
 const EmployeeCreatePage = lazy(() => import("@/features/employees/EmployeeCreatePage").then((module) => ({ default: module.EmployeeCreatePage })))
+const EmployeeEditPage = lazy(() => import("@/features/employees/EmployeeEditPage").then((module) => ({ default: module.EmployeeEditPage })))
 const EventsPage = lazy(() => import("@/features/events/EventsPage").then((module) => ({ default: module.EventsPage })))
 const EventDetailPage = lazy(() => import("@/features/events/EventDetailPage").then((module) => ({ default: module.EventDetailPage })))
 const EventCreatePage = lazy(() => import("@/features/events/EventCreatePage").then((module) => ({ default: module.EventCreatePage })))
@@ -23,9 +25,11 @@ function App() {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/students" element={<StudentsPage />} />
             <Route path="/students/new" element={<StudentCreatePage />} />
+            <Route path="/students/:id/edit" element={<StudentEditPage />} />
             <Route path="/students/:id" element={<StudentDetailPage />} />
             <Route path="/employees" element={<EmployeesPage />} />
             <Route path="/employees/new" element={<EmployeeCreatePage />} />
+            <Route path="/employees/:id/edit" element={<EmployeeEditPage />} />
             <Route path="/employees/:id" element={<EmployeeDetailPage />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/new" element={<EventCreatePage />} />

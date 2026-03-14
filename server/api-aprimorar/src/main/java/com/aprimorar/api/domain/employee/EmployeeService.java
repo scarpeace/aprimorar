@@ -15,6 +15,20 @@ import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 
+/**
+ * Centraliza as regras de negócio do colaborador.
+ *
+ * <p>Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
+ * Também é esse service que garante que CPF e email não se repitam antes de salvar
+ * ou atualizar um colaborador.
+ *
+ * <p>Quando um colaborador é alterado, o service aplica as validações do domínio,
+ * resolve conflitos de unicidade e devolve a resposta em formato DTO.
+ *
+ * @author scarpellini
+ * @version 1.0
+ * @since 2026-03-14
+ */
 @Service
 public class EmployeeService {
 
@@ -28,9 +42,7 @@ public class EmployeeService {
         this.employeeMapper = employeeMapper;
     }
 
-    /*
-      ------------------------ QUERY METHODS ------------------------
-     */
+    /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
     public Page<EmployeeResponseDTO> getEmployees(Pageable pageable) {
@@ -48,9 +60,7 @@ public class EmployeeService {
         return employeeMapper.convertToDto(employee);
     }
 
-    /*
-      ------------------------ INSERT METHODS ------------------------
-     */
+    /* ----- Command Methods ----- */
 
     @Transactional
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
@@ -101,9 +111,7 @@ public class EmployeeService {
         log.info("Colaborador {} desarquivado com sucesso.", employee.getName().toUpperCase());
     }
 
-    /*
-      ------------------------ HELPER METHODS ------------------------
-     */
+    /* ----- Helper Methods ----- */
 
     private Employee findEmployeeOrThrow(UUID employeeId) {
         return employeeRepo.findById(employeeId)

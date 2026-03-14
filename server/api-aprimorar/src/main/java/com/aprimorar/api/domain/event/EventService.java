@@ -21,6 +21,20 @@ import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.StudentRepository;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 
+/**
+ * Centraliza as regras de negócio do evento.
+ *
+ * <p>Aqui ficam a criação, atualização, consultas e remoção de eventos.
+ * Também é esse service que garante que aluno e colaborador existam e que não
+ * haja conflito de agenda antes de persistir um evento.
+ *
+ * <p>Quando um evento é criado ou atualizado, o service valida os participantes,
+ * verifica disponibilidade no intervalo informado e devolve a resposta em formato DTO.
+ *
+ * @author scarpellini
+ * @version 1.0
+ * @since 2026-03-14
+ */
 @Service
 public class EventService {
 
@@ -38,9 +52,7 @@ public class EventService {
         this.eventMapper = eventMapper;
     }
 
-    /*
-      ------------------------ QUERY METHODS ------------------------
-     */
+    /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> getEvents(Pageable pageable) {
@@ -81,9 +93,7 @@ public class EventService {
         return eventPage.map(eventMapper::convertToDto);
     }
 
-    /*
-          ------------------------ INSERT METHODS ------------------------
-     */
+    /* ----- Command Methods ----- */
 
     @Transactional
     public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
@@ -133,9 +143,7 @@ public class EventService {
         log.info("Evento {} deletado com sucesso.", foundEvent.getTitle().toUpperCase());
     }
 
-    /*
-      ------------------------ HELPER METHODS ------------------------
-     */
+    /* ----- Helper Methods ----- */
 
     private Event findEventOrThrow(UUID eventId) {
         return eventRepo.findById(eventId).orElseThrow(EventNotFoundException::new);
@@ -178,7 +186,6 @@ public class EventService {
     }
 
 }
-
 
 
 
