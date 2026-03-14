@@ -20,10 +20,10 @@ public record EventRequestDTO(
         String description,
 
         @NotNull(message = "Data/hora de início do evento é obrigatória")
-        LocalDateTime StartDate,
+        LocalDateTime startDate,
 
         @NotNull(message = "Data/hora de fim do evento é obrigatória")
-        LocalDateTime endDateTime,
+        LocalDateTime endDate,
 
         @NotNull(message = "Preço é obrigatório")
         @PositiveOrZero(message = "Preço deve ser maior ou igual a 0")

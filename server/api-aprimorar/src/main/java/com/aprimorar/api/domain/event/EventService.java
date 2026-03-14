@@ -95,7 +95,7 @@ public class EventService {
         validateParticipantAvailability(
                 event.getStudent(),
                 event.getEmployee(),
-                event.getStartDateTime(),
+                event.getStartDate(),
                 event.getEndDateTime()
         );
 
@@ -115,7 +115,7 @@ public class EventService {
         validateParticipantAvailability(
                 event.getStudent(),
                 event.getEmployee(),
-                event.getStartDateTime(),
+                event.getStartDate(),
                 event.getEndDateTime()
         );
         EventRules.validate(event);
@@ -144,17 +144,17 @@ public class EventService {
     private void validateParticipantAvailability(
             Student student,
             Employee employee,
-            LocalDateTime startDateTime,
-            LocalDateTime endDateTime
+            LocalDateTime startDate,
+            LocalDateTime endDate
     ) {
-        boolean studentConflict = eventRepo.studentHasConflictingEvent(student.getId(), startDateTime, endDateTime);
+        boolean studentConflict = eventRepo.studentHasConflictingEvent(student.getId(), startDate, endDate);
         if (studentConflict) {
             throw new EventScheduleConflictException(
                     "O estudante informado já possui evento no intervalo"
             );
         }
 
-        boolean employeeConflict = eventRepo.employeeHasConflictingEvent(employee.getId(), startDateTime, endDateTime);
+        boolean employeeConflict = eventRepo.employeeHasConflictingEvent(employee.getId(), startDate, endDate);
         if (employeeConflict) {
             throw new EventScheduleConflictException(
                     "O colaborador informado já possui evento no intervalo"

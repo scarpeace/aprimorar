@@ -14,8 +14,8 @@ public class EventMapper {
         Event event = new Event();
         event.setTitle(request.title());
         event.setDescription(request.description());
-        event.setStartDateTime(request.startDateTime());
-        event.setEndDateTime(request.endDateTime());
+        event.setStartDate(request.startDate());
+        event.setEndDateTime(request.endDate());
         event.setPrice(request.price());
         event.setPayment(request.payment());
         event.setContent(request.content());
@@ -30,7 +30,7 @@ public class EventMapper {
                 event.getTitle(),
                 event.getDescription(),
                 event.getContent().name(),
-                event.getStartDateTime(),
+                event.getStartDate(),
                 event.getEndDateTime(),
                 event.getPrice(),
                 event.getPayment(),

@@ -75,6 +75,13 @@ Single-test commands (backend):
 - Single test method: `./mvnw -Dtest=ApiAprimorarApplicationTests#contextLoads test`
 - Replace class and method names with the real target under `src/test/java`.
 
+### Planning automation (`ops/`)
+- Validate sprint contract: `python3 ops/sprint.py validate --file sprint.md`
+- Dry-run sync (no writes): `python3 ops/sprint.py sync --file sprint.md --dry-run`
+- Apply sync to GitHub: `python3 ops/sprint.py sync --file sprint.md --apply`
+- Requires `gh` auth scopes: `repo`, `read:project`, `project`
+- If scope is missing: `gh auth refresh -s repo -s read:project -s project`
+
 ## Verification expectations
 - Prefer the narrowest command that proves the change.
 - Frontend UI/schema updates: run `npm run lint` and `npm run build`.

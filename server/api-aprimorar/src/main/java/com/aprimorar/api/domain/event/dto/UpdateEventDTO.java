@@ -21,10 +21,10 @@ public record UpdateEventDTO(
         String description,
         @NotNull(message = "Data/hora de início do evento é obrigatória")
         @FutureOrPresent(message = "Data/hora de início do evento deve ser no presente ou futuro")
-        LocalDateTime startDateTime,
+        LocalDateTime startDate,
         @NotNull(message = "Data/hora de fim do evento é obrigatória")
         @FutureOrPresent(message = "Data/hora de fim do evento deve ser no presente ou futuro")
-        LocalDateTime endDateTime,
+        LocalDateTime endDate,
         @NotNull(message = "Preço é obrigatório")
         @DecimalMin(value = "0.0", message = "Preço deve ser maior ou igual a 0")
         BigDecimal price,
@@ -49,9 +49,9 @@ public record UpdateEventDTO(
 
     @AssertTrue(message = "Data/hora de fim deve ser após a data/hora de início")
     public boolean isEndAfterStart() {
-        if (startDateTime == null || endDateTime == null) {
+        if (startDate == null || endDate == null) {
             return true;
         }
-        return endDateTime.isAfter(startDateTime);
+        return endDate.isAfter(startDate);
     }
 }

@@ -14,14 +14,14 @@ public class EventRules {
         validateRequiredFields(event, event.getStudent(), event.getEmployee());
         validatePriceAndPayment(event.getPrice(), event.getPayment());
         validateParticipants(event.getStudent(), event.getEmployee());
-        validateDates(event.getStartDateTime(), event.getEndDateTime());
+        validateDates(event.getStartDate(), event.getEndDateTime());
     }
 
     private static void validateRequiredFields(Event event, Student student, Employee employee) {
         if (event.getTitle() == null || event.getTitle().isBlank()) {
             throw new InvalidEventException("Título do evento é obrigatório");
         }
-        if (event.getStartDateTime() == null) {
+        if (event.getStartDate() == null) {
             throw new InvalidEventException("Data de início do evento é obrigatório");
         }
         if (event.getEndDateTime() == null) {
@@ -62,11 +62,11 @@ public class EventRules {
         }
     }
 
-    private static void validateDates(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        if (endDateTime.isBefore(LocalDateTime.now())) {
+    private static void validateDates(LocalDateTime startDate, LocalDateTime endDate) {
+        if (endDate.isBefore(LocalDateTime.now())) {
             throw new InvalidEventException("Data de fim do evento nao pode estar no passado");
         }
-        if (endDateTime.isBefore(startDateTime)) {
+        if (endDate.isBefore(startDate)) {
             throw new InvalidEventException("Data de fim do evento nao pode ser anterior a data de inicio");
         }
     }

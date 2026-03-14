@@ -25,10 +25,10 @@ public class Event extends BaseEntity {
     private String description;
 
     @Column(name = "start_date_time", nullable = false)
-    private LocalDateTime startDateTime;
+    private LocalDateTime startDate;
 
     @Column(name = "end_date_time", nullable = false)
-    private LocalDateTime endDateTime;
+    private LocalDateTime endDate;
 
     @Column(name = "price", precision = 19, scale = 2, nullable = false)
     private BigDecimal price;
@@ -87,20 +87,20 @@ public class Event extends BaseEntity {
         this.description = description;
     }
 
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
-        this.startDateTime = startDateTime;
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
     public LocalDateTime getEndDateTime() {
-        return endDateTime;
+        return endDate;
     }
 
-    public void setEndDateTime(LocalDateTime endDateTime) {
-        this.endDateTime = endDateTime;
+    public void setEndDateTime(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 
     public BigDecimal getPrice() {

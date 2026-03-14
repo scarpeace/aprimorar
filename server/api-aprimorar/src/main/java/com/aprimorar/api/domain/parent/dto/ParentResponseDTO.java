@@ -11,11 +11,8 @@ public record ParentResponseDTO(
         String email,
         String contact,
         String cpf,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant archivedAt,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant createdAt,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant updatedAt
 ) {
 }

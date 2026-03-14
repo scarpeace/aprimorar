@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 public record EventCommand(
         String title,
         String description,
-        LocalDateTime startDateTime,
-        LocalDateTime endDateTime,
+        LocalDateTime StartDate,
+        LocalDateTime endDate,
         BigDecimal price,
         BigDecimal payment,
         EventContent content

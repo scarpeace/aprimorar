@@ -42,9 +42,9 @@ public class StudentMapper {
         return new StudentResponseDTO(
                 entity.getId(),
                 entity.getName(),
-                MapperUtils.formatContact(entity.getContact()),
+                entity.getContact(),
                 entity.getEmail(),
-                MapperUtils.formatCpf(entity.getCpf()),
+                entity.getCpf(),
                 entity.getBirthdate(),
                 entity.getSchool(),
                 calculateAge(entity.getBirthdate()),
