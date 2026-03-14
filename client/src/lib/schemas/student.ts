@@ -1,26 +1,24 @@
 import { z } from "zod"
 import { createParentSchema, parentResponseSchema } from "./parent"
-import { addressResponseSchema } from "./address"
+import { addressResponseSchema, createAddressSchema } from "./address"
 import { formatCpf, formatDateShortYear, formatPhone } from "../shared/formatter"
 
-
-
 export const createStudentSchema = z.object({
-  name: z.string().min(1, "Nome é obrigatório").max(200, "Nome pode ter somente até 200 caracteres"),
+  name: z.string().min(1, "Nome é obrigatório"),
   birthdate: z.string().refine((date) => {
     const d = new Date(date)
     return d < new Date()
   }, "Data de nascimento deve estar no passado"),
   cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF deve estar no formato XXX.XXX.XXX-XX"),
-  school: z.string().min(1, "Escola é obrigatória").max(200, "Escola pode ter somente até 200 caracteres"),
+  school: z.string().min(1, "Escola é obrigatória"),
   contact: z
     .string()
     .regex(
       /^\(\d{2}\)\s?\d{4,5}-\d{4}$/,
       "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"
-    ),
-  email: z.email("E-mail inválido").max(254, "E-mail pode ter somente até 254 caracteres"),
-  address: createParentSchema,
+  ),
+  email: z.email("E-mail inválido"),
+  address: createAddressSchema,
   parent: createParentSchema.optional(),
 })
 

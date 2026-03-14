@@ -8,7 +8,7 @@ export const createEmployeeSchema = z.object({
     const d = new Date(date)
     return d < new Date()
   }, "Data de nascimento deve estar no passado"),
-  pix: z.string().min(1, "Chave PIX é obrigatória").max(100, "Chave PIX pode ter somente até 100 caracteres"),
+  pix: z.string().min(1, "Chave PIX é obrigatória"),
   contact: z
     .string()
     .regex(
@@ -16,7 +16,7 @@ export const createEmployeeSchema = z.object({
       "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"
     ),
   cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF deve estar no formato XXX.XXX.XXX-XX"),
-  email: z.email("E-mail inválido").max(254, "E-mail pode ter somente até 254 caracteres"),
+  email: z.email("E-mail inválido"),
   duty: z.enum(dutyValues),
 })
 

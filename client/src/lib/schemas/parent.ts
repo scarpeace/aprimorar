@@ -2,8 +2,8 @@ import { z } from "zod"
 import { formatPhone, formatCpf, isValidCpf, isValidBrazilianPhone } from '../shared/formatter';
 
 export const createParentSchema = z.object({
-  name: z.string().min(1, "Nome do responsável é obrigatório").max(200, "Nome do responsável pode ter somente até 200 caracteres"),
-  email: z.email("E-mail do responsável inválido").min(1, "Email é obrigatório").max(254, "Email pode ter somente até 254 caracteres"),
+  name: z.string().min(1, "Nome do responsável é obrigatório"),
+  email: z.email("E-mail do responsável inválido").min(1, "Email é obrigatório"),
   contact: z.string()
     .min(1, "Contato é obrigatório")
     .refine(isValidBrazilianPhone, "Número de telefone inválido, confira o número informado"),
