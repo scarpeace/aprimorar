@@ -1,17 +1,15 @@
 import { z } from "zod"
+import { formatPhone, formatCpf, isValidCpf, isValidBrazilianPhone } from '../shared/formatter';
 
-export const parentSchema = z.object({
-  name: z.string().min(1, "Nome do responsável é obrigatório"),
-  email: z.email("E-mail do responsável inválido"),
-  contact: z
-    .string()
-    .regex(
-      /^\(\d{2}\)\s?\d{4,5}-\d{4}$/,
-      "Contato do responsável deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"
-    ),
-  cpf: z
-    .string()
-    .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF do responsável deve estar no formato XXX.XXX.XXX-XX"),
+export const createParentSchema = z.object({
+  name: z.string().min(1, "Nome do responsável é obrigatório").max(200, "Nome do responsável pode ter somente até 200 caracteres"),
+  email: z.email("E-mail do responsável inválido").min(1, "Email é obrigatório").max(254, "Email pode ter somente até 254 caracteres"),
+  contact: z.string()
+    .min(1, "Contato é obrigatório")
+    .refine(isValidBrazilianPhone, "Número de telefone inválido, confira o número informado"),
+  cpf: z.string()
+    .min(1, "CPF é obrigatório")
+    .refine(isValidCpf, "CPF Inválido, confira os números informados")
 })
 
 export const parentSummarySchema = z.object({
@@ -23,12 +21,13 @@ export const parentResponseSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   email: z.string(),
-  contact: z.string(),
-  cpf: z.string(),
-  archivedAt: z.string().nullable(),
-  createdAt: z.string(),
-  updatedAt: z.string().nullable(),
+  contact: z.string().transform(formatPhone),
+  cpf: z.string().transform(formatCpf),
+  archivedAt: z.coerce.date().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date().nullable(),
 })
 
 export type ParentSummary = z.infer<typeof parentSummarySchema>
 export type ParentResponse = z.infer<typeof parentResponseSchema>
+export type CreateParentInput = z.infer<typeof createParentSchema>

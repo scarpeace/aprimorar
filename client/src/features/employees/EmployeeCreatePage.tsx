@@ -31,7 +31,7 @@ export function EmployeeCreatePage() {
     try {
       setSubmitError(null)
       const res = await employeesApi.create(data)
-      navigate(`/employees/${res.data.id}`)
+      navigate(`/employees/${res.id}`)
     } catch (error) {
       console.error("Falha ao criar colaborador:", error)
       setSubmitError(getFriendlyErrorMessage(error))

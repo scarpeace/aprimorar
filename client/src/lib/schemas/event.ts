@@ -1,22 +1,13 @@
 import { z } from "zod"
+import { eventContentValues } from "@/lib/shared/enums"
+import { formatDateShortYear } from "../shared/formatter"
 
-export const eventContentValues = ["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"] as const
-
-export const eventContentLabels: Record<EventContent, string> = {
-  AULA: "AULA",
-  TERAPIA: "TERAPIA",
-  MENTORIA: "MENTORIA",
-  ORIENTACAO_VOCACIONAL: "ORIENTAÇÃO VOCACIONAL",
-  ENEM: "ENEM",
-  PAS: "PAS",
-  OUTRO: "OUTRO",
-}
-
+//TODO Evento não vai precisar de título, ele vai ser gerado automaticamente no backend. Remover num futuro próximo do front
 export const createEventSchema = z.object({
   title: z.string().min(1, "Título é obrigatório").max(100, "Título deve ter no máximo 100 caracteres"),
   description: z.string().max(500, "Descrição deve ter no máximo 500 caracteres").optional(),
-  startDateTime: z.string().min(1, "Data/hora de início é obrigatório"),
-  endDateTime: z.string().min(1, "Data/hora de fim é obrigatório"),
+  startDate: z.string().min(1, "Data/hora de início é obrigatório"),
+  endDate: z.string().min(1, "Data/hora de fim é obrigatório"),
   price: z.number().min(0, "Preço deve ser maior ou igual a 0"),
   payment: z.number().min(0, "Pagamento deve ser maior ou igual a 0"),
   content: z.enum(eventContentValues),
@@ -25,17 +16,17 @@ export const createEventSchema = z.object({
 }).refine((data) => data.payment <= data.price, {
   message: "Pagamento não pode ser maior que o preço",
   path: ["payment"],
-}).refine((data) => new Date(data.endDateTime) > new Date(data.startDateTime), {
+}).refine((data) => new Date(data.endDate) > new Date(data.startDate), {
   message: "Fim deve ser depois do início",
-  path: ["endDateTime"],
+  path: ["endDate"],
 })
 
 export const eventResponseSchema = z.object({
   id: z.uuid(),
   title: z.string(),
   description: z.string().nullable(),
-  startDate: z.string(),
-  endDate: z.string(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
   price: z.number(),
   payment: z.number(),
   content: z.enum(eventContentValues),
@@ -43,10 +34,9 @@ export const eventResponseSchema = z.object({
   studentName: z.string(),
   employeeId: z.uuid(),
   employeeName: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string().nullable(),
+  createdAt: z.coerce.date().transform(formatDateShortYear),
+  updatedAt: z.coerce.date().nullable(),
 })
 
 export type CreateEventInput = z.infer<typeof createEventSchema>
 export type EventResponse = z.infer<typeof eventResponseSchema>
-export type EventContent = (typeof eventContentValues)[number]

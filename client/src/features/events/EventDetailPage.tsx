@@ -6,7 +6,9 @@ import { ErrorState } from "@/components/ui/error-state"
 import { LoadingState } from "@/components/ui/loading-state"
 import { SummaryField } from "@/components/ui/summary-field"
 import { Calendar } from "lucide-react"
-import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
+import type { EventResponse } from "@/lib/schemas/event"
+import { eventContentLabels } from "@/lib/shared/enums"
+import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter"
 import { useCallback, useEffect, useState } from "react"
 import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
 import styles from "@/features/events/EventDetailPage.module.css"
@@ -26,8 +28,8 @@ export function EventDetailPage() {
     try {
       setLoading(true)
       setError(null)
-      const res = await eventsApi.getById(id)
-      setEvent(res.data)
+      const res: EventResponse = await eventsApi.getById(id)
+      setEvent(res)
     } catch (loadError) {
       console.error("Falha ao carregar evento:", loadError)
       setError(getFriendlyErrorMessage(loadError))
@@ -39,6 +41,9 @@ export function EventDetailPage() {
   useEffect(() => {
     loadEvent()
   }, [loadEvent])
+
+  const profit = Number(event?.price ?? 0) - Number(event?.payment ?? 0)
+
 
   if (loading) return <LoadingState message="Carregando evento..." />
 
@@ -63,10 +68,6 @@ export function EventDetailPage() {
     )
   }
 
-  const price = Number(event.price)
-  const payment = Number(event.payment)
-  const profit = Number.isFinite(price) && Number.isFinite(payment) ? price - payment : 0
-  const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" })
 
   return (
     <div className={styles.page}>
@@ -92,18 +93,18 @@ export function EventDetailPage() {
         </CardHeader>
         <CardContent>
           <div className={styles.summaryGrid}>
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="ID" value={String(event.id)} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Título" value={event.title} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Descrição" value={event.description ?? "-"} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Conteúdo" value={eventContentLabels[event.content]} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Aluno" value={event.studentName} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Colaborador" value={event.employeeName} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Início" value={event.startDateTime} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Fim" value={event.endDateTime} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Preço" value={brl.format(price)} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Pagamento (custo)" value={brl.format(payment)} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Lucro" value={brl.format(profit)} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Criado em" value={event.createdAt} />
+            <SummaryField title="ID">{String(event.id)}</SummaryField>
+            <SummaryField title="Título">{event.title}</SummaryField>
+            <SummaryField title="Descrição">{event.description ?? "-"}</SummaryField>
+            <SummaryField title="Conteúdo">{eventContentLabels[event.content]}</SummaryField>
+            <SummaryField title="Aluno">{event.studentName}</SummaryField>
+            <SummaryField title="Colaborador">{event.employeeName}</SummaryField>
+            <SummaryField title="Data">{formatDateShortYear(event.startDate)}</SummaryField>
+            <SummaryField title="Horário">{`${formatTime(event.startDate)} : ${formatTime(event.endDate)}`}</SummaryField>
+            <SummaryField title="Preço">{brl.format(event.price)}</SummaryField>
+            <SummaryField title="Pagamento (custo)">{brl.format(event.payment)}</SummaryField>
+            <SummaryField title="Lucro">{brl.format(profit)}</SummaryField>
+            <SummaryField title="Criado em">{formatDateShortYear(event.createdAt)}</SummaryField>
           </div>
         </CardContent>
       </Card>

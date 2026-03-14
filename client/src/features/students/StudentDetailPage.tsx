@@ -5,13 +5,14 @@ import { EmptyState } from "@/components/ui/empty-state"
 import { ErrorState } from "@/components/ui/error-state"
 import { LoadingState } from "@/components/ui/loading-state"
 import { SummaryField } from "@/components/ui/summary-field"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { GraduationCap } from "lucide-react"
-import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
+import type { EventResponse } from "@/lib/schemas/event"
 import type { StudentResponse } from "@/lib/schemas/student"
-import { eventsApi, getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
+import { eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
 import { useCallback, useEffect, useState } from "react"
 import styles from "@/features/students/StudentDetailPage.module.css"
+import type { PageResponse } from "@/lib/schemas/page-response"
+import { EventsTable } from "@/components/ui/events-table"
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -33,14 +34,14 @@ export function StudentDetailPage() {
 
       const [studentRes, eventsRes] = await Promise.all([
         studentsApi.getById(id),
-        eventsApi.listByStudent(id, 0, 100, "startDateTime"),
+        eventsApi.listByStudent(id, 0, 100, "startDate"),
       ])
 
-      const eventsPage: PageResponse<EventResponse> = eventsRes.data
+      const eventsPage: PageResponse<EventResponse> = eventsRes
 
-      setStudent(studentRes.data)
-      setLinkedEvents(eventsPage.content)
-      setStudentEventsCount(eventsPage.totalElements)
+      setStudent(studentRes)
+      setLinkedEvents(eventsRes.content)
+      setStudentEventsCount(eventsPage.page.totalElements)
     } catch (loadError) {
       console.error("Falha ao carregar aluno:", loadError)
       setError(getFriendlyErrorMessage(loadError))
@@ -76,17 +77,6 @@ export function StudentDetailPage() {
     )
   }
 
-  const parentName = student.parent?.name ?? "-"
-  const parentEmail = student.parent?.email ?? "-"
-  const parentContact = student.parent?.contact ?? "-"
-  const parentCpf = student.parent?.cpf ?? "-"
-
-  const address = student.address
-    ? `${student.address.street}, ${student.address.number} - ${student.address.district}, ${student.address.city}/${student.address.state}`
-    : "-"
-  const addressComplement = student.address?.complement ?? "-"
-  const addressZip = student.address?.zip ?? "-"
-
   return (
     <div className={styles.page}>
       <div className={styles.header}>
@@ -111,22 +101,26 @@ export function StudentDetailPage() {
         </CardHeader>
         <CardContent>
           <div className={styles.summaryGrid}>
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Nome completo" value={student.name} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CPF" value={student.cpf} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="E-mail" value={student.email} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Idade" value={String(student.age)} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Contato" value={student.contact} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Data de nascimento" value={student.birthdate} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Data de matrícula" value={student.createdAt} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Escola" value={student.school} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Status" value={student.archivedAt ? "Arquivado" : "Ativo"} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Responsável" value={parentName} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="E-mail do responsável" value={parentEmail} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Contato do responsável" value={parentContact} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CPF do responsável" value={parentCpf} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Endereço" value={address} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Complemento" value={addressComplement} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CEP" value={addressZip} />
+            <SummaryField title="Nome completo">{student.name}</SummaryField>
+            <SummaryField title="CPF">{student.cpf}</SummaryField>
+            <SummaryField title="E-mail">{student.email}</SummaryField>
+            <SummaryField title="Idade">{String(student.age)}</SummaryField>
+            <SummaryField title="Contato">{student.contact}</SummaryField>
+            <SummaryField title="Data de nascimento">{student.birthdate}</SummaryField>
+            <SummaryField title="Data de matrícula">{student.createdAt}</SummaryField>
+            <SummaryField title="Escola">{student.school}</SummaryField>
+            <SummaryField title="Status">{student.archivedAt ? "Arquivado" : "Ativo"}</SummaryField>
+            <SummaryField title="Responsável">{student.parent.name}</SummaryField>
+            <SummaryField title="E-mail do responsável">{student.parent.email}</SummaryField>
+            <SummaryField title="Contato do responsável">{student.parent.contact}</SummaryField>
+            <SummaryField title="CPF do responsável">{student.parent.cpf}</SummaryField>
+            <SummaryField title="Endereço">{student.address.street}</SummaryField>
+
+            {student.address.complement != null ?
+            <SummaryField title="Complemento">{student.address.complement ? student.address.complement : null}</SummaryField>
+              :"Sem complemento"
+            }
+            <SummaryField title="CEP">{student.address.zip}</SummaryField>
           </div>
         </CardContent>
       </Card>
@@ -141,36 +135,7 @@ export function StudentDetailPage() {
             <p className="text-sm text-muted-foreground">Este aluno ainda não possui eventos vinculados.</p>
           ) : (
             <div className={styles.tableWrap}>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Título</TableHead>
-                    <TableHead>Conteúdo</TableHead>
-                    <TableHead>Início</TableHead>
-                    <TableHead>Fim</TableHead>
-                    <TableHead>Colaborador</TableHead>
-                    <TableHead>Preço</TableHead>
-                    <TableHead>Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {linkedEvents.map((event) => (
-                    <TableRow key={event.id}>
-                      <TableCell>{event.title}</TableCell>
-                      <TableCell>{eventContentLabels[event.content]}</TableCell>
-                      <TableCell>{event.startDateTime}</TableCell>
-                      <TableCell>{event.endDateTime}</TableCell>
-                      <TableCell>{event.employeeName}</TableCell>
-                      <TableCell>{event.price}</TableCell>
-                      <TableCell>
-                        <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/events/${event.id}`}>
-                          Ver evento
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <EventsTable variant="studentPage" events={linkedEvents} />
             </div>
           )}
         </CardContent>

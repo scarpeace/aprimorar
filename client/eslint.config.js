@@ -25,6 +25,7 @@ export default defineConfig([
     rules: {
       // shadcn-style files often export helpers + components.
       'react-refresh/only-export-components': 'off',
+      'unused-imports/no-unused-imports': 'warn'
     },
   },
 ])

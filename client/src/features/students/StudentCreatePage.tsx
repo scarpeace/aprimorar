@@ -10,7 +10,8 @@ import { useForm } from "react-hook-form"
 import { useHookFormMask } from "use-mask-input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createStudentSchema, type CreateStudentInput, type ParentSummary } from "@/lib/schemas"
-import { getFriendlyErrorMessage, parentsApi, studentsApi, type PageResponse } from "@/services/api"
+import type { PageResponse } from "@/lib/schemas/page-response"
+import { getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
 
 export function StudentCreatePage() {
   const navigate = useNavigate()
@@ -38,7 +39,7 @@ export function StudentCreatePage() {
       setParentsLoading(true)
 
       const res = await parentsApi.list(0, 100, "name")
-      const page: PageResponse<ParentSummary> = res.data
+      const page: PageResponse<ParentSummary> = res
       setParents(page.content)
       if (page.content.length === 0) setParentMode("new")
     } catch (error) {
@@ -71,13 +72,13 @@ export function StudentCreatePage() {
         parentMode === "existing" && data.parentId
           ? {
               ...data,
-              parent: (await parentsApi.getById(data.parentId)).data,
+              parent: await parentsApi.getById(data.parentId),
               parentId: undefined,
             }
           : { ...data, parentId: undefined }
 
       const res = await studentsApi.create(payload)
-      navigate(`/students/${res.data.id}`)
+      navigate(`/students/${res.id}`)
     } catch (error) {
       console.error("Falha ao criar aluno:", error)
       setSubmitError(getFriendlyErrorMessage(error))

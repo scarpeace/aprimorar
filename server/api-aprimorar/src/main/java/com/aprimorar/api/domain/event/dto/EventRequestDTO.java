@@ -20,7 +20,7 @@ public record EventRequestDTO(
         String description,
 
         @NotNull(message = "Data/hora de início do evento é obrigatória")
-        LocalDateTime startDateTime,
+        LocalDateTime StartDate,
 
         @NotNull(message = "Data/hora de fim do evento é obrigatória")
         LocalDateTime endDateTime,

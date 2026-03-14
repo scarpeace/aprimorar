@@ -5,14 +5,15 @@ import { EmptyState } from "@/components/ui/empty-state"
 import { ErrorState } from "@/components/ui/error-state"
 import { LoadingState } from "@/components/ui/loading-state"
 import { SummaryField } from "@/components/ui/summary-field"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { UserCog } from "lucide-react"
-import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
+import type { EventResponse } from "@/lib/schemas/event"
 import type { EmployeeResponse } from "@/lib/schemas/employee"
 import { dutyLabels } from "@/features/employees/dutyLabels"
-import { employeesApi, eventsApi, getFriendlyErrorMessage, type PageResponse } from "@/services/api"
+import { employeesApi, eventsApi, getFriendlyErrorMessage } from "@/services/api"
 import { useCallback, useEffect, useState } from "react"
 import styles from "@/features/employees/EmployeeDetailPage.module.css"
+import type { PageResponse } from "@/lib/schemas/page-response"
+import { EventsTable } from "@/components/ui/events-table"
 
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -34,14 +35,14 @@ export function EmployeeDetailPage() {
 
       const [employeeRes, eventsRes] = await Promise.all([
         employeesApi.getById(id),
-        eventsApi.listByEmployee(id, 0, 100, "startDateTime"),
+        eventsApi.listByEmployee(id, 0, 100, "startDate"),
       ])
 
-      const eventsPage: PageResponse<EventResponse> = eventsRes.data
+      const eventsPage: PageResponse<EventResponse> = eventsRes;
 
-      setEmployee(employeeRes.data)
+      setEmployee(employeeRes)
       setLinkedEvents(eventsPage.content)
-      setEmployeeEventsCount(eventsPage.totalElements)
+      setEmployeeEventsCount(eventsPage.page.totalElements)
     } catch (loadError) {
       console.error("Falha ao carregar colaborador:", loadError)
       setError(getFriendlyErrorMessage(loadError))
@@ -104,15 +105,15 @@ export function EmployeeDetailPage() {
         </CardHeader>
         <CardContent>
           <div className={styles.summaryGrid}>
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Nome completo" value={employee.name} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="E-mail" value={employee.email} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Cargo" value={dutyLabels[employee.duty]} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Contato" value={employee.contact} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CPF" value={employee.cpf} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Chave PIX" value={employee.pix} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Data de nascimento" value={employee.birthdate} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Status" value={employee.archivedAt ? "Arquivado" : "Ativo"} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Criado em" value={employee.createdAt} />
+            <SummaryField title="Nome completo">{employee.name}</SummaryField>
+            <SummaryField title="E-mail">{employee.email}</SummaryField>
+            <SummaryField title="Cargo">{dutyLabels[employee.duty]}</SummaryField>
+            <SummaryField title="Contato">{employee.contact}</SummaryField>
+            <SummaryField title="CPF">{employee.cpf}</SummaryField>
+            <SummaryField title="Chave PIX">{employee.pix}</SummaryField>
+            <SummaryField title="Data de nascimento">{employee.birthdate}</SummaryField>
+            <SummaryField title="Status">{employee.archivedAt ? "Arquivado" : "Ativo"}</SummaryField>
+            <SummaryField title="Criado em">{employee.createdAt}</SummaryField>
           </div>
         </CardContent>
       </Card>
@@ -124,39 +125,10 @@ export function EmployeeDetailPage() {
         </CardHeader>
         <CardContent>
           {linkedEvents.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Este colaborador ainda não possui eventos vinculados.</p>
+            <p className="text-sm text-muted-foreground">Este aluno ainda não possui eventos vinculados.</p>
           ) : (
             <div className={styles.tableWrap}>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Título</TableHead>
-                    <TableHead>Aluno</TableHead>
-                    <TableHead>Conteúdo</TableHead>
-                    <TableHead>Início</TableHead>
-                    <TableHead>Fim</TableHead>
-                    <TableHead>Preço</TableHead>
-                    <TableHead>Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {linkedEvents.map((event) => (
-                    <TableRow key={event.id}>
-                      <TableCell>{event.title}</TableCell>
-                      <TableCell>{event.studentName}</TableCell>
-                      <TableCell>{eventContentLabels[event.content]}</TableCell>
-                      <TableCell>{event.startDateTime}</TableCell>
-                      <TableCell>{event.endDateTime}</TableCell>
-                      <TableCell>{event.price}</TableCell>
-                      <TableCell>
-                        <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/events/${event.id}`}>
-                          Ver evento
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <EventsTable variant="employeePage" events={linkedEvents} />
             </div>
           )}
         </CardContent>

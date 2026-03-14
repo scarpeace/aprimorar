@@ -10,8 +10,10 @@ import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import type { EmployeeResponse, StudentResponse } from "@/lib/schemas"
-import { createEventSchema, eventContentLabels, eventContentValues, type CreateEventInput } from "@/lib/schemas"
-import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
+import { createEventSchema, type CreateEventInput } from "@/lib/schemas"
+import type { PageResponse } from "@/lib/schemas/page-response"
+import { eventContentLabels, eventContentValues } from "@/lib/shared/enums"
+import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
 
 export function EventCreatePage() {
   const navigate = useNavigate()
@@ -56,8 +58,8 @@ export function EventCreatePage() {
         employeesApi.list(0, 100, "name"),
       ])
 
-      const studentsPage: PageResponse<StudentResponse> = studentsRes.data
-      const employeesPage: PageResponse<EmployeeResponse> = employeesRes.data
+      const studentsPage: PageResponse<StudentResponse> = studentsRes
+      const employeesPage: PageResponse<EmployeeResponse> = employeesRes
       setStudents(studentsPage.content)
       setEmployees(employeesPage.content)
     } catch (error) {
@@ -76,7 +78,7 @@ export function EventCreatePage() {
     try {
       setSubmitError(null)
       const res = await eventsApi.create(data)
-      navigate(`/events/${res.data.id}`)
+      navigate(`/events/${res.id}`)
     } catch (error) {
       console.error("Falha ao criar evento:", error)
       setSubmitError(getFriendlyErrorMessage(error))
@@ -200,22 +202,22 @@ export function EventCreatePage() {
                 </div>
 
                 <div className={styles.field}>
-                <label className={styles.label} htmlFor="startDateTime">
+                <label className={styles.label} htmlFor="startDate">
                   Início
                 </label>
-                <Input id="startDateTime" type="datetime-local" {...register("startDateTime")} />
-                {errors.startDateTime?.message ? (
-                  <p className={styles.error}>{errors.startDateTime.message}</p>
+                <Input id="startDate" type="datetime-local" {...register("startDate")} />
+                {errors.startDate?.message ? (
+                  <p className={styles.error}>{errors.startDate.message}</p>
                 ) : null}
                 </div>
 
                 <div className={styles.field}>
-                <label className={styles.label} htmlFor="endDateTime">
+                <label className={styles.label} htmlFor="endDate">
                   Fim
                 </label>
-                <Input id="endDateTime" type="datetime-local" {...register("endDateTime")} />
-                {errors.endDateTime?.message ? (
-                  <p className={styles.error}>{errors.endDateTime.message}</p>
+                <Input id="endDate" type="datetime-local" {...register("endDate")} />
+                {errors.endDate?.message ? (
+                  <p className={styles.error}>{errors.endDate.message}</p>
                 ) : null}
                 </div>
 

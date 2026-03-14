@@ -17,13 +17,12 @@ import type { EmployeeResponse } from "@/lib/schemas"
 import { employeesApi, getFriendlyErrorMessage, } from "@/services/api"
 import styles from "@/features/employees/EmployeesPage.module.css"
 import type { PageResponse } from "@/lib/schemas/page-response"
+import { Badge } from "@/components/ui/badge"
 
 export function EmployeesPage() {
   const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [archiveError, setArchivedError] = useState<string | null>(null)
-  const [archivingId, setarchivingId] = useState<string | null>(null)
 
   const loadEmployees = async () => {
     try {
@@ -42,24 +41,6 @@ export function EmployeesPage() {
   useEffect(() => {
     loadEmployees()
   }, [])
-
-  const handleArchive = async (employee: EmployeeResponse) => {
-    if (!window.confirm(`Arquivar colaborador "${employee.name}"?`)) {
-      return
-    }
-
-    try {
-      setArchivedError(null)
-      setarchivingId(employee.id)
-      await employeesApi.archive(employee.id)
-      setEmployeeList((prev) => prev.filter((item) => item.id !== employee.id))
-    } catch (error) {
-      console.error("Falha ao excluir colaborador:", error)
-      setArchivedError(getFriendlyErrorMessage(error))
-    } finally {
-      setarchivingId(null)
-    }
-  }
 
   if (loading) {
     return <LoadingState message="Carregando colaboradores..." />
@@ -89,26 +70,19 @@ export function EmployeesPage() {
           <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
           <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
         </div>
-        <Button asChild type="button">
+        <Button asChild variant="success">
           <Link to="/employees/new">Novo colaborador</Link>
         </Button>
       </div>
-
-      {archiveError ? (
-        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-          {archiveError}
-        </div>
-      ) : null}
 
       <div className={styles.tableWrap}>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
-              <TableHead>Cargo</TableHead>
+              <TableHead>Função</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>PIX</TableHead>
-              <TableHead>Ativo</TableHead>
               <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -119,25 +93,18 @@ export function EmployeesPage() {
                 <TableCell>{dutyLabels[employee.duty]}</TableCell>
                 <TableCell>{employee.email}</TableCell>
                 <TableCell>{employee.pix}</TableCell>
-                <TableCell>{employee.archivedAt ? "Não" : "Sim"}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-3">
+                   <Button variant="default" asChild>
                     <Link
                       className="text-sm font-medium text-blue-600 hover:underline"
                       to={`/employees/${employee.id}`}
                     >
                       Detalhes
                     </Link>
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleArchive(employee)}
-                      disabled={archivingId === employee.id}
-                    >
-                      {archivingId === employee.id ? "Arquivando..." : "Arquivar"}
                     </Button>
-                  </div>
+                </TableCell>
+                <TableCell>
+                  {employee.archivedAt ? <Badge variant="warn">Arquivado</Badge> : <Badge variant="success">Ativo</Badge>}
                 </TableCell>
               </TableRow>
             ))}
