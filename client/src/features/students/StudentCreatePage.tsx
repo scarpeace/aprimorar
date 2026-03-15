@@ -109,8 +109,8 @@ export function StudentCreatePage() {
       setSubmitError(null)
     },
     onSuccess: async (createdStudent) => {
+      queryClient.removeQueries({ queryKey: queryKeys.students })
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.students }),
         queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
         queryClient.invalidateQueries({ queryKey: queryKeys.events }),
         queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),

@@ -39,6 +39,8 @@ function getApiErrorMessage(data: unknown) {
 }
 
 export function getFriendlyErrorMessage(error: unknown) {
+  if (!error) return ""
+
   if (axios.isAxiosError(error)) {
     const status = error.response?.status
     const apiMessage = getApiErrorMessage(error.response?.data)

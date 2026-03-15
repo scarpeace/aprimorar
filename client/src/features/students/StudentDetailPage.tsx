@@ -211,7 +211,13 @@ export function StudentDetailPage() {
           <p className="text-sm app-text-muted">Este aluno ainda não possui eventos vinculados.</p>
         ) : (
           <div className="app-table-wrap">
-            <EventsTable variant="studentPage" events={eventsData?.content ?? []} />
+
+            {/*TODO: deve ter um jeito melhor de enviar a eventsPage */}
+            <EventsTable
+              variant="studentPage"
+              eventsPage={eventsData!}
+              loading={isEventsLoading}
+              error={eventsError ? getFriendlyErrorMessage(eventsError) : ""} />
           </div>
         )}
       </SectionCard>

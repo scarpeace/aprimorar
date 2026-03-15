@@ -1,18 +1,51 @@
 import { ButtonLink } from "@/components/ui/button"
+import { EmptyCard } from "@/components/ui/empty-card"
+import { ErrorCard } from "@/components/ui/error-card"
+import { LoadingCard } from "@/components/ui/loading-card"
 import type { EventResponse } from "@/lib/schemas/event"
+import type { PageResponse } from "@/lib/schemas/page-response"
 import { eventContentLabels } from "@/lib/shared/enums"
 import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter"
 
 export type EventsTableVariant = "studentPage" | "eventsPage" | "employeePage"
 
-type EventsTableProps = {
-  events: EventResponse[]
+type EventsTableBaseProps = {
   variant?: EventsTableVariant
+  loading: boolean
+  error: string
 }
 
-export function EventsTable({ events, variant = "eventsPage" }: EventsTableProps) {
+type EventsTablePaginatedProps = EventsTableBaseProps & {
+  eventsPage: PageResponse<EventResponse>
+  eventsList?: never
+}
+
+type EventsTableListProps = EventsTableBaseProps & {
+  eventsList: EventResponse[]
+  eventsPage?: never
+}
+
+type EventsTableProps = EventsTablePaginatedProps | EventsTableListProps
+
+export function EventsTable({ eventsPage, eventsList, variant = "eventsPage", loading, error }: Readonly<EventsTableProps>) {
   const showPrice = variant === "eventsPage" || variant === "studentPage"
   const showPayment = variant === "employeePage"
+
+  if (loading) {
+    return <LoadingCard description="Carregando eventos..." />
+  }
+
+  const events = eventsPage?.content ?? eventsList ?? []
+
+  if (events.length === 0) {
+    return <EmptyCard description="Cadastre um evento para ele aparecer por aqui." title={"Nenhum evento encontrado."} />
+  }
+
+  if (error) {
+    return <ErrorCard description={error} title="Erro ao carregar eventos" />
+  }
+
+
 
   return (
     <div className="app-table-wrap">

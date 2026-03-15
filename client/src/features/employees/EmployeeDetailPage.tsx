@@ -1,9 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { UserCog } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom"
 import { ButtonLink } from "@/components/ui/button"
-import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
@@ -17,27 +16,39 @@ import { employeesApi, eventsApi, getFriendlyErrorMessage } from "@/services/api
 import { DetailsActions } from "@/components/ui/details-actions"
 import { Alert } from "@/components/ui/alert"
 
-const EMPLOYEE_EVENTS_PARAMS = { page: 0, size: 100, sortBy: "startDate" }
-
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
   const employeeId = id ?? ""
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const employeeQuery = useQuery({
-    queryKey: [...queryKeys.employees, employeeId],
-    queryFn: () => employeesApi.getById(employeeId),
-    enabled: Boolean(id),
+  const [employeeQuery, employeeEventsQuery] = useQueries({
+    queries: [
+      {
+        queryKey: queryKeys.employeeDetail(employeeId),
+        queryFn: () => employeesApi.getById(employeeId),
+        enabled: Boolean(id),
+      },
+      {
+        queryKey: queryKeys.eventsByEmployee(employeeId),
+        queryFn: () => eventsApi.listByEmployee(employeeId),
+        enabled: Boolean(id),
+      },
+    ],
   })
+
+  const { data: employeeData, error: employeeError, isLoading: isEmployeeLoading } = employeeQuery
+  const { data: employeeEvents, error: employeeEventsError, isLoading: isEmployeeEventsLoading } = employeeEventsQuery
+
 
   const {
     mutate: archiveEmployeeMutation,
     isPending: isArchiveEmployeePending,
     error: archiveEmployeeError,
+    isError: isArchiveEmployeeError,
   } = useMutation({
     mutationFn: () =>
-      employeeQuery.data?.archivedAt ? employeesApi.unarchive(employeeId) : employeesApi.archive(employeeId),
+      employeeData?.archivedAt ? employeesApi.unarchive(employeeId) : employeesApi.archive(employeeId),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.employees }),
@@ -52,6 +63,7 @@ export function EmployeeDetailPage() {
     mutate: deleteEmployeeMutation,
     isPending: isDeleteEmployeePending,
     error: deleteEmployeeError,
+    isError: isDeleteEmployeeError,
   } = useMutation({
     mutationFn: () => employeesApi.delete(employeeId),
     onSuccess: async () => {
@@ -66,73 +78,40 @@ export function EmployeeDetailPage() {
     },
   })
 
-  const employeeEventsQuery = useQuery({
-    queryKey: [...queryKeys.events, "employee", employeeId, EMPLOYEE_EVENTS_PARAMS],
-    queryFn: () =>
-      eventsApi.listByEmployee(
-        employeeId,
-        EMPLOYEE_EVENTS_PARAMS.page,
-        EMPLOYEE_EVENTS_PARAMS.size,
-        EMPLOYEE_EVENTS_PARAMS.sortBy
-      ),
-    enabled: Boolean(id),
-  })
-
-  if (!id) {
-    return (
-      <div className={styles.page}>
-        <ErrorCard description="ID do colaborador não informado." />
-      </div>
-    )
-  }
-
-  const refetchAll = async () => {
-    await Promise.all([employeeQuery.refetch(), employeeEventsQuery.refetch()])
-  }
-
   const handleEmployeeDelete = () => {
     if (globalThis.confirm("Tem certeza que deseja excluir este colaborador? Esta ação não pode ser desfeita.")) {
       deleteEmployeeMutation()
     }
   }
 
-  if (employeeQuery.isLoading || employeeEventsQuery.isLoading) {
+  if (isEmployeeLoading || isEmployeeEventsLoading) {
     return <PageLoading message="Carregando colaborador..." />
   }
 
-  if (employeeQuery.isError || employeeEventsQuery.isError) {
-    const queryError = employeeQuery.error ?? employeeEventsQuery.error
+  if (employeeError || employeeEventsError) {
 
     return (
       <div className={styles.page}>
-        <ErrorCard description={getFriendlyErrorMessage(queryError)} onAction={refetchAll} />
+        <ErrorCard
+          description={getFriendlyErrorMessage(employeeError || employeeEventsError)}
+          actionLabel="Voltar para listagem de responsáveis"
+          onAction={() => navigate("/parents")} />
       </div>
     )
   }
 
-  const employee = employeeQuery.data
-
-  if (!employee) {
-    return (
-      <div className={styles.page}>
-        <EmptyCard title="Colaborador não encontrado" description="Não encontramos os dados deste colaborador." />
-      </div>
-    )
-  }
-
-  const linkedEvents = employeeEventsQuery.data?.content ?? []
-  const employeeEventsCount = employeeEventsQuery.data?.page.totalElements ?? 0
+  const employeeEventsCount = employeeEvents?.page.totalElements ?? 0
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: employee.name },
-    { label: "E-mail", value: employee.email },
-    { label: "Cargo", value: dutyLabels[employee.duty as keyof typeof dutyLabels] },
-    { label: "Contato", value: employee.contact },
-    { label: "CPF", value: employee.cpf },
-    { label: "Chave PIX", value: employee.pix },
-    { label: "Data de nascimento", value: employee.birthdate },
-    { label: "Status", value: employee.archivedAt ? "Arquivado" : "Ativo" },
-    { label: "Criado em", value: employee.createdAt },
+    { label: "Nome completo", value: employeeData?.name },
+    { label: "E-mail", value: employeeData?.email },
+    { label: "Cargo", value: dutyLabels[employeeData?.duty as keyof typeof dutyLabels] },
+    { label: "Contato", value: employeeData?.contact },
+    { label: "CPF", value: employeeData?.cpf },
+    { label: "Chave PIX", value: employeeData?.pix },
+    { label: "Data de nascimento", value: employeeData?.birthdate },
+    { label: "Status", value: employeeData?.archivedAt ? "Arquivado" : "Ativo" },
+    { label: "Criado em", value: employeeData?.createdAt },
   ]
 
   return (
@@ -158,8 +137,8 @@ export function EmployeeDetailPage() {
         description="Dados completos de cadastro, contato e status."
         headerAction={
           <DetailsActions
-            data={employee}
-            editTo={`/employees/edit/${employee.id}`}
+            data={employeeData}
+            editTo={`/employees/edit/${employeeId}`}
             handleArchive={archiveEmployeeMutation}
             handleDelete={handleEmployeeDelete}
             isArchivePending={isArchiveEmployeePending}
@@ -167,9 +146,9 @@ export function EmployeeDetailPage() {
           />
         }
       >
-        {(archiveEmployeeError ?? deleteEmployeeError) && (
+        {(isArchiveEmployeeError || isDeleteEmployeeError) && (
           <Alert variant="error">
-            {getFriendlyErrorMessage(archiveEmployeeError ?? deleteEmployeeError)}
+            {getFriendlyErrorMessage(archiveEmployeeError || deleteEmployeeError)}
           </Alert>
         )}
         <div className={styles.summaryGrid}>
@@ -183,13 +162,13 @@ export function EmployeeDetailPage() {
         title="Eventos vinculados"
         description={`Total de eventos vinculados a este colaborador: ${employeeEventsCount}`}
       >
-        {linkedEvents.length === 0 ? (
-          <p className="text-sm app-text-muted">Este colaborador ainda não possui eventos vinculados.</p>
-        ) : (
-          <div className="app-table-wrap">
-            <EventsTable variant="employeePage" events={linkedEvents} />
-          </div>
-        )}
+        {/* //TODO deve ter um jeito melhor de enviar a eventsPage */}
+        <EventsTable
+          eventsPage={employeeEvents ?? { content: [], page: { totalElements: 0, totalPages: 0, number: 0, size: 0 } }}
+          loading={isEmployeeEventsLoading}
+          error={employeeEventsError ? getFriendlyErrorMessage(employeeEventsError) : ""}
+          variant="employeePage"
+        />
       </SectionCard>
     </div>
   )

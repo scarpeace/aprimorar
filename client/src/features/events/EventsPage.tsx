@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query"
-import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
@@ -14,33 +13,30 @@ const EVENTS_LIST_PARAMS = { page: 0, size: 20, sortBy: "startDate" }
 
 export function EventsPage() {
   const {
-    data: eventList = [],
-    isLoading,
-    isError,
-    error,
+    data: eventsResponse,
+    isLoading: isLoadingEvents,
+    isError: isErrorEvents,
+    error: errorEvents,
     refetch,
   } = useQuery({
     queryKey: [...queryKeys.events, EVENTS_LIST_PARAMS],
     queryFn: async () => {
-      const eventsRes = await eventsApi.list(
+      return eventsApi.list(
         EVENTS_LIST_PARAMS.page,
         EVENTS_LIST_PARAMS.size,
         EVENTS_LIST_PARAMS.sortBy
       )
-
-      return eventsRes.content
     },
   })
 
-  if (isLoading) {
+  if (isLoadingEvents) {
     return <PageLoading message="Carregando eventos..." />
   }
 
-  if (isError) {
+  if (isErrorEvents) {
     return (
       <div className={styles.page}>
-        <PageHeader title="Eventos" description="Gerencie horários, preços e atribuições." />
-        <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
+        <ErrorCard description={getFriendlyErrorMessage(errorEvents)} onAction={refetch} />
       </div>
     )
   }
@@ -60,20 +56,13 @@ export function EventsPage() {
       </PageHeader>
 
       <div className="app-table-wrap">
-        <EventsTable variant="eventsPage" events={eventList} />
-      </div>
-
-      {eventList.length === 0 ? (
-        <EmptyCard
-          title="Nenhum evento cadastrado"
-          description="Quando você cadastrar o primeiro evento, ele aparecerá na tabela acima."
-          action={
-            <ButtonLink to="/events/new" variant="secondary">
-              Novo evento
-            </ButtonLink>
-          }
+        <EventsTable
+          variant="eventsPage"
+          eventsPage={eventsResponse!}
+          loading={isLoadingEvents}
+          error={errorEvents ? getFriendlyErrorMessage(errorEvents) : ""}
         />
-      ) : null}
+      </div>
     </div>
   )
 }

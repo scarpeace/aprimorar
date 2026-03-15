@@ -1,4 +1,5 @@
 import { ButtonLink } from "@/components/ui/button"
+import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { LoadingCard } from "@/components/ui/loading-card"
 import type { StudentResponse } from "@/lib/schemas/student"
@@ -15,6 +16,10 @@ type StudentsTableProps = {
 export function StudentsTable({ students, variant = "studentsPage", loading, error }: Readonly<StudentsTableProps>) {
   if (loading) {
     return <LoadingCard description="Carregando alunos ..." />
+  }
+
+  if (students.length === 0) {
+    return <EmptyCard description="Nenhum aluno encontrado." title={"Nenhum aluno encontrado."} />
   }
 
   if (error) {

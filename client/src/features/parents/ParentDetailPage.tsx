@@ -84,15 +84,16 @@ export function ParentDetailPage() {
     }
   }
 
-  if (isParentLoading) {
+  if (isParentLoading || isParentStudentsLoading) {
     return <PageLoading message="Carregando responsável..." />
   }
 
-  if (parentError || !parentData) {
+  if (parentError || !parentData || parentStudentsError || !parentStudentsData) {
+    const queryError = parentError ?? parentStudentsError
     return (
       <div className={styles.page}>
         <ErrorCard
-          description={getFriendlyErrorMessage(parentError)}
+          description={getFriendlyErrorMessage(queryError)}
           actionLabel="Voltar para listagem de responsáveis"
           onAction={() => navigate("/parents")} />
       </div>
@@ -158,6 +159,7 @@ export function ParentDetailPage() {
         title="Alunos vinculados"
         description={`Alunos registrados sob a responsabilidade de ${parentData.name}.`}
       >
+
         <StudentsTable
           students={parentStudentsData ?? []}
           loading={isParentStudentsLoading}
