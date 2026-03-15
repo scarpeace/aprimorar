@@ -12,7 +12,7 @@ export function ErrorCard({
   title = "Não foi possível carregar",
   actionLabel = "Tentar novamente",
   onAction,
-}: ErrorCardProps) {
+}: Readonly<ErrorCardProps>) {
   return (
     <div className="app-surface card border border-error/40 shadow-sm">
       <div className="card-body gap-4">

@@ -7,5 +7,6 @@ export const queryKeys = {
   parentDetail: (id: string) => ["parents", id],
   events: ["events"],
   event: (id: string) => ["events", id],
+  eventsByStudent: (id: string) => ["events", "student", id],
   dashboard: ["dashboard"],
 } as const

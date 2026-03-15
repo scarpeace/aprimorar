@@ -9,8 +9,13 @@ type ButtonVariant =
   | "error"
   | "danger"
   | "outline"
-  | "outlineError"
   | "ghost"
+  | "outlinePrimary"
+  | "outlineSecondary"
+  | "outlineSuccess"
+  | "outlineWarning"
+  | "outlineError"
+  | "outlineDanger"
 
 type ButtonSize = "md" | "sm"
 
@@ -28,8 +33,13 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   error: "btn-error",
   danger: "btn-error",
   outline: "btn-outline",
-  outlineError: "btn-outline btn-error",
   ghost: "btn-ghost",
+  outlinePrimary: "btn-outline btn-primary",
+  outlineSecondary: "btn-outline btn-secondary",
+  outlineSuccess: "btn-outline btn-success",
+  outlineWarning: "btn-outline btn-warning",
+  outlineError: "btn-outline btn-error",
+  outlineDanger: "btn-outline btn-error",
 }
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {

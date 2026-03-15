@@ -1,4 +1,6 @@
 import { ButtonLink } from "@/components/ui/button"
+import { ErrorCard } from "@/components/ui/error-card"
+import { LoadingCard } from "@/components/ui/loading-card"
 import type { StudentResponse } from "@/lib/schemas/student"
 
 export type StudentsTableVariant = "studentsPage" | "parentPage"
@@ -6,9 +8,19 @@ export type StudentsTableVariant = "studentsPage" | "parentPage"
 type StudentsTableProps = {
   students: StudentResponse[]
   variant?: StudentsTableVariant
+  loading: boolean
+  error: string
 }
 
-export function StudentsTable({ students, variant = "studentsPage" }: Readonly<StudentsTableProps>) {
+export function StudentsTable({ students, variant = "studentsPage", loading, error }: Readonly<StudentsTableProps>) {
+  if (loading) {
+    return <LoadingCard description="Carregando alunos ..." />
+  }
+
+  if (error) {
+    return <ErrorCard description={error} />
+  }
+
   return (
     <div className="app-table-wrap">
       <table className="table table-zebra w-full">

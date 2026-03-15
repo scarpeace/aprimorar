@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { UserCog } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom"
@@ -14,6 +14,8 @@ import { queryKeys } from "@/lib/query/queryKeys"
 import { getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
 
 import { StudentsTable } from "@/features/students/components/StudentsTable"
+import { Alert } from "@/components/ui/alert"
+import { DetailsActions } from "@/components/ui/details-actions"
 
 export function ParentDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -21,30 +23,25 @@ export function ParentDetailPage() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const {
-    isError: isParentError,
-    error: parentError,
-    isLoading: isParentLoading,
-    data: parentData,
-    refetch: refetchParent
-  } = useQuery({
-    queryKey: queryKeys.parentDetail(parentId),
-    queryFn: () => parentsApi.getById(parentId),
-    enabled: Boolean(id),
+  const [parentQuery, parentStudentsQuery] = useQueries({
+    queries: [
+      {
+        queryKey: queryKeys.parentDetail(parentId),
+        queryFn: () => parentsApi.getById(parentId),
+        enabled: Boolean(id),
+      },
+      {
+        queryKey: queryKeys.studentsByParent(parentId),
+        queryFn: () => studentsApi.listByParent(parentId),
+        enabled: Boolean(id),
+      },
+    ],
   })
 
-  const {
-    isError: isParentStudentsError,
-    error: parentStudentsError,
-    isLoading: isParentStudentsLoading,
-    data: parentStudentsData,
-    refetch: refetchParentStudents
-  } = useQuery({
-    queryKey: queryKeys.studentsByParent(parentId),
-    queryFn: () => studentsApi.listByParent(parentId),
-    enabled: Boolean(id),
-  })
+  const { data: parentData, error: parentError, isLoading: isParentLoading } = parentQuery
+  const { data: parentStudentsData, error: parentStudentsError, isLoading: isParentStudentsLoading } = parentStudentsQuery
 
+  //TODO O arquivamento tá dando race condition. tem que resolver
   const {
     mutate: archiveParentMutation,
     isError: isArchiveParentError,
@@ -53,6 +50,8 @@ export function ParentDetailPage() {
       mutationFn: () =>
         parentData?.archivedAt ? parentsApi.unarchive(parentId) : parentsApi.archive(parentId),
       onSuccess: async () => {
+        queryClient.removeQueries({ queryKey: [...queryKeys.parents] })
+
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: queryKeys.parentDetail(parentId) }),
           queryClient.invalidateQueries({ queryKey: queryKeys.students }),
@@ -78,11 +77,6 @@ export function ParentDetailPage() {
       },
     })
 
-  const refetchAll = async () => {
-    refetchParent()
-    refetchParentStudents()
-  }
-
   const handleParentDelete = () => {
     const confirmed = globalThis.confirm("Tem certeza que deseja excluir este responsável? Esta ação não pode ser desfeita.")
     if (confirmed) {
@@ -90,30 +84,17 @@ export function ParentDetailPage() {
     }
   }
 
-  if (!id) {
-    return (
-      <div className={styles.page}>
-        <ErrorCard description="ID de responsável inválida." />
-      </div>
-    )
-  }
-
   if (isParentLoading) {
     return <PageLoading message="Carregando responsável..." />
   }
 
-  if (isParentError) {
+  if (parentError || !parentData) {
     return (
       <div className={styles.page}>
-        <ErrorCard description={getFriendlyErrorMessage(parentError)} onAction={refetchAll} />
-      </div>
-    )
-  }
-
-  if (!parentData) {
-    return (
-      <div className={styles.page}>
-        <EmptyCard title="Responsável não encontrado" description="Não encontramos os dados deste responsável." />
+        <ErrorCard
+          description={getFriendlyErrorMessage(parentError)}
+          actionLabel="Voltar para listagem de responsáveis"
+          onAction={() => navigate("/parents")} />
       </div>
     )
   }
@@ -150,37 +131,20 @@ export function ParentDetailPage() {
         title="Resumo do responsável"
         description="Dados completos de cadastro, contato e status."
         headerAction={
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <ButtonLink size="sm" to={`/parents/edit/${parentData.id}`} variant="primary">
-              Editar responsável
-            </ButtonLink>
-
-            <Button
-              type="button"
-              onClick={() => archiveParentMutation()}
-              disabled={isArchiveParentPending}
-              variant={parentData.archivedAt ? "success" : "warning"}
-              size="sm"
-            >
-              {parentData.archivedAt ? "Ativar responsável" : "Arquivar responsável"}
-            </Button>
-
-            <Button
-              type="button"
-              onClick={handleParentDelete}
-              disabled={isDeleteParentPending}
-              variant="error"
-              size="sm"
-            >
-              Excluir responsável
-            </Button>
-          </div>
+          <DetailsActions
+            data={parentData}
+            editTo={`/parents/edit/${parentData.id}`}
+            handleArchive={archiveParentMutation}
+            handleDelete={handleParentDelete}
+            isArchivePending={isArchiveParentPending}
+            isDeletePending={isDeleteParentPending}
+          />
         }
       >
         {(isArchiveParentError || isDeleteParentError) && (
-          <div className="alert alert-error text-sm">
+          <Alert variant="error">
             {getFriendlyErrorMessage(archiveParentError || deleteParentError)}
-          </div>
+          </Alert>
         )}
 
         <div className={styles.summaryGrid}>
@@ -194,17 +158,11 @@ export function ParentDetailPage() {
         title="Alunos vinculados"
         description={`Alunos registrados sob a responsabilidade de ${parentData.name}.`}
       >
-        {isParentStudentsLoading && <PageLoading message="Carregando alunos..." />}
-
-        {isParentStudentsError && (
-          <div className="alert alert-error text-sm mb-4">
-            {getFriendlyErrorMessage(parentStudentsError)}
-          </div>
-        )}
-
-        {parentStudentsData && (
-          <StudentsTable variant="parentPage" students={parentStudentsData} />
-        )}
+        <StudentsTable
+          students={parentStudentsData ?? []}
+          loading={isParentStudentsLoading}
+          error={parentStudentsError ? getFriendlyErrorMessage(parentStudentsError) : ""}
+          variant="parentPage" />
       </SectionCard>
     </div>
   )

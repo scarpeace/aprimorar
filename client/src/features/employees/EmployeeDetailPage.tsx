@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { UserCog } from "lucide-react"
-import { useParams } from "react-router-dom"
-import { Button, ButtonLink } from "@/components/ui/button"
+import { useNavigate, useParams } from "react-router-dom"
+import { ButtonLink } from "@/components/ui/button"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { PageHeader } from "@/components/ui/page-header"
@@ -14,6 +14,8 @@ import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/employees/EmployeeDetailPage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { employeesApi, eventsApi, getFriendlyErrorMessage } from "@/services/api"
+import { DetailsActions } from "@/components/ui/details-actions"
+import { Alert } from "@/components/ui/alert"
 
 const EMPLOYEE_EVENTS_PARAMS = { page: 0, size: 100, sortBy: "startDate" }
 
@@ -21,6 +23,7 @@ export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
   const employeeId = id ?? ""
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const employeeQuery = useQuery({
     queryKey: [...queryKeys.employees, employeeId],
@@ -28,7 +31,11 @@ export function EmployeeDetailPage() {
     enabled: Boolean(id),
   })
 
-  const archiveEmployeeMutation = useMutation({
+  const {
+    mutate: archiveEmployeeMutation,
+    isPending: isArchiveEmployeePending,
+    error: archiveEmployeeError,
+  } = useMutation({
     mutationFn: () =>
       employeeQuery.data?.archivedAt ? employeesApi.unarchive(employeeId) : employeesApi.archive(employeeId),
     onSuccess: async () => {
@@ -38,6 +45,24 @@ export function EmployeeDetailPage() {
         queryClient.invalidateQueries({ queryKey: queryKeys.events }),
         queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
       ])
+    },
+  })
+
+  const {
+    mutate: deleteEmployeeMutation,
+    isPending: isDeleteEmployeePending,
+    error: deleteEmployeeError,
+  } = useMutation({
+    mutationFn: () => employeesApi.delete(employeeId),
+    onSuccess: async () => {
+      queryClient.removeQueries({ queryKey: [...queryKeys.employees, employeeId] })
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.employees }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
+      ])
+      globalThis.alert("Colaborador excluído com sucesso.")
+      navigate("/employees")
     },
   })
 
@@ -63,6 +88,12 @@ export function EmployeeDetailPage() {
 
   const refetchAll = async () => {
     await Promise.all([employeeQuery.refetch(), employeeEventsQuery.refetch()])
+  }
+
+  const handleEmployeeDelete = () => {
+    if (globalThis.confirm("Tem certeza que deseja excluir este colaborador? Esta ação não pode ser desfeita.")) {
+      deleteEmployeeMutation()
+    }
   }
 
   if (employeeQuery.isLoading || employeeEventsQuery.isLoading) {
@@ -95,7 +126,7 @@ export function EmployeeDetailPage() {
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: employee.name },
     { label: "E-mail", value: employee.email },
-    { label: "Cargo", value: dutyLabels[employee.duty] },
+    { label: "Cargo", value: dutyLabels[employee.duty as keyof typeof dutyLabels] },
     { label: "Contato", value: employee.contact },
     { label: "CPF", value: employee.cpf },
     { label: "Chave PIX", value: employee.pix },
@@ -126,27 +157,21 @@ export function EmployeeDetailPage() {
         title="Resumo do colaborador"
         description="Dados completos de cadastro, contato e status."
         headerAction={
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <ButtonLink size="sm" to={`/employees/edit/${employee.id}`} variant="primary">
-              Editar colaborador
-            </ButtonLink>
-            <Button
-              type="button"
-              onClick={() => archiveEmployeeMutation.mutate()}
-              disabled={archiveEmployeeMutation.isPending}
-              variant={employee.archivedAt ? "warning" : "error"}
-              size="sm"
-            >
-              {employee.archivedAt ? "Ativar colaborador" : "Arquivar colaborador"}
-            </Button>
-          </div>
+          <DetailsActions
+            data={employee}
+            editTo={`/employees/edit/${employee.id}`}
+            handleArchive={archiveEmployeeMutation}
+            handleDelete={handleEmployeeDelete}
+            isArchivePending={isArchiveEmployeePending}
+            isDeletePending={isDeleteEmployeePending}
+          />
         }
       >
-        {archiveEmployeeMutation.isError ? (
-          <div className="alert alert-error text-sm">
-            {getFriendlyErrorMessage(archiveEmployeeMutation.error)}
-          </div>
-        ) : null}
+        {(archiveEmployeeError ?? deleteEmployeeError) && (
+          <Alert variant="error">
+            {getFriendlyErrorMessage(archiveEmployeeError ?? deleteEmployeeError)}
+          </Alert>
+        )}
         <div className={styles.summaryGrid}>
           {summaryItems.map((item) => (
             <SummaryItem key={item.label} label={item.label} value={item.value} />
