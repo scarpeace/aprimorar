@@ -23,7 +23,7 @@ export function EmployeesPage() {
     error,
     refetch,
   } = useQuery({
-    queryKey: queryKeys.employees.list(EMPLOYEES_LIST_PARAMS),
+    queryKey: [...queryKeys.employees, EMPLOYEES_LIST_PARAMS],
     queryFn: async () => {
       const employeesRes = await employeesApi.list(
         EMPLOYEES_LIST_PARAMS.page,

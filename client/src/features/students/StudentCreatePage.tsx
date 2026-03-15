@@ -67,7 +67,7 @@ export function StudentCreatePage() {
     error: parentsQueryError,
     refetch: refetchParents,
   } = useQuery({
-    queryKey: queryKeys.parents.list(PARENTS_LIST_PARAMS),
+    queryKey: [...queryKeys.parents, PARENTS_LIST_PARAMS],
     queryFn: () =>
       parentsApi.list(PARENTS_LIST_PARAMS.page, PARENTS_LIST_PARAMS.size, PARENTS_LIST_PARAMS.sortBy),
   })
@@ -111,10 +111,10 @@ export function StudentCreatePage() {
     },
     onSuccess: async (createdStudent) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.parents.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.students }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
       ])
 
       navigate(`/students/${createdStudent.id}`)

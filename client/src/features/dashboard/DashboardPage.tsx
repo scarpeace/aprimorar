@@ -25,7 +25,7 @@ export function DashboardPage() {
     error,
     refetch,
   } = useQuery({
-    queryKey: queryKeys.dashboard.summary(),
+    queryKey: queryKeys.dashboard,
     queryFn: async (): Promise<DashboardSummary> => {
       const [studentsResult, employeesResult, eventsResult] = await Promise.allSettled([
         studentsApi.list(

@@ -22,7 +22,7 @@ export function StudentDetailPage() {
   const queryClient = useQueryClient()
 
   const studentQuery = useQuery({
-    queryKey: queryKeys.students.detail(studentId),
+    queryKey: [...queryKeys.students, studentId],
     queryFn: () => studentsApi.getById(studentId),
     enabled: Boolean(id),
   })
@@ -32,16 +32,16 @@ export function StudentDetailPage() {
       studentQuery.data?.archivedAt ? studentsApi.unarchive(studentId) : studentsApi.archive(studentId),
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.students.detail(studentId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.students }),
+        queryClient.invalidateQueries({ queryKey: [...queryKeys.students, studentId] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
       ])
     },
   })
 
   const studentEventsQuery = useQuery({
-    queryKey: queryKeys.events.byStudent(studentId, STUDENT_EVENTS_PARAMS),
+    queryKey: [...queryKeys.events, "student", studentId, STUDENT_EVENTS_PARAMS],
     queryFn: () =>
       eventsApi.listByStudent(
         studentId,

@@ -70,13 +70,13 @@ export function StudentEditPage() {
   const registerWithMask = useHookFormMask(register)
 
   const studentQuery = useQuery({
-    queryKey: queryKeys.students.editDetail(studentId),
+    queryKey: [...queryKeys.students, "edit", studentId],
     queryFn: () => studentsApi.getByIdForEdit(studentId),
     enabled: Boolean(id),
   })
 
   const studentEventsQuery = useQuery({
-    queryKey: queryKeys.events.byStudent(studentId, DELETE_BLOCKING_EVENTS_PARAMS),
+    queryKey: [...queryKeys.events, "student", studentId, DELETE_BLOCKING_EVENTS_PARAMS],
     queryFn: () =>
       eventsApi.listByStudent(
         studentId,
@@ -134,12 +134,12 @@ export function StudentEditPage() {
     },
     onSuccess: async (updatedStudent) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.students.detail(studentId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.students.editDetail(studentId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.parents.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.parents.detail(studentQuery.data?.parent.id ?? "") }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.students }),
+        queryClient.invalidateQueries({ queryKey: [...queryKeys.students, studentId] }),
+        queryClient.invalidateQueries({ queryKey: [...queryKeys.students, "edit", studentId] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
+        queryClient.invalidateQueries({ queryKey: [...queryKeys.parents, studentQuery.data?.parent.id ?? ""] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
       ])
 
       navigate(`/students/${updatedStudent.id}`)
@@ -157,11 +157,11 @@ export function StudentEditPage() {
     },
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.students.detail(studentId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.students.editDetail(studentId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.students }),
+        queryClient.invalidateQueries({ queryKey: [...queryKeys.students, studentId] }),
+        queryClient.invalidateQueries({ queryKey: [...queryKeys.students, "edit", studentId] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
       ])
 
       navigate("/students")

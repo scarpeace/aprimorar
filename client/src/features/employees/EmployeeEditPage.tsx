@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -33,12 +33,89 @@ function createEmptyEmployeeValues(): EmployeeFormInput {
   }
 }
 
+async function invalidateEmployeeQueries(queryClient: QueryClient, employeeId: string) {
+  await Promise.all([
+    queryClient.invalidateQueries({ queryKey: queryKeys.employees }),
+    queryClient.invalidateQueries({ queryKey: [...queryKeys.employees, employeeId] }),
+    queryClient.invalidateQueries({ queryKey: [...queryKeys.employees, "edit", employeeId] }),
+    queryClient.invalidateQueries({ queryKey: queryKeys.events }),
+    queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
+  ])
+}
+
+function useEmployeeData(employeeId: string) {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const employeeQuery = useQuery({
+    queryKey: [...queryKeys.employees, "edit", employeeId],
+    queryFn: () => employeesApi.getByIdForEdit(employeeId),
+    enabled: Boolean(employeeId),
+  })
+
+  const employeeEventsQuery = useQuery({
+    queryKey: [...queryKeys.events, "employee", employeeId, DELETE_BLOCKING_EVENTS_PARAMS],
+    queryFn: () =>
+      eventsApi.listByEmployee(
+        employeeId,
+        DELETE_BLOCKING_EVENTS_PARAMS.page,
+        DELETE_BLOCKING_EVENTS_PARAMS.size,
+        DELETE_BLOCKING_EVENTS_PARAMS.sortBy
+      ),
+    enabled: Boolean(employeeId),
+  })
+
+  const updateEmployeeMutation = useMutation({
+    mutationFn: (data: EmployeeFormInput) => employeesApi.update(employeeId, data),
+    onMutate: () => {
+      setSubmitError(null)
+    },
+    onSuccess: async (updatedEmployee) => {
+      await invalidateEmployeeQueries(queryClient, employeeId)
+      navigate(`/employees/${updatedEmployee.id}`)
+    },
+    onError: (error) => {
+      console.error("Falha ao atualizar colaborador:", error)
+      setSubmitError(getFriendlyErrorMessage(error))
+    },
+  })
+
+  const deleteEmployeeMutation = useMutation({
+    mutationFn: () => employeesApi.delete(employeeId),
+    onMutate: () => {
+      setSubmitError(null)
+    },
+    onSuccess: async () => {
+      await invalidateEmployeeQueries(queryClient, employeeId)
+      navigate("/employees")
+    },
+    onError: (error) => {
+      console.error("Falha ao excluir colaborador:", error)
+      setSubmitError(getFriendlyErrorMessage(error))
+    },
+  })
+
+  return {
+    employeeQuery,
+    employeeEventsQuery,
+    updateEmployeeMutation,
+    deleteEmployeeMutation,
+    submitError,
+  }
+}
+
 export function EmployeeEditPage() {
   const { id } = useParams<{ id: string }>()
   const employeeId = id ?? ""
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const {
+    employeeQuery,
+    employeeEventsQuery,
+    updateEmployeeMutation,
+    deleteEmployeeMutation,
+    submitError,
+  } = useEmployeeData(employeeId)
 
   const {
     register,
@@ -52,24 +129,6 @@ export function EmployeeEditPage() {
   })
 
   const registerWithMask = useHookFormMask(register)
-
-  const employeeQuery = useQuery({
-    queryKey: queryKeys.employees.editDetail(employeeId),
-    queryFn: () => employeesApi.getByIdForEdit(employeeId),
-    enabled: Boolean(id),
-  })
-
-  const employeeEventsQuery = useQuery({
-    queryKey: queryKeys.events.byEmployee(employeeId, DELETE_BLOCKING_EVENTS_PARAMS),
-    queryFn: () =>
-      eventsApi.listByEmployee(
-        employeeId,
-        DELETE_BLOCKING_EVENTS_PARAMS.page,
-        DELETE_BLOCKING_EVENTS_PARAMS.size,
-        DELETE_BLOCKING_EVENTS_PARAMS.sortBy
-      ),
-    enabled: Boolean(id),
-  })
 
   useEffect(() => {
     if (!employeeQuery.data) {
@@ -90,50 +149,6 @@ export function EmployeeEditPage() {
     setValue("contact", employeeQuery.data.contact)
     setValue("cpf", employeeQuery.data.cpf)
   }, [employeeQuery.data, reset, setValue])
-
-  const updateEmployeeMutation = useMutation({
-    mutationFn: (data: EmployeeFormInput) => employeesApi.update(employeeId, data),
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async (updatedEmployee) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees.detail(employeeId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees.editDetail(employeeId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
-      ])
-
-      navigate(`/employees/${updatedEmployee.id}`)
-    },
-    onError: (error) => {
-      console.error("Falha ao atualizar colaborador:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
-
-  const deleteEmployeeMutation = useMutation({
-    mutationFn: () => employeesApi.delete(employeeId),
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees.detail(employeeId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees.editDetail(employeeId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
-      ])
-
-      navigate("/employees")
-    },
-    onError: (error) => {
-      console.error("Falha ao excluir colaborador:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
 
   const onSubmit = (data: EmployeeFormInput) => {
     updateEmployeeMutation.mutate(data)

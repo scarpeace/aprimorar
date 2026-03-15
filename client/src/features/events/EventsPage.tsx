@@ -20,7 +20,7 @@ export function EventsPage() {
     error,
     refetch,
   } = useQuery({
-    queryKey: queryKeys.events.list(EVENTS_LIST_PARAMS),
+    queryKey: [...queryKeys.events, EVENTS_LIST_PARAMS],
     queryFn: async () => {
       const eventsRes = await eventsApi.list(
         EVENTS_LIST_PARAMS.page,

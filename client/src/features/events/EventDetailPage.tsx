@@ -1,8 +1,8 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { Calendar } from "lucide-react"
-import { useParams } from "react-router-dom"
-import { ButtonLink } from "@/components/ui/button"
+import { useParams, useNavigate } from "react-router-dom"
+import { Button, ButtonLink } from "@/components/ui/button"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { PageHeader } from "@/components/ui/page-header"
@@ -18,11 +18,22 @@ import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
 export function EventDetailPage() {
   const { id } = useParams<{ id: string }>()
   const eventId = id ?? ""
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const eventQuery = useQuery({
-    queryKey: queryKeys.events.detail(eventId),
+    queryKey: [...queryKeys.events, eventId],
     queryFn: () => eventsApi.getById(eventId),
     enabled: Boolean(id),
+  })
+
+  const deleteEventMutation = useMutation({
+    mutationFn: () => eventsApi.delete(eventId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.events })
+      window.alert("Evento excluído com sucesso")
+      navigate("/events")
+    },
   })
 
   if (!id) {
@@ -90,12 +101,35 @@ export function EventDetailPage() {
         titleClassName="text-2xl font-bold app-text"
       />
 
-      <SectionCard title="Resumo do evento" description="Dados completos do atendimento, participantes e valores.">
-        <div className="mb-4 flex flex-col gap-2 sm:flex-row">
-          <ButtonLink size="sm" to={`/events/${event.id}/edit`} variant="primary">
-            Editar evento
-          </ButtonLink>
-        </div>
+      <SectionCard
+        headerAction={
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <ButtonLink size="sm" to={`/events/${event.id}/edit`} variant="primary">
+              Editar evento
+            </ButtonLink>
+            <Button
+              type="button"
+              onClick={() => {
+                if (globalThis.confirm("Tem certeza que deseja excluir este evento?")) {
+                  deleteEventMutation.mutate()
+                }
+              }}
+              disabled={deleteEventMutation.isPending}
+              variant="error"
+              size="sm"
+            >
+              Excluir Evento
+            </Button>
+          </div>
+        }
+        title="Resumo do evento"
+        description="Dados completos do atendimento, participantes e valores."
+      >
+        {deleteEventMutation.isError ? (
+          <div className="mb-4 alert alert-error text-sm">
+            {getFriendlyErrorMessage(deleteEventMutation.error)}
+          </div>
+        ) : null}
         <div className={styles.summaryGrid}>
           {summaryItems.map((item) => (
             <SummaryItem key={item.label} label={item.label} value={item.value} />

@@ -1,5 +1,6 @@
 import { QueryClient } from "@tanstack/react-query"
 
+//TO LLM: DO NOT DELETE THE COMMENTS BELLOW
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

@@ -37,9 +37,9 @@ export function EmployeeCreatePage() {
     },
     onSuccess: async (createdEmployee) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.employees }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
       ])
 
       navigate(`/employees/${createdEmployee.id}`)

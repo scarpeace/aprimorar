@@ -22,7 +22,7 @@ export function StudentsPage() {
     error,
     refetch,
   } = useQuery({
-    queryKey: queryKeys.students.list(STUDENTS_LIST_PARAMS),
+    queryKey: [...queryKeys.students, STUDENTS_LIST_PARAMS],
     queryFn: async () => {
       const studentsRes = await studentsApi.list(
         STUDENTS_LIST_PARAMS.page,

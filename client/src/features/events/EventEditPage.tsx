@@ -76,13 +76,13 @@ export function EventEditPage() {
   const employeeIdField = register("employeeId")
 
   const eventQuery = useQuery({
-    queryKey: queryKeys.events.editDetail(eventId),
+    queryKey: [...queryKeys.events, "edit", eventId],
     queryFn: () => eventsApi.getByIdForEdit(eventId),
     enabled: Boolean(id),
   })
 
   const optionsQuery = useQuery({
-    queryKey: queryKeys.events.createOptions(),
+    queryKey: queryKeys.events,
     queryFn: async (): Promise<EventCreateOptions> => {
       const [studentsRes, employeesRes] = await Promise.all([
         studentsApi.list(EVENT_OPTIONS_PARAMS.page, EVENT_OPTIONS_PARAMS.size, EVENT_OPTIONS_PARAMS.sortBy),
@@ -121,14 +121,10 @@ export function EventEditPage() {
     onMutate: () => {
       setSubmitError(null)
     },
-    onSuccess: async (updatedEvent, data) => {
+    onSuccess: async (updatedEvent) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.editDetail(eventId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.byStudentRoot(data.studentId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.byEmployeeRoot(data.employeeId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
       ])
 
       navigate(`/events/${updatedEvent.id}`)
@@ -146,10 +142,8 @@ export function EventEditPage() {
     },
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(eventId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.editDetail(eventId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
       ])
 
       navigate("/events")

@@ -23,7 +23,7 @@ export function EmployeeDetailPage() {
   const queryClient = useQueryClient()
 
   const employeeQuery = useQuery({
-    queryKey: queryKeys.employees.detail(employeeId),
+    queryKey: [...queryKeys.employees, employeeId],
     queryFn: () => employeesApi.getById(employeeId),
     enabled: Boolean(id),
   })
@@ -33,16 +33,16 @@ export function EmployeeDetailPage() {
       employeeQuery.data?.archivedAt ? employeesApi.unarchive(employeeId) : employeesApi.archive(employeeId),
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees.detail(employeeId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.createOptions() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.summary() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.employees }),
+        queryClient.invalidateQueries({ queryKey: [...queryKeys.employees, employeeId] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
       ])
     },
   })
 
   const employeeEventsQuery = useQuery({
-    queryKey: queryKeys.events.byEmployee(employeeId, EMPLOYEE_EVENTS_PARAMS),
+    queryKey: [...queryKeys.events, "employee", employeeId, EMPLOYEE_EVENTS_PARAMS],
     queryFn: () =>
       eventsApi.listByEmployee(
         employeeId,
