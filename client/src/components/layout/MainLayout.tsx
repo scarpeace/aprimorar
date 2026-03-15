@@ -4,12 +4,14 @@ import {
   UserCog,
   Calendar,
   GraduationCap,
+  Handshake
 } from "lucide-react"
 import styles from "@/components/layout/MainLayout.module.css"
 
 const navigation = [
   { name: "Painel", href: "/", icon: LayoutDashboard },
   { name: "Alunos", href: "/students", icon: GraduationCap },
+  { name: "Pais e Responsáveis", href: "/parents", icon: Handshake },
   { name: "Colaboradores", href: "/employees", icon: UserCog },
   { name: "Eventos", href: "/events", icon: Calendar },
 ]

@@ -16,6 +16,10 @@ const EventsPage = lazy(() => import("@/features/events/EventsPage").then((modul
 const EventDetailPage = lazy(() => import("@/features/events/EventDetailPage").then((module) => ({ default: module.EventDetailPage })))
 const EventCreatePage = lazy(() => import("@/features/events/EventCreatePage").then((module) => ({ default: module.EventCreatePage })))
 const EventEditPage = lazy(() => import("@/features/events/EventEditPage").then((module) => ({ default: module.EventEditPage })))
+const ParentsPage = lazy(() => import("@/features/parents/ParentsPage").then((module) => ({ default: module.ParentsPage })))
+const ParentDetailPage = lazy(() => import("@/features/parents/ParentDetailPage").then((module) => ({ default: module.ParentDetailPage })))
+const ParentCreatePage = lazy(() => import("@/features/parents/ParentCreatePage").then((module) => ({ default: module.ParentCreatePage })))
+const ParentEditPage = lazy(() => import("@/features/parents/ParentEditPage").then((module) => ({ default: module.ParentEditPage })))
 
 function App() {
   return (
@@ -24,18 +28,26 @@ function App() {
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<DashboardPage />} />
+
             <Route path="/students" element={<StudentsPage />} />
             <Route path="/students/new" element={<StudentCreatePage />} />
-            <Route path="/students/:id/edit" element={<StudentEditPage />} />
+            <Route path="/students/edit/:id" element={<StudentEditPage />} />
             <Route path="/students/:id" element={<StudentDetailPage />} />
+
             <Route path="/employees" element={<EmployeesPage />} />
             <Route path="/employees/new" element={<EmployeeCreatePage />} />
-            <Route path="/employees/:id/edit" element={<EmployeeEditPage />} />
+            <Route path="/employees/edit/:id" element={<EmployeeEditPage />} />
             <Route path="/employees/:id" element={<EmployeeDetailPage />} />
+
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/new" element={<EventCreatePage />} />
-            <Route path="/events/:id/edit" element={<EventEditPage />} />
+            <Route path="/events/edit/:id" element={<EventEditPage />} />
             <Route path="/events/:id" element={<EventDetailPage />} />
+
+            <Route path="/parents" element={<ParentsPage />} />
+            <Route path="/parents/new" element={<ParentCreatePage />} />
+            <Route path="/parents/:id" element={<ParentDetailPage />} />
+            <Route path="/parents/edit/:id" element={<ParentEditPage />} />
           </Route>
         </Routes>
       </Suspense>

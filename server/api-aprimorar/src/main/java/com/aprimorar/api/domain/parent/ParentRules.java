@@ -9,10 +9,6 @@ public class ParentRules {
     }
 
     private static void validateRequiredFields(Parent parent) {
-        if (parent.getId() == null) {
-            throw new InvalidParentException("ID do responsável é obrigatória");
-        }
-
         if (parent.getName() == null || parent.getName().isBlank()) {
             throw new InvalidParentException("Nome do responsável é obrigatório");
         }

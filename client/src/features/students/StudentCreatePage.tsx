@@ -10,33 +10,32 @@ import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/students/StudentCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
-import { studentFormSchema, type StudentFormInput } from "@/lib/schemas"
+import { studentInputSchema, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
 
 const PARENTS_LIST_PARAMS = { page: 0, size: 100, sortBy: "name" }
-const EMPTY_PARENTS: Awaited<ReturnType<typeof parentsApi.list>>["content"] = []
-const STUDENT_CREATE_DEFAULT_VALUES: StudentFormInput = {
-  name: "Marina Oliveira",
-  birthdate: "2013-08-21",
-  cpf: "123.456.789-10",
-  contact: "(11) 98888-7766",
-  email: "marina.oliveira@exemplo.com",
-  school: "Escola Municipal Monte Azul",
+const STUDENT_PARANA: StudentFormInput = {
+  name: "Lucas Pereira",
+  birthdate: "2016-07-30",
+  cpf: "456.789.012-33",
+  contact: "(41) 99911-2233",
+  email: "lucas.pereira@exemplo.com",
+  school: "Escola Nossa Senhora",
   address: {
-    street: "Rua das Acacias",
-    number: "245",
-    complement: "Casa 2",
-    district: "Jardim Primavera",
-    city: "Sao Paulo",
-    state: "SP",
-    zip: "04711-230",
+    street: "Rua das Rosas",
+    number: "15",
+    complement: "",
+    district: "Batel",
+    city: "Curitiba",
+    state: "PR",
+    zip: "80420-000",
   },
   parent: {
-    name: "Ana Oliveira",
-    email: "ana.oliveira@exemplo.com",
-    contact: "(11) 97777-6655",
-    cpf: "987.654.321-00",
+    name: "Marcos Pereira",
+    email: "marcos.pereira@exemplo.com",
+    contact: "(41) 95544-3322",
+    cpf: "334.445.556-78",
   },
 }
 
@@ -54,10 +53,10 @@ export function StudentCreatePage() {
     setValue,
     formState: { errors },
   } = useForm<StudentFormInput>({
-    resolver: zodResolver(studentFormSchema),
-    mode:"onBlur",
+    resolver: zodResolver(studentInputSchema),
+    mode: "onBlur",
     shouldUnregister: true,
-    defaultValues: STUDENT_CREATE_DEFAULT_VALUES,
+    defaultValues: STUDENT_PARANA,
   })
 
   const {
@@ -69,10 +68,10 @@ export function StudentCreatePage() {
   } = useQuery({
     queryKey: [...queryKeys.parents, PARENTS_LIST_PARAMS],
     queryFn: () =>
-      parentsApi.list(PARENTS_LIST_PARAMS.page, PARENTS_LIST_PARAMS.size, PARENTS_LIST_PARAMS.sortBy),
+      parentsApi.listPaginated(PARENTS_LIST_PARAMS.page, PARENTS_LIST_PARAMS.size, PARENTS_LIST_PARAMS.sortBy),
   })
 
-  const parents = parentsPage?.content ?? EMPTY_PARENTS
+  const parents = parentsPage?.content ?? []
   const parentsError = isParentsError ? getFriendlyErrorMessage(parentsQueryError) : null
   const effectiveParentMode = parents.length > 0 ? parentMode : "new"
 
@@ -83,7 +82,7 @@ export function StudentCreatePage() {
       return
     }
 
-    const selectedParent = parents.find((item) => item.id === selectedParentId)
+    const selectedParent = parents.find((item: { id: string }) => item.id === selectedParentId)
     if (!selectedParent) {
       return
     }
@@ -99,9 +98,9 @@ export function StudentCreatePage() {
       const payload: StudentFormInput =
         effectiveParentMode === "existing" && selectedParentId
           ? {
-              ...data,
-              parent: await parentsApi.getById(selectedParentId),
-            }
+            ...data,
+            parent: await parentsApi.getById(selectedParentId),
+          }
           : data
 
       return studentsApi.create(payload)
@@ -330,7 +329,7 @@ export function StudentCreatePage() {
                   <option value="" disabled>
                     Selecione um responsável
                   </option>
-                  {parents.map((parent) => (
+                  {parents.map((parent: any) => (
                     <option key={parent.id} value={parent.id}>
                       {parent.name}
                     </option>

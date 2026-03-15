@@ -11,10 +11,10 @@ import { SectionCard } from "@/components/ui/section-card"
 import { SummaryItem } from "@/components/ui/summary-item"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/students/StudentDetailPage.module.css"
+import { formatDateShortYear } from "@/lib/shared/formatter"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
 
-const STUDENT_EVENTS_PARAMS = { page: 0, size: 100, sortBy: "startDate" }
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -41,16 +41,15 @@ export function StudentDetailPage() {
   })
 
   const studentEventsQuery = useQuery({
-    queryKey: [...queryKeys.events, "student", studentId, STUDENT_EVENTS_PARAMS],
+    queryKey: [...queryKeys.events, "student", studentId],
     queryFn: () =>
-      eventsApi.listByStudent(
-        studentId,
-        STUDENT_EVENTS_PARAMS.page,
-        STUDENT_EVENTS_PARAMS.size,
-        STUDENT_EVENTS_PARAMS.sortBy
-      ),
+      eventsApi.listByStudent(studentId),
     enabled: Boolean(id),
   })
+
+  const refetchAll = async () => {
+    await Promise.all([studentQuery.refetch(), studentEventsQuery.refetch()])
+  }
 
   if (!id) {
     return (
@@ -58,10 +57,6 @@ export function StudentDetailPage() {
         <ErrorCard description="ID do aluno não informado." />
       </div>
     )
-  }
-
-  const refetchAll = async () => {
-    await Promise.all([studentQuery.refetch(), studentEventsQuery.refetch()])
   }
 
   if (studentQuery.isLoading || studentEventsQuery.isLoading) {
@@ -98,7 +93,7 @@ export function StudentDetailPage() {
     { label: "Idade", value: String(student.age) },
     { label: "Contato", value: student.contact },
     { label: "Data de nascimento", value: student.birthdate },
-    { label: "Data de matrícula", value: student.createdAt },
+    { label: "Data de matrícula", value: formatDateShortYear(student.createdAt) },
     { label: "Escola", value: student.school },
     { label: "Status", value: student.archivedAt ? "Arquivado" : "Ativo" },
     { label: "Responsável", value: student.parent.name },
@@ -133,7 +128,7 @@ export function StudentDetailPage() {
         description="Dados de aluno, responsável e endereço em um único resumo."
         headerAction={
           <div className="flex flex-col gap-2 sm:flex-row">
-            <ButtonLink size="sm" to={`/students/${student.id}/edit`} variant="primary">
+            <ButtonLink size="sm" to={`/students/edit/${student.id}`} variant="primary">
               Editar Aluno
             </ButtonLink>
             <Button

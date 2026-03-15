@@ -31,7 +31,7 @@ export function EventDetailPage() {
     mutationFn: () => eventsApi.delete(eventId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.events })
-      window.alert("Evento excluído com sucesso")
+      globalThis.alert("Evento excluído com sucesso")
       navigate("/events")
     },
   })
@@ -104,13 +104,14 @@ export function EventDetailPage() {
       <SectionCard
         headerAction={
           <div className="flex flex-col gap-2 sm:flex-row">
-            <ButtonLink size="sm" to={`/events/${event.id}/edit`} variant="primary">
+            <ButtonLink size="sm" to={`/events/edit/${event.id}`} variant="primary">
               Editar evento
             </ButtonLink>
             <Button
               type="button"
               onClick={() => {
-                if (globalThis.confirm("Tem certeza que deseja excluir este evento?")) {
+                const confirmed = globalThis.confirm("Deseja realmente arquivar este evento?")
+                if (confirmed) {
                   deleteEventMutation.mutate()
                 }
               }}

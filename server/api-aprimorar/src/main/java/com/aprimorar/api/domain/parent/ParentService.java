@@ -1,9 +1,12 @@
 package com.aprimorar.api.domain.parent;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
+import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
+import com.aprimorar.api.domain.student.StudentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -36,16 +39,25 @@ public class ParentService {
 
     private final ParentRepository parentRepo;
     private final ParentMapper parentMapper;
+    private final StudentRepository studentRepo;
 
-    public ParentService(ParentRepository parentRepo, ParentMapper parentMapper) {
+    public ParentService(ParentRepository parentRepo, ParentMapper parentMapper, StudentRepository studentRepo) {
         this.parentRepo = parentRepo;
         this.parentMapper = parentMapper;
+        this.studentRepo = studentRepo;
     }
 
     /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
-    public Page<ParentResponseDTO> getParents(Pageable pageable) {
+    public List<ParentResponseDTO> getParents() {
+        List<Parent> list = parentRepo.findAll();
+        log.info("Consulta de responsáveis finalizada, {} registros encontrados.", list.size());
+        return list.stream().map(parentMapper::convertToDto).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ParentResponseDTO> getPaginatedParents(Pageable pageable) {
         Page<Parent> page = parentRepo.findAll(pageable);
         log.info("Consulta de responsáveis finalizada, {} registros encontrados.", page.getTotalElements());
         return page.map(parentMapper::convertToDto);
@@ -80,20 +92,20 @@ public class ParentService {
     public ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO request) {
 
         Parent newParent = parentMapper.convertToEntity(request);
-        Parent oldParent = findParentOrThrow(parentId);
+        Parent updatedParent = findParentOrThrow(parentId);
         verifyParentUniquenessForUpdate(
                 newParent.getCpf(),
                 newParent.getEmail(),
                 parentId
         );
-        oldParent.setName(newParent.getName());
-        oldParent.setEmail(newParent.getEmail());
-        oldParent.setContact(newParent.getContact());
-        oldParent.setCpf(newParent.getCpf());
-        ParentRules.validate(oldParent);
+        updatedParent.setName(newParent.getName());
+        updatedParent.setEmail(newParent.getEmail());
+        updatedParent.setContact(newParent.getContact());
+        updatedParent.setCpf(newParent.getCpf());
+        ParentRules.validate(updatedParent);
 
-        log.info("Responsável {} atualizado com sucesso.", oldParent.getName().toUpperCase());
-        return parentMapper.convertToDto(oldParent);
+        log.info("Responsável {} atualizado com sucesso.", updatedParent.getName().toUpperCase());
+        return parentMapper.convertToDto(updatedParent);
     }
 
     @Transactional
@@ -113,6 +125,13 @@ public class ParentService {
     @Transactional
     public void deleteParent(UUID id) {
         Parent parent = findParentOrThrow(id);
+
+        if (studentRepo.existsByParentId(id)) {
+            throw new ParentHasLinkedStudentsException(
+                    "Não é possível excluir um responsável com alunos vinculados. Primeiro, remova o vínculo ou exclua os alunos."
+            );
+        }
+
         parentRepo.delete(parent);
         log.info("Responsável {} deletado com sucesso.", parent.getName().toUpperCase());
     }

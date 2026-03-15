@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { formatPhone, formatCpf, isValidCpf, isValidBrazilianPhone } from '../shared/formatter';
+import { formatPhone, formatCpf, isValidCpf, isValidBrazilianPhone, formatDateShortYear } from '../shared/formatter';
 
 export const parentFormSchema = z.object({
   name: z.string().min(1, "Nome do responsável é obrigatório"),
@@ -25,7 +25,7 @@ export const parentResponseSchema = z.object({
   contact: z.string().transform(formatPhone),
   cpf: z.string().transform(formatCpf),
   archivedAt: z.coerce.date().nullable(),
-  createdAt: z.coerce.date(),
+  createdAt: z.coerce.date().transform(formatDateShortYear),
   updatedAt: z.coerce.date().nullable(),
 })
 

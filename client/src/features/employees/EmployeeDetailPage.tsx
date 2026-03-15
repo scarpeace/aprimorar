@@ -127,7 +127,7 @@ export function EmployeeDetailPage() {
         description="Dados completos de cadastro, contato e status."
         headerAction={
           <div className="flex flex-col gap-2 sm:flex-row">
-            <ButtonLink size="sm" to={`/employees/${employee.id}/edit`} variant="primary">
+            <ButtonLink size="sm" to={`/employees/edit/${employee.id}`} variant="primary">
               Editar colaborador
             </ButtonLink>
             <Button

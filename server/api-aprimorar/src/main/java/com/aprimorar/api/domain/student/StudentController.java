@@ -1,5 +1,6 @@
 package com.aprimorar.api.domain.student;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
@@ -52,6 +54,15 @@ public class StudentController {
             @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         Page<StudentResponseDTO> students = studentService.getStudents(pageable);
+        return ResponseEntity.ok(students);
+    }
+
+    @Operation(summary = "List all STUDENTS by Parent", description = "Retrieves all students from database based on parentID")
+    @GetMapping("/parent/{parentId}")
+    public ResponseEntity<List<StudentResponseDTO>> listStudentsByParent(
+        @PathVariable UUID parentId
+    ) {
+        List<StudentResponseDTO> students = studentService.getStudentsByParent(parentId);
         return ResponseEntity.ok(students);
     }
 

@@ -14,46 +14,23 @@ import { PageLoading } from "@/components/ui/page-loading"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/students/StudentCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
-import { studentFormSchema, type StudentFormInput } from "@/lib/schemas"
+import { studentInputSchema, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { formatDateInputValue } from "@/lib/shared/formatter"
 import { eventsApi, getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
-
-const DELETE_BLOCKING_EVENTS_PARAMS = { page: 0, size: 1, sortBy: "startDate" }
-
-function createEmptyStudentValues(): StudentFormInput {
-  return {
-    name: "",
-    birthdate: "",
-    cpf: "",
-    contact: "",
-    email: "",
-    school: "",
-    address: {
-      street: "",
-      number: "",
-      complement: "",
-      district: "",
-      city: "",
-      state: "",
-      zip: "",
-    },
-    parent: {
-      name: "",
-      email: "",
-      contact: "",
-      cpf: "",
-    },
-  }
-}
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>()
   const studentId = id ?? ""
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-
   const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const studentQuery = useQuery({
+    queryKey: queryKeys.studentDetail(studentId),
+    queryFn: () => studentsApi.getById(studentId),
+    enabled: Boolean(id),
+  })
 
   const {
     register,
@@ -61,55 +38,39 @@ export function StudentEditPage() {
     setValue,
     formState: { errors },
   } = useForm<StudentFormInput>({
-    resolver: zodResolver(studentFormSchema),
+    resolver: zodResolver(studentInputSchema),
     mode: "onBlur",
-    shouldUnregister: true,
-    defaultValues: createEmptyStudentValues(),
   })
-
   const registerWithMask = useHookFormMask(register)
 
-  const studentQuery = useQuery({
-    queryKey: [...queryKeys.students, "edit", studentId],
-    queryFn: () => studentsApi.getByIdForEdit(studentId),
-    enabled: Boolean(id),
-  })
+  useEffect(() => {
+    if (studentQuery.data) {
+      setValue("name", studentQuery.data.name)
+      setValue("birthdate", formatDateInputValue(studentQuery.data.birthdate))
+      setValue("cpf", studentQuery.data.cpf)
+      setValue("contact", studentQuery.data.contact)
+      setValue("email", studentQuery.data.email)
+      setValue("school", studentQuery.data.school)
+      setValue("address.street", studentQuery.data.address.street)
+      setValue("address.number", studentQuery.data.address.number)
+      setValue("address.complement", studentQuery.data.address.complement ?? "")
+      setValue("address.district", studentQuery.data.address.district)
+      setValue("address.city", studentQuery.data.address.city)
+      setValue("address.state", studentQuery.data.address.state)
+      setValue("address.zip", studentQuery.data.address.zip)
+      setValue("parent.name", studentQuery.data.parent.name)
+      setValue("parent.email", studentQuery.data.parent.email)
+      setValue("parent.contact", studentQuery.data.parent.contact)
+      setValue("parent.cpf", studentQuery.data.parent.cpf)
+    }
+  }, [studentQuery.data])
 
   const studentEventsQuery = useQuery({
-    queryKey: [...queryKeys.events, "student", studentId, DELETE_BLOCKING_EVENTS_PARAMS],
+    queryKey: [...queryKeys.events, "student", studentId],
     queryFn: () =>
-      eventsApi.listByStudent(
-        studentId,
-        DELETE_BLOCKING_EVENTS_PARAMS.page,
-        DELETE_BLOCKING_EVENTS_PARAMS.size,
-        DELETE_BLOCKING_EVENTS_PARAMS.sortBy
-      ),
+      eventsApi.listByStudent(studentId),
     enabled: Boolean(id),
   })
-
-  useEffect(() => {
-    if (!studentQuery.data) {
-      return
-    }
-
-    setValue("name", studentQuery.data.name)
-    setValue("birthdate", formatDateInputValue(studentQuery.data.birthdate))
-    setValue("cpf", studentQuery.data.cpf)
-    setValue("contact", studentQuery.data.contact)
-    setValue("email", studentQuery.data.email)
-    setValue("school", studentQuery.data.school)
-    setValue("address.street", studentQuery.data.address.street)
-    setValue("address.number", studentQuery.data.address.number)
-    setValue("address.complement", studentQuery.data.address.complement ?? "")
-    setValue("address.district", studentQuery.data.address.district)
-    setValue("address.city", studentQuery.data.address.city)
-    setValue("address.state", studentQuery.data.address.state)
-    setValue("address.zip", studentQuery.data.address.zip)
-    setValue("parent.name", studentQuery.data.parent.name)
-    setValue("parent.email", studentQuery.data.parent.email)
-    setValue("parent.contact", studentQuery.data.parent.contact)
-    setValue("parent.cpf", studentQuery.data.parent.cpf)
-  }, [setValue, studentQuery.data])
 
   const updateStudentMutation = useMutation({
     mutationFn: async (data: StudentFormInput) => {
@@ -117,6 +78,7 @@ export function StudentEditPage() {
         throw new Error("Aluno não carregado para edição.")
       }
 
+      //TODO quando o backend do parent tiver pronto tem que arrumar isso aqui
       const updatedParent = await parentsApi.update(studentQuery.data.parent.id, data.parent!)
 
       return studentsApi.update(studentId, {
@@ -135,13 +97,10 @@ export function StudentEditPage() {
     onSuccess: async (updatedStudent) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-        queryClient.invalidateQueries({ queryKey: [...queryKeys.students, studentId] }),
-        queryClient.invalidateQueries({ queryKey: [...queryKeys.students, "edit", studentId] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.studentDetail(studentId) }),
         queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
-        queryClient.invalidateQueries({ queryKey: [...queryKeys.parents, studentQuery.data?.parent.id ?? ""] }),
         queryClient.invalidateQueries({ queryKey: queryKeys.events }),
       ])
-
       navigate(`/students/${updatedStudent.id}`)
     },
     onError: (error) => {
@@ -158,10 +117,9 @@ export function StudentEditPage() {
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-        queryClient.invalidateQueries({ queryKey: [...queryKeys.students, studentId] }),
-        queryClient.invalidateQueries({ queryKey: [...queryKeys.students, "edit", studentId] }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.studentDetail(studentId) }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
         queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
       ])
 
       navigate("/students")
@@ -224,6 +182,7 @@ export function StudentEditPage() {
     )
   }
 
+  //TODO Tem que ver como vai funcionar a deleção de aluno e se vai ter o CASCADE
   const studentHasLinkedEvents = (studentEventsQuery.data?.page.totalElements ?? 0) > 0
 
   return (
@@ -396,6 +355,7 @@ export function StudentEditPage() {
             variant="danger"
             className="sm:mr-auto"
           >
+            {/* TODO: tem alguma forma mais limpa de usar os icones? */}
             <Trash2 className="h-4 w-4" />
             Excluir aluno
           </Button>

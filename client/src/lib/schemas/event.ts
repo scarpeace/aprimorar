@@ -1,13 +1,12 @@
 import { z } from "zod"
 import { eventContentValues } from "@/lib/shared/enums"
-import { formatDateShortYear } from "../shared/formatter"
 
 // TODO Evento não vai precisar de título, ele vai ser gerado automaticamente no backend. Remover num futuro próximo do front.
-export const eventFormSchema = z.object({
+export const eventInputSchema = z.object({
   title: z.string().min(1, "Título é obrigatório").max(100, "Título deve ter no máximo 100 caracteres"),
   description: z.string().max(500, "Descrição deve ter no máximo 500 caracteres").optional(),
-  startDate: z.string().min(1, "Data/hora de início é obrigatório"),
-  endDate: z.string().min(1, "Data/hora de fim é obrigatório"),
+  startDate: z.date().min(1, "Data/hora de início é obrigatório"),
+  endDate: z.date().min(1, "Data/hora de fim é obrigatório"),
   price: z.number().min(0, "Preço deve ser maior ou igual a 0"),
   payment: z.number().min(0, "Pagamento deve ser maior ou igual a 0"),
   content: z.enum(eventContentValues),
@@ -16,28 +15,12 @@ export const eventFormSchema = z.object({
 }).refine((data) => data.payment <= data.price, {
   message: "Pagamento não pode ser maior que o preço",
   path: ["payment"],
-}).refine((data) => new Date(data.endDate) > new Date(data.startDate), {
+}).refine((data) => data.endDate > data.startDate, {
   message: "Fim deve ser depois do início",
   path: ["endDate"],
 })
 
-export const eventRequestSchema = eventFormSchema.transform((data) => ({
-  title: data.title,
-  description: data.description,
-  startDate: data.startDate,
-  endDate: data.endDate,
-  price: data.price,
-  payment: data.payment,
-  content: data.content,
-  student: {
-    id: data.studentId,
-  },
-  employee: {
-    id: data.employeeId,
-  },
-}))
-
-export const eventApiSchema = z.object({
+export const eventResponse = z.object({
   id: z.uuid(),
   title: z.string(),
   description: z.string().nullable(),
@@ -54,12 +37,5 @@ export const eventApiSchema = z.object({
   updatedAt: z.coerce.date().nullable(),
 })
 
-export const eventResponseSchema = eventApiSchema.transform((event) => ({
-  ...event,
-  createdAt: formatDateShortYear(event.createdAt),
-}))
-
-export type EventFormInput = z.infer<typeof eventFormSchema>
-export type EventRequestPayload = z.output<typeof eventRequestSchema>
-export type EventApiResponse = z.infer<typeof eventApiSchema>
-export type EventResponse = z.infer<typeof eventResponseSchema>
+export type EventFormInput = z.infer<typeof eventInputSchema>
+export type EventResponse = z.infer<typeof eventResponse>

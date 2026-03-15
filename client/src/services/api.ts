@@ -1,25 +1,20 @@
 import {
-  studentApiSchema,
   employeeApiSchema,
   employeeResponseSchema,
-  eventApiSchema,
-  eventRequestSchema,
-  eventResponseSchema,
   parentResponseSchema,
-  studentResponseSchema,
+  studentResponse,
+  eventResponse,
+  eventInputSchema,
 } from "@/lib/schemas"
 import type {
   ParentFormInput,
   EmployeeFormInput,
-  EventApiResponse,
   EventFormInput,
-  EventRequestPayload,
   StudentFormInput,
   EmployeeApiResponse,
   EmployeeResponse,
   EventResponse,
   ParentResponse,
-  StudentApiResponse,
   StudentResponse,
 } from "@/lib/schemas"
 import { pageResponseSchema, type PageResponse } from "@/lib/schemas/page-response"
@@ -83,23 +78,23 @@ api.interceptors.response.use(
 export const studentsApi = {
   async list(page = 0, size = 20, sortBy = "name",): Promise<PageResponse<StudentResponse>> {
     const { data } = await api.get<PageResponse<StudentResponse>>(`/v1/students?page=${page}&size=${size}&sort=${sortBy}`)
-    return pageResponseSchema(studentResponseSchema).parse(data);
+    return pageResponseSchema(studentResponse).parse(data);
+  },
+  async listByParent(id: string): Promise<StudentResponse[]> {
+    const { data } = await api.get<StudentResponse[]>(`/v1/students/parent/${id}`)
+    return studentResponse.array().parse(data);
   },
   async getById(id: string): Promise<StudentResponse> {
     const { data } = await api.get<StudentResponse>(`/v1/students/${id}`)
-    return studentResponseSchema.parse(data)
-  },
-  async getByIdForEdit(id: string): Promise<StudentApiResponse> {
-    const { data } = await api.get<StudentApiResponse>(`/v1/students/${id}`)
-    return studentApiSchema.parse(data)
+    return studentResponse.parse(data)
   },
   async create(input: StudentFormInput): Promise<StudentResponse> {
     const { data } = await api.post<StudentResponse>("/v1/students", input)
-    return studentResponseSchema.parse(data)
+    return studentResponse.parse(data)
   },
   async update(id: string, input: StudentFormInput): Promise<StudentResponse> {
     const { data } = await api.put<StudentResponse>(`/v1/students/${id}`, input)
-    return studentResponseSchema.parse(data)
+    return studentResponse.parse(data)
   },
   delete: (id: string) => api.delete(`/v1/students/${id}`),
   archive: (id: string) => api.patch(`/v1/students/${id}/archive`),
@@ -133,7 +128,11 @@ export const employeesApi = {
 }
 
 export const parentsApi = {
-  async list(page = 0, size = 20, sortBy = "name",): Promise<PageResponse<ParentResponse>> {
+  async list(): Promise<ParentResponse[]> {
+    const { data } = await api.get<ParentResponse[]>(`/v1/parents`)
+    return parentResponseSchema.array().parse(data);
+  },
+  async listPaginated(page = 0, size = 20, sortBy = "name",): Promise<PageResponse<ParentResponse>> {
     const { data } = await api.get<PageResponse<ParentResponse>>(`/v1/parents?page=${page}&size=${size}&sort=${sortBy}`)
     return pageResponseSchema(parentResponseSchema).parse(data);
   },
@@ -151,42 +150,38 @@ export const parentsApi = {
   },
   archive: (id: string) => api.patch(`/v1/parents/${id}/archive`),
   unarchive: (id: string) => api.patch(`/v1/parents/${id}/unarchive`),
+  delete: (id: string) => api.delete(`/v1/parents/${id}`),
 }
 
 //TODO Implementar arquivamento e desarquivamento de eventos quando o backend expor esse suporte.
 export const eventsApi = {
   async list(page = 0, size = 20, sortBy = "startDate",): Promise<PageResponse<EventResponse>> {
     const { data } = await api.get<PageResponse<EventResponse>>(`/v1/events?page=${page}&size=${size}&sort=${sortBy}`)
-    return pageResponseSchema(eventResponseSchema).parse(data);
+    return pageResponseSchema(eventResponse).parse(data);
   },
 
   async listByStudent(id: string, page = 0, size = 20, sortBy = "startDate"): Promise<PageResponse<EventResponse>> {
     const { data } = await api.get<PageResponse<EventResponse>>(`/v1/events/student/${id}?page=${page}&size=${size}&sort=${sortBy}`)
-    return pageResponseSchema(eventResponseSchema).parse(data);
+    return pageResponseSchema(eventResponse).parse(data);
   },
 
   async listByEmployee(id: string, page = 0, size = 20, sortBy = "startDate"): Promise<PageResponse<EventResponse>> {
     const { data } = await api.get<PageResponse<EventResponse>>(`/v1/events/employee/${id}?page=${page}&size=${size}&sort=${sortBy}`)
-    return pageResponseSchema(eventResponseSchema).parse(data);
+    return pageResponseSchema(eventResponse).parse(data);
   },
   async getById(id: string): Promise<EventResponse> {
     const { data } = await api.get<EventResponse>(`/v1/events/${id}`)
-    return eventResponseSchema.parse(data)
-  },
-  async getByIdForEdit(id: string): Promise<EventApiResponse> {
-    const { data } = await api.get<EventApiResponse>(`/v1/events/${id}`)
-    return eventApiSchema.parse(data)
+    return eventResponse.parse(data)
   },
   async create(input: EventFormInput): Promise<EventResponse> {
-    const payload = eventRequestSchema.parse(input)
-    const { data } = await api.post<EventResponse, { data: EventResponse }, EventRequestPayload>("/v1/events", payload)
-    return eventResponseSchema.parse(data)
+    const payload = eventInputSchema.parse(input)
+    const { data } = await api.post<EventResponse>("/v1/events", payload)
+    return eventResponse.parse(data)
   },
-
   async update(id: string, input: EventFormInput): Promise<EventResponse> {
-    const payload = eventRequestSchema.parse(input)
-    const { data } = await api.put<EventResponse, { data: EventResponse }, EventRequestPayload>(`/v1/events/${id}`, payload)
-    return eventResponseSchema.parse(data)
+    const payload = eventInputSchema.parse(input)
+    const { data } = await api.put<EventResponse>(`/v1/events/${id}`, payload)
+    return eventResponse.parse(data)
   },
 
   delete: (id: string) => api.delete(`/v1/events/${id}`),

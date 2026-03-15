@@ -13,10 +13,6 @@ type DashboardSummary = {
   revenue: number
 }
 
-const DASHBOARD_STUDENTS_LIST_PARAMS = { page: 0, size: 20, sortBy: "name" }
-const DASHBOARD_EMPLOYEES_LIST_PARAMS = { page: 0, size: 20, sortBy: "name" }
-const DASHBOARD_EVENTS_LIST_PARAMS = { page: 0, size: 20, sortBy: "startDate" }
-
 export function DashboardPage() {
   const {
     data,
@@ -28,21 +24,9 @@ export function DashboardPage() {
     queryKey: queryKeys.dashboard,
     queryFn: async (): Promise<DashboardSummary> => {
       const [studentsResult, employeesResult, eventsResult] = await Promise.allSettled([
-        studentsApi.list(
-          DASHBOARD_STUDENTS_LIST_PARAMS.page,
-          DASHBOARD_STUDENTS_LIST_PARAMS.size,
-          DASHBOARD_STUDENTS_LIST_PARAMS.sortBy
-        ),
-        employeesApi.list(
-          DASHBOARD_EMPLOYEES_LIST_PARAMS.page,
-          DASHBOARD_EMPLOYEES_LIST_PARAMS.size,
-          DASHBOARD_EMPLOYEES_LIST_PARAMS.sortBy
-        ),
-        eventsApi.list(
-          DASHBOARD_EVENTS_LIST_PARAMS.page,
-          DASHBOARD_EVENTS_LIST_PARAMS.size,
-          DASHBOARD_EVENTS_LIST_PARAMS.sortBy
-        ),
+        studentsApi.list(),
+        employeesApi.list(),
+        eventsApi.list(),
       ])
 
       let hasSuccess = false

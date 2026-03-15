@@ -1,9 +1,9 @@
 import { z } from "zod"
 import { parentFormSchema, parentResponseSchema } from "./parent"
 import { addressResponseSchema, addressFormSchema } from "./address"
-import { formatCpf, formatDateShortYear, formatPhone } from "../shared/formatter"
+import { formatCpf, formatPhone } from "../shared/formatter"
 
-export const studentFormSchema = z.object({
+export const studentInputSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   birthdate: z.string().refine((date) => {
     const d = new Date(date)
@@ -22,7 +22,7 @@ export const studentFormSchema = z.object({
   parent: parentFormSchema.optional(),
 })
 
-export const studentApiSchema = z.object({
+export const studentResponse = z.object({
   id: z.uuid(),
   name: z.string(),
   contact: z.string().transform(formatPhone),
@@ -38,12 +38,5 @@ export const studentApiSchema = z.object({
   updatedAt: z.coerce.date().nullable(),
 })
 
-export const studentResponseSchema = studentApiSchema.transform((student) => ({
-  ...student,
-  birthdate: formatDateShortYear(student.birthdate),
-  createdAt: formatDateShortYear(student.createdAt),
-}))
-
-export type StudentFormInput = z.infer<typeof studentFormSchema>
-export type StudentApiResponse = z.infer<typeof studentApiSchema>
-export type StudentResponse = z.infer<typeof studentResponseSchema>
+export type StudentFormInput = z.infer<typeof studentInputSchema>
+export type StudentResponse = z.infer<typeof studentResponse>

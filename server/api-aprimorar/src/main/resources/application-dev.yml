@@ -16,7 +16,7 @@ spring:
     hibernate:
       ddl-auto: validate
       format_sql: true
-    show-sql: true
+#    show-sql: true
 
   output:
     ansi:

@@ -9,14 +9,13 @@ import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/events/EventCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
-import { eventFormSchema, type EmployeeResponse, type EventFormInput, type StudentResponse } from "@/lib/schemas"
+import { eventInputSchema, type EmployeeResponse, type EventFormInput, type StudentResponse } from "@/lib/schemas"
 import { eventContentLabels, eventContentValues } from "@/lib/shared/enums"
 import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
 
 export function EventCreatePage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const {
@@ -25,13 +24,13 @@ export function EventCreatePage() {
     setValue,
     formState: { errors },
   } = useForm<EventFormInput>({
-    resolver: zodResolver(eventFormSchema),
+    resolver: zodResolver(eventInputSchema),
   })
 
   const studentIdField = register("studentId")
   const employeeIdField = register("employeeId")
 
-  const optionsQuery = useQuery({
+  const dropDownOptionsQuery = useQuery({
     queryKey: queryKeys.events,
     queryFn: async (): Promise<{ students: StudentResponse[]; employees: EmployeeResponse[] }> => {
       const [studentsRes, employeesRes] = await Promise.all([
@@ -46,8 +45,8 @@ export function EventCreatePage() {
     },
   })
 
-  const students = (optionsQuery.data?.students ?? []).filter((student) => !student.archivedAt)
-  const employees = (optionsQuery.data?.employees ?? []).filter((employee) => !employee.archivedAt)
+  const students = (dropDownOptionsQuery.data?.students ?? []).filter((student) => !student.archivedAt)
+  const employees = (dropDownOptionsQuery.data?.employees ?? []).filter((employee) => !employee.archivedAt)
 
   const createEventMutation = useMutation({
     mutationFn: (data: EventFormInput) => eventsApi.create(data),
@@ -75,7 +74,7 @@ export function EventCreatePage() {
   const isSubmitting = createEventMutation.isPending
 
   const renderContent = () => {
-    if (optionsQuery.isLoading) {
+    if (dropDownOptionsQuery.isLoading) {
       return (
         <div className="app-inline-loading">
           <span className="loading loading-spinner loading-sm text-primary" />
@@ -84,11 +83,11 @@ export function EventCreatePage() {
       )
     }
 
-    if (optionsQuery.isError) {
+    if (dropDownOptionsQuery.isError) {
       return (
         <div className="space-y-3">
-          <div className="alert alert-error text-sm">{getFriendlyErrorMessage(optionsQuery.error)}</div>
-          <Button type="button" onClick={() => void optionsQuery.refetch()} variant="primary">
+          <div className="alert alert-error text-sm">{getFriendlyErrorMessage(dropDownOptionsQuery.error)}</div>
+          <Button type="button" onClick={() => void dropDownOptionsQuery.refetch()} variant="primary">
             Tentar novamente
           </Button>
         </div>

@@ -12,48 +12,9 @@ import { PageLoading } from "@/components/ui/page-loading"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/events/EventCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
-import { eventFormSchema, type EventFormInput } from "@/lib/schemas"
+import { eventInputSchema, type EmployeeResponse, type EventFormInput, type StudentResponse } from "@/lib/schemas"
 import { eventContentLabels, eventContentValues } from "@/lib/shared/enums"
 import { getFriendlyErrorMessage, employeesApi, eventsApi, studentsApi } from "@/services/api"
-
-const EVENT_OPTIONS_PARAMS = { page: 0, size: 100, sortBy: "name" }
-const EMPTY_OPTIONS: EventCreateOptions = {
-  students: [],
-  employees: [],
-}
-
-type EventCreateOptions = {
-  students: Awaited<ReturnType<typeof studentsApi.list>>["content"]
-  employees: Awaited<ReturnType<typeof employeesApi.list>>["content"]
-}
-
-function createEmptyEventValues(): EventFormInput {
-  return {
-    title: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    price: 0,
-    payment: 0,
-    content: "AULA",
-    studentId: "",
-    employeeId: "",
-  }
-}
-
-function formatDateTimeLocalValue(value: string | Date): string {
-  const date = value instanceof Date ? value : new Date(value)
-
-  if (Number.isNaN(date.getTime())) {
-    return ""
-  }
-
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, "0"),
-    String(date.getDate()).padStart(2, "0"),
-  ].join("-") + `T${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`
-}
 
 export function EventEditPage() {
   const { id } = useParams<{ id: string }>()
@@ -68,25 +29,25 @@ export function EventEditPage() {
     setValue,
     formState: { errors },
   } = useForm<EventFormInput>({
-    resolver: zodResolver(eventFormSchema),
-    defaultValues: createEmptyEventValues(),
+    resolver: zodResolver(eventInputSchema),
+    mode: "onBlur",
   })
 
   const studentIdField = register("studentId")
   const employeeIdField = register("employeeId")
 
   const eventQuery = useQuery({
-    queryKey: [...queryKeys.events, "edit", eventId],
-    queryFn: () => eventsApi.getByIdForEdit(eventId),
+    queryKey: queryKeys.event(eventId),
+    queryFn: () => eventsApi.getById(eventId),
     enabled: Boolean(id),
   })
 
-  const optionsQuery = useQuery({
+  const dropDownOptionsQuery = useQuery({
     queryKey: queryKeys.events,
-    queryFn: async (): Promise<EventCreateOptions> => {
+    queryFn: async (): Promise<{ students: StudentResponse[], employees: EmployeeResponse[] }> => {
       const [studentsRes, employeesRes] = await Promise.all([
-        studentsApi.list(EVENT_OPTIONS_PARAMS.page, EVENT_OPTIONS_PARAMS.size, EVENT_OPTIONS_PARAMS.sortBy),
-        employeesApi.list(EVENT_OPTIONS_PARAMS.page, EVENT_OPTIONS_PARAMS.size, EVENT_OPTIONS_PARAMS.sortBy),
+        studentsApi.list(),
+        employeesApi.list(),
       ])
 
       return {
@@ -94,7 +55,6 @@ export function EventEditPage() {
         employees: employeesRes.content,
       }
     },
-    staleTime: 5 * 60_000,
   })
 
   useEffect(() => {
@@ -104,8 +64,8 @@ export function EventEditPage() {
 
     setValue("title", eventQuery.data.title)
     setValue("description", eventQuery.data.description ?? "")
-    setValue("startDate", formatDateTimeLocalValue(eventQuery.data.startDate))
-    setValue("endDate", formatDateTimeLocalValue(eventQuery.data.endDate))
+    setValue("startDate", eventQuery.data.startDate)
+    setValue("endDate", eventQuery.data.endDate)
     setValue("price", eventQuery.data.price)
     setValue("payment", eventQuery.data.payment)
     setValue("content", eventQuery.data.content)
@@ -113,8 +73,8 @@ export function EventEditPage() {
     setValue("employeeId", eventQuery.data.employeeId)
   }, [eventQuery.data, setValue])
 
-  const students = (optionsQuery.data?.students ?? EMPTY_OPTIONS.students).filter((student) => !student.archivedAt)
-  const employees = (optionsQuery.data?.employees ?? EMPTY_OPTIONS.employees).filter((employee) => !employee.archivedAt)
+  const students = (dropDownOptionsQuery.data?.students ?? []).filter((student) => !student.archivedAt)
+  const employees = (dropDownOptionsQuery.data?.employees ?? []).filter((employee) => !employee.archivedAt)
 
   const updateEventMutation = useMutation({
     mutationFn: (data: EventFormInput) => eventsApi.update(eventId, data),
@@ -176,16 +136,18 @@ export function EventEditPage() {
     )
   }
 
-  if (eventQuery.isLoading || optionsQuery.isLoading) {
+  if (eventQuery.isLoading || dropDownOptionsQuery.isLoading) {
     return <PageLoading message="Carregando evento para edição..." />
   }
 
-  if (eventQuery.isError || optionsQuery.isError || !eventQuery.data) {
-    const queryError = eventQuery.error ?? optionsQuery.error
+  if (eventQuery.isError || dropDownOptionsQuery.isError || !eventQuery.data) {
+    const queryError = eventQuery.error ?? dropDownOptionsQuery.error
 
     return (
       <div className={styles.page}>
-        <ErrorCard description={getFriendlyErrorMessage(queryError)} onAction={() => Promise.all([eventQuery.refetch(), optionsQuery.refetch()])} />
+        <ErrorCard
+          description={getFriendlyErrorMessage(queryError)}
+          onAction={() => Promise.all([eventQuery.refetch(), dropDownOptionsQuery.refetch()])} />
       </div>
     )
   }
