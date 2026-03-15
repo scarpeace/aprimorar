@@ -36,6 +36,7 @@ import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 public class ParentService {
 
     private static final Logger log = LoggerFactory.getLogger(ParentService.class);
+    private static final UUID GHOST_PARENT_ID = UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff");
 
     private final ParentRepository parentRepo;
     private final ParentMapper parentMapper;
@@ -124,6 +125,9 @@ public class ParentService {
 
     @Transactional
     public void deleteParent(UUID id) {
+        if (GHOST_PARENT_ID.equals(id)) {
+            throw new IllegalArgumentException("Não é possível deletar o registro de sistema 'RESPONSÁVEL FANTASMA'.");
+        }
         Parent parent = findParentOrThrow(id);
 
         if (studentRepo.existsByParentId(id)) {

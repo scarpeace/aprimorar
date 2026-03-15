@@ -4,10 +4,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import com.aprimorar.api.domain.event.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.ParentRepository;
-import com.aprimorar.api.domain.parent.ParentService;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import org.slf4j.Logger;
@@ -42,21 +42,22 @@ import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 public class StudentService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentService.class);
+    private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     private final ParentRepository parentRepo;
     private final StudentRepository studentRepo;
     private final StudentMapper studentMapper;
-    private final ParentService parentService;
+    private final EventRepository eventRepo;
 
     public StudentService(
             ParentRepository parentRepo,
             StudentRepository studentRepo,
             StudentMapper studentMapper,
-            ParentService parentService) {
+            EventRepository eventRepo) {
         this.parentRepo = parentRepo;
         this.studentRepo = studentRepo;
         this.studentMapper = studentMapper;
-        this.parentService = null;
+        this.eventRepo = eventRepo;
     }
 
     /* ----- Query Methods ----- */
@@ -136,7 +137,16 @@ public class StudentService {
 
     @Transactional
     public void deleteStudent(UUID studentId) {
+        if (GHOST_STUDENT_ID.equals(studentId)) {
+            throw new IllegalArgumentException("Não é possível deletar o registro de sistema 'ALUNO ARQUIVADO'.");
+        }
+
         Student student = findStudentOrThrow(studentId);
+        
+        // Reatribui eventos para o aluno fantasma antes de deletar
+        log.info("Reatribuindo eventos do aluno {} para o Ghost Student.", student.getName().toUpperCase());
+        eventRepo.reassignEventsToGhost(studentId, GHOST_STUDENT_ID);
+
         studentRepo.delete(student);
         log.info("Aluno {} deletado com sucesso.", student.getName().toUpperCase());
     }

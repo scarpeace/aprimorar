@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { GraduationCap } from "lucide-react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
@@ -20,11 +20,26 @@ export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
   const studentId = id ?? ""
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
+
+  const deleteStudentMutation = useMutation({
+    mutationFn: () => studentsApi.delete(studentId),
+    onSuccess: async () => {
+      // Remove o aluno específico do cache para evitar que o invalidQueries tente buscá-lo novamente e dê 404
+      queryClient.removeQueries({ queryKey: [...queryKeys.students, studentId] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.students })
+      queryClient.invalidateQueries({ queryKey: queryKeys.events })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard })
+
+      globalThis.alert("Aluno excluído com sucesso. Os eventos vinculados agora aparecem sob 'ALUNO ARQUIVADO'.")
+      navigate("/students")
+    },
+  })
 
   const studentQuery = useQuery({
     queryKey: [...queryKeys.students, studentId],
     queryFn: () => studentsApi.getById(studentId),
-    enabled: Boolean(id),
+    enabled: Boolean(id) && !deleteStudentMutation.isSuccess,
   })
 
   const archiveStudentMutation = useMutation({
@@ -49,6 +64,18 @@ export function StudentDetailPage() {
 
   const refetchAll = async () => {
     await Promise.all([studentQuery.refetch(), studentEventsQuery.refetch()])
+  }
+
+  const handleStudentDelete = () => {
+    if (!globalThis.confirm("Deseja realmente excluir este aluno? Todos os eventos com esse aluno serão impactados no sistema.")) {
+      return
+    }
+
+    if (!globalThis.confirm("TEM CERTEZA QUE REALMENTE QUER EXCLUIR ESTE ALUNO? ESSA AÇÃO NÃO PODE SER DESFEITA")) {
+      return
+    }
+
+    deleteStudentMutation.mutate()
   }
 
   if (!id) {
@@ -140,20 +167,33 @@ export function StudentDetailPage() {
             >
               {student.archivedAt ? "Ativar Aluno" : "Arquivar Aluno"}
             </Button>
+            <Button
+              type="button"
+              onClick={handleStudentDelete}
+              disabled={deleteStudentMutation.isPending}
+              variant="error"
+              size="sm"
+            >
+              Excluir Aluno
+            </Button>
           </div>
         }
       >
-        {archiveStudentMutation.isError ? (
-          <div className="alert alert-error text-sm">
-            {getFriendlyErrorMessage(archiveStudentMutation.error)}
-          </div>
-        ) : null}
-        <div className={styles.summaryGrid}>
-          {summaryItems.map((item) => (
-            <SummaryItem key={item.label} label={item.label} value={item.value} />
-          ))}
-        </div>
-      </SectionCard>
+        {
+          archiveStudentMutation.isError ? (
+            <div className="alert alert-error text-sm">
+              {getFriendlyErrorMessage(archiveStudentMutation.error)}
+            </div>
+          ) : null
+        }
+        < div className={styles.summaryGrid} >
+          {
+            summaryItems.map((item) => (
+              <SummaryItem key={item.label} label={item.label} value={item.value} />
+            ))
+          }
+        </div >
+      </SectionCard >
 
       <SectionCard
         title="Eventos vinculados"
@@ -167,6 +207,6 @@ export function StudentDetailPage() {
           </div>
         )}
       </SectionCard>
-    </div>
+    </div >
   )
 }
