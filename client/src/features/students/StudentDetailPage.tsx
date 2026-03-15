@@ -14,7 +14,7 @@ import styles from "@/features/students/StudentDetailPage.module.css"
 import { formatDateShortYear } from "@/lib/shared/formatter"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
-import { DetailsActions } from "@/components/ui/details-actions"
+import { DetailsPageActions } from "@/components/ui/details-page-actions"
 
 
 export function StudentDetailPage() {
@@ -182,7 +182,7 @@ export function StudentDetailPage() {
         title="Resumo do aluno"
         description="Dados de aluno, responsável e endereço em um único resumo."
         headerAction={
-          <DetailsActions
+          <DetailsPageActions
             data={studentData}
             editTo={`/students/edit/${studentData.id}`}
             handleArchive={archiveStudentMutation}

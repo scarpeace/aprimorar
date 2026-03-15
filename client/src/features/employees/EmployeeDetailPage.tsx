@@ -1,4 +1,3 @@
-import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { UserCog } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom"
@@ -11,91 +10,50 @@ import { SummaryItem } from "@/components/ui/summary-item"
 import { dutyLabels } from "@/features/employees/dutyLabels"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/employees/EmployeeDetailPage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { employeesApi, eventsApi, getFriendlyErrorMessage } from "@/services/api"
-import { DetailsActions } from "@/components/ui/details-actions"
+import { getFriendlyErrorMessage } from "@/services/api"
+import { DetailsPageActions } from "@/components/ui/details-page-actions"
 import { Alert } from "@/components/ui/alert"
+import { useEmployeeDetailQuery, useEmployeeEventsQuery, useArchiveEmployee, useUnarchiveEmployee, useDeleteEmployee } from "./hooks/use-employees"
 
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
   const employeeId = id ?? ""
-  const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { data: employeeData, error: employeeError, isLoading: isEmployeeLoading } = useEmployeeDetailQuery(employeeId)
+  const { data: employeeEvents, error: employeeEventsError, isLoading: isEmployeeEventsLoading } = useEmployeeEventsQuery(employeeId)
 
-  const [employeeQuery, employeeEventsQuery] = useQueries({
-    queries: [
-      {
-        queryKey: queryKeys.employeeDetail(employeeId),
-        queryFn: () => employeesApi.getById(employeeId),
-        enabled: Boolean(id),
-      },
-      {
-        queryKey: queryKeys.eventsByEmployee(employeeId),
-        queryFn: () => eventsApi.listByEmployee(employeeId),
-        enabled: Boolean(id),
-      },
-    ],
-  })
+  const { mutate: archiveEmployee, isPending: isArchivePending, isError: isArchiveError, error: archiveError } = useArchiveEmployee()
+  const { mutate: unarchiveEmployee, isPending: isUnarchivePending, isError: isUnarchiveError, error: unarchiveError } = useUnarchiveEmployee()
+  const { mutate: deleteEmployee, isPending: isDeletePending, isError: isDeleteError, error: deleteError } = useDeleteEmployee()
 
-  const { data: employeeData, error: employeeError, isLoading: isEmployeeLoading } = employeeQuery
-  const { data: employeeEvents, error: employeeEventsError, isLoading: isEmployeeEventsLoading } = employeeEventsQuery
-
-
-  const {
-    mutate: archiveEmployeeMutation,
-    isPending: isArchiveEmployeePending,
-    error: archiveEmployeeError,
-    isError: isArchiveEmployeeError,
-  } = useMutation({
-    mutationFn: () =>
-      employeeData?.archivedAt ? employeesApi.unarchive(employeeId) : employeesApi.archive(employeeId),
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees }),
-        queryClient.invalidateQueries({ queryKey: [...queryKeys.employees, employeeId] }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-      ])
-    },
-  })
-
-  const {
-    mutate: deleteEmployeeMutation,
-    isPending: isDeleteEmployeePending,
-    error: deleteEmployeeError,
-    isError: isDeleteEmployeeError,
-  } = useMutation({
-    mutationFn: () => employeesApi.delete(employeeId),
-    onSuccess: async () => {
-      queryClient.removeQueries({ queryKey: [...queryKeys.employees, employeeId] })
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-      ])
-      globalThis.alert("Colaborador excluído com sucesso.")
-      navigate("/employees")
-    },
-  })
+  const handleArchiveToggle = () => {
+    if (employeeData?.archivedAt) {
+      unarchiveEmployee(employeeId)
+    } else {
+      archiveEmployee(employeeId)
+    }
+  }
 
   const handleEmployeeDelete = () => {
     if (globalThis.confirm("Tem certeza que deseja excluir este colaborador? Esta ação não pode ser desfeita.")) {
-      deleteEmployeeMutation()
+      deleteEmployee(employeeId)
     }
   }
+
+  const mutationError = archiveError || unarchiveError || deleteError
+  const isMutationError = isArchiveError || isUnarchiveError || isDeleteError
 
   if (isEmployeeLoading || isEmployeeEventsLoading) {
     return <PageLoading message="Carregando colaborador..." />
   }
 
   if (employeeError || employeeEventsError) {
-
     return (
       <div className={styles.page}>
         <ErrorCard
           description={getFriendlyErrorMessage(employeeError || employeeEventsError)}
-          actionLabel="Voltar para listagem de responsáveis"
-          onAction={() => navigate("/parents")} />
+          actionLabel="Voltar para listagem de colaboradores"
+          onAction={() => navigate("/employees")} />
       </div>
     )
   }
@@ -136,19 +94,19 @@ export function EmployeeDetailPage() {
         title="Resumo do colaborador"
         description="Dados completos de cadastro, contato e status."
         headerAction={
-          <DetailsActions
+          <DetailsPageActions
             data={employeeData}
             editTo={`/employees/edit/${employeeId}`}
-            handleArchive={archiveEmployeeMutation}
+            handleArchive={handleArchiveToggle}
             handleDelete={handleEmployeeDelete}
-            isArchivePending={isArchiveEmployeePending}
-            isDeletePending={isDeleteEmployeePending}
+            isArchivePending={isArchivePending || isUnarchivePending}
+            isDeletePending={isDeletePending}
           />
         }
       >
-        {(isArchiveEmployeeError || isDeleteEmployeeError) && (
+        {isMutationError && (
           <Alert variant="error">
-            {getFriendlyErrorMessage(archiveEmployeeError || deleteEmployeeError)}
+            {getFriendlyErrorMessage(mutationError)}
           </Alert>
         )}
         <div className={styles.summaryGrid}>

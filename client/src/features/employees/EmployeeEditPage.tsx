@@ -1,8 +1,7 @@
-import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
 import { Trash2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
@@ -14,12 +13,10 @@ import { PageLoading } from "@/components/ui/page-loading"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/employees/EmployeeCreatePage.module.css"
 import { dutyLabels } from "@/features/employees/dutyLabels"
-import { queryKeys } from "@/lib/query/queryKeys"
 import { employeeFormSchema, type EmployeeFormInput } from "@/lib/schemas"
 import { formatDateInputValue } from "@/lib/shared/formatter"
-import { employeesApi, eventsApi, getFriendlyErrorMessage } from "@/services/api"
-
-const DELETE_BLOCKING_EVENTS_PARAMS = { page: 0, size: 1, sortBy: "startDate" }
+import { getFriendlyErrorMessage } from "@/services/api"
+import { useEmployeeEditQuery, useEmployeeEventsQuery, useUpdateEmployee, useDeleteEmployee } from "./hooks/use-employees"
 
 function createEmptyEmployeeValues(): EmployeeFormInput {
   return {
@@ -33,89 +30,30 @@ function createEmptyEmployeeValues(): EmployeeFormInput {
   }
 }
 
-async function invalidateEmployeeQueries(queryClient: QueryClient, employeeId: string) {
-  await Promise.all([
-    queryClient.invalidateQueries({ queryKey: queryKeys.employees }),
-    queryClient.invalidateQueries({ queryKey: [...queryKeys.employees, employeeId] }),
-    queryClient.invalidateQueries({ queryKey: [...queryKeys.employees, "edit", employeeId] }),
-    queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-    queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-  ])
-}
-
-function useEmployeeData(employeeId: string) {
-  const queryClient = useQueryClient()
-  const navigate = useNavigate()
-  const [submitError, setSubmitError] = useState<string | null>(null)
-
-  const employeeQuery = useQuery({
-    queryKey: [...queryKeys.employees, "edit", employeeId],
-    queryFn: () => employeesApi.getByIdForEdit(employeeId),
-    enabled: Boolean(employeeId),
-  })
-
-  const employeeEventsQuery = useQuery({
-    queryKey: [...queryKeys.events, "employee", employeeId, DELETE_BLOCKING_EVENTS_PARAMS],
-    queryFn: () =>
-      eventsApi.listByEmployee(
-        employeeId,
-        DELETE_BLOCKING_EVENTS_PARAMS.page,
-        DELETE_BLOCKING_EVENTS_PARAMS.size,
-        DELETE_BLOCKING_EVENTS_PARAMS.sortBy
-      ),
-    enabled: Boolean(employeeId),
-  })
-
-  const updateEmployeeMutation = useMutation({
-    mutationFn: (data: EmployeeFormInput) => employeesApi.update(employeeId, data),
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async (updatedEmployee) => {
-      await invalidateEmployeeQueries(queryClient, employeeId)
-      navigate(`/employees/${updatedEmployee.id}`)
-    },
-    onError: (error) => {
-      console.error("Falha ao atualizar colaborador:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
-
-  const deleteEmployeeMutation = useMutation({
-    mutationFn: () => employeesApi.delete(employeeId),
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async () => {
-      await invalidateEmployeeQueries(queryClient, employeeId)
-      navigate("/employees")
-    },
-    onError: (error) => {
-      console.error("Falha ao excluir colaborador:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
-
-  return {
-    employeeQuery,
-    employeeEventsQuery,
-    updateEmployeeMutation,
-    deleteEmployeeMutation,
-    submitError,
-  }
-}
-
 export function EmployeeEditPage() {
   const { id } = useParams<{ id: string }>()
   const employeeId = id ?? ""
 
   const {
-    employeeQuery,
-    employeeEventsQuery,
-    updateEmployeeMutation,
-    deleteEmployeeMutation,
-    submitError,
-  } = useEmployeeData(employeeId)
+    data: employeeData,
+    isLoading: isEmployeeLoading,
+    isError: isEmployeeError,
+    error: employeeError,
+    refetch: refetchEmployee,
+  } = useEmployeeEditQuery(employeeId)
+
+  const {
+    data: employeeEventsData,
+    isLoading: isEventsLoading,
+    isError: isEventsError,
+    error: eventsError,
+    refetch: refetchEvents,
+  } = useEmployeeEventsQuery(employeeId, 0, 1)
+
+  const { mutate: updateEmployee, isPending: isUpdating, error: updateError } = useUpdateEmployee(employeeId)
+  const { mutate: deleteEmployee, isPending: isDeleting, error: deleteError } = useDeleteEmployee()
+
+  const submitError = updateError || deleteError
 
   const {
     register,
@@ -131,52 +69,52 @@ export function EmployeeEditPage() {
   const registerWithMask = useHookFormMask(register)
 
   useEffect(() => {
-    if (!employeeQuery.data) {
+    if (!employeeData) {
       return
     }
 
     reset({
-      name: employeeQuery.data.name,
-      birthdate: formatDateInputValue(employeeQuery.data.birthdate),
-      pix: employeeQuery.data.pix,
-      contact: employeeQuery.data.contact,
-      cpf: employeeQuery.data.cpf,
-      email: employeeQuery.data.email,
-      duty: employeeQuery.data.duty,
+      name: employeeData.name,
+      birthdate: formatDateInputValue(employeeData.birthdate),
+      pix: employeeData.pix,
+      contact: employeeData.contact,
+      cpf: employeeData.cpf,
+      email: employeeData.email,
+      duty: employeeData.duty,
     })
 
     // Campos com máscara podem não ser reidratados corretamente só com reset.
-    setValue("contact", employeeQuery.data.contact)
-    setValue("cpf", employeeQuery.data.cpf)
-  }, [employeeQuery.data, reset, setValue])
+    setValue("contact", employeeData.contact)
+    setValue("cpf", employeeData.cpf)
+  }, [employeeData, reset, setValue])
 
   const onSubmit = (data: EmployeeFormInput) => {
-    updateEmployeeMutation.mutate(data)
+    updateEmployee(data)
   }
 
   const handleDeleteEmployee = () => {
-    if (employeeEventsQuery.isLoading) {
-      window.alert("Ainda estamos verificando se este colaborador possui eventos vinculados. Tente novamente em instantes.")
+    if (isEventsLoading) {
+      globalThis.alert("Ainda estamos verificando se este colaborador possui eventos vinculados. Tente novamente em instantes.")
       return
     }
 
-    if (employeeEventsQuery.isError) {
-      window.alert("Não foi possível verificar se existem eventos vinculados a este colaborador. Tente novamente.")
+    if (isEventsError) {
+      globalThis.alert("Não foi possível verificar se existem eventos vinculados a este colaborador. Tente novamente.")
       return
     }
 
-    if ((employeeEventsQuery.data?.page.totalElements ?? 0) > 0) {
-      window.alert("Este colaborador possui eventos vinculados e não pode ser excluído. Arquive o colaborador em vez de excluí-lo.")
+    if ((employeeEventsData?.page.totalElements ?? 0) > 0) {
+      globalThis.alert("Este colaborador possui eventos vinculados e não pode ser excluído. Arquive o colaborador em vez de excluí-lo.")
       return
     }
 
-    const confirmed = window.confirm("Tem certeza que deseja excluir este colaborador? Esta ação não pode ser desfeita.")
+    const confirmed = globalThis.confirm("Tem certeza que deseja excluir este colaborador? Esta ação não pode ser desfeita.")
 
     if (!confirmed) {
       return
     }
 
-    deleteEmployeeMutation.mutate()
+    deleteEmployee(employeeId)
   }
 
   if (!id) {
@@ -187,22 +125,22 @@ export function EmployeeEditPage() {
     )
   }
 
-  if (employeeQuery.isLoading) {
+  if (isEmployeeLoading) {
     return <PageLoading message="Carregando colaborador para edição..." />
   }
 
-  if (employeeQuery.isError || employeeEventsQuery.isError || !employeeQuery.data) {
+  if (isEmployeeError || isEventsError || !employeeData) {
     return (
       <div className={styles.page}>
         <ErrorCard
-          description={getFriendlyErrorMessage(employeeQuery.error ?? employeeEventsQuery.error)}
-          onAction={() => Promise.all([employeeQuery.refetch(), employeeEventsQuery.refetch()])}
+          description={getFriendlyErrorMessage(employeeError ?? eventsError)}
+          onAction={() => Promise.all([refetchEmployee(), refetchEvents()])}
         />
       </div>
     )
   }
 
-  const employeeHasLinkedEvents = (employeeEventsQuery.data?.page.totalElements ?? 0) > 0
+  const employeeHasLinkedEvents = (employeeEventsData?.page.totalElements ?? 0) > 0
 
   return (
     <div className={styles.page}>
@@ -274,7 +212,7 @@ export function EmployeeEditPage() {
             </FormField>
           </div>
 
-          {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
+          {submitError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(submitError)}</div> : null}
           {employeeHasLinkedEvents ? (
             <Badge variant="warning">
               Este colaborador possui eventos vinculados e não pode ser excluído. Use o arquivamento para desativar o cadastro ou exclua todos os eventos vinculados a este colaborador.
@@ -285,7 +223,7 @@ export function EmployeeEditPage() {
             <Button
               type="button"
               onClick={handleDeleteEmployee}
-              disabled={updateEmployeeMutation.isPending || deleteEmployeeMutation.isPending}
+              disabled={isUpdating || isDeleting}
               variant="danger"
               className="sm:mr-auto"
             >
@@ -295,8 +233,8 @@ export function EmployeeEditPage() {
             <ButtonLink to={`/employees/${employeeId}`} variant="outline">
               Cancelar
             </ButtonLink>
-            <Button type="submit" disabled={updateEmployeeMutation.isPending || deleteEmployeeMutation.isPending} variant="primary">
-              {updateEmployeeMutation.isPending ? "Salvando..." : "Salvar alterações"}
+            <Button type="submit" disabled={isUpdating || isDeleting} variant="primary">
+              {isUpdating ? "Salvando..." : "Salvar alterações"}
             </Button>
           </div>
         </form>

@@ -1,6 +1,6 @@
 import { Button, ButtonLink } from "./button";
 
-export function DetailsActions(props: Readonly<{
+export function DetailsPageActions(props: Readonly<{
     data: any
     editTo: string
     isArchivePending: boolean

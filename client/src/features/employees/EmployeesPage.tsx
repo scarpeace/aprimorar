@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
@@ -8,32 +7,21 @@ import { PageLoading } from "@/components/ui/page-loading"
 import { ButtonLink } from "@/components/ui/button"
 import { dutyLabels } from "@/features/employees/dutyLabels"
 import styles from "@/features/employees/EmployeesPage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
-
-const EMPLOYEES_LIST_PARAMS = { page: 0, size: 20, sortBy: "name" }
+import { getFriendlyErrorMessage } from "@/services/api"
+import { useEmployeesQuery } from "./hooks/use-employees"
 
 export function EmployeesPage() {
-  const [hideArchived, setHideArchived] = useState(false)
+  const [hideArchived, setHideArchived] = useState(true)
 
   const {
-    data: employeeList = [],
+    data: employeesResponse,
     isLoading,
     isError,
     error,
     refetch,
-  } = useQuery({
-    queryKey: [...queryKeys.employees, EMPLOYEES_LIST_PARAMS],
-    queryFn: async () => {
-      const employeesRes = await employeesApi.list(
-        EMPLOYEES_LIST_PARAMS.page,
-        EMPLOYEES_LIST_PARAMS.size,
-        EMPLOYEES_LIST_PARAMS.sortBy
-      )
+  } = useEmployeesQuery()
 
-      return employeesRes.content
-    },
-  })
+  const employeeList = employeesResponse?.content ?? []
 
   const visibleEmployees = hideArchived ? employeeList.filter((employee) => !employee.archivedAt) : employeeList
 
@@ -67,7 +55,7 @@ export function EmployeesPage() {
               type="checkbox"
               checked={hideArchived}
               onChange={(event) => setHideArchived(event.target.checked)}
-            />
+            />{" "}
             Ocultar arquivados
           </label>
           <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">

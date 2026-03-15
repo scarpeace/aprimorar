@@ -1,8 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { FormField } from "@/components/ui/form-field"
@@ -10,15 +7,11 @@ import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/employees/EmployeeCreatePage.module.css"
 import { dutyLabels } from "@/features/employees/dutyLabels"
-import { queryKeys } from "@/lib/query/queryKeys"
 import { employeeFormSchema, type EmployeeFormInput } from "@/lib/schemas"
-import { employeesApi, getFriendlyErrorMessage } from "@/services/api"
+import { getFriendlyErrorMessage } from "@/services/api"
+import { useCreateEmployee } from "./hooks/use-employees"
 
 export function EmployeeCreatePage() {
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const [submitError, setSubmitError] = useState<string | null>(null)
-
   const {
     register,
     handleSubmit,
@@ -30,32 +23,13 @@ export function EmployeeCreatePage() {
     },
   })
 
-  const createEmployeeMutation = useMutation({
-    mutationFn: (data: EmployeeFormInput) => employeesApi.create(data),
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async (createdEmployee) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.employees }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-      ])
-
-      navigate(`/employees/${createdEmployee.id}`)
-    },
-    onError: (error) => {
-      console.error("Falha ao criar colaborador:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
+  const { mutate: createEmployee, isPending: isSubmitting, error: submitError } = useCreateEmployee()
 
   const onSubmit = (data: EmployeeFormInput) => {
-    createEmployeeMutation.mutate(data)
+    createEmployee(data)
   }
 
   const registerWithMask = useHookFormMask(register)
-  const isSubmitting = createEmployeeMutation.isPending
 
   return (
     <div className={styles.page}>
@@ -127,7 +101,7 @@ export function EmployeeCreatePage() {
             </FormField>
           </div>
 
-          {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
+          {submitError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(submitError)}</div> : null}
 
           <div className={styles.actions}>
             <ButtonLink to="/employees" variant="outline">

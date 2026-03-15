@@ -14,7 +14,6 @@ import { studentInputSchema, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
 
-const PARENTS_LIST_PARAMS = { page: 0, size: 100, sortBy: "name" }
 const STUDENT_PARANA: StudentFormInput = {
   name: "Lucas Pereira",
   birthdate: "2016-07-30",
@@ -60,75 +59,52 @@ export function StudentCreatePage() {
   })
 
   const {
-    data: parentsPage,
-    isLoading: parentsLoading,
-    isError: isParentsError,
-    error: parentsQueryError,
-    refetch: refetchParents,
+    data: parentsList,
+    isLoading: isparentsListLoading,
+    error: parentsListQueryError,
+    refetch: refetchParentsList,
   } = useQuery({
-    queryKey: [...queryKeys.parents, PARENTS_LIST_PARAMS],
+    queryKey: [...queryKeys.parents],
     queryFn: () =>
-      parentsApi.listPaginated(PARENTS_LIST_PARAMS.page, PARENTS_LIST_PARAMS.size, PARENTS_LIST_PARAMS.sortBy),
+      parentsApi.list(),
   })
-
-  const parents = parentsPage?.content ?? []
-  const parentsError = isParentsError ? getFriendlyErrorMessage(parentsQueryError) : null
-  const effectiveParentMode = parents.length > 0 ? parentMode : "new"
 
   const registerWithMask = useHookFormMask(register)
 
   useEffect(() => {
-    if (effectiveParentMode !== "existing") {
-      return
+    if (parentMode === "existing") {
+      const selectedParent = parentsList?.find((item: { id: string }) => item.id === selectedParentId)
+      if (!selectedParent) {
+        return
+      }
+
+      setValue("parent.name", selectedParent.name, { shouldDirty: true, shouldValidate: true })
+      setValue("parent.email", selectedParent.email, { shouldDirty: true, shouldValidate: true })
+      setValue("parent.contact", selectedParent.contact, { shouldDirty: true, shouldValidate: true })
+      setValue("parent.cpf", selectedParent.cpf, { shouldDirty: true, shouldValidate: true })
     }
+  }, [parentMode, parentsList, setValue])
 
-    const selectedParent = parents.find((item: { id: string }) => item.id === selectedParentId)
-    if (!selectedParent) {
-      return
-    }
-
-    setValue("parent.name", selectedParent.name, { shouldDirty: true, shouldValidate: true })
-    setValue("parent.email", selectedParent.email, { shouldDirty: true, shouldValidate: true })
-    setValue("parent.contact", selectedParent.contact, { shouldDirty: true, shouldValidate: true })
-    setValue("parent.cpf", selectedParent.cpf, { shouldDirty: true, shouldValidate: true })
-  }, [effectiveParentMode, parents, selectedParentId, setValue])
-
-  const createStudentMutation = useMutation({
-    mutationFn: async (data: StudentFormInput) => {
-      const payload: StudentFormInput =
-        effectiveParentMode === "existing" && selectedParentId
-          ? {
-            ...data,
-            parent: await parentsApi.getById(selectedParentId),
-          }
-          : data
-
-      return studentsApi.create(payload)
-    },
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async (createdStudent) => {
-      queryClient.removeQueries({ queryKey: queryKeys.students })
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-      ])
-
-      navigate(`/students/${createdStudent.id}`)
-    },
-    onError: (error) => {
-      console.error("Falha ao criar aluno:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
+  const {
+    mutate: createStudentMutation,
+    isError: isCreateStudentError,
+    error: createStudentError,
+    isPending: isCreateStudentPending } = useMutation({
+      mutationFn: (data: StudentFormInput) =>
+        studentsApi.create(data),
+      onSuccess: async () => {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.students }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
+        ])
+        navigate("/students")
+      },
+    })
 
   const onSubmit = (data: StudentFormInput) => {
-    createStudentMutation.mutate(data)
+    createStudentMutation(data)
   }
-
-  const isSubmitting = createStudentMutation.isPending
 
   return (
     <div className={styles.page}>
@@ -270,50 +246,45 @@ export function StudentCreatePage() {
         </SectionCard>
 
         <SectionCard title="Responsável" description="Selecione um responsável existente ou cadastre um novo.">
-          {parentsError ? <div className="alert alert-error text-sm">{parentsError}</div> : null}
+
+          {parentsListQueryError ?
+            <div className="alert alert-error text-sm">
+              {getFriendlyErrorMessage(parentsListQueryError)}
+            </div> : null}
+
+          {/* {isCreateStudentError ?
+            <div className="alert alert-error text-sm">
+              {getFriendlyErrorMessage(createStudentError)}
+            </div> : null} */}
 
           <div className={styles.formGrid}>
-            {parents.length > 0 ? (
-              <FormField
-                className={`${styles.field} ${styles.span2}`}
-                label="Tipo de responsável"
-                htmlFor="parentMode"
-                hint={
-                  parentsLoading ? (
-                    <span className="app-inline-loading">
-                      <span className="loading loading-spinner loading-sm text-primary" />
-                      <span>Carregando lista...</span>
-                    </span>
-                  ) : undefined
-                }
-              >
-                <select
-                  id="parentMode"
-                  className="app-select"
-                  value={parentMode}
-                  onChange={(event) => {
-                    const mode = event.target.value as "existing" | "new"
+            <div className={`${styles.field} ${styles.span2}`}>
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  className="checkbox checkbox-primary checkbox-sm"
+                  checked={parentMode === "existing"}
+                  onChange={(e) => {
+                    const mode = e.target.checked ? "existing" : "new"
                     setParentMode(mode)
-                    if (mode === "new") setSelectedParentId("")
+                    if (mode === "new") {
+                      setSelectedParentId("")
+                      setValue("parent.name", "", { shouldDirty: true })
+                      setValue("parent.email", "", { shouldDirty: true })
+                      setValue("parent.contact", "", { shouldDirty: true })
+                      setValue("parent.cpf", "", { shouldDirty: true })
+                    }
                   }}
-                  disabled={parentsLoading}
-                >
-                  <option value="new">Novo responsável</option>
-                  <option value="existing">Responsável existente</option>
-                </select>
-              </FormField>
-            ) : (
-              <div className={`${styles.field} ${styles.span2}`}>
-                <p className={styles.help}>Nenhum responsável ativo encontrado. Cadastre um novo responsável abaixo.</p>
-                {!parentsLoading ? (
-                  <Button type="button" onClick={() => void refetchParents()} variant="outline">
-                    Recarregar responsáveis
-                  </Button>
-                ) : null}
-              </div>
-            )}
+                  disabled={isparentsListLoading && (parentsList ?? []).length === 0}
+                />
+                <span className="text-sm font-medium">Vincular responsável existente</span>
+                {isparentsListLoading && (
+                  <span className="loading loading-spinner loading-xs text-primary ml-auto" />
+                )}
+              </label>
+            </div>
 
-            {effectiveParentMode === "existing" && parents.length > 0 ? (
+            {parentMode === "existing" && parentsList && parentsList.length > 0 ? (
               <FormField
                 className={`${styles.field} ${styles.span2}`}
                 label="Responsável"
@@ -324,12 +295,12 @@ export function StudentCreatePage() {
                   className="app-select"
                   value={selectedParentId}
                   onChange={(event) => setSelectedParentId(event.target.value)}
-                  disabled={parentsLoading}
+                  disabled={isparentsListLoading}
                 >
                   <option value="" disabled>
                     Selecione um responsável
                   </option>
-                  {parents.map((parent: any) => (
+                  {parentsList.map((parent: any) => (
                     <option key={parent.id} value={parent.id}>
                       {parent.name}
                     </option>
@@ -338,7 +309,7 @@ export function StudentCreatePage() {
               </FormField>
             ) : null}
 
-            {effectiveParentMode === "new" || effectiveParentMode === "existing" ? (
+            {parentMode === "existing" || parentMode === "new" ? (
               <>
                 <FormField
                   className={styles.field}
@@ -350,7 +321,7 @@ export function StudentCreatePage() {
                     className="app-input"
                     id="parent.name"
                     placeholder="Ex: Ana Souza"
-                    readOnly={effectiveParentMode === "existing"}
+                    readOnly={parentMode === "existing"}
                     {...register("parent.name")}
                   />
                 </FormField>
@@ -366,7 +337,7 @@ export function StudentCreatePage() {
                     id="parent.email"
                     type="email"
                     placeholder="exemplo@dominio.com"
-                    readOnly={effectiveParentMode === "existing"}
+                    readOnly={parentMode === "existing"}
                     {...register("parent.email")}
                   />
                 </FormField>
@@ -381,7 +352,7 @@ export function StudentCreatePage() {
                     className="app-input"
                     id="parent.contact"
                     placeholder="(11) 99999-9999"
-                    readOnly={effectiveParentMode === "existing"}
+                    readOnly={parentMode === "existing"}
                     {...registerWithMask("parent.contact", ["(99) 9999-9999", "(99) 99999-9999"])}
                   />
                 </FormField>
@@ -396,7 +367,7 @@ export function StudentCreatePage() {
                     className="app-input"
                     id="parent.cpf"
                     placeholder="000.000.000-00"
-                    readOnly={effectiveParentMode === "existing"}
+                    readOnly={parentMode === "existing"}
                     {...registerWithMask("parent.cpf", "999.999.999-99")}
                   />
                 </FormField>
@@ -411,8 +382,8 @@ export function StudentCreatePage() {
           <ButtonLink to="/students" variant="outline">
             Cancelar
           </ButtonLink>
-          <Button type="submit" disabled={isSubmitting} variant="primary">
-            {isSubmitting ? "Salvando..." : "Criar aluno"}
+          <Button type="submit" disabled={isCreateStudentPending} variant="primary">
+            {isCreateStudentPending ? "Salvando..." : "Criar aluno"}
           </Button>
         </div>
       </form>

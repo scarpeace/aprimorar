@@ -1,88 +1,48 @@
-import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { UserCog } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom"
-import { Button, ButtonLink } from "@/components/ui/button"
-import { EmptyCard } from "@/components/ui/empty-card"
+import { ButtonLink } from "@/components/ui/button"
 import { ErrorCard } from "@/components/ui/error-card"
 import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
 import { SectionCard } from "@/components/ui/section-card"
 import { SummaryItem } from "@/components/ui/summary-item"
 import styles from "./ParentDetailPage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
+import { getFriendlyErrorMessage } from "@/services/api"
+import { useParentDetailQuery, useStudentsByParentQuery, useArchiveParent, useUnarchiveParent, useDeleteParent } from "./hooks/use-parents"
 
 import { StudentsTable } from "@/features/students/components/StudentsTable"
 import { Alert } from "@/components/ui/alert"
-import { DetailsActions } from "@/components/ui/details-actions"
-
+import { DetailsPageActions } from "@/components/ui/details-page-actions"
 export function ParentDetailPage() {
   const { id } = useParams<{ id: string }>()
   const parentId = id ?? ""
-  const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const [parentQuery, parentStudentsQuery] = useQueries({
-    queries: [
-      {
-        queryKey: queryKeys.parentDetail(parentId),
-        queryFn: () => parentsApi.getById(parentId),
-        enabled: Boolean(id),
-      },
-      {
-        queryKey: queryKeys.studentsByParent(parentId),
-        queryFn: () => studentsApi.listByParent(parentId),
-        enabled: Boolean(id),
-      },
-    ],
-  })
+  const { data: parentData, error: parentError, isLoading: isParentLoading } = useParentDetailQuery(parentId)
+  const { data: parentStudentsData, error: parentStudentsError, isLoading: isParentStudentsLoading } = useStudentsByParentQuery(parentId)
 
-  const { data: parentData, error: parentError, isLoading: isParentLoading } = parentQuery
-  const { data: parentStudentsData, error: parentStudentsError, isLoading: isParentStudentsLoading } = parentStudentsQuery
+  const { mutate: archiveParent, isPending: isArchivePending, isError: isArchiveError, error: archiveError } = useArchiveParent()
+  const { mutate: unarchiveParent, isPending: isUnarchivePending, isError: isUnarchiveError, error: unarchiveError } = useUnarchiveParent()
+  const { mutate: deleteParent, isPending: isDeletePending, isError: isDeleteError, error: deleteError } = useDeleteParent()
 
-  //TODO O arquivamento tá dando race condition. tem que resolver
-  const {
-    mutate: archiveParentMutation,
-    isError: isArchiveParentError,
-    error: archiveParentError,
-    isPending: isArchiveParentPending } = useMutation({
-      mutationFn: () =>
-        parentData?.archivedAt ? parentsApi.unarchive(parentId) : parentsApi.archive(parentId),
-      onSuccess: async () => {
-        queryClient.removeQueries({ queryKey: [...queryKeys.parents] })
-
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: queryKeys.parentDetail(parentId) }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-        ])
-      },
-    })
-
-  const {
-    mutate: deleteParentMutation,
-    isError: isDeleteParentError,
-    error: deleteParentError,
-    isPending: isDeleteParentPending } = useMutation({
-      mutationFn: () =>
-        parentsApi.delete(parentId),
-      onSuccess: async () => {
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: queryKeys.parentDetail(parentId) }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-        ])
-        navigate("/parents")
-      },
-    })
-
-  const handleParentDelete = () => {
-    const confirmed = globalThis.confirm("Tem certeza que deseja excluir este responsável? Esta ação não pode ser desfeita.")
-    if (confirmed) {
-      deleteParentMutation()
+  const handleArchiveToggle = () => {
+    if (parentData?.archivedAt) {
+      unarchiveParent(parentId)
+    } else {
+      archiveParent(parentId)
     }
   }
+
+  const handleParentDelete = () => {
+    const confirmed = globalThis.confirm("Tem certeza que deseja excluir este responsável? ESTA AÇÃO NÃO PODE SER DESFEITA.")
+    if (confirmed) {
+      deleteParent(parentId)
+    }
+  }
+
+  const mutationError = archiveError || unarchiveError || deleteError
+  const isMutationError = isArchiveError || isUnarchiveError || isDeleteError
 
   if (isParentLoading || isParentStudentsLoading) {
     return <PageLoading message="Carregando responsável..." />
@@ -118,33 +78,28 @@ export function ParentDetailPage() {
           </ButtonLink>
         }
         description="Veja e gerencie as informações do responsável"
-        leading={
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/15">
-            <UserCog className="h-6 w-6 text-success" />
-          </div>
-        }
+        leading={<UserCog className="h-6 w-6 text-success" />}
         title="Detalhes do responsável"
         titleClassName="text-2xl font-bold app-text"
       />
 
-      {/* TODO Melhorar isso aqui */}
       <SectionCard
         title="Resumo do responsável"
         description="Dados completos de cadastro, contato e status."
         headerAction={
-          <DetailsActions
+          <DetailsPageActions
             data={parentData}
             editTo={`/parents/edit/${parentData.id}`}
-            handleArchive={archiveParentMutation}
+            handleArchive={handleArchiveToggle}
             handleDelete={handleParentDelete}
-            isArchivePending={isArchiveParentPending}
-            isDeletePending={isDeleteParentPending}
+            isArchivePending={isArchivePending || isUnarchivePending}
+            isDeletePending={isDeletePending}
           />
         }
       >
-        {(isArchiveParentError || isDeleteParentError) && (
+        {isMutationError && (
           <Alert variant="error">
-            {getFriendlyErrorMessage(archiveParentError || deleteParentError)}
+            {getFriendlyErrorMessage(mutationError)}
           </Alert>
         )}
 

@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
@@ -7,29 +6,21 @@ import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
 import { ButtonLink } from "@/components/ui/button"
 import styles from "@/features/parents/ParentsPage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { parentsApi, getFriendlyErrorMessage } from "@/services/api"
-
-
-const PARENTS_LIST_PARAMS = { page: 0, size: 20, sortBy: "name" }
+import { useParentsQuery } from "./hooks/use-parents"
+import { getFriendlyErrorMessage } from "@/services/api"
 
 export function ParentsPage() {
-  const [hideArchived, setHideArchived] = useState(false)
+  const [hideArchived, setHideArchived] = useState(true)
 
   const {
-    data: parentList = [],
+    data: parentsResponse,
     isLoading,
     isError,
     error,
     refetch,
-  } = useQuery({
-    queryKey: [...queryKeys.parents],
-    queryFn: async () => {
-      const parentsRes = await parentsApi.listPaginated(PARENTS_LIST_PARAMS.page,PARENTS_LIST_PARAMS.size,PARENTS_LIST_PARAMS.sortBy)
+  } = useParentsQuery()
 
-      return parentsRes.content
-    },
-  })
+  const parentList = parentsResponse?.content ?? []
 
   const visibleParents = hideArchived ? parentList.filter((parent) => !parent.archivedAt) : parentList
 

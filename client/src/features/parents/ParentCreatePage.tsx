@@ -1,16 +1,14 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { FormField } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "./ParentCreatePage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
+import { useCreateParent } from "./hooks/use-parents"
+import { getFriendlyErrorMessage } from "@/services/api"
 import { parentFormSchema, type ParentFormInput } from "@/lib/schemas"
-import { parentsApi, getFriendlyErrorMessage } from "@/services/api"
 
 const initialParentData: ParentFormInput = {
   name: "Gustavo Scarpellini",
@@ -20,8 +18,6 @@ const initialParentData: ParentFormInput = {
 }
 
 export function ParentCreatePage() {
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
   const {
     register,
@@ -33,25 +29,10 @@ export function ParentCreatePage() {
   })
   const registerWithMask = useHookFormMask(register)
 
-  const {
-    mutate: createParentMutation,
-    isError: isCreateParentError,
-    error: createParentError,
-    isPending: isCreateParentPending } = useMutation({
-      mutationFn: (data: ParentFormInput) =>
-        parentsApi.create(data),
-      onSuccess: async () => {
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-        ])
-        navigate("/parents")
-      },
-    })
+  const { mutate: createParent, isPending: isCreateParentPending, isError: isCreateParentError, error: createParentError } = useCreateParent()
 
   const onSubmit = (data: ParentFormInput) => {
-    createParentMutation(data)
+    createParent(data)
   }
 
   return (
@@ -65,6 +46,12 @@ export function ParentCreatePage() {
           </ButtonLink>
         }
       />
+
+      {isCreateParentError ?
+        <div className="alert alert-error text-sm">
+          {getFriendlyErrorMessage(createParentError)}
+        </div>
+        : null}
 
       <SectionCard title="Dados do responsável" description="Preencha as informações abaixo para criar o cadastro.">
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -101,8 +88,6 @@ export function ParentCreatePage() {
               />
             </FormField>
           </div>
-
-          {isCreateParentError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(createParentError)}</div> : null}
 
           <div className={styles.actions}>
             <ButtonLink to="/parents" variant="outline">
