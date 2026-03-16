@@ -5,12 +5,12 @@ import { FormField } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/events/EventCreatePage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { eventInputSchema, type EmployeeResponse, type EventFormInput, type StudentOption } from "@/lib/schemas"
+import { eventInputSchema, type EventFormInput } from "@/lib/schemas"
 import { eventContentLabels, eventContentValues } from "@/lib/shared/enums"
-import { employeesApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
+import { getFriendlyErrorMessage } from "@/services/api"
 import { useCreateEvent } from "./hooks/use-events"
-import { useQuery } from "@tanstack/react-query"
+import { useStudentOptionsQuery } from "@/features/students/hooks/use-students"
+import { useEmployeeOptionsQuery } from "@/features/employees/hooks/use-employees"
 
 export function EventCreatePage() {
   const {
@@ -25,24 +25,12 @@ export function EventCreatePage() {
   const studentIdField = register("studentId")
   const employeeIdField = register("employeeId")
 
-  // TODO: Mover para hooks específicos de alunos/colaboradores se houver refatoração total
-  const dropDownOptionsQuery = useQuery({
-    queryKey: [queryKeys.students, queryKeys.employees, "options"],
-    queryFn: async (): Promise<{ students: StudentOption[]; employees: EmployeeResponse[] }> => {
-      const [students, employeesRes] = await Promise.all([
-        studentsApi.getOptions(),
-        employeesApi.list(0, 100),
-      ])
+  // Opções para os dropdowns de aluno e colaborador
+  const studentsQuery = useStudentOptionsQuery()
+  const employeesQuery = useEmployeeOptionsQuery()
 
-      return {
-        students,
-        employees: employeesRes.content,
-      }
-    },
-  })
-
-  const students = dropDownOptionsQuery.data?.students ?? []
-  const employees = (dropDownOptionsQuery.data?.employees ?? []).filter((employee) => !employee.archivedAt)
+  const students = studentsQuery.data ?? []
+  const employees = employeesQuery.data ?? []
 
   const { mutate: createEvent, isPending: isSubmitting, error: submitError } = useCreateEvent()
 
@@ -51,7 +39,7 @@ export function EventCreatePage() {
   }
 
   const renderContent = () => {
-    if (dropDownOptionsQuery.isLoading) {
+    if (studentsQuery.isLoading || employeesQuery.isLoading) {
       return (
         <div className="app-inline-loading">
           <span className="loading loading-spinner loading-sm text-primary" />
@@ -60,11 +48,19 @@ export function EventCreatePage() {
       )
     }
 
-    if (dropDownOptionsQuery.isError) {
+    if (studentsQuery.isError || employeesQuery.isError) {
+      const error = studentsQuery.error || employeesQuery.error
       return (
         <div className="space-y-3">
-          <div className="alert alert-error text-sm">{getFriendlyErrorMessage(dropDownOptionsQuery.error)}</div>
-          <Button type="button" onClick={() => void dropDownOptionsQuery.refetch()} variant="primary">
+          <div className="alert alert-error text-sm">{getFriendlyErrorMessage(error)}</div>
+          <Button
+            type="button"
+            onClick={() => {
+              void studentsQuery.refetch()
+              void employeesQuery.refetch()
+            }}
+            variant="primary"
+          >
             Tentar novamente
           </Button>
         </div>

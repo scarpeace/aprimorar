@@ -1,6 +1,7 @@
 package com.aprimorar.api.domain.employee;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
@@ -8,9 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.aprimorar.api.domain.employee.dto.EmployeeOptionDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
@@ -50,6 +53,15 @@ public class EmployeeService {
         Page<Employee> page = employeeRepo.findAll(pageable);
         log.info("Consulta de colaboradores finalizada, {} registros encontrados.", page.getTotalElements());
         return page.map(employeeMapper::convertToDto);
+    }
+
+    @Transactional(readOnly = true)
+    public List<EmployeeOptionDTO> getEmployeeOptions() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        
+        return employeeRepo.findAll(EmployeeSpecifications.notArchived(), sort).stream()
+                .map(e -> new EmployeeOptionDTO(e.getId(), e.getName()))
+                .toList();
     }
 
     @Transactional(readOnly = true)

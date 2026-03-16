@@ -40,6 +40,12 @@ export const employeeResponseSchema = employeeApiSchema.transform((employee) => 
   createdAt: formatDateShortYear(employee.createdAt),
 }))
 
+export const employeeOptionSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+})
+
 export type EmployeeFormInput = z.infer<typeof employeeFormSchema>
 export type EmployeeApiResponse = z.infer<typeof employeeApiSchema>
 export type EmployeeResponse = z.infer<typeof employeeResponseSchema>
+export type EmployeeOption = z.infer<typeof employeeOptionSchema>

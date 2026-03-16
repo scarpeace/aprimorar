@@ -116,3 +116,10 @@ export function useUnarchiveStudent() {
     },
   })
 }
+
+export function useStudentOptionsQuery() {
+  return useQuery({
+    queryKey: [...queryKeys.students, "options"],
+    queryFn: () => studentsApi.getOptions(),
+  })
+}

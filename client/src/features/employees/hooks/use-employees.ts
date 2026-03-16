@@ -37,6 +37,13 @@ export function useEmployeeEventsQuery(id: string, page = 0, size = 20) {
   })
 }
 
+export function useEmployeeOptionsQuery() {
+  return useQuery({
+    queryKey: [...queryKeys.employees, "options"],
+    queryFn: () => employeesApi.getOptions(),
+  })
+}
+
 // --- MUTATIONS ---
 
 export function useCreateEmployee() {

@@ -1,6 +1,7 @@
 import {
   employeeApiSchema,
   employeeResponseSchema,
+  employeeOptionSchema,
   parentResponseSchema,
   studentResponse,
   studentOptionSchema,
@@ -14,6 +15,7 @@ import type {
   StudentFormInput,
   EmployeeApiResponse,
   EmployeeResponse,
+  EmployeeOption,
   EventResponse,
   ParentResponse,
   StudentResponse,
@@ -119,6 +121,10 @@ export const employeesApi = {
   async list(page = 0, size = 20, sortBy = "name",): Promise<PageResponse<EmployeeResponse>> {
     const { data } = await api.get<PageResponse<EmployeeResponse>>(`/v1/employees?page=${page}&size=${size}&sort=${sortBy}`)
     return pageResponseSchema(employeeResponseSchema).parse(data);
+  },
+  async getOptions(): Promise<EmployeeOption[]> {
+    const { data } = await api.get<EmployeeOption[]>("/v1/employees/options")
+    return employeeOptionSchema.array().parse(data)
   },
   async getById(id: string): Promise<EmployeeResponse> {
     const { data } = await api.get<EmployeeResponse>(`/v1/employees/${id}`)
