@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { parentFormSchema, parentResponseSchema } from "./parent"
+import { parentResponseSchema } from "./parent"
 import { addressResponseSchema, addressFormSchema } from "./address"
 import { formatCpf, formatPhone } from "../shared/formatter"
 
@@ -19,7 +19,7 @@ export const studentInputSchema = z.object({
     ).min(1, "O telefone é obrigatório"),
   email: z.email("E-mail inválido"),
   address: addressFormSchema,
-  parent: parentFormSchema.optional(),
+  parentId: z.uuid("Responsável é obrigatório"),
 })
 
 export const studentResponse = z.object({

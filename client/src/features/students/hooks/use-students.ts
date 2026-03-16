@@ -28,13 +28,11 @@ export function useCreateStudent() {
 
   return useMutation({
     mutationFn: (data: StudentFormInput) => studentsApi.create(data),
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-      ])
-      navigate("/students")
+    onSuccess: (createdStudent) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.students })
+      queryClient.invalidateQueries({ queryKey: queryKeys.parents })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard })
+      navigate(`/students/${createdStudent.id}`)
     },
   })
 }
@@ -44,17 +42,7 @@ export function useUpdateStudent(id: string) {
   const navigate = useNavigate()
 
   return useMutation({
-    mutationFn: async (data: StudentFormInput) => {
-      // In specific student edit flow, we might need to update the parent first if it's nested
-      // This logic matches what was in StudentEditPage.tsx
-      const student = await studentsApi.getById(id)
-      
-      if (data.parent) {
-        await parentsApi.update(student.parent.id, data.parent)
-      }
-
-      return studentsApi.update(id, data)
-    },
+    mutationFn: (data: StudentFormInput) => studentsApi.update(id, data),
     onSuccess: async (updatedStudent) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.students }),
@@ -76,7 +64,7 @@ export function useDeleteStudent() {
     onSuccess: async (_, id) => {
       // Remove specific student from cache to avoid flicker/404 on refetch
       queryClient.removeQueries({ queryKey: queryKeys.studentDetail(id) })
-      
+
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.students }),
         queryClient.invalidateQueries({ queryKey: queryKeys.events }),

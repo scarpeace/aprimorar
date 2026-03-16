@@ -1,11 +1,9 @@
 package com.aprimorar.api.domain.address.dto;
 
 import com.aprimorar.api.enums.BrazilianState;
-import com.aprimorar.api.shared.MapperUtils;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 public record AddressRequestDTO(
         @NotBlank(message = "Rua do endereço é obrigatória")
@@ -20,7 +18,6 @@ public record AddressRequestDTO(
         @NotNull(message = "Estado do endereço é obrigatório")
         BrazilianState state,
         @NotBlank(message = "CEP do endereço é obrigatório")
-        @Pattern(regexp = MapperUtils.ZIP_CODE_BR, message = MapperUtils.ZIP_CODE_BR_MESSAGE)
         String zip
         ) {
 

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
@@ -25,10 +25,8 @@ import { useParentsListQuery } from "../parents/hooks/use-parents"
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>()
   const studentId = id ?? ""
-  const [selectedParentId, setSelectedParentId] = useState("")
 
   const { data: student, isLoading: isStudentLoading, isError: isStudentError, error: studentError, refetch: refetchStudent } = useStudentDetailQuery(studentId)
-  const currentParentId = selectedParentId || student?.parent?.id || ""
 
   const {
     register,
@@ -62,20 +60,9 @@ export function StudentEditPage() {
       setValue("address.city", student.address.city)
       setValue("address.state", student.address.state)
       setValue("address.zip", student.address.zip)
+      setValue("parentId", student.parent.id)
     }
   }, [student, setValue])
-
-  useEffect(() => {
-    if (currentParentId) {
-      const selectedParent = parentsList?.find((item: ParentResponse) => item.id === currentParentId)
-      if (selectedParent) {
-        setValue("parent.name", selectedParent.name)
-        setValue("parent.email", selectedParent.email)
-        setValue("parent.contact", selectedParent.contact)
-        setValue("parent.cpf", selectedParent.cpf)
-      }
-    }
-  }, [currentParentId, parentsList, setValue])
 
   const studentEventsQuery = useQuery({
     queryKey: [...queryKeys.events, "student", studentId],
@@ -163,14 +150,13 @@ export function StudentEditPage() {
             className={`${styles.field} ${styles.span2}`}
             label="Responsável"
             htmlFor="parentId"
-            error={errors.parent?.name?.message ? "Selecione um responsável" : undefined}
+            error={errors.parentId?.message}
           >
             <div className="flex flex-col gap-2">
               <select
                 id="parentId"
                 className="app-select"
-                value={currentParentId}
-                onChange={(event) => setSelectedParentId(event.target.value)}
+                {...register("parentId")}
                 disabled={isParentsListLoading}
               >
                 <option value="">

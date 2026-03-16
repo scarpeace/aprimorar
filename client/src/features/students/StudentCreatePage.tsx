@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useHookFormMask } from "use-mask-input"
 import { Button, ButtonLink } from "@/components/ui/button"
@@ -7,24 +6,20 @@ import { FormField } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/students/StudentCreatePage.module.css"
-import { studentInputSchema, type ParentResponse, type StudentFormInput } from "@/lib/schemas"
+import { studentInputSchema, type StudentFormInput, type ParentResponse } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { getFriendlyErrorMessage } from "@/services/api"
 import { useCreateStudent } from "./hooks/use-students"
 import { useParentsListQuery } from "../parents/hooks/use-parents"
 
 export function StudentCreatePage() {
-  const [selectedParentId, setSelectedParentId] = useState("")
-
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<StudentFormInput>({
     resolver: zodResolver(studentInputSchema),
     mode: "onBlur",
-    shouldUnregister: true,
   })
 
   const {
@@ -34,22 +29,6 @@ export function StudentCreatePage() {
   } = useParentsListQuery()
 
   const registerWithMask = useHookFormMask(register)
-
-  useEffect(() => {
-    if (selectedParentId) {
-      const selectedParent = parentsList?.find((item: ParentResponse) => item.id === selectedParentId)
-      if (!selectedParent) {
-        return
-      }
-
-      setValue("parent.name", selectedParent.name)
-      setValue("parent.email", selectedParent.email)
-      setValue("parent.contact", selectedParent.contact)
-      setValue("parent.cpf", selectedParent.cpf)
-    } else {
-      setValue("parent", undefined as StudentFormInput["parent"])
-    }
-  }, [selectedParentId, parentsList, setValue])
 
   const { mutate: createStudent, isPending: isSubmitting, error: submitError } = useCreateStudent()
 
@@ -75,14 +54,13 @@ export function StudentCreatePage() {
             className={`${styles.field} ${styles.span2}`}
             label="Responsável"
             htmlFor="parentId"
-            error={errors.parent?.name?.message ? "Selecione um responsável" : undefined}
+            error={errors.parentId?.message}
           >
             <div className="flex flex-col gap-2">
               <select
                 id="parentId"
                 className="app-select"
-                value={selectedParentId}
-                onChange={(event) => setSelectedParentId(event.target.value)}
+                {...register("parentId")}
                 disabled={isParentsListLoading}
               >
                 <option value="">
