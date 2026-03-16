@@ -119,8 +119,9 @@ export const studentsApi = {
 }
 
 export const employeesApi = {
-  async list(page = 0, size = 50, sortBy = "name",): Promise<PageResponse<EmployeeResponse>> {
-    const { data } = await api.get<PageResponse<EmployeeResponse>>(`/v1/employees?page=${page}&size=${size}&sort=${sortBy}`)
+  async list(page = 0, size = 50, sortBy = "name", search?: string): Promise<PageResponse<EmployeeResponse>> {
+    const searchParam = search ? `&search=${encodeURIComponent(search)}` : ""
+    const { data } = await api.get<PageResponse<EmployeeResponse>>(`/v1/employees?page=${page}&size=${size}&sort=${sortBy}${searchParam}`)
     return pageResponseSchema(employeeResponseSchema).parse(data);
   },
   async getOptions(): Promise<EmployeeOption[]> {

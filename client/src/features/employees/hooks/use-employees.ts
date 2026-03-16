@@ -6,10 +6,10 @@ import type { EmployeeFormInput } from "@/lib/schemas"
 
 // --- QUERIES ---
 
-export function useEmployeesQuery(page = 0, size = 20, sortBy = "name") {
+export function useEmployeesQuery(page = 0, size = 20, search?: string, sortBy = "name") {
   return useQuery({
-    queryKey: queryKeys.employees.list({ page, size, sortBy }),
-    queryFn: () => employeesApi.list(page, size, sortBy),
+    queryKey: queryKeys.employees.list({ page, size, sortBy, search }),
+    queryFn: () => employeesApi.list(page, size, sortBy, search),
   })
 }
 

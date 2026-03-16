@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,9 +49,14 @@ public class EmployeeService {
     /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
-    public Page<EmployeeResponseDTO> getEmployees(Pageable pageable) {
-
-        Page<Employee> page = employeeRepo.findAll(pageable);
+    public Page<EmployeeResponseDTO> getEmployees(Pageable pageable, String search) {
+        Page<Employee> page;
+        if (search != null && !search.trim().isEmpty()) {
+            Specification<Employee> spec = EmployeeSpecifications.searchContainsIgnoreCase(search.trim());
+            page = employeeRepo.findAll(spec, pageable);
+        } else {
+            page = employeeRepo.findAll(pageable);
+        }
         log.info("Consulta de colaboradores finalizada, {} registros encontrados.", page.getTotalElements());
         return page.map(employeeMapper::convertToDto);
     }

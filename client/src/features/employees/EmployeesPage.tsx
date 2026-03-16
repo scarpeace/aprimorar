@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
@@ -11,9 +11,21 @@ import styles from "@/features/employees/EmployeesPage.module.css"
 import { getFriendlyErrorMessage } from "@/services/api"
 import { useEmployeesQuery } from "./hooks/use-employees"
 
+export function useDebounce<T>(value: T, delay?: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay || 500)
+    return () => clearTimeout(timer)
+  }, [value, delay])
+
+  return debouncedValue
+}
+
 export function EmployeesPage() {
   const [currentPage, setCurrentPage] = useState(0)
   const [searchTerm, setSearchTerm] = useState("")
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const pageSize = 10
 
   const {
@@ -22,7 +34,12 @@ export function EmployeesPage() {
     isError,
     error,
     refetch,
-  } = useEmployeesQuery(currentPage, pageSize)
+  } = useEmployeesQuery(currentPage, pageSize, debouncedSearchTerm)
+
+  // Reset pagination when search changes
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [debouncedSearchTerm])
 
   const employeeList = response?.content ?? []
   const pageInfo = response?.page

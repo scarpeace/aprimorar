@@ -50,9 +50,11 @@ public class EmployeeController {
 
     @Operation(summary = "List all employees", description = "Retrieves all employees from database with pagination")
     @GetMapping
-    public ResponseEntity<Page<EmployeeResponseDTO>> getEmployees(@PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<Page<EmployeeResponseDTO>> getEmployees(
+            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String search) {
 
-        Page<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable);
+        Page<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search);
         return ResponseEntity.ok(employees);
     }
 
