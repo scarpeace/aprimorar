@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,8 +59,14 @@ public class ParentService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ParentResponseDTO> getPaginatedParents(Pageable pageable) {
-        Page<Parent> page = parentRepo.findAll(pageable);
+    public Page<ParentResponseDTO> getPaginatedParents(Pageable pageable, String search) {
+        Page<Parent> page;
+        if (search != null && !search.trim().isEmpty()) {
+            Specification<Parent> spec = ParentSpecifications.searchContainsIgnoreCase(search.trim());
+            page = parentRepo.findAll(spec, pageable);
+        } else {
+            page = parentRepo.findAll(pageable);
+        }
         log.info("Consulta de responsáveis finalizada, {} registros encontrados.", page.getTotalElements());
         return page.map(parentMapper::convertToDto);
     }

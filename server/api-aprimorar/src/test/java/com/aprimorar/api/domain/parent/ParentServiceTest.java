@@ -71,7 +71,7 @@ class ParentServiceTest {
             when(parentMapper.convertToDto(secondParent)).thenReturn(expectedSecond);
 
             // Act
-            Page<ParentResponseDTO> actual = parentService.getPaginatedParents(input);
+            Page<ParentResponseDTO> actual = parentService.getPaginatedParents(input, null);
 
             // Assert
             assertThat(actual.getContent()).containsExactly(expectedFirst, expectedSecond);
@@ -346,7 +346,7 @@ class ParentServiceTest {
             // Assert
             verify(parentRepo).findById(input);
             verify(studentRepo).existsByParentId(input);
-            verify(parentRepo).delete(expected);
+            verify((org.springframework.data.repository.CrudRepository<Parent, java.util.UUID>) parentRepo).delete((Parent) expected);
         }
 
         @Test
@@ -363,7 +363,7 @@ class ParentServiceTest {
                     .hasMessage("Responsável não encontrado no banco de dados");
 
             verify(parentRepo).findById(input);
-            verify(parentRepo, never()).delete(any());
+            verify((org.springframework.data.repository.CrudRepository<Parent, java.util.UUID>) parentRepo, never()).delete(any());
         }
     }
 

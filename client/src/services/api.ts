@@ -153,8 +153,9 @@ export const parentsApi = {
     const { data } = await api.get<ParentResponse[]>(`/v1/parents/all`)
     return parentResponseSchema.array().parse(data);
   },
-  async listPaginated(page = 0, size = 20, sortBy = "name",): Promise<PageResponse<ParentResponse>> {
-    const { data } = await api.get<PageResponse<ParentResponse>>(`/v1/parents?page=${page}&size=${size}&sort=${sortBy}`)
+  async listPaginated(page = 0, size = 20, sortBy = "name", search?: string): Promise<PageResponse<ParentResponse>> {
+    const searchParam = search ? `&search=${encodeURIComponent(search)}` : ""
+    const { data } = await api.get<PageResponse<ParentResponse>>(`/v1/parents?page=${page}&size=${size}&sort=${sortBy}${searchParam}`)
     return pageResponseSchema(parentResponseSchema).parse(data);
   },
   async getById(id: string): Promise<ParentResponse> {

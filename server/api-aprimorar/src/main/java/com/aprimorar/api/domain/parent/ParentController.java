@@ -47,9 +47,11 @@ public class ParentController {
 
     @Operation(summary = "Get all parents paginated", description = "Retrieves parents from database with pagination")
     @GetMapping
-    public ResponseEntity<Page<ParentResponseDTO>> getPaginatedParents(@PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<Page<ParentResponseDTO>> getPaginatedParents(
+            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String search) {
 
-        Page<ParentResponseDTO> parents = parentService.getPaginatedParents(pageable);
+        Page<ParentResponseDTO> parents = parentService.getPaginatedParents(pageable, search);
         return ResponseEntity.ok(parents);
     }
 

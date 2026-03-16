@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
@@ -7,12 +7,24 @@ import { PageLoading } from "@/components/ui/page-loading"
 import { Pagination } from "@/components/ui/pagination"
 import { ButtonLink } from "@/components/ui/button"
 import styles from "@/features/parents/ParentsPage.module.css"
-import { useParentsQuery } from "./hooks/use-parents"
 import { getFriendlyErrorMessage } from "@/services/api"
+import { useParentsQuery } from "./hooks/use-parents"
+
+export function useDebounce<T>(value: T, delay?: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay || 500)
+    return () => clearTimeout(timer)
+  }, [value, delay])
+
+  return debouncedValue
+}
 
 export function ParentsPage() {
   const [currentPage, setCurrentPage] = useState(0)
   const [searchTerm, setSearchTerm] = useState("")
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const pageSize = 10
 
   const {
@@ -21,7 +33,12 @@ export function ParentsPage() {
     isError,
     error,
     refetch,
-  } = useParentsQuery(currentPage, pageSize)
+  } = useParentsQuery(currentPage, pageSize, debouncedSearchTerm)
+
+  // Reset pagination when search changes
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [debouncedSearchTerm])
 
   const parentList = response?.content ?? []
   const pageInfo = response?.page
@@ -50,7 +67,7 @@ export function ParentsPage() {
       >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput
-            placeholder="Buscar responsável por nome, função ou email"
+            placeholder="Buscar responsável por nome, email ou CPF"
             ariaLabel="Buscar responsável"
             value={searchTerm}
             onChange={setSearchTerm}

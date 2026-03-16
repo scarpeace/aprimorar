@@ -6,10 +6,10 @@ import type { ParentFormInput } from "@/lib/schemas"
 
 // --- QUERIES ---
 
-export function useParentsQuery(page = 0, size = 20, sortBy = "name") {
+export function useParentsQuery(page = 0, size = 20, search?: string, sortBy = "name") {
   return useQuery({
-    queryKey: queryKeys.parents.list({ page, size, sortBy }),
-    queryFn: () => parentsApi.listPaginated(page, size, sortBy),
+    queryKey: queryKeys.parents.list({ page, size, sortBy, search }),
+    queryFn: () => parentsApi.listPaginated(page, size, sortBy, search),
   })
 }
 
