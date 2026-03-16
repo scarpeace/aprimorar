@@ -196,7 +196,7 @@ public class EventService {
             throw new InvalidEventException(
                 "Evento não pode ter estudantes arquivados");
         }
-        if (studentRepo.existsByIdAndArchivedAtIsNotNull(employeeId)) {
+        if (employeeRepo.existsByIdAndArchivedAtIsNotNull(employeeId)) {
             throw new InvalidEventException(
                 "Evento não pode ter colaboradores arquivados");
         }

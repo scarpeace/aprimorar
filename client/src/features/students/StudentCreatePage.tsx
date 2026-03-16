@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -8,30 +7,11 @@ import { FormField } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/students/StudentCreatePage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { studentInputSchema, type StudentFormInput } from "@/lib/schemas"
+import { studentInputSchema, type ParentResponse, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
-import { getFriendlyErrorMessage, parentsApi } from "@/services/api"
+import { getFriendlyErrorMessage } from "@/services/api"
 import { useCreateStudent } from "./hooks/use-students"
 import { useParentsListQuery } from "../parents/hooks/use-parents"
-
-const STUDENT_PARANA: StudentFormInput = {
-  name: "Lucas Pereira",
-  birthdate: "2016-07-30",
-  cpf: "456.789.012-33",
-  contact: "(41) 99911-2233",
-  email: "lucas.pereira@exemplo.com",
-  school: "Escola Nossa Senhora",
-  address: {
-    street: "Rua das Rosas",
-    number: "15",
-    complement: "",
-    district: "Batel",
-    city: "Curitiba",
-    state: "PR",
-    zip: "80420-000",
-  },
-}
 
 export function StudentCreatePage() {
   const [selectedParentId, setSelectedParentId] = useState("")
@@ -45,20 +25,19 @@ export function StudentCreatePage() {
     resolver: zodResolver(studentInputSchema),
     mode: "onBlur",
     shouldUnregister: true,
-    defaultValues: STUDENT_PARANA,
   })
 
   const {
     data: parentsList,
-    isLoading: isparentsListLoading,
+    isLoading: isParentsListLoading,
     error: parentsListQueryError,
-  } = useParentsListQuery();
+  } = useParentsListQuery()
 
   const registerWithMask = useHookFormMask(register)
 
   useEffect(() => {
     if (selectedParentId) {
-      const selectedParent = parentsList?.find((item: { id: string }) => item.id === selectedParentId)
+      const selectedParent = parentsList?.find((item: ParentResponse) => item.id === selectedParentId)
       if (!selectedParent) {
         return
       }
@@ -68,8 +47,7 @@ export function StudentCreatePage() {
       setValue("parent.contact", selectedParent.contact)
       setValue("parent.cpf", selectedParent.cpf)
     } else {
-      // @ts-ignore - limpando o objeto parent para o zod ignorar ou falhar se obrigatório no backend
-      setValue("parent", undefined)
+      setValue("parent", undefined as StudentFormInput["parent"])
     }
   }, [selectedParentId, parentsList, setValue])
 
@@ -105,14 +83,14 @@ export function StudentCreatePage() {
                 className="app-select"
                 value={selectedParentId}
                 onChange={(event) => setSelectedParentId(event.target.value)}
-                disabled={isparentsListLoading}
+                disabled={isParentsListLoading}
               >
                 <option value="">
-                  {isparentsListLoading ? "Carregando responsáveis..." : "Selecione um responsável"}
+                  {isParentsListLoading ? "Carregando responsáveis..." : "Selecione um responsável"}
                 </option>
-                {parentsList?.map((parent: any) => (
+                {parentsList?.filter((parent: ParentResponse) => !parent.archivedAt).map((parent: ParentResponse) => (
                   <option key={parent.id} value={parent.id}>
-                    {parent.name} ({parent.cpf})
+                    {parent.name}
                   </option>
                 ))}
               </select>

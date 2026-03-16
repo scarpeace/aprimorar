@@ -45,6 +45,9 @@ class ParentServiceTest {
     @Mock
     private ParentMapper parentMapper;
 
+    @Mock
+    private com.aprimorar.api.domain.student.StudentRepository studentRepo;
+
     @InjectMocks
     private ParentService parentService;
 
@@ -335,12 +338,14 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
+            when(studentRepo.existsByParentId(input)).thenReturn(false);
 
             // Act
             parentService.deleteParent(input);
 
             // Assert
             verify(parentRepo).findById(input);
+            verify(studentRepo).existsByParentId(input);
             verify(parentRepo).delete(expected);
         }
 

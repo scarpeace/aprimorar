@@ -21,9 +21,9 @@ export const parentSummarySchema = z.object({
 export const parentResponseSchema = z.object({
   id: z.uuid(),
   name: z.string(),
-  email: z.string(),
-  contact: z.string().transform(formatPhone),
-  cpf: z.string().transform(formatCpf),
+  email: z.coerce.string(),
+  contact: z.coerce.string().transform(formatPhone),
+  cpf: z.coerce.string().transform(formatCpf),
   archivedAt: z.coerce.date().nullable(),
   createdAt: z.coerce.date().transform(formatDateShortYear),
   updatedAt: z.coerce.date().nullable(),

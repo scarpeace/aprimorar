@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 
@@ -55,6 +55,13 @@ public class StudentController {
     ) {
         Page<StudentResponseDTO> students = studentService.getStudents(pageable);
         return ResponseEntity.ok(students);
+    }
+
+    @Operation(summary = "List all STUDENTS for options", description = "Retrieves simplified student data for dropdowns")
+    @GetMapping("/options")
+    public ResponseEntity<List<StudentOptionDTO>> getStudentOptions() {
+        List<StudentOptionDTO> options = studentService.getStudentOptions();
+        return ResponseEntity.ok(options);
     }
 
     @Operation(summary = "List all STUDENTS by Parent", description = "Retrieves all students from database based on parentID")

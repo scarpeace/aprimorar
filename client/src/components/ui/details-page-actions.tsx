@@ -1,42 +1,46 @@
-import { Button, ButtonLink } from "./button";
+import { Button, ButtonLink } from "./button"
 
-export function DetailsPageActions(props: Readonly<{
-    data: any
-    editTo: string
-    isArchivePending?: boolean
-    isDeletePending: boolean
-    handleArchive?: () => void
-    handleDelete: () => void
-}>) {
-    const { data, editTo, handleArchive, handleDelete, isArchivePending, isDeletePending } = props
+type DetailsPageActionsProps = {
+  data?: Record<string, unknown> | null
+  editTo: string
+  isArchivePending?: boolean
+  isDeletePending: boolean
+  handleArchive?: () => void
+  handleDelete: () => void
+}
 
-    return (
-        <div className="flex flex-col gap-2 sm:flex-row">
-            {handleArchive && (
-                <Button
-                    type="button"
-                    onClick={() => handleArchive()}
-                    disabled={isArchivePending}
-                    variant={data.archivedAt ? "warning" : "outlineWarning"}
-                    size="sm"
-                >
-                    {data.archivedAt ? "Desarquivar" : "Arquivar"}
-                </Button>
-            )}
+export function DetailsPageActions(props: Readonly<DetailsPageActionsProps>) {
+  const { data, editTo, handleArchive, handleDelete, isArchivePending, isDeletePending } = props
 
-            <ButtonLink size="sm" to={editTo} variant="primary">
-                Editar
-            </ButtonLink>
+  const isArchived = Boolean(data && "archivedAt" in data && data.archivedAt)
 
-            <Button
-                type="button"
-                onClick={handleDelete}
-                disabled={isDeletePending}
-                variant="error"
-                size="sm"
-            >
-                Excluir
-            </Button>
-        </div>
-    )
+  return (
+    <div className="flex flex-col gap-2 sm:flex-row">
+      {handleArchive && (
+        <Button
+          type="button"
+          onClick={() => handleArchive()}
+          disabled={isArchivePending}
+          variant={isArchived ? "warning" : "outlineWarning"}
+          size="sm"
+        >
+          {isArchived ? "Desarquivar" : "Arquivar"}
+        </Button>
+      )}
+
+      <ButtonLink size="sm" to={editTo} variant="primary">
+        Editar
+      </ButtonLink>
+
+      <Button
+        type="button"
+        onClick={handleDelete}
+        disabled={isDeletePending}
+        variant="error"
+        size="sm"
+      >
+        Excluir
+      </Button>
+    </div>
+  )
 }

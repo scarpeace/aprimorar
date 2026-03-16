@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, type Resolver } from "react-hook-form"
 import { Trash2 } from "lucide-react"
 import { useParams } from "react-router-dom"
 import { Button, ButtonLink } from "@/components/ui/button"
@@ -28,7 +28,7 @@ export function EventEditPage() {
     setValue,
     formState: { errors },
   } = useForm<EventFormInput>({
-    resolver: zodResolver(eventInputSchema) as any,
+    resolver: zodResolver(eventInputSchema) as unknown as Resolver<EventFormInput>,
     mode: "onBlur",
   })
 
@@ -56,8 +56,8 @@ export function EventEditPage() {
 
     setValue("title", eventData.title)
     setValue("description", eventData.description ?? "")
-    setValue("startDate", formatDateTimeLocal(eventData.startDate) as any)
-    setValue("endDate", formatDateTimeLocal(eventData.endDate) as any)
+    setValue("startDate", formatDateTimeLocal(eventData.startDate) as unknown as EventFormInput["startDate"])
+    setValue("endDate", formatDateTimeLocal(eventData.endDate) as unknown as EventFormInput["endDate"])
     setValue("price", Number(eventData.price))
     setValue("payment", Number(eventData.payment))
     setValue("content", eventData.content)

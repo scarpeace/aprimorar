@@ -3,6 +3,7 @@ import {
   employeeResponseSchema,
   parentResponseSchema,
   studentResponse,
+  studentOptionSchema,
   eventResponse,
   eventInputSchema,
 } from "@/lib/schemas"
@@ -16,9 +17,11 @@ import type {
   EventResponse,
   ParentResponse,
   StudentResponse,
+  StudentOption,
 } from "@/lib/schemas"
 import { pageResponseSchema, type PageResponse } from "@/lib/schemas/page-response"
 import axios from "axios"
+import { ZodError } from "zod"
 
 type ApiErrorResponse = {
   status?: number
@@ -40,6 +43,11 @@ function getApiErrorMessage(data: unknown) {
 
 export function getFriendlyErrorMessage(error: unknown) {
   if (!error) return ""
+
+  if (error instanceof ZodError) {
+    console.error("Schema validation error:", error.issues)
+    return "Resposta da API em formato inesperado. Atualize a página ou contate o suporte."
+  }
 
   if (axios.isAxiosError(error)) {
     const status = error.response?.status
@@ -81,6 +89,10 @@ export const studentsApi = {
   async list(page = 0, size = 20, sortBy = "name",): Promise<PageResponse<StudentResponse>> {
     const { data } = await api.get<PageResponse<StudentResponse>>(`/v1/students?page=${page}&size=${size}&sort=${sortBy}`)
     return pageResponseSchema(studentResponse).parse(data);
+  },
+  async getOptions(): Promise<StudentOption[]> {
+    const { data } = await api.get<StudentOption[]>("/v1/students/options")
+    return studentOptionSchema.array().parse(data)
   },
   async listByParent(id: string): Promise<StudentResponse[]> {
     const { data } = await api.get<StudentResponse[]>(`/v1/students/parent/${id}`)
@@ -131,7 +143,7 @@ export const employeesApi = {
 
 export const parentsApi = {
   async list(): Promise<ParentResponse[]> {
-    const { data } = await api.get<ParentResponse[]>(`/v1/parents`)
+    const { data } = await api.get<ParentResponse[]>(`/v1/parents/all`)
     return parentResponseSchema.array().parse(data);
   },
   async listPaginated(page = 0, size = 20, sortBy = "name",): Promise<PageResponse<ParentResponse>> {

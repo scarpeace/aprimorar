@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, type Resolver } from "react-hook-form"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { FormField } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/events/EventCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
-import { eventInputSchema, type EmployeeResponse, type EventFormInput, type StudentResponse } from "@/lib/schemas"
+import { eventInputSchema, type EmployeeResponse, type EventFormInput, type StudentOption } from "@/lib/schemas"
 import { eventContentLabels, eventContentValues } from "@/lib/shared/enums"
 import { employeesApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
 import { useCreateEvent } from "./hooks/use-events"
@@ -19,7 +19,7 @@ export function EventCreatePage() {
     setValue,
     formState: { errors },
   } = useForm<EventFormInput>({
-    resolver: zodResolver(eventInputSchema) as any,
+    resolver: zodResolver(eventInputSchema) as unknown as Resolver<EventFormInput>,
   })
 
   const studentIdField = register("studentId")
@@ -28,20 +28,20 @@ export function EventCreatePage() {
   // TODO: Mover para hooks específicos de alunos/colaboradores se houver refatoração total
   const dropDownOptionsQuery = useQuery({
     queryKey: [queryKeys.students, queryKeys.employees, "options"],
-    queryFn: async (): Promise<{ students: StudentResponse[]; employees: EmployeeResponse[] }> => {
-      const [studentsRes, employeesRes] = await Promise.all([
-        studentsApi.list(0, 100), // Pega uma quantidade maior para o dropdown
+    queryFn: async (): Promise<{ students: StudentOption[]; employees: EmployeeResponse[] }> => {
+      const [students, employeesRes] = await Promise.all([
+        studentsApi.getOptions(),
         employeesApi.list(0, 100),
       ])
 
       return {
-        students: studentsRes.content,
+        students,
         employees: employeesRes.content,
       }
     },
   })
 
-  const students = (dropDownOptionsQuery.data?.students ?? []).filter((student) => !student.archivedAt)
+  const students = dropDownOptionsQuery.data?.students ?? []
   const employees = (dropDownOptionsQuery.data?.employees ?? []).filter((employee) => !employee.archivedAt)
 
   const { mutate: createEvent, isPending: isSubmitting, error: submitError } = useCreateEvent()

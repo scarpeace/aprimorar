@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.address.Address;
+import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
 import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.parent.ParentRepository;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
@@ -47,40 +48,11 @@ class StudentServiceTest {
     class CommandMethods {
 
         @Test
-        @DisplayName("should create student and persist new parent before student")
-        void shouldCreateStudentAndPersistNewParentBeforeStudent() {
-            StudentRequestDTO input = request(parent(null, "Ana Souza", "ana@email.com", "(11) 97777-6655", "123.456.789-01"));
-            Parent transientParent = parent(null, "Ana Souza", "ana@email.com", "11977776655", "12345678901");
-            Parent savedParent = parent(PARENT_ID, "Ana Souza", "ana@email.com", "11977776655", "12345678901");
-            Student mappedStudent = student(transientParent);
-            Student savedStudent = student(savedParent);
-            savedStudent.setId(STUDENT_ID);
-            StudentResponseDTO expected = response(savedStudent);
-
-            when(studentMapper.convertToEntity(input)).thenReturn(mappedStudent);
-            when(parentRepo.findByCpf("12345678901")).thenReturn(Optional.empty());
-            when(parentRepo.existsByEmail("ana@email.com")).thenReturn(false);
-            when(parentRepo.save(any(Parent.class))).thenReturn(savedParent);
-            when(studentRepo.existsByCpf("12345678901")).thenReturn(false);
-            when(studentRepo.existsByEmail("aluno@email.com")).thenReturn(false);
-            when(studentRepo.save(mappedStudent)).thenReturn(savedStudent);
-            when(studentMapper.convertToDto(savedStudent)).thenReturn(expected);
-
-            StudentResponseDTO actual = studentService.createStudent(input);
-
-            assertThat(actual).isEqualTo(expected);
-            assertThat(mappedStudent.getParent()).isEqualTo(savedParent);
-            verify(parentRepo).save(any(Parent.class));
-            verify(studentRepo).save(mappedStudent);
-        }
-
-        @Test
         @DisplayName("should create student using existing parent when parent id is informed")
         void shouldCreateStudentUsingExistingParentWhenParentIdIsInformed() {
-            StudentRequestDTO input = request(parent(PARENT_ID, "Ana Souza", "ana@email.com", "(11) 97777-6655", "123.456.789-01"));
-            Parent detachedParent = parent(PARENT_ID, "Ana Souza", "ana@email.com", "11977776655", "12345678901");
+            StudentRequestDTO input = request(PARENT_ID);
             Parent existingParent = parent(PARENT_ID, "Ana Souza", "ana@email.com", "11977776655", "12345678901");
-            Student mappedStudent = student(detachedParent);
+            Student mappedStudent = student(null); // Mapper doesn't set parent
             Student savedStudent = student(existingParent);
             savedStudent.setId(STUDENT_ID);
             StudentResponseDTO expected = response(savedStudent);
@@ -96,17 +68,15 @@ class StudentServiceTest {
 
             assertThat(actual).isEqualTo(expected);
             assertThat(mappedStudent.getParent()).isEqualTo(existingParent);
-            verify(parentRepo, never()).save(detachedParent);
             verify(studentRepo).save(mappedStudent);
         }
 
         @Test
         @DisplayName("should update existing student and resolve existing parent association")
         void shouldUpdateExistingStudentAndResolveExistingParentAssociation() {
-            StudentRequestDTO input = request(parent(PARENT_ID, "Ana Souza", "ana@email.com", "(11) 97777-6655", "123.456.789-01"));
-            Parent updatedParent = parent(PARENT_ID, "Ana Souza", "ana@email.com", "11977776655", "12345678901");
+            StudentRequestDTO input = request(PARENT_ID);
             Parent existingParent = parent(PARENT_ID, "Ana Souza", "ana@email.com", "11977776655", "12345678901");
-            Student mappedStudent = student(updatedParent);
+            Student mappedStudent = student(null); // Mapper doesn't set parent
             Student existingStudent = student(existingParent);
             existingStudent.setId(STUDENT_ID);
             existingStudent.setName("Aluno Antigo");
@@ -131,7 +101,7 @@ class StudentServiceTest {
         }
     }
 
-    private static StudentRequestDTO request(Parent parent) {
+    private static StudentRequestDTO request(UUID parentId) {
         return new StudentRequestDTO(
                 "Aluno Teste",
                 LocalDate.of(2012, 5, 10),
@@ -139,8 +109,8 @@ class StudentServiceTest {
                 "Escola Teste",
                 "(11) 98888-7766",
                 "aluno@email.com",
-                address(),
-                parent
+                addressRequest(),
+                parentId
         );
     }
 
@@ -165,6 +135,18 @@ class StudentServiceTest {
         parent.setContact(contact);
         parent.setCpf(cpf);
         return parent;
+    }
+
+    private static AddressRequestDTO addressRequest() {
+        return new AddressRequestDTO(
+                "Rua das Flores",
+                "123",
+                "Casa",
+                "Centro",
+                "Sao Paulo",
+                BrazilianState.SP,
+                "04711-230"
+        );
     }
 
     private static Address address() {

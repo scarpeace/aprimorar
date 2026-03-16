@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
@@ -39,8 +39,6 @@ export function ParentEditPage() {
 
   const {
     mutate: updateParentMutation,
-    isError: isUpdateParentError,
-    error: updateParentError,
     isPending: isUpdateParentPending } = useMutation({
       mutationFn: (data: ParentFormInput) =>
         parentsApi.update(parentId, data),
@@ -57,7 +55,6 @@ export function ParentEditPage() {
   const {
     mutate: deleteParentMutation,
     isError: isDeleteParentError,
-    error: deleteParentError,
     isPending: isDeleteParentPending } = useMutation({
       mutationFn: () =>
         parentsApi.delete(parentId),

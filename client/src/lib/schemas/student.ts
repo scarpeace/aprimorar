@@ -38,5 +38,11 @@ export const studentResponse = z.object({
   updatedAt: z.coerce.date().nullable(),
 })
 
+export const studentOptionSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+})
+
 export type StudentFormInput = z.infer<typeof studentInputSchema>
 export type StudentResponse = z.infer<typeof studentResponse>
+export type StudentOption = z.infer<typeof studentOptionSchema>

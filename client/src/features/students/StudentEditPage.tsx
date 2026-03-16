@@ -1,9 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
 import { Trash2 } from "lucide-react"
+import { Alert } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { ErrorCard } from "@/components/ui/error-card"
@@ -13,12 +15,11 @@ import { PageLoading } from "@/components/ui/page-loading"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/students/StudentCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
-import { studentInputSchema, type StudentFormInput } from "@/lib/schemas"
+import { studentInputSchema, type ParentResponse, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { formatDateInputValue } from "@/lib/shared/formatter"
 import { getFriendlyErrorMessage, eventsApi } from "@/services/api"
 import { useStudentDetailQuery, useUpdateStudent, useDeleteStudent } from "./hooks/use-students"
-import { useQuery } from "@tanstack/react-query"
 import { useParentsListQuery } from "../parents/hooks/use-parents"
 
 export function StudentEditPage() {
@@ -27,6 +28,7 @@ export function StudentEditPage() {
   const [selectedParentId, setSelectedParentId] = useState("")
 
   const { data: student, isLoading: isStudentLoading, isError: isStudentError, error: studentError, refetch: refetchStudent } = useStudentDetailQuery(studentId)
+  const currentParentId = selectedParentId || student?.parent?.id || ""
 
   const {
     register,
@@ -41,9 +43,9 @@ export function StudentEditPage() {
 
   const {
     data: parentsList,
-    isLoading: isparentsListLoading,
+    isLoading: isParentsListLoading,
     error: parentsListQueryError,
-  } = useParentsListQuery();
+  } = useParentsListQuery()
 
   useEffect(() => {
     if (student) {
@@ -60,16 +62,12 @@ export function StudentEditPage() {
       setValue("address.city", student.address.city)
       setValue("address.state", student.address.state)
       setValue("address.zip", student.address.zip)
-
-      if (!selectedParentId && student.parent) {
-        setSelectedParentId(student.parent.id)
-      }
     }
   }, [student, setValue])
 
   useEffect(() => {
-    if (selectedParentId) {
-      const selectedParent = parentsList?.find((item: { id: string }) => item.id === selectedParentId)
+    if (currentParentId) {
+      const selectedParent = parentsList?.find((item: ParentResponse) => item.id === currentParentId)
       if (selectedParent) {
         setValue("parent.name", selectedParent.name)
         setValue("parent.email", selectedParent.email)
@@ -77,7 +75,7 @@ export function StudentEditPage() {
         setValue("parent.cpf", selectedParent.cpf)
       }
     }
-  }, [selectedParentId, parentsList, setValue])
+  }, [currentParentId, parentsList, setValue])
 
   const studentEventsQuery = useQuery({
     queryKey: [...queryKeys.events, "student", studentId],
@@ -171,14 +169,14 @@ export function StudentEditPage() {
               <select
                 id="parentId"
                 className="app-select"
-                value={selectedParentId}
+                value={currentParentId}
                 onChange={(event) => setSelectedParentId(event.target.value)}
-                disabled={isparentsListLoading}
+                disabled={isParentsListLoading}
               >
                 <option value="">
-                  {isparentsListLoading ? "Carregando responsáveis..." : "Selecione um responsável"}
+                  {isParentsListLoading ? "Carregando responsáveis..." : "Selecione um responsável"}
                 </option>
-                {parentsList?.map((parent: any) => (
+                {parentsList?.map((parent: ParentResponse) => (
                   <option key={parent.id} value={parent.id}>
                     {parent.name} ({parent.cpf})
                   </option>
@@ -307,12 +305,16 @@ export function StudentEditPage() {
         </SectionCard>
 
 
-        {submitError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(submitError)}</div> : null}
-        {studentHasLinkedEvents ? (
+        {submitError && (
+          <Alert variant="error" className="text-sm">
+            {getFriendlyErrorMessage(submitError)}
+          </Alert>
+        )}
+        {studentHasLinkedEvents && (
           <Badge variant="warning">
             Este aluno possui eventos vinculados e não pode ser excluído. Use o arquivamento para desativar o cadastro ou exclua todos os eventos relacionados a esse aluno.
           </Badge>
-        ) : null}
+        )}
 
         <div className={styles.actions}>
           <Button

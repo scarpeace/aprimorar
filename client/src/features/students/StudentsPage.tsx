@@ -10,7 +10,7 @@ import { getFriendlyErrorMessage } from "@/services/api"
 import { useStudentsQuery } from "./hooks/use-students"
 
 export function StudentsPage() {
-  const [hideArchived, setHideArchived] = useState(false)
+  const [hideArchived, setHideArchived] = useState(true)
 
   const {
     data: studentList = [],

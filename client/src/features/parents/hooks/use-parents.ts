@@ -13,10 +13,6 @@ export function useParentsQuery(page = 0, size = 20, sortBy = "name") {
   })
 }
 
-/**
- * Hook to get all parents without pagination.
- * Useful for selects and dropdowns.
- */
 export function useParentsListQuery() {
   return useQuery({
     queryKey: [...queryKeys.parents, "all"],

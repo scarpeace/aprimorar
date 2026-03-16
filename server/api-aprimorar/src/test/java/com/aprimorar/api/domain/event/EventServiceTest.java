@@ -63,10 +63,11 @@ class EventServiceTest {
             existingEvent.setId(EVENT_ID);
             EventResponseDTO expected = response(existingEvent, resolvedStudent, resolvedEmployee);
 
-            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
             when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(existingEvent));
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(resolvedStudent));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(resolvedEmployee));
+            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
+            when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, mappedEvent.getStartDate(), mappedEvent.getEndDateTime(), EVENT_ID)).thenReturn(false);
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, mappedEvent.getStartDate(), mappedEvent.getEndDateTime(), EVENT_ID)).thenReturn(false);
             when(eventMapper.convertToDto(existingEvent)).thenReturn(expected);
@@ -95,8 +96,8 @@ class EventServiceTest {
                 BigDecimal.valueOf(120),
                 BigDecimal.valueOf(80),
                 EventContent.AULA,
-                student(STUDENT_ID, null),
-                employee(EMPLOYEE_ID, null)
+                STUDENT_ID,
+                EMPLOYEE_ID
         );
     }
 
