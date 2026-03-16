@@ -38,7 +38,7 @@ export function EventEditPage() {
   const { data: eventData, isLoading: isEventLoading, isError: isEventError, error: eventError, refetch: refetchEvent } = useEventDetailQuery(eventId)
 
   const dropDownOptionsQuery = useQuery({
-    queryKey: [queryKeys.students, queryKeys.employees, "options"],
+    queryKey: [queryKeys.students.all, queryKeys.employees.all, "options"],
     queryFn: async (): Promise<{ students: StudentResponse[], employees: EmployeeResponse[] }> => {
       const [studentsRes, employeesRes] = await Promise.all([
         studentsApi.list(0, 100),

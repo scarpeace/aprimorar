@@ -88,7 +88,7 @@ api.interceptors.response.use(
 )
 
 export const studentsApi = {
-  async list(page = 0, size = 20, sortBy = "name",): Promise<PageResponse<StudentResponse>> {
+  async list(page = 0, size = 50, sortBy = "name",): Promise<PageResponse<StudentResponse>> {
     const { data } = await api.get<PageResponse<StudentResponse>>(`/v1/students?page=${page}&size=${size}&sort=${sortBy}`)
     return pageResponseSchema(studentResponse).parse(data);
   },
@@ -118,7 +118,7 @@ export const studentsApi = {
 }
 
 export const employeesApi = {
-  async list(page = 0, size = 20, sortBy = "name",): Promise<PageResponse<EmployeeResponse>> {
+  async list(page = 0, size = 50, sortBy = "name",): Promise<PageResponse<EmployeeResponse>> {
     const { data } = await api.get<PageResponse<EmployeeResponse>>(`/v1/employees?page=${page}&size=${size}&sort=${sortBy}`)
     return pageResponseSchema(employeeResponseSchema).parse(data);
   },

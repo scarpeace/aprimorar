@@ -10,19 +10,19 @@ import { useParentsQuery } from "./hooks/use-parents"
 import { getFriendlyErrorMessage } from "@/services/api"
 
 export function ParentsPage() {
-  const [hideArchived, setHideArchived] = useState(true)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pageSize = 10
 
   const {
-    data: parentsResponse,
+    data: response,
     isLoading,
     isError,
     error,
     refetch,
-  } = useParentsQuery()
+  } = useParentsQuery(currentPage, pageSize)
 
-  const parentList = parentsResponse?.content ?? []
-
-  const visibleParents = hideArchived ? parentList.filter((parent) => !parent.archivedAt) : parentList
+  const parentList = response?.content ?? []
+  const pageInfo = response?.page
 
   if (isLoading) {
     return <PageLoading message="Carregando responsáveis..." />
@@ -37,6 +37,9 @@ export function ParentsPage() {
     )
   }
 
+  const totalElements = pageInfo?.totalElements ?? 0
+  const totalPages = pageInfo?.totalPages ?? 0
+
   return (
     <div className={styles.page}>
       <PageHeader
@@ -48,15 +51,6 @@ export function ParentsPage() {
             placeholder="Buscar responsável por nome, função ou email"
             ariaLabel="Buscar responsável"
           />
-          <label className="app-text-muted flex items-center gap-2 whitespace-nowrap text-sm">
-            <input
-              className="checkbox checkbox-sm"
-              type="checkbox"
-              checked={hideArchived}
-              onChange={(event) => setHideArchived(event.target.checked)}
-            />
-            Ocultar arquivados
-          </label>
           <ButtonLink className="sm:ml-auto" to="/parents/new" variant="success">
             Novo responsável
           </ButtonLink>
@@ -76,7 +70,7 @@ export function ParentsPage() {
               </tr>
             </thead>
             <tbody>
-              {visibleParents.map((parent) => (
+              {parentList.map((parent) => (
                 <tr className="transition-colors hover:bg-base-200/70" key={parent.id}>
                   <td>{parent.name}</td>
                   <td className="hidden whitespace-normal break-all lg:table-cell">{parent.email}</td>
@@ -98,7 +92,35 @@ export function ParentsPage() {
         </div>
       </div>
 
-      {visibleParents.length === 0 ? (
+      {/* PAGINAÇÃO */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between px-2">
+          <p className="text-sm app-text-muted">
+            Mostrando {parentList.length} de {totalElements} responsáveis
+          </p>
+          <div className="join">
+            <button
+              className="btn btn-sm join-item"
+              disabled={currentPage === 0}
+              onClick={() => setCurrentPage((p) => p - 1)}
+            >
+              Anterior
+            </button>
+            <button className="btn btn-sm join-item no-animation cursor-default">
+              Página {currentPage + 1} de {totalPages}
+            </button>
+            <button
+              className="btn btn-sm join-item"
+              disabled={currentPage >= totalPages - 1}
+              onClick={() => setCurrentPage((p) => p + 1)}
+            >
+              Próxima
+            </button>
+          </div>
+        </div>
+      )}
+
+      {parentList.length === 0 ? (
         <EmptyCard
           title="Nenhum responsável cadastrado"
           description="Quando você cadastrar o primeiro responsável, ele aparecerá na tabela acima."

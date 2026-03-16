@@ -32,7 +32,7 @@ export function ParentEditPage() {
     isFetched: isParentFetched,
     refetch: refetchParent
   } = useQuery({
-    queryKey: queryKeys.parentDetail(parentId),
+    queryKey: queryKeys.parents.detail(parentId),
     queryFn: () => parentsApi.getById(parentId),
     enabled: Boolean(id),
   })
@@ -44,9 +44,9 @@ export function ParentEditPage() {
         parentsApi.update(parentId, data),
       onSuccess: async () => {
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: queryKeys.parentDetail(parentId) }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.parents.detail(parentId) }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.students.all }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all }),
         ])
         navigate(`/parents/${parentId}`)
       },
@@ -60,10 +60,10 @@ export function ParentEditPage() {
         parentsApi.delete(parentId),
       onSuccess: async () => {
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: queryKeys.parentDetail(parentId) }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-          queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.parents.all }),
+          queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all }),
         ])
+        navigate("/parents")
       },
     })
 

@@ -10,17 +10,19 @@ import { getFriendlyErrorMessage } from "@/services/api"
 import { useStudentsQuery } from "./hooks/use-students"
 
 export function StudentsPage() {
-  const [hideArchived, setHideArchived] = useState(true)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pageSize = 10
 
   const {
-    data: studentList = [],
+    data: response,
     isLoading,
     isError,
     error,
     refetch,
-  } = useStudentsQuery()
+  } = useStudentsQuery(currentPage, pageSize)
 
-  const visibleStudents = hideArchived ? studentList.filter((student) => !student.archivedAt) : studentList
+  const studentList = response?.content ?? []
+  const pageInfo = response?.page
 
   if (isLoading) {
     return <PageLoading message="Carregando alunos..." />
@@ -35,6 +37,9 @@ export function StudentsPage() {
     )
   }
 
+  const totalElements = pageInfo?.totalElements ?? 0
+  const totalPages = pageInfo?.totalPages ?? 0
+
   return (
     <div className={styles.page}>
       <PageHeader
@@ -46,15 +51,6 @@ export function StudentsPage() {
             placeholder="Buscar aluno por nome, email ou escola"
             ariaLabel="Buscar aluno"
           />
-          <label className="app-text-muted flex items-center gap-2 whitespace-nowrap text-sm">
-            <input
-              className="checkbox checkbox-sm"
-              type="checkbox"
-              checked={hideArchived}
-              onChange={(event) => setHideArchived(event.target.checked)}
-            />
-            Ocultar arquivados
-          </label>
           <ButtonLink className="sm:ml-auto" to="/students/new" variant="success">
             Novo aluno
           </ButtonLink>
@@ -74,7 +70,7 @@ export function StudentsPage() {
               </tr>
             </thead>
             <tbody>
-              {visibleStudents.map((student) => (
+              {studentList.map((student) => (
                 <tr className="transition-colors hover:bg-base-200/70" key={student.id}>
                   <td>{student.name}</td>
                   <td className="hidden lg:table-cell">{student.email}</td>
@@ -96,7 +92,35 @@ export function StudentsPage() {
         </div>
       </div>
 
-      {visibleStudents.length === 0 ? (
+      {/* PAGINAÇÃO */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between px-2">
+          <p className="text-sm app-text-muted">
+            Mostrando {studentList.length} de {totalElements} alunos
+          </p>
+          <div className="join">
+            <button
+              className="btn btn-sm join-item"
+              disabled={currentPage === 0}
+              onClick={() => setCurrentPage((p) => p - 1)}
+            >
+              Anterior
+            </button>
+            <button className="btn btn-sm join-item no-animation cursor-default">
+              Página {currentPage + 1} de {totalPages}
+            </button>
+            <button
+              className="btn btn-sm join-item"
+              disabled={currentPage >= totalPages - 1}
+              onClick={() => setCurrentPage((p) => p + 1)}
+            >
+              Próxima
+            </button>
+          </div>
+        </div>
+      )}
+
+      {studentList.length === 0 ? (
         <EmptyCard
           title="Nenhum aluno cadastrado"
           description="Quando você cadastrar o primeiro aluno, ele aparecerá na tabela acima."

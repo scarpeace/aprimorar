@@ -65,7 +65,7 @@ export function StudentEditPage() {
   }, [student, setValue])
 
   const studentEventsQuery = useQuery({
-    queryKey: [...queryKeys.events, "student", studentId],
+    queryKey: queryKeys.events.byStudent(studentId),
     queryFn: () =>
       eventsApi.listByStudent(studentId),
     enabled: Boolean(id),

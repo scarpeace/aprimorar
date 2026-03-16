@@ -8,14 +8,14 @@ import type { EmployeeFormInput } from "@/lib/schemas"
 
 export function useEmployeesQuery(page = 0, size = 20, sortBy = "name") {
   return useQuery({
-    queryKey: [...queryKeys.employees, "list", { page, size, sortBy }],
+    queryKey: queryKeys.employees.list({ page, size, sortBy }),
     queryFn: () => employeesApi.list(page, size, sortBy),
   })
 }
 
 export function useEmployeeDetailQuery(id: string) {
   return useQuery({
-    queryKey: [...queryKeys.employees, id],
+    queryKey: queryKeys.employees.detail(id),
     queryFn: () => employeesApi.getById(id),
     enabled: !!id,
   })
@@ -23,7 +23,7 @@ export function useEmployeeDetailQuery(id: string) {
 
 export function useEmployeeEditQuery(id: string) {
   return useQuery({
-    queryKey: [...queryKeys.employees, "edit", id],
+    queryKey: queryKeys.employees.detail(id),
     queryFn: () => employeesApi.getByIdForEdit(id),
     enabled: !!id,
   })
@@ -31,7 +31,7 @@ export function useEmployeeEditQuery(id: string) {
 
 export function useEmployeeEventsQuery(id: string, page = 0, size = 20) {
   return useQuery({
-    queryKey: [...queryKeys.events, "employee", id, { page, size }],
+    queryKey: queryKeys.events.byEmployee(id),
     queryFn: () => eventsApi.listByEmployee(id, page, size),
     enabled: !!id,
   })
@@ -39,7 +39,7 @@ export function useEmployeeEventsQuery(id: string, page = 0, size = 20) {
 
 export function useEmployeeOptionsQuery() {
   return useQuery({
-    queryKey: [...queryKeys.employees, "options"],
+    queryKey: queryKeys.employees.options,
     queryFn: () => employeesApi.getOptions(),
   })
 }
@@ -53,8 +53,8 @@ export function useCreateEmployee() {
   return useMutation({
     mutationFn: (data: EmployeeFormInput) => employeesApi.create(data),
     onSuccess: (createdEmployee) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees })
-      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard })
+      queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       navigate(`/employees/${createdEmployee.id}`)
     },
   })
@@ -67,8 +67,8 @@ export function useUpdateEmployee(id: string) {
   return useMutation({
     mutationFn: (data: EmployeeFormInput) => employeesApi.update(id, data),
     onSuccess: (updatedEmployee) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees })
-      queryClient.setQueryData([...queryKeys.employees, id], updatedEmployee)
+      queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.employees.detail(id) })
       navigate(`/employees/${id}`)
     },
   })
@@ -80,9 +80,11 @@ export function useDeleteEmployee() {
 
   return useMutation({
     mutationFn: (id: string) => employeesApi.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees })
+    onSuccess: async (_, id) => {
       navigate("/employees")
+      queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() })
+      queryClient.invalidateQueries({ queryKey: ["events", "by-employee"] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
     },
   })
 }
@@ -93,8 +95,8 @@ export function useArchiveEmployee() {
   return useMutation({
     mutationFn: (id: string) => employeesApi.archive(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees })
-      queryClient.invalidateQueries({ queryKey: [...queryKeys.employees, id] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.employees.detail(id) })
     },
   })
 }
@@ -105,8 +107,8 @@ export function useUnarchiveEmployee() {
   return useMutation({
     mutationFn: (id: string) => employeesApi.unarchive(id),
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees })
-      queryClient.invalidateQueries({ queryKey: [...queryKeys.employees, id] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.employees.detail(id) })
     },
   })
 }

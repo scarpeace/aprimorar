@@ -11,19 +11,19 @@ import { getFriendlyErrorMessage } from "@/services/api"
 import { useEmployeesQuery } from "./hooks/use-employees"
 
 export function EmployeesPage() {
-  const [hideArchived, setHideArchived] = useState(true)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pageSize = 10
 
   const {
-    data: employeesResponse,
+    data: response,
     isLoading,
     isError,
     error,
     refetch,
-  } = useEmployeesQuery()
+  } = useEmployeesQuery(currentPage, pageSize)
 
-  const employeeList = employeesResponse?.content ?? []
-
-  const visibleEmployees = hideArchived ? employeeList.filter((employee) => !employee.archivedAt) : employeeList
+  const employeeList = response?.content ?? []
+  const pageInfo = response?.page
 
   if (isLoading) {
     return <PageLoading message="Carregando colaboradores..." />
@@ -38,6 +38,9 @@ export function EmployeesPage() {
     )
   }
 
+  const totalElements = pageInfo?.totalElements ?? 0
+  const totalPages = pageInfo?.totalPages ?? 0
+
   return (
     <div className={styles.page}>
       <PageHeader
@@ -49,15 +52,6 @@ export function EmployeesPage() {
             placeholder="Buscar colaborador por nome, função ou email"
             ariaLabel="Buscar colaborador"
           />
-          <label className="app-text-muted flex items-center gap-2 whitespace-nowrap text-sm">
-            <input
-              className="checkbox checkbox-sm"
-              type="checkbox"
-              checked={hideArchived}
-              onChange={(event) => setHideArchived(event.target.checked)}
-            />{" "}
-            Ocultar arquivados
-          </label>
           <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">
             Novo colaborador
           </ButtonLink>
@@ -78,7 +72,7 @@ export function EmployeesPage() {
               </tr>
             </thead>
             <tbody>
-              {visibleEmployees.map((employee) => (
+              {employeeList.map((employee) => (
                 <tr className="transition-colors hover:bg-base-200/70" key={employee.id}>
                   <td>{employee.name}</td>
                   <td>{dutyLabels[employee.duty]}</td>
@@ -101,7 +95,35 @@ export function EmployeesPage() {
         </div>
       </div>
 
-      {visibleEmployees.length === 0 ? (
+      {/* PAGINAÇÃO */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between px-2">
+          <p className="text-sm app-text-muted">
+            Mostrando {employeeList.length} de {totalElements} colaboradores
+          </p>
+          <div className="join">
+            <button
+              className="btn btn-sm join-item"
+              disabled={currentPage === 0}
+              onClick={() => setCurrentPage((p) => p - 1)}
+            >
+              Anterior
+            </button>
+            <button className="btn btn-sm join-item no-animation cursor-default">
+              Página {currentPage + 1} de {totalPages}
+            </button>
+            <button
+              className="btn btn-sm join-item"
+              disabled={currentPage >= totalPages - 1}
+              onClick={() => setCurrentPage((p) => p + 1)}
+            >
+              Próxima
+            </button>
+          </div>
+        </div>
+      )}
+
+      {employeeList.length === 0 ? (
         <EmptyCard
           title="Nenhum colaborador cadastrado"
           description="Quando você cadastrar o primeiro colaborador, ele aparecerá na tabela acima."

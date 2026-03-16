@@ -24,7 +24,7 @@ export function StudentDetailPage() {
   const { data: student, isLoading: isStudentLoading, isError: isStudentError, error: studentError, refetch: refetchStudent } = useStudentDetailQuery(studentId)
 
   const eventsQuery = useQuery({
-    queryKey: queryKeys.eventsByStudent(studentId),
+    queryKey: queryKeys.events.byStudent(studentId),
     queryFn: () => eventsApi.listByStudent(studentId),
     enabled: Boolean(id),
   })

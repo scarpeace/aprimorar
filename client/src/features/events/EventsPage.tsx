@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
@@ -9,13 +10,16 @@ import { getFriendlyErrorMessage } from "@/services/api"
 import { useEventsQuery } from "./hooks/use-events"
 
 export function EventsPage() {
+  const [currentPage, setCurrentPage] = useState(0)
+  const pageSize = 10
+
   const {
     data: eventsResponse,
     isLoading: isLoadingEvents,
     isError: isErrorEvents,
     error: errorEvents,
     refetch,
-  } = useEventsQuery()
+  } = useEventsQuery(currentPage, pageSize)
 
   if (isLoadingEvents) {
     return <PageLoading message="Carregando eventos..." />
@@ -28,6 +32,10 @@ export function EventsPage() {
       </div>
     )
   }
+
+  const pageInfo = eventsResponse?.page
+  const totalElements = pageInfo?.totalElements ?? 0
+  const totalPages = pageInfo?.totalPages ?? 0
 
   return (
     <div className={styles.page}>
@@ -51,6 +59,34 @@ export function EventsPage() {
           error={errorEvents ? getFriendlyErrorMessage(errorEvents) : ""}
         />
       </div>
+
+      {/* PAGINAÇÃO */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between px-2">
+          <p className="text-sm app-text-muted">
+            Mostrando {eventsResponse?.content.length ?? 0} de {totalElements} eventos
+          </p>
+          <div className="join">
+            <button
+              className="btn btn-sm join-item"
+              disabled={currentPage === 0}
+              onClick={() => setCurrentPage((p: number) => p - 1)}
+            >
+              Anterior
+            </button>
+            <button className="btn btn-sm join-item no-animation cursor-default">
+              Página {currentPage + 1} de {totalPages}
+            </button>
+            <button
+              className="btn btn-sm join-item"
+              disabled={currentPage >= totalPages - 1}
+              onClick={() => setCurrentPage((p: number) => p + 1)}
+            >
+              Próxima
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

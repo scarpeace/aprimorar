@@ -8,14 +8,14 @@ import type { EventFormInput } from "@/lib/schemas"
 
 export function useEventsQuery(page = 0, size = 20, sortBy = "startDate") {
   return useQuery({
-    queryKey: [...queryKeys.events, "list", { page, size, sortBy }],
+    queryKey: queryKeys.events.list({ page, size, sortBy }),
     queryFn: () => eventsApi.list(page, size, sortBy),
   })
 }
 
 export function useEventDetailQuery(id: string) {
   return useQuery({
-    queryKey: [...queryKeys.events, id],
+    queryKey: queryKeys.events.detail(id),
     queryFn: () => eventsApi.getById(id),
     enabled: !!id,
   })
@@ -30,10 +30,10 @@ export function useCreateEvent() {
   return useMutation({
     mutationFn: (data: EventFormInput) => eventsApi.create(data),
     onSuccess: (createdEvent) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.events })
-      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard })
-      queryClient.invalidateQueries({ queryKey: queryKeys.students })
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees })
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.students.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.employees.all })
       navigate(`/events/${createdEvent.id}`)
     },
   })
@@ -45,12 +45,12 @@ export function useUpdateEvent(id: string) {
 
   return useMutation({
     mutationFn: (data: EventFormInput) => eventsApi.update(id, data),
-    onSuccess: (updatedEvent) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.events })
-      queryClient.setQueryData([...queryKeys.events, id], updatedEvent)
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(id) })
       // Invalida também os alunos e colaboradores pois podem ter mudado
-      queryClient.invalidateQueries({ queryKey: queryKeys.students })
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees })
+      queryClient.invalidateQueries({ queryKey: queryKeys.students.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.employees.all })
       navigate(`/events/${id}`)
     },
   })
@@ -62,13 +62,12 @@ export function useDeleteEvent() {
 
   return useMutation({
     mutationFn: (id: string) => eventsApi.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.events })
-      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard })
-      queryClient.invalidateQueries({ queryKey: queryKeys.students })
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees })
+    onSuccess: async (_, id) => {
       navigate("/events")
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.lists() })
+      queryClient.invalidateQueries({ queryKey: ["events", "by-student"] })
+      queryClient.invalidateQueries({ queryKey: ["events", "by-employee"] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
     },
   })
 }
-
