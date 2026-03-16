@@ -1,8 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { FormField } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/ui/page-header"
@@ -11,31 +8,30 @@ import styles from "@/features/events/EventCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { eventInputSchema, type EmployeeResponse, type EventFormInput, type StudentResponse } from "@/lib/schemas"
 import { eventContentLabels, eventContentValues } from "@/lib/shared/enums"
-import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
+import { employeesApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
+import { useCreateEvent } from "./hooks/use-events"
+import { useQuery } from "@tanstack/react-query"
 
 export function EventCreatePage() {
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const [submitError, setSubmitError] = useState<string | null>(null)
-
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
   } = useForm<EventFormInput>({
-    resolver: zodResolver(eventInputSchema),
+    resolver: zodResolver(eventInputSchema) as any,
   })
 
   const studentIdField = register("studentId")
   const employeeIdField = register("employeeId")
 
+  // TODO: Mover para hooks específicos de alunos/colaboradores se houver refatoração total
   const dropDownOptionsQuery = useQuery({
-    queryKey: queryKeys.events,
+    queryKey: [queryKeys.students, queryKeys.employees, "options"],
     queryFn: async (): Promise<{ students: StudentResponse[]; employees: EmployeeResponse[] }> => {
       const [studentsRes, employeesRes] = await Promise.all([
-        studentsApi.list(),
-        employeesApi.list(),
+        studentsApi.list(0, 100), // Pega uma quantidade maior para o dropdown
+        employeesApi.list(0, 100),
       ])
 
       return {
@@ -48,30 +44,11 @@ export function EventCreatePage() {
   const students = (dropDownOptionsQuery.data?.students ?? []).filter((student) => !student.archivedAt)
   const employees = (dropDownOptionsQuery.data?.employees ?? []).filter((employee) => !employee.archivedAt)
 
-  const createEventMutation = useMutation({
-    mutationFn: (data: EventFormInput) => eventsApi.create(data),
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async (createdEvent) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-      ])
-
-      navigate(`/events/${createdEvent.id}`)
-    },
-    onError: (error) => {
-      console.error("Falha ao criar evento:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
+  const { mutate: createEvent, isPending: isSubmitting, error: submitError } = useCreateEvent()
 
   const onSubmit = (data: EventFormInput) => {
-    createEventMutation.mutate(data)
+    createEvent(data)
   }
-
-  const isSubmitting = createEventMutation.isPending
 
   const renderContent = () => {
     if (dropDownOptionsQuery.isLoading) {
@@ -219,7 +196,7 @@ export function EventCreatePage() {
           </FormField>
         </div>
 
-        {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
+        {submitError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(submitError)}</div> : null}
 
         <div className={styles.actions}>
           <ButtonLink to="/events" variant="outline">

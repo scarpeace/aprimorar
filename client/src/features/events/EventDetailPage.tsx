@@ -1,8 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { Calendar } from "lucide-react"
-import { useParams, useNavigate } from "react-router-dom"
-import { Button, ButtonLink } from "@/components/ui/button"
+import { useParams } from "react-router-dom"
+import { ButtonLink } from "@/components/ui/button"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { PageHeader } from "@/components/ui/page-header"
@@ -10,53 +9,37 @@ import { PageLoading } from "@/components/ui/page-loading"
 import { SectionCard } from "@/components/ui/section-card"
 import { SummaryItem } from "@/components/ui/summary-item"
 import styles from "@/features/events/EventDetailPage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
 import { eventContentLabels } from "@/lib/shared/enums"
 import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter"
-import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
+import { getFriendlyErrorMessage } from "@/services/api"
+import { useEventDetailQuery, useDeleteEvent } from "./hooks/use-events"
+import { DetailsPageActions } from "@/components/ui/details-page-actions"
 
 export function EventDetailPage() {
   const { id } = useParams<{ id: string }>()
   const eventId = id ?? ""
-  const queryClient = useQueryClient()
-  const navigate = useNavigate()
 
-  const eventQuery = useQuery({
-    queryKey: [...queryKeys.events, eventId],
-    queryFn: () => eventsApi.getById(eventId),
-    enabled: Boolean(id),
-  })
+  const { data: event, isLoading: isEventLoading, error: eventError } = useEventDetailQuery(eventId)
 
-  const deleteEventMutation = useMutation({
-    mutationFn: () => eventsApi.delete(eventId),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.events })
-      globalThis.alert("Evento excluído com sucesso")
-      navigate("/events")
-    },
-  })
+  const { mutate: deleteEvent, isPending: isDeletePending } = useDeleteEvent()
 
-  if (!id) {
-    return (
-      <div className={styles.page}>
-        <ErrorCard description="ID do evento não informado." />
-      </div>
-    )
+  const handleDelete = () => {
+    if (!globalThis.confirm("Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.")) return
+    deleteEvent(eventId)
   }
 
-  if (eventQuery.isLoading) {
+
+  if (isEventLoading) {
     return <PageLoading message="Carregando evento..." />
   }
 
-  if (eventQuery.isError) {
+  if (eventError) {
     return (
       <div className={styles.page}>
-        <ErrorCard description={getFriendlyErrorMessage(eventQuery.error)} onAction={eventQuery.refetch} />
+        <ErrorCard description={getFriendlyErrorMessage(eventError)} />
       </div>
     )
   }
-
-  const event = eventQuery.data
 
   if (!event) {
     return (
@@ -103,34 +86,16 @@ export function EventDetailPage() {
 
       <SectionCard
         headerAction={
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <ButtonLink size="sm" to={`/events/edit/${event.id}`} variant="primary">
-              Editar evento
-            </ButtonLink>
-            <Button
-              type="button"
-              onClick={() => {
-                const confirmed = globalThis.confirm("Deseja realmente arquivar este evento?")
-                if (confirmed) {
-                  deleteEventMutation.mutate()
-                }
-              }}
-              disabled={deleteEventMutation.isPending}
-              variant="error"
-              size="sm"
-            >
-              Excluir Evento
-            </Button>
-          </div>
+          <DetailsPageActions
+            data={event}
+            editTo={`/events/edit/${event.id}`}
+            handleDelete={handleDelete}
+            isDeletePending={isDeletePending}
+          />
         }
         title="Resumo do evento"
         description="Dados completos do atendimento, participantes e valores."
       >
-        {deleteEventMutation.isError ? (
-          <div className="mb-4 alert alert-error text-sm">
-            {getFriendlyErrorMessage(deleteEventMutation.error)}
-          </div>
-        ) : null}
         <div className={styles.summaryGrid}>
           {summaryItems.map((item) => (
             <SummaryItem key={item.label} label={item.label} value={item.value} />

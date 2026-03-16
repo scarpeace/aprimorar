@@ -3,24 +3,26 @@ import { Button, ButtonLink } from "./button";
 export function DetailsPageActions(props: Readonly<{
     data: any
     editTo: string
-    isArchivePending: boolean
+    isArchivePending?: boolean
     isDeletePending: boolean
-    handleArchive: () => void
+    handleArchive?: () => void
     handleDelete: () => void
 }>) {
     const { data, editTo, handleArchive, handleDelete, isArchivePending, isDeletePending } = props
 
     return (
         <div className="flex flex-col gap-2 sm:flex-row">
-            <Button
-                type="button"
-                onClick={() => handleArchive()}
-                disabled={isArchivePending}
-                variant={data.archivedAt ? "warning" : "outlineWarning"}
-                size="sm"
-            >
-                {data.archivedAt ? "Desarquivar" : "Arquivar"}
-            </Button>
+            {handleArchive && (
+                <Button
+                    type="button"
+                    onClick={() => handleArchive()}
+                    disabled={isArchivePending}
+                    variant={data.archivedAt ? "warning" : "outlineWarning"}
+                    size="sm"
+                >
+                    {data.archivedAt ? "Desarquivar" : "Arquivar"}
+                </Button>
+            )}
 
             <ButtonLink size="sm" to={editTo} variant="primary">
                 Editar

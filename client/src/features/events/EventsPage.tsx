@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
@@ -6,10 +5,8 @@ import { PageLoading } from "@/components/ui/page-loading"
 import { ButtonLink } from "@/components/ui/button"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/events/EventsPage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { eventsApi, getFriendlyErrorMessage } from "@/services/api"
-
-const EVENTS_LIST_PARAMS = { page: 0, size: 20, sortBy: "startDate" }
+import { getFriendlyErrorMessage } from "@/services/api"
+import { useEventsQuery } from "./hooks/use-events"
 
 export function EventsPage() {
   const {
@@ -18,16 +15,7 @@ export function EventsPage() {
     isError: isErrorEvents,
     error: errorEvents,
     refetch,
-  } = useQuery({
-    queryKey: [...queryKeys.events, EVENTS_LIST_PARAMS],
-    queryFn: async () => {
-      return eventsApi.list(
-        EVENTS_LIST_PARAMS.page,
-        EVENTS_LIST_PARAMS.size,
-        EVENTS_LIST_PARAMS.sortBy
-      )
-    },
-  })
+  } = useEventsQuery()
 
   if (isLoadingEvents) {
     return <PageLoading message="Carregando eventos..." />

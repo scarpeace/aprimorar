@@ -1,9 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { Trash2 } from "lucide-react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { ErrorCard } from "@/components/ui/error-card"
 import { FormField } from "@/components/ui/form-field"
@@ -14,14 +13,14 @@ import styles from "@/features/events/EventCreatePage.module.css"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { eventInputSchema, type EmployeeResponse, type EventFormInput, type StudentResponse } from "@/lib/schemas"
 import { eventContentLabels, eventContentValues } from "@/lib/shared/enums"
-import { getFriendlyErrorMessage, employeesApi, eventsApi, studentsApi } from "@/services/api"
+import { getFriendlyErrorMessage, employeesApi, studentsApi } from "@/services/api"
+import { useEventDetailQuery, useUpdateEvent, useDeleteEvent } from "./hooks/use-events"
+import { useQuery } from "@tanstack/react-query"
+import { formatDateTimeLocal } from "@/lib/shared/formatter"
 
 export function EventEditPage() {
   const { id } = useParams<{ id: string }>()
   const eventId = id ?? ""
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const {
     register,
@@ -29,27 +28,22 @@ export function EventEditPage() {
     setValue,
     formState: { errors },
   } = useForm<EventFormInput>({
-    resolver: zodResolver(eventInputSchema),
+    resolver: zodResolver(eventInputSchema) as any,
     mode: "onBlur",
   })
 
   const studentIdField = register("studentId")
   const employeeIdField = register("employeeId")
 
-  const eventQuery = useQuery({
-    queryKey: queryKeys.event(eventId),
-    queryFn: () => eventsApi.getById(eventId),
-    enabled: Boolean(id),
-  })
+  const { data: eventData, isLoading: isEventLoading, isError: isEventError, error: eventError, refetch: refetchEvent } = useEventDetailQuery(eventId)
 
   const dropDownOptionsQuery = useQuery({
-    queryKey: queryKeys.events,
+    queryKey: [queryKeys.students, queryKeys.employees, "options"],
     queryFn: async (): Promise<{ students: StudentResponse[], employees: EmployeeResponse[] }> => {
       const [studentsRes, employeesRes] = await Promise.all([
-        studentsApi.list(),
-        employeesApi.list(),
+        studentsApi.list(0, 100),
+        employeesApi.list(0, 100),
       ])
-
       return {
         students: studentsRes.content,
         employees: employeesRes.content,
@@ -58,96 +52,50 @@ export function EventEditPage() {
   })
 
   useEffect(() => {
-    if (!eventQuery.data) {
-      return
-    }
+    if (!eventData) return
 
-    setValue("title", eventQuery.data.title)
-    setValue("description", eventQuery.data.description ?? "")
-    setValue("startDate", eventQuery.data.startDate)
-    setValue("endDate", eventQuery.data.endDate)
-    setValue("price", eventQuery.data.price)
-    setValue("payment", eventQuery.data.payment)
-    setValue("content", eventQuery.data.content)
-    setValue("studentId", eventQuery.data.studentId)
-    setValue("employeeId", eventQuery.data.employeeId)
-  }, [eventQuery.data, setValue])
+    setValue("title", eventData.title)
+    setValue("description", eventData.description ?? "")
+    setValue("startDate", formatDateTimeLocal(eventData.startDate) as any)
+    setValue("endDate", formatDateTimeLocal(eventData.endDate) as any)
+    setValue("price", Number(eventData.price))
+    setValue("payment", Number(eventData.payment))
+    setValue("content", eventData.content)
+    setValue("studentId", eventData.studentId)
+    setValue("employeeId", eventData.employeeId)
+  }, [eventData, setValue])
 
   const students = (dropDownOptionsQuery.data?.students ?? []).filter((student) => !student.archivedAt)
   const employees = (dropDownOptionsQuery.data?.employees ?? []).filter((employee) => !employee.archivedAt)
 
-  const updateEventMutation = useMutation({
-    mutationFn: (data: EventFormInput) => eventsApi.update(eventId, data),
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async (updatedEvent) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-      ])
-
-      navigate(`/events/${updatedEvent.id}`)
-    },
-    onError: (error) => {
-      console.error("Falha ao atualizar evento:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
-
-  const deleteEventMutation = useMutation({
-    mutationFn: () => eventsApi.delete(eventId),
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-      ])
-
-      navigate("/events")
-    },
-    onError: (error) => {
-      console.error("Falha ao excluir evento:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
+  const { mutate: updateEvent, isPending: isUpdating, error: updateError } = useUpdateEvent(eventId)
+  const { mutate: deleteEvent, isPending: isDeleting, error: deleteError } = useDeleteEvent()
 
   const onSubmit = (data: EventFormInput) => {
-    updateEventMutation.mutate(data)
+    updateEvent(data)
   }
 
   const handleDeleteEvent = () => {
-    const confirmed = window.confirm("Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.")
-
-    if (!confirmed) {
-      return
-    }
-
-    deleteEventMutation.mutate()
+    if (!globalThis.confirm("Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.")) return
+    deleteEvent(eventId)
   }
 
-  if (!id) {
-    return (
-      <div className={styles.page}>
-        <ErrorCard description="ID do evento não informado." />
-      </div>
-    )
-  }
+  const isMutationPending = isUpdating || isDeleting
+  const submitError = updateError || deleteError
 
-  if (eventQuery.isLoading || dropDownOptionsQuery.isLoading) {
+
+  if (isEventLoading || dropDownOptionsQuery.isLoading) {
     return <PageLoading message="Carregando evento para edição..." />
   }
 
-  if (eventQuery.isError || dropDownOptionsQuery.isError || !eventQuery.data) {
-    const queryError = eventQuery.error ?? dropDownOptionsQuery.error
+  if (isEventError || dropDownOptionsQuery.isError || !eventData) {
+    const queryError = eventError ?? dropDownOptionsQuery.error
 
     return (
       <div className={styles.page}>
         <ErrorCard
           description={getFriendlyErrorMessage(queryError)}
-          onAction={() => Promise.all([eventQuery.refetch(), dropDownOptionsQuery.refetch()])} />
+          onAction={() => Promise.all([refetchEvent(), dropDownOptionsQuery.refetch()])} />
       </div>
     )
   }
@@ -289,14 +237,14 @@ export function EventEditPage() {
             </FormField>
           </div>
 
-          {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
+          {submitError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(submitError)}</div> : null}
 
           <div className={styles.actions}>
             <Button
               type="button"
               onClick={handleDeleteEvent}
-              disabled={updateEventMutation.isPending || deleteEventMutation.isPending}
-              variant="danger"
+              disabled={isMutationPending}
+              variant="error"
               className="sm:mr-auto"
             >
               <Trash2 className="h-4 w-4" />
@@ -305,8 +253,8 @@ export function EventEditPage() {
             <ButtonLink to={`/events/${eventId}`} variant="outline">
               Cancelar
             </ButtonLink>
-            <Button type="submit" disabled={updateEventMutation.isPending || deleteEventMutation.isPending} variant="primary">
-              {updateEventMutation.isPending ? "Salvando..." : "Salvar alterações"}
+            <Button type="submit" disabled={isMutationPending} variant="primary">
+              {isUpdating ? "Salvando..." : "Salvar alterações"}
             </Button>
           </div>
         </form>

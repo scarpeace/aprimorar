@@ -19,8 +19,6 @@ public class EventMapper {
         event.setPrice(request.price());
         event.setPayment(request.payment());
         event.setContent(request.content());
-        event.setStudent(request.student());
-        event.setEmployee(request.employee());
         return event;
     }
 
@@ -39,8 +37,6 @@ public class EventMapper {
                 event.getEmployee().getId(),
                 event.getEmployee().getName(),
                 event.getCreatedAt(),
-                event.getUpdatedAt()
-        );
+                event.getUpdatedAt());
     }
 }
-

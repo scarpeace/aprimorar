@@ -1,12 +1,12 @@
 import { z } from "zod"
 import { eventContentValues } from "@/lib/shared/enums"
-
+import { brl } from "../shared/formatter"
 // TODO Evento não vai precisar de título, ele vai ser gerado automaticamente no backend. Remover num futuro próximo do front.
 export const eventInputSchema = z.object({
   title: z.string().min(1, "Título é obrigatório").max(100, "Título deve ter no máximo 100 caracteres"),
   description: z.string().max(500, "Descrição deve ter no máximo 500 caracteres").optional(),
-  startDate: z.date().min(1, "Data/hora de início é obrigatório"),
-  endDate: z.date().min(1, "Data/hora de fim é obrigatório"),
+  startDate: z.coerce.date({ message: "Data de início inválida" }),
+  endDate: z.coerce.date({ message: "Data de fim inválida" }),
   price: z.number().min(0, "Preço deve ser maior ou igual a 0"),
   payment: z.number().min(0, "Pagamento deve ser maior ou igual a 0"),
   content: z.enum(eventContentValues),
