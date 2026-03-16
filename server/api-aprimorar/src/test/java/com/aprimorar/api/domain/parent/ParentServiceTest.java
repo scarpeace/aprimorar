@@ -45,6 +45,9 @@ class ParentServiceTest {
     @Mock
     private ParentMapper parentMapper;
 
+    @Mock
+    private com.aprimorar.api.domain.student.StudentRepository studentRepo;
+
     @InjectMocks
     private ParentService parentService;
 
@@ -68,7 +71,7 @@ class ParentServiceTest {
             when(parentMapper.convertToDto(secondParent)).thenReturn(expectedSecond);
 
             // Act
-            Page<ParentResponseDTO> actual = parentService.getParents(input);
+            Page<ParentResponseDTO> actual = parentService.getPaginatedParents(input, null);
 
             // Assert
             assertThat(actual.getContent()).containsExactly(expectedFirst, expectedSecond);
@@ -335,13 +338,15 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
+            when(studentRepo.existsByParentId(input)).thenReturn(false);
 
             // Act
             parentService.deleteParent(input);
 
             // Assert
             verify(parentRepo).findById(input);
-            verify(parentRepo).delete(expected);
+            verify(studentRepo).existsByParentId(input);
+            verify((org.springframework.data.repository.CrudRepository<Parent, java.util.UUID>) parentRepo).delete((Parent) expected);
         }
 
         @Test
@@ -358,7 +363,7 @@ class ParentServiceTest {
                     .hasMessage("Responsável não encontrado no banco de dados");
 
             verify(parentRepo).findById(input);
-            verify(parentRepo, never()).delete(any());
+            verify((org.springframework.data.repository.CrudRepository<Parent, java.util.UUID>) parentRepo, never()).delete(any());
         }
     }
 

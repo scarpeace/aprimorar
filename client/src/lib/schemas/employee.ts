@@ -1,8 +1,8 @@
 import { z } from "zod"
+import { dutyValues } from "@/lib/shared/enums"
+import { formatCpf, formatDateShortYear, formatPhone } from '../shared/formatter';
 
-export const dutyValues = ["TEACHER", "ADM", "THERAPIST", "MENTOR"] as const
-
-export const createEmployeeSchema = z.object({
+export const employeeFormSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(200, "Nome muito grande"),
   birthdate: z.string().refine((date) => {
     const d = new Date(date)
@@ -20,19 +20,32 @@ export const createEmployeeSchema = z.object({
   duty: z.enum(dutyValues),
 })
 
-export const employeeResponseSchema = z.object({
+export const employeeApiSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   birthdate: z.string(),
   pix: z.string(),
-  contact: z.string(),
-  cpf: z.string(),
+  contact: z.string().transform(formatPhone),
+  cpf: z.string().transform(formatCpf),
   email: z.email(),
   duty: z.enum(dutyValues),
-  archivedAt: z.string().nullable(),
-  createdAt: z.string(),
-  updatedAt: z.string().nullable(),
+  archivedAt: z.coerce.date().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date().nullable(),
 })
 
-export type CreateEmployeeInput = z.infer<typeof createEmployeeSchema>
+export const employeeResponseSchema = employeeApiSchema.transform((employee) => ({
+  ...employee,
+  birthdate: formatDateShortYear(employee.birthdate),
+  createdAt: formatDateShortYear(employee.createdAt),
+}))
+
+export const employeeOptionSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+})
+
+export type EmployeeFormInput = z.infer<typeof employeeFormSchema>
+export type EmployeeApiResponse = z.infer<typeof employeeApiSchema>
 export type EmployeeResponse = z.infer<typeof employeeResponseSchema>
+export type EmployeeOption = z.infer<typeof employeeOptionSchema>

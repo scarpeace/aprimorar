@@ -1,155 +1,129 @@
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { EmptyState } from "@/components/ui/empty-state"
-import { ErrorState } from "@/components/ui/error-state"
-import { LoadingState } from "@/components/ui/loading-state"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { useState, useEffect } from "react"
+import { EmptyCard } from "@/components/ui/empty-card"
+import { ErrorCard } from "@/components/ui/error-card"
+import { ListSearchInput } from "@/components/ui/list-search-input"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageLoading } from "@/components/ui/page-loading"
+import { Pagination } from "@/components/ui/pagination"
+import { ButtonLink } from "@/components/ui/button"
 import { dutyLabels } from "@/features/employees/dutyLabels"
-import type { EmployeeResponse } from "@/lib/schemas"
-import { employeesApi, getFriendlyErrorMessage, } from "@/services/api"
 import styles from "@/features/employees/EmployeesPage.module.css"
-import type { PageResponse } from "@/lib/schemas/page-response"
+import { getFriendlyErrorMessage } from "@/services/api"
+import { useEmployeesQuery } from "./hooks/use-employees"
+import { useDebounce } from "@/hooks/use-debounce"
 
 export function EmployeesPage() {
-  const [employeeList, setEmployeeList] = useState<EmployeeResponse[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [archiveError, setArchivedError] = useState<string | null>(null)
-  const [archivingId, setarchivingId] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [searchTerm, setSearchTerm] = useState("")
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const pageSize = 10
 
-  const loadEmployees = async () => {
-    try {
-      setError(null)
-      setLoading(true)
-      const employeesRes : PageResponse<EmployeeResponse> = await employeesApi.list()
-      setEmployeeList(employeesRes.content)
-    } catch (error) {
-      console.error("Falha ao carregar colaboradores:", error)
-      setError(getFriendlyErrorMessage(error))
-    } finally {
-      setLoading(false)
-    }
-  }
+  const {
+    data: response,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useEmployeesQuery(currentPage, pageSize, debouncedSearchTerm)
 
+  // Reset pagination when search changes
   useEffect(() => {
-    loadEmployees()
-  }, [])
+    setCurrentPage(0)
+  }, [debouncedSearchTerm])
 
-  const handleArchive = async (employee: EmployeeResponse) => {
-    if (!window.confirm(`Arquivar colaborador "${employee.name}"?`)) {
-      return
-    }
+  const employeeList = response?.content ?? []
+  const pageInfo = response?.page
 
-    try {
-      setArchivedError(null)
-      setarchivingId(employee.id)
-      await employeesApi.archive(employee.id)
-      setEmployeeList((prev) => prev.filter((item) => item.id !== employee.id))
-    } catch (error) {
-      console.error("Falha ao excluir colaborador:", error)
-      setArchivedError(getFriendlyErrorMessage(error))
-    } finally {
-      setarchivingId(null)
-    }
+  if (isLoading) {
+    return <PageLoading message="Carregando colaboradores..." />
   }
 
-  if (loading) {
-    return <LoadingState message="Carregando colaboradores..." />
-  }
-
-  if (error) {
+  if (isError) {
     return (
       <div className={styles.page}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
-          <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
-        </div>
-        <ErrorState
-          title="Não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadEmployees}
-        />
+        <PageHeader title="Colaboradores" description="Gerencie professores e equipe." />
+        <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
       </div>
     )
   }
 
+  const totalElements = pageInfo?.totalElements ?? 0
+  const totalPages = pageInfo?.totalPages ?? 0
+
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Colaboradores</h1>
-          <p className="text-sm text-gray-600">Gerencie professores e equipe.</p>
+      <PageHeader
+        description="Gerencie professores e equipe."
+        title="Colaboradores"
+      >
+        <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
+          <ListSearchInput
+            placeholder="Buscar colaborador por nome, função ou email"
+            ariaLabel="Buscar colaborador"
+            value={searchTerm}
+            onChange={setSearchTerm}
+          />
+          <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">
+            Novo colaborador
+          </ButtonLink>
         </div>
-        <Button asChild type="button">
-          <Link to="/employees/new">Novo colaborador</Link>
-        </Button>
-      </div>
+      </PageHeader>
 
-      {archiveError ? (
-        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-          {archiveError}
-        </div>
-      ) : null}
-
-      <div className={styles.tableWrap}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Cargo</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>PIX</TableHead>
-              <TableHead>Ativo</TableHead>
-              <TableHead>Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {employeeList.map((employee) => (
-              <TableRow key={employee.id}>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{dutyLabels[employee.duty]}</TableCell>
-                <TableCell>{employee.email}</TableCell>
-                <TableCell>{employee.pix}</TableCell>
-                <TableCell>{employee.archivedAt ? "Não" : "Sim"}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <Link
-                      className="text-sm font-medium text-blue-600 hover:underline"
-                      to={`/employees/${employee.id}`}
-                    >
+      <div className="app-table-wrap">
+        <div className="overflow-x-auto">
+          <table className="table table-zebra w-full">
+            <thead className="bg-base-200/90">
+              <tr>
+                <th className="app-th">Nome</th>
+                <th className="app-th">Função</th>
+                <th className="app-th hidden lg:table-cell">Email</th>
+                <th className="app-th hidden lg:table-cell">PIX</th>
+                <th className="app-th">Ações</th>
+                <th className="app-th-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {employeeList.map((employee) => (
+                <tr className="transition-colors hover:bg-base-200/70" key={employee.id}>
+                  <td>{employee.name}</td>
+                  <td>{dutyLabels[employee.duty]}</td>
+                  <td className="hidden whitespace-normal break-all lg:table-cell">{employee.email}</td>
+                  <td className="hidden whitespace-normal break-all lg:table-cell">{employee.pix}</td>
+                  <td>
+                    <ButtonLink size="sm" to={`/employees/${employee.id}`} variant="outline">
                       Detalhes
-                    </Link>
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleArchive(employee)}
-                      disabled={archivingId === employee.id}
-                    >
-                      {archivingId === employee.id ? "Arquivando..." : "Arquivar"}
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                    </ButtonLink>
+                  </td>
+                  <td className="text-center">
+                    <span className={`badge ${employee.archivedAt ? "badge-warning" : "badge-success"}`}>
+                      {employee.archivedAt ? "Arquivado" : "Ativo"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalElements={totalElements}
+        totalPages={totalPages}
+        currentElementsCount={employeeList.length}
+        itemName="colaboradores"
+        onPageChange={setCurrentPage}
+      />
 
       {employeeList.length === 0 ? (
-        <EmptyState
+        <EmptyCard
           title="Nenhum colaborador cadastrado"
           description="Quando você cadastrar o primeiro colaborador, ele aparecerá na tabela acima."
-          actionLabel="Novo colaborador"
+          action={
+            <ButtonLink to="/employees/new" variant="secondary">
+              Novo colaborador
+            </ButtonLink>
+          }
         />
       ) : null}
     </div>

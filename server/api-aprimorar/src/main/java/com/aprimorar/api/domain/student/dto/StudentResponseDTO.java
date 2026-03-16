@@ -14,17 +14,13 @@ public record StudentResponseDTO(
         String contact,
         String email,
         String cpf,
-        @JsonFormat(pattern = "dd/MM/yyyy")
         LocalDate birthdate,
         String school,
         Integer age,
         Address address,
         Parent parent,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant archivedAt,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant createdAt,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant updatedAt
 ) {
 }

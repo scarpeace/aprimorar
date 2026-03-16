@@ -1,5 +1,6 @@
 package com.aprimorar.api.domain.student;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 
@@ -49,9 +52,26 @@ public class StudentController {
     @Operation(summary = "List all STUDENTS", description = "Retrieves all students from database with pagination")
     @GetMapping
     public ResponseEntity<Page<StudentResponseDTO>> listStudents(
-            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
+            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String search
     ) {
-        Page<StudentResponseDTO> students = studentService.getStudents(pageable);
+        Page<StudentResponseDTO> students = studentService.getStudents(pageable, search);
+        return ResponseEntity.ok(students);
+    }
+
+    @Operation(summary = "List all STUDENTS for options", description = "Retrieves simplified student data for dropdowns")
+    @GetMapping("/options")
+    public ResponseEntity<List<StudentOptionDTO>> getStudentOptions() {
+        List<StudentOptionDTO> options = studentService.getStudentOptions();
+        return ResponseEntity.ok(options);
+    }
+
+    @Operation(summary = "List all STUDENTS by Parent", description = "Retrieves all students from database based on parentID")
+    @GetMapping("/parent/{parentId}")
+    public ResponseEntity<List<StudentResponseDTO>> listStudentsByParent(
+        @PathVariable UUID parentId
+    ) {
+        List<StudentResponseDTO> students = studentService.getStudentsByParent(parentId);
         return ResponseEntity.ok(students);
     }
 

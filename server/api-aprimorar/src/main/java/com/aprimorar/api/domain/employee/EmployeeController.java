@@ -1,5 +1,6 @@
 package com.aprimorar.api.domain.employee;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.domain.employee.dto.EmployeeOptionDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
 
@@ -48,10 +50,19 @@ public class EmployeeController {
 
     @Operation(summary = "List all employees", description = "Retrieves all employees from database with pagination")
     @GetMapping
-    public ResponseEntity<Page<EmployeeResponseDTO>> getEmployees(@PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<Page<EmployeeResponseDTO>> getEmployees(
+            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String search) {
 
-        Page<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable);
+        Page<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search);
         return ResponseEntity.ok(employees);
+    }
+
+    @Operation(summary = "Get all employees for options", description = "Retrieves simplified employee data for dropdowns")
+    @GetMapping("/options")
+    public ResponseEntity<List<EmployeeOptionDTO>> getEmployeeOptions() {
+        List<EmployeeOptionDTO> options = employeeService.getEmployeeOptions();
+        return ResponseEntity.ok(options);
     }
 
     @Operation(summary = "Get employee by ID", description = "Retrieves a single employee based on ID")

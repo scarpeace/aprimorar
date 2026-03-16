@@ -1,5 +1,6 @@
 package com.aprimorar.api.domain.parent;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -36,11 +37,21 @@ public class ParentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParent);
     }
 
-    @Operation(summary = "List all parents", description = "Retrieves parents from database with pagination")
-    @GetMapping
-    public ResponseEntity<Page<ParentResponseDTO>> listParents(@PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+    @Operation(summary = "Get all parents", description = "Retrieves all parents")
+    @GetMapping("/all")
+    public ResponseEntity<List<ParentResponseDTO>> getParents() {
 
-        Page<ParentResponseDTO> parents = parentService.getParents(pageable);
+        List<ParentResponseDTO> parents = parentService.getParents();
+        return ResponseEntity.ok(parents);
+    }
+
+    @Operation(summary = "Get all parents paginated", description = "Retrieves parents from database with pagination")
+    @GetMapping
+    public ResponseEntity<Page<ParentResponseDTO>> getPaginatedParents(
+            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String search) {
+
+        Page<ParentResponseDTO> parents = parentService.getPaginatedParents(pageable, search);
         return ResponseEntity.ok(parents);
     }
 

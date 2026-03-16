@@ -1,17 +1,9 @@
 import { z } from "zod"
-import { parentSchema } from "./parent"
+import { parentResponseSchema } from "./parent"
+import { addressResponseSchema, addressFormSchema } from "./address"
+import { formatCpf, formatPhone } from "../shared/formatter"
 
-export const addressSchema = z.object({
-  street: z.string().min(1, "Rua é obrigatória"),
-  number: z.string().min(1, "Número é obrigatório"),
-  complement: z.string().optional(),
-  district: z.string().min(1, "Bairro é obrigatório"),
-  city: z.string().min(1, "Cidade é obrigatória"),
-  state: z.string().min(1, "Estado é obrigatório"),
-  zip: z.string().regex(/^\d{5}-?\d{3}$/, "CEP deve estar no formato 00000-000 ou 00000000"),
-})
-
-export const createStudentSchema = z.object({
+export const studentInputSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   birthdate: z.string().refine((date) => {
     const d = new Date(date)
@@ -24,33 +16,33 @@ export const createStudentSchema = z.object({
     .regex(
       /^\(\d{2}\)\s?\d{4,5}-\d{4}$/,
       "Contato deve estar no formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX"
-    ),
+    ).min(1, "O telefone é obrigatório"),
   email: z.email("E-mail inválido"),
-  address: addressSchema,
-  parentId: z.uuid("Selecione um responsável").optional(),
-  parent: parentSchema.optional(),
-}).refine((data) => (data.parentId ? !data.parent : !!data.parent), {
-  message: "Informe um responsável (existente ou novo)",
-  path: ["parentId"],
+  address: addressFormSchema,
+  parentId: z.uuid("Responsável é obrigatório"),
 })
 
-export const studentResponseSchema = z.object({
+export const studentResponse = z.object({
   id: z.uuid(),
   name: z.string(),
-  contact: z.string(),
+  contact: z.string().transform(formatPhone),
   email: z.email(),
-  cpf: z.string(),
+  cpf: z.string().transform(formatCpf),
   birthdate: z.string(),
   age: z.number().int().nonnegative(),
   school: z.string(),
-  archivedAt: z.string().nullable(),
-  address: addressSchema.nullable(),
-  parent: parentSchema.nullable(),
-  createdAt: z.string(),
-  updatedAt: z.string().nullable(),
+  archivedAt: z.coerce.date().nullable(),
+  address: addressResponseSchema,
+  parent: parentResponseSchema,
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date().nullable(),
 })
 
-export type CreateStudentInput = z.infer<typeof createStudentSchema>
-export type StudentResponse = z.infer<typeof studentResponseSchema>
-export type AddressInput = z.infer<typeof addressSchema>
-export type ParentInput = z.infer<typeof parentSchema>
+export const studentOptionSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+})
+
+export type StudentFormInput = z.infer<typeof studentInputSchema>
+export type StudentResponse = z.infer<typeof studentResponse>
+export type StudentOption = z.infer<typeof studentOptionSchema>

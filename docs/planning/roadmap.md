@@ -3,6 +3,13 @@
 Canonical context lives in `AGENTS.md`.
 Use this file for phase order and epic indexing only.
 
+## Planning Operations
+
+- Sprint automation quickstart: `docs/planning/sprint-automation-quickstart.md`
+- Sprint automation full guide: `docs/planning/sprint-automation-guide.md`
+- Sprint template: `docs/planning/sprint-template.md`
+- Scrum MCP prompt: `.opencode/prompts/scrum-agent-mcp.md`
+
 ## Development Roadmap
 
 ### Phase 0 - Planning Structure Migration

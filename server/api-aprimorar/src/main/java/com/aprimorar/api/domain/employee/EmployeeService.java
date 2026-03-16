@@ -1,21 +1,42 @@
 package com.aprimorar.api.domain.employee;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.aprimorar.api.domain.employee.dto.EmployeeOptionDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 
+/**
+ * Centraliza as regras de negócio do colaborador.
+ *
+ * <p>Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
+ * Também é esse service que garante que CPF e email não se repitam antes de salvar
+ * ou atualizar um colaborador.
+ *
+ * <p>Quando um colaborador é alterado, o service aplica as validações do domínio,
+ * resolve conflitos de unicidade e devolve a resposta em formato DTO.
+ *
+ * @author scarpellini
+ * @version 1.0
+ * @since 2026-03-14
+ */
 @Service
 public class EmployeeService {
+
+    private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
     private final EmployeeRepository employeeRepo;
     private final EmployeeMapper employeeMapper;
@@ -25,27 +46,39 @@ public class EmployeeService {
         this.employeeMapper = employeeMapper;
     }
 
-    /*
-      ------------------------ QUERY METHODS ------------------------
-     */
+    /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
-    public Page<EmployeeResponseDTO> getEmployees(Pageable pageable) {
-
-        Page<Employee> page = employeeRepo.findAll(pageable);
+    public Page<EmployeeResponseDTO> getEmployees(Pageable pageable, String search) {
+        Page<Employee> page;
+        if (search != null && !search.trim().isEmpty()) {
+            Specification<Employee> spec = EmployeeSpecifications.searchContainsIgnoreCase(search.trim());
+            page = employeeRepo.findAll(spec, pageable);
+        } else {
+            page = employeeRepo.findAll(pageable);
+        }
+        log.info("Consulta de colaboradores finalizada, {} registros encontrados.", page.getTotalElements());
         return page.map(employeeMapper::convertToDto);
+    }
+
+    @Transactional(readOnly = true)
+    public List<EmployeeOptionDTO> getEmployeeOptions() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        
+        return employeeRepo.findAll(EmployeeSpecifications.notArchived(), sort).stream()
+                .map(e -> new EmployeeOptionDTO(e.getId(), e.getName()))
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public EmployeeResponseDTO findById(UUID employeeId) {
 
         Employee employee = findEmployeeOrThrow(employeeId);
+        log.info("Colaborador {} consultado com sucesso.", employee.getName().toUpperCase());
         return employeeMapper.convertToDto(employee);
     }
 
-    /*
-      ------------------------ INSERT METHODS ------------------------
-     */
+    /* ----- Command Methods ----- */
 
     @Transactional
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
@@ -53,54 +86,64 @@ public class EmployeeService {
         Employee employee = employeeMapper.convertToEntity(employeeRequestDto);
 
         EmployeeRules.validate(employee);
-        validateEmployeeUniqueness(employee.getCpf(), employee.getEmail());
+        validateEmployeeUniquenessForCreate(employee.getCpf(), employee.getEmail());
 
         Employee savedEmployee = employeeRepo.save(employee);
 
+        log.info("Colaborador {} cadastrado com sucesso.", savedEmployee.getName().toUpperCase());
         return employeeMapper.convertToDto(savedEmployee);
     }
 
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
 
-        Employee employee = employeeMapper.convertToEntity(request);
+        Employee newEmployee = employeeMapper.convertToEntity(request);
+        Employee oldEmployee = findEmployeeOrThrow(employeeId);
 
-        EmployeeRules.validate(employee);
-        findEmployeeOrThrow(employeeId);
+        validateEmployeeUniquenessForUpdate(newEmployee.getCpf(), newEmployee.getEmail(), employeeId);
 
-        Employee updatedEmployee = employeeRepo.save(employee);
+        oldEmployee.setName(newEmployee.getName());
+        oldEmployee.setBirthdate(newEmployee.getBirthdate());
+        oldEmployee.setPix(newEmployee.getPix());
+        oldEmployee.setContact(newEmployee.getContact());
+        oldEmployee.setCpf(newEmployee.getCpf());
+        oldEmployee.setEmail(newEmployee.getEmail());
+        oldEmployee.setDuty(newEmployee.getDuty());
+        EmployeeRules.validate(oldEmployee);
 
-        return employeeMapper.convertToDto(updatedEmployee);
+        log.info("Colaborador {} atualizado com sucesso.", oldEmployee.getName().toUpperCase());
+        return employeeMapper.convertToDto(oldEmployee);
     }
 
     @Transactional
     public void deleteEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
         employeeRepo.delete(employee);
+        log.info("Colaborador {} deletado com sucesso.", employee.getName().toUpperCase());
     }
 
     @Transactional
     public void archiveEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
         employee.setArchivedAt(Instant.now());
+        log.info("Colaborador {} arquivado com sucesso.", employee.getName().toUpperCase());
     }
 
     @Transactional
     public void unarchiveEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
         employee.setArchivedAt(null);
+        log.info("Colaborador {} desarquivado com sucesso.", employee.getName().toUpperCase());
     }
 
-    /*
-      ------------------------ HELPER METHODS ------------------------
-     */
+    /* ----- Helper Methods ----- */
 
     private Employee findEmployeeOrThrow(UUID employeeId) {
         return employeeRepo.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Colaborador não encontrado no Banco de Dados"));
     }
 
-    private void validateEmployeeUniqueness(String cpf, String email) {
+    private void validateEmployeeUniquenessForCreate(String cpf, String email) {
         if (employeeRepo.existsByCpf(cpf)) {
             throw new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados");
         }
@@ -108,6 +151,15 @@ public class EmployeeService {
         if (employeeRepo.existsByEmail(email)) {
             throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
         }
+    }
 
+    private void validateEmployeeUniquenessForUpdate(String cpf, String email, UUID employeeId) {
+        if (employeeRepo.existsByCpfAndIdNot(cpf, employeeId)) {
+            throw new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados");
+        }
+
+        if (employeeRepo.existsByEmailAndIdNot(email, employeeId)) {
+            throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
+        }
     }
 }

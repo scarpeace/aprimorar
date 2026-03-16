@@ -40,7 +40,7 @@ public class EventController {
 
     @Operation(summary = "List all events", description = "Retrieves all events from database with pagination")
     @GetMapping
-    public ResponseEntity<Page<EventResponseDTO>> getEvents(@PageableDefault(page = 0, size = 20, sort = "startDateTime", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<Page<EventResponseDTO>> getEvents(@PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable) {
 
         Page<EventResponseDTO> events = eventService.getEvents(pageable);
         return ResponseEntity.ok(events);
@@ -56,7 +56,7 @@ public class EventController {
 
     @Operation(summary = "List all events by Employee", description = "Retrieves all events of a single employee by ID")
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<Page<EventResponseDTO>> getEventsByEmployeeId(@PageableDefault(page = 0, size = 20, sort = "startDateTime", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID employeeId) {
+    public ResponseEntity<Page<EventResponseDTO>> getEventsByEmployeeId(@PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID employeeId) {
 
         Page<EventResponseDTO> events = eventService.getEventsByEmployeeId(pageable, employeeId);
         return ResponseEntity.ok(events);
@@ -64,7 +64,7 @@ public class EventController {
 
     @Operation(summary = "List all events by Student ID", description = "Retrieves all events of a single student by ID")
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<Page<EventResponseDTO>> getEventsByStudentId(@PageableDefault(page = 0, size = 20, sort = "startDateTime", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID studentId) {
+    public ResponseEntity<Page<EventResponseDTO>> getEventsByStudentId(@PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID studentId) {
 
         Page<EventResponseDTO> events = eventService.getEventsByStudentId(pageable, studentId);
         return ResponseEntity.ok(events);

@@ -1,129 +1,128 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ErrorState } from "@/components/ui/error-state"
-import { LoadingState } from "@/components/ui/loading-state"
-import { studentsApi, employeesApi, eventsApi, getFriendlyErrorMessage } from "@/services/api"
-import { useCallback, useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { ErrorCard } from "@/components/ui/error-card"
+import { PageLoading } from "@/components/ui/page-loading"
 import styles from "@/features/dashboard/DashboardPage.module.css"
+import { queryKeys } from "@/lib/query/queryKeys"
+import { brl } from "@/lib/shared/formatter"
+import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
+
+type DashboardSummary = {
+  studentsCount: number
+  employeesCount: number
+  eventsCount: number
+  revenue: number
+}
 
 export function DashboardPage() {
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: queryKeys.dashboard.all,
+    queryFn: async (): Promise<DashboardSummary> => {
+      const [studentsResult, employeesResult, eventsResult] = await Promise.allSettled([
+        studentsApi.list(),
+        employeesApi.list(),
+        eventsApi.list(),
+      ])
 
-  const [studentsCount, setStudentsCount] = useState(0)
-  const [employeesCount, setEmployeesCount] = useState(0)
-  const [eventsCount, setEventsCount] = useState(0)
-  const [revenue, setRevenue] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+      let hasSuccess = false
 
- const loadDashboard = useCallback(async () => {
-  try {
-    setError(null)
-    setLoading(true)
-    const [studentsResult, employeesResult, eventsResult] = await Promise.allSettled([
-      studentsApi.list(0, 20, "name"),
-      employeesApi.list(),
-      eventsApi.list(),
-    ])
-    console.log(studentsResult);
+      const studentsCount = studentsResult.status === "fulfilled" ? studentsResult.value.page.totalElements : 0
 
-    let hasSuccess = false
+      if (studentsResult.status === "fulfilled") {
+        hasSuccess = true
+      } else {
+        console.error("Falha ao carregar alunos:", studentsResult.reason)
+      }
 
-    if (studentsResult.status === "fulfilled") {
-      setStudentsCount(studentsResult.value.page.totalElements)
-      hasSuccess = true
-    } else {
-      console.error("Falha ao carregar alunos:", studentsResult.reason)
-      setStudentsCount(0)
-    }
+      const employeesCount = employeesResult.status === "fulfilled" ? employeesResult.value.page.totalElements : 0
 
-    if (employeesResult.status === "fulfilled") {
-      setEmployeesCount(employeesResult.value.page.totalElements)
-      hasSuccess = true
-    } else {
-      console.error("Falha ao carregar colaboradores:", employeesResult.reason)
-      setEmployeesCount(0)
-    }
+      if (employeesResult.status === "fulfilled") {
+        hasSuccess = true
+      } else {
+        console.error("Falha ao carregar colaboradores:", employeesResult.reason)
+      }
 
-    if (eventsResult.status === "fulfilled") {
-      setEventsCount(eventsResult.value.page.totalElements)
-      const total = eventsResult.value.content.reduce(
-        (sum, event) => sum + Number(event.payment),
-        0
-      )
-      setRevenue(total)
-      hasSuccess = true
+      const eventsCount = eventsResult.status === "fulfilled" ? eventsResult.value.page.totalElements : 0
+      const revenue =
+        eventsResult.status === "fulfilled"
+          ? eventsResult.value.content.reduce((sum, event) => sum + Number(event.payment), 0)
+          : 0
 
-    } else {
-      console.error("Falha ao carregar eventos:", eventsResult.reason)
-      setEventsCount(0)
-      setRevenue(0)
-    }
-    if (!hasSuccess) {
-      setError("Não foi possível carregar os dados do painel.")
-    }
-  } catch (error) {
-    console.error("Falha ao carregar o painel:", error)
-    setError(getFriendlyErrorMessage(error))
-  } finally {
-    setLoading(false)
+      if (eventsResult.status === "fulfilled") {
+        hasSuccess = true
+      } else {
+        console.error("Falha ao carregar eventos:", eventsResult.reason)
+      }
+
+      if (!hasSuccess) {
+        throw new Error("Não foi possível carregar os dados do painel.")
+      }
+
+      return {
+        studentsCount,
+        employeesCount,
+        eventsCount,
+        revenue,
+      }
+    },
+  })
+
+  if (isLoading) {
+    return <PageLoading message="Carregando painel..." />
   }
-}, [])
 
-useEffect(() => {
-  loadDashboard()
-}, [loadDashboard])
-
-  if (loading) return <LoadingState message="Carregando painel..." />
-
-  if (error) {
+  if (isError) {
     return (
       <div className={styles.errorWrap}>
-        <h1 className="text-3xl font-bold text-gray-900">Painel</h1>
-        <ErrorState
+        <h1 className="app-text text-3xl font-bold">Painel</h1>
+        <ErrorCard
           title="Ops, não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadDashboard}
+          description={getFriendlyErrorMessage(error)}
+          onAction={refetch}
         />
       </div>
     )
   }
 
+  const summary = data
+
+  if (!summary) {
+    return null
+  }
+
   return (
     <div className={styles.page}>
-      <h1 className="text-3xl font-bold text-gray-900">Painel</h1>
+      <h1 className="app-text text-3xl font-bold">Painel</h1>
       <div className={styles.kpiGrid}>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Alunos ativos</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{studentsCount}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Colaboradores ativos</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{employeesCount}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Eventos</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{eventsCount}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Custo (pagamentos)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">R$ {revenue}</div>
-          </CardContent>
-        </Card>
+        <div className="card border border-base-300 bg-base-100 shadow-sm">
+          <div className="card-body gap-2">
+            <h2 className="app-kpi-label">Alunos ativos</h2>
+            <div className="app-kpi-value">{summary.studentsCount}</div>
+          </div>
+        </div>
+        <div className="card border border-base-300 bg-base-100 shadow-sm">
+          <div className="card-body gap-2">
+            <h2 className="app-kpi-label">Colaboradores ativos</h2>
+            <div className="app-kpi-value">{summary.employeesCount}</div>
+          </div>
+        </div>
+        <div className="card border border-base-300 bg-base-100 shadow-sm">
+          <div className="card-body gap-2">
+            <h2 className="app-kpi-label">Eventos</h2>
+            <div className="app-kpi-value">{summary.eventsCount}</div>
+          </div>
+        </div>
+        <div className="card border border-base-300 bg-base-100 shadow-sm">
+          <div className="card-body gap-2">
+            <h2 className="app-kpi-label">Custo (pagamentos)</h2>
+            <div className="app-kpi-value">{brl.format(summary.revenue)}</div>
+          </div>
+        </div>
       </div>
     </div>
   )

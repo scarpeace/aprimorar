@@ -1,69 +1,80 @@
-import { Link, useParams } from "react-router-dom"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { EmptyState } from "@/components/ui/empty-state"
-import { ErrorState } from "@/components/ui/error-state"
-import { LoadingState } from "@/components/ui/loading-state"
-import { SummaryField } from "@/components/ui/summary-field"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import type { ReactNode } from "react"
 import { GraduationCap } from "lucide-react"
-import { eventContentLabels, type EventResponse } from "@/lib/schemas/event"
-import type { StudentResponse } from "@/lib/schemas/student"
-import { eventsApi, getFriendlyErrorMessage, studentsApi, type PageResponse } from "@/services/api"
-import { useCallback, useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { ButtonLink } from "@/components/ui/button"
+import { EmptyCard } from "@/components/ui/empty-card"
+import { ErrorCard } from "@/components/ui/error-card"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageLoading } from "@/components/ui/page-loading"
+import { SectionCard } from "@/components/ui/section-card"
+import { SummaryItem } from "@/components/ui/summary-item"
+import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/students/StudentDetailPage.module.css"
+import { formatDateShortYear } from "@/lib/shared/formatter"
+import { queryKeys } from "@/lib/query/queryKeys"
+import { getFriendlyErrorMessage, eventsApi } from "@/services/api"
+import { DetailsPageActions } from "@/components/ui/details-page-actions"
+import { useStudentDetailQuery, useArchiveStudent, useUnarchiveStudent, useDeleteStudent } from "./hooks/use-students"
+import { useQuery } from "@tanstack/react-query"
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const [student, setStudent] = useState<StudentResponse | null>(null)
-  const [linkedEvents, setLinkedEvents] = useState<EventResponse[]>([])
-  const [studentEventsCount, setStudentEventsCount] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const studentId = id ?? ""
 
-  const loadStudentData = useCallback(async () => {
-    if (!id) {
-      setError("ID do aluno não informado.")
+  const { data: student, isLoading: isStudentLoading, isError: isStudentError, error: studentError, refetch: refetchStudent } = useStudentDetailQuery(studentId)
+
+  const eventsQuery = useQuery({
+    queryKey: queryKeys.events.byStudent(studentId),
+    queryFn: () => eventsApi.listByStudent(studentId),
+    enabled: Boolean(id),
+  })
+
+  const {
+    data: events,
+    error: eventsError,
+    isLoading: isEventsLoading,
+    refetch: refetchEvents
+  } = eventsQuery;
+
+  const { mutate: deleteStudent, isPending: isDeleting, error: deleteError } = useDeleteStudent()
+  const { mutate: archiveStudent, isPending: isArchiving } = useArchiveStudent()
+  const { mutate: unarchiveStudent, isPending: isUnarchiving } = useUnarchiveStudent()
+
+  const handleArchiveToggle = () => {
+    if (!student) return
+    if (student.archivedAt) {
+      unarchiveStudent(studentId)
+    } else {
+      if (!globalThis.confirm("Deseja realmente arquivar este aluno?")) return
+      archiveStudent(studentId)
+    }
+  }
+
+  const handleStudentDelete = () => {
+    if (!globalThis.confirm("Deseja realmente excluir este aluno? Todos os eventos com esse aluno serão impactados no sistema.")) {
       return
     }
-
-    try {
-      setLoading(true)
-      setError(null)
-
-      const [studentRes, eventsRes] = await Promise.all([
-        studentsApi.getById(id),
-        eventsApi.listByStudent(id, 0, 100, "startDateTime"),
-      ])
-
-      const eventsPage: PageResponse<EventResponse> = eventsRes.data
-
-      setStudent(studentRes.data)
-      setLinkedEvents(eventsPage.content)
-      setStudentEventsCount(eventsPage.totalElements)
-    } catch (loadError) {
-      console.error("Falha ao carregar aluno:", loadError)
-      setError(getFriendlyErrorMessage(loadError))
-    } finally {
-      setLoading(false)
+    if (!globalThis.confirm("TEM CERTEZA QUE REALMENTE QUER EXCLUIR ESTE ALUNO? ESSA AÇÃO NÃO PODE SER DESFEITA")) {
+      return
     }
-  }, [id])
+    deleteStudent(studentId)
+  }
 
-  useEffect(() => {
-    loadStudentData()
-  }, [loadStudentData])
+  const refetchAll = async () => {
+    await Promise.all([refetchStudent(), refetchEvents()])
+  }
 
-  if (loading) return <LoadingState message="Carregando aluno..." />
+  if (isStudentLoading || isEventsLoading) {
+    return <PageLoading message="Carregando aluno..." />
+  }
 
-  if (error) {
+  const mutationError = deleteError
+  if (isStudentError || eventsError || mutationError) {
+    const error = studentError ?? eventsError ?? mutationError
+
     return (
       <div className={styles.page}>
-        <ErrorState
-          title="Não foi possível carregar"
-          description={error}
-          actionLabel="Tentar novamente"
-          onAction={loadStudentData}
-        />
+        <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetchAll} />
       </div>
     )
   }
@@ -71,110 +82,91 @@ export function StudentDetailPage() {
   if (!student) {
     return (
       <div className={styles.page}>
-        <EmptyState title="Aluno não encontrado" description="Não encontramos os dados deste aluno." />
+        <EmptyCard title="Aluno não encontrado" description="Não encontramos os dados deste aluno." />
       </div>
     )
   }
 
-  const parentName = student.parent?.name ?? "-"
-  const parentEmail = student.parent?.email ?? "-"
-  const parentContact = student.parent?.contact ?? "-"
-  const parentCpf = student.parent?.cpf ?? "-"
+  const studentEventsCount = events?.page.totalElements ?? 0
 
-  const address = student.address
-    ? `${student.address.street}, ${student.address.number} - ${student.address.district}, ${student.address.city}/${student.address.state}`
-    : "-"
-  const addressComplement = student.address?.complement ?? "-"
-  const addressZip = student.address?.zip ?? "-"
+  const summaryItems: Array<{ label: string; value: ReactNode }> = [
+    { label: "Nome completo", value: student.name },
+    { label: "CPF", value: student.cpf },
+    { label: "E-mail", value: student.email },
+    { label: "Idade", value: student.age },
+    { label: "Contato", value: student.contact },
+    { label: "Data de nascimento", value: student.birthdate },
+    { label: "Data de matrícula", value: formatDateShortYear(student.createdAt) },
+    { label: "Escola", value: student.school },
+    { label: "Status", value: student.archivedAt ? "Arquivado" : "Ativo" },
+    { label: "Responsável", value: student.parent.name },
+    { label: "E-mail do responsável", value: student.parent.email },
+    { label: "Contato do responsável", value: student.parent.contact },
+    { label: "CPF do responsável", value: student.parent.cpf },
+    { label: "Endereço", value: student.address.street },
+    { label: "Complemento", value: student.address.complement ?? "Sem complemento" },
+    { label: "CEP", value: student.address.zip },
+  ]
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div className={styles.headerLeft}>
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-            <GraduationCap className="h-6 w-6 text-blue-600" />
+      <PageHeader
+        action={
+          <ButtonLink to="/students" variant="outline">
+            Voltar para alunos
+          </ButtonLink>
+        }
+        description="Veja e gerencie as informações do aluno"
+        leading={
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/15">
+            <GraduationCap className="h-6 w-6 text-primary" />
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Detalhes do aluno</h1>
-            <p className="text-sm text-gray-500">Veja e gerencie as informações do aluno</p>
-          </div>
+        }
+        title="Detalhes do aluno"
+        titleClassName="text-2xl font-bold app-text"
+      />
+
+      <SectionCard
+        title="Resumo do aluno"
+        description="Dados de aluno, responsável e endereço em um único resumo."
+        headerAction={
+          <DetailsPageActions
+            data={student}
+            editTo={`/students/edit/${student.id}`}
+            handleArchive={handleArchiveToggle}
+            handleDelete={handleStudentDelete}
+            isArchivePending={isArchiving || isUnarchiving}
+            isDeletePending={isDeleting}
+          />
+        }
+      >
+        <div className={styles.summaryGrid}>
+          {
+            summaryItems.map((item) => (
+              <SummaryItem key={item.label} label={item.label} value={item.value} />
+            ))
+          }
         </div>
-        <Button asChild type="button" variant="outline">
-          <Link to="/students">← Voltar para alunos</Link>
-        </Button>
-      </div>
+      </SectionCard >
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Resumo do aluno</CardTitle>
-          <CardDescription>Dados de aluno, responsável e endereço em um único resumo.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className={styles.summaryGrid}>
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Nome completo" value={student.name} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CPF" value={student.cpf} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="E-mail" value={student.email} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Idade" value={String(student.age)} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Contato" value={student.contact} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Data de nascimento" value={student.birthdate} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Data de matrícula" value={student.createdAt} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Escola" value={student.school} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Status" value={student.archivedAt ? "Arquivado" : "Ativo"} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Responsável" value={parentName} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="E-mail do responsável" value={parentEmail} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Contato do responsável" value={parentContact} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CPF do responsável" value={parentCpf} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Endereço" value={address} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="Complemento" value={addressComplement} />
-            <SummaryField className={styles.summaryItem} labelClassName={styles.summaryLabel} valueClassName={styles.summaryValue} label="CEP" value={addressZip} />
+      {/* EVENTOS DO ALUNO */}
+
+      <SectionCard
+        title="Eventos vinculados"
+        description={`Total de eventos vinculados a este aluno: ${studentEventsCount}`}
+      >
+        {studentEventsCount === 0 ? (
+          <p className="text-sm app-text-muted">Este aluno ainda não possui eventos vinculados.</p>
+        ) : (
+          <div className="app-table-wrap">
+            <EventsTable
+              variant="studentPage"
+              eventsPage={events!}
+              loading={isEventsLoading}
+              error={eventsError ? getFriendlyErrorMessage(eventsError) : ""} />
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Eventos vinculados</CardTitle>
-          <CardDescription>Total de eventos vinculados a este aluno: {studentEventsCount}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {linkedEvents.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Este aluno ainda não possui eventos vinculados.</p>
-          ) : (
-            <div className={styles.tableWrap}>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Título</TableHead>
-                    <TableHead>Conteúdo</TableHead>
-                    <TableHead>Início</TableHead>
-                    <TableHead>Fim</TableHead>
-                    <TableHead>Colaborador</TableHead>
-                    <TableHead>Preço</TableHead>
-                    <TableHead>Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {linkedEvents.map((event) => (
-                    <TableRow key={event.id}>
-                      <TableCell>{event.title}</TableCell>
-                      <TableCell>{eventContentLabels[event.content]}</TableCell>
-                      <TableCell>{event.startDateTime}</TableCell>
-                      <TableCell>{event.endDateTime}</TableCell>
-                      <TableCell>{event.employeeName}</TableCell>
-                      <TableCell>{event.price}</TableCell>
-                      <TableCell>
-                        <Link className="text-sm font-medium text-blue-600 hover:underline" to={`/events/${event.id}`}>
-                          Ver evento
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+        )}
+      </SectionCard>
+    </div >
   )
 }

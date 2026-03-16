@@ -12,18 +12,14 @@ public record EmployeeResponseDTO(
         UUID id,
         String name,
 
-        @JsonFormat(pattern = "dd/MM/yyyy")
         LocalDate birthdate,
         String pix,
         String contact,
         String cpf,
         String email,
         Duty duty,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant archivedAt,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant createdAt,
-        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "America/Sao_Paulo")
         Instant updatedAt
         ) {
 }

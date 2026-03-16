@@ -26,8 +26,8 @@ public class ParentMapper {
                 parent.getId(),
                 parent.getName(),
                 parent.getEmail(),
-                MapperUtils.formatContact(parent.getContact()),
-                MapperUtils.formatCpf(parent.getCpf()),
+                parent.getContact(),
+                parent.getCpf(),
                 parent.getArchivedAt(),
                 parent.getCreatedAt(),
                 parent.getUpdatedAt()

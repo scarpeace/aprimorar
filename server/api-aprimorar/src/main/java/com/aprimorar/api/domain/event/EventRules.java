@@ -1,27 +1,24 @@
 package com.aprimorar.api.domain.event;
 
-import com.aprimorar.api.domain.employee.Employee;
 import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.event.exception.NotAllowedToUpdateEventException;
-import com.aprimorar.api.domain.student.Student;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class EventRules {
 
-    public static void validate(Event event){
-        validateRequiredFields(event, event.getStudent(), event.getEmployee());
+    public static void validate(Event event) {
+        validateRequiredFields(event);
         validatePriceAndPayment(event.getPrice(), event.getPayment());
-        validateParticipants(event.getStudent(), event.getEmployee());
-        validateDates(event.getStartDateTime(), event.getEndDateTime());
+        validateDates(event.getStartDate(), event.getEndDateTime());
     }
 
-    private static void validateRequiredFields(Event event, Student student, Employee employee) {
+    private static void validateRequiredFields(Event event) {
         if (event.getTitle() == null || event.getTitle().isBlank()) {
             throw new InvalidEventException("Título do evento é obrigatório");
         }
-        if (event.getStartDateTime() == null) {
+        if (event.getStartDate() == null) {
             throw new InvalidEventException("Data de início do evento é obrigatório");
         }
         if (event.getEndDateTime() == null) {
@@ -36,10 +33,10 @@ public class EventRules {
         if (event.getContent() == null) {
             throw new InvalidEventException("O conteúdo do evento é obrigatório");
         }
-        if (student == null) {
+        if (event.getStudent() == null) {
             throw new InvalidEventException("Um evento não pode existir sem um estudante");
         }
-        if (employee == null) {
+        if (event.getEmployee() == null) {
             throw new InvalidEventException("Um evento não pode existir sem um colaborador");
         }
     }
@@ -53,26 +50,17 @@ public class EventRules {
         }
     }
 
-    private static void validateParticipants(Student student, Employee employee) {
-        if (student.getArchivedAt() != null) {
-            throw new InvalidEventException("Evento não pode ter estudantes arquivados");
-        }
-        if (employee.getArchivedAt() != null) {
-            throw new InvalidEventException("Evento não pode ter colaboradores arquivados");
-        }
-    }
-
-    private static void validateDates(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        if (endDateTime.isBefore(LocalDateTime.now())) {
+    private static void validateDates(LocalDateTime startDate, LocalDateTime endDate) {
+        if (endDate.isBefore(LocalDateTime.now())) {
             throw new InvalidEventException("Data de fim do evento nao pode estar no passado");
         }
-        if (endDateTime.isBefore(startDateTime)) {
+        if (endDate.isBefore(startDate)) {
             throw new InvalidEventException("Data de fim do evento nao pode ser anterior a data de inicio");
         }
     }
 
-    public static void validateEditWindow(Event event){
-        if(event.getEndDateTime().isAfter(event.getEndDateTime().plusWeeks(2))){
+    public static void validateEditWindow(Event event) {
+        if (event.getEndDateTime().isAfter(event.getEndDateTime().plusWeeks(2))) {
             throw new NotAllowedToUpdateEventException("A janela para a editar as informações do evento encerrou");
         }
     }

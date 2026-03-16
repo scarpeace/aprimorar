@@ -13,11 +13,8 @@ import com.aprimorar.api.shared.MapperUtils;
 @Component
 public class EmployeeMapper {
 
-    private final Clock applicationClock;
 
-    public EmployeeMapper(Clock applicationClock){
-        this.applicationClock = applicationClock;
-    }
+    public EmployeeMapper(){}
 
     public Employee convertToEntity(EmployeeRequestDTO request) {
         Employee employee = new Employee();
@@ -39,8 +36,8 @@ public class EmployeeMapper {
                 entity.getName(),
                 entity.getBirthdate(),
                 entity.getPix(),
-                MapperUtils.formatContact(entity.getContact()),
-                MapperUtils.formatCpf(entity.getCpf()),
+                entity.getContact(),
+                entity.getCpf(),
                 entity.getEmail(),
                 entity.getDuty(),
                 entity.getArchivedAt(),

@@ -11,6 +11,7 @@ import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
 import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.parent.exception.InvalidParentException;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
+import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.InvalidStudentException;
@@ -53,6 +54,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             EventScheduleConflictException.class,
             ParentAlreadyExistsException.class,
+            ParentHasLinkedStudentsException.class,
             EmployeeAlreadyExistsException.class,
             StudentAlreadyExistException.class,
             DataIntegrityViolationException.class

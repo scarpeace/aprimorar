@@ -4,13 +4,14 @@ import {
   UserCog,
   Calendar,
   GraduationCap,
+  Handshake
 } from "lucide-react"
-import { cn } from "@/lib/utils"
 import styles from "@/components/layout/MainLayout.module.css"
 
 const navigation = [
   { name: "Painel", href: "/", icon: LayoutDashboard },
   { name: "Alunos", href: "/students", icon: GraduationCap },
+  { name: "Pais e Responsáveis", href: "/parents", icon: Handshake },
   { name: "Colaboradores", href: "/employees", icon: UserCog },
   { name: "Eventos", href: "/events", icon: Calendar },
 ]
@@ -23,7 +24,10 @@ export function MainLayout() {
     <div className={styles.layout}>
       <aside className={styles.sidebar}>
         <div className={styles.brand}>
-          <h1 className="text-xl font-bold text-gray-900">Aprimorar</h1>
+          <div>
+            <h1 className="app-text text-xl font-extrabold tracking-tight">Aprimorar</h1>
+            <p className={styles.brandCaption}>Gestão educacional</p>
+          </div>
         </div>
         <nav className={styles.nav}>
           {navigation.map((item) => {
@@ -32,10 +36,7 @@ export function MainLayout() {
               <Link
                 key={item.name}
                 to={item.href}
-                className={cn(
-                  styles.navLink,
-                  isActive ? styles.navLinkActive : undefined
-                )}
+                className={`${styles.navLink} ${isActive ? styles.navLinkActive : ""}`.trim()}
               >
                 <item.icon className="h-5 w-5" />
                 {item.name}
