@@ -88,8 +88,9 @@ api.interceptors.response.use(
 )
 
 export const studentsApi = {
-  async list(page = 0, size = 50, sortBy = "name",): Promise<PageResponse<StudentResponse>> {
-    const { data } = await api.get<PageResponse<StudentResponse>>(`/v1/students?page=${page}&size=${size}&sort=${sortBy}`)
+  async list(page = 0, size = 50, sortBy = "name", search?: string): Promise<PageResponse<StudentResponse>> {
+    const searchParam = search ? `&search=${encodeURIComponent(search)}` : ""
+    const { data } = await api.get<PageResponse<StudentResponse>>(`/v1/students?page=${page}&size=${size}&sort=${sortBy}${searchParam}`)
     return pageResponseSchema(studentResponse).parse(data);
   },
   async getOptions(): Promise<StudentOption[]> {

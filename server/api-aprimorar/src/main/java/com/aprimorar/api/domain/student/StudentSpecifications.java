@@ -15,6 +15,17 @@ public final class StudentSpecifications {
         return (root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
+    public static Specification<Student> searchContainsIgnoreCase(String term) {
+        return (root, query, cb) -> {
+            String likeTerm = "%" + term.toLowerCase() + "%";
+            return cb.or(
+                cb.like(cb.lower(root.get("name")), likeTerm),
+                cb.like(cb.lower(root.get("email")), likeTerm),
+                cb.like(cb.lower(root.get("school")), likeTerm)
+            );
+        };
+    }
+
     public static Specification<Student> notArchived() {
         return (root, query, cb) -> cb.isNull(root.get("archivedAt"));
     }

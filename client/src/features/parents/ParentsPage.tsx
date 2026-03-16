@@ -12,6 +12,7 @@ import { getFriendlyErrorMessage } from "@/services/api"
 
 export function ParentsPage() {
   const [currentPage, setCurrentPage] = useState(0)
+  const [searchTerm, setSearchTerm] = useState("")
   const pageSize = 10
 
   const {
@@ -51,6 +52,8 @@ export function ParentsPage() {
           <ListSearchInput
             placeholder="Buscar responsável por nome, função ou email"
             ariaLabel="Buscar responsável"
+            value={searchTerm}
+            onChange={setSearchTerm}
           />
           <ButtonLink className="sm:ml-auto" to="/parents/new" variant="success">
             Novo responsável

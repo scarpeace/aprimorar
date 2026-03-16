@@ -49,12 +49,16 @@ public class StudentService {
     /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
-    public Page<StudentResponseDTO> getStudents(Pageable pageable) {
+    public Page<StudentResponseDTO> getStudents(Pageable pageable, String search) {
 
-        Specification<Student> spec = Specification.allOf(  
+        Specification<Student> spec = Specification.allOf(
                 StudentSpecifications.isNotGhost(),
                 StudentSpecifications.notArchived()
         );
+
+        if (search != null && !search.trim().isEmpty()) {
+            spec = spec.and(StudentSpecifications.searchContainsIgnoreCase(search.trim()));
+        }
 
         Page<Student> page = studentRepo.findAll(spec, pageable);
 

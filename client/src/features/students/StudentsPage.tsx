@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
@@ -10,16 +10,35 @@ import styles from "@/features/students/StudentsPage.module.css"
 import { getFriendlyErrorMessage } from "@/services/api"
 import { useStudentsQuery } from "./hooks/use-students"
 
+export function useDebounce<T>(value: T, delay?: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay || 500)
+    return () => clearTimeout(timer)
+  }, [value, delay])
+
+  return debouncedValue
+}
+
 export function StudentsPage() {
   const [currentPage, setCurrentPage] = useState(0)
+  const [searchTerm, setSearchTerm] = useState("")
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const pageSize = 10
+
   const {
     data: response,
     isLoading,
     isError,
     error,
     refetch,
-  } = useStudentsQuery(currentPage, pageSize)
+  } = useStudentsQuery(currentPage, pageSize, debouncedSearchTerm)
+
+  // Reset pagination when search changes
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [debouncedSearchTerm])
 
   const studentList = response?.content ?? []
   const pageInfo = response?.page
@@ -50,6 +69,8 @@ export function StudentsPage() {
           <ListSearchInput
             placeholder="Buscar aluno por nome, email ou escola"
             ariaLabel="Buscar aluno"
+            value={searchTerm}
+            onChange={setSearchTerm}
           />
           <ButtonLink className="sm:ml-auto" to="/students/new" variant="success">
             Novo aluno
@@ -57,6 +78,7 @@ export function StudentsPage() {
         </div>
       </PageHeader>
 
+      {/* TODO transformar isso no StudentsTable */}
       <div className="app-table-wrap">
         <div className="overflow-x-auto">
           <table className="table table-zebra w-full">

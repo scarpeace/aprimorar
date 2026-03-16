@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
@@ -51,9 +52,10 @@ public class StudentController {
     @Operation(summary = "List all STUDENTS", description = "Retrieves all students from database with pagination")
     @GetMapping
     public ResponseEntity<Page<StudentResponseDTO>> listStudents(
-            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
+            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String search
     ) {
-        Page<StudentResponseDTO> students = studentService.getStudents(pageable);
+        Page<StudentResponseDTO> students = studentService.getStudents(pageable, search);
         return ResponseEntity.ok(students);
     }
 

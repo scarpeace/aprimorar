@@ -12,6 +12,7 @@ import { useEventsQuery } from "./hooks/use-events"
 
 export function EventsPage() {
   const [currentPage, setCurrentPage] = useState(0)
+  const [searchTerm, setSearchTerm] = useState("")
   const pageSize = 10
 
   const {
@@ -45,6 +46,8 @@ export function EventsPage() {
           <ListSearchInput
             placeholder="Buscar evento por aluno, colaborador ou conteúdo"
             ariaLabel="Buscar evento"
+            value={searchTerm}
+            onChange={setSearchTerm}
           />
           <ButtonLink className="sm:ml-auto" to="/events/new" variant="success">
             Novo evento

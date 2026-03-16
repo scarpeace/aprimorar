@@ -4,11 +4,11 @@ import { queryKeys } from "@/lib/query/queryKeys"
 import { studentsApi } from "@/services/api"
 import type { StudentFormInput } from "@/lib/schemas"
 
-export function useStudentsQuery(page = 0, size = 10, sortBy = "name") {
-  const params = { page, size, sortBy }
+export function useStudentsQuery(page: number, size: number, search?: string) {
   return useQuery({
-    queryKey: queryKeys.students.list(params),
-    queryFn: () => studentsApi.list(page, size, sortBy),
+    queryKey: queryKeys.students.list({ page, size, search }),
+    queryFn: () => studentsApi.list(page, size, "name", search),
+    staleTime: 1000 * 60 * 5,
   })
 }
 

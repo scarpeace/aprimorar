@@ -13,6 +13,7 @@ import { useEmployeesQuery } from "./hooks/use-employees"
 
 export function EmployeesPage() {
   const [currentPage, setCurrentPage] = useState(0)
+  const [searchTerm, setSearchTerm] = useState("")
   const pageSize = 10
 
   const {
@@ -52,6 +53,8 @@ export function EmployeesPage() {
           <ListSearchInput
             placeholder="Buscar colaborador por nome, função ou email"
             ariaLabel="Buscar colaborador"
+            value={searchTerm}
+            onChange={setSearchTerm}
           />
           <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">
             Novo colaborador
