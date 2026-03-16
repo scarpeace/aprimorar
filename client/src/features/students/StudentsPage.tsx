@@ -13,7 +13,6 @@ import { useStudentsQuery } from "./hooks/use-students"
 export function StudentsPage() {
   const [currentPage, setCurrentPage] = useState(0)
   const pageSize = 10
-
   const {
     data: response,
     isLoading,
