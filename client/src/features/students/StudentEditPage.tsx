@@ -1,8 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
 import { Trash2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
@@ -17,20 +16,17 @@ import { queryKeys } from "@/lib/query/queryKeys"
 import { studentInputSchema, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { formatDateInputValue } from "@/lib/shared/formatter"
-import { eventsApi, getFriendlyErrorMessage, parentsApi, studentsApi } from "@/services/api"
+import { getFriendlyErrorMessage, eventsApi } from "@/services/api"
+import { useStudentDetailQuery, useUpdateStudent, useDeleteStudent } from "./hooks/use-students"
+import { useQuery } from "@tanstack/react-query"
+import { useParentsListQuery } from "../parents/hooks/use-parents"
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>()
   const studentId = id ?? ""
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [selectedParentId, setSelectedParentId] = useState("")
 
-  const studentQuery = useQuery({
-    queryKey: queryKeys.studentDetail(studentId),
-    queryFn: () => studentsApi.getById(studentId),
-    enabled: Boolean(id),
-  })
+  const { data: student, isLoading: isStudentLoading, isError: isStudentError, error: studentError, refetch: refetchStudent } = useStudentDetailQuery(studentId)
 
   const {
     register,
@@ -43,27 +39,45 @@ export function StudentEditPage() {
   })
   const registerWithMask = useHookFormMask(register)
 
+  const {
+    data: parentsList,
+    isLoading: isparentsListLoading,
+    error: parentsListQueryError,
+  } = useParentsListQuery();
+
   useEffect(() => {
-    if (studentQuery.data) {
-      setValue("name", studentQuery.data.name)
-      setValue("birthdate", formatDateInputValue(studentQuery.data.birthdate))
-      setValue("cpf", studentQuery.data.cpf)
-      setValue("contact", studentQuery.data.contact)
-      setValue("email", studentQuery.data.email)
-      setValue("school", studentQuery.data.school)
-      setValue("address.street", studentQuery.data.address.street)
-      setValue("address.number", studentQuery.data.address.number)
-      setValue("address.complement", studentQuery.data.address.complement ?? "")
-      setValue("address.district", studentQuery.data.address.district)
-      setValue("address.city", studentQuery.data.address.city)
-      setValue("address.state", studentQuery.data.address.state)
-      setValue("address.zip", studentQuery.data.address.zip)
-      setValue("parent.name", studentQuery.data.parent.name)
-      setValue("parent.email", studentQuery.data.parent.email)
-      setValue("parent.contact", studentQuery.data.parent.contact)
-      setValue("parent.cpf", studentQuery.data.parent.cpf)
+    if (student) {
+      setValue("name", student.name)
+      setValue("birthdate", formatDateInputValue(student.birthdate))
+      setValue("cpf", student.cpf)
+      setValue("contact", student.contact)
+      setValue("email", student.email)
+      setValue("school", student.school)
+      setValue("address.street", student.address.street)
+      setValue("address.number", student.address.number)
+      setValue("address.complement", student.address.complement ?? "")
+      setValue("address.district", student.address.district)
+      setValue("address.city", student.address.city)
+      setValue("address.state", student.address.state)
+      setValue("address.zip", student.address.zip)
+
+      if (!selectedParentId && student.parent) {
+        setSelectedParentId(student.parent.id)
+      }
     }
-  }, [studentQuery.data])
+  }, [student, setValue])
+
+  useEffect(() => {
+    if (selectedParentId) {
+      const selectedParent = parentsList?.find((item: { id: string }) => item.id === selectedParentId)
+      if (selectedParent) {
+        setValue("parent.name", selectedParent.name)
+        setValue("parent.email", selectedParent.email)
+        setValue("parent.contact", selectedParent.contact)
+        setValue("parent.cpf", selectedParent.cpf)
+      }
+    }
+  }, [selectedParentId, parentsList, setValue])
 
   const studentEventsQuery = useQuery({
     queryKey: [...queryKeys.events, "student", studentId],
@@ -72,92 +86,40 @@ export function StudentEditPage() {
     enabled: Boolean(id),
   })
 
-  const updateStudentMutation = useMutation({
-    mutationFn: async (data: StudentFormInput) => {
-      if (!studentQuery.data) {
-        throw new Error("Aluno não carregado para edição.")
-      }
-
-      //TODO quando o backend do parent tiver pronto tem que arrumar isso aqui
-      const updatedParent = await parentsApi.update(studentQuery.data.parent.id, data.parent!)
-
-      return studentsApi.update(studentId, {
-        ...data,
-        parent: {
-          name: updatedParent.name,
-          email: updatedParent.email,
-          contact: updatedParent.contact,
-          cpf: updatedParent.cpf,
-        },
-      })
-    },
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async (updatedStudent) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.studentDetail(studentId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-      ])
-      navigate(`/students/${updatedStudent.id}`)
-    },
-    onError: (error) => {
-      console.error("Falha ao atualizar aluno:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
-
-  const deleteStudentMutation = useMutation({
-    mutationFn: () => studentsApi.delete(studentId),
-    onMutate: () => {
-      setSubmitError(null)
-    },
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.studentDetail(studentId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.parents }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-      ])
-
-      navigate("/students")
-    },
-    onError: (error) => {
-      console.error("Falha ao excluir aluno:", error)
-      setSubmitError(getFriendlyErrorMessage(error))
-    },
-  })
+  const { mutate: updateStudent, isPending: isUpdating, error: updateError } = useUpdateStudent(studentId)
+  const { mutate: deleteStudent, isPending: isDeleting, error: deleteError } = useDeleteStudent()
 
   const onSubmit = (data: StudentFormInput) => {
-    updateStudentMutation.mutate(data)
+    updateStudent(data)
   }
 
   const handleDeleteStudent = () => {
     if (studentEventsQuery.isLoading) {
-      window.alert("Ainda estamos verificando se este aluno possui eventos vinculados. Tente novamente em instantes.")
+      globalThis.alert("Ainda estamos verificando se este aluno possui eventos vinculados. Tente novamente em instantes.")
       return
     }
 
     if (studentEventsQuery.isError) {
-      window.alert("Não foi possível verificar se existem eventos vinculados a este aluno. Tente novamente.")
+      globalThis.alert("Não foi possível verificar se existem eventos vinculados a este aluno. Tente novamente.")
       return
     }
 
     if ((studentEventsQuery.data?.page.totalElements ?? 0) > 0) {
-      window.alert("Este aluno possui eventos vinculados e não pode ser excluído. Arquive o aluno em vez de excluí-lo.")
+      globalThis.alert("Este aluno possui eventos vinculados e não pode ser excluído. Arquive o aluno em vez de excluí-lo.")
       return
     }
 
-    const confirmed = window.confirm("Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita.")
+    const confirmed = globalThis.confirm("Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita.")
 
     if (!confirmed) {
       return
     }
 
-    deleteStudentMutation.mutate()
+    deleteStudent(studentId)
   }
+
+  const isMutationPending = isUpdating || isDeleting
+  const submitError = updateError || deleteError
 
   if (!id) {
     return (
@@ -167,16 +129,17 @@ export function StudentEditPage() {
     )
   }
 
-  if (studentQuery.isLoading) {
+  if (isStudentLoading) {
     return <PageLoading message="Carregando aluno para edição..." />
   }
 
-  if (studentQuery.isError || studentEventsQuery.isError || !studentQuery.data) {
+  if (isStudentError || studentEventsQuery.isError || !student) {
+    const error = studentError ?? studentEventsQuery.error
     return (
       <div className={styles.page}>
         <ErrorCard
-          description={getFriendlyErrorMessage(studentQuery.error ?? studentEventsQuery.error)}
-          onAction={() => Promise.all([studentQuery.refetch(), studentEventsQuery.refetch()])}
+          description={getFriendlyErrorMessage(error)}
+          onAction={() => Promise.all([refetchStudent(), studentEventsQuery.refetch()])}
         />
       </div>
     )
@@ -196,6 +159,45 @@ export function StudentEditPage() {
           </ButtonLink>
         }
       />
+      <SectionCard title="Responsável" description="Selecione um responsável já cadastrado no sistema.">
+        <div className={styles.formGrid}>
+          <FormField
+            className={`${styles.field} ${styles.span2}`}
+            label="Responsável"
+            htmlFor="parentId"
+            error={errors.parent?.name?.message ? "Selecione um responsável" : undefined}
+          >
+            <div className="flex flex-col gap-2">
+              <select
+                id="parentId"
+                className="app-select"
+                value={selectedParentId}
+                onChange={(event) => setSelectedParentId(event.target.value)}
+                disabled={isparentsListLoading}
+              >
+                <option value="">
+                  {isparentsListLoading ? "Carregando responsáveis..." : "Selecione um responsável"}
+                </option>
+                {parentsList?.map((parent: any) => (
+                  <option key={parent.id} value={parent.id}>
+                    {parent.name} ({parent.cpf})
+                  </option>
+                ))}
+              </select>
+
+              {parentsListQueryError && (
+                <p className="text-xs text-error">
+                  {getFriendlyErrorMessage(parentsListQueryError)}
+                </p>
+              )}
+
+              <p className="text-xs text-muted-foreground mt-1">
+                Não encontrou o responsável? <ButtonLink to="/parents/new" variant="ghost" size="sm" className="h-auto p-0 underline">Cadastre um novo aqui</ButtonLink>
+              </p>
+            </div>
+          </FormField>
+        </div>
+      </SectionCard>
 
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <SectionCard title="Dados do aluno" description="Atualize os dados pessoais e endereço.">
@@ -304,43 +306,8 @@ export function StudentEditPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Responsável" description="Atualize os dados do responsável vinculado a este aluno.">
-          <div className={styles.formGrid}>
-            <FormField className={styles.field} label="Nome do responsável" htmlFor="parent.name" error={errors.parent?.name?.message}>
-              <input className="app-input" id="parent.name" placeholder="Ex: Ana Souza" {...register("parent.name")} />
-            </FormField>
 
-            <FormField className={styles.field} label="E-mail do responsável" htmlFor="parent.email" error={errors.parent?.email?.message}>
-              <input
-                className="app-input"
-                id="parent.email"
-                type="email"
-                placeholder="exemplo@dominio.com"
-                {...register("parent.email")}
-              />
-            </FormField>
-
-            <FormField className={styles.field} label="Contato do responsável" htmlFor="parent.contact" error={errors.parent?.contact?.message}>
-              <input
-                className="app-input"
-                id="parent.contact"
-                placeholder="(11) 99999-9999"
-                {...registerWithMask("parent.contact", ["(99) 9999-9999", "(99) 99999-9999"])}
-              />
-            </FormField>
-
-            <FormField className={styles.field} label="CPF do responsável" htmlFor="parent.cpf" error={errors.parent?.cpf?.message}>
-              <input
-                className="app-input"
-                id="parent.cpf"
-                placeholder="000.000.000-00"
-                {...registerWithMask("parent.cpf", "999.999.999-99")}
-              />
-            </FormField>
-          </div>
-        </SectionCard>
-
-        {submitError ? <div className="alert alert-error text-sm">{submitError}</div> : null}
+        {submitError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(submitError)}</div> : null}
         {studentHasLinkedEvents ? (
           <Badge variant="warning">
             Este aluno possui eventos vinculados e não pode ser excluído. Use o arquivamento para desativar o cadastro ou exclua todos os eventos relacionados a esse aluno.
@@ -351,7 +318,7 @@ export function StudentEditPage() {
           <Button
             type="button"
             onClick={handleDeleteStudent}
-            disabled={updateStudentMutation.isPending || deleteStudentMutation.isPending}
+            disabled={isMutationPending}
             variant="danger"
             className="sm:mr-auto"
           >
@@ -362,8 +329,8 @@ export function StudentEditPage() {
           <ButtonLink to={`/students/${studentId}`} variant="outline">
             Cancelar
           </ButtonLink>
-          <Button type="submit" disabled={updateStudentMutation.isPending || deleteStudentMutation.isPending} variant="primary">
-            {updateStudentMutation.isPending ? "Salvando..." : "Salvar alterações"}
+          <Button type="submit" disabled={isMutationPending} variant="primary">
+            {isUpdating ? "Salvando..." : "Salvar alterações"}
           </Button>
         </div>
       </form>

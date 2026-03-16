@@ -1,7 +1,6 @@
-import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query"
 import type { ReactNode } from "react"
 import { GraduationCap } from "lucide-react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { ButtonLink } from "@/components/ui/button"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
@@ -13,86 +12,42 @@ import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/students/StudentDetailPage.module.css"
 import { formatDateShortYear } from "@/lib/shared/formatter"
 import { queryKeys } from "@/lib/query/queryKeys"
-import { eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
+import { getFriendlyErrorMessage, eventsApi } from "@/services/api"
 import { DetailsPageActions } from "@/components/ui/details-page-actions"
-
+import { useStudentDetailQuery, useArchiveStudent, useUnarchiveStudent, useDeleteStudent } from "./hooks/use-students"
+import { useQuery } from "@tanstack/react-query"
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>()
   const studentId = id ?? ""
-  const queryClient = useQueryClient()
-  const navigate = useNavigate()
 
-  const [studentQuery, eventsQuery] = useQueries({
-    queries: [
-      {
-        queryKey: queryKeys.studentDetail(studentId),
-        queryFn: () => studentsApi.getById(studentId),
-        enabled: Boolean(id),
-      },
-      {
-        queryKey: queryKeys.eventsByStudent(studentId),
-        queryFn: () => eventsApi.listByStudent(studentId),
-        enabled: Boolean(id),
-      },
-    ],
+  const { data: student, isLoading: isStudentLoading, isError: isStudentError, error: studentError, refetch: refetchStudent } = useStudentDetailQuery(studentId)
+
+  const eventsQuery = useQuery({
+    queryKey: queryKeys.eventsByStudent(studentId),
+    queryFn: () => eventsApi.listByStudent(studentId),
+    enabled: Boolean(id),
   })
 
   const {
-    data: studentData,
-    error: studentError,
-    isLoading: isStudentLoading,
-    refetch: refetchStudent,
-  } = studentQuery;
-
-  const {
-    data: eventsData,
+    data: events,
     error: eventsError,
     isLoading: isEventsLoading,
     refetch: refetchEvents
   } = eventsQuery;
 
-  const {
-    mutate: deleteStudentMutation,
-    error: deleteStudentMutationError,
-    isPending: isDeleteStudentMutationPending,
-  } = useMutation({
-    mutationFn: () => studentsApi.delete(studentId),
-    onSuccess: async () => {
-      // Remove o aluno específico do cache para evitar que o invalidQueries tente buscá-lo novamente e dê 404
-      queryClient.removeQueries({ queryKey: [...queryKeys.students, studentId] })
+  const { mutate: deleteStudent, isPending: isDeleting, error: deleteError } = useDeleteStudent()
+  const { mutate: archiveStudent, isPending: isArchiving } = useArchiveStudent()
+  const { mutate: unarchiveStudent, isPending: isUnarchiving } = useUnarchiveStudent()
 
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.eventsByStudent(studentId) }),
-      ])
-
-      globalThis.alert("Aluno excluído com sucesso. ")
-      navigate("/students")
-    },
-  })
-
-  const {
-    mutate: archiveStudentMutation,
-    error: archiveStudentMutationError,
-    isPending: isArchiveStudentMutationPending,
-  } = useMutation({
-    mutationFn: () =>
-      studentData?.archivedAt ? studentsApi.unarchive(studentId) : studentsApi.archive(studentId),
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: [...queryKeys.students, studentId] }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.students }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.dashboard }),
-      ])
-    },
-  })
-
-  const refetchAll = async () => {
-    await Promise.all([refetchStudent(), refetchEvents()])
+  const handleArchiveToggle = () => {
+    if (!student) return
+    if (student.archivedAt) {
+      unarchiveStudent(studentId)
+    } else {
+      if (!globalThis.confirm("Deseja realmente arquivar este aluno?")) return
+      archiveStudent(studentId)
+    }
   }
 
   const handleStudentDelete = () => {
@@ -102,36 +57,29 @@ export function StudentDetailPage() {
     if (!globalThis.confirm("TEM CERTEZA QUE REALMENTE QUER EXCLUIR ESTE ALUNO? ESSA AÇÃO NÃO PODE SER DESFEITA")) {
       return
     }
-    deleteStudentMutation()
+    deleteStudent(studentId)
+  }
+
+  const refetchAll = async () => {
+    await Promise.all([refetchStudent(), refetchEvents()])
   }
 
   if (isStudentLoading || isEventsLoading) {
     return <PageLoading message="Carregando aluno..." />
   }
 
-  //QUERIES ERRORS
-  if (studentError || eventsError) {
-    const queryError = studentError ?? eventsError
+  const mutationError = deleteError
+  if (isStudentError || eventsError || mutationError) {
+    const error = studentError ?? eventsError ?? mutationError
 
     return (
       <div className={styles.page}>
-        <ErrorCard description={getFriendlyErrorMessage(queryError)} onAction={refetchAll} />
+        <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetchAll} />
       </div>
     )
   }
 
-  //MUTATION ERRORS
-  if (deleteStudentMutationError || archiveStudentMutationError) {
-    const mutationError = deleteStudentMutationError ?? archiveStudentMutationError
-
-    return (
-      <div className={styles.page}>
-        <ErrorCard description={getFriendlyErrorMessage(mutationError)} onAction={refetchAll} />
-      </div>
-    )
-  }
-
-  if (!studentData) {
+  if (!student) {
     return (
       <div className={styles.page}>
         <EmptyCard title="Aluno não encontrado" description="Não encontramos os dados deste aluno." />
@@ -139,25 +87,25 @@ export function StudentDetailPage() {
     )
   }
 
-  const studentEventsCount = eventsData?.page.totalElements ?? 0
+  const studentEventsCount = events?.page.totalElements ?? 0
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: studentData.name },
-    { label: "CPF", value: studentData.cpf },
-    { label: "E-mail", value: studentData.email },
-    { label: "Idade", value: studentData.age },
-    { label: "Contato", value: studentData.contact },
-    { label: "Data de nascimento", value: studentData.birthdate },
-    { label: "Data de matrícula", value: formatDateShortYear(studentData.createdAt) },
-    { label: "Escola", value: studentData.school },
-    { label: "Status", value: studentData.archivedAt ? "Arquivado" : "Ativo" },
-    { label: "Responsável", value: studentData.parent.name },
-    { label: "E-mail do responsável", value: studentData.parent.email },
-    { label: "Contato do responsável", value: studentData.parent.contact },
-    { label: "CPF do responsável", value: studentData.parent.cpf },
-    { label: "Endereço", value: studentData.address.street },
-    { label: "Complemento", value: studentData.address.complement ?? "Sem complemento" },
-    { label: "CEP", value: studentData.address.zip },
+    { label: "Nome completo", value: student.name },
+    { label: "CPF", value: student.cpf },
+    { label: "E-mail", value: student.email },
+    { label: "Idade", value: student.age },
+    { label: "Contato", value: student.contact },
+    { label: "Data de nascimento", value: student.birthdate },
+    { label: "Data de matrícula", value: formatDateShortYear(student.createdAt) },
+    { label: "Escola", value: student.school },
+    { label: "Status", value: student.archivedAt ? "Arquivado" : "Ativo" },
+    { label: "Responsável", value: student.parent.name },
+    { label: "E-mail do responsável", value: student.parent.email },
+    { label: "Contato do responsável", value: student.parent.contact },
+    { label: "CPF do responsável", value: student.parent.cpf },
+    { label: "Endereço", value: student.address.street },
+    { label: "Complemento", value: student.address.complement ?? "Sem complemento" },
+    { label: "CEP", value: student.address.zip },
   ]
 
   return (
@@ -183,12 +131,12 @@ export function StudentDetailPage() {
         description="Dados de aluno, responsável e endereço em um único resumo."
         headerAction={
           <DetailsPageActions
-            data={studentData}
-            editTo={`/students/edit/${studentData.id}`}
-            handleArchive={archiveStudentMutation}
+            data={student}
+            editTo={`/students/edit/${student.id}`}
+            handleArchive={handleArchiveToggle}
             handleDelete={handleStudentDelete}
-            isArchivePending={isArchiveStudentMutationPending}
-            isDeletePending={isDeleteStudentMutationPending}
+            isArchivePending={isArchiving || isUnarchiving}
+            isDeletePending={isDeleting}
           />
         }
       >
@@ -207,15 +155,13 @@ export function StudentDetailPage() {
         title="Eventos vinculados"
         description={`Total de eventos vinculados a este aluno: ${studentEventsCount}`}
       >
-        {eventsData?.page.totalElements === 0 ? (
+        {studentEventsCount === 0 ? (
           <p className="text-sm app-text-muted">Este aluno ainda não possui eventos vinculados.</p>
         ) : (
           <div className="app-table-wrap">
-
-            {/*TODO: deve ter um jeito melhor de enviar a eventsPage */}
             <EventsTable
               variant="studentPage"
-              eventsPage={eventsData!}
+              eventsPage={events!}
               loading={isEventsLoading}
               error={eventsError ? getFriendlyErrorMessage(eventsError) : ""} />
           </div>

@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
@@ -7,10 +6,8 @@ import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
 import { ButtonLink } from "@/components/ui/button"
 import styles from "@/features/students/StudentsPage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { getFriendlyErrorMessage, studentsApi } from "@/services/api"
-
-const STUDENTS_LIST_PARAMS = { page: 0, size: 20, sortBy: "name" }
+import { getFriendlyErrorMessage } from "@/services/api"
+import { useStudentsQuery } from "./hooks/use-students"
 
 export function StudentsPage() {
   const [hideArchived, setHideArchived] = useState(false)
@@ -21,18 +18,7 @@ export function StudentsPage() {
     isError,
     error,
     refetch,
-  } = useQuery({
-    queryKey: [...queryKeys.students, STUDENTS_LIST_PARAMS],
-    queryFn: async () => {
-      const studentsRes = await studentsApi.list(
-        STUDENTS_LIST_PARAMS.page,
-        STUDENTS_LIST_PARAMS.size,
-        STUDENTS_LIST_PARAMS.sortBy
-      )
-
-      return studentsRes.content
-    },
-  })
+  } = useStudentsQuery()
 
   const visibleStudents = hideArchived ? studentList.filter((student) => !student.archivedAt) : studentList
 
