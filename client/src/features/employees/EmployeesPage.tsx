@@ -10,17 +10,7 @@ import { dutyLabels } from "@/features/employees/dutyLabels"
 import styles from "@/features/employees/EmployeesPage.module.css"
 import { getFriendlyErrorMessage } from "@/services/api"
 import { useEmployeesQuery } from "./hooks/use-employees"
-
-export function useDebounce<T>(value: T, delay?: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay || 500)
-    return () => clearTimeout(timer)
-  }, [value, delay])
-
-  return debouncedValue
-}
+import { useDebounce } from "@/hooks/use-debounce"
 
 export function EmployeesPage() {
   const [currentPage, setCurrentPage] = useState(0)

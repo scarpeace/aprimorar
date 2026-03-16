@@ -9,17 +9,7 @@ import { ButtonLink } from "@/components/ui/button"
 import styles from "@/features/parents/ParentsPage.module.css"
 import { getFriendlyErrorMessage } from "@/services/api"
 import { useParentsQuery } from "./hooks/use-parents"
-
-export function useDebounce<T>(value: T, delay?: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay || 500)
-    return () => clearTimeout(timer)
-  }, [value, delay])
-
-  return debouncedValue
-}
+import { useDebounce } from "@/hooks/use-debounce"
 
 export function ParentsPage() {
   const [currentPage, setCurrentPage] = useState(0)
