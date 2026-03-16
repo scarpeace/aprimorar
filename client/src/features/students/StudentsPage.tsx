@@ -4,6 +4,7 @@ import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
+import { Pagination } from "@/components/ui/pagination"
 import { ButtonLink } from "@/components/ui/button"
 import styles from "@/features/students/StudentsPage.module.css"
 import { getFriendlyErrorMessage } from "@/services/api"
@@ -92,33 +93,14 @@ export function StudentsPage() {
         </div>
       </div>
 
-      {/* PAGINAÇÃO */}
-      {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-between px-2">
-          <p className="text-sm app-text-muted">
-            Mostrando {studentList.length} de {totalElements} alunos
-          </p>
-          <div className="join">
-            <button
-              className="btn btn-sm join-item"
-              disabled={currentPage === 0}
-              onClick={() => setCurrentPage((p) => p - 1)}
-            >
-              Anterior
-            </button>
-            <button className="btn btn-sm join-item no-animation cursor-default">
-              Página {currentPage + 1} de {totalPages}
-            </button>
-            <button
-              className="btn btn-sm join-item"
-              disabled={currentPage >= totalPages - 1}
-              onClick={() => setCurrentPage((p) => p + 1)}
-            >
-              Próxima
-            </button>
-          </div>
-        </div>
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalElements={totalElements}
+        totalPages={totalPages}
+        currentElementsCount={studentList.length}
+        itemName="alunos"
+        onPageChange={setCurrentPage}
+      />
 
       {studentList.length === 0 ? (
         <EmptyCard

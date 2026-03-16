@@ -64,12 +64,7 @@ export function useDeleteStudent() {
   return useMutation({
     mutationFn: (id: string) => studentsApi.delete(id),
     onSuccess: async (_, id) => {
-      // Navegamos imediatamente para fechar a tela de detalhes.
       navigate("/students")
-
-      // Invalidamos EXPLICITAMENTE apenas as listas (evita o "fuzzy match" do .all 
-      // que causaria o recarregamento na tela de detalhes, resultando em 404).
-      // As telas filhas do responsável também são limpas.
       queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() })
       queryClient.invalidateQueries({ queryKey: ["students", "by-parent"] })
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })

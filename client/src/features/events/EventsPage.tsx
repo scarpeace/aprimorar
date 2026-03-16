@@ -3,6 +3,7 @@ import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
+import { Pagination } from "@/components/ui/pagination"
 import { ButtonLink } from "@/components/ui/button"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/events/EventsPage.module.css"
@@ -60,33 +61,14 @@ export function EventsPage() {
         />
       </div>
 
-      {/* PAGINAÇÃO */}
-      {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-between px-2">
-          <p className="text-sm app-text-muted">
-            Mostrando {eventsResponse?.content.length ?? 0} de {totalElements} eventos
-          </p>
-          <div className="join">
-            <button
-              className="btn btn-sm join-item"
-              disabled={currentPage === 0}
-              onClick={() => setCurrentPage((p: number) => p - 1)}
-            >
-              Anterior
-            </button>
-            <button className="btn btn-sm join-item no-animation cursor-default">
-              Página {currentPage + 1} de {totalPages}
-            </button>
-            <button
-              className="btn btn-sm join-item"
-              disabled={currentPage >= totalPages - 1}
-              onClick={() => setCurrentPage((p: number) => p + 1)}
-            >
-              Próxima
-            </button>
-          </div>
-        </div>
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalElements={totalElements}
+        totalPages={totalPages}
+        currentElementsCount={eventsResponse?.content.length ?? 0}
+        itemName="eventos"
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

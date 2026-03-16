@@ -4,6 +4,7 @@ import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
+import { Pagination } from "@/components/ui/pagination"
 import { ButtonLink } from "@/components/ui/button"
 import { dutyLabels } from "@/features/employees/dutyLabels"
 import styles from "@/features/employees/EmployeesPage.module.css"
@@ -95,33 +96,14 @@ export function EmployeesPage() {
         </div>
       </div>
 
-      {/* PAGINAÇÃO */}
-      {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-between px-2">
-          <p className="text-sm app-text-muted">
-            Mostrando {employeeList.length} de {totalElements} colaboradores
-          </p>
-          <div className="join">
-            <button
-              className="btn btn-sm join-item"
-              disabled={currentPage === 0}
-              onClick={() => setCurrentPage((p) => p - 1)}
-            >
-              Anterior
-            </button>
-            <button className="btn btn-sm join-item no-animation cursor-default">
-              Página {currentPage + 1} de {totalPages}
-            </button>
-            <button
-              className="btn btn-sm join-item"
-              disabled={currentPage >= totalPages - 1}
-              onClick={() => setCurrentPage((p) => p + 1)}
-            >
-              Próxima
-            </button>
-          </div>
-        </div>
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalElements={totalElements}
+        totalPages={totalPages}
+        currentElementsCount={employeeList.length}
+        itemName="colaboradores"
+        onPageChange={setCurrentPage}
+      />
 
       {employeeList.length === 0 ? (
         <EmptyCard
