@@ -53,9 +53,9 @@ export function EmployeeDetailPage() {
         description="Dados completos de cadastro, contato e status."
         headerAction={
           <>
-            <DeleteEmployeeButton employeeId={employeeId} />
             <EditEmployeeButton employeeId={employeeId} />
             <ArchiveEmployeeButton employeeId={employeeId} isArchived={!!employeeData?.archivedAt} />
+            <DeleteEmployeeButton employeeId={employeeId} />
           </>
         }
       >

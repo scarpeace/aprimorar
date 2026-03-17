@@ -19,7 +19,7 @@ export function SectionCard({ title, description, headerAction, children, classN
               {title ? <h2 className="card-title">{title}</h2> : null}
               {description ? <p className="text-sm app-text-muted">{description}</p> : null}
             </div>
-            {headerAction ? <div className="shrink-0">{headerAction}</div> : null}
+            {headerAction ? <div className="shrink-0 flex flex-wrap gap-3">{headerAction}</div> : null}
           </div>
         ) : null}
 

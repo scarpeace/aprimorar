@@ -21,7 +21,7 @@ export const DeleteEmployeeButton = ({ employeeId }: { employeeId: string }) => 
       className="sm:mr-auto"
     >
       <Trash2 className="h-4 w-4" />
-      {isDeleting ? "Excluindo..." : "Excluir colaborador"}
+      {isDeleting ? "Excluindo..." : "Excluir"}
     </Button>
   )
 }
