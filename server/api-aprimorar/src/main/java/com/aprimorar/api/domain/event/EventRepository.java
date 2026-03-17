@@ -17,6 +17,10 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     @Query("UPDATE Event e SET e.student.id = :ghostId WHERE e.student.id = :studentId")
     void reassignEventsToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
 
+    @Modifying
+    @Query("UPDATE Event e SET e.employee.id = :ghostId WHERE e.employee.id = :employeeId")
+    void reassignEmployeeEventsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
+
     @Override
     @EntityGraph(attributePaths = {"student", "employee"})
     Page<Event> findAll(Pageable pageable);

@@ -23,14 +23,14 @@ export const employeeFormSchema = z.object({
 export const employeeApiSchema = z.object({
   id: z.uuid(),
   name: z.string(),
-  birthdate: z.string().transform(formatDateShortYear),
+  birthdate: z.string(),
   pix: z.string(),
   contact: z.string().transform(formatPhone),
   cpf: z.string().transform(formatCpf),
   email: z.email(),
   duty: z.enum(dutyValues),
   archivedAt: z.coerce.date().nullable(),
-  createdAt: z.coerce.date().transform(formatDateShortYear),
+  createdAt: z.coerce.date(),
   updatedAt: z.coerce.date().nullable(),
 })
 

@@ -14,8 +14,9 @@ import { useEmployeeDetailQuery } from "./hooks/use-employees"
 import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
 import { EditEmployeeButton } from "./components/EditEmployeeButton"
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton"
-import { Button, ButtonLink } from "@/components/ui/button"
+import { ButtonLink } from "@/components/ui/button"
 
+//TODO: Tá renderizando duas (ou quatro não sei) vezes
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
   const employeeId = id ?? ""
@@ -35,6 +36,7 @@ export function EmployeeDetailPage() {
     { label: "Criado em", value: employeeData?.createdAt },
   ]
 
+  console.log(employeeData?.birthdate)
   return (
     <div className={styles.page}>
       <PageHeader

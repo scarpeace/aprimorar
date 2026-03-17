@@ -20,11 +20,11 @@ export function Pagination({
   if (totalPages <= 1) return null
 
   return (
-    <div className="mt-4 flex items-center justify-between pl-4">
-      <p className="text-sm app-text-muted">
+    <div className="mt-4 flex items-center justify-between px-3">
+      <p className="text-sm app-text-muted hidden lg:block">
         Mostrando {currentElementsCount} de {totalElements} {itemName}
       </p>
-      <div className="join">
+      <div className="join mx-auto mb-3">
         <button
           className="join-item btn btn-sm"
           disabled={currentPage === 0}

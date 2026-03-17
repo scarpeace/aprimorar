@@ -5,4 +5,5 @@ public enum Duty {
     ADM,
     THERAPIST,
     MENTOR,
+    SYSTEM,
 }

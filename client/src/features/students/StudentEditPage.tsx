@@ -1,12 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQuery } from "@tanstack/react-query"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
 import { Trash2 } from "lucide-react"
 import { Alert } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { ErrorCard } from "@/components/ui/error-card"
 import { FormField } from "@/components/ui/form-field"
@@ -21,10 +20,12 @@ import { formatDateInputValue } from "@/lib/shared/formatter"
 import { getFriendlyErrorMessage, eventsApi } from "@/services/api"
 import { useStudentDetailQuery, useUpdateStudent, useDeleteStudent } from "./hooks/use-students"
 import { useParentsListQuery } from "../parents/hooks/use-parents"
+import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal"
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>()
   const studentId = id ?? ""
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const { data: student, isLoading: isStudentLoading, isError: isStudentError, error: studentError, refetch: refetchStudent } = useStudentDetailQuery(studentId)
 
@@ -78,29 +79,14 @@ export function StudentEditPage() {
     updateStudent(data)
   }
 
-  const handleDeleteStudent = () => {
-    if (studentEventsQuery.isLoading) {
-      globalThis.alert("Ainda estamos verificando se este aluno possui eventos vinculados. Tente novamente em instantes.")
-      return
-    }
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true)
+  }
 
-    if (studentEventsQuery.isError) {
-      globalThis.alert("Não foi possível verificar se existem eventos vinculados a este aluno. Tente novamente.")
-      return
-    }
-
-    if ((studentEventsQuery.data?.page.totalElements ?? 0) > 0) {
-      globalThis.alert("Este aluno possui eventos vinculados e não pode ser excluído. Arquive o aluno em vez de excluí-lo.")
-      return
-    }
-
-    const confirmed = globalThis.confirm("Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita.")
-
-    if (!confirmed) {
-      return
-    }
-
-    deleteStudent(studentId)
+  const handleConfirmDelete = () => {
+    deleteStudent(studentId, {
+      onSettled: () => setIsDeleteModalOpen(false)
+    })
   }
 
   const isMutationPending = isUpdating || isDeleting
@@ -130,8 +116,7 @@ export function StudentEditPage() {
     )
   }
 
-  //TODO Tem que ver como vai funcionar a deleção de aluno e se vai ter o CASCADE
-  const studentHasLinkedEvents = (studentEventsQuery.data?.page.totalElements ?? 0) > 0
+  const eventsCount = studentEventsQuery.data?.page.totalElements ?? 0
 
   return (
     <div className={styles.page}>
@@ -296,24 +281,35 @@ export function StudentEditPage() {
             {getFriendlyErrorMessage(submitError)}
           </Alert>
         )}
-        {studentHasLinkedEvents && (
-          <Badge variant="warning">
-            Este aluno possui eventos vinculados e não pode ser excluído. Use o arquivamento para desativar o cadastro ou exclua todos os eventos relacionados a esse aluno.
-          </Badge>
-        )}
 
         <div className={styles.actions}>
           <Button
             type="button"
-            onClick={handleDeleteStudent}
+            onClick={handleDeleteClick}
             disabled={isMutationPending}
             variant="danger"
             className="sm:mr-auto"
           >
-            {/* TODO: tem alguma forma mais limpa de usar os icones? */}
             <Trash2 className="h-4 w-4" />
             Excluir aluno
           </Button>
+
+          <DeleteConfirmationModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            onConfirm={handleConfirmDelete}
+            title="Excluir Aluno"
+            isPending={isDeleting}
+            isLoadingEvents={studentEventsQuery.isLoading}
+            eventsCount={eventsCount}
+            itemName="aluno"
+            phantomWarning={
+              <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
+                Ao excluí-lo, seu histórico pessoal será apagado, mas <strong>todos os seus eventos e atendimentos serão transferidos automaticamente para um perfil de "Aluno Removido"</strong> para manter a consistência financeira e o histórico da clínica.
+              </div>
+            }
+          />
+
           <ButtonLink to={`/students/${studentId}`} variant="outline">
             Cancelar
           </ButtonLink>
@@ -325,3 +321,4 @@ export function StudentEditPage() {
     </div>
   )
 }
+
