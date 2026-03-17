@@ -3,7 +3,6 @@ import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
-import { Trash2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { ErrorCard } from "@/components/ui/error-card"
@@ -16,19 +15,9 @@ import { dutyLabels } from "@/features/employees/dutyLabels"
 import { employeeFormSchema, type EmployeeFormInput } from "@/lib/schemas"
 import { formatDateInputValue } from "@/lib/shared/formatter"
 import { getFriendlyErrorMessage } from "@/services/api"
-import { useEmployeeEditQuery, useEmployeeEventsQuery, useUpdateEmployee, useDeleteEmployee } from "./hooks/use-employees"
-
-function createEmptyEmployeeValues(): EmployeeFormInput {
-  return {
-    name: "",
-    birthdate: "",
-    pix: "",
-    contact: "",
-    cpf: "",
-    email: "",
-    duty: "TEACHER",
-  }
-}
+import { useEmployeeEditQuery, useEmployeeEventsQuery, useUpdateEmployee } from "./hooks/use-employees"
+import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
+import { EditEmployeeButton } from "./components/EditEmployeeButton"
 
 export function EmployeeEditPage() {
   const { id } = useParams<{ id: string }>()
@@ -51,9 +40,8 @@ export function EmployeeEditPage() {
   } = useEmployeeEventsQuery(employeeId, 0, 1)
 
   const { mutate: updateEmployee, isPending: isUpdating, error: updateError } = useUpdateEmployee(employeeId)
-  const { mutate: deleteEmployee, isPending: isDeleting, error: deleteError } = useDeleteEmployee()
 
-  const submitError = updateError || deleteError
+  const submitError = updateError
 
   const {
     register,
@@ -63,7 +51,9 @@ export function EmployeeEditPage() {
     formState: { errors },
   } = useForm<EmployeeFormInput>({
     resolver: zodResolver(employeeFormSchema),
-    defaultValues: createEmptyEmployeeValues(),
+    defaultValues: {
+      duty: "TEACHER",
+    },
   })
 
   const registerWithMask = useHookFormMask(register)
@@ -92,31 +82,6 @@ export function EmployeeEditPage() {
     updateEmployee(data)
   }
 
-  const handleDeleteEmployee = () => {
-    if (isEventsLoading) {
-      globalThis.alert("Ainda estamos verificando se este colaborador possui eventos vinculados. Tente novamente em instantes.")
-      return
-    }
-
-    if (isEventsError) {
-      globalThis.alert("Não foi possível verificar se existem eventos vinculados a este colaborador. Tente novamente.")
-      return
-    }
-
-    if ((employeeEventsData?.page.totalElements ?? 0) > 0) {
-      globalThis.alert("Este colaborador possui eventos vinculados e não pode ser excluído. Arquive o colaborador em vez de excluí-lo.")
-      return
-    }
-
-    const confirmed = globalThis.confirm("Tem certeza que deseja excluir este colaborador? Esta ação não pode ser desfeita.")
-
-    if (!confirmed) {
-      return
-    }
-
-    deleteEmployee(employeeId)
-  }
-
   if (!id) {
     return (
       <div className={styles.page}>
@@ -129,7 +94,7 @@ export function EmployeeEditPage() {
     return <PageLoading message="Carregando colaborador para edição..." />
   }
 
-  if (isEmployeeError || isEventsError || !employeeData) {
+  if (isEmployeeError || isEventsError || !employeeData || !employeeEventsData) {
     return (
       <div className={styles.page}>
         <ErrorCard
@@ -220,20 +185,9 @@ export function EmployeeEditPage() {
           ) : null}
 
           <div className={styles.actions}>
-            <Button
-              type="button"
-              onClick={handleDeleteEmployee}
-              disabled={isUpdating || isDeleting}
-              variant="danger"
-              className="sm:mr-auto"
-            >
-              <Trash2 className="h-4 w-4" />
-              Excluir colaborador
-            </Button>
-            <ButtonLink to={`/employees/${employeeId}`} variant="outline">
-              Cancelar
-            </ButtonLink>
-            <Button type="submit" disabled={isUpdating || isDeleting} variant="primary">
+            <DeleteEmployeeButton employeeId={employeeId} />
+            <EditEmployeeButton employeeId={employeeId} />
+            <Button type="submit" disabled={isUpdating} variant="primary">
               {isUpdating ? "Salvando..." : "Salvar alterações"}
             </Button>
           </div>

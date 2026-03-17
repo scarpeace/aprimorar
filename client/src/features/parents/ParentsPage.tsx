@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { Users } from "lucide-react"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
@@ -54,6 +55,7 @@ export function ParentsPage() {
       <PageHeader
         description="Gerencie pais e responsáveis."
         title="Responsáveis"
+        icon={Users}
       >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput

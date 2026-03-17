@@ -11,52 +11,25 @@ import { dutyLabels } from "@/features/employees/dutyLabels"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/employees/EmployeeDetailPage.module.css"
 import { getFriendlyErrorMessage } from "@/services/api"
-import { DetailsPageActions } from "@/components/ui/details-page-actions"
 import { Alert } from "@/components/ui/alert"
-import { useEmployeeDetailQuery, useEmployeeEventsQuery, useArchiveEmployee, useUnarchiveEmployee, useDeleteEmployee } from "./hooks/use-employees"
+import { useEmployeeDetailQuery, useEmployeeEventsQuery, useDeleteEmployee, useArchiveEmployee } from "./hooks/use-employees"
+import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
+import { EditEmployeeButton } from "./components/EditEmployeeButton"
+import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton"
 
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
   const employeeId = id ?? ""
   const navigate = useNavigate()
-  const { data: employeeData, error: employeeError, isLoading: isEmployeeLoading } = useEmployeeDetailQuery(employeeId)
-  const { data: employeeEvents, error: employeeEventsError, isLoading: isEmployeeEventsLoading } = useEmployeeEventsQuery(employeeId)
 
-  const { mutate: archiveEmployee, isPending: isArchivePending, isError: isArchiveError, error: archiveError } = useArchiveEmployee()
-  const { mutate: unarchiveEmployee, isPending: isUnarchivePending, isError: isUnarchiveError, error: unarchiveError } = useUnarchiveEmployee()
-  const { mutate: deleteEmployee, isPending: isDeletePending, isError: isDeleteError, error: deleteError } = useDeleteEmployee()
+  const { data: employeeData, error: employeeDataError, isLoading: isEmployeeLoading, isFetched: isEmployeeFetched } = useEmployeeDetailQuery(employeeId)
+  const { data: employeeEvents, error: employeeEventsDataError, isLoading: isEmployeeEventsLoading, isFetched: isEmployeeEventsFetched } = useEmployeeEventsQuery(employeeId)
 
-  const handleArchiveToggle = () => {
-    if (employeeData?.archivedAt) {
-      unarchiveEmployee(employeeId)
-    } else {
-      archiveEmployee(employeeId)
-    }
-  }
+  const { isError: isDeleteError, error: deleteError } = useDeleteEmployee()
+  const { isError: isArchiveError, error: archiveError } = useArchiveEmployee()
 
-  const handleEmployeeDelete = () => {
-    if (globalThis.confirm("Tem certeza que deseja excluir este colaborador? Esta ação não pode ser desfeita.")) {
-      deleteEmployee(employeeId)
-    }
-  }
-
-  const mutationError = archiveError || unarchiveError || deleteError
-  const isMutationError = isArchiveError || isUnarchiveError || isDeleteError
-
-  if (isEmployeeLoading || isEmployeeEventsLoading) {
-    return <PageLoading message="Carregando colaborador..." />
-  }
-
-  if (employeeError || employeeEventsError) {
-    return (
-      <div className={styles.page}>
-        <ErrorCard
-          description={getFriendlyErrorMessage(employeeError || employeeEventsError)}
-          actionLabel="Voltar para listagem de colaboradores"
-          onAction={() => navigate("/employees")} />
-      </div>
-    )
-  }
+  const mutationError = deleteError || archiveError
+  const isMutationError = isDeleteError || isArchiveError
 
   const employeeEventsCount = employeeEvents?.page.totalElements ?? 0
 
@@ -75,33 +48,23 @@ export function EmployeeDetailPage() {
   return (
     <div className={styles.page}>
       <PageHeader
-        action={
-          <ButtonLink to="/employees" variant="outline">
-            Voltar para colaboradores
-          </ButtonLink>
-        }
+        link="/employees"
+        icon={UserCog}
         description="Veja e gerencie as informações do colaborador"
-        leading={
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/15">
-            <UserCog className="h-6 w-6 text-success" />
-          </div>
-        }
         title="Detalhes do colaborador"
         titleClassName="text-2xl font-bold app-text"
       />
 
+      {/* COLABORADOR */}
       <SectionCard
         title="Resumo do colaborador"
         description="Dados completos de cadastro, contato e status."
         headerAction={
-          <DetailsPageActions
-            data={employeeData}
-            editTo={`/employees/edit/${employeeId}`}
-            handleArchive={handleArchiveToggle}
-            handleDelete={handleEmployeeDelete}
-            isArchivePending={isArchivePending || isUnarchivePending}
-            isDeletePending={isDeletePending}
-          />
+          <>
+            <DeleteEmployeeButton employeeId={employeeId} />
+            <EditEmployeeButton employeeId={employeeId} />
+            <ArchiveEmployeeButton employeeId={employeeId} isArchived={!!employeeData?.archivedAt} />
+          </>
         }
       >
         {isMutationError && (
@@ -109,24 +72,52 @@ export function EmployeeDetailPage() {
             {getFriendlyErrorMessage(mutationError)}
           </Alert>
         )}
-        <div className={styles.summaryGrid}>
-          {summaryItems.map((item) => (
-            <SummaryItem key={item.label} label={item.label} value={item.value} />
-          ))}
-        </div>
+
+        {isEmployeeLoading && <PageLoading message="Carregando colaborador..." />}
+
+        {employeeDataError && (
+          <div className={styles.page}>
+            <ErrorCard
+              description={getFriendlyErrorMessage(employeeDataError)}
+              actionLabel="Voltar para listagem de colaboradores"
+              onAction={() => navigate("/employees")} />
+          </div>
+        )}
+
+        {isEmployeeFetched && (
+          <div className={styles.summaryGrid}>
+            {summaryItems.map((item) => (
+              <SummaryItem key={item.label} label={item.label} value={item.value} />
+            ))}
+          </div>
+        )}
       </SectionCard>
 
+      {/* EVENTOS DO COLABORADOR */}
       <SectionCard
         title="Eventos vinculados"
         description={`Total de eventos vinculados a este colaborador: ${employeeEventsCount}`}
       >
+        {isEmployeeEventsLoading && <PageLoading message="Carregando eventos..." />}
+
+        {employeeEventsDataError && (
+          <div className={styles.page}>
+            <ErrorCard
+              description={getFriendlyErrorMessage(employeeEventsDataError)}
+              actionLabel="Voltar para listagem de colaboradores"
+              onAction={() => navigate("/employees")} />
+          </div>
+        )}
+
         {/* //TODO deve ter um jeito melhor de enviar a eventsPage */}
-        <EventsTable
-          eventsPage={employeeEvents ?? { content: [], page: { totalElements: 0, totalPages: 0, number: 0, size: 0 } }}
-          loading={isEmployeeEventsLoading}
-          error={employeeEventsError ? getFriendlyErrorMessage(employeeEventsError) : ""}
-          variant="employeePage"
-        />
+        {isEmployeeEventsFetched && (
+          <EventsTable
+            eventsPage={employeeEvents ?? { content: [], page: { totalElements: 0, totalPages: 0, number: 0, size: 0 } }}
+            loading={isEmployeeEventsLoading}
+            error={employeeEventsDataError ? getFriendlyErrorMessage(employeeEventsDataError) : ""}
+            variant="employeePage"
+          />
+        )}
       </SectionCard>
     </div>
   )
