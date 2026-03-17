@@ -15,9 +15,10 @@ import { dutyLabels } from "@/features/employees/dutyLabels"
 import { employeeFormSchema, type EmployeeFormInput } from "@/lib/schemas"
 import { formatDateInputValue } from "@/lib/shared/formatter"
 import { getFriendlyErrorMessage } from "@/services/api"
-import { useEmployeeEditQuery, useEmployeeEventsQuery, useUpdateEmployee } from "./hooks/use-employees"
+import { useEmployeeEditQuery, useUpdateEmployee } from "./hooks/use-employees"
 import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
 import { EditEmployeeButton } from "./components/EditEmployeeButton"
+import { Save } from "lucide-react"
 
 export function EmployeeEditPage() {
   const { id } = useParams<{ id: string }>()
@@ -31,81 +32,44 @@ export function EmployeeEditPage() {
     refetch: refetchEmployee,
   } = useEmployeeEditQuery(employeeId)
 
-  const {
-    data: employeeEventsData,
-    isLoading: isEventsLoading,
-    isError: isEventsError,
-    error: eventsError,
-    refetch: refetchEvents,
-  } = useEmployeeEventsQuery(employeeId, 0, 1)
-
-  const { mutate: updateEmployee, isPending: isUpdating, error: updateError } = useUpdateEmployee(employeeId)
-
-  const submitError = updateError
+  const { mutate: updateEmployee, isPending: isUpdating } = useUpdateEmployee(employeeId)
 
   const {
     register,
     handleSubmit,
-    reset,
-    setValue,
     formState: { errors },
   } = useForm<EmployeeFormInput>({
     resolver: zodResolver(employeeFormSchema),
-    defaultValues: {
-      duty: "TEACHER",
+    values: {
+      name: employeeData?.name ?? "",
+      email: employeeData?.email ?? "",
+      contact: employeeData?.contact ?? "",
+      cpf: employeeData?.cpf ?? "",
+      pix: employeeData?.pix ?? "",
+      birthdate: employeeData?.birthdate ? formatDateInputValue(employeeData.birthdate) : "",
+      duty: employeeData?.duty ?? "TEACHER",
     },
   })
-
   const registerWithMask = useHookFormMask(register)
-
-  useEffect(() => {
-    if (!employeeData) {
-      return
-    }
-
-    reset({
-      name: employeeData.name,
-      birthdate: formatDateInputValue(employeeData.birthdate),
-      pix: employeeData.pix,
-      contact: employeeData.contact,
-      cpf: employeeData.cpf,
-      email: employeeData.email,
-      duty: employeeData.duty,
-    })
-
-    // Campos com máscara podem não ser reidratados corretamente só com reset.
-    setValue("contact", employeeData.contact)
-    setValue("cpf", employeeData.cpf)
-  }, [employeeData, reset, setValue])
 
   const onSubmit = (data: EmployeeFormInput) => {
     updateEmployee(data)
-  }
-
-  if (!id) {
-    return (
-      <div className={styles.page}>
-        <ErrorCard description="ID do colaborador não informado." />
-      </div>
-    )
   }
 
   if (isEmployeeLoading) {
     return <PageLoading message="Carregando colaborador para edição..." />
   }
 
-  if (isEmployeeError || isEventsError || !employeeData || !employeeEventsData) {
+  if (isEmployeeError || !employeeData) {
     return (
       <div className={styles.page}>
         <ErrorCard
-          description={getFriendlyErrorMessage(employeeError ?? eventsError)}
-          onAction={() => Promise.all([refetchEmployee(), refetchEvents()])}
+          description={getFriendlyErrorMessage(employeeError)}
+          onAction={refetchEmployee}
         />
       </div>
     )
   }
-
-  const employeeHasLinkedEvents = (employeeEventsData?.page.totalElements ?? 0) > 0
 
   return (
     <div className={styles.page}>
@@ -177,17 +141,12 @@ export function EmployeeEditPage() {
             </FormField>
           </div>
 
-          {submitError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(submitError)}</div> : null}
-          {employeeHasLinkedEvents ? (
-            <Badge variant="warning">
-              Este colaborador possui eventos vinculados e não pode ser excluído. Use o arquivamento para desativar o cadastro ou exclua todos os eventos vinculados a este colaborador.
-            </Badge>
-          ) : null}
 
           <div className={styles.actions}>
             <DeleteEmployeeButton employeeId={employeeId} />
             <EditEmployeeButton employeeId={employeeId} />
-            <Button type="submit" disabled={isUpdating} variant="primary">
+            <Button type="submit" disabled={isUpdating} variant="success">
+              <Save />
               {isUpdating ? "Salvando..." : "Salvar alterações"}
             </Button>
           </div>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useDeleteEmployee } from "../hooks/use-employees";
 
+//TODO: Tem que implementar o delete do employee com eventos
 export const DeleteEmployeeButton = ({ employeeId }: { employeeId: string }) => {
 
   const { mutate: deleteEmployee, isPending: isDeleting } = useDeleteEmployee();

@@ -14,7 +14,7 @@ import { useEmployeeDetailQuery } from "./hooks/use-employees"
 import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
 import { EditEmployeeButton } from "./components/EditEmployeeButton"
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton"
-import { ButtonLink } from "@/components/ui/button"
+import { Button, ButtonLink } from "@/components/ui/button"
 
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -42,14 +42,9 @@ export function EmployeeDetailPage() {
         title="Colaboradores"
         icon={UserCog}
         action={
-          <>
-            <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">
-              Novo colaborador
-            </ButtonLink>
-            <ButtonLink className="sm:ml-auto" to="/employees" variant="outline">
-              Voltar
-            </ButtonLink>
-          </>
+          <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">
+            Novo colaborador
+          </ButtonLink>
         }
       />
 
