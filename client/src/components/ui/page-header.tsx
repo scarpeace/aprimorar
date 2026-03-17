@@ -1,11 +1,9 @@
 import type { ReactNode } from "react"
-import { ButtonLink } from "./button"
 import { type LucideIcon } from "lucide-react"
 
 type PageHeaderProps = {
   title: string
   description?: string
-  link?: string
   action?: ReactNode
   icon?: LucideIcon
   children?: ReactNode
@@ -15,7 +13,6 @@ type PageHeaderProps = {
 export function PageHeader({
   title,
   description,
-  link,
   action,
   icon: Icon,
   children,

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { MainLayout } from "@/components/layout/MainLayout"
 import { PageLoading } from "@/components/ui/page-loading"
 import { Toaster } from "sonner"
+import { ErrorBoundary } from "./components/ui/error-boundary"
 
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage").then((module) => ({ default: module.DashboardPage })))
 const StudentsPage = lazy(() => import("@/features/students/StudentsPage").then((module) => ({ default: module.StudentsPage })))
@@ -26,33 +27,35 @@ function App() {
   return (
     <BrowserRouter>
       <Toaster position="top-right" richColors />
-      <Suspense fallback={<PageLoading message="Carregando tela..." />}>
-        <Routes>
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<DashboardPage />} />
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoading message="Carregando tela..." />}>
+          <Routes>
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<DashboardPage />} />
 
-            <Route path="/students" element={<StudentsPage />} />
-            <Route path="/students/new" element={<StudentCreatePage />} />
-            <Route path="/students/edit/:id" element={<StudentEditPage />} />
-            <Route path="/students/:id" element={<StudentDetailPage />} />
+              <Route path="/students" element={<StudentsPage />} />
+              <Route path="/students/new" element={<StudentCreatePage />} />
+              <Route path="/students/edit/:id" element={<StudentEditPage />} />
+              <Route path="/students/:id" element={<StudentDetailPage />} />
 
-            <Route path="/employees" element={<EmployeesPage />} />
-            <Route path="/employees/new" element={<EmployeeCreatePage />} />
-            <Route path="/employees/edit/:id" element={<EmployeeEditPage />} />
-            <Route path="/employees/:id" element={<EmployeeDetailPage />} />
+              <Route path="/employees" element={<EmployeesPage />} />
+              <Route path="/employees/new" element={<EmployeeCreatePage />} />
+              <Route path="/employees/edit/:id" element={<EmployeeEditPage />} />
+              <Route path="/employees/:id" element={<EmployeeDetailPage />} />
 
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/events/new" element={<EventCreatePage />} />
-            <Route path="/events/edit/:id" element={<EventEditPage />} />
-            <Route path="/events/:id" element={<EventDetailPage />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/events/new" element={<EventCreatePage />} />
+              <Route path="/events/edit/:id" element={<EventEditPage />} />
+              <Route path="/events/:id" element={<EventDetailPage />} />
 
-            <Route path="/parents" element={<ParentsPage />} />
-            <Route path="/parents/new" element={<ParentCreatePage />} />
-            <Route path="/parents/:id" element={<ParentDetailPage />} />
-            <Route path="/parents/edit/:id" element={<ParentEditPage />} />
-          </Route>
-        </Routes>
-      </Suspense>
+              <Route path="/parents" element={<ParentsPage />} />
+              <Route path="/parents/new" element={<ParentCreatePage />} />
+              <Route path="/parents/:id" element={<ParentDetailPage />} />
+              <Route path="/parents/edit/:id" element={<ParentEditPage />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
     </BrowserRouter>
   )
 }
