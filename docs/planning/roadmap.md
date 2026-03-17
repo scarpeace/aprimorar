@@ -1,6 +1,6 @@
 # Roadmap
 
-Canonical context lives in `AGENTS.md`.
+Canonical context lives in `../AGENTS.md`.
 Use this file for phase order and epic indexing only.
 
 ## Planning Operations

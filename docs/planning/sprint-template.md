@@ -9,9 +9,9 @@ Use este template para planejar sprint e sincronizar tickets com GitHub.
 - Em modo estrito, labels/campos/opcoes do Project precisam existir antes do sync.
 
 ## Comandos locais
-- Validar contrato: `python3 ops/sprint.py validate --file sprint.md`
-- Simular sync: `python3 ops/sprint.py sync --file sprint.md --dry-run`
-- Aplicar sync: `python3 ops/sprint.py sync --file sprint.md --apply`
+- Validar contrato: `python3 docs/ops/sprint.py validate --file docs/sprint.md`
+- Simular sync: `python3 docs/ops/sprint.py sync --file docs/sprint.md --dry-run`
+- Aplicar sync: `python3 docs/ops/sprint.py sync --file docs/sprint.md --apply`
 
 ## Pre requisitos
 - `gh` autenticado com escopos: `repo`, `read:project`, `project`

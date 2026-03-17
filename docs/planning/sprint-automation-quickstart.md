@@ -4,19 +4,19 @@ Guia rapido (1 pagina) para planejar sprint com MCP e sincronizar no GitHub.
 
 ## O que voce ganha
 
-- Planejamento padronizado por `sprint.md`
+- Planejamento padronizado por `docs/sprint.md`
 - Criacao/atualizacao de issues sem trabalho manual repetitivo
 - Backlog/board atualizados no Project com rastreabilidade
 
 ## Fluxo oficial
 
-1. Agente Scrum (MCP) gera/atualiza `sprint.md`
+1. Agente Scrum (MCP) gera/atualiza `docs/sprint.md`
 2. Script local valida e sincroniza:
    - `validate`
    - `dry-run`
    - `apply`
 
-Regra: o MCP planeja; o `ops/sprint.py` escreve no GitHub.
+Regra: o MCP planeja; o `docs/ops/sprint.py` escreve no GitHub.
 
 ## Setup inicial (uma vez)
 
@@ -34,7 +34,7 @@ gh project list --owner "<owner>" --format json
 gh project field-list <project-number> --owner "<owner>" --format json
 ```
 
-3. Ajustar `sprint.md`:
+3. Ajustar `docs/sprint.md`:
 - `repo` correto (`owner/repo`)
 - `project.owner` e `project.number` corretos
 - `defaults.status` com opcao real do campo `Status`
@@ -42,16 +42,16 @@ gh project field-list <project-number> --owner "<owner>" --format json
 ## Execucao diaria (3 comandos)
 
 ```bash
-python3 ops/sprint.py validate --file sprint.md
-python3 ops/sprint.py sync --file sprint.md --dry-run
-python3 ops/sprint.py sync --file sprint.md --apply
+python3 docs/ops/sprint.py validate --file docs/sprint.md
+python3 docs/ops/sprint.py sync --file docs/sprint.md --dry-run
+python3 docs/ops/sprint.py sync --file docs/sprint.md --apply
 ```
 
 ## Boas praticas essenciais
 
 - Sempre rodar `dry-run` antes de `apply`
 - Manter `ticket_key` estavel (`S02-001`, `S02-002`, ...)
-- Nao editar manualmente issue sincronizada sem atualizar `sprint.md`
+- Nao editar manualmente issue sincronizada sem atualizar `docs/sprint.md`
 - Usar labels existentes (modo estrito)
 - Incluir `acceptance_criteria` em todo item
 
@@ -71,7 +71,7 @@ Isso evita inconsistencias no backlog.
   - rode `gh auth refresh --hostname github.com -s repo -s project`
 - Erro de status invalido:
   - verifique opcoes com `gh project field-list ...`
-  - ajuste `defaults.status` no `sprint.md`
+  - ajuste `defaults.status` no `docs/sprint.md`
 - Label inexistente:
   - crie a label no repo ou troque por uma label existente
 
@@ -80,4 +80,4 @@ Isso evita inconsistencias no backlog.
 - Guia completo: `docs/planning/sprint-automation-guide.md`
 - Template de sprint: `docs/planning/sprint-template.md`
 - Prompt Scrum MCP: `.opencode/prompts/scrum-agent-mcp.md`
-- Exemplo JSON: `ops/sprint_schema_example.json`
+- Exemplo JSON: `docs/ops/sprint_schema_example.json`

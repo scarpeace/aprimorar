@@ -7,24 +7,24 @@ Este documento explica, em passo a passo, como usar o fluxo de sprint automatiza
 Padronizar planejamento e execucao de sprint com dois componentes:
 
 - Agente Scrum/PM (MCP GitHub) para planejar e gerar `sprint.md`
-- Script local `ops/sprint.py` para sincronizar issues e Project no GitHub
+- Script local `docs/ops/sprint.py` para sincronizar issues e Project no GitHub
 
 Essa separacao deixa o processo rapido, auditavel e previsivel.
 
 ## Arquitetura recomendada
 
 - Planejamento assistido: MCP so le contexto e propoe o plano
-- Escrita oficial: apenas `ops/sprint.py` cria/atualiza issue e campos do Project
-- Fonte unica da verdade: `sprint.md`
+- Escrita oficial: apenas `docs/ops/sprint.py` cria/atualiza issue e campos do Project
+- Fonte unica da verdade: `docs/sprint.md`
 - Idempotencia: cada item usa `ticket_key` estavel (`S01-001`, `S01-002`, etc.)
 
 ## Arquivos importantes
 
-- `sprint.md`: contrato da sprint atual
-- `ops/sprint.py`: CLI de validacao e sync
+- `docs/sprint.md`: contrato da sprint atual
+- `docs/ops/sprint.py`: CLI de validacao e sync
 - `docs/planning/sprint-template.md`: template pronto de sprint
 - `.opencode/prompts/scrum-agent-mcp.md`: prompt base para o agente Scrum
-- `ops/sprint_schema_example.json`: exemplo de payload JSON
+- `docs/ops/sprint_schema_example.json`: exemplo de payload JSON
 
 ## Pre requisitos
 
@@ -78,7 +78,7 @@ Checklist rapido:
 ### 2) Validar contrato
 
 ```bash
-python3 ops/sprint.py validate --file sprint.md
+python3 docs/ops/sprint.py validate --file docs/sprint.md
 ```
 
 Se falhar, ajuste o JSON antes de continuar.
@@ -86,7 +86,7 @@ Se falhar, ajuste o JSON antes de continuar.
 ### 3) Simular sincronizacao (obrigatorio)
 
 ```bash
-python3 ops/sprint.py sync --file sprint.md --dry-run
+python3 docs/ops/sprint.py sync --file docs/sprint.md --dry-run
 ```
 
 Revise:
@@ -98,7 +98,7 @@ Revise:
 ### 4) Aplicar no GitHub
 
 ```bash
-python3 ops/sprint.py sync --file sprint.md --apply
+python3 docs/ops/sprint.py sync --file docs/sprint.md --apply
 ```
 
 Resultado esperado:
@@ -110,7 +110,7 @@ Resultado esperado:
 ## Passo a passo (rotina semanal)
 
 1. Gerar nova proposta de sprint via MCP usando `.opencode/prompts/scrum-agent-mcp.md`
-2. Salvar em `sprint.md`
+2. Salvar em `docs/sprint.md`
 3. Rodar `validate`
 4. Rodar `dry-run`
 5. Ajustar erros de modo estrito
@@ -137,13 +137,13 @@ Resultado esperado:
 - Sempre rodar `--dry-run` antes de `--apply`
 - Tratar erro de schema antes de erro de integracao
 - Fazer sync em pequenos lotes quando houver muitas mudancas
-- Nao editar manualmente titulo/corpo/labels de issue sincronizada sem atualizar `sprint.md`
+- Nao editar manualmente titulo/corpo/labels de issue sincronizada sem atualizar `docs/sprint.md`
 
 ### Project
 
 - Verificar opcoes de `Status` e `Priority` antes de planejar
 - Padronizar nomes de campo no Project (evita mapeamento extra)
-- Se mudar nome de campo, atualizar `field_map` no `sprint.md`
+- Se mudar nome de campo, atualizar `field_map` no `docs/sprint.md`
 
 ## Troubleshooting rapido
 
@@ -198,22 +198,22 @@ Acao:
 ## Exemplo minimo de execucao
 
 ```bash
-python3 ops/sprint.py validate --file sprint.md
-python3 ops/sprint.py sync --file sprint.md --dry-run
-python3 ops/sprint.py sync --file sprint.md --apply
+python3 docs/ops/sprint.py validate --file docs/sprint.md
+python3 docs/ops/sprint.py sync --file docs/sprint.md --dry-run
+python3 docs/ops/sprint.py sync --file docs/sprint.md --apply
 ```
 
 ## Checklist de pronto para usar em time
 
 - [ ] Escopos `gh` corretos
 - [ ] Project e campos confirmados
-- [ ] `sprint.md` validado
+- [ ] `docs/sprint.md` validado
 - [ ] Dry-run revisado por alguem do time
 - [ ] Apply executado
 - [ ] Links das issues compartilhados
 
 ## Evolucao futura sugerida
 
-- Adicionar comando de resumo (`report`) no `ops/sprint.py`
+- Adicionar comando de resumo (`report`) no `docs/ops/sprint.py`
 - Adicionar comando para validar labels/campos antes do dry-run
 - Criar automacao opcional em GitHub Actions (apenas depois do fluxo local estar estavel)

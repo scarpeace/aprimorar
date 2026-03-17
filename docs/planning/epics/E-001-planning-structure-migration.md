@@ -7,7 +7,7 @@
 ## Scope
 - In scope:
   - Establish canonical planning files under `docs/planning/`
-  - Consolidate repo guidance into `AGENTS.md`
+  - Consolidate repo guidance into `../../AGENTS.md`
   - Normalize epic/task IDs and templates
 - Out of scope:
   - Product feature changes
@@ -39,7 +39,7 @@
 ## Archive (DONE)
 ### Task: T-001 — Consolidate project docs
 - Status: DONE
-- Scope: Moved product and agent guidance into canonical repository docs, later finalized in `AGENTS.md`.
+- Scope: Moved product and agent guidance into canonical repository docs, later finalized in `../../AGENTS.md`.
 - Verification: Manual markdown review and legacy spot checks.
 
 ### Task: T-002 — Create roadmap and epic index
@@ -64,6 +64,6 @@
 
 ## Review Notes (append-only)
 - 2026-03-08:
-  - Quality: Canonical guidance now lives in `AGENTS.md`; legacy archive and project hubs were removed.
+  - Quality: Canonical guidance now lives in `../../AGENTS.md`; legacy archive and project hubs were removed.
   - Security: No runtime impact.
   - Performance: No runtime impact.
