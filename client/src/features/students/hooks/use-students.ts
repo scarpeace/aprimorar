@@ -34,6 +34,12 @@ export function useCreateStudent() {
     },
   })
 }
+export function useStudentOptionsQuery() {
+  return useQuery({
+    queryKey: queryKeys.students.options,
+    queryFn: () => studentsApi.getOptions(),
+  })
+}
 
 export function useUpdateStudent(id: string) {
   const queryClient = useQueryClient()
@@ -100,9 +106,4 @@ export function useUnarchiveStudent() {
   })
 }
 
-export function useStudentOptionsQuery() {
-  return useQuery({
-    queryKey: queryKeys.students.options,
-    queryFn: () => studentsApi.getOptions(),
-  })
-}
+

@@ -5,7 +5,7 @@ export type PaginationProps = {
   totalElements: number
   totalPages: number
   currentElementsCount: number
-  itemName?: string
+  itemName: string
   onPageChange: (page: number) => void
 }
 
@@ -20,7 +20,7 @@ export function Pagination({
   if (totalPages <= 1) return null
 
   return (
-    <div className="mt-4 flex items-center justify-between px-2">
+    <div className="mt-4 flex items-center justify-between pl-4">
       <p className="text-sm app-text-muted">
         Mostrando {currentElementsCount} de {totalElements} {itemName}
       </p>

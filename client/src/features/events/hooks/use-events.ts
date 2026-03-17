@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { eventsApi } from "@/services/api"
 import { queryKeys } from "@/lib/query/queryKeys"
@@ -6,10 +6,12 @@ import type { EventFormInput } from "@/lib/schemas"
 
 // --- QUERIES ---
 
-export function useEventsQuery(page = 0, size = 20, sortBy = "startDate") {
+export function useEventsQuery(page = 0, size = 20, sortBy = "startDate", options = {}) {
   return useQuery({
     queryKey: queryKeys.events.list({ page, size, sortBy }),
     queryFn: () => eventsApi.list(page, size, sortBy),
+    placeholderData: keepPreviousData,
+    ...options
   })
 }
 
@@ -18,6 +20,26 @@ export function useEventDetailQuery(id: string) {
     queryKey: queryKeys.events.detail(id),
     queryFn: () => eventsApi.getById(id),
     enabled: !!id,
+  })
+}
+
+export function useEventsByEmployeeQuery(id: string, page = 0, size = 20, options = {}) {
+  return useQuery({
+    queryKey: [...queryKeys.events.byEmployee(id), { page, size }],
+    queryFn: () => eventsApi.listByEmployee(id, page, size),
+    enabled: !!id,
+    placeholderData: keepPreviousData,
+    ...options
+  })
+}
+
+export function useEventsByStudentQuery(id: string, page = 0, size = 20, options = {}) {
+  return useQuery({
+    queryKey: [...queryKeys.events.byStudent(id), { page, size }],
+    queryFn: () => eventsApi.listByStudent(id, page, size),
+    enabled: !!id,
+    placeholderData: keepPreviousData,
+    ...options
   })
 }
 

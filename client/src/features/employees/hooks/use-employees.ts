@@ -30,14 +30,6 @@ export function useEmployeeEditQuery(id: string) {
   })
 }
 
-export function useEmployeeEventsQuery(id: string, page = 0, size = 20) {
-  return useQuery({
-    queryKey: queryKeys.events.byEmployee(id),
-    queryFn: () => eventsApi.listByEmployee(id, page, size),
-    enabled: !!id,
-  })
-}
-
 export function useEmployeeOptionsQuery() {
   return useQuery({
     queryKey: queryKeys.employees.options,

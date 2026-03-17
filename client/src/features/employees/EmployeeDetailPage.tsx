@@ -10,7 +10,7 @@ import { dutyLabels } from "@/features/employees/dutyLabels"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/employees/EmployeeDetailPage.module.css"
 import { getFriendlyErrorMessage } from "@/services/api"
-import { useEmployeeDetailQuery, useEmployeeEventsQuery } from "./hooks/use-employees"
+import { useEmployeeDetailQuery } from "./hooks/use-employees"
 import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
 import { EditEmployeeButton } from "./components/EditEmployeeButton"
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton"
@@ -21,9 +21,6 @@ export function EmployeeDetailPage() {
   const navigate = useNavigate()
 
   const { data: employeeData, error: employeeDataError, isLoading: isEmployeeLoading, isFetched: isEmployeeFetched } = useEmployeeDetailQuery(employeeId)
-  const { data: employeeEvents, error: employeeEventsDataError, isLoading: isEmployeeEventsLoading, isFetched: isEmployeeEventsFetched } = useEmployeeEventsQuery(employeeId)
-
-  const employeeEventsCount = employeeEvents?.page.totalElements ?? 0
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: employeeData?.name },
@@ -83,28 +80,12 @@ export function EmployeeDetailPage() {
       {/* EVENTOS DO COLABORADOR */}
       <SectionCard
         title="Eventos vinculados"
-        description={`Total de eventos vinculados a este colaborador: ${employeeEventsCount}`}
+        description={"Todos os eventos vinculados a esse colaborador"}
       >
-        {isEmployeeEventsLoading && <PageLoading message="Carregando eventos..." />}
-
-        {employeeEventsDataError && (
-          <div className={styles.page}>
-            <ErrorCard
-              description={getFriendlyErrorMessage(employeeEventsDataError)}
-              actionLabel="Voltar para listagem de colaboradores"
-              onAction={() => navigate("/employees")} />
-          </div>
-        )}
-
-        {/* //TODO deve ter um jeito melhor de enviar a eventsPage */}
-        {isEmployeeEventsFetched && (
-          <EventsTable
-            eventsPage={employeeEvents ?? { content: [], page: { totalElements: 0, totalPages: 0, number: 0, size: 0 } }}
-            loading={isEmployeeEventsLoading}
-            error={employeeEventsDataError ? getFriendlyErrorMessage(employeeEventsDataError) : ""}
-            variant="employeePage"
-          />
-        )}
+        <EventsTable
+          variant="embeddedEmployee"
+          ownerId={employeeId}
+        />
       </SectionCard>
     </div>
   )
