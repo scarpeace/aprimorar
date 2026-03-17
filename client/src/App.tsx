@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { MainLayout } from "@/components/layout/MainLayout"
 import { PageLoading } from "@/components/ui/page-loading"
+import { Toaster } from "sonner"
 
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage").then((module) => ({ default: module.DashboardPage })))
 const StudentsPage = lazy(() => import("@/features/students/StudentsPage").then((module) => ({ default: module.StudentsPage })))
@@ -24,6 +25,7 @@ const ParentEditPage = lazy(() => import("@/features/parents/ParentEditPage").th
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" richColors />
       <Suspense fallback={<PageLoading message="Carregando tela..." />}>
         <Routes>
           <Route element={<MainLayout />}>

@@ -4,10 +4,7 @@ import { useDeleteEmployee } from "../hooks/use-employees";
 
 export const DeleteEmployeeButton = ({ employeeId }: { employeeId: string }) => {
 
-  const { mutate: deleteEmployee, isPending: isDeleting, isError: isDeleteError, error: deleteError } = useDeleteEmployee();
-
-  const mutationError = deleteError
-  const isMutationError = isDeleteError
+  const { mutate: deleteEmployee, isPending: isDeleting } = useDeleteEmployee();
 
   const handleEmployeeDelete = () => {
     if (globalThis.confirm("Tem certeza que deseja excluir este colaborador? Esta ação não pode ser desfeita.")) {

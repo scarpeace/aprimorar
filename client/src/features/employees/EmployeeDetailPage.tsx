@@ -1,7 +1,6 @@
 import type { ReactNode } from "react"
 import { UserCog } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom"
-import { ButtonLink } from "@/components/ui/button"
 import { ErrorCard } from "@/components/ui/error-card"
 import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
@@ -11,8 +10,7 @@ import { dutyLabels } from "@/features/employees/dutyLabels"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/employees/EmployeeDetailPage.module.css"
 import { getFriendlyErrorMessage } from "@/services/api"
-import { Alert } from "@/components/ui/alert"
-import { useEmployeeDetailQuery, useEmployeeEventsQuery, useDeleteEmployee, useArchiveEmployee } from "./hooks/use-employees"
+import { useEmployeeDetailQuery, useEmployeeEventsQuery } from "./hooks/use-employees"
 import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
 import { EditEmployeeButton } from "./components/EditEmployeeButton"
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton"
@@ -24,12 +22,6 @@ export function EmployeeDetailPage() {
 
   const { data: employeeData, error: employeeDataError, isLoading: isEmployeeLoading, isFetched: isEmployeeFetched } = useEmployeeDetailQuery(employeeId)
   const { data: employeeEvents, error: employeeEventsDataError, isLoading: isEmployeeEventsLoading, isFetched: isEmployeeEventsFetched } = useEmployeeEventsQuery(employeeId)
-
-  const { isError: isDeleteError, error: deleteError } = useDeleteEmployee()
-  const { isError: isArchiveError, error: archiveError } = useArchiveEmployee()
-
-  const mutationError = deleteError || archiveError
-  const isMutationError = isDeleteError || isArchiveError
 
   const employeeEventsCount = employeeEvents?.page.totalElements ?? 0
 
@@ -67,11 +59,6 @@ export function EmployeeDetailPage() {
           </>
         }
       >
-        {isMutationError && (
-          <Alert variant="error">
-            {getFriendlyErrorMessage(mutationError)}
-          </Alert>
-        )}
 
         {isEmployeeLoading && <PageLoading message="Carregando colaborador..." />}
 

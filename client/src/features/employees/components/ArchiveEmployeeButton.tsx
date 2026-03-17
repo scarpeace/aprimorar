@@ -15,9 +15,7 @@ export const ArchiveEmployeeButton = ({
     const isLoading = isArchiving || isUnarchiving;
 
     const handleArchive = () => {
-        if (globalThis.confirm("Tem certeza que deseja arquivar este colaborador?")) {
-            archiveEmployee(employeeId);
-        }
+        archiveEmployee(employeeId);
     };
 
     const handleUnarchive = () => {
