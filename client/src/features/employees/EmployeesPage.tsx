@@ -20,7 +20,7 @@ export function EmployeesPage() {
   const pageSize = 10
 
   const {
-    data: response,
+    data: employeesPage,
     isLoading,
     isError,
     error,
@@ -32,8 +32,7 @@ export function EmployeesPage() {
     setCurrentPage(0)
   }, [debouncedSearchTerm])
 
-  const employeeList = response?.content ?? []
-  const pageInfo = response?.page
+  const employeeList = employeesPage?.content ?? []
 
   if (isLoading) {
     return <PageLoading message="Carregando colaboradores..." />
@@ -41,15 +40,18 @@ export function EmployeesPage() {
 
   if (isError) {
     return (
-      <div className={styles.page}>
-        <PageHeader title="Colaboradores" description="Gerencie professores e equipe." />
-        <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
-      </div>
+      <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
     )
   }
 
-  const totalElements = pageInfo?.totalElements ?? 0
-  const totalPages = pageInfo?.totalPages ?? 0
+  if (employeesPage?.content.length === 0) {
+    return (
+      <EmptyCard
+        title="Nenhum colaborador encontrado"
+        description="Nenhum colaborador foi encontrado no banco de dados."
+      />
+    )
+  }
 
   return (
     <div className={styles.page}>
@@ -78,8 +80,9 @@ export function EmployeesPage() {
               <tr>
                 <th className="app-th">Nome</th>
                 <th className="app-th">Função</th>
-                <th className="app-th hidden lg:table-cell">Email</th>
                 <th className="app-th hidden lg:table-cell">PIX</th>
+                <th className="app-th hidden lg:table-cell">CPF</th>
+                <th className="app-th hidden lg:table-cell">Contato</th>
                 <th className="app-th">Ações</th>
                 <th className="app-th-center">Status</th>
               </tr>
@@ -89,8 +92,9 @@ export function EmployeesPage() {
                 <tr className="transition-colors hover:bg-base-200/70" key={employee.id}>
                   <td>{employee.name}</td>
                   <td>{dutyLabels[employee.duty]}</td>
-                  <td className="hidden whitespace-normal break-all lg:table-cell">{employee.email}</td>
                   <td className="hidden whitespace-normal break-all lg:table-cell">{employee.pix}</td>
+                  <td className="hidden whitespace-normal break-all lg:table-cell">{employee.cpf}</td>
+                  <td className="hidden whitespace-normal break-all lg:table-cell">{employee.contact}</td>
                   <td>
                     <ButtonLink size="sm" to={`/employees/${employee.id}`} variant="outline">
                       Detalhes
@@ -110,24 +114,12 @@ export function EmployeesPage() {
 
       <Pagination
         currentPage={currentPage}
-        totalElements={totalElements}
-        totalPages={totalPages}
+        totalElements={employeesPage?.page.totalElements ?? 0}
+        totalPages={employeesPage?.page.totalPages ?? 0}
         currentElementsCount={employeeList.length}
         itemName="colaboradores"
         onPageChange={setCurrentPage}
       />
-
-      {employeeList.length === 0 ? (
-        <EmptyCard
-          title="Nenhum colaborador cadastrado"
-          description="Quando você cadastrar o primeiro colaborador, ele aparecerá na tabela acima."
-          action={
-            <ButtonLink to="/employees/new" variant="secondary">
-              Novo colaborador
-            </ButtonLink>
-          }
-        />
-      ) : null}
     </div>
   )
 }
