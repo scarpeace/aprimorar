@@ -5,8 +5,8 @@ import { type LucideIcon } from "lucide-react"
 type PageHeaderProps = {
   title: string
   description?: string
-  action?: string
   link?: string
+  action?: ReactNode
   icon?: LucideIcon
   children?: ReactNode
   titleClassName?: string
@@ -38,11 +38,9 @@ export function PageHeader({
         </div>
       </div>
 
-      {link && (
-        <div className="shrink-0">
-          <ButtonLink to={link} variant="outline">
-            {action ?? "Voltar"}
-          </ButtonLink>
+      {action && (
+        <div className="shrink-0 flex gap-3">
+          {action}
         </div>
       )}
     </header>

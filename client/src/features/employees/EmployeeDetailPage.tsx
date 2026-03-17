@@ -14,6 +14,7 @@ import { useEmployeeDetailQuery } from "./hooks/use-employees"
 import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
 import { EditEmployeeButton } from "./components/EditEmployeeButton"
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton"
+import { ButtonLink } from "@/components/ui/button"
 
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -37,11 +38,19 @@ export function EmployeeDetailPage() {
   return (
     <div className={styles.page}>
       <PageHeader
-        link="/employees"
+        description="Gerencie professores e equipe."
+        title="Colaboradores"
         icon={UserCog}
-        description="Veja e gerencie as informações do colaborador"
-        title="Detalhes do colaborador"
-        titleClassName="text-2xl font-bold app-text"
+        action={
+          <>
+            <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">
+              Novo colaborador
+            </ButtonLink>
+            <ButtonLink className="sm:ml-auto" to="/employees" variant="outline">
+              Voltar
+            </ButtonLink>
+          </>
+        }
       />
 
       {/* COLABORADOR */}
