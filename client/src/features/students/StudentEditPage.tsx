@@ -19,6 +19,7 @@ import { getFriendlyErrorMessage } from "@/services/api"
 import { useStudentDetailQuery, useUpdateStudent } from "./hooks/use-students"
 import { useParentsListQuery } from "../parents/hooks/use-parents"
 import { DeleteStudentButton } from "./components/DeleteStudentButton"
+import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown"
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>()
@@ -30,10 +31,29 @@ export function StudentEditPage() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<StudentFormInput>({
     resolver: zodResolver(studentInputSchema),
     mode: "onBlur",
+    values: {
+      name: student?.name ?? "",
+      birthdate: formatDateInputValue(student?.birthdate ?? ""),
+      cpf: student?.cpf ?? "",
+      contact: student?.contact ?? "",
+      email: student?.email ?? "",
+      school: student?.school ?? "",
+      address: {
+        street: student?.address?.street ?? "",
+        number: student?.address?.number ?? "",
+        complement: student?.address?.complement ?? "",
+        district: student?.address?.district ?? "",
+        city: student?.address?.city ?? "",
+        state: student?.address?.state ?? "",
+        zip: student?.address?.zip ?? "",
+      },
+      parentId: student?.parent?.id ?? "Responsável não encontrado",
+    }
   })
   const registerWithMask = useHookFormMask(register)
 
@@ -43,25 +63,6 @@ export function StudentEditPage() {
     error: parentsListQueryError,
   } = useParentsListQuery()
 
-  useEffect(() => {
-    if (student) {
-      setValue("name", student.name)
-      setValue("birthdate", formatDateInputValue(student.birthdate))
-      setValue("cpf", student.cpf)
-      setValue("contact", student.contact)
-      setValue("email", student.email)
-      setValue("school", student.school)
-      setValue("address.street", student.address.street)
-      setValue("address.number", student.address.number)
-      setValue("address.complement", student.address.complement ?? "")
-      setValue("address.district", student.address.district)
-      setValue("address.city", student.address.city)
-      setValue("address.state", student.address.state)
-      setValue("address.zip", student.address.zip)
-      setValue("parentId", student.parent.id)
-    }
-  }, [student, setValue])
-
   const { mutate: updateStudent, isPending: isUpdating, error: updateError } = useUpdateStudent(studentId)
 
   const onSubmit = (data: StudentFormInput) => {
@@ -70,6 +71,8 @@ export function StudentEditPage() {
 
   const isMutationPending = isUpdating
   const submitError = updateError
+
+  const selectedParentId = watch("parentId")
 
   if (!id) {
     return (
@@ -110,37 +113,21 @@ export function StudentEditPage() {
         <div className={styles.formGrid}>
           <FormField
             className={`${styles.field} ${styles.span2}`}
-            label="Responsável"
+            label=""
             htmlFor="parentId"
             error={errors.parentId?.message}
           >
-            <div className="flex flex-col gap-2">
-              <select
-                id="parentId"
-                className="app-select"
-                {...register("parentId")}
-                disabled={isParentsListLoading}
-              >
-                <option value="">
-                  {isParentsListLoading ? "Carregando responsáveis..." : "Selecione um responsável"}
-                </option>
-                {parentsList?.map((parent: ParentResponse) => (
-                  <option key={parent.id} value={parent.id}>
-                    {parent.name} ({parent.cpf})
-                  </option>
-                ))}
-              </select>
+            {/* Registra o campo silenciosamente */}
+            <input type="hidden" {...register("parentId")} />
+            <ParentSelectDropdown
+              value={selectedParentId}
+              onChange={(id) => setValue("parentId", id, { shouldValidate: true, shouldDirty: true })}
+              hasError={!!errors.parentId}
+            />
 
-              {parentsListQueryError && (
-                <p className="text-xs text-error">
-                  {getFriendlyErrorMessage(parentsListQueryError)}
-                </p>
-              )}
-
-              <p className="text-xs text-muted-foreground mt-1">
-                Não encontrou o responsável? <ButtonLink to="/parents/new" variant="ghost" size="sm" className="h-auto p-0 underline">Cadastre um novo aqui</ButtonLink>
-              </p>
-            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Não encontrou o responsável? <ButtonLink to="/parents/new" variant="ghost" size="sm" className="h-auto p-0 underline">Cadastre um novo aqui</ButtonLink>
+            </p>
           </FormField>
         </div>
       </SectionCard>

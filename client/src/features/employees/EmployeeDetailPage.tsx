@@ -16,6 +16,7 @@ import { EditEmployeeButton } from "./components/EditEmployeeButton"
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton"
 import { ButtonLink } from "@/components/ui/button"
 import { eventResponse } from "@/lib/schemas"
+import { formatDateShortYear } from "@/lib/shared/formatter"
 
 //TODO: Tá renderizando duas (ou quatro não sei) vezes
 export function EmployeeDetailPage() {
@@ -36,9 +37,9 @@ export function EmployeeDetailPage() {
     { label: "Contato", value: employeeData?.contact },
     { label: "CPF", value: employeeData?.cpf },
     { label: "Chave PIX", value: employeeData?.pix },
-    { label: "Data de nascimento", value: employeeData?.birthdate },
+    { label: "Data de nascimento", value: formatDateShortYear(employeeData?.birthdate ?? "") },
     { label: "Status", value: employeeData?.archivedAt ? "Arquivado" : "Ativo" },
-    { label: "Criado em", value: employeeData?.createdAt },
+    { label: "Criado em", value: formatDateShortYear(employeeData?.createdAt ?? "") },
   ]
 
   return (

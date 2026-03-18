@@ -25,15 +25,15 @@ export const studentInputSchema = z.object({
 export const studentResponse = z.object({
   id: z.uuid(),
   name: z.string(),
+  birthdate: z.string(),
   contact: z.string().transform(formatPhone),
   email: z.email(),
   cpf: z.string().transform(formatCpf),
-  birthdate: z.string(),
   age: z.number().int().nonnegative(),
   school: z.string(),
-  archivedAt: z.coerce.date().nullable(),
   address: addressResponseSchema,
   parent: parentResponseSchema,
+  archivedAt: z.coerce.date().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date().nullable(),
 })

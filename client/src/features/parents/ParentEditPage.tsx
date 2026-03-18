@@ -15,7 +15,6 @@ import { getFriendlyErrorMessage } from "@/services/api"
 import { useParentDetailQuery, useUpdateParent } from "./hooks/use-parents"
 import { DeleteParentButton } from "./components/DeleteParentButton"
 
-
 export function ParentEditPage() {
 
   const { id } = useParams<{ id: string }>()
@@ -38,8 +37,6 @@ export function ParentEditPage() {
   const {
     register,
     handleSubmit,
-    reset,
-    setValue,
     formState: { errors },
   } = useForm<ParentFormInput>({
     resolver: zodResolver(parentFormSchema),
@@ -55,7 +52,6 @@ export function ParentEditPage() {
   const onSubmit = (data: ParentFormInput) => {
     updateParent(data)
   }
-
 
   if (isParentLoading) {
     return <PageLoading message="Carregando responsável para edição..." />

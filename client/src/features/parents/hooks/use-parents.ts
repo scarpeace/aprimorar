@@ -80,6 +80,7 @@ export function useDeleteParent() {
       toast.success("Responsável deletado com sucesso!")
       navigate("/parents")
       queryClient.invalidateQueries({ queryKey: queryKeys.parents.lists() })
+      queryClient.invalidateQueries({ queryKey: ["students", "by-parent"] })
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
     },
   })

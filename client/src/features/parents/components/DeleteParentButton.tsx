@@ -57,17 +57,18 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
         isOpen={isOpen}
         onClose={handleClose}
         onConfirm={handleConfirmDelete}
-        title="Excluir Responsável"
+        title="Restrição de Exclusão"
         isPending={isDeleting}
         isLoadingEvents={isStudentsLoading}
         eventsCount={studentsCount}
         itemName="responsável"
+        isBlocker={studentsCount > 0}
         phantomWarning={
           studentsCount > 0 ? (
-            <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm mt-3">
-              Este responsável possui <strong>{studentsCount} aluno(s) vinculado(s)</strong>.
-              Ao excluí-lo, certifique-se de que os dados não afetarão o histórico desses alunos.
-              Esta ação é permanente e não pode ser desfeita.
+            <div className="bg-error/10 text-error-content p-4 rounded-md text-sm mt-3">
+              Este responsável ainda possui <strong>{studentsCount} aluno(s) vinculado(s)</strong> no sistema.
+              <br /><br />
+              Você não pode excluí-lo sem antes acessar os alunos e excluí-los individualmente. Isso garante que o fluxo financeiro e histórico de eventos deles sejam tratados da forma correta.
             </div>
           ) : (
             <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm mt-3">

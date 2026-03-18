@@ -11,6 +11,7 @@ interface DeleteConfirmationModalProps {
   isLoadingEvents?: boolean
   eventsCount?: number
   itemName?: string
+  isBlocker?: boolean
   phantomWarning?: ReactNode
   confirmText?: string
   cancelText?: string
@@ -25,6 +26,7 @@ export const DeleteConfirmationModal = ({
   isLoadingEvents = false,
   eventsCount = 0,
   itemName = "item",
+  isBlocker = false,
   phantomWarning,
   confirmText = "Sim, Excluir",
   cancelText = "Cancelar",
@@ -45,11 +47,19 @@ export const DeleteConfirmationModal = ({
           <p className="py-4 text-muted-foreground">Verificando dados vinculados...</p>
         ) : hasEvents ? (
           <div className="py-4 space-y-4">
-            <p>
-              <strong>Atenção:</strong> Este {itemName} possui <span className="text-secondary font-semibold">{eventsCount}</span> evento(s) vinculado(s).
-            </p>
-            {phantomWarning}
-            <p className="font-semibold mt-2">Deseja prosseguir com a exclusão?</p>
+            {isBlocker ? (
+              <>
+                {phantomWarning}
+              </>
+            ) : (
+              <>
+                <p>
+                  <strong>Atenção:</strong> Este {itemName} possui <span className="text-secondary font-semibold">{eventsCount}</span> evento(s) vinculado(s).
+                </p>
+                {phantomWarning}
+                <p className="font-semibold mt-2">Deseja prosseguir com a exclusão?</p>
+              </>
+            )}
           </div>
         ) : (
           <p className="py-4">
@@ -65,17 +75,19 @@ export const DeleteConfirmationModal = ({
               onClick={onClose}
               disabled={isPending}
             >
-              {cancelText}
+              {isBlocker ? "Entendi" : cancelText}
             </Button>
-            <Button
-              type="button"
-              variant="danger"
-              onClick={onConfirm}
-              disabled={isPending || isLoadingEvents}
-              className="ml-2"
-            >
-              {isPending ? "Excluindo..." : confirmText}
-            </Button>
+            {!isBlocker && (
+              <Button
+                type="button"
+                variant="danger"
+                onClick={onConfirm}
+                disabled={isPending || isLoadingEvents}
+                className="ml-2"
+              >
+                {isPending ? "Excluindo..." : confirmText}
+              </Button>
+            )}
           </form>
         </div>
       </div>

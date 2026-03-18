@@ -53,21 +53,18 @@ export function StudentCreatePage() {
             htmlFor="parentId"
             error={errors.parentId?.message}
           >
-            <div className="flex flex-col gap-2">
 
-              {/* Registra o campo silenciosamente */}
-              <input type="hidden" {...register("parentId")} />
+            {/* Registra o campo silenciosamente */}
+            <input type="hidden" {...register("parentId")} />
+            <ParentSelectDropdown
+              value={selectedParentId}
+              onChange={(id) => setValue("parentId", id, { shouldValidate: true, shouldDirty: true })}
+              hasError={!!errors.parentId}
+            />
 
-              <ParentSelectDropdown
-                value={selectedParentId}
-                onChange={(id) => setValue("parentId", id, { shouldValidate: true, shouldDirty: true })}
-                hasError={!!errors.parentId}
-              />
-
-              <p className="text-xs text-muted-foreground mt-1">
-                Não encontrou o responsável? <ButtonLink to="/parents/new" variant="ghost" size="sm" className="h-auto p-0 underline">Cadastre um novo aqui</ButtonLink>
-              </p>
-            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Não encontrou o responsável? <ButtonLink to="/parents/new" variant="ghost" size="sm" className="h-auto p-0 underline">Cadastre um novo aqui</ButtonLink>
+            </p>
           </FormField>
         </div>
       </SectionCard>
