@@ -6,10 +6,10 @@ import type { EventFormInput } from "@/lib/schemas"
 
 // --- QUERIES ---
 
-export function useEventsQuery(page = 0, size = 20, sortBy = "startDate", options = {}) {
+export function useEventsQuery(page = 0, size = 20, sortBy = "startDate", search?: string, options = {}) {
   return useQuery({
-    queryKey: queryKeys.events.list({ page, size, sortBy }),
-    queryFn: () => eventsApi.list(page, size, sortBy),
+    queryKey: queryKeys.events.list({ page, size, sortBy, search }),
+    queryFn: () => eventsApi.list(page, size, sortBy, search),
     placeholderData: keepPreviousData,
     ...options
   })

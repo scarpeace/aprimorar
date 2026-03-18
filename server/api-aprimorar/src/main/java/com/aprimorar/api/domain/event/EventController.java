@@ -40,9 +40,11 @@ public class EventController {
 
     @Operation(summary = "List all events", description = "Retrieves all events from database with pagination")
     @GetMapping
-    public ResponseEntity<Page<EventResponseDTO>> getEvents(@PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<Page<EventResponseDTO>> getEvents(
+            @PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String search) {
 
-        Page<EventResponseDTO> events = eventService.getEvents(pageable);
+        Page<EventResponseDTO> events = eventService.getEvents(pageable, search);
         return ResponseEntity.ok(events);
     }
 

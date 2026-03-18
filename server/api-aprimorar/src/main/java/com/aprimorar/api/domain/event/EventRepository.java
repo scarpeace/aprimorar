@@ -11,7 +11,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface EventRepository extends JpaRepository<Event, UUID> {
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecificationExecutor<Event> {
 
     @Modifying
     @Query("UPDATE Event e SET e.student.id = :ghostId WHERE e.student.id = :studentId")

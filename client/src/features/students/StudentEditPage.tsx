@@ -57,12 +57,6 @@ export function StudentEditPage() {
   })
   const registerWithMask = useHookFormMask(register)
 
-  const {
-    data: parentsList,
-    isLoading: isParentsListLoading,
-    error: parentsListQueryError,
-  } = useParentsListQuery()
-
   const { mutate: updateStudent, isPending: isUpdating, error: updateError } = useUpdateStudent(studentId)
 
   const onSubmit = (data: StudentFormInput) => {

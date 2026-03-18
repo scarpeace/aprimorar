@@ -4,9 +4,11 @@ import { PageHeader } from "@/components/ui/page-header"
 import { ButtonLink } from "@/components/ui/button"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/events/EventsPage.module.css"
+import { useDebounce } from "@/hooks/use-debounce"
 
 export function EventsPage() {
   const [searchTerm, setSearchTerm] = useState("")
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
   return (
     <div className={styles.page}>
@@ -27,9 +29,9 @@ export function EventsPage() {
       <div className="app-table-wrap">
         <EventsTable
           variant="eventsPage"
+          searchTerm={debouncedSearchTerm}
         />
       </div>
-
     </div>
   )
 }

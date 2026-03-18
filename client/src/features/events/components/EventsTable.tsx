@@ -5,19 +5,25 @@ import { LoadingCard } from "@/components/ui/loading-card"
 import { eventContentLabels } from "@/lib/shared/enums"
 import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter"
 import { useEventsByEmployeeQuery, useEventsByStudentQuery, useEventsQuery } from "../hooks/use-events"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Pagination } from "@/components/ui/pagination"
 
 type EventsTableProps = {
   variant: "eventsPage" | "embeddedEmployee" | "embeddedStudent"
   ownerId?: string
+  searchTerm?: string
 }
 
-export function EventsTable({ variant = "eventsPage", ownerId }: Readonly<EventsTableProps>) {
+export function EventsTable({ variant = "eventsPage", ownerId, searchTerm }: Readonly<EventsTableProps>) {
   const [currentPage, setCurrentPage] = useState(0)
   const pageSize = 10
 
-  const allResults = useEventsQuery(currentPage, pageSize, "startDate", {
+  // Reset pagination when search changes
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [searchTerm])
+
+  const allResults = useEventsQuery(currentPage, pageSize, "startDate", searchTerm, {
     enabled: variant === "eventsPage"
   });
   const employeeResults = useEventsByEmployeeQuery(ownerId!, currentPage, pageSize, {

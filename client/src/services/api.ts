@@ -133,8 +133,9 @@ export const parentsApi = {
 
 //TODO Implementar arquivamento e desarquivamento de eventos quando o backend expor esse suporte.
 export const eventsApi = {
-  async list(page = 0, size = 20, sortBy = "startDate",): Promise<PageResponse<EventResponse>> {
-    const { data } = await api.get<PageResponse<EventResponse>>(`/v1/events?page=${page}&size=${size}&sort=${sortBy}`)
+  async list(page = 0, size = 20, sortBy = "startDate", search?: string): Promise<PageResponse<EventResponse>> {
+    const searchParam = search ? `&search=${encodeURIComponent(search)}` : ""
+    const { data } = await api.get<PageResponse<EventResponse>>(`/v1/events?page=${page}&size=${size}&sort=${sortBy}${searchParam}`)
     return pageResponseSchema(eventResponse).parse(data);
   },
 
