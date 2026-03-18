@@ -40,16 +40,10 @@ export function EmployeesPage() {
 
   if (isError) {
     return (
-      <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
-    )
-  }
-
-  if (employeesPage?.content.length === 0) {
-    return (
-      <EmptyCard
-        title="Nenhum colaborador encontrado"
-        description="Nenhum colaborador foi encontrado no banco de dados."
-      />
+      <>
+        <PageHeader title="Colaboradores" description="Gerencie professores e equipe." icon={UserCog} />
+        <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
+      </>
     )
   }
 
@@ -122,6 +116,19 @@ export function EmployeesPage() {
         itemName="colaboradores"
         onPageChange={setCurrentPage}
       />
+
+      {employeeList.length === 0 && debouncedSearchTerm === "" && (
+        <EmptyCard
+          title="Nenhum colaborador encontrado"
+          description=""
+          action={
+            <ButtonLink to="/employees/new" variant="secondary">
+              Novo aluno
+            </ButtonLink>
+          }
+        />
+      )}
     </div>
+
   )
 }

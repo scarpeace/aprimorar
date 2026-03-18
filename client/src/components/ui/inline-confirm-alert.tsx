@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react"
+import React, { type ReactNode } from "react"
 import { AlertTriangle, Info, AlertCircle, CheckCircle } from "lucide-react"
 
 interface InlineConfirmAlertProps {
@@ -22,7 +22,7 @@ export function InlineConfirmAlert({
   className = "",
   isLoading = false,
 }: InlineConfirmAlertProps) {
-  
+
   const variantIcons = {
     warning: <AlertTriangle className="h-6 w-6 shrink-0" />,
     error: <AlertCircle className="h-6 w-6 shrink-0" />,
@@ -42,15 +42,15 @@ export function InlineConfirmAlert({
       {variantIcons[variant]}
       <span className="text-sm font-medium">{message}</span>
       <div className="flex gap-2">
-        <button 
-          className="btn btn-sm btn-ghost" 
+        <button
+          className="btn btn-sm btn-ghost"
           onClick={onCancel}
           disabled={isLoading}
         >
           {cancelText}
         </button>
-        <button 
-          className={`btn btn-sm ${confirmBtnClasses[variant]}`} 
+        <button
+          className={`btn btn-sm ${confirmBtnClasses[variant]}`}
           onClick={onConfirm}
           disabled={isLoading}
         >
@@ -60,7 +60,7 @@ export function InlineConfirmAlert({
               Aguarde...
             </>
           ) : (
-             confirmText
+            confirmText
           )}
         </button>
       </div>

@@ -19,7 +19,7 @@ export function StudentsPage() {
   const pageSize = 10
 
   const {
-    data: response,
+    data: studentsPage,
     isLoading,
     isError,
     error,
@@ -31,8 +31,7 @@ export function StudentsPage() {
     setCurrentPage(0)
   }, [debouncedSearchTerm])
 
-  const studentList = response?.content ?? []
-  const pageInfo = response?.page
+  const studentList = studentsPage?.content ?? []
 
   if (isLoading) {
     return <PageLoading message="Carregando alunos..." />
@@ -46,9 +45,6 @@ export function StudentsPage() {
       </div>
     )
   }
-
-  const totalElements = pageInfo?.totalElements ?? 0
-  const totalPages = pageInfo?.totalPages ?? 0
 
   return (
     <div className={styles.page}>
@@ -108,24 +104,24 @@ export function StudentsPage() {
 
       <Pagination
         currentPage={currentPage}
-        totalElements={totalElements}
-        totalPages={totalPages}
+        totalElements={studentsPage?.page.totalElements ?? 0}
+        totalPages={studentsPage?.page.totalPages ?? 0}
         currentElementsCount={studentList.length}
         itemName="alunos"
         onPageChange={setCurrentPage}
       />
 
-      {studentList.length === 0 ? (
+      {studentList.length === 0 && debouncedSearchTerm === "" && (
         <EmptyCard
-          title="Nenhum aluno cadastrado"
-          description="Quando você cadastrar o primeiro aluno, ele aparecerá na tabela acima."
+          title="Nenhum aluno encontrado"
+          description=""
           action={
             <ButtonLink to="/students/new" variant="secondary">
               Novo aluno
             </ButtonLink>
           }
         />
-      ) : null}
+      )}
     </div>
   )
 }
