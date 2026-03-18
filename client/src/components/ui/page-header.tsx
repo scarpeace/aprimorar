@@ -5,7 +5,10 @@ type PageHeaderProps = {
   title: string
   description?: string
   action?: ReactNode
-  icon?: LucideIcon
+  leading?: ReactNode
+  Icon?: React.ElementType
+  iconClassName?: string
+  iconBgClassName?: string
   children?: ReactNode
   titleClassName?: string
 }
@@ -14,7 +17,10 @@ export function PageHeader({
   title,
   description,
   action,
-  icon: Icon,
+  leading,
+  Icon,
+  iconClassName,
+  iconBgClassName,
   children,
   titleClassName,
 }: Readonly<PageHeaderProps>) {
@@ -22,8 +28,8 @@ export function PageHeader({
     <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-3">
       <div className="flex items-center gap-4 w-full min-w-0 sm:flex-1">
         {Icon ? (
-          <div className="flex h-26 w-30 items-center justify-center rounded-full bg-success/15" >
-            <Icon className="h-16 w-16 text-success" />
+          <div className={`flex h-26 w-30 items-center justify-center rounded-full ${iconBgClassName || "bg-success/15"}`} >
+            <Icon className={`h-16 w-16 ${iconClassName || "text-success"}`} />
           </div>
         ) : null}
         <div className="w-full min-w-0">

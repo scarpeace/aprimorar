@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Users } from "lucide-react"
+import { GraduationCap, Users } from "lucide-react"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
 import { ButtonLink } from "@/components/ui/button"
@@ -16,7 +16,9 @@ export function StudentsPage() {
       <PageHeader
         description="Gerencie cadastros e matrículas."
         title="Alunos"
-        icon={Users}
+        Icon={GraduationCap}
+        iconClassName="text-success"
+        iconBgClassName="bg-success/15"
       >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput

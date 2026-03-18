@@ -43,7 +43,13 @@ export function EmployeesPage() {
   if (isError) {
     return (
       <div className={styles.page}>
-        <PageHeader title="Colaboradores" description="Gerencie professores e equipe." icon={UserCog} />
+        <PageHeader
+          description="Gerencie professores e equipe."
+          title="Colaboradores"
+          Icon={UserCog}
+          iconClassName="text-warning"
+          iconBgClassName="bg-warning/20"
+        ></PageHeader>
         <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
       </div>
     )
@@ -54,7 +60,9 @@ export function EmployeesPage() {
       <PageHeader
         description="Gerencie professores e equipe."
         title="Colaboradores"
-        icon={UserCog}
+        Icon={UserCog}
+        iconClassName="text-warning"
+        iconBgClassName="bg-warning/20"
       >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput

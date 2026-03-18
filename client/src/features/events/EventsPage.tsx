@@ -16,7 +16,9 @@ export function EventsPage() {
       <PageHeader
         description="Gerencie os atendimentos."
         title="Atendimentos"
-        icon={CalendarCheck2}
+        Icon={CalendarCheck2}
+        iconClassName="text-primary"
+        iconBgClassName="bg-primary/15"
       >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput

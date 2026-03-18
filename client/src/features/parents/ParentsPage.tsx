@@ -52,7 +52,9 @@ export function ParentsPage() {
       <PageHeader
         description="Gerencie pais e responsáveis."
         title="Responsáveis"
-        icon={Handshake}
+        Icon={Handshake}
+        iconClassName="text-error"
+        iconBgClassName="bg-error/15"
       >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput
