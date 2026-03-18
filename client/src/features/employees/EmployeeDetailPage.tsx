@@ -15,8 +15,11 @@ import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
 import { EditEmployeeButton } from "./components/EditEmployeeButton"
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton"
 import { ButtonLink } from "@/components/ui/button"
-import { eventResponse } from "@/lib/schemas"
-import { formatDateShortYear } from "@/lib/shared/formatter"
+import { eventResponse, type EventResponse } from "@/lib/schemas"
+import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter"
+import { Table, type ColumnDef } from "@/components/ui/table"
+import { useEventsByEmployeeQuery } from "../events/hooks/use-events"
+import { eventContentLabels } from "@/lib/shared/enums"
 
 //TODO: Tá renderizando duas (ou quatro não sei) vezes
 export function EmployeeDetailPage() {
@@ -30,6 +33,10 @@ export function EmployeeDetailPage() {
     isFetched: isEmployeeFetched }
     = useEmployeeDetailQuery(employeeId)
 
+  const { data: employeeEventsData,
+    isLoading: isEmployeeEventsLoading,
+    error: employeeEventsError } = useEventsByEmployeeQuery(employeeId)
+
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: employeeData?.name },
     { label: "E-mail", value: employeeData?.email },
@@ -41,6 +48,14 @@ export function EmployeeDetailPage() {
     { label: "Status", value: employeeData?.archivedAt ? "Arquivado" : "Ativo" },
     { label: "Criado em", value: formatDateShortYear(employeeData?.createdAt ?? "") },
   ]
+
+  const myEventsColumns: ColumnDef<EventResponse>[] = [
+    { header: "Aluno", accessor: (event) => event.studentName },
+    { header: "Data", accessor: (event) => formatDateShortYear(event.startDate) },
+    { header: "Horário", accessor: (event) => `${formatTime(event.startDate)} às ${formatTime(event.endDate)}` },
+    { header: "Conteúdo", accessor: (event) => eventContentLabels[event.content] },
+    { header: "Pagamento", accessor: (event) => brl.format(event.payment) },
+  ];
 
   return (
     <div className={styles.page}>
@@ -93,10 +108,7 @@ export function EmployeeDetailPage() {
         title="Eventos vinculados"
         description={`Total de eventos vinculados ao colaborador: ${employeeData?.name}`}
       >
-        <EventsTable
-          variant="embeddedEmployee"
-          ownerId={employeeId}
-        />
+        <EventsTable variant={"embeddedEmployee"} ownerId={employeeId} />
       </SectionCard>
     </div>
   )

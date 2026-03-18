@@ -24,13 +24,15 @@ export function useEventDetailQuery(id: string) {
 }
 
 export function useEventsByEmployeeQuery(id: string, page = 0, size = 20, options = {}) {
-  return useQuery({
+  const queryResults = useQuery({
     queryKey: [...queryKeys.events.byEmployee(id), { page, size }],
     queryFn: () => eventsApi.listByEmployee(id, page, size),
     enabled: !!id,
     placeholderData: keepPreviousData,
     ...options
   })
+
+  return queryResults;
 }
 
 export function useEventsByStudentQuery(id: string, page = 0, size = 20, options = {}) {
@@ -93,3 +95,4 @@ export function useDeleteEvent() {
     },
   })
 }
+
