@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { eventsApi } from "@/services/api"
 import { queryKeys } from "@/lib/query/queryKeys"
 import type { EventFormInput } from "@/lib/schemas"
+import { toast } from "sonner"
 
 // --- QUERIES ---
 
@@ -54,6 +55,7 @@ export function useCreateEvent() {
   return useMutation({
     mutationFn: (data: EventFormInput) => eventsApi.create(data),
     onSuccess: (createdEvent) => {
+      toast.success("Evento criado com sucesso!")
       queryClient.invalidateQueries({ queryKey: queryKeys.events.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.students.all })
@@ -70,6 +72,7 @@ export function useUpdateEvent(id: string) {
   return useMutation({
     mutationFn: (data: EventFormInput) => eventsApi.update(id, data),
     onSuccess: () => {
+      toast.success("Evento atualizado com sucesso!")
       queryClient.invalidateQueries({ queryKey: queryKeys.events.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(id) })
       // Invalida também os alunos e colaboradores pois podem ter mudado
@@ -87,6 +90,7 @@ export function useDeleteEvent() {
   return useMutation({
     mutationFn: (id: string) => eventsApi.delete(id),
     onSuccess: async (_, id) => {
+      toast.success("Evento deletado com sucesso!")
       navigate("/events")
       queryClient.invalidateQueries({ queryKey: queryKeys.events.lists() })
       queryClient.invalidateQueries({ queryKey: ["events", "by-student"] })
