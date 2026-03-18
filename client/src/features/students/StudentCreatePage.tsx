@@ -6,31 +6,28 @@ import { FormField } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/ui/page-header"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/students/StudentCreatePage.module.css"
-import { studentInputSchema, type StudentFormInput, type ParentResponse } from "@/lib/schemas"
+import { studentInputSchema, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
-import { getFriendlyErrorMessage } from "@/services/api"
 import { useCreateStudent } from "./hooks/use-students"
-import { useParentsListQuery } from "../parents/hooks/use-parents"
+import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown"
 
 export function StudentCreatePage() {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<StudentFormInput>({
     resolver: zodResolver(studentInputSchema),
     mode: "onBlur",
   })
 
-  const {
-    data: parentsList,
-    isLoading: isParentsListLoading,
-    error: parentsListQueryError,
-  } = useParentsListQuery()
+  const selectedParentId = watch("parentId")
 
   const registerWithMask = useHookFormMask(register)
 
-  const { mutate: createStudent, isPending: isSubmitting, error: submitError } = useCreateStudent()
+  const { mutate: createStudent, isPending: isSubmitting } = useCreateStudent()
 
   const onSubmit = (data: StudentFormInput) => {
     createStudent(data)
@@ -56,33 +53,18 @@ export function StudentCreatePage() {
             htmlFor="parentId"
             error={errors.parentId?.message}
           >
-            <div className="flex flex-col gap-2">
-              <select
-                id="parentId"
-                className="app-select"
-                {...register("parentId")}
-                disabled={isParentsListLoading}
-              >
-                <option value="">
-                  {isParentsListLoading ? "Carregando responsáveis..." : "Selecione um responsável"}
-                </option>
-                {parentsList?.filter((parent: ParentResponse) => !parent.archivedAt).map((parent: ParentResponse) => (
-                  <option key={parent.id} value={parent.id}>
-                    {parent.name}
-                  </option>
-                ))}
-              </select>
 
-              {parentsListQueryError && (
-                <p className="text-xs text-error">
-                  {getFriendlyErrorMessage(parentsListQueryError)}
-                </p>
-              )}
+            {/* Registra o campo silenciosamente */}
+            <input type="hidden" {...register("parentId")} />
+            <ParentSelectDropdown
+              value={selectedParentId}
+              onChange={(id) => setValue("parentId", id, { shouldValidate: true, shouldDirty: true })}
+              hasError={!!errors.parentId}
+            />
 
-              <p className="text-xs text-muted-foreground mt-1">
-                Não encontrou o responsável? <ButtonLink to="/parents/new" variant="ghost" size="sm" className="h-auto p-0 underline">Cadastre um novo aqui</ButtonLink>
-              </p>
-            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Não encontrou o responsável? <ButtonLink to="/parents/new" variant="ghost" size="sm" className="h-auto p-0 underline">Cadastre um novo aqui</ButtonLink>
+            </p>
           </FormField>
         </div>
       </SectionCard>
@@ -214,14 +196,11 @@ export function StudentCreatePage() {
           </div>
         </SectionCard>
 
-
-        {submitError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(submitError)}</div> : null}
-
         <div className={styles.actions}>
           <ButtonLink to="/students" variant="outline">
             Cancelar
           </ButtonLink>
-          <Button type="submit" disabled={isSubmitting} variant="primary">
+          <Button type="submit" disabled={isSubmitting} variant="success">
             {isSubmitting ? "Salvando..." : "Criar aluno"}
           </Button>
         </div>

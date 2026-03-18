@@ -135,13 +135,13 @@ def extract_json_block(markdown_text: str) -> dict[str, Any]:
     if not blocks:
         raise ValidationError(
             [
-                "Nao foi encontrado bloco JSON. Adicione um bloco com ```json ... ``` em sprint.md"
+                "Nao foi encontrado bloco JSON. Adicione um bloco com ```json ... ``` em docs/sprint.md"
             ]
         )
     if len(blocks) > 1:
         raise ValidationError(
             [
-                "Foram encontrados multiplos blocos JSON. Mantenha apenas um bloco em sprint.md"
+                "Foram encontrados multiplos blocos JSON. Mantenha apenas um bloco em docs/sprint.md"
             ]
         )
 
@@ -149,7 +149,9 @@ def extract_json_block(markdown_text: str) -> dict[str, Any]:
     try:
         parsed = json.loads(block)
     except json.JSONDecodeError as exc:
-        raise ValidationError([f"JSON invalido no bloco de sprint.md: {exc}"]) from exc
+        raise ValidationError(
+            [f"JSON invalido no bloco de docs/sprint.md: {exc}"]
+        ) from exc
 
     if not isinstance(parsed, dict):
         raise ValidationError(["O bloco JSON precisa ser um objeto no nivel raiz"])
@@ -1240,19 +1242,21 @@ def run_sync(spec: dict[str, Any], dry_run: bool) -> None:
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="sprint.py",
-        description="Sincroniza sprint.md (JSON) com issues e GitHub Project",
+        description="Sincroniza docs/sprint.md (JSON) com issues e GitHub Project",
     )
 
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    validate_parser = subparsers.add_parser("validate", help="Valida arquivo sprint.md")
+    validate_parser = subparsers.add_parser(
+        "validate", help="Valida arquivo docs/sprint.md"
+    )
     validate_parser.add_argument(
-        "--file", default="sprint.md", help="Caminho do arquivo markdown"
+        "--file", default="docs/sprint.md", help="Caminho do arquivo markdown"
     )
 
     sync_parser = subparsers.add_parser("sync", help="Sincroniza com GitHub")
     sync_parser.add_argument(
-        "--file", default="sprint.md", help="Caminho do arquivo markdown"
+        "--file", default="docs/sprint.md", help="Caminho do arquivo markdown"
     )
     mode_group = sync_parser.add_mutually_exclusive_group()
     mode_group.add_argument(

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { parentsApi, studentsApi } from "@/services/api"
 import { queryKeys } from "@/lib/query/queryKeys"
 import type { ParentFormInput } from "@/lib/schemas"
+import { toast } from "sonner"
 
 // --- QUERIES ---
 
@@ -28,11 +29,12 @@ export function useParentDetailQuery(id: string) {
   })
 }
 
-export function useStudentsByParentQuery(parentId: string) {
+export function useStudentsByParentQuery(parentId: string, options = {}) {
   return useQuery({
     queryKey: queryKeys.students.byParent(parentId),
     queryFn: () => studentsApi.listByParent(parentId),
     enabled: !!parentId,
+    ...options
   })
 }
 
@@ -45,6 +47,7 @@ export function useCreateParent() {
   return useMutation({
     mutationFn: (data: ParentFormInput) => parentsApi.create(data),
     onSuccess: (createdParent) => {
+      toast.success("Responsável criado com sucesso!")
       queryClient.invalidateQueries({ queryKey: queryKeys.parents.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       navigate(`/parents/${createdParent.id}`)
@@ -59,6 +62,7 @@ export function useUpdateParent(id: string) {
   return useMutation({
     mutationFn: (data: ParentFormInput) => parentsApi.update(id, data),
     onSuccess: (updatedParent) => {
+      toast.success("Responsável atualizado com sucesso!")
       queryClient.invalidateQueries({ queryKey: queryKeys.parents.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.parents.detail(id) })
       navigate(`/parents/${id}`)
@@ -73,8 +77,10 @@ export function useDeleteParent() {
   return useMutation({
     mutationFn: (id: string) => parentsApi.delete(id),
     onSuccess: async (_, id) => {
+      toast.success("Responsável deletado com sucesso!")
       navigate("/parents")
       queryClient.invalidateQueries({ queryKey: queryKeys.parents.lists() })
+      queryClient.invalidateQueries({ queryKey: ["students", "by-parent"] })
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
     },
   })
@@ -86,6 +92,7 @@ export function useArchiveParent() {
   return useMutation({
     mutationFn: (id: string) => parentsApi.archive(id),
     onSuccess: (_, id) => {
+      toast.success("Responsável arquivado com sucesso!")
       queryClient.invalidateQueries({ queryKey: queryKeys.parents.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.parents.detail(id) })
     },
@@ -98,6 +105,7 @@ export function useUnarchiveParent() {
   return useMutation({
     mutationFn: (id: string) => parentsApi.unarchive(id),
     onSuccess: (_, id) => {
+      toast.success("Responsável desarquivado com sucesso!")
       queryClient.invalidateQueries({ queryKey: queryKeys.parents.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.parents.detail(id) })
     },

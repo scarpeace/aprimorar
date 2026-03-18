@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,9 +62,14 @@ public class EventService {
     /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
-    public Page<EventResponseDTO> getEvents(Pageable pageable) {
-
-        Page<Event> eventPage = eventRepo.findAll(pageable);
+    public Page<EventResponseDTO> getEvents(Pageable pageable, String search) {
+        Page<Event> eventPage;
+        if (search != null && !search.trim().isEmpty()) {
+            Specification<Event> spec = EventSpecifications.searchContainsIgnoreCase(search.trim());
+            eventPage = eventRepo.findAll(spec, pageable);
+        } else {
+            eventPage = eventRepo.findAll(pageable);
+        }
         log.info("Consulta de eventos finalizada, {} registros encontrados.", eventPage.getTotalElements());
         return eventPage.map(eventMapper::convertToDto);
     }

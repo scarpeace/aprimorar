@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { Handshake, User2, Users } from "lucide-react"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
@@ -18,7 +19,7 @@ export function ParentsPage() {
   const pageSize = 10
 
   const {
-    data: response,
+    data: parentsPage,
     isLoading,
     isError,
     error,
@@ -30,8 +31,7 @@ export function ParentsPage() {
     setCurrentPage(0)
   }, [debouncedSearchTerm])
 
-  const parentList = response?.content ?? []
-  const pageInfo = response?.page
+  const parentList = parentsPage?.content ?? []
 
   if (isLoading) {
     return <PageLoading message="Carregando responsáveis..." />
@@ -46,14 +46,15 @@ export function ParentsPage() {
     )
   }
 
-  const totalElements = pageInfo?.totalElements ?? 0
-  const totalPages = pageInfo?.totalPages ?? 0
-
   return (
     <div className={styles.page}>
+
       <PageHeader
         description="Gerencie pais e responsáveis."
         title="Responsáveis"
+        Icon={Handshake}
+        iconClassName="text-error"
+        iconBgClassName="bg-error/15"
       >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput
@@ -105,24 +106,24 @@ export function ParentsPage() {
 
       <Pagination
         currentPage={currentPage}
-        totalElements={totalElements}
-        totalPages={totalPages}
+        totalElements={parentsPage?.page.totalElements ?? 0}
+        totalPages={parentsPage?.page.totalPages ?? 0}
         currentElementsCount={parentList.length}
         itemName="responsáveis"
         onPageChange={setCurrentPage}
       />
 
-      {parentList.length === 0 ? (
+      {parentList.length === 0 && debouncedSearchTerm === "" && (
         <EmptyCard
-          title="Nenhum responsável cadastrado"
-          description="Quando você cadastrar o primeiro responsável, ele aparecerá na tabela acima."
+          title="Nenhum responsável encontrado"
+          description=""
           action={
             <ButtonLink to="/parents/new" variant="secondary">
-              Novo responsável
+              Novo aluno
             </ButtonLink>
           }
         />
-      ) : null}
+      )}
     </div>
   )
 }

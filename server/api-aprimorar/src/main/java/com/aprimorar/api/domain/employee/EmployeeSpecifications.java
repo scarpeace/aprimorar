@@ -1,5 +1,6 @@
 package com.aprimorar.api.domain.employee;
 
+import com.aprimorar.api.enums.Duty;
 import org.springframework.data.jpa.domain.Specification;
 
 public final class EmployeeSpecifications {
@@ -14,10 +15,13 @@ public final class EmployeeSpecifications {
     public static Specification<Employee> searchContainsIgnoreCase(String term) {
         return (root, query, cb) -> {
             String pattern = "%" + term.toLowerCase() + "%";
-            return cb.or(
-                cb.like(cb.lower(root.get("name")), pattern),
-                cb.like(cb.lower(root.get("email")), pattern),
-                cb.like(cb.lower(root.get("duty").as(String.class)), pattern)
+            return cb.and(
+                cb.notEqual(root.get("duty"), Duty.SYSTEM),
+                cb.or(
+                    cb.like(cb.lower(root.get("name")), pattern),
+                    cb.like(cb.lower(root.get("email")), pattern),
+                    cb.like(cb.lower(root.get("duty").as(String.class)), pattern)
+                )
             );
         };
     }

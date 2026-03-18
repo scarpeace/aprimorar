@@ -1,12 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useQuery } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
-import { Trash2 } from "lucide-react"
+
 import { Alert } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { ErrorCard } from "@/components/ui/error-card"
 import { FormField } from "@/components/ui/form-field"
@@ -14,13 +12,14 @@ import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/students/StudentCreatePage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
 import { studentInputSchema, type ParentResponse, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { formatDateInputValue } from "@/lib/shared/formatter"
-import { getFriendlyErrorMessage, eventsApi } from "@/services/api"
-import { useStudentDetailQuery, useUpdateStudent, useDeleteStudent } from "./hooks/use-students"
+import { getFriendlyErrorMessage } from "@/services/api"
+import { useStudentDetailQuery, useUpdateStudent } from "./hooks/use-students"
 import { useParentsListQuery } from "../parents/hooks/use-parents"
+import { DeleteStudentButton } from "./components/DeleteStudentButton"
+import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown"
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>()
@@ -32,79 +31,42 @@ export function StudentEditPage() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<StudentFormInput>({
     resolver: zodResolver(studentInputSchema),
     mode: "onBlur",
+    values: {
+      name: student?.name ?? "",
+      birthdate: formatDateInputValue(student?.birthdate ?? ""),
+      cpf: student?.cpf ?? "",
+      contact: student?.contact ?? "",
+      email: student?.email ?? "",
+      school: student?.school ?? "",
+      address: {
+        street: student?.address?.street ?? "",
+        number: student?.address?.number ?? "",
+        complement: student?.address?.complement ?? "",
+        district: student?.address?.district ?? "",
+        city: student?.address?.city ?? "",
+        state: student?.address?.state ?? "",
+        zip: student?.address?.zip ?? "",
+      },
+      parentId: student?.parent?.id ?? "Responsável não encontrado",
+    }
   })
   const registerWithMask = useHookFormMask(register)
 
-  const {
-    data: parentsList,
-    isLoading: isParentsListLoading,
-    error: parentsListQueryError,
-  } = useParentsListQuery()
-
-  useEffect(() => {
-    if (student) {
-      setValue("name", student.name)
-      setValue("birthdate", formatDateInputValue(student.birthdate))
-      setValue("cpf", student.cpf)
-      setValue("contact", student.contact)
-      setValue("email", student.email)
-      setValue("school", student.school)
-      setValue("address.street", student.address.street)
-      setValue("address.number", student.address.number)
-      setValue("address.complement", student.address.complement ?? "")
-      setValue("address.district", student.address.district)
-      setValue("address.city", student.address.city)
-      setValue("address.state", student.address.state)
-      setValue("address.zip", student.address.zip)
-      setValue("parentId", student.parent.id)
-    }
-  }, [student, setValue])
-
-  const studentEventsQuery = useQuery({
-    queryKey: queryKeys.events.byStudent(studentId),
-    queryFn: () =>
-      eventsApi.listByStudent(studentId),
-    enabled: Boolean(id),
-  })
-
   const { mutate: updateStudent, isPending: isUpdating, error: updateError } = useUpdateStudent(studentId)
-  const { mutate: deleteStudent, isPending: isDeleting, error: deleteError } = useDeleteStudent()
 
   const onSubmit = (data: StudentFormInput) => {
     updateStudent(data)
   }
 
-  const handleDeleteStudent = () => {
-    if (studentEventsQuery.isLoading) {
-      globalThis.alert("Ainda estamos verificando se este aluno possui eventos vinculados. Tente novamente em instantes.")
-      return
-    }
+  const isMutationPending = isUpdating
+  const submitError = updateError
 
-    if (studentEventsQuery.isError) {
-      globalThis.alert("Não foi possível verificar se existem eventos vinculados a este aluno. Tente novamente.")
-      return
-    }
-
-    if ((studentEventsQuery.data?.page.totalElements ?? 0) > 0) {
-      globalThis.alert("Este aluno possui eventos vinculados e não pode ser excluído. Arquive o aluno em vez de excluí-lo.")
-      return
-    }
-
-    const confirmed = globalThis.confirm("Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita.")
-
-    if (!confirmed) {
-      return
-    }
-
-    deleteStudent(studentId)
-  }
-
-  const isMutationPending = isUpdating || isDeleting
-  const submitError = updateError || deleteError
+  const selectedParentId = watch("parentId")
 
   if (!id) {
     return (
@@ -118,20 +80,17 @@ export function StudentEditPage() {
     return <PageLoading message="Carregando aluno para edição..." />
   }
 
-  if (isStudentError || studentEventsQuery.isError || !student) {
-    const error = studentError ?? studentEventsQuery.error
+  if (isStudentError || !student) {
+    const error = studentError
     return (
       <div className={styles.page}>
         <ErrorCard
           description={getFriendlyErrorMessage(error)}
-          onAction={() => Promise.all([refetchStudent(), studentEventsQuery.refetch()])}
+          onAction={() => refetchStudent()}
         />
       </div>
     )
   }
-
-  //TODO Tem que ver como vai funcionar a deleção de aluno e se vai ter o CASCADE
-  const studentHasLinkedEvents = (studentEventsQuery.data?.page.totalElements ?? 0) > 0
 
   return (
     <div className={styles.page}>
@@ -148,37 +107,21 @@ export function StudentEditPage() {
         <div className={styles.formGrid}>
           <FormField
             className={`${styles.field} ${styles.span2}`}
-            label="Responsável"
+            label=""
             htmlFor="parentId"
             error={errors.parentId?.message}
           >
-            <div className="flex flex-col gap-2">
-              <select
-                id="parentId"
-                className="app-select"
-                {...register("parentId")}
-                disabled={isParentsListLoading}
-              >
-                <option value="">
-                  {isParentsListLoading ? "Carregando responsáveis..." : "Selecione um responsável"}
-                </option>
-                {parentsList?.map((parent: ParentResponse) => (
-                  <option key={parent.id} value={parent.id}>
-                    {parent.name} ({parent.cpf})
-                  </option>
-                ))}
-              </select>
+            {/* Registra o campo silenciosamente */}
+            <input type="hidden" {...register("parentId")} />
+            <ParentSelectDropdown
+              value={selectedParentId}
+              onChange={(id) => setValue("parentId", id, { shouldValidate: true, shouldDirty: true })}
+              hasError={!!errors.parentId}
+            />
 
-              {parentsListQueryError && (
-                <p className="text-xs text-error">
-                  {getFriendlyErrorMessage(parentsListQueryError)}
-                </p>
-              )}
-
-              <p className="text-xs text-muted-foreground mt-1">
-                Não encontrou o responsável? <ButtonLink to="/parents/new" variant="ghost" size="sm" className="h-auto p-0 underline">Cadastre um novo aqui</ButtonLink>
-              </p>
-            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Não encontrou o responsável? <ButtonLink to="/parents/new" variant="ghost" size="sm" className="h-auto p-0 underline">Cadastre um novo aqui</ButtonLink>
+            </p>
           </FormField>
         </div>
       </SectionCard>
@@ -288,40 +231,28 @@ export function StudentEditPage() {
               />
             </FormField>
           </div>
+
+
+          {submitError && (
+            <Alert variant="error" className="text-sm">
+              {getFriendlyErrorMessage(submitError)}
+            </Alert>
+          )}
+
+          <div className={styles.actions}>
+            <DeleteStudentButton studentId={studentId} />
+
+            <ButtonLink to={`/students/${studentId}`} variant="outline">
+              Cancelar
+            </ButtonLink>
+            <Button type="submit" disabled={isMutationPending} variant="success">
+              {isUpdating ? "Salvando..." : "Salvar alterações"}
+            </Button>
+          </div>
         </SectionCard>
 
-
-        {submitError && (
-          <Alert variant="error" className="text-sm">
-            {getFriendlyErrorMessage(submitError)}
-          </Alert>
-        )}
-        {studentHasLinkedEvents && (
-          <Badge variant="warning">
-            Este aluno possui eventos vinculados e não pode ser excluído. Use o arquivamento para desativar o cadastro ou exclua todos os eventos relacionados a esse aluno.
-          </Badge>
-        )}
-
-        <div className={styles.actions}>
-          <Button
-            type="button"
-            onClick={handleDeleteStudent}
-            disabled={isMutationPending}
-            variant="danger"
-            className="sm:mr-auto"
-          >
-            {/* TODO: tem alguma forma mais limpa de usar os icones? */}
-            <Trash2 className="h-4 w-4" />
-            Excluir aluno
-          </Button>
-          <ButtonLink to={`/students/${studentId}`} variant="outline">
-            Cancelar
-          </ButtonLink>
-          <Button type="submit" disabled={isMutationPending} variant="primary">
-            {isUpdating ? "Salvando..." : "Salvar alterações"}
-          </Button>
-        </div>
       </form>
     </div>
   )
 }
+

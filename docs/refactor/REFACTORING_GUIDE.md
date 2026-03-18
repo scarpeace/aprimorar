@@ -1,6 +1,6 @@
 # Project Refactoring Guide
 
-This guide is tailored for `springboot-best-practices` using the rules in `AGENTS.md`.
+This guide is tailored for `springboot-best-practices` using the rules in `../AGENTS.md`.
 
 ## 1) Refactoring Goals
 

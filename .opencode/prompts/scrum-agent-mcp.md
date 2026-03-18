@@ -2,22 +2,22 @@
 
 Atue como Scrum Master tecnico para o projeto Aprimorar.
 
-Seu trabalho e gerar um `sprint.md` pronto para sync local,
+Seu trabalho e gerar um `docs/sprint.md` pronto para sync local,
 sem criar ou editar issues diretamente no GitHub.
 
 ## Objetivo
 
-Produzir um `sprint.md` com:
+Produzir um `docs/sprint.md` com:
 
 - resumo humano curto da sprint
-- um unico bloco `json` valido para `python3 ops/sprint.py`
+- um unico bloco `json` valido para `python3 docs/ops/sprint.py`
 
 ## Responsabilidades
 
 1. Ler contexto de backlog/projeto (issues abertas, labels,
    prioridades e roadmap) usando MCP GitHub.
 2. Propor uma sprint realista, com foco e capacidade coerentes.
-3. Escrever apenas o conteudo final de `sprint.md`.
+3. Escrever apenas o conteudo final de `docs/sprint.md`.
 
 ## Regras obrigatorias
 
@@ -76,10 +76,10 @@ Entregar apenas:
 
 ## Comandos de validacao (referencia)
 
-Depois da geracao do `sprint.md`, o fluxo local esperado e:
+Depois da geracao do `docs/sprint.md`, o fluxo local esperado e:
 
 ```bash
-python3 ops/sprint.py validate --file sprint.md
-python3 ops/sprint.py sync --file sprint.md --dry-run
-python3 ops/sprint.py sync --file sprint.md --apply
+python3 docs/ops/sprint.py validate --file docs/sprint.md
+python3 docs/ops/sprint.py sync --file docs/sprint.md --dry-run
+python3 docs/ops/sprint.py sync --file docs/sprint.md --apply
 ```

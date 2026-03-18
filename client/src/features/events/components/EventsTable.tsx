@@ -2,50 +2,56 @@ import { ButtonLink } from "@/components/ui/button"
 import { EmptyCard } from "@/components/ui/empty-card"
 import { ErrorCard } from "@/components/ui/error-card"
 import { LoadingCard } from "@/components/ui/loading-card"
-import type { EventResponse } from "@/lib/schemas/event"
-import type { PageResponse } from "@/lib/schemas/page-response"
 import { eventContentLabels } from "@/lib/shared/enums"
 import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter"
+import { useEventsByEmployeeQuery, useEventsByStudentQuery, useEventsQuery } from "../hooks/use-events"
+import { useState, useEffect } from "react"
+import { Pagination } from "@/components/ui/pagination"
 
-export type EventsTableVariant = "studentPage" | "eventsPage" | "employeePage"
-
-type EventsTableBaseProps = {
-  variant?: EventsTableVariant
-  loading: boolean
-  error: string
+type EventsTableProps = {
+  variant: "eventsPage" | "embeddedEmployee" | "embeddedStudent"
+  ownerId?: string
+  searchTerm?: string
 }
 
-type EventsTablePaginatedProps = EventsTableBaseProps & {
-  eventsPage: PageResponse<EventResponse>
-  eventsList?: never
-}
+export function EventsTable({ variant = "eventsPage", ownerId, searchTerm }: Readonly<EventsTableProps>) {
+  const [currentPage, setCurrentPage] = useState(0)
+  const pageSize = 10
 
-type EventsTableListProps = EventsTableBaseProps & {
-  eventsList: EventResponse[]
-  eventsPage?: never
-}
+  // Reset pagination when search changes
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [searchTerm])
 
-type EventsTableProps = EventsTablePaginatedProps | EventsTableListProps
+  const allResults = useEventsQuery(currentPage, pageSize, "startDate", searchTerm, {
+    enabled: variant === "eventsPage"
+  });
+  const employeeResults = useEventsByEmployeeQuery(ownerId!, currentPage, pageSize, {
+    enabled: variant === "embeddedEmployee" && !!ownerId
+  });
+  const studentResults = useEventsByStudentQuery(ownerId!, currentPage, pageSize, {
+    enabled: variant === "embeddedStudent" && !!ownerId
+  });
 
-export function EventsTable({ eventsPage, eventsList, variant = "eventsPage", loading, error }: Readonly<EventsTableProps>) {
-  const showPrice = variant === "eventsPage" || variant === "studentPage"
-  const showPayment = variant === "employeePage"
+  const { data: events, isLoading, error } =
+    variant === "eventsPage" ? allResults
+      : variant === "embeddedEmployee" ? employeeResults
+        : studentResults;
 
-  if (loading) {
+  const showPrice = variant === "eventsPage" || variant === "embeddedStudent"
+  const showPayment = variant === "embeddedEmployee"
+
+  if (isLoading) {
     return <LoadingCard description="Carregando eventos..." />
   }
 
-  const events = eventsPage?.content ?? eventsList ?? []
-
-  if (events.length === 0) {
+  if (events?.page.totalElements === 0) {
     return <EmptyCard description="Cadastre um evento para ele aparecer por aqui." title={"Nenhum evento encontrado."} />
   }
 
   if (error) {
-    return <ErrorCard description={error} title="Erro ao carregar eventos" />
+    return <ErrorCard description={error.message} title="Erro ao carregar eventos" />
   }
-
-
 
   return (
     <div className="app-table-wrap">
@@ -63,7 +69,7 @@ export function EventsTable({ eventsPage, eventsList, variant = "eventsPage", lo
           </tr>
         </thead>
         <tbody>
-          {events.map((event) => (
+          {events?.content.map((event) => (
             <tr className="transition-colors hover:bg-base-200/70" key={event.id}>
               <td>{event.studentName}</td>
               <td>{event.employeeName}</td>
@@ -81,6 +87,14 @@ export function EventsTable({ eventsPage, eventsList, variant = "eventsPage", lo
           ))}
         </tbody>
       </table>
+      <Pagination
+        currentPage={currentPage}
+        totalElements={events?.page.totalElements ?? 0}
+        totalPages={events?.page.totalPages ?? 0}
+        currentElementsCount={events?.content.length ?? 0}
+        itemName="eventos"
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

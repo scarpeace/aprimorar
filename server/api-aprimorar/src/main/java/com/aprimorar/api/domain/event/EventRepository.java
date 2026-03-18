@@ -11,11 +11,17 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface EventRepository extends JpaRepository<Event, UUID> {
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecificationExecutor<Event> {
 
     @Modifying
     @Query("UPDATE Event e SET e.student.id = :ghostId WHERE e.student.id = :studentId")
     void reassignEventsToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
+
+    @Modifying
+    @Query("UPDATE Event e SET e.employee.id = :ghostId WHERE e.employee.id = :employeeId")
+    void reassignEmployeeEventsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
 
     @Override
     @EntityGraph(attributePaths = {"student", "employee"})

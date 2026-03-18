@@ -36,7 +36,7 @@ Important backend paths:
 
 ## Canonical docs
 Use these as source-of-truth before planning or architecture changes:
-- `AGENTS.md`
+- `docs/AGENTS.md`
 - `docs/planning/roadmap.md`
 - `docs/planning/epics/E-000-template.md`
 - `docs/planning/epics/*.md`
@@ -79,10 +79,10 @@ Single-test commands (backend):
 - Single test method: `./mvnw -Dtest=ApiAprimorarApplicationTests#contextLoads test`
 - Replace class and method names with the real target under `src/test/java`.
 
-### Planning automation (`ops/`)
-- Validate sprint contract: `python3 ops/sprint.py validate --file sprint.md`
-- Dry-run sync (no writes): `python3 ops/sprint.py sync --file sprint.md --dry-run`
-- Apply sync to GitHub: `python3 ops/sprint.py sync --file sprint.md --apply`
+### Planning automation (`docs/ops/`)
+- Validate sprint contract: `python3 docs/ops/sprint.py validate --file docs/sprint.md`
+- Dry-run sync (no writes): `python3 docs/ops/sprint.py sync --file docs/sprint.md --dry-run`
+- Apply sync to GitHub: `python3 docs/ops/sprint.py sync --file docs/sprint.md --apply`
 - Requires `gh` auth scopes: `repo`, `read:project`, `project`
 - If scope is missing: `gh auth refresh -s repo -s read:project -s project`
 - Full workflow guide: `docs/planning/sprint-automation-guide.md`

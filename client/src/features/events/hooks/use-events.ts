@@ -1,15 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { eventsApi } from "@/services/api"
 import { queryKeys } from "@/lib/query/queryKeys"
 import type { EventFormInput } from "@/lib/schemas"
+import { toast } from "sonner"
 
 // --- QUERIES ---
 
-export function useEventsQuery(page = 0, size = 20, sortBy = "startDate") {
+export function useEventsQuery(page = 0, size = 20, sortBy = "startDate", search?: string, options = {}) {
   return useQuery({
-    queryKey: queryKeys.events.list({ page, size, sortBy }),
-    queryFn: () => eventsApi.list(page, size, sortBy),
+    queryKey: queryKeys.events.list({ page, size, sortBy, search }),
+    queryFn: () => eventsApi.list(page, size, sortBy, search),
+    placeholderData: keepPreviousData,
+    ...options
   })
 }
 
@@ -18,6 +21,28 @@ export function useEventDetailQuery(id: string) {
     queryKey: queryKeys.events.detail(id),
     queryFn: () => eventsApi.getById(id),
     enabled: !!id,
+  })
+}
+
+export function useEventsByEmployeeQuery(id: string, page = 0, size = 20, options = {}) {
+  const queryResults = useQuery({
+    queryKey: [...queryKeys.events.byEmployee(id), { page, size }],
+    queryFn: () => eventsApi.listByEmployee(id, page, size),
+    enabled: !!id,
+    placeholderData: keepPreviousData,
+    ...options
+  })
+
+  return queryResults;
+}
+
+export function useEventsByStudentQuery(id: string, page = 0, size = 20, options = {}) {
+  return useQuery({
+    queryKey: [...queryKeys.events.byStudent(id), { page, size }],
+    queryFn: () => eventsApi.listByStudent(id, page, size),
+    enabled: !!id,
+    placeholderData: keepPreviousData,
+    ...options
   })
 }
 
@@ -30,6 +55,7 @@ export function useCreateEvent() {
   return useMutation({
     mutationFn: (data: EventFormInput) => eventsApi.create(data),
     onSuccess: (createdEvent) => {
+      toast.success("Evento criado com sucesso!")
       queryClient.invalidateQueries({ queryKey: queryKeys.events.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.students.all })
@@ -46,6 +72,7 @@ export function useUpdateEvent(id: string) {
   return useMutation({
     mutationFn: (data: EventFormInput) => eventsApi.update(id, data),
     onSuccess: () => {
+      toast.success("Evento atualizado com sucesso!")
       queryClient.invalidateQueries({ queryKey: queryKeys.events.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(id) })
       // Invalida também os alunos e colaboradores pois podem ter mudado
@@ -63,6 +90,7 @@ export function useDeleteEvent() {
   return useMutation({
     mutationFn: (id: string) => eventsApi.delete(id),
     onSuccess: async (_, id) => {
+      toast.success("Evento deletado com sucesso!")
       navigate("/events")
       queryClient.invalidateQueries({ queryKey: queryKeys.events.lists() })
       queryClient.invalidateQueries({ queryKey: ["events", "by-student"] })
@@ -71,3 +99,4 @@ export function useDeleteEvent() {
     },
   })
 }
+

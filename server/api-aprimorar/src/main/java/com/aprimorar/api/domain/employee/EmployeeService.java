@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
+import com.aprimorar.api.enums.Duty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -38,25 +39,28 @@ public class EmployeeService {
 
     private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
+    private static final UUID PHANTOM_EMPLOYEE_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
     private final EmployeeRepository employeeRepo;
     private final EmployeeMapper employeeMapper;
+    private final com.aprimorar.api.domain.event.EventRepository eventRepo;
 
-    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper) {
+    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, com.aprimorar.api.domain.event.EventRepository eventRepo) {
         this.employeeRepo = employeeRepo;
         this.employeeMapper = employeeMapper;
+        this.eventRepo = eventRepo;
     }
 
     /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
     public Page<EmployeeResponseDTO> getEmployees(Pageable pageable, String search) {
-        Page<Employee> page;
+        Specification<Employee> spec = (root, query, cb) -> cb.notEqual(root.get("duty"), Duty.SYSTEM);
+        
         if (search != null && !search.trim().isEmpty()) {
-            Specification<Employee> spec = EmployeeSpecifications.searchContainsIgnoreCase(search.trim());
-            page = employeeRepo.findAll(spec, pageable);
-        } else {
-            page = employeeRepo.findAll(pageable);
+            spec = spec.and(EmployeeSpecifications.searchContainsIgnoreCase(search.trim()));
         }
+
+        Page<Employee> page = employeeRepo.findAll(spec, pageable);
         log.info("Consulta de colaboradores finalizada, {} registros encontrados.", page.getTotalElements());
         return page.map(employeeMapper::convertToDto);
     }
@@ -118,8 +122,9 @@ public class EmployeeService {
     @Transactional
     public void deleteEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
+        eventRepo.reassignEmployeeEventsToGhost(employeeId, PHANTOM_EMPLOYEE_ID);
         employeeRepo.delete(employee);
-        log.info("Colaborador {} deletado com sucesso.", employee.getName().toUpperCase());
+        log.info("Colaborador {} deletado com sucesso. Eventos transferidos para arquivo morto fantasma.", employee.getName().toUpperCase());
     }
 
     @Transactional

@@ -8,7 +8,6 @@ import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/employees/EmployeeCreatePage.module.css"
 import { dutyLabels } from "@/features/employees/dutyLabels"
 import { employeeFormSchema, type EmployeeFormInput } from "@/lib/schemas"
-import { getFriendlyErrorMessage } from "@/services/api"
 import { useCreateEmployee } from "./hooks/use-employees"
 
 export function EmployeeCreatePage() {
@@ -22,14 +21,12 @@ export function EmployeeCreatePage() {
       duty: "TEACHER",
     },
   })
+  const registerWithMask = useHookFormMask(register)
 
-  const { mutate: createEmployee, isPending: isSubmitting, error: submitError } = useCreateEmployee()
-
+  const { mutate: createEmployee, isPending: isSubmitting } = useCreateEmployee()
   const onSubmit = (data: EmployeeFormInput) => {
     createEmployee(data)
   }
-
-  const registerWithMask = useHookFormMask(register)
 
   return (
     <div className={styles.page}>
@@ -37,8 +34,8 @@ export function EmployeeCreatePage() {
         title="Novo colaborador"
         description="Crie um novo cadastro de colaborador."
         action={
-          <ButtonLink to="/employees" variant="outline">
-            Voltar para colaboradores
+          <ButtonLink className="sm:ml-auto" to="/employees" variant="outline">
+            Voltar
           </ButtonLink>
         }
       />
@@ -100,8 +97,6 @@ export function EmployeeCreatePage() {
               </select>
             </FormField>
           </div>
-
-          {submitError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(submitError)}</div> : null}
 
           <div className={styles.actions}>
             <ButtonLink to="/employees" variant="outline">

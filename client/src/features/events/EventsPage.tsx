@@ -1,56 +1,34 @@
 import { useState } from "react"
-import { ErrorCard } from "@/components/ui/error-card"
 import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
-import { PageLoading } from "@/components/ui/page-loading"
-import { Pagination } from "@/components/ui/pagination"
 import { ButtonLink } from "@/components/ui/button"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/events/EventsPage.module.css"
-import { getFriendlyErrorMessage } from "@/services/api"
-import { useEventsQuery } from "./hooks/use-events"
+import { useDebounce } from "@/hooks/use-debounce"
+import { CalendarCheck2 } from "lucide-react"
 
 export function EventsPage() {
-  const [currentPage, setCurrentPage] = useState(0)
   const [searchTerm, setSearchTerm] = useState("")
-  const pageSize = 10
-
-  const {
-    data: eventsResponse,
-    isLoading: isLoadingEvents,
-    isError: isErrorEvents,
-    error: errorEvents,
-    refetch,
-  } = useEventsQuery(currentPage, pageSize)
-
-  if (isLoadingEvents) {
-    return <PageLoading message="Carregando eventos..." />
-  }
-
-  if (isErrorEvents) {
-    return (
-      <div className={styles.page}>
-        <ErrorCard description={getFriendlyErrorMessage(errorEvents)} onAction={refetch} />
-      </div>
-    )
-  }
-
-  const pageInfo = eventsResponse?.page
-  const totalElements = pageInfo?.totalElements ?? 0
-  const totalPages = pageInfo?.totalPages ?? 0
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
   return (
     <div className={styles.page}>
-      <PageHeader description="Gerencie horários, preços e atribuições." title="Eventos">
+      <PageHeader
+        description="Gerencie os atendimentos."
+        title="Atendimentos"
+        Icon={CalendarCheck2}
+        iconClassName="text-primary"
+        iconBgClassName="bg-primary/15"
+      >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput
-            placeholder="Buscar evento por aluno, colaborador ou conteúdo"
-            ariaLabel="Buscar evento"
+            placeholder="Buscar atendimento por aluno, colaborador ou conteúdo"
+            ariaLabel="Buscar atendimento"
             value={searchTerm}
             onChange={setSearchTerm}
           />
           <ButtonLink className="sm:ml-auto" to="/events/new" variant="success">
-            Novo evento
+            Novo atendimento
           </ButtonLink>
         </div>
       </PageHeader>
@@ -58,20 +36,9 @@ export function EventsPage() {
       <div className="app-table-wrap">
         <EventsTable
           variant="eventsPage"
-          eventsPage={eventsResponse!}
-          loading={isLoadingEvents}
-          error={errorEvents ? getFriendlyErrorMessage(errorEvents) : ""}
+          searchTerm={debouncedSearchTerm}
         />
       </div>
-
-      <Pagination
-        currentPage={currentPage}
-        totalElements={totalElements}
-        totalPages={totalPages}
-        currentElementsCount={eventsResponse?.content.length ?? 0}
-        itemName="eventos"
-        onPageChange={setCurrentPage}
-      />
     </div>
   )
 }

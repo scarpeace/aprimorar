@@ -4,7 +4,7 @@ Periodo: 2026-03-16 a 2026-03-29
 Objetivo: Implementar a paginação em páginas que usam tabelas
 
 ## Notas
-- Este arquivo e o contrato unico para o sync local (`ops/sprint.py`).
+- Este arquivo e o contrato unico para o sync local (`docs/ops/sprint.py`).
 - Ajuste `project.owner` e `project.number` se seu Project v2 for diferente.
 - Modo estrito: labels e campos precisam existir antes de rodar `--apply`.
 
