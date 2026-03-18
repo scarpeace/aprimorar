@@ -19,7 +19,7 @@ export function ParentsPage() {
   const pageSize = 10
 
   const {
-    data: response,
+    data: parentsPage,
     isLoading,
     isError,
     error,
@@ -31,8 +31,7 @@ export function ParentsPage() {
     setCurrentPage(0)
   }, [debouncedSearchTerm])
 
-  const parentList = response?.content ?? []
-  const pageInfo = response?.page
+  const parentList = parentsPage?.content ?? []
 
   if (isLoading) {
     return <PageLoading message="Carregando responsáveis..." />
@@ -46,9 +45,6 @@ export function ParentsPage() {
       </div>
     )
   }
-
-  const totalElements = pageInfo?.totalElements ?? 0
-  const totalPages = pageInfo?.totalPages ?? 0
 
   return (
     <div className={styles.page}>
@@ -107,24 +103,24 @@ export function ParentsPage() {
 
       <Pagination
         currentPage={currentPage}
-        totalElements={totalElements}
-        totalPages={totalPages}
+        totalElements={parentsPage?.page.totalElements ?? 0}
+        totalPages={parentsPage?.page.totalPages ?? 0}
         currentElementsCount={parentList.length}
         itemName="responsáveis"
         onPageChange={setCurrentPage}
       />
 
-      {parentList.length === 0 ? (
+      {parentList.length === 0 && debouncedSearchTerm === "" && (
         <EmptyCard
-          title="Nenhum responsável cadastrado"
-          description="Quando você cadastrar o primeiro responsável, ele aparecerá na tabela acima."
+          title="Nenhum responsável encontrado"
+          description=""
           action={
             <ButtonLink to="/parents/new" variant="secondary">
-              Novo responsável
+              Novo aluno
             </ButtonLink>
           }
         />
-      ) : null}
+      )}
     </div>
   )
 }

@@ -19,7 +19,7 @@ export function PageHeader({
   titleClassName,
 }: Readonly<PageHeaderProps>) {
   return (
-    <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-8">
+    <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-3">
       <div className="flex items-center gap-4 w-full min-w-0 sm:flex-1">
         {Icon && (
           <div className="shrink-0">

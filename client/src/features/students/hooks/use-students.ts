@@ -75,11 +75,12 @@ export function useArchiveStudent() {
   })
 }
 
-export function useStudentsQuery(page: number, size: number, search?: string) {
+export function useStudentsQuery(page: number, size: number, search?: string, options = {}) {
   return useQuery({
     queryKey: queryKeys.students.list({ page, size, search }),
     queryFn: () => studentsApi.list(page, size, "name", search),
     staleTime: 1000 * 60 * 5,
+    ...options
   })
 }
 

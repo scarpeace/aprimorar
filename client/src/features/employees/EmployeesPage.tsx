@@ -19,6 +19,7 @@ export function EmployeesPage() {
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
   const pageSize = 10
 
+  //TODO Retirar essa query daqui, verificar StudentsPage
   const {
     data: employeesPage,
     isLoading,
@@ -38,12 +39,13 @@ export function EmployeesPage() {
     return <PageLoading message="Carregando colaboradores..." />
   }
 
+  //TODO ver se esse erro de página tá padronizado em todos os componentes + adicionar actions
   if (isError) {
     return (
-      <>
+      <div className={styles.page}>
         <PageHeader title="Colaboradores" description="Gerencie professores e equipe." icon={UserCog} />
         <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
-      </>
+      </div>
     )
   }
 
@@ -53,11 +55,6 @@ export function EmployeesPage() {
         description="Gerencie professores e equipe."
         title="Colaboradores"
         icon={UserCog}
-        action={
-          <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">
-            Novo colaborador
-          </ButtonLink>
-        }
       >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput
@@ -66,6 +63,9 @@ export function EmployeesPage() {
             value={searchTerm}
             onChange={setSearchTerm}
           />
+          <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">
+            Novo colaborador
+          </ButtonLink>
         </div>
       </PageHeader>
 

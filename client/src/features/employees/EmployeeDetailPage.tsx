@@ -15,6 +15,7 @@ import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
 import { EditEmployeeButton } from "./components/EditEmployeeButton"
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton"
 import { ButtonLink } from "@/components/ui/button"
+import { eventResponse } from "@/lib/schemas"
 
 //TODO: Tá renderizando duas (ou quatro não sei) vezes
 export function EmployeeDetailPage() {
@@ -22,7 +23,11 @@ export function EmployeeDetailPage() {
   const employeeId = id ?? ""
   const navigate = useNavigate()
 
-  const { data: employeeData, error: employeeDataError, isLoading: isEmployeeLoading, isFetched: isEmployeeFetched } = useEmployeeDetailQuery(employeeId)
+  const { data: employeeData,
+    error: employeeDataError,
+    isLoading: isEmployeeLoading,
+    isFetched: isEmployeeFetched }
+    = useEmployeeDetailQuery(employeeId)
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: employeeData?.name },
@@ -36,7 +41,6 @@ export function EmployeeDetailPage() {
     { label: "Criado em", value: employeeData?.createdAt },
   ]
 
-  console.log(employeeData?.birthdate)
   return (
     <div className={styles.page}>
       <PageHeader
@@ -50,7 +54,7 @@ export function EmployeeDetailPage() {
         }
       />
 
-      {/* COLABORADOR */}
+      {/* RESUMO DO COLABORADOR */}
       <SectionCard
         title="Resumo do colaborador"
         description="Dados completos de cadastro, contato e status."
@@ -86,7 +90,7 @@ export function EmployeeDetailPage() {
       {/* EVENTOS DO COLABORADOR */}
       <SectionCard
         title="Eventos vinculados"
-        description={"Todos os eventos vinculados a esse colaborador"}
+        description={`Total de eventos vinculados ao colaborador: ${employeeData?.name}`}
       >
         <EventsTable
           variant="embeddedEmployee"
