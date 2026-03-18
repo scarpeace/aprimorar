@@ -21,13 +21,11 @@ export function PageHeader({
   return (
     <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-3">
       <div className="flex items-center gap-4 w-full min-w-0 sm:flex-1">
-        {Icon && (
-          <div className="shrink-0">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/15">
-              <Icon className="h-6 w-6 text-success" />
-            </div>
+        {Icon ? (
+          <div className="flex h-26 w-30 items-center justify-center rounded-full bg-success/15" >
+            <Icon className="h-16 w-16 text-success" />
           </div>
-        )}
+        ) : null}
         <div className="w-full min-w-0">
           <h1 className={`${titleClassName ?? "text-3xl font-bold app-text"}`.trim()}>{title}</h1>
           {description ? <p className="text-sm app-text-muted">{description}</p> : null}

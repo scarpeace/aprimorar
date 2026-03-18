@@ -5,6 +5,7 @@ import { ButtonLink } from "@/components/ui/button"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/events/EventsPage.module.css"
 import { useDebounce } from "@/hooks/use-debounce"
+import { CalendarCheck2 } from "lucide-react"
 
 export function EventsPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -12,16 +13,20 @@ export function EventsPage() {
 
   return (
     <div className={styles.page}>
-      <PageHeader description="Gerencie horários, preços e atribuições." title="Eventos">
+      <PageHeader
+        description="Gerencie os atendimentos."
+        title="Atendimentos"
+        icon={CalendarCheck2}
+      >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput
-            placeholder="Buscar evento por aluno, colaborador ou conteúdo"
-            ariaLabel="Buscar evento"
+            placeholder="Buscar atendimento por aluno, colaborador ou conteúdo"
+            ariaLabel="Buscar atendimento"
             value={searchTerm}
             onChange={setSearchTerm}
           />
           <ButtonLink className="sm:ml-auto" to="/events/new" variant="success">
-            Novo evento
+            Novo atendimento
           </ButtonLink>
         </div>
       </PageHeader>
