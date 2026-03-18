@@ -2,18 +2,18 @@ import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react"
-import { useDeleteEmployee } from "../hooks/use-employees"
+import { useDeleteStudent } from "../hooks/use-students"
 import { eventsApi } from "@/services/api"
 import { queryKeys } from "@/lib/query/queryKeys"
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal"
 
-export const DeleteEmployeeButton = ({ employeeId }: { employeeId: string }) => {
+export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const { mutate: deleteEmployee, isPending: isDeleting } = useDeleteEmployee()
+  const { mutate: deleteStudent, isPending: isDeleting } = useDeleteStudent()
 
   const { data: eventsData, isLoading: isEventsLoading } = useQuery({
-    queryKey: [...queryKeys.events.byEmployee(employeeId), 0, 1],
-    queryFn: () => eventsApi.listByEmployee(employeeId, 0, 1),
+    queryKey: [...queryKeys.events.byStudent(studentId), 0, 1],
+    queryFn: () => eventsApi.listByStudent(studentId, 0, 1),
     enabled: isOpen, // Only fetch when the user clicks to delete
   })
 
@@ -28,7 +28,7 @@ export const DeleteEmployeeButton = ({ employeeId }: { employeeId: string }) => 
   }
 
   const handleConfirmDelete = () => {
-    deleteEmployee(employeeId, {
+    deleteStudent(studentId, {
       onSettled: () => {
         setIsOpen(false)
       }
@@ -54,14 +54,14 @@ export const DeleteEmployeeButton = ({ employeeId }: { employeeId: string }) => 
         isOpen={isOpen}
         onClose={handleClose}
         onConfirm={handleConfirmDelete}
-        title="Excluir Colaborador"
+        title="Excluir Aluno"
         isPending={isDeleting}
         isLoadingEvents={isEventsLoading}
         eventsCount={eventsCount}
-        itemName="colaborador"
+        itemName="aluno"
         phantomWarning={
           <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
-            Ao excluí-lo, seu histórico pessoal será apagado, mas <strong>todos os seus eventos e atendimentos serão transferidos automaticamente para um perfil de "Colaborador Removido"</strong> para manter a consistência financeira e o histórico.
+            Ao excluí-lo, seu histórico pessoal será apagado, mas <strong>todos os seus eventos e atendimentos serão transferidos automaticamente para um perfil de "Aluno Removido"</strong> para manter a consistência financeira e o histórico da clínica.
           </div>
         }
       />

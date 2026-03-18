@@ -48,7 +48,7 @@ export function EventsTable({ variant = "eventsPage", ownerId }: Readonly<Events
   }
 
   return (
-    <div className="app-table-wrap min-h-[500px]">
+    <div className="app-table-wrap">
       <table className="table table-zebra w-full">
         <thead className="bg-base-200/90">
           <tr>

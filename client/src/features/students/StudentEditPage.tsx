@@ -1,10 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useParams } from "react-router-dom"
 import { useHookFormMask } from "use-mask-input"
-import { Trash2 } from "lucide-react"
+
 import { Alert } from "@/components/ui/alert"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { ErrorCard } from "@/components/ui/error-card"
@@ -13,19 +12,17 @@ import { PageHeader } from "@/components/ui/page-header"
 import { PageLoading } from "@/components/ui/page-loading"
 import { SectionCard } from "@/components/ui/section-card"
 import styles from "@/features/students/StudentCreatePage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
 import { studentInputSchema, type ParentResponse, type StudentFormInput } from "@/lib/schemas"
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { formatDateInputValue } from "@/lib/shared/formatter"
-import { getFriendlyErrorMessage, eventsApi } from "@/services/api"
-import { useStudentDetailQuery, useUpdateStudent, useDeleteStudent } from "./hooks/use-students"
+import { getFriendlyErrorMessage } from "@/services/api"
+import { useStudentDetailQuery, useUpdateStudent } from "./hooks/use-students"
 import { useParentsListQuery } from "../parents/hooks/use-parents"
-import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal"
+import { DeleteStudentButton } from "./components/DeleteStudentButton"
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>()
   const studentId = id ?? ""
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const { data: student, isLoading: isStudentLoading, isError: isStudentError, error: studentError, refetch: refetchStudent } = useStudentDetailQuery(studentId)
 
@@ -65,32 +62,14 @@ export function StudentEditPage() {
     }
   }, [student, setValue])
 
-  const studentEventsQuery = useQuery({
-    queryKey: queryKeys.events.byStudent(studentId),
-    queryFn: () =>
-      eventsApi.listByStudent(studentId),
-    enabled: Boolean(id),
-  })
-
   const { mutate: updateStudent, isPending: isUpdating, error: updateError } = useUpdateStudent(studentId)
-  const { mutate: deleteStudent, isPending: isDeleting, error: deleteError } = useDeleteStudent()
 
   const onSubmit = (data: StudentFormInput) => {
     updateStudent(data)
   }
 
-  const handleDeleteClick = () => {
-    setIsDeleteModalOpen(true)
-  }
-
-  const handleConfirmDelete = () => {
-    deleteStudent(studentId, {
-      onSettled: () => setIsDeleteModalOpen(false)
-    })
-  }
-
-  const isMutationPending = isUpdating || isDeleting
-  const submitError = updateError || deleteError
+  const isMutationPending = isUpdating
+  const submitError = updateError
 
   if (!id) {
     return (
@@ -104,19 +83,17 @@ export function StudentEditPage() {
     return <PageLoading message="Carregando aluno para edição..." />
   }
 
-  if (isStudentError || studentEventsQuery.isError || !student) {
-    const error = studentError ?? studentEventsQuery.error
+  if (isStudentError || !student) {
+    const error = studentError
     return (
       <div className={styles.page}>
         <ErrorCard
           description={getFriendlyErrorMessage(error)}
-          onAction={() => Promise.all([refetchStudent(), studentEventsQuery.refetch()])}
+          onAction={() => refetchStudent()}
         />
       </div>
     )
   }
-
-  const eventsCount = studentEventsQuery.data?.page.totalElements ?? 0
 
   return (
     <div className={styles.page}>
@@ -273,50 +250,26 @@ export function StudentEditPage() {
               />
             </FormField>
           </div>
+
+
+          {submitError && (
+            <Alert variant="error" className="text-sm">
+              {getFriendlyErrorMessage(submitError)}
+            </Alert>
+          )}
+
+          <div className={styles.actions}>
+            <DeleteStudentButton studentId={studentId} />
+
+            <ButtonLink to={`/students/${studentId}`} variant="outline">
+              Cancelar
+            </ButtonLink>
+            <Button type="submit" disabled={isMutationPending} variant="success">
+              {isUpdating ? "Salvando..." : "Salvar alterações"}
+            </Button>
+          </div>
         </SectionCard>
 
-
-        {submitError && (
-          <Alert variant="error" className="text-sm">
-            {getFriendlyErrorMessage(submitError)}
-          </Alert>
-        )}
-
-        <div className={styles.actions}>
-          <Button
-            type="button"
-            onClick={handleDeleteClick}
-            disabled={isMutationPending}
-            variant="danger"
-            className="sm:mr-auto"
-          >
-            <Trash2 className="h-4 w-4" />
-            Excluir aluno
-          </Button>
-
-          <DeleteConfirmationModal
-            isOpen={isDeleteModalOpen}
-            onClose={() => setIsDeleteModalOpen(false)}
-            onConfirm={handleConfirmDelete}
-            title="Excluir Aluno"
-            isPending={isDeleting}
-            isLoadingEvents={studentEventsQuery.isLoading}
-            eventsCount={eventsCount}
-            itemName="aluno"
-            phantomWarning={
-              <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
-                Ao excluí-lo, seu histórico pessoal será apagado, mas <strong>todos os seus eventos e atendimentos serão transferidos automaticamente para um perfil de "Aluno Removido"</strong> para manter a consistência financeira e o histórico da clínica.
-              </div>
-            }
-          />
-
-          <ButtonLink to={`/students/${studentId}`} variant="outline">
-            Cancelar
-          </ButtonLink>
-          <Button type="submit" disabled={isMutationPending} variant="primary">
-            {isUpdating ? "Salvando..." : "Salvar alterações"}
-          </Button>
-        </div>
       </form>
     </div>
   )

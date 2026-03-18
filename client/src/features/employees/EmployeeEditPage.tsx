@@ -144,7 +144,9 @@ export function EmployeeEditPage() {
 
           <div className={styles.actions}>
             <DeleteEmployeeButton employeeId={employeeId} />
-            <EditEmployeeButton employeeId={employeeId} />
+            <ButtonLink to={`/employees/${employeeId}`} variant="outline">
+              Cancelar
+            </ButtonLink>
             <Button type="submit" disabled={isUpdating} variant="success">
               <Save />
               {isUpdating ? "Salvando..." : "Salvar alterações"}

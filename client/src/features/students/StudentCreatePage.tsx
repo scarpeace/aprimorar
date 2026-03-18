@@ -11,6 +11,7 @@ import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
 import { getFriendlyErrorMessage } from "@/services/api"
 import { useCreateStudent } from "./hooks/use-students"
 import { useParentsListQuery } from "../parents/hooks/use-parents"
+import { ChevronDown } from "lucide-react"
 
 export function StudentCreatePage() {
   const {
@@ -27,6 +28,8 @@ export function StudentCreatePage() {
     isLoading: isParentsListLoading,
     error: parentsListQueryError,
   } = useParentsListQuery()
+
+  console.log({ parentsList, timestamp: Date.now() })
 
   const registerWithMask = useHookFormMask(register)
 
@@ -57,7 +60,22 @@ export function StudentCreatePage() {
             error={errors.parentId?.message}
           >
             <div className="flex flex-col gap-2">
-              <select
+
+              <button className="btn" disabled={isParentsListLoading} popoverTarget="popover-1" style={{ anchorName: "--anchor-1" } /* as React.CSSProperties */}>
+                {isParentsListLoading ? "Carregando responsáveis..." : "Selecione o responsável"}
+                <ChevronDown className="ml-auto" />
+              </button>
+
+              <ul className="dropdown menu w-52 rounded-box bg-base-100 shadow-sm"
+                popover="auto" id="popover-1" {...register("parentId")} style={{ positionAnchor: "--anchor-1" } as React.CSSProperties}>
+                {parentsList?.filter((parent: ParentResponse) => !parent.archivedAt).map((parent: ParentResponse) => (
+                  <li key={parent.id} value={parent.id}>
+                    <a >{parent.name + " - " + parent.cpf}</a>
+                  </li>
+                ))}
+              </ul>
+
+              {/* <select
                 id="parentId"
                 className="app-select"
                 {...register("parentId")}
@@ -66,12 +84,9 @@ export function StudentCreatePage() {
                 <option value="">
                   {isParentsListLoading ? "Carregando responsáveis..." : "Selecione um responsável"}
                 </option>
-                {parentsList?.filter((parent: ParentResponse) => !parent.archivedAt).map((parent: ParentResponse) => (
-                  <option key={parent.id} value={parent.id}>
-                    {parent.name}
-                  </option>
-                ))}
-              </select>
+
+
+              </select> */}
 
               {parentsListQueryError && (
                 <p className="text-xs text-error">
