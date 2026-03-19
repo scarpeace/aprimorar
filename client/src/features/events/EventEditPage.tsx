@@ -21,11 +21,11 @@ import { eventContentLabels, eventContentValues } from "@/lib/shared/enums";
 import { getFriendlyErrorMessage, employeesApi } from "@/services/api";
 import { studentsApi } from "@/features/students/api/studentsApi";
 import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
+import { useEventDetailQuery } from "@/features/events/query/useEventQueries";
 import {
-  useEventDetailQuery,
-  useUpdateEvent,
   useDeleteEvent,
-} from "./hooks/use-events";
+  useUpdateEvent,
+} from "@/features/events/query/useEventMutations";
 import { useQuery } from "@tanstack/react-query";
 import { formatDateTimeLocal } from "@/lib/shared/formatter";
 

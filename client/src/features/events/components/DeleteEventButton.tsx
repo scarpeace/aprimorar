@@ -1,30 +1,30 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Trash2 } from "lucide-react"
-import { useDeleteEvent } from "../hooks/use-events"
-import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { useDeleteEvent } from "../query/useEventMutations";
+import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 
 export const DeleteEventButton = ({ eventId }: { eventId: string }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const { mutate: deleteEvent, isPending: isDeleting } = useDeleteEvent()
+  const [isOpen, setIsOpen] = useState(false);
+  const { mutate: deleteEvent, isPending: isDeleting } = useDeleteEvent();
 
   const handleOpenClick = () => {
-    setIsOpen(true)
-  }
+    setIsOpen(true);
+  };
 
   const handleClose = () => {
     if (!isDeleting) {
-      setIsOpen(false)
+      setIsOpen(false);
     }
-  }
+  };
 
   const handleConfirmDelete = () => {
     deleteEvent(eventId, {
       onSettled: () => {
-        setIsOpen(false)
-      }
-    })
-  }
+        setIsOpen(false);
+      },
+    });
+  };
 
   return (
     <>
@@ -48,5 +48,5 @@ export const DeleteEventButton = ({ eventId }: { eventId: string }) => {
         itemName="evento"
       />
     </>
-  )
-}
+  );
+};

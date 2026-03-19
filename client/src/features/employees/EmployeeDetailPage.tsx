@@ -1,59 +1,84 @@
-import type { ReactNode } from "react"
-import { UserCog } from "lucide-react"
-import { useNavigate, useParams } from "react-router-dom"
-import { ErrorCard } from "@/components/ui/error-card"
-import { PageHeader } from "@/components/ui/page-header"
-import { PageLoading } from "@/components/ui/page-loading"
-import { SectionCard } from "@/components/ui/section-card"
-import { SummaryItem } from "@/components/ui/summary-item"
-import { dutyLabels } from "@/features/employees/dutyLabels"
-import { EventsTable } from "@/features/events/components/EventsTable"
-import styles from "@/features/employees/EmployeeDetailPage.module.css"
-import { getFriendlyErrorMessage } from "@/services/api"
-import { useEmployeeDetailQuery } from "./hooks/use-employees"
-import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton"
-import { EditEmployeeButton } from "./components/EditEmployeeButton"
-import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton"
-import { ButtonLink } from "@/components/ui/button"
-import { eventResponse, type EventResponse } from "@/lib/schemas"
-import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter"
-import { Table, type ColumnDef } from "@/components/ui/table"
-import { useEventsByEmployeeQuery } from "../events/hooks/use-events"
-import { eventContentLabels } from "@/lib/shared/enums"
+import type { ReactNode } from "react";
+import { UserCog } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { ErrorCard } from "@/components/ui/error-card";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLoading } from "@/components/ui/page-loading";
+import { SectionCard } from "@/components/ui/section-card";
+import { SummaryItem } from "@/components/ui/summary-item";
+import { dutyLabels } from "@/features/employees/dutyLabels";
+import { EventsTable } from "@/features/events/components/EventsTable";
+import styles from "@/features/employees/EmployeeDetailPage.module.css";
+import { getFriendlyErrorMessage } from "@/services/api";
+import { useEmployeeDetailQuery } from "./hooks/use-employees";
+import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton";
+import { EditEmployeeButton } from "./components/EditEmployeeButton";
+import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton";
+import { ButtonLink } from "@/components/ui/button";
+import { eventResponse, type EventResponse } from "@/lib/schemas";
+import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter";
+import { Table, type ColumnDef } from "@/components/ui/table";
+import { useEventsByEmployeeQuery } from "../events/query/useEventQueries";
+import { eventContentLabels } from "@/lib/shared/enums";
 
 //TODO: Tá renderizando duas (ou quatro não sei) vezes
 export function EmployeeDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const employeeId = id ?? ""
-  const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>();
+  const employeeId = id ?? "";
+  const navigate = useNavigate();
 
-  const { data: employeeData,
+  const {
+    data: employeeData,
     error: employeeDataError,
     isLoading: isEmployeeLoading,
-    isFetched: isEmployeeFetched }
-    = useEmployeeDetailQuery(employeeId)
+    isFetched: isEmployeeFetched,
+  } = useEmployeeDetailQuery(employeeId);
 
-  const { data: employeeEventsData,
+  const {
+    data: employeeEventsData,
     isLoading: isEmployeeEventsLoading,
-    error: employeeEventsError } = useEventsByEmployeeQuery(employeeId)
+    error: employeeEventsError,
+  } = useEventsByEmployeeQuery(employeeId);
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: employeeData?.name },
     { label: "E-mail", value: employeeData?.email },
-    { label: "Cargo", value: dutyLabels[employeeData?.duty as keyof typeof dutyLabels] },
+    {
+      label: "Cargo",
+      value: dutyLabels[employeeData?.duty as keyof typeof dutyLabels],
+    },
     { label: "Contato", value: employeeData?.contact },
     { label: "CPF", value: employeeData?.cpf },
     { label: "Chave PIX", value: employeeData?.pix },
-    { label: "Data de nascimento", value: formatDateShortYear(employeeData?.birthdate ?? "") },
-    { label: "Status", value: employeeData?.archivedAt ? "Arquivado" : "Ativo" },
-    { label: "Criado em", value: formatDateShortYear(employeeData?.createdAt ?? "") },
-  ]
+    {
+      label: "Data de nascimento",
+      value: formatDateShortYear(employeeData?.birthdate ?? ""),
+    },
+    {
+      label: "Status",
+      value: employeeData?.archivedAt ? "Arquivado" : "Ativo",
+    },
+    {
+      label: "Criado em",
+      value: formatDateShortYear(employeeData?.createdAt ?? ""),
+    },
+  ];
 
   const myEventsColumns: ColumnDef<EventResponse>[] = [
     { header: "Aluno", accessor: (event) => event.studentName },
-    { header: "Data", accessor: (event) => formatDateShortYear(event.startDate) },
-    { header: "Horário", accessor: (event) => `${formatTime(event.startDate)} às ${formatTime(event.endDate)}` },
-    { header: "Conteúdo", accessor: (event) => eventContentLabels[event.content] },
+    {
+      header: "Data",
+      accessor: (event) => formatDateShortYear(event.startDate),
+    },
+    {
+      header: "Horário",
+      accessor: (event) =>
+        `${formatTime(event.startDate)} às ${formatTime(event.endDate)}`,
+    },
+    {
+      header: "Conteúdo",
+      accessor: (event) => eventContentLabels[event.content],
+    },
     { header: "Pagamento", accessor: (event) => brl.format(event.payment) },
   ];
 
@@ -64,7 +89,11 @@ export function EmployeeDetailPage() {
         title="Colaboradores"
         icon={UserCog}
         action={
-          <ButtonLink className="sm:ml-auto" to="/employees/new" variant="success">
+          <ButtonLink
+            className="sm:ml-auto"
+            to="/employees/new"
+            variant="success"
+          >
             Novo colaborador
           </ButtonLink>
         }
@@ -77,27 +106,36 @@ export function EmployeeDetailPage() {
         headerAction={
           <>
             <EditEmployeeButton employeeId={employeeId} />
-            <ArchiveEmployeeButton employeeId={employeeId} isArchived={!!employeeData?.archivedAt} />
+            <ArchiveEmployeeButton
+              employeeId={employeeId}
+              isArchived={!!employeeData?.archivedAt}
+            />
             <DeleteEmployeeButton employeeId={employeeId} />
           </>
         }
       >
-
-        {isEmployeeLoading && <PageLoading message="Carregando colaborador..." />}
+        {isEmployeeLoading && (
+          <PageLoading message="Carregando colaborador..." />
+        )}
 
         {employeeDataError && (
           <div className={styles.page}>
             <ErrorCard
               description={getFriendlyErrorMessage(employeeDataError)}
               actionLabel="Voltar para listagem de colaboradores"
-              onAction={() => navigate("/employees")} />
+              onAction={() => navigate("/employees")}
+            />
           </div>
         )}
 
         {isEmployeeFetched && (
           <div className={styles.summaryGrid}>
             {summaryItems.map((item) => (
-              <SummaryItem key={item.label} label={item.label} value={item.value} />
+              <SummaryItem
+                key={item.label}
+                label={item.label}
+                value={item.value}
+              />
             ))}
           </div>
         )}
@@ -111,5 +149,5 @@ export function EmployeeDetailPage() {
         <EventsTable variant={"embeddedEmployee"} ownerId={employeeId} />
       </SectionCard>
     </div>
-  )
+  );
 }
