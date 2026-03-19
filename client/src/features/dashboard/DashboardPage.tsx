@@ -1,79 +1,28 @@
-import { useQuery } from "@tanstack/react-query"
-import { ErrorCard } from "@/components/ui/error-card"
-import { PageLoading } from "@/components/ui/page-loading"
-import styles from "@/features/dashboard/DashboardPage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { brl } from "@/lib/shared/formatter"
-import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
+import { ErrorCard } from "@/components/ui/error-card";
+import { PageLoading } from "@/components/ui/page-loading";
+import styles from "@/features/dashboard/DashboardPage.module.css";
+import { useDashboardSummary } from "@/features/dashboard/query/useDashboardSummary";
+import { brl } from "@/lib/shared/formatter";
+import { getFriendlyErrorMessage } from "@/services/api";
 
-type DashboardSummary = {
-  studentsCount: number
-  employeesCount: number
-  eventsCount: number
-  revenue: number
+function getCurrentYearMonth() {
+  const now = new Date();
+  return {
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+  };
 }
 
 export function DashboardPage() {
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: queryKeys.dashboard.all,
-    queryFn: async (): Promise<DashboardSummary> => {
-      const [studentsResult, employeesResult, eventsResult] = await Promise.allSettled([
-        studentsApi.list(),
-        employeesApi.list(),
-        eventsApi.list(),
-      ])
+  const { year, month } = getCurrentYearMonth();
 
-      let hasSuccess = false
-
-      const studentsCount = studentsResult.status === "fulfilled" ? studentsResult.value.page.totalElements : 0
-
-      if (studentsResult.status === "fulfilled") {
-        hasSuccess = true
-      } else {
-        console.error("Falha ao carregar alunos:", studentsResult.reason)
-      }
-
-      const employeesCount = employeesResult.status === "fulfilled" ? employeesResult.value.page.totalElements : 0
-
-      if (employeesResult.status === "fulfilled") {
-        hasSuccess = true
-      } else {
-        console.error("Falha ao carregar colaboradores:", employeesResult.reason)
-      }
-
-      const eventsCount = eventsResult.status === "fulfilled" ? eventsResult.value.page.totalElements : 0
-      const revenue =
-        eventsResult.status === "fulfilled"
-          ? eventsResult.value.content.reduce((sum, event) => sum + Number(event.payment), 0)
-          : 0
-
-      if (eventsResult.status === "fulfilled") {
-        hasSuccess = true
-      } else {
-        console.error("Falha ao carregar eventos:", eventsResult.reason)
-      }
-
-      if (!hasSuccess) {
-        throw new Error("Não foi possível carregar os dados do painel.")
-      }
-
-      return {
-        studentsCount,
-        employeesCount,
-        eventsCount,
-        revenue,
-      }
-    },
-  })
+  const { data, isLoading, isError, error, refetch } = useDashboardSummary({
+    year,
+    month,
+  });
 
   if (isLoading) {
-    return <PageLoading message="Carregando painel..." />
+    return <PageLoading message="Carregando painel..." />;
   }
 
   if (isError) {
@@ -86,44 +35,52 @@ export function DashboardPage() {
           onAction={refetch}
         />
       </div>
-    )
+    );
   }
 
-  const summary = data
-
-  if (!summary) {
-    return null
+  if (!data) {
+    return null;
   }
+
+  const summary = data.kpis;
 
   return (
     <div className={styles.page}>
       <h1 className="app-text text-3xl font-bold">Painel</h1>
+
       <div className={styles.kpiGrid}>
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
             <h2 className="app-kpi-label">Alunos ativos</h2>
-            <div className="app-kpi-value">{summary.studentsCount}</div>
+            <div className="app-kpi-value">{summary.activeStudentsInMonth}</div>
           </div>
         </div>
+
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
-            <h2 className="app-kpi-label">Colaboradores ativos</h2>
-            <div className="app-kpi-value">{summary.employeesCount}</div>
+            <h2 className="app-kpi-label">Aulas no mês</h2>
+            <div className="app-kpi-value">{summary.classesInMonth}</div>
           </div>
         </div>
+
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
-            <h2 className="app-kpi-label">Eventos</h2>
-            <div className="app-kpi-value">{summary.eventsCount}</div>
+            <h2 className="app-kpi-label">Receita no mês</h2>
+            <div className="app-kpi-value">
+              {brl.format(summary.revenueInMonth)}
+            </div>
           </div>
         </div>
+
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
-            <h2 className="app-kpi-label">Custo (pagamentos)</h2>
-            <div className="app-kpi-value">{brl.format(summary.revenue)}</div>
+            <h2 className="app-kpi-label">Custo no mês</h2>
+            <div className="app-kpi-value">
+              {brl.format(summary.costInMonth)}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
