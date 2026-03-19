@@ -40,7 +40,7 @@ export function EmployeesPage() {
   }
 
   //TODO ver se esse erro de página tá padronizado em todos os componentes + adicionar actions
-  if (isError) {
+  if (isError || !employeesPage) {
     return (
       <div className={styles.page}>
         <PageHeader

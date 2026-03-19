@@ -15,11 +15,7 @@ import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton";
 import { EditEmployeeButton } from "./components/EditEmployeeButton";
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton";
 import { ButtonLink } from "@/components/ui/button";
-import { eventResponse, type EventResponse } from "@/features/events/schemas/event";
-import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { Table, type ColumnDef } from "@/components/ui/table";
-import { useEventsByEmployeeQuery } from "../events/query/useEventQueries";
-import { eventContentLabels } from "@/features/events/schemas/eventContentEnum";
+import { formatDateShortYear } from "@/lib/utils/formatter";
 
 //TODO: Tá renderizando duas (ou quatro não sei) vezes
 export function EmployeeDetailPage() {
@@ -33,12 +29,6 @@ export function EmployeeDetailPage() {
     isLoading: isEmployeeLoading,
     isFetched: isEmployeeFetched,
   } = useEmployeeDetailQuery(employeeId);
-
-  const {
-    data: employeeEventsData,
-    isLoading: isEmployeeEventsLoading,
-    error: employeeEventsError,
-  } = useEventsByEmployeeQuery(employeeId);
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: employeeData?.name },

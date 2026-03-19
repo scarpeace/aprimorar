@@ -21,7 +21,7 @@ client/src/
 │   │   ├── StudentDetailPage.tsx
 │   │   ├── StudentCreatePage.tsx
 │   │   ├── components/    # Feature-specific components
-│   │   └── hooks/         # Feature-specific hooks
+│   │   └── query/         # Feature-specific hooks (React Query)
 │   └── events/
 ├── components/
 │   └── ui/               # Reusable UI primitives
@@ -306,19 +306,44 @@ export class ErrorBoundary extends Component<{ children?: ReactNode }, { error: 
 
 ## Import Conventions
 
-Always use `@/` alias, never deep relative imports:
+### Import Order (Grouped)
+1. React/core imports
+2. Third-party libraries (react-router-dom, lucide-react, react-hook-form)
+3. `@/` alias imports (shared components, lib utilities)
+4. Relative imports (same-feature components, hooks)
 
 ```typescript
-// Correct
-import { ButtonLink } from "@/components/ui/button"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { studentsApi } from "@/services/api"
+// 1. React/core
+import { useState } from "react"
 
-// Avoid
-import { ButtonLink } from "../../components/ui/button"
+// 2. Third-party
+import { useNavigate } from "react-router-dom"
+import { GraduationCap } from "lucide-react"
+
+// 3. @/ alias (shared)
+import { Button } from "@/components/ui/button"
+import { getFriendlyErrorMessage } from "@/lib/shared/api"
+
+// 4. Relative (same feature)
+import { StudentsTable } from "./components/StudentsTable"
+import { useStudentDetailQuery } from "./query/useStudentQueries"
 ```
 
-Use `import type` for type-only imports:
+### Cross-Feature vs Same-Feature Imports
+
+```typescript
+// Cross-feature - use @/ alias
+import { EventsTable } from "@/features/events/components/EventsTable"
+import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown"
+
+// Same-feature - use relative paths
+import { StudentsTable } from "./components/StudentsTable"
+import { useStudentQueries } from "./query/useStudentQueries"
+```
+
+### Type-Only Imports
+
+Always use `import type` for type-only imports:
 
 ```typescript
 import type { ReactNode } from "react"

@@ -54,9 +54,8 @@ export function ParentSelectDropdown({
         >
           {activeParents?.map((parent: ParentResponse) => (
             <li key={parent.id}>
-              <a
-                role="button"
-                tabIndex={0}
+              <button
+                type="button"
                 className={value === parent.id ? "active" : ""}
                 onClick={() => {
                   onChange(parent.id);
@@ -65,7 +64,7 @@ export function ParentSelectDropdown({
                 }}
               >
                 {parent.name}
-              </a>
+              </button>
             </li>
           ))}
           {activeParents?.length === 0 && (

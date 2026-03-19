@@ -3,12 +3,13 @@ import { PageLoading } from "@/components/ui/page-loading";
 import styles from "@/features/dashboard/DashboardPage.module.css";
 import { useDashboardSummary } from "@/features/dashboard/query/useDashboardSummary";
 import { brl } from "@/lib/utils/formatter";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { PizzaChart } from "./components/PizzaChart";
 
 function getCurrentYearMonth() {
   const now = new Date();
   return {
-    year: now.getFullYear(),
+    year: 2027,
     month: now.getMonth() + 1,
   };
 }
@@ -25,7 +26,7 @@ export function DashboardPage() {
     return <PageLoading message="Carregando painel..." />;
   }
 
-  if (isError) {
+  if (isError || !data) {
     return (
       <div className={styles.errorWrap}>
         <h1 className="app-text text-3xl font-bold">Painel</h1>
@@ -38,28 +39,25 @@ export function DashboardPage() {
     );
   }
 
-  if (!data) {
-    return null;
-  }
-
-  const summary = data.kpis;
+  const { kpis, charts } = data;
 
   return (
     <div className={styles.page}>
       <h1 className="app-text text-3xl font-bold">Painel</h1>
 
+      {/* KPI Section */}
       <div className={styles.kpiGrid}>
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
             <h2 className="app-kpi-label">Alunos ativos</h2>
-            <div className="app-kpi-value">{summary.activeStudentsInMonth}</div>
+            <div className="app-kpi-value">{kpis.activeStudentsInMonth}</div>
           </div>
         </div>
 
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
             <h2 className="app-kpi-label">Aulas no mês</h2>
-            <div className="app-kpi-value">{summary.classesInMonth}</div>
+            <div className="app-kpi-value">{kpis.classesInMonth}</div>
           </div>
         </div>
 
@@ -67,7 +65,7 @@ export function DashboardPage() {
           <div className="card-body gap-2">
             <h2 className="app-kpi-label">Receita no mês</h2>
             <div className="app-kpi-value">
-              {brl.format(summary.revenueInMonth)}
+              {brl.format(kpis.revenueInMonth)}
             </div>
           </div>
         </div>
@@ -75,9 +73,34 @@ export function DashboardPage() {
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
             <h2 className="app-kpi-label">Custo no mês</h2>
-            <div className="app-kpi-value">
-              {brl.format(summary.costInMonth)}
-            </div>
+            <div className="app-kpi-value">{brl.format(kpis.costInMonth)}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="card border border-base-300 bg-base-100 shadow-sm">
+          <div className="card-body">
+            <h2 className="card-title text-lg font-semibold">
+              Distribuição de Conteúdo
+            </h2>
+            <p className="text-sm text-base-content/60 mb-4">
+              Visualização das aulas por categoria de atendimento.
+            </p>
+            <PizzaChart data={charts.classesByContent} />
+          </div>
+        </div>
+
+        {/* Placeholder for future charts */}
+        <div className="card border border-base-300 bg-base-100 shadow-sm flex items-center justify-center min-h-[300px]">
+          <div className="text-center p-8">
+            <h3 className="text-base-content/40 font-medium italic">
+              Gráfico de Evolução
+            </h3>
+            <p className="text-xs text-base-content/30 mt-1">
+              Em desenvolvimento
+            </p>
           </div>
         </div>
       </div>

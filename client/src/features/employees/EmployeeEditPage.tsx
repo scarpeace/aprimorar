@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useHookFormMask } from "use-mask-input";
-import { Badge } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { FormField } from "@/components/ui/form-field";
@@ -17,7 +16,6 @@ import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useEmployeeEditQuery } from "./query/useEmployeeQueries";
 import { useUpdateEmployee } from "./query/useEmployeeMutations";
 import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton";
-import { EditEmployeeButton } from "./components/EditEmployeeButton";
 import { Save } from "lucide-react";
 
 export function EmployeeEditPage() {
