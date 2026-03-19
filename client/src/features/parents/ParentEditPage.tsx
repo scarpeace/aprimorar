@@ -10,7 +10,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "./ParentCreatePage.module.css";
-import { parentFormSchema, type ParentFormInput } from "@/lib/schemas";
+import { parentFormSchema, type ParentFormInput } from "@/features/parents/schemas/parent";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useParentDetailQuery } from "./query/useParentQueries";
 import { useUpdateParent } from "./query/useParentMutations";

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useHookFormMask } from "use-mask-input";
@@ -12,17 +11,12 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/students/StudentCreatePage.module.css";
-import {
-  studentInputSchema,
-  type ParentResponse,
-  type StudentFormInput,
-} from "@/lib/schemas";
-import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates";
+import { studentInputSchema, type StudentFormInput } from "@/features/students/schemas/student";
+import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
 import { formatDateInputValue } from "@/lib/utils/formatter";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useStudentDetailQuery } from "@/features/students/query/useStudentQueries";
 import { useUpdateStudent } from "@/features/students/query/useStudentMutations";
-import { useParentsListQuery } from "../parents/query/useParentQueries";
 import { DeleteStudentButton } from "./components/DeleteStudentButton";
 import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown";
 

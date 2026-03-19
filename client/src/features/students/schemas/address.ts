@@ -1,6 +1,6 @@
 import z from "zod"
-import { BRAZILIAN_STATE_VALUES } from "../shared/brazilianStates"
-import { formatZip } from "../shared/formatter"
+import { BRAZILIAN_STATE_VALUES } from "../../../lib/utils/brazilianStates"
+import { formatZip } from "../../../lib/utils/formatter"
 
 export const addressFormSchema = z.object({
   street: z.string().min(1, "Rua é obrigatória").max(100, "Rua pode ter somente até 100 caracteres"),

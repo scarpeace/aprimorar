@@ -6,7 +6,7 @@ import { dashboardQueryKeys } from "@/features/dashboard/query/dashboardQueryKey
 import { employeesApi } from "@/features/employees/api/employeesApi";
 import { employeesQueryKeys } from "@/features/employees/query/employeesQueryKeys";
 import { eventsQueryKeys } from "@/features/events/query/eventsQueryKeys";
-import type { EmployeeFormInput } from "@/lib/schemas";
+import type { EmployeeFormInput } from "@/features/employees/schemas/employee";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 export function useCreateEmployee() {

@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { dutyLabels } from "@/features/employees/dutyLabels";
+import { dutyLabels } from "@/features/employees/schemas/dutyEnum";
 import { EventsTable } from "@/features/events/components/EventsTable";
 import styles from "@/features/employees/EmployeeDetailPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
@@ -15,11 +15,11 @@ import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton";
 import { EditEmployeeButton } from "./components/EditEmployeeButton";
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton";
 import { ButtonLink } from "@/components/ui/button";
-import { eventResponse, type EventResponse } from "@/lib/schemas";
+import { eventResponse, type EventResponse } from "@/features/events/schemas/event";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Table, type ColumnDef } from "@/components/ui/table";
 import { useEventsByEmployeeQuery } from "../events/query/useEventQueries";
-import { eventContentLabels } from "@/lib/shared/enums";
+import { eventContentLabels } from "@/features/events/schemas/eventContentEnum";
 
 //TODO: Tá renderizando duas (ou quatro não sei) vezes
 export function EmployeeDetailPage() {

@@ -11,13 +11,10 @@ import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/events/EventCreatePage.module.css";
 import { employeesQueryKeys } from "@/features/employees/query/employeesQueryKeys";
-import {
-  eventInputSchema,
-  type EmployeeResponse,
-  type EventFormInput,
-  type StudentResponse,
-} from "@/lib/schemas";
-import { eventContentLabels, eventContentValues } from "@/lib/shared/enums";
+import { eventInputSchema, type EventFormInput } from "@/features/events/schemas/event";
+import type { EmployeeResponse } from "@/features/employees/schemas/employee";
+import type { StudentResponse } from "@/features/students/schemas/student";
+import { eventContentLabels, eventContentValues } from "@/features/events/schemas/eventContentEnum";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { employeesApi } from "@/features/employees/api/employeesApi";
 import { studentsApi } from "@/features/students/api/studentsApi";

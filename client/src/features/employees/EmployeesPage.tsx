@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { Pagination } from "@/components/ui/pagination";
 import { ButtonLink } from "@/components/ui/button";
-import { dutyLabels } from "@/features/employees/dutyLabels";
+import { dutyLabels } from "./schemas/dutyEnum";
 import styles from "@/features/employees/EmployeesPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useEmployeesQuery } from "./query/useEmployeeQueries";

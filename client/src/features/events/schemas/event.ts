@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { eventContentValues } from "@/lib/shared/enums"
+import { eventContentValues } from "./eventContentEnum"
 // TODO Evento não vai precisar de título, ele vai ser gerado automaticamente no backend. Remover num futuro próximo do front.
 export const eventInputSchema = z.object({
   title: z.string().min(1, "Título é obrigatório").max(100, "Título deve ter no máximo 100 caracteres"),

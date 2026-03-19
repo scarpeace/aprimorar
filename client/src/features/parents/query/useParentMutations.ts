@@ -6,7 +6,7 @@ import { dashboardQueryKeys } from "@/features/dashboard/query/dashboardQueryKey
 import { parentsApi } from "@/features/parents/api/parentsApi";
 import { parentsQueryKeys } from "@/features/parents/query/parentsQueryKeys";
 import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
-import type { ParentFormInput } from "@/lib/schemas";
+import type { ParentFormInput } from "@/features/parents/schemas/parent";
 
 export function useCreateParent() {
   const queryClient = useQueryClient();

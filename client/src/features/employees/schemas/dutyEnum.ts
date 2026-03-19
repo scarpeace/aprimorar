@@ -1,4 +1,12 @@
-import type { Duty } from "@/lib/shared/enums"
+export const dutyValues = [
+  "TEACHER",
+  "ADM",
+  "THERAPIST",
+  "MENTOR",
+  "SYSTEM",
+] as const;
+
+export type Duty = typeof dutyValues[number];
 
 export const dutyLabels = {
   TEACHER: "Professor(a)",
@@ -6,4 +14,4 @@ export const dutyLabels = {
   THERAPIST: "Terapeuta",
   MENTOR: "Mentor(a)",
   SYSTEM: "Sistema",
-} as const satisfies Record<Duty, string>
+} as const satisfies Record<Duty, string>;

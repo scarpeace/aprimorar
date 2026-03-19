@@ -5,7 +5,7 @@ import { LoadingCard } from "@/components/ui/loading-card"
 import { useState, useEffect, type ReactNode } from "react"
 import { Pagination } from "@/components/ui/pagination"
 import type { UseQueryResult } from "@tanstack/react-query"
-import type { PageResponse } from "@/lib/schemas/page-response"
+import type { PageResponse } from "@/lib/shared/page-response"
 
 export type ColumnDef<T> = {
     header: string

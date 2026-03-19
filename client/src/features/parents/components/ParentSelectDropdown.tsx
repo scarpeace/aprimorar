@@ -1,7 +1,7 @@
 import React, { useId } from "react";
 import { ChevronDown } from "lucide-react";
 import { useParentsListQuery } from "../query/useParentQueries";
-import type { ParentResponse } from "@/lib/schemas";
+import type { ParentResponse } from "@/features/parents/schemas/parent";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 type ParentSelectDropdownProps = Readonly<{

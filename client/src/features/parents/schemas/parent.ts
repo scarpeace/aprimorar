@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { formatPhone, formatCpf, isValidCpf, isValidBrazilianPhone, formatDateShortYear } from '../shared/formatter';
+import { formatPhone, formatCpf, isValidCpf, isValidBrazilianPhone, formatDateShortYear } from '../../../lib/utils/formatter';
 
 export const parentFormSchema = z.object({
   name: z.string().min(1, "Nome do responsável é obrigatório"),

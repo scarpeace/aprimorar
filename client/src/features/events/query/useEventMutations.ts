@@ -6,7 +6,7 @@ import { eventsApi } from "@/features/events/api/eventsApi";
 import { eventsQueryKeys } from "@/features/events/query/eventsQueryKeys";
 import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
 import { employeesQueryKeys } from "@/features/employees/query/employeesQueryKeys";
-import type { EventFormInput } from "@/lib/schemas";
+import type { EventFormInput } from "@/features/events/schemas/event";
 
 export function useCreateEvent() {
   const queryClient = useQueryClient();

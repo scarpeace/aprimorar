@@ -1,7 +1,7 @@
 import { z } from "zod"
-import { parentResponseSchema } from "../../../lib/schemas/parent"
-import { addressResponseSchema, addressFormSchema } from "../../../lib/schemas/address"
-import { formatCpf, formatPhone } from "../../../lib/shared/formatter"
+import { parentResponseSchema } from "../../parents/schemas/parent"
+import { addressResponseSchema, addressFormSchema } from "./address"
+import { formatCpf, formatPhone } from "../../../lib/utils/formatter"
 
 export const studentInputSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),

@@ -2,8 +2,8 @@ import { ButtonLink } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { eventContentLabels } from "@/lib/shared/enums";
-import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter";
+import { eventContentLabels } from "../schemas/eventContentEnum";
+import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import {
   useEventsByEmployeeQuery,
   useEventsByStudentQuery,
@@ -62,10 +62,10 @@ export function EventsTable({
     isLoading,
     error,
   } = variant === "eventsPage"
-    ? allResults
-    : variant === "embeddedEmployee"
-      ? employeeResults
-      : studentResults;
+      ? allResults
+      : variant === "embeddedEmployee"
+        ? employeeResults
+        : studentResults;
 
   const showPrice = variant === "eventsPage" || variant === "embeddedStudent";
   const showPayment = variant === "embeddedEmployee";

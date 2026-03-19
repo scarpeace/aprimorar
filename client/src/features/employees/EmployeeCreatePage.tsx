@@ -6,8 +6,8 @@ import { FormField } from "@/components/ui/form-field";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/employees/EmployeeCreatePage.module.css";
-import { dutyLabels } from "@/features/employees/dutyLabels";
-import { employeeFormSchema, type EmployeeFormInput } from "@/lib/schemas";
+import { dutyLabels } from "@/features/employees/schemas/dutyEnum";
+import { employeeFormSchema, type EmployeeFormInput } from "@/features/employees/schemas/employee";
 import { useCreateEmployee } from "./query/useEmployeeMutations";
 
 export function EmployeeCreatePage() {

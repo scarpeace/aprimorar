@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useHookFormMask } from "use-mask-input";
@@ -11,8 +10,8 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/employees/EmployeeCreatePage.module.css";
-import { dutyLabels } from "@/features/employees/dutyLabels";
-import { employeeFormSchema, type EmployeeFormInput } from "@/lib/schemas";
+import { dutyLabels } from "@/features/employees/schemas/dutyEnum";
+import { employeeFormSchema, type EmployeeFormInput } from "@/features/employees/schemas/employee";
 import { formatDateInputValue } from "@/lib/utils/formatter";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useEmployeeEditQuery } from "./query/useEmployeeQueries";

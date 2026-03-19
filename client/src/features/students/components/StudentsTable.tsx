@@ -8,7 +8,7 @@ import {
   useStudentsByParentQuery,
   useStudentsQuery,
 } from "@/features/students/query/useStudentQueries";
-import type { StudentResponse } from "@/features/students/schema/student";
+import type { StudentResponse } from "@/features/students/schemas/student";
 
 export type StudentsTableVariant = "studentsPage" | "embeddedParent";
 

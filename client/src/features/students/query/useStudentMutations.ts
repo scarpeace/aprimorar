@@ -6,7 +6,7 @@ import { eventsQueryKeys } from "@/features/events/query/eventsQueryKeys";
 import { parentsQueryKeys } from "@/features/parents/query/parentsQueryKeys";
 import { studentsApi } from "@/features/students/api/studentsApi";
 import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
-import type { StudentFormInput } from "@/lib/schemas";
+import type { StudentFormInput } from "@/features/students/schemas/student";
 
 export function useCreateStudent() {
   const queryClient = useQueryClient();

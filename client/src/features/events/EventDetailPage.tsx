@@ -9,7 +9,7 @@ import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import styles from "@/features/events/EventDetailPage.module.css";
-import { eventContentLabels } from "@/lib/shared/enums";
+import { eventContentLabels } from "@/features/events/schemas/eventContentEnum";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useEventDetailQuery } from "./query/useEventQueries";

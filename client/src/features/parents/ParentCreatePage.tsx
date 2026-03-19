@@ -8,7 +8,7 @@ import { SectionCard } from "@/components/ui/section-card";
 import styles from "./ParentCreatePage.module.css";
 import { useCreateParent } from "./query/useParentMutations";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { parentFormSchema, type ParentFormInput } from "@/lib/schemas";
+import { parentFormSchema, type ParentFormInput } from "@/features/parents/schemas/parent";
 
 const initialParentData: ParentFormInput = {
   name: "Gustavo Scarpellini",

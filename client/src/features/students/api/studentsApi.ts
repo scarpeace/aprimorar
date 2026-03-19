@@ -9,7 +9,7 @@ import {
   type StudentFormInput,
   type StudentOption,
   type StudentResponse,
-} from "@/features/students/schema/student";
+} from "../schemas/student";
 
 export const studentsApi = {
   async list(
