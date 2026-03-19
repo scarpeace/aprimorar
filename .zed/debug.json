@@ -1,0 +1,14 @@
+[
+  {
+    "adapter": "Java",
+    "request": "launch",
+    "label": "Launch Aprimorar Java",
+    // Classe principal
+    "mainClass": "com.aprimorar.api.ApiAprimorarApplication",
+    // Garante que o processo rode dentro da pasta do backend
+    "cwd": "$ZED_WORKTREE_ROOT/server/api-aprimorar",
+    "stopOnEntry": false,
+    "args": [],
+    "vmArgs": ["-Dspring.profiles.active=dev"],
+  },
+]

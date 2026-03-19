@@ -6,6 +6,7 @@ import java.util.Locale;
 import com.aprimorar.api.domain.address.exception.InvalidAddressException;
 import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
+import com.aprimorar.api.domain.dashboard.exception.InvalidDashboardRequestException;
 import com.aprimorar.api.domain.event.exception.EventNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
 import com.aprimorar.api.domain.event.exception.InvalidEventException;
@@ -67,7 +68,8 @@ public class GlobalExceptionHandler {
             InvalidEventException.class,
             InvalidParentException.class,
             InvalidStudentException.class,
-            InvalidAddressException.class
+            InvalidAddressException.class,
+            InvalidDashboardRequestException.class
     })
     public ResponseEntity<ApiError> handleInvalidDomainException(RuntimeException ex, HttpServletRequest request) {
         return buildErrorResponse(ex, HttpStatus.BAD_REQUEST, request);

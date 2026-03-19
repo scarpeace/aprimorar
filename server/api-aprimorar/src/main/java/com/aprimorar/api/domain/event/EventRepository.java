@@ -1,6 +1,8 @@
 package com.aprimorar.api.domain.event;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -11,9 +13,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.aprimorar.api.enums.EventContent;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecificationExecutor<Event> {
+
+    interface EventContentCountProjection {
+        EventContent getContent();
+        long getCount();
+    }
 
     @Modifying
     @Query("UPDATE Event e SET e.student.id = :ghostId WHERE e.student.id = :studentId")
@@ -78,6 +86,56 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             @Param("ignoredEventId") UUID ignoredEventId
+    );
+
+    long countByStartDateGreaterThanEqualAndStartDateLessThan(LocalDateTime startDate, LocalDateTime endDate);
+
+    @Query("""
+            select count(distinct e.student.id)
+            from Event e
+            where e.startDate >= :startDate
+              and e.startDate < :endDate
+              and e.student.id <> :excludedStudentId
+            """)
+    long countDistinctStudentsInPeriodExcludingStudent(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            @Param("excludedStudentId") UUID excludedStudentId
+    );
+
+    @Query("""
+            select coalesce(sum(e.price), 0)
+            from Event e
+            where e.startDate >= :startDate
+              and e.startDate < :endDate
+            """)
+    BigDecimal sumPriceInPeriod(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
+    @Query("""
+            select coalesce(sum(e.payment), 0)
+            from Event e
+            where e.startDate >= :startDate
+              and e.startDate < :endDate
+            """)
+    BigDecimal sumPaymentInPeriod(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
+    @Query("""
+            select e.content as content, count(e) as count
+            from Event e
+            where e.startDate >= :startDate
+              and e.startDate < :endDate
+            group by e.content
+            order by count(e) desc
+            """)
+    List<EventContentCountProjection> findContentDistributionInPeriod(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
     );
 
 
