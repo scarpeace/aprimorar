@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useDeleteStudent } from "@/features/students/query/useStudentMutations";
-import { eventsApi } from "@/services/api";
-import { queryKeys } from "@/lib/query/queryKeys";
+import { eventsApi } from "@/features/events/api/eventsApi";
+import { eventsQueryKeys } from "@/features/events/query/eventsQueryKeys";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 
 export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
@@ -12,7 +12,7 @@ export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
   const { mutate: deleteStudent, isPending: isDeleting } = useDeleteStudent();
 
   const { data: eventsData, isLoading: isEventsLoading } = useQuery({
-    queryKey: [...queryKeys.events.byStudent(studentId), 0, 1],
+    queryKey: [...eventsQueryKeys.byStudent(studentId), { page: 0, size: 1 }],
     queryFn: () => eventsApi.listByStudent(studentId, 0, 1),
     enabled: isOpen,
   });

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { useDeleteParent } from "../hooks/use-parents";
+import { useDeleteParent } from "../query/useParentMutations";
 import { studentsApi } from "@/features/students/api/studentsApi";
 import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";

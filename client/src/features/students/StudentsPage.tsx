@@ -4,7 +4,7 @@ import { ListSearchInput } from "@/components/ui/list-search-input"
 import { PageHeader } from "@/components/ui/page-header"
 import { ButtonLink } from "@/components/ui/button"
 import styles from "@/features/students/StudentsPage.module.css"
-import { useDebounce } from "@/hooks/use-debounce"
+import { useDebounce } from "@/lib/shared/use-debounce"
 import { StudentsTable } from "./components/StudentsTable"
 
 export function StudentsPage() {

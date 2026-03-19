@@ -1,53 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import {
-  employeesApi,
-  eventsApi,
-  getFriendlyErrorMessage,
-} from "@/services/api";
-import { queryKeys } from "@/lib/query/queryKeys";
+
 import { dashboardQueryKeys } from "@/features/dashboard/query/dashboardQueryKeys";
+import { employeesApi } from "@/features/employees/api/employeesApi";
+import { employeesQueryKeys } from "@/features/employees/query/employeesQueryKeys";
+import { eventsQueryKeys } from "@/features/events/query/eventsQueryKeys";
 import type { EmployeeFormInput } from "@/lib/schemas";
-
-// --- QUERIES ---
-
-export function useEmployeesQuery(
-  page = 0,
-  size = 20,
-  search?: string,
-  sortBy = "name",
-) {
-  return useQuery({
-    queryKey: queryKeys.employees.list({ page, size, sortBy, search }),
-    queryFn: () => employeesApi.list(page, size, sortBy, search),
-  });
-}
-
-export function useEmployeeDetailQuery(id: string) {
-  return useQuery({
-    queryKey: queryKeys.employees.detail(id),
-    queryFn: () => employeesApi.getById(id),
-    enabled: !!id,
-  });
-}
-
-export function useEmployeeEditQuery(id: string) {
-  return useQuery({
-    queryKey: queryKeys.employees.detail(id),
-    queryFn: () => employeesApi.getByIdForEdit(id),
-    enabled: !!id,
-  });
-}
-
-export function useEmployeeOptionsQuery() {
-  return useQuery({
-    queryKey: queryKeys.employees.options,
-    queryFn: () => employeesApi.getOptions(),
-  });
-}
-
-// --- MUTATIONS ---
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 export function useCreateEmployee() {
   const queryClient = useQueryClient();
@@ -57,7 +17,7 @@ export function useCreateEmployee() {
     mutationFn: (data: EmployeeFormInput) => employeesApi.create(data),
     onSuccess: (createdEmployee) => {
       toast.success("Colaborador criado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() });
+      queryClient.invalidateQueries({ queryKey: employeesQueryKeys.lists() });
       queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.all });
       navigate(`/employees/${createdEmployee.id}`);
     },
@@ -73,11 +33,11 @@ export function useUpdateEmployee(id: string) {
 
   return useMutation({
     mutationFn: (data: EmployeeFormInput) => employeesApi.update(id, data),
-    onSuccess: (updatedEmployee) => {
+    onSuccess: () => {
       toast.success("Colaborador atualizado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() });
+      queryClient.invalidateQueries({ queryKey: employeesQueryKeys.lists() });
       queryClient.invalidateQueries({
-        queryKey: queryKeys.employees.detail(id),
+        queryKey: employeesQueryKeys.detail(id),
       });
       navigate(`/employees/${id}`);
     },
@@ -93,11 +53,13 @@ export function useDeleteEmployee() {
 
   return useMutation({
     mutationFn: (id: string) => employeesApi.delete(id),
-    onSuccess: async (_, id) => {
+    onSuccess: async () => {
       toast.success("Colaborador excluído com sucesso!");
       navigate("/employees");
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() });
-      queryClient.invalidateQueries({ queryKey: ["events", "by-employee"] });
+      queryClient.invalidateQueries({ queryKey: employeesQueryKeys.lists() });
+      queryClient.invalidateQueries({
+        queryKey: eventsQueryKeys.byEmployeePrefix(),
+      });
       queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.all });
     },
     onError: (error) => {
@@ -113,9 +75,9 @@ export function useArchiveEmployee() {
     mutationFn: (id: string) => employeesApi.archive(id),
     onSuccess: (_, id) => {
       toast.success("Colaborador arquivado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() });
+      queryClient.invalidateQueries({ queryKey: employeesQueryKeys.lists() });
       queryClient.invalidateQueries({
-        queryKey: queryKeys.employees.detail(id),
+        queryKey: employeesQueryKeys.detail(id),
       });
     },
     onError: (error) => {
@@ -131,9 +93,9 @@ export function useUnarchiveEmployee() {
     mutationFn: (id: string) => employeesApi.unarchive(id),
     onSuccess: (_, id) => {
       toast.success("Colaborador desarquivado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() });
+      queryClient.invalidateQueries({ queryKey: employeesQueryKeys.lists() });
       queryClient.invalidateQueries({
-        queryKey: queryKeys.employees.detail(id),
+        queryKey: employeesQueryKeys.detail(id),
       });
     },
     onError: (error) => {

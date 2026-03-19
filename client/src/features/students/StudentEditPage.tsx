@@ -18,11 +18,11 @@ import {
   type StudentFormInput,
 } from "@/lib/schemas";
 import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates";
-import { formatDateInputValue } from "@/lib/shared/formatter";
-import { getFriendlyErrorMessage } from "@/services/api";
+import { formatDateInputValue } from "@/lib/utils/formatter";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useStudentDetailQuery } from "@/features/students/query/useStudentQueries";
 import { useUpdateStudent } from "@/features/students/query/useStudentMutations";
-import { useParentsListQuery } from "../parents/hooks/use-parents";
+import { useParentsListQuery } from "../parents/query/useParentQueries";
 import { DeleteStudentButton } from "./components/DeleteStudentButton";
 import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown";
 

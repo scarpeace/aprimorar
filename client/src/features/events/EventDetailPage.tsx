@@ -10,8 +10,8 @@ import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import styles from "@/features/events/EventDetailPage.module.css";
 import { eventContentLabels } from "@/lib/shared/enums";
-import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter";
-import { getFriendlyErrorMessage } from "@/services/api";
+import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useEventDetailQuery } from "./query/useEventQueries";
 import { EditEventButton } from "./components/EditEventButton";
 import { DeleteEventButton } from "./components/DeleteEventButton";
@@ -73,7 +73,7 @@ export function EventDetailPage() {
     <div className={styles.page}>
       <PageHeader
         description="Veja e gerencie as informações do evento"
-        icon={Calendar}
+        Icon={Calendar}
         title="Detalhes do evento"
         action={
           <ButtonLink to="/events" variant="outline">

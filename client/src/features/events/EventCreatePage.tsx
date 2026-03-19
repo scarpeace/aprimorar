@@ -7,10 +7,10 @@ import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/events/EventCreatePage.module.css";
 import { eventInputSchema, type EventFormInput } from "@/lib/schemas";
 import { eventContentLabels, eventContentValues } from "@/lib/shared/enums";
-import { getFriendlyErrorMessage } from "@/services/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useCreateEvent } from "./query/useEventMutations";
 import { useStudentOptionsQuery } from "@/features/students/query/useStudentQueries";
-import { useEmployeeOptionsQuery } from "@/features/employees/hooks/use-employees";
+import { useEmployeeOptionsQuery } from "@/features/employees/query/useEmployeeQueries";
 
 export function EventCreatePage() {
   const {

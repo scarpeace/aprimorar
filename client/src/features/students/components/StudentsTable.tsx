@@ -7,8 +7,8 @@ import { Pagination } from "@/components/ui/pagination";
 import {
   useStudentsByParentQuery,
   useStudentsQuery,
-} from "../query/useStudentQueries";
-import type { StudentResponse } from "@/lib/schemas/student";
+} from "@/features/students/query/useStudentQueries";
+import type { StudentResponse } from "@/features/students/schema/student";
 
 export type StudentsTableVariant = "studentsPage" | "embeddedParent";
 

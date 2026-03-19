@@ -2,9 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { dashboardQueryKeys } from "@/features/dashboard/query/dashboardQueryKeys";
+import { eventsQueryKeys } from "@/features/events/query/eventsQueryKeys";
+import { parentsQueryKeys } from "@/features/parents/query/parentsQueryKeys";
 import { studentsApi } from "@/features/students/api/studentsApi";
 import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
-import { queryKeys } from "@/lib/query/queryKeys";
 import type { StudentFormInput } from "@/lib/schemas";
 
 export function useCreateStudent() {
@@ -17,7 +18,7 @@ export function useCreateStudent() {
       toast.success("Aluno criado com sucesso!");
 
       queryClient.invalidateQueries({ queryKey: studentsQueryKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.parents.all });
+      queryClient.invalidateQueries({ queryKey: parentsQueryKeys.all });
       queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.all });
 
       navigate(`/students/${createdStudent.id}`);
@@ -37,9 +38,11 @@ export function useUpdateStudent(id: string) {
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: studentsQueryKeys.lists() }),
-        queryClient.invalidateQueries({ queryKey: studentsQueryKeys.detail(id) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.parents.all }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.events.all }),
+        queryClient.invalidateQueries({
+          queryKey: studentsQueryKeys.detail(id),
+        }),
+        queryClient.invalidateQueries({ queryKey: parentsQueryKeys.all }),
+        queryClient.invalidateQueries({ queryKey: eventsQueryKeys.all }),
         queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.all }),
       ]);
     },

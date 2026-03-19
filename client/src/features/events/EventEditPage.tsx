@@ -10,7 +10,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/events/EventCreatePage.module.css";
-import { queryKeys } from "@/lib/query/queryKeys";
+import { employeesQueryKeys } from "@/features/employees/query/employeesQueryKeys";
 import {
   eventInputSchema,
   type EmployeeResponse,
@@ -18,7 +18,8 @@ import {
   type StudentResponse,
 } from "@/lib/schemas";
 import { eventContentLabels, eventContentValues } from "@/lib/shared/enums";
-import { getFriendlyErrorMessage, employeesApi } from "@/services/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { employeesApi } from "@/features/employees/api/employeesApi";
 import { studentsApi } from "@/features/students/api/studentsApi";
 import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
 import { useEventDetailQuery } from "@/features/events/query/useEventQueries";
@@ -27,7 +28,7 @@ import {
   useUpdateEvent,
 } from "@/features/events/query/useEventMutations";
 import { useQuery } from "@tanstack/react-query";
-import { formatDateTimeLocal } from "@/lib/shared/formatter";
+import { formatDateTimeLocal } from "@/lib/utils/formatter";
 
 export function EventEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -57,7 +58,7 @@ export function EventEditPage() {
   } = useEventDetailQuery(eventId);
 
   const dropDownOptionsQuery = useQuery({
-    queryKey: [studentsQueryKeys.all, queryKeys.employees.all, "options"],
+    queryKey: [studentsQueryKeys.all, employeesQueryKeys.all, "options"],
     queryFn: async (): Promise<{
       students: StudentResponse[];
       employees: EmployeeResponse[];

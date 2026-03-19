@@ -1,11 +1,14 @@
-import { api } from "@/services/api";
-import { pageResponseSchema, type PageResponse } from "@/lib/schemas/page-response";
+import { api } from "@/lib/shared/api";
+import {
+  pageResponseSchema,
+  type PageResponse,
+} from "@/lib/shared/page-response";
 import {
   eventInputSchema,
   eventResponse,
   type EventFormInput,
   type EventResponse,
-} from "@/lib/schemas/event";
+} from "@/features/events/schemas/event";
 
 export const eventsApi = {
   async list(

@@ -1,5 +1,5 @@
 import z from "zod"
-import { BRAZILIAN_STATE_VALUES } from "../shared/enums/brazilianStates"
+import { BRAZILIAN_STATE_VALUES } from "../shared/brazilianStates"
 import { formatZip } from "../shared/formatter"
 
 export const addressFormSchema = z.object({

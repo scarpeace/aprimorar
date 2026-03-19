@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/ui/page-header"
 import { ButtonLink } from "@/components/ui/button"
 import { EventsTable } from "@/features/events/components/EventsTable"
 import styles from "@/features/events/EventsPage.module.css"
-import { useDebounce } from "@/hooks/use-debounce"
+import { useDebounce } from "@/lib/shared/use-debounce"
 import { CalendarCheck2 } from "lucide-react"
 
 export function EventsPage() {

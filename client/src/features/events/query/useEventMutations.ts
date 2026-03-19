@@ -5,7 +5,7 @@ import { dashboardQueryKeys } from "@/features/dashboard/query/dashboardQueryKey
 import { eventsApi } from "@/features/events/api/eventsApi";
 import { eventsQueryKeys } from "@/features/events/query/eventsQueryKeys";
 import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
-import { queryKeys } from "@/lib/query/queryKeys";
+import { employeesQueryKeys } from "@/features/employees/query/employeesQueryKeys";
 import type { EventFormInput } from "@/lib/schemas";
 
 export function useCreateEvent() {
@@ -20,7 +20,7 @@ export function useCreateEvent() {
       queryClient.invalidateQueries({ queryKey: eventsQueryKeys.all });
       queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.all });
       queryClient.invalidateQueries({ queryKey: studentsQueryKeys.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees.all });
+      queryClient.invalidateQueries({ queryKey: employeesQueryKeys.all });
 
       navigate(`/events/${createdEvent.id}`);
     },
@@ -39,7 +39,7 @@ export function useUpdateEvent(id: string) {
       queryClient.invalidateQueries({ queryKey: eventsQueryKeys.all });
       queryClient.invalidateQueries({ queryKey: eventsQueryKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: studentsQueryKeys.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.employees.all });
+      queryClient.invalidateQueries({ queryKey: employeesQueryKeys.all });
 
       navigate(`/events/${id}`);
     },

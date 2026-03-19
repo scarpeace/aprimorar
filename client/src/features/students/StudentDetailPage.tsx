@@ -9,8 +9,8 @@ import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { EventsTable } from "@/features/events/components/EventsTable";
 import styles from "@/features/students/StudentDetailPage.module.css";
-import { formatDateShortYear } from "@/lib/shared/formatter";
-import { getFriendlyErrorMessage } from "@/services/api";
+import { formatDateShortYear } from "@/lib/utils/formatter";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useStudentDetailQuery } from "./query/useStudentQueries";
 import { EditStudentButton } from "./components/EditStudentButton";
 import { ArchiveStudentButton } from "./components/ArchiveStudentButton";
@@ -58,7 +58,7 @@ export function StudentDetailPage() {
       <PageHeader
         description="Veja e gerencie as informações do aluno"
         title="Detalhes do aluno"
-        icon={GraduationCap}
+        Icon={GraduationCap}
         action={
           <ButtonLink
             className="sm:ml-auto"

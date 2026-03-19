@@ -1,29 +1,34 @@
-import React, { useId } from "react"
-import { ChevronDown } from "lucide-react"
-import { useParentsListQuery } from "../hooks/use-parents"
-import type { ParentResponse } from "@/lib/schemas"
-import { getFriendlyErrorMessage } from "@/services/api"
+import React, { useId } from "react";
+import { ChevronDown } from "lucide-react";
+import { useParentsListQuery } from "../query/useParentQueries";
+import type { ParentResponse } from "@/lib/schemas";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 type ParentSelectDropdownProps = Readonly<{
-  value?: string
-  onChange: (id: string) => void
-  disabled?: boolean
-  hasError?: boolean
-}>
+  value?: string;
+  onChange: (id: string) => void;
+  disabled?: boolean;
+  hasError?: boolean;
+}>;
 
-export function ParentSelectDropdown({ value, onChange, disabled, hasError }: ParentSelectDropdownProps) {
+export function ParentSelectDropdown({
+  value,
+  onChange,
+  disabled,
+  hasError,
+}: ParentSelectDropdownProps) {
   const {
     data: parentsList,
     isLoading: isParentsListLoading,
     error: parentsListQueryError,
-  } = useParentsListQuery()
+  } = useParentsListQuery();
 
-  const uniqueId = useId().replaceAll(":", "")
-  const popoverId = `parents-list-${uniqueId}`
-  const anchorName = `--anchor-${uniqueId}`
+  const uniqueId = useId().replaceAll(":", "");
+  const popoverId = `parents-list-${uniqueId}`;
+  const anchorName = `--anchor-${uniqueId}`;
 
-  const selectedParent = parentsList?.find((p) => p.id === value)
-  const activeParents = parentsList?.filter((p) => p.archivedAt === null)
+  const selectedParent = parentsList?.find((p) => p.id === value);
+  const activeParents = parentsList?.filter((p) => p.archivedAt === null);
 
   return (
     <div className="flex flex-col gap-2">
@@ -37,7 +42,7 @@ export function ParentSelectDropdown({ value, onChange, disabled, hasError }: Pa
         >
           {isParentsListLoading
             ? "Carregando responsáveis..."
-            : (selectedParent?.name || "Selecione o responsável")}
+            : selectedParent?.name || "Selecione o responsável"}
           <ChevronDown className="ml-auto" />
         </button>
 
@@ -65,7 +70,9 @@ export function ParentSelectDropdown({ value, onChange, disabled, hasError }: Pa
           ))}
           {activeParents?.length === 0 && (
             <li className="disabled">
-              <span className="opacity-50 px-4 py-2">Nenhum responsável encontrado</span>
+              <span className="opacity-50 px-4 py-2">
+                Nenhum responsável encontrado
+              </span>
             </li>
           )}
         </ul>
@@ -77,5 +84,5 @@ export function ParentSelectDropdown({ value, onChange, disabled, hasError }: Pa
         </p>
       )}
     </div>
-  )
+  );
 }

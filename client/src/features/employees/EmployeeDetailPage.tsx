@@ -9,14 +9,14 @@ import { SummaryItem } from "@/components/ui/summary-item";
 import { dutyLabels } from "@/features/employees/dutyLabels";
 import { EventsTable } from "@/features/events/components/EventsTable";
 import styles from "@/features/employees/EmployeeDetailPage.module.css";
-import { getFriendlyErrorMessage } from "@/services/api";
-import { useEmployeeDetailQuery } from "./hooks/use-employees";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { useEmployeeDetailQuery } from "@/features/employees/query/useEmployeeQueries";
 import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton";
 import { EditEmployeeButton } from "./components/EditEmployeeButton";
 import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton";
 import { ButtonLink } from "@/components/ui/button";
 import { eventResponse, type EventResponse } from "@/lib/schemas";
-import { brl, formatDateShortYear, formatTime } from "@/lib/shared/formatter";
+import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Table, type ColumnDef } from "@/components/ui/table";
 import { useEventsByEmployeeQuery } from "../events/query/useEventQueries";
 import { eventContentLabels } from "@/lib/shared/enums";
@@ -64,30 +64,31 @@ export function EmployeeDetailPage() {
     },
   ];
 
-  const myEventsColumns: ColumnDef<EventResponse>[] = [
-    { header: "Aluno", accessor: (event) => event.studentName },
-    {
-      header: "Data",
-      accessor: (event) => formatDateShortYear(event.startDate),
-    },
-    {
-      header: "Horário",
-      accessor: (event) =>
-        `${formatTime(event.startDate)} às ${formatTime(event.endDate)}`,
-    },
-    {
-      header: "Conteúdo",
-      accessor: (event) => eventContentLabels[event.content],
-    },
-    { header: "Pagamento", accessor: (event) => brl.format(event.payment) },
-  ];
+  //Ao implementar a tabela geral isso aqui vai funcionar.
+  // const myEventsColumns: ColumnDef<EventResponse>[] = [
+  //   { header: "Aluno", accessor: (event) => event.studentName },
+  //   {
+  //     header: "Data",
+  //     accessor: (event) => formatDateShortYear(event.startDate),
+  //   },
+  //   {
+  //     header: "Horário",
+  //     accessor: (event) =>
+  //       `${formatTime(event.startDate)} às ${formatTime(event.endDate)}`,
+  //   },
+  //   {
+  //     header: "Conteúdo",
+  //     accessor: (event) => eventContentLabels[event.content],
+  //   },
+  //   { header: "Pagamento", accessor: (event) => brl.format(event.payment) },
+  // ];
 
   return (
     <div className={styles.page}>
       <PageHeader
         description="Gerencie professores e equipe."
         title="Colaboradores"
-        icon={UserCog}
+        Icon={UserCog}
         action={
           <ButtonLink
             className="sm:ml-auto"

@@ -11,3 +11,5 @@
 .idea
 .ruff_cache
 .gemini
+.zed
+.opencode
