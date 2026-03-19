@@ -1,27 +1,32 @@
-import type { ReactNode } from "react"
-import { GraduationCap } from "lucide-react"
-import { useParams, useNavigate } from "react-router-dom"
-import { ButtonLink } from "@/components/ui/button"
-import { ErrorCard } from "@/components/ui/error-card"
-import { PageHeader } from "@/components/ui/page-header"
-import { PageLoading } from "@/components/ui/page-loading"
-import { SectionCard } from "@/components/ui/section-card"
-import { SummaryItem } from "@/components/ui/summary-item"
-import { EventsTable } from "@/features/events/components/EventsTable"
-import styles from "@/features/students/StudentDetailPage.module.css"
-import { formatDateShortYear } from "@/lib/shared/formatter"
-import { getFriendlyErrorMessage } from "@/services/api"
-import { useStudentDetailQuery } from "./hooks/use-students"
-import { EditStudentButton } from "./components/EditStudentButton"
-import { ArchiveStudentButton } from "./components/ArchiveStudentButton"
-import { DeleteStudentButton } from "./components/DeleteStudentButton"
+import type { ReactNode } from "react";
+import { GraduationCap } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ButtonLink } from "@/components/ui/button";
+import { ErrorCard } from "@/components/ui/error-card";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLoading } from "@/components/ui/page-loading";
+import { SectionCard } from "@/components/ui/section-card";
+import { SummaryItem } from "@/components/ui/summary-item";
+import { EventsTable } from "@/features/events/components/EventsTable";
+import styles from "@/features/students/StudentDetailPage.module.css";
+import { formatDateShortYear } from "@/lib/shared/formatter";
+import { getFriendlyErrorMessage } from "@/services/api";
+import { useStudentDetailQuery } from "./query/useStudentQueries";
+import { EditStudentButton } from "./components/EditStudentButton";
+import { ArchiveStudentButton } from "./components/ArchiveStudentButton";
+import { DeleteStudentButton } from "./components/DeleteStudentButton";
 
 export function StudentDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const studentId = id ?? ""
-  const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>();
+  const studentId = id ?? "";
+  const navigate = useNavigate();
 
-  const { data: student, isLoading: isStudentLoading, error: studentError, isFetched: isStudentFetched } = useStudentDetailQuery(studentId)
+  const {
+    data: student,
+    isLoading: isStudentLoading,
+    error: studentError,
+    isFetched: isStudentFetched,
+  } = useStudentDetailQuery(studentId);
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: student?.name },
@@ -30,7 +35,10 @@ export function StudentDetailPage() {
     { label: "Idade", value: student?.age },
     { label: "Contato", value: student?.contact },
     { label: "Data de nascimento", value: student?.birthdate },
-    { label: "Data de matrícula", value: formatDateShortYear(student?.createdAt ?? "") },
+    {
+      label: "Data de matrícula",
+      value: formatDateShortYear(student?.createdAt ?? ""),
+    },
     { label: "Escola", value: student?.school },
     { label: "Status", value: student?.archivedAt ? "Arquivado" : "Ativo" },
     { label: "Responsável", value: student?.parent.name },
@@ -38,9 +46,12 @@ export function StudentDetailPage() {
     { label: "Contato do responsável", value: student?.parent.contact },
     { label: "CPF do responsável", value: student?.parent.cpf },
     { label: "Endereço", value: student?.address.street },
-    { label: "Complemento", value: student?.address.complement ?? "Sem complemento" },
+    {
+      label: "Complemento",
+      value: student?.address.complement ?? "Sem complemento",
+    },
     { label: "CEP", value: student?.address.zip },
-  ]
+  ];
 
   return (
     <div className={styles.page}>
@@ -49,7 +60,11 @@ export function StudentDetailPage() {
         title="Detalhes do aluno"
         icon={GraduationCap}
         action={
-          <ButtonLink className="sm:ml-auto" to="/students/new" variant="success">
+          <ButtonLink
+            className="sm:ml-auto"
+            to="/students/new"
+            variant="success"
+          >
             Novo aluno
           </ButtonLink>
         }
@@ -61,7 +76,10 @@ export function StudentDetailPage() {
         headerAction={
           <>
             <EditStudentButton studentId={studentId} />
-            <ArchiveStudentButton studentId={studentId} isArchived={!!student?.archivedAt} />
+            <ArchiveStudentButton
+              studentId={studentId}
+              isArchived={!!student?.archivedAt}
+            />
             <DeleteStudentButton studentId={studentId} />
           </>
         }
@@ -73,17 +91,20 @@ export function StudentDetailPage() {
             <ErrorCard
               description={getFriendlyErrorMessage(studentError)}
               actionLabel="Voltar para listagem de alunos"
-              onAction={() => navigate("/students")} />
+              onAction={() => navigate("/students")}
+            />
           </div>
         )}
 
         {isStudentFetched && student && (
           <div className={styles.summaryGrid}>
-            {
-              summaryItems.map((item) => (
-                <SummaryItem key={item.label} label={item.label} value={item.value} />
-              ))
-            }
+            {summaryItems.map((item) => (
+              <SummaryItem
+                key={item.label}
+                label={item.label}
+                value={item.value}
+              />
+            ))}
           </div>
         )}
       </SectionCard>
@@ -93,11 +114,8 @@ export function StudentDetailPage() {
         title="Eventos vinculados"
         description="Todos os eventos vinculados a este aluno."
       >
-        <EventsTable
-          variant="embeddedStudent"
-          ownerId={studentId}
-        />
+        <EventsTable variant="embeddedStudent" ownerId={studentId} />
       </SectionCard>
     </div>
-  )
+  );
 }

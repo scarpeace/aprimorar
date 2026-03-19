@@ -1,26 +1,37 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
-import { useForm, type Resolver } from "react-hook-form"
-import { Trash2 } from "lucide-react"
-import { useParams } from "react-router-dom"
-import { Button, ButtonLink } from "@/components/ui/button"
-import { ErrorCard } from "@/components/ui/error-card"
-import { FormField } from "@/components/ui/form-field"
-import { PageHeader } from "@/components/ui/page-header"
-import { PageLoading } from "@/components/ui/page-loading"
-import { SectionCard } from "@/components/ui/section-card"
-import styles from "@/features/events/EventCreatePage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { eventInputSchema, type EmployeeResponse, type EventFormInput, type StudentResponse } from "@/lib/schemas"
-import { eventContentLabels, eventContentValues } from "@/lib/shared/enums"
-import { getFriendlyErrorMessage, employeesApi, studentsApi } from "@/services/api"
-import { useEventDetailQuery, useUpdateEvent, useDeleteEvent } from "./hooks/use-events"
-import { useQuery } from "@tanstack/react-query"
-import { formatDateTimeLocal } from "@/lib/shared/formatter"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm, type Resolver } from "react-hook-form";
+import { Trash2 } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { ErrorCard } from "@/components/ui/error-card";
+import { FormField } from "@/components/ui/form-field";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLoading } from "@/components/ui/page-loading";
+import { SectionCard } from "@/components/ui/section-card";
+import styles from "@/features/events/EventCreatePage.module.css";
+import { queryKeys } from "@/lib/query/queryKeys";
+import {
+  eventInputSchema,
+  type EmployeeResponse,
+  type EventFormInput,
+  type StudentResponse,
+} from "@/lib/schemas";
+import { eventContentLabels, eventContentValues } from "@/lib/shared/enums";
+import { getFriendlyErrorMessage, employeesApi } from "@/services/api";
+import { studentsApi } from "@/features/students/api/studentsApi";
+import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
+import {
+  useEventDetailQuery,
+  useUpdateEvent,
+  useDeleteEvent,
+} from "./hooks/use-events";
+import { useQuery } from "@tanstack/react-query";
+import { formatDateTimeLocal } from "@/lib/shared/formatter";
 
 export function EventEditPage() {
-  const { id } = useParams<{ id: string }>()
-  const eventId = id ?? ""
+  const { id } = useParams<{ id: string }>();
+  const eventId = id ?? "";
 
   const {
     register,
@@ -28,76 +39,116 @@ export function EventEditPage() {
     setValue,
     formState: { errors },
   } = useForm<EventFormInput>({
-    resolver: zodResolver(eventInputSchema) as unknown as Resolver<EventFormInput>,
+    resolver: zodResolver(
+      eventInputSchema,
+    ) as unknown as Resolver<EventFormInput>,
     mode: "onBlur",
-  })
+  });
 
-  const studentIdField = register("studentId")
-  const employeeIdField = register("employeeId")
+  const studentIdField = register("studentId");
+  const employeeIdField = register("employeeId");
 
-  const { data: eventData, isLoading: isEventLoading, isError: isEventError, error: eventError, refetch: refetchEvent } = useEventDetailQuery(eventId)
+  const {
+    data: eventData,
+    isLoading: isEventLoading,
+    isError: isEventError,
+    error: eventError,
+    refetch: refetchEvent,
+  } = useEventDetailQuery(eventId);
 
   const dropDownOptionsQuery = useQuery({
-    queryKey: [queryKeys.students.all, queryKeys.employees.all, "options"],
-    queryFn: async (): Promise<{ students: StudentResponse[], employees: EmployeeResponse[] }> => {
+    queryKey: [studentsQueryKeys.all, queryKeys.employees.all, "options"],
+    queryFn: async (): Promise<{
+      students: StudentResponse[];
+      employees: EmployeeResponse[];
+    }> => {
       const [studentsRes, employeesRes] = await Promise.all([
         studentsApi.list(0, 100),
         employeesApi.list(0, 100),
-      ])
+      ]);
       return {
         students: studentsRes.content,
         employees: employeesRes.content,
-      }
+      };
     },
-  })
+  });
 
   useEffect(() => {
-    if (!eventData) return
+    if (!eventData) return;
 
-    setValue("title", eventData.title)
-    setValue("description", eventData.description ?? "")
-    setValue("startDate", formatDateTimeLocal(eventData.startDate) as unknown as EventFormInput["startDate"])
-    setValue("endDate", formatDateTimeLocal(eventData.endDate) as unknown as EventFormInput["endDate"])
-    setValue("price", Number(eventData.price))
-    setValue("payment", Number(eventData.payment))
-    setValue("content", eventData.content)
-    setValue("studentId", eventData.studentId)
-    setValue("employeeId", eventData.employeeId)
-  }, [eventData, setValue])
+    setValue("title", eventData.title);
+    setValue("description", eventData.description ?? "");
+    setValue(
+      "startDate",
+      formatDateTimeLocal(
+        eventData.startDate,
+      ) as unknown as EventFormInput["startDate"],
+    );
+    setValue(
+      "endDate",
+      formatDateTimeLocal(
+        eventData.endDate,
+      ) as unknown as EventFormInput["endDate"],
+    );
+    setValue("price", Number(eventData.price));
+    setValue("payment", Number(eventData.payment));
+    setValue("content", eventData.content);
+    setValue("studentId", eventData.studentId);
+    setValue("employeeId", eventData.employeeId);
+  }, [eventData, setValue]);
 
-  const students = (dropDownOptionsQuery.data?.students ?? []).filter((student) => !student.archivedAt)
-  const employees = (dropDownOptionsQuery.data?.employees ?? []).filter((employee) => !employee.archivedAt)
+  const students = (dropDownOptionsQuery.data?.students ?? []).filter(
+    (student) => !student.archivedAt,
+  );
+  const employees = (dropDownOptionsQuery.data?.employees ?? []).filter(
+    (employee) => !employee.archivedAt,
+  );
 
-  const { mutate: updateEvent, isPending: isUpdating, error: updateError } = useUpdateEvent(eventId)
-  const { mutate: deleteEvent, isPending: isDeleting, error: deleteError } = useDeleteEvent()
+  const {
+    mutate: updateEvent,
+    isPending: isUpdating,
+    error: updateError,
+  } = useUpdateEvent(eventId);
+  const {
+    mutate: deleteEvent,
+    isPending: isDeleting,
+    error: deleteError,
+  } = useDeleteEvent();
 
   const onSubmit = (data: EventFormInput) => {
-    updateEvent(data)
-  }
+    updateEvent(data);
+  };
 
   const handleDeleteEvent = () => {
-    if (!globalThis.confirm("Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.")) return
-    deleteEvent(eventId)
-  }
+    if (
+      !globalThis.confirm(
+        "Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.",
+      )
+    )
+      return;
+    deleteEvent(eventId);
+  };
 
-  const isMutationPending = isUpdating || isDeleting
-  const submitError = updateError || deleteError
-
+  const isMutationPending = isUpdating || isDeleting;
+  const submitError = updateError || deleteError;
 
   if (isEventLoading || dropDownOptionsQuery.isLoading) {
-    return <PageLoading message="Carregando evento para edição..." />
+    return <PageLoading message="Carregando evento para edição..." />;
   }
 
   if (isEventError || dropDownOptionsQuery.isError || !eventData) {
-    const queryError = eventError ?? dropDownOptionsQuery.error
+    const queryError = eventError ?? dropDownOptionsQuery.error;
 
     return (
       <div className={styles.page}>
         <ErrorCard
           description={getFriendlyErrorMessage(queryError)}
-          onAction={() => Promise.all([refetchEvent(), dropDownOptionsQuery.refetch()])} />
+          onAction={() =>
+            Promise.all([refetchEvent(), dropDownOptionsQuery.refetch()])
+          }
+        />
       </div>
-    )
+    );
   }
 
   return (
@@ -112,11 +163,24 @@ export function EventEditPage() {
         }
       />
 
-      <SectionCard title="Dados do evento" description="Atualize data, valores e participantes do atendimento.">
+      <SectionCard
+        title="Dados do evento"
+        description="Atualize data, valores e participantes do atendimento."
+      >
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formGrid}>
-            <FormField className={styles.field} label="Título" htmlFor="title" error={errors.title?.message}>
-              <input className="app-input" id="title" placeholder="Ex: Aula de matemática" {...register("title")} />
+            <FormField
+              className={styles.field}
+              label="Título"
+              htmlFor="title"
+              error={errors.title?.message}
+            >
+              <input
+                className="app-input"
+                id="title"
+                placeholder="Ex: Aula de matemática"
+                {...register("title")}
+              />
             </FormField>
 
             <FormField
@@ -130,8 +194,10 @@ export function EventEditPage() {
                 className="app-select"
                 {...studentIdField}
                 onChange={(event) => {
-                  studentIdField.onChange(event)
-                  setValue("studentId", event.target.value, { shouldValidate: true })
+                  studentIdField.onChange(event);
+                  setValue("studentId", event.target.value, {
+                    shouldValidate: true,
+                  });
                 }}
                 defaultValue=""
               >
@@ -157,8 +223,10 @@ export function EventEditPage() {
                 className="app-select"
                 {...employeeIdField}
                 onChange={(event) => {
-                  employeeIdField.onChange(event)
-                  setValue("employeeId", event.target.value, { shouldValidate: true })
+                  employeeIdField.onChange(event);
+                  setValue("employeeId", event.target.value, {
+                    shouldValidate: true,
+                  });
                 }}
                 defaultValue=""
               >
@@ -173,8 +241,18 @@ export function EventEditPage() {
               </select>
             </FormField>
 
-            <FormField className={styles.field} label="Conteúdo" htmlFor="content" error={errors.content?.message}>
-              <select id="content" className="app-select" {...register("content")} defaultValue="">
+            <FormField
+              className={styles.field}
+              label="Conteúdo"
+              htmlFor="content"
+              error={errors.content?.message}
+            >
+              <select
+                id="content"
+                className="app-select"
+                {...register("content")}
+                defaultValue=""
+              >
                 <option value="" disabled>
                   Selecione um conteúdo
                 </option>
@@ -186,15 +264,40 @@ export function EventEditPage() {
               </select>
             </FormField>
 
-            <FormField className={styles.field} label="Início" htmlFor="startDate" error={errors.startDate?.message}>
-              <input className="app-input" id="startDate" type="datetime-local" {...register("startDate")} />
+            <FormField
+              className={styles.field}
+              label="Início"
+              htmlFor="startDate"
+              error={errors.startDate?.message}
+            >
+              <input
+                className="app-input"
+                id="startDate"
+                type="datetime-local"
+                {...register("startDate")}
+              />
             </FormField>
 
-            <FormField className={styles.field} label="Fim" htmlFor="endDate" error={errors.endDate?.message}>
-              <input className="app-input" id="endDate" type="datetime-local" {...register("endDate")} />
+            <FormField
+              className={styles.field}
+              label="Fim"
+              htmlFor="endDate"
+              error={errors.endDate?.message}
+            >
+              <input
+                className="app-input"
+                id="endDate"
+                type="datetime-local"
+                {...register("endDate")}
+              />
             </FormField>
 
-            <FormField className={styles.field} label="Preço (receita)" htmlFor="price" error={errors.price?.message}>
+            <FormField
+              className={styles.field}
+              label="Preço (receita)"
+              htmlFor="price"
+              error={errors.price?.message}
+            >
               <input
                 className="app-input"
                 id="price"
@@ -208,7 +311,12 @@ export function EventEditPage() {
               />
             </FormField>
 
-            <FormField className={styles.field} label="Pagamento (custo)" htmlFor="payment" error={errors.payment?.message}>
+            <FormField
+              className={styles.field}
+              label="Pagamento (custo)"
+              htmlFor="payment"
+              error={errors.payment?.message}
+            >
               <input
                 className="app-input"
                 id="payment"
@@ -237,7 +345,11 @@ export function EventEditPage() {
             </FormField>
           </div>
 
-          {submitError ? <div className="alert alert-error text-sm">{getFriendlyErrorMessage(submitError)}</div> : null}
+          {submitError ? (
+            <div className="alert alert-error text-sm">
+              {getFriendlyErrorMessage(submitError)}
+            </div>
+          ) : null}
 
           <div className={styles.actions}>
             <Button
@@ -253,12 +365,16 @@ export function EventEditPage() {
             <ButtonLink to={`/events/${eventId}`} variant="outline">
               Cancelar
             </ButtonLink>
-            <Button type="submit" disabled={isMutationPending} variant="primary">
+            <Button
+              type="submit"
+              disabled={isMutationPending}
+              variant="primary"
+            >
               {isUpdating ? "Salvando..." : "Salvar alterações"}
             </Button>
           </div>
         </form>
       </SectionCard>
     </div>
-  )
+  );
 }

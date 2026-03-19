@@ -1,15 +1,15 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useHookFormMask } from "use-mask-input"
-import { Button, ButtonLink } from "@/components/ui/button"
-import { FormField } from "@/components/ui/form-field"
-import { PageHeader } from "@/components/ui/page-header"
-import { SectionCard } from "@/components/ui/section-card"
-import styles from "@/features/students/StudentCreatePage.module.css"
-import { studentInputSchema, type StudentFormInput } from "@/lib/schemas"
-import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates"
-import { useCreateStudent } from "./hooks/use-students"
-import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useHookFormMask } from "use-mask-input";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { FormField } from "@/components/ui/form-field";
+import { PageHeader } from "@/components/ui/page-header";
+import { SectionCard } from "@/components/ui/section-card";
+import styles from "@/features/students/StudentCreatePage.module.css";
+import { studentInputSchema, type StudentFormInput } from "@/lib/schemas";
+import { BRAZILIAN_STATES } from "@/lib/shared/enums/brazilianStates";
+import { useCreateStudent } from "./query/useStudentMutations";
+import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown";
 
 export function StudentCreatePage() {
   const {
@@ -21,17 +21,17 @@ export function StudentCreatePage() {
   } = useForm<StudentFormInput>({
     resolver: zodResolver(studentInputSchema),
     mode: "onBlur",
-  })
+  });
 
-  const selectedParentId = watch("parentId")
+  const selectedParentId = watch("parentId");
 
-  const registerWithMask = useHookFormMask(register)
+  const registerWithMask = useHookFormMask(register);
 
-  const { mutate: createStudent, isPending: isSubmitting } = useCreateStudent()
+  const { mutate: createStudent, isPending: isSubmitting } = useCreateStudent();
 
   const onSubmit = (data: StudentFormInput) => {
-    createStudent(data)
-  }
+    createStudent(data);
+  };
 
   return (
     <div className={styles.page}>
@@ -45,7 +45,10 @@ export function StudentCreatePage() {
         }
       />
 
-      <SectionCard title="Responsável" description="Selecione um responsável já cadastrado no sistema.">
+      <SectionCard
+        title="Responsável"
+        description="Selecione um responsável já cadastrado no sistema."
+      >
         <div className={styles.formGrid}>
           <FormField
             className={`${styles.field} ${styles.span2}`}
@@ -53,36 +56,76 @@ export function StudentCreatePage() {
             htmlFor="parentId"
             error={errors.parentId?.message}
           >
-
             {/* Registra o campo silenciosamente */}
             <input type="hidden" {...register("parentId")} />
             <ParentSelectDropdown
               value={selectedParentId}
-              onChange={(id) => setValue("parentId", id, { shouldValidate: true, shouldDirty: true })}
+              onChange={(id) =>
+                setValue("parentId", id, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                })
+              }
               hasError={!!errors.parentId}
             />
 
             <p className="text-xs text-muted-foreground mt-1">
-              Não encontrou o responsável? <ButtonLink to="/parents/new" variant="ghost" size="sm" className="h-auto p-0 underline">Cadastre um novo aqui</ButtonLink>
+              Não encontrou o responsável?{" "}
+              <ButtonLink
+                to="/parents/new"
+                variant="ghost"
+                size="sm"
+                className="h-auto p-0 underline"
+              >
+                Cadastre um novo aqui
+              </ButtonLink>
             </p>
           </FormField>
         </div>
       </SectionCard>
 
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <SectionCard title="Dados do aluno" description="Preencha os dados pessoais e endereço.">
+        <SectionCard
+          title="Dados do aluno"
+          description="Preencha os dados pessoais e endereço."
+        >
           <div className={styles.sectionTitle}>Aluno</div>
 
           <div className={styles.formGrid}>
-            <FormField className={styles.field} label="Nome completo" htmlFor="name" error={errors.name?.message}>
-              <input className="app-input" id="name" placeholder="Ex: João Pedro" {...register("name")} />
+            <FormField
+              className={styles.field}
+              label="Nome completo"
+              htmlFor="name"
+              error={errors.name?.message}
+            >
+              <input
+                className="app-input"
+                id="name"
+                placeholder="Ex: João Pedro"
+                {...register("name")}
+              />
             </FormField>
 
-            <FormField className={styles.field} label="Data de nascimento" htmlFor="birthdate" error={errors.birthdate?.message}>
-              <input className="app-input" id="birthdate" type="date" {...register("birthdate")} />
+            <FormField
+              className={styles.field}
+              label="Data de nascimento"
+              htmlFor="birthdate"
+              error={errors.birthdate?.message}
+            >
+              <input
+                className="app-input"
+                id="birthdate"
+                type="date"
+                {...register("birthdate")}
+              />
             </FormField>
 
-            <FormField className={styles.field} label="CPF" htmlFor="cpf" error={errors.cpf?.message}>
+            <FormField
+              className={styles.field}
+              label="CPF"
+              htmlFor="cpf"
+              error={errors.cpf?.message}
+            >
               <input
                 className="app-input"
                 id="cpf"
@@ -91,16 +134,29 @@ export function StudentCreatePage() {
               />
             </FormField>
 
-            <FormField className={styles.field} label="Contato" htmlFor="contact" error={errors.contact?.message}>
+            <FormField
+              className={styles.field}
+              label="Contato"
+              htmlFor="contact"
+              error={errors.contact?.message}
+            >
               <input
                 className="app-input"
                 id="contact"
                 placeholder="(11) 99999-9999"
-                {...registerWithMask("contact", ["(99) 9999-9999", "(99) 99999-9999"])}
+                {...registerWithMask("contact", [
+                  "(99) 9999-9999",
+                  "(99) 99999-9999",
+                ])}
               />
             </FormField>
 
-            <FormField className={styles.field} label="Email" htmlFor="email" error={errors.email?.message}>
+            <FormField
+              className={styles.field}
+              label="Email"
+              htmlFor="email"
+              error={errors.email?.message}
+            >
               <input
                 className="app-input"
                 id="email"
@@ -110,8 +166,18 @@ export function StudentCreatePage() {
               />
             </FormField>
 
-            <FormField className={styles.field} label="Escola" htmlFor="school" error={errors.school?.message}>
-              <input className="app-input" id="school" placeholder="Ex: Escola Estadual X" {...register("school")} />
+            <FormField
+              className={styles.field}
+              label="Escola"
+              htmlFor="school"
+              error={errors.school?.message}
+            >
+              <input
+                className="app-input"
+                id="school"
+                placeholder="Ex: Escola Estadual X"
+                {...register("school")}
+              />
             </FormField>
           </div>
 
@@ -133,7 +199,12 @@ export function StudentCreatePage() {
               />
             </FormField>
 
-            <FormField className={styles.field} label="Número" htmlFor="address.number" error={errors.address?.number?.message}>
+            <FormField
+              className={styles.field}
+              label="Número"
+              htmlFor="address.number"
+              error={errors.address?.number?.message}
+            >
               <input
                 className="app-input"
                 id="address.number"
@@ -156,7 +227,12 @@ export function StudentCreatePage() {
               />
             </FormField>
 
-            <FormField className={styles.field} label="Bairro" htmlFor="address.district" error={errors.address?.district?.message}>
+            <FormField
+              className={styles.field}
+              label="Bairro"
+              htmlFor="address.district"
+              error={errors.address?.district?.message}
+            >
               <input
                 className="app-input"
                 id="address.district"
@@ -165,7 +241,12 @@ export function StudentCreatePage() {
               />
             </FormField>
 
-            <FormField className={styles.field} label="Cidade" htmlFor="address.city" error={errors.address?.city?.message}>
+            <FormField
+              className={styles.field}
+              label="Cidade"
+              htmlFor="address.city"
+              error={errors.address?.city?.message}
+            >
               <input
                 className="app-input"
                 id="address.city"
@@ -174,8 +255,17 @@ export function StudentCreatePage() {
               />
             </FormField>
 
-            <FormField className={styles.field} label="Estado" htmlFor="address.state" error={errors.address?.state?.message}>
-              <select className="app-select" id="address.state" {...register("address.state")}>
+            <FormField
+              className={styles.field}
+              label="Estado"
+              htmlFor="address.state"
+              error={errors.address?.state?.message}
+            >
+              <select
+                className="app-select"
+                id="address.state"
+                {...register("address.state")}
+              >
                 <option value="">Selecione um estado</option>
                 {BRAZILIAN_STATES.map((state) => (
                   <option key={state.value} value={state.value}>
@@ -185,7 +275,12 @@ export function StudentCreatePage() {
               </select>
             </FormField>
 
-            <FormField className={styles.field} label="CEP" htmlFor="address.zip" error={errors.address?.zip?.message}>
+            <FormField
+              className={styles.field}
+              label="CEP"
+              htmlFor="address.zip"
+              error={errors.address?.zip?.message}
+            >
               <input
                 className="app-input"
                 id="address.zip"
@@ -206,5 +301,5 @@ export function StudentCreatePage() {
         </div>
       </form>
     </div>
-  )
+  );
 }

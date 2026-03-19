@@ -7,6 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { eventsApi } from "@/services/api";
 import { dashboardQueryKeys } from "@/features/dashboard/query/dashboardQueryKeys";
+import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
 import { queryKeys } from "@/lib/query/queryKeys";
 import type { EventFormInput } from "@/lib/schemas";
 import { toast } from "sonner";
@@ -80,7 +81,7 @@ export function useCreateEvent() {
       toast.success("Evento criado com sucesso!");
       queryClient.invalidateQueries({ queryKey: queryKeys.events.all });
       queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.students.all });
+      queryClient.invalidateQueries({ queryKey: studentsQueryKeys.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.employees.all });
       navigate(`/events/${createdEvent.id}`);
     },
@@ -98,7 +99,7 @@ export function useUpdateEvent(id: string) {
       queryClient.invalidateQueries({ queryKey: queryKeys.events.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.events.detail(id) });
       // Invalida também os alunos e colaboradores pois podem ter mudado
-      queryClient.invalidateQueries({ queryKey: queryKeys.students.all });
+      queryClient.invalidateQueries({ queryKey: studentsQueryKeys.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.employees.all });
       navigate(`/events/${id}`);
     },

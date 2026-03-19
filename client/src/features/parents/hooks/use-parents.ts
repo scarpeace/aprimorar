@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { parentsApi, studentsApi } from "@/services/api";
+import { parentsApi } from "@/services/api";
+import { studentsApi } from "@/features/students/api/studentsApi";
+import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
 import { dashboardQueryKeys } from "@/features/dashboard/query/dashboardQueryKeys";
 import { queryKeys } from "@/lib/query/queryKeys";
 import type { ParentFormInput } from "@/lib/schemas";
@@ -37,7 +39,7 @@ export function useParentDetailQuery(id: string) {
 
 export function useStudentsByParentQuery(parentId: string, options = {}) {
   return useQuery({
-    queryKey: queryKeys.students.byParent(parentId),
+    queryKey: studentsQueryKeys.byParent(parentId),
     queryFn: () => studentsApi.listByParent(parentId),
     enabled: !!parentId,
     ...options,
