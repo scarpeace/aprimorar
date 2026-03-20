@@ -3,7 +3,7 @@ package com.aprimorar.api.domain.dashboard;
 import com.aprimorar.api.domain.dashboard.dto.DashboardSummaryResponseDTO;
 import com.aprimorar.api.domain.dashboard.exception.InvalidDashboardRequestException;
 import com.aprimorar.api.domain.event.EventRepository;
-import com.aprimorar.api.domain.event.EventRepository.EventContentCountProjection;
+import com.aprimorar.api.domain.event.EventRepository.EventContentCount;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
@@ -64,7 +64,7 @@ public class DashboardService {
             monthRange.endExclusiveDateTime()
         );
 
-        List<EventContentCountProjection> groupedByContent =
+        List<EventContentCount> groupedByContent =
             eventRepository.findContentDistributionInPeriod(
                 monthRange.startDateTime(),
                 monthRange.endExclusiveDateTime()

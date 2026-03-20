@@ -18,7 +18,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecificationExecutor<Event> {
 
-    interface EventContentCountProjection {
+    interface EventContentCount {
         EventContent getContent();
         long getCount();
     }
@@ -133,7 +133,7 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             group by e.content
             order by count(e) desc
             """)
-    List<EventContentCountProjection> findContentDistributionInPeriod(
+    List<EventContentCount> findContentDistributionInPeriod(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );

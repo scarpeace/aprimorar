@@ -54,6 +54,10 @@ Checked locations:
 
 If any of these files are added later, treat them as higher-priority constraints.
 
+## MCP Tools
+
+When you need current library documentation, use `context7` to search up-to-date docs.
+
 ## General Guidelines
 
 ### Change Discipline

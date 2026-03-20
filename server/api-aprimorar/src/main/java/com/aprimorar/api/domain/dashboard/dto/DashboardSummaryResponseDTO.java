@@ -1,6 +1,6 @@
 package com.aprimorar.api.domain.dashboard.dto;
 
-import com.aprimorar.api.domain.event.EventRepository.EventContentCountProjection;
+import com.aprimorar.api.domain.event.EventRepository.EventContentCount;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
@@ -8,96 +8,80 @@ import java.time.YearMonth;
 import java.util.List;
 
 public record DashboardSummaryResponseDTO(
-    PeriodDTO period,
-    KpisDTO kpis,   
-    ChartsDTO charts,
-    MetaDTO meta
+    int year,
+    int month,
+    int prevYear,
+    int prevMonth,
+    int nextYear,
+    int nextMonth,
+    long activeStudentsInMonth,
+    long classesInMonth,
+    BigDecimal revenueInMonth,
+    BigDecimal costInMonth,
+    List<ClassesByContentDTO> charts,
+    Instant generatedAt,
+    int refreshSeconds
 ) {
     public static DashboardSummaryResponseDTO of(
-        YearMonth selectedMonth,
+        YearMonth month,
         long activeStudentsInMonth,
         long classesInMonth,
         BigDecimal revenueInMonth,
         BigDecimal costInMonth,
-        List<EventContentCountProjection> contentDistribution,
+        List<EventContentCount> contentDistribution,
         Instant generatedAt,
         int refreshSeconds
     ) {
+        YearMonth prev = month.minusMonths(1);
+        YearMonth next = month.plusMonths(1);
+        List<ClassesByContentDTO> charts = buildCharts(
+            contentDistribution,
+            classesInMonth
+        );
+
         return new DashboardSummaryResponseDTO(
-            PeriodDTO.of(selectedMonth),
-            new KpisDTO(
-                activeStudentsInMonth,
-                classesInMonth,
-                revenueInMonth,
-                costInMonth
-            ),
-            new ChartsDTO(
-                toContentDistribution(contentDistribution, classesInMonth)
-            ),
-            new MetaDTO(generatedAt, refreshSeconds)
+            month.getYear(),
+            month.getMonthValue(),
+            prev.getYear(),
+            prev.getMonthValue(),
+            next.getYear(),
+            next.getMonthValue(),
+            activeStudentsInMonth,
+            classesInMonth,
+            revenueInMonth,
+            costInMonth,
+            charts,
+            generatedAt,
+            refreshSeconds
         );
     }
 
-    private static List<ClassesByContentDTO> toContentDistribution(
-        List<EventContentCountProjection> groupedByContent,
-        long classesInMonth
+    private static List<ClassesByContentDTO> buildCharts(
+        List<EventContentCount> distribution,
+        long total
     ) {
-        if (classesInMonth == 0) return List.of();
+        if (total == 0) {
+            return List.of();
+        }
 
-        return groupedByContent
+        return distribution
             .stream()
-            .map(item ->
+            .map(p ->
                 new ClassesByContentDTO(
-                    item.getContent().name(),
-                    item.getCount(),
-                    calculatePercentage(item.getCount(), classesInMonth)
+                    p.getContent().name(),
+                    p.getCount(),
+                    BigDecimal.valueOf((p.getCount() * 100.0) / total).setScale(
+                        2,
+                        RoundingMode.HALF_UP
+                    )
                 )
             )
             .toList();
     }
-
-    private static BigDecimal calculatePercentage(long count, long total) {
-        return BigDecimal.valueOf(count)
-            .multiply(BigDecimal.valueOf(100))
-            .divide(BigDecimal.valueOf(total), 2, RoundingMode.HALF_UP);
-    }
-
-    public record PeriodDTO(
-        int year,
-        int month,
-        MonthPointerDTO prev,
-        MonthPointerDTO next
-    ) {
-        public static PeriodDTO of(YearMonth month) {
-            return new PeriodDTO(
-                month.getYear(),
-                month.getMonthValue(),
-                MonthPointerDTO.from(month.minusMonths(1)),
-                MonthPointerDTO.from(month.plusMonths(1))
-            );
-        }
-    }
-
-    public record MonthPointerDTO(int year, int month) {
-        public static MonthPointerDTO from(YearMonth month) {
-            return new MonthPointerDTO(month.getYear(), month.getMonthValue());
-        }
-    }
-
-    public record KpisDTO(
-        long activeStudentsInMonth,
-        long classesInMonth,
-        BigDecimal revenueInMonth,
-        BigDecimal costInMonth
-    ) {}
-
-    public record ChartsDTO(List<ClassesByContentDTO> classesByContent) {}
 
     public record ClassesByContentDTO(
         String content,
         long count,
         BigDecimal percentage
     ) {}
-
-    public record MetaDTO(Instant generatedAt, int refreshSeconds) {}
 }

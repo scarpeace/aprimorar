@@ -2,8 +2,8 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { PageLoading } from "@/components/ui/page-loading";
 import styles from "@/features/dashboard/DashboardPage.module.css";
 import { useDashboardSummary } from "@/features/dashboard/query/useDashboardSummary";
-import { brl } from "@/lib/utils/formatter";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { brl } from "@/lib/utils/formatter";
 import { PizzaChart } from "./components/PizzaChart";
 
 function getCurrentYearMonth() {
