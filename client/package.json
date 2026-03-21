@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync": "kubb generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -27,6 +28,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@kubb/cli": "^4.36.1",
+    "@kubb/core": "^4.36.1",
+    "@kubb/plugin-client": "^4.36.1",
+    "@kubb/plugin-oas": "^4.36.1",
+    "@kubb/plugin-react-query": "^4.36.1",
+    "@kubb/plugin-ts": "^4.36.1",
+    "@kubb/plugin-zod": "^4.36.1",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
@@ -36,6 +44,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "tslib": "^2.8.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
     "vite": "^7.3.1"

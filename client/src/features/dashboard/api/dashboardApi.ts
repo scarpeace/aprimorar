@@ -1,25 +1,12 @@
-import { api } from "@/lib/shared/api";
-import {
-  dashboardSummaryResponseSchema,
-  type DashboardSummaryResponse,
-} from "@/features/dashboard/schemas/dashboardSummary";
+import { getDashboardSummary } from "@/gen/client/dashboard/getDashboardSummary";
+import { getDashboardSummaryQueryResponseSchema } from "@/gen/schemas/dashboard/getDashboardSummarySchema";
 
-export interface DashboardSummaryParams {
+interface DashboardSummaryParams {
   year: number;
   month: number;
 }
 
-export const dashboardApi = {
-  async getSummary(
-    params: DashboardSummaryParams,
-  ): Promise<DashboardSummaryResponse> {
-    const { data } = await api.get<DashboardSummaryResponse>(
-      "/v1/dashboard/summary",
-      {
-        params,
-      },
-    );
-
-    return dashboardSummaryResponseSchema.parse(data);
-  },
-};
+export async function fetchDashboardSummary(params: DashboardSummaryParams) {
+  const raw = await getDashboardSummary(params);
+  return getDashboardSummaryQueryResponseSchema.parse(raw);
+}

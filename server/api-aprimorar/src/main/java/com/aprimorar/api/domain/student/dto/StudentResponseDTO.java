@@ -6,7 +6,8 @@ import java.util.UUID;
 
 import com.aprimorar.api.domain.address.Address;
 import com.aprimorar.api.domain.parent.Parent;
-import com.fasterxml.jackson.annotation.JsonFormat;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public record StudentResponseDTO(
         UUID id,

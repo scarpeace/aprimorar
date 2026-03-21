@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/parents")
-@Tag(name = "Parents", description = "Parent management APIs")
+@Tag(name = "Parent", description = "Parent management APIs")
 public class ParentController {
 
     private final ParentService parentService;
@@ -29,7 +29,11 @@ public class ParentController {
         this.parentService = parentService;
     }
 
-    @Operation(summary = "Create parent", description = "Creates a new parent")
+    @Operation(
+        operationId = "createParent",
+        summary = "Criar novo responsável",
+        description = "Cria um novo responsável com os dados fornecidos."
+    )
     @PostMapping
     public ResponseEntity<ParentResponseDTO> createParent(@RequestBody @Valid ParentRequestDTO request) {
 
@@ -37,7 +41,11 @@ public class ParentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParent);
     }
 
-    @Operation(summary = "Get all parents", description = "Retrieves all parents")
+    @Operation(
+        operationId = "getParents",
+        summary = "Obter todos os responsáveis",
+        description = "Retorna todos os responsáveis cadastrados."
+    )
     @GetMapping("/all")
     public ResponseEntity<List<ParentResponseDTO>> getParents() {
 
@@ -45,7 +53,11 @@ public class ParentController {
         return ResponseEntity.ok(parents);
     }
 
-    @Operation(summary = "Get all parents paginated", description = "Retrieves parents from database with pagination")
+    @Operation(
+        operationId = "getPaginatedParents",
+        summary = "Obter responsáveis paginados",
+        description = "Retorna os responsáveis cadastrados com paginação."
+    )
     @GetMapping
     public ResponseEntity<Page<ParentResponseDTO>> getPaginatedParents(
             @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
@@ -55,7 +67,11 @@ public class ParentController {
         return ResponseEntity.ok(parents);
     }
 
-    @Operation(summary = "Get parent by ID", description = "Retrieves a single parent based on ID")
+    @Operation(
+        operationId = "getParentById",
+        summary = "Obter responsável por ID",
+        description = "Retorna um único responsável com base no ID fornecido."
+    )
     @GetMapping("/{parentId}")
     public ResponseEntity<ParentResponseDTO> getParentById(@PathVariable UUID parentId) {
 
@@ -63,7 +79,11 @@ public class ParentController {
         return ResponseEntity.ok(parent);
     }
 
-    @Operation(summary = "Update parent", description = "Fully updates parent data")
+    @Operation(
+        operationId = "updateParent",
+        summary = "Atualizar responsável",
+        description = "Atualiza os dados de um responsável existente com base no ID fornecido."
+    )
     @PutMapping("/{parentId}")
     public ResponseEntity<ParentResponseDTO> updateParent(
             @PathVariable UUID parentId,
@@ -74,7 +94,11 @@ public class ParentController {
         return ResponseEntity.ok(updatedParent);
     }
 
-    @Operation(summary = "Archive Parent", description = "Archives a parent")
+    @Operation(
+        operationId = "archiveParent",
+        summary = "Arquivar responsável",
+        description = "Arquiva um responsável com base no ID fornecido."
+    )
     @PatchMapping("/{id}/archive")
     public ResponseEntity<Void> archiveParent(@PathVariable UUID id) {
 
@@ -82,7 +106,11 @@ public class ParentController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Unarchive Parent", description = "Unarchives a parent")
+    @Operation(
+        operationId = "unarchiveParent",
+        summary = "Desarquivar responsável",
+        description = "Desarquiva um responsável com base no ID fornecido."
+    )
     @PatchMapping("/{id}/unarchive")
     public ResponseEntity<Void> unarchiveParent(@PathVariable UUID id) {
 
@@ -90,7 +118,11 @@ public class ParentController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Delete parent", description = "Deletes a parent based on ID")
+    @Operation(
+        operationId = "deleteParent",
+        summary = "Deletar responsável",
+        description = "Deleta um responsável com base no ID fornecido."
+    )
     @DeleteMapping("/{parentId}")
     public ResponseEntity<Void> deleteParent(@PathVariable UUID parentId) {
 

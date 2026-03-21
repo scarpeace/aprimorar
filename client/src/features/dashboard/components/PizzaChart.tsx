@@ -6,21 +6,21 @@ import {
   Tooltip,
   type PieLabelRenderProps,
 } from "recharts";
+import { z } from "zod";
+import { dashboardSummaryResponseDTOSchema } from "@/gen/schemas/dashboardSummaryResponseDTOSchema";
 import { eventContentLabels } from "@/features/events/schemas/eventContentEnum";
-import type { ClassesByContent } from "@/features/dashboard/schemas/dashboardSummary";
-
+type DashboardSummary = z.infer<typeof dashboardSummaryResponseDTOSchema>;
+type ClassesByContentDTO = NonNullable<DashboardSummary["charts"]>[number];
 const COLORS = [
-  "#3b82f6", // blue-500
-  "#10b981", // emerald-500
-  "#f59e0b", // amber-500
-  "#ef4444", // red-500
-  "#8b5cf6", // violet-500
-  "#ec4899", // pink-500
-  "#06b6d4", // cyan-500
+  "#3b82f6",
+  "#10b981",
+  "#f59e0b",
+  "#ef4444",
+  "#8b5cf6",
+  "#ec4899",
+  "#06b6d4",
 ];
-
 const RADIAN = Math.PI / 180;
-
 const renderCustomizedLabel = ({
   cx,
   cy,
@@ -32,15 +32,11 @@ const renderCustomizedLabel = ({
   if (cx == null || cy == null || innerRadius == null || outerRadius == null) {
     return null;
   }
-
   const radius =
     Number(innerRadius) + (Number(outerRadius) - Number(innerRadius)) * 0.5;
   const x = Number(cx) + radius * Math.cos(-(midAngle ?? 0) * RADIAN);
   const y = Number(cy) + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
-
-  // Somente mostra label se a fatia for relevante (> 5%)
   if ((percent ?? 0) < 0.05) return null;
-
   return (
     <text
       x={x}
@@ -54,12 +50,10 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
-
 interface PizzaChartProps {
-  data: ClassesByContent[];
+  data: ClassesByContentDTO[];
   isAnimationActive?: boolean;
 }
-
 export function PizzaChart({
   data,
   isAnimationActive = true,
@@ -68,10 +62,9 @@ export function PizzaChart({
     name:
       eventContentLabels[item.content as keyof typeof eventContentLabels] ||
       item.content,
-    value: item.count,
+    value: item.count ?? 0,
     fill: COLORS[index % COLORS.length],
   }));
-
   if (chartData.length === 0) {
     return (
       <div className="flex h-64 w-full items-center justify-center rounded-lg border border-dashed border-base-300 italic text-base-content/50">
@@ -79,9 +72,8 @@ export function PizzaChart({
       </div>
     );
   }
-
   return (
-    <div className="h-80 w-full min-h-[320px]">
+    <div className="h-80 w-full min-h-80">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -94,7 +86,7 @@ export function PizzaChart({
             dataKey="value"
             isAnimationActive={isAnimationActive}
           />
-          <Tooltip formatter={(value: any) => [`${value}`]} />
+          <Tooltip formatter={(value) => [`${value ?? ""}`]} />
           <Legend
             verticalAlign="bottom"
             height={36}

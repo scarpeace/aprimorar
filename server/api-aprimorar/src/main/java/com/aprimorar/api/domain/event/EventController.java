@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/v1/events")
-@Tag(name = "Events", description = "Event management APIs")
+@Tag(name = "Event", description = "Event management APIs")
 public class EventController {
 
     private final EventService eventService;
@@ -30,7 +30,11 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @Operation(summary = "Create EVENT", description = "Creates event with date, price, payment, student and employee data")
+    @Operation(
+        operationId = "createEvent",
+        summary = "Criar evento",
+        description = "Cria um novo evento com os dados fornecidos."
+    )
     @PostMapping
     public ResponseEntity<EventResponseDTO> createEvent(@RequestBody @Valid EventRequestDTO createEventDto) {
 
@@ -38,7 +42,11 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "List all events", description = "Retrieves all events from database with pagination")
+    @Operation(
+        operationId = "getEvents",
+        summary = "Listar eventos",
+        description = "Retorna todos os eventos do banco de dados com paginação."
+    )
     @GetMapping
     public ResponseEntity<Page<EventResponseDTO>> getEvents(
             @PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable,
@@ -48,7 +56,11 @@ public class EventController {
         return ResponseEntity.ok(events);
     }
 
-    @Operation(summary = "List single event by ID", description = "Retrieves single event based on ID")
+    @Operation(
+        operationId = "getEventById",
+        summary = "Obter evento por ID",
+        description = "Retorna um único evento com base no ID fornecido."
+    )
     @GetMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> getEventById(@PathVariable UUID eventId) {
 
@@ -56,7 +68,11 @@ public class EventController {
         return ResponseEntity.ok(foundEvent);
     }
 
-    @Operation(summary = "List all events by Employee", description = "Retrieves all events of a single employee by ID")
+    @Operation(
+        operationId = "getEventsByEmployeeId",
+        summary = "Listar eventos por funcionário",
+        description = "Retorna todos os eventos de um único funcionário com base no ID fornecido."
+    )
     @GetMapping("/employee/{employeeId}")
     public ResponseEntity<Page<EventResponseDTO>> getEventsByEmployeeId(@PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID employeeId) {
 
@@ -64,7 +80,11 @@ public class EventController {
         return ResponseEntity.ok(events);
     }
 
-    @Operation(summary = "List all events by Student ID", description = "Retrieves all events of a single student by ID")
+    @Operation(
+        operationId = "getEventsByStudentId",
+        summary = "Listar eventos por aluno",
+        description = "Retorna todos os eventos de um único aluno com base no ID fornecido."
+    )
     @GetMapping("/student/{studentId}")
     public ResponseEntity<Page<EventResponseDTO>> getEventsByStudentId(@PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID studentId) {
 
@@ -72,7 +92,11 @@ public class EventController {
         return ResponseEntity.ok(events);
     }
 
-    @Operation(summary = "Update EVENT", description = "Fully updates event data")
+    @Operation(
+        operationId = "updateEvent",
+        summary = "Atualizar evento",
+        description = "Atualiza totalmente os dados de um evento."
+    )
     @PutMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable UUID eventId, @RequestBody @Valid EventRequestDTO eventRequestDTO) {
 
@@ -80,7 +104,11 @@ public class EventController {
         return ResponseEntity.ok(updatedEvent);
     }
 
-    @Operation(summary = "Delete EVENT", description = "Deletes single event based on ID")
+    @Operation(
+        operationId = "deleteEvent",
+        summary = "Deletar evento",
+        description = "Deleta um evento com base no ID fornecido."
+    )
     @DeleteMapping("/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable UUID eventId) {
         eventService.deleteEvent(eventId);

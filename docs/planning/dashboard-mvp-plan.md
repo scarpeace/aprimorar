@@ -31,58 +31,35 @@ Entregar um dashboard operacional com navegacao por mes, KPIs mensais e grafico 
 - Seta para esquerda: volta para o mes anterior.
 - Ao trocar de mes, todos os KPIs e graficos passam a refletir o novo mes.
 
-## Contrato alvo da API (resumo)
-Endpoint unico para a tela:
+## Contrato alvo da API
+Endpoint:
 - `GET /v1/dashboard/summary?year=YYYY&month=MM`
 
-Resposta deve conter:
-- `period`: periodo atual e ponteiros de navegacao mensal (`prev`/`next`).
-- `kpis`: metricas mensais.
-- `charts`: apenas `classesByContent`.
-- `meta`: `generatedAt` e `refreshSeconds`.
-
-## Contrato de resposta (payload final)
+Resposta (estrutura plana):
 ```json
 {
-  "period": {
-    "year": 2026,
-    "month": 3,
-    "monthLabel": "Marco/2026",
-    "timezone": "America/Sao_Paulo",
-    "prev": { "year": 2026, "month": 2 },
-    "next": { "year": 2026, "month": 4 }
-  },
-  "kpis": {
-    "activeStudentsInMonth": 42,
-    "classesInMonth": 118,
-    "revenueInMonth": 15430.5,
-    "costInMonth": 8630.0
-  },
-  "charts": {
-    "classesByContent": [
-      { "content": "AULA", "count": 56, "percentage": 47.46 },
-      { "content": "MENTORIA", "count": 22, "percentage": 18.64 },
-      { "content": "TERAPIA", "count": 14, "percentage": 11.86 },
-      { "content": "ORIENTACAO_VOCACIONAL", "count": 9, "percentage": 7.63 },
-      { "content": "ENEM", "count": 8, "percentage": 6.78 },
-      { "content": "PAS", "count": 5, "percentage": 4.24 },
-      { "content": "OUTRO", "count": 4, "percentage": 3.39 }
-    ]
-  },
-  "meta": {
-    "generatedAt": "2026-03-18T19:42:00Z",
-    "refreshSeconds": 60
-  }
+  "year": 2026,
+  "month": 3,
+  "prevYear": 2026,
+  "prevMonth": 2,
+  "nextYear": 2026,
+  "nextMonth": 4,
+  "activeStudentsInMonth": 42,
+  "classesInMonth": 118,
+  "revenueInMonth": 15430.5,
+  "costInMonth": 8630.0,
+  "charts": [
+    { "content": "AULA", "count": 56, "percentage": 47.46 },
+    { "content": "MENTORIA", "count": 22, "percentage": 18.64 }
+  ],
+  "generatedAt": "2026-03-20T10:00:00Z",
+  "refreshSeconds": 60
 }
 ```
 
 ## Validacoes de entrada (backend)
-- `year`:
-  - obrigatorio.
-  - faixa `2000..2100`.
-- `month`:
-  - obrigatorio.
-  - faixa `1..12`.
+- `year`: obrigatorio, faixa `2000..2100`.
+- `month`: obrigatorio, faixa `1..12`.
 - Requisicao invalida retorna `400 BAD_REQUEST`.
 
 ## Comportamento para estado vazio
@@ -91,12 +68,48 @@ Resposta deve conter:
   - `classesInMonth = 0`
   - `revenueInMonth = 0`
   - `costInMonth = 0`
-  - `classesByContent = []`
+  - `charts = []`
   - resposta `200 OK`
 
-## Etapas e controle de progresso
-Use o status abaixo para travar o fluxo: so avancar para a proxima etapa apos marcar a atual como concluida.
+## Pipeline OpenAPI + Kubb
 
+### Backend (documentacao)
+- `DashboardController`: `@Tag`, `@Operation`, `@ApiResponses`, `@Parameter`
+- `DashboardSummaryResponseDTO`: `@Schema` em todos os campos
+- `springdoc-openapi`: integrado (Swagger UI em `/swagger-ui.html`)
+
+### Geracao do JSON
+- Profile Maven: `./mvnw -Pgenerate-openapi generate-resources`
+- JSON gerado em: `server/api-aprimorar/target/generated/openapi/openapi.json`
+- Ou via curl: `curl http://localhost:8080/v3/api-docs > client/src/gen/openapi.json`
+
+### Frontend (Kubb)
+- Config: `client/kubb.config.ts`
+- Saida: `client/src/gen/`
+- Plugins: `@kubb/plugin-oas`, `@kubb/plugin-ts`, `@kubb/plugin-zod`, `@kubb/plugin-react-query`
+
+### Comandos
+```bash
+# Baixar openapi.json do backend
+npm run generate
+
+# Gerar tipos + schemas + hooks
+npm run sync
+```
+
+### Arquivos gerados (182 arquivos)
+```
+client/src/gen/
+├── openapi.json          <- fonte de verdade
+├── types/                <- TypeScript types
+│   └── DashboardSummaryResponseDTO.ts
+├── zod/                  <- Zod schemas
+│   └── dashboardSummaryResponseDTOSchema.ts
+└── hooks/                 <- React Query hooks
+    └── useGetSummary.ts
+```
+
+## Etapas e controle de progresso
 Legenda:
 - `[ ]` Pendente
 - `[~]` Em progresso
@@ -105,54 +118,20 @@ Legenda:
 ### Etapa 1 - Contrato e desenho tecnico
 Status: `[x]`
 
-Entregas:
-- Definicao do endpoint simplificado por mes.
-- Definicao dos campos finais do payload (sem semana).
-- Definicao das regras de negocio para KPIs e pizza.
+### Etapa 2 - Backend de agregacao
+Status: `[x]`
+- DashboardController, DashboardService, DashboardSummaryResponseDTO
+- Queries agregadas no EventRepository
+- springdoc-openapi configurado
 
-Criterios de conclusao:
-- Contrato aprovado sem ambiguidades.
-- Regras de calculo e navegacao mensal formalizadas.
+### Etapa 3 - OpenAPI + Kubb
+Status: `[x]`
+- Documentacao OpenAPI completa no controller e DTO
+- springdoc-openapi-maven-plugin configurado no pom.xml
+- Kubb configurado com 4 plugins
+- 182 arquivos gerados (tipos + Zod + hooks)
 
-### Etapa 2 - Backend de agregacao (repositorio + service)
-Status: `[~]`
-
-Entregas:
-- Criar/ajustar modulo `dashboard` no backend (`controller`, `service`, `dto`).
-- Implementar queries agregadas para KPIs mensais.
-- Implementar distribuicao por `EventContent` no mes.
-- Ajustar payload para remover qualquer referencia semanal.
-
-Criterios de conclusao:
-- Endpoint responde corretamente para meses com e sem dados.
-- Valores financeiros retornam com precisao (`BigDecimal`).
-- Payload aderente ao contrato simplificado.
-
-### Etapa 3 - Testes backend
-Status: `[ ]`
-
-Entregas:
-- Testes unitarios do service de dashboard (KPIs mensais e pizza).
-- Testes de controller para parametros invalidos e resposta valida.
-- Cobrir navegacao mensal (`prev`/`next`).
-
-Criterios de conclusao:
-- `./mvnw test` verde para o modulo.
-- Cenarios vazios retornam zero sem erro.
-
-### Etapa 4 - Contrato frontend (schema + api client + query keys)
-Status: `[ ]`
-
-Entregas:
-- Criar schema Zod para o payload simplificado.
-- Ajustar `dashboardApi.getSummary(year, month)` em `client/src/services/api.ts`.
-- Ajustar query key de dashboard por mes.
-
-Criterios de conclusao:
-- Parse de resposta validado por Zod.
-- Tipos inferidos usados sem `any`.
-
-### Etapa 5 - UI Dashboard (MVP visual)
+### Etapa 4 - UI Dashboard
 Status: `[ ]`
 
 Entregas:
@@ -161,24 +140,13 @@ Entregas:
 - Quatro cards de KPI mensais.
 - Grafico de pizza por `EventContent`.
 - Estados de carregamento, erro e vazio.
+- Integracao com hooks gerados pelo Kubb.
 
 Criterios de conclusao:
 - Navegacao mensal atualiza KPIs e pizza corretamente.
-- Tela sem referencias semanais.
+- Hook `useGetSummary` integrado com cache hibrido (`refetchInterval: 60000`).
 
-### Etapa 6 - Refresh, polimento e responsividade
-Status: `[ ]`
-
-Entregas:
-- Atualizacao automatica a cada 60s.
-- Ajustes de responsividade desktop/mobile.
-- Refino visual para leitura operacional rapida.
-
-Criterios de conclusao:
-- Tela funcional em diferentes larguras sem quebra.
-- Revalidacao automatica sem flicker excessivo.
-
-### Etapa 7 - Validacao final e handoff
+### Etapa 5 - Validacao final
 Status: `[ ]`
 
 Entregas:

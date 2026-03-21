@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/v1/employees")
-@Tag(name = "Employees", description = "Employee management APIs")
+@Tag(name = "Employee", description = "Employee management APIs")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -40,7 +40,11 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @Operation(summary = "Create employee", description = "Creates a new employee with provided data")
+    @Operation(
+        operationId = "createEmployee",
+        summary = "Criar funcionário",
+        description = "Cria um novo funcionário com os dados fornecidos."
+    )
     @PostMapping
     public ResponseEntity<EmployeeResponseDTO> createEmployee(@RequestBody @Valid EmployeeRequestDTO employeeRequestDto) {
 
@@ -48,7 +52,11 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "List all employees", description = "Retrieves all employees from database with pagination")
+    @Operation(
+        operationId = "getEmployees",
+        summary = "Listar funcionários",
+        description = "Retorna todos os funcionários do banco de dados com paginação."
+    )
     @GetMapping
     public ResponseEntity<Page<EmployeeResponseDTO>> getEmployees(
             @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
@@ -58,14 +66,22 @@ public class EmployeeController {
         return ResponseEntity.ok(employees);
     }
 
-    @Operation(summary = "Get all employees for options", description = "Retrieves simplified employee data for dropdowns")
+    @Operation(
+        operationId = "getEmployeeOptions",
+        summary = "Obter opções de funcionários",
+        description = "Retorna uma lista simplificada de funcionários para uso em dropdowns."
+    )
     @GetMapping("/options")
     public ResponseEntity<List<EmployeeOptionDTO>> getEmployeeOptions() {
         List<EmployeeOptionDTO> options = employeeService.getEmployeeOptions();
         return ResponseEntity.ok(options);
     }
 
-    @Operation(summary = "Get employee by ID", description = "Retrieves a single employee based on ID")
+    @Operation(
+        operationId = "getEmployeeById",
+        summary = "Obter funcionário por ID",
+        description = "Retorna um único funcionário com base no ID fornecido."
+    )
     @GetMapping("/{employeeId}")
     public ResponseEntity<EmployeeResponseDTO> getEmployeeById(@PathVariable UUID employeeId) {
 
@@ -73,7 +89,11 @@ public class EmployeeController {
         return ResponseEntity.ok(foundEmployee);
     }
 
-    @Operation(summary = "Update employee", description = "Partially updates an existing employee with provided data")
+    @Operation(
+        operationId = "updateEmployee",
+        summary = "Atualizar funcionário",
+        description = "Atualiza parcialmente um funcionário existente com os dados fornecidos."
+    )
     @PatchMapping("/{employeeId}")
     public ResponseEntity<EmployeeResponseDTO> updateEmployee(@PathVariable UUID employeeId, @RequestBody @Valid EmployeeRequestDTO request) {
 
@@ -81,7 +101,11 @@ public class EmployeeController {
         return ResponseEntity.ok(updatedEmployee);
     }
 
-    @Operation(summary = "Delete employee", description = "Deletes an employee based on ID")
+    @Operation(
+        operationId = "deleteEmployee",
+        summary = "Deletar funcionário",
+        description = "Deleta um funcionário com base no ID fornecido."
+    )
     @DeleteMapping("/{employeeId}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable UUID employeeId) {
 
@@ -89,7 +113,11 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Archive employee", description = "Archives an employee based on ID")
+    @Operation(
+        operationId = "archiveEmployee",
+        summary = "Arquivar funcionário",
+        description = "Arquiva um funcionário com base no ID fornecido."
+    )
     @PatchMapping("/{employeeId}/archive")
     public ResponseEntity<Void> archiveEmployee(@PathVariable UUID employeeId) {
 
@@ -97,7 +125,11 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Unarchive employee", description = "Unarchives an employee based on ID")
+    @Operation(
+        operationId = "unarchiveEmployee",
+        summary = "Desarquivar funcionário",
+        description = "Desarquiva um funcionário com base no ID fornecido."
+    )
     @PatchMapping("/{employeeId}/unarchive")
     public ResponseEntity<Void> unarchiveEmployee(@PathVariable UUID employeeId) {
 

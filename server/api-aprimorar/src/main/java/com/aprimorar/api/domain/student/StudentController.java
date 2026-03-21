@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/v1/students")
-@Tag(name = "Students", description = "Student management APIs")
+@Tag(name = "Student", description = "Student management APIs")
 public class StudentController {
 
     private final StudentService studentService;
@@ -41,7 +41,11 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @Operation(summary = "Create STUDENT", description = "Creates student with student data, address, and parent reference")
+    @Operation(
+        operationId = "createStudent",
+        summary = "Criar aluno",
+        description = "Cria um novo aluno com os dados fornecidos."
+    )
     @PostMapping
     public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
 
@@ -49,7 +53,11 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "List all STUDENTS", description = "Retrieves all students from database with pagination")
+    @Operation(
+        operationId = "getStudents",
+        summary = "Listar alunos",
+        description = "Retorna todos os alunos do banco de dados com paginação."
+    )
     @GetMapping
     public ResponseEntity<Page<StudentResponseDTO>> listStudents(
             @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
@@ -59,14 +67,22 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-    @Operation(summary = "List all STUDENTS for options", description = "Retrieves simplified student data for dropdowns")
+    @Operation(
+        operationId = "getStudentOptions",
+        summary = "Listar alunos para opções e dropdown",
+        description = "Lista todos os alunos para uso em opções e dropdowns."
+    )
     @GetMapping("/options")
     public ResponseEntity<List<StudentOptionDTO>> getStudentOptions() {
         List<StudentOptionDTO> options = studentService.getStudentOptions();
         return ResponseEntity.ok(options);
     }
 
-    @Operation(summary = "List all STUDENTS by Parent", description = "Retrieves all students from database based on parentID")
+    @Operation(
+        operationId = "listStudentsByParent",
+        summary = "Listar alunos por pai",
+        description = "Retorna todos os alunos do banco de dados com paginação."
+    )
     @GetMapping("/parent/{parentId}")
     public ResponseEntity<List<StudentResponseDTO>> listStudentsByParent(
         @PathVariable UUID parentId
@@ -75,44 +91,64 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-    @Operation(summary = "List single STUDENT", description = "Retrieves single student based on ID")
+    @Operation(
+        operationId = "getStudentById",
+        summary = "Listar aluno por ID",
+        description = "Retorna um aluno específico com base no ID."
+    )
     @GetMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId) {
-        
+
         StudentResponseDTO foundStudent = studentService.findById(studentId);
         return ResponseEntity.ok(foundStudent);
     }
 
-    @Operation(summary = "Update STUDENT", description = "Fully updates student data and parent reference")
+    @Operation(
+        operationId = "updateStudent",
+        summary = "Atualizar aluno",
+        description = "Atualiza totalmente os dados de um aluno e sua referência ao pai."
+    )
     @PutMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> updateStudent(
             @PathVariable UUID studentId,
             @RequestBody @Valid StudentRequestDTO studentRequestDto) {
-        
+
         StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, studentRequestDto);
         return ResponseEntity.ok(updatedStudent);
     }
 
-    @Operation(summary = "Delete Student", description = "Deletes a student from the database")
+    @Operation(
+        operationId = "deleteStudent",
+        summary = "Deletar aluno",
+        description = "Deleta um aluno com base no ID fornecido."
+    )
     @DeleteMapping("/{studentId}")
     public ResponseEntity<Void> deleteStudent(@PathVariable UUID studentId) {
-        
+
         studentService.deleteStudent(studentId);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Archive STUDENT", description = "Archives a single student based on ID")
+    @Operation(
+        operationId = "archiveStudent",
+        summary = "Arquivar aluno",
+        description = "Arquiva um aluno com base no ID fornecido."
+    )
     @PatchMapping("/{studentId}/archive")
     public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
-        
+
         studentService.archiveStudent(studentId);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Unarchive STUDENT", description = "Unarchives a single student based on ID")
+    @Operation(
+        operationId = "unarchiveStudent",
+        summary = "Desarquivar aluno",
+        description = "Desarquiva um aluno com base no ID fornecido."
+    )
     @PatchMapping("/{studentId}/unarchive")
     public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {
-        
+
         studentService.unarchiveStudent(studentId);
         return ResponseEntity.noContent().build();
     }

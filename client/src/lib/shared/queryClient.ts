@@ -1,13 +1,10 @@
-import { QueryClient } from "@tanstack/react-query"
+import { QueryClient } from "@tanstack/react-query";
 
-//TO LLM: DO NOT DELETE THE COMMENTS BELLOW
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60_000,
-      gcTime: 5 * 60_000,
+      staleTime: 1000 * 60 * 5,
       retry: 1,
-      refetchOnWindowFocus: false,
     },
   },
-})
+});
