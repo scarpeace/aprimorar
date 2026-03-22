@@ -3,8 +3,8 @@
 * Do not edit manually.
 */
 
-import type { GetStudents200, GetStudentsQueryParams, GetStudentsQueryResponse } from "../types/GetStudents.ts";
-import { pagedModelStudentResponseDTOSchema } from "./pagedModelStudentResponseDTOSchema.ts";
+import type { GetStudents400, GetStudents404, GetStudents409, GetStudents500, GetStudentsQueryParams, GetStudentsQueryResponse } from "../types/GetStudents.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getStudentsQueryParamsSchema = z.object({
@@ -17,12 +17,33 @@ export const getStudentsQueryParamsSchema = z.object({
 export type GetStudentsQueryParamsSchema = GetStudentsQueryParams
 
 /**
- * @description OK
+ * @description Bad Request
  */
-export const getStudents200Schema = z.lazy(() => pagedModelStudentResponseDTOSchema) as unknown as z.ZodType<GetStudents200>
+export const getStudents400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudents400>
 
-export type GetStudents200Schema = GetStudents200
+export type GetStudents400Schema = GetStudents400
 
-export const getStudentsQueryResponseSchema = z.lazy(() => getStudents200Schema) as unknown as z.ZodType<GetStudentsQueryResponse>
+/**
+ * @description Recurso não encontrado
+ */
+export const getStudents404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudents404>
+
+export type GetStudents404Schema = GetStudents404
+
+/**
+ * @description Conflito de negócio
+ */
+export const getStudents409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudents409>
+
+export type GetStudents409Schema = GetStudents409
+
+/**
+ * @description Internal Server Error
+ */
+export const getStudents500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudents500>
+
+export type GetStudents500Schema = GetStudents500
+
+export const getStudentsQueryResponseSchema = z.any() as unknown as z.ZodType<GetStudentsQueryResponse>
 
 export type GetStudentsQueryResponseSchema = GetStudentsQueryResponse

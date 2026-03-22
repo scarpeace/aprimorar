@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.annotations.ErrorResponsesAnnotation;
 import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
@@ -34,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/v1/students")
 @Tag(name = "Student", description = "Student management APIs")
+@ErrorResponsesAnnotation
 public class StudentController {
 
     private final StudentService studentService;

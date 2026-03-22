@@ -3,7 +3,8 @@
 * Do not edit manually.
 */
 
-import type { UnarchiveStudent200, UnarchiveStudentMutationResponse, UnarchiveStudentPathParams } from "../types/UnarchiveStudent.ts";
+import type { UnarchiveStudent400, UnarchiveStudent404, UnarchiveStudent409, UnarchiveStudent500, UnarchiveStudentMutationResponse, UnarchiveStudentPathParams } from "../types/UnarchiveStudent.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const unarchiveStudentPathParamsSchema = z.object({
@@ -13,12 +14,33 @@ export const unarchiveStudentPathParamsSchema = z.object({
 export type UnarchiveStudentPathParamsSchema = UnarchiveStudentPathParams
 
 /**
- * @description OK
+ * @description Bad Request
  */
-export const unarchiveStudent200Schema = z.any() as unknown as z.ZodType<UnarchiveStudent200>
+export const unarchiveStudent400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UnarchiveStudent400>
 
-export type UnarchiveStudent200Schema = UnarchiveStudent200
+export type UnarchiveStudent400Schema = UnarchiveStudent400
 
-export const unarchiveStudentMutationResponseSchema = z.lazy(() => unarchiveStudent200Schema) as unknown as z.ZodType<UnarchiveStudentMutationResponse>
+/**
+ * @description Recurso não encontrado
+ */
+export const unarchiveStudent404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UnarchiveStudent404>
+
+export type UnarchiveStudent404Schema = UnarchiveStudent404
+
+/**
+ * @description Conflito de negócio
+ */
+export const unarchiveStudent409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UnarchiveStudent409>
+
+export type UnarchiveStudent409Schema = UnarchiveStudent409
+
+/**
+ * @description Internal Server Error
+ */
+export const unarchiveStudent500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UnarchiveStudent500>
+
+export type UnarchiveStudent500Schema = UnarchiveStudent500
+
+export const unarchiveStudentMutationResponseSchema = z.any() as unknown as z.ZodType<UnarchiveStudentMutationResponse>
 
 export type UnarchiveStudentMutationResponseSchema = UnarchiveStudentMutationResponse

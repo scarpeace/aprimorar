@@ -3,22 +3,43 @@
 * Do not edit manually.
 */
 
-import type { CreateStudent200, CreateStudentMutationRequest, CreateStudentMutationResponse } from "../types/CreateStudent.ts";
+import type { CreateStudent400, CreateStudent404, CreateStudent409, CreateStudent500, CreateStudentMutationRequest, CreateStudentMutationResponse } from "../types/CreateStudent.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";
-import { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description OK
+ * @description Bad Request
  */
-export const createStudent200Schema = z.lazy(() => studentResponseDTOSchema) as unknown as z.ZodType<CreateStudent200>
+export const createStudent400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<CreateStudent400>
 
-export type CreateStudent200Schema = CreateStudent200
+export type CreateStudent400Schema = CreateStudent400
+
+/**
+ * @description Recurso não encontrado
+ */
+export const createStudent404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<CreateStudent404>
+
+export type CreateStudent404Schema = CreateStudent404
+
+/**
+ * @description Conflito de negócio
+ */
+export const createStudent409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<CreateStudent409>
+
+export type CreateStudent409Schema = CreateStudent409
+
+/**
+ * @description Internal Server Error
+ */
+export const createStudent500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<CreateStudent500>
+
+export type CreateStudent500Schema = CreateStudent500
 
 export const createStudentMutationRequestSchema = z.lazy(() => studentRequestDTOSchema) as unknown as z.ZodType<CreateStudentMutationRequest>
 
 export type CreateStudentMutationRequestSchema = CreateStudentMutationRequest
 
-export const createStudentMutationResponseSchema = z.lazy(() => createStudent200Schema) as unknown as z.ZodType<CreateStudentMutationResponse>
+export const createStudentMutationResponseSchema = z.any() as unknown as z.ZodType<CreateStudentMutationResponse>
 
 export type CreateStudentMutationResponseSchema = CreateStudentMutationResponse

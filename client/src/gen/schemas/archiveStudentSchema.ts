@@ -3,7 +3,8 @@
 * Do not edit manually.
 */
 
-import type { ArchiveStudent200, ArchiveStudentMutationResponse, ArchiveStudentPathParams } from "../types/ArchiveStudent.ts";
+import type { ArchiveStudent400, ArchiveStudent404, ArchiveStudent409, ArchiveStudent500, ArchiveStudentMutationResponse, ArchiveStudentPathParams } from "../types/ArchiveStudent.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const archiveStudentPathParamsSchema = z.object({
@@ -13,12 +14,33 @@ export const archiveStudentPathParamsSchema = z.object({
 export type ArchiveStudentPathParamsSchema = ArchiveStudentPathParams
 
 /**
- * @description OK
+ * @description Bad Request
  */
-export const archiveStudent200Schema = z.any() as unknown as z.ZodType<ArchiveStudent200>
+export const archiveStudent400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<ArchiveStudent400>
 
-export type ArchiveStudent200Schema = ArchiveStudent200
+export type ArchiveStudent400Schema = ArchiveStudent400
 
-export const archiveStudentMutationResponseSchema = z.lazy(() => archiveStudent200Schema) as unknown as z.ZodType<ArchiveStudentMutationResponse>
+/**
+ * @description Recurso não encontrado
+ */
+export const archiveStudent404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<ArchiveStudent404>
+
+export type ArchiveStudent404Schema = ArchiveStudent404
+
+/**
+ * @description Conflito de negócio
+ */
+export const archiveStudent409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<ArchiveStudent409>
+
+export type ArchiveStudent409Schema = ArchiveStudent409
+
+/**
+ * @description Internal Server Error
+ */
+export const archiveStudent500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<ArchiveStudent500>
+
+export type ArchiveStudent500Schema = ArchiveStudent500
+
+export const archiveStudentMutationResponseSchema = z.any() as unknown as z.ZodType<ArchiveStudentMutationResponse>
 
 export type ArchiveStudentMutationResponseSchema = ArchiveStudentMutationResponse

@@ -3,8 +3,8 @@
 * Do not edit manually.
 */
 
-import type { ListStudentsByParent200, ListStudentsByParentPathParams, ListStudentsByParentQueryResponse } from "../types/ListStudentsByParent.ts";
-import { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
+import type { ListStudentsByParent400, ListStudentsByParent404, ListStudentsByParent409, ListStudentsByParent500, ListStudentsByParentPathParams, ListStudentsByParentQueryResponse } from "../types/ListStudentsByParent.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const listStudentsByParentPathParamsSchema = z.object({
@@ -14,12 +14,33 @@ export const listStudentsByParentPathParamsSchema = z.object({
 export type ListStudentsByParentPathParamsSchema = ListStudentsByParentPathParams
 
 /**
- * @description OK
+ * @description Bad Request
  */
-export const listStudentsByParent200Schema = z.array(z.lazy(() => studentResponseDTOSchema)) as unknown as z.ZodType<ListStudentsByParent200>
+export const listStudentsByParent400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<ListStudentsByParent400>
 
-export type ListStudentsByParent200Schema = ListStudentsByParent200
+export type ListStudentsByParent400Schema = ListStudentsByParent400
 
-export const listStudentsByParentQueryResponseSchema = z.lazy(() => listStudentsByParent200Schema) as unknown as z.ZodType<ListStudentsByParentQueryResponse>
+/**
+ * @description Recurso não encontrado
+ */
+export const listStudentsByParent404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<ListStudentsByParent404>
+
+export type ListStudentsByParent404Schema = ListStudentsByParent404
+
+/**
+ * @description Conflito de negócio
+ */
+export const listStudentsByParent409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<ListStudentsByParent409>
+
+export type ListStudentsByParent409Schema = ListStudentsByParent409
+
+/**
+ * @description Internal Server Error
+ */
+export const listStudentsByParent500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<ListStudentsByParent500>
+
+export type ListStudentsByParent500Schema = ListStudentsByParent500
+
+export const listStudentsByParentQueryResponseSchema = z.any() as unknown as z.ZodType<ListStudentsByParentQueryResponse>
 
 export type ListStudentsByParentQueryResponseSchema = ListStudentsByParentQueryResponse

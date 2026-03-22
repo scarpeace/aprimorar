@@ -48,11 +48,6 @@ public class GlobalExceptionHandler {
             ParentNotFoundException.class,
             StudentNotFoundException.class
     })
-    @ApiResponse(
-            responseCode = "404",
-            description = "Recurso não encontrado",
-            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
-    )
     public ResponseEntity<ProblemDetail> handleNotFoundExceptions(RuntimeException ex, HttpServletRequest request) {
         return buildProblemDetail(
                 ErrorCode.RESOURCE_NOT_FOUND,
@@ -71,11 +66,6 @@ public class GlobalExceptionHandler {
             ParentAlreadyExistsException.class,
             StudentAlreadyExistException.class
     })
-    @ApiResponse(
-            responseCode = "409",
-            description = "Conflito de negócio",
-            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
-    )
     public ResponseEntity<ProblemDetail> handleConflictExceptions(
             RuntimeException ex,
             HttpServletRequest request) {
@@ -97,11 +87,6 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException.class,
             MethodArgumentNotValidException.class
     })
-    @ApiResponse(
-            responseCode = "400",
-            description = "Requisição inválida",
-            content = @Content(schema = @Schema(implementation = ProblemDetail.class))
-    )
     public ResponseEntity<ProblemDetail> handleBadRequestExceptions(
             Exception ex,
             HttpServletRequest request) {

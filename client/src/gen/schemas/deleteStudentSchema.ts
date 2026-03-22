@@ -3,7 +3,8 @@
 * Do not edit manually.
 */
 
-import type { DeleteStudent200, DeleteStudentMutationResponse, DeleteStudentPathParams } from "../types/DeleteStudent.ts";
+import type { DeleteStudent400, DeleteStudent404, DeleteStudent409, DeleteStudent500, DeleteStudentMutationResponse, DeleteStudentPathParams } from "../types/DeleteStudent.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const deleteStudentPathParamsSchema = z.object({
@@ -13,12 +14,33 @@ export const deleteStudentPathParamsSchema = z.object({
 export type DeleteStudentPathParamsSchema = DeleteStudentPathParams
 
 /**
- * @description OK
+ * @description Bad Request
  */
-export const deleteStudent200Schema = z.any() as unknown as z.ZodType<DeleteStudent200>
+export const deleteStudent400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<DeleteStudent400>
 
-export type DeleteStudent200Schema = DeleteStudent200
+export type DeleteStudent400Schema = DeleteStudent400
 
-export const deleteStudentMutationResponseSchema = z.lazy(() => deleteStudent200Schema) as unknown as z.ZodType<DeleteStudentMutationResponse>
+/**
+ * @description Recurso não encontrado
+ */
+export const deleteStudent404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<DeleteStudent404>
+
+export type DeleteStudent404Schema = DeleteStudent404
+
+/**
+ * @description Conflito de negócio
+ */
+export const deleteStudent409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<DeleteStudent409>
+
+export type DeleteStudent409Schema = DeleteStudent409
+
+/**
+ * @description Internal Server Error
+ */
+export const deleteStudent500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<DeleteStudent500>
+
+export type DeleteStudent500Schema = DeleteStudent500
+
+export const deleteStudentMutationResponseSchema = z.any() as unknown as z.ZodType<DeleteStudentMutationResponse>
 
 export type DeleteStudentMutationResponseSchema = DeleteStudentMutationResponse

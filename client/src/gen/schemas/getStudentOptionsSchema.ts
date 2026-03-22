@@ -3,17 +3,38 @@
 * Do not edit manually.
 */
 
-import type { GetStudentOptions200, GetStudentOptionsQueryResponse } from "../types/GetStudentOptions.ts";
-import { studentOptionDTOSchema } from "./studentOptionDTOSchema.ts";
+import type { GetStudentOptions400, GetStudentOptions404, GetStudentOptions409, GetStudentOptions500, GetStudentOptionsQueryResponse } from "../types/GetStudentOptions.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description OK
+ * @description Bad Request
  */
-export const getStudentOptions200Schema = z.array(z.lazy(() => studentOptionDTOSchema)) as unknown as z.ZodType<GetStudentOptions200>
+export const getStudentOptions400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudentOptions400>
 
-export type GetStudentOptions200Schema = GetStudentOptions200
+export type GetStudentOptions400Schema = GetStudentOptions400
 
-export const getStudentOptionsQueryResponseSchema = z.lazy(() => getStudentOptions200Schema) as unknown as z.ZodType<GetStudentOptionsQueryResponse>
+/**
+ * @description Recurso não encontrado
+ */
+export const getStudentOptions404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudentOptions404>
+
+export type GetStudentOptions404Schema = GetStudentOptions404
+
+/**
+ * @description Conflito de negócio
+ */
+export const getStudentOptions409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudentOptions409>
+
+export type GetStudentOptions409Schema = GetStudentOptions409
+
+/**
+ * @description Internal Server Error
+ */
+export const getStudentOptions500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudentOptions500>
+
+export type GetStudentOptions500Schema = GetStudentOptions500
+
+export const getStudentOptionsQueryResponseSchema = z.any() as unknown as z.ZodType<GetStudentOptionsQueryResponse>
 
 export type GetStudentOptionsQueryResponseSchema = GetStudentOptionsQueryResponse

@@ -3,8 +3,8 @@
 * Do not edit manually.
 */
 
-import type { GetStudentById200, GetStudentByIdPathParams, GetStudentByIdQueryResponse } from "../types/GetStudentById.ts";
-import { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
+import type { GetStudentById400, GetStudentById404, GetStudentById409, GetStudentById500, GetStudentByIdPathParams, GetStudentByIdQueryResponse } from "../types/GetStudentById.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getStudentByIdPathParamsSchema = z.object({
@@ -14,12 +14,33 @@ export const getStudentByIdPathParamsSchema = z.object({
 export type GetStudentByIdPathParamsSchema = GetStudentByIdPathParams
 
 /**
- * @description OK
+ * @description Bad Request
  */
-export const getStudentById200Schema = z.lazy(() => studentResponseDTOSchema) as unknown as z.ZodType<GetStudentById200>
+export const getStudentById400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudentById400>
 
-export type GetStudentById200Schema = GetStudentById200
+export type GetStudentById400Schema = GetStudentById400
 
-export const getStudentByIdQueryResponseSchema = z.lazy(() => getStudentById200Schema) as unknown as z.ZodType<GetStudentByIdQueryResponse>
+/**
+ * @description Recurso não encontrado
+ */
+export const getStudentById404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudentById404>
+
+export type GetStudentById404Schema = GetStudentById404
+
+/**
+ * @description Conflito de negócio
+ */
+export const getStudentById409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudentById409>
+
+export type GetStudentById409Schema = GetStudentById409
+
+/**
+ * @description Internal Server Error
+ */
+export const getStudentById500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudentById500>
+
+export type GetStudentById500Schema = GetStudentById500
+
+export const getStudentByIdQueryResponseSchema = z.any() as unknown as z.ZodType<GetStudentByIdQueryResponse>
 
 export type GetStudentByIdQueryResponseSchema = GetStudentByIdQueryResponse

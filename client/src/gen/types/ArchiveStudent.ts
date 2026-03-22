@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type ArchiveStudentPathParams = {
     /**
@@ -12,14 +13,29 @@ export type ArchiveStudentPathParams = {
 };
 
 /**
- * @description OK
+ * @description Bad Request
 */
-export type ArchiveStudent200 = any;
+export type ArchiveStudent400 = ProblemDetail;
 
-export type ArchiveStudentMutationResponse = ArchiveStudent200;
+/**
+ * @description Recurso não encontrado
+*/
+export type ArchiveStudent404 = ProblemDetail;
+
+/**
+ * @description Conflito de negócio
+*/
+export type ArchiveStudent409 = ProblemDetail;
+
+/**
+ * @description Internal Server Error
+*/
+export type ArchiveStudent500 = ProblemDetail;
+
+export type ArchiveStudentMutationResponse = any;
 
 export type ArchiveStudentMutation = {
-    Response: ArchiveStudent200;
+    Response: any;
     PathParams: ArchiveStudentPathParams;
-    Errors: any;
+    Errors: ArchiveStudent400 | ArchiveStudent404 | ArchiveStudent409 | ArchiveStudent500;
 };

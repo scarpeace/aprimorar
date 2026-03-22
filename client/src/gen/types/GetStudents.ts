@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { PagedModelStudentResponseDTO } from "./PagedModelStudentResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type GetStudentsQueryParams = {
     /**
@@ -32,14 +32,29 @@ export type GetStudentsQueryParams = {
 };
 
 /**
- * @description OK
+ * @description Bad Request
 */
-export type GetStudents200 = PagedModelStudentResponseDTO;
+export type GetStudents400 = ProblemDetail;
 
-export type GetStudentsQueryResponse = GetStudents200;
+/**
+ * @description Recurso não encontrado
+*/
+export type GetStudents404 = ProblemDetail;
+
+/**
+ * @description Conflito de negócio
+*/
+export type GetStudents409 = ProblemDetail;
+
+/**
+ * @description Internal Server Error
+*/
+export type GetStudents500 = ProblemDetail;
+
+export type GetStudentsQueryResponse = any;
 
 export type GetStudentsQuery = {
-    Response: GetStudents200;
+    Response: any;
     QueryParams: GetStudentsQueryParams;
-    Errors: any;
+    Errors: GetStudents400 | GetStudents404 | GetStudents409 | GetStudents500;
 };

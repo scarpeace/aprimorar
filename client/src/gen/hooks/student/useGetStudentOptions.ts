@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetStudentOptionsQueryResponse } from "../../types/GetStudentOptions.ts";
+import type { GetStudentOptionsQueryResponse, GetStudentOptions400, GetStudentOptions404, GetStudentOptions409, GetStudentOptions500 } from "../../types/GetStudentOptions.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { getStudentOptionsQueryResponseSchema } from "../../schemas/getStudentOptionsSchema.ts";
@@ -24,14 +24,14 @@ export async function getStudentOptions(config: Partial<RequestConfig> & { clien
 
 
 
-  const res = await request<GetStudentOptionsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/v1/students/options`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<GetStudentOptionsQueryResponse, ResponseErrorConfig<GetStudentOptions400 | GetStudentOptions404 | GetStudentOptions409 | GetStudentOptions500>, unknown>({ method : "GET", url : `/v1/students/options`, baseURL : `http://localhost:8080`, ... requestConfig })
   return getStudentOptionsQueryResponseSchema.parse(res.data)
 }
 
 export function getStudentOptionsQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getStudentOptionsQueryKey()
-        return queryOptions<GetStudentOptionsQueryResponse, ResponseErrorConfig<Error>, GetStudentOptionsQueryResponse, typeof queryKey>({
+        return queryOptions<GetStudentOptionsQueryResponse, ResponseErrorConfig<GetStudentOptions400 | GetStudentOptions404 | GetStudentOptions409 | GetStudentOptions500>, GetStudentOptionsQueryResponse, typeof queryKey>({
          
          queryKey,
          queryFn: async ({ signal }) => {
@@ -48,7 +48,7 @@ export function getStudentOptionsQueryOptions(config: Partial<RequestConfig> & {
  */
 export function useGetStudentOptions<TData = GetStudentOptionsQueryResponse, TQueryData = GetStudentOptionsQueryResponse, TQueryKey extends QueryKey = GetStudentOptionsQueryKey>(options: 
 {
-  query?: Partial<QueryObserverOptions<GetStudentOptionsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetStudentOptionsQueryResponse, ResponseErrorConfig<GetStudentOptions400 | GetStudentOptions404 | GetStudentOptions409 | GetStudentOptions500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -62,7 +62,7 @@ export function useGetStudentOptions<TData = GetStudentOptionsQueryResponse, TQu
           ...getStudentOptionsQueryOptions(config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetStudentOptions400 | GetStudentOptions404 | GetStudentOptions409 | GetStudentOptions500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

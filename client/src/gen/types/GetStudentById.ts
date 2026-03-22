@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { StudentResponseDTO } from "./StudentResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type GetStudentByIdPathParams = {
     /**
@@ -13,14 +13,29 @@ export type GetStudentByIdPathParams = {
 };
 
 /**
- * @description OK
+ * @description Bad Request
 */
-export type GetStudentById200 = StudentResponseDTO;
+export type GetStudentById400 = ProblemDetail;
 
-export type GetStudentByIdQueryResponse = GetStudentById200;
+/**
+ * @description Recurso não encontrado
+*/
+export type GetStudentById404 = ProblemDetail;
+
+/**
+ * @description Conflito de negócio
+*/
+export type GetStudentById409 = ProblemDetail;
+
+/**
+ * @description Internal Server Error
+*/
+export type GetStudentById500 = ProblemDetail;
+
+export type GetStudentByIdQueryResponse = any;
 
 export type GetStudentByIdQuery = {
-    Response: GetStudentById200;
+    Response: any;
     PathParams: GetStudentByIdPathParams;
-    Errors: any;
+    Errors: GetStudentById400 | GetStudentById404 | GetStudentById409 | GetStudentById500;
 };

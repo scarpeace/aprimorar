@@ -3,8 +3,8 @@
 * Do not edit manually.
 */
 
+import type { ProblemDetail } from "./ProblemDetail.ts";
 import type { StudentRequestDTO } from "./StudentRequestDTO.ts";
-import type { StudentResponseDTO } from "./StudentResponseDTO.ts";
 
 export type UpdateStudentPathParams = {
     /**
@@ -14,17 +14,32 @@ export type UpdateStudentPathParams = {
 };
 
 /**
- * @description OK
+ * @description Bad Request
 */
-export type UpdateStudent200 = StudentResponseDTO;
+export type UpdateStudent400 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type UpdateStudent404 = ProblemDetail;
+
+/**
+ * @description Conflito de negócio
+*/
+export type UpdateStudent409 = ProblemDetail;
+
+/**
+ * @description Internal Server Error
+*/
+export type UpdateStudent500 = ProblemDetail;
 
 export type UpdateStudentMutationRequest = StudentRequestDTO;
 
-export type UpdateStudentMutationResponse = UpdateStudent200;
+export type UpdateStudentMutationResponse = any;
 
 export type UpdateStudentMutation = {
-    Response: UpdateStudent200;
+    Response: any;
     Request: UpdateStudentMutationRequest;
     PathParams: UpdateStudentPathParams;
-    Errors: any;
+    Errors: UpdateStudent400 | UpdateStudent404 | UpdateStudent409 | UpdateStudent500;
 };

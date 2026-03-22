@@ -3,16 +3,31 @@
 * Do not edit manually.
 */
 
-import type { StudentOptionDTO } from "./StudentOptionDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 /**
- * @description OK
+ * @description Bad Request
 */
-export type GetStudentOptions200 = StudentOptionDTO[];
+export type GetStudentOptions400 = ProblemDetail;
 
-export type GetStudentOptionsQueryResponse = GetStudentOptions200;
+/**
+ * @description Recurso não encontrado
+*/
+export type GetStudentOptions404 = ProblemDetail;
+
+/**
+ * @description Conflito de negócio
+*/
+export type GetStudentOptions409 = ProblemDetail;
+
+/**
+ * @description Internal Server Error
+*/
+export type GetStudentOptions500 = ProblemDetail;
+
+export type GetStudentOptionsQueryResponse = any;
 
 export type GetStudentOptionsQuery = {
-    Response: GetStudentOptions200;
-    Errors: any;
+    Response: any;
+    Errors: GetStudentOptions400 | GetStudentOptions404 | GetStudentOptions409 | GetStudentOptions500;
 };

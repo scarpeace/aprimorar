@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type DeleteStudentPathParams = {
     /**
@@ -12,14 +13,29 @@ export type DeleteStudentPathParams = {
 };
 
 /**
- * @description OK
+ * @description Bad Request
 */
-export type DeleteStudent200 = any;
+export type DeleteStudent400 = ProblemDetail;
 
-export type DeleteStudentMutationResponse = DeleteStudent200;
+/**
+ * @description Recurso não encontrado
+*/
+export type DeleteStudent404 = ProblemDetail;
+
+/**
+ * @description Conflito de negócio
+*/
+export type DeleteStudent409 = ProblemDetail;
+
+/**
+ * @description Internal Server Error
+*/
+export type DeleteStudent500 = ProblemDetail;
+
+export type DeleteStudentMutationResponse = any;
 
 export type DeleteStudentMutation = {
-    Response: DeleteStudent200;
+    Response: any;
     PathParams: DeleteStudentPathParams;
-    Errors: any;
+    Errors: DeleteStudent400 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500;
 };

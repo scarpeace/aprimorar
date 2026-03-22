@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { StudentResponseDTO } from "./StudentResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type ListStudentsByParentPathParams = {
     /**
@@ -13,14 +13,29 @@ export type ListStudentsByParentPathParams = {
 };
 
 /**
- * @description OK
+ * @description Bad Request
 */
-export type ListStudentsByParent200 = StudentResponseDTO[];
+export type ListStudentsByParent400 = ProblemDetail;
 
-export type ListStudentsByParentQueryResponse = ListStudentsByParent200;
+/**
+ * @description Recurso não encontrado
+*/
+export type ListStudentsByParent404 = ProblemDetail;
+
+/**
+ * @description Conflito de negócio
+*/
+export type ListStudentsByParent409 = ProblemDetail;
+
+/**
+ * @description Internal Server Error
+*/
+export type ListStudentsByParent500 = ProblemDetail;
+
+export type ListStudentsByParentQueryResponse = any;
 
 export type ListStudentsByParentQuery = {
-    Response: ListStudentsByParent200;
+    Response: any;
     PathParams: ListStudentsByParentPathParams;
-    Errors: any;
+    Errors: ListStudentsByParent400 | ListStudentsByParent404 | ListStudentsByParent409 | ListStudentsByParent500;
 };

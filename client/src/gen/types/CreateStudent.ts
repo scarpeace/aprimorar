@@ -3,20 +3,35 @@
 * Do not edit manually.
 */
 
+import type { ProblemDetail } from "./ProblemDetail.ts";
 import type { StudentRequestDTO } from "./StudentRequestDTO.ts";
-import type { StudentResponseDTO } from "./StudentResponseDTO.ts";
 
 /**
- * @description OK
+ * @description Bad Request
 */
-export type CreateStudent200 = StudentResponseDTO;
+export type CreateStudent400 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type CreateStudent404 = ProblemDetail;
+
+/**
+ * @description Conflito de negócio
+*/
+export type CreateStudent409 = ProblemDetail;
+
+/**
+ * @description Internal Server Error
+*/
+export type CreateStudent500 = ProblemDetail;
 
 export type CreateStudentMutationRequest = StudentRequestDTO;
 
-export type CreateStudentMutationResponse = CreateStudent200;
+export type CreateStudentMutationResponse = any;
 
 export type CreateStudentMutation = {
-    Response: CreateStudent200;
+    Response: any;
     Request: CreateStudentMutationRequest;
-    Errors: any;
+    Errors: CreateStudent400 | CreateStudent404 | CreateStudent409 | CreateStudent500;
 };

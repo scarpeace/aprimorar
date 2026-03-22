@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { UpdateStudentMutationRequest, UpdateStudentMutationResponse, UpdateStudentPathParams } from "../../types/UpdateStudent.ts";
+import type { UpdateStudentMutationRequest, UpdateStudentMutationResponse, UpdateStudentPathParams, UpdateStudent400, UpdateStudent404, UpdateStudent409, UpdateStudent500 } from "../../types/UpdateStudent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { updateStudentMutationResponseSchema, updateStudentMutationRequestSchema } from "../../schemas/updateStudentSchema.ts";
@@ -24,14 +24,14 @@ export async function updateStudent(studentId: UpdateStudentPathParams["studentI
 
   const requestData = updateStudentMutationRequestSchema.parse(data)
 
-  const res = await request<UpdateStudentMutationResponse, ResponseErrorConfig<Error>, UpdateStudentMutationRequest>({ method : "PUT", url : `/v1/students/${studentId}`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
+  const res = await request<UpdateStudentMutationResponse, ResponseErrorConfig<UpdateStudent400 | UpdateStudent404 | UpdateStudent409 | UpdateStudent500>, UpdateStudentMutationRequest>({ method : "PUT", url : `/v1/students/${studentId}`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
   return updateStudentMutationResponseSchema.parse(res.data)
 }
 
 export function updateStudentMutationOptions<TContext = unknown>(config: Partial<RequestConfig<UpdateStudentMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = updateStudentMutationKey()
-        return mutationOptions<UpdateStudentMutationResponse, ResponseErrorConfig<Error>, {studentId: UpdateStudentPathParams["studentId"], data: UpdateStudentMutationRequest}, TContext>({
+        return mutationOptions<UpdateStudentMutationResponse, ResponseErrorConfig<UpdateStudent400 | UpdateStudent404 | UpdateStudent409 | UpdateStudent500>, {studentId: UpdateStudentPathParams["studentId"], data: UpdateStudentMutationRequest}, TContext>({
           mutationKey,
           mutationFn: async({ studentId, data }) => {
             return updateStudent(studentId, data, config)
@@ -47,7 +47,7 @@ export function updateStudentMutationOptions<TContext = unknown>(config: Partial
  */
 export function useUpdateStudent<TContext>(options: 
 {
-  mutation?: UseMutationOptions<UpdateStudentMutationResponse, ResponseErrorConfig<Error>, {studentId: UpdateStudentPathParams["studentId"], data: UpdateStudentMutationRequest}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<UpdateStudentMutationResponse, ResponseErrorConfig<UpdateStudent400 | UpdateStudent404 | UpdateStudent409 | UpdateStudent500>, {studentId: UpdateStudentPathParams["studentId"], data: UpdateStudentMutationRequest}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig<UpdateStudentMutationRequest>> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useUpdateStudent<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? updateStudentMutationKey()
 
-          const baseOptions = updateStudentMutationOptions(config) as UseMutationOptions<UpdateStudentMutationResponse, ResponseErrorConfig<Error>, {studentId: UpdateStudentPathParams["studentId"], data: UpdateStudentMutationRequest}, TContext>
+          const baseOptions = updateStudentMutationOptions(config) as UseMutationOptions<UpdateStudentMutationResponse, ResponseErrorConfig<UpdateStudent400 | UpdateStudent404 | UpdateStudent409 | UpdateStudent500>, {studentId: UpdateStudentPathParams["studentId"], data: UpdateStudentMutationRequest}, TContext>
           
 
-          return useMutation<UpdateStudentMutationResponse, ResponseErrorConfig<Error>, {studentId: UpdateStudentPathParams["studentId"], data: UpdateStudentMutationRequest}, TContext>({
+          return useMutation<UpdateStudentMutationResponse, ResponseErrorConfig<UpdateStudent400 | UpdateStudent404 | UpdateStudent409 | UpdateStudent500>, {studentId: UpdateStudentPathParams["studentId"], data: UpdateStudentMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<UpdateStudentMutationResponse, ResponseErrorConfig<Error>, {studentId: UpdateStudentPathParams["studentId"], data: UpdateStudentMutationRequest}, TContext>
+          }, queryClient) as UseMutationResult<UpdateStudentMutationResponse, ResponseErrorConfig<UpdateStudent400 | UpdateStudent404 | UpdateStudent409 | UpdateStudent500>, {studentId: UpdateStudentPathParams["studentId"], data: UpdateStudentMutationRequest}, TContext>
       
 }

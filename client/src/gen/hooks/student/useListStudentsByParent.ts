@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { ListStudentsByParentQueryResponse, ListStudentsByParentPathParams } from "../../types/ListStudentsByParent.ts";
+import type { ListStudentsByParentQueryResponse, ListStudentsByParentPathParams, ListStudentsByParent400, ListStudentsByParent404, ListStudentsByParent409, ListStudentsByParent500 } from "../../types/ListStudentsByParent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { listStudentsByParentQueryResponseSchema } from "../../schemas/listStudentsByParentSchema.ts";
@@ -24,14 +24,14 @@ export async function listStudentsByParent(parentId: ListStudentsByParentPathPar
 
 
 
-  const res = await request<ListStudentsByParentQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/v1/students/parent/${parentId}`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<ListStudentsByParentQueryResponse, ResponseErrorConfig<ListStudentsByParent400 | ListStudentsByParent404 | ListStudentsByParent409 | ListStudentsByParent500>, unknown>({ method : "GET", url : `/v1/students/parent/${parentId}`, baseURL : `http://localhost:8080`, ... requestConfig })
   return listStudentsByParentQueryResponseSchema.parse(res.data)
 }
 
 export function listStudentsByParentQueryOptions(parentId: ListStudentsByParentPathParams["parentId"], config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = listStudentsByParentQueryKey(parentId)
-        return queryOptions<ListStudentsByParentQueryResponse, ResponseErrorConfig<Error>, ListStudentsByParentQueryResponse, typeof queryKey>({
+        return queryOptions<ListStudentsByParentQueryResponse, ResponseErrorConfig<ListStudentsByParent400 | ListStudentsByParent404 | ListStudentsByParent409 | ListStudentsByParent500>, ListStudentsByParentQueryResponse, typeof queryKey>({
          enabled: !!(parentId),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -48,7 +48,7 @@ export function listStudentsByParentQueryOptions(parentId: ListStudentsByParentP
  */
 export function useListStudentsByParent<TData = ListStudentsByParentQueryResponse, TQueryData = ListStudentsByParentQueryResponse, TQueryKey extends QueryKey = ListStudentsByParentQueryKey>(parentId: ListStudentsByParentPathParams["parentId"], options: 
 {
-  query?: Partial<QueryObserverOptions<ListStudentsByParentQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<ListStudentsByParentQueryResponse, ResponseErrorConfig<ListStudentsByParent400 | ListStudentsByParent404 | ListStudentsByParent409 | ListStudentsByParent500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -62,7 +62,7 @@ export function useListStudentsByParent<TData = ListStudentsByParentQueryRespons
           ...listStudentsByParentQueryOptions(parentId, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ListStudentsByParent400 | ListStudentsByParent404 | ListStudentsByParent409 | ListStudentsByParent500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { UnarchiveStudentMutationResponse, UnarchiveStudentPathParams } from "../../types/UnarchiveStudent.ts";
+import type { UnarchiveStudentMutationResponse, UnarchiveStudentPathParams, UnarchiveStudent400, UnarchiveStudent404, UnarchiveStudent409, UnarchiveStudent500 } from "../../types/UnarchiveStudent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { unarchiveStudentMutationResponseSchema } from "../../schemas/unarchiveStudentSchema.ts";
@@ -24,14 +24,14 @@ export async function unarchiveStudent(studentId: UnarchiveStudentPathParams["st
 
 
 
-  const res = await request<UnarchiveStudentMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "PATCH", url : `/v1/students/${studentId}/unarchive`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<UnarchiveStudentMutationResponse, ResponseErrorConfig<UnarchiveStudent400 | UnarchiveStudent404 | UnarchiveStudent409 | UnarchiveStudent500>, unknown>({ method : "PATCH", url : `/v1/students/${studentId}/unarchive`, baseURL : `http://localhost:8080`, ... requestConfig })
   return unarchiveStudentMutationResponseSchema.parse(res.data)
 }
 
 export function unarchiveStudentMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const mutationKey = unarchiveStudentMutationKey()
-        return mutationOptions<UnarchiveStudentMutationResponse, ResponseErrorConfig<Error>, {studentId: UnarchiveStudentPathParams["studentId"]}, TContext>({
+        return mutationOptions<UnarchiveStudentMutationResponse, ResponseErrorConfig<UnarchiveStudent400 | UnarchiveStudent404 | UnarchiveStudent409 | UnarchiveStudent500>, {studentId: UnarchiveStudentPathParams["studentId"]}, TContext>({
           mutationKey,
           mutationFn: async({ studentId }) => {
             return unarchiveStudent(studentId, config)
@@ -47,7 +47,7 @@ export function unarchiveStudentMutationOptions<TContext = unknown>(config: Part
  */
 export function useUnarchiveStudent<TContext>(options: 
 {
-  mutation?: UseMutationOptions<UnarchiveStudentMutationResponse, ResponseErrorConfig<Error>, {studentId: UnarchiveStudentPathParams["studentId"]}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<UnarchiveStudentMutationResponse, ResponseErrorConfig<UnarchiveStudent400 | UnarchiveStudent404 | UnarchiveStudent409 | UnarchiveStudent500>, {studentId: UnarchiveStudentPathParams["studentId"]}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useUnarchiveStudent<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? unarchiveStudentMutationKey()
 
-          const baseOptions = unarchiveStudentMutationOptions(config) as UseMutationOptions<UnarchiveStudentMutationResponse, ResponseErrorConfig<Error>, {studentId: UnarchiveStudentPathParams["studentId"]}, TContext>
+          const baseOptions = unarchiveStudentMutationOptions(config) as UseMutationOptions<UnarchiveStudentMutationResponse, ResponseErrorConfig<UnarchiveStudent400 | UnarchiveStudent404 | UnarchiveStudent409 | UnarchiveStudent500>, {studentId: UnarchiveStudentPathParams["studentId"]}, TContext>
           
 
-          return useMutation<UnarchiveStudentMutationResponse, ResponseErrorConfig<Error>, {studentId: UnarchiveStudentPathParams["studentId"]}, TContext>({
+          return useMutation<UnarchiveStudentMutationResponse, ResponseErrorConfig<UnarchiveStudent400 | UnarchiveStudent404 | UnarchiveStudent409 | UnarchiveStudent500>, {studentId: UnarchiveStudentPathParams["studentId"]}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<UnarchiveStudentMutationResponse, ResponseErrorConfig<Error>, {studentId: UnarchiveStudentPathParams["studentId"]}, TContext>
+          }, queryClient) as UseMutationResult<UnarchiveStudentMutationResponse, ResponseErrorConfig<UnarchiveStudent400 | UnarchiveStudent404 | UnarchiveStudent409 | UnarchiveStudent500>, {studentId: UnarchiveStudentPathParams["studentId"]}, TContext>
       
 }

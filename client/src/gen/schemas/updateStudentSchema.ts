@@ -3,9 +3,9 @@
 * Do not edit manually.
 */
 
-import type { UpdateStudent200, UpdateStudentMutationRequest, UpdateStudentMutationResponse, UpdateStudentPathParams } from "../types/UpdateStudent.ts";
+import type { UpdateStudent400, UpdateStudent404, UpdateStudent409, UpdateStudent500, UpdateStudentMutationRequest, UpdateStudentMutationResponse, UpdateStudentPathParams } from "../types/UpdateStudent.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";
-import { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 export const updateStudentPathParamsSchema = z.object({
@@ -15,16 +15,37 @@ export const updateStudentPathParamsSchema = z.object({
 export type UpdateStudentPathParamsSchema = UpdateStudentPathParams
 
 /**
- * @description OK
+ * @description Bad Request
  */
-export const updateStudent200Schema = z.lazy(() => studentResponseDTOSchema) as unknown as z.ZodType<UpdateStudent200>
+export const updateStudent400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UpdateStudent400>
 
-export type UpdateStudent200Schema = UpdateStudent200
+export type UpdateStudent400Schema = UpdateStudent400
+
+/**
+ * @description Recurso não encontrado
+ */
+export const updateStudent404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UpdateStudent404>
+
+export type UpdateStudent404Schema = UpdateStudent404
+
+/**
+ * @description Conflito de negócio
+ */
+export const updateStudent409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UpdateStudent409>
+
+export type UpdateStudent409Schema = UpdateStudent409
+
+/**
+ * @description Internal Server Error
+ */
+export const updateStudent500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UpdateStudent500>
+
+export type UpdateStudent500Schema = UpdateStudent500
 
 export const updateStudentMutationRequestSchema = z.lazy(() => studentRequestDTOSchema) as unknown as z.ZodType<UpdateStudentMutationRequest>
 
 export type UpdateStudentMutationRequestSchema = UpdateStudentMutationRequest
 
-export const updateStudentMutationResponseSchema = z.lazy(() => updateStudent200Schema) as unknown as z.ZodType<UpdateStudentMutationResponse>
+export const updateStudentMutationResponseSchema = z.any() as unknown as z.ZodType<UpdateStudentMutationResponse>
 
 export type UpdateStudentMutationResponseSchema = UpdateStudentMutationResponse
