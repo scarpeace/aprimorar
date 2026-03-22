@@ -32,6 +32,8 @@ class EventServiceTest {
     private static final UUID EVENT_ID = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
     private static final UUID STUDENT_ID = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
     private static final UUID EMPLOYEE_ID = UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc");
+    private static final LocalDateTime EVENT_START = LocalDateTime.of(2026, 3, 25, 10, 0);
+    private static final LocalDateTime EVENT_END = LocalDateTime.of(2026, 3, 25, 11, 0);
 
     @Mock
     private EventRepository eventRepo;
@@ -91,8 +93,8 @@ class EventServiceTest {
         return new EventRequestDTO(
                 "Evento atualizado",
                 "Descrição de teste",
-                LocalDateTime.of(2026, 3, 20, 10, 0),
-                LocalDateTime.of(2026, 3, 20, 11, 0),
+                EVENT_START,
+                EVENT_END,
                 BigDecimal.valueOf(120),
                 BigDecimal.valueOf(80),
                 EventContent.AULA,
@@ -105,8 +107,8 @@ class EventServiceTest {
         Event event = new Event();
         event.setTitle(title);
         event.setDescription("Descrição de teste");
-        event.setStartDate(LocalDateTime.of(2026, 3, 20, 10, 0));
-        event.setEndDateTime(LocalDateTime.of(2026, 3, 20, 11, 0));
+        event.setStartDate(EVENT_START);
+        event.setEndDateTime(EVENT_END);
         event.setPrice(BigDecimal.valueOf(120));
         event.setPayment(BigDecimal.valueOf(80));
         event.setContent(EventContent.AULA);

@@ -53,6 +53,7 @@ public class ParentService {
     @Transactional(readOnly = true)
     public List<ParentResponseDTO> getParents() {
         List<Parent> list = parentRepo.findAll();
+
         log.info("Consulta de responsáveis finalizada, {} registros encontrados.", list.size());
         return list.stream().map(parentMapper::convertToDto).toList();
     }

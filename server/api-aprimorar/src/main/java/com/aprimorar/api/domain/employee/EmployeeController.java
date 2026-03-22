@@ -3,6 +3,7 @@ package com.aprimorar.api.domain.employee;
 import java.util.List;
 import java.util.UUID;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -59,7 +60,7 @@ public class EmployeeController {
     )
     @GetMapping
     public ResponseEntity<Page<EmployeeResponseDTO>> getEmployees(
-            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @ParameterObject @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
             @org.springframework.web.bind.annotation.RequestParam(required = false) String search) {
 
         Page<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search);

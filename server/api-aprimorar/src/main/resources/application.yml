@@ -1,6 +1,13 @@
 spring:
   application:
     name: "aprimorar-api"
+    profile:
+      active: 'dev'
+  mvc:
+    problemdetails:
+      enabled: true
+  springdoc:
+    override-with-generic-response: false
   flyway:
     enabled: true
     locations: classpath:db/migration

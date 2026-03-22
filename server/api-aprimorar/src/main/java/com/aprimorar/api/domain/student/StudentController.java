@@ -3,6 +3,7 @@ package com.aprimorar.api.domain.student;
 import java.util.List;
 import java.util.UUID;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -60,7 +61,7 @@ public class StudentController {
     )
     @GetMapping
     public ResponseEntity<Page<StudentResponseDTO>> listStudents(
-            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @ParameterObject @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) String search
     ) {
         Page<StudentResponseDTO> students = studentService.getStudents(pageable, search);

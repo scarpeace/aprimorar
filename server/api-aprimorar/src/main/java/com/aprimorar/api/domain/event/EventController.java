@@ -2,6 +2,7 @@ package com.aprimorar.api.domain.event;
 
 import java.util.UUID;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -49,7 +50,7 @@ public class EventController {
     )
     @GetMapping
     public ResponseEntity<Page<EventResponseDTO>> getEvents(
-            @PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable,
+            @ParameterObject @PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) String search) {
 
         Page<EventResponseDTO> events = eventService.getEvents(pageable, search);
@@ -74,7 +75,9 @@ public class EventController {
         description = "Retorna todos os eventos de um único funcionário com base no ID fornecido."
     )
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<Page<EventResponseDTO>> getEventsByEmployeeId(@PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID employeeId) {
+    public ResponseEntity<Page<EventResponseDTO>> getEventsByEmployeeId(
+        @ParameterObject @PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable,
+        @PathVariable UUID employeeId) {
 
         Page<EventResponseDTO> events = eventService.getEventsByEmployeeId(pageable, employeeId);
         return ResponseEntity.ok(events);
@@ -86,7 +89,7 @@ public class EventController {
         description = "Retorna todos os eventos de um único aluno com base no ID fornecido."
     )
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<Page<EventResponseDTO>> getEventsByStudentId(@PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID studentId) {
+    public ResponseEntity<Page<EventResponseDTO>> getEventsByStudentId(@ParameterObject @PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID studentId) {
 
         Page<EventResponseDTO> events = eventService.getEventsByStudentId(pageable, studentId);
         return ResponseEntity.ok(events);
