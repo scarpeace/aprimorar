@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { UpdateStudentMutationRequest, UpdateStudentMutationResponse, UpdateStudentPathParams, UpdateStudent400, UpdateStudent404, UpdateStudent409, UpdateStudent500 } from "../../types/UpdateStudent.ts";
+import type { UpdateStudentMutationRequest, UpdateStudentMutationResponse, UpdateStudentPathParams, UpdateStudent400, UpdateStudent404, UpdateStudent409, UpdateStudent500 } from "../../types/student/UpdateStudent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { updateStudentMutationResponseSchema, updateStudentMutationRequestSchema } from "../../schemas/updateStudentSchema.ts";
+import { updateStudentMutationResponseSchema, updateStudentMutationRequestSchema } from "../../schemas/student/updateStudentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const updateStudentMutationKey = () => [{ url: '/v1/students/:studentId' }] as const

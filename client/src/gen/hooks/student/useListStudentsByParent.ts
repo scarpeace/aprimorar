@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { ListStudentsByParentQueryResponse, ListStudentsByParentPathParams, ListStudentsByParent400, ListStudentsByParent404, ListStudentsByParent409, ListStudentsByParent500 } from "../../types/ListStudentsByParent.ts";
+import type { ListStudentsByParentQueryResponse, ListStudentsByParentPathParams, ListStudentsByParent400, ListStudentsByParent404, ListStudentsByParent409, ListStudentsByParent500 } from "../../types/student/ListStudentsByParent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { listStudentsByParentQueryResponseSchema } from "../../schemas/listStudentsByParentSchema.ts";
+import { listStudentsByParentQueryResponseSchema } from "../../schemas/student/listStudentsByParentSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const listStudentsByParentQueryKey = (parentId: ListStudentsByParentPathParams["parentId"]) => [{ url: '/v1/students/parent/:parentId', params: {parentId:parentId} }] as const

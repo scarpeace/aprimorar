@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetEmployeesQueryResponse, GetEmployeesQueryParams } from "../../types/GetEmployees.ts";
+import type { GetEmployeesQueryResponse, GetEmployeesQueryParams } from "../../types/employee/GetEmployees.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getEmployeesQueryResponseSchema } from "../../schemas/getEmployeesSchema.ts";
+import { getEmployeesQueryResponseSchema } from "../../schemas/employee/getEmployeesSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEmployeesQueryKey = (params?: GetEmployeesQueryParams) => [{ url: '/v1/employees' }, ...(params ? [params] : [])] as const

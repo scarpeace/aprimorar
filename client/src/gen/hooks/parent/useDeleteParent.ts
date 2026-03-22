@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { DeleteParentMutationResponse, DeleteParentPathParams } from "../../types/DeleteParent.ts";
+import type { DeleteParentMutationResponse, DeleteParentPathParams } from "../../types/parent/DeleteParent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { deleteParentMutationResponseSchema } from "../../schemas/deleteParentSchema.ts";
+import { deleteParentMutationResponseSchema } from "../../schemas/parent/deleteParentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteParentMutationKey = () => [{ url: '/v1/parents/:parentId' }] as const

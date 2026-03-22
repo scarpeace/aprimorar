@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetEventByIdQueryResponse, GetEventByIdPathParams } from "../../types/GetEventById.ts";
+import type { GetEventByIdQueryResponse, GetEventByIdPathParams } from "../../types/event/GetEventById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getEventByIdQueryResponseSchema } from "../../schemas/getEventByIdSchema.ts";
+import { getEventByIdQueryResponseSchema } from "../../schemas/event/getEventByIdSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEventByIdQueryKey = (eventId: GetEventByIdPathParams["eventId"]) => [{ url: '/v1/events/:eventId', params: {eventId:eventId} }] as const

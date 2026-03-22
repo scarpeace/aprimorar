@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { UpdateEmployeeMutationRequest, UpdateEmployeeMutationResponse, UpdateEmployeePathParams } from "../../types/UpdateEmployee.ts";
+import type { UpdateEmployeeMutationRequest, UpdateEmployeeMutationResponse, UpdateEmployeePathParams } from "../../types/employee/UpdateEmployee.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { updateEmployeeMutationResponseSchema, updateEmployeeMutationRequestSchema } from "../../schemas/updateEmployeeSchema.ts";
+import { updateEmployeeMutationResponseSchema, updateEmployeeMutationRequestSchema } from "../../schemas/employee/updateEmployeeSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const updateEmployeeMutationKey = () => [{ url: '/v1/employees/:employeeId' }] as const

@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetStudentByIdQueryResponse, GetStudentByIdPathParams, GetStudentById400, GetStudentById404, GetStudentById409, GetStudentById500 } from "../../types/GetStudentById.ts";
+import type { GetStudentByIdQueryResponse, GetStudentByIdPathParams, GetStudentById400, GetStudentById404, GetStudentById409, GetStudentById500 } from "../../types/student/GetStudentById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getStudentByIdQueryResponseSchema } from "../../schemas/getStudentByIdSchema.ts";
+import { getStudentByIdQueryResponseSchema } from "../../schemas/student/getStudentByIdSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getStudentByIdQueryKey = (studentId: GetStudentByIdPathParams["studentId"]) => [{ url: '/v1/students/:studentId', params: {studentId:studentId} }] as const

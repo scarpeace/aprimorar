@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetEventsByEmployeeIdQueryResponse, GetEventsByEmployeeIdPathParams, GetEventsByEmployeeIdQueryParams } from "../../types/GetEventsByEmployeeId.ts";
+import type { GetEventsByEmployeeIdQueryResponse, GetEventsByEmployeeIdPathParams, GetEventsByEmployeeIdQueryParams } from "../../types/event/GetEventsByEmployeeId.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getEventsByEmployeeIdQueryResponseSchema } from "../../schemas/getEventsByEmployeeIdSchema.ts";
+import { getEventsByEmployeeIdQueryResponseSchema } from "../../schemas/event/getEventsByEmployeeIdSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEventsByEmployeeIdQueryKey = (employeeId: GetEventsByEmployeeIdPathParams["employeeId"], params?: GetEventsByEmployeeIdQueryParams) => [{ url: '/v1/events/employee/:employeeId', params: {employeeId:employeeId} }, ...(params ? [params] : [])] as const

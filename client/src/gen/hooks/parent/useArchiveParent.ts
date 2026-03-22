@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { ArchiveParentMutationResponse, ArchiveParentPathParams } from "../../types/ArchiveParent.ts";
+import type { ArchiveParentMutationResponse, ArchiveParentPathParams } from "../../types/parent/ArchiveParent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { archiveParentMutationResponseSchema } from "../../schemas/archiveParentSchema.ts";
+import { archiveParentMutationResponseSchema } from "../../schemas/parent/archiveParentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const archiveParentMutationKey = () => [{ url: '/v1/parents/:id/archive' }] as const

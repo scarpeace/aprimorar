@@ -4,11 +4,9 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { Pagination } from "@/components/ui/pagination";
-import {
-  useStudentsByParentQuery,
-  useStudentsQuery,
-} from "@/features/students/query/useStudentQueries";
 import type { StudentResponse } from "@/features/students/schemas/student";
+import { useGetStudents } from "@/gen";
+import { useStudentsByParentQuery } from "../query/useStudentQueries";
 
 export type StudentsTableVariant = "studentsPage" | "embeddedParent";
 
@@ -32,14 +30,14 @@ export function StudentsTable({
     setCurrentPage(0);
   }, [searchTerm]);
 
-  const studentsPageResults = useStudentsQuery(
-    currentPage,
-    pageSize,
-    searchTerm,
-    {
-      enabled: variant === "studentsPage",
+  const studentsPageResults = useGetStudents({
+    pageable: {
+      page: currentPage,
+      size: pageSize,
+      sort: ["name"],
     },
-  );
+    search: searchTerm,
+  });
 
   const parentStudentsResults = useStudentsByParentQuery(ownerId ?? "", {
     enabled: variant === "embeddedParent" && !!ownerId,

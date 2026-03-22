@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { UnarchiveStudentMutationResponse, UnarchiveStudentPathParams, UnarchiveStudent400, UnarchiveStudent404, UnarchiveStudent409, UnarchiveStudent500 } from "../../types/UnarchiveStudent.ts";
+import type { UnarchiveStudentMutationResponse, UnarchiveStudentPathParams, UnarchiveStudent400, UnarchiveStudent404, UnarchiveStudent409, UnarchiveStudent500 } from "../../types/student/UnarchiveStudent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { unarchiveStudentMutationResponseSchema } from "../../schemas/unarchiveStudentSchema.ts";
+import { unarchiveStudentMutationResponseSchema } from "../../schemas/student/unarchiveStudentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const unarchiveStudentMutationKey = () => [{ url: '/v1/students/:studentId/unarchive' }] as const

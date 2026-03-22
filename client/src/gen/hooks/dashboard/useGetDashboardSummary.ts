@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetDashboardSummaryQueryResponse, GetDashboardSummaryQueryParams } from "../../types/GetDashboardSummary.ts";
+import type { GetDashboardSummaryQueryResponse, GetDashboardSummaryQueryParams } from "../../types/dashboard/GetDashboardSummary.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getDashboardSummaryQueryResponseSchema } from "../../schemas/getDashboardSummarySchema.ts";
+import { getDashboardSummaryQueryResponseSchema } from "../../schemas/dashboard/getDashboardSummarySchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getDashboardSummaryQueryKey = (params: GetDashboardSummaryQueryParams) => [{ url: '/v1/dashboard/summary' }, ...(params ? [params] : [])] as const

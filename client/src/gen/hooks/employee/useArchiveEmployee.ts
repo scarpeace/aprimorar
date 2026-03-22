@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { ArchiveEmployeeMutationResponse, ArchiveEmployeePathParams } from "../../types/ArchiveEmployee.ts";
+import type { ArchiveEmployeeMutationResponse, ArchiveEmployeePathParams } from "../../types/employee/ArchiveEmployee.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { archiveEmployeeMutationResponseSchema } from "../../schemas/archiveEmployeeSchema.ts";
+import { archiveEmployeeMutationResponseSchema } from "../../schemas/employee/archiveEmployeeSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const archiveEmployeeMutationKey = () => [{ url: '/v1/employees/:employeeId/archive' }] as const

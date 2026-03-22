@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetStudentOptionsQueryResponse, GetStudentOptions400, GetStudentOptions404, GetStudentOptions409, GetStudentOptions500 } from "../../types/GetStudentOptions.ts";
+import type { GetStudentOptionsQueryResponse, GetStudentOptions400, GetStudentOptions404, GetStudentOptions409, GetStudentOptions500 } from "../../types/student/GetStudentOptions.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getStudentOptionsQueryResponseSchema } from "../../schemas/getStudentOptionsSchema.ts";
+import { getStudentOptionsQueryResponseSchema } from "../../schemas/student/getStudentOptionsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getStudentOptionsQueryKey = () => [{ url: '/v1/students/options' }] as const

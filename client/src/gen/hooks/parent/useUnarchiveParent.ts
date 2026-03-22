@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { UnarchiveParentMutationResponse, UnarchiveParentPathParams } from "../../types/UnarchiveParent.ts";
+import type { UnarchiveParentMutationResponse, UnarchiveParentPathParams } from "../../types/parent/UnarchiveParent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { unarchiveParentMutationResponseSchema } from "../../schemas/unarchiveParentSchema.ts";
+import { unarchiveParentMutationResponseSchema } from "../../schemas/parent/unarchiveParentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const unarchiveParentMutationKey = () => [{ url: '/v1/parents/:id/unarchive' }] as const

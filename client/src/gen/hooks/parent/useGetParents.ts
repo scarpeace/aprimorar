@@ -4,49 +4,49 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetParentsQueryResponse } from "../../types/GetParents.ts";
+import type { GetParentsQueryResponse, GetParentsQueryParams } from "../../types/parent/GetParents.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getParentsQueryResponseSchema } from "../../schemas/getParentsSchema.ts";
+import { getParentsQueryResponseSchema } from "../../schemas/parent/getParentsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getParentsQueryKey = () => [{ url: '/v1/parents/all' }] as const
+export const getParentsQueryKey = (params?: GetParentsQueryParams) => [{ url: '/v1/parents' }, ...(params ? [params] : [])] as const
 
 export type GetParentsQueryKey = ReturnType<typeof getParentsQueryKey>
 
 /**
- * @description Retorna todos os responsáveis cadastrados.
- * @summary Obter todos os responsáveis
- * {@link /v1/parents/all}
+ * @description Retorna os responsáveis cadastrados com paginação.
+ * @summary Listar responsáveis com paginação
+ * {@link /v1/parents}
  */
-export async function getParents(config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function getParents(params?: GetParentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
 
 
-  const res = await request<GetParentsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/v1/parents/all`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<GetParentsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/v1/parents`, baseURL : `http://localhost:8080`, params, ... requestConfig })
   return getParentsQueryResponseSchema.parse(res.data)
 }
 
-export function getParentsQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function getParentsQueryOptions(params?: GetParentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
-        const queryKey = getParentsQueryKey()
+        const queryKey = getParentsQueryKey(params)
         return queryOptions<GetParentsQueryResponse, ResponseErrorConfig<Error>, GetParentsQueryResponse, typeof queryKey>({
          
          queryKey,
          queryFn: async ({ signal }) => {
-            return getParents({ ...config, signal: config.signal ?? signal })
+            return getParents(params, { ...config, signal: config.signal ?? signal })
          },
         })
 
 }
 
 /**
- * @description Retorna todos os responsáveis cadastrados.
- * @summary Obter todos os responsáveis
- * {@link /v1/parents/all}
+ * @description Retorna os responsáveis cadastrados com paginação.
+ * @summary Listar responsáveis com paginação
+ * {@link /v1/parents}
  */
-export function useGetParents<TData = GetParentsQueryResponse, TQueryData = GetParentsQueryResponse, TQueryKey extends QueryKey = GetParentsQueryKey>(options: 
+export function useGetParents<TData = GetParentsQueryResponse, TQueryData = GetParentsQueryResponse, TQueryKey extends QueryKey = GetParentsQueryKey>(params?: GetParentsQueryParams, options: 
 {
   query?: Partial<QueryObserverOptions<GetParentsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
@@ -55,11 +55,11 @@ export function useGetParents<TData = GetParentsQueryResponse, TQueryData = GetP
 
          const { query: queryConfig = {}, client: config = {} } = options ?? {}
          const { client: queryClient, ...resolvedOptions } = queryConfig
-         const queryKey = resolvedOptions?.queryKey ?? getParentsQueryKey()
+         const queryKey = resolvedOptions?.queryKey ?? getParentsQueryKey(params)
          
 
          const query = useQuery({
-          ...getParentsQueryOptions(config),
+          ...getParentsQueryOptions(params, config),
           ...resolvedOptions,
           queryKey,
          } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }

@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetEventsByStudentIdQueryResponse, GetEventsByStudentIdPathParams, GetEventsByStudentIdQueryParams } from "../../types/GetEventsByStudentId.ts";
+import type { GetEventsByStudentIdQueryResponse, GetEventsByStudentIdPathParams, GetEventsByStudentIdQueryParams } from "../../types/event/GetEventsByStudentId.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getEventsByStudentIdQueryResponseSchema } from "../../schemas/getEventsByStudentIdSchema.ts";
+import { getEventsByStudentIdQueryResponseSchema } from "../../schemas/event/getEventsByStudentIdSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEventsByStudentIdQueryKey = (studentId: GetEventsByStudentIdPathParams["studentId"], params?: GetEventsByStudentIdQueryParams) => [{ url: '/v1/events/student/:studentId', params: {studentId:studentId} }, ...(params ? [params] : [])] as const

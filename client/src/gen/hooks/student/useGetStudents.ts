@@ -4,13 +4,13 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetStudentsQueryResponse, GetStudentsQueryParams, GetStudents400, GetStudents404, GetStudents409, GetStudents500 } from "../../types/GetStudents.ts";
+import type { GetStudentsQueryResponse, GetStudentsQueryParams, GetStudents400, GetStudents404, GetStudents409, GetStudents500 } from "../../types/student/GetStudents.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getStudentsQueryResponseSchema } from "../../schemas/getStudentsSchema.ts";
+import { getStudentsQueryResponseSchema } from "../../schemas/student/getStudentsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getStudentsQueryKey = (params?: GetStudentsQueryParams) => [{ url: '/v1/students' }, ...(params ? [params] : [])] as const
+export const getStudentsQueryKey = (params: GetStudentsQueryParams) => [{ url: '/v1/students' }, ...(params ? [params] : [])] as const
 
 export type GetStudentsQueryKey = ReturnType<typeof getStudentsQueryKey>
 
@@ -19,7 +19,7 @@ export type GetStudentsQueryKey = ReturnType<typeof getStudentsQueryKey>
  * @summary Listar alunos
  * {@link /v1/students}
  */
-export async function getStudents(params?: GetStudentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function getStudents(params: GetStudentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
 
@@ -28,11 +28,11 @@ export async function getStudents(params?: GetStudentsQueryParams, config: Parti
   return getStudentsQueryResponseSchema.parse(res.data)
 }
 
-export function getStudentsQueryOptions(params?: GetStudentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function getStudentsQueryOptions(params: GetStudentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getStudentsQueryKey(params)
         return queryOptions<GetStudentsQueryResponse, ResponseErrorConfig<GetStudents400 | GetStudents404 | GetStudents409 | GetStudents500>, GetStudentsQueryResponse, typeof queryKey>({
-         
+         enabled: !!(params),
          queryKey,
          queryFn: async ({ signal }) => {
             return getStudents(params, { ...config, signal: config.signal ?? signal })
@@ -46,7 +46,7 @@ export function getStudentsQueryOptions(params?: GetStudentsQueryParams, config:
  * @summary Listar alunos
  * {@link /v1/students}
  */
-export function useGetStudents<TData = GetStudentsQueryResponse, TQueryData = GetStudentsQueryResponse, TQueryKey extends QueryKey = GetStudentsQueryKey>(params?: GetStudentsQueryParams, options: 
+export function useGetStudents<TData = GetStudentsQueryResponse, TQueryData = GetStudentsQueryResponse, TQueryKey extends QueryKey = GetStudentsQueryKey>(params: GetStudentsQueryParams, options: 
 {
   query?: Partial<QueryObserverOptions<GetStudentsQueryResponse, ResponseErrorConfig<GetStudents400 | GetStudents404 | GetStudents409 | GetStudents500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

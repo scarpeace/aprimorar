@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { DeleteEventMutationResponse, DeleteEventPathParams } from "../../types/DeleteEvent.ts";
+import type { DeleteEventMutationResponse, DeleteEventPathParams } from "../../types/event/DeleteEvent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { deleteEventMutationResponseSchema } from "../../schemas/deleteEventSchema.ts";
+import { deleteEventMutationResponseSchema } from "../../schemas/event/deleteEventSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteEventMutationKey = () => [{ url: '/v1/events/:eventId' }] as const

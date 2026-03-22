@@ -18,10 +18,10 @@ export default defineConfig({
 
     pluginTs({
       output: { path: './types' },
-       // group: {
-       //   type: 'tag',
-       //   name: ({ group }) => group.toLowerCase(),
-       // },
+       group: {
+         type: 'tag',
+         name: ({ group }) => group.toLowerCase(),
+       },
     }),
 
     pluginZod({
@@ -29,10 +29,10 @@ export default defineConfig({
       version: '4',
       typed: true,
       inferred: true,
-      // group: {
-      //   type: 'tag',
-      //   name: ({ group }) => group.toLowerCase(),
-      // },
+      group: {
+        type: 'tag',
+        name: ({ group }) => group.toLowerCase(),
+      },
     }),
 
     pluginReactQuery({

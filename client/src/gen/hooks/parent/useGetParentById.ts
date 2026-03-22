@@ -4,10 +4,10 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetParentByIdQueryResponse, GetParentByIdPathParams } from "../../types/GetParentById.ts";
+import type { GetParentByIdQueryResponse, GetParentByIdPathParams } from "../../types/parent/GetParentById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getParentByIdQueryResponseSchema } from "../../schemas/getParentByIdSchema.ts";
+import { getParentByIdQueryResponseSchema } from "../../schemas/parent/getParentByIdSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getParentByIdQueryKey = (parentId: GetParentByIdPathParams["parentId"]) => [{ url: '/v1/parents/:parentId', params: {parentId:parentId} }] as const

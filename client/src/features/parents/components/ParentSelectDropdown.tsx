@@ -3,6 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { useParentsListQuery } from "../query/useParentQueries";
 import type { ParentResponse } from "@/features/parents/schemas/parent";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { useGetParentOptions } from "@/gen";
 
 type ParentSelectDropdownProps = Readonly<{
   value?: string;
@@ -17,11 +18,12 @@ export function ParentSelectDropdown({
   disabled,
   hasError,
 }: ParentSelectDropdownProps) {
+  
   const {
     data: parentsList,
     isLoading: isParentsListLoading,
     error: parentsListQueryError,
-  } = useParentsListQuery();
+  } = useGetParentOptions();
 
   const uniqueId = useId().replaceAll(":", "");
   const popoverId = `parents-list-${uniqueId}`;
