@@ -3,21 +3,20 @@
 * Do not edit manually.
 */
 
-import type { StudentRequestDTO } from "../types/StudentRequestDTO.ts";
 import { addressRequestDTOSchema } from "./addressRequestDTOSchema.ts";
 import { z } from "zod/v4";
 
 export const studentRequestDTOSchema = z.object({
-    "name": z.string().min(1),
-"birthdate": z.iso.date(),
-"cpf": z.string(),
-"school": z.string().min(1),
-"contact": z.string().min(1),
-"email": z.string().min(1),
+    "name": z.string().min(1).describe("Nome do aluno"),
+"birthdate": z.iso.date().describe("Data de nascimento do aluno"),
+"cpf": z.string().describe("CPF do aluno"),
+"school": z.string().min(1).describe("Escola do aluno"),
+"contact": z.string().min(1).describe("Telefone de contato do aluno"),
+"email": z.string().min(1).describe("Email do aluno"),
 get "address"(){
-                return addressRequestDTOSchema
+                return addressRequestDTOSchema.describe("Endereço do aluno como AdressRequestDTO")
               },
-"parentId": z.uuid()
-    }) as unknown as z.ZodType<StudentRequestDTO>
+"parentId": z.uuid().describe("UUID do responsável")
+    })
 
-export type StudentRequestDTOSchema = StudentRequestDTO
+export type StudentRequestDTOSchema = z.infer<typeof studentRequestDTOSchema>

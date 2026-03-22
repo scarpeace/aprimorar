@@ -3,17 +3,51 @@
 * Do not edit manually.
 */
 
-import type { GetParentOptions200, GetParentOptionsQueryResponse } from "../../types/parent/GetParentOptions.ts";
-import { parentOptionDTOSchema } from "../parentOptionDTOSchema.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const getParentOptions200Schema = z.array(z.lazy(() => parentOptionDTOSchema).describe("Opção de responsável para uso em dropdowns")) as unknown as z.ZodType<GetParentOptions200>
+export const getParentOptions400Schema = z.lazy(() => problemDetailSchema)
 
-export type GetParentOptions200Schema = GetParentOptions200
+export type GetParentOptions400Schema = z.infer<typeof getParentOptions400Schema>
 
-export const getParentOptionsQueryResponseSchema = z.lazy(() => getParentOptions200Schema) as unknown as z.ZodType<GetParentOptionsQueryResponse>
+/**
+ * @description Não autenticado
+ */
+export const getParentOptions401Schema = z.lazy(() => problemDetailSchema)
 
-export type GetParentOptionsQueryResponseSchema = GetParentOptionsQueryResponse
+export type GetParentOptions401Schema = z.infer<typeof getParentOptions401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const getParentOptions403Schema = z.lazy(() => problemDetailSchema)
+
+export type GetParentOptions403Schema = z.infer<typeof getParentOptions403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const getParentOptions404Schema = z.lazy(() => problemDetailSchema)
+
+export type GetParentOptions404Schema = z.infer<typeof getParentOptions404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const getParentOptions409Schema = z.lazy(() => problemDetailSchema)
+
+export type GetParentOptions409Schema = z.infer<typeof getParentOptions409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const getParentOptions500Schema = z.lazy(() => problemDetailSchema)
+
+export type GetParentOptions500Schema = z.infer<typeof getParentOptions500Schema>
+
+export const getParentOptionsQueryResponseSchema = z.any()
+
+export type GetParentOptionsQueryResponseSchema = z.infer<typeof getParentOptionsQueryResponseSchema>

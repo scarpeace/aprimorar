@@ -4,6 +4,7 @@
 */
 
 import type { ProblemDetail } from "../ProblemDetail.ts";
+import type { StudentResponseDTO } from "../StudentResponseDTO.ts";
 
 export type GetStudentByIdPathParams = {
     /**
@@ -13,9 +14,24 @@ export type GetStudentByIdPathParams = {
 };
 
 /**
- * @description Bad Request
+ * @description OK
+*/
+export type GetStudentById200 = StudentResponseDTO;
+
+/**
+ * @description Requisição inválida (erro de validação)
 */
 export type GetStudentById400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type GetStudentById401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetStudentById403 = ProblemDetail;
 
 /**
  * @description Recurso não encontrado
@@ -23,19 +39,19 @@ export type GetStudentById400 = ProblemDetail;
 export type GetStudentById404 = ProblemDetail;
 
 /**
- * @description Conflito de negócio
+ * @description Conflito de regra de negócio
 */
 export type GetStudentById409 = ProblemDetail;
 
 /**
- * @description Internal Server Error
+ * @description Erro interno do servidor
 */
 export type GetStudentById500 = ProblemDetail;
 
-export type GetStudentByIdQueryResponse = any;
+export type GetStudentByIdQueryResponse = GetStudentById200;
 
 export type GetStudentByIdQuery = {
-    Response: any;
+    Response: GetStudentById200;
     PathParams: GetStudentByIdPathParams;
-    Errors: GetStudentById400 | GetStudentById404 | GetStudentById409 | GetStudentById500;
+    Errors: GetStudentById400 | GetStudentById401 | GetStudentById403 | GetStudentById404 | GetStudentById409 | GetStudentById500;
 };

@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { DeleteStudentMutationResponse, DeleteStudentPathParams, DeleteStudent400, DeleteStudent404, DeleteStudent409, DeleteStudent500 } from "../../types/student/DeleteStudent.ts";
+import type { DeleteStudentMutationResponse, DeleteStudentPathParams, DeleteStudent400, DeleteStudent401, DeleteStudent403, DeleteStudent404, DeleteStudent409, DeleteStudent500 } from "../../types/student/DeleteStudent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { deleteStudentMutationResponseSchema } from "../../schemas/student/deleteStudentSchema.ts";
@@ -24,14 +24,14 @@ export async function deleteStudent(studentId: DeleteStudentPathParams["studentI
 
 
 
-  const res = await request<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, unknown>({ method : "DELETE", url : `/v1/students/${studentId}`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent401 | DeleteStudent403 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, unknown>({ method : "DELETE", url : `/v1/students/${studentId}`, baseURL : `http://localhost:8080`, ... requestConfig })
   return deleteStudentMutationResponseSchema.parse(res.data)
 }
 
 export function deleteStudentMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const mutationKey = deleteStudentMutationKey()
-        return mutationOptions<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, {studentId: DeleteStudentPathParams["studentId"]}, TContext>({
+        return mutationOptions<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent401 | DeleteStudent403 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, {studentId: DeleteStudentPathParams["studentId"]}, TContext>({
           mutationKey,
           mutationFn: async({ studentId }) => {
             return deleteStudent(studentId, config)
@@ -47,7 +47,7 @@ export function deleteStudentMutationOptions<TContext = unknown>(config: Partial
  */
 export function useDeleteStudent<TContext>(options: 
 {
-  mutation?: UseMutationOptions<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, {studentId: DeleteStudentPathParams["studentId"]}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent401 | DeleteStudent403 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, {studentId: DeleteStudentPathParams["studentId"]}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useDeleteStudent<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? deleteStudentMutationKey()
 
-          const baseOptions = deleteStudentMutationOptions(config) as UseMutationOptions<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, {studentId: DeleteStudentPathParams["studentId"]}, TContext>
+          const baseOptions = deleteStudentMutationOptions(config) as UseMutationOptions<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent401 | DeleteStudent403 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, {studentId: DeleteStudentPathParams["studentId"]}, TContext>
           
 
-          return useMutation<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, {studentId: DeleteStudentPathParams["studentId"]}, TContext>({
+          return useMutation<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent401 | DeleteStudent403 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, {studentId: DeleteStudentPathParams["studentId"]}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, {studentId: DeleteStudentPathParams["studentId"]}, TContext>
+          }, queryClient) as UseMutationResult<DeleteStudentMutationResponse, ResponseErrorConfig<DeleteStudent400 | DeleteStudent401 | DeleteStudent403 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500>, {studentId: DeleteStudentPathParams["studentId"]}, TContext>
       
 }

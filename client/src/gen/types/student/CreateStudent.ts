@@ -5,11 +5,27 @@
 
 import type { ProblemDetail } from "../ProblemDetail.ts";
 import type { StudentRequestDTO } from "../StudentRequestDTO.ts";
+import type { StudentResponseDTO } from "../StudentResponseDTO.ts";
 
 /**
- * @description Bad Request
+ * @description Created
+*/
+export type CreateStudent201 = StudentResponseDTO;
+
+/**
+ * @description Requisição inválida (erro de validação)
 */
 export type CreateStudent400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type CreateStudent401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type CreateStudent403 = ProblemDetail;
 
 /**
  * @description Recurso não encontrado
@@ -17,21 +33,21 @@ export type CreateStudent400 = ProblemDetail;
 export type CreateStudent404 = ProblemDetail;
 
 /**
- * @description Conflito de negócio
+ * @description Conflito de regra de negócio
 */
 export type CreateStudent409 = ProblemDetail;
 
 /**
- * @description Internal Server Error
+ * @description Erro interno do servidor
 */
 export type CreateStudent500 = ProblemDetail;
 
 export type CreateStudentMutationRequest = StudentRequestDTO;
 
-export type CreateStudentMutationResponse = any;
+export type CreateStudentMutationResponse = CreateStudent201;
 
 export type CreateStudentMutation = {
-    Response: any;
+    Response: CreateStudent201;
     Request: CreateStudentMutationRequest;
-    Errors: CreateStudent400 | CreateStudent404 | CreateStudent409 | CreateStudent500;
+    Errors: CreateStudent400 | CreateStudent401 | CreateStudent403 | CreateStudent404 | CreateStudent409 | CreateStudent500;
 };

@@ -1,12 +1,12 @@
 package com.aprimorar.api.domain.dashboard.dto;
 
-import com.aprimorar.api.domain.event.EventRepository.EventContentCount;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.YearMonth;
 import java.util.List;
+
+import com.aprimorar.api.domain.event.EventRepository.EventContentCount;
 
 public record DashboardSummaryResponseDTO(
     int year,

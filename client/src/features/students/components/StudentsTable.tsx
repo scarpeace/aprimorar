@@ -5,7 +5,7 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { Pagination } from "@/components/ui/pagination";
 import type { StudentResponse } from "@/features/students/schemas/student";
-import { useGetStudents } from "@/gen";
+import { useGetStudents, useGetStudentsByParent } from "@/gen";
 import { useStudentsByParentQuery } from "../query/useStudentQueries";
 
 export type StudentsTableVariant = "studentsPage" | "embeddedParent";
@@ -30,7 +30,7 @@ export function StudentsTable({
     setCurrentPage(0);
   }, [searchTerm]);
 
-  const studentsPageResults = useGetStudents({
+  const studentsPage = useGetStudents({
     pageable: {
       page: currentPage,
       size: pageSize,
@@ -39,22 +39,20 @@ export function StudentsTable({
     search: searchTerm,
   });
 
-  const parentStudentsResults = useStudentsByParentQuery(ownerId ?? "", {
-    enabled: variant === "embeddedParent" && !!ownerId,
-  });
+  const studentsByParent = useGetStudentsByParent(ownerId ?? "");
 
   const isLoading =
     variant === "studentsPage"
-      ? studentsPageResults.isLoading
-      : parentStudentsResults.isLoading;
+      ? studentsPage.isLoading
+      : studentsByParent.isLoading;
   const error =
     variant === "studentsPage"
-      ? studentsPageResults.error
-      : parentStudentsResults.error;
+      ? studentsPage.error
+      : studentsByParent.error;
   const data =
     variant === "studentsPage"
-      ? studentsPageResults.data
-      : parentStudentsResults.data;
+      ? studentsPage.data
+      : studentsByParent.data;
 
   const studentList: StudentResponse[] = Array.isArray(data)
     ? data

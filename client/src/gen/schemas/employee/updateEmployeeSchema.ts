@@ -3,28 +3,62 @@
 * Do not edit manually.
 */
 
-import type { UpdateEmployee200, UpdateEmployeeMutationRequest, UpdateEmployeeMutationResponse, UpdateEmployeePathParams } from "../../types/employee/UpdateEmployee.ts";
 import { employeeRequestDTOSchema } from "../employeeRequestDTOSchema.ts";
-import { employeeResponseDTOSchema } from "../employeeResponseDTOSchema.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const updateEmployeePathParamsSchema = z.object({
     "employeeId": z.uuid()
-    }) as unknown as z.ZodType<UpdateEmployeePathParams>
+    })
 
-export type UpdateEmployeePathParamsSchema = UpdateEmployeePathParams
+export type UpdateEmployeePathParamsSchema = z.infer<typeof updateEmployeePathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const updateEmployee200Schema = z.lazy(() => employeeResponseDTOSchema) as unknown as z.ZodType<UpdateEmployee200>
+export const updateEmployee400Schema = z.lazy(() => problemDetailSchema)
 
-export type UpdateEmployee200Schema = UpdateEmployee200
+export type UpdateEmployee400Schema = z.infer<typeof updateEmployee400Schema>
 
-export const updateEmployeeMutationRequestSchema = z.lazy(() => employeeRequestDTOSchema) as unknown as z.ZodType<UpdateEmployeeMutationRequest>
+/**
+ * @description Não autenticado
+ */
+export const updateEmployee401Schema = z.lazy(() => problemDetailSchema)
 
-export type UpdateEmployeeMutationRequestSchema = UpdateEmployeeMutationRequest
+export type UpdateEmployee401Schema = z.infer<typeof updateEmployee401Schema>
 
-export const updateEmployeeMutationResponseSchema = z.lazy(() => updateEmployee200Schema) as unknown as z.ZodType<UpdateEmployeeMutationResponse>
+/**
+ * @description Acesso negado
+ */
+export const updateEmployee403Schema = z.lazy(() => problemDetailSchema)
 
-export type UpdateEmployeeMutationResponseSchema = UpdateEmployeeMutationResponse
+export type UpdateEmployee403Schema = z.infer<typeof updateEmployee403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const updateEmployee404Schema = z.lazy(() => problemDetailSchema)
+
+export type UpdateEmployee404Schema = z.infer<typeof updateEmployee404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const updateEmployee409Schema = z.lazy(() => problemDetailSchema)
+
+export type UpdateEmployee409Schema = z.infer<typeof updateEmployee409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const updateEmployee500Schema = z.lazy(() => problemDetailSchema)
+
+export type UpdateEmployee500Schema = z.infer<typeof updateEmployee500Schema>
+
+export const updateEmployeeMutationRequestSchema = z.lazy(() => employeeRequestDTOSchema)
+
+export type UpdateEmployeeMutationRequestSchema = z.infer<typeof updateEmployeeMutationRequestSchema>
+
+export const updateEmployeeMutationResponseSchema = z.any()
+
+export type UpdateEmployeeMutationResponseSchema = z.infer<typeof updateEmployeeMutationResponseSchema>

@@ -3,28 +3,62 @@
 * Do not edit manually.
 */
 
-import type { UpdateEvent200, UpdateEventMutationRequest, UpdateEventMutationResponse, UpdateEventPathParams } from "../../types/event/UpdateEvent.ts";
 import { eventRequestDTOSchema } from "../eventRequestDTOSchema.ts";
-import { eventResponseDTOSchema } from "../eventResponseDTOSchema.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const updateEventPathParamsSchema = z.object({
     "eventId": z.uuid()
-    }) as unknown as z.ZodType<UpdateEventPathParams>
+    })
 
-export type UpdateEventPathParamsSchema = UpdateEventPathParams
+export type UpdateEventPathParamsSchema = z.infer<typeof updateEventPathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const updateEvent200Schema = z.lazy(() => eventResponseDTOSchema) as unknown as z.ZodType<UpdateEvent200>
+export const updateEvent400Schema = z.lazy(() => problemDetailSchema)
 
-export type UpdateEvent200Schema = UpdateEvent200
+export type UpdateEvent400Schema = z.infer<typeof updateEvent400Schema>
 
-export const updateEventMutationRequestSchema = z.lazy(() => eventRequestDTOSchema) as unknown as z.ZodType<UpdateEventMutationRequest>
+/**
+ * @description Não autenticado
+ */
+export const updateEvent401Schema = z.lazy(() => problemDetailSchema)
 
-export type UpdateEventMutationRequestSchema = UpdateEventMutationRequest
+export type UpdateEvent401Schema = z.infer<typeof updateEvent401Schema>
 
-export const updateEventMutationResponseSchema = z.lazy(() => updateEvent200Schema) as unknown as z.ZodType<UpdateEventMutationResponse>
+/**
+ * @description Acesso negado
+ */
+export const updateEvent403Schema = z.lazy(() => problemDetailSchema)
 
-export type UpdateEventMutationResponseSchema = UpdateEventMutationResponse
+export type UpdateEvent403Schema = z.infer<typeof updateEvent403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const updateEvent404Schema = z.lazy(() => problemDetailSchema)
+
+export type UpdateEvent404Schema = z.infer<typeof updateEvent404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const updateEvent409Schema = z.lazy(() => problemDetailSchema)
+
+export type UpdateEvent409Schema = z.infer<typeof updateEvent409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const updateEvent500Schema = z.lazy(() => problemDetailSchema)
+
+export type UpdateEvent500Schema = z.infer<typeof updateEvent500Schema>
+
+export const updateEventMutationRequestSchema = z.lazy(() => eventRequestDTOSchema)
+
+export type UpdateEventMutationRequestSchema = z.infer<typeof updateEventMutationRequestSchema>
+
+export const updateEventMutationResponseSchema = z.any()
+
+export type UpdateEventMutationResponseSchema = z.infer<typeof updateEventMutationResponseSchema>

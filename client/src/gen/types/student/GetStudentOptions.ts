@@ -4,11 +4,27 @@
 */
 
 import type { ProblemDetail } from "../ProblemDetail.ts";
+import type { StudentOptionDTO } from "../StudentOptionDTO.ts";
 
 /**
- * @description Bad Request
+ * @description OK
+*/
+export type GetStudentOptions200 = StudentOptionDTO[];
+
+/**
+ * @description Requisição inválida (erro de validação)
 */
 export type GetStudentOptions400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type GetStudentOptions401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetStudentOptions403 = ProblemDetail;
 
 /**
  * @description Recurso não encontrado
@@ -16,18 +32,18 @@ export type GetStudentOptions400 = ProblemDetail;
 export type GetStudentOptions404 = ProblemDetail;
 
 /**
- * @description Conflito de negócio
+ * @description Conflito de regra de negócio
 */
 export type GetStudentOptions409 = ProblemDetail;
 
 /**
- * @description Internal Server Error
+ * @description Erro interno do servidor
 */
 export type GetStudentOptions500 = ProblemDetail;
 
-export type GetStudentOptionsQueryResponse = any;
+export type GetStudentOptionsQueryResponse = GetStudentOptions200;
 
 export type GetStudentOptionsQuery = {
-    Response: any;
-    Errors: GetStudentOptions400 | GetStudentOptions404 | GetStudentOptions409 | GetStudentOptions500;
+    Response: GetStudentOptions200;
+    Errors: GetStudentOptions400 | GetStudentOptions401 | GetStudentOptions403 | GetStudentOptions404 | GetStudentOptions409 | GetStudentOptions500;
 };

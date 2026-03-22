@@ -3,7 +3,6 @@
 * Do not edit manually.
 */
 
-import type { ParentResponseDTO } from "../types/ParentResponseDTO.ts";
 import { z } from "zod/v4";
 
 export const parentResponseDTOSchema = z.object({
@@ -15,6 +14,6 @@ export const parentResponseDTOSchema = z.object({
 "archivedAt": z.optional(z.iso.datetime()),
 "createdAt": z.optional(z.iso.datetime()),
 "updatedAt": z.optional(z.iso.datetime())
-    }) as unknown as z.ZodType<ParentResponseDTO>
+    })
 
-export type ParentResponseDTOSchema = ParentResponseDTO
+export type ParentResponseDTOSchema = z.infer<typeof parentResponseDTOSchema>

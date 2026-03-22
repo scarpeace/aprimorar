@@ -4,7 +4,7 @@
 */
 
 import type { EmployeeRequestDTO } from "../EmployeeRequestDTO.ts";
-import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type UpdateEmployeePathParams = {
     /**
@@ -14,17 +14,42 @@ export type UpdateEmployeePathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type UpdateEmployee200 = EmployeeResponseDTO;
+export type UpdateEmployee400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type UpdateEmployee401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type UpdateEmployee403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type UpdateEmployee404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type UpdateEmployee409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type UpdateEmployee500 = ProblemDetail;
 
 export type UpdateEmployeeMutationRequest = EmployeeRequestDTO;
 
-export type UpdateEmployeeMutationResponse = UpdateEmployee200;
+export type UpdateEmployeeMutationResponse = any;
 
 export type UpdateEmployeeMutation = {
-    Response: UpdateEmployee200;
+    Response: any;
     Request: UpdateEmployeeMutationRequest;
     PathParams: UpdateEmployeePathParams;
-    Errors: any;
+    Errors: UpdateEmployee400 | UpdateEmployee401 | UpdateEmployee403 | UpdateEmployee404 | UpdateEmployee409 | UpdateEmployee500;
 };

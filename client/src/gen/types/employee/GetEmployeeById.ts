@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetEmployeeByIdPathParams = {
     /**
@@ -13,14 +13,39 @@ export type GetEmployeeByIdPathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type GetEmployeeById200 = EmployeeResponseDTO;
+export type GetEmployeeById400 = ProblemDetail;
 
-export type GetEmployeeByIdQueryResponse = GetEmployeeById200;
+/**
+ * @description Não autenticado
+*/
+export type GetEmployeeById401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetEmployeeById403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type GetEmployeeById404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type GetEmployeeById409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type GetEmployeeById500 = ProblemDetail;
+
+export type GetEmployeeByIdQueryResponse = any;
 
 export type GetEmployeeByIdQuery = {
-    Response: GetEmployeeById200;
+    Response: any;
     PathParams: GetEmployeeByIdPathParams;
-    Errors: any;
+    Errors: GetEmployeeById400 | GetEmployeeById401 | GetEmployeeById403 | GetEmployeeById404 | GetEmployeeById409 | GetEmployeeById500;
 };

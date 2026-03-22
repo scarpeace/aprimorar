@@ -4,7 +4,7 @@
 */
 
 
-export type EmployeeOptionDTO = {
+export type StudentOptionDTO = {
     /**
      * @type string | undefined, uuid
     */

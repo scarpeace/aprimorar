@@ -3,23 +3,57 @@
 * Do not edit manually.
 */
 
-import type { GetEventById200, GetEventByIdPathParams, GetEventByIdQueryResponse } from "../../types/event/GetEventById.ts";
-import { eventResponseDTOSchema } from "../eventResponseDTOSchema.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getEventByIdPathParamsSchema = z.object({
     "eventId": z.uuid()
-    }) as unknown as z.ZodType<GetEventByIdPathParams>
+    })
 
-export type GetEventByIdPathParamsSchema = GetEventByIdPathParams
+export type GetEventByIdPathParamsSchema = z.infer<typeof getEventByIdPathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const getEventById200Schema = z.lazy(() => eventResponseDTOSchema) as unknown as z.ZodType<GetEventById200>
+export const getEventById400Schema = z.lazy(() => problemDetailSchema)
 
-export type GetEventById200Schema = GetEventById200
+export type GetEventById400Schema = z.infer<typeof getEventById400Schema>
 
-export const getEventByIdQueryResponseSchema = z.lazy(() => getEventById200Schema) as unknown as z.ZodType<GetEventByIdQueryResponse>
+/**
+ * @description Não autenticado
+ */
+export const getEventById401Schema = z.lazy(() => problemDetailSchema)
 
-export type GetEventByIdQueryResponseSchema = GetEventByIdQueryResponse
+export type GetEventById401Schema = z.infer<typeof getEventById401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const getEventById403Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEventById403Schema = z.infer<typeof getEventById403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const getEventById404Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEventById404Schema = z.infer<typeof getEventById404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const getEventById409Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEventById409Schema = z.infer<typeof getEventById409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const getEventById500Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEventById500Schema = z.infer<typeof getEventById500Schema>
+
+export const getEventByIdQueryResponseSchema = z.any()
+
+export type GetEventByIdQueryResponseSchema = z.infer<typeof getEventByIdQueryResponseSchema>

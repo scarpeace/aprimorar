@@ -4,19 +4,44 @@
 */
 
 import type { ParentRequestDTO } from "../ParentRequestDTO.ts";
-import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type CreateParent200 = ParentResponseDTO;
+export type CreateParent400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type CreateParent401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type CreateParent403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type CreateParent404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type CreateParent409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type CreateParent500 = ProblemDetail;
 
 export type CreateParentMutationRequest = ParentRequestDTO;
 
-export type CreateParentMutationResponse = CreateParent200;
+export type CreateParentMutationResponse = any;
 
 export type CreateParentMutation = {
-    Response: CreateParent200;
+    Response: any;
     Request: CreateParentMutationRequest;
-    Errors: any;
+    Errors: CreateParent400 | CreateParent401 | CreateParent403 | CreateParent404 | CreateParent409 | CreateParent500;
 };

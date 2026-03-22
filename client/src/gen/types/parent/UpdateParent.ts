@@ -4,7 +4,7 @@
 */
 
 import type { ParentRequestDTO } from "../ParentRequestDTO.ts";
-import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type UpdateParentPathParams = {
     /**
@@ -14,17 +14,42 @@ export type UpdateParentPathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type UpdateParent200 = ParentResponseDTO;
+export type UpdateParent400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type UpdateParent401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type UpdateParent403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type UpdateParent404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type UpdateParent409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type UpdateParent500 = ProblemDetail;
 
 export type UpdateParentMutationRequest = ParentRequestDTO;
 
-export type UpdateParentMutationResponse = UpdateParent200;
+export type UpdateParentMutationResponse = any;
 
 export type UpdateParentMutation = {
-    Response: UpdateParent200;
+    Response: any;
     Request: UpdateParentMutationRequest;
     PathParams: UpdateParentPathParams;
-    Errors: any;
+    Errors: UpdateParent400 | UpdateParent401 | UpdateParent403 | UpdateParent404 | UpdateParent409 | UpdateParent500;
 };

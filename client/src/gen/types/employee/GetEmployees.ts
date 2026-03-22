@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { PagedModelEmployeeResponseDTO } from "../PagedModelEmployeeResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetEmployeesQueryParams = {
     /**
@@ -32,14 +32,39 @@ export type GetEmployeesQueryParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type GetEmployees200 = PagedModelEmployeeResponseDTO;
+export type GetEmployees400 = ProblemDetail;
 
-export type GetEmployeesQueryResponse = GetEmployees200;
+/**
+ * @description Não autenticado
+*/
+export type GetEmployees401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetEmployees403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type GetEmployees404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type GetEmployees409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type GetEmployees500 = ProblemDetail;
+
+export type GetEmployeesQueryResponse = any;
 
 export type GetEmployeesQuery = {
-    Response: GetEmployees200;
+    Response: any;
     QueryParams: GetEmployeesQueryParams;
-    Errors: any;
+    Errors: GetEmployees400 | GetEmployees401 | GetEmployees403 | GetEmployees404 | GetEmployees409 | GetEmployees500;
 };

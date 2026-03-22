@@ -3,7 +3,6 @@
 * Do not edit manually.
 */
 
-import type { ProblemDetail } from "../types/ProblemDetail.ts";
 import { z } from "zod/v4";
 
 export const problemDetailSchema = z.object({
@@ -15,6 +14,6 @@ export const problemDetailSchema = z.object({
 "properties": z.optional(z.object({
     
     }).catchall(z.any()))
-    }) as unknown as z.ZodType<ProblemDetail>
+    })
 
-export type ProblemDetailSchema = ProblemDetail
+export type ProblemDetailSchema = z.infer<typeof problemDetailSchema>

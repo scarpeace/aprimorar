@@ -3,24 +3,23 @@
 * Do not edit manually.
 */
 
-import type { GetDashboardSummary200, GetDashboardSummaryQueryParams, GetDashboardSummaryQueryResponse } from "../../types/dashboard/GetDashboardSummary.ts";
 import { dashboardSummaryResponseDTOSchema } from "../dashboardSummaryResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 export const getDashboardSummaryQueryParamsSchema = z.object({
     "year": z.coerce.number().int().describe("Ano do período (ex: 2026)"),
 "month": z.coerce.number().int().describe("Mês do período (1-12)")
-    }) as unknown as z.ZodType<GetDashboardSummaryQueryParams>
+    })
 
-export type GetDashboardSummaryQueryParamsSchema = GetDashboardSummaryQueryParams
+export type GetDashboardSummaryQueryParamsSchema = z.infer<typeof getDashboardSummaryQueryParamsSchema>
 
 /**
  * @description OK
  */
-export const getDashboardSummary200Schema = z.lazy(() => dashboardSummaryResponseDTOSchema) as unknown as z.ZodType<GetDashboardSummary200>
+export const getDashboardSummary200Schema = z.lazy(() => dashboardSummaryResponseDTOSchema)
 
-export type GetDashboardSummary200Schema = GetDashboardSummary200
+export type GetDashboardSummary200Schema = z.infer<typeof getDashboardSummary200Schema>
 
-export const getDashboardSummaryQueryResponseSchema = z.lazy(() => getDashboardSummary200Schema) as unknown as z.ZodType<GetDashboardSummaryQueryResponse>
+export const getDashboardSummaryQueryResponseSchema = z.lazy(() => getDashboardSummary200Schema)
 
-export type GetDashboardSummaryQueryResponseSchema = GetDashboardSummaryQueryResponse
+export type GetDashboardSummaryQueryResponseSchema = z.infer<typeof getDashboardSummaryQueryResponseSchema>

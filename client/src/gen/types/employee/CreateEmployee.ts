@@ -4,19 +4,44 @@
 */
 
 import type { EmployeeRequestDTO } from "../EmployeeRequestDTO.ts";
-import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type CreateEmployee200 = EmployeeResponseDTO;
+export type CreateEmployee400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type CreateEmployee401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type CreateEmployee403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type CreateEmployee404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type CreateEmployee409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type CreateEmployee500 = ProblemDetail;
 
 export type CreateEmployeeMutationRequest = EmployeeRequestDTO;
 
-export type CreateEmployeeMutationResponse = CreateEmployee200;
+export type CreateEmployeeMutationResponse = any;
 
 export type CreateEmployeeMutation = {
-    Response: CreateEmployee200;
+    Response: any;
     Request: CreateEmployeeMutationRequest;
-    Errors: any;
+    Errors: CreateEmployee400 | CreateEmployee401 | CreateEmployee403 | CreateEmployee404 | CreateEmployee409 | CreateEmployee500;
 };

@@ -3,23 +3,57 @@
 * Do not edit manually.
 */
 
-import type { GetEmployeeById200, GetEmployeeByIdPathParams, GetEmployeeByIdQueryResponse } from "../../types/employee/GetEmployeeById.ts";
-import { employeeResponseDTOSchema } from "../employeeResponseDTOSchema.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getEmployeeByIdPathParamsSchema = z.object({
     "employeeId": z.uuid()
-    }) as unknown as z.ZodType<GetEmployeeByIdPathParams>
+    })
 
-export type GetEmployeeByIdPathParamsSchema = GetEmployeeByIdPathParams
+export type GetEmployeeByIdPathParamsSchema = z.infer<typeof getEmployeeByIdPathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const getEmployeeById200Schema = z.lazy(() => employeeResponseDTOSchema) as unknown as z.ZodType<GetEmployeeById200>
+export const getEmployeeById400Schema = z.lazy(() => problemDetailSchema)
 
-export type GetEmployeeById200Schema = GetEmployeeById200
+export type GetEmployeeById400Schema = z.infer<typeof getEmployeeById400Schema>
 
-export const getEmployeeByIdQueryResponseSchema = z.lazy(() => getEmployeeById200Schema) as unknown as z.ZodType<GetEmployeeByIdQueryResponse>
+/**
+ * @description Não autenticado
+ */
+export const getEmployeeById401Schema = z.lazy(() => problemDetailSchema)
 
-export type GetEmployeeByIdQueryResponseSchema = GetEmployeeByIdQueryResponse
+export type GetEmployeeById401Schema = z.infer<typeof getEmployeeById401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const getEmployeeById403Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEmployeeById403Schema = z.infer<typeof getEmployeeById403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const getEmployeeById404Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEmployeeById404Schema = z.infer<typeof getEmployeeById404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const getEmployeeById409Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEmployeeById409Schema = z.infer<typeof getEmployeeById409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const getEmployeeById500Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEmployeeById500Schema = z.infer<typeof getEmployeeById500Schema>
+
+export const getEmployeeByIdQueryResponseSchema = z.any()
+
+export type GetEmployeeByIdQueryResponseSchema = z.infer<typeof getEmployeeByIdQueryResponseSchema>

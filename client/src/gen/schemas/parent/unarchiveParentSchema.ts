@@ -3,22 +3,57 @@
 * Do not edit manually.
 */
 
-import type { UnarchiveParent200, UnarchiveParentMutationResponse, UnarchiveParentPathParams } from "../../types/parent/UnarchiveParent.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const unarchiveParentPathParamsSchema = z.object({
     "id": z.uuid()
-    }) as unknown as z.ZodType<UnarchiveParentPathParams>
+    })
 
-export type UnarchiveParentPathParamsSchema = UnarchiveParentPathParams
+export type UnarchiveParentPathParamsSchema = z.infer<typeof unarchiveParentPathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const unarchiveParent200Schema = z.any() as unknown as z.ZodType<UnarchiveParent200>
+export const unarchiveParent400Schema = z.lazy(() => problemDetailSchema)
 
-export type UnarchiveParent200Schema = UnarchiveParent200
+export type UnarchiveParent400Schema = z.infer<typeof unarchiveParent400Schema>
 
-export const unarchiveParentMutationResponseSchema = z.lazy(() => unarchiveParent200Schema) as unknown as z.ZodType<UnarchiveParentMutationResponse>
+/**
+ * @description Não autenticado
+ */
+export const unarchiveParent401Schema = z.lazy(() => problemDetailSchema)
 
-export type UnarchiveParentMutationResponseSchema = UnarchiveParentMutationResponse
+export type UnarchiveParent401Schema = z.infer<typeof unarchiveParent401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const unarchiveParent403Schema = z.lazy(() => problemDetailSchema)
+
+export type UnarchiveParent403Schema = z.infer<typeof unarchiveParent403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const unarchiveParent404Schema = z.lazy(() => problemDetailSchema)
+
+export type UnarchiveParent404Schema = z.infer<typeof unarchiveParent404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const unarchiveParent409Schema = z.lazy(() => problemDetailSchema)
+
+export type UnarchiveParent409Schema = z.infer<typeof unarchiveParent409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const unarchiveParent500Schema = z.lazy(() => problemDetailSchema)
+
+export type UnarchiveParent500Schema = z.infer<typeof unarchiveParent500Schema>
+
+export const unarchiveParentMutationResponseSchema = z.any()
+
+export type UnarchiveParentMutationResponseSchema = z.infer<typeof unarchiveParentMutationResponseSchema>

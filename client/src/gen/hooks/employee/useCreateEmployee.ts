@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { CreateEmployeeMutationRequest, CreateEmployeeMutationResponse } from "../../types/employee/CreateEmployee.ts";
+import type { CreateEmployeeMutationRequest, CreateEmployeeMutationResponse, CreateEmployee400, CreateEmployee401, CreateEmployee403, CreateEmployee404, CreateEmployee409, CreateEmployee500 } from "../../types/employee/CreateEmployee.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { createEmployeeMutationResponseSchema, createEmployeeMutationRequestSchema } from "../../schemas/employee/createEmployeeSchema.ts";
@@ -24,14 +24,14 @@ export async function createEmployee(data: CreateEmployeeMutationRequest, config
 
   const requestData = createEmployeeMutationRequestSchema.parse(data)
 
-  const res = await request<CreateEmployeeMutationResponse, ResponseErrorConfig<Error>, CreateEmployeeMutationRequest>({ method : "POST", url : `/v1/employees`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
+  const res = await request<CreateEmployeeMutationResponse, ResponseErrorConfig<CreateEmployee400 | CreateEmployee401 | CreateEmployee403 | CreateEmployee404 | CreateEmployee409 | CreateEmployee500>, CreateEmployeeMutationRequest>({ method : "POST", url : `/v1/employees`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
   return createEmployeeMutationResponseSchema.parse(res.data)
 }
 
 export function createEmployeeMutationOptions<TContext = unknown>(config: Partial<RequestConfig<CreateEmployeeMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = createEmployeeMutationKey()
-        return mutationOptions<CreateEmployeeMutationResponse, ResponseErrorConfig<Error>, {data: CreateEmployeeMutationRequest}, TContext>({
+        return mutationOptions<CreateEmployeeMutationResponse, ResponseErrorConfig<CreateEmployee400 | CreateEmployee401 | CreateEmployee403 | CreateEmployee404 | CreateEmployee409 | CreateEmployee500>, {data: CreateEmployeeMutationRequest}, TContext>({
           mutationKey,
           mutationFn: async({ data }) => {
             return createEmployee(data, config)
@@ -47,7 +47,7 @@ export function createEmployeeMutationOptions<TContext = unknown>(config: Partia
  */
 export function useCreateEmployee<TContext>(options: 
 {
-  mutation?: UseMutationOptions<CreateEmployeeMutationResponse, ResponseErrorConfig<Error>, {data: CreateEmployeeMutationRequest}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<CreateEmployeeMutationResponse, ResponseErrorConfig<CreateEmployee400 | CreateEmployee401 | CreateEmployee403 | CreateEmployee404 | CreateEmployee409 | CreateEmployee500>, {data: CreateEmployeeMutationRequest}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig<CreateEmployeeMutationRequest>> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useCreateEmployee<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? createEmployeeMutationKey()
 
-          const baseOptions = createEmployeeMutationOptions(config) as UseMutationOptions<CreateEmployeeMutationResponse, ResponseErrorConfig<Error>, {data: CreateEmployeeMutationRequest}, TContext>
+          const baseOptions = createEmployeeMutationOptions(config) as UseMutationOptions<CreateEmployeeMutationResponse, ResponseErrorConfig<CreateEmployee400 | CreateEmployee401 | CreateEmployee403 | CreateEmployee404 | CreateEmployee409 | CreateEmployee500>, {data: CreateEmployeeMutationRequest}, TContext>
           
 
-          return useMutation<CreateEmployeeMutationResponse, ResponseErrorConfig<Error>, {data: CreateEmployeeMutationRequest}, TContext>({
+          return useMutation<CreateEmployeeMutationResponse, ResponseErrorConfig<CreateEmployee400 | CreateEmployee401 | CreateEmployee403 | CreateEmployee404 | CreateEmployee409 | CreateEmployee500>, {data: CreateEmployeeMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<CreateEmployeeMutationResponse, ResponseErrorConfig<Error>, {data: CreateEmployeeMutationRequest}, TContext>
+          }, queryClient) as UseMutationResult<CreateEmployeeMutationResponse, ResponseErrorConfig<CreateEmployee400 | CreateEmployee401 | CreateEmployee403 | CreateEmployee404 | CreateEmployee409 | CreateEmployee500>, {data: CreateEmployeeMutationRequest}, TContext>
       
 }

@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type DeleteEmployeePathParams = {
     /**
@@ -12,14 +13,39 @@ export type DeleteEmployeePathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type DeleteEmployee200 = any;
+export type DeleteEmployee400 = ProblemDetail;
 
-export type DeleteEmployeeMutationResponse = DeleteEmployee200;
+/**
+ * @description Não autenticado
+*/
+export type DeleteEmployee401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type DeleteEmployee403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type DeleteEmployee404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type DeleteEmployee409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type DeleteEmployee500 = ProblemDetail;
+
+export type DeleteEmployeeMutationResponse = any;
 
 export type DeleteEmployeeMutation = {
-    Response: DeleteEmployee200;
+    Response: any;
     PathParams: DeleteEmployeePathParams;
-    Errors: any;
+    Errors: DeleteEmployee400 | DeleteEmployee401 | DeleteEmployee403 | DeleteEmployee404 | DeleteEmployee409 | DeleteEmployee500;
 };

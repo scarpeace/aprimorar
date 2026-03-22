@@ -4,13 +4,13 @@
 */
 
 import type { PageMetadata } from "./PageMetadata.ts";
-import type { ParentResponseDTO } from "./ParentResponseDTO.ts";
+import type { StudentResponseDTO } from "./StudentResponseDTO.ts";
 
-export type PagedModelParentResponseDTO = {
+export type PagedModelStudentResponseDTO = {
     /**
      * @type array | undefined
     */
-    content?: ParentResponseDTO[];
+    content?: StudentResponseDTO[];
     /**
      * @type object | undefined
     */

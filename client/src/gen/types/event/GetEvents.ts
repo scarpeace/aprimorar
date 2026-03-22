@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { PagedModelEventResponseDTO } from "../PagedModelEventResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetEventsQueryParams = {
     /**
@@ -32,14 +32,39 @@ export type GetEventsQueryParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type GetEvents200 = PagedModelEventResponseDTO;
+export type GetEvents400 = ProblemDetail;
 
-export type GetEventsQueryResponse = GetEvents200;
+/**
+ * @description Não autenticado
+*/
+export type GetEvents401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetEvents403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type GetEvents404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type GetEvents409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type GetEvents500 = ProblemDetail;
+
+export type GetEventsQueryResponse = any;
 
 export type GetEventsQuery = {
-    Response: GetEvents200;
+    Response: any;
     QueryParams: GetEventsQueryParams;
-    Errors: any;
+    Errors: GetEvents400 | GetEvents401 | GetEvents403 | GetEvents404 | GetEvents409 | GetEvents500;
 };

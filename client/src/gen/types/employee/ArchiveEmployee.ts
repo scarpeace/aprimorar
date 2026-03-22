@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type ArchiveEmployeePathParams = {
     /**
@@ -12,14 +13,39 @@ export type ArchiveEmployeePathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type ArchiveEmployee200 = any;
+export type ArchiveEmployee400 = ProblemDetail;
 
-export type ArchiveEmployeeMutationResponse = ArchiveEmployee200;
+/**
+ * @description Não autenticado
+*/
+export type ArchiveEmployee401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type ArchiveEmployee403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type ArchiveEmployee404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type ArchiveEmployee409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type ArchiveEmployee500 = ProblemDetail;
+
+export type ArchiveEmployeeMutationResponse = any;
 
 export type ArchiveEmployeeMutation = {
-    Response: ArchiveEmployee200;
+    Response: any;
     PathParams: ArchiveEmployeePathParams;
-    Errors: any;
+    Errors: ArchiveEmployee400 | ArchiveEmployee401 | ArchiveEmployee403 | ArchiveEmployee404 | ArchiveEmployee409 | ArchiveEmployee500;
 };

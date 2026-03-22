@@ -13,9 +13,24 @@ export type DeleteStudentPathParams = {
 };
 
 /**
- * @description Bad Request
+ * @description No Content
+*/
+export type DeleteStudent204 = any;
+
+/**
+ * @description Requisição inválida (erro de validação)
 */
 export type DeleteStudent400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type DeleteStudent401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type DeleteStudent403 = ProblemDetail;
 
 /**
  * @description Recurso não encontrado
@@ -23,19 +38,19 @@ export type DeleteStudent400 = ProblemDetail;
 export type DeleteStudent404 = ProblemDetail;
 
 /**
- * @description Conflito de negócio
+ * @description Conflito de regra de negócio
 */
 export type DeleteStudent409 = ProblemDetail;
 
 /**
- * @description Internal Server Error
+ * @description Erro interno do servidor
 */
 export type DeleteStudent500 = ProblemDetail;
 
-export type DeleteStudentMutationResponse = any;
+export type DeleteStudentMutationResponse = DeleteStudent204;
 
 export type DeleteStudentMutation = {
-    Response: any;
+    Response: DeleteStudent204;
     PathParams: DeleteStudentPathParams;
-    Errors: DeleteStudent400 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500;
+    Errors: DeleteStudent400 | DeleteStudent401 | DeleteStudent403 | DeleteStudent404 | DeleteStudent409 | DeleteStudent500;
 };

@@ -3,7 +3,6 @@
 * Do not edit manually.
 */
 
-import type { EventRequestDTO } from "../types/EventRequestDTO.ts";
 import { z } from "zod/v4";
 
 export const eventRequestDTOSchema = z.object({
@@ -16,6 +15,6 @@ export const eventRequestDTOSchema = z.object({
 "content": z.enum(["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"]),
 "studentId": z.uuid(),
 "employeeId": z.uuid()
-    }) as unknown as z.ZodType<EventRequestDTO>
+    })
 
-export type EventRequestDTOSchema = EventRequestDTO
+export type EventRequestDTOSchema = z.infer<typeof eventRequestDTOSchema>

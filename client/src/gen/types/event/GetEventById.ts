@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { EventResponseDTO } from "../EventResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetEventByIdPathParams = {
     /**
@@ -13,14 +13,39 @@ export type GetEventByIdPathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type GetEventById200 = EventResponseDTO;
+export type GetEventById400 = ProblemDetail;
 
-export type GetEventByIdQueryResponse = GetEventById200;
+/**
+ * @description Não autenticado
+*/
+export type GetEventById401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetEventById403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type GetEventById404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type GetEventById409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type GetEventById500 = ProblemDetail;
+
+export type GetEventByIdQueryResponse = any;
 
 export type GetEventByIdQuery = {
-    Response: GetEventById200;
+    Response: any;
     PathParams: GetEventByIdPathParams;
-    Errors: any;
+    Errors: GetEventById400 | GetEventById401 | GetEventById403 | GetEventById404 | GetEventById409 | GetEventById500;
 };

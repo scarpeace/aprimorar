@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useHookFormMask } from "use-mask-input";
 
 import { Alert } from "@/components/ui/alert";
@@ -11,18 +11,18 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/students/StudentCreatePage.module.css";
-import { studentInputSchema, type StudentFormInput } from "@/features/students/schemas/student";
 import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
-import { formatDateInputValue } from "@/lib/utils/formatter";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { useStudentDetailQuery } from "@/features/students/query/useStudentQueries";
-import { useUpdateStudent } from "@/features/students/query/useStudentMutations";
 import { DeleteStudentButton } from "./components/DeleteStudentButton";
 import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown";
+import { updateStudentMutationRequestSchema, useGetStudentById, useUpdateStudent, type StudentRequestDTO, type UpdateStudentMutationRequest } from "@/gen";
+import { useState } from "react";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
+  const navigate = useNavigate()
+  const [parentId, setParentId] = useState("");
 
   const {
     data: student,
@@ -30,7 +30,15 @@ export function StudentEditPage() {
     isError: isStudentError,
     error: studentError,
     refetch: refetchStudent,
-  } = useStudentDetailQuery(studentId);
+  } = useGetStudentById(studentId);
+
+  const {
+    mutate: updateStudent,
+    isPending: isUpdating,
+    error: updateError,
+  } = useUpdateStudent({
+  });
+
 
   const {
     register,
@@ -38,12 +46,12 @@ export function StudentEditPage() {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<StudentFormInput>({
-    resolver: zodResolver(studentInputSchema),
+  } = useForm<UpdateStudentMutationRequest>({
+    resolver: zodResolver(updateStudentMutationRequestSchema),
     mode: "onBlur",
     values: {
       name: student?.name ?? "",
-      birthdate: formatDateInputValue(student?.birthdate ?? ""),
+      birthdate: student?.birthdate ?? "",
       cpf: student?.cpf ?? "",
       contact: student?.contact ?? "",
       email: student?.email ?? "",
@@ -60,34 +68,14 @@ export function StudentEditPage() {
       parentId: student?.parent?.id ?? "Responsável não encontrado",
     },
   });
+  const selectedParentId = watch("parentId");
   const registerWithMask = useHookFormMask(register);
 
-  const {
-    mutate: updateStudent,
-    isPending: isUpdating,
-    error: updateError,
-  } = useUpdateStudent(studentId);
 
-  const onSubmit = (data: StudentFormInput) => {
-    updateStudent(data);
+  const onSubmit = (data: StudentRequestDTO) => {
+    updateStudent({ studentId, data });
+    navigate(`/students/${studentId}`);
   };
-
-  const isMutationPending = isUpdating;
-  const submitError = updateError;
-
-  const selectedParentId = watch("parentId");
-
-  if (!id) {
-    return (
-      <div className={styles.page}>
-        <ErrorCard description="ID do aluno não informado." />
-      </div>
-    );
-  }
-
-  if (isStudentLoading) {
-    return <PageLoading message="Carregando aluno para edição..." />;
-  }
 
   if (isStudentError || !student) {
     const error = studentError;
@@ -112,6 +100,16 @@ export function StudentEditPage() {
           </ButtonLink>
         }
       />
+
+      {!id && (
+        <div className={styles.page}>
+          <ErrorCard description="ID do aluno não informado." />
+        </div>
+      )}
+
+      {isStudentLoading && (
+        <PageLoading message="Carregando aluno para edição..." />
+      )}
       <SectionCard
         title="Responsável"
         description="Selecione um responsável já cadastrado no sistema."
@@ -127,12 +125,12 @@ export function StudentEditPage() {
             <input type="hidden" {...register("parentId")} />
             <ParentSelectDropdown
               value={selectedParentId}
-              onChange={(id) =>
+              onChange={(id) => {
                 setValue("parentId", id, {
                   shouldValidate: true,
                   shouldDirty: true,
                 })
-              }
+              }}
               hasError={!!errors.parentId}
             />
 
@@ -357,9 +355,9 @@ export function StudentEditPage() {
             </FormField>
           </div>
 
-          {submitError && (
+          {updateError && (
             <Alert variant="error" className="text-sm">
-              {getFriendlyErrorMessage(submitError)}
+              {getFriendlyErrorMessage(updateError)}
             </Alert>
           )}
 
@@ -371,7 +369,7 @@ export function StudentEditPage() {
             </ButtonLink>
             <Button
               type="submit"
-              disabled={isMutationPending}
+              disabled={isUpdating}
               variant="success"
             >
               {isUpdating ? "Salvando..." : "Salvar alterações"}

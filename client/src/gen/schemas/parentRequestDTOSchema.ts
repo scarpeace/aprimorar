@@ -3,7 +3,6 @@
 * Do not edit manually.
 */
 
-import type { ParentRequestDTO } from "../types/ParentRequestDTO.ts";
 import { z } from "zod/v4";
 
 export const parentRequestDTOSchema = z.object({
@@ -11,6 +10,6 @@ export const parentRequestDTOSchema = z.object({
 "email": z.string(),
 "contact": z.string(),
 "cpf": z.string()
-    }) as unknown as z.ZodType<ParentRequestDTO>
+    })
 
-export type ParentRequestDTOSchema = ParentRequestDTO
+export type ParentRequestDTOSchema = z.infer<typeof parentRequestDTOSchema>

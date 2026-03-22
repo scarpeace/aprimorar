@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { UpdateEventMutationRequest, UpdateEventMutationResponse, UpdateEventPathParams } from "../../types/event/UpdateEvent.ts";
+import type { UpdateEventMutationRequest, UpdateEventMutationResponse, UpdateEventPathParams, UpdateEvent400, UpdateEvent401, UpdateEvent403, UpdateEvent404, UpdateEvent409, UpdateEvent500 } from "../../types/event/UpdateEvent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { updateEventMutationResponseSchema, updateEventMutationRequestSchema } from "../../schemas/event/updateEventSchema.ts";
@@ -24,14 +24,14 @@ export async function updateEvent(eventId: UpdateEventPathParams["eventId"], dat
 
   const requestData = updateEventMutationRequestSchema.parse(data)
 
-  const res = await request<UpdateEventMutationResponse, ResponseErrorConfig<Error>, UpdateEventMutationRequest>({ method : "PUT", url : `/v1/events/${eventId}`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
+  const res = await request<UpdateEventMutationResponse, ResponseErrorConfig<UpdateEvent400 | UpdateEvent401 | UpdateEvent403 | UpdateEvent404 | UpdateEvent409 | UpdateEvent500>, UpdateEventMutationRequest>({ method : "PUT", url : `/v1/events/${eventId}`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
   return updateEventMutationResponseSchema.parse(res.data)
 }
 
 export function updateEventMutationOptions<TContext = unknown>(config: Partial<RequestConfig<UpdateEventMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = updateEventMutationKey()
-        return mutationOptions<UpdateEventMutationResponse, ResponseErrorConfig<Error>, {eventId: UpdateEventPathParams["eventId"], data: UpdateEventMutationRequest}, TContext>({
+        return mutationOptions<UpdateEventMutationResponse, ResponseErrorConfig<UpdateEvent400 | UpdateEvent401 | UpdateEvent403 | UpdateEvent404 | UpdateEvent409 | UpdateEvent500>, {eventId: UpdateEventPathParams["eventId"], data: UpdateEventMutationRequest}, TContext>({
           mutationKey,
           mutationFn: async({ eventId, data }) => {
             return updateEvent(eventId, data, config)
@@ -47,7 +47,7 @@ export function updateEventMutationOptions<TContext = unknown>(config: Partial<R
  */
 export function useUpdateEvent<TContext>(options: 
 {
-  mutation?: UseMutationOptions<UpdateEventMutationResponse, ResponseErrorConfig<Error>, {eventId: UpdateEventPathParams["eventId"], data: UpdateEventMutationRequest}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<UpdateEventMutationResponse, ResponseErrorConfig<UpdateEvent400 | UpdateEvent401 | UpdateEvent403 | UpdateEvent404 | UpdateEvent409 | UpdateEvent500>, {eventId: UpdateEventPathParams["eventId"], data: UpdateEventMutationRequest}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig<UpdateEventMutationRequest>> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useUpdateEvent<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? updateEventMutationKey()
 
-          const baseOptions = updateEventMutationOptions(config) as UseMutationOptions<UpdateEventMutationResponse, ResponseErrorConfig<Error>, {eventId: UpdateEventPathParams["eventId"], data: UpdateEventMutationRequest}, TContext>
+          const baseOptions = updateEventMutationOptions(config) as UseMutationOptions<UpdateEventMutationResponse, ResponseErrorConfig<UpdateEvent400 | UpdateEvent401 | UpdateEvent403 | UpdateEvent404 | UpdateEvent409 | UpdateEvent500>, {eventId: UpdateEventPathParams["eventId"], data: UpdateEventMutationRequest}, TContext>
           
 
-          return useMutation<UpdateEventMutationResponse, ResponseErrorConfig<Error>, {eventId: UpdateEventPathParams["eventId"], data: UpdateEventMutationRequest}, TContext>({
+          return useMutation<UpdateEventMutationResponse, ResponseErrorConfig<UpdateEvent400 | UpdateEvent401 | UpdateEvent403 | UpdateEvent404 | UpdateEvent409 | UpdateEvent500>, {eventId: UpdateEventPathParams["eventId"], data: UpdateEventMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<UpdateEventMutationResponse, ResponseErrorConfig<Error>, {eventId: UpdateEventPathParams["eventId"], data: UpdateEventMutationRequest}, TContext>
+          }, queryClient) as UseMutationResult<UpdateEventMutationResponse, ResponseErrorConfig<UpdateEvent400 | UpdateEvent401 | UpdateEvent403 | UpdateEvent404 | UpdateEvent409 | UpdateEvent500>, {eventId: UpdateEventPathParams["eventId"], data: UpdateEventMutationRequest}, TContext>
       
 }

@@ -3,48 +3,69 @@
 * Do not edit manually.
 */
 
-import type { GetStudents400, GetStudents404, GetStudents409, GetStudents500, GetStudentsQueryParams, GetStudentsQueryResponse } from "../../types/student/GetStudents.ts";
 import { pageableSchema } from "../pageableSchema.ts";
+import { pagedModelStudentResponseDTOSchema } from "../pagedModelStudentResponseDTOSchema.ts";
 import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getStudentsQueryParamsSchema = z.object({
     get "pageable"(){
-                return pageableSchema
+                return pageableSchema.describe("Página com informações de paginação")
               },
-"search": z.optional(z.string())
-    }) as unknown as z.ZodType<GetStudentsQueryParams>
+"search": z.optional(z.string().describe("Termo de busca"))
+    })
 
-export type GetStudentsQueryParamsSchema = GetStudentsQueryParams
+export type GetStudentsQueryParamsSchema = z.infer<typeof getStudentsQueryParamsSchema>
 
 /**
- * @description Bad Request
+ * @description OK
  */
-export const getStudents400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudents400>
+export const getStudents200Schema = z.lazy(() => pagedModelStudentResponseDTOSchema)
 
-export type GetStudents400Schema = GetStudents400
+export type GetStudents200Schema = z.infer<typeof getStudents200Schema>
+
+/**
+ * @description Requisição inválida (erro de validação)
+ */
+export const getStudents400Schema = z.lazy(() => problemDetailSchema)
+
+export type GetStudents400Schema = z.infer<typeof getStudents400Schema>
+
+/**
+ * @description Não autenticado
+ */
+export const getStudents401Schema = z.lazy(() => problemDetailSchema)
+
+export type GetStudents401Schema = z.infer<typeof getStudents401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const getStudents403Schema = z.lazy(() => problemDetailSchema)
+
+export type GetStudents403Schema = z.infer<typeof getStudents403Schema>
 
 /**
  * @description Recurso não encontrado
  */
-export const getStudents404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudents404>
+export const getStudents404Schema = z.lazy(() => problemDetailSchema)
 
-export type GetStudents404Schema = GetStudents404
-
-/**
- * @description Conflito de negócio
- */
-export const getStudents409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudents409>
-
-export type GetStudents409Schema = GetStudents409
+export type GetStudents404Schema = z.infer<typeof getStudents404Schema>
 
 /**
- * @description Internal Server Error
+ * @description Conflito de regra de negócio
  */
-export const getStudents500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<GetStudents500>
+export const getStudents409Schema = z.lazy(() => problemDetailSchema)
 
-export type GetStudents500Schema = GetStudents500
+export type GetStudents409Schema = z.infer<typeof getStudents409Schema>
 
-export const getStudentsQueryResponseSchema = z.any() as unknown as z.ZodType<GetStudentsQueryResponse>
+/**
+ * @description Erro interno do servidor
+ */
+export const getStudents500Schema = z.lazy(() => problemDetailSchema)
 
-export type GetStudentsQueryResponseSchema = GetStudentsQueryResponse
+export type GetStudents500Schema = z.infer<typeof getStudents500Schema>
+
+export const getStudentsQueryResponseSchema = z.lazy(() => getStudents200Schema)
+
+export type GetStudentsQueryResponseSchema = z.infer<typeof getStudentsQueryResponseSchema>

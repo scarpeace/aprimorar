@@ -3,7 +3,6 @@
 * Do not edit manually.
 */
 
-import type { DashboardSummaryResponseDTO } from "../types/DashboardSummaryResponseDTO.ts";
 import { classesByContentDTOSchema } from "./classesByContentDTOSchema.ts";
 import { z } from "zod/v4";
 
@@ -23,6 +22,6 @@ get "charts"(){
               },
 "generatedAt": z.optional(z.iso.datetime()),
 "refreshSeconds": z.optional(z.int())
-    }) as unknown as z.ZodType<DashboardSummaryResponseDTO>
+    })
 
-export type DashboardSummaryResponseDTOSchema = DashboardSummaryResponseDTO
+export type DashboardSummaryResponseDTOSchema = z.infer<typeof dashboardSummaryResponseDTOSchema>

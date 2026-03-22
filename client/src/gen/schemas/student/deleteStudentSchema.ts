@@ -3,44 +3,64 @@
 * Do not edit manually.
 */
 
-import type { DeleteStudent400, DeleteStudent404, DeleteStudent409, DeleteStudent500, DeleteStudentMutationResponse, DeleteStudentPathParams } from "../../types/student/DeleteStudent.ts";
 import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const deleteStudentPathParamsSchema = z.object({
     "studentId": z.uuid()
-    }) as unknown as z.ZodType<DeleteStudentPathParams>
+    })
 
-export type DeleteStudentPathParamsSchema = DeleteStudentPathParams
+export type DeleteStudentPathParamsSchema = z.infer<typeof deleteStudentPathParamsSchema>
 
 /**
- * @description Bad Request
+ * @description No Content
  */
-export const deleteStudent400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<DeleteStudent400>
+export const deleteStudent204Schema = z.any()
 
-export type DeleteStudent400Schema = DeleteStudent400
+export type DeleteStudent204Schema = z.infer<typeof deleteStudent204Schema>
+
+/**
+ * @description Requisição inválida (erro de validação)
+ */
+export const deleteStudent400Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteStudent400Schema = z.infer<typeof deleteStudent400Schema>
+
+/**
+ * @description Não autenticado
+ */
+export const deleteStudent401Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteStudent401Schema = z.infer<typeof deleteStudent401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const deleteStudent403Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteStudent403Schema = z.infer<typeof deleteStudent403Schema>
 
 /**
  * @description Recurso não encontrado
  */
-export const deleteStudent404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<DeleteStudent404>
+export const deleteStudent404Schema = z.lazy(() => problemDetailSchema)
 
-export type DeleteStudent404Schema = DeleteStudent404
-
-/**
- * @description Conflito de negócio
- */
-export const deleteStudent409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<DeleteStudent409>
-
-export type DeleteStudent409Schema = DeleteStudent409
+export type DeleteStudent404Schema = z.infer<typeof deleteStudent404Schema>
 
 /**
- * @description Internal Server Error
+ * @description Conflito de regra de negócio
  */
-export const deleteStudent500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<DeleteStudent500>
+export const deleteStudent409Schema = z.lazy(() => problemDetailSchema)
 
-export type DeleteStudent500Schema = DeleteStudent500
+export type DeleteStudent409Schema = z.infer<typeof deleteStudent409Schema>
 
-export const deleteStudentMutationResponseSchema = z.any() as unknown as z.ZodType<DeleteStudentMutationResponse>
+/**
+ * @description Erro interno do servidor
+ */
+export const deleteStudent500Schema = z.lazy(() => problemDetailSchema)
 
-export type DeleteStudentMutationResponseSchema = DeleteStudentMutationResponse
+export type DeleteStudent500Schema = z.infer<typeof deleteStudent500Schema>
+
+export const deleteStudentMutationResponseSchema = z.lazy(() => deleteStudent204Schema)
+
+export type DeleteStudentMutationResponseSchema = z.infer<typeof deleteStudentMutationResponseSchema>

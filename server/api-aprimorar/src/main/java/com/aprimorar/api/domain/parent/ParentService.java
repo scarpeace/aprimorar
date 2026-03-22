@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
+import com.aprimorar.api.domain.parent.dto.ParentOptionDTO;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 
 /**
@@ -51,15 +52,16 @@ public class ParentService {
     /* ----- Query Methods ----- */
 
     @Transactional(readOnly = true)
-    public List<ParentResponseDTO> getParents() {
-        List<Parent> list = parentRepo.findAll();
-
-        log.info("Consulta de responsáveis finalizada, {} registros encontrados.", list.size());
-        return list.stream().map(parentMapper::convertToDto).toList();
+    public List<ParentOptionDTO> getParentOptions() {
+        List<Parent> list = parentRepo.findByArchivedAtIsNull();
+        log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
+        return list.stream()
+                .map(p -> new ParentOptionDTO(p.getId(), p.getName()))
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public Page<ParentResponseDTO> getPaginatedParents(Pageable pageable, String search) {
+    public Page<ParentResponseDTO> getParents(Pageable pageable, String search) {
         Page<Parent> page;
         if (search != null && !search.trim().isEmpty()) {
             Specification<Parent> spec = ParentSpecifications.searchContainsIgnoreCase(search.trim());

@@ -3,28 +3,14 @@
 * Do not edit manually.
 */
 
-import type { PagedModelParentResponseDTO } from "../PagedModelParentResponseDTO.ts";
+import type { Pageable } from "../Pageable.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetParentsQueryParams = {
     /**
-     * @description Zero-based page index (0..N)
-     * @minLength 0
-     * @default 0
-     * @type integer | undefined
+     * @type object
     */
-    page?: number;
-    /**
-     * @description The size of the page to be returned
-     * @minLength 1
-     * @default 20
-     * @type integer | undefined
-    */
-    size?: number;
-    /**
-     * @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
-     * @type array | undefined
-    */
-    sort?: string[];
+    pageable: Pageable;
     /**
      * @type string | undefined
     */
@@ -32,14 +18,39 @@ export type GetParentsQueryParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type GetParents200 = PagedModelParentResponseDTO;
+export type GetParents400 = ProblemDetail;
 
-export type GetParentsQueryResponse = GetParents200;
+/**
+ * @description Não autenticado
+*/
+export type GetParents401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetParents403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type GetParents404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type GetParents409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type GetParents500 = ProblemDetail;
+
+export type GetParentsQueryResponse = any;
 
 export type GetParentsQuery = {
-    Response: GetParents200;
+    Response: any;
     QueryParams: GetParentsQueryParams;
-    Errors: any;
+    Errors: GetParents400 | GetParents401 | GetParents403 | GetParents404 | GetParents409 | GetParents500;
 };

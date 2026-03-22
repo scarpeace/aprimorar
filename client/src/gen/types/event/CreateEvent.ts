@@ -4,19 +4,44 @@
 */
 
 import type { EventRequestDTO } from "../EventRequestDTO.ts";
-import type { EventResponseDTO } from "../EventResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type CreateEvent200 = EventResponseDTO;
+export type CreateEvent400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type CreateEvent401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type CreateEvent403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type CreateEvent404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type CreateEvent409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type CreateEvent500 = ProblemDetail;
 
 export type CreateEventMutationRequest = EventRequestDTO;
 
-export type CreateEventMutationResponse = CreateEvent200;
+export type CreateEventMutationResponse = any;
 
 export type CreateEventMutation = {
-    Response: CreateEvent200;
+    Response: any;
     Request: CreateEventMutationRequest;
-    Errors: any;
+    Errors: CreateEvent400 | CreateEvent401 | CreateEvent403 | CreateEvent404 | CreateEvent409 | CreateEvent500;
 };

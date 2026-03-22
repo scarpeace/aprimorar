@@ -8,6 +8,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record EmployeeResponseDTO(
         UUID id,
         String name,

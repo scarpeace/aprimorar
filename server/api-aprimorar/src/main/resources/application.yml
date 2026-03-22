@@ -7,6 +7,12 @@ spring:
     problemdetails:
       enabled: true
   springdoc:
+    api-docs:
+      path: /v3/api-docs # Caminho lido pelo kubb.config.ts
+    default-produces-media-type: application/json
+    swagger-ui:
+      path: /swagger-ui.html
+      operationsSorter: method 
     override-with-generic-response: false
   flyway:
     enabled: true

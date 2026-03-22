@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type DeleteParentPathParams = {
     /**
@@ -12,14 +13,39 @@ export type DeleteParentPathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type DeleteParent200 = any;
+export type DeleteParent400 = ProblemDetail;
 
-export type DeleteParentMutationResponse = DeleteParent200;
+/**
+ * @description Não autenticado
+*/
+export type DeleteParent401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type DeleteParent403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type DeleteParent404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type DeleteParent409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type DeleteParent500 = ProblemDetail;
+
+export type DeleteParentMutationResponse = any;
 
 export type DeleteParentMutation = {
-    Response: DeleteParent200;
+    Response: any;
     PathParams: DeleteParentPathParams;
-    Errors: any;
+    Errors: DeleteParent400 | DeleteParent401 | DeleteParent403 | DeleteParent404 | DeleteParent409 | DeleteParent500;
 };

@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetParentOptionsQueryResponse } from "../../types/parent/GetParentOptions.ts";
+import type { GetParentOptionsQueryResponse, GetParentOptions400, GetParentOptions401, GetParentOptions403, GetParentOptions404, GetParentOptions409, GetParentOptions500 } from "../../types/parent/GetParentOptions.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { getParentOptionsQueryResponseSchema } from "../../schemas/parent/getParentOptionsSchema.ts";
@@ -24,14 +24,14 @@ export async function getParentOptions(config: Partial<RequestConfig> & { client
 
 
 
-  const res = await request<GetParentOptionsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/v1/parents/options`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<GetParentOptionsQueryResponse, ResponseErrorConfig<GetParentOptions400 | GetParentOptions401 | GetParentOptions403 | GetParentOptions404 | GetParentOptions409 | GetParentOptions500>, unknown>({ method : "GET", url : `/v1/parents/options`, baseURL : `http://localhost:8080`, ... requestConfig })
   return getParentOptionsQueryResponseSchema.parse(res.data)
 }
 
 export function getParentOptionsQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getParentOptionsQueryKey()
-        return queryOptions<GetParentOptionsQueryResponse, ResponseErrorConfig<Error>, GetParentOptionsQueryResponse, typeof queryKey>({
+        return queryOptions<GetParentOptionsQueryResponse, ResponseErrorConfig<GetParentOptions400 | GetParentOptions401 | GetParentOptions403 | GetParentOptions404 | GetParentOptions409 | GetParentOptions500>, GetParentOptionsQueryResponse, typeof queryKey>({
          
          queryKey,
          queryFn: async ({ signal }) => {
@@ -48,7 +48,7 @@ export function getParentOptionsQueryOptions(config: Partial<RequestConfig> & { 
  */
 export function useGetParentOptions<TData = GetParentOptionsQueryResponse, TQueryData = GetParentOptionsQueryResponse, TQueryKey extends QueryKey = GetParentOptionsQueryKey>(options: 
 {
-  query?: Partial<QueryObserverOptions<GetParentOptionsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetParentOptionsQueryResponse, ResponseErrorConfig<GetParentOptions400 | GetParentOptions401 | GetParentOptions403 | GetParentOptions404 | GetParentOptions409 | GetParentOptions500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -62,7 +62,7 @@ export function useGetParentOptions<TData = GetParentOptionsQueryResponse, TQuer
           ...getParentOptionsQueryOptions(config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetParentOptions400 | GetParentOptions401 | GetParentOptions403 | GetParentOptions404 | GetParentOptions409 | GetParentOptions500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

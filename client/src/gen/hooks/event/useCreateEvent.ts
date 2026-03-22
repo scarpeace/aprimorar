@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { CreateEventMutationRequest, CreateEventMutationResponse } from "../../types/event/CreateEvent.ts";
+import type { CreateEventMutationRequest, CreateEventMutationResponse, CreateEvent400, CreateEvent401, CreateEvent403, CreateEvent404, CreateEvent409, CreateEvent500 } from "../../types/event/CreateEvent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { createEventMutationResponseSchema, createEventMutationRequestSchema } from "../../schemas/event/createEventSchema.ts";
@@ -24,14 +24,14 @@ export async function createEvent(data: CreateEventMutationRequest, config: Part
 
   const requestData = createEventMutationRequestSchema.parse(data)
 
-  const res = await request<CreateEventMutationResponse, ResponseErrorConfig<Error>, CreateEventMutationRequest>({ method : "POST", url : `/v1/events`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
+  const res = await request<CreateEventMutationResponse, ResponseErrorConfig<CreateEvent400 | CreateEvent401 | CreateEvent403 | CreateEvent404 | CreateEvent409 | CreateEvent500>, CreateEventMutationRequest>({ method : "POST", url : `/v1/events`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
   return createEventMutationResponseSchema.parse(res.data)
 }
 
 export function createEventMutationOptions<TContext = unknown>(config: Partial<RequestConfig<CreateEventMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = createEventMutationKey()
-        return mutationOptions<CreateEventMutationResponse, ResponseErrorConfig<Error>, {data: CreateEventMutationRequest}, TContext>({
+        return mutationOptions<CreateEventMutationResponse, ResponseErrorConfig<CreateEvent400 | CreateEvent401 | CreateEvent403 | CreateEvent404 | CreateEvent409 | CreateEvent500>, {data: CreateEventMutationRequest}, TContext>({
           mutationKey,
           mutationFn: async({ data }) => {
             return createEvent(data, config)
@@ -47,7 +47,7 @@ export function createEventMutationOptions<TContext = unknown>(config: Partial<R
  */
 export function useCreateEvent<TContext>(options: 
 {
-  mutation?: UseMutationOptions<CreateEventMutationResponse, ResponseErrorConfig<Error>, {data: CreateEventMutationRequest}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<CreateEventMutationResponse, ResponseErrorConfig<CreateEvent400 | CreateEvent401 | CreateEvent403 | CreateEvent404 | CreateEvent409 | CreateEvent500>, {data: CreateEventMutationRequest}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig<CreateEventMutationRequest>> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useCreateEvent<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? createEventMutationKey()
 
-          const baseOptions = createEventMutationOptions(config) as UseMutationOptions<CreateEventMutationResponse, ResponseErrorConfig<Error>, {data: CreateEventMutationRequest}, TContext>
+          const baseOptions = createEventMutationOptions(config) as UseMutationOptions<CreateEventMutationResponse, ResponseErrorConfig<CreateEvent400 | CreateEvent401 | CreateEvent403 | CreateEvent404 | CreateEvent409 | CreateEvent500>, {data: CreateEventMutationRequest}, TContext>
           
 
-          return useMutation<CreateEventMutationResponse, ResponseErrorConfig<Error>, {data: CreateEventMutationRequest}, TContext>({
+          return useMutation<CreateEventMutationResponse, ResponseErrorConfig<CreateEvent400 | CreateEvent401 | CreateEvent403 | CreateEvent404 | CreateEvent409 | CreateEvent500>, {data: CreateEventMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<CreateEventMutationResponse, ResponseErrorConfig<Error>, {data: CreateEventMutationRequest}, TContext>
+          }, queryClient) as UseMutationResult<CreateEventMutationResponse, ResponseErrorConfig<CreateEvent400 | CreateEvent401 | CreateEvent403 | CreateEvent404 | CreateEvent409 | CreateEvent500>, {data: CreateEventMutationRequest}, TContext>
       
 }

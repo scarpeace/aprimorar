@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetParentByIdQueryResponse, GetParentByIdPathParams } from "../../types/parent/GetParentById.ts";
+import type { GetParentByIdQueryResponse, GetParentByIdPathParams, GetParentById400, GetParentById401, GetParentById403, GetParentById404, GetParentById409, GetParentById500 } from "../../types/parent/GetParentById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { getParentByIdQueryResponseSchema } from "../../schemas/parent/getParentByIdSchema.ts";
@@ -24,14 +24,14 @@ export async function getParentById(parentId: GetParentByIdPathParams["parentId"
 
 
 
-  const res = await request<GetParentByIdQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/v1/parents/${parentId}`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<GetParentByIdQueryResponse, ResponseErrorConfig<GetParentById400 | GetParentById401 | GetParentById403 | GetParentById404 | GetParentById409 | GetParentById500>, unknown>({ method : "GET", url : `/v1/parents/${parentId}`, baseURL : `http://localhost:8080`, ... requestConfig })
   return getParentByIdQueryResponseSchema.parse(res.data)
 }
 
 export function getParentByIdQueryOptions(parentId: GetParentByIdPathParams["parentId"], config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getParentByIdQueryKey(parentId)
-        return queryOptions<GetParentByIdQueryResponse, ResponseErrorConfig<Error>, GetParentByIdQueryResponse, typeof queryKey>({
+        return queryOptions<GetParentByIdQueryResponse, ResponseErrorConfig<GetParentById400 | GetParentById401 | GetParentById403 | GetParentById404 | GetParentById409 | GetParentById500>, GetParentByIdQueryResponse, typeof queryKey>({
          enabled: !!(parentId),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -48,7 +48,7 @@ export function getParentByIdQueryOptions(parentId: GetParentByIdPathParams["par
  */
 export function useGetParentById<TData = GetParentByIdQueryResponse, TQueryData = GetParentByIdQueryResponse, TQueryKey extends QueryKey = GetParentByIdQueryKey>(parentId: GetParentByIdPathParams["parentId"], options: 
 {
-  query?: Partial<QueryObserverOptions<GetParentByIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetParentByIdQueryResponse, ResponseErrorConfig<GetParentById400 | GetParentById401 | GetParentById403 | GetParentById404 | GetParentById409 | GetParentById500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -62,7 +62,7 @@ export function useGetParentById<TData = GetParentByIdQueryResponse, TQueryData 
           ...getParentByIdQueryOptions(parentId, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetParentById400 | GetParentById401 | GetParentById403 | GetParentById404 | GetParentById409 | GetParentById500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { CreateStudentMutationRequest, CreateStudentMutationResponse, CreateStudent400, CreateStudent404, CreateStudent409, CreateStudent500 } from "../../types/student/CreateStudent.ts";
+import type { CreateStudentMutationRequest, CreateStudentMutationResponse, CreateStudent400, CreateStudent401, CreateStudent403, CreateStudent404, CreateStudent409, CreateStudent500 } from "../../types/student/CreateStudent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { createStudentMutationResponseSchema, createStudentMutationRequestSchema } from "../../schemas/student/createStudentSchema.ts";
@@ -24,14 +24,14 @@ export async function createStudent(data: CreateStudentMutationRequest, config: 
 
   const requestData = createStudentMutationRequestSchema.parse(data)
 
-  const res = await request<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent404 | CreateStudent409 | CreateStudent500>, CreateStudentMutationRequest>({ method : "POST", url : `/v1/students`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
+  const res = await request<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent401 | CreateStudent403 | CreateStudent404 | CreateStudent409 | CreateStudent500>, CreateStudentMutationRequest>({ method : "POST", url : `/v1/students`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
   return createStudentMutationResponseSchema.parse(res.data)
 }
 
 export function createStudentMutationOptions<TContext = unknown>(config: Partial<RequestConfig<CreateStudentMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = createStudentMutationKey()
-        return mutationOptions<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent404 | CreateStudent409 | CreateStudent500>, {data: CreateStudentMutationRequest}, TContext>({
+        return mutationOptions<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent401 | CreateStudent403 | CreateStudent404 | CreateStudent409 | CreateStudent500>, {data: CreateStudentMutationRequest}, TContext>({
           mutationKey,
           mutationFn: async({ data }) => {
             return createStudent(data, config)
@@ -47,7 +47,7 @@ export function createStudentMutationOptions<TContext = unknown>(config: Partial
  */
 export function useCreateStudent<TContext>(options: 
 {
-  mutation?: UseMutationOptions<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent404 | CreateStudent409 | CreateStudent500>, {data: CreateStudentMutationRequest}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent401 | CreateStudent403 | CreateStudent404 | CreateStudent409 | CreateStudent500>, {data: CreateStudentMutationRequest}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig<CreateStudentMutationRequest>> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useCreateStudent<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? createStudentMutationKey()
 
-          const baseOptions = createStudentMutationOptions(config) as UseMutationOptions<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent404 | CreateStudent409 | CreateStudent500>, {data: CreateStudentMutationRequest}, TContext>
+          const baseOptions = createStudentMutationOptions(config) as UseMutationOptions<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent401 | CreateStudent403 | CreateStudent404 | CreateStudent409 | CreateStudent500>, {data: CreateStudentMutationRequest}, TContext>
           
 
-          return useMutation<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent404 | CreateStudent409 | CreateStudent500>, {data: CreateStudentMutationRequest}, TContext>({
+          return useMutation<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent401 | CreateStudent403 | CreateStudent404 | CreateStudent409 | CreateStudent500>, {data: CreateStudentMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent404 | CreateStudent409 | CreateStudent500>, {data: CreateStudentMutationRequest}, TContext>
+          }, queryClient) as UseMutationResult<CreateStudentMutationResponse, ResponseErrorConfig<CreateStudent400 | CreateStudent401 | CreateStudent403 | CreateStudent404 | CreateStudent409 | CreateStudent500>, {data: CreateStudentMutationRequest}, TContext>
       
 }

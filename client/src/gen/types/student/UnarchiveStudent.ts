@@ -13,9 +13,24 @@ export type UnarchiveStudentPathParams = {
 };
 
 /**
- * @description Bad Request
+ * @description No Content
+*/
+export type UnarchiveStudent204 = any;
+
+/**
+ * @description Requisição inválida (erro de validação)
 */
 export type UnarchiveStudent400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type UnarchiveStudent401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type UnarchiveStudent403 = ProblemDetail;
 
 /**
  * @description Recurso não encontrado
@@ -23,19 +38,19 @@ export type UnarchiveStudent400 = ProblemDetail;
 export type UnarchiveStudent404 = ProblemDetail;
 
 /**
- * @description Conflito de negócio
+ * @description Conflito de regra de negócio
 */
 export type UnarchiveStudent409 = ProblemDetail;
 
 /**
- * @description Internal Server Error
+ * @description Erro interno do servidor
 */
 export type UnarchiveStudent500 = ProblemDetail;
 
-export type UnarchiveStudentMutationResponse = any;
+export type UnarchiveStudentMutationResponse = UnarchiveStudent204;
 
 export type UnarchiveStudentMutation = {
-    Response: any;
+    Response: UnarchiveStudent204;
     PathParams: UnarchiveStudentPathParams;
-    Errors: UnarchiveStudent400 | UnarchiveStudent404 | UnarchiveStudent409 | UnarchiveStudent500;
+    Errors: UnarchiveStudent400 | UnarchiveStudent401 | UnarchiveStudent403 | UnarchiveStudent404 | UnarchiveStudent409 | UnarchiveStudent500;
 };

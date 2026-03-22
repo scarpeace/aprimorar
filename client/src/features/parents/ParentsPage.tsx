@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Handshake, User2, Users } from "lucide-react";
+import { Handshake } from "lucide-react";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { ListSearchInput } from "@/components/ui/list-search-input";
@@ -10,6 +10,7 @@ import { ButtonLink } from "@/components/ui/button";
 import styles from "@/features/parents/ParentsPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useDebounce } from "@/lib/shared/use-debounce";
+import { useGetParents } from "@/gen";
 
 export function ParentsPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -20,36 +21,20 @@ export function ParentsPage() {
   const {
     data: parentsPage,
     isLoading,
-    isError,
     error,
     refetch,
-  } = useGetPaginatedParents({ page: currentPage, size: pageSize, search: debouncedSearchTerm });
+  } = useGetParents({
+    pageable: {
+      page: currentPage,
+      size: pageSize,
+      sort: ["name"]
+    },
+  });
 
   // Reset pagination when search changes
   useEffect(() => {
     setCurrentPage(0);
   }, [debouncedSearchTerm]);
-
-  const parentList = parentsPage?.content ?? [];
-
-  if (isLoading) {
-    return <PageLoading message="Carregando responsáveis..." />;
-  }
-
-  if (isError) {
-    return (
-      <div className={styles.page}>
-        <PageHeader
-          title="Responsáveis"
-          description="Gerencie pais responsáveis."
-        />
-        <ErrorCard
-          description={getFriendlyErrorMessage(error)}
-          onAction={refetch}
-        />
-      </div>
-    );
-  }
 
   return (
     <div className={styles.page}>
@@ -77,6 +62,10 @@ export function ParentsPage() {
         </div>
       </PageHeader>
 
+      {isLoading && <PageLoading message="Carregando responsáveis..." />}
+
+      {error && <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />}
+
       <div className="app-table-wrap">
         <div className="overflow-x-auto">
           <table className="table table-zebra w-full">
@@ -90,7 +79,7 @@ export function ParentsPage() {
               </tr>
             </thead>
             <tbody>
-              {parentList.map((parent) => (
+              {parentsPage?.content?.map((parent) => (
                 <tr
                   className="transition-colors hover:bg-base-200/70"
                   key={parent.id}
@@ -127,14 +116,14 @@ export function ParentsPage() {
 
       <Pagination
         currentPage={currentPage}
-        totalElements={parentsPage?.page.totalElements ?? 0}
-        totalPages={parentsPage?.page.totalPages ?? 0}
-        currentElementsCount={parentList.length}
+        totalElements={parentsPage?.page?.totalElements ?? 0}
+        totalPages={parentsPage?.page?.totalPages ?? 0}
+        currentElementsCount={parentsPage?.page?.totalElements ?? 0}
         itemName="responsáveis"
         onPageChange={setCurrentPage}
       />
 
-      {parentList.length === 0 && debouncedSearchTerm === "" && (
+      {parentsPage?.content?.length === 0 && debouncedSearchTerm === "" && (
         <EmptyCard
           title="Nenhum responsável encontrado"
           description=""

@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetParentByIdPathParams = {
     /**
@@ -13,14 +13,39 @@ export type GetParentByIdPathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type GetParentById200 = ParentResponseDTO;
+export type GetParentById400 = ProblemDetail;
 
-export type GetParentByIdQueryResponse = GetParentById200;
+/**
+ * @description Não autenticado
+*/
+export type GetParentById401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetParentById403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type GetParentById404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type GetParentById409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type GetParentById500 = ProblemDetail;
+
+export type GetParentByIdQueryResponse = any;
 
 export type GetParentByIdQuery = {
-    Response: GetParentById200;
+    Response: any;
     PathParams: GetParentByIdPathParams;
-    Errors: any;
+    Errors: GetParentById400 | GetParentById401 | GetParentById403 | GetParentById404 | GetParentById409 | GetParentById500;
 };

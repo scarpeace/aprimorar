@@ -3,43 +3,64 @@
 * Do not edit manually.
 */
 
-import type { CreateStudent400, CreateStudent404, CreateStudent409, CreateStudent500, CreateStudentMutationRequest, CreateStudentMutationResponse } from "../../types/student/CreateStudent.ts";
 import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { studentRequestDTOSchema } from "../studentRequestDTOSchema.ts";
+import { studentResponseDTOSchema } from "../studentResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description Bad Request
+ * @description Created
  */
-export const createStudent400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<CreateStudent400>
+export const createStudent201Schema = z.lazy(() => studentResponseDTOSchema)
 
-export type CreateStudent400Schema = CreateStudent400
+export type CreateStudent201Schema = z.infer<typeof createStudent201Schema>
+
+/**
+ * @description Requisição inválida (erro de validação)
+ */
+export const createStudent400Schema = z.lazy(() => problemDetailSchema)
+
+export type CreateStudent400Schema = z.infer<typeof createStudent400Schema>
+
+/**
+ * @description Não autenticado
+ */
+export const createStudent401Schema = z.lazy(() => problemDetailSchema)
+
+export type CreateStudent401Schema = z.infer<typeof createStudent401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const createStudent403Schema = z.lazy(() => problemDetailSchema)
+
+export type CreateStudent403Schema = z.infer<typeof createStudent403Schema>
 
 /**
  * @description Recurso não encontrado
  */
-export const createStudent404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<CreateStudent404>
+export const createStudent404Schema = z.lazy(() => problemDetailSchema)
 
-export type CreateStudent404Schema = CreateStudent404
-
-/**
- * @description Conflito de negócio
- */
-export const createStudent409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<CreateStudent409>
-
-export type CreateStudent409Schema = CreateStudent409
+export type CreateStudent404Schema = z.infer<typeof createStudent404Schema>
 
 /**
- * @description Internal Server Error
+ * @description Conflito de regra de negócio
  */
-export const createStudent500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<CreateStudent500>
+export const createStudent409Schema = z.lazy(() => problemDetailSchema)
 
-export type CreateStudent500Schema = CreateStudent500
+export type CreateStudent409Schema = z.infer<typeof createStudent409Schema>
 
-export const createStudentMutationRequestSchema = z.lazy(() => studentRequestDTOSchema) as unknown as z.ZodType<CreateStudentMutationRequest>
+/**
+ * @description Erro interno do servidor
+ */
+export const createStudent500Schema = z.lazy(() => problemDetailSchema)
 
-export type CreateStudentMutationRequestSchema = CreateStudentMutationRequest
+export type CreateStudent500Schema = z.infer<typeof createStudent500Schema>
 
-export const createStudentMutationResponseSchema = z.any() as unknown as z.ZodType<CreateStudentMutationResponse>
+export const createStudentMutationRequestSchema = z.lazy(() => studentRequestDTOSchema)
 
-export type CreateStudentMutationResponseSchema = CreateStudentMutationResponse
+export type CreateStudentMutationRequestSchema = z.infer<typeof createStudentMutationRequestSchema>
+
+export const createStudentMutationResponseSchema = z.lazy(() => createStudent201Schema)
+
+export type CreateStudentMutationResponseSchema = z.infer<typeof createStudentMutationResponseSchema>

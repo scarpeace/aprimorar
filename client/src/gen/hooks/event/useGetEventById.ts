@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetEventByIdQueryResponse, GetEventByIdPathParams } from "../../types/event/GetEventById.ts";
+import type { GetEventByIdQueryResponse, GetEventByIdPathParams, GetEventById400, GetEventById401, GetEventById403, GetEventById404, GetEventById409, GetEventById500 } from "../../types/event/GetEventById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { getEventByIdQueryResponseSchema } from "../../schemas/event/getEventByIdSchema.ts";
@@ -24,14 +24,14 @@ export async function getEventById(eventId: GetEventByIdPathParams["eventId"], c
 
 
 
-  const res = await request<GetEventByIdQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/v1/events/${eventId}`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<GetEventByIdQueryResponse, ResponseErrorConfig<GetEventById400 | GetEventById401 | GetEventById403 | GetEventById404 | GetEventById409 | GetEventById500>, unknown>({ method : "GET", url : `/v1/events/${eventId}`, baseURL : `http://localhost:8080`, ... requestConfig })
   return getEventByIdQueryResponseSchema.parse(res.data)
 }
 
 export function getEventByIdQueryOptions(eventId: GetEventByIdPathParams["eventId"], config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getEventByIdQueryKey(eventId)
-        return queryOptions<GetEventByIdQueryResponse, ResponseErrorConfig<Error>, GetEventByIdQueryResponse, typeof queryKey>({
+        return queryOptions<GetEventByIdQueryResponse, ResponseErrorConfig<GetEventById400 | GetEventById401 | GetEventById403 | GetEventById404 | GetEventById409 | GetEventById500>, GetEventByIdQueryResponse, typeof queryKey>({
          enabled: !!(eventId),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -48,7 +48,7 @@ export function getEventByIdQueryOptions(eventId: GetEventByIdPathParams["eventI
  */
 export function useGetEventById<TData = GetEventByIdQueryResponse, TQueryData = GetEventByIdQueryResponse, TQueryKey extends QueryKey = GetEventByIdQueryKey>(eventId: GetEventByIdPathParams["eventId"], options: 
 {
-  query?: Partial<QueryObserverOptions<GetEventByIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetEventByIdQueryResponse, ResponseErrorConfig<GetEventById400 | GetEventById401 | GetEventById403 | GetEventById404 | GetEventById409 | GetEventById500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -62,7 +62,7 @@ export function useGetEventById<TData = GetEventByIdQueryResponse, TQueryData = 
           ...getEventByIdQueryOptions(eventId, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetEventById400 | GetEventById401 | GetEventById403 | GetEventById404 | GetEventById409 | GetEventById500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

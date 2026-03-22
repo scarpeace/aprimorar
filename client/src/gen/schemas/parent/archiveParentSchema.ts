@@ -3,22 +3,57 @@
 * Do not edit manually.
 */
 
-import type { ArchiveParent200, ArchiveParentMutationResponse, ArchiveParentPathParams } from "../../types/parent/ArchiveParent.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const archiveParentPathParamsSchema = z.object({
     "id": z.uuid()
-    }) as unknown as z.ZodType<ArchiveParentPathParams>
+    })
 
-export type ArchiveParentPathParamsSchema = ArchiveParentPathParams
+export type ArchiveParentPathParamsSchema = z.infer<typeof archiveParentPathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const archiveParent200Schema = z.any() as unknown as z.ZodType<ArchiveParent200>
+export const archiveParent400Schema = z.lazy(() => problemDetailSchema)
 
-export type ArchiveParent200Schema = ArchiveParent200
+export type ArchiveParent400Schema = z.infer<typeof archiveParent400Schema>
 
-export const archiveParentMutationResponseSchema = z.lazy(() => archiveParent200Schema) as unknown as z.ZodType<ArchiveParentMutationResponse>
+/**
+ * @description Não autenticado
+ */
+export const archiveParent401Schema = z.lazy(() => problemDetailSchema)
 
-export type ArchiveParentMutationResponseSchema = ArchiveParentMutationResponse
+export type ArchiveParent401Schema = z.infer<typeof archiveParent401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const archiveParent403Schema = z.lazy(() => problemDetailSchema)
+
+export type ArchiveParent403Schema = z.infer<typeof archiveParent403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const archiveParent404Schema = z.lazy(() => problemDetailSchema)
+
+export type ArchiveParent404Schema = z.infer<typeof archiveParent404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const archiveParent409Schema = z.lazy(() => problemDetailSchema)
+
+export type ArchiveParent409Schema = z.infer<typeof archiveParent409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const archiveParent500Schema = z.lazy(() => problemDetailSchema)
+
+export type ArchiveParent500Schema = z.infer<typeof archiveParent500Schema>
+
+export const archiveParentMutationResponseSchema = z.any()
+
+export type ArchiveParentMutationResponseSchema = z.infer<typeof archiveParentMutationResponseSchema>

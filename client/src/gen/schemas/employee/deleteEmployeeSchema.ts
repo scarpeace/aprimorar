@@ -3,22 +3,57 @@
 * Do not edit manually.
 */
 
-import type { DeleteEmployee200, DeleteEmployeeMutationResponse, DeleteEmployeePathParams } from "../../types/employee/DeleteEmployee.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const deleteEmployeePathParamsSchema = z.object({
     "employeeId": z.uuid()
-    }) as unknown as z.ZodType<DeleteEmployeePathParams>
+    })
 
-export type DeleteEmployeePathParamsSchema = DeleteEmployeePathParams
+export type DeleteEmployeePathParamsSchema = z.infer<typeof deleteEmployeePathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const deleteEmployee200Schema = z.any() as unknown as z.ZodType<DeleteEmployee200>
+export const deleteEmployee400Schema = z.lazy(() => problemDetailSchema)
 
-export type DeleteEmployee200Schema = DeleteEmployee200
+export type DeleteEmployee400Schema = z.infer<typeof deleteEmployee400Schema>
 
-export const deleteEmployeeMutationResponseSchema = z.lazy(() => deleteEmployee200Schema) as unknown as z.ZodType<DeleteEmployeeMutationResponse>
+/**
+ * @description Não autenticado
+ */
+export const deleteEmployee401Schema = z.lazy(() => problemDetailSchema)
 
-export type DeleteEmployeeMutationResponseSchema = DeleteEmployeeMutationResponse
+export type DeleteEmployee401Schema = z.infer<typeof deleteEmployee401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const deleteEmployee403Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteEmployee403Schema = z.infer<typeof deleteEmployee403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const deleteEmployee404Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteEmployee404Schema = z.infer<typeof deleteEmployee404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const deleteEmployee409Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteEmployee409Schema = z.infer<typeof deleteEmployee409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const deleteEmployee500Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteEmployee500Schema = z.infer<typeof deleteEmployee500Schema>
+
+export const deleteEmployeeMutationResponseSchema = z.any()
+
+export type DeleteEmployeeMutationResponseSchema = z.infer<typeof deleteEmployeeMutationResponseSchema>

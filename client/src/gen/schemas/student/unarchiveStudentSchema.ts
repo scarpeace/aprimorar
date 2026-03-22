@@ -3,44 +3,64 @@
 * Do not edit manually.
 */
 
-import type { UnarchiveStudent400, UnarchiveStudent404, UnarchiveStudent409, UnarchiveStudent500, UnarchiveStudentMutationResponse, UnarchiveStudentPathParams } from "../../types/student/UnarchiveStudent.ts";
 import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const unarchiveStudentPathParamsSchema = z.object({
     "studentId": z.uuid()
-    }) as unknown as z.ZodType<UnarchiveStudentPathParams>
+    })
 
-export type UnarchiveStudentPathParamsSchema = UnarchiveStudentPathParams
+export type UnarchiveStudentPathParamsSchema = z.infer<typeof unarchiveStudentPathParamsSchema>
 
 /**
- * @description Bad Request
+ * @description No Content
  */
-export const unarchiveStudent400Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UnarchiveStudent400>
+export const unarchiveStudent204Schema = z.any()
 
-export type UnarchiveStudent400Schema = UnarchiveStudent400
+export type UnarchiveStudent204Schema = z.infer<typeof unarchiveStudent204Schema>
+
+/**
+ * @description Requisição inválida (erro de validação)
+ */
+export const unarchiveStudent400Schema = z.lazy(() => problemDetailSchema)
+
+export type UnarchiveStudent400Schema = z.infer<typeof unarchiveStudent400Schema>
+
+/**
+ * @description Não autenticado
+ */
+export const unarchiveStudent401Schema = z.lazy(() => problemDetailSchema)
+
+export type UnarchiveStudent401Schema = z.infer<typeof unarchiveStudent401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const unarchiveStudent403Schema = z.lazy(() => problemDetailSchema)
+
+export type UnarchiveStudent403Schema = z.infer<typeof unarchiveStudent403Schema>
 
 /**
  * @description Recurso não encontrado
  */
-export const unarchiveStudent404Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UnarchiveStudent404>
+export const unarchiveStudent404Schema = z.lazy(() => problemDetailSchema)
 
-export type UnarchiveStudent404Schema = UnarchiveStudent404
-
-/**
- * @description Conflito de negócio
- */
-export const unarchiveStudent409Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UnarchiveStudent409>
-
-export type UnarchiveStudent409Schema = UnarchiveStudent409
+export type UnarchiveStudent404Schema = z.infer<typeof unarchiveStudent404Schema>
 
 /**
- * @description Internal Server Error
+ * @description Conflito de regra de negócio
  */
-export const unarchiveStudent500Schema = z.lazy(() => problemDetailSchema) as unknown as z.ZodType<UnarchiveStudent500>
+export const unarchiveStudent409Schema = z.lazy(() => problemDetailSchema)
 
-export type UnarchiveStudent500Schema = UnarchiveStudent500
+export type UnarchiveStudent409Schema = z.infer<typeof unarchiveStudent409Schema>
 
-export const unarchiveStudentMutationResponseSchema = z.any() as unknown as z.ZodType<UnarchiveStudentMutationResponse>
+/**
+ * @description Erro interno do servidor
+ */
+export const unarchiveStudent500Schema = z.lazy(() => problemDetailSchema)
 
-export type UnarchiveStudentMutationResponseSchema = UnarchiveStudentMutationResponse
+export type UnarchiveStudent500Schema = z.infer<typeof unarchiveStudent500Schema>
+
+export const unarchiveStudentMutationResponseSchema = z.lazy(() => unarchiveStudent204Schema)
+
+export type UnarchiveStudentMutationResponseSchema = z.infer<typeof unarchiveStudentMutationResponseSchema>

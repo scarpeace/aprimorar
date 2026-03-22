@@ -3,7 +3,6 @@
 * Do not edit manually.
 */
 
-import type { PageMetadata } from "../types/PageMetadata.ts";
 import { z } from "zod/v4";
 
 export const pageMetadataSchema = z.object({
@@ -11,6 +10,6 @@ export const pageMetadataSchema = z.object({
 "number": z.optional(z.int()),
 "totalElements": z.optional(z.int()),
 "totalPages": z.optional(z.int())
-    }) as unknown as z.ZodType<PageMetadata>
+    })
 
-export type PageMetadataSchema = PageMetadata
+export type PageMetadataSchema = z.infer<typeof pageMetadataSchema>

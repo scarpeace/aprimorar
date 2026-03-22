@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type UnarchiveEmployeePathParams = {
     /**
@@ -12,14 +13,39 @@ export type UnarchiveEmployeePathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type UnarchiveEmployee200 = any;
+export type UnarchiveEmployee400 = ProblemDetail;
 
-export type UnarchiveEmployeeMutationResponse = UnarchiveEmployee200;
+/**
+ * @description Não autenticado
+*/
+export type UnarchiveEmployee401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type UnarchiveEmployee403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type UnarchiveEmployee404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type UnarchiveEmployee409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type UnarchiveEmployee500 = ProblemDetail;
+
+export type UnarchiveEmployeeMutationResponse = any;
 
 export type UnarchiveEmployeeMutation = {
-    Response: UnarchiveEmployee200;
+    Response: any;
     PathParams: UnarchiveEmployeePathParams;
-    Errors: any;
+    Errors: UnarchiveEmployee400 | UnarchiveEmployee401 | UnarchiveEmployee403 | UnarchiveEmployee404 | UnarchiveEmployee409 | UnarchiveEmployee500;
 };

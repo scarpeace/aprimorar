@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { ArchiveEmployeeMutationResponse, ArchiveEmployeePathParams } from "../../types/employee/ArchiveEmployee.ts";
+import type { ArchiveEmployeeMutationResponse, ArchiveEmployeePathParams, ArchiveEmployee400, ArchiveEmployee401, ArchiveEmployee403, ArchiveEmployee404, ArchiveEmployee409, ArchiveEmployee500 } from "../../types/employee/ArchiveEmployee.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { archiveEmployeeMutationResponseSchema } from "../../schemas/employee/archiveEmployeeSchema.ts";
@@ -24,14 +24,14 @@ export async function archiveEmployee(employeeId: ArchiveEmployeePathParams["emp
 
 
 
-  const res = await request<ArchiveEmployeeMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "PATCH", url : `/v1/employees/${employeeId}/archive`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<ArchiveEmployeeMutationResponse, ResponseErrorConfig<ArchiveEmployee400 | ArchiveEmployee401 | ArchiveEmployee403 | ArchiveEmployee404 | ArchiveEmployee409 | ArchiveEmployee500>, unknown>({ method : "PATCH", url : `/v1/employees/${employeeId}/archive`, baseURL : `http://localhost:8080`, ... requestConfig })
   return archiveEmployeeMutationResponseSchema.parse(res.data)
 }
 
 export function archiveEmployeeMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const mutationKey = archiveEmployeeMutationKey()
-        return mutationOptions<ArchiveEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: ArchiveEmployeePathParams["employeeId"]}, TContext>({
+        return mutationOptions<ArchiveEmployeeMutationResponse, ResponseErrorConfig<ArchiveEmployee400 | ArchiveEmployee401 | ArchiveEmployee403 | ArchiveEmployee404 | ArchiveEmployee409 | ArchiveEmployee500>, {employeeId: ArchiveEmployeePathParams["employeeId"]}, TContext>({
           mutationKey,
           mutationFn: async({ employeeId }) => {
             return archiveEmployee(employeeId, config)
@@ -47,7 +47,7 @@ export function archiveEmployeeMutationOptions<TContext = unknown>(config: Parti
  */
 export function useArchiveEmployee<TContext>(options: 
 {
-  mutation?: UseMutationOptions<ArchiveEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: ArchiveEmployeePathParams["employeeId"]}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<ArchiveEmployeeMutationResponse, ResponseErrorConfig<ArchiveEmployee400 | ArchiveEmployee401 | ArchiveEmployee403 | ArchiveEmployee404 | ArchiveEmployee409 | ArchiveEmployee500>, {employeeId: ArchiveEmployeePathParams["employeeId"]}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useArchiveEmployee<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? archiveEmployeeMutationKey()
 
-          const baseOptions = archiveEmployeeMutationOptions(config) as UseMutationOptions<ArchiveEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: ArchiveEmployeePathParams["employeeId"]}, TContext>
+          const baseOptions = archiveEmployeeMutationOptions(config) as UseMutationOptions<ArchiveEmployeeMutationResponse, ResponseErrorConfig<ArchiveEmployee400 | ArchiveEmployee401 | ArchiveEmployee403 | ArchiveEmployee404 | ArchiveEmployee409 | ArchiveEmployee500>, {employeeId: ArchiveEmployeePathParams["employeeId"]}, TContext>
           
 
-          return useMutation<ArchiveEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: ArchiveEmployeePathParams["employeeId"]}, TContext>({
+          return useMutation<ArchiveEmployeeMutationResponse, ResponseErrorConfig<ArchiveEmployee400 | ArchiveEmployee401 | ArchiveEmployee403 | ArchiveEmployee404 | ArchiveEmployee409 | ArchiveEmployee500>, {employeeId: ArchiveEmployeePathParams["employeeId"]}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<ArchiveEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: ArchiveEmployeePathParams["employeeId"]}, TContext>
+          }, queryClient) as UseMutationResult<ArchiveEmployeeMutationResponse, ResponseErrorConfig<ArchiveEmployee400 | ArchiveEmployee401 | ArchiveEmployee403 | ArchiveEmployee404 | ArchiveEmployee409 | ArchiveEmployee500>, {employeeId: ArchiveEmployeePathParams["employeeId"]}, TContext>
       
 }

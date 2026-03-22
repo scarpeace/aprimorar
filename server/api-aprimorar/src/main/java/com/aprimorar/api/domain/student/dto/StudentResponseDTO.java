@@ -4,24 +4,26 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.address.Address;
-import com.aprimorar.api.domain.parent.Parent;
+import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
+import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 
 public record StudentResponseDTO(
-        UUID id,
-        String name,
-        String contact,
-        String email,
-        String cpf,
-        LocalDate birthdate,
-        String school,
-        Integer age,
-        Address address,
-        Parent parent,
-        Instant archivedAt,
-        Instant createdAt,
-        Instant updatedAt
+    UUID id,
+    String name,
+    String contact,
+    String email,
+    String cpf,
+    LocalDate birthdate,
+    String school,
+    Integer age,
+    AddressResponseDTO address,
+    ParentResponseDTO parent,
+    @Nullable
+    Instant archivedAt,
+    Instant createdAt,
+    @Nullable
+    Instant updatedAt
 ) {
 }

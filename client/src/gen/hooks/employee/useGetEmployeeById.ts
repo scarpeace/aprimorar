@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetEmployeeByIdQueryResponse, GetEmployeeByIdPathParams } from "../../types/employee/GetEmployeeById.ts";
+import type { GetEmployeeByIdQueryResponse, GetEmployeeByIdPathParams, GetEmployeeById400, GetEmployeeById401, GetEmployeeById403, GetEmployeeById404, GetEmployeeById409, GetEmployeeById500 } from "../../types/employee/GetEmployeeById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { getEmployeeByIdQueryResponseSchema } from "../../schemas/employee/getEmployeeByIdSchema.ts";
@@ -24,14 +24,14 @@ export async function getEmployeeById(employeeId: GetEmployeeByIdPathParams["emp
 
 
 
-  const res = await request<GetEmployeeByIdQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/v1/employees/${employeeId}`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<GetEmployeeByIdQueryResponse, ResponseErrorConfig<GetEmployeeById400 | GetEmployeeById401 | GetEmployeeById403 | GetEmployeeById404 | GetEmployeeById409 | GetEmployeeById500>, unknown>({ method : "GET", url : `/v1/employees/${employeeId}`, baseURL : `http://localhost:8080`, ... requestConfig })
   return getEmployeeByIdQueryResponseSchema.parse(res.data)
 }
 
 export function getEmployeeByIdQueryOptions(employeeId: GetEmployeeByIdPathParams["employeeId"], config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getEmployeeByIdQueryKey(employeeId)
-        return queryOptions<GetEmployeeByIdQueryResponse, ResponseErrorConfig<Error>, GetEmployeeByIdQueryResponse, typeof queryKey>({
+        return queryOptions<GetEmployeeByIdQueryResponse, ResponseErrorConfig<GetEmployeeById400 | GetEmployeeById401 | GetEmployeeById403 | GetEmployeeById404 | GetEmployeeById409 | GetEmployeeById500>, GetEmployeeByIdQueryResponse, typeof queryKey>({
          enabled: !!(employeeId),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -48,7 +48,7 @@ export function getEmployeeByIdQueryOptions(employeeId: GetEmployeeByIdPathParam
  */
 export function useGetEmployeeById<TData = GetEmployeeByIdQueryResponse, TQueryData = GetEmployeeByIdQueryResponse, TQueryKey extends QueryKey = GetEmployeeByIdQueryKey>(employeeId: GetEmployeeByIdPathParams["employeeId"], options: 
 {
-  query?: Partial<QueryObserverOptions<GetEmployeeByIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetEmployeeByIdQueryResponse, ResponseErrorConfig<GetEmployeeById400 | GetEmployeeById401 | GetEmployeeById403 | GetEmployeeById404 | GetEmployeeById409 | GetEmployeeById500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -62,7 +62,7 @@ export function useGetEmployeeById<TData = GetEmployeeByIdQueryResponse, TQueryD
           ...getEmployeeByIdQueryOptions(employeeId, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetEmployeeById400 | GetEmployeeById401 | GetEmployeeById403 | GetEmployeeById404 | GetEmployeeById409 | GetEmployeeById500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

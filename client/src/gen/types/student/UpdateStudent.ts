@@ -5,6 +5,7 @@
 
 import type { ProblemDetail } from "../ProblemDetail.ts";
 import type { StudentRequestDTO } from "../StudentRequestDTO.ts";
+import type { StudentResponseDTO } from "../StudentResponseDTO.ts";
 
 export type UpdateStudentPathParams = {
     /**
@@ -14,9 +15,24 @@ export type UpdateStudentPathParams = {
 };
 
 /**
- * @description Bad Request
+ * @description OK
+*/
+export type UpdateStudent200 = StudentResponseDTO;
+
+/**
+ * @description Requisição inválida (erro de validação)
 */
 export type UpdateStudent400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type UpdateStudent401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type UpdateStudent403 = ProblemDetail;
 
 /**
  * @description Recurso não encontrado
@@ -24,22 +40,22 @@ export type UpdateStudent400 = ProblemDetail;
 export type UpdateStudent404 = ProblemDetail;
 
 /**
- * @description Conflito de negócio
+ * @description Conflito de regra de negócio
 */
 export type UpdateStudent409 = ProblemDetail;
 
 /**
- * @description Internal Server Error
+ * @description Erro interno do servidor
 */
 export type UpdateStudent500 = ProblemDetail;
 
 export type UpdateStudentMutationRequest = StudentRequestDTO;
 
-export type UpdateStudentMutationResponse = any;
+export type UpdateStudentMutationResponse = UpdateStudent200;
 
 export type UpdateStudentMutation = {
-    Response: any;
+    Response: UpdateStudent200;
     Request: UpdateStudentMutationRequest;
     PathParams: UpdateStudentPathParams;
-    Errors: UpdateStudent400 | UpdateStudent404 | UpdateStudent409 | UpdateStudent500;
+    Errors: UpdateStudent400 | UpdateStudent401 | UpdateStudent403 | UpdateStudent404 | UpdateStudent409 | UpdateStudent500;
 };

@@ -3,7 +3,6 @@ package com.aprimorar.api.domain.student;
 import java.util.List;
 import java.util.UUID;
 
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,6 +26,8 @@ import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -45,10 +46,11 @@ public class StudentController {
     }
 
     @Operation(
-        operationId = "createStudent",
-        summary = "Criar aluno",
-        description = "Cria um novo aluno com os dados fornecidos."
+            operationId = "createStudent",
+            summary = "Criar aluno",
+            description = "Cria um novo aluno com os dados fornecidos."
     )
+    @ApiResponse(responseCode = "201")
     @PostMapping
     public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
 
@@ -57,24 +59,30 @@ public class StudentController {
     }
 
     @Operation(
-        operationId = "getStudents",
-        summary = "Listar alunos",
-        description = "Retorna todos os alunos do banco de dados com paginação."
+            operationId = "getStudents",
+            summary = "Listar alunos com paginação",
+            description = "Retorna todos os alunos do banco de dados com paginação."
     )
+    @ApiResponse(responseCode = "200")
     @GetMapping
-    public ResponseEntity<Page<StudentResponseDTO>> listStudents(
-            @ParameterObject @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+    public ResponseEntity<Page<StudentResponseDTO>> getStudents(
+            @Parameter(description = "Página com informações de paginação")
+            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC)
+            Pageable pageable,
+
+            @Parameter(description = "Termo de busca")
             @RequestParam(required = false) String search
     ) {
         Page<StudentResponseDTO> students = studentService.getStudents(pageable, search);
         return ResponseEntity.ok(students);
     }
 
-    @Operation(
-        operationId = "getStudentOptions",
-        summary = "Listar alunos para opções e dropdown",
-        description = "Lista todos os alunos para uso em opções e dropdowns."
+   @Operation(
+            operationId = "getStudentOptions",
+            summary = "Listar alunos para opções e dropdown",
+            description = "Lista todos os alunos para uso em opções e dropdowns."
     )
+   @ApiResponse(responseCode = "200")
     @GetMapping("/options")
     public ResponseEntity<List<StudentOptionDTO>> getStudentOptions() {
         List<StudentOptionDTO> options = studentService.getStudentOptions();
@@ -82,23 +90,25 @@ public class StudentController {
     }
 
     @Operation(
-        operationId = "listStudentsByParent",
-        summary = "Listar alunos por pai",
-        description = "Retorna todos os alunos do banco de dados com paginação."
+            operationId = "getStudentsByParent",
+            summary = "Listar alunos por pai",
+            description = "Retorna todos os alunos do banco de dados com paginação."
     )
+    @ApiResponse(responseCode = "200")
     @GetMapping("/parent/{parentId}")
-    public ResponseEntity<List<StudentResponseDTO>> listStudentsByParent(
-        @PathVariable UUID parentId
+    public ResponseEntity<List<StudentResponseDTO>> getStudentsByParent(
+            @PathVariable UUID parentId
     ) {
         List<StudentResponseDTO> students = studentService.getStudentsByParent(parentId);
         return ResponseEntity.ok(students);
     }
 
     @Operation(
-        operationId = "getStudentById",
-        summary = "Listar aluno por ID",
-        description = "Retorna um aluno específico com base no ID."
+            operationId = "getStudentById",
+            summary = "Listar aluno por ID",
+            description = "Retorna um aluno específico com base no ID."
     )
+    @ApiResponse(responseCode = "200")
     @GetMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId) {
 
@@ -107,10 +117,11 @@ public class StudentController {
     }
 
     @Operation(
-        operationId = "updateStudent",
-        summary = "Atualizar aluno",
-        description = "Atualiza totalmente os dados de um aluno e sua referência ao pai."
+            operationId = "updateStudent",
+            summary = "Atualizar aluno",
+            description = "Atualiza totalmente os dados de um aluno e sua referência ao pai."
     )
+    @ApiResponse(responseCode = "200")
     @PutMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> updateStudent(
             @PathVariable UUID studentId,
@@ -121,10 +132,11 @@ public class StudentController {
     }
 
     @Operation(
-        operationId = "deleteStudent",
-        summary = "Deletar aluno",
-        description = "Deleta um aluno com base no ID fornecido."
+            operationId = "deleteStudent",
+            summary = "Deletar aluno",
+            description = "Deleta um aluno com base no ID fornecido."
     )
+    @ApiResponse(responseCode = "204")
     @DeleteMapping("/{studentId}")
     public ResponseEntity<Void> deleteStudent(@PathVariable UUID studentId) {
 
@@ -133,10 +145,11 @@ public class StudentController {
     }
 
     @Operation(
-        operationId = "archiveStudent",
-        summary = "Arquivar aluno",
-        description = "Arquiva um aluno com base no ID fornecido."
+            operationId = "archiveStudent",
+            summary = "Arquivar aluno",
+            description = "Arquiva um aluno com base no ID fornecido."
     )
+    @ApiResponse(responseCode = "204")
     @PatchMapping("/{studentId}/archive")
     public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
 
@@ -145,10 +158,11 @@ public class StudentController {
     }
 
     @Operation(
-        operationId = "unarchiveStudent",
-        summary = "Desarquivar aluno",
-        description = "Desarquiva um aluno com base no ID fornecido."
+            operationId = "unarchiveStudent",
+            summary = "Desarquivar aluno",
+            description = "Desarquiva um aluno com base no ID fornecido."
     )
+    @ApiResponse(responseCode = "204")
     @PatchMapping("/{studentId}/unarchive")
     public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {
 

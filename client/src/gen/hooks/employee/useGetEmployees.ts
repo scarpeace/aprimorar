@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetEmployeesQueryResponse, GetEmployeesQueryParams } from "../../types/employee/GetEmployees.ts";
+import type { GetEmployeesQueryResponse, GetEmployeesQueryParams, GetEmployees400, GetEmployees401, GetEmployees403, GetEmployees404, GetEmployees409, GetEmployees500 } from "../../types/employee/GetEmployees.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { getEmployeesQueryResponseSchema } from "../../schemas/employee/getEmployeesSchema.ts";
@@ -24,14 +24,14 @@ export async function getEmployees(params?: GetEmployeesQueryParams, config: Par
 
 
 
-  const res = await request<GetEmployeesQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/v1/employees`, baseURL : `http://localhost:8080`, params, ... requestConfig })
+  const res = await request<GetEmployeesQueryResponse, ResponseErrorConfig<GetEmployees400 | GetEmployees401 | GetEmployees403 | GetEmployees404 | GetEmployees409 | GetEmployees500>, unknown>({ method : "GET", url : `/v1/employees`, baseURL : `http://localhost:8080`, params, ... requestConfig })
   return getEmployeesQueryResponseSchema.parse(res.data)
 }
 
 export function getEmployeesQueryOptions(params?: GetEmployeesQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getEmployeesQueryKey(params)
-        return queryOptions<GetEmployeesQueryResponse, ResponseErrorConfig<Error>, GetEmployeesQueryResponse, typeof queryKey>({
+        return queryOptions<GetEmployeesQueryResponse, ResponseErrorConfig<GetEmployees400 | GetEmployees401 | GetEmployees403 | GetEmployees404 | GetEmployees409 | GetEmployees500>, GetEmployeesQueryResponse, typeof queryKey>({
          
          queryKey,
          queryFn: async ({ signal }) => {
@@ -48,7 +48,7 @@ export function getEmployeesQueryOptions(params?: GetEmployeesQueryParams, confi
  */
 export function useGetEmployees<TData = GetEmployeesQueryResponse, TQueryData = GetEmployeesQueryResponse, TQueryKey extends QueryKey = GetEmployeesQueryKey>(params?: GetEmployeesQueryParams, options: 
 {
-  query?: Partial<QueryObserverOptions<GetEmployeesQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetEmployeesQueryResponse, ResponseErrorConfig<GetEmployees400 | GetEmployees401 | GetEmployees403 | GetEmployees404 | GetEmployees409 | GetEmployees500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -62,7 +62,7 @@ export function useGetEmployees<TData = GetEmployeesQueryResponse, TQueryData = 
           ...getEmployeesQueryOptions(params, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetEmployees400 | GetEmployees401 | GetEmployees403 | GetEmployees404 | GetEmployees409 | GetEmployees500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

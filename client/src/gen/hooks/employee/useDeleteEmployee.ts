@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { DeleteEmployeeMutationResponse, DeleteEmployeePathParams } from "../../types/employee/DeleteEmployee.ts";
+import type { DeleteEmployeeMutationResponse, DeleteEmployeePathParams, DeleteEmployee400, DeleteEmployee401, DeleteEmployee403, DeleteEmployee404, DeleteEmployee409, DeleteEmployee500 } from "../../types/employee/DeleteEmployee.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { deleteEmployeeMutationResponseSchema } from "../../schemas/employee/deleteEmployeeSchema.ts";
@@ -24,14 +24,14 @@ export async function deleteEmployee(employeeId: DeleteEmployeePathParams["emplo
 
 
 
-  const res = await request<DeleteEmployeeMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "DELETE", url : `/v1/employees/${employeeId}`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<DeleteEmployeeMutationResponse, ResponseErrorConfig<DeleteEmployee400 | DeleteEmployee401 | DeleteEmployee403 | DeleteEmployee404 | DeleteEmployee409 | DeleteEmployee500>, unknown>({ method : "DELETE", url : `/v1/employees/${employeeId}`, baseURL : `http://localhost:8080`, ... requestConfig })
   return deleteEmployeeMutationResponseSchema.parse(res.data)
 }
 
 export function deleteEmployeeMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const mutationKey = deleteEmployeeMutationKey()
-        return mutationOptions<DeleteEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: DeleteEmployeePathParams["employeeId"]}, TContext>({
+        return mutationOptions<DeleteEmployeeMutationResponse, ResponseErrorConfig<DeleteEmployee400 | DeleteEmployee401 | DeleteEmployee403 | DeleteEmployee404 | DeleteEmployee409 | DeleteEmployee500>, {employeeId: DeleteEmployeePathParams["employeeId"]}, TContext>({
           mutationKey,
           mutationFn: async({ employeeId }) => {
             return deleteEmployee(employeeId, config)
@@ -47,7 +47,7 @@ export function deleteEmployeeMutationOptions<TContext = unknown>(config: Partia
  */
 export function useDeleteEmployee<TContext>(options: 
 {
-  mutation?: UseMutationOptions<DeleteEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: DeleteEmployeePathParams["employeeId"]}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<DeleteEmployeeMutationResponse, ResponseErrorConfig<DeleteEmployee400 | DeleteEmployee401 | DeleteEmployee403 | DeleteEmployee404 | DeleteEmployee409 | DeleteEmployee500>, {employeeId: DeleteEmployeePathParams["employeeId"]}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useDeleteEmployee<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? deleteEmployeeMutationKey()
 
-          const baseOptions = deleteEmployeeMutationOptions(config) as UseMutationOptions<DeleteEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: DeleteEmployeePathParams["employeeId"]}, TContext>
+          const baseOptions = deleteEmployeeMutationOptions(config) as UseMutationOptions<DeleteEmployeeMutationResponse, ResponseErrorConfig<DeleteEmployee400 | DeleteEmployee401 | DeleteEmployee403 | DeleteEmployee404 | DeleteEmployee409 | DeleteEmployee500>, {employeeId: DeleteEmployeePathParams["employeeId"]}, TContext>
           
 
-          return useMutation<DeleteEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: DeleteEmployeePathParams["employeeId"]}, TContext>({
+          return useMutation<DeleteEmployeeMutationResponse, ResponseErrorConfig<DeleteEmployee400 | DeleteEmployee401 | DeleteEmployee403 | DeleteEmployee404 | DeleteEmployee409 | DeleteEmployee500>, {employeeId: DeleteEmployeePathParams["employeeId"]}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<DeleteEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: DeleteEmployeePathParams["employeeId"]}, TContext>
+          }, queryClient) as UseMutationResult<DeleteEmployeeMutationResponse, ResponseErrorConfig<DeleteEmployee400 | DeleteEmployee401 | DeleteEmployee403 | DeleteEmployee404 | DeleteEmployee409 | DeleteEmployee500>, {employeeId: DeleteEmployeePathParams["employeeId"]}, TContext>
       
 }

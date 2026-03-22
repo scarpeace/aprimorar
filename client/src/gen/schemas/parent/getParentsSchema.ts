@@ -3,26 +3,61 @@
 * Do not edit manually.
 */
 
-import type { GetParents200, GetParentsQueryParams, GetParentsQueryResponse } from "../../types/parent/GetParents.ts";
-import { pagedModelParentResponseDTOSchema } from "../pagedModelParentResponseDTOSchema.ts";
+import { pageableSchema } from "../pageableSchema.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getParentsQueryParamsSchema = z.object({
-    "page": z.coerce.number().int().min(0).default(0).describe("Zero-based page index (0..N)"),
-"size": z.coerce.number().int().min(1).default(20).describe("The size of the page to be returned"),
-"sort": z.array(z.string()).describe("Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported."),
+    get "pageable"(){
+                return pageableSchema
+              },
 "search": z.optional(z.string())
-    }) as unknown as z.ZodType<GetParentsQueryParams>
+    })
 
-export type GetParentsQueryParamsSchema = GetParentsQueryParams
+export type GetParentsQueryParamsSchema = z.infer<typeof getParentsQueryParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const getParents200Schema = z.lazy(() => pagedModelParentResponseDTOSchema) as unknown as z.ZodType<GetParents200>
+export const getParents400Schema = z.lazy(() => problemDetailSchema)
 
-export type GetParents200Schema = GetParents200
+export type GetParents400Schema = z.infer<typeof getParents400Schema>
 
-export const getParentsQueryResponseSchema = z.lazy(() => getParents200Schema) as unknown as z.ZodType<GetParentsQueryResponse>
+/**
+ * @description Não autenticado
+ */
+export const getParents401Schema = z.lazy(() => problemDetailSchema)
 
-export type GetParentsQueryResponseSchema = GetParentsQueryResponse
+export type GetParents401Schema = z.infer<typeof getParents401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const getParents403Schema = z.lazy(() => problemDetailSchema)
+
+export type GetParents403Schema = z.infer<typeof getParents403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const getParents404Schema = z.lazy(() => problemDetailSchema)
+
+export type GetParents404Schema = z.infer<typeof getParents404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const getParents409Schema = z.lazy(() => problemDetailSchema)
+
+export type GetParents409Schema = z.infer<typeof getParents409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const getParents500Schema = z.lazy(() => problemDetailSchema)
+
+export type GetParents500Schema = z.infer<typeof getParents500Schema>
+
+export const getParentsQueryResponseSchema = z.any()
+
+export type GetParentsQueryResponseSchema = z.infer<typeof getParentsQueryResponseSchema>

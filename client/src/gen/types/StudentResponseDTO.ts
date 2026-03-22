@@ -3,18 +3,10 @@
 * Do not edit manually.
 */
 
+import type { AddressResponseDTO } from "./AddressResponseDTO.ts";
+import type { ParentResponseDTO } from "./ParentResponseDTO.ts";
 
-export const employeeResponseDTODutyEnum = {
-    TEACHER: "TEACHER",
-    ADM: "ADM",
-    THERAPIST: "THERAPIST",
-    MENTOR: "MENTOR",
-    SYSTEM: "SYSTEM"
-} as const;
-
-export type EmployeeResponseDTODutyEnumKey = (typeof employeeResponseDTODutyEnum)[keyof typeof employeeResponseDTODutyEnum];
-
-export type EmployeeResponseDTO = {
+export type StudentResponseDTO = {
     /**
      * @type string | undefined, uuid
     */
@@ -24,21 +16,9 @@ export type EmployeeResponseDTO = {
     */
     name?: string;
     /**
-     * @type string | undefined, date
-    */
-    birthdate?: string;
-    /**
-     * @type string | undefined
-    */
-    pix?: string;
-    /**
      * @type string | undefined
     */
     contact?: string;
-    /**
-     * @type string | undefined
-    */
-    cpf?: string;
     /**
      * @type string | undefined
     */
@@ -46,7 +26,27 @@ export type EmployeeResponseDTO = {
     /**
      * @type string | undefined
     */
-    duty?: EmployeeResponseDTODutyEnumKey;
+    cpf?: string;
+    /**
+     * @type string | undefined, date
+    */
+    birthdate?: string;
+    /**
+     * @type string | undefined
+    */
+    school?: string;
+    /**
+     * @type integer | undefined, int32
+    */
+    age?: number;
+    /**
+     * @type object | undefined
+    */
+    address?: AddressResponseDTO;
+    /**
+     * @type object | undefined
+    */
+    parent?: ParentResponseDTO;
     /**
      * @type string | undefined, date-time
     */

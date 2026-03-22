@@ -1,7 +1,5 @@
 import React, { useId } from "react";
 import { ChevronDown } from "lucide-react";
-import { useParentsListQuery } from "../query/useParentQueries";
-import type { ParentResponse } from "@/features/parents/schemas/parent";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useGetParentOptions } from "@/gen";
 
@@ -18,19 +16,15 @@ export function ParentSelectDropdown({
   disabled,
   hasError,
 }: ParentSelectDropdownProps) {
-  
-  const {
-    data: parentsList,
-    isLoading: isParentsListLoading,
-    error: parentsListQueryError,
-  } = useGetParentOptions();
+
+  const { data: parentOptions, isLoading: isLoadingParentOptions, error: parentOptionsError } = useGetParentOptions()
+
 
   const uniqueId = useId().replaceAll(":", "");
   const popoverId = `parents-list-${uniqueId}`;
   const anchorName = `--anchor-${uniqueId}`;
 
-  const selectedParent = parentsList?.find((p) => p.id === value);
-  const activeParents = parentsList?.filter((p) => p.archivedAt === null);
+  const selectedParent = parentOptions?.find((p) => p.id === value);
 
   return (
     <div className="flex flex-col gap-2">
@@ -38,11 +32,11 @@ export function ParentSelectDropdown({
         <button
           type="button"
           className={`btn w-full justify-between ${hasError ? "border-error" : ""}`}
-          disabled={disabled || isParentsListLoading}
+          disabled={disabled || isLoadingParentOptions}
           popoverTarget={popoverId}
           style={{ anchorName } as React.CSSProperties}
         >
-          {isParentsListLoading
+          {isLoadingParentOptions
             ? "Carregando responsáveis..."
             : selectedParent?.name || "Selecione o responsável"}
           <ChevronDown className="ml-auto" />
@@ -54,7 +48,7 @@ export function ParentSelectDropdown({
           id={popoverId}
           style={{ positionAnchor: anchorName } as React.CSSProperties}
         >
-          {activeParents?.map((parent: ParentResponse) => (
+          {parentOptions?.map((parent: any) => (
             <li key={parent.id}>
               <button
                 type="button"
@@ -69,7 +63,7 @@ export function ParentSelectDropdown({
               </button>
             </li>
           ))}
-          {activeParents?.length === 0 && (
+          {parentOptions?.length === 0 && (
             <li className="disabled">
               <span className="opacity-50 px-4 py-2">
                 Nenhum responsável encontrado
@@ -79,9 +73,9 @@ export function ParentSelectDropdown({
         </ul>
       </div>
 
-      {parentsListQueryError && (
+      {parentOptionsError && (
         <p className="text-xs text-error">
-          {getFriendlyErrorMessage(parentsListQueryError)}
+          {getFriendlyErrorMessage(parentOptionsError)}
         </p>
       )}
     </div>

@@ -3,16 +3,41 @@
 * Do not edit manually.
 */
 
-import type { ParentOptionDTO } from "../ParentOptionDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type GetParentOptions200 = ParentOptionDTO[];
+export type GetParentOptions400 = ProblemDetail;
 
-export type GetParentOptionsQueryResponse = GetParentOptions200;
+/**
+ * @description Não autenticado
+*/
+export type GetParentOptions401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetParentOptions403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type GetParentOptions404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type GetParentOptions409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type GetParentOptions500 = ProblemDetail;
+
+export type GetParentOptionsQueryResponse = any;
 
 export type GetParentOptionsQuery = {
-    Response: GetParentOptions200;
-    Errors: any;
+    Response: any;
+    Errors: GetParentOptions400 | GetParentOptions401 | GetParentOptions403 | GetParentOptions404 | GetParentOptions409 | GetParentOptions500;
 };

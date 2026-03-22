@@ -11,10 +11,10 @@ import { EventsTable } from "@/features/events/components/EventsTable";
 import styles from "@/features/students/StudentDetailPage.module.css";
 import { formatDateShortYear } from "@/lib/utils/formatter";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { useStudentDetailQuery } from "./query/useStudentQueries";
 import { EditStudentButton } from "./components/EditStudentButton";
 import { ArchiveStudentButton } from "./components/ArchiveStudentButton";
 import { DeleteStudentButton } from "./components/DeleteStudentButton";
+import { useGetStudentById } from "@/gen";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +26,7 @@ export function StudentDetailPage() {
     isLoading: isStudentLoading,
     error: studentError,
     isFetched: isStudentFetched,
-  } = useStudentDetailQuery(studentId);
+  } = useGetStudentById(studentId);
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: student?.name },

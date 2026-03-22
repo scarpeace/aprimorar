@@ -3,22 +3,57 @@
 * Do not edit manually.
 */
 
-import type { ArchiveEmployee200, ArchiveEmployeeMutationResponse, ArchiveEmployeePathParams } from "../../types/employee/ArchiveEmployee.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const archiveEmployeePathParamsSchema = z.object({
     "employeeId": z.uuid()
-    }) as unknown as z.ZodType<ArchiveEmployeePathParams>
+    })
 
-export type ArchiveEmployeePathParamsSchema = ArchiveEmployeePathParams
+export type ArchiveEmployeePathParamsSchema = z.infer<typeof archiveEmployeePathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const archiveEmployee200Schema = z.any() as unknown as z.ZodType<ArchiveEmployee200>
+export const archiveEmployee400Schema = z.lazy(() => problemDetailSchema)
 
-export type ArchiveEmployee200Schema = ArchiveEmployee200
+export type ArchiveEmployee400Schema = z.infer<typeof archiveEmployee400Schema>
 
-export const archiveEmployeeMutationResponseSchema = z.lazy(() => archiveEmployee200Schema) as unknown as z.ZodType<ArchiveEmployeeMutationResponse>
+/**
+ * @description Não autenticado
+ */
+export const archiveEmployee401Schema = z.lazy(() => problemDetailSchema)
 
-export type ArchiveEmployeeMutationResponseSchema = ArchiveEmployeeMutationResponse
+export type ArchiveEmployee401Schema = z.infer<typeof archiveEmployee401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const archiveEmployee403Schema = z.lazy(() => problemDetailSchema)
+
+export type ArchiveEmployee403Schema = z.infer<typeof archiveEmployee403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const archiveEmployee404Schema = z.lazy(() => problemDetailSchema)
+
+export type ArchiveEmployee404Schema = z.infer<typeof archiveEmployee404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const archiveEmployee409Schema = z.lazy(() => problemDetailSchema)
+
+export type ArchiveEmployee409Schema = z.infer<typeof archiveEmployee409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const archiveEmployee500Schema = z.lazy(() => problemDetailSchema)
+
+export type ArchiveEmployee500Schema = z.infer<typeof archiveEmployee500Schema>
+
+export const archiveEmployeeMutationResponseSchema = z.any()
+
+export type ArchiveEmployeeMutationResponseSchema = z.infer<typeof archiveEmployeeMutationResponseSchema>

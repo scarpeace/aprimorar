@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetStudentByIdQueryResponse, GetStudentByIdPathParams, GetStudentById400, GetStudentById404, GetStudentById409, GetStudentById500 } from "../../types/student/GetStudentById.ts";
+import type { GetStudentByIdQueryResponse, GetStudentByIdPathParams, GetStudentById400, GetStudentById401, GetStudentById403, GetStudentById404, GetStudentById409, GetStudentById500 } from "../../types/student/GetStudentById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { getStudentByIdQueryResponseSchema } from "../../schemas/student/getStudentByIdSchema.ts";
@@ -24,14 +24,14 @@ export async function getStudentById(studentId: GetStudentByIdPathParams["studen
 
 
 
-  const res = await request<GetStudentByIdQueryResponse, ResponseErrorConfig<GetStudentById400 | GetStudentById404 | GetStudentById409 | GetStudentById500>, unknown>({ method : "GET", url : `/v1/students/${studentId}`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<GetStudentByIdQueryResponse, ResponseErrorConfig<GetStudentById400 | GetStudentById401 | GetStudentById403 | GetStudentById404 | GetStudentById409 | GetStudentById500>, unknown>({ method : "GET", url : `/v1/students/${studentId}`, baseURL : `http://localhost:8080`, ... requestConfig })
   return getStudentByIdQueryResponseSchema.parse(res.data)
 }
 
 export function getStudentByIdQueryOptions(studentId: GetStudentByIdPathParams["studentId"], config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getStudentByIdQueryKey(studentId)
-        return queryOptions<GetStudentByIdQueryResponse, ResponseErrorConfig<GetStudentById400 | GetStudentById404 | GetStudentById409 | GetStudentById500>, GetStudentByIdQueryResponse, typeof queryKey>({
+        return queryOptions<GetStudentByIdQueryResponse, ResponseErrorConfig<GetStudentById400 | GetStudentById401 | GetStudentById403 | GetStudentById404 | GetStudentById409 | GetStudentById500>, GetStudentByIdQueryResponse, typeof queryKey>({
          enabled: !!(studentId),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -48,7 +48,7 @@ export function getStudentByIdQueryOptions(studentId: GetStudentByIdPathParams["
  */
 export function useGetStudentById<TData = GetStudentByIdQueryResponse, TQueryData = GetStudentByIdQueryResponse, TQueryKey extends QueryKey = GetStudentByIdQueryKey>(studentId: GetStudentByIdPathParams["studentId"], options: 
 {
-  query?: Partial<QueryObserverOptions<GetStudentByIdQueryResponse, ResponseErrorConfig<GetStudentById400 | GetStudentById404 | GetStudentById409 | GetStudentById500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetStudentByIdQueryResponse, ResponseErrorConfig<GetStudentById400 | GetStudentById401 | GetStudentById403 | GetStudentById404 | GetStudentById409 | GetStudentById500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -62,7 +62,7 @@ export function useGetStudentById<TData = GetStudentByIdQueryResponse, TQueryDat
           ...getStudentByIdQueryOptions(studentId, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetStudentById400 | GetStudentById404 | GetStudentById409 | GetStudentById500>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetStudentById400 | GetStudentById401 | GetStudentById403 | GetStudentById404 | GetStudentById409 | GetStudentById500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

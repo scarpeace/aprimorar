@@ -18,16 +18,16 @@ export default defineConfig({
 
     pluginTs({
       output: { path: './types' },
-       group: {
-         type: 'tag',
-         name: ({ group }) => group.toLowerCase(),
-       },
+      group: {
+        type: 'tag',
+        name: ({ group }) => group.toLowerCase(),
+      },
     }),
 
     pluginZod({
       output: { path: './schemas' },
       version: '4',
-      typed: true,
+      typed: false,
       inferred: true,
       group: {
         type: 'tag',
@@ -37,7 +37,7 @@ export default defineConfig({
 
     pluginReactQuery({
       //Quando for implementar a autenticação te que tirar essa BaseURl daqui.
-      client: {baseURL: 'http://localhost:8080'},
+      client: { baseURL: 'http://localhost:8080' },
       output: { path: './hooks' },
       group: {
         type: 'tag',

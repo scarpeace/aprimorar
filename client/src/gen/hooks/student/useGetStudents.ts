@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetStudentsQueryResponse, GetStudentsQueryParams, GetStudents400, GetStudents404, GetStudents409, GetStudents500 } from "../../types/student/GetStudents.ts";
+import type { GetStudentsQueryResponse, GetStudentsQueryParams, GetStudents400, GetStudents401, GetStudents403, GetStudents404, GetStudents409, GetStudents500 } from "../../types/student/GetStudents.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { getStudentsQueryResponseSchema } from "../../schemas/student/getStudentsSchema.ts";
@@ -16,7 +16,7 @@ export type GetStudentsQueryKey = ReturnType<typeof getStudentsQueryKey>
 
 /**
  * @description Retorna todos os alunos do banco de dados com paginação.
- * @summary Listar alunos
+ * @summary Listar alunos com paginação
  * {@link /v1/students}
  */
 export async function getStudents(params: GetStudentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
@@ -24,14 +24,14 @@ export async function getStudents(params: GetStudentsQueryParams, config: Partia
 
 
 
-  const res = await request<GetStudentsQueryResponse, ResponseErrorConfig<GetStudents400 | GetStudents404 | GetStudents409 | GetStudents500>, unknown>({ method : "GET", url : `/v1/students`, baseURL : `http://localhost:8080`, params, ... requestConfig })
+  const res = await request<GetStudentsQueryResponse, ResponseErrorConfig<GetStudents400 | GetStudents401 | GetStudents403 | GetStudents404 | GetStudents409 | GetStudents500>, unknown>({ method : "GET", url : `/v1/students`, baseURL : `http://localhost:8080`, params, ... requestConfig })
   return getStudentsQueryResponseSchema.parse(res.data)
 }
 
 export function getStudentsQueryOptions(params: GetStudentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getStudentsQueryKey(params)
-        return queryOptions<GetStudentsQueryResponse, ResponseErrorConfig<GetStudents400 | GetStudents404 | GetStudents409 | GetStudents500>, GetStudentsQueryResponse, typeof queryKey>({
+        return queryOptions<GetStudentsQueryResponse, ResponseErrorConfig<GetStudents400 | GetStudents401 | GetStudents403 | GetStudents404 | GetStudents409 | GetStudents500>, GetStudentsQueryResponse, typeof queryKey>({
          enabled: !!(params),
          queryKey,
          queryFn: async ({ signal }) => {
@@ -43,12 +43,12 @@ export function getStudentsQueryOptions(params: GetStudentsQueryParams, config: 
 
 /**
  * @description Retorna todos os alunos do banco de dados com paginação.
- * @summary Listar alunos
+ * @summary Listar alunos com paginação
  * {@link /v1/students}
  */
 export function useGetStudents<TData = GetStudentsQueryResponse, TQueryData = GetStudentsQueryResponse, TQueryKey extends QueryKey = GetStudentsQueryKey>(params: GetStudentsQueryParams, options: 
 {
-  query?: Partial<QueryObserverOptions<GetStudentsQueryResponse, ResponseErrorConfig<GetStudents400 | GetStudents404 | GetStudents409 | GetStudents500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetStudentsQueryResponse, ResponseErrorConfig<GetStudents400 | GetStudents401 | GetStudents403 | GetStudents404 | GetStudents409 | GetStudents500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -62,7 +62,7 @@ export function useGetStudents<TData = GetStudentsQueryResponse, TQueryData = Ge
           ...getStudentsQueryOptions(params, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetStudents400 | GetStudents404 | GetStudents409 | GetStudents500>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetStudents400 | GetStudents401 | GetStudents403 | GetStudents404 | GetStudents409 | GetStudents500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

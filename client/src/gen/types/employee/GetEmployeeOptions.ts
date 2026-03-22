@@ -3,16 +3,41 @@
 * Do not edit manually.
 */
 
-import type { EmployeeOptionDTO } from "../EmployeeOptionDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type GetEmployeeOptions200 = EmployeeOptionDTO[];
+export type GetEmployeeOptions400 = ProblemDetail;
 
-export type GetEmployeeOptionsQueryResponse = GetEmployeeOptions200;
+/**
+ * @description Não autenticado
+*/
+export type GetEmployeeOptions401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetEmployeeOptions403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type GetEmployeeOptions404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type GetEmployeeOptions409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type GetEmployeeOptions500 = ProblemDetail;
+
+export type GetEmployeeOptionsQueryResponse = any;
 
 export type GetEmployeeOptionsQuery = {
-    Response: GetEmployeeOptions200;
-    Errors: any;
+    Response: any;
+    Errors: GetEmployeeOptions400 | GetEmployeeOptions401 | GetEmployeeOptions403 | GetEmployeeOptions404 | GetEmployeeOptions409 | GetEmployeeOptions500;
 };

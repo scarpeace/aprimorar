@@ -3,22 +3,57 @@
 * Do not edit manually.
 */
 
-import type { DeleteEvent200, DeleteEventMutationResponse, DeleteEventPathParams } from "../../types/event/DeleteEvent.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const deleteEventPathParamsSchema = z.object({
     "eventId": z.uuid()
-    }) as unknown as z.ZodType<DeleteEventPathParams>
+    })
 
-export type DeleteEventPathParamsSchema = DeleteEventPathParams
+export type DeleteEventPathParamsSchema = z.infer<typeof deleteEventPathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const deleteEvent200Schema = z.any() as unknown as z.ZodType<DeleteEvent200>
+export const deleteEvent400Schema = z.lazy(() => problemDetailSchema)
 
-export type DeleteEvent200Schema = DeleteEvent200
+export type DeleteEvent400Schema = z.infer<typeof deleteEvent400Schema>
 
-export const deleteEventMutationResponseSchema = z.lazy(() => deleteEvent200Schema) as unknown as z.ZodType<DeleteEventMutationResponse>
+/**
+ * @description Não autenticado
+ */
+export const deleteEvent401Schema = z.lazy(() => problemDetailSchema)
 
-export type DeleteEventMutationResponseSchema = DeleteEventMutationResponse
+export type DeleteEvent401Schema = z.infer<typeof deleteEvent401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const deleteEvent403Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteEvent403Schema = z.infer<typeof deleteEvent403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const deleteEvent404Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteEvent404Schema = z.infer<typeof deleteEvent404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const deleteEvent409Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteEvent409Schema = z.infer<typeof deleteEvent409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const deleteEvent500Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteEvent500Schema = z.infer<typeof deleteEvent500Schema>
+
+export const deleteEventMutationResponseSchema = z.any()
+
+export type DeleteEventMutationResponseSchema = z.infer<typeof deleteEventMutationResponseSchema>

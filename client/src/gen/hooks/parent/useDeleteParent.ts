@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { DeleteParentMutationResponse, DeleteParentPathParams } from "../../types/parent/DeleteParent.ts";
+import type { DeleteParentMutationResponse, DeleteParentPathParams, DeleteParent400, DeleteParent401, DeleteParent403, DeleteParent404, DeleteParent409, DeleteParent500 } from "../../types/parent/DeleteParent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { deleteParentMutationResponseSchema } from "../../schemas/parent/deleteParentSchema.ts";
@@ -24,14 +24,14 @@ export async function deleteParent(parentId: DeleteParentPathParams["parentId"],
 
 
 
-  const res = await request<DeleteParentMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "DELETE", url : `/v1/parents/${parentId}`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<DeleteParentMutationResponse, ResponseErrorConfig<DeleteParent400 | DeleteParent401 | DeleteParent403 | DeleteParent404 | DeleteParent409 | DeleteParent500>, unknown>({ method : "DELETE", url : `/v1/parents/${parentId}`, baseURL : `http://localhost:8080`, ... requestConfig })
   return deleteParentMutationResponseSchema.parse(res.data)
 }
 
 export function deleteParentMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const mutationKey = deleteParentMutationKey()
-        return mutationOptions<DeleteParentMutationResponse, ResponseErrorConfig<Error>, {parentId: DeleteParentPathParams["parentId"]}, TContext>({
+        return mutationOptions<DeleteParentMutationResponse, ResponseErrorConfig<DeleteParent400 | DeleteParent401 | DeleteParent403 | DeleteParent404 | DeleteParent409 | DeleteParent500>, {parentId: DeleteParentPathParams["parentId"]}, TContext>({
           mutationKey,
           mutationFn: async({ parentId }) => {
             return deleteParent(parentId, config)
@@ -47,7 +47,7 @@ export function deleteParentMutationOptions<TContext = unknown>(config: Partial<
  */
 export function useDeleteParent<TContext>(options: 
 {
-  mutation?: UseMutationOptions<DeleteParentMutationResponse, ResponseErrorConfig<Error>, {parentId: DeleteParentPathParams["parentId"]}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<DeleteParentMutationResponse, ResponseErrorConfig<DeleteParent400 | DeleteParent401 | DeleteParent403 | DeleteParent404 | DeleteParent409 | DeleteParent500>, {parentId: DeleteParentPathParams["parentId"]}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useDeleteParent<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? deleteParentMutationKey()
 
-          const baseOptions = deleteParentMutationOptions(config) as UseMutationOptions<DeleteParentMutationResponse, ResponseErrorConfig<Error>, {parentId: DeleteParentPathParams["parentId"]}, TContext>
+          const baseOptions = deleteParentMutationOptions(config) as UseMutationOptions<DeleteParentMutationResponse, ResponseErrorConfig<DeleteParent400 | DeleteParent401 | DeleteParent403 | DeleteParent404 | DeleteParent409 | DeleteParent500>, {parentId: DeleteParentPathParams["parentId"]}, TContext>
           
 
-          return useMutation<DeleteParentMutationResponse, ResponseErrorConfig<Error>, {parentId: DeleteParentPathParams["parentId"]}, TContext>({
+          return useMutation<DeleteParentMutationResponse, ResponseErrorConfig<DeleteParent400 | DeleteParent401 | DeleteParent403 | DeleteParent404 | DeleteParent409 | DeleteParent500>, {parentId: DeleteParentPathParams["parentId"]}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<DeleteParentMutationResponse, ResponseErrorConfig<Error>, {parentId: DeleteParentPathParams["parentId"]}, TContext>
+          }, queryClient) as UseMutationResult<DeleteParentMutationResponse, ResponseErrorConfig<DeleteParent400 | DeleteParent401 | DeleteParent403 | DeleteParent404 | DeleteParent409 | DeleteParent500>, {parentId: DeleteParentPathParams["parentId"]}, TContext>
       
 }

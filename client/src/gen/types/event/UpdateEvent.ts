@@ -4,7 +4,7 @@
 */
 
 import type { EventRequestDTO } from "../EventRequestDTO.ts";
-import type { EventResponseDTO } from "../EventResponseDTO.ts";
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type UpdateEventPathParams = {
     /**
@@ -14,17 +14,42 @@ export type UpdateEventPathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type UpdateEvent200 = EventResponseDTO;
+export type UpdateEvent400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type UpdateEvent401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type UpdateEvent403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type UpdateEvent404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type UpdateEvent409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type UpdateEvent500 = ProblemDetail;
 
 export type UpdateEventMutationRequest = EventRequestDTO;
 
-export type UpdateEventMutationResponse = UpdateEvent200;
+export type UpdateEventMutationResponse = any;
 
 export type UpdateEventMutation = {
-    Response: UpdateEvent200;
+    Response: any;
     Request: UpdateEventMutationRequest;
     PathParams: UpdateEventPathParams;
-    Errors: any;
+    Errors: UpdateEvent400 | UpdateEvent401 | UpdateEvent403 | UpdateEvent404 | UpdateEvent409 | UpdateEvent500;
 };

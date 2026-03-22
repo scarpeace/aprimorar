@@ -4,23 +4,41 @@
 */
 
 import type { Pageable } from "../Pageable.ts";
+import type { PagedModelStudentResponseDTO } from "../PagedModelStudentResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetStudentsQueryParams = {
     /**
+     * @description Página com informações de paginação
      * @type object
     */
     pageable: Pageable;
     /**
+     * @description Termo de busca
      * @type string | undefined
     */
     search?: string;
 };
 
 /**
- * @description Bad Request
+ * @description OK
+*/
+export type GetStudents200 = PagedModelStudentResponseDTO;
+
+/**
+ * @description Requisição inválida (erro de validação)
 */
 export type GetStudents400 = ProblemDetail;
+
+/**
+ * @description Não autenticado
+*/
+export type GetStudents401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type GetStudents403 = ProblemDetail;
 
 /**
  * @description Recurso não encontrado
@@ -28,19 +46,19 @@ export type GetStudents400 = ProblemDetail;
 export type GetStudents404 = ProblemDetail;
 
 /**
- * @description Conflito de negócio
+ * @description Conflito de regra de negócio
 */
 export type GetStudents409 = ProblemDetail;
 
 /**
- * @description Internal Server Error
+ * @description Erro interno do servidor
 */
 export type GetStudents500 = ProblemDetail;
 
-export type GetStudentsQueryResponse = any;
+export type GetStudentsQueryResponse = GetStudents200;
 
 export type GetStudentsQuery = {
-    Response: any;
+    Response: GetStudents200;
     QueryParams: GetStudentsQueryParams;
-    Errors: GetStudents400 | GetStudents404 | GetStudents409 | GetStudents500;
+    Errors: GetStudents400 | GetStudents401 | GetStudents403 | GetStudents404 | GetStudents409 | GetStudents500;
 };

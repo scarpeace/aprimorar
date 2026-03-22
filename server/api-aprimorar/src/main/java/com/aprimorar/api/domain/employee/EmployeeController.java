@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.annotations.ErrorResponsesAnnotation;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
@@ -33,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/v1/employees")
 @Tag(name = "Employee", description = "Employee management APIs")
+@ErrorResponsesAnnotation
 public class EmployeeController {
 
     private final EmployeeService employeeService;

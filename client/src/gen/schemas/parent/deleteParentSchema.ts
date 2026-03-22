@@ -3,22 +3,57 @@
 * Do not edit manually.
 */
 
-import type { DeleteParent200, DeleteParentMutationResponse, DeleteParentPathParams } from "../../types/parent/DeleteParent.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const deleteParentPathParamsSchema = z.object({
     "parentId": z.uuid()
-    }) as unknown as z.ZodType<DeleteParentPathParams>
+    })
 
-export type DeleteParentPathParamsSchema = DeleteParentPathParams
+export type DeleteParentPathParamsSchema = z.infer<typeof deleteParentPathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const deleteParent200Schema = z.any() as unknown as z.ZodType<DeleteParent200>
+export const deleteParent400Schema = z.lazy(() => problemDetailSchema)
 
-export type DeleteParent200Schema = DeleteParent200
+export type DeleteParent400Schema = z.infer<typeof deleteParent400Schema>
 
-export const deleteParentMutationResponseSchema = z.lazy(() => deleteParent200Schema) as unknown as z.ZodType<DeleteParentMutationResponse>
+/**
+ * @description Não autenticado
+ */
+export const deleteParent401Schema = z.lazy(() => problemDetailSchema)
 
-export type DeleteParentMutationResponseSchema = DeleteParentMutationResponse
+export type DeleteParent401Schema = z.infer<typeof deleteParent401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const deleteParent403Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteParent403Schema = z.infer<typeof deleteParent403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const deleteParent404Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteParent404Schema = z.infer<typeof deleteParent404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const deleteParent409Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteParent409Schema = z.infer<typeof deleteParent409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const deleteParent500Schema = z.lazy(() => problemDetailSchema)
+
+export type DeleteParent500Schema = z.infer<typeof deleteParent500Schema>
+
+export const deleteParentMutationResponseSchema = z.any()
+
+export type DeleteParentMutationResponseSchema = z.infer<typeof deleteParentMutationResponseSchema>

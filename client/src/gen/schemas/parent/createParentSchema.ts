@@ -3,22 +3,56 @@
 * Do not edit manually.
 */
 
-import type { CreateParent200, CreateParentMutationRequest, CreateParentMutationResponse } from "../../types/parent/CreateParent.ts";
 import { parentRequestDTOSchema } from "../parentRequestDTOSchema.ts";
-import { parentResponseDTOSchema } from "../parentResponseDTOSchema.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const createParent200Schema = z.lazy(() => parentResponseDTOSchema) as unknown as z.ZodType<CreateParent200>
+export const createParent400Schema = z.lazy(() => problemDetailSchema)
 
-export type CreateParent200Schema = CreateParent200
+export type CreateParent400Schema = z.infer<typeof createParent400Schema>
 
-export const createParentMutationRequestSchema = z.lazy(() => parentRequestDTOSchema) as unknown as z.ZodType<CreateParentMutationRequest>
+/**
+ * @description Não autenticado
+ */
+export const createParent401Schema = z.lazy(() => problemDetailSchema)
 
-export type CreateParentMutationRequestSchema = CreateParentMutationRequest
+export type CreateParent401Schema = z.infer<typeof createParent401Schema>
 
-export const createParentMutationResponseSchema = z.lazy(() => createParent200Schema) as unknown as z.ZodType<CreateParentMutationResponse>
+/**
+ * @description Acesso negado
+ */
+export const createParent403Schema = z.lazy(() => problemDetailSchema)
 
-export type CreateParentMutationResponseSchema = CreateParentMutationResponse
+export type CreateParent403Schema = z.infer<typeof createParent403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const createParent404Schema = z.lazy(() => problemDetailSchema)
+
+export type CreateParent404Schema = z.infer<typeof createParent404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const createParent409Schema = z.lazy(() => problemDetailSchema)
+
+export type CreateParent409Schema = z.infer<typeof createParent409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const createParent500Schema = z.lazy(() => problemDetailSchema)
+
+export type CreateParent500Schema = z.infer<typeof createParent500Schema>
+
+export const createParentMutationRequestSchema = z.lazy(() => parentRequestDTOSchema)
+
+export type CreateParentMutationRequestSchema = z.infer<typeof createParentMutationRequestSchema>
+
+export const createParentMutationResponseSchema = z.any()
+
+export type CreateParentMutationResponseSchema = z.infer<typeof createParentMutationResponseSchema>

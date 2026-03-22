@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { CreateParentMutationRequest, CreateParentMutationResponse } from "../../types/parent/CreateParent.ts";
+import type { CreateParentMutationRequest, CreateParentMutationResponse, CreateParent400, CreateParent401, CreateParent403, CreateParent404, CreateParent409, CreateParent500 } from "../../types/parent/CreateParent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { createParentMutationResponseSchema, createParentMutationRequestSchema } from "../../schemas/parent/createParentSchema.ts";
@@ -24,14 +24,14 @@ export async function createParent(data: CreateParentMutationRequest, config: Pa
 
   const requestData = createParentMutationRequestSchema.parse(data)
 
-  const res = await request<CreateParentMutationResponse, ResponseErrorConfig<Error>, CreateParentMutationRequest>({ method : "POST", url : `/v1/parents`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
+  const res = await request<CreateParentMutationResponse, ResponseErrorConfig<CreateParent400 | CreateParent401 | CreateParent403 | CreateParent404 | CreateParent409 | CreateParent500>, CreateParentMutationRequest>({ method : "POST", url : `/v1/parents`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
   return createParentMutationResponseSchema.parse(res.data)
 }
 
 export function createParentMutationOptions<TContext = unknown>(config: Partial<RequestConfig<CreateParentMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = createParentMutationKey()
-        return mutationOptions<CreateParentMutationResponse, ResponseErrorConfig<Error>, {data: CreateParentMutationRequest}, TContext>({
+        return mutationOptions<CreateParentMutationResponse, ResponseErrorConfig<CreateParent400 | CreateParent401 | CreateParent403 | CreateParent404 | CreateParent409 | CreateParent500>, {data: CreateParentMutationRequest}, TContext>({
           mutationKey,
           mutationFn: async({ data }) => {
             return createParent(data, config)
@@ -47,7 +47,7 @@ export function createParentMutationOptions<TContext = unknown>(config: Partial<
  */
 export function useCreateParent<TContext>(options: 
 {
-  mutation?: UseMutationOptions<CreateParentMutationResponse, ResponseErrorConfig<Error>, {data: CreateParentMutationRequest}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<CreateParentMutationResponse, ResponseErrorConfig<CreateParent400 | CreateParent401 | CreateParent403 | CreateParent404 | CreateParent409 | CreateParent500>, {data: CreateParentMutationRequest}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig<CreateParentMutationRequest>> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useCreateParent<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? createParentMutationKey()
 
-          const baseOptions = createParentMutationOptions(config) as UseMutationOptions<CreateParentMutationResponse, ResponseErrorConfig<Error>, {data: CreateParentMutationRequest}, TContext>
+          const baseOptions = createParentMutationOptions(config) as UseMutationOptions<CreateParentMutationResponse, ResponseErrorConfig<CreateParent400 | CreateParent401 | CreateParent403 | CreateParent404 | CreateParent409 | CreateParent500>, {data: CreateParentMutationRequest}, TContext>
           
 
-          return useMutation<CreateParentMutationResponse, ResponseErrorConfig<Error>, {data: CreateParentMutationRequest}, TContext>({
+          return useMutation<CreateParentMutationResponse, ResponseErrorConfig<CreateParent400 | CreateParent401 | CreateParent403 | CreateParent404 | CreateParent409 | CreateParent500>, {data: CreateParentMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<CreateParentMutationResponse, ResponseErrorConfig<Error>, {data: CreateParentMutationRequest}, TContext>
+          }, queryClient) as UseMutationResult<CreateParentMutationResponse, ResponseErrorConfig<CreateParent400 | CreateParent401 | CreateParent403 | CreateParent404 | CreateParent409 | CreateParent500>, {data: CreateParentMutationRequest}, TContext>
       
 }

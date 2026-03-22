@@ -15,37 +15,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @ApiResponses({
-    @ApiResponse(
-        responseCode = "400",
-        description = "Bad Request",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = ProblemDetail.class)
-        )
-    ),
-     @ApiResponse(
-        responseCode = "404",
-        description = "Recurso não encontrado",
-        content = @Content(
-            schema = @Schema(implementation = ProblemDetail.class),
-            mediaType = "application/json"
-            )
-    ),
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de negócio",
-        content = @Content(
-            schema = @Schema(implementation = ProblemDetail.class),
-            mediaType = "application/json"
-            )
-    ),
-    @ApiResponse(
-        responseCode = "500",
-        description = "Internal Server Error",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = ProblemDetail.class)
-        )
-    )
+    @ApiResponse(responseCode = "400", description = "Requisição inválida (erro de validação)", 
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+    @ApiResponse(responseCode = "401", description = "Não autenticado", 
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+    @ApiResponse(responseCode = "403", description = "Acesso negado", 
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+    @ApiResponse(responseCode = "404", description = "Recurso não encontrado", 
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+    @ApiResponse(responseCode = "409", description = "Conflito de regra de negócio", 
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
+    @ApiResponse(responseCode = "500", description = "Erro interno do servidor", 
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
 })
 public @interface ErrorResponsesAnnotation {}

@@ -3,13 +3,12 @@
 * Do not edit manually.
 */
 
-import type { ClassesByContentDTO } from "../types/ClassesByContentDTO.ts";
 import { z } from "zod/v4";
 
 export const classesByContentDTOSchema = z.object({
     "content": z.optional(z.string()),
 "count": z.optional(z.int()),
 "percentage": z.optional(z.number())
-    }) as unknown as z.ZodType<ClassesByContentDTO>
+    })
 
-export type ClassesByContentDTOSchema = ClassesByContentDTO
+export type ClassesByContentDTOSchema = z.infer<typeof classesByContentDTOSchema>

@@ -3,28 +3,62 @@
 * Do not edit manually.
 */
 
-import type { UpdateParent200, UpdateParentMutationRequest, UpdateParentMutationResponse, UpdateParentPathParams } from "../../types/parent/UpdateParent.ts";
 import { parentRequestDTOSchema } from "../parentRequestDTOSchema.ts";
-import { parentResponseDTOSchema } from "../parentResponseDTOSchema.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const updateParentPathParamsSchema = z.object({
     "parentId": z.uuid()
-    }) as unknown as z.ZodType<UpdateParentPathParams>
+    })
 
-export type UpdateParentPathParamsSchema = UpdateParentPathParams
+export type UpdateParentPathParamsSchema = z.infer<typeof updateParentPathParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const updateParent200Schema = z.lazy(() => parentResponseDTOSchema) as unknown as z.ZodType<UpdateParent200>
+export const updateParent400Schema = z.lazy(() => problemDetailSchema)
 
-export type UpdateParent200Schema = UpdateParent200
+export type UpdateParent400Schema = z.infer<typeof updateParent400Schema>
 
-export const updateParentMutationRequestSchema = z.lazy(() => parentRequestDTOSchema) as unknown as z.ZodType<UpdateParentMutationRequest>
+/**
+ * @description Não autenticado
+ */
+export const updateParent401Schema = z.lazy(() => problemDetailSchema)
 
-export type UpdateParentMutationRequestSchema = UpdateParentMutationRequest
+export type UpdateParent401Schema = z.infer<typeof updateParent401Schema>
 
-export const updateParentMutationResponseSchema = z.lazy(() => updateParent200Schema) as unknown as z.ZodType<UpdateParentMutationResponse>
+/**
+ * @description Acesso negado
+ */
+export const updateParent403Schema = z.lazy(() => problemDetailSchema)
 
-export type UpdateParentMutationResponseSchema = UpdateParentMutationResponse
+export type UpdateParent403Schema = z.infer<typeof updateParent403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const updateParent404Schema = z.lazy(() => problemDetailSchema)
+
+export type UpdateParent404Schema = z.infer<typeof updateParent404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const updateParent409Schema = z.lazy(() => problemDetailSchema)
+
+export type UpdateParent409Schema = z.infer<typeof updateParent409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const updateParent500Schema = z.lazy(() => problemDetailSchema)
+
+export type UpdateParent500Schema = z.infer<typeof updateParent500Schema>
+
+export const updateParentMutationRequestSchema = z.lazy(() => parentRequestDTOSchema)
+
+export type UpdateParentMutationRequestSchema = z.infer<typeof updateParentMutationRequestSchema>
+
+export const updateParentMutationResponseSchema = z.any()
+
+export type UpdateParentMutationResponseSchema = z.infer<typeof updateParentMutationResponseSchema>

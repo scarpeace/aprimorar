@@ -9,8 +9,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.annotations.ErrorResponsesAnnotation;
 import com.aprimorar.api.domain.event.dto.EventRequestDTO;
 import com.aprimorar.api.domain.event.dto.EventResponseDTO;
 
@@ -23,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/v1/events")
 @Tag(name = "Event", description = "Event management APIs")
+@ErrorResponsesAnnotation
 public class EventController {
 
     private final EventService eventService;
@@ -70,12 +80,12 @@ public class EventController {
     }
 
     @Operation(
-        operationId = "getEventsByEmployeeId",
+        operationId = "getEventsByEmployee",
         summary = "Listar eventos por funcionário",
         description = "Retorna todos os eventos de um único funcionário com base no ID fornecido."
     )
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<Page<EventResponseDTO>> getEventsByEmployeeId(
+    public ResponseEntity<Page<EventResponseDTO>> getEventsByEmployee(
         @ParameterObject @PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable,
         @PathVariable UUID employeeId) {
 
@@ -84,12 +94,12 @@ public class EventController {
     }
 
     @Operation(
-        operationId = "getEventsByStudentId",
+        operationId = "getEventsByStudent",
         summary = "Listar eventos por aluno",
         description = "Retorna todos os eventos de um único aluno com base no ID fornecido."
     )
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<Page<EventResponseDTO>> getEventsByStudentId(@ParameterObject @PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID studentId) {
+    public ResponseEntity<Page<EventResponseDTO>> getEventsByStudent(@ParameterObject @PageableDefault(page = 0, size = 20, sort = "startDate", direction = Sort.Direction.ASC) Pageable pageable, @PathVariable UUID studentId) {
 
         Page<EventResponseDTO> events = eventService.getEventsByStudentId(pageable, studentId);
         return ResponseEntity.ok(events);

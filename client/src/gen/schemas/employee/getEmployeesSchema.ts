@@ -3,8 +3,7 @@
 * Do not edit manually.
 */
 
-import type { GetEmployees200, GetEmployeesQueryParams, GetEmployeesQueryResponse } from "../../types/employee/GetEmployees.ts";
-import { pagedModelEmployeeResponseDTOSchema } from "../pagedModelEmployeeResponseDTOSchema.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getEmployeesQueryParamsSchema = z.object({
@@ -12,17 +11,52 @@ export const getEmployeesQueryParamsSchema = z.object({
 "size": z.coerce.number().int().min(1).default(20).describe("The size of the page to be returned"),
 "sort": z.array(z.string()).describe("Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported."),
 "search": z.optional(z.string())
-    }) as unknown as z.ZodType<GetEmployeesQueryParams>
+    })
 
-export type GetEmployeesQueryParamsSchema = GetEmployeesQueryParams
+export type GetEmployeesQueryParamsSchema = z.infer<typeof getEmployeesQueryParamsSchema>
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const getEmployees200Schema = z.lazy(() => pagedModelEmployeeResponseDTOSchema) as unknown as z.ZodType<GetEmployees200>
+export const getEmployees400Schema = z.lazy(() => problemDetailSchema)
 
-export type GetEmployees200Schema = GetEmployees200
+export type GetEmployees400Schema = z.infer<typeof getEmployees400Schema>
 
-export const getEmployeesQueryResponseSchema = z.lazy(() => getEmployees200Schema) as unknown as z.ZodType<GetEmployeesQueryResponse>
+/**
+ * @description Não autenticado
+ */
+export const getEmployees401Schema = z.lazy(() => problemDetailSchema)
 
-export type GetEmployeesQueryResponseSchema = GetEmployeesQueryResponse
+export type GetEmployees401Schema = z.infer<typeof getEmployees401Schema>
+
+/**
+ * @description Acesso negado
+ */
+export const getEmployees403Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEmployees403Schema = z.infer<typeof getEmployees403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const getEmployees404Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEmployees404Schema = z.infer<typeof getEmployees404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const getEmployees409Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEmployees409Schema = z.infer<typeof getEmployees409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const getEmployees500Schema = z.lazy(() => problemDetailSchema)
+
+export type GetEmployees500Schema = z.infer<typeof getEmployees500Schema>
+
+export const getEmployeesQueryResponseSchema = z.any()
+
+export type GetEmployeesQueryResponseSchema = z.infer<typeof getEmployeesQueryResponseSchema>

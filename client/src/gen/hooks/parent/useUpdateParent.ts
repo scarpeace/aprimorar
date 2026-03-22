@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { UpdateParentMutationRequest, UpdateParentMutationResponse, UpdateParentPathParams } from "../../types/parent/UpdateParent.ts";
+import type { UpdateParentMutationRequest, UpdateParentMutationResponse, UpdateParentPathParams, UpdateParent400, UpdateParent401, UpdateParent403, UpdateParent404, UpdateParent409, UpdateParent500 } from "../../types/parent/UpdateParent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { updateParentMutationResponseSchema, updateParentMutationRequestSchema } from "../../schemas/parent/updateParentSchema.ts";
@@ -24,14 +24,14 @@ export async function updateParent(parentId: UpdateParentPathParams["parentId"],
 
   const requestData = updateParentMutationRequestSchema.parse(data)
 
-  const res = await request<UpdateParentMutationResponse, ResponseErrorConfig<Error>, UpdateParentMutationRequest>({ method : "PUT", url : `/v1/parents/${parentId}`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
+  const res = await request<UpdateParentMutationResponse, ResponseErrorConfig<UpdateParent400 | UpdateParent401 | UpdateParent403 | UpdateParent404 | UpdateParent409 | UpdateParent500>, UpdateParentMutationRequest>({ method : "PUT", url : `/v1/parents/${parentId}`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
   return updateParentMutationResponseSchema.parse(res.data)
 }
 
 export function updateParentMutationOptions<TContext = unknown>(config: Partial<RequestConfig<UpdateParentMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = updateParentMutationKey()
-        return mutationOptions<UpdateParentMutationResponse, ResponseErrorConfig<Error>, {parentId: UpdateParentPathParams["parentId"], data: UpdateParentMutationRequest}, TContext>({
+        return mutationOptions<UpdateParentMutationResponse, ResponseErrorConfig<UpdateParent400 | UpdateParent401 | UpdateParent403 | UpdateParent404 | UpdateParent409 | UpdateParent500>, {parentId: UpdateParentPathParams["parentId"], data: UpdateParentMutationRequest}, TContext>({
           mutationKey,
           mutationFn: async({ parentId, data }) => {
             return updateParent(parentId, data, config)
@@ -47,7 +47,7 @@ export function updateParentMutationOptions<TContext = unknown>(config: Partial<
  */
 export function useUpdateParent<TContext>(options: 
 {
-  mutation?: UseMutationOptions<UpdateParentMutationResponse, ResponseErrorConfig<Error>, {parentId: UpdateParentPathParams["parentId"], data: UpdateParentMutationRequest}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<UpdateParentMutationResponse, ResponseErrorConfig<UpdateParent400 | UpdateParent401 | UpdateParent403 | UpdateParent404 | UpdateParent409 | UpdateParent500>, {parentId: UpdateParentPathParams["parentId"], data: UpdateParentMutationRequest}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig<UpdateParentMutationRequest>> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useUpdateParent<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? updateParentMutationKey()
 
-          const baseOptions = updateParentMutationOptions(config) as UseMutationOptions<UpdateParentMutationResponse, ResponseErrorConfig<Error>, {parentId: UpdateParentPathParams["parentId"], data: UpdateParentMutationRequest}, TContext>
+          const baseOptions = updateParentMutationOptions(config) as UseMutationOptions<UpdateParentMutationResponse, ResponseErrorConfig<UpdateParent400 | UpdateParent401 | UpdateParent403 | UpdateParent404 | UpdateParent409 | UpdateParent500>, {parentId: UpdateParentPathParams["parentId"], data: UpdateParentMutationRequest}, TContext>
           
 
-          return useMutation<UpdateParentMutationResponse, ResponseErrorConfig<Error>, {parentId: UpdateParentPathParams["parentId"], data: UpdateParentMutationRequest}, TContext>({
+          return useMutation<UpdateParentMutationResponse, ResponseErrorConfig<UpdateParent400 | UpdateParent401 | UpdateParent403 | UpdateParent404 | UpdateParent409 | UpdateParent500>, {parentId: UpdateParentPathParams["parentId"], data: UpdateParentMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<UpdateParentMutationResponse, ResponseErrorConfig<Error>, {parentId: UpdateParentPathParams["parentId"], data: UpdateParentMutationRequest}, TContext>
+          }, queryClient) as UseMutationResult<UpdateParentMutationResponse, ResponseErrorConfig<UpdateParent400 | UpdateParent401 | UpdateParent403 | UpdateParent404 | UpdateParent409 | UpdateParent500>, {parentId: UpdateParentPathParams["parentId"], data: UpdateParentMutationRequest}, TContext>
       
 }

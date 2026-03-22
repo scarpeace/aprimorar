@@ -3,22 +3,56 @@
 * Do not edit manually.
 */
 
-import type { CreateEvent200, CreateEventMutationRequest, CreateEventMutationResponse } from "../../types/event/CreateEvent.ts";
 import { eventRequestDTOSchema } from "../eventRequestDTOSchema.ts";
-import { eventResponseDTOSchema } from "../eventResponseDTOSchema.ts";
+import { problemDetailSchema } from "../problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
  */
-export const createEvent200Schema = z.lazy(() => eventResponseDTOSchema) as unknown as z.ZodType<CreateEvent200>
+export const createEvent400Schema = z.lazy(() => problemDetailSchema)
 
-export type CreateEvent200Schema = CreateEvent200
+export type CreateEvent400Schema = z.infer<typeof createEvent400Schema>
 
-export const createEventMutationRequestSchema = z.lazy(() => eventRequestDTOSchema) as unknown as z.ZodType<CreateEventMutationRequest>
+/**
+ * @description Não autenticado
+ */
+export const createEvent401Schema = z.lazy(() => problemDetailSchema)
 
-export type CreateEventMutationRequestSchema = CreateEventMutationRequest
+export type CreateEvent401Schema = z.infer<typeof createEvent401Schema>
 
-export const createEventMutationResponseSchema = z.lazy(() => createEvent200Schema) as unknown as z.ZodType<CreateEventMutationResponse>
+/**
+ * @description Acesso negado
+ */
+export const createEvent403Schema = z.lazy(() => problemDetailSchema)
 
-export type CreateEventMutationResponseSchema = CreateEventMutationResponse
+export type CreateEvent403Schema = z.infer<typeof createEvent403Schema>
+
+/**
+ * @description Recurso não encontrado
+ */
+export const createEvent404Schema = z.lazy(() => problemDetailSchema)
+
+export type CreateEvent404Schema = z.infer<typeof createEvent404Schema>
+
+/**
+ * @description Conflito de regra de negócio
+ */
+export const createEvent409Schema = z.lazy(() => problemDetailSchema)
+
+export type CreateEvent409Schema = z.infer<typeof createEvent409Schema>
+
+/**
+ * @description Erro interno do servidor
+ */
+export const createEvent500Schema = z.lazy(() => problemDetailSchema)
+
+export type CreateEvent500Schema = z.infer<typeof createEvent500Schema>
+
+export const createEventMutationRequestSchema = z.lazy(() => eventRequestDTOSchema)
+
+export type CreateEventMutationRequestSchema = z.infer<typeof createEventMutationRequestSchema>
+
+export const createEventMutationResponseSchema = z.any()
+
+export type CreateEventMutationResponseSchema = z.infer<typeof createEventMutationResponseSchema>

@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetEventsQueryResponse, GetEventsQueryParams } from "../../types/event/GetEvents.ts";
+import type { GetEventsQueryResponse, GetEventsQueryParams, GetEvents400, GetEvents401, GetEvents403, GetEvents404, GetEvents409, GetEvents500 } from "../../types/event/GetEvents.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { getEventsQueryResponseSchema } from "../../schemas/event/getEventsSchema.ts";
@@ -24,14 +24,14 @@ export async function getEvents(params?: GetEventsQueryParams, config: Partial<R
 
 
 
-  const res = await request<GetEventsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/v1/events`, baseURL : `http://localhost:8080`, params, ... requestConfig })
+  const res = await request<GetEventsQueryResponse, ResponseErrorConfig<GetEvents400 | GetEvents401 | GetEvents403 | GetEvents404 | GetEvents409 | GetEvents500>, unknown>({ method : "GET", url : `/v1/events`, baseURL : `http://localhost:8080`, params, ... requestConfig })
   return getEventsQueryResponseSchema.parse(res.data)
 }
 
 export function getEventsQueryOptions(params?: GetEventsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getEventsQueryKey(params)
-        return queryOptions<GetEventsQueryResponse, ResponseErrorConfig<Error>, GetEventsQueryResponse, typeof queryKey>({
+        return queryOptions<GetEventsQueryResponse, ResponseErrorConfig<GetEvents400 | GetEvents401 | GetEvents403 | GetEvents404 | GetEvents409 | GetEvents500>, GetEventsQueryResponse, typeof queryKey>({
          
          queryKey,
          queryFn: async ({ signal }) => {
@@ -48,7 +48,7 @@ export function getEventsQueryOptions(params?: GetEventsQueryParams, config: Par
  */
 export function useGetEvents<TData = GetEventsQueryResponse, TQueryData = GetEventsQueryResponse, TQueryKey extends QueryKey = GetEventsQueryKey>(params?: GetEventsQueryParams, options: 
 {
-  query?: Partial<QueryObserverOptions<GetEventsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  query?: Partial<QueryObserverOptions<GetEventsQueryResponse, ResponseErrorConfig<GetEvents400 | GetEvents401 | GetEvents403 | GetEvents404 | GetEvents409 | GetEvents500>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
 }
  = {}) {
@@ -62,7 +62,7 @@ export function useGetEvents<TData = GetEventsQueryResponse, TQueryData = GetEve
           ...getEventsQueryOptions(params, config),
           ...resolvedOptions,
           queryKey,
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<GetEvents400 | GetEvents401 | GetEvents403 | GetEvents404 | GetEvents409 | GetEvents500>> & { queryKey: TQueryKey }
 
          query.queryKey = queryKey as TQueryKey
 

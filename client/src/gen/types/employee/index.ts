@@ -1,8 +1,8 @@
-export type { ArchiveEmployee200, ArchiveEmployeeMutation, ArchiveEmployeeMutationResponse, ArchiveEmployeePathParams } from "./ArchiveEmployee.ts";
-export type { CreateEmployee200, CreateEmployeeMutation, CreateEmployeeMutationRequest, CreateEmployeeMutationResponse } from "./CreateEmployee.ts";
-export type { DeleteEmployee200, DeleteEmployeeMutation, DeleteEmployeeMutationResponse, DeleteEmployeePathParams } from "./DeleteEmployee.ts";
-export type { GetEmployeeById200, GetEmployeeByIdPathParams, GetEmployeeByIdQuery, GetEmployeeByIdQueryResponse } from "./GetEmployeeById.ts";
-export type { GetEmployeeOptions200, GetEmployeeOptionsQuery, GetEmployeeOptionsQueryResponse } from "./GetEmployeeOptions.ts";
-export type { GetEmployees200, GetEmployeesQuery, GetEmployeesQueryParams, GetEmployeesQueryResponse } from "./GetEmployees.ts";
-export type { UnarchiveEmployee200, UnarchiveEmployeeMutation, UnarchiveEmployeeMutationResponse, UnarchiveEmployeePathParams } from "./UnarchiveEmployee.ts";
-export type { UpdateEmployee200, UpdateEmployeeMutation, UpdateEmployeeMutationRequest, UpdateEmployeeMutationResponse, UpdateEmployeePathParams } from "./UpdateEmployee.ts";
+export type { ArchiveEmployee400, ArchiveEmployee401, ArchiveEmployee403, ArchiveEmployee404, ArchiveEmployee409, ArchiveEmployee500, ArchiveEmployeeMutation, ArchiveEmployeeMutationResponse, ArchiveEmployeePathParams } from "./ArchiveEmployee.ts";
+export type { CreateEmployee400, CreateEmployee401, CreateEmployee403, CreateEmployee404, CreateEmployee409, CreateEmployee500, CreateEmployeeMutation, CreateEmployeeMutationRequest, CreateEmployeeMutationResponse } from "./CreateEmployee.ts";
+export type { DeleteEmployee400, DeleteEmployee401, DeleteEmployee403, DeleteEmployee404, DeleteEmployee409, DeleteEmployee500, DeleteEmployeeMutation, DeleteEmployeeMutationResponse, DeleteEmployeePathParams } from "./DeleteEmployee.ts";
+export type { GetEmployeeById400, GetEmployeeById401, GetEmployeeById403, GetEmployeeById404, GetEmployeeById409, GetEmployeeById500, GetEmployeeByIdPathParams, GetEmployeeByIdQuery, GetEmployeeByIdQueryResponse } from "./GetEmployeeById.ts";
+export type { GetEmployeeOptions400, GetEmployeeOptions401, GetEmployeeOptions403, GetEmployeeOptions404, GetEmployeeOptions409, GetEmployeeOptions500, GetEmployeeOptionsQuery, GetEmployeeOptionsQueryResponse } from "./GetEmployeeOptions.ts";
+export type { GetEmployees400, GetEmployees401, GetEmployees403, GetEmployees404, GetEmployees409, GetEmployees500, GetEmployeesQuery, GetEmployeesQueryParams, GetEmployeesQueryResponse } from "./GetEmployees.ts";
+export type { UnarchiveEmployee400, UnarchiveEmployee401, UnarchiveEmployee403, UnarchiveEmployee404, UnarchiveEmployee409, UnarchiveEmployee500, UnarchiveEmployeeMutation, UnarchiveEmployeeMutationResponse, UnarchiveEmployeePathParams } from "./UnarchiveEmployee.ts";
+export type { UpdateEmployee400, UpdateEmployee401, UpdateEmployee403, UpdateEmployee404, UpdateEmployee409, UpdateEmployee500, UpdateEmployeeMutation, UpdateEmployeeMutationRequest, UpdateEmployeeMutationResponse, UpdateEmployeePathParams } from "./UpdateEmployee.ts";

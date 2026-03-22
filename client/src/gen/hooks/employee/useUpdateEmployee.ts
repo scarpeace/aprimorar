@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { UpdateEmployeeMutationRequest, UpdateEmployeeMutationResponse, UpdateEmployeePathParams } from "../../types/employee/UpdateEmployee.ts";
+import type { UpdateEmployeeMutationRequest, UpdateEmployeeMutationResponse, UpdateEmployeePathParams, UpdateEmployee400, UpdateEmployee401, UpdateEmployee403, UpdateEmployee404, UpdateEmployee409, UpdateEmployee500 } from "../../types/employee/UpdateEmployee.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { updateEmployeeMutationResponseSchema, updateEmployeeMutationRequestSchema } from "../../schemas/employee/updateEmployeeSchema.ts";
@@ -24,14 +24,14 @@ export async function updateEmployee(employeeId: UpdateEmployeePathParams["emplo
 
   const requestData = updateEmployeeMutationRequestSchema.parse(data)
 
-  const res = await request<UpdateEmployeeMutationResponse, ResponseErrorConfig<Error>, UpdateEmployeeMutationRequest>({ method : "PATCH", url : `/v1/employees/${employeeId}`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
+  const res = await request<UpdateEmployeeMutationResponse, ResponseErrorConfig<UpdateEmployee400 | UpdateEmployee401 | UpdateEmployee403 | UpdateEmployee404 | UpdateEmployee409 | UpdateEmployee500>, UpdateEmployeeMutationRequest>({ method : "PATCH", url : `/v1/employees/${employeeId}`, baseURL : `http://localhost:8080`, data : requestData, ... requestConfig })
   return updateEmployeeMutationResponseSchema.parse(res.data)
 }
 
 export function updateEmployeeMutationOptions<TContext = unknown>(config: Partial<RequestConfig<UpdateEmployeeMutationRequest>> & { client?: Client } = {}) {
 
         const mutationKey = updateEmployeeMutationKey()
-        return mutationOptions<UpdateEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: UpdateEmployeePathParams["employeeId"], data: UpdateEmployeeMutationRequest}, TContext>({
+        return mutationOptions<UpdateEmployeeMutationResponse, ResponseErrorConfig<UpdateEmployee400 | UpdateEmployee401 | UpdateEmployee403 | UpdateEmployee404 | UpdateEmployee409 | UpdateEmployee500>, {employeeId: UpdateEmployeePathParams["employeeId"], data: UpdateEmployeeMutationRequest}, TContext>({
           mutationKey,
           mutationFn: async({ employeeId, data }) => {
             return updateEmployee(employeeId, data, config)
@@ -47,7 +47,7 @@ export function updateEmployeeMutationOptions<TContext = unknown>(config: Partia
  */
 export function useUpdateEmployee<TContext>(options: 
 {
-  mutation?: UseMutationOptions<UpdateEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: UpdateEmployeePathParams["employeeId"], data: UpdateEmployeeMutationRequest}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<UpdateEmployeeMutationResponse, ResponseErrorConfig<UpdateEmployee400 | UpdateEmployee401 | UpdateEmployee403 | UpdateEmployee404 | UpdateEmployee409 | UpdateEmployee500>, {employeeId: UpdateEmployeePathParams["employeeId"], data: UpdateEmployeeMutationRequest}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig<UpdateEmployeeMutationRequest>> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useUpdateEmployee<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? updateEmployeeMutationKey()
 
-          const baseOptions = updateEmployeeMutationOptions(config) as UseMutationOptions<UpdateEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: UpdateEmployeePathParams["employeeId"], data: UpdateEmployeeMutationRequest}, TContext>
+          const baseOptions = updateEmployeeMutationOptions(config) as UseMutationOptions<UpdateEmployeeMutationResponse, ResponseErrorConfig<UpdateEmployee400 | UpdateEmployee401 | UpdateEmployee403 | UpdateEmployee404 | UpdateEmployee409 | UpdateEmployee500>, {employeeId: UpdateEmployeePathParams["employeeId"], data: UpdateEmployeeMutationRequest}, TContext>
           
 
-          return useMutation<UpdateEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: UpdateEmployeePathParams["employeeId"], data: UpdateEmployeeMutationRequest}, TContext>({
+          return useMutation<UpdateEmployeeMutationResponse, ResponseErrorConfig<UpdateEmployee400 | UpdateEmployee401 | UpdateEmployee403 | UpdateEmployee404 | UpdateEmployee409 | UpdateEmployee500>, {employeeId: UpdateEmployeePathParams["employeeId"], data: UpdateEmployeeMutationRequest}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<UpdateEmployeeMutationResponse, ResponseErrorConfig<Error>, {employeeId: UpdateEmployeePathParams["employeeId"], data: UpdateEmployeeMutationRequest}, TContext>
+          }, queryClient) as UseMutationResult<UpdateEmployeeMutationResponse, ResponseErrorConfig<UpdateEmployee400 | UpdateEmployee401 | UpdateEmployee403 | UpdateEmployee404 | UpdateEmployee409 | UpdateEmployee500>, {employeeId: UpdateEmployeePathParams["employeeId"], data: UpdateEmployeeMutationRequest}, TContext>
       
 }

@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type DeleteEventPathParams = {
     /**
@@ -12,14 +13,39 @@ export type DeleteEventPathParams = {
 };
 
 /**
- * @description OK
+ * @description Requisição inválida (erro de validação)
 */
-export type DeleteEvent200 = any;
+export type DeleteEvent400 = ProblemDetail;
 
-export type DeleteEventMutationResponse = DeleteEvent200;
+/**
+ * @description Não autenticado
+*/
+export type DeleteEvent401 = ProblemDetail;
+
+/**
+ * @description Acesso negado
+*/
+export type DeleteEvent403 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado
+*/
+export type DeleteEvent404 = ProblemDetail;
+
+/**
+ * @description Conflito de regra de negócio
+*/
+export type DeleteEvent409 = ProblemDetail;
+
+/**
+ * @description Erro interno do servidor
+*/
+export type DeleteEvent500 = ProblemDetail;
+
+export type DeleteEventMutationResponse = any;
 
 export type DeleteEventMutation = {
-    Response: DeleteEvent200;
+    Response: any;
     PathParams: DeleteEventPathParams;
-    Errors: any;
+    Errors: DeleteEvent400 | DeleteEvent401 | DeleteEvent403 | DeleteEvent404 | DeleteEvent409 | DeleteEvent500;
 };

@@ -6,10 +6,9 @@ import { FormField } from "@/components/ui/form-field";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/students/StudentCreatePage.module.css";
-import { studentInputSchema, type StudentFormInput } from "@/features/students/schemas/student";
 import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
-import { useCreateStudent } from "./query/useStudentMutations";
 import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown";
+import { studentRequestDTOSchema, useCreateStudent, type CreateStudentMutationRequest, type StudentRequestDTO } from "@/gen";
 
 export function StudentCreatePage() {
   const {
@@ -18,19 +17,17 @@ export function StudentCreatePage() {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<StudentFormInput>({
-    resolver: zodResolver(studentInputSchema),
+  } = useForm<StudentRequestDTO>({
+    resolver: zodResolver(studentRequestDTOSchema),
     mode: "onBlur",
   });
-
   const selectedParentId = watch("parentId");
-
   const registerWithMask = useHookFormMask(register);
 
   const { mutate: createStudent, isPending: isSubmitting } = useCreateStudent();
 
-  const onSubmit = (data: StudentFormInput) => {
-    createStudent(data);
+  const onSubmit = (data: CreateStudentMutationRequest) => {
+    createStudent({ data });
   };
 
   return (

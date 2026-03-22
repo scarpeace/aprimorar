@@ -1,19 +1,17 @@
 package com.aprimorar.api.domain.dashboard;
 
-import com.aprimorar.api.domain.dashboard.dto.DashboardSummaryResponseDTO;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.aprimorar.api.domain.dashboard.dto.DashboardSummaryResponseDTO;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -40,8 +38,7 @@ public class DashboardController {
         @Parameter(description = "Mês do período (1-12)", example = "3")
         @RequestParam Integer month
     ) {
-        DashboardSummaryResponseDTO summary = dashboardService.getSummary(year,month
-        );
+        DashboardSummaryResponseDTO summary = dashboardService.getSummary(year,month);
         return ResponseEntity.ok(summary);
     }
 }

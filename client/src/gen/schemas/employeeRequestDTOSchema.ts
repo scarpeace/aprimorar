@@ -3,7 +3,6 @@
 * Do not edit manually.
 */
 
-import type { EmployeeRequestDTO } from "../types/EmployeeRequestDTO.ts";
 import { z } from "zod/v4";
 
 export const employeeRequestDTOSchema = z.object({
@@ -14,6 +13,6 @@ export const employeeRequestDTOSchema = z.object({
 "cpf": z.string().min(1).regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/),
 "email": z.string().min(1),
 "duty": z.enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"])
-    }) as unknown as z.ZodType<EmployeeRequestDTO>
+    })
 
-export type EmployeeRequestDTOSchema = EmployeeRequestDTO
+export type EmployeeRequestDTOSchema = z.infer<typeof employeeRequestDTOSchema>

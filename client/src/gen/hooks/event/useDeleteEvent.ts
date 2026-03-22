@@ -4,7 +4,7 @@
 */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { DeleteEventMutationResponse, DeleteEventPathParams } from "../../types/event/DeleteEvent.ts";
+import type { DeleteEventMutationResponse, DeleteEventPathParams, DeleteEvent400, DeleteEvent401, DeleteEvent403, DeleteEvent404, DeleteEvent409, DeleteEvent500 } from "../../types/event/DeleteEvent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { deleteEventMutationResponseSchema } from "../../schemas/event/deleteEventSchema.ts";
@@ -24,14 +24,14 @@ export async function deleteEvent(eventId: DeleteEventPathParams["eventId"], con
 
 
 
-  const res = await request<DeleteEventMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "DELETE", url : `/v1/events/${eventId}`, baseURL : `http://localhost:8080`, ... requestConfig })
+  const res = await request<DeleteEventMutationResponse, ResponseErrorConfig<DeleteEvent400 | DeleteEvent401 | DeleteEvent403 | DeleteEvent404 | DeleteEvent409 | DeleteEvent500>, unknown>({ method : "DELETE", url : `/v1/events/${eventId}`, baseURL : `http://localhost:8080`, ... requestConfig })
   return deleteEventMutationResponseSchema.parse(res.data)
 }
 
 export function deleteEventMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const mutationKey = deleteEventMutationKey()
-        return mutationOptions<DeleteEventMutationResponse, ResponseErrorConfig<Error>, {eventId: DeleteEventPathParams["eventId"]}, TContext>({
+        return mutationOptions<DeleteEventMutationResponse, ResponseErrorConfig<DeleteEvent400 | DeleteEvent401 | DeleteEvent403 | DeleteEvent404 | DeleteEvent409 | DeleteEvent500>, {eventId: DeleteEventPathParams["eventId"]}, TContext>({
           mutationKey,
           mutationFn: async({ eventId }) => {
             return deleteEvent(eventId, config)
@@ -47,7 +47,7 @@ export function deleteEventMutationOptions<TContext = unknown>(config: Partial<R
  */
 export function useDeleteEvent<TContext>(options: 
 {
-  mutation?: UseMutationOptions<DeleteEventMutationResponse, ResponseErrorConfig<Error>, {eventId: DeleteEventPathParams["eventId"]}, TContext> & { client?: QueryClient },
+  mutation?: UseMutationOptions<DeleteEventMutationResponse, ResponseErrorConfig<DeleteEvent400 | DeleteEvent401 | DeleteEvent403 | DeleteEvent404 | DeleteEvent409 | DeleteEvent500>, {eventId: DeleteEventPathParams["eventId"]}, TContext> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client },
 }
  = {}) {
@@ -56,13 +56,13 @@ export function useDeleteEvent<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? deleteEventMutationKey()
 
-          const baseOptions = deleteEventMutationOptions(config) as UseMutationOptions<DeleteEventMutationResponse, ResponseErrorConfig<Error>, {eventId: DeleteEventPathParams["eventId"]}, TContext>
+          const baseOptions = deleteEventMutationOptions(config) as UseMutationOptions<DeleteEventMutationResponse, ResponseErrorConfig<DeleteEvent400 | DeleteEvent401 | DeleteEvent403 | DeleteEvent404 | DeleteEvent409 | DeleteEvent500>, {eventId: DeleteEventPathParams["eventId"]}, TContext>
           
 
-          return useMutation<DeleteEventMutationResponse, ResponseErrorConfig<Error>, {eventId: DeleteEventPathParams["eventId"]}, TContext>({
+          return useMutation<DeleteEventMutationResponse, ResponseErrorConfig<DeleteEvent400 | DeleteEvent401 | DeleteEvent403 | DeleteEvent404 | DeleteEvent409 | DeleteEvent500>, {eventId: DeleteEventPathParams["eventId"]}, TContext>({
             ...baseOptions,
             mutationKey,
             ...mutationOptions,
-          }, queryClient) as UseMutationResult<DeleteEventMutationResponse, ResponseErrorConfig<Error>, {eventId: DeleteEventPathParams["eventId"]}, TContext>
+          }, queryClient) as UseMutationResult<DeleteEventMutationResponse, ResponseErrorConfig<DeleteEvent400 | DeleteEvent401 | DeleteEvent403 | DeleteEvent404 | DeleteEvent409 | DeleteEvent500>, {eventId: DeleteEventPathParams["eventId"]}, TContext>
       
 }
