@@ -19,7 +19,7 @@ export function DashboardPage() {
     month,
   });
 
-  console.log(data)
+  console.log(data?.charts);
 
   if (isLoading) {
     return <PageLoading message="Carregando painel..." />;
@@ -54,7 +54,7 @@ export function DashboardPage() {
         </div>
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
-            <h2 className="app-kpi-label">Receita no mês</h2>
+            <h2 className="app-kpitext-amber-100-label">Receita no mês</h2>
             <div className="app-kpi-value">
               {brl.format(data.revenueInMonth ?? 0)}
             </div>

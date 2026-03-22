@@ -10,7 +10,7 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { getPaginatedParentsQueryResponseSchema } from "../../schemas/getPaginatedParentsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getPaginatedParentsQueryKey = (params: GetPaginatedParentsQueryParams) => [{ url: '/v1/parents' }, ...(params ? [params] : [])] as const
+export const getPaginatedParentsQueryKey = (params?: GetPaginatedParentsQueryParams) => [{ url: '/v1/parents' }, ...(params ? [params] : [])] as const
 
 export type GetPaginatedParentsQueryKey = ReturnType<typeof getPaginatedParentsQueryKey>
 
@@ -19,7 +19,7 @@ export type GetPaginatedParentsQueryKey = ReturnType<typeof getPaginatedParentsQ
  * @summary Obter responsáveis paginados
  * {@link /v1/parents}
  */
-export async function getPaginatedParents(params: GetPaginatedParentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function getPaginatedParents(params?: GetPaginatedParentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
 
@@ -28,11 +28,11 @@ export async function getPaginatedParents(params: GetPaginatedParentsQueryParams
   return getPaginatedParentsQueryResponseSchema.parse(res.data)
 }
 
-export function getPaginatedParentsQueryOptions(params: GetPaginatedParentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function getPaginatedParentsQueryOptions(params?: GetPaginatedParentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getPaginatedParentsQueryKey(params)
         return queryOptions<GetPaginatedParentsQueryResponse, ResponseErrorConfig<Error>, GetPaginatedParentsQueryResponse, typeof queryKey>({
-         enabled: !!(params),
+         
          queryKey,
          queryFn: async ({ signal }) => {
             return getPaginatedParents(params, { ...config, signal: config.signal ?? signal })
@@ -46,7 +46,7 @@ export function getPaginatedParentsQueryOptions(params: GetPaginatedParentsQuery
  * @summary Obter responsáveis paginados
  * {@link /v1/parents}
  */
-export function useGetPaginatedParents<TData = GetPaginatedParentsQueryResponse, TQueryData = GetPaginatedParentsQueryResponse, TQueryKey extends QueryKey = GetPaginatedParentsQueryKey>(params: GetPaginatedParentsQueryParams, options: 
+export function useGetPaginatedParents<TData = GetPaginatedParentsQueryResponse, TQueryData = GetPaginatedParentsQueryResponse, TQueryKey extends QueryKey = GetPaginatedParentsQueryKey>(params?: GetPaginatedParentsQueryParams, options: 
 {
   query?: Partial<QueryObserverOptions<GetPaginatedParentsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

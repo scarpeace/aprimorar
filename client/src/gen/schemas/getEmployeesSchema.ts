@@ -4,14 +4,13 @@
 */
 
 import type { GetEmployees200, GetEmployeesQueryParams, GetEmployeesQueryResponse } from "../types/GetEmployees.ts";
-import { pageableSchema } from "./pageableSchema.ts";
 import { pagedModelEmployeeResponseDTOSchema } from "./pagedModelEmployeeResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 export const getEmployeesQueryParamsSchema = z.object({
-    get "pageable"(){
-                return pageableSchema
-              },
+    "page": z.coerce.number().int().min(0).default(0).describe("Zero-based page index (0..N)"),
+"size": z.coerce.number().int().min(1).default(20).describe("The size of the page to be returned"),
+"sort": z.array(z.string()).describe("Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported."),
 "search": z.optional(z.string())
     }) as unknown as z.ZodType<GetEmployeesQueryParams>
 

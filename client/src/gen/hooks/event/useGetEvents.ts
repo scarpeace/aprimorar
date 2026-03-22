@@ -10,7 +10,7 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { getEventsQueryResponseSchema } from "../../schemas/getEventsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getEventsQueryKey = (params: GetEventsQueryParams) => [{ url: '/v1/events' }, ...(params ? [params] : [])] as const
+export const getEventsQueryKey = (params?: GetEventsQueryParams) => [{ url: '/v1/events' }, ...(params ? [params] : [])] as const
 
 export type GetEventsQueryKey = ReturnType<typeof getEventsQueryKey>
 
@@ -19,7 +19,7 @@ export type GetEventsQueryKey = ReturnType<typeof getEventsQueryKey>
  * @summary Listar eventos
  * {@link /v1/events}
  */
-export async function getEvents(params: GetEventsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function getEvents(params?: GetEventsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
 
@@ -28,11 +28,11 @@ export async function getEvents(params: GetEventsQueryParams, config: Partial<Re
   return getEventsQueryResponseSchema.parse(res.data)
 }
 
-export function getEventsQueryOptions(params: GetEventsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function getEventsQueryOptions(params?: GetEventsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getEventsQueryKey(params)
         return queryOptions<GetEventsQueryResponse, ResponseErrorConfig<Error>, GetEventsQueryResponse, typeof queryKey>({
-         enabled: !!(params),
+         
          queryKey,
          queryFn: async ({ signal }) => {
             return getEvents(params, { ...config, signal: config.signal ?? signal })
@@ -46,7 +46,7 @@ export function getEventsQueryOptions(params: GetEventsQueryParams, config: Part
  * @summary Listar eventos
  * {@link /v1/events}
  */
-export function useGetEvents<TData = GetEventsQueryResponse, TQueryData = GetEventsQueryResponse, TQueryKey extends QueryKey = GetEventsQueryKey>(params: GetEventsQueryParams, options: 
+export function useGetEvents<TData = GetEventsQueryResponse, TQueryData = GetEventsQueryResponse, TQueryKey extends QueryKey = GetEventsQueryKey>(params?: GetEventsQueryParams, options: 
 {
   query?: Partial<QueryObserverOptions<GetEventsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

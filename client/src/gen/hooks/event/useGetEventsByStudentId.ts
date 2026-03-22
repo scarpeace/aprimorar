@@ -10,7 +10,7 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { getEventsByStudentIdQueryResponseSchema } from "../../schemas/getEventsByStudentIdSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getEventsByStudentIdQueryKey = (studentId: GetEventsByStudentIdPathParams["studentId"], params: GetEventsByStudentIdQueryParams) => [{ url: '/v1/events/student/:studentId', params: {studentId:studentId} }, ...(params ? [params] : [])] as const
+export const getEventsByStudentIdQueryKey = (studentId: GetEventsByStudentIdPathParams["studentId"], params?: GetEventsByStudentIdQueryParams) => [{ url: '/v1/events/student/:studentId', params: {studentId:studentId} }, ...(params ? [params] : [])] as const
 
 export type GetEventsByStudentIdQueryKey = ReturnType<typeof getEventsByStudentIdQueryKey>
 
@@ -19,7 +19,7 @@ export type GetEventsByStudentIdQueryKey = ReturnType<typeof getEventsByStudentI
  * @summary Listar eventos por aluno
  * {@link /v1/events/student/:studentId}
  */
-export async function getEventsByStudentId(studentId: GetEventsByStudentIdPathParams["studentId"], params: GetEventsByStudentIdQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function getEventsByStudentId(studentId: GetEventsByStudentIdPathParams["studentId"], params?: GetEventsByStudentIdQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
 
@@ -28,11 +28,11 @@ export async function getEventsByStudentId(studentId: GetEventsByStudentIdPathPa
   return getEventsByStudentIdQueryResponseSchema.parse(res.data)
 }
 
-export function getEventsByStudentIdQueryOptions(studentId: GetEventsByStudentIdPathParams["studentId"], params: GetEventsByStudentIdQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function getEventsByStudentIdQueryOptions(studentId: GetEventsByStudentIdPathParams["studentId"], params?: GetEventsByStudentIdQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getEventsByStudentIdQueryKey(studentId, params)
         return queryOptions<GetEventsByStudentIdQueryResponse, ResponseErrorConfig<Error>, GetEventsByStudentIdQueryResponse, typeof queryKey>({
-         enabled: !!(studentId&& params),
+         enabled: !!(studentId),
          queryKey,
          queryFn: async ({ signal }) => {
             return getEventsByStudentId(studentId, params, { ...config, signal: config.signal ?? signal })
@@ -46,7 +46,7 @@ export function getEventsByStudentIdQueryOptions(studentId: GetEventsByStudentId
  * @summary Listar eventos por aluno
  * {@link /v1/events/student/:studentId}
  */
-export function useGetEventsByStudentId<TData = GetEventsByStudentIdQueryResponse, TQueryData = GetEventsByStudentIdQueryResponse, TQueryKey extends QueryKey = GetEventsByStudentIdQueryKey>(studentId: GetEventsByStudentIdPathParams["studentId"], params: GetEventsByStudentIdQueryParams, options: 
+export function useGetEventsByStudentId<TData = GetEventsByStudentIdQueryResponse, TQueryData = GetEventsByStudentIdQueryResponse, TQueryKey extends QueryKey = GetEventsByStudentIdQueryKey>(studentId: GetEventsByStudentIdPathParams["studentId"], params?: GetEventsByStudentIdQueryParams, options: 
 {
   query?: Partial<QueryObserverOptions<GetEventsByStudentIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

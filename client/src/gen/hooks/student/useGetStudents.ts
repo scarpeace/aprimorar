@@ -10,7 +10,7 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { getStudentsQueryResponseSchema } from "../../schemas/getStudentsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getStudentsQueryKey = (params: GetStudentsQueryParams) => [{ url: '/v1/students' }, ...(params ? [params] : [])] as const
+export const getStudentsQueryKey = (params?: GetStudentsQueryParams) => [{ url: '/v1/students' }, ...(params ? [params] : [])] as const
 
 export type GetStudentsQueryKey = ReturnType<typeof getStudentsQueryKey>
 
@@ -19,7 +19,7 @@ export type GetStudentsQueryKey = ReturnType<typeof getStudentsQueryKey>
  * @summary Listar alunos
  * {@link /v1/students}
  */
-export async function getStudents(params: GetStudentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function getStudents(params?: GetStudentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
 
@@ -28,11 +28,11 @@ export async function getStudents(params: GetStudentsQueryParams, config: Partia
   return getStudentsQueryResponseSchema.parse(res.data)
 }
 
-export function getStudentsQueryOptions(params: GetStudentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function getStudentsQueryOptions(params?: GetStudentsQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getStudentsQueryKey(params)
         return queryOptions<GetStudentsQueryResponse, ResponseErrorConfig<Error>, GetStudentsQueryResponse, typeof queryKey>({
-         enabled: !!(params),
+         
          queryKey,
          queryFn: async ({ signal }) => {
             return getStudents(params, { ...config, signal: config.signal ?? signal })
@@ -46,7 +46,7 @@ export function getStudentsQueryOptions(params: GetStudentsQueryParams, config: 
  * @summary Listar alunos
  * {@link /v1/students}
  */
-export function useGetStudents<TData = GetStudentsQueryResponse, TQueryData = GetStudentsQueryResponse, TQueryKey extends QueryKey = GetStudentsQueryKey>(params: GetStudentsQueryParams, options: 
+export function useGetStudents<TData = GetStudentsQueryResponse, TQueryData = GetStudentsQueryResponse, TQueryKey extends QueryKey = GetStudentsQueryKey>(params?: GetStudentsQueryParams, options: 
 {
   query?: Partial<QueryObserverOptions<GetStudentsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

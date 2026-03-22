@@ -10,7 +10,7 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { getEmployeesQueryResponseSchema } from "../../schemas/getEmployeesSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getEmployeesQueryKey = (params: GetEmployeesQueryParams) => [{ url: '/v1/employees' }, ...(params ? [params] : [])] as const
+export const getEmployeesQueryKey = (params?: GetEmployeesQueryParams) => [{ url: '/v1/employees' }, ...(params ? [params] : [])] as const
 
 export type GetEmployeesQueryKey = ReturnType<typeof getEmployeesQueryKey>
 
@@ -19,7 +19,7 @@ export type GetEmployeesQueryKey = ReturnType<typeof getEmployeesQueryKey>
  * @summary Listar funcionários
  * {@link /v1/employees}
  */
-export async function getEmployees(params: GetEmployeesQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function getEmployees(params?: GetEmployeesQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
 
@@ -28,11 +28,11 @@ export async function getEmployees(params: GetEmployeesQueryParams, config: Part
   return getEmployeesQueryResponseSchema.parse(res.data)
 }
 
-export function getEmployeesQueryOptions(params: GetEmployeesQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function getEmployeesQueryOptions(params?: GetEmployeesQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getEmployeesQueryKey(params)
         return queryOptions<GetEmployeesQueryResponse, ResponseErrorConfig<Error>, GetEmployeesQueryResponse, typeof queryKey>({
-         enabled: !!(params),
+         
          queryKey,
          queryFn: async ({ signal }) => {
             return getEmployees(params, { ...config, signal: config.signal ?? signal })
@@ -46,7 +46,7 @@ export function getEmployeesQueryOptions(params: GetEmployeesQueryParams, config
  * @summary Listar funcionários
  * {@link /v1/employees}
  */
-export function useGetEmployees<TData = GetEmployeesQueryResponse, TQueryData = GetEmployeesQueryResponse, TQueryKey extends QueryKey = GetEmployeesQueryKey>(params: GetEmployeesQueryParams, options: 
+export function useGetEmployees<TData = GetEmployeesQueryResponse, TQueryData = GetEmployeesQueryResponse, TQueryKey extends QueryKey = GetEmployeesQueryKey>(params?: GetEmployeesQueryParams, options: 
 {
   query?: Partial<QueryObserverOptions<GetEmployeesQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }

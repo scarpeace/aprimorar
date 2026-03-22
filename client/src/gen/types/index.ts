@@ -34,7 +34,6 @@ export type { GetStudentOptions200, GetStudentOptionsQuery, GetStudentOptionsQue
 export type { GetStudents200, GetStudentsQuery, GetStudentsQueryParams, GetStudentsQueryResponse } from "./GetStudents.ts";
 export type { ListStudentsByParent200, ListStudentsByParentPathParams, ListStudentsByParentQuery, ListStudentsByParentQueryResponse } from "./ListStudentsByParent.ts";
 export type { PageMetadata } from "./PageMetadata.ts";
-export type { Pageable } from "./Pageable.ts";
 export type { PagedModelEmployeeResponseDTO } from "./PagedModelEmployeeResponseDTO.ts";
 export type { PagedModelEventResponseDTO } from "./PagedModelEventResponseDTO.ts";
 export type { PagedModelParentResponseDTO } from "./PagedModelParentResponseDTO.ts";

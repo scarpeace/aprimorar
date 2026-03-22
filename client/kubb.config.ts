@@ -18,10 +18,10 @@ export default defineConfig({
 
     pluginTs({
       output: { path: './types' },
-      // group: {
-      //   type: 'tag',
-      //   name: ({ group }) => group.toLowerCase(),
-      // },
+       // group: {
+       //   type: 'tag',
+       //   name: ({ group }) => group.toLowerCase(),
+       // },
     }),
 
     pluginZod({

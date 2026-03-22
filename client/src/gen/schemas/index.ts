@@ -34,7 +34,6 @@ export type { GetStudentOptions200Schema, GetStudentOptionsQueryResponseSchema }
 export type { GetStudents200Schema, GetStudentsQueryParamsSchema, GetStudentsQueryResponseSchema } from "./getStudentsSchema.ts";
 export type { ListStudentsByParent200Schema, ListStudentsByParentPathParamsSchema, ListStudentsByParentQueryResponseSchema } from "./listStudentsByParentSchema.ts";
 export type { PageMetadataSchema } from "./pageMetadataSchema.ts";
-export type { PageableSchema } from "./pageableSchema.ts";
 export type { PagedModelEmployeeResponseDTOSchema } from "./pagedModelEmployeeResponseDTOSchema.ts";
 export type { PagedModelEventResponseDTOSchema } from "./pagedModelEventResponseDTOSchema.ts";
 export type { PagedModelParentResponseDTOSchema } from "./pagedModelParentResponseDTOSchema.ts";
@@ -139,7 +138,6 @@ export { listStudentsByParent200Schema } from "./listStudentsByParentSchema.ts";
 export { listStudentsByParentPathParamsSchema } from "./listStudentsByParentSchema.ts";
 export { listStudentsByParentQueryResponseSchema } from "./listStudentsByParentSchema.ts";
 export { pageMetadataSchema } from "./pageMetadataSchema.ts";
-export { pageableSchema } from "./pageableSchema.ts";
 export { pagedModelEmployeeResponseDTOSchema } from "./pagedModelEmployeeResponseDTOSchema.ts";
 export { pagedModelEventResponseDTOSchema } from "./pagedModelEventResponseDTOSchema.ts";
 export { pagedModelParentResponseDTOSchema } from "./pagedModelParentResponseDTOSchema.ts";

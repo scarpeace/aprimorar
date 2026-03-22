@@ -67,7 +67,6 @@ export type { GetStudentOptions200Schema, GetStudentOptionsQueryResponseSchema }
 export type { GetStudents200Schema, GetStudentsQueryParamsSchema, GetStudentsQueryResponseSchema } from "./schemas/getStudentsSchema.ts";
 export type { ListStudentsByParent200Schema, ListStudentsByParentPathParamsSchema, ListStudentsByParentQueryResponseSchema } from "./schemas/listStudentsByParentSchema.ts";
 export type { PageMetadataSchema } from "./schemas/pageMetadataSchema.ts";
-export type { PageableSchema } from "./schemas/pageableSchema.ts";
 export type { PagedModelEmployeeResponseDTOSchema } from "./schemas/pagedModelEmployeeResponseDTOSchema.ts";
 export type { PagedModelEventResponseDTOSchema } from "./schemas/pagedModelEventResponseDTOSchema.ts";
 export type { PagedModelParentResponseDTOSchema } from "./schemas/pagedModelParentResponseDTOSchema.ts";
@@ -121,7 +120,6 @@ export type { GetStudentOptions200, GetStudentOptionsQuery, GetStudentOptionsQue
 export type { GetStudents200, GetStudentsQuery, GetStudentsQueryParams, GetStudentsQueryResponse } from "./types/GetStudents.ts";
 export type { ListStudentsByParent200, ListStudentsByParentPathParams, ListStudentsByParentQuery, ListStudentsByParentQueryResponse } from "./types/ListStudentsByParent.ts";
 export type { PageMetadata } from "./types/PageMetadata.ts";
-export type { Pageable } from "./types/Pageable.ts";
 export type { PagedModelEmployeeResponseDTO } from "./types/PagedModelEmployeeResponseDTO.ts";
 export type { PagedModelEventResponseDTO } from "./types/PagedModelEventResponseDTO.ts";
 export type { PagedModelParentResponseDTO } from "./types/PagedModelParentResponseDTO.ts";
@@ -358,7 +356,6 @@ export { listStudentsByParent200Schema } from "./schemas/listStudentsByParentSch
 export { listStudentsByParentPathParamsSchema } from "./schemas/listStudentsByParentSchema.ts";
 export { listStudentsByParentQueryResponseSchema } from "./schemas/listStudentsByParentSchema.ts";
 export { pageMetadataSchema } from "./schemas/pageMetadataSchema.ts";
-export { pageableSchema } from "./schemas/pageableSchema.ts";
 export { pagedModelEmployeeResponseDTOSchema } from "./schemas/pagedModelEmployeeResponseDTOSchema.ts";
 export { pagedModelEventResponseDTOSchema } from "./schemas/pagedModelEventResponseDTOSchema.ts";
 export { pagedModelParentResponseDTOSchema } from "./schemas/pagedModelParentResponseDTOSchema.ts";

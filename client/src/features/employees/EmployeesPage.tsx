@@ -10,8 +10,8 @@ import { ButtonLink } from "@/components/ui/button";
 import { dutyLabels } from "./schemas/dutyEnum";
 import styles from "@/features/employees/EmployeesPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { useEmployeesQuery } from "./query/useEmployeeQueries";
 import { useDebounce } from "@/lib/shared/use-debounce";
+import { useGetEmployees } from "@/gen/hooks/employee/useGetEmployees";
 
 export function EmployeesPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -26,7 +26,7 @@ export function EmployeesPage() {
     isError,
     error,
     refetch,
-  } = useEmployeesQuery(currentPage, pageSize, debouncedSearchTerm);
+  } = useGetEmployees(currentPage, pageSize, debouncedSearchTerm);
 
   // Reset pagination when search changes
   useEffect(() => {

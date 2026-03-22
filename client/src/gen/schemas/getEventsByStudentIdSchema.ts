@@ -4,7 +4,6 @@
 */
 
 import type { GetEventsByStudentId200, GetEventsByStudentIdPathParams, GetEventsByStudentIdQueryParams, GetEventsByStudentIdQueryResponse } from "../types/GetEventsByStudentId.ts";
-import { pageableSchema } from "./pageableSchema.ts";
 import { pagedModelEventResponseDTOSchema } from "./pagedModelEventResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
@@ -15,9 +14,9 @@ export const getEventsByStudentIdPathParamsSchema = z.object({
 export type GetEventsByStudentIdPathParamsSchema = GetEventsByStudentIdPathParams
 
 export const getEventsByStudentIdQueryParamsSchema = z.object({
-    get "pageable"(){
-                return pageableSchema
-              }
+    "page": z.coerce.number().int().min(0).default(0).describe("Zero-based page index (0..N)"),
+"size": z.coerce.number().int().min(1).default(20).describe("The size of the page to be returned"),
+"sort": z.array(z.string()).describe("Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.")
     }) as unknown as z.ZodType<GetEventsByStudentIdQueryParams>
 
 export type GetEventsByStudentIdQueryParamsSchema = GetEventsByStudentIdQueryParams

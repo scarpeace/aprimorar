@@ -9,8 +9,8 @@ import { Pagination } from "@/components/ui/pagination";
 import { ButtonLink } from "@/components/ui/button";
 import styles from "@/features/parents/ParentsPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { useParentsQuery } from "./query/useParentQueries";
 import { useDebounce } from "@/lib/shared/use-debounce";
+import { useGetPaginatedParents } from "@/gen";
 
 export function ParentsPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -24,7 +24,7 @@ export function ParentsPage() {
     isError,
     error,
     refetch,
-  } = useParentsQuery(currentPage, pageSize, debouncedSearchTerm);
+  } = useGetPaginatedParents({ page: currentPage, size:pageSize, search:debouncedSearchTerm });
 
   // Reset pagination when search changes
   useEffect(() => {

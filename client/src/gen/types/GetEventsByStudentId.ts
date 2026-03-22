@@ -3,7 +3,6 @@
 * Do not edit manually.
 */
 
-import type { Pageable } from "./Pageable.ts";
 import type { PagedModelEventResponseDTO } from "./PagedModelEventResponseDTO.ts";
 
 export type GetEventsByStudentIdPathParams = {
@@ -15,9 +14,24 @@ export type GetEventsByStudentIdPathParams = {
 
 export type GetEventsByStudentIdQueryParams = {
     /**
-     * @type object
+     * @description Zero-based page index (0..N)
+     * @minLength 0
+     * @default 0
+     * @type integer | undefined
     */
-    pageable: Pageable;
+    page?: number;
+    /**
+     * @description The size of the page to be returned
+     * @minLength 1
+     * @default 20
+     * @type integer | undefined
+    */
+    size?: number;
+    /**
+     * @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+     * @type array | undefined
+    */
+    sort?: string[];
 };
 
 /**

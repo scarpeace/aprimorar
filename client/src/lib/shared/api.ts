@@ -25,5 +25,6 @@ export function getFriendlyErrorMessage(error: unknown): string {
     if (status === 409) return apiMessage ?? "Conflito de dados";
   }
 
+  console.log(error)
   return "Erro inesperado";
 }

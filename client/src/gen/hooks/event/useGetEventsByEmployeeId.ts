@@ -10,7 +10,7 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { getEventsByEmployeeIdQueryResponseSchema } from "../../schemas/getEventsByEmployeeIdSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getEventsByEmployeeIdQueryKey = (employeeId: GetEventsByEmployeeIdPathParams["employeeId"], params: GetEventsByEmployeeIdQueryParams) => [{ url: '/v1/events/employee/:employeeId', params: {employeeId:employeeId} }, ...(params ? [params] : [])] as const
+export const getEventsByEmployeeIdQueryKey = (employeeId: GetEventsByEmployeeIdPathParams["employeeId"], params?: GetEventsByEmployeeIdQueryParams) => [{ url: '/v1/events/employee/:employeeId', params: {employeeId:employeeId} }, ...(params ? [params] : [])] as const
 
 export type GetEventsByEmployeeIdQueryKey = ReturnType<typeof getEventsByEmployeeIdQueryKey>
 
@@ -19,7 +19,7 @@ export type GetEventsByEmployeeIdQueryKey = ReturnType<typeof getEventsByEmploye
  * @summary Listar eventos por funcionário
  * {@link /v1/events/employee/:employeeId}
  */
-export async function getEventsByEmployeeId(employeeId: GetEventsByEmployeeIdPathParams["employeeId"], params: GetEventsByEmployeeIdQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export async function getEventsByEmployeeId(employeeId: GetEventsByEmployeeIdPathParams["employeeId"], params?: GetEventsByEmployeeIdQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config
 
 
@@ -28,11 +28,11 @@ export async function getEventsByEmployeeId(employeeId: GetEventsByEmployeeIdPat
   return getEventsByEmployeeIdQueryResponseSchema.parse(res.data)
 }
 
-export function getEventsByEmployeeIdQueryOptions(employeeId: GetEventsByEmployeeIdPathParams["employeeId"], params: GetEventsByEmployeeIdQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function getEventsByEmployeeIdQueryOptions(employeeId: GetEventsByEmployeeIdPathParams["employeeId"], params?: GetEventsByEmployeeIdQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
 
         const queryKey = getEventsByEmployeeIdQueryKey(employeeId, params)
         return queryOptions<GetEventsByEmployeeIdQueryResponse, ResponseErrorConfig<Error>, GetEventsByEmployeeIdQueryResponse, typeof queryKey>({
-         enabled: !!(employeeId&& params),
+         enabled: !!(employeeId),
          queryKey,
          queryFn: async ({ signal }) => {
             return getEventsByEmployeeId(employeeId, params, { ...config, signal: config.signal ?? signal })
@@ -46,7 +46,7 @@ export function getEventsByEmployeeIdQueryOptions(employeeId: GetEventsByEmploye
  * @summary Listar eventos por funcionário
  * {@link /v1/events/employee/:employeeId}
  */
-export function useGetEventsByEmployeeId<TData = GetEventsByEmployeeIdQueryResponse, TQueryData = GetEventsByEmployeeIdQueryResponse, TQueryKey extends QueryKey = GetEventsByEmployeeIdQueryKey>(employeeId: GetEventsByEmployeeIdPathParams["employeeId"], params: GetEventsByEmployeeIdQueryParams, options: 
+export function useGetEventsByEmployeeId<TData = GetEventsByEmployeeIdQueryResponse, TQueryData = GetEventsByEmployeeIdQueryResponse, TQueryKey extends QueryKey = GetEventsByEmployeeIdQueryKey>(employeeId: GetEventsByEmployeeIdPathParams["employeeId"], params?: GetEventsByEmployeeIdQueryParams, options: 
 {
   query?: Partial<QueryObserverOptions<GetEventsByEmployeeIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
   client?: Partial<RequestConfig> & { client?: Client }
