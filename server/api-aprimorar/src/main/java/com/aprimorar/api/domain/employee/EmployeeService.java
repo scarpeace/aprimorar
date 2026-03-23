@@ -4,8 +4,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
-import com.aprimorar.api.enums.Duty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,16 +16,22 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
+import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
+import com.aprimorar.api.domain.employee.repository.EmployeeSpecifications;
+import com.aprimorar.api.enums.Duty;
 
 /**
  * Centraliza as regras de negócio do colaborador.
  *
- * <p>Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
- * Também é esse service que garante que CPF e email não se repitam antes de salvar
- * ou atualizar um colaborador.
+ * <p>
+ * Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
+ * Também é esse service que garante que CPF e email não se repitam antes de
+ * salvar ou atualizar um colaborador.
  *
- * <p>Quando um colaborador é alterado, o service aplica as validações do domínio,
+ * <p>
+ * Quando um colaborador é alterado, o service aplica as validações do domínio,
  * resolve conflitos de unicidade e devolve a resposta em formato DTO.
  *
  * @author scarpellini
@@ -42,20 +46,19 @@ public class EmployeeService {
     private static final UUID PHANTOM_EMPLOYEE_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
     private final EmployeeRepository employeeRepo;
     private final EmployeeMapper employeeMapper;
-    private final com.aprimorar.api.domain.event.EventRepository eventRepo;
+    private final com.aprimorar.api.domain.event.repository.EventRepository eventRepo;
 
-    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, com.aprimorar.api.domain.event.EventRepository eventRepo) {
+    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, com.aprimorar.api.domain.event.repository.EventRepository eventRepo) {
         this.employeeRepo = employeeRepo;
         this.employeeMapper = employeeMapper;
         this.eventRepo = eventRepo;
     }
 
     /* ----- Query Methods ----- */
-
     @Transactional(readOnly = true)
     public Page<EmployeeResponseDTO> getEmployees(Pageable pageable, String search) {
         Specification<Employee> spec = (root, query, cb) -> cb.notEqual(root.get("duty"), Duty.SYSTEM);
-        
+
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(EmployeeSpecifications.searchContainsIgnoreCase(search.trim()));
         }
@@ -68,7 +71,7 @@ public class EmployeeService {
     @Transactional(readOnly = true)
     public List<EmployeeOptionDTO> getEmployeeOptions() {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
-        
+
         return employeeRepo.findAll(EmployeeSpecifications.notArchived(), sort).stream()
                 .map(e -> new EmployeeOptionDTO(e.getId(), e.getName()))
                 .toList();
@@ -83,7 +86,6 @@ public class EmployeeService {
     }
 
     /* ----- Command Methods ----- */
-
     @Transactional
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
 
@@ -142,7 +144,6 @@ public class EmployeeService {
     }
 
     /* ----- Helper Methods ----- */
-
     private Employee findEmployeeOrThrow(UUID employeeId) {
         return employeeRepo.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Colaborador não encontrado no Banco de Dados"));

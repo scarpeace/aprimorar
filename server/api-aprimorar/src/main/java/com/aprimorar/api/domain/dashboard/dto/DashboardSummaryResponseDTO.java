@@ -6,84 +6,86 @@ import java.time.Instant;
 import java.time.YearMonth;
 import java.util.List;
 
-import com.aprimorar.api.domain.event.EventRepository.EventContentCount;
+import com.aprimorar.api.domain.event.repository.EventRepository.EventContentCount;
 
 public record DashboardSummaryResponseDTO(
-    int year,
-    int month,
-    int prevYear,
-    int prevMonth,
-    int nextYear,
-    int nextMonth,
-    long activeStudentsInMonth,
-    long classesInMonth,
-    BigDecimal revenueInMonth,
-    BigDecimal costInMonth,
-    List<ClassesByContentDTO> charts,
-    Instant generatedAt,
-    int refreshSeconds
-) {
-
-    public static DashboardSummaryResponseDTO of(
-        YearMonth month,
+        int year,
+        int month,
+        int prevYear,
+        int prevMonth,
+        int nextYear,
+        int nextMonth,
         long activeStudentsInMonth,
         long classesInMonth,
         BigDecimal revenueInMonth,
         BigDecimal costInMonth,
-        List<EventContentCount> contentDistribution,
+        List<ClassesByContentDTO> charts,
         Instant generatedAt,
         int refreshSeconds
+        ) {
+
+    public static DashboardSummaryResponseDTO of(
+            YearMonth month,
+            long activeStudentsInMonth,
+            long classesInMonth,
+            BigDecimal revenueInMonth,
+            BigDecimal costInMonth,
+            List<EventContentCount> contentDistribution,
+            Instant generatedAt,
+            int refreshSeconds
     ) {
         YearMonth prev = month.minusMonths(1);
         YearMonth next = month.plusMonths(1);
         List<ClassesByContentDTO> charts = buildCharts(
-            contentDistribution,
-            classesInMonth
+                contentDistribution,
+                classesInMonth
         );
 
         return new DashboardSummaryResponseDTO(
-            month.getYear(),
-            month.getMonthValue(),
-            prev.getYear(),
-            prev.getMonthValue(),
-            next.getYear(),
-            next.getMonthValue(),
-            activeStudentsInMonth,
-            classesInMonth,
-            revenueInMonth,
-            costInMonth,
-            charts,
-            generatedAt,
-            refreshSeconds
+                month.getYear(),
+                month.getMonthValue(),
+                prev.getYear(),
+                prev.getMonthValue(),
+                next.getYear(),
+                next.getMonthValue(),
+                activeStudentsInMonth,
+                classesInMonth,
+                revenueInMonth,
+                costInMonth,
+                charts,
+                generatedAt,
+                refreshSeconds
         );
     }
 
     private static List<ClassesByContentDTO> buildCharts(
-        List<EventContentCount> distribution,
-        long total
+            List<EventContentCount> distribution,
+            long total
     ) {
         if (total == 0) {
             return List.of();
         }
 
         return distribution
-            .stream()
-            .map(p ->
-                new ClassesByContentDTO(
-                    p.getContent().name(),
-                    p.getCount(),
-                    BigDecimal.valueOf((p.getCount() * 100.0) / total).setScale(
-                        2,
-                        RoundingMode.HALF_UP
-                    )
+                .stream()
+                .map(p
+                        -> new ClassesByContentDTO(
+                        p.getContent().name(),
+                        p.getCount(),
+                        BigDecimal.valueOf((p.getCount() * 100.0) / total).setScale(
+                                2,
+                                RoundingMode.HALF_UP
+                        )
                 )
-            )
-            .toList();
+                )
+                .toList();
     }
 
     public record ClassesByContentDTO(
-        String content,
-        long count,
-        BigDecimal percentage
-    ) {}
+            String content,
+            long count,
+            BigDecimal percentage
+            ) {
+
+    }
 }

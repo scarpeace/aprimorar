@@ -1,4 +1,4 @@
-package com.aprimorar.api.domain.parent;
+package com.aprimorar.api.domain.parent.web;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,20 +19,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.domain.parent.ParentService;
 import com.aprimorar.api.domain.parent.dto.ParentOptionDTO;
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/v1/parents")
-@Tag(name = "Parent", description = "Parent management APIs")
 public class ParentController implements ParentControllerDocs {
 
     private final ParentService parentService;
@@ -41,22 +38,14 @@ public class ParentController implements ParentControllerDocs {
         this.parentService = parentService;
     }
 
-    @Operation(
-            operationId = "createParent",
-            summary = "Criar novo responsável",
-            description = "Cria um novo responsável com os dados fornecidos.")
-    @ApiResponse(responseCode = "201")
+    @Override
     @PostMapping
     public ResponseEntity<ParentResponseDTO> createParent(@RequestBody @Valid ParentRequestDTO request) {
         ParentResponseDTO createdParent = parentService.createParent(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParent);
     }
 
-    @Operation(
-            operationId = "getParents",
-            summary = "Listar responsáveis com paginação",
-            description = "Retorna os responsáveis cadastrados com paginação.")
-    @ApiResponse(responseCode = "200")
+    @Override
     @GetMapping
     public ResponseEntity<Page<ParentResponseDTO>> getParents(
             @ParameterObject Pageable pageable,
@@ -64,33 +53,20 @@ public class ParentController implements ParentControllerDocs {
         return ResponseEntity.ok(parentService.getParents(pageable, search));
     }
 
-    @Operation(
-            operationId = "getParentOptions",
-            summary = "Listar responsáveis para dropdown",
-            description = "Retorna id e nome de todos os responsáveis para uso em selects.")
-    @ApiResponse(responseCode = "200")
+    @Override
     @GetMapping("/options")
-    public ResponseEntity<List<ParentOptionDTO>> getParentOptions() {
+    public ResponseEntity<List<ParentOptionDTO>> getParentsOptions() {
         return ResponseEntity.ok(parentService.getParentOptions());
     }
 
-    @Operation(
-            operationId = "getParentById",
-            summary = "Obter responsável por ID",
-            description = "Retorna um único responsável com base no ID fornecido.")
-    @ApiResponse(responseCode = "200")
-
+    @Override
     @GetMapping("/{parentId}")
     public ResponseEntity<ParentResponseDTO> getParentById(@PathVariable UUID parentId) {
         ParentResponseDTO parent = parentService.findById(parentId);
         return ResponseEntity.ok(parent);
     }
 
-    @Operation(
-            operationId = "updateParent",
-            summary = "Atualizar responsável",
-            description = "Atualiza os dados de um responsável existente com base no ID fornecido.")
-    @ApiResponse(responseCode = "200")
+    @Override
     @PutMapping("/{parentId}")
     public ResponseEntity<ParentResponseDTO> updateParent(
             @PathVariable UUID parentId,
@@ -100,33 +76,21 @@ public class ParentController implements ParentControllerDocs {
         return ResponseEntity.ok(updatedParent);
     }
 
-    @Operation(
-            operationId = "deleteParent",
-            summary = "Deletar responsável",
-            description = "Deleta um responsável com base no ID fornecido.")
-    @ApiResponse(responseCode = "204")
+    @Override
     @DeleteMapping("/{parentId}")
     public ResponseEntity<Void> deleteParent(@PathVariable UUID parentId) {
         parentService.deleteParent(parentId);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(
-            operationId = "archiveParent",
-            summary = "Arquivar responsável",
-            description = "Arquiva um responsável com base no ID fornecido.")
-    @ApiResponse(responseCode = "204")
+    @Override
     @PatchMapping("/{id}/archive")
     public ResponseEntity<Void> archiveParent(@PathVariable UUID id) {
         parentService.archiveParent(id);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(
-            operationId = "unarchiveParent",
-            summary = "Desarquivar responsável",
-            description = "Desarquiva um responsável com base no ID fornecido.")
-    @ApiResponse(responseCode = "204")
+    @Override
     @PatchMapping("/{id}/unarchive")
     public ResponseEntity<Void> unarchiveParent(@PathVariable UUID id) {
         parentService.unarchiveParent(id);

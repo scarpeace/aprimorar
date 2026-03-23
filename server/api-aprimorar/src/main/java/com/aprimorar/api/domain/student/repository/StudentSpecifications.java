@@ -1,8 +1,10 @@
-package com.aprimorar.api.domain.student;
+package com.aprimorar.api.domain.student.repository;
 
 import java.util.UUID;
 
 import org.springframework.data.jpa.domain.Specification;
+
+import com.aprimorar.api.domain.student.Student;
 
 public final class StudentSpecifications {
 
@@ -19,9 +21,9 @@ public final class StudentSpecifications {
         return (root, query, cb) -> {
             String likeTerm = "%" + term.toLowerCase() + "%";
             return cb.or(
-                cb.like(cb.lower(root.get("name")), likeTerm),
-                cb.like(cb.lower(root.get("email")), likeTerm),
-                cb.like(cb.lower(root.get("school")), likeTerm)
+                    cb.like(cb.lower(root.get("name")), likeTerm),
+                    cb.like(cb.lower(root.get("email")), likeTerm),
+                    cb.like(cb.lower(root.get("school")), likeTerm)
             );
         };
     }

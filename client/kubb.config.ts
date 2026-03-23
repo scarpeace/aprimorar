@@ -9,10 +9,10 @@ export default defineConfig({
     path: 'http://localhost:8080/v3/api-docs',
   },
   output: {
-    path: './src/gen',
+    path: './src/kubb',
     clean: true,
     format: 'auto',
-    lint: 'eslint',
+    barrelType: 'named'
   },
 
   plugins: [
@@ -20,10 +20,10 @@ export default defineConfig({
 
     pluginTs({
       output: { path: './types' },
-      group: {
-        type: 'tag',
-        name: ({ group }) => group.toLowerCase(),
-      },
+      // group: {
+      //   type: 'tag',
+      //   name: ({ group }) => group.toLowerCase(),
+      // },
     }),
 
     pluginZod({
@@ -31,10 +31,10 @@ export default defineConfig({
       version: '4',
       dateType: 'string',
       coercion: true,
-      group: {
-        type: 'tag',
-        name: ({ group }) => group.toLowerCase(),
-      },
+      // group: {
+      //   type: 'tag',
+      //   name: ({ group }) => group.toLowerCase(),
+      // },
     }),
 
     pluginReactQuery({

@@ -1,4 +1,4 @@
-package com.aprimorar.api.domain.student;
+package com.aprimorar.api.domain.student.web;
 
 import java.util.List;
 import java.util.UUID;

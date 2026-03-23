@@ -1,30 +1,31 @@
 package com.aprimorar.api.domain.event;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.employee.Employee;
-import com.aprimorar.api.domain.employee.EmployeeRepository;
-import com.aprimorar.api.domain.event.dto.EventRequestDTO;
-import com.aprimorar.api.domain.event.dto.EventResponseDTO;
-import com.aprimorar.api.domain.student.Student;
-import com.aprimorar.api.domain.student.StudentRepository;
-import com.aprimorar.api.enums.EventContent;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
+import com.aprimorar.api.domain.event.dto.EventRequestDTO;
+import com.aprimorar.api.domain.event.dto.EventResponseDTO;
+import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.student.Student;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.enums.EventContent;
 
 @ExtendWith(MockitoExtension.class)
 class EventServiceTest {

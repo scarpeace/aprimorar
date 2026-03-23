@@ -1,4 +1,4 @@
-package com.aprimorar.api.domain.student;
+package com.aprimorar.api.domain.student.web;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.domain.student.StudentService;
 import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +50,6 @@ public class StudentController implements StudentControllerDocs {
     @GetMapping
     public ResponseEntity<Page<StudentResponseDTO>> getStudents(
             @ParameterObject Pageable pageable,
-            @Parameter(description = "Termo de busca")
             @RequestParam(required = false) String search
     ) {
         Page<StudentResponseDTO> students = studentService.getStudents(pageable, search);

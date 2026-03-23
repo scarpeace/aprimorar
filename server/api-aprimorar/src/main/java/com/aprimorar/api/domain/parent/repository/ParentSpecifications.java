@@ -1,6 +1,8 @@
-package com.aprimorar.api.domain.parent;
+package com.aprimorar.api.domain.parent.repository;
 
 import org.springframework.data.jpa.domain.Specification;
+
+import com.aprimorar.api.domain.parent.Parent;
 
 public final class ParentSpecifications {
 
@@ -11,9 +13,9 @@ public final class ParentSpecifications {
         return (root, query, cb) -> {
             String likeTerm = "%" + term.toLowerCase() + "%";
             return cb.or(
-                cb.like(cb.lower(root.get("name")), likeTerm),
-                cb.like(cb.lower(root.get("email")), likeTerm),
-                cb.like(cb.lower(root.get("cpf")), likeTerm)
+                    cb.like(cb.lower(root.get("name")), likeTerm),
+                    cb.like(cb.lower(root.get("email")), likeTerm),
+                    cb.like(cb.lower(root.get("cpf")), likeTerm)
             );
         };
     }

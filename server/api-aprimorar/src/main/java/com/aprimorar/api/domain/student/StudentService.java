@@ -13,16 +13,17 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aprimorar.api.domain.event.EventRepository;
+import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.ParentRepository;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
+import com.aprimorar.api.domain.parent.repository.ParentRepository;
 import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
-
+import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.domain.student.repository.StudentSpecifications;
 
 @Service
 public class StudentService {
@@ -47,7 +48,6 @@ public class StudentService {
     }
 
     /* ----- Query Methods ----- */
-
     @Transactional(readOnly = true)
     public Page<StudentResponseDTO> getStudents(Pageable pageable, String search) {
 
@@ -72,7 +72,7 @@ public class StudentService {
                 StudentSpecifications.isNotGhost(),
                 StudentSpecifications.notArchived()
         );
-        
+
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
         return studentRepo.findAll(spec, sort).stream()
@@ -94,7 +94,6 @@ public class StudentService {
     }
 
     /* ----- Command Methods ----- */
-
     @Transactional
     public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
 
@@ -162,7 +161,7 @@ public class StudentService {
         }
 
         Student student = findStudentOrThrow(studentId);
-        
+
         // Reatribui eventos para o aluno fantasma antes de deletar
         log.info("Reatribuindo eventos do aluno {} para o Ghost Student.", student.getName().toUpperCase());
         eventRepo.reassignEventsToGhost(studentId, GHOST_STUDENT_ID);
@@ -172,7 +171,6 @@ public class StudentService {
     }
 
     /* ----- Helper Methods ----- */
-
     private Student findStudentOrThrow(UUID studentId) {
         return studentRepo.findById(studentId)
                 .orElseThrow(() -> new StudentNotFoundException("Aluno não encontrado no banco de dados"));

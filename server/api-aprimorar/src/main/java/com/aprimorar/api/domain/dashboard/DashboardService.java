@@ -2,8 +2,9 @@ package com.aprimorar.api.domain.dashboard;
 
 import com.aprimorar.api.domain.dashboard.dto.DashboardSummaryResponseDTO;
 import com.aprimorar.api.domain.dashboard.exception.InvalidDashboardRequestException;
-import com.aprimorar.api.domain.event.EventRepository;
-import com.aprimorar.api.domain.event.EventRepository.EventContentCount;
+import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.event.repository.EventRepository.EventContentCount;
+
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
@@ -23,15 +24,15 @@ public class DashboardService {
     private static final int MIN_MONTH = 1;
     private static final int MAX_MONTH = 12;
     private static final UUID GHOST_STUDENT_ID = UUID.fromString(
-        "00000000-0000-0000-0000-000000000000"
+            "00000000-0000-0000-0000-000000000000"
     );
 
     private final EventRepository eventRepository;
     private final Clock applicationClock;
 
     public DashboardService(
-        EventRepository eventRepository,
-        Clock applicationClock
+            EventRepository eventRepository,
+            Clock applicationClock
     ) {
         this.eventRepository = eventRepository;
         this.applicationClock = applicationClock;
@@ -44,54 +45,54 @@ public class DashboardService {
         YearMonth selectedMonth = YearMonth.of(year, month);
         DateTimeRange monthRange = toMonthRange(selectedMonth);
 
-        long activeStudentsInMonth =
-            eventRepository.countDistinctStudentsInPeriodExcludingStudent(
-                monthRange.startDateTime(),
-                monthRange.endExclusiveDateTime(),
-                GHOST_STUDENT_ID
-            );
-        long classesInMonth =
-            eventRepository.countByStartDateGreaterThanEqualAndStartDateLessThan(
+        long activeStudentsInMonth
+                = eventRepository.countDistinctStudentsInPeriodExcludingStudent(
+                        monthRange.startDateTime(),
+                        monthRange.endExclusiveDateTime(),
+                        GHOST_STUDENT_ID
+                );
+        long classesInMonth
+                = eventRepository.countByStartDateGreaterThanEqualAndStartDateLessThan(
+                        monthRange.startDateTime(),
+                        monthRange.endExclusiveDateTime()
+                );
+        BigDecimal revenueInMonth = eventRepository.sumPriceInPeriod(
                 monthRange.startDateTime(),
                 monthRange.endExclusiveDateTime()
-            );
-        BigDecimal revenueInMonth = eventRepository.sumPriceInPeriod(
-            monthRange.startDateTime(),
-            monthRange.endExclusiveDateTime()
         );
         BigDecimal costInMonth = eventRepository.sumPaymentInPeriod(
-            monthRange.startDateTime(),
-            monthRange.endExclusiveDateTime()
-        );
-
-        List<EventContentCount> groupedByContent =
-            eventRepository.findContentDistributionInPeriod(
                 monthRange.startDateTime(),
                 monthRange.endExclusiveDateTime()
-            );
+        );
+
+        List<EventContentCount> groupedByContent
+                = eventRepository.findContentDistributionInPeriod(
+                        monthRange.startDateTime(),
+                        monthRange.endExclusiveDateTime()
+                );
 
         return DashboardSummaryResponseDTO.of(
-            selectedMonth,
-            activeStudentsInMonth,
-            classesInMonth,
-            revenueInMonth,
-            costInMonth,
-            groupedByContent,
-            applicationClock.instant(),
-            REFRESH_SECONDS
+                selectedMonth,
+                activeStudentsInMonth,
+                classesInMonth,
+                revenueInMonth,
+                costInMonth,
+                groupedByContent,
+                applicationClock.instant(),
+                REFRESH_SECONDS
         );
     }
 
     private void validateInput(Integer year, Integer month) {
         if (year == null || year < MIN_YEAR || year > MAX_YEAR) {
             throw new InvalidDashboardRequestException(
-                "Ano invalido. Informe um ano entre 2000 e 2100."
+                    "Ano invalido. Informe um ano entre 2000 e 2100."
             );
         }
 
         if (month == null || month < MIN_MONTH || month > MAX_MONTH) {
             throw new InvalidDashboardRequestException(
-                "Mes invalido. Informe um valor entre 1 e 12."
+                    "Mes invalido. Informe um valor entre 1 e 12."
             );
         }
     }
@@ -100,13 +101,15 @@ public class DashboardService {
         LocalDate firstDay = yearMonth.atDay(1);
         LocalDate firstDayNextMonth = yearMonth.plusMonths(1).atDay(1);
         return new DateTimeRange(
-            firstDay.atStartOfDay(),
-            firstDayNextMonth.atStartOfDay()
+                firstDay.atStartOfDay(),
+                firstDayNextMonth.atStartOfDay()
         );
     }
 
     private record DateTimeRange(
-        LocalDateTime startDateTime,
-        LocalDateTime endExclusiveDateTime
-    ) {}
+            LocalDateTime startDateTime,
+            LocalDateTime endExclusiveDateTime
+            ) {
+
+    }
 }

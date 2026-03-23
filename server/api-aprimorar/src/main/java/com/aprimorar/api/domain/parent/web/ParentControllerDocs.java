@@ -1,4 +1,4 @@
-package com.aprimorar.api.domain.parent;
+package com.aprimorar.api.domain.parent.web;
 
 import java.util.List;
 import java.util.UUID;
@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
+import com.aprimorar.api.domain.parent.dto.ParentOptionDTO;
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 import com.aprimorar.api.exception.ProblemDetailResponseDTO;
@@ -57,21 +58,36 @@ public interface ParentControllerDocs {
     );
 
     @Operation(
-            operationId = "getParentsByStudent",
-            summary = "Listar responsáveis por aluno",
-            description = "Lista todos os responsáveis de um aluno específico."
+            operationId = "getParentById",
+            summary = "Listar responsável por ID",
+            description = "Lista um responsável específico pelo ID."
     )
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Responsáveis listados com sucesso",
+        @ApiResponse(responseCode = "200", description = "Responsável listado com sucesso",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ParentResponseDTO.class))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
     })
-    ResponseEntity<List<ParentResponseDTO>> getParentsByStudent(
-            @Parameter(description = "ID do aluno") UUID studentId
+    ResponseEntity<ParentResponseDTO> getParentById(
+            @Parameter(description = "ID do responsável") UUID parentId
     );
+
+    @Operation(
+            operationId = "getParentsOptions",
+            summary = "Listar responsáveis para listas e dropdowns",
+            description = "Lista todos os responsáveis cadastrados para uso em listas e dropdowns."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Responsáveis listados com sucesso",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ParentOptionDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Requisição inválida",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+    })
+    ResponseEntity<List<ParentOptionDTO>> getParentsOptions();
 
     @Operation(
             operationId = "updateParent",
@@ -91,6 +107,7 @@ public interface ParentControllerDocs {
             @Parameter(description = "Dados do responsável") ParentRequestDTO request
     );
 
+    //TODO: falta colocar o código certo dos erros (não precisa colocar da resposta)
     @Operation(
             operationId = "deleteParent",
             summary = "Deletar responsável",
@@ -103,6 +120,36 @@ public interface ParentControllerDocs {
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
     })
     ResponseEntity<Void> deleteParent(
+            @Parameter(description = "ID do responsável") UUID parentId
+    );
+
+    @Operation(
+            operationId = "archiveParent",
+            summary = "Arquivar responsável",
+            description = "Arquiva um responsável específico."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Responsável arquivado com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Responsável não encontrado",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+    })
+    ResponseEntity<Void> archiveParent(
+            @Parameter(description = "ID do responsável") UUID parentId
+    );
+
+    @Operation(
+            operationId = "unarchiveParent",
+            summary = "Desarquivar responsável",
+            description = "Desarquiva um responsável específico."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Responsável desarquivado com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Responsável não encontrado",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+    })
+    ResponseEntity<Void> unarchiveParent(
             @Parameter(description = "ID do responsável") UUID parentId
     );
 

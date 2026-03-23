@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.aprimorar.api.domain.dashboard.dto.DashboardSummaryResponseDTO;
-import com.aprimorar.api.domain.event.EventRepository.EventContentCount;
+import com.aprimorar.api.domain.event.repository.EventRepository.EventContentCount;
 import com.aprimorar.api.enums.EventContent;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -18,7 +18,7 @@ class DashboardSummaryResponseDTOTest {
 
     @Test
     @DisplayName(
-        "Should create DashboardSummaryResponseDTO with correct mappings and calculations"
+            "Should create DashboardSummaryResponseDTO with correct mappings and calculations"
     )
     void shouldCreateDtoWithCorrectMappingsAndCalculations() {
         YearMonth selectedMonth = YearMonth.of(2024, 1);
@@ -40,14 +40,14 @@ class DashboardSummaryResponseDTOTest {
         List<EventContentCount> distribution = List.of(proj1, proj2);
 
         DashboardSummaryResponseDTO dto = DashboardSummaryResponseDTO.of(
-            selectedMonth,
-            activeStudents,
-            totalClasses,
-            revenue,
-            cost,
-            distribution,
-            now,
-            refreshSeconds
+                selectedMonth,
+                activeStudents,
+                totalClasses,
+                revenue,
+                cost,
+                distribution,
+                now,
+                refreshSeconds
         );
 
         assertThat(dto.year()).isEqualTo(2024);
@@ -65,11 +65,11 @@ class DashboardSummaryResponseDTOTest {
         assertThat(dto.charts()).hasSize(2);
 
         assertThat(dto.charts())
-            .extracting(DashboardSummaryResponseDTO.ClassesByContentDTO::percentage)
-            .containsExactlyInAnyOrder(
-                new BigDecimal("75.00"),
-                new BigDecimal("25.00")
-            );
+                .extracting(DashboardSummaryResponseDTO.ClassesByContentDTO::percentage)
+                .containsExactlyInAnyOrder(
+                        new BigDecimal("75.00"),
+                        new BigDecimal("25.00")
+                );
 
         assertThat(dto.generatedAt()).isEqualTo(now);
         assertThat(dto.refreshSeconds()).isEqualTo(60);
@@ -83,14 +83,14 @@ class DashboardSummaryResponseDTOTest {
         List<EventContentCount> distribution = List.of();
 
         DashboardSummaryResponseDTO dto = DashboardSummaryResponseDTO.of(
-            selectedMonth,
-            0,
-            totalClasses,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            distribution,
-            Instant.now(),
-            60
+                selectedMonth,
+                0,
+                totalClasses,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                distribution,
+                Instant.now(),
+                60
         );
 
         assertThat(dto.charts()).isEmpty();

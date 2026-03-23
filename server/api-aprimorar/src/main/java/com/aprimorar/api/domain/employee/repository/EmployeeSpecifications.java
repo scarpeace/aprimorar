@@ -1,7 +1,9 @@
-package com.aprimorar.api.domain.employee;
+package com.aprimorar.api.domain.employee.repository;
 
-import com.aprimorar.api.enums.Duty;
 import org.springframework.data.jpa.domain.Specification;
+
+import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.enums.Duty;
 
 public final class EmployeeSpecifications {
 
@@ -16,12 +18,12 @@ public final class EmployeeSpecifications {
         return (root, query, cb) -> {
             String pattern = "%" + term.toLowerCase() + "%";
             return cb.and(
-                cb.notEqual(root.get("duty"), Duty.SYSTEM),
-                cb.or(
-                    cb.like(cb.lower(root.get("name")), pattern),
-                    cb.like(cb.lower(root.get("email")), pattern),
-                    cb.like(cb.lower(root.get("duty").as(String.class)), pattern)
-                )
+                    cb.notEqual(root.get("duty"), Duty.SYSTEM),
+                    cb.or(
+                            cb.like(cb.lower(root.get("name")), pattern),
+                            cb.like(cb.lower(root.get("email")), pattern),
+                            cb.like(cb.lower(root.get("duty").as(String.class)), pattern)
+                    )
             );
         };
     }
