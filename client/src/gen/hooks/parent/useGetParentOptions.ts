@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { GetParentOptionsQueryResponse, GetParentOptions400, GetParentOptions401, GetParentOptions403, GetParentOptions404, GetParentOptions409, GetParentOptions500 } from "../../types/parent/GetParentOptions.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getParentOptionsQueryResponseSchema } from "../../zod/parent/getParentOptionsSchema.ts";
+import { getParentOptionsQueryResponseSchema } from "../../schemas/parent/getParentOptionsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getParentOptionsQueryKey = () => [{ url: '/v1/parents/options' }] as const

@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { UpdateParentMutationRequest, UpdateParentMutationResponse, UpdateParentPathParams, UpdateParent400, UpdateParent401, UpdateParent403, UpdateParent404, UpdateParent409, UpdateParent500 } from "../../types/parent/UpdateParent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { updateParentMutationResponseSchema, updateParentMutationRequestSchema } from "../../zod/parent/updateParentSchema.ts";
+import { updateParentMutationResponseSchema, updateParentMutationRequestSchema } from "../../schemas/parent/updateParentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const updateParentMutationKey = () => [{ url: '/v1/parents/:parentId' }] as const

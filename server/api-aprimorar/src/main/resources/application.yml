@@ -12,8 +12,7 @@ spring:
 
 springdoc:
   api-docs:
-    path: /v3/api-docs # Caminho lido pelo kubb.config.ts
-    version: OPENAPI_3_0
+    path: /v3/api-docs
   default-produces-media-type: application/json
   swagger-ui:
     path: /swagger-ui.html

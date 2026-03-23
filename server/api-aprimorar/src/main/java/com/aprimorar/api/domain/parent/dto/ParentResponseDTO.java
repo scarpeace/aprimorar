@@ -4,17 +4,18 @@ import java.time.Instant;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 public record ParentResponseDTO(
-        UUID id,
-        String name,
-        String email,
-        String contact,
-        String cpf,
+        @NotNull UUID id,
+        @NotNull String name,
+        @NotNull String email,
+        @NotNull String contact,
+        @NotNull String cpf,
         @Schema(nullable = true)
         @Nullable
         Instant archivedAt,
-        Instant createdAt,
+        @NotNull Instant createdAt,
         @Schema(nullable = true)
         @Nullable
         Instant updatedAt

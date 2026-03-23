@@ -7,22 +7,23 @@ import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 public record StudentResponseDTO(
-        UUID id,
-        String name,
-        String contact,
-        String email,
-        String cpf,
-        LocalDate birthdate,
-        String school,
-        Integer age,
-        AddressResponseDTO address,
-        ParentResponseDTO parent,
+        @NotNull UUID id,
+        @NotNull String name,
+        @NotNull String contact,
+        @NotNull String email,
+        @NotNull String cpf,
+        @NotNull LocalDate birthdate,
+        @NotNull String school,
+        @NotNull Integer age,
+        @NotNull AddressResponseDTO address,
+        @NotNull ParentResponseDTO parent,
         @Schema(nullable = true)
         @Nullable
         Instant archivedAt,
-        Instant createdAt,
+        @NotNull Instant createdAt,
         @Schema(nullable = true)
         @Nullable
         Instant updatedAt

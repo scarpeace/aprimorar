@@ -8,55 +8,55 @@ import type { ParentResponseDTO } from "./ParentResponseDTO.ts";
 
 export type StudentResponseDTO = {
     /**
-     * @type string | undefined, uuid
+     * @type string, uuid
     */
-    id?: string;
+    id: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    name?: string;
+    name: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    contact?: string;
+    contact: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    email?: string;
+    email: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    cpf?: string;
+    cpf: string;
     /**
-     * @type string | undefined, date
+     * @type string, date
     */
-    birthdate?: string;
+    birthdate: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    school?: string;
+    school: string;
     /**
-     * @type integer | undefined, int32
+     * @type integer, int32
     */
-    age?: number;
+    age: number;
     /**
-     * @type object | undefined
+     * @type object
     */
-    address?: AddressResponseDTO;
+    address: AddressResponseDTO;
     /**
-     * @type object | undefined
+     * @type object
     */
-    parent?: ParentResponseDTO;
-    /**
-     * @type string, date-time
-    */
-    archivedAt?: string | null;
+    parent: ParentResponseDTO;
     /**
      * @type string | undefined, date-time
     */
-    createdAt?: string;
+    archivedAt?: string;
     /**
      * @type string, date-time
     */
-    updatedAt?: string | null;
+    createdAt: string;
+    /**
+     * @type string | undefined, date-time
+    */
+    updatedAt?: string;
 };

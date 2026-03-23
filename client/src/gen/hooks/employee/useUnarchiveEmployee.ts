@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { UnarchiveEmployeeMutationResponse, UnarchiveEmployeePathParams, UnarchiveEmployee400, UnarchiveEmployee401, UnarchiveEmployee403, UnarchiveEmployee404, UnarchiveEmployee409, UnarchiveEmployee500 } from "../../types/employee/UnarchiveEmployee.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { unarchiveEmployeeMutationResponseSchema } from "../../zod/employee/unarchiveEmployeeSchema.ts";
+import { unarchiveEmployeeMutationResponseSchema } from "../../schemas/employee/unarchiveEmployeeSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const unarchiveEmployeeMutationKey = () => [{ url: '/v1/employees/:employeeId/unarchive' }] as const

@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { GetParentsQueryResponse, GetParentsQueryParams, GetParents400, GetParents401, GetParents403, GetParents404, GetParents409, GetParents500 } from "../../types/parent/GetParents.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getParentsQueryResponseSchema } from "../../zod/parent/getParentsSchema.ts";
+import { getParentsQueryResponseSchema } from "../../schemas/parent/getParentsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getParentsQueryKey = (params: GetParentsQueryParams) => [{ url: '/v1/parents' }, ...(params ? [params] : [])] as const

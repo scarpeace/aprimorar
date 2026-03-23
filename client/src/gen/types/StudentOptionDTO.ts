@@ -6,11 +6,11 @@
 
 export type StudentOptionDTO = {
     /**
-     * @type string | undefined, uuid
+     * @type string, uuid
     */
-    id?: string;
+    id: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    name?: string;
+    name: string;
 };

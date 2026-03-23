@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { DeleteEmployeeMutationResponse, DeleteEmployeePathParams, DeleteEmployee400, DeleteEmployee401, DeleteEmployee403, DeleteEmployee404, DeleteEmployee409, DeleteEmployee500 } from "../../types/employee/DeleteEmployee.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { deleteEmployeeMutationResponseSchema } from "../../zod/employee/deleteEmployeeSchema.ts";
+import { deleteEmployeeMutationResponseSchema } from "../../schemas/employee/deleteEmployeeSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteEmployeeMutationKey = () => [{ url: '/v1/employees/:employeeId' }] as const

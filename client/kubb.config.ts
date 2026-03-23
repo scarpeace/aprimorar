@@ -16,6 +16,7 @@ export default defineConfig({
     pluginOas({ generators: [] }),
 
     pluginTs({
+      output: { path: './types' },
       group: {
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),
@@ -23,6 +24,7 @@ export default defineConfig({
     }),
 
     pluginZod({
+      output: { path: './schemas' },
       version: '4',
       typed: true,
       inferred: true,

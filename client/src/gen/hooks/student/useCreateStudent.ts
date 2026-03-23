@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { CreateStudentMutationRequest, CreateStudentMutationResponse, CreateStudent400, CreateStudent401, CreateStudent403, CreateStudent404, CreateStudent409, CreateStudent500 } from "../../types/student/CreateStudent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { createStudentMutationResponseSchema, createStudentMutationRequestSchema } from "../../zod/student/createStudentSchema.ts";
+import { createStudentMutationResponseSchema, createStudentMutationRequestSchema } from "../../schemas/student/createStudentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createStudentMutationKey = () => [{ url: '/v1/students' }] as const

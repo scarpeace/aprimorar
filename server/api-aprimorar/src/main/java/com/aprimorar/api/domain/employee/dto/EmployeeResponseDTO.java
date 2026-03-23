@@ -1,28 +1,27 @@
 package com.aprimorar.api.domain.employee.dto;
 
 import com.aprimorar.api.enums.Duty;
-import com.aprimorar.api.enums.Role;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public record EmployeeResponseDTO(
-        UUID id,
-        String name,
-
-        LocalDate birthdate,
-        String pix,
-        String contact,
-        String cpf,
-        String email,
-        Duty duty,
+        @NotNull UUID id,
+        @NotNull String name,
+        @NotNull LocalDate birthdate,
+        @NotNull String pix,
+        @NotNull String contact,
+        @NotNull String cpf,
+        @NotNull String email,
+        @NotNull Duty duty,
+        @Schema(nullable = true)
+        @Nullable
         Instant archivedAt,
-        Instant createdAt,
+        @NotNull Instant createdAt,
+        @Schema(nullable = true)
+        @Nullable
         Instant updatedAt
-        ) {
-}
+) {}

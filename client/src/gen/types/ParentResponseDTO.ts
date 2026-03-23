@@ -6,35 +6,35 @@
 
 export type ParentResponseDTO = {
     /**
-     * @type string | undefined, uuid
+     * @type string, uuid
     */
-    id?: string;
+    id: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    name?: string;
+    name: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    email?: string;
+    email: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    contact?: string;
+    contact: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    cpf?: string;
-    /**
-     * @type string, date-time
-    */
-    archivedAt?: string | null;
+    cpf: string;
     /**
      * @type string | undefined, date-time
     */
-    createdAt?: string;
+    archivedAt?: string;
     /**
      * @type string, date-time
     */
-    updatedAt?: string | null;
+    createdAt: string;
+    /**
+     * @type string | undefined, date-time
+    */
+    updatedAt?: string;
 };

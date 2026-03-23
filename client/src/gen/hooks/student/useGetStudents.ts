@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { GetStudentsQueryResponse, GetStudentsQueryParams, GetStudents400, GetStudents401, GetStudents403, GetStudents404, GetStudents409, GetStudents500 } from "../../types/student/GetStudents.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getStudentsQueryResponseSchema } from "../../zod/student/getStudentsSchema.ts";
+import { getStudentsQueryResponseSchema } from "../../schemas/student/getStudentsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getStudentsQueryKey = (params: GetStudentsQueryParams) => [{ url: '/v1/students' }, ...(params ? [params] : [])] as const

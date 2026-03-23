@@ -38,31 +38,31 @@ export type AddressResponseDTOStateEnumKey = (typeof addressResponseDTOStateEnum
 
 export type AddressResponseDTO = {
     /**
-     * @type string | undefined
+     * @type string
     */
-    street?: string;
-    /**
-     * @type string | undefined
-    */
-    number?: string;
+    street: string;
     /**
      * @type string
     */
-    complement?: string | null;
+    number: string;
     /**
      * @type string | undefined
     */
-    district?: string;
+    complement?: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    city?: string;
+    district: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    state?: AddressResponseDTOStateEnumKey;
+    city: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    zip?: string;
+    state: AddressResponseDTOStateEnumKey;
+    /**
+     * @type string
+    */
+    zip: string;
 };

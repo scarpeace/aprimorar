@@ -36,9 +36,6 @@ export const addressRequestDTOStateEnum = {
 
 export type AddressRequestDTOStateEnumKey = (typeof addressRequestDTOStateEnum)[keyof typeof addressRequestDTOStateEnum];
 
-/**
- * @description Endereço do aluno como AdressRequestDTO
-*/
 export type AddressRequestDTO = {
     /**
      * @minLength 1

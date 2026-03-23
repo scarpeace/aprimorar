@@ -29,6 +29,6 @@ export type ProblemDetail = {
      * @type object | undefined
     */
     properties?: {
-        [key: string]: object;
+        [key: string]: any;
     };
 };
