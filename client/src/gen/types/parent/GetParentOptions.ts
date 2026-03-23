@@ -3,7 +3,13 @@
 * Do not edit manually.
 */
 
+import type { ParentOptionDTO } from "../ParentOptionDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
+
+/**
+ * @description OK
+*/
+export type GetParentOptions200 = ParentOptionDTO[];
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -35,9 +41,9 @@ export type GetParentOptions409 = ProblemDetail;
 */
 export type GetParentOptions500 = ProblemDetail;
 
-export type GetParentOptionsQueryResponse = any;
+export type GetParentOptionsQueryResponse = GetParentOptions200;
 
 export type GetParentOptionsQuery = {
-    Response: any;
+    Response: GetParentOptions200;
     Errors: GetParentOptions400 | GetParentOptions401 | GetParentOptions403 | GetParentOptions404 | GetParentOptions409 | GetParentOptions500;
 };

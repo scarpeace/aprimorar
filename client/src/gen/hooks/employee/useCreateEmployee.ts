@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { CreateEmployeeMutationRequest, CreateEmployeeMutationResponse, CreateEmployee400, CreateEmployee401, CreateEmployee403, CreateEmployee404, CreateEmployee409, CreateEmployee500 } from "../../types/employee/CreateEmployee.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { createEmployeeMutationResponseSchema, createEmployeeMutationRequestSchema } from "../../schemas/employee/createEmployeeSchema.ts";
+import { createEmployeeMutationResponseSchema, createEmployeeMutationRequestSchema } from "../../zod/employee/createEmployeeSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createEmployeeMutationKey = () => [{ url: '/v1/employees' }] as const

@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { ArchiveStudentMutationResponse, ArchiveStudentPathParams, ArchiveStudent400, ArchiveStudent401, ArchiveStudent403, ArchiveStudent404, ArchiveStudent409, ArchiveStudent500 } from "../../types/student/ArchiveStudent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { archiveStudentMutationResponseSchema } from "../../schemas/student/archiveStudentSchema.ts";
+import { archiveStudentMutationResponseSchema } from "../../zod/student/archiveStudentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const archiveStudentMutationKey = () => [{ url: '/v1/students/:studentId/archive' }] as const

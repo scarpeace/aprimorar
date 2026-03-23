@@ -13,6 +13,11 @@ export type DeleteEmployeePathParams = {
 };
 
 /**
+ * @description No Content
+*/
+export type DeleteEmployee204 = any;
+
+/**
  * @description Requisição inválida (erro de validação)
 */
 export type DeleteEmployee400 = ProblemDetail;
@@ -42,10 +47,10 @@ export type DeleteEmployee409 = ProblemDetail;
 */
 export type DeleteEmployee500 = ProblemDetail;
 
-export type DeleteEmployeeMutationResponse = any;
+export type DeleteEmployeeMutationResponse = DeleteEmployee204;
 
 export type DeleteEmployeeMutation = {
-    Response: any;
+    Response: DeleteEmployee204;
     PathParams: DeleteEmployeePathParams;
     Errors: DeleteEmployee400 | DeleteEmployee401 | DeleteEmployee403 | DeleteEmployee404 | DeleteEmployee409 | DeleteEmployee500;
 };

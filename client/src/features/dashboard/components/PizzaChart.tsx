@@ -6,11 +6,11 @@ import {
   Tooltip,
   type PieLabelRenderProps,
 } from "recharts";
-import { z } from "zod";
-import { dashboardSummaryResponseDTOSchema } from "@/gen/schemas/dashboardSummaryResponseDTOSchema";
 import { eventContentLabels } from "@/features/events/schemas/eventContentEnum";
-type DashboardSummary = z.infer<typeof dashboardSummaryResponseDTOSchema>;
-type ClassesByContentDTO = NonNullable<DashboardSummary["charts"]>[number];
+import type { DashboardSummaryResponseDTO } from "@/gen";
+
+type ClassesByContentDTO = NonNullable<DashboardSummaryResponseDTO["charts"]>[number];
+
 const COLORS = [
   "#3b82f6",
   "#10b981",

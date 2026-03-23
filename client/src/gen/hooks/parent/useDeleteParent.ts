@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { DeleteParentMutationResponse, DeleteParentPathParams, DeleteParent400, DeleteParent401, DeleteParent403, DeleteParent404, DeleteParent409, DeleteParent500 } from "../../types/parent/DeleteParent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { deleteParentMutationResponseSchema } from "../../schemas/parent/deleteParentSchema.ts";
+import { deleteParentMutationResponseSchema } from "../../zod/parent/deleteParentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteParentMutationKey = () => [{ url: '/v1/parents/:parentId' }] as const

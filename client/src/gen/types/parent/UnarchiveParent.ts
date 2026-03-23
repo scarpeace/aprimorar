@@ -13,6 +13,11 @@ export type UnarchiveParentPathParams = {
 };
 
 /**
+ * @description No Content
+*/
+export type UnarchiveParent204 = any;
+
+/**
  * @description Requisição inválida (erro de validação)
 */
 export type UnarchiveParent400 = ProblemDetail;
@@ -42,10 +47,10 @@ export type UnarchiveParent409 = ProblemDetail;
 */
 export type UnarchiveParent500 = ProblemDetail;
 
-export type UnarchiveParentMutationResponse = any;
+export type UnarchiveParentMutationResponse = UnarchiveParent204;
 
 export type UnarchiveParentMutation = {
-    Response: any;
+    Response: UnarchiveParent204;
     PathParams: UnarchiveParentPathParams;
     Errors: UnarchiveParent400 | UnarchiveParent401 | UnarchiveParent403 | UnarchiveParent404 | UnarchiveParent409 | UnarchiveParent500;
 };

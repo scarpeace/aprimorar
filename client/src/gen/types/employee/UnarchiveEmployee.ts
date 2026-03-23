@@ -13,6 +13,11 @@ export type UnarchiveEmployeePathParams = {
 };
 
 /**
+ * @description No Content
+*/
+export type UnarchiveEmployee204 = any;
+
+/**
  * @description Requisição inválida (erro de validação)
 */
 export type UnarchiveEmployee400 = ProblemDetail;
@@ -42,10 +47,10 @@ export type UnarchiveEmployee409 = ProblemDetail;
 */
 export type UnarchiveEmployee500 = ProblemDetail;
 
-export type UnarchiveEmployeeMutationResponse = any;
+export type UnarchiveEmployeeMutationResponse = UnarchiveEmployee204;
 
 export type UnarchiveEmployeeMutation = {
-    Response: any;
+    Response: UnarchiveEmployee204;
     PathParams: UnarchiveEmployeePathParams;
     Errors: UnarchiveEmployee400 | UnarchiveEmployee401 | UnarchiveEmployee403 | UnarchiveEmployee404 | UnarchiveEmployee409 | UnarchiveEmployee500;
 };

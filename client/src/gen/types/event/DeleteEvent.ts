@@ -13,6 +13,11 @@ export type DeleteEventPathParams = {
 };
 
 /**
+ * @description No Content
+*/
+export type DeleteEvent204 = any;
+
+/**
  * @description Requisição inválida (erro de validação)
 */
 export type DeleteEvent400 = ProblemDetail;
@@ -42,10 +47,10 @@ export type DeleteEvent409 = ProblemDetail;
 */
 export type DeleteEvent500 = ProblemDetail;
 
-export type DeleteEventMutationResponse = any;
+export type DeleteEventMutationResponse = DeleteEvent204;
 
 export type DeleteEventMutation = {
-    Response: any;
+    Response: DeleteEvent204;
     PathParams: DeleteEventPathParams;
     Errors: DeleteEvent400 | DeleteEvent401 | DeleteEvent403 | DeleteEvent404 | DeleteEvent409 | DeleteEvent500;
 };

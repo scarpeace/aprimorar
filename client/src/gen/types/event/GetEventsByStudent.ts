@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { PagedModelEventResponseDTO } from "../PagedModelEventResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetEventsByStudentPathParams = {
@@ -35,6 +36,11 @@ export type GetEventsByStudentQueryParams = {
 };
 
 /**
+ * @description OK
+*/
+export type GetEventsByStudent200 = PagedModelEventResponseDTO;
+
+/**
  * @description Requisição inválida (erro de validação)
 */
 export type GetEventsByStudent400 = ProblemDetail;
@@ -64,10 +70,10 @@ export type GetEventsByStudent409 = ProblemDetail;
 */
 export type GetEventsByStudent500 = ProblemDetail;
 
-export type GetEventsByStudentQueryResponse = any;
+export type GetEventsByStudentQueryResponse = GetEventsByStudent200;
 
 export type GetEventsByStudentQuery = {
-    Response: any;
+    Response: GetEventsByStudent200;
     PathParams: GetEventsByStudentPathParams;
     QueryParams: GetEventsByStudentQueryParams;
     Errors: GetEventsByStudent400 | GetEventsByStudent401 | GetEventsByStudent403 | GetEventsByStudent404 | GetEventsByStudent409 | GetEventsByStudent500;

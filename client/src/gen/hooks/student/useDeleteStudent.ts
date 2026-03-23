@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { DeleteStudentMutationResponse, DeleteStudentPathParams, DeleteStudent400, DeleteStudent401, DeleteStudent403, DeleteStudent404, DeleteStudent409, DeleteStudent500 } from "../../types/student/DeleteStudent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { deleteStudentMutationResponseSchema } from "../../schemas/student/deleteStudentSchema.ts";
+import { deleteStudentMutationResponseSchema } from "../../zod/student/deleteStudentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteStudentMutationKey = () => [{ url: '/v1/students/:studentId' }] as const

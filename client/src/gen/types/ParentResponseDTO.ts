@@ -26,15 +26,15 @@ export type ParentResponseDTO = {
     */
     cpf?: string;
     /**
-     * @type string | undefined, date-time
+     * @type string, date-time
     */
-    archivedAt?: string;
+    archivedAt?: string | null;
     /**
      * @type string | undefined, date-time
     */
     createdAt?: string;
     /**
-     * @type string | undefined, date-time
+     * @type string, date-time
     */
-    updatedAt?: string;
+    updatedAt?: string | null;
 };

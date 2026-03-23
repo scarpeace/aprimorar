@@ -4,6 +4,7 @@
 */
 
 import type { EmployeeRequestDTO } from "../EmployeeRequestDTO.ts";
+import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type UpdateEmployeePathParams = {
@@ -12,6 +13,11 @@ export type UpdateEmployeePathParams = {
     */
     employeeId: string;
 };
+
+/**
+ * @description OK
+*/
+export type UpdateEmployee200 = EmployeeResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -45,10 +51,10 @@ export type UpdateEmployee500 = ProblemDetail;
 
 export type UpdateEmployeeMutationRequest = EmployeeRequestDTO;
 
-export type UpdateEmployeeMutationResponse = any;
+export type UpdateEmployeeMutationResponse = UpdateEmployee200;
 
 export type UpdateEmployeeMutation = {
-    Response: any;
+    Response: UpdateEmployee200;
     Request: UpdateEmployeeMutationRequest;
     PathParams: UpdateEmployeePathParams;
     Errors: UpdateEmployee400 | UpdateEmployee401 | UpdateEmployee403 | UpdateEmployee404 | UpdateEmployee409 | UpdateEmployee500;

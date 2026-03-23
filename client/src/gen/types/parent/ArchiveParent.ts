@@ -13,6 +13,11 @@ export type ArchiveParentPathParams = {
 };
 
 /**
+ * @description No Content
+*/
+export type ArchiveParent204 = any;
+
+/**
  * @description Requisição inválida (erro de validação)
 */
 export type ArchiveParent400 = ProblemDetail;
@@ -42,10 +47,10 @@ export type ArchiveParent409 = ProblemDetail;
 */
 export type ArchiveParent500 = ProblemDetail;
 
-export type ArchiveParentMutationResponse = any;
+export type ArchiveParentMutationResponse = ArchiveParent204;
 
 export type ArchiveParentMutation = {
-    Response: any;
+    Response: ArchiveParent204;
     PathParams: ArchiveParentPathParams;
     Errors: ArchiveParent400 | ArchiveParent401 | ArchiveParent403 | ArchiveParent404 | ArchiveParent409 | ArchiveParent500;
 };

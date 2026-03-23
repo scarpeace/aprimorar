@@ -5,10 +5,9 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { Pagination } from "@/components/ui/pagination";
 import type { StudentResponse } from "@/features/students/schemas/student";
-import { useGetStudents, useGetStudentsByParent } from "@/gen";
-import { useStudentsByParentQuery } from "../query/useStudentQueries";
+import { getStudentsByParent, useGetStudents, useGetStudentsByParent, type StudentResponseDTO } from "@/gen";
 
-export type StudentsTableVariant = "studentsPage" | "embeddedParent";
+export type StudentsTableVariant = "page" | "embeddeded";
 
 //TODO: Essa tabela precisa de um refactor
 type StudentsTableProps = {
@@ -18,7 +17,7 @@ type StudentsTableProps = {
 };
 
 export function StudentsTable({
-  variant = "studentsPage",
+  variant = "page",
   ownerId,
   searchTerm = "",
 }: Readonly<StudentsTableProps>) {
@@ -30,7 +29,7 @@ export function StudentsTable({
     setCurrentPage(0);
   }, [searchTerm]);
 
-  const studentsPage = useGetStudents({
+  const { data: studentsPage, isLoading: studentsPageLoading, error: studentsPageError } = useGetStudents({
     pageable: {
       page: currentPage,
       size: pageSize,
@@ -39,33 +38,20 @@ export function StudentsTable({
     search: searchTerm,
   });
 
-  const studentsByParent = useGetStudentsByParent(ownerId ?? "");
+  const { data: studentsByParent, isLoading: studentsByParentLoading, error: studentsByParentError } = useGetStudentsByParent(ownerId ?? "");
 
-  const isLoading =
-    variant === "studentsPage"
-      ? studentsPage.isLoading
-      : studentsByParent.isLoading;
-  const error =
-    variant === "studentsPage"
-      ? studentsPage.error
-      : studentsByParent.error;
-  const data =
-    variant === "studentsPage"
-      ? studentsPage.data
-      : studentsByParent.data;
+  const studentsList = () => {
+    if (variant === "page") {
+      return studentsPage?.content;
+    }
+    return studentsByParent
+  }
 
-  const studentList: StudentResponse[] = Array.isArray(data)
-    ? data
-    : (data?.content ?? []);
-  const pageInfo = Array.isArray(data) ? undefined : data?.page;
-
-  if (isLoading) {
+  if (studentsPageLoading || studentsByParentLoading) {
     return <LoadingCard description="Carregando alunos..." />;
   }
 
-  const totalElements = pageInfo?.totalElements ?? studentList.length;
-
-  if (totalElements === 0 && !searchTerm) {
+  if (studentsList()?.length === 0 && !searchTerm) {
     return (
       <EmptyCard
         description="Cadastre um aluno para ele aparecer por aqui."
@@ -74,10 +60,10 @@ export function StudentsTable({
     );
   }
 
-  if (error) {
+  if (studentsPageError || studentsByParentError) {
     return (
       <ErrorCard
-        description={error.message || "Ocorreu um erro."}
+        description={studentsPageError?.message || studentsByParentError?.message || "Ocorreu um erro."}
         title="Erro ao carregar alunos"
       />
     );
@@ -90,42 +76,42 @@ export function StudentsTable({
           <thead className="bg-base-200/90">
             <tr>
               <th className="app-th">Nome</th>
-              {variant === "studentsPage" && (
+              {variant === "page" && (
                 <th className="app-th hidden lg:table-cell">Email</th>
               )}
               <th className="app-th">Escola</th>
-              {variant === "embeddedParent" && (
+              {variant === "embeddeded" && (
                 <th className="app-th-center">Idade</th>
               )}
-              {variant === "embeddedParent" && (
+              {variant === "embeddeded" && (
                 <th className="app-th">Contato</th>
               )}
-              {variant === "studentsPage" && (
+              {variant === "page" && (
                 <th className="app-th">Responsável</th>
               )}
-              {variant === "studentsPage" && (
+              {variant === "page" && (
                 <th className="app-th-center">Status</th>
               )}
               <th className="app-th">Ações</th>
             </tr>
           </thead>
           <tbody>
-            {studentList.map((student) => (
+            {studentsPage?.content?.map((student) => (
               <tr
                 className="transition-colors hover:bg-base-200/70"
                 key={student.id}
               >
                 <td className="font-medium">{student.name}</td>
-                {variant === "studentsPage" && (
+                {variant === "page" && (
                   <td className="hidden lg:table-cell">{student.email}</td>
                 )}
                 <td>{student.school}</td>
-                {variant === "embeddedParent" && (
+                {variant === "embeddeded" && (
                   <td className="text-center">{student.age}</td>
                 )}
-                {variant === "embeddedParent" && <td>{student.contact}</td>}
-                {variant === "studentsPage" && <td>{student?.parent?.name}</td>}
-                {variant === "studentsPage" && (
+                {variant === "embeddeded" && <td>{student.contact}</td>}
+                {variant === "page" && <td>{student?.parent?.name}</td>}
+                {variant === "page" && (
                   <td className="text-center">
                     <span
                       className={`badge ${student.archivedAt ? "badge-warning" : "badge-success"}`}
@@ -145,10 +131,10 @@ export function StudentsTable({
                 </td>
               </tr>
             ))}
-            {studentList.length === 0 && searchTerm && (
+            {studentsPage?.content?.length === 0 && searchTerm && (
               <tr>
                 <td
-                  colSpan={variant === "studentsPage" ? 6 : 5}
+                  colSpan={variant === "page" ? 6 : 5}
                   className="text-center py-8 text-base-content/50"
                 >
                   Nenhum aluno encontrado.
@@ -159,12 +145,12 @@ export function StudentsTable({
         </table>
       </div>
 
-      {variant === "studentsPage" && (
+      {variant === "page" && (
         <Pagination
           currentPage={currentPage}
-          totalElements={pageInfo?.totalElements ?? 0}
-          totalPages={pageInfo?.totalPages ?? 0}
-          currentElementsCount={studentList.length}
+          totalElements={studentsPage?.page?.totalElements ?? 0}
+          totalPages={studentsPage?.page?.totalPages ?? 0}
+          currentElementsCount={studentsPage?.content?.length ?? 0}
           itemName="alunos"
           onPageChange={setCurrentPage}
         />

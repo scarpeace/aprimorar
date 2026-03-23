@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { GetEmployeeOptionsQueryResponse, GetEmployeeOptions400, GetEmployeeOptions401, GetEmployeeOptions403, GetEmployeeOptions404, GetEmployeeOptions409, GetEmployeeOptions500 } from "../../types/employee/GetEmployeeOptions.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { getEmployeeOptionsQueryResponseSchema } from "../../schemas/employee/getEmployeeOptionsSchema.ts";
+import { getEmployeeOptionsQueryResponseSchema } from "../../zod/employee/getEmployeeOptionsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEmployeeOptionsQueryKey = () => [{ url: '/v1/employees/options' }] as const

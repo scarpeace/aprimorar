@@ -4,6 +4,7 @@
 */
 
 import type { EventRequestDTO } from "../EventRequestDTO.ts";
+import type { EventResponseDTO } from "../EventResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type UpdateEventPathParams = {
@@ -12,6 +13,11 @@ export type UpdateEventPathParams = {
     */
     eventId: string;
 };
+
+/**
+ * @description OK
+*/
+export type UpdateEvent200 = EventResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -45,10 +51,10 @@ export type UpdateEvent500 = ProblemDetail;
 
 export type UpdateEventMutationRequest = EventRequestDTO;
 
-export type UpdateEventMutationResponse = any;
+export type UpdateEventMutationResponse = UpdateEvent200;
 
 export type UpdateEventMutation = {
-    Response: any;
+    Response: UpdateEvent200;
     Request: UpdateEventMutationRequest;
     PathParams: UpdateEventPathParams;
     Errors: UpdateEvent400 | UpdateEvent401 | UpdateEvent403 | UpdateEvent404 | UpdateEvent409 | UpdateEvent500;

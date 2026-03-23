@@ -4,6 +4,7 @@
 */
 
 import type { ParentRequestDTO } from "../ParentRequestDTO.ts";
+import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type UpdateParentPathParams = {
@@ -12,6 +13,11 @@ export type UpdateParentPathParams = {
     */
     parentId: string;
 };
+
+/**
+ * @description OK
+*/
+export type UpdateParent200 = ParentResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -45,10 +51,10 @@ export type UpdateParent500 = ProblemDetail;
 
 export type UpdateParentMutationRequest = ParentRequestDTO;
 
-export type UpdateParentMutationResponse = any;
+export type UpdateParentMutationResponse = UpdateParent200;
 
 export type UpdateParentMutation = {
-    Response: any;
+    Response: UpdateParent200;
     Request: UpdateParentMutationRequest;
     PathParams: UpdateParentPathParams;
     Errors: UpdateParent400 | UpdateParent401 | UpdateParent403 | UpdateParent404 | UpdateParent409 | UpdateParent500;

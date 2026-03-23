@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { ArchiveEmployeeMutationResponse, ArchiveEmployeePathParams, ArchiveEmployee400, ArchiveEmployee401, ArchiveEmployee403, ArchiveEmployee404, ArchiveEmployee409, ArchiveEmployee500 } from "../../types/employee/ArchiveEmployee.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { archiveEmployeeMutationResponseSchema } from "../../schemas/employee/archiveEmployeeSchema.ts";
+import { archiveEmployeeMutationResponseSchema } from "../../zod/employee/archiveEmployeeSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const archiveEmployeeMutationKey = () => [{ url: '/v1/employees/:employeeId/archive' }] as const

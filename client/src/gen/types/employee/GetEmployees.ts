@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { PagedModelEmployeeResponseDTO } from "../PagedModelEmployeeResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetEmployeesQueryParams = {
@@ -30,6 +31,11 @@ export type GetEmployeesQueryParams = {
     */
     search?: string;
 };
+
+/**
+ * @description OK
+*/
+export type GetEmployees200 = PagedModelEmployeeResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -61,10 +67,10 @@ export type GetEmployees409 = ProblemDetail;
 */
 export type GetEmployees500 = ProblemDetail;
 
-export type GetEmployeesQueryResponse = any;
+export type GetEmployeesQueryResponse = GetEmployees200;
 
 export type GetEmployeesQuery = {
-    Response: any;
+    Response: GetEmployees200;
     QueryParams: GetEmployeesQueryParams;
     Errors: GetEmployees400 | GetEmployees401 | GetEmployees403 | GetEmployees404 | GetEmployees409 | GetEmployees500;
 };

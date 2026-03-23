@@ -4,6 +4,7 @@
 */
 
 import type { Pageable } from "../Pageable.ts";
+import type { PagedModelParentResponseDTO } from "../PagedModelParentResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetParentsQueryParams = {
@@ -16,6 +17,11 @@ export type GetParentsQueryParams = {
     */
     search?: string;
 };
+
+/**
+ * @description OK
+*/
+export type GetParents200 = PagedModelParentResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -47,10 +53,10 @@ export type GetParents409 = ProblemDetail;
 */
 export type GetParents500 = ProblemDetail;
 
-export type GetParentsQueryResponse = any;
+export type GetParentsQueryResponse = GetParents200;
 
 export type GetParentsQuery = {
-    Response: any;
+    Response: GetParents200;
     QueryParams: GetParentsQueryParams;
     Errors: GetParents400 | GetParents401 | GetParents403 | GetParents404 | GetParents409 | GetParents500;
 };

@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { PagedModelEventResponseDTO } from "../PagedModelEventResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetEventsByEmployeePathParams = {
@@ -35,6 +36,11 @@ export type GetEventsByEmployeeQueryParams = {
 };
 
 /**
+ * @description OK
+*/
+export type GetEventsByEmployee200 = PagedModelEventResponseDTO;
+
+/**
  * @description Requisição inválida (erro de validação)
 */
 export type GetEventsByEmployee400 = ProblemDetail;
@@ -64,10 +70,10 @@ export type GetEventsByEmployee409 = ProblemDetail;
 */
 export type GetEventsByEmployee500 = ProblemDetail;
 
-export type GetEventsByEmployeeQueryResponse = any;
+export type GetEventsByEmployeeQueryResponse = GetEventsByEmployee200;
 
 export type GetEventsByEmployeeQuery = {
-    Response: any;
+    Response: GetEventsByEmployee200;
     PathParams: GetEventsByEmployeePathParams;
     QueryParams: GetEventsByEmployeeQueryParams;
     Errors: GetEventsByEmployee400 | GetEventsByEmployee401 | GetEventsByEmployee403 | GetEventsByEmployee404 | GetEventsByEmployee409 | GetEventsByEmployee500;

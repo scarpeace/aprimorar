@@ -3,7 +3,6 @@ import { pluginOas } from '@kubb/plugin-oas'
 import { pluginTs } from '@kubb/plugin-ts'
 import { pluginZod } from '@kubb/plugin-zod'
 import { pluginReactQuery } from '@kubb/plugin-react-query'
-import { pluginClient } from '@kubb/plugin-client'
 
 export default defineConfig({
   input: {
@@ -17,7 +16,6 @@ export default defineConfig({
     pluginOas({ generators: [] }),
 
     pluginTs({
-      output: { path: './types' },
       group: {
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),
@@ -25,9 +23,8 @@ export default defineConfig({
     }),
 
     pluginZod({
-      output: { path: './schemas' },
       version: '4',
-      typed: false,
+      typed: true,
       inferred: true,
       group: {
         type: 'tag',

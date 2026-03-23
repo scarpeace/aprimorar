@@ -62,7 +62,7 @@ public class StudentMapper {
         );
     }
 
-    private Integer calculateAge(LocalDate birthdate) {
+    public Integer calculateAge(LocalDate birthdate) {
         LocalDate today = LocalDate.now(applicationClock);
         return Period.between(birthdate, today).getYears();
     }

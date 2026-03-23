@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetParentByIdPathParams = {
@@ -11,6 +12,11 @@ export type GetParentByIdPathParams = {
     */
     parentId: string;
 };
+
+/**
+ * @description OK
+*/
+export type GetParentById200 = ParentResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -42,10 +48,10 @@ export type GetParentById409 = ProblemDetail;
 */
 export type GetParentById500 = ProblemDetail;
 
-export type GetParentByIdQueryResponse = any;
+export type GetParentByIdQueryResponse = GetParentById200;
 
 export type GetParentByIdQuery = {
-    Response: any;
+    Response: GetParentById200;
     PathParams: GetParentByIdPathParams;
     Errors: GetParentById400 | GetParentById401 | GetParentById403 | GetParentById404 | GetParentById409 | GetParentById500;
 };

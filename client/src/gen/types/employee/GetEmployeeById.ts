@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetEmployeeByIdPathParams = {
@@ -11,6 +12,11 @@ export type GetEmployeeByIdPathParams = {
     */
     employeeId: string;
 };
+
+/**
+ * @description OK
+*/
+export type GetEmployeeById200 = EmployeeResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -42,10 +48,10 @@ export type GetEmployeeById409 = ProblemDetail;
 */
 export type GetEmployeeById500 = ProblemDetail;
 
-export type GetEmployeeByIdQueryResponse = any;
+export type GetEmployeeByIdQueryResponse = GetEmployeeById200;
 
 export type GetEmployeeByIdQuery = {
-    Response: any;
+    Response: GetEmployeeById200;
     PathParams: GetEmployeeByIdPathParams;
     Errors: GetEmployeeById400 | GetEmployeeById401 | GetEmployeeById403 | GetEmployeeById404 | GetEmployeeById409 | GetEmployeeById500;
 };

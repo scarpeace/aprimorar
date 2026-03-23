@@ -4,7 +4,13 @@
 */
 
 import type { EmployeeRequestDTO } from "../EmployeeRequestDTO.ts";
+import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
+
+/**
+ * @description Created
+*/
+export type CreateEmployee201 = EmployeeResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -38,10 +44,10 @@ export type CreateEmployee500 = ProblemDetail;
 
 export type CreateEmployeeMutationRequest = EmployeeRequestDTO;
 
-export type CreateEmployeeMutationResponse = any;
+export type CreateEmployeeMutationResponse = CreateEmployee201;
 
 export type CreateEmployeeMutation = {
-    Response: any;
+    Response: CreateEmployee201;
     Request: CreateEmployeeMutationRequest;
     Errors: CreateEmployee400 | CreateEmployee401 | CreateEmployee403 | CreateEmployee404 | CreateEmployee409 | CreateEmployee500;
 };

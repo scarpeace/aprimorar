@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { EventResponseDTO } from "../EventResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
 
 export type GetEventByIdPathParams = {
@@ -11,6 +12,11 @@ export type GetEventByIdPathParams = {
     */
     eventId: string;
 };
+
+/**
+ * @description OK
+*/
+export type GetEventById200 = EventResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -42,10 +48,10 @@ export type GetEventById409 = ProblemDetail;
 */
 export type GetEventById500 = ProblemDetail;
 
-export type GetEventByIdQueryResponse = any;
+export type GetEventByIdQueryResponse = GetEventById200;
 
 export type GetEventByIdQuery = {
-    Response: any;
+    Response: GetEventById200;
     PathParams: GetEventByIdPathParams;
     Errors: GetEventById400 | GetEventById401 | GetEventById403 | GetEventById404 | GetEventById409 | GetEventById500;
 };

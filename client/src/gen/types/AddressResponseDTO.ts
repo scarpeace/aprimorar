@@ -46,9 +46,9 @@ export type AddressResponseDTO = {
     */
     number?: string;
     /**
-     * @type string | undefined
+     * @type string
     */
-    complement?: string;
+    complement?: string | null;
     /**
      * @type string | undefined
     */

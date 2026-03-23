@@ -25,10 +25,10 @@ import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-
 
 @Slf4j
 @RestController
@@ -44,10 +44,11 @@ public class EmployeeController {
     }
 
     @Operation(
-        operationId = "createEmployee",
-        summary = "Criar funcionário",
-        description = "Cria um novo funcionário com os dados fornecidos."
+            operationId = "createEmployee",
+            summary = "Criar funcionário",
+            description = "Cria um novo funcionário com os dados fornecidos."
     )
+    @ApiResponse(responseCode = "201")
     @PostMapping
     public ResponseEntity<EmployeeResponseDTO> createEmployee(@RequestBody @Valid EmployeeRequestDTO employeeRequestDto) {
 
@@ -56,10 +57,11 @@ public class EmployeeController {
     }
 
     @Operation(
-        operationId = "getEmployees",
-        summary = "Listar funcionários",
-        description = "Retorna todos os funcionários do banco de dados com paginação."
+            operationId = "getEmployees",
+            summary = "Listar funcionários",
+            description = "Retorna todos os funcionários do banco de dados com paginação."
     )
+    @ApiResponse(responseCode = "200")
     @GetMapping
     public ResponseEntity<Page<EmployeeResponseDTO>> getEmployees(
             @ParameterObject @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
@@ -70,10 +72,11 @@ public class EmployeeController {
     }
 
     @Operation(
-        operationId = "getEmployeeOptions",
-        summary = "Obter opções de funcionários",
-        description = "Retorna uma lista simplificada de funcionários para uso em dropdowns."
+            operationId = "getEmployeeOptions",
+            summary = "Obter opções de funcionários",
+            description = "Retorna uma lista simplificada de funcionários para uso em dropdowns."
     )
+    @ApiResponse(responseCode = "200")
     @GetMapping("/options")
     public ResponseEntity<List<EmployeeOptionDTO>> getEmployeeOptions() {
         List<EmployeeOptionDTO> options = employeeService.getEmployeeOptions();
@@ -81,10 +84,11 @@ public class EmployeeController {
     }
 
     @Operation(
-        operationId = "getEmployeeById",
-        summary = "Obter funcionário por ID",
-        description = "Retorna um único funcionário com base no ID fornecido."
+            operationId = "getEmployeeById",
+            summary = "Obter funcionário por ID",
+            description = "Retorna um único funcionário com base no ID fornecido."
     )
+    @ApiResponse(responseCode = "200")
     @GetMapping("/{employeeId}")
     public ResponseEntity<EmployeeResponseDTO> getEmployeeById(@PathVariable UUID employeeId) {
 
@@ -93,10 +97,11 @@ public class EmployeeController {
     }
 
     @Operation(
-        operationId = "updateEmployee",
-        summary = "Atualizar funcionário",
-        description = "Atualiza parcialmente um funcionário existente com os dados fornecidos."
+            operationId = "updateEmployee",
+            summary = "Atualizar funcionário",
+            description = "Atualiza parcialmente um funcionário existente com os dados fornecidos."
     )
+    @ApiResponse(responseCode = "200")
     @PatchMapping("/{employeeId}")
     public ResponseEntity<EmployeeResponseDTO> updateEmployee(@PathVariable UUID employeeId, @RequestBody @Valid EmployeeRequestDTO request) {
 
@@ -105,10 +110,11 @@ public class EmployeeController {
     }
 
     @Operation(
-        operationId = "deleteEmployee",
-        summary = "Deletar funcionário",
-        description = "Deleta um funcionário com base no ID fornecido."
+            operationId = "deleteEmployee",
+            summary = "Deletar funcionário",
+            description = "Deleta um funcionário com base no ID fornecido."
     )
+    @ApiResponse(responseCode = "204")
     @DeleteMapping("/{employeeId}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable UUID employeeId) {
 
@@ -117,10 +123,11 @@ public class EmployeeController {
     }
 
     @Operation(
-        operationId = "archiveEmployee",
-        summary = "Arquivar funcionário",
-        description = "Arquiva um funcionário com base no ID fornecido."
+            operationId = "archiveEmployee",
+            summary = "Arquivar funcionário",
+            description = "Arquiva um funcionário com base no ID fornecido."
     )
+    @ApiResponse(responseCode = "204")
     @PatchMapping("/{employeeId}/archive")
     public ResponseEntity<Void> archiveEmployee(@PathVariable UUID employeeId) {
 
@@ -129,10 +136,11 @@ public class EmployeeController {
     }
 
     @Operation(
-        operationId = "unarchiveEmployee",
-        summary = "Desarquivar funcionário",
-        description = "Desarquiva um funcionário com base no ID fornecido."
+            operationId = "unarchiveEmployee",
+            summary = "Desarquivar funcionário",
+            description = "Desarquiva um funcionário com base no ID fornecido."
     )
+    @ApiResponse(responseCode = "204")
     @PatchMapping("/{employeeId}/unarchive")
     public ResponseEntity<Void> unarchiveEmployee(@PathVariable UUID employeeId) {
 

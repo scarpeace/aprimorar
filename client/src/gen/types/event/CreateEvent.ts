@@ -4,7 +4,13 @@
 */
 
 import type { EventRequestDTO } from "../EventRequestDTO.ts";
+import type { EventResponseDTO } from "../EventResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
+
+/**
+ * @description Created
+*/
+export type CreateEvent201 = EventResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -38,10 +44,10 @@ export type CreateEvent500 = ProblemDetail;
 
 export type CreateEventMutationRequest = EventRequestDTO;
 
-export type CreateEventMutationResponse = any;
+export type CreateEventMutationResponse = CreateEvent201;
 
 export type CreateEventMutation = {
-    Response: any;
+    Response: CreateEvent201;
     Request: CreateEventMutationRequest;
     Errors: CreateEvent400 | CreateEvent401 | CreateEvent403 | CreateEvent404 | CreateEvent409 | CreateEvent500;
 };

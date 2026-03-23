@@ -4,7 +4,13 @@
 */
 
 import type { ParentRequestDTO } from "../ParentRequestDTO.ts";
+import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
+
+/**
+ * @description Created
+*/
+export type CreateParent201 = ParentResponseDTO;
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -38,10 +44,10 @@ export type CreateParent500 = ProblemDetail;
 
 export type CreateParentMutationRequest = ParentRequestDTO;
 
-export type CreateParentMutationResponse = any;
+export type CreateParentMutationResponse = CreateParent201;
 
 export type CreateParentMutation = {
-    Response: any;
+    Response: CreateParent201;
     Request: CreateParentMutationRequest;
     Errors: CreateParent400 | CreateParent401 | CreateParent403 | CreateParent404 | CreateParent409 | CreateParent500;
 };

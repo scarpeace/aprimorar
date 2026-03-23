@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type { UpdateEventMutationRequest, UpdateEventMutationResponse, UpdateEventPathParams, UpdateEvent400, UpdateEvent401, UpdateEvent403, UpdateEvent404, UpdateEvent409, UpdateEvent500 } from "../../types/event/UpdateEvent.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
-import { updateEventMutationResponseSchema, updateEventMutationRequestSchema } from "../../schemas/event/updateEventSchema.ts";
+import { updateEventMutationResponseSchema, updateEventMutationRequestSchema } from "../../zod/event/updateEventSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const updateEventMutationKey = () => [{ url: '/v1/events/:eventId' }] as const

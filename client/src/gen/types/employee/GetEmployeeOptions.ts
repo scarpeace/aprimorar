@@ -3,7 +3,13 @@
 * Do not edit manually.
 */
 
+import type { EmployeeOptionDTO } from "../EmployeeOptionDTO.ts";
 import type { ProblemDetail } from "../ProblemDetail.ts";
+
+/**
+ * @description OK
+*/
+export type GetEmployeeOptions200 = EmployeeOptionDTO[];
 
 /**
  * @description Requisição inválida (erro de validação)
@@ -35,9 +41,9 @@ export type GetEmployeeOptions409 = ProblemDetail;
 */
 export type GetEmployeeOptions500 = ProblemDetail;
 
-export type GetEmployeeOptionsQueryResponse = any;
+export type GetEmployeeOptionsQueryResponse = GetEmployeeOptions200;
 
 export type GetEmployeeOptionsQuery = {
-    Response: any;
+    Response: GetEmployeeOptions200;
     Errors: GetEmployeeOptions400 | GetEmployeeOptions401 | GetEmployeeOptions403 | GetEmployeeOptions404 | GetEmployeeOptions409 | GetEmployeeOptions500;
 };

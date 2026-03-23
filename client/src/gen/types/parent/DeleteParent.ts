@@ -13,6 +13,11 @@ export type DeleteParentPathParams = {
 };
 
 /**
+ * @description No Content
+*/
+export type DeleteParent204 = any;
+
+/**
  * @description Requisição inválida (erro de validação)
 */
 export type DeleteParent400 = ProblemDetail;
@@ -42,10 +47,10 @@ export type DeleteParent409 = ProblemDetail;
 */
 export type DeleteParent500 = ProblemDetail;
 
-export type DeleteParentMutationResponse = any;
+export type DeleteParentMutationResponse = DeleteParent204;
 
 export type DeleteParentMutation = {
-    Response: any;
+    Response: DeleteParent204;
     PathParams: DeleteParentPathParams;
     Errors: DeleteParent400 | DeleteParent401 | DeleteParent403 | DeleteParent404 | DeleteParent409 | DeleteParent500;
 };
