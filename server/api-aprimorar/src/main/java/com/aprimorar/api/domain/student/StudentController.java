@@ -3,10 +3,9 @@ package com.aprimorar.api.domain.student;
 import java.util.List;
 import java.util.UUID;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,24 +19,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aprimorar.api.annotations.ErrorResponsesAnnotation;
 import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/v1/students")
-@Tag(name = "Student", description = "Student management APIs")
-@ErrorResponsesAnnotation
-public class StudentController {
+public class StudentController implements StudentControllerDocs {
 
     private final StudentService studentService;
 
@@ -45,12 +38,7 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @Operation(
-            operationId = "createStudent",
-            summary = "Criar aluno",
-            description = "Cria um novo aluno com os dados fornecidos."
-    )
-    @ApiResponse(responseCode = "201")
+    @Override
     @PostMapping
     public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
 
@@ -58,16 +46,10 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(
-            operationId = "getStudents",
-            summary = "Listar alunos com paginação",
-            description = "Retorna todos os alunos do banco de dados com paginação."
-    )
-    @ApiResponse(responseCode = "200")
+    @Override
     @GetMapping
     public ResponseEntity<Page<StudentResponseDTO>> getStudents(
-            @Parameter(description = "Página com informações de paginação")
-            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @ParameterObject Pageable pageable,
             @Parameter(description = "Termo de busca")
             @RequestParam(required = false) String search
     ) {
@@ -75,24 +57,14 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-    @Operation(
-            operationId = "getStudentOptions",
-            summary = "Listar alunos para opções e dropdown",
-            description = "Lista todos os alunos para uso em opções e dropdowns."
-    )
-    @ApiResponse(responseCode = "200")
+    @Override
     @GetMapping("/options")
     public ResponseEntity<List<StudentOptionDTO>> getStudentOptions() {
         List<StudentOptionDTO> options = studentService.getStudentOptions();
         return ResponseEntity.ok(options);
     }
 
-    @Operation(
-            operationId = "getStudentsByParent",
-            summary = "Listar alunos por pai",
-            description = "Retorna todos os alunos do banco de dados com paginação."
-    )
-    @ApiResponse(responseCode = "200")
+    @Override
     @GetMapping("/parent/{parentId}")
     public ResponseEntity<List<StudentResponseDTO>> getStudentsByParent(
             @PathVariable UUID parentId
@@ -101,12 +73,7 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-    @Operation(
-            operationId = "getStudentById",
-            summary = "Listar aluno por ID",
-            description = "Retorna um aluno específico com base no ID."
-    )
-    @ApiResponse(responseCode = "200")
+    @Override
     @GetMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId) {
 
@@ -114,12 +81,7 @@ public class StudentController {
         return ResponseEntity.ok(foundStudent);
     }
 
-    @Operation(
-            operationId = "updateStudent",
-            summary = "Atualizar aluno",
-            description = "Atualiza totalmente os dados de um aluno e sua referência ao pai."
-    )
-    @ApiResponse(responseCode = "200")
+    @Override
     @PutMapping("/{studentId}")
     public ResponseEntity<StudentResponseDTO> updateStudent(
             @PathVariable UUID studentId,
@@ -129,12 +91,7 @@ public class StudentController {
         return ResponseEntity.ok(updatedStudent);
     }
 
-    @Operation(
-            operationId = "deleteStudent",
-            summary = "Deletar aluno",
-            description = "Deleta um aluno com base no ID fornecido."
-    )
-    @ApiResponse(responseCode = "204")
+    @Override
     @DeleteMapping("/{studentId}")
     public ResponseEntity<Void> deleteStudent(@PathVariable UUID studentId) {
 
@@ -142,12 +99,7 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(
-            operationId = "archiveStudent",
-            summary = "Arquivar aluno",
-            description = "Arquiva um aluno com base no ID fornecido."
-    )
-    @ApiResponse(responseCode = "204")
+    @Override
     @PatchMapping("/{studentId}/archive")
     public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
 
@@ -155,12 +107,7 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(
-            operationId = "unarchiveStudent",
-            summary = "Desarquivar aluno",
-            description = "Desarquiva um aluno com base no ID fornecido."
-    )
-    @ApiResponse(responseCode = "204")
+    @Override
     @PatchMapping("/{studentId}/unarchive")
     public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {
 

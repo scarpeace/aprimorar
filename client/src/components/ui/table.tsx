@@ -31,7 +31,6 @@ export function Table<T>({ variant = "page", data, columns, isLoading, error, ow
         setCurrentPage(0)
     }, [searchTerm])
 
-    console.log(actionPrefix)
     if (isLoading) {
         return <LoadingCard description="Carregando dados..." />
     }
