@@ -1,10 +1,7 @@
 package com.aprimorar.api.domain.event;
 
-import com.aprimorar.api.domain.employee.Employee;
-import com.aprimorar.api.domain.event.command.EventCommand;
 import com.aprimorar.api.domain.event.dto.EventRequestDTO;
 import com.aprimorar.api.domain.event.dto.EventResponseDTO;
-import com.aprimorar.api.domain.student.Student;
 import org.springframework.stereotype.Component;
 
 @Component

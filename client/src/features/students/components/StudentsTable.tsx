@@ -6,6 +6,7 @@ import { LoadingCard } from "@/components/ui/loading-card";
 import { Pagination } from "@/components/ui/pagination";
 import type { StudentResponse } from "@/features/students/schemas/student";
 import { getStudentsByParent, useGetStudents, useGetStudentsByParent, type StudentResponseDTO } from "@/gen";
+import { PageLoading } from "@/components/ui/page-loading";
 
 export type StudentsTableVariant = "page" | "embeddeded";
 
@@ -48,17 +49,9 @@ export function StudentsTable({
   }
 
   if (studentsPageLoading || studentsByParentLoading) {
-    return <LoadingCard description="Carregando alunos..." />;
+    return <PageLoading message="Carregando alunos..." />;
   }
 
-  if (studentsList()?.length === 0 && !searchTerm) {
-    return (
-      <EmptyCard
-        description="Cadastre um aluno para ele aparecer por aqui."
-        title={"Nenhum aluno encontrado."}
-      />
-    );
-  }
 
   if (studentsPageError || studentsByParentError) {
     return (
@@ -96,7 +89,7 @@ export function StudentsTable({
             </tr>
           </thead>
           <tbody>
-            {studentsPage?.content?.map((student) => (
+            {studentsList()?.map((student) => (
               <tr
                 className="transition-colors hover:bg-base-200/70"
                 key={student.id}

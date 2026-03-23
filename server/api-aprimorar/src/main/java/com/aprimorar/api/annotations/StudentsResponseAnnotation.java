@@ -19,15 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = ProblemDetailResponseDTO.class))),
-    @ApiResponse(responseCode = "401", description = "Não autenticado",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ProblemDetailResponseDTO.class))),
-    @ApiResponse(responseCode = "403", description = "Acesso negado",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ProblemDetailResponseDTO.class))),
-    @ApiResponse(responseCode = "404", description = "Recurso não encontrado",
+    @ApiResponse(responseCode = "404", description = "Aluno não encontrado",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = ProblemDetailResponseDTO.class))),
@@ -38,7 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+                    schema = @Schema(implementation = RuntimeException.class)))
 })
-public @interface ErrorResponsesAnnotation {
+public @interface StudentsResponseAnnotation {
 }

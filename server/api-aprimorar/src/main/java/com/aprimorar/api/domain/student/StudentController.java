@@ -26,8 +26,8 @@ import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -67,9 +67,7 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<Page<StudentResponseDTO>> getStudents(
             @Parameter(description = "Página com informações de paginação")
-            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC)
-            Pageable pageable,
-
+            @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
             @Parameter(description = "Termo de busca")
             @RequestParam(required = false) String search
     ) {
@@ -77,12 +75,12 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-   @Operation(
+    @Operation(
             operationId = "getStudentOptions",
             summary = "Listar alunos para opções e dropdown",
             description = "Lista todos os alunos para uso em opções e dropdowns."
     )
-   @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "200")
     @GetMapping("/options")
     public ResponseEntity<List<StudentOptionDTO>> getStudentOptions() {
         List<StudentOptionDTO> options = studentService.getStudentOptions();

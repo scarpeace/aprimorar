@@ -33,7 +33,7 @@ export function StudentsPage() {
         </div>
       </PageHeader>
 
-      <StudentsTable variant="studentsPage" searchTerm={debouncedSearchTerm} />
+      <StudentsTable variant="page" searchTerm={debouncedSearchTerm} />
     </div>
   )
 }

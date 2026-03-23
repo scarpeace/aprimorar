@@ -1,21 +1,19 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
-import {
-  useArchiveStudent,
-  useUnarchiveStudent,
-} from "../query/useStudentMutations";
+
 import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
+import { useArchiveStudent, useGetStudentById, useUnarchiveStudent } from "@/gen";
 
 //TODO falta adicionar o comportamento de Alert para desarquivar também
 export const ArchiveStudentButton = ({
   studentId,
-  isArchived,
 }: {
   studentId: string;
-  isArchived: boolean | null;
 }) => {
   const [showConfirm, setShowConfirm] = useState(false);
+
+  const { data: student } = useGetStudentById(studentId);
   const { mutate: unarchiveStudent, isPending: isUnarchiving } =
     useUnarchiveStudent();
   const { mutate: archiveStudent, isPending: isArchiving } =
@@ -23,15 +21,16 @@ export const ArchiveStudentButton = ({
 
   const isLoading = isArchiving || isUnarchiving;
 
-  const handleArchiveConfirm = () => {
-    archiveStudent(studentId, {
+  const handleArchive = () => {
+    archiveStudent({ studentId }, {
       onSuccess: () => setShowConfirm(false),
     });
   };
 
   const handleUnarchive = () => {
-    unarchiveStudent(studentId);
+    unarchiveStudent({ studentId });
   };
+  console.log(student?.archivedAt)
 
   if (isLoading && !showConfirm) {
     return (
@@ -42,7 +41,7 @@ export const ArchiveStudentButton = ({
     );
   }
 
-  if (isArchived) {
+  if (student?.archivedAt !== null) {
     return (
       <Button
         type="button"
@@ -63,7 +62,7 @@ export const ArchiveStudentButton = ({
         message="Deseja realmente arquivar este aluno?"
         confirmText="Sim, arquivar"
         cancelText="Cancelar"
-        onConfirm={handleArchiveConfirm}
+        onConfirm={handleArchive}
         onCancel={() => setShowConfirm(false)}
         className="sm:mr-auto"
         isLoading={isArchiving}

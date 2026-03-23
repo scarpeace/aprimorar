@@ -13,6 +13,7 @@ spring:
 springdoc:
   api-docs:
     path: /v3/api-docs
+    version: openapi_3_0
   default-produces-media-type: application/json
   swagger-ui:
     path: /swagger-ui.html

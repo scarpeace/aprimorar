@@ -11,7 +11,10 @@ export default defineConfig({
   output: {
     path: './src/gen',
     clean: true,
+    format: 'auto',
+    lint: 'eslint',
   },
+
   plugins: [
     pluginOas({ generators: [] }),
 
@@ -26,8 +29,8 @@ export default defineConfig({
     pluginZod({
       output: { path: './schemas' },
       version: '4',
-      typed: true,
-      inferred: true,
+      dateType: 'string',
+      coercion: true,
       group: {
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),
@@ -38,18 +41,14 @@ export default defineConfig({
       //Quando for implementar a autenticação te que tirar essa BaseURl daqui.
       client: { baseURL: 'http://localhost:8080' },
       output: { path: './hooks' },
+      paramsType: 'inline',
+      pathParamsType: 'inline',
       group: {
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),
       },
       parser: 'zod',
-      query: {
-        methods: ['get'],
-      },
       suspense: false,
-      mutation: {
-        methods: ['post', 'put', 'patch', 'delete'],
-      },
     }),
   ],
 })

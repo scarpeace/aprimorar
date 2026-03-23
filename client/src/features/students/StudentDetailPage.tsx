@@ -28,6 +28,7 @@ export function StudentDetailPage() {
     isFetched: isStudentFetched,
   } = useGetStudentById(studentId);
 
+
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: student?.name },
     { label: "CPF", value: student?.cpf },
@@ -78,7 +79,6 @@ export function StudentDetailPage() {
             <EditStudentButton studentId={studentId} />
             <ArchiveStudentButton
               studentId={studentId}
-              isArchived={!!student?.archivedAt}
             />
             <DeleteStudentButton studentId={studentId} />
           </>

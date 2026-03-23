@@ -19,7 +19,6 @@ export function DashboardPage() {
     month,
   });
 
-  console.log(data?.charts);
 
   if (isLoading) {
     return <PageLoading message="Carregando painel..." />;

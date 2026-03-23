@@ -1,21 +1,13 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { useDeleteStudent } from "@/features/students/query/useStudentMutations";
-import { eventsApi } from "@/features/events/api/eventsApi";
-import { eventsQueryKeys } from "@/features/events/query/eventsQueryKeys";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
+import { useDeleteStudent, useGetEventsByStudent } from "@/gen";
 
 export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: deleteStudent, isPending: isDeleting } = useDeleteStudent();
-
-  const { data: eventsData, isLoading: isEventsLoading } = useQuery({
-    queryKey: [...eventsQueryKeys.byStudent(studentId), { page: 0, size: 1 }],
-    queryFn: () => eventsApi.listByStudent(studentId, 0, 1),
-    enabled: isOpen,
-  });
+  const { data: eventsData, isLoading: isEventsLoading } = useGetEventsByStudent(studentId);
 
   const handleOpenClick = () => {
     setIsOpen(true);
@@ -28,14 +20,14 @@ export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
   };
 
   const handleConfirmDelete = () => {
-    deleteStudent(studentId, {
+    deleteStudent({ studentId }, {
       onSettled: () => {
         setIsOpen(false);
       },
     });
   };
 
-  const eventsCount = eventsData?.page.totalElements ?? 0;
+  const eventsCount = eventsData?.page?.totalElements ?? 0;
 
   return (
     <>

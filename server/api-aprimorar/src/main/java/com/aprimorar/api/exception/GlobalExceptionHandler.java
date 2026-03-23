@@ -18,9 +18,6 @@ import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.InvalidStudentException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
