@@ -88,8 +88,8 @@ export function StudentDetailPage() {
         headerAction={
           <>
             <EditStudentButton studentId={studentId} />
-            <ArchiveStudentButton studentId={studentId} />
-            <DeleteStudentButton studentId={studentId} />
+            <ArchiveStudentButton studentId={studentId} isArchived={!!student?.archivedAt} />
+            <DeleteStudentButton studentId={studentId}  />
           </>
         }
       >

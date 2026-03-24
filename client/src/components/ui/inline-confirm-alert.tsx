@@ -38,9 +38,9 @@ export function InlineConfirmAlert({
   }
 
   return (
-    <div role="alert" className={`alert alert-${variant} alert-vertical sm:alert-horizontal shadow-sm ${className}`}>
+    <div role="alert" className={`alert h-10 flex alert-${variant} alert-vertical sm:alert-horizontal shadow-sm ${className}`}>
       {variantIcons[variant]}
-      <span className="text-sm font-medium">{message}</span>
+      <span className="text-xs font-extrabold">{message}</span>
       <div className="flex gap-2">
         <button
           className="btn btn-sm btn-ghost"

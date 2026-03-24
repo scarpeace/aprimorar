@@ -3,36 +3,67 @@ import { Button } from "@/components/ui/button";
 import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
 
 import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
-import { useArchiveStudent, useGetStudentById, useUnarchiveStudent } from "@/kubb";
+import {
+  getStudentByIdQueryKey,
+  getStudentsQueryKey,
+  useArchiveStudent,
+  useUnarchiveStudent,
+} from "@/kubb";
+import { useQueryClient } from "@tanstack/react-query";
+
+type ArchiveStudentButtonProps = {
+  studentId: string;
+  isArchived: boolean;
+};
 
 //TODO falta adicionar o comportamento de Alert para desarquivar também
 export const ArchiveStudentButton = ({
   studentId,
-}: {
-  studentId: string;
-}) => {
+  isArchived,
+}: ArchiveStudentButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
+  const queryClient = useQueryClient();
 
-  const { data: student } = useGetStudentById(studentId);
   const { mutate: unarchiveStudent, isPending: isUnarchiving } =
     useUnarchiveStudent();
   const { mutate: archiveStudent, isPending: isArchiving } =
     useArchiveStudent();
 
-  const isLoading = isArchiving || isUnarchiving;
-
   const handleArchive = () => {
-    archiveStudent({ studentId }, {
-      onSuccess: () => setShowConfirm(false),
-    });
+    archiveStudent(
+      { studentId },
+      {
+        onSuccess: () => {
+          setShowConfirm(false)
+          queryClient.invalidateQueries({
+            queryKey: getStudentByIdQueryKey(studentId),
+          });
+          queryClient.invalidateQueries({
+            queryKey: getStudentsQueryKey(),
+          });
+        },
+      },
+    );
   };
 
   const handleUnarchive = () => {
-    unarchiveStudent({ studentId });
+    unarchiveStudent(
+      { studentId },
+      {
+        onSuccess: () => {
+          setShowConfirm(false)
+          queryClient.invalidateQueries({
+            queryKey: getStudentByIdQueryKey(studentId),
+          });
+          queryClient.invalidateQueries({
+            queryKey: getStudentsQueryKey(),
+          });
+        },
+      },
+    );
   };
-  console.log(student?.archivedAt)
 
-  if (isLoading && !showConfirm) {
+  if (isUnarchiving || isArchiving) {
     return (
       <Button type="button" disabled variant="outline" className="sm:mr-auto">
         <Loader2Icon className="h-4 w-4 animate-spin" />
@@ -41,11 +72,27 @@ export const ArchiveStudentButton = ({
     );
   }
 
-  if (student?.archivedAt !== null) {
+  if (showConfirm) {
+    return (
+      <InlineConfirmAlert
+        variant={isArchived ? "info" : "warning"}
+        message={`Deseja mesmo ${isArchived ? 'Desarquivar' : 'Arquivar'} o aluno?`}
+        confirmText={`Sim, ${isArchived ? 'Desarquivar' : 'Arquivar'} o aluno`}
+        cancelText="Cancelar"
+        onConfirm={isArchived ? handleUnarchive : handleArchive}
+        onCancel={() => setShowConfirm(false)}
+        className="sm:mr-auto"
+        isLoading={isArchiving}
+      />
+    );
+  }
+
+
+  if (isArchived) {
     return (
       <Button
         type="button"
-        onClick={handleUnarchive}
+        onClick={() => setShowConfirm(true)}
         variant="outline"
         className="sm:mr-auto"
       >
@@ -55,30 +102,18 @@ export const ArchiveStudentButton = ({
     );
   }
 
-  if (showConfirm) {
-    return (
-      <InlineConfirmAlert
-        variant="warning"
-        message="Deseja realmente arquivar este aluno?"
-        confirmText="Sim, arquivar"
-        cancelText="Cancelar"
-        onConfirm={handleArchive}
-        onCancel={() => setShowConfirm(false)}
-        className="sm:mr-auto"
-        isLoading={isArchiving}
-      />
-    );
-  }
 
-  return (
-    <Button
-      type="button"
-      onClick={() => setShowConfirm(true)}
-      variant="warning"
-      className="sm:mr-auto"
-    >
-      <ArchiveIcon className="h-4 w-4" />
-      Arquivar
-    </Button>
-  );
+
+    return (
+      <Button
+        type="button"
+        onClick={() => setShowConfirm(true)}
+        variant="warning"
+        className="sm:mr-auto"
+      >
+        <ArchiveIcon className="h-4 w-4" />
+        Arquivar
+      </Button>
+    );
+
 };
