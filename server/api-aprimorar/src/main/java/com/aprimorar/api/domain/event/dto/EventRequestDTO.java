@@ -1,7 +1,7 @@
 package com.aprimorar.api.domain.event.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 import com.aprimorar.api.enums.EventContent;
@@ -17,10 +17,10 @@ public record EventRequestDTO(
         String description,
 
         @NotNull(message = "Data/hora de início do evento é obrigatória")
-        LocalDateTime startDate,
+        Instant startDate,
 
         @NotNull(message = "Data/hora de fim do evento é obrigatória")
-        LocalDateTime endDate,
+        Instant endDate,
 
         @NotNull(message = "Preço é obrigatório")
         @PositiveOrZero(message = "Preço deve ser maior ou igual a 0")

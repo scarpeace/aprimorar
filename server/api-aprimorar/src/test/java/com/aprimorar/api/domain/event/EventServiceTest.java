@@ -2,6 +2,8 @@ package com.aprimorar.api.domain.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +35,7 @@ class EventServiceTest {
     private static final UUID EVENT_ID = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
     private static final UUID STUDENT_ID = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
     private static final UUID EMPLOYEE_ID = UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc");
+    private static final ZoneId APP_ZONE = ZoneId.of("America/Sao_Paulo");
     private static final LocalDateTime EVENT_START = LocalDateTime.of(2026, 3, 25, 10, 0);
     private static final LocalDateTime EVENT_END = LocalDateTime.of(2026, 3, 25, 11, 0);
 
@@ -71,6 +74,8 @@ class EventServiceTest {
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(resolvedEmployee));
             when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
             when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
+            when(eventMapper.toLocalDateTime(input.startDate())).thenReturn(EVENT_START);
+            when(eventMapper.toLocalDateTime(input.endDate())).thenReturn(EVENT_END);
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, mappedEvent.getStartDate(), mappedEvent.getEndDateTime(), EVENT_ID)).thenReturn(false);
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, mappedEvent.getStartDate(), mappedEvent.getEndDateTime(), EVENT_ID)).thenReturn(false);
             when(eventMapper.convertToDto(existingEvent)).thenReturn(expected);
@@ -94,8 +99,8 @@ class EventServiceTest {
         return new EventRequestDTO(
                 "Evento atualizado",
                 "Descrição de teste",
-                EVENT_START,
-                EVENT_END,
+                EVENT_START.atZone(APP_ZONE).toOffsetDateTime(),
+                EVENT_END.atZone(APP_ZONE).toOffsetDateTime(),
                 BigDecimal.valueOf(120),
                 BigDecimal.valueOf(80),
                 EventContent.AULA,
@@ -138,8 +143,8 @@ class EventServiceTest {
                 event.getTitle(),
                 event.getDescription(),
                 event.getContent().name(),
-                event.getStartDate(),
-                event.getEndDateTime(),
+                event.getStartDate().atZone(APP_ZONE).toOffsetDateTime(),
+                event.getEndDateTime().atZone(APP_ZONE).toOffsetDateTime(),
                 event.getPrice(),
                 event.getPayment(),
                 student.getId(),

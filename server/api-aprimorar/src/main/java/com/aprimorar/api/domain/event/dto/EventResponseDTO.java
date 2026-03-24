@@ -2,7 +2,7 @@ package com.aprimorar.api.domain.event.dto;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
@@ -15,8 +15,8 @@ public record EventResponseDTO(
         @Nullable
         String description,
         @NotNull String content,
-        @NotNull LocalDateTime startDate,
-        @NotNull LocalDateTime endDate,
+        @NotNull Instant startDate,
+        @NotNull Instant endDate,
         @NotNull BigDecimal price,
         @NotNull BigDecimal payment,
         @NotNull UUID studentId,

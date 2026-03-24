@@ -133,8 +133,8 @@ public class EventService {
 
         existingEvent.setTitle(request.title());
         existingEvent.setDescription(request.description());
-        existingEvent.setStartDate(request.startDate());
-        existingEvent.setEndDateTime(request.endDate());
+        existingEvent.setStartDate(eventMapper.toLocalDateTime(request.startDate()));
+        existingEvent.setEndDateTime(eventMapper.toLocalDateTime(request.endDate()));
         existingEvent.setPrice(request.price());
         existingEvent.setPayment(request.payment());
         existingEvent.setContent(request.content());
