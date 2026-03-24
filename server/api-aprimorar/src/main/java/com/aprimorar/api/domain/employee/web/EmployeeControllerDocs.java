@@ -14,6 +14,7 @@ import com.aprimorar.api.exception.ProblemDetailResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,9 +45,7 @@ public interface EmployeeControllerDocs {
             description = "Retorna todos os funcionários do banco de dados com paginação."
     )
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Listagem dos funcionários com paginação",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = Page.class))),
+        @ApiResponse(responseCode = "200", description = "Listagem dos funcionários com paginação"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
@@ -64,7 +63,7 @@ public interface EmployeeControllerDocs {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Listagem dos funcionários para opções e dropdown",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = EmployeeOptionDTO.class))),
+                        array = @ArraySchema(schema = @Schema(implementation = EmployeeOptionDTO.class)))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))

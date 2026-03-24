@@ -10,11 +10,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "./ParentCreatePage.module.css";
-import { parentFormSchema, type ParentFormInput } from "@/features/parents/schemas/parent";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { useParentDetailQuery } from "./query/useParentQueries";
-import { useUpdateParent } from "./query/useParentMutations";
 import { DeleteParentButton } from "./components/DeleteParentButton";
+import { updateParentMutationRequestSchema, useGetParentById, useUpdateParent, type UpdateParentMutationRequest } from "@/kubb";
 
 export function ParentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -26,17 +24,17 @@ export function ParentEditPage() {
     isLoading: isParentLoading,
     data: parentData,
     refetch: refetchParent,
-  } = useParentDetailQuery(parentId);
+  } = useGetParentById(parentId);
 
   const { mutate: updateParent, isPending: isUpdating } =
-    useUpdateParent(parentId);
+    useUpdateParent();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ParentFormInput>({
-    resolver: zodResolver(parentFormSchema),
+  } = useForm<UpdateParentMutationRequest>({
+    resolver: zodResolver(updateParentMutationRequestSchema ),
     values: {
       name: parentData?.name ?? "",
       email: parentData?.email ?? "",
@@ -46,8 +44,8 @@ export function ParentEditPage() {
   });
   const registerWithMask = useHookFormMask(register);
 
-  const onSubmit = (data: ParentFormInput) => {
-    updateParent(data);
+  const onSubmit = (data:UpdateParentMutationRequest) => {
+    updateParent({parentId, data});
   };
 
   if (isParentLoading) {

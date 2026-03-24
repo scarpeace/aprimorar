@@ -4,7 +4,7 @@ import styles from "@/features/dashboard/DashboardPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { brl } from "@/lib/utils/formatter";
 import { PizzaChart } from "./components/PizzaChart";
-import { useGetDashboardSummary } from "@/gen";
+import { useGetDashboardSummary } from "@/kubb";
 function getCurrentYearMonth() {
   const now = new Date();
   return {

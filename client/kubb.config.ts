@@ -16,7 +16,7 @@ export default defineConfig({
   },
 
   plugins: [
-    pluginOas({ generators: [] }),
+    pluginOas({ generators: [] , collisionDetection: true}),
 
     pluginTs({
       output: { path: './types' },
@@ -29,8 +29,8 @@ export default defineConfig({
     pluginZod({
       output: { path: './schemas' },
       version: '4',
+      inferred: true,
       dateType: 'string',
-      coercion: true,
       // group: {
       //   type: 'tag',
       //   name: ({ group }) => group.toLowerCase(),

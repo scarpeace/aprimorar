@@ -14,6 +14,7 @@ import com.aprimorar.api.exception.ProblemDetailResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,9 +45,7 @@ public interface StudentControllerDocs {
             description = "Retorna todos os alunos do banco de dados com paginação."
     )
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Listagem dos alunos com paginação",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = Page.class))),
+        @ApiResponse(responseCode = "200", description = "Listagem dos alunos com paginação"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
@@ -64,7 +63,7 @@ public interface StudentControllerDocs {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Listagem dos alunos para opções e dropdown",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = StudentOptionDTO.class))),
+                        array = @ArraySchema(schema = @Schema(implementation = StudentOptionDTO.class)))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
@@ -79,7 +78,7 @@ public interface StudentControllerDocs {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Listagem dos alunos por pai",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = StudentResponseDTO.class))),
+                        array = @ArraySchema(schema = @Schema(implementation = StudentResponseDTO.class)))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))

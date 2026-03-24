@@ -11,18 +11,19 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/students/StudentCreatePage.module.css";
-import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
+import { updateStudentMutationRequestSchema, useGetStudentById, useUpdateStudent, type StudentRequestDTO, type UpdateStudentMutationRequest } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { DeleteStudentButton } from "./components/DeleteStudentButton";
+import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
 import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown";
-import { updateStudentMutationRequestSchema, useGetStudentById, useUpdateStudent, type StudentRequestDTO, type UpdateStudentMutationRequest } from "@/gen";
-import { useState } from "react";
+import { DeleteStudentButton } from "./components/DeleteStudentButton";
+import {addressRequestDTOStateEnum} from "../../kubb/types/AddressRequestDTO"
+
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
   const navigate = useNavigate()
-  const [parentId, setParentId] = useState("");
+  // const [parentId, setParentId] = useState("");
 
   const {
     data: student,
@@ -62,7 +63,7 @@ export function StudentEditPage() {
         complement: student?.address?.complement ?? "",
         district: student?.address?.district ?? "",
         city: student?.address?.city ?? "",
-        state: student?.address?.state ?? "",
+        state: student?.address?.state ?? addressRequestDTOStateEnum.DF,
         zip: student?.address?.zip ?? "",
       },
       parentId: student?.parent?.id ?? "Responsável não encontrado",

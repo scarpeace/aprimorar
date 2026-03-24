@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
 
 import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
-import { useArchiveStudent, useGetStudentById, useUnarchiveStudent } from "@/gen";
+import { useArchiveStudent, useGetStudentById, useUnarchiveStudent } from "@/kubb";
 
 //TODO falta adicionar o comportamento de Alert para desarquivar também
 export const ArchiveStudentButton = ({

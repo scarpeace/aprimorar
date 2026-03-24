@@ -6,8 +6,8 @@ import {
   Tooltip,
   type PieLabelRenderProps,
 } from "recharts";
+import type { DashboardSummaryResponseDTO } from "@/kubb";
 import { eventContentLabels } from "@/features/events/schemas/eventContentEnum";
-import type { DashboardSummaryResponseDTO } from "@/gen";
 
 type ClassesByContentDTO = NonNullable<DashboardSummaryResponseDTO["charts"]>[number];
 

@@ -1,17 +1,18 @@
-import type { ReactNode } from "react"
+import type { ProblemDetailResponseDTO } from "@/kubb"
 
 type AlertVariant = "info" | "success" | "warning" | "error"
 
 type AlertProps = {
   variant?: AlertVariant
-  children: ReactNode
+  message?: string
+  error?: ProblemDetailResponseDTO
   className?: string
 }
 
-export function Alert({ variant = "info", children, className = "" }: Readonly<AlertProps>) {
+export function Alert({ variant = "info", message, error, className = "" }: Readonly<AlertProps>) {
   return (
     <div role="alert" className={`alert alert-${variant} ${className}`}>
-      <span>{children}</span>
+      <span>{error?.detail}</span>
     </div>
   )
 }

@@ -10,144 +10,111 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/events/EventCreatePage.module.css";
-import { employeesQueryKeys } from "@/features/employees/query/employeesQueryKeys";
-import { eventInputSchema, type EventFormInput } from "@/features/events/schemas/event";
-import type { EmployeeResponse } from "@/features/employees/schemas/employee";
-import type { StudentResponse } from "@/features/students/schemas/student";
-import { eventContentLabels, eventContentValues } from "@/features/events/schemas/eventContentEnum";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { employeesApi } from "@/features/employees/api/employeesApi";
-import { studentsApi } from "@/features/students/api/studentsApi";
-import { studentsQueryKeys } from "@/features/students/query/studentsQueryKeys";
-import { useEventDetailQuery } from "@/features/events/query/useEventQueries";
 import {
-  useDeleteEvent,
+  eventContentLabels,
+  eventContentValues,
+} from "@/features/events/schemas/eventContentEnum";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import {
+  updateEventMutationRequestSchema,
+  useGetEventById,
+  useGetStudentOptions,
   useUpdateEvent,
-} from "@/features/events/query/useEventMutations";
-import { useQuery } from "@tanstack/react-query";
+  type UpdateEventMutationRequestSchema,
+} from "@/kubb";
+import { useEmployeeOptionsQuery } from "@/features/employees/query/useEmployeeQueries";
 import { formatDateTimeLocal } from "@/lib/utils/formatter";
+import { DeleteEventButton } from "./components/DeleteEventButton";
+import { Alert } from "@/components/ui/alert";
 
 export function EventEditPage() {
-  const { id } = useParams<{ id: string }>();
-  const eventId = id ?? "";
+  const { id: eventId } = useParams<{ id: string }>();
+
+  const {
+    data: eventData,
+    isLoading: isEventLoading,
+    error: eventError,
+    refetch: refetchEvent,
+  } = useGetEventById(eventId ?? "", {
+    query: { enabled: !!eventId },
+  });
+
+  const {
+    mutate: updateEvent,
+    isPending: isUpdateEventPending,
+    error: updateEventError,
+  } = useUpdateEvent();
+
+  const {
+    data: studentOptions,
+    isLoading: isStudentOptionsLoading,
+    refetch: refetchStudentOptions,
+    error: studentOptionsError,
+  } = useGetStudentOptions();
+  const {
+    data: employeeeOptions,
+    isLoading: isEmployeeeOptionsLoading,
+    refetch: refetchEmployeeOptions,
+    error: employeeeOptionsError,
+  } = useEmployeeOptionsQuery();
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<EventFormInput>({
-    resolver: zodResolver(
-      eventInputSchema,
-    ) as unknown as Resolver<EventFormInput>,
+  } = useForm<UpdateEventMutationRequestSchema>({
+    resolver: zodResolver(updateEventMutationRequestSchema),
     mode: "onBlur",
+    values: {
+      title: eventData?.title ?? "",
+      description: eventData?.description ?? "",
+      content:
+        (eventData?.content as UpdateEventMutationRequestSchema["content"]) ??
+        "",
+      startDate: eventData?.startDate
+        ? formatDateTimeLocal(eventData.startDate)
+        : "",
+      endDate: eventData?.endDate ? formatDateTimeLocal(eventData.endDate) : "",
+      price: eventData?.price ?? 0,
+      payment: eventData?.payment ?? 0,
+      studentId: eventData?.studentId ?? "",
+      employeeId: eventData?.employeeId ?? "",
+    },
   });
-
   const studentIdField = register("studentId");
   const employeeIdField = register("employeeId");
 
-  const {
-    data: eventData,
-    isLoading: isEventLoading,
-    isError: isEventError,
-    error: eventError,
-    refetch: refetchEvent,
-  } = useEventDetailQuery(eventId);
-
-  const dropDownOptionsQuery = useQuery({
-    queryKey: [studentsQueryKeys.all, employeesQueryKeys.all, "options"],
-    queryFn: async (): Promise<{
-      students: StudentResponse[];
-      employees: EmployeeResponse[];
-    }> => {
-      const [studentsRes, employeesRes] = await Promise.all([
-        studentsApi.list(0, 100),
-        employeesApi.list(0, 100),
-      ]);
-      return {
-        students: studentsRes.content,
-        employees: employeesRes.content,
-      };
-    },
-  });
-
-  useEffect(() => {
-    if (!eventData) return;
-
-    setValue("title", eventData.title);
-    setValue("description", eventData.description ?? "");
-    setValue(
-      "startDate",
-      formatDateTimeLocal(
-        eventData.startDate,
-      ) as unknown as EventFormInput["startDate"],
-    );
-    setValue(
-      "endDate",
-      formatDateTimeLocal(
-        eventData.endDate,
-      ) as unknown as EventFormInput["endDate"],
-    );
-    setValue("price", Number(eventData.price));
-    setValue("payment", Number(eventData.payment));
-    setValue("content", eventData.content);
-    setValue("studentId", eventData.studentId);
-    setValue("employeeId", eventData.employeeId);
-  }, [eventData, setValue]);
-
-  const students = (dropDownOptionsQuery.data?.students ?? []).filter(
-    (student) => !student.archivedAt,
-  );
-  const employees = (dropDownOptionsQuery.data?.employees ?? []).filter(
-    (employee) => !employee.archivedAt,
-  );
-
-  const {
-    mutate: updateEvent,
-    isPending: isUpdating,
-    error: updateError,
-  } = useUpdateEvent(eventId);
-  const {
-    mutate: deleteEvent,
-    isPending: isDeleting,
-    error: deleteError,
-  } = useDeleteEvent();
-
-  const onSubmit = (data: EventFormInput) => {
-    updateEvent(data);
-  };
-
-  const handleDeleteEvent = () => {
-    if (
-      !globalThis.confirm(
-        "Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.",
-      )
-    )
-      return;
-    deleteEvent(eventId);
-  };
-
-  const isMutationPending = isUpdating || isDeleting;
-  const submitError = updateError || deleteError;
-
-  if (isEventLoading || dropDownOptionsQuery.isLoading) {
-    return <PageLoading message="Carregando evento para edição..." />;
+  if (!eventId) {
+    return <ErrorCard description={"Evento não encontrado"} />;
   }
 
-  if (isEventError || dropDownOptionsQuery.isError || !eventData) {
-    const queryError = eventError ?? dropDownOptionsQuery.error;
-
+  const errorMessage =
+    eventError || studentOptionsError || employeeeOptionsError;
+  if (eventError || studentOptionsError || employeeeOptionsError) {
     return (
       <div className={styles.page}>
         <ErrorCard
-          description={getFriendlyErrorMessage(queryError)}
+          description={getFriendlyErrorMessage(errorMessage)}
           onAction={() =>
-            Promise.all([refetchEvent(), dropDownOptionsQuery.refetch()])
+            Promise.all([
+              refetchEvent(),
+              refetchEmployeeOptions(),
+              refetchStudentOptions(),
+            ])
           }
         />
       </div>
     );
   }
+
+  if (isEventLoading || isStudentOptionsLoading || isEmployeeeOptionsLoading) {
+    return <PageLoading message="Carregando evento para edição..." />;
+  }
+
+  const onSubmit = (data: UpdateEventMutationRequestSchema) => {
+    updateEvent({ eventId, data });
+  };
 
   return (
     <div className={styles.page}>
@@ -202,7 +169,7 @@ export function EventEditPage() {
                 <option value="" disabled>
                   Selecione um aluno
                 </option>
-                {students.map((student) => (
+                {studentOptions?.map((student) => (
                   <option key={student.id} value={student.id}>
                     {student.name}
                   </option>
@@ -231,7 +198,7 @@ export function EventEditPage() {
                 <option value="" disabled>
                   Selecione um colaborador
                 </option>
-                {employees.map((employee) => (
+                {employeeeOptions?.map((employee) => (
                   <option key={employee.id} value={employee.id}>
                     {employee.name}
                   </option>
@@ -343,35 +310,17 @@ export function EventEditPage() {
             </FormField>
           </div>
 
-          {submitError ? (
-            <div className="alert alert-error text-sm">
-              {getFriendlyErrorMessage(submitError)}
-            </div>
-          ) : null}
-
           <div className={styles.actions}>
-            <Button
-              type="button"
-              onClick={handleDeleteEvent}
-              disabled={isMutationPending}
-              variant="error"
-              className="sm:mr-auto"
-            >
-              <Trash2 className="h-4 w-4" />
-              Excluir evento
-            </Button>
+            <DeleteEventButton eventId={eventId} />
             <ButtonLink to={`/events/${eventId}`} variant="outline">
               Cancelar
             </ButtonLink>
-            <Button
-              type="submit"
-              disabled={isMutationPending}
-              variant="primary"
-            >
-              {isUpdating ? "Salvando..." : "Salvar alterações"}
+            <Button type="submit" disabled={isUpdateEventPending} variant="primary">
+              {isUpdateEventPending ? "Salvando..." : "Salvar alterações"}
             </Button>
           </div>
         </form>
+        <Alert variant="error" message={getFriendlyErrorMessage(updateEventError)} />
       </SectionCard>
     </div>
   );

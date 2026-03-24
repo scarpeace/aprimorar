@@ -122,6 +122,7 @@ public class GlobalExceptionHandler {
                     .getFieldErrors()
                     .stream()
                     .map(fieldError -> fieldError.getDefaultMessage())
+                    .filter(java.util.Objects::nonNull)
                     .findFirst()
                     .orElse("Dados inválidos");
         }
@@ -130,7 +131,7 @@ public class GlobalExceptionHandler {
                     ? notReadableException.getMessage()
                     : "Corpo da requisição inválido";
         }
-        return ex.getMessage();
+        return (ex != null && ex.getMessage() != null) ? ex.getMessage() : "Requisição inválida";
     }
 
     private ResponseEntity<ProblemDetail> buildProblemDetail(

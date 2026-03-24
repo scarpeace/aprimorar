@@ -9,12 +9,12 @@ import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import styles from "./ParentDetailPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { useParentDetailQuery } from "./query/useParentQueries";
 
 import { StudentsTable } from "@/features/students/components/StudentsTable";
 import { EditParentButton } from "./components/EditParentButton";
 import { ArchiveParentButton } from "./components/ArchiveParentButton";
 import { DeleteParentButton } from "./components/DeleteParentButton";
+import { useGetParentById } from "@/kubb";
 export function ParentDetailPage() {
   const { id } = useParams<{ id: string }>();
   const parentId = id ?? "";
@@ -25,7 +25,7 @@ export function ParentDetailPage() {
     error: parentError,
     isLoading: isParentLoading,
     isFetched: isParentFetched,
-  } = useParentDetailQuery(parentId);
+  } = useGetParentById(parentId);
 
   if (isParentLoading) {
     return <PageLoading message="Carregando responsável..." />;
@@ -110,7 +110,7 @@ export function ParentDetailPage() {
         title="Alunos vinculados"
         description={`Alunos registrados sob a responsabilidade de ${parentData.name}.`}
       >
-        <StudentsTable variant="embeddedParent" ownerId={parentId} />
+        <StudentsTable variant="embedded" ownerId={parentId} />
       </SectionCard>
     </div>
   );

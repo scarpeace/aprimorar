@@ -5,10 +5,10 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { Pagination } from "@/components/ui/pagination";
 import type { StudentResponse } from "@/features/students/schemas/student";
-import { getStudentsByParent, useGetStudents, useGetStudentsByParent, type StudentResponseDTO } from "@/gen";
+import { getStudentsByParent, useGetStudents, useGetStudentsByParent, type StudentResponseDTO } from "@/kubb";
 import { PageLoading } from "@/components/ui/page-loading";
 
-export type StudentsTableVariant = "page" | "embeddeded";
+export type StudentsTableVariant = "page" | "embedded";
 
 //TODO: Essa tabela precisa de um refactor
 type StudentsTableProps = {
@@ -73,10 +73,10 @@ export function StudentsTable({
                 <th className="app-th hidden lg:table-cell">Email</th>
               )}
               <th className="app-th">Escola</th>
-              {variant === "embeddeded" && (
+              {variant === "embedded" && (
                 <th className="app-th-center">Idade</th>
               )}
-              {variant === "embeddeded" && (
+              {variant === "embedded" && (
                 <th className="app-th">Contato</th>
               )}
               {variant === "page" && (
@@ -99,10 +99,10 @@ export function StudentsTable({
                   <td className="hidden lg:table-cell">{student.email}</td>
                 )}
                 <td>{student.school}</td>
-                {variant === "embeddeded" && (
+                {variant === "embedded" && (
                   <td className="text-center">{student.age}</td>
                 )}
-                {variant === "embeddeded" && <td>{student.contact}</td>}
+                {variant === "embedded" && <td>{student.contact}</td>}
                 {variant === "page" && <td>{student?.parent?.name}</td>}
                 {variant === "page" && (
                   <td className="text-center">

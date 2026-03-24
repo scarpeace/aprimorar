@@ -15,6 +15,7 @@ import com.aprimorar.api.exception.ProblemDetailResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -45,9 +46,7 @@ public interface ParentControllerDocs {
             description = "Lista todos os responsáveis cadastrados."
     )
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Responsáveis listados com sucesso",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ParentResponseDTO.class))),
+        @ApiResponse(responseCode = "200", description = "Responsáveis listados com sucesso"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
@@ -82,7 +81,7 @@ public interface ParentControllerDocs {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Responsáveis listados com sucesso",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ParentOptionDTO.class))),
+                        array = @ArraySchema(schema = @Schema(implementation = ParentOptionDTO.class)))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))

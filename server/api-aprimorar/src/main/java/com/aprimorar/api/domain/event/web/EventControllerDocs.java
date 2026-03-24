@@ -42,9 +42,7 @@ public interface EventControllerDocs {
             description = "Retorna todos os eventos do banco de dados com paginação."
     )
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Listagem dos eventos com paginação",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = EventResponseDTO.class))),
+        @ApiResponse(responseCode = "200", description = "Listagem dos eventos com paginação"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
@@ -76,9 +74,7 @@ public interface EventControllerDocs {
             summary = "Listar evento por ID",
             description = "Retorna um evento específico com base no ID do colaborador.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Listagem do evento por ID",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = EventResponseDTO.class))),
+        @ApiResponse(responseCode = "200", description = "Listagem do evento por ID"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))})
@@ -93,9 +89,7 @@ public interface EventControllerDocs {
             description = "Retorna um evento específico com base no ID do aluno."
     )
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Listagem do evento por ID do aluno",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = EventResponseDTO.class))),
+        @ApiResponse(responseCode = "200", description = "Listagem do evento por ID do aluno"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))

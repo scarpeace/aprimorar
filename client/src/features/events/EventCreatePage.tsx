@@ -5,12 +5,9 @@ import { FormField } from "@/components/ui/form-field";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/events/EventCreatePage.module.css";
-import { eventInputSchema, type EventFormInput } from "@/features/events/schemas/event";
-import { eventContentLabels, eventContentValues } from "@/features/events/schemas/eventContentEnum";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { useCreateEvent } from "./query/useEventMutations";
-import { useStudentOptionsQuery } from "@/features/students/query/useStudentQueries";
 import { useEmployeeOptionsQuery } from "@/features/employees/query/useEmployeeQueries";
+import { useGetStudentOptions } from "@/kubb";
 
 export function EventCreatePage() {
   const {
@@ -28,7 +25,7 @@ export function EventCreatePage() {
   const employeeIdField = register("employeeId");
 
   // Opções para os dropdowns de aluno e colaborador
-  const studentsQuery = useStudentOptionsQuery();
+  const studentsQuery = useGetStudentOptions();
   const employeesQuery = useEmployeeOptionsQuery();
 
   const students = studentsQuery.data ?? [];

@@ -10,7 +10,7 @@ import { ButtonLink } from "@/components/ui/button";
 import styles from "@/features/parents/ParentsPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useDebounce } from "@/lib/shared/use-debounce";
-import { useGetParents } from "@/gen";
+import { useGetParents } from "@/kubb";
 
 export function ParentsPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -24,11 +24,9 @@ export function ParentsPage() {
     error,
     refetch,
   } = useGetParents({
-    pageable: {
-      page: currentPage,
-      size: pageSize,
-      sort: ["name"]
-    },
+    page: currentPage,
+    size: pageSize,
+    sort: ["name"]
   });
 
   // Reset pagination when search changes

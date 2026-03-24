@@ -157,18 +157,20 @@ Objetivo: mostrar mensagem vinda do backend (ex.: "Aluno nao encontrado").
 Exemplo pequeno:
 
 ```ts
-import type { ApiError } from "@/gen"
+import type { ApiError } from "@/kubb";
 
 export function getFriendlyErrorMessage(error: unknown): string {
-  const axiosError = error as { response?: { data?: ApiError; status?: number } }
-  const apiError = axiosError.response?.data
+  const axiosError = error as {
+    response?: { data?: ApiError; status?: number };
+  };
+  const apiError = axiosError.response?.data;
 
-  if (apiError?.message) return apiError.message
-  if (axiosError.response?.status === 400) return "Dados invalidos"
-  if (axiosError.response?.status === 404) return "Aluno nao encontrado"
-  if (axiosError.response?.status === 409) return "Conflito de dados"
+  if (apiError?.message) return apiError.message;
+  if (axiosError.response?.status === 400) return "Dados invalidos";
+  if (axiosError.response?.status === 404) return "Aluno nao encontrado";
+  if (axiosError.response?.status === 409) return "Conflito de dados";
 
-  return "Erro inesperado"
+  return "Erro inesperado";
 }
 ```
 
@@ -176,8 +178,8 @@ Exemplo pequeno de uso em mutation:
 
 ```ts
 onError: (error) => {
-  toast.error(getFriendlyErrorMessage(error))
-}
+  toast.error(getFriendlyErrorMessage(error));
+};
 ```
 
 ---

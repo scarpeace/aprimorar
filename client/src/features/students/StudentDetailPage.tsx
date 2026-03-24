@@ -14,7 +14,7 @@ import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { EditStudentButton } from "./components/EditStudentButton";
 import { ArchiveStudentButton } from "./components/ArchiveStudentButton";
 import { DeleteStudentButton } from "./components/DeleteStudentButton";
-import { useGetStudentById } from "@/gen";
+import { useGetStudentById } from "@/kubb";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
