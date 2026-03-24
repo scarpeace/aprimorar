@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { GraduationCap } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ButtonLink } from "@/components/ui/button";
@@ -7,19 +7,21 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { EventsTable } from "@/features/events/components/EventsTable";
 import styles from "@/features/students/StudentDetailPage.module.css";
 import { formatDateShortYear } from "@/lib/utils/formatter";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { EditStudentButton } from "./components/EditStudentButton";
 import { ArchiveStudentButton } from "./components/ArchiveStudentButton";
 import { DeleteStudentButton } from "./components/DeleteStudentButton";
-import { useGetStudentById } from "@/kubb";
+import { useGetEventsByStudent, useGetStudentById } from "@/kubb";
+import { EventTable } from "@/features/events/components/EventTable";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 10;
 
   const {
     data: student,
@@ -28,6 +30,15 @@ export function StudentDetailPage() {
     isFetched: isStudentFetched,
   } = useGetStudentById(studentId);
 
+  const {
+    data: studentEvents,
+    isLoading: isStudentEventsLoading,
+    error: studentEventsError,
+  } = useGetEventsByStudent(studentId, {
+    page: currentPage,
+    size: pageSize,
+    sort: ["startDate,desc"],
+  });
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: student?.name },
@@ -77,9 +88,7 @@ export function StudentDetailPage() {
         headerAction={
           <>
             <EditStudentButton studentId={studentId} />
-            <ArchiveStudentButton
-              studentId={studentId}
-            />
+            <ArchiveStudentButton studentId={studentId} />
             <DeleteStudentButton studentId={studentId} />
           </>
         }
@@ -114,7 +123,22 @@ export function StudentDetailPage() {
         title="Eventos vinculados"
         description="Todos os eventos vinculados a este aluno."
       >
-        <EventsTable variant="embeddedStudent" ownerId={studentId} />
+        {/*<EventsTable variant="embeddedStudent" ownerId={studentId} />*/}
+        <EventTable
+          variant="page"
+          context="student"
+          data={studentEvents}
+          isLoading={isStudentEventsLoading}
+          error={studentEventsError ?? null}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          itemName="eventos"
+          renderActions={(event) => (
+            <ButtonLink to={`/events/${event.id}`} size="sm" variant="outline">
+              Detalhes
+            </ButtonLink>
+          )}
+        />
       </SectionCard>
     </div>
   );

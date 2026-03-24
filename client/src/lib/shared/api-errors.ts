@@ -1,7 +1,12 @@
 import axios from "axios";
+import { ZodError } from "zod";
 
 export function getFriendlyErrorMessage(error: unknown): string {
   if (!error) return "";
+
+  if (error instanceof ZodError) {
+    return "Resposta da API em formato inesperado"
+  }
 
   if (axios.isAxiosError(error)) {
     const status = error.response?.status;

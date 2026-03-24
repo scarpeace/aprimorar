@@ -6,37 +6,27 @@ import { FormField } from "@/components/ui/form-field";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "./ParentCreatePage.module.css";
-import { useCreateParent } from "./query/useParentMutations";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { parentFormSchema, type ParentFormInput } from "@/features/parents/schemas/parent";
-
-const initialParentData: ParentFormInput = {
-  name: "Gustavo Scarpellini",
-  email: "gustavo.scarpellini@gmail.com",
-  contact: "61999293945",
-  cpf: "60558245253",
-};
+import { createParent, createParentMutationRequestSchema, useCreateParent, type CreateParentMutationRequestSchema } from "@/kubb";
 
 export function ParentCreatePage() {
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ParentFormInput>({
-    resolver: zodResolver(parentFormSchema),
-    defaultValues: initialParentData,
-  });
-  const registerWithMask = useHookFormMask(register);
-
-  const {
-    mutate: createParent,
     isPending: isCreateParentPending,
     isError: isCreateParentError,
     error: createParentError,
   } = useCreateParent();
 
-  const onSubmit = (data: ParentFormInput) => {
-    createParent(data);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateParentMutationRequestSchema>({
+    resolver: zodResolver(createParentMutationRequestSchema),
+  });
+  const registerWithMask = useHookFormMask(register);
+
+  const onSubmit = (data: CreateParentMutationRequestSchema) => {
+    createParent( data );
   };
 
   return (

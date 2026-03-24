@@ -27,7 +27,7 @@ export function StudentsTable({
 
   // Reset pagination when search changes
   useEffect(() => {
-    setCurrentPage(0);
+    setCurrentPage((page) => (page === 0 ? page : 0));
   }, [searchTerm]);
 
   const { data: studentsPage, isLoading: studentsPageLoading, error: studentsPageError } = useGetStudents({

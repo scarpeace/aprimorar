@@ -18,8 +18,9 @@ export class ErrorBoundary extends Component<{ children?: ReactNode }, { error: 
                         description={`Um erro inesperado paralisou esta tela, tire um print e mande para o suporte. ${this.state.error.message}`}
                         actionLabel="Recarregar página"
                         onAction={() => globalThis.location.reload()}
-                    />
-                    <ButtonLink className="mt-4" to="/">Voltar para página inicial</ButtonLink>
+                />
+                {/*TODO: Esse botão não tá funcionando*/}
+                    <ButtonLink className="mt-4" to="/">Voltar para a página inicial</ButtonLink>
                 </div>
             )
         }

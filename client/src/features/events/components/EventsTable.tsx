@@ -28,8 +28,7 @@ export function EventsTable({
 
   // Reset pagination when search changes
   useEffect(() => {
-    setCurrentPage(0);
-    
+    setCurrentPage((page) => (page === 0 ? page : 0));
   }, [searchTerm]);
 
   const allResults = useEventsQuery(

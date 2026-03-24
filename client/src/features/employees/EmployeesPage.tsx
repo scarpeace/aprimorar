@@ -30,7 +30,7 @@ export function EmployeesPage() {
 
   // Reset pagination when search changes
   useEffect(() => {
-    setCurrentPage(0);
+    setCurrentPage((page) => (page === 0 ? page : 0));
   }, [debouncedSearchTerm]);
 
   const employeeList = employeesPage?.content ?? [];

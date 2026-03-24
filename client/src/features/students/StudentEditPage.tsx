@@ -357,9 +357,7 @@ export function StudentEditPage() {
           </div>
 
           {updateError && (
-            <Alert variant="error" className="text-sm">
-              {getFriendlyErrorMessage(updateError)}
-            </Alert>
+            <Alert variant="error" message={getFriendlyErrorMessage(updateError)} className="text-sm"/>
           )}
 
           <div className={styles.actions}>

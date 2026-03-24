@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Handshake } from "lucide-react";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
@@ -28,11 +28,6 @@ export function ParentsPage() {
     size: pageSize,
     sort: ["name"]
   });
-
-  // Reset pagination when search changes
-  useEffect(() => {
-    setCurrentPage(0);
-  }, [debouncedSearchTerm]);
 
   return (
     <div className={styles.page}>
