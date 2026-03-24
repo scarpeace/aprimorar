@@ -1,7 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm, type Resolver } from "react-hook-form";
-import { Trash2 } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
@@ -10,12 +8,10 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/events/EventCreatePage.module.css";
-import {
-  eventContentLabels,
-  eventContentValues,
-} from "@/features/events/schemas/eventContentEnum";
+
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import {
+  eventRequestDTOContentEnum,
   updateEventMutationRequestSchema,
   useGetEventById,
   useGetStudentOptions,
@@ -221,7 +217,7 @@ export function EventEditPage() {
                 <option value="" disabled>
                   Selecione um conteúdo
                 </option>
-                {eventContentValues.map((content) => (
+                {eventRequestDTOContentEnum.map((content) => (
                   <option key={content} value={content}>
                     {eventContentLabels[content]}
                   </option>

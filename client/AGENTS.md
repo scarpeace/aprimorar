@@ -1,390 +1,116 @@
 # Frontend AGENTS.md
 
-React + TypeScript + Vite patterns for the Aprimorar client application.
+React + TypeScript + Vite guidance for coding agents working in `client/`.
 
-## Build Commands
+## Scope
+- This file applies to the SPA in `client/`
+- Read the root `AGENTS.md` first for repo-wide workflow and verification expectations
+- Generated Kubb files in `client/src/kubb/` are off-limits for manual edits
+
+## Build And Verification
+Run from `client/`:
 
 ```bash
-npm run dev      # Start dev server (http://localhost:5173)
-npm run lint     # Lint all TypeScript/TSX files
-npm run build    # TypeScript type-check + production build
-npm run preview  # Preview production build locally
+npm install
+npm run dev
+npm run lint
+npm run build
+npm run preview
+npm run sync
 ```
 
-## File Structure
-
-```
-client/src/
-├── features/           # Route pages and feature-specific code
-│   ├── students/
-│   │   ├── StudentsPage.tsx
-│   │   ├── StudentDetailPage.tsx
-│   │   ├── StudentCreatePage.tsx
-│   │   ├── components/    # Feature-specific components
-│   │   └── query/         # Feature-specific hooks (React Query)
-│   └── events/
-├── components/
-│   └── ui/               # Reusable UI primitives
-├── lib/
-│   ├── schemas/          # Zod schemas per domain
-│   └── query/            # React Query setup, queryKeys
-└── services/             # API wrappers (Axios)
-```
-
-## Component Patterns
-
-### File Naming
-- Pages: `*Page.tsx` (e.g., `StudentsPage.tsx`)
-- Components: `*.tsx` (e.g., `StudentsTable.tsx`)
-- Hooks: `hooks/*.ts` or `use-*.ts`
-
-### Export Pattern
-Use **named exports** for all components:
-
-```tsx
-// Correct
-export function StudentsPage() { ... }
-
-// Avoid
-export default function StudentsPage() { ... }
-```
-
-### Component Props
-Define props as interfaces at the top of the file:
-
-```tsx
-interface PageHeaderProps {
-  title: string
-  description?: string
-  action?: ReactNode
-  Icon?: ElementType
-}
-
-export function PageHeader({ title, description, action, Icon, ... }: PageHeaderProps) {
-  // ...
-}
-```
-
-### Variant Pattern
-For styled components with variants:
-
-```tsx
-type ButtonVariant = "primary" | "secondary" | "success" | "error" | "outline" | "ghost"
-
-const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: "btn-primary",
-  secondary: "btn-secondary",
-  // ...
-}
-
-export function Button({ variant = "primary", className, ... }: ButtonProps) {
-  return <button className={`${VARIANT_CLASSES[variant]} ${className ?? ""}`} {...} />
-}
-```
-
-## Zod Schema Patterns
-
-### Schema Organization
-One file per domain in `lib/schemas/`:
-
-```typescript
-// student.ts
-export const studentInputSchema = z.object({
-  name: z.string().min(1, "Nome é obrigatório"),
-  email: z.string().email("E-mail inválido"),
-  birthdate: z.string().refine((d) => new Date(d) < new Date(), "Data deve ser no passado"),
-  parentId: z.uuid(),
-})
-
-export const studentResponseSchema = z.object({
-  id: z.uuid(),
-  name: z.string(),
-  // ...
-})
-
-export type StudentFormInput = z.infer<typeof studentInputSchema>
-export type StudentResponse = z.infer<typeof studentResponseSchema>
-```
-
-### Generic Paginated Response
-```typescript
-export const pageResponseSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
-  z.object({
-    content: z.array(itemSchema),
-    page: z.object({
-      size: z.number(),
-      totalElements: z.number(),
-      totalPages: z.number(),
-      number: z.number(),
-    }),
-  })
-```
-
-### Transform Patterns
-```typescript
-cpf: z.string().transform(formatCpf),
-contact: z.string().transform(formatPhone),
-```
-
-## API Patterns
-
-### Axios Configuration
-```typescript
-// services/api.ts
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
-  headers: { "Content-Type": "application/json" },
-})
-
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.error("API Error:", error.response?.data || error.message)
-    return Promise.reject(error)
-  }
-)
-```
-
-### API Wrapper Pattern
-```typescript
-export const studentsApi = {
-  async list(page = 0, size = 50, search?: string): Promise<StudentResponse[]> {
-    const { data } = await api.get("/v1/students", { params: { page, size, search } })
-    return studentResponseSchema.parse(data)
-  },
-
-  async create(input: StudentFormInput): Promise<StudentResponse> {
-    const { data } = await api.post("/v1/students", input)
-    return studentResponseSchema.parse(data)
-  },
-}
-```
-
-### Error Handling
-```typescript
-// services/api-errors.ts
-export function getFriendlyErrorMessage(error: unknown): string {
-  if (!error) return ""
-
-  if (error instanceof ZodError) {
-    return "Resposta da API em formato inesperado"
-  }
-
-  if (axios.isAxiosError(error)) {
-    const status = error.response?.status
-    const apiMessage = error.response?.data?.message
-
-    if (status === 400) return apiMessage ?? "Dados inválidos"
-    if (status === 404) return apiMessage ?? "Não encontrado"
-    if (status === 409) return apiMessage ?? "Conflito de dados"
-  }
-
-  return "Erro inesperado"
-}
-```
-
-## React Query Patterns
-
-### Query Key Centralization
-```typescript
-// lib/query/queryKeys.ts
-export const queryKeys = {
-  students: {
-    all: ["students"] as const,
-    lists: () => ["students", "list"] as const,
-    list: (params: Record<string, unknown>) => ["students", "list", params] as const,
-    detail: (id: string) => ["students", "detail", id] as const,
-  },
-} as const
-```
-
-### Query Hook Pattern
-```typescript
-// features/students/hooks/use-students.ts
-export function useStudentsQuery(page: number, size: number, search?: string) {
-  return useQuery({
-    queryKey: queryKeys.students.list({ page, size, search }),
-    queryFn: () => studentsApi.list(page, size, search),
-    staleTime: 1000 * 60 * 5,
-  })
-}
-```
-
-### Mutation Hook Pattern
-```typescript
-export function useCreateStudent() {
-  const queryClient = useQueryClient()
-  const navigate = useNavigate()
-
-  return useMutation({
-    mutationFn: (data: StudentFormInput) => studentsApi.create(data),
-    onSuccess: (created) => {
-      toast.success("Aluno criado com sucesso!")
-      queryClient.invalidateQueries({ queryKey: queryKeys.students.lists() })
-      navigate(`/students/${created.id}`)
-    },
-    onError: (error) => {
-      toast.error(getFriendlyErrorMessage(error))
-    },
-  })
-}
-```
-
-### Conditional Query with `enabled`
-```typescript
-const results = useStudentsQuery(currentPage, pageSize, searchTerm, {
-  enabled: variant === "studentsPage",
-})
-```
-
-### Keep Previous Data for Pagination
-```typescript
-import { keepPreviousData } from "@tanstack/react-query"
-
-export function useEventsQuery(...) {
-  return useQuery({
-    queryKey: queryKeys.events.list({ page, size, search }),
-    queryFn: () => eventsApi.list(page, size, search),
-    placeholderData: keepPreviousData,
-  })
-}
-```
-
-## Form Patterns
-
-Using react-hook-form with zod-resolver:
-
-```typescript
-const {
-  register,
-  handleSubmit,
-  setValue,
-  watch,
-  formState: { errors },
-} = useForm<StudentFormInput>({
-  resolver: zodResolver(studentInputSchema),
-  mode: "onBlur",
-})
-
-return (
-  <form onSubmit={handleSubmit(onSubmit)}>
-    <input {...register("name")} />
-    {errors.name && <span>{errors.name.message}</span>}
-    {/* ... */}
-  </form>
-)
-```
-
-## UI Components
-
-### Loading and Error States
-```tsx
-if (isLoading) {
-  return <PageLoading message="Carregando alunos..." />
-}
-
-if (isError) {
-  return <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />
-}
-```
-
-### Error Boundary
-```tsx
-export class ErrorBoundary extends Component<{ children?: ReactNode }, { error: Error | null }> {
-  static getDerivedStateFromError(error: Error) {
-    return { error }
-  }
-
-  render() {
-    if (this.state.error) {
-      return <ErrorCard title="Ops..." description={this.state.error.message} />
-    }
-    return this.props.children
-  }
-}
-```
-
-## Import Conventions
-
-### Import Order (Grouped)
-1. React/core imports
-2. Third-party libraries (react-router-dom, lucide-react, react-hook-form)
-3. `@/` alias imports (shared components, lib utilities)
-4. Relative imports (same-feature components, hooks)
-
-```typescript
-// 1. React/core
-import { useState } from "react"
-
-// 2. Third-party
-import { useNavigate } from "react-router-dom"
-import { GraduationCap } from "lucide-react"
-
-// 3. @/ alias (shared)
-import { Button } from "@/components/ui/button"
-import { getFriendlyErrorMessage } from "@/lib/shared/api"
-
-// 4. Relative (same feature)
-import { StudentsTable } from "./components/StudentsTable"
-import { useStudentDetailQuery } from "./query/useStudentQueries"
-```
-
-### Cross-Feature vs Same-Feature Imports
-
-```typescript
-// Cross-feature - use @/ alias
-import { EventsTable } from "@/features/events/components/EventsTable"
-import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown"
-
-// Same-feature - use relative paths
-import { StudentsTable } from "./components/StudentsTable"
-import { useStudentQueries } from "./query/useStudentQueries"
-```
-
-### Type-Only Imports
-
-Always use `import type` for type-only imports:
-
-```typescript
-import type { ReactNode } from "react"
-import type { StudentResponse } from "@/lib/schemas/student"
-```
-
-## Performance Patterns (from Vercel Best Practices)
-
-### Parallel Data Fetching
-```typescript
-// Use Promise.allSettled for independent queries
-const [studentsResult, eventsResult] = await Promise.allSettled([
-  studentsApi.list(),
-  eventsApi.list(),
-])
-
-if (studentsResult.status === "fulfilled") {
-  // handle success
-} else {
-  console.error("Failed to load students:", studentsResult.reason)
-}
-```
-
-### Memoization
-```typescript
-// Use useMemo for expensive computations
-const sortedData = useMemo(
-  () => [...data].sort((a, b) => a.name.localeCompare(b.name)),
-  [data]
-)
-
-// Use useCallback for stable references
-const handleSubmit = useCallback(() => { ... }, [dependencies])
-```
-
-### Early Exit Pattern
-```typescript
-// Return early to avoid nesting
-if (isLoading) return <Loading />
-if (isError) return <ErrorCard />
-
-// Main content
-return <div>...</div>
-```
+- `npm run build` runs `tsc -b && vite build`
+- `npm run sync` regenerates hooks, schemas, and types from the backend OpenAPI document
+- There is no dedicated frontend test runner configured right now
+- For frontend-only work, the expected minimum verification is `npm run lint` and `npm run build`
+
+## Project Structure
+- `src/features/` contains route pages, domain UI, and feature-specific logic
+- `src/components/ui/` contains reusable UI primitives shared across features
+- `src/lib/` contains shared utilities, formatting helpers, API helpers, and infra code
+- `src/kubb/` contains generated API code; regenerate instead of editing
+
+## Imports And Module Boundaries
+- Import order: React/core, third-party, `@/` aliases, then relative imports
+- Use `import type` for type-only imports
+- Prefer `@/` aliases for cross-feature imports; use relative imports within the same feature when clearer
+- Use named exports for components, hooks, and helpers; avoid `export default`
+- Keep feature internals inside the feature folder unless they are clearly reusable across domains
+
+## Components And Files
+- Route pages use `*Page.tsx`
+- Feature components belong in `src/features/<feature>/components/`
+- Shared building blocks belong in `src/components/ui/`
+- Keep page components focused on orchestration; move repeated logic into hooks, helpers, or child components
+- Prefer explicit props types near the top of the file
+- Prefer early returns for loading, empty, and error states rather than nested conditionals
+
+## Styling And UI
+- Preserve the visual language already present in the touched feature
+- Reuse shared UI primitives before creating new one-off controls
+- Keep layouts responsive for desktop and mobile
+- Avoid adding comments unless a block is genuinely non-obvious
+- Follow the file's existing formatting style; do not mass-reformat unrelated lines
+
+## Types, Zod, And Forms
+- Use Zod schemas and inferred types at form and API boundaries
+- Treat generated Kubb schemas/types/hooks as the source of truth for server contracts
+- Prefer `z.input<typeof schema>` for form values when schema transforms or coercions are involved
+- React Hook Form should normally use `zodResolver(schema)` and `mode: "onBlur"`
+- Hidden fields and custom inputs should update form state through `setValue` with validation/dirty flags when needed
+- Avoid unsafe casts such as `as unknown as Resolver<...>` unless the root mismatch is understood and unavoidable
+
+## Data Fetching And State
+- Use TanStack Query for server state
+- Reuse stable query keys; do not invent ad hoc string keys per component
+- Use `enabled` for queries that depend on route params or other conditional inputs
+- Prefer keeping pagination, filters, and search term state in the parent page or feature container
+- Let shared table-like components render data and pagination, but keep query orchestration in the parent
+- Use placeholder data or `keepPreviousData` for paginated UX where it matches existing patterns
+- Invalidate relevant queries after mutations succeed
+
+## API And Error Handling
+- Use shared helpers such as `getFriendlyErrorMessage` when available
+- Prefer UI-level Portuguese error messages over raw thrown messages
+- Do not swallow API failures with `console.log` only; surface them through page states or alerts
+- If Zod parsing fails on generated schemas, inspect the backend contract and Kubb output before weakening validation
+- When Kubb types mark paginated fields as optional, handwritten abstractions should accept that shape rather than forcing stricter local types
+
+## Naming Conventions
+- Components, pages, interfaces, and exported types use PascalCase
+- Hooks use `useXxx`
+- Variables, functions, and object properties use camelCase
+- CSS modules use PascalCase file names when that pattern already exists nearby
+- Prefer descriptive names such as `currentPage`, `studentEvents`, or `handleSearchChange` over abbreviations
+
+## Reusable Patterns
+
+### Tables
+- Keep generic `Table` components domain-agnostic and focused on rendering
+- Put domain-specific columns, formatting, and context rules into wrappers such as `EventTable`
+- Pass `currentPage` and `onPageChange` from the parent page instead of managing them inside a generic table
+
+### Search Inputs
+- Reusable search input components should be presentational
+- Parent pages should own `searchTerm`, debounce behavior, and query params
+- Reset pagination in the same event handler that changes the search term when possible
+
+### Route Params
+- `useParams()` values are optional; guard invalid IDs with `enabled` in queries and explicit UI fallbacks
+- Do not call hooks conditionally after an early return
+
+## Kubb And Generated Contracts
+- After changing backend DTOs or endpoint signatures, run the backend OpenAPI generation and then `npm run sync`
+- Do not patch generated schemas to work around backend mismatches unless the user explicitly asks for a temporary hack
+- If generated schemas reject backend dates or enums, fix the backend contract or mapper first
+
+## Suggested Verification By Change Type
+- Form/UI only: `npm run lint` and `npm run build`
+- Query or API consumption change: `npm run lint`, `npm run build`, and verify relevant screens manually in dev mode
+- Contract change: backend OpenAPI generation, `npm run sync`, then frontend build
+
+## Quick Checklist
+- Did you keep user-facing strings in Portuguese?
+- Did you avoid editing `src/kubb/` manually?
+- Did you keep generic components generic and push domain rules into wrappers?
+- Did you verify with `npm run lint` and `npm run build` when practical?

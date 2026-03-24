@@ -6,8 +6,7 @@ import {
   Tooltip,
   type PieLabelRenderProps,
 } from "recharts";
-import type { DashboardSummaryResponseDTO } from "@/kubb";
-import { eventContentLabels } from "@/features/events/schemas/eventContentEnum";
+import { type DashboardSummaryResponseDTO } from "@/kubb";
 
 type ClassesByContentDTO = NonNullable<DashboardSummaryResponseDTO["charts"]>[number];
 
@@ -59,9 +58,7 @@ export function PizzaChart({
   isAnimationActive = true,
 }: Readonly<PizzaChartProps>) {
   const chartData = data.map((item, index) => ({
-    name:
-      eventContentLabels[item.content as keyof typeof eventContentLabels] ||
-      item.content,
+    name: item.content,
     value: item.count ?? 0,
     fill: COLORS[index % COLORS.length],
   }));

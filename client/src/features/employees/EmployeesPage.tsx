@@ -11,7 +11,7 @@ import { dutyLabels } from "./schemas/dutyEnum";
 import styles from "@/features/employees/EmployeesPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useDebounce } from "@/lib/shared/use-debounce";
-import { useGetEmployees } from "@/gen/hooks/employee/useGetEmployees";
+import { useGetEmployees } from "@/kubb";
 
 export function EmployeesPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -26,12 +26,11 @@ export function EmployeesPage() {
     isError,
     error,
     refetch,
-  } = useGetEmployees(currentPage, pageSize, debouncedSearchTerm);
-
-  // Reset pagination when search changes
-  useEffect(() => {
-    setCurrentPage((page) => (page === 0 ? page : 0));
-  }, [debouncedSearchTerm]);
+  } = useGetEmployees({
+    page: currentPage,
+    size: pageSize,
+    search: debouncedSearchTerm,
+  });
 
   const employeeList = employeesPage?.content ?? [];
 
