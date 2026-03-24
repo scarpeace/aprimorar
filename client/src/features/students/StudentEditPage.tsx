@@ -11,12 +11,13 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/students/StudentCreatePage.module.css";
-import { updateStudentMutationRequestSchema, useGetStudentById, useUpdateStudent, type StudentRequestDTO, type UpdateStudentMutationRequest } from "@/kubb";
+import { getStudentByIdQueryKey, getStudentsQueryKey, updateStudentMutationKey, updateStudentMutationRequestSchema, useGetStudentById, useUpdateStudent, type StudentRequestDTO, type UpdateStudentMutationRequest } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
 import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown";
 import { DeleteStudentButton } from "./components/DeleteStudentButton";
 import {addressRequestDTOStateEnum} from "../../kubb/types/AddressRequestDTO"
+import { useQueryClient } from "@tanstack/react-query";
 
 
 export function StudentEditPage() {
@@ -24,6 +25,7 @@ export function StudentEditPage() {
   const studentId = id ?? "";
   const navigate = useNavigate()
   // const [parentId, setParentId] = useState("");
+  const queryClient = useQueryClient();
 
   const {
     data: student,
@@ -74,8 +76,17 @@ export function StudentEditPage() {
 
 
   const onSubmit = (data: StudentRequestDTO) => {
-    updateStudent({ studentId, data });
-    navigate(`/students/${studentId}`);
+    updateStudent({ studentId, data }, {
+      onSuccess: () => {
+        navigate(`/students/${studentId}`)
+        queryClient.invalidateQueries({
+          queryKey: getStudentByIdQueryKey(studentId)
+        })
+        queryClient.invalidateQueries({
+          queryKey: getStudentsQueryKey()
+        })
+      }
+    });
   };
 
   if (isStudentError || !student) {
