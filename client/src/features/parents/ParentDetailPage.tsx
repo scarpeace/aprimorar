@@ -10,7 +10,7 @@ import { SummaryItem } from "@/components/ui/summary-item";
 import styles from "./ParentDetailPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
-import { StudentsTable } from "@/features/students/components/StudentsTable";
+import { StudentsTable } from "@/features/students/components/StudentTable";
 import { EditParentButton } from "./components/EditParentButton";
 import { ArchiveParentButton } from "./components/ArchiveParentButton";
 import { DeleteParentButton } from "./components/DeleteParentButton";

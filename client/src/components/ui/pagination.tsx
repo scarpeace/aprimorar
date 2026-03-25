@@ -24,7 +24,7 @@ export function Pagination({
       <p className="text-sm app-text-muted hidden lg:block">
         Mostrando {currentElementsCount} de {totalElements} {itemName}
       </p>
-      <div className="join mx-auto mb-3">
+      <div className="join mx-auto lg:mx-0 mb-3">
         <button
           className="join-item btn btn-sm"
           disabled={currentPage === 0}

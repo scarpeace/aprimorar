@@ -5,11 +5,19 @@ import { PageHeader } from "@/components/ui/page-header"
 import { ButtonLink } from "@/components/ui/button"
 import styles from "@/features/students/StudentsPage.module.css"
 import { useDebounce } from "@/lib/shared/use-debounce"
-import { StudentsTable } from "./components/StudentsTable"
+import { StudentTable } from "./components/StudentTable"
+import { useStudents } from "./query/studentQueries"
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const {
+    data: students,
+    isLoading: isStudentsLoading,
+    error: studentsError
+  } = useStudents({page: currentPage, size:8, search: debouncedSearchTerm})
 
   return (
     <div className={styles.page}>
@@ -34,7 +42,20 @@ export function StudentsPage() {
       </PageHeader>
 
       {/*TODO: substituir a tabela pela genérica*/}
-      <StudentsTable variant="page" searchTerm={debouncedSearchTerm} />
+      <StudentTable
+        variant="page"
+        data={students}
+        isLoading={isStudentsLoading}
+        error={studentsError ?? null}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        itemName="alunos"
+        renderActions={(student) => (
+          <ButtonLink to={`/students/${student.id}`} size="sm" variant="outline">
+            Detalhes
+          </ButtonLink>
+        )}
+      />
     </div>
   )
 }
