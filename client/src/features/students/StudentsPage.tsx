@@ -1,23 +1,24 @@
-import { useState } from "react"
-import { GraduationCap } from "lucide-react"
-import { ListSearchInput } from "@/components/ui/list-search-input"
-import { PageHeader } from "@/components/ui/page-header"
-import { ButtonLink } from "@/components/ui/button"
-import styles from "@/features/students/StudentsPage.module.css"
-import { useDebounce } from "@/lib/shared/use-debounce"
-import { StudentTable } from "./components/StudentTable"
-import { useStudents } from "./query/studentQueries"
+import { useState } from "react";
+import { GraduationCap } from "lucide-react";
+import { ListSearchInput } from "@/components/ui/list-search-input";
+import { PageHeader } from "@/components/ui/page-header";
+import { ButtonLink } from "@/components/ui/button";
+import styles from "@/features/students/StudentsPage.module.css";
+import { useDebounce } from "@/lib/shared/use-debounce";
+import { useStudents } from "./query/studentQueries";
+import type { StudentResponseDTO } from "@/kubb/types/StudentResponseDTO";
+import { StudentsTableContent, StudentsTablePagination, StudentsTableRoot, StudentsTableState } from "./components/StudentsTable";
 
 export function StudentsPage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [currentPage, setCurrentPage] = useState(0);
 
   const {
-    data: students,
-    isLoading: isStudentsLoading,
-    error: studentsError
-  } = useStudents({page: currentPage, size:8, search: debouncedSearchTerm})
+    data: studentsPage,
+    isLoading: isStudentsPageLoading,
+    error: studentsPageError,
+  } = useStudents({ page: currentPage, size: 8, search: debouncedSearchTerm });
 
   return (
     <div className={styles.page}>
@@ -35,26 +36,40 @@ export function StudentsPage() {
             value={searchTerm}
             onChange={setSearchTerm}
           />
-          <ButtonLink className="sm:ml-auto" to="/students/new" variant="success">
+          <ButtonLink
+            className="sm:ml-auto"
+            to="/students/new"
+            variant="success"
+          >
             Novo aluno
           </ButtonLink>
         </div>
       </PageHeader>
 
-      <StudentTable
-        variant="page"
-        data={students}
-        isLoading={isStudentsLoading}
-        error={studentsError ?? null}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-        itemName="alunos"
-        renderActions={(student) => (
-          <ButtonLink to={`/students/${student.id}`} size="sm" variant="outline">
-            Detalhes
-          </ButtonLink>
-        )}
-      />
+
+      <StudentsTableRoot>
+        <StudentsTableState students={studentsPage?.content} isLoading={isStudentsPageLoading} error={studentsPageError} >
+          <StudentsTableContent
+            students={studentsPage?.content ?? []}
+            renderActions={(student : StudentResponseDTO) => (
+              <ButtonLink
+                to={`/students/${student.id}`}
+                size="sm"
+                variant="outline"
+              >
+                Detalhes
+              </ButtonLink>
+            )}
+          />
+          <StudentsTablePagination
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+            totalElements={studentsPage?.page?.totalElements ?? 0}
+            totalPages={studentsPage?.page?.totalPages ?? 0}
+            currentElementsCount={studentsPage?.content?.length ?? 0}
+          />
+        </StudentsTableState>
+      </StudentsTableRoot>
     </div>
-  )
+  );
 }

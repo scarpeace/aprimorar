@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./ParentDetailPage.module.css";
 
-import { StudentTable } from "@/features/students/components/StudentTable";
+import { StudentTable } from "@/features/students/components/StudentsTable/intex";
 import { useStudentsByParent } from "../students/query/studentQueries";
 import { ArchiveParentButton } from "./components/ArchiveParentButton";
 import { DeleteParentButton } from "./components/DeleteParentButton";

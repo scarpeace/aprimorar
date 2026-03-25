@@ -13,7 +13,6 @@ export default defineConfig({
     path: './src/kubb',
     clean: true,
     format: 'auto',
-    barrelType: 'named'
   },
 
   plugins: [

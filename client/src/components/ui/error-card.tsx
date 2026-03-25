@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { AlertTriangle, Home, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "./alert";
 
 type ErrorCardProps = {
   description: string;
@@ -12,48 +12,49 @@ type ErrorCardProps = {
 export function ErrorCard({
   description,
   title = "Não foi possível carregar",
+  actionLabel = "Voltar para a Página inicial",
+  onAction,
 }: Readonly<ErrorCardProps>) {
   const navigate = useNavigate();
+
+  const handleAction = () => {
+    if (onAction) {
+      return onAction();
+    }
+
+    return navigate("/");
+  };
+
   return (
-    <div className="card lg:card-side bg-base-100 shadow-sm">
-      <figure>
-        <img
-          src="https://img.daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.webp"
-          alt="Album"
-        />
-      </figure>
-      <div className="card-body">
-        <h2 className="card-title text-error">{title}</h2>
-        <p className="text-error/60">{description}</p>
-        <div className="card-actions justify-end">
-          <Button onClick={() => navigate("/")} variant="outline">
-            Voltar para a Página inicial
-          </Button>
+    <div className="card overflow-hidden border border-error/20 bg-base-100 shadow-md">
+      <div className="grid gap-0 lg:grid-cols-[280px_1fr]">
+        <div className="relative flex min-h-64 items-center justify-center bg-gradient-to-br from-error/10 via-base-200 to-base-100 p-8">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,80,80,0.18),transparent_45%)]" />
+          <div className="relative flex h-28 w-28 items-center justify-center rounded-3xl border border-error/20 bg-base-100 shadow-sm">
+            <AlertTriangle className="h-14 w-14 text-error" />
+          </div>
+        </div>
+
+        <div className="card-body justify-center gap-5 p-8">
+          <div className="badge badge-error badge-outline w-fit gap-2 px-3 py-3">
+            Ops, algo deu errado
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold text-error">{title}</h2>
+            <p className="max-w-2xl text-sm leading-6 text-base-content/70">
+              {description}
+            </p>
+          </div>
+
+          <div className="card-actions justify-end pt-2">
+            <Button onClick={handleAction} variant="outlineSecondary">
+              {onAction ? <RefreshCw className="h-4 w-4" /> : <Home className="h-4 w-4" />}
+              {actionLabel}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
-
-    // <div className="app-surface card justif border border-error/40 shadow-sm">
-    //   <div className="card-body text-center gap-4">
-    //     <div className="flex flex-col text-center">
-    //       {/*<h2 className="card-title text-error">{title}</h2>*/}
-    //       <h2 className="card-title text-error">Titulo do erro</h2>
-    //       {/*<p className="app-text-muted text-sm">{description}</p>*/}
-    //       <p className="app-text-muted text-sm">Descrição do erro</p>
-    //     </div>
-    //     {/*{onAction ? (*/}
-    //     <div className="card-actions justify-start">
-    //       <Button
-    //         onClick={() => navigate("/")}
-    //         type="button"
-    //         variant="outlineError"
-    //         size="sm"
-    //       >
-    //         {actionLabel}
-    //       </Button>
-    //     </div>
-    //     {/*) : null}*/}
-    //   </div>
-    // </div>
   );
 }

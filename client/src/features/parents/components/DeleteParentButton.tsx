@@ -52,9 +52,9 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
         onClose={handleClose}
         onConfirm={handleConfirmDelete}
         title="Excluir Aluno"
-        isPending={isDeleting}
-        isLoadingEvents={isParentStudentsLoading}
-        eventsCount={parentStudents?.length}
+        isItemPending={isDeleting}
+        isItemLoading={isParentStudentsLoading}
+        itemDeleteCount={parentStudents?.length}
         itemName="aluno"
         phantomWarning={
           <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
