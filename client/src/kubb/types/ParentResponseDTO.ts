@@ -8,7 +8,7 @@ export type ParentResponseDTO = {
    * @description ID do responsável
    * @type string, uuid
    */
-  id: string;
+  parentId: string;
   /**
    * @description Nome do responsável
    * @type string

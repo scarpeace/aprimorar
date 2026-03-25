@@ -1,8 +1,8 @@
 package com.aprimorar.api.domain.event;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
@@ -99,8 +99,8 @@ class EventServiceTest {
         return new EventRequestDTO(
                 "Evento atualizado",
                 "Descrição de teste",
-                EVENT_START.atZone(APP_ZONE).toOffsetDateTime(),
-                EVENT_END.atZone(APP_ZONE).toOffsetDateTime(),
+                EVENT_START.atZone(APP_ZONE).toInstant(),
+                EVENT_END.atZone(APP_ZONE).toInstant(),
                 BigDecimal.valueOf(120),
                 BigDecimal.valueOf(80),
                 EventContent.AULA,
@@ -143,8 +143,8 @@ class EventServiceTest {
                 event.getTitle(),
                 event.getDescription(),
                 event.getContent().name(),
-                event.getStartDate().atZone(APP_ZONE).toOffsetDateTime(),
-                event.getEndDateTime().atZone(APP_ZONE).toOffsetDateTime(),
+                event.getStartDate().atZone(APP_ZONE).toInstant(),
+                event.getEndDateTime().atZone(APP_ZONE).toInstant(),
                 event.getPrice(),
                 event.getPayment(),
                 student.getId(),

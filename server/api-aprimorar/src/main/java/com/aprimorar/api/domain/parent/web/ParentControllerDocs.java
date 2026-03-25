@@ -8,9 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import com.aprimorar.api.domain.parent.dto.ParentOptionDTO;
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
+import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
 import com.aprimorar.api.exception.ProblemDetailResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,19 +74,19 @@ public interface ParentControllerDocs {
     );
 
     @Operation(
-            operationId = "getParentsOptions",
+            operationId = "getParentsSummary",
             summary = "Listar responsáveis para listas e dropdowns",
             description = "Lista todos os responsáveis cadastrados para uso em listas e dropdowns."
     )
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Responsáveis listados com sucesso",
                 content = @Content(mediaType = "application/json",
-                        array = @ArraySchema(schema = @Schema(implementation = ParentOptionDTO.class)))),
+                        array = @ArraySchema(schema = @Schema(implementation = ParentSummaryDTO.class)))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
     })
-    ResponseEntity<List<ParentOptionDTO>> getParentsOptions();
+    ResponseEntity<List<ParentSummaryDTO>> getParentSummary();
 
     @Operation(
             operationId = "updateParent",

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.domain.student.StudentService;
-import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
+import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 
@@ -58,8 +58,8 @@ public class StudentController implements StudentControllerDocs {
 
     @Override
     @GetMapping("/options")
-    public ResponseEntity<List<StudentOptionDTO>> getStudentOptions() {
-        List<StudentOptionDTO> options = studentService.getStudentOptions();
+    public ResponseEntity<List<StudentSummaryDTO>> getStudentSummary() {
+        List<StudentSummaryDTO> options = studentService.getStudentOptions();
         return ResponseEntity.ok(options);
     }
 

@@ -27,13 +27,13 @@ export type { PagedModelEmployeeResponseDTO } from "./PagedModelEmployeeResponse
 export type { PagedModelEventResponseDTO } from "./PagedModelEventResponseDTO.ts";
 export type { PagedModelParentResponseDTO } from "./PagedModelParentResponseDTO.ts";
 export type { PagedModelStudentResponseDTO } from "./PagedModelStudentResponseDTO.ts";
-export type { ParentOptionDTO } from "./ParentOptionDTO.ts";
 export type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
+export type { ParentSummaryDTO } from "./ParentSummaryDTO.ts";
 export type { ProblemDetailResponseDTO } from "./ProblemDetailResponseDTO.ts";
-export type { StudentOptionDTO } from "./StudentOptionDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
+export type { StudentSummaryDTO } from "./StudentSummaryDTO.ts";
 export type {
   GetDashboardSummary200,
   GetDashboardSummary400,
@@ -185,11 +185,11 @@ export type {
   GetParentsQueryResponse,
 } from "./parent/GetParents.ts";
 export type {
-  GetParentsOptions200,
-  GetParentsOptions400,
-  GetParentsOptionsQuery,
-  GetParentsOptionsQueryResponse,
-} from "./parent/GetParentsOptions.ts";
+  GetParentsSummary200,
+  GetParentsSummary400,
+  GetParentsSummaryQuery,
+  GetParentsSummaryQueryResponse,
+} from "./parent/GetParentsSummary.ts";
 export type {
   UnarchiveParent204,
   UnarchiveParent404,
@@ -234,11 +234,11 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./student/GetStudentById.ts";
 export type {
-  GetStudentOptions200,
-  GetStudentOptions400,
-  GetStudentOptionsQuery,
-  GetStudentOptionsQueryResponse,
-} from "./student/GetStudentOptions.ts";
+  GetStudentSummary200,
+  GetStudentSummary400,
+  GetStudentSummaryQuery,
+  GetStudentSummaryQueryResponse,
+} from "./student/GetStudentSummary.ts";
 export type {
   GetStudents200,
   GetStudents400,

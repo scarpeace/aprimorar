@@ -23,16 +23,16 @@ export type {
   GetParentByIdQueryResponseSchema,
 } from "./getParentByIdSchema.ts";
 export type {
-  GetParentsOptions200Schema,
-  GetParentsOptions400Schema,
-  GetParentsOptionsQueryResponseSchema,
-} from "./getParentsOptionsSchema.ts";
-export type {
   GetParents200Schema,
   GetParents400Schema,
   GetParentsQueryParamsSchema,
   GetParentsQueryResponseSchema,
 } from "./getParentsSchema.ts";
+export type {
+  GetParentsSummary200Schema,
+  GetParentsSummary400Schema,
+  GetParentsSummaryQueryResponseSchema,
+} from "./getParentsSummarySchema.ts";
 export type {
   UnarchiveParent204Schema,
   UnarchiveParent404Schema,
@@ -62,13 +62,13 @@ export { getParentById200Schema } from "./getParentByIdSchema.ts";
 export { getParentById400Schema } from "./getParentByIdSchema.ts";
 export { getParentByIdPathParamsSchema } from "./getParentByIdSchema.ts";
 export { getParentByIdQueryResponseSchema } from "./getParentByIdSchema.ts";
-export { getParentsOptions200Schema } from "./getParentsOptionsSchema.ts";
-export { getParentsOptions400Schema } from "./getParentsOptionsSchema.ts";
-export { getParentsOptionsQueryResponseSchema } from "./getParentsOptionsSchema.ts";
 export { getParents200Schema } from "./getParentsSchema.ts";
 export { getParents400Schema } from "./getParentsSchema.ts";
 export { getParentsQueryParamsSchema } from "./getParentsSchema.ts";
 export { getParentsQueryResponseSchema } from "./getParentsSchema.ts";
+export { getParentsSummary200Schema } from "./getParentsSummarySchema.ts";
+export { getParentsSummary400Schema } from "./getParentsSummarySchema.ts";
+export { getParentsSummaryQueryResponseSchema } from "./getParentsSummarySchema.ts";
 export { unarchiveParent204Schema } from "./unarchiveParentSchema.ts";
 export { unarchiveParent404Schema } from "./unarchiveParentSchema.ts";
 export { unarchiveParentMutationResponseSchema } from "./unarchiveParentSchema.ts";

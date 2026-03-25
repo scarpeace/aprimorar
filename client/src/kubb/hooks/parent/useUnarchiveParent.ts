@@ -23,7 +23,7 @@ import { unarchiveParentMutationResponseSchema } from "../../schemas/parent/unar
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const unarchiveParentMutationKey = () =>
-  [{ url: "/v1/parents/:id/unarchive" }] as const;
+  [{ url: "/v1/parents/:parentId/unarchive" }] as const;
 
 export type UnarchiveParentMutationKey = ReturnType<
   typeof unarchiveParentMutationKey
@@ -32,10 +32,10 @@ export type UnarchiveParentMutationKey = ReturnType<
 /**
  * @description Desarquiva um responsável específico.
  * @summary Desarquivar responsável
- * {@link /v1/parents/:id/unarchive}
+ * {@link /v1/parents/:parentId/unarchive}
  */
 export async function unarchiveParent(
-  id: UnarchiveParentPathParams["id"],
+  parentId: UnarchiveParentPathParams["parentId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
@@ -46,7 +46,7 @@ export async function unarchiveParent(
     unknown
   >({
     method: "PATCH",
-    url: `/v1/parents/${id}/unarchive`,
+    url: `/v1/parents/${parentId}/unarchive`,
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
@@ -60,12 +60,12 @@ export function unarchiveParentMutationOptions<TContext = unknown>(
   return mutationOptions<
     UnarchiveParentMutationResponse,
     ResponseErrorConfig<UnarchiveParent404>,
-    { id: UnarchiveParentPathParams["id"] },
+    { parentId: UnarchiveParentPathParams["parentId"] },
     TContext
   >({
     mutationKey,
-    mutationFn: async ({ id }) => {
-      return unarchiveParent(id, config);
+    mutationFn: async ({ parentId }) => {
+      return unarchiveParent(parentId, config);
     },
   });
 }
@@ -73,14 +73,14 @@ export function unarchiveParentMutationOptions<TContext = unknown>(
 /**
  * @description Desarquiva um responsável específico.
  * @summary Desarquivar responsável
- * {@link /v1/parents/:id/unarchive}
+ * {@link /v1/parents/:parentId/unarchive}
  */
 export function useUnarchiveParent<TContext>(
   options: {
     mutation?: UseMutationOptions<
       UnarchiveParentMutationResponse,
       ResponseErrorConfig<UnarchiveParent404>,
-      { id: UnarchiveParentPathParams["id"] },
+      { parentId: UnarchiveParentPathParams["parentId"] },
       TContext
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
@@ -96,14 +96,14 @@ export function useUnarchiveParent<TContext>(
   ) as UseMutationOptions<
     UnarchiveParentMutationResponse,
     ResponseErrorConfig<UnarchiveParent404>,
-    { id: UnarchiveParentPathParams["id"] },
+    { parentId: UnarchiveParentPathParams["parentId"] },
     TContext
   >;
 
   return useMutation<
     UnarchiveParentMutationResponse,
     ResponseErrorConfig<UnarchiveParent404>,
-    { id: UnarchiveParentPathParams["id"] },
+    { parentId: UnarchiveParentPathParams["parentId"] },
     TContext
   >(
     {
@@ -115,7 +115,7 @@ export function useUnarchiveParent<TContext>(
   ) as UseMutationResult<
     UnarchiveParentMutationResponse,
     ResponseErrorConfig<UnarchiveParent404>,
-    { id: UnarchiveParentPathParams["id"] },
+    { parentId: UnarchiveParentPathParams["parentId"] },
     TContext
   >;
 }

@@ -13,8 +13,9 @@ import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { EditStudentButton } from "./components/EditStudentButton";
 import { ArchiveStudentButton } from "./components/ArchiveStudentButton";
 import { DeleteStudentButton } from "./components/DeleteStudentButton";
-import { useGetEventsByStudent, useGetStudentById } from "@/kubb";
+import { useGetEventsByStudent } from "@/kubb";
 import { EventTable } from "@/features/events/components/EventTable";
+import { useStudentById } from "./query/studentQueries";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +29,7 @@ export function StudentDetailPage() {
     isLoading: isStudentLoading,
     error: studentError,
     isFetched: isStudentFetched,
-  } = useGetStudentById(studentId);
+  } = useStudentById(studentId);
 
   const {
     data: studentEvents,

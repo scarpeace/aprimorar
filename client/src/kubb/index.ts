@@ -19,14 +19,14 @@ export type { CreateParentMutationKey } from "./hooks/parent/useCreateParent.ts"
 export type { DeleteParentMutationKey } from "./hooks/parent/useDeleteParent.ts";
 export type { GetParentByIdQueryKey } from "./hooks/parent/useGetParentById.ts";
 export type { GetParentsQueryKey } from "./hooks/parent/useGetParents.ts";
-export type { GetParentsOptionsQueryKey } from "./hooks/parent/useGetParentsOptions.ts";
+export type { GetParentsSummaryQueryKey } from "./hooks/parent/useGetParentsSummary.ts";
 export type { UnarchiveParentMutationKey } from "./hooks/parent/useUnarchiveParent.ts";
 export type { UpdateParentMutationKey } from "./hooks/parent/useUpdateParent.ts";
 export type { ArchiveStudentMutationKey } from "./hooks/student/useArchiveStudent.ts";
 export type { CreateStudentMutationKey } from "./hooks/student/useCreateStudent.ts";
 export type { DeleteStudentMutationKey } from "./hooks/student/useDeleteStudent.ts";
 export type { GetStudentByIdQueryKey } from "./hooks/student/useGetStudentById.ts";
-export type { GetStudentOptionsQueryKey } from "./hooks/student/useGetStudentOptions.ts";
+export type { GetStudentSummaryQueryKey } from "./hooks/student/useGetStudentSummary.ts";
 export type { GetStudentsQueryKey } from "./hooks/student/useGetStudents.ts";
 export type { GetStudentsByParentQueryKey } from "./hooks/student/useGetStudentsByParent.ts";
 export type { UnarchiveStudentMutationKey } from "./hooks/student/useUnarchiveStudent.ts";
@@ -169,16 +169,16 @@ export type {
   GetParentByIdQueryResponseSchema,
 } from "./schemas/parent/getParentByIdSchema.ts";
 export type {
-  GetParentsOptions200Schema,
-  GetParentsOptions400Schema,
-  GetParentsOptionsQueryResponseSchema,
-} from "./schemas/parent/getParentsOptionsSchema.ts";
-export type {
   GetParents200Schema,
   GetParents400Schema,
   GetParentsQueryParamsSchema,
   GetParentsQueryResponseSchema,
 } from "./schemas/parent/getParentsSchema.ts";
+export type {
+  GetParentsSummary200Schema,
+  GetParentsSummary400Schema,
+  GetParentsSummaryQueryResponseSchema,
+} from "./schemas/parent/getParentsSummarySchema.ts";
 export type {
   UnarchiveParent204Schema,
   UnarchiveParent404Schema,
@@ -192,9 +192,9 @@ export type {
   UpdateParentMutationResponseSchema,
   UpdateParentPathParamsSchema,
 } from "./schemas/parent/updateParentSchema.ts";
-export type { ParentOptionDTOSchema } from "./schemas/parentOptionDTOSchema.ts";
 export type { ParentRequestDTOSchema } from "./schemas/parentRequestDTOSchema.ts";
 export type { ParentResponseDTOSchema } from "./schemas/parentResponseDTOSchema.ts";
+export type { ParentSummaryDTOSchema } from "./schemas/parentSummaryDTOSchema.ts";
 export type { ProblemDetailResponseDTOSchema } from "./schemas/problemDetailResponseDTOSchema.ts";
 export type {
   ArchiveStudent204Schema,
@@ -221,10 +221,10 @@ export type {
   GetStudentByIdQueryResponseSchema,
 } from "./schemas/student/getStudentByIdSchema.ts";
 export type {
-  GetStudentOptions200Schema,
-  GetStudentOptions400Schema,
-  GetStudentOptionsQueryResponseSchema,
-} from "./schemas/student/getStudentOptionsSchema.ts";
+  GetStudentSummary200Schema,
+  GetStudentSummary400Schema,
+  GetStudentSummaryQueryResponseSchema,
+} from "./schemas/student/getStudentSummarySchema.ts";
 export type {
   GetStudentsByParent200Schema,
   GetStudentsByParent400Schema,
@@ -250,9 +250,9 @@ export type {
   UpdateStudentMutationResponseSchema,
   UpdateStudentPathParamsSchema,
 } from "./schemas/student/updateStudentSchema.ts";
-export type { StudentOptionDTOSchema } from "./schemas/studentOptionDTOSchema.ts";
 export type { StudentRequestDTOSchema } from "./schemas/studentRequestDTOSchema.ts";
 export type { StudentResponseDTOSchema } from "./schemas/studentResponseDTOSchema.ts";
+export type { StudentSummaryDTOSchema } from "./schemas/studentSummaryDTOSchema.ts";
 export type {
   AddressRequestDTO,
   AddressRequestDTOStateEnumKey,
@@ -282,13 +282,13 @@ export type { PagedModelEmployeeResponseDTO } from "./types/PagedModelEmployeeRe
 export type { PagedModelEventResponseDTO } from "./types/PagedModelEventResponseDTO.ts";
 export type { PagedModelParentResponseDTO } from "./types/PagedModelParentResponseDTO.ts";
 export type { PagedModelStudentResponseDTO } from "./types/PagedModelStudentResponseDTO.ts";
-export type { ParentOptionDTO } from "./types/ParentOptionDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
+export type { ParentSummaryDTO } from "./types/ParentSummaryDTO.ts";
 export type { ProblemDetailResponseDTO } from "./types/ProblemDetailResponseDTO.ts";
-export type { StudentOptionDTO } from "./types/StudentOptionDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
+export type { StudentSummaryDTO } from "./types/StudentSummaryDTO.ts";
 export type {
   GetDashboardSummary200,
   GetDashboardSummary400,
@@ -440,11 +440,11 @@ export type {
   GetParentsQueryResponse,
 } from "./types/parent/GetParents.ts";
 export type {
-  GetParentsOptions200,
-  GetParentsOptions400,
-  GetParentsOptionsQuery,
-  GetParentsOptionsQueryResponse,
-} from "./types/parent/GetParentsOptions.ts";
+  GetParentsSummary200,
+  GetParentsSummary400,
+  GetParentsSummaryQuery,
+  GetParentsSummaryQueryResponse,
+} from "./types/parent/GetParentsSummary.ts";
 export type {
   UnarchiveParent204,
   UnarchiveParent404,
@@ -489,11 +489,11 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./types/student/GetStudentById.ts";
 export type {
-  GetStudentOptions200,
-  GetStudentOptions400,
-  GetStudentOptionsQuery,
-  GetStudentOptionsQueryResponse,
-} from "./types/student/GetStudentOptions.ts";
+  GetStudentSummary200,
+  GetStudentSummary400,
+  GetStudentSummaryQuery,
+  GetStudentSummaryQueryResponse,
+} from "./types/student/GetStudentSummary.ts";
 export type {
   GetStudents200,
   GetStudents400,
@@ -607,10 +607,10 @@ export { getParents } from "./hooks/parent/useGetParents.ts";
 export { getParentsQueryKey } from "./hooks/parent/useGetParents.ts";
 export { getParentsQueryOptions } from "./hooks/parent/useGetParents.ts";
 export { useGetParents } from "./hooks/parent/useGetParents.ts";
-export { getParentsOptions } from "./hooks/parent/useGetParentsOptions.ts";
-export { getParentsOptionsQueryKey } from "./hooks/parent/useGetParentsOptions.ts";
-export { getParentsOptionsQueryOptions } from "./hooks/parent/useGetParentsOptions.ts";
-export { useGetParentsOptions } from "./hooks/parent/useGetParentsOptions.ts";
+export { getParentsSummary } from "./hooks/parent/useGetParentsSummary.ts";
+export { getParentsSummaryQueryKey } from "./hooks/parent/useGetParentsSummary.ts";
+export { getParentsSummaryQueryOptions } from "./hooks/parent/useGetParentsSummary.ts";
+export { useGetParentsSummary } from "./hooks/parent/useGetParentsSummary.ts";
 export { unarchiveParent } from "./hooks/parent/useUnarchiveParent.ts";
 export { unarchiveParentMutationKey } from "./hooks/parent/useUnarchiveParent.ts";
 export { unarchiveParentMutationOptions } from "./hooks/parent/useUnarchiveParent.ts";
@@ -635,10 +635,10 @@ export { getStudentById } from "./hooks/student/useGetStudentById.ts";
 export { getStudentByIdQueryKey } from "./hooks/student/useGetStudentById.ts";
 export { getStudentByIdQueryOptions } from "./hooks/student/useGetStudentById.ts";
 export { useGetStudentById } from "./hooks/student/useGetStudentById.ts";
-export { getStudentOptions } from "./hooks/student/useGetStudentOptions.ts";
-export { getStudentOptionsQueryKey } from "./hooks/student/useGetStudentOptions.ts";
-export { getStudentOptionsQueryOptions } from "./hooks/student/useGetStudentOptions.ts";
-export { useGetStudentOptions } from "./hooks/student/useGetStudentOptions.ts";
+export { getStudentSummary } from "./hooks/student/useGetStudentSummary.ts";
+export { getStudentSummaryQueryKey } from "./hooks/student/useGetStudentSummary.ts";
+export { getStudentSummaryQueryOptions } from "./hooks/student/useGetStudentSummary.ts";
+export { useGetStudentSummary } from "./hooks/student/useGetStudentSummary.ts";
 export { getStudents } from "./hooks/student/useGetStudents.ts";
 export { getStudentsQueryKey } from "./hooks/student/useGetStudents.ts";
 export { getStudentsQueryOptions } from "./hooks/student/useGetStudents.ts";
@@ -752,13 +752,13 @@ export { getParentById200Schema } from "./schemas/parent/getParentByIdSchema.ts"
 export { getParentById400Schema } from "./schemas/parent/getParentByIdSchema.ts";
 export { getParentByIdPathParamsSchema } from "./schemas/parent/getParentByIdSchema.ts";
 export { getParentByIdQueryResponseSchema } from "./schemas/parent/getParentByIdSchema.ts";
-export { getParentsOptions200Schema } from "./schemas/parent/getParentsOptionsSchema.ts";
-export { getParentsOptions400Schema } from "./schemas/parent/getParentsOptionsSchema.ts";
-export { getParentsOptionsQueryResponseSchema } from "./schemas/parent/getParentsOptionsSchema.ts";
 export { getParents200Schema } from "./schemas/parent/getParentsSchema.ts";
 export { getParents400Schema } from "./schemas/parent/getParentsSchema.ts";
 export { getParentsQueryParamsSchema } from "./schemas/parent/getParentsSchema.ts";
 export { getParentsQueryResponseSchema } from "./schemas/parent/getParentsSchema.ts";
+export { getParentsSummary200Schema } from "./schemas/parent/getParentsSummarySchema.ts";
+export { getParentsSummary400Schema } from "./schemas/parent/getParentsSummarySchema.ts";
+export { getParentsSummaryQueryResponseSchema } from "./schemas/parent/getParentsSummarySchema.ts";
 export { unarchiveParent204Schema } from "./schemas/parent/unarchiveParentSchema.ts";
 export { unarchiveParent404Schema } from "./schemas/parent/unarchiveParentSchema.ts";
 export { unarchiveParentMutationResponseSchema } from "./schemas/parent/unarchiveParentSchema.ts";
@@ -768,9 +768,9 @@ export { updateParent400Schema } from "./schemas/parent/updateParentSchema.ts";
 export { updateParentMutationRequestSchema } from "./schemas/parent/updateParentSchema.ts";
 export { updateParentMutationResponseSchema } from "./schemas/parent/updateParentSchema.ts";
 export { updateParentPathParamsSchema } from "./schemas/parent/updateParentSchema.ts";
-export { parentOptionDTOSchema } from "./schemas/parentOptionDTOSchema.ts";
 export { parentRequestDTOSchema } from "./schemas/parentRequestDTOSchema.ts";
 export { parentResponseDTOSchema } from "./schemas/parentResponseDTOSchema.ts";
+export { parentSummaryDTOSchema } from "./schemas/parentSummaryDTOSchema.ts";
 export { problemDetailResponseDTOSchema } from "./schemas/problemDetailResponseDTOSchema.ts";
 export { archiveStudent204Schema } from "./schemas/student/archiveStudentSchema.ts";
 export { archiveStudent400Schema } from "./schemas/student/archiveStudentSchema.ts";
@@ -788,9 +788,9 @@ export { getStudentById200Schema } from "./schemas/student/getStudentByIdSchema.
 export { getStudentById400Schema } from "./schemas/student/getStudentByIdSchema.ts";
 export { getStudentByIdPathParamsSchema } from "./schemas/student/getStudentByIdSchema.ts";
 export { getStudentByIdQueryResponseSchema } from "./schemas/student/getStudentByIdSchema.ts";
-export { getStudentOptions200Schema } from "./schemas/student/getStudentOptionsSchema.ts";
-export { getStudentOptions400Schema } from "./schemas/student/getStudentOptionsSchema.ts";
-export { getStudentOptionsQueryResponseSchema } from "./schemas/student/getStudentOptionsSchema.ts";
+export { getStudentSummary200Schema } from "./schemas/student/getStudentSummarySchema.ts";
+export { getStudentSummary400Schema } from "./schemas/student/getStudentSummarySchema.ts";
+export { getStudentSummaryQueryResponseSchema } from "./schemas/student/getStudentSummarySchema.ts";
 export { getStudentsByParent200Schema } from "./schemas/student/getStudentsByParentSchema.ts";
 export { getStudentsByParent400Schema } from "./schemas/student/getStudentsByParentSchema.ts";
 export { getStudentsByParentPathParamsSchema } from "./schemas/student/getStudentsByParentSchema.ts";
@@ -808,9 +808,9 @@ export { updateStudent400Schema } from "./schemas/student/updateStudentSchema.ts
 export { updateStudentMutationRequestSchema } from "./schemas/student/updateStudentSchema.ts";
 export { updateStudentMutationResponseSchema } from "./schemas/student/updateStudentSchema.ts";
 export { updateStudentPathParamsSchema } from "./schemas/student/updateStudentSchema.ts";
-export { studentOptionDTOSchema } from "./schemas/studentOptionDTOSchema.ts";
 export { studentRequestDTOSchema } from "./schemas/studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./schemas/studentResponseDTOSchema.ts";
+export { studentSummaryDTOSchema } from "./schemas/studentSummaryDTOSchema.ts";
 export { addressRequestDTOStateEnum } from "./types/AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./types/AddressResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./types/EmployeeRequestDTO.ts";

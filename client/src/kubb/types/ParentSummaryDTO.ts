@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export type ParentOptionDTO = {
+export type ParentSummaryDTO = {
   /**
    * @type string, uuid
    */

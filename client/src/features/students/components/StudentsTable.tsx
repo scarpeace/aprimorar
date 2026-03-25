@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ButtonLink } from "@/components/ui/button";
-import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
-import { LoadingCard } from "@/components/ui/loading-card";
 import { Pagination } from "@/components/ui/pagination";
-import type { StudentResponse } from "@/features/students/schemas/student";
-import { getStudentsByParent, useGetStudents, useGetStudentsByParent, type StudentResponseDTO } from "@/kubb";
+import { useGetStudentsByParent } from "@/kubb";
 import { PageLoading } from "@/components/ui/page-loading";
+import { useStudents } from "../query/studentQueries";
 
 export type StudentsTableVariant = "page" | "embedded";
 
@@ -24,39 +22,43 @@ export function StudentsTable({
 }: Readonly<StudentsTableProps>) {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
+  const {
+    data: studentsPage,
+    isLoading: studentsPageLoading,
+    error: studentsPageError,
+  } = useStudents({ page: currentPage, size: pageSize, search: searchTerm }); //TODO: tem que botar um debounce aqui
 
-  // Reset pagination when search changes
-  useEffect(() => {
-    setCurrentPage((page) => (page === 0 ? page : 0));
-  }, [searchTerm]);
+  console.log(studentsPage);
+  // // Reset pagination when search changes
+  // useEffect(() => {
+  //   setCurrentPage((page) => (page === 0 ? page : 0));
+  // }, [searchTerm]);
 
-  const { data: studentsPage, isLoading: studentsPageLoading, error: studentsPageError } = useGetStudents({
-    pageable: {
-      page: currentPage,
-      size: pageSize,
-      sort: ["name"],
-    },
-    search: searchTerm,
-  });
-
-  const { data: studentsByParent, isLoading: studentsByParentLoading, error: studentsByParentError } = useGetStudentsByParent(ownerId ?? "");
+  const {
+    data: studentsByParent,
+    isLoading: studentsByParentLoading,
+    error: studentsByParentError,
+  } = useGetStudentsByParent(ownerId ?? "");
 
   const studentsList = () => {
     if (variant === "page") {
       return studentsPage?.content;
     }
-    return studentsByParent
-  }
+    return studentsByParent;
+  };
 
   if (studentsPageLoading || studentsByParentLoading) {
     return <PageLoading message="Carregando alunos..." />;
   }
 
-
   if (studentsPageError || studentsByParentError) {
     return (
       <ErrorCard
-        description={studentsPageError?.message || studentsByParentError?.message || "Ocorreu um erro."}
+        description={
+          studentsPageError?.message ||
+          studentsByParentError?.message ||
+          "Ocorreu um erro."
+        }
         title="Erro ao carregar alunos"
       />
     );
@@ -76,15 +78,9 @@ export function StudentsTable({
               {variant === "embedded" && (
                 <th className="app-th-center">Idade</th>
               )}
-              {variant === "embedded" && (
-                <th className="app-th">Contato</th>
-              )}
-              {variant === "page" && (
-                <th className="app-th">Responsável</th>
-              )}
-              {variant === "page" && (
-                <th className="app-th-center">Status</th>
-              )}
+              {variant === "embedded" && <th className="app-th">Contato</th>}
+              {variant === "page" && <th className="app-th">Responsável</th>}
+              {variant === "page" && <th className="app-th-center">Status</th>}
               <th className="app-th">Ações</th>
             </tr>
           </thead>

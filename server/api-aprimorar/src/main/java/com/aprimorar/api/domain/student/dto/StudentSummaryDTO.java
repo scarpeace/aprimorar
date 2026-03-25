@@ -1,9 +1,9 @@
-package com.aprimorar.api.domain.parent.dto;
+package com.aprimorar.api.domain.student.dto;
 
 import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 
-public record ParentOptionDTO(
+public record StudentSummaryDTO(
         @NotNull UUID id,
         @NotNull String name
 ) {

@@ -10,7 +10,7 @@ export type ArchiveParentPathParams = {
    * @description ID do responsável
    * @type string, uuid
    */
-  id: string;
+  parentId: string;
 };
 
 /**

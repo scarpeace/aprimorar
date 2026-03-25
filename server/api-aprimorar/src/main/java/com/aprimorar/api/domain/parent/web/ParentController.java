@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.domain.parent.ParentService;
-import com.aprimorar.api.domain.parent.dto.ParentOptionDTO;
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
+import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -54,9 +54,9 @@ public class ParentController implements ParentControllerDocs {
     }
 
     @Override
-    @GetMapping("/options")
-    public ResponseEntity<List<ParentOptionDTO>> getParentsOptions() {
-        return ResponseEntity.ok(parentService.getParentOptions());
+    @GetMapping("/summary")
+    public ResponseEntity<List<ParentSummaryDTO>> getParentSummary() {
+        return ResponseEntity.ok(parentService.getParentSummary());
     }
 
     @Override
@@ -84,16 +84,16 @@ public class ParentController implements ParentControllerDocs {
     }
 
     @Override
-    @PatchMapping("/{id}/archive")
-    public ResponseEntity<Void> archiveParent(@PathVariable UUID id) {
-        parentService.archiveParent(id);
+    @PatchMapping("/{parentId}/archive")
+    public ResponseEntity<Void> archiveParent(@PathVariable UUID parentId) {
+        parentService.archiveParent(parentId);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PatchMapping("/{id}/unarchive")
-    public ResponseEntity<Void> unarchiveParent(@PathVariable UUID id) {
-        parentService.unarchiveParent(id);
+    @PatchMapping("/{parentId}/unarchive")
+    public ResponseEntity<Void> unarchiveParent(@PathVariable UUID parentId) {
+        parentService.unarchiveParent(parentId);
         return ResponseEntity.noContent().build();
     }
 

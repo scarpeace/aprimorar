@@ -5,9 +5,9 @@
 
 import fetch from "@kubb/plugin-client/clients/axios";
 import type {
-  GetStudentOptionsQueryResponse,
-  GetStudentOptions400,
-} from "../../types/student/GetStudentOptions.ts";
+  GetStudentSummaryQueryResponse,
+  GetStudentSummary400,
+} from "../../types/student/GetStudentSummary.ts";
 import type {
   Client,
   RequestConfig,
@@ -19,14 +19,14 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getStudentOptionsQueryResponseSchema } from "../../schemas/student/getStudentOptionsSchema.ts";
+import { getStudentSummaryQueryResponseSchema } from "../../schemas/student/getStudentSummarySchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getStudentOptionsQueryKey = () =>
+export const getStudentSummaryQueryKey = () =>
   [{ url: "/v1/students/options" }] as const;
 
-export type GetStudentOptionsQueryKey = ReturnType<
-  typeof getStudentOptionsQueryKey
+export type GetStudentSummaryQueryKey = ReturnType<
+  typeof getStudentSummaryQueryKey
 >;
 
 /**
@@ -34,14 +34,14 @@ export type GetStudentOptionsQueryKey = ReturnType<
  * @summary Listar alunos para opções e dropdown
  * {@link /v1/students/options}
  */
-export async function getStudentOptions(
+export async function getStudentSummary(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
-    GetStudentOptionsQueryResponse,
-    ResponseErrorConfig<GetStudentOptions400>,
+    GetStudentSummaryQueryResponse,
+    ResponseErrorConfig<GetStudentSummary400>,
     unknown
   >({
     method: "GET",
@@ -49,22 +49,22 @@ export async function getStudentOptions(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return getStudentOptionsQueryResponseSchema.parse(res.data);
+  return getStudentSummaryQueryResponseSchema.parse(res.data);
 }
 
-export function getStudentOptionsQueryOptions(
+export function getStudentSummaryQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = getStudentOptionsQueryKey();
+  const queryKey = getStudentSummaryQueryKey();
   return queryOptions<
-    GetStudentOptionsQueryResponse,
-    ResponseErrorConfig<GetStudentOptions400>,
-    GetStudentOptionsQueryResponse,
+    GetStudentSummaryQueryResponse,
+    ResponseErrorConfig<GetStudentSummary400>,
+    GetStudentSummaryQueryResponse,
     typeof queryKey
   >({
     queryKey,
     queryFn: async ({ signal }) => {
-      return getStudentOptions({ ...config, signal: config.signal ?? signal });
+      return getStudentSummary({ ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -74,16 +74,16 @@ export function getStudentOptionsQueryOptions(
  * @summary Listar alunos para opções e dropdown
  * {@link /v1/students/options}
  */
-export function useGetStudentOptions<
-  TData = GetStudentOptionsQueryResponse,
-  TQueryData = GetStudentOptionsQueryResponse,
-  TQueryKey extends QueryKey = GetStudentOptionsQueryKey,
+export function useGetStudentSummary<
+  TData = GetStudentSummaryQueryResponse,
+  TQueryData = GetStudentSummaryQueryResponse,
+  TQueryKey extends QueryKey = GetStudentSummaryQueryKey,
 >(
   options: {
     query?: Partial<
       QueryObserverOptions<
-        GetStudentOptionsQueryResponse,
-        ResponseErrorConfig<GetStudentOptions400>,
+        GetStudentSummaryQueryResponse,
+        ResponseErrorConfig<GetStudentSummary400>,
         TData,
         TQueryData,
         TQueryKey
@@ -94,16 +94,16 @@ export function useGetStudentOptions<
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey = resolvedOptions?.queryKey ?? getStudentOptionsQueryKey();
+  const queryKey = resolvedOptions?.queryKey ?? getStudentSummaryQueryKey();
 
   const query = useQuery(
     {
-      ...getStudentOptionsQueryOptions(config),
+      ...getStudentSummaryQueryOptions(config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<GetStudentOptions400>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<GetStudentSummary400>> & {
     queryKey: TQueryKey;
   };
 

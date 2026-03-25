@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export type StudentOptionDTO = {
+export type StudentSummaryDTO = {
   /**
    * @type string, uuid
    */

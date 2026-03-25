@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 public record ParentResponseDTO(
         @Schema(description = "ID do responsável", example = "123e4567-e89b-12d3-a456-426614174000")
         @NotNull
-        UUID id,
+        UUID parentId,
         @Schema(description = "Nome do responsável", example = "João Silva")
         @NotNull
         String name,

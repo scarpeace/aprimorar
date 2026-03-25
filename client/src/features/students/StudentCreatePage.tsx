@@ -9,13 +9,12 @@ import styles from "@/features/students/StudentCreatePage.module.css";
 import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
 import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown";
 import {
-    createStudentMutationRequestSchema,
-  studentRequestDTOSchema,
-  useCreateStudent,
+  createStudentMutationRequestSchema,
   type CreateStudentMutationRequestSchema,
   type StudentRequestDTO,
   type StudentRequestDTOSchema,
 } from "@/kubb";
+import { useCreateStudentMutation } from "./query/studentMutations";
 
 export function StudentCreatePage() {
   const {
@@ -25,22 +24,14 @@ export function StudentCreatePage() {
     watch,
     formState: { errors },
   } = useForm<CreateStudentMutationRequestSchema>({
-    resolver: async (data, context, options) => {
-      // you can debug your validation schema here
-      console.log("formData", data);
-      console.log(
-        "validation result",
-        await zodResolver(createStudentMutationRequestSchema)(data, context, options),
-      );
-      return zodResolver(studentRequestDTOSchema)(data, context, options);
-    },
-    // resolver: zodResolver(studentRequestDTOSchema) as unknown as Resolver<StudentRequestDTOSchema>,
+    resolver: zodResolver(createStudentMutationRequestSchema),
     mode: "onBlur",
   });
   const selectedParentId = watch("parentId");
   const registerWithMask = useHookFormMask(register);
 
-  const { mutate: createStudent, isPending: isSubmitting } = useCreateStudent();
+  const { mutate: createStudent, isPending: isSubmitting } =
+    useCreateStudentMutation();
 
   const onSubmit = (data: StudentRequestDTOSchema) => {
     createStudent({ data: data as StudentRequestDTO });

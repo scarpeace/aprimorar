@@ -17,7 +17,7 @@ import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
-import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
+import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
@@ -67,7 +67,7 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudentOptionDTO> getStudentOptions() {
+    public List<StudentSummaryDTO> getStudentOptions() {
         Specification<Student> spec = Specification.allOf(
                 StudentSpecifications.isNotGhost(),
                 StudentSpecifications.notArchived()
@@ -76,7 +76,7 @@ public class StudentService {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
         return studentRepo.findAll(spec, sort).stream()
-                .map(s -> new StudentOptionDTO(s.getId(), s.getName()))
+                .map(s -> new StudentSummaryDTO(s.getId(), s.getName()))
                 .toList();
     }
 

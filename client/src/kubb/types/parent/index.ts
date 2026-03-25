@@ -34,11 +34,11 @@ export type {
   GetParentsQueryResponse,
 } from "./GetParents.ts";
 export type {
-  GetParentsOptions200,
-  GetParentsOptions400,
-  GetParentsOptionsQuery,
-  GetParentsOptionsQueryResponse,
-} from "./GetParentsOptions.ts";
+  GetParentsSummary200,
+  GetParentsSummary400,
+  GetParentsSummaryQuery,
+  GetParentsSummaryQueryResponse,
+} from "./GetParentsSummary.ts";
 export type {
   UnarchiveParent204,
   UnarchiveParent404,

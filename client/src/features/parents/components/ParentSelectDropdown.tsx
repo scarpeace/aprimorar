@@ -1,7 +1,6 @@
 import React, { useId } from "react";
 import { ChevronDown } from "lucide-react";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { useGetParentsOptions, type ParentOptionDTO } from "@/kubb";
 
 type ParentSelectDropdownProps = Readonly<{
   value?: string;

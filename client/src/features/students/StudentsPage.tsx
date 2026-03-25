@@ -33,6 +33,7 @@ export function StudentsPage() {
         </div>
       </PageHeader>
 
+      {/*TODO: substituir a tabela pela genérica*/}
       <StudentsTable variant="page" searchTerm={debouncedSearchTerm} />
     </div>
   )

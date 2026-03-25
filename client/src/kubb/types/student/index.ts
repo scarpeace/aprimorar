@@ -27,11 +27,11 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./GetStudentById.ts";
 export type {
-  GetStudentOptions200,
-  GetStudentOptions400,
-  GetStudentOptionsQuery,
-  GetStudentOptionsQueryResponse,
-} from "./GetStudentOptions.ts";
+  GetStudentSummary200,
+  GetStudentSummary400,
+  GetStudentSummaryQuery,
+  GetStudentSummaryQueryResponse,
+} from "./GetStudentSummary.ts";
 export type {
   GetStudents200,
   GetStudents400,

@@ -6,7 +6,7 @@
 import { z } from "zod/v4";
 
 export const parentResponseDTOSchema = z.object({
-  id: z.uuid().describe("ID do responsável"),
+  parentId: z.uuid().describe("ID do responsável"),
   name: z.string().describe("Nome do responsável"),
   email: z.string().describe("Email do responsável"),
   contact: z.string().describe("Contato do responsável"),

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
+import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.exception.ProblemDetailResponseDTO;
@@ -56,19 +56,19 @@ public interface StudentControllerDocs {
     );
 
     @Operation(
-            operationId = "getStudentOptions",
+            operationId = "getStudentSummary",
             summary = "Listar alunos para opções e dropdown",
             description = "Lista todos os alunos para uso em opções e dropdowns."
     )
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Listagem dos alunos para opções e dropdown",
                 content = @Content(mediaType = "application/json",
-                        array = @ArraySchema(schema = @Schema(implementation = StudentOptionDTO.class)))),
+                        array = @ArraySchema(schema = @Schema(implementation = StudentSummaryDTO.class)))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
     })
-    ResponseEntity<List<StudentOptionDTO>> getStudentOptions();
+    ResponseEntity<List<StudentSummaryDTO>> getStudentSummary();
 
     @Operation(
             operationId = "getStudentsByParent",

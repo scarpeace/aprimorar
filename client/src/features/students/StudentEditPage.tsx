@@ -11,13 +11,14 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/students/StudentCreatePage.module.css";
-import { getStudentByIdQueryKey, getStudentsQueryKey, updateStudentMutationKey, updateStudentMutationRequestSchema, useGetStudentById, useUpdateStudent, type StudentRequestDTO, type UpdateStudentMutationRequest } from "@/kubb";
+import { getStudentByIdQueryKey, getStudentsQueryKey, updateStudentMutationRequestSchema, useUpdateStudent, type StudentRequestDTO, type UpdateStudentMutationRequest } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
 import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown";
 import { DeleteStudentButton } from "./components/DeleteStudentButton";
 import {addressRequestDTOStateEnum} from "../../kubb/types/AddressRequestDTO"
 import { useQueryClient } from "@tanstack/react-query";
+import { useStudentById } from "./query/studentQueries";
 
 
 export function StudentEditPage() {
@@ -33,7 +34,7 @@ export function StudentEditPage() {
     isError: isStudentError,
     error: studentError,
     refetch: refetchStudent,
-  } = useGetStudentById(studentId);
+  } = useStudentById(studentId);
 
   const {
     mutate: updateStudent,

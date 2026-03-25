@@ -7,7 +7,7 @@ import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchem
 import { z } from "zod/v4";
 
 export const unarchiveParentPathParamsSchema = z.object({
-  id: z.uuid().describe("ID do responsável"),
+  parentId: z.uuid().describe("ID do responsável"),
 });
 
 export type UnarchiveParentPathParamsSchema = z.infer<

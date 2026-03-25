@@ -23,10 +23,10 @@ export type {
   GetStudentByIdQueryResponseSchema,
 } from "./getStudentByIdSchema.ts";
 export type {
-  GetStudentOptions200Schema,
-  GetStudentOptions400Schema,
-  GetStudentOptionsQueryResponseSchema,
-} from "./getStudentOptionsSchema.ts";
+  GetStudentSummary200Schema,
+  GetStudentSummary400Schema,
+  GetStudentSummaryQueryResponseSchema,
+} from "./getStudentSummarySchema.ts";
 export type {
   GetStudentsByParent200Schema,
   GetStudentsByParent400Schema,
@@ -68,9 +68,9 @@ export { getStudentById200Schema } from "./getStudentByIdSchema.ts";
 export { getStudentById400Schema } from "./getStudentByIdSchema.ts";
 export { getStudentByIdPathParamsSchema } from "./getStudentByIdSchema.ts";
 export { getStudentByIdQueryResponseSchema } from "./getStudentByIdSchema.ts";
-export { getStudentOptions200Schema } from "./getStudentOptionsSchema.ts";
-export { getStudentOptions400Schema } from "./getStudentOptionsSchema.ts";
-export { getStudentOptionsQueryResponseSchema } from "./getStudentOptionsSchema.ts";
+export { getStudentSummary200Schema } from "./getStudentSummarySchema.ts";
+export { getStudentSummary400Schema } from "./getStudentSummarySchema.ts";
+export { getStudentSummaryQueryResponseSchema } from "./getStudentSummarySchema.ts";
 export { getStudentsByParent200Schema } from "./getStudentsByParentSchema.ts";
 export { getStudentsByParent400Schema } from "./getStudentsByParentSchema.ts";
 export { getStudentsByParentPathParamsSchema } from "./getStudentsByParentSchema.ts";

@@ -12,9 +12,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aprimorar.api.domain.parent.dto.ParentOptionDTO;
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
+import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
@@ -56,11 +56,11 @@ public class ParentService {
 
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
-    public List<ParentOptionDTO> getParentOptions() {
+    public List<ParentSummaryDTO> getParentSummary() {
         List<Parent> list = parentRepo.findByArchivedAtIsNull();
         log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
         return list.stream()
-                .map(p -> new ParentOptionDTO(p.getId(), p.getName()))
+                .map(p -> new ParentSummaryDTO(p.getId(), p.getName()))
                 .toList();
     }
 

@@ -23,7 +23,7 @@ import { archiveParentMutationResponseSchema } from "../../schemas/parent/archiv
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const archiveParentMutationKey = () =>
-  [{ url: "/v1/parents/:id/archive" }] as const;
+  [{ url: "/v1/parents/:parentId/archive" }] as const;
 
 export type ArchiveParentMutationKey = ReturnType<
   typeof archiveParentMutationKey
@@ -32,10 +32,10 @@ export type ArchiveParentMutationKey = ReturnType<
 /**
  * @description Arquiva um responsável específico.
  * @summary Arquivar responsável
- * {@link /v1/parents/:id/archive}
+ * {@link /v1/parents/:parentId/archive}
  */
 export async function archiveParent(
-  id: ArchiveParentPathParams["id"],
+  parentId: ArchiveParentPathParams["parentId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
@@ -46,7 +46,7 @@ export async function archiveParent(
     unknown
   >({
     method: "PATCH",
-    url: `/v1/parents/${id}/archive`,
+    url: `/v1/parents/${parentId}/archive`,
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
@@ -60,12 +60,12 @@ export function archiveParentMutationOptions<TContext = unknown>(
   return mutationOptions<
     ArchiveParentMutationResponse,
     ResponseErrorConfig<ArchiveParent404>,
-    { id: ArchiveParentPathParams["id"] },
+    { parentId: ArchiveParentPathParams["parentId"] },
     TContext
   >({
     mutationKey,
-    mutationFn: async ({ id }) => {
-      return archiveParent(id, config);
+    mutationFn: async ({ parentId }) => {
+      return archiveParent(parentId, config);
     },
   });
 }
@@ -73,14 +73,14 @@ export function archiveParentMutationOptions<TContext = unknown>(
 /**
  * @description Arquiva um responsável específico.
  * @summary Arquivar responsável
- * {@link /v1/parents/:id/archive}
+ * {@link /v1/parents/:parentId/archive}
  */
 export function useArchiveParent<TContext>(
   options: {
     mutation?: UseMutationOptions<
       ArchiveParentMutationResponse,
       ResponseErrorConfig<ArchiveParent404>,
-      { id: ArchiveParentPathParams["id"] },
+      { parentId: ArchiveParentPathParams["parentId"] },
       TContext
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
@@ -95,14 +95,14 @@ export function useArchiveParent<TContext>(
   ) as UseMutationOptions<
     ArchiveParentMutationResponse,
     ResponseErrorConfig<ArchiveParent404>,
-    { id: ArchiveParentPathParams["id"] },
+    { parentId: ArchiveParentPathParams["parentId"] },
     TContext
   >;
 
   return useMutation<
     ArchiveParentMutationResponse,
     ResponseErrorConfig<ArchiveParent404>,
-    { id: ArchiveParentPathParams["id"] },
+    { parentId: ArchiveParentPathParams["parentId"] },
     TContext
   >(
     {
@@ -114,7 +114,7 @@ export function useArchiveParent<TContext>(
   ) as UseMutationResult<
     ArchiveParentMutationResponse,
     ResponseErrorConfig<ArchiveParent404>,
-    { id: ArchiveParentPathParams["id"] },
+    { parentId: ArchiveParentPathParams["parentId"] },
     TContext
   >;
 }

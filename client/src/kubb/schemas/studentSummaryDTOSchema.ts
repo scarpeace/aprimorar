@@ -5,9 +5,9 @@
 
 import { z } from "zod/v4";
 
-export const studentOptionDTOSchema = z.object({
+export const studentSummaryDTOSchema = z.object({
   id: z.uuid(),
   name: z.string(),
 });
 
-export type StudentOptionDTOSchema = z.infer<typeof studentOptionDTOSchema>;
+export type StudentSummaryDTOSchema = z.infer<typeof studentSummaryDTOSchema>;
