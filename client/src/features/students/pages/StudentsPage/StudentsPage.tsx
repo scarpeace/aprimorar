@@ -3,13 +3,12 @@ import { GraduationCap } from "lucide-react";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { PageHeader } from "@/components/ui/page-header";
 import { ButtonLink } from "@/components/ui/button";
-import styles from "@/features/students/StudentsPage.module.css";
+import styles from "./students-page.module.css";
 import { useDebounce } from "@/lib/shared/use-debounce";
-import { useStudents } from "./query/studentQueries";
+import { useStudents } from "../../query/studentQueries";
 import type { StudentResponseDTO } from "@/kubb/types/StudentResponseDTO";
 import { TableRoot } from "@/components/layout/TableRoot";
-import { StudentsTable } from "./components/StudentsTable/StudentsTable";
-
+import { StudentsTable } from "../../components/StudentsTable/StudentsTable";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,12 +47,15 @@ export function StudentsPage() {
         </div>
       </PageHeader>
 
-
       <TableRoot>
-        <StudentsTable.State students={studentsPage?.content} isLoading={isStudentsPageLoading} error={studentsPageError} >
+        <StudentsTable.State
+          students={studentsPage?.content}
+          isLoading={isStudentsPageLoading}
+          error={studentsPageError}
+        >
           <StudentsTable.Content
             students={studentsPage?.content ?? []}
-            renderActions={(student : StudentResponseDTO) => (
+            renderActions={(student: StudentResponseDTO) => (
               <ButtonLink
                 to={`/students/${student.id}`}
                 size="sm"

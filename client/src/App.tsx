@@ -4,12 +4,12 @@ import { MainLayout } from "@/components/layout/MainLayout"
 import { PageLoading } from "@/components/ui/page-loading"
 import { Toaster } from "sonner"
 import { ErrorBoundary } from "./components/ui/error-boundary"
+import { StudentEditPage } from "./features/students/pages/StudentEditPage/StudentEditPage"
+import { StudentsPage } from "./features/students/pages/StudentsPage/StudentsPage"
 
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage").then((module) => ({ default: module.DashboardPage })))
-const StudentsPage = lazy(() => import("@/features/students/StudentsPage").then((module) => ({ default: module.StudentsPage })))
-const StudentDetailPage = lazy(() => import("@/features/students/StudentDetailPage").then((module) => ({ default: module.StudentDetailPage })))
-const StudentCreatePage = lazy(() => import("@/features/students/StudentCreatePage").then((module) => ({ default: module.StudentCreatePage })))
-const StudentEditPage = lazy(() => import("@/features/students/StudentEditPage").then((module) => ({ default: module.StudentEditPage })))
+const StudentDetailPage = lazy(() => import("@/features/students/pages/StudentDetailPage/StudentDetailPage").then((module) => ({ default: module.StudentDetailPage })))
+const StudentCreatePage = lazy(() => import("@/features/students/pages/StudentCreatePage/StudentCreatePage").then((module) => ({ default: module.StudentCreatePage })))
 const EmployeesPage = lazy(() => import("@/features/employees/EmployeesPage").then((module) => ({ default: module.EmployeesPage })))
 const EmployeeDetailPage = lazy(() => import("@/features/employees/EmployeeDetailPage").then((module) => ({ default: module.EmployeeDetailPage })))
 const EmployeeCreatePage = lazy(() => import("@/features/employees/EmployeeCreatePage").then((module) => ({ default: module.EmployeeCreatePage })))

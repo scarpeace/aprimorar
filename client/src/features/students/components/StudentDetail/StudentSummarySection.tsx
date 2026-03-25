@@ -3,9 +3,9 @@ import type { ReactNode } from "react";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { formatDateShortYear } from "@/lib/utils/formatter";
-import { EditStudentButton } from "./EditStudentButton";
-import { ArchiveStudentButton } from "./ArchiveStudentButton";
-import { DeleteStudentButton } from "./DeleteStudentButton";
+import { ArchiveStudentButton } from "../ArchiveStudentButton";
+import { DeleteStudentButton } from "../DeleteStudentButton";
+import { EditStudentButton } from "../EditStudentButton";
 
 type StudentSummarySectionProps = {
   student?: StudentResponseDTO;

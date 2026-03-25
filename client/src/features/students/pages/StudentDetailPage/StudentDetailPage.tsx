@@ -3,12 +3,12 @@ import { GraduationCap } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ButtonLink } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
-import styles from "@/features/students/StudentDetailPage.module.css";
+import styles from "./student-detail-page.module.css";
 import { useGetEventsByStudent } from "@/kubb";
-import { useStudentById } from "./query/studentQueries";
-import { StudentDetailState } from "./components/StudentDetailState";
-import { StudentEventsSection } from "./components/StudentEventsSection";
-import { StudentSummarySection } from "./components/StudentSummarySection";
+import { useStudentById } from "../../query/studentQueries";
+import { StudentDetailState } from "../../components/StudentDetail/StudentDetailState";
+import { StudentEventsSection } from "../../components/StudentDetail/StudentEventsSection";
+import { StudentSummarySection } from "../../components/StudentDetail/StudentSummarySection";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +21,6 @@ export function StudentDetailPage() {
     data: student,
     isLoading: isStudentLoading,
     error: studentError,
-    isFetched: isStudentFetched,
   } = useStudentById(studentId);
 
   const {
@@ -34,7 +33,7 @@ export function StudentDetailPage() {
     sort: ["startDate,desc"],
   });
 
-     return (
+  return (
     <div className={styles.page}>
       <PageHeader
         description="Veja e gerencie as informações do aluno"

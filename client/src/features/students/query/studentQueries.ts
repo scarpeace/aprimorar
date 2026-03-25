@@ -14,7 +14,7 @@ export function useStudents(params: GetStudentsQueryParams = {}) {
     query: {
       queryKey: studentsQueryKeys.list(params),
       placeholderData: keepPreviousData,
-      staleTime: 1000 * 60 * 5, // 5 minutos
+      staleTime: 1000 * 60 * 5,
     },
   });
 }

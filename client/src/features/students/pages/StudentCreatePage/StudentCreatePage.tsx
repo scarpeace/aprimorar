@@ -1,128 +1,54 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
 import { useHookFormMask } from "use-mask-input";
-
-import { Alert } from "@/components/ui/alert";
 import { Button, ButtonLink } from "@/components/ui/button";
-import { ErrorCard } from "@/components/ui/error-card";
 import { FormField } from "@/components/ui/form-field";
 import { PageHeader } from "@/components/ui/page-header";
-import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
-import styles from "@/features/students/StudentCreatePage.module.css";
-import { getStudentByIdQueryKey, getStudentsQueryKey, updateStudentMutationRequestSchema, useUpdateStudent, type StudentRequestDTO, type UpdateStudentMutationRequest } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import styles from "./student-create-page.module.css";
 import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
-import { ParentSelectDropdown } from "../parents/components/ParentSelectDropdown";
-import { DeleteStudentButton } from "./components/DeleteStudentButton";
-import {addressRequestDTOStateEnum} from "../../kubb/types/AddressRequestDTO"
-import { useQueryClient } from "@tanstack/react-query";
-import { useStudentById } from "./query/studentQueries";
+import {
+  createStudentMutationRequestSchema,
+  type CreateStudentMutationRequestSchema,
+  type StudentRequestDTO,
+  type StudentRequestDTOSchema,
+} from "@/kubb";
+import { useCreateStudentMutation } from "../../query/studentMutations";
+import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
 
-
-export function StudentEditPage() {
-  const { id } = useParams<{ id: string }>();
-  const studentId = id ?? "";
-  const navigate = useNavigate()
-  // const [parentId, setParentId] = useState("");
-  const queryClient = useQueryClient();
-
-  const {
-    data: student,
-    isLoading: isStudentLoading,
-    isError: isStudentError,
-    error: studentError,
-    refetch: refetchStudent,
-  } = useStudentById(studentId);
-
-  const {
-    mutate: updateStudent,
-    isPending: isUpdating,
-    error: updateError,
-  } = useUpdateStudent({
-  });
-
-
+export function StudentCreatePage() {
   const {
     register,
     handleSubmit,
     setValue,
     watch,
     formState: { errors },
-  } = useForm<UpdateStudentMutationRequest>({
-    resolver: zodResolver(updateStudentMutationRequestSchema),
+  } = useForm<CreateStudentMutationRequestSchema>({
+    resolver: zodResolver(createStudentMutationRequestSchema),
     mode: "onBlur",
-    values: {
-      name: student?.name ?? "",
-      birthdate: student?.birthdate ?? "",
-      cpf: student?.cpf ?? "",
-      contact: student?.contact ?? "",
-      email: student?.email ?? "",
-      school: student?.school ?? "",
-      address: {
-        street: student?.address?.street ?? "",
-        number: student?.address?.number ?? "",
-        complement: student?.address?.complement ?? "",
-        district: student?.address?.district ?? "",
-        city: student?.address?.city ?? "",
-        state: student?.address?.state ?? addressRequestDTOStateEnum.DF,
-        zip: student?.address?.zip ?? "",
-      },
-      parentId: student?.parent?.parentId ?? "Responsável não encontrado",
-    },
   });
   const selectedParentId = watch("parentId");
   const registerWithMask = useHookFormMask(register);
 
+  const { mutate: createStudent, isPending: isSubmitting } =
+    useCreateStudentMutation();
 
-  const onSubmit = (data: StudentRequestDTO) => {
-    updateStudent({ studentId, data }, {
-      onSuccess: () => {
-        navigate(`/students/${studentId}`)
-        queryClient.invalidateQueries({
-          queryKey: getStudentByIdQueryKey(studentId)
-        })
-        queryClient.invalidateQueries({
-          queryKey: getStudentsQueryKey()
-        })
-      }
-    });
+  const onSubmit = (data: StudentRequestDTOSchema) => {
+    createStudent({ data: data as StudentRequestDTO });
   };
-
-  if (isStudentError || !student) {
-    const error = studentError;
-    return (
-      <div className={styles.page}>
-        <ErrorCard
-          description={getFriendlyErrorMessage(error)}
-          onAction={() => refetchStudent()}
-        />
-      </div>
-    );
-  }
 
   return (
     <div className={styles.page}>
       <PageHeader
-        title="Editar aluno"
-        description="Atualize os dados do aluno e do responsável."
+        title="Novo aluno"
+        description="Crie um novo cadastro de aluno."
         action={
-          <ButtonLink to={`/students/${studentId}`} variant="outline">
-            Voltar para detalhes
+          <ButtonLink to="/students" variant="outline">
+            Voltar para alunos
           </ButtonLink>
         }
       />
 
-      {!id && (
-        <div className={styles.page}>
-          <ErrorCard description="ID do aluno não informado." />
-        </div>
-      )}
-
-      {isStudentLoading && (
-        <PageLoading message="Carregando aluno para edição..." />
-      )}
       <SectionCard
         title="Responsável"
         description="Selecione um responsável já cadastrado no sistema."
@@ -130,7 +56,7 @@ export function StudentEditPage() {
         <div className={styles.formGrid}>
           <FormField
             className={`${styles.field} ${styles.span2}`}
-            label=""
+            label="Responsável"
             htmlFor="parentId"
             error={errors.parentId?.message}
           >
@@ -138,12 +64,12 @@ export function StudentEditPage() {
             <input type="hidden" {...register("parentId")} />
             <ParentSelectDropdown
               value={selectedParentId}
-              onChange={(id) => {
+              onChange={(id) =>
                 setValue("parentId", id, {
                   shouldValidate: true,
                   shouldDirty: true,
                 })
-              }}
+              }
               hasError={!!errors.parentId}
             />
 
@@ -165,7 +91,7 @@ export function StudentEditPage() {
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <SectionCard
           title="Dados do aluno"
-          description="Atualize os dados pessoais e endereço."
+          description="Preencha os dados pessoais e endereço."
         >
           <div className={styles.sectionTitle}>Aluno</div>
 
@@ -367,26 +293,16 @@ export function StudentEditPage() {
               />
             </FormField>
           </div>
-
-          {updateError && (
-            <Alert variant="error" message={getFriendlyErrorMessage(updateError)} className="text-sm"/>
-          )}
-
-          <div className={styles.actions}>
-            <DeleteStudentButton studentId={studentId} />
-
-            <ButtonLink to={`/students/${studentId}`} variant="outline">
-              Cancelar
-            </ButtonLink>
-            <Button
-              type="submit"
-              disabled={isUpdating}
-              variant="success"
-            >
-              {isUpdating ? "Salvando..." : "Salvar alterações"}
-            </Button>
-          </div>
         </SectionCard>
+
+        <div className={styles.actions}>
+          <ButtonLink to="/students" variant="outline">
+            Cancelar
+          </ButtonLink>
+          <Button type="submit" disabled={isSubmitting} variant="success">
+            {isSubmitting ? "Salvando..." : "Criar aluno"}
+          </Button>
+        </div>
       </form>
     </div>
   );

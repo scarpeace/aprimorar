@@ -4,19 +4,24 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
+import { StudentsTable } from "@/features/students/components/StudentsTable/StudentsTable";
+import type { StudentResponseDTO } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { UserCog } from "lucide-react";
 import type { ReactNode } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import styles from "./ParentDetailPage.module.css";
+import styles from "./parent-detail-page.module.css";
 
-import { StudentTable } from "@/features/students/components/StudentsTable/intex";
 import { useStudentsByParent } from "../students/query/studentQueries";
 import { ArchiveParentButton } from "./components/ArchiveParentButton";
 import { DeleteParentButton } from "./components/DeleteParentButton";
 import { EditParentButton } from "./components/EditParentButton";
 import { useParentById } from "./query/parentQueries";
-import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
+import {
+  formatCpf,
+  formatDateShortYear,
+  formatPhone,
+} from "@/lib/utils/formatter";
 
 //TODO: O responsável SISTEMA tá podendo ser arquivado/desarquivado, tem que arrumar
 export function ParentDetailPage() {
@@ -59,7 +64,7 @@ export function ParentDetailPage() {
     { label: "Contato", value: formatPhone(parentData.contact) },
     { label: "CPF", value: formatCpf(parentData.cpf ?? "") },
     { label: "Status", value: parentData.archivedAt ? "Arquivado" : "Ativo" },
-    { label: "Criado em", value: formatDateShortYear( parentData.createdAt) },
+    { label: "Criado em", value: formatDateShortYear(parentData.createdAt) },
   ];
 
   return (
@@ -120,24 +125,24 @@ export function ParentDetailPage() {
         title="Alunos vinculados"
         description={`Alunos registrados sob a responsabilidade de ${parentData.name}.`}
       >
-        <StudentTable
-          variant="embedded"
-          data={parentStudents}
+        <StudentsTable.State
+          students={parentStudents}
           isLoading={isParentStudentLoading}
           error={parentStudentsError ?? null}
-          itemName="alunos"
-          currentPage={0}
-          onPageChange={() => 0}
-          renderActions={(student) => (
-            <ButtonLink
-              to={`/students/${student.id}`}
-              size="sm"
-              variant="outline"
-            >
-              Detalhes
-            </ButtonLink>
-          )}
-        />
+        >
+          <StudentsTable.Content
+            students={parentStudents ?? []}
+            renderActions={(student: StudentResponseDTO) => (
+              <ButtonLink
+                to={`/students/${student.id}`}
+                size="sm"
+                variant="outline"
+              >
+                Detalhes
+              </ButtonLink>
+            )}
+          />
+        </StudentsTable.State>
       </SectionCard>
     </div>
   );
