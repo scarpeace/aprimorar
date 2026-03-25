@@ -40,7 +40,7 @@ export function useStudentsByParent(parentId: string) {
   });
 }
 
-export function useStudentOptions() {
+export function useStudentsSummary() {
   return useGetStudentSummary({
     query: {
       queryKey: studentsQueryKeys.summary(),

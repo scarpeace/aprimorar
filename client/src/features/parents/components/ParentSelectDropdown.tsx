@@ -1,6 +1,8 @@
 import React, { useId } from "react";
 import { ChevronDown } from "lucide-react";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { useParentsSummary } from "../query/parentQueries";
+import type { ParentSummaryDTO } from "@/kubb";
 
 type ParentSelectDropdownProps = Readonly<{
   value?: string;
@@ -16,7 +18,7 @@ export function ParentSelectDropdown({
   hasError,
 }: ParentSelectDropdownProps) {
 
-  const { data: parentOptions, isLoading: isLoadingParentOptions, error: parentOptionsError } = useGetParentsOptions()
+  const { data: parentOptions, isLoading: isLoadingParentOptions, error: parentOptionsError } = useParentsSummary();
 
   const uniqueId = useId().replaceAll(":", "");
   const popoverId = `parents-list-${uniqueId}`;
@@ -46,7 +48,7 @@ export function ParentSelectDropdown({
           id={popoverId}
           style={{ positionAnchor: anchorName } as React.CSSProperties}
         >
-          {parentOptions?.map((parent: ParentOptionDTO) => (
+          {parentOptions?.map((parent: ParentSummaryDTO) => (
             <li key={parent.id}>
               <button
                 type="button"

@@ -69,7 +69,7 @@ export function StudentEditPage() {
         state: student?.address?.state ?? addressRequestDTOStateEnum.DF,
         zip: student?.address?.zip ?? "",
       },
-      parentId: student?.parent?.id ?? "Responsável não encontrado",
+      parentId: student?.parent?.parentId ?? "Responsável não encontrado",
     },
   });
   const selectedParentId = watch("parentId");

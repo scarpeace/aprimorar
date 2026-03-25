@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
-import { UserCog } from "lucide-react";
+import { ButtonLink } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { Pagination } from "@/components/ui/pagination";
-import { ButtonLink } from "@/components/ui/button";
-import { dutyLabels } from "./schemas/dutyEnum";
 import styles from "@/features/employees/EmployeesPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useDebounce } from "@/lib/shared/use-debounce";
-import { useGetEmployees } from "@/kubb";
+import { UserCog } from "lucide-react";
+import { useState } from "react";
+import { useEmployees } from "./query/employeeQueries";
+import { employeeRequestDTODutyEnum } from "@/kubb";
 
 export function EmployeesPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -21,25 +21,23 @@ export function EmployeesPage() {
 
   //TODO Retirar essa query daqui, verificar StudentsPage
   const {
-    data: employeesPage,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useGetEmployees({
+    data: employees,
+    isLoading: isEmployeesLoading,
+    error: employeesError,
+    refetch: refetchEmployees,
+  } = useEmployees({
     page: currentPage,
     size: pageSize,
     search: debouncedSearchTerm,
   });
 
-  const employeeList = employeesPage?.content ?? [];
 
-  if (isLoading) {
+  if (isEmployeesLoading) {
     return <PageLoading message="Carregando colaboradores..." />;
   }
 
   //TODO ver se esse erro de página tá padronizado em todos os componentes + adicionar actions
-  if (isError || !employeesPage) {
+  if (employeesError) {
     return (
       <div className={styles.page}>
         <PageHeader
@@ -50,8 +48,8 @@ export function EmployeesPage() {
           iconBgClassName="bg-warning/20"
         ></PageHeader>
         <ErrorCard
-          description={getFriendlyErrorMessage(error)}
-          onAction={refetch}
+          description={getFriendlyErrorMessage(employeesError)}
+          onAction={refetchEmployees}
         />
       </div>
     );
@@ -98,13 +96,13 @@ export function EmployeesPage() {
               </tr>
             </thead>
             <tbody>
-              {employeeList.map((employee) => (
+              {employees?.content?.map((employee) => (
                 <tr
                   className="transition-colors hover:bg-base-200/70"
                   key={employee.id}
                 >
                   <td>{employee.name}</td>
-                  <td>{dutyLabels[employee.duty]}</td>
+                  <td>{employeeRequestDTODutyEnum[employee.duty]}</td>
                   <td className="hidden whitespace-normal break-all lg:table-cell">
                     {employee.pix}
                   </td>
@@ -139,14 +137,14 @@ export function EmployeesPage() {
 
       <Pagination
         currentPage={currentPage}
-        totalElements={employeesPage?.page.totalElements ?? 0}
-        totalPages={employeesPage?.page.totalPages ?? 0}
-        currentElementsCount={employeeList.length}
+        totalElements={employees?.page?.totalElements ?? 0}
+        totalPages={employees?.page?.totalPages ?? 0}
+        currentElementsCount={employees?.content?.length ?? 0}
         itemName="colaboradores"
         onPageChange={setCurrentPage}
       />
 
-      {employeeList.length === 0 && debouncedSearchTerm === "" && (
+      {employees?.page?.totalElements === 0 && debouncedSearchTerm === "" && (
         <EmptyCard
           title="Nenhum colaborador encontrado"
           description=""

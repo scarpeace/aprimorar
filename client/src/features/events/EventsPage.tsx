@@ -51,7 +51,7 @@ export function EventsPage() {
           onPageChange={setCurrentPage}
           itemName="eventos"
           renderActions={(event) => (
-            <ButtonLink to={`/events/${event.id}`} size="sm" variant="outline">
+            <ButtonLink to={`/events/${event.eventId}`} size="sm" variant="outline">
               Detalhes
             </ButtonLink>
           )}

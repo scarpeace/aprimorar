@@ -75,7 +75,7 @@ export function ParentsPage() {
               {parentsPage?.content?.map((parent) => (
                 <tr
                   className="transition-colors hover:bg-base-200/70"
-                  key={parent.id}
+                  key={parent.parentId}
                 >
                   <td>{parent.name}</td>
                   <td className="hidden whitespace-normal break-all lg:table-cell">
@@ -87,7 +87,7 @@ export function ParentsPage() {
                   <td>
                     <ButtonLink
                       size="sm"
-                      to={`/parents/${parent.id}`}
+                      to={`/parents/${parent.parentId}`}
                       variant="outline"
                     >
                       Detalhes

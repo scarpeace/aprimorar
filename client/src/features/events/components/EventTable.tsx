@@ -91,7 +91,7 @@ export function EventTable({
       currentPage={currentPage}
       onPageChange={onPageChange}
       itemName={itemName}
-      getRowKey={(event) => event.id}
+      getRowKey={(event) => event.eventId}
       renderActions={renderActions}
       loadingDescription="Carregando eventos..."
       emptyTitle="Nenhum evento encontrado."

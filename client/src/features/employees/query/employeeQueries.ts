@@ -22,7 +22,7 @@ export function useEmployeeById(employeeId: string) {
   });
 }
 
-export function useEmployeeOptions() {
+export function useEmployeesSummary() {
   return useGetEmployeeSummary({
     query: {
       queryKey: employeeQueryKeys.summary(),

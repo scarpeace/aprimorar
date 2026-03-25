@@ -10,6 +10,6 @@ export const employeeQueryKeys = {
   detail: (employeeId: string) => ["employees", "detail", employeeId] as const,
 } as const;
 
-export type EmployeesListQueryKey = ReturnType<typeof employeesQueryKeys.list>;
-export type EmployeeDetailQueryKey = ReturnType<typeof employeesQueryKeys.detail
+export type EmployeesListQueryKey = ReturnType<typeof employeeQueryKeys.list>;
+export type EmployeeDetailQueryKey = ReturnType<typeof employeeQueryKeys.detail
 >;
