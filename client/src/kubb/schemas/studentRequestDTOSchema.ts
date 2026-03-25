@@ -11,7 +11,7 @@ import { z } from "zod/v4";
  */
 export const studentRequestDTOSchema = z
   .object({
-    name: z.string().min(3).max(120).describe("Nome do aluno"),
+    name: z.string().min(20).max(120).describe("Nome do aluno"),
     birthdate: z.iso.date(),
     cpf: z.string(),
     school: z.string().min(1),
@@ -20,7 +20,7 @@ export const studentRequestDTOSchema = z
     get address() {
       return addressRequestDTOSchema;
     },
-    parentId: z.uuid(),
+    parentId: z.uuid().describe("ID do responsável do aluno"),
   })
   .describe("Dados do aluno");
 

@@ -270,7 +270,6 @@ export function StudentCreatePage() {
                 id="address.state"
                 {...register("address.state")}
               >
-                <option value="">Selecione um estado</option>
                 {BRAZILIAN_STATES.map((state) => (
                   <option key={state.value} value={state.value}>
                     {state.label}

@@ -23,7 +23,11 @@ const ParentDetailPage = lazy(() => import("@/features/parents/ParentDetailPage"
 const ParentCreatePage = lazy(() => import("@/features/parents/ParentCreatePage").then((module) => ({ default: module.ParentCreatePage })))
 const ParentEditPage = lazy(() => import("@/features/parents/ParentEditPage").then((module) => ({ default: module.ParentEditPage })))
 
+import { pt } from "zod/locales"
+import z from "zod/v4"
+
 function App() {
+  z.config(pt());
   return (
     <BrowserRouter>
       <Toaster position="top-right" richColors />

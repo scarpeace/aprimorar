@@ -38,6 +38,7 @@ export type AddressRequestDTOStateEnumKey =
 
 export type AddressRequestDTO = {
   /**
+   * @description Rua do endereço
    * @minLength 1
    * @type string
    */

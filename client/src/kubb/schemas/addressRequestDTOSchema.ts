@@ -6,7 +6,7 @@
 import { z } from "zod/v4";
 
 export const addressRequestDTOSchema = z.object({
-  street: z.string().min(1),
+  street: z.string().min(1).describe("Rua do endereço"),
   number: z.string().min(1),
   complement: z.optional(z.string()),
   district: z.string().min(1),
