@@ -6,7 +6,7 @@
 import { z } from "zod/v4";
 
 export const eventResponseDTOSchema = z.object({
-  id: z.uuid(),
+  eventId: z.uuid(),
   title: z.string(),
   description: z.string().nullish(),
   content: z.string(),

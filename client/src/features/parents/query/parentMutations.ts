@@ -7,6 +7,7 @@ import {
   useUpdateParent,
   useArchiveParent,
   useUnarchiveParent,
+  useDeleteParent,
 } from "@/kubb";
 import { parentQueryKeys } from "./parentQueryKeys";
 
@@ -43,14 +44,30 @@ export function useUpdateParentMutation() {
         toast.success("Responsável atualizado com sucesso");
 
         queryClient.invalidateQueries({ queryKey: parentQueryKeys.lists() });
-        queryClient.invalidateQueries({
-          queryKey: parentQueryKeys.detail(variables.parentId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: parentQueryKeys.summary(),
-        });
+        queryClient.invalidateQueries({queryKey: parentQueryKeys.detail(variables.parentId)});
+        queryClient.invalidateQueries({queryKey: parentQueryKeys.summary()});
 
         navigate(`/parents/${updatedParent.parentId}`);
+      },
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
+      },
+    },
+  });
+}
+
+export function useDeleteParentMutation() {
+  const queryClient = useQueryClient();
+
+  return useDeleteParent({
+    mutation: {
+      onSuccess: (_, variables) => {
+        toast.success("Responsável excluído com sucesso");
+
+        //TODO: talvez aqui dê pra juntar essas duas queries para todas as listas. Até porque o summary é uma lista, não?
+        queryClient.invalidateQueries({ queryKey: parentQueryKeys.lists()});
+        queryClient.invalidateQueries({queryKey: parentQueryKeys.summary()});
+        queryClient.invalidateQueries({queryKey: parentQueryKeys.detail(variables.parentId)});
       },
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
@@ -69,12 +86,8 @@ export function useArchiveParentMutation() {
         toast.success("Responsável arquivado com sucesso");
 
         queryClient.invalidateQueries({ queryKey: parentQueryKeys.lists() });
-        queryClient.invalidateQueries({
-          queryKey: parentQueryKeys.detail(variables.parentId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: parentQueryKeys.summary(),
-        });
+        queryClient.invalidateQueries({queryKey: parentQueryKeys.summary()});
+        queryClient.invalidateQueries({ queryKey: parentQueryKeys.detail(variables.parentId) });
       },
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));

@@ -7,7 +7,7 @@ import {
   useGetStudentSummary,
 } from "@/kubb";
 
-import { studentsQueryKeys } from "./studentsQueryKeys";
+import { studentsQueryKeys } from "./studentQueryKeys";
 
 export function useStudents(params: GetStudentsQueryParams = {}) {
   return useGetStudents(params, {

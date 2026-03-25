@@ -7,7 +7,7 @@ export type EventResponseDTO = {
   /**
    * @type string, uuid
    */
-  id: string;
+  eventId: string;
   /**
    * @type string
    */

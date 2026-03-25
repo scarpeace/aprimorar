@@ -9,7 +9,7 @@ export const parentQueryKeys = {
     detail: (parentId: string) => ["parents", "detail", parentId] as const,
   byParent: (parentId: string) =>
     ["parents", "by-parent", parentId] as const,
-    summary: () => ["parents", "options"] as const,
+    summary: () => ["parents", "summary"] as const,
 } as const;
 
 export type ParentsListQueryKey = ReturnType<typeof parentQueryKeys.list>;

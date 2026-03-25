@@ -9,7 +9,7 @@ export const studentsQueryKeys = {
   detail: (studentId: string) => ["students", "detail", studentId] as const,
   byParent: (parentId: string) =>
     ["students", "by-parent", parentId] as const,
-  summary: () => ["students", "options"] as const,
+  summary: () => ["students", "summary"] as const,
 } as const;
 
 export type StudentsListQueryKey = ReturnType<typeof studentsQueryKeys.list>;

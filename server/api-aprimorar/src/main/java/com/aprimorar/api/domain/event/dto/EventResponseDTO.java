@@ -2,14 +2,13 @@ package com.aprimorar.api.domain.event.dto;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 public record EventResponseDTO(
-        @NotNull UUID id,
+        @NotNull UUID eventId,
         @NotNull String title,
         @Schema(nullable = true)
         @Nullable
