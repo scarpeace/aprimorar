@@ -1,11 +1,9 @@
 
 type ErrorCardProps = {
-  description: string
   title?: string
 }
 
 export function LoadingCard({
-  description,
   title = "Carregando dados...",
 }: Readonly<ErrorCardProps>) {
   return (

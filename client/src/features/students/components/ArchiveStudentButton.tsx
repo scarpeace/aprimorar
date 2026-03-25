@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/button";
 import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
 
 import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
-import { getStudentByIdQueryKey, getStudentsQueryKey } from "@/kubb";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   useArchiveStudentMutation,
   useUnarchiveStudentMutation,
@@ -27,10 +25,10 @@ export const ArchiveStudentButton = ({
     useArchiveStudentMutation();
 
   const handleArchive = () => {
-    archiveStudent({ studentId });
+    archiveStudent({ studentId }, { onSuccess: () => setShowConfirm(false) });
   };
   const handleUnarchive = () => {
-    unarchiveStudent({ studentId });
+    unarchiveStudent({ studentId }, { onSuccess: () => setShowConfirm(false) });
   };
 
   if (isUnarchivingStudent || isArchivingStudent) {

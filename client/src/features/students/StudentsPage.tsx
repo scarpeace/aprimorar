@@ -7,7 +7,8 @@ import styles from "@/features/students/StudentsPage.module.css";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { useStudents } from "./query/studentQueries";
 import type { StudentResponseDTO } from "@/kubb/types/StudentResponseDTO";
-import { StudentsTableContent, StudentsTablePagination, StudentsTableRoot, StudentsTableState } from "./components/StudentsTable";
+import { StudentsTableContent, StudentsTablePagination, StudentsTableState } from "./components/StudentsTable";
+import { TableRoot } from "@/components/layout/TableRoot";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,7 +48,7 @@ export function StudentsPage() {
       </PageHeader>
 
 
-      <StudentsTableRoot>
+      <TableRoot>
         <StudentsTableState students={studentsPage?.content} isLoading={isStudentsPageLoading} error={studentsPageError} >
           <StudentsTableContent
             students={studentsPage?.content ?? []}
@@ -69,7 +70,7 @@ export function StudentsPage() {
             currentElementsCount={studentsPage?.content?.length ?? 0}
           />
         </StudentsTableState>
-      </StudentsTableRoot>
+      </TableRoot>
     </div>
   );
 }

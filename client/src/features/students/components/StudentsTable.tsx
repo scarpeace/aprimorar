@@ -11,9 +11,6 @@ import {
 } from "@/lib/utils/formatter";
 import type { ReactNode } from "react";
 
-type StudentsTableRootProps = {
-  children: ReactNode;
-};
 
 type StudentsTableStateProps = {
   students?: StudentResponseDTO[];
@@ -36,11 +33,7 @@ type StudentsTablePaginationProps = {
   itemName?: string;
 };
 
-export function StudentsTableRoot({
-  children,
-}: Readonly<StudentsTableRootProps>) {
-  return <div className="app-table-wrap overflow-x-auto">{children}</div>;
-}
+
 
 export function StudentsTableState({
   students,
@@ -49,7 +42,7 @@ export function StudentsTableState({
   children,
 }: Readonly<StudentsTableStateProps>) {
   if (isLoading) {
-    return <LoadingCard description="Carregando alunos..." />;
+    return <LoadingCard title="Carregando alunos..." />;
   }
   if (error) {
     return (
