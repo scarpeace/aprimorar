@@ -8,7 +8,6 @@ export type {
 } from "./AddressResponseDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
-export type { EmployeeOptionDTO } from "./EmployeeOptionDTO.ts";
 export type {
   EmployeeRequestDTO,
   EmployeeRequestDTODutyEnumKey,
@@ -17,6 +16,7 @@ export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./EmployeeResponseDTO.ts";
+export type { EmployeeSummaryDTO } from "./EmployeeSummaryDTO.ts";
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
@@ -70,11 +70,11 @@ export type {
   GetEmployeeByIdQueryResponse,
 } from "./employee/GetEmployeeById.ts";
 export type {
-  GetEmployeeOptions200,
-  GetEmployeeOptions400,
-  GetEmployeeOptionsQuery,
-  GetEmployeeOptionsQueryResponse,
-} from "./employee/GetEmployeeOptions.ts";
+  GetEmployeeSummary200,
+  GetEmployeeSummary400,
+  GetEmployeeSummaryQuery,
+  GetEmployeeSummaryQueryResponse,
+} from "./employee/GetEmployeeSummary.ts";
 export type {
   GetEmployees200,
   GetEmployees400,

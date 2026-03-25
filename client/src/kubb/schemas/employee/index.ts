@@ -23,10 +23,10 @@ export type {
   GetEmployeeByIdQueryResponseSchema,
 } from "./getEmployeeByIdSchema.ts";
 export type {
-  GetEmployeeOptions200Schema,
-  GetEmployeeOptions400Schema,
-  GetEmployeeOptionsQueryResponseSchema,
-} from "./getEmployeeOptionsSchema.ts";
+  GetEmployeeSummary200Schema,
+  GetEmployeeSummary400Schema,
+  GetEmployeeSummaryQueryResponseSchema,
+} from "./getEmployeeSummarySchema.ts";
 export type {
   GetEmployees200Schema,
   GetEmployees400Schema,
@@ -62,9 +62,9 @@ export { getEmployeeById200Schema } from "./getEmployeeByIdSchema.ts";
 export { getEmployeeById400Schema } from "./getEmployeeByIdSchema.ts";
 export { getEmployeeByIdPathParamsSchema } from "./getEmployeeByIdSchema.ts";
 export { getEmployeeByIdQueryResponseSchema } from "./getEmployeeByIdSchema.ts";
-export { getEmployeeOptions200Schema } from "./getEmployeeOptionsSchema.ts";
-export { getEmployeeOptions400Schema } from "./getEmployeeOptionsSchema.ts";
-export { getEmployeeOptionsQueryResponseSchema } from "./getEmployeeOptionsSchema.ts";
+export { getEmployeeSummary200Schema } from "./getEmployeeSummarySchema.ts";
+export { getEmployeeSummary400Schema } from "./getEmployeeSummarySchema.ts";
+export { getEmployeeSummaryQueryResponseSchema } from "./getEmployeeSummarySchema.ts";
 export { getEmployees200Schema } from "./getEmployeesSchema.ts";
 export { getEmployees400Schema } from "./getEmployeesSchema.ts";
 export { getEmployeesQueryParamsSchema } from "./getEmployeesSchema.ts";

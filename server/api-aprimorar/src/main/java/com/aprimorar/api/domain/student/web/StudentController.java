@@ -59,7 +59,7 @@ public class StudentController implements StudentControllerDocs {
     @Override
     @GetMapping("/options")
     public ResponseEntity<List<StudentSummaryDTO>> getStudentSummary() {
-        List<StudentSummaryDTO> options = studentService.getStudentOptions();
+        List<StudentSummaryDTO> options = studentService.getStudentSummary();
         return ResponseEntity.ok(options);
     }
 

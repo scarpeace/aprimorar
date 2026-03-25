@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.domain.employee.EmployeeService;
-import com.aprimorar.api.domain.employee.dto.EmployeeOptionDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -59,8 +59,8 @@ public class EmployeeController implements EmployeeControllerDocs {
 
     @Override
     @GetMapping("/options")
-    public ResponseEntity<List<EmployeeOptionDTO>> getEmployeeOptions() {
-        List<EmployeeOptionDTO> options = employeeService.getEmployeeOptions();
+    public ResponseEntity<List<EmployeeSummaryDTO>> getEmployeeSummary() {
+        List<EmployeeSummaryDTO> options = employeeService.getEmployeeSummary();
         return ResponseEntity.ok(options);
     }
 

@@ -27,11 +27,11 @@ export type {
   GetEmployeeByIdQueryResponse,
 } from "./GetEmployeeById.ts";
 export type {
-  GetEmployeeOptions200,
-  GetEmployeeOptions400,
-  GetEmployeeOptionsQuery,
-  GetEmployeeOptionsQueryResponse,
-} from "./GetEmployeeOptions.ts";
+  GetEmployeeSummary200,
+  GetEmployeeSummary400,
+  GetEmployeeSummaryQuery,
+  GetEmployeeSummaryQueryResponse,
+} from "./GetEmployeeSummary.ts";
 export type {
   GetEmployees200,
   GetEmployees400,

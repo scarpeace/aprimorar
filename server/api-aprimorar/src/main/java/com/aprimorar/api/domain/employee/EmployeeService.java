@@ -1,9 +1,16 @@
 package com.aprimorar.api.domain.employee;
 
+import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
+import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
+import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
+import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
+import com.aprimorar.api.domain.employee.repository.EmployeeSpecifications;
+import com.aprimorar.api.enums.Duty;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,15 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.aprimorar.api.domain.employee.dto.EmployeeOptionDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
-import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
-import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
-import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
-import com.aprimorar.api.domain.employee.repository.EmployeeSpecifications;
-import com.aprimorar.api.enums.Duty;
 
 /**
  * Centraliza as regras de negócio do colaborador.
@@ -48,7 +46,11 @@ public class EmployeeService {
     private final EmployeeMapper employeeMapper;
     private final com.aprimorar.api.domain.event.repository.EventRepository eventRepo;
 
-    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, com.aprimorar.api.domain.event.repository.EventRepository eventRepo) {
+    public EmployeeService(
+        EmployeeRepository employeeRepo,
+        EmployeeMapper employeeMapper,
+        com.aprimorar.api.domain.event.repository.EventRepository eventRepo
+    ) {
         this.employeeRepo = employeeRepo;
         this.employeeMapper = employeeMapper;
         this.eventRepo = eventRepo;
@@ -69,17 +71,18 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public List<EmployeeOptionDTO> getEmployeeOptions() {
+    public List<EmployeeSummaryDTO> getEmployeeSummary() {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
-        return employeeRepo.findAll(EmployeeSpecifications.notArchived(), sort).stream()
-                .map(e -> new EmployeeOptionDTO(e.getId(), e.getName()))
-                .toList();
+        return employeeRepo
+            .findAll(EmployeeSpecifications.notArchived(), sort)
+            .stream()
+            .map(e -> new EmployeeSummaryDTO(e.getId(), e.getName()))
+            .toList();
     }
 
     @Transactional(readOnly = true)
     public EmployeeResponseDTO findById(UUID employeeId) {
-
         Employee employee = findEmployeeOrThrow(employeeId);
         log.info("Colaborador {} consultado com sucesso.", employee.getName().toUpperCase());
         return employeeMapper.convertToDto(employee);
@@ -88,7 +91,6 @@ public class EmployeeService {
     /* ----- Command Methods ----- */
     @Transactional
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
-
         Employee employee = employeeMapper.convertToEntity(employeeRequestDto);
 
         EmployeeRules.validate(employee);
@@ -102,7 +104,6 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
-
         Employee newEmployee = employeeMapper.convertToEntity(request);
         Employee oldEmployee = findEmployeeOrThrow(employeeId);
 
@@ -145,8 +146,7 @@ public class EmployeeService {
 
     /* ----- Helper Methods ----- */
     private Employee findEmployeeOrThrow(UUID employeeId) {
-        return employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException("Colaborador não encontrado no Banco de Dados"));
+        return employeeRepo.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException("Colaborador não encontrado no Banco de Dados"));
     }
 
     private void validateEmployeeUniquenessForCreate(String cpf, String email) {

@@ -7,9 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import com.aprimorar.api.domain.employee.dto.EmployeeOptionDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
 import com.aprimorar.api.exception.ProblemDetailResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,19 +56,19 @@ public interface EmployeeControllerDocs {
     );
 
     @Operation(
-            operationId = "getEmployeeOptions",
+            operationId = "getEmployeeSummary",
             summary = "Obter opções de funcionários",
             description = "Retorna uma lista simplificada de funcionários para uso em dropdowns."
     )
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Listagem dos funcionários para opções e dropdown",
                 content = @Content(mediaType = "application/json",
-                        array = @ArraySchema(schema = @Schema(implementation = EmployeeOptionDTO.class)))),
+                        array = @ArraySchema(schema = @Schema(implementation = EmployeeSummaryDTO.class)))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
     })
-    ResponseEntity<List<EmployeeOptionDTO>> getEmployeeOptions();
+    ResponseEntity<List<EmployeeSummaryDTO>> getEmployeeSummary();
 
     @Operation(
             operationId = "getEmployeeById",

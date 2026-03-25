@@ -1,9 +1,19 @@
 package com.aprimorar.api.domain.student;
 
+import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.parent.Parent;
+import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
+import com.aprimorar.api.domain.parent.repository.ParentRepository;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
+import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
+import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.domain.student.repository.StudentSpecifications;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,18 +22,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.aprimorar.api.domain.event.repository.EventRepository;
-import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
-import com.aprimorar.api.domain.parent.repository.ParentRepository;
-import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
-import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
-import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
-import com.aprimorar.api.domain.student.repository.StudentRepository;
-import com.aprimorar.api.domain.student.repository.StudentSpecifications;
 
 @Service
 public class StudentService {
@@ -36,11 +34,7 @@ public class StudentService {
     private final StudentMapper studentMapper;
     private final EventRepository eventRepo;
 
-    public StudentService(
-            ParentRepository parentRepo,
-            StudentRepository studentRepo,
-            StudentMapper studentMapper,
-            EventRepository eventRepo) {
+    public StudentService(ParentRepository parentRepo, StudentRepository studentRepo, StudentMapper studentMapper, EventRepository eventRepo) {
         this.parentRepo = parentRepo;
         this.studentRepo = studentRepo;
         this.studentMapper = studentMapper;
@@ -50,11 +44,7 @@ public class StudentService {
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
     public Page<StudentResponseDTO> getStudents(Pageable pageable, String search) {
-
-        Specification<Student> spec = Specification.allOf(
-                StudentSpecifications.isNotGhost(),
-                StudentSpecifications.notArchived()
-        );
+        Specification<Student> spec = Specification.allOf(StudentSpecifications.isNotGhost(), StudentSpecifications.notArchived());
 
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(StudentSpecifications.searchContainsIgnoreCase(search.trim()));
@@ -67,17 +57,14 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudentSummaryDTO> getStudentOptions() {
-        Specification<Student> spec = Specification.allOf(
-                StudentSpecifications.isNotGhost(),
-                StudentSpecifications.notArchived()
-        );
-
+    public List<StudentSummaryDTO> getStudentSummary() {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
-        return studentRepo.findAll(spec, sort).stream()
-                .map(s -> new StudentSummaryDTO(s.getId(), s.getName()))
-                .toList();
+        return studentRepo
+            .findAll(StudentSpecifications.notArchived(), sort)
+            .stream()
+            .map(e -> new StudentSummaryDTO(e.getId(), e.getName()))
+            .toList();
     }
 
     public List<StudentResponseDTO> getStudentsByParent(UUID parentId) {
@@ -87,7 +74,6 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public StudentResponseDTO findById(UUID studentId) {
-
         Student student = findStudentOrThrow(studentId);
         log.info("Aluno {} consultado com sucesso.", student.getName().toUpperCase());
         return studentMapper.convertToDto(student);
@@ -96,7 +82,6 @@ public class StudentService {
     /* ----- Command Methods ----- */
     @Transactional
     public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
-
         Student student = studentMapper.convertToEntity(studentRequestDto);
         student.setParent(resolveParentOrThrow(studentRequestDto.parentId()));
         StudentRules.validate(student);
@@ -109,7 +94,6 @@ public class StudentService {
 
     @Transactional
     public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO request) {
-
         if (GHOST_STUDENT_ID.equals(id)) {
             throw new IllegalArgumentException("Não é possível modificar o registro de sistema 'ALUNO ARQUIVADO'.");
         }
@@ -172,8 +156,7 @@ public class StudentService {
 
     /* ----- Helper Methods ----- */
     private Student findStudentOrThrow(UUID studentId) {
-        return studentRepo.findById(studentId)
-                .orElseThrow(() -> new StudentNotFoundException("Aluno não encontrado no banco de dados"));
+        return studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFoundException("Aluno não encontrado no banco de dados"));
     }
 
     private void ensureStudentUniqueness(Student student) {
@@ -197,8 +180,6 @@ public class StudentService {
     }
 
     private Parent resolveParentOrThrow(UUID parentId) {
-        return parentRepo.findById(parentId)
-                .orElseThrow(() -> new ParentNotFoundException("Responsável não encontrado no banco de dados"));
+        return parentRepo.findById(parentId).orElseThrow(() -> new ParentNotFoundException("Responsável não encontrado no banco de dados"));
     }
-
 }

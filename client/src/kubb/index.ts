@@ -3,7 +3,7 @@ export type { ArchiveEmployeeMutationKey } from "./hooks/employee/useArchiveEmpl
 export type { CreateEmployeeMutationKey } from "./hooks/employee/useCreateEmployee.ts";
 export type { DeleteEmployeeMutationKey } from "./hooks/employee/useDeleteEmployee.ts";
 export type { GetEmployeeByIdQueryKey } from "./hooks/employee/useGetEmployeeById.ts";
-export type { GetEmployeeOptionsQueryKey } from "./hooks/employee/useGetEmployeeOptions.ts";
+export type { GetEmployeeSummaryQueryKey } from "./hooks/employee/useGetEmployeeSummary.ts";
 export type { GetEmployeesQueryKey } from "./hooks/employee/useGetEmployees.ts";
 export type { UnarchiveEmployeeMutationKey } from "./hooks/employee/useUnarchiveEmployee.ts";
 export type { UpdateEmployeeMutationKey } from "./hooks/employee/useUpdateEmployee.ts";
@@ -66,10 +66,10 @@ export type {
   GetEmployeeByIdQueryResponseSchema,
 } from "./schemas/employee/getEmployeeByIdSchema.ts";
 export type {
-  GetEmployeeOptions200Schema,
-  GetEmployeeOptions400Schema,
-  GetEmployeeOptionsQueryResponseSchema,
-} from "./schemas/employee/getEmployeeOptionsSchema.ts";
+  GetEmployeeSummary200Schema,
+  GetEmployeeSummary400Schema,
+  GetEmployeeSummaryQueryResponseSchema,
+} from "./schemas/employee/getEmployeeSummarySchema.ts";
 export type {
   GetEmployees200Schema,
   GetEmployees400Schema,
@@ -89,9 +89,9 @@ export type {
   UpdateEmployeeMutationResponseSchema,
   UpdateEmployeePathParamsSchema,
 } from "./schemas/employee/updateEmployeeSchema.ts";
-export type { EmployeeOptionDTOSchema } from "./schemas/employeeOptionDTOSchema.ts";
 export type { EmployeeRequestDTOSchema } from "./schemas/employeeRequestDTOSchema.ts";
 export type { EmployeeResponseDTOSchema } from "./schemas/employeeResponseDTOSchema.ts";
+export type { EmployeeSummaryDTOSchema } from "./schemas/employeeSummaryDTOSchema.ts";
 export type {
   CreateEvent200Schema,
   CreateEvent400Schema,
@@ -263,7 +263,6 @@ export type {
 } from "./types/AddressResponseDTO.ts";
 export type { ClassesByContentDTO } from "./types/ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./types/DashboardSummaryResponseDTO.ts";
-export type { EmployeeOptionDTO } from "./types/EmployeeOptionDTO.ts";
 export type {
   EmployeeRequestDTO,
   EmployeeRequestDTODutyEnumKey,
@@ -272,6 +271,7 @@ export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./types/EmployeeResponseDTO.ts";
+export type { EmployeeSummaryDTO } from "./types/EmployeeSummaryDTO.ts";
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
@@ -325,11 +325,11 @@ export type {
   GetEmployeeByIdQueryResponse,
 } from "./types/employee/GetEmployeeById.ts";
 export type {
-  GetEmployeeOptions200,
-  GetEmployeeOptions400,
-  GetEmployeeOptionsQuery,
-  GetEmployeeOptionsQueryResponse,
-} from "./types/employee/GetEmployeeOptions.ts";
+  GetEmployeeSummary200,
+  GetEmployeeSummary400,
+  GetEmployeeSummaryQuery,
+  GetEmployeeSummaryQueryResponse,
+} from "./types/employee/GetEmployeeSummary.ts";
 export type {
   GetEmployees200,
   GetEmployees400,
@@ -543,10 +543,10 @@ export { getEmployeeById } from "./hooks/employee/useGetEmployeeById.ts";
 export { getEmployeeByIdQueryKey } from "./hooks/employee/useGetEmployeeById.ts";
 export { getEmployeeByIdQueryOptions } from "./hooks/employee/useGetEmployeeById.ts";
 export { useGetEmployeeById } from "./hooks/employee/useGetEmployeeById.ts";
-export { getEmployeeOptions } from "./hooks/employee/useGetEmployeeOptions.ts";
-export { getEmployeeOptionsQueryKey } from "./hooks/employee/useGetEmployeeOptions.ts";
-export { getEmployeeOptionsQueryOptions } from "./hooks/employee/useGetEmployeeOptions.ts";
-export { useGetEmployeeOptions } from "./hooks/employee/useGetEmployeeOptions.ts";
+export { getEmployeeSummary } from "./hooks/employee/useGetEmployeeSummary.ts";
+export { getEmployeeSummaryQueryKey } from "./hooks/employee/useGetEmployeeSummary.ts";
+export { getEmployeeSummaryQueryOptions } from "./hooks/employee/useGetEmployeeSummary.ts";
+export { useGetEmployeeSummary } from "./hooks/employee/useGetEmployeeSummary.ts";
 export { getEmployees } from "./hooks/employee/useGetEmployees.ts";
 export { getEmployeesQueryKey } from "./hooks/employee/useGetEmployees.ts";
 export { getEmployeesQueryOptions } from "./hooks/employee/useGetEmployees.ts";
@@ -679,9 +679,9 @@ export { getEmployeeById200Schema } from "./schemas/employee/getEmployeeByIdSche
 export { getEmployeeById400Schema } from "./schemas/employee/getEmployeeByIdSchema.ts";
 export { getEmployeeByIdPathParamsSchema } from "./schemas/employee/getEmployeeByIdSchema.ts";
 export { getEmployeeByIdQueryResponseSchema } from "./schemas/employee/getEmployeeByIdSchema.ts";
-export { getEmployeeOptions200Schema } from "./schemas/employee/getEmployeeOptionsSchema.ts";
-export { getEmployeeOptions400Schema } from "./schemas/employee/getEmployeeOptionsSchema.ts";
-export { getEmployeeOptionsQueryResponseSchema } from "./schemas/employee/getEmployeeOptionsSchema.ts";
+export { getEmployeeSummary200Schema } from "./schemas/employee/getEmployeeSummarySchema.ts";
+export { getEmployeeSummary400Schema } from "./schemas/employee/getEmployeeSummarySchema.ts";
+export { getEmployeeSummaryQueryResponseSchema } from "./schemas/employee/getEmployeeSummarySchema.ts";
 export { getEmployees200Schema } from "./schemas/employee/getEmployeesSchema.ts";
 export { getEmployees400Schema } from "./schemas/employee/getEmployeesSchema.ts";
 export { getEmployeesQueryParamsSchema } from "./schemas/employee/getEmployeesSchema.ts";
@@ -695,9 +695,9 @@ export { updateEmployee400Schema } from "./schemas/employee/updateEmployeeSchema
 export { updateEmployeeMutationRequestSchema } from "./schemas/employee/updateEmployeeSchema.ts";
 export { updateEmployeeMutationResponseSchema } from "./schemas/employee/updateEmployeeSchema.ts";
 export { updateEmployeePathParamsSchema } from "./schemas/employee/updateEmployeeSchema.ts";
-export { employeeOptionDTOSchema } from "./schemas/employeeOptionDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./schemas/employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./schemas/employeeResponseDTOSchema.ts";
+export { employeeSummaryDTOSchema } from "./schemas/employeeSummaryDTOSchema.ts";
 export { createEvent200Schema } from "./schemas/event/createEventSchema.ts";
 export { createEvent400Schema } from "./schemas/event/createEventSchema.ts";
 export { createEventMutationRequestSchema } from "./schemas/event/createEventSchema.ts";

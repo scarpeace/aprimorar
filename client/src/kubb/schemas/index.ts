@@ -33,10 +33,10 @@ export type {
   GetEmployeeByIdQueryResponseSchema,
 } from "./employee/getEmployeeByIdSchema.ts";
 export type {
-  GetEmployeeOptions200Schema,
-  GetEmployeeOptions400Schema,
-  GetEmployeeOptionsQueryResponseSchema,
-} from "./employee/getEmployeeOptionsSchema.ts";
+  GetEmployeeSummary200Schema,
+  GetEmployeeSummary400Schema,
+  GetEmployeeSummaryQueryResponseSchema,
+} from "./employee/getEmployeeSummarySchema.ts";
 export type {
   GetEmployees200Schema,
   GetEmployees400Schema,
@@ -56,9 +56,9 @@ export type {
   UpdateEmployeeMutationResponseSchema,
   UpdateEmployeePathParamsSchema,
 } from "./employee/updateEmployeeSchema.ts";
-export type { EmployeeOptionDTOSchema } from "./employeeOptionDTOSchema.ts";
 export type { EmployeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
 export type { EmployeeResponseDTOSchema } from "./employeeResponseDTOSchema.ts";
+export type { EmployeeSummaryDTOSchema } from "./employeeSummaryDTOSchema.ts";
 export type {
   CreateEvent200Schema,
   CreateEvent400Schema,
@@ -244,9 +244,9 @@ export { getEmployeeById200Schema } from "./employee/getEmployeeByIdSchema.ts";
 export { getEmployeeById400Schema } from "./employee/getEmployeeByIdSchema.ts";
 export { getEmployeeByIdPathParamsSchema } from "./employee/getEmployeeByIdSchema.ts";
 export { getEmployeeByIdQueryResponseSchema } from "./employee/getEmployeeByIdSchema.ts";
-export { getEmployeeOptions200Schema } from "./employee/getEmployeeOptionsSchema.ts";
-export { getEmployeeOptions400Schema } from "./employee/getEmployeeOptionsSchema.ts";
-export { getEmployeeOptionsQueryResponseSchema } from "./employee/getEmployeeOptionsSchema.ts";
+export { getEmployeeSummary200Schema } from "./employee/getEmployeeSummarySchema.ts";
+export { getEmployeeSummary400Schema } from "./employee/getEmployeeSummarySchema.ts";
+export { getEmployeeSummaryQueryResponseSchema } from "./employee/getEmployeeSummarySchema.ts";
 export { getEmployees200Schema } from "./employee/getEmployeesSchema.ts";
 export { getEmployees400Schema } from "./employee/getEmployeesSchema.ts";
 export { getEmployeesQueryParamsSchema } from "./employee/getEmployeesSchema.ts";
@@ -260,9 +260,9 @@ export { updateEmployee400Schema } from "./employee/updateEmployeeSchema.ts";
 export { updateEmployeeMutationRequestSchema } from "./employee/updateEmployeeSchema.ts";
 export { updateEmployeeMutationResponseSchema } from "./employee/updateEmployeeSchema.ts";
 export { updateEmployeePathParamsSchema } from "./employee/updateEmployeeSchema.ts";
-export { employeeOptionDTOSchema } from "./employeeOptionDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./employeeResponseDTOSchema.ts";
+export { employeeSummaryDTOSchema } from "./employeeSummaryDTOSchema.ts";
 export { createEvent200Schema } from "./event/createEventSchema.ts";
 export { createEvent400Schema } from "./event/createEventSchema.ts";
 export { createEventMutationRequestSchema } from "./event/createEventSchema.ts";

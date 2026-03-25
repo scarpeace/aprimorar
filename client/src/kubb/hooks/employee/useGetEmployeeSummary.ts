@@ -5,9 +5,9 @@
 
 import fetch from "@kubb/plugin-client/clients/axios";
 import type {
-  GetEmployeeOptionsQueryResponse,
-  GetEmployeeOptions400,
-} from "../../types/employee/GetEmployeeOptions.ts";
+  GetEmployeeSummaryQueryResponse,
+  GetEmployeeSummary400,
+} from "../../types/employee/GetEmployeeSummary.ts";
 import type {
   Client,
   RequestConfig,
@@ -19,14 +19,14 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getEmployeeOptionsQueryResponseSchema } from "../../schemas/employee/getEmployeeOptionsSchema.ts";
+import { getEmployeeSummaryQueryResponseSchema } from "../../schemas/employee/getEmployeeSummarySchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getEmployeeOptionsQueryKey = () =>
+export const getEmployeeSummaryQueryKey = () =>
   [{ url: "/v1/employees/options" }] as const;
 
-export type GetEmployeeOptionsQueryKey = ReturnType<
-  typeof getEmployeeOptionsQueryKey
+export type GetEmployeeSummaryQueryKey = ReturnType<
+  typeof getEmployeeSummaryQueryKey
 >;
 
 /**
@@ -34,14 +34,14 @@ export type GetEmployeeOptionsQueryKey = ReturnType<
  * @summary Obter opções de funcionários
  * {@link /v1/employees/options}
  */
-export async function getEmployeeOptions(
+export async function getEmployeeSummary(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
-    GetEmployeeOptionsQueryResponse,
-    ResponseErrorConfig<GetEmployeeOptions400>,
+    GetEmployeeSummaryQueryResponse,
+    ResponseErrorConfig<GetEmployeeSummary400>,
     unknown
   >({
     method: "GET",
@@ -49,22 +49,22 @@ export async function getEmployeeOptions(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return getEmployeeOptionsQueryResponseSchema.parse(res.data);
+  return getEmployeeSummaryQueryResponseSchema.parse(res.data);
 }
 
-export function getEmployeeOptionsQueryOptions(
+export function getEmployeeSummaryQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = getEmployeeOptionsQueryKey();
+  const queryKey = getEmployeeSummaryQueryKey();
   return queryOptions<
-    GetEmployeeOptionsQueryResponse,
-    ResponseErrorConfig<GetEmployeeOptions400>,
-    GetEmployeeOptionsQueryResponse,
+    GetEmployeeSummaryQueryResponse,
+    ResponseErrorConfig<GetEmployeeSummary400>,
+    GetEmployeeSummaryQueryResponse,
     typeof queryKey
   >({
     queryKey,
     queryFn: async ({ signal }) => {
-      return getEmployeeOptions({ ...config, signal: config.signal ?? signal });
+      return getEmployeeSummary({ ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -74,16 +74,16 @@ export function getEmployeeOptionsQueryOptions(
  * @summary Obter opções de funcionários
  * {@link /v1/employees/options}
  */
-export function useGetEmployeeOptions<
-  TData = GetEmployeeOptionsQueryResponse,
-  TQueryData = GetEmployeeOptionsQueryResponse,
-  TQueryKey extends QueryKey = GetEmployeeOptionsQueryKey,
+export function useGetEmployeeSummary<
+  TData = GetEmployeeSummaryQueryResponse,
+  TQueryData = GetEmployeeSummaryQueryResponse,
+  TQueryKey extends QueryKey = GetEmployeeSummaryQueryKey,
 >(
   options: {
     query?: Partial<
       QueryObserverOptions<
-        GetEmployeeOptionsQueryResponse,
-        ResponseErrorConfig<GetEmployeeOptions400>,
+        GetEmployeeSummaryQueryResponse,
+        ResponseErrorConfig<GetEmployeeSummary400>,
         TData,
         TQueryData,
         TQueryKey
@@ -94,16 +94,16 @@ export function useGetEmployeeOptions<
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey = resolvedOptions?.queryKey ?? getEmployeeOptionsQueryKey();
+  const queryKey = resolvedOptions?.queryKey ?? getEmployeeSummaryQueryKey();
 
   const query = useQuery(
     {
-      ...getEmployeeOptionsQueryOptions(config),
+      ...getEmployeeSummaryQueryOptions(config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<GetEmployeeOptions400>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<GetEmployeeSummary400>> & {
     queryKey: TQueryKey;
   };
 
