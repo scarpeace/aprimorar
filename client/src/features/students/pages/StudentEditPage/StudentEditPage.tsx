@@ -86,6 +86,7 @@ export function StudentEditPage() {
             register={register}
             registerWithMask={registerWithMask}
             errors={errors}
+            className="grid grid-cols-3 gap-4"
           />
 
           <AddressInfoSection register={register} errors={errors} />
