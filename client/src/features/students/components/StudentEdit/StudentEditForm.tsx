@@ -10,7 +10,7 @@ export function StudentEditForm({
   children,
 }: Readonly<StudentEditFormProps>) {
   return (
-    <form className={""} onSubmit={onSubmit}>
+    <form className="flex flex-col gap-3" onSubmit={onSubmit}>
       {children}
     </form>
   );

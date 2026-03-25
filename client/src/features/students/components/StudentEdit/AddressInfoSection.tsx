@@ -1,22 +1,18 @@
 import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import type { UpdateStudentMutationRequest } from "@/kubb";
+import { addressRequestDTOStateEnum, type UpdateStudentMutationRequest } from "@/kubb";
 
 type AddressInfoSectionProps = {
   register: UseFormRegister<UpdateStudentMutationRequest>;
   errors: FieldErrors<UpdateStudentMutationRequest>;
   className?: string;
-  fieldClassName?: string;
-  span2ClassName?: string;
 };
 
 export function AddressInfoSection({
   register,
   errors,
   className,
-  fieldClassName,
-  span2ClassName,
 }: Readonly<AddressInfoSectionProps>) {
   return (
     <SectionCard
@@ -25,7 +21,7 @@ export function AddressInfoSection({
     >
       <div className={className}>
         <FormField
-          className={`${fieldClassName ?? ""} ${span2ClassName ?? ""}`.trim()}
+          className=""
           label="Rua"
           htmlFor="address.street"
           error={errors.address?.street?.message}
@@ -39,7 +35,7 @@ export function AddressInfoSection({
         </FormField>
 
         <FormField
-          className={fieldClassName}
+          className={"col-span-1"}
           label="Número"
           htmlFor="address.number"
           error={errors.address?.number?.message}
@@ -53,7 +49,7 @@ export function AddressInfoSection({
         </FormField>
 
         <FormField
-          className={fieldClassName}
+          className=""
           label="Complemento"
           htmlFor="address.complement"
           error={errors.address?.complement?.message}
@@ -67,7 +63,7 @@ export function AddressInfoSection({
         </FormField>
 
         <FormField
-          className={fieldClassName}
+          className=""
           label="Bairro"
           htmlFor="address.district"
           error={errors.address?.district?.message}
@@ -81,7 +77,7 @@ export function AddressInfoSection({
         </FormField>
 
         <FormField
-          className={fieldClassName}
+          className=""
           label="Cidade"
           htmlFor="address.city"
           error={errors.address?.city?.message}
@@ -95,20 +91,26 @@ export function AddressInfoSection({
         </FormField>
 
         <FormField
-          className={fieldClassName}
+          className=""
           label="Estado"
           htmlFor="address.state"
           error={errors.address?.state?.message}
         >
-          <input
-            className="app-input"
+          <select
+            className="app-select"
             id="address.state"
             {...register("address.state")}
-          />
+          >
+            {Object.values(addressRequestDTOStateEnum).map((state) => (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            ))}
+          </select>
         </FormField>
 
         <FormField
-          className={fieldClassName}
+          className=""
           label="CEP"
           htmlFor="address.zip"
           error={errors.address?.zip?.message}

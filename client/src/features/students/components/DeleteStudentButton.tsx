@@ -4,9 +4,12 @@ import { Trash2 } from "lucide-react";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 import { useEventsByStudent } from "@/features/events/query/eventQueries";
 import { useDeleteStudentMutation } from "../hooks/studentMutations";
+import { useNavigate } from "react-router-dom";
 
 export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
   const { mutate: deleteStudent, isPending: isDeleting } =
     useDeleteStudentMutation();
   const { data: eventsData, isLoading: isEventsLoading } =
@@ -28,6 +31,7 @@ export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
       {
         onSettled: () => {
           setIsOpen(false);
+          navigate("/students");
         },
       },
     );
@@ -64,7 +68,7 @@ export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
               todos os seus eventos e atendimentos serão transferidos
               automaticamente para um perfil de "Aluno Removido"
             </strong>{" "}
-            para manter a consistência financeira e o histórico da clínica.
+            para manter a consistência financeira e o histórico da escola.
           </div>
         }
       />

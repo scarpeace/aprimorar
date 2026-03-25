@@ -89,7 +89,8 @@ export function StudentEditPage() {
             className="grid grid-cols-3 gap-4"
           />
 
-          <AddressInfoSection register={register} errors={errors} />
+          <AddressInfoSection className="grid grid-cols-3 gap-4" register={register} errors={errors} />
+
 
           <StudentEditActions studentId={studentId} isSubmitting={isUpdatingStudent} />
 
