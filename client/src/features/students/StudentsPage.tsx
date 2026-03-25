@@ -41,7 +41,6 @@ export function StudentsPage() {
         </div>
       </PageHeader>
 
-      {/*TODO: substituir a tabela pela genérica*/}
       <StudentTable
         variant="page"
         data={students}

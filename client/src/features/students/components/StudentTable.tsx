@@ -1,5 +1,5 @@
 import { Table, type ColumnDef } from "@/components/ui/table";
-import { formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
+import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
 import type { StudentResponseDTO, PagedModelStudentResponseDTO } from "@/kubb";
 import type { ReactNode } from "react";
 
@@ -24,11 +24,12 @@ function getStudentColumns(
     },
     {
       header: "CPF",
-      accessor: (student) => student.cpf,
+      accessor: (student) => formatCpf(student.cpf),
     },
     {
-      header: "Nascimento",
-      accessor: (student) => formatDateShortYear(student.birthdate),
+      header: "Idade",
+      accessor: (student) => student.age,
+      cellClassName:'text-center'
     },
     {
       header: "Contato",

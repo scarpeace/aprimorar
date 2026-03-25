@@ -6,13 +6,13 @@ type ErrorCardProps = {
 
 export function LoadingCard({
   description,
-  title = "Carregando dados",
+  title = "Carregando dados...",
 }: Readonly<ErrorCardProps>) {
   return (
-    <div className="app-surface card border border-error/40 shadow-sm">
-      <div className="card-body gap-4">
-        <h2 className="card-title text-error">{title}</h2>
-        <p className="app-text-muted text-sm">{description}</p>
+    <div className="app-surface card border border-info/40 shadow-sm">
+      <div className="card-body flex flex-row justify-center gap-4">
+        <span className="loading loading-spinner loading-sm text-primary" />
+        <h2 className="card-title">{title}</h2>
       </div>
     </div>
   )
