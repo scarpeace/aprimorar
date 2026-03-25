@@ -16,6 +16,7 @@ import { ArchiveParentButton } from "./components/ArchiveParentButton";
 import { DeleteParentButton } from "./components/DeleteParentButton";
 import { EditParentButton } from "./components/EditParentButton";
 import { useParentById } from "./query/parentQueries";
+import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
 
 //TODO: O responsável SISTEMA tá podendo ser arquivado/desarquivado, tem que arrumar
 export function ParentDetailPage() {
@@ -40,16 +41,7 @@ export function ParentDetailPage() {
     return <PageLoading message="Carregando responsável..." />;
   }
 
-  const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: parentData?.name },
-    { label: "E-mail", value: parentData?.email },
-    { label: "Contato", value: parentData?.contact },
-    { label: "CPF", value: parentData?.cpf },
-    { label: "Status", value: parentData?.archivedAt ? "Arquivado" : "Ativo" },
-    { label: "Criado em", value: parentData?.createdAt },
-  ];
-
-  if (parentError) {
+  if (parentError || !parentData) {
     return (
       <div className={styles.page}>
         <ErrorCard
@@ -60,6 +52,15 @@ export function ParentDetailPage() {
       </div>
     );
   }
+
+  const summaryItems: Array<{ label: string; value: ReactNode }> = [
+    { label: "Nome completo", value: parentData.name },
+    { label: "E-mail", value: parentData.email },
+    { label: "Contato", value: formatPhone(parentData.contact) },
+    { label: "CPF", value: formatCpf(parentData.cpf ?? "") },
+    { label: "Status", value: parentData.archivedAt ? "Arquivado" : "Ativo" },
+    { label: "Criado em", value: formatDateShortYear( parentData.createdAt) },
+  ];
 
   return (
     <div className={styles.page}>
@@ -117,7 +118,7 @@ export function ParentDetailPage() {
       {/* ALUNOS VINCULADOS */}
       <SectionCard
         title="Alunos vinculados"
-        description={`Alunos registrados sob a responsabilidade de ${parent.name}.`}
+        description={`Alunos registrados sob a responsabilidade de ${parentData.name}.`}
       >
         <StudentTable
           variant="embedded"
@@ -126,7 +127,7 @@ export function ParentDetailPage() {
           error={parentStudentsError ?? null}
           itemName="alunos"
           currentPage={0}
-          onPageChange={()=> 0}
+          onPageChange={() => 0}
           renderActions={(student) => (
             <ButtonLink
               to={`/students/${student.id}`}

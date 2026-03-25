@@ -1,11 +1,11 @@
 import { Table, type ColumnDef } from "@/components/ui/table";
 import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
-import type { StudentResponseDTO, PagedModelStudentResponseDTO } from "@/kubb";
+import type { StudentResponseDTO, PagedModelStudentResponseDTO, GetStudentsByParent200 } from "@/kubb";
 import type { ReactNode } from "react";
 
 type StudentTableProps = {
   variant?: "page" | "embedded";
-  data?: PagedModelStudentResponseDTO | [];
+  data?: PagedModelStudentResponseDTO | GetStudentsByParent200;
   isLoading: boolean;
   error: unknown;
   currentPage: number;
@@ -89,7 +89,7 @@ export function StudentTable({
   error,
   currentPage,
   onPageChange,
-  itemName = "studentos",
+  itemName = "alunos",
   renderActions,
 }: Readonly<StudentTableProps>) {
   return (
@@ -104,10 +104,10 @@ export function StudentTable({
       itemName={itemName}
       getRowKey={(student) => student.id}
       renderActions={renderActions}
-      loadingDescription="Carregando studentos..."
-      emptyTitle="Nenhum studento encontrado."
-      emptyDescription="Nenhum studento encontrado para os filtros aplicados."
-      errorTitle="Erro ao carregar studentos"
+      loadingDescription="Carregando alunos..."
+      emptyTitle="Nenhum aluno encontrado."
+      emptyDescription="Nenhum aluno encontrado para os filtros aplicados."
+      errorTitle="Erro ao carregar alunos"
     />
   );
 }
