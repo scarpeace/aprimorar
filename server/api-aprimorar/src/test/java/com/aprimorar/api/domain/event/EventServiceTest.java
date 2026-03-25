@@ -1,30 +1,33 @@
 package com.aprimorar.api.domain.event;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.employee.Employee;
-import com.aprimorar.api.domain.employee.EmployeeRepository;
-import com.aprimorar.api.domain.event.dto.EventRequestDTO;
-import com.aprimorar.api.domain.event.dto.EventResponseDTO;
-import com.aprimorar.api.domain.student.Student;
-import com.aprimorar.api.domain.student.StudentRepository;
-import com.aprimorar.api.enums.EventContent;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
+import com.aprimorar.api.domain.event.dto.EventRequestDTO;
+import com.aprimorar.api.domain.event.dto.EventResponseDTO;
+import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.student.Student;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.enums.EventContent;
 
 @ExtendWith(MockitoExtension.class)
 class EventServiceTest {
@@ -32,6 +35,9 @@ class EventServiceTest {
     private static final UUID EVENT_ID = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
     private static final UUID STUDENT_ID = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
     private static final UUID EMPLOYEE_ID = UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc");
+    private static final ZoneId APP_ZONE = ZoneId.of("America/Sao_Paulo");
+    private static final LocalDateTime EVENT_START = LocalDateTime.of(2026, 3, 25, 10, 0);
+    private static final LocalDateTime EVENT_END = LocalDateTime.of(2026, 3, 25, 11, 0);
 
     @Mock
     private EventRepository eventRepo;
@@ -68,6 +74,8 @@ class EventServiceTest {
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(resolvedEmployee));
             when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
             when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
+            when(eventMapper.toLocalDateTime(input.startDate())).thenReturn(EVENT_START);
+            when(eventMapper.toLocalDateTime(input.endDate())).thenReturn(EVENT_END);
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, mappedEvent.getStartDate(), mappedEvent.getEndDateTime(), EVENT_ID)).thenReturn(false);
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, mappedEvent.getStartDate(), mappedEvent.getEndDateTime(), EVENT_ID)).thenReturn(false);
             when(eventMapper.convertToDto(existingEvent)).thenReturn(expected);
@@ -91,8 +99,8 @@ class EventServiceTest {
         return new EventRequestDTO(
                 "Evento atualizado",
                 "Descrição de teste",
-                LocalDateTime.of(2026, 3, 20, 10, 0),
-                LocalDateTime.of(2026, 3, 20, 11, 0),
+                EVENT_START.atZone(APP_ZONE).toInstant(),
+                EVENT_END.atZone(APP_ZONE).toInstant(),
                 BigDecimal.valueOf(120),
                 BigDecimal.valueOf(80),
                 EventContent.AULA,
@@ -105,8 +113,8 @@ class EventServiceTest {
         Event event = new Event();
         event.setTitle(title);
         event.setDescription("Descrição de teste");
-        event.setStartDate(LocalDateTime.of(2026, 3, 20, 10, 0));
-        event.setEndDateTime(LocalDateTime.of(2026, 3, 20, 11, 0));
+        event.setStartDate(EVENT_START);
+        event.setEndDateTime(EVENT_END);
         event.setPrice(BigDecimal.valueOf(120));
         event.setPayment(BigDecimal.valueOf(80));
         event.setContent(EventContent.AULA);
@@ -135,8 +143,8 @@ class EventServiceTest {
                 event.getTitle(),
                 event.getDescription(),
                 event.getContent().name(),
-                event.getStartDate(),
-                event.getEndDateTime(),
+                event.getStartDate().atZone(APP_ZONE).toInstant(),
+                event.getEndDateTime().atZone(APP_ZONE).toInstant(),
                 event.getPrice(),
                 event.getPayment(),
                 student.getId(),

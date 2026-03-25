@@ -1,39 +1,33 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useHookFormMask } from "use-mask-input"
-import { Button, ButtonLink } from "@/components/ui/button"
-import { FormField } from "@/components/ui/form-field"
-import { PageHeader } from "@/components/ui/page-header"
-import { SectionCard } from "@/components/ui/section-card"
-import styles from "./ParentCreatePage.module.css"
-import { useCreateParent } from "./hooks/use-parents"
-import { getFriendlyErrorMessage } from "@/services/api"
-import { parentFormSchema, type ParentFormInput } from "@/lib/schemas"
-
-const initialParentData: ParentFormInput = {
-  name: "Gustavo Scarpellini",
-  email: "gustavo.scarpellini@gmail.com",
-  contact: "61999293945",
-  cpf: "60558245253",
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useHookFormMask } from "use-mask-input";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { FormField } from "@/components/ui/form-field";
+import { PageHeader } from "@/components/ui/page-header";
+import { SectionCard } from "@/components/ui/section-card";
+import styles from "./ParentCreatePage.module.css";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { createParent, createParentMutationRequestSchema, useCreateParent, type CreateParentMutationRequestSchema } from "@/kubb";
 
 export function ParentCreatePage() {
+  const {
+    isPending: isCreateParentPending,
+    isError: isCreateParentError,
+    error: createParentError,
+  } = useCreateParent();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ParentFormInput>({
-    resolver: zodResolver(parentFormSchema),
-    defaultValues: initialParentData,
-  })
-  const registerWithMask = useHookFormMask(register)
+  } = useForm<CreateParentMutationRequestSchema>({
+    resolver: zodResolver(createParentMutationRequestSchema),
+  });
+  const registerWithMask = useHookFormMask(register);
 
-  const { mutate: createParent, isPending: isCreateParentPending, isError: isCreateParentError, error: createParentError } = useCreateParent()
-
-  const onSubmit = (data: ParentFormInput) => {
-    createParent(data)
-  }
+  const onSubmit = (data: CreateParentMutationRequestSchema) => {
+    createParent( data );
+  };
 
   return (
     <div className={styles.page}>
@@ -47,20 +41,42 @@ export function ParentCreatePage() {
         }
       />
 
-      {isCreateParentError ?
+      {isCreateParentError ? (
         <div className="alert alert-error text-sm">
           {getFriendlyErrorMessage(createParentError)}
         </div>
-        : null}
+      ) : null}
 
-      <SectionCard title="Dados do responsável" description="Preencha as informações abaixo para criar o cadastro.">
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+      <SectionCard
+        title="Dados do responsável"
+        description="Preencha as informações abaixo para criar o cadastro."
+      >
+        <form
+          className={styles.form}
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+        >
           <div className={styles.formGrid}>
-            <FormField className={styles.field} label="Nome completo" htmlFor="name" error={errors.name?.message}>
-              <input className="app-input" id="name" placeholder="Ex: Maria Silva" {...register("name")} />
+            <FormField
+              className={styles.field}
+              label="Nome completo"
+              htmlFor="name"
+              error={errors.name?.message}
+            >
+              <input
+                className="app-input"
+                id="name"
+                placeholder="Ex: Maria Silva"
+                {...register("name")}
+              />
             </FormField>
 
-            <FormField className={styles.field} label="Email" htmlFor="email" error={errors.email?.message}>
+            <FormField
+              className={styles.field}
+              label="Email"
+              htmlFor="email"
+              error={errors.email?.message}
+            >
               <input
                 className="app-input"
                 id="email"
@@ -70,16 +86,29 @@ export function ParentCreatePage() {
               />
             </FormField>
 
-            <FormField className={styles.field} label="Contato" htmlFor="contact" error={errors.contact?.message}>
+            <FormField
+              className={styles.field}
+              label="Contato"
+              htmlFor="contact"
+              error={errors.contact?.message}
+            >
               <input
                 className="app-input"
                 id="contact"
                 placeholder="(11) 99999-9999"
-                {...registerWithMask("contact", ["(99) 9999-9999", "(99) 99999-9999"])}
+                {...registerWithMask("contact", [
+                  "(99) 9999-9999",
+                  "(99) 99999-9999",
+                ])}
               />
             </FormField>
 
-            <FormField className={styles.field} label="CPF" htmlFor="cpf" error={errors.cpf?.message}>
+            <FormField
+              className={styles.field}
+              label="CPF"
+              htmlFor="cpf"
+              error={errors.cpf?.message}
+            >
               <input
                 className="app-input"
                 id="cpf"
@@ -93,12 +122,16 @@ export function ParentCreatePage() {
             <ButtonLink to="/parents" variant="outline">
               Cancelar
             </ButtonLink>
-            <Button type="submit" disabled={isCreateParentPending} variant="primary">
+            <Button
+              type="submit"
+              disabled={isCreateParentPending}
+              variant="primary"
+            >
               {isCreateParentPending ? "Salvando..." : "Criar responsável"}
             </Button>
           </div>
         </form>
       </SectionCard>
     </div>
-  )
+  );
 }

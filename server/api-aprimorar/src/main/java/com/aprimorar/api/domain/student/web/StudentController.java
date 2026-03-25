@@ -1,0 +1,117 @@
+package com.aprimorar.api.domain.student.web;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.aprimorar.api.domain.student.StudentService;
+import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RestController
+@RequestMapping("/v1/students")
+public class StudentController implements StudentControllerDocs {
+
+    private final StudentService studentService;
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    @Override
+    @PostMapping
+    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
+
+        StudentResponseDTO response = studentService.createStudent(createStudentDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @Override
+    @GetMapping
+    public ResponseEntity<Page<StudentResponseDTO>> getStudents(
+            @ParameterObject Pageable pageable,
+            @RequestParam(required = false) String search
+    ) {
+        Page<StudentResponseDTO> students = studentService.getStudents(pageable, search);
+        return ResponseEntity.ok(students);
+    }
+
+    @Override
+    @GetMapping("/options")
+    public ResponseEntity<List<StudentSummaryDTO>> getStudentSummary() {
+        List<StudentSummaryDTO> options = studentService.getStudentSummary();
+        return ResponseEntity.ok(options);
+    }
+
+    @Override
+    @GetMapping("/parent/{parentId}")
+    public ResponseEntity<List<StudentResponseDTO>> getStudentsByParent(
+            @PathVariable UUID parentId
+    ) {
+        List<StudentResponseDTO> students = studentService.getStudentsByParent(parentId);
+        return ResponseEntity.ok(students);
+    }
+
+    @Override
+    @GetMapping("/{studentId}")
+    public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId) {
+
+        StudentResponseDTO foundStudent = studentService.findById(studentId);
+        return ResponseEntity.ok(foundStudent);
+    }
+
+    @Override
+    @PutMapping("/{studentId}")
+    public ResponseEntity<StudentResponseDTO> updateStudent(
+            @PathVariable UUID studentId,
+            @RequestBody @Valid StudentRequestDTO studentRequestDto) {
+
+        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, studentRequestDto);
+        return ResponseEntity.ok(updatedStudent);
+    }
+
+    @Override
+    @DeleteMapping("/{studentId}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable UUID studentId) {
+
+        studentService.deleteStudent(studentId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @PatchMapping("/{studentId}/archive")
+    public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
+
+        studentService.archiveStudent(studentId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @PatchMapping("/{studentId}/unarchive")
+    public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {
+
+        studentService.unarchiveStudent(studentId);
+        return ResponseEntity.noContent().build();
+    }
+
+}

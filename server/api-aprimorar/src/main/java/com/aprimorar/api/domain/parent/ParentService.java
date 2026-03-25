@@ -4,9 +4,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
-import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
-import com.aprimorar.api.domain.student.StudentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,17 +14,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
+import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
+import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
+import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
+import com.aprimorar.api.domain.parent.repository.ParentRepository;
+import com.aprimorar.api.domain.parent.repository.ParentSpecifications;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
 
 /**
  * Centraliza as regras de negócio do responsável.
  *
- * <p>Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
- * Também é esse service que garante que CPF e email não se repitam antes de salvar
- * ou atualizar um responsável.
+ * <p>
+ * Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
+ * Também é esse service que garante que CPF e email não se repitam antes de
+ * salvar ou atualizar um responsável.
  *
- * <p>Quando um responsável é alterado, o service reaproveita a entidade já persistida,
- * aplica as validações necessárias e devolve a resposta em formato DTO.
+ * <p>
+ * Quando um responsável é alterado, o service reaproveita a entidade já
+ * persistida, aplica as validações necessárias e devolve a resposta em formato
+ * DTO.
  *
  * @author scarpellini
  * @version 1.0
@@ -49,16 +55,17 @@ public class ParentService {
     }
 
     /* ----- Query Methods ----- */
-
     @Transactional(readOnly = true)
-    public List<ParentResponseDTO> getParents() {
-        List<Parent> list = parentRepo.findAll();
-        log.info("Consulta de responsáveis finalizada, {} registros encontrados.", list.size());
-        return list.stream().map(parentMapper::convertToDto).toList();
+    public List<ParentSummaryDTO> getParentSummary() {
+        List<Parent> list = parentRepo.findByArchivedAtIsNull();
+        log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
+        return list.stream()
+                .map(p -> new ParentSummaryDTO(p.getId(), p.getName()))
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public Page<ParentResponseDTO> getPaginatedParents(Pageable pageable, String search) {
+    public Page<ParentResponseDTO> getParents(Pageable pageable, String search) {
         Page<Parent> page;
         if (search != null && !search.trim().isEmpty()) {
             Specification<Parent> spec = ParentSpecifications.searchContainsIgnoreCase(search.trim());
@@ -78,7 +85,6 @@ public class ParentService {
     }
 
     /* ----- Command Methods ----- */
-
     @Transactional
     public ParentResponseDTO createParent(ParentRequestDTO request) {
 
@@ -144,16 +150,14 @@ public class ParentService {
     }
 
     /* ----- Helper Methods ----- */
-
     private Parent findParentOrThrow(UUID parentId) {
         return parentRepo.findById(parentId)
                 .orElseThrow(() -> new ParentNotFoundException("Responsável não encontrado no banco de dados"));
     }
 
-
     private void verifyParentUniquenessForUpdate(String cpf, String email, UUID id) {
 
-        if(id != null) {
+        if (id != null) {
             if (parentRepo.existsByCpfAndIdNot(cpf, id)) {
                 throw new ParentAlreadyExistsException(
                         "Responsável com o CPF informado já existe no banco de dados"
@@ -172,11 +176,11 @@ public class ParentService {
         boolean existsByCpf = parentRepo.existsByCpf(cpf);
         boolean existsByEmail = parentRepo.existsByEmail(email);
 
-        if(existsByCpf){
+        if (existsByCpf) {
             throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
         }
 
-        if(existsByEmail){
+        if (existsByEmail) {
             throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
     }

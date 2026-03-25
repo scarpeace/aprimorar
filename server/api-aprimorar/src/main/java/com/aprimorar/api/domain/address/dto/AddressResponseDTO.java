@@ -1,14 +1,18 @@
 package com.aprimorar.api.domain.address.dto;
 
 import com.aprimorar.api.enums.BrazilianState;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 public record AddressResponseDTO(
-        String street,
-        String number,
+        @NotNull String street,
+        @NotNull String number,
+        @Schema(nullable = true)
+        @Nullable
         String complement,
-        String district,
-        String city,
-        BrazilianState state,
-        String zip
-) {
-}
+        @NotNull String district,
+        @NotNull String city,
+        @NotNull BrazilianState state,
+        @NotNull String zip
+) {}

@@ -1,15 +1,22 @@
-import { useState } from "react"
-import { ListSearchInput } from "@/components/ui/list-search-input"
-import { PageHeader } from "@/components/ui/page-header"
-import { ButtonLink } from "@/components/ui/button"
-import { EventsTable } from "@/features/events/components/EventsTable"
-import styles from "@/features/events/EventsPage.module.css"
-import { useDebounce } from "@/hooks/use-debounce"
-import { CalendarCheck2 } from "lucide-react"
+import { useState } from "react";
+import { ListSearchInput } from "@/components/ui/list-search-input";
+import { PageHeader } from "@/components/ui/page-header";
+import { ButtonLink } from "@/components/ui/button";
+import styles from "@/features/events/EventsPage.module.css";
+import { CalendarCheck2 } from "lucide-react";
+import { EventTable } from "./components/EventTable";
+import { useGetEvents } from "@/kubb";
 
 export function EventsPage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const [searchTerm, setSearchTerm] = useState("");
+  // const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const {
+    data: events,
+    isLoading: isEventsLoading,
+    error: eventsError,
+  } = useGetEvents();
 
   return (
     <div className={styles.page}>
@@ -34,11 +41,22 @@ export function EventsPage() {
       </PageHeader>
 
       <div className="app-table-wrap">
-        <EventsTable
-          variant="eventsPage"
-          searchTerm={debouncedSearchTerm}
+        <EventTable
+          variant="page"
+          context="student"
+          data={events}
+          isLoading={isEventsLoading}
+          error={eventsError ?? null}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          itemName="eventos"
+          renderActions={(event) => (
+            <ButtonLink to={`/events/${event.id}`} size="sm" variant="outline">
+              Detalhes
+            </ButtonLink>
+          )}
         />
       </div>
     </div>
-  )
+  );
 }

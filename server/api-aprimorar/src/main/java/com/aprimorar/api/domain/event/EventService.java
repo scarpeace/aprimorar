@@ -3,11 +3,6 @@ package com.aprimorar.api.domain.event;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.employee.Employee;
-import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
-import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
-import com.aprimorar.api.domain.event.exception.InvalidEventException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,21 +11,27 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aprimorar.api.domain.employee.EmployeeRepository;
+import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
+import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
 import com.aprimorar.api.domain.event.dto.EventRequestDTO;
 import com.aprimorar.api.domain.event.dto.EventResponseDTO;
 import com.aprimorar.api.domain.event.exception.EventNotFoundException;
+import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
+import com.aprimorar.api.domain.event.exception.InvalidEventException;
+import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.event.repository.EventSpecifications;
 import com.aprimorar.api.domain.student.Student;
-import com.aprimorar.api.domain.student.StudentRepository;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
 
 /**
  * Centraliza as regras de negócio do evento.
  *
  * <p>
- * Aqui ficam a criação, atualização, consultas e remoção de eventos.
- * Também é esse service que garante que aluno e colaborador existam e que não
- * haja conflito de agenda antes de persistir um evento.
+ * Aqui ficam a criação, atualização, consultas e remoção de eventos. Também é
+ * esse service que garante que aluno e colaborador existam e que não haja
+ * conflito de agenda antes de persistir um evento.
  *
  * <p>
  * Quando um evento é criado ou atualizado, o service valida os participantes,
@@ -60,7 +61,6 @@ public class EventService {
     }
 
     /* ----- Query Methods ----- */
-
     @Transactional(readOnly = true)
     public Page<EventResponseDTO> getEvents(Pageable pageable, String search) {
         Page<Event> eventPage;
@@ -104,7 +104,6 @@ public class EventService {
     }
 
     /* ----- Command Methods ----- */
-
     @Transactional
     public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
         Event event = eventMapper.convertToEntity(eventRequestDTO);
@@ -134,8 +133,8 @@ public class EventService {
 
         existingEvent.setTitle(request.title());
         existingEvent.setDescription(request.description());
-        existingEvent.setStartDate(request.startDate());
-        existingEvent.setEndDateTime(request.endDate());
+        existingEvent.setStartDate(eventMapper.toLocalDateTime(request.startDate()));
+        existingEvent.setEndDateTime(eventMapper.toLocalDateTime(request.endDate()));
         existingEvent.setPrice(request.price());
         existingEvent.setPayment(request.payment());
         existingEvent.setContent(request.content());
@@ -162,7 +161,6 @@ public class EventService {
     }
 
     /* ----- Helper Methods ----- */
-
     private Event findEventOrThrow(UUID eventId) {
         return eventRepo.findById(eventId).orElseThrow(EventNotFoundException::new);
     }
@@ -170,13 +168,13 @@ public class EventService {
     private Student resolveStudentOrThrow(UUID studentId) {
         return studentRepo.findById(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(
-                        "Estudante com o ID informado não encontrado no banco de dados"));
+                "Estudante com o ID informado não encontrado no banco de dados"));
     }
 
     private Employee resolveEmployeeOrThrow(UUID employeeId) {
         return employeeRepo.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException(
-                        "Colaborador com o ID informado não encontrado no banco de dados"));
+                "Colaborador com o ID informado não encontrado no banco de dados"));
     }
 
     private void validateParticipantAvailability(
@@ -192,7 +190,7 @@ public class EventService {
                     "O estudante informado já possui evento no intervalo");
         }
 
-        boolean employeeConflict = eventRepo.employeeHasConflictingEvent(employeeId, startDate, endDate,ignoredEventId);
+        boolean employeeConflict = eventRepo.employeeHasConflictingEvent(employeeId, startDate, endDate, ignoredEventId);
         if (employeeConflict) {
             throw new EventScheduleConflictException(
                     "O colaborador informado já possui evento no intervalo");
@@ -200,11 +198,11 @@ public class EventService {
 
         if (studentRepo.existsByIdAndArchivedAtIsNotNull(studentId)) {
             throw new InvalidEventException(
-                "Evento não pode ter estudantes arquivados");
+                    "Evento não pode ter estudantes arquivados");
         }
         if (employeeRepo.existsByIdAndArchivedAtIsNotNull(employeeId)) {
             throw new InvalidEventException(
-                "Evento não pode ter colaboradores arquivados");
+                    "Evento não pode ter colaboradores arquivados");
         }
     }
 

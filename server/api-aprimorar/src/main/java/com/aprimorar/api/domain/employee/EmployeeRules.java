@@ -1,11 +1,10 @@
 package com.aprimorar.api.domain.employee;
 
-import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.InvalidStudentException;
 
 public class EmployeeRules {
 
-    public static void validate(Employee employee) {
+	public static void validate(Employee employee) {
         validateRequiredFields(employee);
     }
 

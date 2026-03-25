@@ -1,60 +1,55 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useParams } from "react-router-dom"
-import { useHookFormMask } from "use-mask-input"
-import { Save } from "lucide-react"
-import { Button, ButtonLink } from "@/components/ui/button"
-import { ErrorCard } from "@/components/ui/error-card"
-import { FormField } from "@/components/ui/form-field"
-import { PageHeader } from "@/components/ui/page-header"
-import { PageLoading } from "@/components/ui/page-loading"
-import { SectionCard } from "@/components/ui/section-card"
-import styles from "./ParentCreatePage.module.css"
-import { parentFormSchema, type ParentFormInput } from "@/lib/schemas"
-import { getFriendlyErrorMessage } from "@/services/api"
-import { useParentDetailQuery, useUpdateParent } from "./hooks/use-parents"
-import { DeleteParentButton } from "./components/DeleteParentButton"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { useHookFormMask } from "use-mask-input";
+import { Save } from "lucide-react";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { ErrorCard } from "@/components/ui/error-card";
+import { FormField } from "@/components/ui/form-field";
+import { PageHeader } from "@/components/ui/page-header";
+import { PageLoading } from "@/components/ui/page-loading";
+import { SectionCard } from "@/components/ui/section-card";
+import styles from "./ParentCreatePage.module.css";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { DeleteParentButton } from "./components/DeleteParentButton";
+import { updateParentMutationRequestSchema, useGetParentById, useUpdateParent, type UpdateParentMutationRequest } from "@/kubb";
 
 export function ParentEditPage() {
-
-  const { id } = useParams<{ id: string }>()
-  const parentId = id ?? ""
+  const { id } = useParams<{ id: string }>();
+  const parentId = id ?? "";
 
   const {
     isError: isParentError,
     error: parentError,
     isLoading: isParentLoading,
     data: parentData,
-    refetch: refetchParent
-  } = useParentDetailQuery(parentId)
+    refetch: refetchParent,
+  } = useGetParentById(parentId);
 
-
-  const {
-    mutate: updateParent,
-    isPending: isUpdating
-  } = useUpdateParent(parentId)
+  const { mutate: updateParent, isPending: isUpdating } =
+    useUpdateParent();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ParentFormInput>({
-    resolver: zodResolver(parentFormSchema),
+  } = useForm<UpdateParentMutationRequest>({
+    resolver: zodResolver(updateParentMutationRequestSchema ),
     values: {
       name: parentData?.name ?? "",
       email: parentData?.email ?? "",
       contact: parentData?.contact ?? "",
       cpf: parentData?.cpf ?? "",
     },
-  })
-  const registerWithMask = useHookFormMask(register)
+  });
+  const registerWithMask = useHookFormMask(register);
 
-  const onSubmit = (data: ParentFormInput) => {
-    updateParent(data)
-  }
+  const onSubmit = (data:UpdateParentMutationRequest) => {
+    updateParent({parentId, data});
+  };
 
   if (isParentLoading) {
-    return <PageLoading message="Carregando responsável para edição..." />
+    return <PageLoading message="Carregando responsável para edição..." />;
   }
 
   if (isParentError || !parentData) {
@@ -65,7 +60,7 @@ export function ParentEditPage() {
           onAction={refetchParent}
         />
       </div>
-    )
+    );
   }
 
   return (
@@ -80,14 +75,36 @@ export function ParentEditPage() {
         }
       />
 
-      <SectionCard title="Dados do responsável" description="Atualize as informações de cadastro e contato.">
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+      <SectionCard
+        title="Dados do responsável"
+        description="Atualize as informações de cadastro e contato."
+      >
+        <form
+          className={styles.form}
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+        >
           <div className={styles.formGrid}>
-            <FormField className={styles.field} label="Nome completo" htmlFor="name" error={errors.name?.message}>
-              <input className="app-input" id="name" placeholder="Ex: Maria Silva" {...register("name")} />
+            <FormField
+              className={styles.field}
+              label="Nome completo"
+              htmlFor="name"
+              error={errors.name?.message}
+            >
+              <input
+                className="app-input"
+                id="name"
+                placeholder="Ex: Maria Silva"
+                {...register("name")}
+              />
             </FormField>
 
-            <FormField className={styles.field} label="Email" htmlFor="email" error={errors.email?.message}>
+            <FormField
+              className={styles.field}
+              label="Email"
+              htmlFor="email"
+              error={errors.email?.message}
+            >
               <input
                 className="app-input"
                 id="email"
@@ -97,16 +114,29 @@ export function ParentEditPage() {
               />
             </FormField>
 
-            <FormField className={styles.field} label="Contato" htmlFor="contact" error={errors.contact?.message}>
+            <FormField
+              className={styles.field}
+              label="Contato"
+              htmlFor="contact"
+              error={errors.contact?.message}
+            >
               <input
                 className="app-input"
                 id="contact"
                 placeholder="(11) 99999-9999"
-                {...registerWithMask("contact", ["(99) 9999-9999", "(99) 99999-9999"])}
+                {...registerWithMask("contact", [
+                  "(99) 9999-9999",
+                  "(99) 99999-9999",
+                ])}
               />
             </FormField>
 
-            <FormField className={styles.field} label="CPF" htmlFor="cpf" error={errors.cpf?.message}>
+            <FormField
+              className={styles.field}
+              label="CPF"
+              htmlFor="cpf"
+              error={errors.cpf?.message}
+            >
               <input
                 className="app-input"
                 id="cpf"
@@ -129,5 +159,5 @@ export function ParentEditPage() {
         </form>
       </SectionCard>
     </div>
-  )
+  );
 }

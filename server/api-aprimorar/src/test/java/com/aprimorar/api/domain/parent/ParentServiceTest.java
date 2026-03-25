@@ -28,6 +28,7 @@ import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
+import com.aprimorar.api.domain.parent.repository.ParentRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ParentServiceTest {
@@ -46,7 +47,7 @@ class ParentServiceTest {
     private ParentMapper parentMapper;
 
     @Mock
-    private com.aprimorar.api.domain.student.StudentRepository studentRepo;
+    private com.aprimorar.api.domain.student.repository.StudentRepository studentRepo;
 
     @InjectMocks
     private ParentService parentService;
@@ -71,7 +72,7 @@ class ParentServiceTest {
             when(parentMapper.convertToDto(secondParent)).thenReturn(expectedSecond);
 
             // Act
-            Page<ParentResponseDTO> actual = parentService.getPaginatedParents(input, null);
+            Page<ParentResponseDTO> actual = parentService.getParents(input, null);
 
             // Assert
             assertThat(actual.getContent()).containsExactly(expectedFirst, expectedSecond);

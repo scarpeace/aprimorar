@@ -1,20 +1,14 @@
 package com.aprimorar.api.domain.employee;
 
-import java.time.Clock;
 
-import com.aprimorar.api.enums.Duty;
 import org.springframework.stereotype.Component;
 
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
-import com.aprimorar.api.enums.Role;
 import com.aprimorar.api.shared.MapperUtils;
 
 @Component
 public class EmployeeMapper {
-
-
-    public EmployeeMapper(){}
 
     public Employee convertToEntity(EmployeeRequestDTO request) {
         Employee employee = new Employee();

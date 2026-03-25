@@ -1,8 +1,6 @@
 package com.aprimorar.api.domain.address;
 
 import com.aprimorar.api.domain.address.exception.InvalidAddressException;
-import com.aprimorar.api.domain.employee.Employee;
-import com.aprimorar.api.domain.student.exception.InvalidStudentException;
 
 public class AddressRules {
 

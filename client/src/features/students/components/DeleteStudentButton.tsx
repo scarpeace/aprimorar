@@ -1,41 +1,48 @@
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
-import { Trash2 } from "lucide-react"
-import { useDeleteStudent } from "../hooks/use-students"
-import { eventsApi } from "@/services/api"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
+import { getStudentByIdQueryKey, getStudentsQueryKey, useDeleteStudent, useGetEventsByStudent } from "@/kubb";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const { mutate: deleteStudent, isPending: isDeleting } = useDeleteStudent()
-
-  const { data: eventsData, isLoading: isEventsLoading } = useQuery({
-    queryKey: [...queryKeys.events.byStudent(studentId), 0, 1],
-    queryFn: () => eventsApi.listByStudent(studentId, 0, 1),
-    enabled: isOpen, // Only fetch when the user clicks to delete
-  })
+  const [isOpen, setIsOpen] = useState(false);
+  const { mutate: deleteStudent, isPending: isDeleting } = useDeleteStudent();
+  const { data: eventsData, isLoading: isEventsLoading } = useGetEventsByStudent(studentId);
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const handleOpenClick = () => {
-    setIsOpen(true)
-  }
+    setIsOpen(true);
+  };
 
   const handleClose = () => {
     if (!isDeleting) {
-      setIsOpen(false)
+      setIsOpen(false);
     }
-  }
+  };
 
   const handleConfirmDelete = () => {
-    deleteStudent(studentId, {
-      onSettled: () => {
-        setIsOpen(false)
-      }
-    })
-  }
+    console.log(studentId)
 
-  const eventsCount = eventsData?.page.totalElements ?? 0
+    deleteStudent({ studentId }, {
+      onSuccess: () => {
+        navigate(`/students`)
+        queryClient.invalidateQueries({
+          queryKey: getStudentsQueryKey()
+        })
+        queryClient.removeQueries({
+          queryKey: getStudentByIdQueryKey(studentId)
+        })
+      },
+      onSettled: () => {
+        setIsOpen(false);
+      },
+    });
+  };
+
+  const eventsCount = eventsData?.page?.totalElements ?? 0;
 
   return (
     <>
@@ -61,10 +68,15 @@ export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
         itemName="aluno"
         phantomWarning={
           <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
-            Ao excluí-lo, seu histórico pessoal será apagado, mas <strong>todos os seus eventos e atendimentos serão transferidos automaticamente para um perfil de "Aluno Removido"</strong> para manter a consistência financeira e o histórico da clínica.
+            Ao excluí-lo, seu histórico pessoal será apagado, mas{" "}
+            <strong>
+              todos os seus eventos e atendimentos serão transferidos
+              automaticamente para um perfil de "Aluno Removido"
+            </strong>{" "}
+            para manter a consistência financeira e o histórico da clínica.
           </div>
         }
       />
     </>
-  )
-}
+  );
+};

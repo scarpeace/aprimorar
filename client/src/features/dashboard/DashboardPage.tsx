@@ -1,82 +1,29 @@
-import { useQuery } from "@tanstack/react-query"
-import { ErrorCard } from "@/components/ui/error-card"
-import { PageLoading } from "@/components/ui/page-loading"
-import styles from "@/features/dashboard/DashboardPage.module.css"
-import { queryKeys } from "@/lib/query/queryKeys"
-import { brl } from "@/lib/shared/formatter"
-import { employeesApi, eventsApi, getFriendlyErrorMessage, studentsApi } from "@/services/api"
-
-type DashboardSummary = {
-  studentsCount: number
-  employeesCount: number
-  eventsCount: number
-  revenue: number
+import { ErrorCard } from "@/components/ui/error-card";
+import { PageLoading } from "@/components/ui/page-loading";
+import styles from "@/features/dashboard/DashboardPage.module.css";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { brl } from "@/lib/utils/formatter";
+import { PizzaChart } from "./components/PizzaChart";
+import { useGetDashboardSummary } from "@/kubb";
+function getCurrentYearMonth() {
+  const now = new Date();
+  return {
+    year: now.getFullYear() + 1,
+    month: now.getMonth() + 1,
+  };
 }
-
 export function DashboardPage() {
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: queryKeys.dashboard.all,
-    queryFn: async (): Promise<DashboardSummary> => {
-      const [studentsResult, employeesResult, eventsResult] = await Promise.allSettled([
-        studentsApi.list(),
-        employeesApi.list(),
-        eventsApi.list(),
-      ])
+  const { year, month } = getCurrentYearMonth();
+  const { data, isLoading, isError, error, refetch } = useGetDashboardSummary({
+    year,
+    month,
+  });
 
-      let hasSuccess = false
-
-      const studentsCount = studentsResult.status === "fulfilled" ? studentsResult.value.page.totalElements : 0
-
-      if (studentsResult.status === "fulfilled") {
-        hasSuccess = true
-      } else {
-        console.error("Falha ao carregar alunos:", studentsResult.reason)
-      }
-
-      const employeesCount = employeesResult.status === "fulfilled" ? employeesResult.value.page.totalElements : 0
-
-      if (employeesResult.status === "fulfilled") {
-        hasSuccess = true
-      } else {
-        console.error("Falha ao carregar colaboradores:", employeesResult.reason)
-      }
-
-      const eventsCount = eventsResult.status === "fulfilled" ? eventsResult.value.page.totalElements : 0
-      const revenue =
-        eventsResult.status === "fulfilled"
-          ? eventsResult.value.content.reduce((sum, event) => sum + Number(event.payment), 0)
-          : 0
-
-      if (eventsResult.status === "fulfilled") {
-        hasSuccess = true
-      } else {
-        console.error("Falha ao carregar eventos:", eventsResult.reason)
-      }
-
-      if (!hasSuccess) {
-        throw new Error("Não foi possível carregar os dados do painel.")
-      }
-
-      return {
-        studentsCount,
-        employeesCount,
-        eventsCount,
-        revenue,
-      }
-    },
-  })
 
   if (isLoading) {
-    return <PageLoading message="Carregando painel..." />
+    return <PageLoading message="Carregando painel..." />;
   }
-
-  if (isError) {
+  if (isError || !data) {
     return (
       <div className={styles.errorWrap}>
         <h1 className="app-text text-3xl font-bold">Painel</h1>
@@ -86,15 +33,8 @@ export function DashboardPage() {
           onAction={refetch}
         />
       </div>
-    )
+    );
   }
-
-  const summary = data
-
-  if (!summary) {
-    return null
-  }
-
   return (
     <div className={styles.page}>
       <h1 className="app-text text-3xl font-bold">Painel</h1>
@@ -102,28 +42,51 @@ export function DashboardPage() {
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
             <h2 className="app-kpi-label">Alunos ativos</h2>
-            <div className="app-kpi-value">{summary.studentsCount}</div>
+            <div className="app-kpi-value">{data.activeStudentsInMonth ?? 0}</div>
           </div>
         </div>
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
-            <h2 className="app-kpi-label">Colaboradores ativos</h2>
-            <div className="app-kpi-value">{summary.employeesCount}</div>
+            <h2 className="app-kpi-label">Aulas no mês</h2>
+            <div className="app-kpi-value">{data.classesInMonth ?? 0}</div>
           </div>
         </div>
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
-            <h2 className="app-kpi-label">Eventos</h2>
-            <div className="app-kpi-value">{summary.eventsCount}</div>
+            <h2 className="app-kpitext-amber-100-label">Receita no mês</h2>
+            <div className="app-kpi-value">
+              {brl.format(data.revenueInMonth ?? 0)}
+            </div>
           </div>
         </div>
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
-            <h2 className="app-kpi-label">Custo (pagamentos)</h2>
-            <div className="app-kpi-value">{brl.format(summary.revenue)}</div>
+            <h2 className="app-kpi-label">Custo no mês</h2>
+            <div className="app-kpi-value">{brl.format(data.costInMonth ?? 0)}</div>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="card border border-base-300 bg-base-100 shadow-sm">
+          <div className="card-body">
+            <h2 className="card-title text-lg font-semibold">
+              Distribuição de Conteúdo
+            </h2>
+            <p className="text-sm text-base-content/60 mb-4">
+              Visualização das aulas por categoria de atendimento.
+            </p>
+            <PizzaChart data={data.charts ?? []} />
+          </div>
+        </div>
+        <div className="card border border-base-300 bg-base-100 shadow-sm flex items-center justify-center min-h-[300px]">
+          <div className="text-center p-8">
+            <h3 className="text-base-content/40 font-medium italic">
+              Gráfico de Evolução
+            </h3>
+            <p className="text-xs text-base-content/30 mt-1">Em desenvolvimento</p>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

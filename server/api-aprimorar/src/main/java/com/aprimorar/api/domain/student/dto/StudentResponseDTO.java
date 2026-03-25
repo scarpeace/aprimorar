@@ -4,23 +4,50 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.address.Address;
-import com.aprimorar.api.domain.parent.Parent;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
+import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 
 public record StudentResponseDTO(
+        @NotNull
         UUID id,
+        
+        @NotNull
         String name,
+        
+        @NotNull
         String contact,
+        
+        @NotNull
         String email,
+        
+        @NotNull
         String cpf,
+        
+        @NotNull
         LocalDate birthdate,
+        
+        @NotNull
         String school,
+        
+        @NotNull
         Integer age,
-        Address address,
-        Parent parent,
+        
+        @NotNull
+        AddressResponseDTO address,
+        
+        @NotNull
+        ParentResponseDTO parent,
+        
+        @Schema(nullable = true)
         Instant archivedAt,
+        
+        @NotNull
         Instant createdAt,
-        Instant updatedAt
-) {
+        
+        @Schema(nullable = true)
+        Instant updatedAt) {
+
 }
