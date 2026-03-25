@@ -9,6 +9,8 @@ import { useStudentById } from "../../hooks/studentQueries";
 import { StudentDetailState } from "../../components/StudentDetail/StudentDetailState";
 import { StudentEventsSection } from "../../components/StudentDetail/StudentEventsSection";
 import { StudentSummarySection } from "../../components/StudentDetail/StudentSummarySection";
+import { AddressSummarySection } from "@/features/address/AddressSumarySection";
+import { Collapse } from "@/components/ui/collapse";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -52,8 +54,12 @@ export function StudentDetailPage() {
         error={studentError}
         onBack={() => navigate("/students")}
       >
-        <StudentSummarySection student={student} studentId={studentId} />
-
+        <div className="grid gap-2">
+          <StudentSummarySection student={student} studentId={studentId} />
+          <Collapse title="Endereço">
+            <AddressSummarySection address={student?.address} />
+          </Collapse>
+        </div>
         <StudentEventsSection
           studentId={studentId}
           events={studentEvents}
