@@ -7,8 +7,9 @@ import styles from "@/features/students/StudentsPage.module.css";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { useStudents } from "./query/studentQueries";
 import type { StudentResponseDTO } from "@/kubb/types/StudentResponseDTO";
-import { StudentsTableContent, StudentsTablePagination, StudentsTableState } from "./components/StudentsTable";
 import { TableRoot } from "@/components/layout/TableRoot";
+import { StudentsTable } from "./components/StudentsTable/StudentsTable";
+
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,8 +50,8 @@ export function StudentsPage() {
 
 
       <TableRoot>
-        <StudentsTableState students={studentsPage?.content} isLoading={isStudentsPageLoading} error={studentsPageError} >
-          <StudentsTableContent
+        <StudentsTable.State students={studentsPage?.content} isLoading={isStudentsPageLoading} error={studentsPageError} >
+          <StudentsTable.Content
             students={studentsPage?.content ?? []}
             renderActions={(student : StudentResponseDTO) => (
               <ButtonLink
@@ -62,14 +63,14 @@ export function StudentsPage() {
               </ButtonLink>
             )}
           />
-          <StudentsTablePagination
+          <StudentsTable.Pagination
             currentPage={currentPage}
             onPageChange={setCurrentPage}
             totalElements={studentsPage?.page?.totalElements ?? 0}
             totalPages={studentsPage?.page?.totalPages ?? 0}
             currentElementsCount={studentsPage?.content?.length ?? 0}
           />
-        </StudentsTableState>
+        </StudentsTable.State>
       </TableRoot>
     </div>
   );
