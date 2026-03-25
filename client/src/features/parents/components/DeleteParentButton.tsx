@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
-import { useStudentsByParent } from "@/features/students/query/studentQueries";
+import { useStudentsByParent } from "@/features/students/hooks/studentQueries";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useDeleteParentMutation } from "../query/parentMutations";

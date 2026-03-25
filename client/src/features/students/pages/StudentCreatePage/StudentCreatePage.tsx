@@ -13,7 +13,7 @@ import {
   type StudentRequestDTO,
   type StudentRequestDTOSchema,
 } from "@/kubb";
-import { useCreateStudentMutation } from "../../query/studentMutations";
+import { useCreateStudentMutation } from "../../hooks/studentMutations";
 import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
 
 export function StudentCreatePage() {

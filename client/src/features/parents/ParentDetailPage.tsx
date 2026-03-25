@@ -12,7 +12,7 @@ import type { ReactNode } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./parent-detail-page.module.css";
 
-import { useStudentsByParent } from "../students/query/studentQueries";
+import { useStudentsByParent } from "../students/hooks/studentQueries";
 import { ArchiveParentButton } from "./components/ArchiveParentButton";
 import { DeleteParentButton } from "./components/DeleteParentButton";
 import { EditParentButton } from "./components/EditParentButton";

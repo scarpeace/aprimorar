@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { ButtonLink } from "@/components/ui/button";
 import styles from "./students-page.module.css";
 import { useDebounce } from "@/lib/shared/use-debounce";
-import { useStudents } from "../../query/studentQueries";
+import { useStudents } from "../../hooks/studentQueries";
 import type { StudentResponseDTO } from "@/kubb/types/StudentResponseDTO";
 import { TableRoot } from "@/components/layout/TableRoot";
 import { StudentsTable } from "../../components/StudentsTable/StudentsTable";

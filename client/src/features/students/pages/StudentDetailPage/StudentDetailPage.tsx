@@ -5,7 +5,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import styles from "./student-detail-page.module.css";
 import { useGetEventsByStudent } from "@/kubb";
-import { useStudentById } from "../../query/studentQueries";
+import { useStudentById } from "../../hooks/studentQueries";
 import { StudentDetailState } from "../../components/StudentDetail/StudentDetailState";
 import { StudentEventsSection } from "../../components/StudentDetail/StudentEventsSection";
 import { StudentSummarySection } from "../../components/StudentDetail/StudentSummarySection";

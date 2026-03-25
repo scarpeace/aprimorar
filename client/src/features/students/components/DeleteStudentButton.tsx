@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 import { useEventsByStudent } from "@/features/events/query/eventQueries";
-import { useDeleteStudentMutation } from "../query/studentMutations";
+import { useDeleteStudentMutation } from "../hooks/studentMutations";
 
 export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
   const [isOpen, setIsOpen] = useState(false);

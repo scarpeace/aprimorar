@@ -14,7 +14,7 @@ import {
 import {
   useEmployeesSummary,
 } from "../employees/query/employeeQueries";
-import { useStudentsSummary } from "../students/query/studentQueries";
+import { useStudentsSummary } from "../students/hooks/studentQueries";
 import { useCreateEventMutation } from "./query/eventMutations";
 
 export function EventCreatePage() {
