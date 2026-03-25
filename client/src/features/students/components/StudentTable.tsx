@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 type StudentTableProps = {
   variant?: "page" | "embedded";
-  data?: PagedModelStudentResponseDTO;
+  data?: PagedModelStudentResponseDTO | [];
   isLoading: boolean;
   error: unknown;
   currentPage: number;

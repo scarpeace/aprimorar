@@ -3,67 +3,37 @@ import { Button } from "@/components/ui/button";
 import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
 
 import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
-import {
-  getStudentByIdQueryKey,
-  getStudentsQueryKey,
-  useArchiveStudent,
-  useUnarchiveStudent,
-} from "@/kubb";
+import { getStudentByIdQueryKey, getStudentsQueryKey } from "@/kubb";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  useArchiveStudentMutation,
+  useUnarchiveStudentMutation,
+} from "../query/studentMutations";
 
 type ArchiveStudentButtonProps = {
   studentId: string;
   isArchived: boolean;
 };
 
-//TODO falta adicionar o comportamento de Alert para desarquivar também
 export const ArchiveStudentButton = ({
   studentId,
   isArchived,
 }: ArchiveStudentButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
-  const queryClient = useQueryClient();
 
-  const { mutate: unarchiveStudent, isPending: isUnarchiving } =
-    useUnarchiveStudent();
-  const { mutate: archiveStudent, isPending: isArchiving } =
-    useArchiveStudent();
+  const { mutate: unarchiveStudent, isPending: isUnarchivingStudent } =
+    useUnarchiveStudentMutation();
+  const { mutate: archiveStudent, isPending: isArchivingStudent } =
+    useArchiveStudentMutation();
 
   const handleArchive = () => {
-    archiveStudent(
-      { studentId },
-      {
-        onSuccess: () => {
-          setShowConfirm(false)
-          queryClient.invalidateQueries({
-            queryKey: getStudentByIdQueryKey(studentId),
-          });
-          queryClient.invalidateQueries({
-            queryKey: getStudentsQueryKey(),
-          });
-        },
-      },
-    );
+    archiveStudent({ studentId });
   };
-
   const handleUnarchive = () => {
-    unarchiveStudent(
-      { studentId },
-      {
-        onSuccess: () => {
-          setShowConfirm(false)
-          queryClient.invalidateQueries({
-            queryKey: getStudentByIdQueryKey(studentId),
-          });
-          queryClient.invalidateQueries({
-            queryKey: getStudentsQueryKey(),
-          });
-        },
-      },
-    );
+    unarchiveStudent({ studentId });
   };
 
-  if (isUnarchiving || isArchiving) {
+  if (isUnarchivingStudent || isArchivingStudent) {
     return (
       <Button type="button" disabled variant="outline" className="sm:mr-auto">
         <Loader2Icon className="h-4 w-4 animate-spin" />
@@ -76,17 +46,16 @@ export const ArchiveStudentButton = ({
     return (
       <InlineConfirmAlert
         variant={isArchived ? "info" : "warning"}
-        message={`Deseja mesmo ${isArchived ? 'Desarquivar' : 'Arquivar'} o aluno?`}
-        confirmText={`Sim, ${isArchived ? 'Desarquivar' : 'Arquivar'} o aluno`}
+        message={`Deseja mesmo ${isArchived ? "Desarquivar" : "Arquivar"} o aluno?`}
+        confirmText={`Sim, ${isArchived ? "Desarquivar" : "Arquivar"} o aluno`}
         cancelText="Cancelar"
         onConfirm={isArchived ? handleUnarchive : handleArchive}
         onCancel={() => setShowConfirm(false)}
         className="sm:mr-auto"
-        isLoading={isArchiving}
+        isLoading={isArchivingStudent || isUnarchivingStudent}
       />
     );
   }
-
 
   if (isArchived) {
     return (
@@ -102,18 +71,15 @@ export const ArchiveStudentButton = ({
     );
   }
 
-
-
-    return (
-      <Button
-        type="button"
-        onClick={() => setShowConfirm(true)}
-        variant="warning"
-        className="sm:mr-auto"
-      >
-        <ArchiveIcon className="h-4 w-4" />
-        Arquivar
-      </Button>
-    );
-
+  return (
+    <Button
+      type="button"
+      onClick={() => setShowConfirm(true)}
+      variant="warning"
+      className="sm:mr-auto"
+    >
+      <ArchiveIcon className="h-4 w-4" />
+      Arquivar
+    </Button>
+  );
 };

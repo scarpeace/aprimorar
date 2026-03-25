@@ -1,20 +1,23 @@
-import type { ReactNode } from "react";
-import { UserCog } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
 import { ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import styles from "./ParentDetailPage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { UserCog } from "lucide-react";
+import type { ReactNode } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import styles from "./ParentDetailPage.module.css";
 
-import { StudentsTable } from "@/features/students/components/StudentTable";
-import { EditParentButton } from "./components/EditParentButton";
+import { StudentTable } from "@/features/students/components/StudentTable";
+import { useStudentsByParent } from "../students/query/studentQueries";
 import { ArchiveParentButton } from "./components/ArchiveParentButton";
 import { DeleteParentButton } from "./components/DeleteParentButton";
-import { useGetParentById } from "@/kubb";
+import { EditParentButton } from "./components/EditParentButton";
+import { useParentById } from "./query/parentQueries";
+
+//TODO: O responsável SISTEMA tá podendo ser arquivado/desarquivado, tem que arrumar
 export function ParentDetailPage() {
   const { id } = useParams<{ id: string }>();
   const parentId = id ?? "";
@@ -25,7 +28,13 @@ export function ParentDetailPage() {
     error: parentError,
     isLoading: isParentLoading,
     isFetched: isParentFetched,
-  } = useGetParentById(parentId);
+  } = useParentById(parentId);
+
+  const {
+    data: parentStudents,
+    error: parentStudentsError,
+    isLoading: isParentStudentLoading,
+  } = useStudentsByParent(parentId);
 
   if (isParentLoading) {
     return <PageLoading message="Carregando responsável..." />;
@@ -40,7 +49,7 @@ export function ParentDetailPage() {
     { label: "Criado em", value: parentData?.createdAt },
   ];
 
-  if (parentError || !parentData) {
+  if (parentError) {
     return (
       <div className={styles.page}>
         <ErrorCard
@@ -108,9 +117,26 @@ export function ParentDetailPage() {
       {/* ALUNOS VINCULADOS */}
       <SectionCard
         title="Alunos vinculados"
-        description={`Alunos registrados sob a responsabilidade de ${parentData.name}.`}
+        description={`Alunos registrados sob a responsabilidade de ${parent.name}.`}
       >
-        <StudentsTable variant="embedded" ownerId={parentId} />
+        <StudentTable
+          variant="embedded"
+          data={parentStudents}
+          isLoading={isParentStudentLoading}
+          error={parentStudentsError ?? null}
+          itemName="alunos"
+          currentPage={0}
+          onPageChange={()=> 0}
+          renderActions={(student) => (
+            <ButtonLink
+              to={`/students/${student.id}`}
+              size="sm"
+              variant="outline"
+            >
+              Detalhes
+            </ButtonLink>
+          )}
+        />
       </SectionCard>
     </div>
   );

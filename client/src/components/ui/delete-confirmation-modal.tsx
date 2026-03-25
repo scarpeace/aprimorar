@@ -2,6 +2,7 @@ import { AlertTriangle } from "lucide-react"
 import { Button } from "./button"
 import type { ReactNode } from "react"
 
+//TODO: Tem que revisar os nomes dessas props e montar um componente reutilizável
 interface DeleteConfirmationModalProps {
   isOpen: boolean
   onClose: () => void

@@ -2,16 +2,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
-import { getStudentByIdQueryKey, getStudentsQueryKey, useDeleteStudent, useGetEventsByStudent } from "@/kubb";
-import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useEventsByStudent } from "@/features/events/query/eventQueries";
+import { useDeleteStudentMutation } from "../query/studentMutations";
 
 export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate: deleteStudent, isPending: isDeleting } = useDeleteStudent();
-  const { data: eventsData, isLoading: isEventsLoading } = useGetEventsByStudent(studentId);
-  const queryClient = useQueryClient()
-  const navigate = useNavigate()
+  const { mutate: deleteStudent, isPending: isDeleting } =
+    useDeleteStudentMutation();
+  const { data: eventsData, isLoading: isEventsLoading } =
+    useEventsByStudent(studentId);
 
   const handleOpenClick = () => {
     setIsOpen(true);
@@ -24,22 +23,14 @@ export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
   };
 
   const handleConfirmDelete = () => {
-    console.log(studentId)
-
-    deleteStudent({ studentId }, {
-      onSuccess: () => {
-        navigate(`/students`)
-        queryClient.invalidateQueries({
-          queryKey: getStudentsQueryKey()
-        })
-        queryClient.removeQueries({
-          queryKey: getStudentByIdQueryKey(studentId)
-        })
+    deleteStudent(
+      { studentId },
+      {
+        onSettled: () => {
+          setIsOpen(false);
+        },
       },
-      onSettled: () => {
-        setIsOpen(false);
-      },
-    });
+    );
   };
 
   const eventsCount = eventsData?.page?.totalElements ?? 0;
