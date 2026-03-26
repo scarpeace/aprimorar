@@ -1,45 +1,49 @@
 package com.aprimorar.api.domain.student.dto;
 
-import java.time.LocalDate;
-import java.util.UUID;
-
 import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.UUID;
 
 public record StudentRequestDTO(
-        @NotBlank(message = "Nome do aluno é obrigatório")
-        @Schema(description = "Nome do aluno", nullable = false, minLength=3, maxLength=120)
-        String name,
-        
-        @NotNull(message = "A data de nascimento do aluno é obrigatória")
-        @PastOrPresent(message = "A data de nascimento do aluno não pode ser no futuro")
-        LocalDate birthdate,
-       
-        @NotNull(message = "CPF do aluno é obrigatório")
-        String cpf,
-       
-        @NotBlank(message = "Escola do aluno é obrigatória")
-        String school,
-       
-        @NotBlank(message = "Contato do aluno é obrigatório")
-        String contact,
-       
-        @NotBlank(message = "Email do aluno é obrigatório")
-        @Email(message = "Email deve ser um endereço de email válido")
-        String email,
-       
-        @NotNull(message = "Endereço do aluno é obrigatório")
-        @Schema(implementation = AddressRequestDTO.class)
-        @Valid
-        AddressRequestDTO address,
-       
-        @NotNull(message = "Responsável do aluno é obrigatório")
-        UUID parentId) {
+    @NotBlank()
+    @Schema(description = "Nome do aluno", nullable = false, minLength = 20, maxLength = 120)
+    String name,
 
-}
+    @NotNull()
+    @PastOrPresent()
+    @Schema(description = "Data de nascimento do aluno", nullable = false)
+    LocalDate birthdate,
+
+    @NotNull()
+    @Schema(description = "CPF do aluno", nullable = false)
+    String cpf,
+
+    @NotBlank()
+    @Schema(description = "Escola do aluno", nullable = false)
+    String school,
+
+    @NotBlank()
+    @Schema(description = "Contato do aluno", nullable = false)
+    String contact,
+
+    @NotBlank()
+    @Email()
+    @Schema(description = "Email do aluno", nullable = false)
+    String email,
+
+    @NotNull()
+    @Schema(implementation = AddressRequestDTO.class)
+    @Valid
+    AddressRequestDTO address,
+
+    @NotNull()
+    @Schema(description = "ID do responsável do aluno", nullable = false)
+    UUID parentId
+) {}

@@ -5,7 +5,7 @@
 
 import { parentSummaryDTOSchema } from "../parentSummaryDTOSchema.ts";
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 /**
  * @description Responsáveis listados com sucesso

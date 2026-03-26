@@ -4,7 +4,7 @@
  */
 
 import { addressRequestDTOSchema } from "./addressRequestDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 /**
  * @description Dados do aluno
@@ -12,11 +12,11 @@ import { z } from "zod/v4";
 export const studentRequestDTOSchema = z
   .object({
     name: z.string().min(20).max(120).describe("Nome do aluno"),
-    birthdate: z.iso.date(),
-    cpf: z.string(),
-    school: z.string().min(1),
-    contact: z.string().min(1),
-    email: z.string().min(1),
+    birthdate: z.iso.date().describe("Data de nascimento do aluno"),
+    cpf: z.string().describe("CPF do aluno"),
+    school: z.string().min(1).describe("Escola do aluno"),
+    contact: z.string().min(1).describe("Contato do aluno"),
+    email: z.string().min(1).describe("Email do aluno"),
     get address() {
       return addressRequestDTOSchema;
     },

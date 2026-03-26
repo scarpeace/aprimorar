@@ -5,7 +5,7 @@
 
 import { addressResponseDTOSchema } from "./addressResponseDTOSchema.ts";
 import { parentResponseDTOSchema } from "./parentResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const studentResponseDTOSchema = z.object({
   id: z.uuid(),

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParentResponseDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api-aprimorar</a> &gt; <a href="index.source.html" class="el_package">com.aprimorar.api.domain.parent.dto</a> &gt; <span class="el_source">ParentResponseDTO.java</span></div><h1>ParentResponseDTO.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.aprimorar.api.domain.parent.dto;</span>
+
+import java.time.Instant;
+import java.util.UUID;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+
+public record ParentResponseDTO(
+        @Schema(description = &quot;ID do responsável&quot;, example = &quot;123e4567-e89b-12d3-a456-426614174000&quot;)
+        @NotNull
+        UUID id,
+        @Schema(description = &quot;Nome do responsável&quot;, example = &quot;João Silva&quot;)
+        @NotNull
+        String name,
+        @Schema(description = &quot;Email do responsável&quot;, example = &quot;email@email.com&quot;)
+        @NotNull
+        String email,
+        @Schema(description = &quot;Contato do responsável&quot;, example = &quot;11999999999&quot;)
+        @NotNull
+        String contact,
+        @Schema(description = &quot;CPF do responsável&quot;, example = &quot;12345678901&quot;)
+        @NotNull
+        String cpf,
+        @Schema(nullable = true)
+        Instant archivedAt,
+        @NotNull
+        Instant createdAt,
+        @Schema(nullable = true)
+        Instant updatedAt
+        ) {
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

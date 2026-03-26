@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EventService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api-aprimorar</a> &gt; <a href="index.source.html" class="el_package">com.aprimorar.api.domain.event</a> &gt; <span class="el_source">EventService.java</span></div><h1>EventService.java</h1><pre class="source lang-java linenums">package com.aprimorar.api.domain.event;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
+import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
+import com.aprimorar.api.domain.event.dto.EventRequestDTO;
+import com.aprimorar.api.domain.event.dto.EventResponseDTO;
+import com.aprimorar.api.domain.event.exception.EventNotFoundException;
+import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
+import com.aprimorar.api.domain.event.exception.InvalidEventException;
+import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.event.repository.EventSpecifications;
+import com.aprimorar.api.domain.student.Student;
+import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
+
+/**
+ * Centraliza as regras de negócio do evento.
+ *
+ * &lt;p&gt;
+ * Aqui ficam a criação, atualização, consultas e remoção de eventos. Também é
+ * esse service que garante que aluno e colaborador existam e que não haja
+ * conflito de agenda antes de persistir um evento.
+ *
+ * &lt;p&gt;
+ * Quando um evento é criado ou atualizado, o service valida os participantes,
+ * verifica disponibilidade no intervalo informado e devolve a resposta em
+ * formato DTO.
+ *
+ * @author scarpellini
+ * @version 1.0
+ * @since 2026-03-14
+ */
+@Service
+public class EventService {
+
+<span class="fc" id="L48">    private static final Logger log = LoggerFactory.getLogger(EventService.class);</span>
+
+    private final EventRepository eventRepo;
+    private final StudentRepository studentRepo;
+    private final EmployeeRepository employeeRepo;
+    private final EventMapper eventMapper;
+
+<span class="fc" id="L55">    public EventService(EventRepository eventRepo, StudentRepository studentRepo, EmployeeRepository employeeRepo,</span>
+            EventMapper eventMapper) {
+<span class="fc" id="L57">        this.eventRepo = eventRepo;</span>
+<span class="fc" id="L58">        this.studentRepo = studentRepo;</span>
+<span class="fc" id="L59">        this.employeeRepo = employeeRepo;</span>
+<span class="fc" id="L60">        this.eventMapper = eventMapper;</span>
+<span class="fc" id="L61">    }</span>
+
+    /* ----- Query Methods ----- */
+    @Transactional(readOnly = true)
+    public Page&lt;EventResponseDTO&gt; getEvents(Pageable pageable, String search) {
+        Page&lt;Event&gt; eventPage;
+<span class="nc bnc" id="L67" title="All 4 branches missed.">        if (search != null &amp;&amp; !search.trim().isEmpty()) {</span>
+<span class="nc" id="L68">            Specification&lt;Event&gt; spec = EventSpecifications.searchContainsIgnoreCase(search.trim());</span>
+<span class="nc" id="L69">            eventPage = eventRepo.findAll(spec, pageable);</span>
+<span class="nc" id="L70">        } else {</span>
+<span class="nc" id="L71">            eventPage = eventRepo.findAll(pageable);</span>
+        }
+<span class="nc" id="L73">        log.info(&quot;Consulta de eventos finalizada, {} registros encontrados.&quot;, eventPage.getTotalElements());</span>
+<span class="nc" id="L74">        return eventPage.map(eventMapper::convertToDto);</span>
+    }
+
+    @Transactional(readOnly = true)
+    public EventResponseDTO findById(UUID eventId) {
+
+<span class="nc" id="L80">        Event event = eventRepo.findById(eventId).orElseThrow(EventNotFoundException::new);</span>
+<span class="nc" id="L81">        log.info(&quot;Evento {} consultado com sucesso.&quot;, event.getTitle().toUpperCase());</span>
+<span class="nc" id="L82">        return eventMapper.convertToDto(event);</span>
+    }
+
+    @Transactional(readOnly = true)
+    public Page&lt;EventResponseDTO&gt; getEventsByEmployeeId(Pageable pageable, UUID employeeId) {
+
+<span class="nc" id="L88">        Page&lt;Event&gt; eventPage = eventRepo.findAllByEmployeeId(employeeId, pageable);</span>
+<span class="nc" id="L89">        log.info(</span>
+<span class="nc" id="L90">                &quot;Consulta de eventos do colaborador {} finalizada, {} registros encontrados.&quot;,</span>
+<span class="nc" id="L91">                employeeId,</span>
+<span class="nc" id="L92">                eventPage.getTotalElements());</span>
+<span class="nc" id="L93">        return eventPage.map(eventMapper::convertToDto);</span>
+    }
+
+    @Transactional(readOnly = true)
+    public Page&lt;EventResponseDTO&gt; getEventsByStudentId(Pageable pageable, UUID studentId) {
+<span class="nc" id="L98">        Page&lt;Event&gt; eventPage = eventRepo.findAllByStudentId(studentId, pageable);</span>
+<span class="nc" id="L99">        log.info(</span>
+<span class="nc" id="L100">                &quot;Consulta de eventos do aluno {} finalizada, {} registros encontrados.&quot;,</span>
+<span class="nc" id="L101">                studentId,</span>
+<span class="nc" id="L102">                eventPage.getTotalElements());</span>
+<span class="nc" id="L103">        return eventPage.map(eventMapper::convertToDto);</span>
+    }
+
+    /* ----- Command Methods ----- */
+    @Transactional
+    public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
+<span class="nc" id="L109">        Event event = eventMapper.convertToEntity(eventRequestDTO);</span>
+
+<span class="nc" id="L111">        Student student = resolveStudentOrThrow(eventRequestDTO.studentId());</span>
+<span class="nc" id="L112">        Employee employee = resolveEmployeeOrThrow(eventRequestDTO.employeeId());</span>
+<span class="nc" id="L113">        event.setStudent(student);</span>
+<span class="nc" id="L114">        event.setEmployee(employee);</span>
+
+<span class="nc" id="L116">        EventRules.validate(event);</span>
+<span class="nc" id="L117">        validateParticipantAvailability(</span>
+<span class="nc" id="L118">                student.getId(),</span>
+<span class="nc" id="L119">                employee.getId(),</span>
+<span class="nc" id="L120">                event.getStartDate(),</span>
+<span class="nc" id="L121">                event.getEndDateTime(),</span>
+<span class="nc" id="L122">                null);</span>
+<span class="nc" id="L123">        Event savedEvent = eventRepo.save(event);</span>
+<span class="nc" id="L124">        log.info(&quot;Evento {} cadastrado com sucesso.&quot;, savedEvent.getTitle().toUpperCase());</span>
+<span class="nc" id="L125">        return eventMapper.convertToDto(savedEvent);</span>
+    }
+
+    @Transactional
+    public EventResponseDTO updateEvent(UUID id, EventRequestDTO request) {
+<span class="fc" id="L130">        Event existingEvent = findEventOrThrow(id);</span>
+<span class="fc" id="L131">        Student student = resolveStudentOrThrow(request.studentId());</span>
+<span class="fc" id="L132">        Employee employee = resolveEmployeeOrThrow(request.employeeId());</span>
+
+<span class="fc" id="L134">        existingEvent.setTitle(request.title());</span>
+<span class="fc" id="L135">        existingEvent.setDescription(request.description());</span>
+<span class="fc" id="L136">        existingEvent.setStartDate(eventMapper.toLocalDateTime(request.startDate()));</span>
+<span class="fc" id="L137">        existingEvent.setEndDateTime(eventMapper.toLocalDateTime(request.endDate()));</span>
+<span class="fc" id="L138">        existingEvent.setPrice(request.price());</span>
+<span class="fc" id="L139">        existingEvent.setPayment(request.payment());</span>
+<span class="fc" id="L140">        existingEvent.setContent(request.content());</span>
+<span class="fc" id="L141">        existingEvent.setStudent(student);</span>
+<span class="fc" id="L142">        existingEvent.setEmployee(employee);</span>
+
+<span class="fc" id="L144">        EventRules.validate(existingEvent);</span>
+<span class="fc" id="L145">        validateParticipantAvailability(</span>
+<span class="fc" id="L146">                student.getId(),</span>
+<span class="fc" id="L147">                employee.getId(),</span>
+<span class="fc" id="L148">                existingEvent.getStartDate(),</span>
+<span class="fc" id="L149">                existingEvent.getEndDateTime(),</span>
+<span class="fc" id="L150">                id);</span>
+
+<span class="fc" id="L152">        log.info(&quot;Evento {} atualizado com sucesso.&quot;, existingEvent.getTitle().toUpperCase());</span>
+<span class="fc" id="L153">        return eventMapper.convertToDto(existingEvent);</span>
+    }
+
+    @Transactional
+    public void deleteEvent(UUID eventId) {
+<span class="nc" id="L158">        Event foundEvent = findEventOrThrow(eventId);</span>
+<span class="nc" id="L159">        eventRepo.delete(foundEvent);</span>
+<span class="nc" id="L160">        log.info(&quot;Evento {} deletado com sucesso.&quot;, foundEvent.getTitle().toUpperCase());</span>
+<span class="nc" id="L161">    }</span>
+
+    /* ----- Helper Methods ----- */
+    private Event findEventOrThrow(UUID eventId) {
+<span class="fc" id="L165">        return eventRepo.findById(eventId).orElseThrow(EventNotFoundException::new);</span>
+    }
+
+    private Student resolveStudentOrThrow(UUID studentId) {
+<span class="fc" id="L169">        return studentRepo.findById(studentId)</span>
+<span class="pc" id="L170">                .orElseThrow(() -&gt; new StudentNotFoundException(</span>
+<span class="nc" id="L171">                &quot;Estudante com o ID informado não encontrado no banco de dados&quot;));</span>
+    }
+
+    private Employee resolveEmployeeOrThrow(UUID employeeId) {
+<span class="fc" id="L175">        return employeeRepo.findById(employeeId)</span>
+<span class="pc" id="L176">                .orElseThrow(() -&gt; new EmployeeNotFoundException(</span>
+<span class="nc" id="L177">                &quot;Colaborador com o ID informado não encontrado no banco de dados&quot;));</span>
+    }
+
+    private void validateParticipantAvailability(
+            UUID studentId,
+            UUID employeeId,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            UUID ignoredEventId) {
+
+<span class="fc" id="L187">        boolean studentConflict = eventRepo.studentHasConflictingEvent(studentId, startDate, endDate, ignoredEventId);</span>
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">        if (studentConflict) {</span>
+<span class="nc" id="L189">            throw new EventScheduleConflictException(</span>
+<span class="nc" id="L190">                    &quot;O estudante informado já possui evento no intervalo&quot;);</span>
+        }
+
+<span class="fc" id="L193">        boolean employeeConflict = eventRepo.employeeHasConflictingEvent(employeeId, startDate, endDate, ignoredEventId);</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">        if (employeeConflict) {</span>
+<span class="nc" id="L195">            throw new EventScheduleConflictException(</span>
+<span class="nc" id="L196">                    &quot;O colaborador informado já possui evento no intervalo&quot;);</span>
+        }
+
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">        if (studentRepo.existsByIdAndArchivedAtIsNotNull(studentId)) {</span>
+<span class="nc" id="L200">            throw new InvalidEventException(</span>
+<span class="nc" id="L201">                    &quot;Evento não pode ter estudantes arquivados&quot;);</span>
+        }
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">        if (employeeRepo.existsByIdAndArchivedAtIsNotNull(employeeId)) {</span>
+<span class="nc" id="L204">            throw new InvalidEventException(</span>
+<span class="nc" id="L205">                    &quot;Evento não pode ter colaboradores arquivados&quot;);</span>
+        }
+<span class="fc" id="L207">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

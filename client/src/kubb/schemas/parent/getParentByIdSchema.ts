@@ -5,7 +5,7 @@
 
 import { parentResponseDTOSchema } from "../parentResponseDTOSchema.ts";
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const getParentByIdPathParamsSchema = z.object({
   parentId: z.uuid().describe("ID do responsável"),

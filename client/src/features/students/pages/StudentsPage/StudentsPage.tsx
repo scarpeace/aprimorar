@@ -6,9 +6,9 @@ import { ButtonLink } from "@/components/ui/button";
 import styles from "./students-page.module.css";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { useStudents } from "../../hooks/studentQueries";
-import type { StudentResponseDTO } from "@/kubb/types/StudentResponseDTO";
 import { TableRoot } from "@/components/layout/TableRoot";
-import { StudentsTable } from "../../components/StudentsTable/StudentsTable";
+import { StudentsTable } from "./components/StudentsTable";
+import type { StudentResponseDTO } from "@/kubb";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");

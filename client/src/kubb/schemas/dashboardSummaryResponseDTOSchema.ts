@@ -4,7 +4,7 @@
  */
 
 import { classesByContentDTOSchema } from "./classesByContentDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const dashboardSummaryResponseDTOSchema = z.object({
   year: z.optional(z.int()),

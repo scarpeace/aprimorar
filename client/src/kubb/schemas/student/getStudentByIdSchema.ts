@@ -5,7 +5,7 @@
 
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
 import { studentResponseDTOSchema } from "../studentResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const getStudentByIdPathParamsSchema = z.object({
   studentId: z.uuid(),

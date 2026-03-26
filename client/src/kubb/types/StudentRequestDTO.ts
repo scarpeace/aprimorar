@@ -17,24 +17,29 @@ export type StudentRequestDTO = {
    */
   name: string;
   /**
+   * @description Data de nascimento do aluno
    * @type string, date
    */
   birthdate: string;
   /**
+   * @description CPF do aluno
    * @type string
    */
   cpf: string;
   /**
+   * @description Escola do aluno
    * @minLength 1
    * @type string
    */
   school: string;
   /**
+   * @description Contato do aluno
    * @minLength 1
    * @type string
    */
   contact: string;
   /**
+   * @description Email do aluno
    * @minLength 1
    * @type string
    */

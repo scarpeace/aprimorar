@@ -5,7 +5,7 @@
 
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
 import { studentSummaryDTOSchema } from "../studentSummaryDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 /**
  * @description Listagem dos alunos para opções e dropdown

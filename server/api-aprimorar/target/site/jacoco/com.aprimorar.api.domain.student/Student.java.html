@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Student.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api-aprimorar</a> &gt; <a href="index.source.html" class="el_package">com.aprimorar.api.domain.student</a> &gt; <span class="el_source">Student.java</span></div><h1>Student.java</h1><pre class="source lang-java linenums">package com.aprimorar.api.domain.student;
+
+import java.time.LocalDate;
+
+import com.aprimorar.api.domain.parent.Parent;
+import com.aprimorar.api.shared.BaseEntity;
+import jakarta.persistence.*;
+
+import com.aprimorar.api.domain.address.Address;
+
+@Entity
+@Table(name = &quot;tb_students&quot;)
+public class Student extends BaseEntity {
+
+    @Column(name = &quot;name&quot;, nullable = false)
+    private String name;
+
+    @Column(name = &quot;contact&quot;, nullable = false)
+    private String contact;
+
+    @Column(name = &quot;email&quot;, nullable = false, unique = true)
+    private String email;
+
+    @Column(name = &quot;birthdate&quot;, nullable = false)
+    private LocalDate birthdate;
+
+    @Column(name = &quot;cpf&quot;, nullable = false, unique = true)
+    private String cpf;
+
+    @Column(name = &quot;school&quot;, nullable = false)
+    private String school;
+
+    @ManyToOne
+    @JoinColumn(name = &quot;parent_id&quot;, referencedColumnName = &quot;id&quot;, nullable = false)
+    private Parent parent;
+
+    @Embedded()
+    private Address address;
+
+<span class="fc" id="L40">    public Student() {</span>
+<span class="fc" id="L41">    }</span>
+
+    public String getName() {
+<span class="fc" id="L44">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L48">        this.name = name;</span>
+<span class="fc" id="L49">    }</span>
+
+    public String getContact() {
+<span class="nc" id="L52">        return contact;</span>
+    }
+
+    public void setContact(String contact) {
+<span class="nc" id="L56">        this.contact = contact;</span>
+<span class="nc" id="L57">    }</span>
+
+    public String getEmail() {
+<span class="nc" id="L60">        return email;</span>
+    }
+
+    public void setEmail(String email) {
+<span class="nc" id="L64">        this.email = email;</span>
+<span class="nc" id="L65">    }</span>
+
+    public LocalDate getBirthdate() {
+<span class="nc" id="L68">        return birthdate;</span>
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+<span class="nc" id="L72">        this.birthdate = birthdate;</span>
+<span class="nc" id="L73">    }</span>
+
+    public String getCpf() {
+<span class="nc" id="L76">        return cpf;</span>
+    }
+
+    public void setCpf(String cpf) {
+<span class="nc" id="L80">        this.cpf = cpf;</span>
+<span class="nc" id="L81">    }</span>
+
+    public String getSchool() {
+<span class="nc" id="L84">        return school;</span>
+    }
+
+    public void setSchool(String school) {
+<span class="nc" id="L88">        this.school = school;</span>
+<span class="nc" id="L89">    }</span>
+
+    public Parent getParent() {
+<span class="nc" id="L92">        return parent;</span>
+    }
+
+    public void setParent(Parent parent) {
+<span class="nc" id="L96">        this.parent = parent;</span>
+<span class="nc" id="L97">    }</span>
+
+    public Address getAddress() {
+<span class="nc" id="L100">        return address;</span>
+    }
+
+    public void setAddress(Address address) {
+<span class="nc" id="L104">        this.address = address;</span>
+<span class="nc" id="L105">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -5,7 +5,7 @@
 
 import { employeeResponseDTOSchema } from "./employeeResponseDTOSchema.ts";
 import { pageMetadataSchema } from "./pageMetadataSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const pagedModelEmployeeResponseDTOSchema = z.object({
   get content() {

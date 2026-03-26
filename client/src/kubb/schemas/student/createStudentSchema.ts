@@ -6,7 +6,7 @@
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
 import { studentRequestDTOSchema } from "../studentRequestDTOSchema.ts";
 import { studentResponseDTOSchema } from "../studentResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 /**
  * @description Aluno criado com sucesso

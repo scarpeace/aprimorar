@@ -6,7 +6,7 @@
 import { parentRequestDTOSchema } from "../parentRequestDTOSchema.ts";
 import { parentResponseDTOSchema } from "../parentResponseDTOSchema.ts";
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 /**
  * @description Responsável criado com sucesso

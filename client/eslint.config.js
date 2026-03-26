@@ -19,5 +19,25 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+    '@typescript-eslint/no-unused-vars': 'warn',
+  },
+  },
+  {
+    files: ['src/features/*/pages/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'warn',
+        {
+          patterns: [
+            {
+              group: ['@/kubb', '@/kubb/*'],
+              message:
+                'Imports diretos do Kubb não são permitidos em páginas. Use os tipos e hooks exportados de @/features/*/hooks.',
+            },
+          ],
+        },
+      ],
+    },
   },
 ])

@@ -5,7 +5,7 @@
 
 import { employeeSummaryDTOSchema } from "../employeeSummaryDTOSchema.ts";
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 /**
  * @description Listagem dos funcionários para opções e dropdown

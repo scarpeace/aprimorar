@@ -1,15 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import {
-  updateStudentMutationRequestSchema,
-  type StudentResponseDTO,
-  type UpdateStudentMutationRequest,
-} from "@/kubb";
+import { studentFormSchema } from "../schemas/studentFormSchema";
+import type { StudentApiResponse, StudentFormInput } from "../types";
 
-export function useStudentEditForm(student?: StudentResponseDTO) {
-  const form = useForm<UpdateStudentMutationRequest>({
-    resolver: zodResolver(updateStudentMutationRequestSchema),
+export function useStudentEditForm(student?: StudentApiResponse) {
+  const form = useForm<StudentFormInput>({
+    resolver: zodResolver(studentFormSchema),
     mode: "onBlur",
     values: {
       name: student?.name ?? "",

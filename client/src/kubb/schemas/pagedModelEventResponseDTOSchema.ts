@@ -5,7 +5,7 @@
 
 import { eventResponseDTOSchema } from "./eventResponseDTOSchema.ts";
 import { pageMetadataSchema } from "./pageMetadataSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const pagedModelEventResponseDTOSchema = z.object({
   get content() {

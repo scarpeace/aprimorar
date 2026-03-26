@@ -3,7 +3,6 @@ import { pluginOas } from '@kubb/plugin-oas'
 import { pluginTs } from '@kubb/plugin-ts'
 import { pluginZod } from '@kubb/plugin-zod'
 import { pluginReactQuery } from '@kubb/plugin-react-query'
-import { pluginClient } from '@kubb/plugin-client'
 
 export default defineConfig({
   input: {
@@ -38,6 +37,7 @@ export default defineConfig({
       output: { path: './schemas' },
       version: '4',
       inferred: true,
+      importPath: '@/lib/validations/zod',
       dateType: 'string',
       group: {
         type: 'tag',
@@ -51,11 +51,11 @@ export default defineConfig({
       output: { path: './hooks' },
       paramsType: 'inline',
       pathParamsType: 'inline',
+      parser: 'zod',
       group: {
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),
       },
-      parser: 'zod',
       suspense: false,
     }),
   ],

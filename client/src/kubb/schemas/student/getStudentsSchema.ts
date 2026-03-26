@@ -5,7 +5,7 @@
 
 import { pagedModelStudentResponseDTOSchema } from "../pagedModelStudentResponseDTOSchema.ts";
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const getStudentsQueryParamsSchema = z.object({
   page: z.coerce

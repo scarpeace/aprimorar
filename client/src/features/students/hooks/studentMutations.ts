@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { studentsQueryKeys } from "./studentQueryKeys";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
+
 export function useCreateStudentMutation() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();

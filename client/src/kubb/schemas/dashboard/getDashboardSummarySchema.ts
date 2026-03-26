@@ -5,7 +5,7 @@
 
 import { dashboardSummaryResponseDTOSchema } from "../dashboardSummaryResponseDTOSchema.ts";
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const getDashboardSummaryQueryParamsSchema = z.object({
   year: z.coerce.number().int().describe("Ano do período (ex: 2026)"),

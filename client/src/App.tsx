@@ -27,7 +27,7 @@ import { pt } from "zod/locales"
 import z from "zod/v4"
 
 function App() {
-  z.config(pt());
+  z.config(pt())
   return (
     <BrowserRouter>
       <Toaster position="top-right" richColors />

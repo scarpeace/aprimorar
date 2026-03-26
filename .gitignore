@@ -1,17 +1,26 @@
+# .opencode: ignora tudo por padrão
 .opencode/*
+
+# exceções permitidas
 !.opencode/opencode.jsonc
 !.opencode/agents/
 !.opencode/agents/*.md
 !.opencode/prompts/
 !.opencode/prompts/*.md
+
+# re-ignora arquivos pesados/gerados dentro de .opencode
 .opencode/node_modules/
 .opencode/bun.lock
 .opencode/package.json
+
+# IDE / caches locais
 .vscode
 .idea
 .ruff_cache
 .gemini
 .zed
-.opencode
+
+# kubb / outros
+docs
 kubb
-codebook.tml
+codebook.toml

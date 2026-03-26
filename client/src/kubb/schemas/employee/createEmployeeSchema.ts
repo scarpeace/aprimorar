@@ -6,7 +6,7 @@
 import { employeeRequestDTOSchema } from "../employeeRequestDTOSchema.ts";
 import { employeeResponseDTOSchema } from "../employeeResponseDTOSchema.ts";
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 /**
  * @description Funcionário criado com sucesso

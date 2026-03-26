@@ -1,0 +1,1 @@
+const s={all:["students"],lists:()=>["students","list"],list:t=>["students","list",t],details:()=>["students","detail"],detail:t=>["students","detail",t],byParentPrefix:()=>["students","by-parent"],byParent:t=>["students","by-parent",t],options:["students","options"]};export{s};

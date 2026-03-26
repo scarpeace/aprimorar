@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EventRules.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api-aprimorar</a> &gt; <a href="index.source.html" class="el_package">com.aprimorar.api.domain.event</a> &gt; <span class="el_source">EventRules.java</span></div><h1>EventRules.java</h1><pre class="source lang-java linenums">package com.aprimorar.api.domain.event;
+
+import com.aprimorar.api.domain.event.exception.InvalidEventException;
+import com.aprimorar.api.domain.event.exception.NotAllowedToUpdateEventException;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+<span class="nc" id="L9">public class EventRules {</span>
+
+    public static void validate(Event event) {
+<span class="fc" id="L12">        validateRequiredFields(event);</span>
+<span class="fc" id="L13">        validatePriceAndPayment(event.getPrice(), event.getPayment());</span>
+<span class="fc" id="L14">        validateDates(event.getStartDate(), event.getEndDateTime());</span>
+<span class="fc" id="L15">    }</span>
+
+    private static void validateRequiredFields(Event event) {
+<span class="pc bpc" id="L18" title="2 of 4 branches missed.">        if (event.getTitle() == null || event.getTitle().isBlank()) {</span>
+<span class="nc" id="L19">            throw new InvalidEventException(&quot;Título do evento é obrigatório&quot;);</span>
+        }
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (event.getStartDate() == null) {</span>
+<span class="fc" id="L22">            throw new InvalidEventException(&quot;Data de início do evento é obrigatório&quot;);</span>
+        }
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">        if (event.getEndDateTime() == null) {</span>
+<span class="nc" id="L25">            throw new InvalidEventException(&quot;Data de término do evento é obrigatório&quot;);</span>
+        }
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">        if (event.getPrice() == null) {</span>
+<span class="nc" id="L28">            throw new InvalidEventException(&quot;Valor do evento é obrigatório&quot;);</span>
+        }
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        if (event.getPayment() == null) {</span>
+<span class="nc" id="L31">            throw new InvalidEventException(&quot;Pagamento do evento é obrigatório&quot;);</span>
+        }
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if (event.getContent() == null) {</span>
+<span class="nc" id="L34">            throw new InvalidEventException(&quot;O conteúdo do evento é obrigatório&quot;);</span>
+        }
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        if (event.getStudent() == null) {</span>
+<span class="nc" id="L37">            throw new InvalidEventException(&quot;Um evento não pode existir sem um estudante&quot;);</span>
+        }
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (event.getEmployee() == null) {</span>
+<span class="nc" id="L40">            throw new InvalidEventException(&quot;Um evento não pode existir sem um colaborador&quot;);</span>
+        }
+<span class="fc" id="L42">    }</span>
+
+    private static void validatePriceAndPayment(BigDecimal price, BigDecimal payment) {
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if (price.compareTo(payment) &lt; 0) {</span>
+<span class="nc" id="L46">            throw new InvalidEventException(&quot;O valor do evento não pode ser menor que o pagamento&quot;);</span>
+        }
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        if (price.compareTo(BigDecimal.valueOf(50)) &lt; 0) {</span>
+<span class="nc" id="L49">            throw new InvalidEventException(&quot;O valor do evento não pode ser menor que R$50,00&quot;);</span>
+        }
+<span class="fc" id="L51">    }</span>
+
+    private static void validateDates(LocalDateTime startDate, LocalDateTime endDate) {
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        if (endDate.isBefore(LocalDateTime.now())) {</span>
+<span class="nc" id="L55">            throw new InvalidEventException(&quot;Data de fim do evento nao pode estar no passado&quot;);</span>
+        }
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        if (endDate.isBefore(startDate)) {</span>
+<span class="nc" id="L58">            throw new InvalidEventException(&quot;Data de fim do evento nao pode ser anterior a data de inicio&quot;);</span>
+        }
+<span class="fc" id="L60">    }</span>
+
+    public static void validateEditWindow(Event event) {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (event.getEndDateTime().isAfter(event.getEndDateTime().plusWeeks(2))) {</span>
+<span class="nc" id="L64">            throw new NotAllowedToUpdateEventException(&quot;A janela para a editar as informações do evento encerrou&quot;);</span>
+        }
+<span class="nc" id="L66">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

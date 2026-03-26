@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StudentRules.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api-aprimorar</a> &gt; <a href="index.source.html" class="el_package">com.aprimorar.api.domain.student</a> &gt; <span class="el_source">StudentRules.java</span></div><h1>StudentRules.java</h1><pre class="source lang-java linenums">package com.aprimorar.api.domain.student;
+
+import com.aprimorar.api.domain.student.exception.InvalidStudentException;
+
+<span class="nc" id="L5">public class StudentRules {</span>
+
+    public static void validate(Student student){
+<span class="nc" id="L8">        validateRequiredFields(student);</span>
+<span class="nc" id="L9">    }</span>
+
+    private static void validateRequiredFields(Student student) {
+<span class="nc bnc" id="L12" title="All 4 branches missed.">        if (student.getName() == null || student.getName().isBlank()) {</span>
+<span class="nc" id="L13">            throw new InvalidStudentException(&quot;Nome do estudante não pode estar vazio&quot;);</span>
+        }
+<span class="nc bnc" id="L15" title="All 2 branches missed.">        if (student.getBirthdate() == null) {</span>
+<span class="nc" id="L16">            throw new InvalidStudentException(&quot;A data de nascimento não pode estar vazio&quot;);</span>
+        }
+<span class="nc bnc" id="L18" title="All 4 branches missed.">        if (student.getCpf() == null || student.getCpf().isBlank()) {</span>
+<span class="nc" id="L19">            throw new InvalidStudentException(&quot;CPF do estudante não pode estar vazio&quot;);</span>
+        }
+<span class="nc bnc" id="L21" title="All 4 branches missed.">        if (student.getSchool() == null || student.getSchool().isBlank()) {</span>
+<span class="nc" id="L22">            throw new InvalidStudentException(&quot;Escola do estudante não pode estar vazio&quot;);</span>
+        }
+<span class="nc bnc" id="L24" title="All 4 branches missed.">        if (student.getContact() == null || student.getContact().isBlank()) {</span>
+<span class="nc" id="L25">            throw new InvalidStudentException(&quot;Contato do estudante não pode estar vazio&quot;);</span>
+        }
+<span class="nc bnc" id="L27" title="All 4 branches missed.">        if (student.getEmail() == null || student.getEmail().isBlank()) {</span>
+<span class="nc" id="L28">            throw new InvalidStudentException(&quot;Email do estudante não pode estar vazio&quot;);</span>
+        }
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        if (student.getParent() == null) {</span>
+<span class="nc" id="L31">            throw new InvalidStudentException(&quot;O ID do responsável não pode ser nulo&quot;);</span>
+        }
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (student.getAddress() == null) {</span>
+<span class="nc" id="L34">            throw new InvalidStudentException(&quot;O endereço do aluno não pode ser nulo&quot;);</span>
+        }
+<span class="nc" id="L36">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

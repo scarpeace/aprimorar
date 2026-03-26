@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StudentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api-aprimorar</a> &gt; <a href="index.source.html" class="el_package">com.aprimorar.api.domain.student</a> &gt; <span class="el_source">StudentService.java</span></div><h1>StudentService.java</h1><pre class="source lang-java linenums">package com.aprimorar.api.domain.student;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.parent.Parent;
+import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
+import com.aprimorar.api.domain.parent.repository.ParentRepository;
+import com.aprimorar.api.domain.student.dto.StudentOptionDTO;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
+import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.domain.student.repository.StudentSpecifications;
+
+@Service
+public class StudentService {
+
+<span class="nc" id="L31">    private static final Logger log = LoggerFactory.getLogger(StudentService.class);</span>
+<span class="nc" id="L32">    private static final UUID GHOST_STUDENT_ID = UUID.fromString(&quot;00000000-0000-0000-0000-000000000000&quot;);</span>
+
+    private final ParentRepository parentRepo;
+    private final StudentRepository studentRepo;
+    private final StudentMapper studentMapper;
+    private final EventRepository eventRepo;
+
+<span class="nc" id="L39">    public StudentService(</span>
+            ParentRepository parentRepo,
+            StudentRepository studentRepo,
+            StudentMapper studentMapper,
+            EventRepository eventRepo) {
+<span class="nc" id="L44">        this.parentRepo = parentRepo;</span>
+<span class="nc" id="L45">        this.studentRepo = studentRepo;</span>
+<span class="nc" id="L46">        this.studentMapper = studentMapper;</span>
+<span class="nc" id="L47">        this.eventRepo = eventRepo;</span>
+<span class="nc" id="L48">    }</span>
+
+    /* ----- Query Methods ----- */
+    @Transactional(readOnly = true)
+    public Page&lt;StudentResponseDTO&gt; getStudents(Pageable pageable, String search) {
+
+<span class="nc" id="L54">        Specification&lt;Student&gt; spec = Specification.allOf(</span>
+<span class="nc" id="L55">                StudentSpecifications.isNotGhost(),</span>
+<span class="nc" id="L56">                StudentSpecifications.notArchived()</span>
+        );
+
+<span class="nc bnc" id="L59" title="All 4 branches missed.">        if (search != null &amp;&amp; !search.trim().isEmpty()) {</span>
+<span class="nc" id="L60">            spec = spec.and(StudentSpecifications.searchContainsIgnoreCase(search.trim()));</span>
+        }
+
+<span class="nc" id="L63">        Page&lt;Student&gt; page = studentRepo.findAll(spec, pageable);</span>
+
+<span class="nc" id="L65">        log.info(&quot;Consulta de alunos finalizada, {} registros encontrados.&quot;, page.getTotalElements());</span>
+<span class="nc" id="L66">        return page.map(studentMapper::convertToDto);</span>
+    }
+
+    @Transactional(readOnly = true)
+    public List&lt;StudentOptionDTO&gt; getStudentOptions() {
+<span class="nc" id="L71">        Specification&lt;Student&gt; spec = Specification.allOf(</span>
+<span class="nc" id="L72">                StudentSpecifications.isNotGhost(),</span>
+<span class="nc" id="L73">                StudentSpecifications.notArchived()</span>
+        );
+
+<span class="nc" id="L76">        Sort sort = Sort.by(Sort.Direction.ASC, &quot;name&quot;);</span>
+
+<span class="nc" id="L78">        return studentRepo.findAll(spec, sort).stream()</span>
+<span class="nc" id="L79">                .map(s -&gt; new StudentOptionDTO(s.getId(), s.getName()))</span>
+<span class="nc" id="L80">                .toList();</span>
+    }
+
+    public List&lt;StudentResponseDTO&gt; getStudentsByParent(UUID parentId) {
+<span class="nc" id="L84">        List&lt;Student&gt; studentParentsList = studentRepo.findAllByParentId(parentId);</span>
+<span class="nc" id="L85">        return studentParentsList.stream().map(studentMapper::convertToDto).toList();</span>
+    }
+
+    @Transactional(readOnly = true)
+    public StudentResponseDTO findById(UUID studentId) {
+
+<span class="nc" id="L91">        Student student = findStudentOrThrow(studentId);</span>
+<span class="nc" id="L92">        log.info(&quot;Aluno {} consultado com sucesso.&quot;, student.getName().toUpperCase());</span>
+<span class="nc" id="L93">        return studentMapper.convertToDto(student);</span>
+    }
+
+    /* ----- Command Methods ----- */
+    @Transactional
+    public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
+
+<span class="nc" id="L100">        Student student = studentMapper.convertToEntity(studentRequestDto);</span>
+<span class="nc" id="L101">        student.setParent(resolveParentOrThrow(studentRequestDto.parentId()));</span>
+<span class="nc" id="L102">        StudentRules.validate(student);</span>
+<span class="nc" id="L103">        ensureStudentUniqueness(student);</span>
+<span class="nc" id="L104">        Student savedStudent = studentRepo.save(student);</span>
+
+<span class="nc" id="L106">        log.info(&quot;Aluno {} cadastrado com sucesso.&quot;, savedStudent.getName().toUpperCase());</span>
+<span class="nc" id="L107">        return studentMapper.convertToDto(savedStudent);</span>
+    }
+
+    @Transactional
+    public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO request) {
+
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (GHOST_STUDENT_ID.equals(id)) {</span>
+<span class="nc" id="L114">            throw new IllegalArgumentException(&quot;Não é possível modificar o registro de sistema 'ALUNO ARQUIVADO'.&quot;);</span>
+        }
+
+<span class="nc" id="L117">        Student updatedData = studentMapper.convertToEntity(request);</span>
+<span class="nc" id="L118">        Student existingStudent = findStudentOrThrow(id);</span>
+
+<span class="nc" id="L120">        ensureStudentUniquenessForUpdate(updatedData, id);</span>
+
+<span class="nc" id="L122">        existingStudent.setName(updatedData.getName());</span>
+<span class="nc" id="L123">        existingStudent.setBirthdate(updatedData.getBirthdate());</span>
+<span class="nc" id="L124">        existingStudent.setCpf(updatedData.getCpf());</span>
+<span class="nc" id="L125">        existingStudent.setSchool(updatedData.getSchool());</span>
+<span class="nc" id="L126">        existingStudent.setContact(updatedData.getContact());</span>
+<span class="nc" id="L127">        existingStudent.setEmail(updatedData.getEmail());</span>
+<span class="nc" id="L128">        existingStudent.setAddress(updatedData.getAddress());</span>
+<span class="nc" id="L129">        existingStudent.setParent(resolveParentOrThrow(request.parentId()));</span>
+
+<span class="nc" id="L131">        StudentRules.validate(existingStudent);</span>
+
+<span class="nc" id="L133">        log.info(&quot;Aluno {} atualizado com sucesso.&quot;, existingStudent.getName().toUpperCase());</span>
+<span class="nc" id="L134">        return studentMapper.convertToDto(existingStudent);</span>
+    }
+
+    @Transactional
+    public void archiveStudent(UUID studentId) {
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (GHOST_STUDENT_ID.equals(studentId)) {</span>
+<span class="nc" id="L140">            throw new IllegalArgumentException(&quot;Não é possível arquivar o registro de sistema 'ALUNO ARQUIVADO'.&quot;);</span>
+        }
+<span class="nc" id="L142">        Student student = findStudentOrThrow(studentId);</span>
+<span class="nc" id="L143">        student.setArchivedAt(Instant.now());</span>
+<span class="nc" id="L144">        log.info(&quot;Aluno {} arquivado com sucesso.&quot;, student.getName().toUpperCase());</span>
+<span class="nc" id="L145">    }</span>
+
+    @Transactional
+    public void unarchiveStudent(UUID studentId) {
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (GHOST_STUDENT_ID.equals(studentId)) {</span>
+<span class="nc" id="L150">            throw new IllegalArgumentException(&quot;O registro 'ALUNO ARQUIVADO' não pode ser desarquivado.&quot;);</span>
+        }
+<span class="nc" id="L152">        Student student = findStudentOrThrow(studentId);</span>
+<span class="nc" id="L153">        student.setArchivedAt(null);</span>
+<span class="nc" id="L154">        log.info(&quot;Aluno {} desarquivado com sucesso.&quot;, student.getName().toUpperCase());</span>
+<span class="nc" id="L155">    }</span>
+
+    @Transactional
+    public void deleteStudent(UUID studentId) {
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (GHOST_STUDENT_ID.equals(studentId)) {</span>
+<span class="nc" id="L160">            throw new IllegalArgumentException(&quot;Não é possível deletar o registro de sistema 'ALUNO ARQUIVADO'.&quot;);</span>
+        }
+
+<span class="nc" id="L163">        Student student = findStudentOrThrow(studentId);</span>
+
+        // Reatribui eventos para o aluno fantasma antes de deletar
+<span class="nc" id="L166">        log.info(&quot;Reatribuindo eventos do aluno {} para o Ghost Student.&quot;, student.getName().toUpperCase());</span>
+<span class="nc" id="L167">        eventRepo.reassignEventsToGhost(studentId, GHOST_STUDENT_ID);</span>
+
+<span class="nc" id="L169">        studentRepo.delete(student);</span>
+<span class="nc" id="L170">        log.info(&quot;Aluno {} deletado com sucesso.&quot;, student.getName().toUpperCase());</span>
+<span class="nc" id="L171">    }</span>
+
+    /* ----- Helper Methods ----- */
+    private Student findStudentOrThrow(UUID studentId) {
+<span class="nc" id="L175">        return studentRepo.findById(studentId)</span>
+<span class="nc" id="L176">                .orElseThrow(() -&gt; new StudentNotFoundException(&quot;Aluno não encontrado no banco de dados&quot;));</span>
+    }
+
+    private void ensureStudentUniqueness(Student student) {
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (studentRepo.existsByCpf(student.getCpf())) {</span>
+<span class="nc" id="L181">            throw new StudentAlreadyExistException(&quot;Aluno com o CPF informado já existe no banco de dados&quot;);</span>
+        }
+
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (studentRepo.existsByEmail(student.getEmail())) {</span>
+<span class="nc" id="L185">            throw new StudentAlreadyExistException(&quot;Aluno com o Email informado já existe no banco de dados&quot;);</span>
+        }
+<span class="nc" id="L187">    }</span>
+
+    private void ensureStudentUniquenessForUpdate(Student student, UUID studentId) {
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (studentRepo.existsByCpfAndIdNot(student.getCpf(), studentId)) {</span>
+<span class="nc" id="L191">            throw new StudentAlreadyExistException(&quot;Aluno com o CPF informado já existe no banco de dados&quot;);</span>
+        }
+
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        if (studentRepo.existsByEmailAndIdNot(student.getEmail(), studentId)) {</span>
+<span class="nc" id="L195">            throw new StudentAlreadyExistException(&quot;Aluno com o Email informado já existe no banco de dados&quot;);</span>
+        }
+<span class="nc" id="L197">    }</span>
+
+    private Parent resolveParentOrThrow(UUID parentId) {
+<span class="nc" id="L200">        return parentRepo.findById(parentId)</span>
+<span class="nc" id="L201">                .orElseThrow(() -&gt; new ParentNotFoundException(&quot;Responsável não encontrado no banco de dados&quot;));</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const addressResponseDTOSchema = z.object({
   street: z.string(),

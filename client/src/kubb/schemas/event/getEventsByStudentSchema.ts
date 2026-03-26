@@ -5,7 +5,7 @@
 
 import { pagedModelEventResponseDTOSchema } from "../pagedModelEventResponseDTOSchema.ts";
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const getEventsByStudentPathParamsSchema = z.object({
   studentId: z.uuid().describe("ID do aluno"),

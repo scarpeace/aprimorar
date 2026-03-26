@@ -5,7 +5,7 @@
 
 import { eventResponseDTOSchema } from "../eventResponseDTOSchema.ts";
 import { problemDetailResponseDTOSchema } from "../problemDetailResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const getEventByIdPathParamsSchema = z.object({
   eventId: z.uuid().describe("ID do evento"),

@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const problemDetailResponseDTOSchema = z.object({
   type: z.optional(z.string().describe("Tipo do Erro")),

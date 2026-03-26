@@ -5,7 +5,7 @@
 
 import { pageMetadataSchema } from "./pageMetadataSchema.ts";
 import { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
-import { z } from "zod/v4";
+import { z } from "@/lib/validations/zod";
 
 export const pagedModelStudentResponseDTOSchema = z.object({
   get content() {

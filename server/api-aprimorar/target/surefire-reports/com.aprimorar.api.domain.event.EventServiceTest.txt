@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.aprimorar.api.domain.event.EventServiceTest
+-------------------------------------------------------------------------------
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.701 s -- in com.aprimorar.api.domain.event.EventServiceTest

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmployeeService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">api-aprimorar</a> &gt; <a href="index.source.html" class="el_package">com.aprimorar.api.domain.employee</a> &gt; <span class="el_source">EmployeeService.java</span></div><h1>EmployeeService.java</h1><pre class="source lang-java linenums">package com.aprimorar.api.domain.employee;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.aprimorar.api.domain.employee.dto.EmployeeOptionDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
+import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
+import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
+import com.aprimorar.api.domain.employee.repository.EmployeeSpecifications;
+import com.aprimorar.api.enums.Duty;
+
+/**
+ * Centraliza as regras de negócio do colaborador.
+ *
+ * &lt;p&gt;
+ * Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
+ * Também é esse service que garante que CPF e email não se repitam antes de
+ * salvar ou atualizar um colaborador.
+ *
+ * &lt;p&gt;
+ * Quando um colaborador é alterado, o service aplica as validações do domínio,
+ * resolve conflitos de unicidade e devolve a resposta em formato DTO.
+ *
+ * @author scarpellini
+ * @version 1.0
+ * @since 2026-03-14
+ */
+@Service
+public class EmployeeService {
+
+<span class="nc" id="L44">    private static final Logger log = LoggerFactory.getLogger(EmployeeService.class);</span>
+
+<span class="nc" id="L46">    private static final UUID PHANTOM_EMPLOYEE_ID = UUID.fromString(&quot;00000000-0000-4000-8000-000000000001&quot;);</span>
+    private final EmployeeRepository employeeRepo;
+    private final EmployeeMapper employeeMapper;
+    private final com.aprimorar.api.domain.event.repository.EventRepository eventRepo;
+
+<span class="nc" id="L51">    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, com.aprimorar.api.domain.event.repository.EventRepository eventRepo) {</span>
+<span class="nc" id="L52">        this.employeeRepo = employeeRepo;</span>
+<span class="nc" id="L53">        this.employeeMapper = employeeMapper;</span>
+<span class="nc" id="L54">        this.eventRepo = eventRepo;</span>
+<span class="nc" id="L55">    }</span>
+
+    /* ----- Query Methods ----- */
+    @Transactional(readOnly = true)
+    public Page&lt;EmployeeResponseDTO&gt; getEmployees(Pageable pageable, String search) {
+<span class="nc" id="L60">        Specification&lt;Employee&gt; spec = (root, query, cb) -&gt; cb.notEqual(root.get(&quot;duty&quot;), Duty.SYSTEM);</span>
+
+<span class="nc bnc" id="L62" title="All 4 branches missed.">        if (search != null &amp;&amp; !search.trim().isEmpty()) {</span>
+<span class="nc" id="L63">            spec = spec.and(EmployeeSpecifications.searchContainsIgnoreCase(search.trim()));</span>
+        }
+
+<span class="nc" id="L66">        Page&lt;Employee&gt; page = employeeRepo.findAll(spec, pageable);</span>
+<span class="nc" id="L67">        log.info(&quot;Consulta de colaboradores finalizada, {} registros encontrados.&quot;, page.getTotalElements());</span>
+<span class="nc" id="L68">        return page.map(employeeMapper::convertToDto);</span>
+    }
+
+    @Transactional(readOnly = true)
+    public List&lt;EmployeeOptionDTO&gt; getEmployeeOptions() {
+<span class="nc" id="L73">        Sort sort = Sort.by(Sort.Direction.ASC, &quot;name&quot;);</span>
+
+<span class="nc" id="L75">        return employeeRepo.findAll(EmployeeSpecifications.notArchived(), sort).stream()</span>
+<span class="nc" id="L76">                .map(e -&gt; new EmployeeOptionDTO(e.getId(), e.getName()))</span>
+<span class="nc" id="L77">                .toList();</span>
+    }
+
+    @Transactional(readOnly = true)
+    public EmployeeResponseDTO findById(UUID employeeId) {
+
+<span class="nc" id="L83">        Employee employee = findEmployeeOrThrow(employeeId);</span>
+<span class="nc" id="L84">        log.info(&quot;Colaborador {} consultado com sucesso.&quot;, employee.getName().toUpperCase());</span>
+<span class="nc" id="L85">        return employeeMapper.convertToDto(employee);</span>
+    }
+
+    /* ----- Command Methods ----- */
+    @Transactional
+    public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
+
+<span class="nc" id="L92">        Employee employee = employeeMapper.convertToEntity(employeeRequestDto);</span>
+
+<span class="nc" id="L94">        EmployeeRules.validate(employee);</span>
+<span class="nc" id="L95">        validateEmployeeUniquenessForCreate(employee.getCpf(), employee.getEmail());</span>
+
+<span class="nc" id="L97">        Employee savedEmployee = employeeRepo.save(employee);</span>
+
+<span class="nc" id="L99">        log.info(&quot;Colaborador {} cadastrado com sucesso.&quot;, savedEmployee.getName().toUpperCase());</span>
+<span class="nc" id="L100">        return employeeMapper.convertToDto(savedEmployee);</span>
+    }
+
+    @Transactional
+    public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
+
+<span class="nc" id="L106">        Employee newEmployee = employeeMapper.convertToEntity(request);</span>
+<span class="nc" id="L107">        Employee oldEmployee = findEmployeeOrThrow(employeeId);</span>
+
+<span class="nc" id="L109">        validateEmployeeUniquenessForUpdate(newEmployee.getCpf(), newEmployee.getEmail(), employeeId);</span>
+
+<span class="nc" id="L111">        oldEmployee.setName(newEmployee.getName());</span>
+<span class="nc" id="L112">        oldEmployee.setBirthdate(newEmployee.getBirthdate());</span>
+<span class="nc" id="L113">        oldEmployee.setPix(newEmployee.getPix());</span>
+<span class="nc" id="L114">        oldEmployee.setContact(newEmployee.getContact());</span>
+<span class="nc" id="L115">        oldEmployee.setCpf(newEmployee.getCpf());</span>
+<span class="nc" id="L116">        oldEmployee.setEmail(newEmployee.getEmail());</span>
+<span class="nc" id="L117">        oldEmployee.setDuty(newEmployee.getDuty());</span>
+<span class="nc" id="L118">        EmployeeRules.validate(oldEmployee);</span>
+
+<span class="nc" id="L120">        log.info(&quot;Colaborador {} atualizado com sucesso.&quot;, oldEmployee.getName().toUpperCase());</span>
+<span class="nc" id="L121">        return employeeMapper.convertToDto(oldEmployee);</span>
+    }
+
+    @Transactional
+    public void deleteEmployee(UUID employeeId) {
+<span class="nc" id="L126">        Employee employee = findEmployeeOrThrow(employeeId);</span>
+<span class="nc" id="L127">        eventRepo.reassignEmployeeEventsToGhost(employeeId, PHANTOM_EMPLOYEE_ID);</span>
+<span class="nc" id="L128">        employeeRepo.delete(employee);</span>
+<span class="nc" id="L129">        log.info(&quot;Colaborador {} deletado com sucesso. Eventos transferidos para arquivo morto fantasma.&quot;, employee.getName().toUpperCase());</span>
+<span class="nc" id="L130">    }</span>
+
+    @Transactional
+    public void archiveEmployee(UUID employeeId) {
+<span class="nc" id="L134">        Employee employee = findEmployeeOrThrow(employeeId);</span>
+<span class="nc" id="L135">        employee.setArchivedAt(Instant.now());</span>
+<span class="nc" id="L136">        log.info(&quot;Colaborador {} arquivado com sucesso.&quot;, employee.getName().toUpperCase());</span>
+<span class="nc" id="L137">    }</span>
+
+    @Transactional
+    public void unarchiveEmployee(UUID employeeId) {
+<span class="nc" id="L141">        Employee employee = findEmployeeOrThrow(employeeId);</span>
+<span class="nc" id="L142">        employee.setArchivedAt(null);</span>
+<span class="nc" id="L143">        log.info(&quot;Colaborador {} desarquivado com sucesso.&quot;, employee.getName().toUpperCase());</span>
+<span class="nc" id="L144">    }</span>
+
+    /* ----- Helper Methods ----- */
+    private Employee findEmployeeOrThrow(UUID employeeId) {
+<span class="nc" id="L148">        return employeeRepo.findById(employeeId)</span>
+<span class="nc" id="L149">                .orElseThrow(() -&gt; new EmployeeNotFoundException(&quot;Colaborador não encontrado no Banco de Dados&quot;));</span>
+    }
+
+    private void validateEmployeeUniquenessForCreate(String cpf, String email) {
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (employeeRepo.existsByCpf(cpf)) {</span>
+<span class="nc" id="L154">            throw new EmployeeAlreadyExistsException(&quot;Colaborador com o CPF informado já cadastrado no banco de dados&quot;);</span>
+        }
+
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (employeeRepo.existsByEmail(email)) {</span>
+<span class="nc" id="L158">            throw new EmployeeAlreadyExistsException(&quot;Colaborador com o Email informado já cadastrado no banco de dados&quot;);</span>
+        }
+<span class="nc" id="L160">    }</span>
+
+    private void validateEmployeeUniquenessForUpdate(String cpf, String email, UUID employeeId) {
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (employeeRepo.existsByCpfAndIdNot(cpf, employeeId)) {</span>
+<span class="nc" id="L164">            throw new EmployeeAlreadyExistsException(&quot;Colaborador com o CPF informado já cadastrado no banco de dados&quot;);</span>
+        }
+
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (employeeRepo.existsByEmailAndIdNot(email, employeeId)) {</span>
+<span class="nc" id="L168">            throw new EmployeeAlreadyExistsException(&quot;Colaborador com o Email informado já cadastrado no banco de dados&quot;);</span>
+        }
+<span class="nc" id="L170">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
