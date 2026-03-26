@@ -52,7 +52,8 @@ public interface StudentControllerDocs {
     })
     ResponseEntity<Page<StudentResponseDTO>> getStudents(
             @Parameter(description = "Página com informações de paginação") Pageable pageable,
-            @Parameter(description = "Termo de busca") String search
+            @Parameter(description = "Termo de busca") String search,
+            @Parameter(description = "Inclui arquivados") Boolean archived
     );
 
     @Operation(

@@ -7,6 +7,17 @@ import {
   useArchiveStudentMutation,
   useUnarchiveStudentMutation,
 } from "../hooks/studentMutations";
+import {
+  archiveStudent,
+  archiveStudentMutationKey,
+  getStudentByIdQueryKey,
+  getStudentsQueryKey,
+  getStudentSummaryQueryKey,
+  useArchiveStudent,
+  useUnarchiveStudent,
+} from "@/kubb";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 type ArchiveStudentButtonProps = {
   studentId: string;
@@ -18,17 +29,42 @@ export const ArchiveStudentButton = ({
   isArchived,
 }: ArchiveStudentButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
+  const queryClient = useQueryClient();
 
   const { mutate: unarchiveStudent, isPending: isUnarchivingStudent } =
-    useUnarchiveStudentMutation();
+    useUnarchiveStudent({
+      mutation: {
+        onSuccess: () => {
+          toast.success("Aluno desarquivado com sucesso!");
+          setShowConfirm(false);
+          queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
+          queryClient.invalidateQueries({queryKey: getStudentByIdQueryKey(studentId)});
+          queryClient.invalidateQueries({queryKey: getStudentSummaryQueryKey()});
+        },
+      },
+    });
   const { mutate: archiveStudent, isPending: isArchivingStudent } =
-    useArchiveStudentMutation();
+    useArchiveStudent({
+      mutation: {
+        onSuccess: () => {
+          toast.success("Aluno arquivado com sucesso!");
+          setShowConfirm(false);
+          queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
+          queryClient.invalidateQueries({
+            queryKey: getStudentByIdQueryKey(studentId),
+          });
+          queryClient.invalidateQueries({
+            queryKey: getStudentSummaryQueryKey(),
+          });
+        },
+      },
+    });
 
   const handleArchive = () => {
-    archiveStudent({ studentId }, { onSuccess: () => setShowConfirm(false) });
+    archiveStudent({ studentId });
   };
   const handleUnarchive = () => {
-    unarchiveStudent({ studentId }, { onSuccess: () => setShowConfirm(false) });
+    unarchiveStudent({ studentId });
   };
 
   if (isUnarchivingStudent || isArchivingStudent) {

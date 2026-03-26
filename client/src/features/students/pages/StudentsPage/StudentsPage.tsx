@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GraduationCap } from "lucide-react";
+import { Check, ChevronDown, ChevronUpCircle, GraduationCap, PersonStanding } from "lucide-react";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { PageHeader } from "@/components/ui/page-header";
 import { ButtonLink } from "@/components/ui/button";
@@ -8,17 +8,25 @@ import { useDebounce } from "@/lib/shared/use-debounce";
 import { TableRoot } from "@/components/layout/TableRoot";
 import { StudentsTable } from "./components/StudentsTable";
 import { useGetStudents, type StudentResponseDTO } from "@/kubb";
+import path from "path";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [currentPage, setCurrentPage] = useState(0);
+  const [showArchived, setShowArchived] = useState(false);
+  const [expandData, setExpandData] = useState(false);
 
   const {
     data: studentsPage,
     isLoading: isStudentsPageLoading,
     error: studentsPageError,
-  } = useGetStudents({ page: currentPage, size: 8, search: debouncedSearchTerm });
+  } = useGetStudents({
+    page: currentPage,
+    size: 8,
+    search: debouncedSearchTerm,
+    archived: showArchived,
+  });
 
   return (
     <div className={styles.page}>
@@ -36,6 +44,33 @@ export function StudentsPage() {
             value={searchTerm}
             onChange={setSearchTerm}
           />
+
+          <div className="flex gap-2 justify-between items-center px-2">
+            <div className="tooltip" data-tip="Mostrar Arquivados">
+              <label id="showArchived" className="label mx-auto">
+                <input
+                  id="showArchived"
+                  type="checkbox"
+                  checked={showArchived}
+                  onChange={() => setShowArchived(!showArchived)}
+                  className="toggle checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800"
+                />
+              </label>
+            </div>
+
+            <div className="tooltip tooltip-right" data-tip="Ampliar Dados">
+              <label id="expandData" className="label mx-auto">
+                <input
+                  id="expandData"
+                  type="checkbox"
+                  checked={expandData}
+                  onChange={() => setExpandData(!expandData)}
+                  className="toggle checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800"
+                />
+              </label>
+            </div>
+          </div>
+
           <ButtonLink
             className="sm:ml-auto"
             to="/students/new"

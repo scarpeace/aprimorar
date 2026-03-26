@@ -28,6 +28,7 @@ export const getStudentsQueryParamsSchema = z.object({
       ),
   ),
   search: z.optional(z.string().describe("Termo de busca")),
+  archived: z.optional(z.boolean().describe("Inclui arquivados")),
 });
 
 export type GetStudentsQueryParamsSchema = z.infer<

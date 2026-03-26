@@ -50,9 +50,10 @@ public class StudentController implements StudentControllerDocs {
     @GetMapping
     public ResponseEntity<Page<StudentResponseDTO>> getStudents(
             @ParameterObject Pageable pageable,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Boolean archived
     ) {
-        Page<StudentResponseDTO> students = studentService.getStudents(pageable, search);
+        Page<StudentResponseDTO> students = studentService.getStudents(pageable, search, archived);
         return ResponseEntity.ok(students);
     }
 

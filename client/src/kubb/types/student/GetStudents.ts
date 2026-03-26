@@ -31,6 +31,11 @@ export type GetStudentsQueryParams = {
    * @type string | undefined
    */
   search?: string;
+  /**
+   * @description Inclui arquivados
+   * @type boolean | undefined
+   */
+  archived?: boolean;
 };
 
 /**

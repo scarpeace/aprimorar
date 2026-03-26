@@ -1,21 +1,9 @@
 package com.aprimorar.api.domain.student;
 
-import com.aprimorar.api.domain.event.repository.EventRepository;
-import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.ParentMapper;
-import com.aprimorar.api.domain.parent.ParentRules;
-import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
-import com.aprimorar.api.domain.parent.repository.ParentRepository;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
-import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
-import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
-import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
-import com.aprimorar.api.domain.student.repository.StudentRepository;
-import com.aprimorar.api.domain.student.repository.StudentSpecifications;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,6 +12,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.parent.Parent;
+import com.aprimorar.api.domain.parent.ParentMapper;
+import com.aprimorar.api.domain.parent.ParentRules;
+import com.aprimorar.api.domain.parent.repository.ParentRepository;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
+import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
+import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.domain.student.repository.StudentSpecifications;
 
 @Service
 public class StudentService {
@@ -53,10 +54,10 @@ public class StudentService {
 
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
-    public Page<StudentResponseDTO> getStudents(Pageable pageable, String search) {
+    public Page<StudentResponseDTO> getStudents(Pageable pageable, String search, Boolean archived) {
         Specification<Student> spec = Specification.allOf(
             StudentSpecifications.isNotGhost(),
-            StudentSpecifications.notArchived()
+            Boolean.TRUE.equals(archived) ? StudentSpecifications.archived() : StudentSpecifications.notArchived()
         );
 
         if (search != null && !search.trim().isEmpty()) {
@@ -128,7 +129,7 @@ public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO dto) {
 
     ensureParentUniquenessForUpdate(parentData, currentParent.getId());
     ParentRules.validate(parentData);
-    
+
     currentParent.setName(parentData.getName());
     currentParent.setContact(parentData.getContact());
     currentParent.setEmail(parentData.getEmail());

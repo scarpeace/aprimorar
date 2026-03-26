@@ -21,6 +21,7 @@
 .zed
 node_modules
 dist
+target
 # kubb
 
 
