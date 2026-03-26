@@ -4,6 +4,7 @@
  */
 
 import type { AddressRequestDTO } from "./AddressRequestDTO.ts";
+import type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 
 /**
  * @description Dados do aluno
@@ -44,12 +45,13 @@ export type StudentRequestDTO = {
    */
   email: string;
   /**
+   * @description Endereço do aluno
    * @type object
    */
   address: AddressRequestDTO;
   /**
-   * @description ID do responsável do aluno
-   * @type string, uuid
+   * @description Dados do responsável
+   * @type object
    */
-  parentId: string;
+  parent: ParentRequestDTO;
 };

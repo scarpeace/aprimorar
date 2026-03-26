@@ -5,10 +5,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { ButtonLink } from "@/components/ui/button";
 import styles from "./students-page.module.css";
 import { useDebounce } from "@/lib/shared/use-debounce";
-import { useStudents } from "../../hooks/studentQueries";
 import { TableRoot } from "@/components/layout/TableRoot";
 import { StudentsTable } from "./components/StudentsTable";
-import type { StudentResponseDTO } from "@/kubb";
+import { useGetStudents, type StudentResponseDTO } from "@/kubb";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,7 +18,7 @@ export function StudentsPage() {
     data: studentsPage,
     isLoading: isStudentsPageLoading,
     error: studentsPageError,
-  } = useStudents({ page: currentPage, size: 8, search: debouncedSearchTerm });
+  } = useGetStudents({ page: currentPage, size: 8, search: debouncedSearchTerm });
 
   return (
     <div className={styles.page}>

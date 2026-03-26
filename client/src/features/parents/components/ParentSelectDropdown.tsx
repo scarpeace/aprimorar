@@ -48,15 +48,15 @@ export function ParentSelectDropdown({
         <FormField
           label="Responsável"
           htmlFor="parentId"
-          error={errors.parentId?.message}
+          error={errors.parent?.message}
         >
           {/* Input oculto para que o react-hook-form consiga registrar o campo e suas validações */}
-          <input type="hidden" {...register("parentId")} />
+          <input type="hidden" {...register("parent")} />
 
           <div className="flex flex-col gap-2">
             <button
               type="button"
-              className={`btn w-full justify-between ${errors.parentId ? "border-error" : ""}`}
+              className={`btn w-full justify-between ${errors.parent ? "border-error" : ""}`}
               disabled={isLoadingParentSummary}
               popoverTarget={popoverId}
               style={{ anchorName } as React.CSSProperties}
@@ -77,9 +77,9 @@ export function ParentSelectDropdown({
                 <li key={parent.id}>
                   <button
                     type="button"
-                    className={selectedParentId === parent.id ? "active" : ""}
+                    className={selectedParent === parent ? "active" : ""}
                     onClick={() => {
-                      setValue("parentId", parent.id, {
+                      setValue("parent", parent, {
                         shouldValidate: true,
                         shouldDirty: true,
                       });

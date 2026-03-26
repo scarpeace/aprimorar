@@ -5,42 +5,47 @@
 
 import { z } from "@/lib/validations/zod";
 
-export const addressRequestDTOSchema = z.object({
-  street: z.string().min(1).describe("Rua do endereço"),
-  number: z.string().min(1),
-  complement: z.optional(z.string()),
-  district: z.string().min(1),
-  city: z.string().min(1),
-  state: z.enum([
-    "AC",
-    "AL",
-    "AP",
-    "AM",
-    "BA",
-    "CE",
-    "DF",
-    "ES",
-    "GO",
-    "MA",
-    "MT",
-    "MS",
-    "MG",
-    "PA",
-    "PB",
-    "PR",
-    "PE",
-    "PI",
-    "RJ",
-    "RN",
-    "RS",
-    "RO",
-    "RR",
-    "SC",
-    "SP",
-    "SE",
-    "TO",
-  ]),
-  zip: z.string().min(1),
-});
+/**
+ * @description Endereço do aluno
+ */
+export const addressRequestDTOSchema = z
+  .object({
+    street: z.string().min(1).describe("Rua do endereço"),
+    number: z.string().min(1),
+    complement: z.optional(z.string()),
+    district: z.string().min(1),
+    city: z.string().min(1),
+    state: z.enum([
+      "AC",
+      "AL",
+      "AP",
+      "AM",
+      "BA",
+      "CE",
+      "DF",
+      "ES",
+      "GO",
+      "MA",
+      "MT",
+      "MS",
+      "MG",
+      "PA",
+      "PB",
+      "PR",
+      "PE",
+      "PI",
+      "RJ",
+      "RN",
+      "RS",
+      "RO",
+      "RR",
+      "SC",
+      "SP",
+      "SE",
+      "TO",
+    ]),
+    zip: z.string().min(1),
+  })
+  .describe("Endereço do aluno");
 
 export type AddressRequestDTOSchema = z.infer<typeof addressRequestDTOSchema>;

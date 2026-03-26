@@ -4,6 +4,7 @@
  */
 
 import { addressRequestDTOSchema } from "./addressRequestDTOSchema.ts";
+import { parentRequestDTOSchema } from "./parentRequestDTOSchema.ts";
 import { z } from "@/lib/validations/zod";
 
 /**
@@ -18,9 +19,11 @@ export const studentRequestDTOSchema = z
     contact: z.string().min(1).describe("Contato do aluno"),
     email: z.string().min(1).describe("Email do aluno"),
     get address() {
-      return addressRequestDTOSchema;
+      return addressRequestDTOSchema.describe("Endereço do aluno");
     },
-    parentId: z.uuid().describe("ID do responsável do aluno"),
+    get parent() {
+      return parentRequestDTOSchema.describe("Dados do responsável");
+    },
   })
   .describe("Dados do aluno");
 

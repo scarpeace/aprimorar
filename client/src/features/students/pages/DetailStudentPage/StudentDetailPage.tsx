@@ -4,13 +4,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ButtonLink } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import styles from "./student-detail-page.module.css";
-import { useStudentById } from "../../hooks/studentQueries";
 import { StudentDetailState } from "./components/StudentDetailState";
 import { StudentEventsSection } from "./components/StudentEventsSection";
 import { StudentSummarySection } from "./components/StudentSummarySection";
 import { AddressSummarySection } from "@/features/address/AddressSumarySection";
 import { Collapse } from "@/components/ui/collapse";
 import { useEventsByStudent } from "@/features/events/query/eventQueries";
+import { useGetStudentById } from "@/kubb";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +22,7 @@ export function StudentDetailPage() {
     data: student,
     isLoading: isStudentLoading,
     error: studentError,
-  } = useStudentById(studentId);
+  } = useGetStudentById(studentId);
 
   const {
     data: studentEvents,

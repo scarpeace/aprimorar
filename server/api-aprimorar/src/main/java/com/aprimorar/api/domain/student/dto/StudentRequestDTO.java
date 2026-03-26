@@ -1,15 +1,15 @@
 package com.aprimorar.api.domain.student.dto;
 
 import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
+import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.UUID;
 
 public record StudentRequestDTO(
     @NotBlank()
@@ -39,11 +39,12 @@ public record StudentRequestDTO(
     String email,
 
     @NotNull()
-    @Schema(implementation = AddressRequestDTO.class)
+    @Schema(description = "Endereço do aluno", implementation = AddressRequestDTO.class)
     @Valid
     AddressRequestDTO address,
 
     @NotNull()
-    @Schema(description = "ID do responsável do aluno", nullable = false)
-    UUID parentId
+    @Schema(description = "Responsável do aluno", implementation = ParentRequestDTO.class)
+    @Valid
+    ParentRequestDTO parent
 ) {}

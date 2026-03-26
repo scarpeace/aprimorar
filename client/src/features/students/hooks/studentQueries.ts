@@ -9,7 +9,7 @@ import {
 
 import { studentsQueryKeys } from "./studentQueryKeys";
 
-export function useStudents(params: GetStudentsQueryParams = {}) {
+export function useStudentsQuery(params: GetStudentsQueryParams = {}) {
   return useGetStudents(params, {
     query: {
       queryKey: studentsQueryKeys.list(params),
@@ -19,7 +19,7 @@ export function useStudents(params: GetStudentsQueryParams = {}) {
   });
 }
 
-export function useStudentById(studentId: string) {
+export function useStudentByIdQuery(studentId: string) {
   return useGetStudentById(studentId, {
     query: {
       queryKey: studentsQueryKeys.detail(studentId),
@@ -29,7 +29,7 @@ export function useStudentById(studentId: string) {
   });
 }
 
-export function useStudentsByParent(parentId: string) {
+export function useStudentsByParentQuery(parentId: string) {
   return useGetStudentsByParent(parentId, {
     query: {
       queryKey: studentsQueryKeys.byParent(parentId),

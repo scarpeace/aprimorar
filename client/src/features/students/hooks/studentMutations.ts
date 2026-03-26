@@ -1,4 +1,6 @@
 import {
+  getStudentSummaryQueryKey,
+  updateStudentMutationKey,
   useArchiveStudent,
   useCreateStudent,
   useDeleteStudent,
@@ -11,7 +13,6 @@ import { toast } from "sonner";
 import { studentsQueryKeys } from "./studentQueryKeys";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
-
 export function useCreateStudentMutation() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -20,8 +21,8 @@ export function useCreateStudentMutation() {
     mutation: {
       onSuccess: (createdStudent) => {
         toast.success("Aluno criado com sucesso");
-        queryClient.invalidateQueries({queryKey: studentsQueryKeys.lists()});
-        queryClient.invalidateQueries({queryKey: studentsQueryKeys.summary()});
+        queryClient.invalidateQueries({queryKey: updateStudentMutationKey()});
+        queryClient.invalidateQueries({queryKey: getStudentSummaryQueryKey()});
         navigate(`/students/${createdStudent.id}`);
       },
       onError: (error) => {

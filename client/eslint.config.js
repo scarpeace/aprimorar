@@ -1,14 +1,14 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import js from "@eslint/js";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import tseslint from "typescript-eslint";
+import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(['dist', 'src/gen', 'src/gen/**/*']),
+  globalIgnores(["dist", "src/gen", "src/gen/**/*"]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -20,24 +20,8 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-    '@typescript-eslint/no-unused-vars': 'warn',
-  },
-  },
-  {
-    files: ['src/features/*/pages/**/*.{ts,tsx}'],
-    rules: {
-      'no-restricted-imports': [
-        'warn',
-        {
-          patterns: [
-            {
-              group: ['@/kubb', '@/kubb/*'],
-              message:
-                'Imports diretos do Kubb não são permitidos em páginas. Use os tipos e hooks exportados de @/features/*/hooks.',
-            },
-          ],
-        },
-      ],
+      "@typescript-eslint/no-unused-vars": "warn",
+      " @typescript-eslint/no-explicit-any": "warn",
     },
   },
-])
+]);

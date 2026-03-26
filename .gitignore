@@ -19,8 +19,11 @@
 .ruff_cache
 .gemini
 .zed
-
-# kubb / outros
-docs
+node_modules
+dist
 # kubb
+
+
+docs
+
 codebook.toml

@@ -25,18 +25,20 @@ export function useStudentForm(student?: StudentResponseDTOSchema) {
         state: student?.address?.state ?? "DF",
         zip: student?.address?.zip ?? "",
       },
-      parentId: student?.parent?.parentId,
-      parent: student?.parent,
+      parent: {
+        name: student?.parent?.name ?? "",
+        email: student?.parent?.email ?? "",
+        contact: student?.parent?.contact ?? "",
+        cpf: student?.parent?.cpf ?? "",
+      },
     },
   });
 
   const registerWithMask = useHookFormMask(form.register);
-  const selectedParentId = form.watch("parentId");
 
   return {
     ...form,
     errors: form.formState.errors,
     registerWithMask,
-    selectedParentId,
   };
 }

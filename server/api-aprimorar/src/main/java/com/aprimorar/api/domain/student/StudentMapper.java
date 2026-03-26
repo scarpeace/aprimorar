@@ -39,6 +39,7 @@ public class StudentMapper {
         student.setContact(MapperUtils.normalizeContact(dto.contact()));
         student.setEmail(MapperUtils.normalizeEmail(dto.email()));
         student.setAddress(addressMapper.convertToEntity(dto.address()));
+        student.setParent(parentMapper.convertToEntity(dto.parent()));
 
         return student;
     }

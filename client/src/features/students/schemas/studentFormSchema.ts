@@ -15,8 +15,7 @@ export const studentFormSchema = studentRequestDTOSchema.extend({
     .min(1, { message: "Email do aluno é obrigatório" })
     .email({ message: "Email deve ser um endereço de email válido" }),
   address: addressFormSchema,
-  parentId: z.uuid().optional(),
-  parent: parentFormSchema.optional(),
+  parent: parentFormSchema,
 });
 
 export type StudentFormInput = z.input<typeof studentFormSchema>;
