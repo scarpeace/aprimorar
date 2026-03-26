@@ -8,8 +8,8 @@ import { SectionCard } from "@/components/ui/section-card";
 import styles from "./student-create-page.module.css";
 import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
 import { useCreateStudentMutation } from "../../hooks/studentMutations";
-import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
 import { studentFormSchema, type StudentFormInput } from "../../schemas/studentFormSchema";
+import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
 
 export function StudentCreatePage() {
   const {

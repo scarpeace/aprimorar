@@ -11,7 +11,7 @@ type StudentInfoSectionProps = {
   className?: string;
 };
 
-export function StudentInfoSection({
+export function StudentDetailsForm({
   register,
   registerWithMask,
   errors,

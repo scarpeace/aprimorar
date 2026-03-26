@@ -11,7 +11,7 @@ import { z } from "@/lib/validations/zod";
  */
 export const studentRequestDTOSchema = z
   .object({
-    name: z.string().min(20).max(120).describe("Nome do aluno"),
+    name: z.string().min(1).describe("Nome do aluno"),
     birthdate: z.iso.date().describe("Data de nascimento do aluno"),
     cpf: z.string().describe("CPF do aluno"),
     school: z.string().min(1).describe("Escola do aluno"),

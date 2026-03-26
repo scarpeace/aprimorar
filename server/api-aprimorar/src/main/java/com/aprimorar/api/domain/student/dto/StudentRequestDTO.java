@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public record StudentRequestDTO(
     @NotBlank()
-    @Schema(description = "Nome do aluno", nullable = false, minLength = 20, maxLength = 120)
+    @Schema(description = "Nome do aluno")
     String name,
 
     @NotNull()

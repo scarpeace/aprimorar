@@ -2,15 +2,17 @@ import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { addressRequestDTOStateEnum } from "@/kubb";
-import type { StudentFormInput } from "@/features/students/types";
+import type { AddressFormInput } from "./schemas/addressFormSchema";
 
 type AddressInfoSectionProps = {
-  register: UseFormRegister<StudentFormInput>;
-  errors: FieldErrors<StudentFormInput>;
+  address: AddressFormInput;
+  register: UseFormRegister<AddressFormInput>;
+  errors: FieldErrors<AddressFormInput>;
   className?: string;
 };
 
-export function AddressInfoSection({
+export function AddressDetailsForm({
+  address,
   register,
   errors,
   className,
@@ -24,83 +26,83 @@ export function AddressInfoSection({
         <FormField
           className=""
           label="Rua"
-          htmlFor="address.street"
-          error={errors.address?.street?.message}
+          htmlFor="street"
+          error={errors.street?.message}
         >
           <input
             className="app-input"
-            id="address.street"
+            id="street"
             placeholder="Ex: Rua das Flores"
-            {...register("address.street")}
+            {...register("street")}
           />
         </FormField>
 
         <FormField
           className={"col-span-1"}
           label="Número"
-          htmlFor="address.number"
-          error={errors.address?.number?.message}
+          htmlFor="number"
+          error={errors?.number?.message}
         >
           <input
             className="app-input"
-            id="address.number"
+            id="number"
             placeholder="Ex: 123"
-            {...register("address.number")}
+            {...register("number")}
           />
         </FormField>
 
         <FormField
           className=""
           label="Complemento"
-          htmlFor="address.complement"
-          error={errors.address?.complement?.message}
+          htmlFor="complement"
+          error={errors?.complement?.message}
         >
           <input
             className="app-input"
-            id="address.complement"
+            id="complement"
             placeholder="Apto, bloco, etc"
-            {...register("address.complement")}
+            {...register("complement")}
           />
         </FormField>
 
         <FormField
           className=""
           label="Bairro"
-          htmlFor="address.district"
-          error={errors.address?.district?.message}
+          htmlFor="district"
+          error={errors?.district?.message}
         >
           <input
             className="app-input"
-            id="address.district"
+            id="district"
             placeholder="Ex: Centro"
-            {...register("address.district")}
+            {...register("district")}
           />
         </FormField>
 
         <FormField
           className=""
           label="Cidade"
-          htmlFor="address.city"
-          error={errors.address?.city?.message}
+          htmlFor="city"
+          error={errors?.city?.message}
         >
           <input
             className="app-input"
-            id="address.city"
+            id="city"
             placeholder="Ex: Brasília"
-            {...register("address.city")}
+            {...register("city")}
           />
         </FormField>
 
         <FormField
           className=""
           label="Estado"
-          htmlFor="address.state"
-          error={errors.address?.state?.message}
+          htmlFor="state"
+          error={errors?.state?.message}
         >
           <select
             className="app-select"
-            id="address.state"
-            {...register("address.state")}
+            id="state"
+            {...register("state")}
           >
             {Object.values(addressRequestDTOStateEnum).map((state) => (
               <option key={state} value={state}>
@@ -113,14 +115,14 @@ export function AddressInfoSection({
         <FormField
           className=""
           label="CEP"
-          htmlFor="address.zip"
-          error={errors.address?.zip?.message}
+          htmlFor="zip"
+          error={errors?.zip?.message}
         >
           <input
             className="app-input"
-            id="address.zip"
+            id="zip"
             placeholder="00000-000"
-            {...register("address.zip")}
+            {...register("zip")}
           />
         </FormField>
       </div>

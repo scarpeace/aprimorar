@@ -21,7 +21,6 @@ export function StudentEditActions({
             Cancelar
           </ButtonLink>
         </div>
-
       </div>
     </div>
   );

@@ -4,15 +4,16 @@ import { PageHeader } from "@/components/ui/page-header";
 import { useParams } from "react-router-dom";
 import { useStudentById } from "../../hooks/studentQueries";
 import { StudentEditPageState } from "./components/StudentEditPageState";
-import { StudentInfoSection } from "./components/StudentDetailsForm";
-import { AddressInfoSection } from "../../../address/AddressEditForm";
-import { ParentDetailsForm } from "./components/ParentDetailsForm";
+import { StudentDetailsForm } from "./components/StudentDetailsForm";
 import { useEffect } from "react";
 import { StudentEditActions } from "./components/StudentEditActions";
-import { useStudentEditForm } from "../../hooks/studentEditForm";
-import type { StudentFormInput } from "../../schemas/studentFormSchema";
+import { useStudentForm } from "../../hooks/studentEditForm";
 import { useUpdateStudentMutation } from "../../hooks/studentMutations";
 import { StudentEditForm } from "./components/StudentEditForm";
+import { AddressDetailsForm } from "@/features/address/AddressDetailsForm";
+import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
+import type { StudentFormInput } from "../../schemas/studentFormSchema";
+import type { UpdateStudentMutationRequest } from "@/kubb";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -39,16 +40,10 @@ export function StudentEditPage() {
     handleSubmit,
     register,
     registerWithMask,
-  } = useStudentEditForm(student);
+  } = useStudentForm(student);
 
-  //TODO: isso aqui pode virar um watch do form?
-  useEffect(() => {
-    if (!student) return;
-    // setSelectedParentId(formSelectedParentId);
-    setValue("parentId", student.parent.parentId);
-  }, [student, setValue]);
-
-  const onSubmit = handleSubmit((data: StudentFormInput) => {
+   const onSubmit = handleSubmit((data: UpdateStudentMutationRequest) => {
+    console.log(data);
     updateStudent({ studentId, data });
   });
 
@@ -72,7 +67,7 @@ export function StudentEditPage() {
         onRetry={refetchStudent}
       >
         <StudentEditForm onSubmit={onSubmit}>
-          <ParentDetailsForm
+          <ParentSelectDropdown
             selectedParentId={formSelectedParentId}
             register={register}
             setValue={setValue}
@@ -80,14 +75,14 @@ export function StudentEditPage() {
             className="grid grid-cols-1 gap-4"
           />
 
-          <StudentInfoSection
+          <StudentDetailsForm
             register={register}
             registerWithMask={registerWithMask}
             errors={errors}
             className="grid grid-cols-3 gap-4"
           />
 
-          <AddressInfoSection
+          <AddressDetailsForm
             className="grid grid-cols-3 gap-4"
             register={register}
             errors={errors}

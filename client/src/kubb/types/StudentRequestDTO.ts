@@ -11,8 +11,7 @@ import type { AddressRequestDTO } from "./AddressRequestDTO.ts";
 export type StudentRequestDTO = {
   /**
    * @description Nome do aluno
-   * @minLength 20
-   * @maxLength 120
+   * @minLength 1
    * @type string
    */
   name: string;

@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import { studentFormSchema } from "../schemas/studentFormSchema";
-import type { StudentApiResponse, StudentFormInput } from "../types";
+import { studentFormSchema, type StudentFormInput } from "../schemas/studentFormSchema";
+import type { StudentResponseDTOSchema } from "@/kubb";
 
-export function useStudentEditForm(student?: StudentApiResponse) {
+export function useStudentForm(student?: StudentResponseDTOSchema) {
+
   const form = useForm<StudentFormInput>({
     resolver: zodResolver(studentFormSchema),
     mode: "onBlur",
@@ -24,7 +25,8 @@ export function useStudentEditForm(student?: StudentApiResponse) {
         state: student?.address?.state ?? "DF",
         zip: student?.address?.zip ?? "",
       },
-      parentId: student?.parent?.parentId ?? "",
+      parentId: student?.parent?.parentId,
+      parent: student?.parent,
     },
   });
 

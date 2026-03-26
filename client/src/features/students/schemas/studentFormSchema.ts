@@ -6,7 +6,7 @@ import { z } from "@/lib/validations/zod";
 export const studentFormSchema = studentRequestDTOSchema.extend({
   name: z
     .string()
-    .min(20, { message: "Nome do aluno deve ter no mínimo 20 caracteres" })
+    .min(10, { message: "Nome do aluno deve ter no mínimo 10 caracteres" })
     .max(120, { message: "Nome do aluno deve ter no máximo 120 caracteres" }),
   school: z.string().min(1, { message: "Escola do aluno é obrigatória" }),
   contact: z.string().min(1, { message: "Contato do aluno é obrigatório" }),
@@ -15,7 +15,8 @@ export const studentFormSchema = studentRequestDTOSchema.extend({
     .min(1, { message: "Email do aluno é obrigatório" })
     .email({ message: "Email deve ser um endereço de email válido" }),
   address: addressFormSchema,
-  parent: z.uuid() || parentFormSchema,
+  parentId: z.uuid().optional(),
+  parent: parentFormSchema.optional(),
 });
 
 export type StudentFormInput = z.input<typeof studentFormSchema>;
