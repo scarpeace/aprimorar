@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
             return "Conflito de agenda";
         }
         if (ex instanceof DataIntegrityViolationException) {
-            return "Conflito de dados";
+            return "Conflito de dados no sistema, por favor verifique os dados e tente novamente";
         }
         return "Conflito de negócio";
     }

@@ -12,38 +12,38 @@ import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 public record StudentRequestDTO(
-    @NotBlank()
-    @Schema(description = "Nome do aluno")
+    @NotBlank(message = "Nome do aluno é obrigatório")
+    @Schema(description = "Nome do aluno", example = "John Doe")
     String name,
 
-    @NotNull()
+    @NotNull(message = "Data de nascimento é obrigatória")
     @PastOrPresent()
-    @Schema(description = "Data de nascimento do aluno", nullable = false)
+    @Schema(nullable = false, description = "Data de nascimento do aluno", example = "2000-01-01")
     LocalDate birthdate,
 
-    @NotNull()
-    @Schema(description = "CPF do aluno", nullable = false)
+    @NotBlank(message = "CPF é obrigatório")
+    @Schema(nullable = false, description = "CPF do aluno", example = "123.456.789-00")
     String cpf,
 
-    @NotBlank()
-    @Schema(description = "Escola do aluno", nullable = false)
+    @NotBlank(message = "Escola do aluno é obrigatória")
+    @Schema(description = "Escola do aluno", example = "School Name")
     String school,
 
-    @NotBlank()
-    @Schema(description = "Contato do aluno", nullable = false)
+    @NotBlank(message = "Contato do aluno é obrigatório")
+    @Schema(description = "Contato do aluno", example = "(61) 99999-9999")
     String contact,
 
-    @NotBlank()
+    @NotBlank(message = "Email do aluno é obrigatório")
     @Email()
-    @Schema(description = "Email do aluno", nullable = false)
+    @Schema(description = "Email do aluno", example = "john.doe@example.com")
     String email,
 
-    @NotNull()
+    @NotNull(message = "Endereço do aluno é obrigatório")
     @Schema(description = "Endereço do aluno", implementation = AddressRequestDTO.class)
     @Valid
     AddressRequestDTO address,
 
-    @NotNull()
+    @NotNull(message = "Responsável do aluno é obrigatório")
     @Schema(description = "Responsável do aluno", implementation = ParentRequestDTO.class)
     @Valid
     ParentRequestDTO parent

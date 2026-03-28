@@ -1,53 +1,61 @@
 package com.aprimorar.api.domain.student.dto;
 
+import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
+import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
-import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
-
 public record StudentResponseDTO(
-        @NotNull
-        UUID id,
-        
-        @NotNull
-        String name,
-        
-        @NotNull
-        String contact,
-        
-        @NotNull
-        String email,
-        
-        @NotNull
-        String cpf,
-        
-        @NotNull
-        LocalDate birthdate,
-        
-        @NotNull
-        String school,
-        
-        @NotNull
-        Integer age,
-        
-        @NotNull
-        AddressResponseDTO address,
-        
-        @NotNull
-        ParentResponseDTO parent,
-        
-        @Schema(nullable = true)
-        Instant archivedAt,
-        
-        @NotNull
-        Instant createdAt,
-        
-        @Schema(nullable = true)
-        Instant updatedAt) {
+    @NotNull
+    @Schema(description = "Indentificador único do aluno", example = "550e8400-e29b-41d4-a716-446655440000")
+    UUID id,
 
-}
+    @NotNull
+    @Schema(example = "John Doe", description = "Nome do aluno")
+    String name,
+
+    @NotNull
+    @Schema(example = "123456789", description = "Contato do aluno")
+    String contact,
+
+    @NotNull
+    @Schema(example = "john.doe@example.com", description = "Email do aluno")
+    String email,
+
+    @NotNull
+    @Schema(example = "123.456.789-00", description = "CPF do aluno")
+    String cpf,
+
+    @NotNull
+    @Schema(example = "1990-01-01", description = "Data de nascimento do aluno")
+    LocalDate birthdate,
+
+    @NotNull
+    @Schema(example = "School Name", description = "Nome da escola do aluno")
+    String school,
+
+    @NotNull
+    @Schema(example = "30", description = "Idade do aluno")
+    Integer age,
+
+    @NotNull
+    @Schema(implementation = AddressResponseDTO.class, example = "Street Name", description = "Endereço do aluno")
+    AddressResponseDTO address,
+
+    @NotNull
+    @Schema(implementation = ParentResponseDTO.class,example = "Parent Name", description = "Nome do pai ou responsável do aluno")
+    ParentResponseDTO parent,
+
+    @Schema(nullable = true, example = "2023-01-01T00:00:00Z", description = "Data e hora quando o aluno foi arquivado")
+    Instant archivedAt,
+
+    @NotNull
+    @Schema(example = "2023-01-01T00:00:00Z", description = "Data e hora quando o aluno foi criado")
+    Instant createdAt,
+
+    @Schema(nullable = true,example = "2023-01-01T00:00:00Z",description = "Data e hora quando o aluno foi atualizado")
+    Instant updatedAt
+) {}

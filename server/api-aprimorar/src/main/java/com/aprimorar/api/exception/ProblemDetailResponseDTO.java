@@ -1,6 +1,5 @@
 package com.aprimorar.api.exception;
 
-import java.util.Map;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -14,9 +13,7 @@ public record ProblemDetailResponseDTO(
         @Schema(description = "Detalhe geral do erro", example = "Error Detail")
         String detail,
         @Schema(description = "Caminho (URI) onde ocorreu", example = "/v1/path")
-        String instance,
-        @Schema(description = "Dicionário de erros por campo", example = "{\"field\": \"Error Detail\"}")
-        Map<String, String> errors
+        String instance
         ) {
 
 }
