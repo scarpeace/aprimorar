@@ -6,7 +6,7 @@ import { FormField } from "@/components/ui/form-field";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "./ParentCreatePage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { createParent, createParentMutationRequestSchema, useCreateParent, type CreateParentMutationRequestSchema } from "@/kubb";
 
 export function ParentCreatePage() {

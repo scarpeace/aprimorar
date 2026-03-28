@@ -1,40 +1,38 @@
 import {
   getStudentsQueryKey,
-  getStudentSummaryQueryKey,
   updateStudentMutationKey,
   useArchiveStudent,
   useCreateStudent,
   useDeleteStudent,
   useUnarchiveStudent,
   useUpdateStudent,
-  type CreateStudentMutationResponse,
-  type StudentRequestDTO,
+  type StudentResponseDTO,
 } from "@/kubb";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { studentsQueryKeys } from "./studentQueryKeys";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { studentInputSchema, type StudentFormInput } from "./studentSchema";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { studentInputSchema } from "./studentSchema";
 
 export function useCreateStudentMutation() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useCreateStudent({
-
     mutation: {
-      onMutate: (newStudent) => {
-        const { success, error, data } = studentInputSchema.safeParse(newStudent);
-        if (!success) {
-          throw error;
-        }
-        return data;
-      },
+      // onMutate: (newStudent) => {
+      //   const { success, error, data } = studentInputSchema.safeParse(newStudent);
+      //   if (!success) {
+      //     console.log("ERRO DO ZOD:", error)
+      //     throw error;
+      //   }
+      //   return data;
+      // },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error("Algo deu errado ao criar o aluno");
       },
-      onSuccess: (createdStudent: CreateStudentMutationResponse) => {
+      onSuccess: (createdStudent: StudentResponseDTO) => {
         toast.success("Aluno criado com sucesso");
         queryClient.invalidateQueries({ queryKey: updateStudentMutationKey() });
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
@@ -59,7 +57,7 @@ export function useUpdateStudentMutation() {
         navigate(`/students/${updatedStudent.id}`);
       },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error("Algo deu errado ao atualizar o aluno");
       },
     },
   });

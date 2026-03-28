@@ -1,7 +1,7 @@
 import  { ErrorCard } from "@/components/ui/error-card";
 import { PageLoading } from "@/components/ui/page-loading";
 import type { StudentResponseDTO } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import type { ReactNode } from "react";
 
 type StudentPageStateProps = {

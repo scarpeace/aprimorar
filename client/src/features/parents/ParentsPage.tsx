@@ -8,7 +8,7 @@ import { PageLoading } from "@/components/ui/page-loading";
 import { Pagination } from "@/components/ui/pagination";
 import { ButtonLink } from "@/components/ui/button";
 import styles from "@/features/parents/ParentsPage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { useGetParents } from "@/kubb";
 

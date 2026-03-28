@@ -1,6 +1,7 @@
 import { defineConfig } from '@kubb/core'
 import { pluginOas } from '@kubb/plugin-oas'
 import { pluginTs } from '@kubb/plugin-ts'
+import { pluginFaker } from '@kubb/plugin-faker'
 import { pluginZod } from '@kubb/plugin-zod'
 import { pluginReactQuery } from '@kubb/plugin-react-query'
 
@@ -24,13 +25,23 @@ export default defineConfig({
       },
     }),
 
-    // pluginFaker({
-    //   output: { path: './faker' },
-    //   group: {
-    //     type: 'tag',
-    //     name: ({ group }) => group.toLowerCase(),
-    //   },
-    // }),
+   // pluginFaker({
+   //    output: {
+   //      path: './mocks',
+   //      banner: '/* eslint-disable no-alert, no-console */',
+   //      barrelType: 'named',
+   //      footer: ''
+   //    },
+   //    group: {
+   //      type: 'tag',
+   //      name: ({ group }) => `${group}Mocks`,
+   //    },
+   //   dateType: 'string',
+   //    // dateParser: 'dayjs',
+   //    unknownType: 'unknown',
+   //    regexGenerator: 'faker',
+   //    seed: [100],
+   //  }),
 
     // pluginZod({
     //   output: {path: './schemas'},
@@ -58,6 +69,3 @@ export default defineConfig({
     }),
   ],
 })
-function pluginFaker(arg0: { output: { path: string }; group: { type: string; name: ({ group }: { group: any }) => any } }) {
-  throw new Error('Function not implemented.')
-}

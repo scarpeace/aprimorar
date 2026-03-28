@@ -12,7 +12,7 @@ import styles from "@/features/employees/EmployeeCreatePage.module.css";
 import { dutyLabels } from "@/features/employees/schemas/dutyEnum";
 import { employeeFormSchema, type EmployeeFormInput } from "@/features/employees/schemas/employee";
 import { formatDateInputValue } from "@/lib/utils/formatter";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useEmployeeEditQuery } from "./query/useEmployeeQueries";
 import { useUpdateEmployee } from "./query/useEmployeeMutations";
 import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton";

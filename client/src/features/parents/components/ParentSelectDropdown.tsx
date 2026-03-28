@@ -1,6 +1,6 @@
 import React, { useId, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useParentsSummary } from "../query/parentQueries";
 import type { ParentSummaryDTO } from "@/kubb";
 import { ButtonLink } from "@/components/ui/button";

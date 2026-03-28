@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import type { StudentResponseDTO } from "@/kubb";
 import { ErrorCard } from "@/components/ui/error-card";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { LoadingCard } from "@/components/ui/loading-card";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 
 type StudentDetailStateProps = {
   student?: StudentResponseDTO;

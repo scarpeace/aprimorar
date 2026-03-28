@@ -26,8 +26,8 @@ export function StudentCreatePage() {
     registerWithMask,
   } = useStudentForm();
 
-  const onSubmit = handleSubmit((data: StudentInputSchema) => {
-    createStudent({data});
+  const onSubmit = handleSubmit((data) => {
+    createStudent({ data });
   });
 
   return (
@@ -75,7 +75,7 @@ export function StudentCreatePage() {
           <StudentFormActions isSubmitting={isCreatingStudent} />
 
           {createStudentError ? (
-            <Alert variant="error" message={createStudentError.message} />
+            <Alert variant="error" error={createStudentError} />
           ) : null}
         </StudentForm>
       </StudentPageState>

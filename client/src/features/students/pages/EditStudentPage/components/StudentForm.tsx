@@ -1,7 +1,9 @@
+import type { StudentInputSchema } from "@/features/students/hooks/studentSchema";
 import type { ReactNode } from "react";
+import type { FormSubmitHandler } from "react-hook-form";
 
 type StudentEditFormProps = {
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit: React.SubmitEventHandler<HTMLFormElement>;
   children: ReactNode;
 };
 

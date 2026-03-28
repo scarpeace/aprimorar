@@ -29,11 +29,4 @@ export type ProblemDetailResponseDTO = {
    * @type string | undefined
    */
   instance?: string;
-  /**
-   * @description Dicionário de erros por campo
-   * @type object | undefined
-   */
-  errors?: {
-    [key: string]: string;
-  };
 };

@@ -8,38 +8,47 @@ import type { ParentResponseDTO } from "./ParentResponseDTO.ts";
 
 export type StudentResponseDTO = {
   /**
+   * @description Indentificador único do aluno
    * @type string, uuid
    */
   id: string;
   /**
+   * @description Nome do aluno
    * @type string
    */
   name: string;
   /**
+   * @description Contato do aluno
    * @type string
    */
   contact: string;
   /**
+   * @description Email do aluno
    * @type string
    */
   email: string;
   /**
+   * @description CPF do aluno
    * @type string
    */
   cpf: string;
   /**
+   * @description Data de nascimento do aluno
    * @type string, date
    */
   birthdate: string;
   /**
+   * @description Nome da escola do aluno
    * @type string
    */
   school: string;
   /**
+   * @description Idade do aluno
    * @type integer, int32
    */
   age: number;
   /**
+   * @description Endereço do aluno
    * @type object
    */
   address: AddressResponseDTO;
@@ -48,14 +57,17 @@ export type StudentResponseDTO = {
    */
   parent: ParentResponseDTO;
   /**
+   * @description Data e hora quando o aluno foi arquivado
    * @type string, date-time
    */
   archivedAt?: string | null;
   /**
+   * @description Data e hora quando o aluno foi criado
    * @type string, date-time
    */
   createdAt: string;
   /**
+   * @description Data e hora quando o aluno foi atualizado
    * @type string, date-time
    */
   updatedAt?: string | null;

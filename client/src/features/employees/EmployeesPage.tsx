@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { Pagination } from "@/components/ui/pagination";
 import styles from "@/features/employees/EmployeesPage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { UserCog } from "lucide-react";
 import { useState } from "react";

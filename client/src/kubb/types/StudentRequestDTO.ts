@@ -23,6 +23,7 @@ export type StudentRequestDTO = {
   birthdate: string;
   /**
    * @description CPF do aluno
+   * @minLength 1
    * @type string
    */
   cpf: string;

@@ -1,13 +1,13 @@
 import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
-import { type StudentFormInput } from "@/features/students/hooks/use-student-form";
+import type { StudentInputSchema } from "@/features/students/hooks/studentSchema";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
 
 type StudentInfoSectionProps = {
   register: UseFormRegister<any>;
   registerWithMask: ReturnType<typeof useHookFormMask>;
-  errors: FieldErrors<StudentFormInput>;
+  errors: FieldErrors<StudentInputSchema>;
   className?: string;
 };
 

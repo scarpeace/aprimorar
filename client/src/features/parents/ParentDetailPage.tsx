@@ -6,7 +6,7 @@ import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { StudentsTable } from "@/features/students/components/StudentsTable/StudentsTable";
 import type { StudentResponseDTO } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { UserCog } from "lucide-react";
 import type { ReactNode } from "react";
 import { useNavigate, useParams } from "react-router-dom";
