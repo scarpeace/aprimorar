@@ -93,7 +93,7 @@ export function AddressDetailsForm({
         </FormField>
 
         <FormField
-          className=""
+          className="shrink"
           label="Estado"
           htmlFor={`address.state`}
           error={errors[`address.state`]?.message as string}

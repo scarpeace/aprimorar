@@ -23,16 +23,15 @@ export default defineConfig({
         name: ({ group }) => group.toLowerCase(),
       },
     }),
-    // pluginClient({
-    //   output: { path: './clients' },
-    //   paramsType: 'inline',
-    //   pathParamsType: 'inline',
-    //   parser:'zod',
+
+    // pluginFaker({
+    //   output: { path: './faker' },
     //   group: {
     //     type: 'tag',
     //     name: ({ group }) => group.toLowerCase(),
     //   },
     // }),
+
     pluginZod({
       output: { path: './schemas' },
       version: '4',
@@ -60,3 +59,6 @@ export default defineConfig({
     }),
   ],
 })
+function pluginFaker(arg0: { output: { path: string }; group: { type: string; name: ({ group }: { group: any }) => any } }) {
+  throw new Error('Function not implemented.')
+}

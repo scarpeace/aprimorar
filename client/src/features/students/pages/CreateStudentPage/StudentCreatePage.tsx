@@ -1,303 +1,110 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useHookFormMask } from "use-mask-input";
-import { Button, ButtonLink } from "@/components/ui/button";
-import { FormField } from "@/components/ui/form-field";
+import { Alert } from "@/components/ui/alert";
 import { PageHeader } from "@/components/ui/page-header";
-import { SectionCard } from "@/components/ui/section-card";
-import styles from "./student-create-page.module.css";
-import { BRAZILIAN_STATES } from "@/lib/utils/brazilianStates";
-import { useCreateStudentMutation } from "../../hooks/studentMutations";
-import { studentFormSchema, type StudentFormInput } from "../../schemas/studentFormSchema";
-import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
+import { AddressDetailsForm } from "@/features/address/AddressDetailsForm";
+import { ParentDetailsForm } from "@/features/parents/components/ParentDetailsForm";
+import {
+  getStudentsQueryKey,
+  updateStudentMutationKey,
+  useCreateStudent,
+} from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useStudentForm } from "../../hooks/use-student-form";
+import type { StudentFormInput } from "../../schemas/studentFormSchema";
+import { StudentDetailsForm } from "../EditStudentPage/components/StudentDetailsForm";
+import { StudentEditForm } from "../EditStudentPage/components/StudentEditForm";
+
 
 export function StudentCreatePage() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<StudentFormInput>({
-    resolver: zodResolver(studentFormSchema),
-    mode: "onBlur",
+    mutate: createStudent,
+    error: createStudentError,
+    isPending: isStudentCreating,
+  } = useCreateStudent({
+    mutation: {
+      onSuccess: (createdStudent) => {
+        console.log(createdStudent);
+        toast.success("Aluno criado com sucesso");
+        queryClient.invalidateQueries({ queryKey: updateStudentMutationKey() });
+        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
+        navigate(`/students/${createdStudent.id}`);
+      },
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
+      },
+    },
   });
-  const selectedParentId = watch("parentId");
-  const registerWithMask = useHookFormMask(register);
 
-  const { mutate: createStudent, isPending: isSubmitting } =
-    useCreateStudentMutation();
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+    registerWithMask,
+  } = useStudentForm();
 
-  const onSubmit = (data: StudentFormInput) => {
-    createStudent({ data});
-  };
+  const onSubmit = handleSubmit((data: StudentFormInput) => {
+    createStudent({ data });
+  });
 
   return (
-    <div className={styles.page}>
+    <div className="container">
       <PageHeader
-        title="Novo aluno"
-        description="Crie um novo cadastro de aluno."
-        action={
-          <ButtonLink to="/students" variant="outline">
-            Voltar para alunos
-          </ButtonLink>
-        }
+        title="Criar aluno"
+        description="Preencha os dados do aluno e do responsável."
       />
 
-      <SectionCard
-        title="Responsável"
-        description="Selecione um responsável já cadastrado no sistema."
-      >
-        <div className={styles.formGrid}>
-          <FormField
-            className={`${styles.field} ${styles.span2}`}
-            label="Responsável"
-            htmlFor="parentId"
-            error={errors.parentId?.message}
-          >
-            {/* Registra o campo silenciosamente */}
-            <input type="hidden" {...register("parentId")} />
-            <ParentSelectDropdown
-              value={selectedParentId}
-              onChange={(id) =>
-                setValue("parentId", id, {
-                  shouldValidate: true,
-                  shouldDirty: true,
-                })
-              }
-              hasError={!!errors.parentId}
-            />
+      {/*<StudentEditPageState
+        studentId={studentId}
+        student={student}
+        isLoading={isStudentLoading}
+        error={studentError}
+        onRetry={refetchStudent}
+      >*/}
 
-            <p className="text-xs text-muted-foreground mt-1">
-              Não encontrou o responsável?{" "}
-              <ButtonLink
-                to="/parents/new"
-                variant="ghost"
-                size="sm"
-                className="h-auto p-0 underline"
-              >
-                Cadastre um novo aqui
-              </ButtonLink>
-            </p>
-          </FormField>
-        </div>
-      </SectionCard>
+      <StudentEditForm onSubmit={onSubmit}>
+        {/*<ParentSelectDropdown
+            selectedParentId={formSelectedParentId}
+            register={register}
+            setValue={setValue}
+            errors={errors}
+            className="grid grid-cols-1 gap-4"
+          />*/}
 
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <SectionCard
-          title="Dados do aluno"
-          description="Preencha os dados pessoais e endereço."
-        >
-          <div className={styles.sectionTitle}>Aluno</div>
+        <StudentDetailsForm
+          register={register}
+          registerWithMask={registerWithMask}
+          errors={errors}
+          className="grid grid-cols-3 gap-4"
+        />
 
-          <div className={styles.formGrid}>
-            <FormField
-              className={styles.field}
-              label="Nome completo"
-              htmlFor="name"
-              error={errors.name?.message}
-            >
-              <input
-                className="app-input"
-                id="name"
-                placeholder="Ex: João Pedro"
-                {...register("name")}
-              />
-            </FormField>
+        <ParentDetailsForm
+          register={register}
+          registerWithMask={registerWithMask}
+          errors={errors}
+          className="grid grid-cols-2 gap-4"
+        />
 
-            <FormField
-              className={styles.field}
-              label="Data de nascimento"
-              htmlFor="birthdate"
-              error={errors.birthdate?.message}
-            >
-              <input
-                className="app-input"
-                id="birthdate"
-                type="date"
-                {...register("birthdate")}
-              />
-            </FormField>
+        <AddressDetailsForm
+          register={register}
+          className="grid grid-cols-3 gap-4"
+          errors={errors}
+        />
 
-            <FormField
-              className={styles.field}
-              label="CPF"
-              htmlFor="cpf"
-              error={errors.cpf?.message}
-            >
-              <input
-                className="app-input"
-                id="cpf"
-                placeholder="000.000.000-00"
-                {...registerWithMask("cpf", "999.999.999-99")}
-              />
-            </FormField>
+        {/*<StudentCreateActions
+            studentId={studentId}
+            isSubmitting={isStudentCreating}
+          />*/}
 
-            <FormField
-              className={styles.field}
-              label="Contato"
-              htmlFor="contact"
-              error={errors.contact?.message}
-            >
-              <input
-                className="app-input"
-                id="contact"
-                placeholder="(11) 99999-9999"
-                {...registerWithMask("contact", [
-                  "(99) 9999-9999",
-                  "(99) 99999-9999",
-                ])}
-              />
-            </FormField>
-
-            <FormField
-              className={styles.field}
-              label="Email"
-              htmlFor="email"
-              error={errors.email?.message}
-            >
-              <input
-                className="app-input"
-                id="email"
-                type="email"
-                placeholder="exemplo@dominio.com"
-                {...register("email")}
-              />
-            </FormField>
-
-            <FormField
-              className={styles.field}
-              label="Escola"
-              htmlFor="school"
-              error={errors.school?.message}
-            >
-              <input
-                className="app-input"
-                id="school"
-                placeholder="Ex: Escola Estadual X"
-                {...register("school")}
-              />
-            </FormField>
-          </div>
-
-          <div className={styles.divider} />
-          <div className={styles.sectionTitle}>Endereço</div>
-
-          <div className={styles.formGrid}>
-            <FormField
-              className={`${styles.field} ${styles.span2}`}
-              label="Rua"
-              htmlFor="address.street"
-              error={errors.address?.street?.message}
-            >
-              <input
-                className="app-input"
-                id="address.street"
-                placeholder="Ex: Rua das Flores"
-                {...register("address.street")}
-              />
-            </FormField>
-
-            <FormField
-              className={styles.field}
-              label="Número"
-              htmlFor="address.number"
-              error={errors.address?.number?.message}
-            >
-              <input
-                className="app-input"
-                id="address.number"
-                placeholder="Ex: 123"
-                {...register("address.number")}
-              />
-            </FormField>
-
-            <FormField
-              className={styles.field}
-              label="Complemento (opcional)"
-              htmlFor="address.complement"
-              error={errors.address?.complement?.message}
-            >
-              <input
-                className="app-input"
-                id="address.complement"
-                placeholder="Apto, bloco, etc"
-                {...register("address.complement")}
-              />
-            </FormField>
-
-            <FormField
-              className={styles.field}
-              label="Bairro"
-              htmlFor="address.district"
-              error={errors.address?.district?.message}
-            >
-              <input
-                className="app-input"
-                id="address.district"
-                placeholder="Ex: Centro"
-                {...register("address.district")}
-              />
-            </FormField>
-
-            <FormField
-              className={styles.field}
-              label="Cidade"
-              htmlFor="address.city"
-              error={errors.address?.city?.message}
-            >
-              <input
-                className="app-input"
-                id="address.city"
-                placeholder="Ex: São Paulo"
-                {...register("address.city")}
-              />
-            </FormField>
-
-            <FormField
-              className={styles.field}
-              label="Estado"
-              htmlFor="address.state"
-              error={errors.address?.state?.message}
-            >
-              <select
-                className="app-select"
-                id="address.state"
-                {...register("address.state")}
-              >
-                {BRAZILIAN_STATES.map((state) => (
-                  <option key={state.value} value={state.value}>
-                    {state.label}
-                  </option>
-                ))}
-              </select>
-            </FormField>
-
-            <FormField
-              className={styles.field}
-              label="CEP"
-              htmlFor="address.zip"
-              error={errors.address?.zip?.message}
-            >
-              <input
-                className="app-input"
-                id="address.zip"
-                placeholder="00000-000"
-                {...registerWithMask("address.zip", "99999-999")}
-              />
-            </FormField>
-          </div>
-        </SectionCard>
-
-        <div className={styles.actions}>
-          <ButtonLink to="/students" variant="outline">
-            Cancelar
-          </ButtonLink>
-          <Button type="submit" disabled={isSubmitting} variant="success">
-            {isSubmitting ? "Salvando..." : "Criar aluno"}
-          </Button>
-        </div>
-      </form>
+        {createStudentError ? (
+          <Alert variant="error" message={createStudentError.message} />
+        ) : null}
+      </StudentEditForm>
+      {/*</StudentEditPageState>*/}
     </div>
   );
 }

@@ -4,6 +4,29 @@ import { useHookFormMask } from "use-mask-input";
 import { studentFormSchema, type StudentFormInput } from "../schemas/studentFormSchema";
 import type { StudentResponseDTOSchema } from "@/kubb";
 
+const mock = {
+  name: "Felipe Barbosa",
+  birthdate: "2012-09-20",
+  cpf: "990.714.990-06",
+  school: "Escola A",
+  contact: "(61) 96242-8200",
+  email: "felipe.barbosa@38estudante.com",
+  address: {
+    street: "Rua das Flores",
+    number: "123",
+    complement: "Casa 1",
+    district: "Centro",
+    city: "Brasilia",
+    state: "DF",
+    zip: "70000-001",
+  },
+  parent: {
+    name: "Marcia Barbosa",
+    email: "marcia.barbosa@735email.com",
+    contact: "(61) 99111-2201",
+    cpf: "123.456.789-01",
+  },
+};
 export function useStudentForm(student?: StudentResponseDTOSchema) {
 
   const form = useForm<StudentFormInput>({
