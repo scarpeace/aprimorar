@@ -19,7 +19,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getStudentSummaryQueryResponseSchema } from "../../schemas/student/getStudentSummarySchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getStudentSummaryQueryKey = () =>
@@ -49,7 +48,7 @@ export async function getStudentSummary(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return getStudentSummaryQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getStudentSummaryQueryOptions(

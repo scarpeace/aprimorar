@@ -20,7 +20,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getStudentsByParentQueryResponseSchema } from "../../schemas/student/getStudentsByParentSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getStudentsByParentQueryKey = (
@@ -55,7 +54,7 @@ export async function getStudentsByParent(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return getStudentsByParentQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getStudentsByParentQueryOptions(

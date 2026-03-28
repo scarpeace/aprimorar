@@ -2,21 +2,26 @@ import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
+import z from "zod";
+import type { ParentInputSchema } from "../hooks/parentSchema";
 
 type ParentDetailsFormProps = Readonly<{
   register: UseFormRegister<any>;
   registerWithMask: ReturnType<typeof useHookFormMask>;
-  errors: FieldErrors<any>;
-  parentId?: string;
+  prefix?: string;
+  errors?: FieldErrors<ParentInputSchema>;
   className?: string;
 }>;
 
 export function ParentDetailsForm({
   register,
   registerWithMask,
+  prefix,
   errors,
   className,
 }: ParentDetailsFormProps) {
+
+  const withPrefix = (field: string) => prefix ? `${prefix}.${field}` : field;
 
   return (
     <SectionCard
@@ -26,41 +31,41 @@ export function ParentDetailsForm({
       <div className={className}>
         <FormField
           label="Nome completo"
-          htmlFor={`parent.name`}
-          error={errors[`parent.name`]?.message as string}
+          htmlFor={withPrefix(`name`)}
+          error={errors?.name?.message}
         >
           <input
             className="app-input"
             id={`name`}
             placeholder="Ex: Maria Silva"
-            {...register(`parent.name`)}
+            {...register(withPrefix(`name`))}
           />
         </FormField>
 
         <FormField
           label="Email"
-          htmlFor={`parent.email`}
-          error={errors[`parent.email`]?.message as string}
+          htmlFor={withPrefix(`email`)}
+          error={errors?.email?.message}
         >
           <input
             className="app-input"
             id={`email`}
             type="email"
             placeholder="exemplo@dominio.com"
-            {...register(`parent.email`)}
+            {...register(withPrefix(`email`))}
           />
         </FormField>
 
         <FormField
           label="Contato"
-          htmlFor={`parent.contact`}
-          error={errors[`parent.contact`]?.message as string}
+          htmlFor={withPrefix(`contact`)}
+          error={errors?.contact?.message}
         >
           <input
             className="app-input"
             id={`contact`}
             placeholder="(11) 99999-9999"
-            {...registerWithMask(`parent.contact`, [
+            {...registerWithMask(withPrefix(`contact`), [
               "(99) 9999-9999",
               "(99) 99999-9999",
             ])}
@@ -69,14 +74,14 @@ export function ParentDetailsForm({
 
         <FormField
           label="CPF"
-          htmlFor={`parent.cpf`}
-          error={errors[`parent.cpf`]?.message as string}
+          htmlFor={withPrefix(`cpf`)}
+          error={errors?.cpf?.message}
         >
           <input
             className="app-input"
             id={`cpf`}
             placeholder="000.000.000-00"
-            {...registerWithMask(`parent.cpf`, "999.999.999-99")}
+            {...registerWithMask(withPrefix(`cpf`), "999.999.999-99")}
           />
         </FormField>
       </div>

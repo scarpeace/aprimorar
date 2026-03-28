@@ -11,13 +11,14 @@ import com.aprimorar.api.domain.parent.Parent;
 
 public interface ParentRepository extends JpaRepository<Parent, UUID>, JpaSpecificationExecutor<Parent> {
 
-    Optional<Parent> findByCpf(String cpf);
 
+    Optional<Parent> findByCpf(String cpf);
     Optional<Parent> findByEmail(String email);
 
     List<Parent> findByArchivedAtIsNull();
 
+    Boolean existsByEmail(String cpf);
+    Boolean existsByCpf(String cpf);
     boolean existsByCpfAndIdNot(String cpf, UUID id);
-
     boolean existsByEmailAndIdNot(String email, UUID id);
 }

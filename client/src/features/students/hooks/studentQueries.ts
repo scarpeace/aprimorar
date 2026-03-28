@@ -8,6 +8,7 @@ import {
 } from "@/kubb";
 
 import { studentsQueryKeys } from "./studentQueryKeys";
+import { studentResponseSchema } from "./studentSchema";
 
 export function useStudentsQuery(params: GetStudentsQueryParams = {}) {
   return useGetStudents(params, {
@@ -19,9 +20,10 @@ export function useStudentsQuery(params: GetStudentsQueryParams = {}) {
   });
 }
 
-export function useStudentByIdQuery(studentId: string) {
+export function useStudentByIdQuery(studentId: string): ReturnType<typeof useGetStudentById> {
   return useGetStudentById(studentId, {
     query: {
+      select: (data) => studentResponseSchema.parse(data),
       queryKey: studentsQueryKeys.detail(studentId),
       enabled: !!studentId,
       staleTime: 1000 * 60 * 5,

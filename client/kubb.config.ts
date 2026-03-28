@@ -32,17 +32,17 @@ export default defineConfig({
     //   },
     // }),
 
-    pluginZod({
-      output: { path: './schemas' },
-      version: '4',
-      inferred: true,
-      importPath: '@/lib/validations/zod',
-      dateType: 'string',
-      group: {
-        type: 'tag',
-        name: ({ group }) => group.toLowerCase(),
-      },
-    }),
+    // pluginZod({
+    //   output: {path: './schemas'},
+    //   version: '4',
+    //   inferred: true,
+    //   importPath: '@/lib/validations/zod',
+    //   dateType: 'string',
+    //   group: {
+    //     type: 'tag',
+    //     name: ({ group }) => group.toLowerCase(),
+    //   },
+    // }),
 
     pluginReactQuery({
       //Quando for implementar a autenticação te que tirar essa BaseURl daqui.
@@ -50,7 +50,6 @@ export default defineConfig({
       output: { path: './hooks' },
       paramsType: 'inline',
       pathParamsType: 'inline',
-      parser: 'zod',
       group: {
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),

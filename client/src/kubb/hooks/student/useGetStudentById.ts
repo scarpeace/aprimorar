@@ -20,7 +20,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getStudentByIdQueryResponseSchema } from "../../schemas/student/getStudentByIdSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getStudentByIdQueryKey = (
@@ -53,7 +52,7 @@ export async function getStudentById(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return getStudentByIdQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getStudentByIdQueryOptions(

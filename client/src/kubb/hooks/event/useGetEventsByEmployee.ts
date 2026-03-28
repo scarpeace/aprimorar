@@ -21,7 +21,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getEventsByEmployeeQueryResponseSchema } from "../../schemas/event/getEventsByEmployeeSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEventsByEmployeeQueryKey = (
@@ -63,7 +62,7 @@ export async function getEventsByEmployee(
     params,
     ...requestConfig,
   });
-  return getEventsByEmployeeQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getEventsByEmployeeQueryOptions(

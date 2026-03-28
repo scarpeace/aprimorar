@@ -19,7 +19,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getParentsSummaryQueryResponseSchema } from "../../schemas/parent/getParentsSummarySchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getParentsSummaryQueryKey = () =>
@@ -49,7 +48,7 @@ export async function getParentsSummary(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return getParentsSummaryQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getParentsSummaryQueryOptions(

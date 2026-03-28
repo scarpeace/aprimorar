@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.student.StudentService;
 import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
@@ -40,7 +41,8 @@ public class StudentController implements StudentControllerDocs {
 
     @Override
     @PostMapping
-    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
+    public ResponseEntity<StudentResponseDTO> createStudent(
+            @RequestBody @Valid StudentRequestDTO createStudentDto) {
 
         StudentResponseDTO response = studentService.createStudent(createStudentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

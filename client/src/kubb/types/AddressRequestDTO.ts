@@ -41,36 +41,48 @@ export type AddressRequestDTOStateEnumKey =
  */
 export type AddressRequestDTO = {
   /**
-   * @description Rua do endereço
-   * @minLength 1
+   * @description Rua ou Condomínio
+   * @minLength 3
+   * @maxLength 255
    * @type string
    */
   street: string;
   /**
+   * @description Número da residência
    * @minLength 1
+   * @maxLength 10
    * @type string
    */
   number: string;
   /**
+   * @description Complemento do endereço
+   * @maxLength 255
    * @type string | undefined
    */
   complement?: string;
   /**
-   * @minLength 1
+   * @description Bairro do endereço
+   * @minLength 3
+   * @maxLength 255
    * @type string
    */
   district: string;
   /**
-   * @minLength 1
+   * @description Cidade do endereço
+   * @minLength 3
+   * @maxLength 255
    * @type string
    */
   city: string;
   /**
+   * @description Estado do endereço
    * @type string
    */
   state: AddressRequestDTOStateEnumKey;
   /**
-   * @minLength 1
+   * @description CEP do endereço
+   * @minLength 8
+   * @maxLength 8
    * @type string
    */
   zip: string;

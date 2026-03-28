@@ -19,7 +19,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import { deleteEventMutationResponseSchema } from "../../schemas/event/deleteEventSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteEventMutationKey = () =>
@@ -48,7 +47,7 @@ export async function deleteEvent(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return deleteEventMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function deleteEventMutationOptions<TContext = unknown>(

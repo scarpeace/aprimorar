@@ -8,8 +8,10 @@ com/aprimorar/api/shared/APIResponse.class
 com/aprimorar/api/domain/employee/EmployeeRules.class
 com/aprimorar/api/domain/parent/dto/ParentResponseDTO.class
 com/aprimorar/api/enums/BrazilianState.class
+com/aprimorar/api/domain/employee/dto/EmployeeSummaryDTO.class
 com/aprimorar/api/domain/event/exception/EventNotFoundException.class
 com/aprimorar/api/annotations/StudentsResponseAnnotation.class
+com/aprimorar/api/domain/student/dto/StudentSummaryDTO.class
 com/aprimorar/api/domain/student/StudentRules.class
 com/aprimorar/api/domain/student/StudentService.class
 com/aprimorar/api/domain/event/exception/InvalidEventException.class
@@ -35,6 +37,7 @@ com/aprimorar/api/domain/address/dto/AddressResponseDTO.class
 com/aprimorar/api/domain/event/repository/EventRepository$EventContentCount.class
 com/aprimorar/api/domain/parent/exception/ParentAlreadyExistsException.class
 com/aprimorar/api/domain/event/web/EventControllerDocs.class
+com/aprimorar/api/domain/parent/dto/ParentSummaryDTO.class
 com/aprimorar/api/exception/GlobalExceptionHandler.class
 com/aprimorar/api/domain/employee/exception/EmployeeAlreadyExistsException.class
 com/aprimorar/api/domain/event/repository/EventRepository.class

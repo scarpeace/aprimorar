@@ -20,10 +20,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import {
-  updateEventMutationResponseSchema,
-  updateEventMutationRequestSchema,
-} from "../../schemas/event/updateEventSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const updateEventMutationKey = () =>
@@ -45,7 +41,7 @@ export async function updateEvent(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const requestData = updateEventMutationRequestSchema.parse(data);
+  const requestData = data;
 
   const res = await request<
     UpdateEventMutationResponse,
@@ -58,7 +54,7 @@ export async function updateEvent(
     data: requestData,
     ...requestConfig,
   });
-  return updateEventMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function updateEventMutationOptions<TContext = unknown>(

@@ -20,7 +20,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getStudentsQueryResponseSchema } from "../../schemas/student/getStudentsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getStudentsQueryKey = (params?: GetStudentsQueryParams) =>
@@ -50,7 +49,7 @@ export async function getStudents(
     params,
     ...requestConfig,
   });
-  return getStudentsQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getStudentsQueryOptions(

@@ -1,13 +1,13 @@
+import type { ParentResponseDTO } from "@/kubb";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import type { ParentResponseDTOSchema } from "@/kubb";
-import { parentFormSchema, type ParentFormInput } from "@/features/parents/schemas/parentFormSchema";
+import { parentInputSchema, type ParentInputSchema, type ParentResponseSchema } from "./parentSchema";
 
-export function useParentForm(parent?: ParentResponseDTOSchema) {
+export function useParentForm(parent?: ParentResponseSchema) {
 
-  const form = useForm<ParentFormInput>({
-    resolver: zodResolver(parentFormSchema),
+  const form = useForm<ParentInputSchema>({
+    resolver: zodResolver(parentInputSchema),
     mode: "onBlur",
     values: {
       name: parent?.name ?? "",
@@ -16,7 +16,6 @@ export function useParentForm(parent?: ParentResponseDTOSchema) {
       email: parent?.email ?? "",
     },
   });
-
   const registerWithMask = useHookFormMask(form.register);
 
   return {

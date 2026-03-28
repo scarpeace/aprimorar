@@ -20,10 +20,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import {
-  updateParentMutationResponseSchema,
-  updateParentMutationRequestSchema,
-} from "../../schemas/parent/updateParentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const updateParentMutationKey = () =>
@@ -47,7 +43,7 @@ export async function updateParent(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const requestData = updateParentMutationRequestSchema.parse(data);
+  const requestData = data;
 
   const res = await request<
     UpdateParentMutationResponse,
@@ -60,7 +56,7 @@ export async function updateParent(
     data: requestData,
     ...requestConfig,
   });
-  return updateParentMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function updateParentMutationOptions<TContext = unknown>(

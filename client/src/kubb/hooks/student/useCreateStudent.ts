@@ -19,10 +19,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import {
-  createStudentMutationResponseSchema,
-  createStudentMutationRequestSchema,
-} from "../../schemas/student/createStudentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createStudentMutationKey = () =>
@@ -45,7 +41,7 @@ export async function createStudent(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const requestData = createStudentMutationRequestSchema.parse(data);
+  const requestData = data;
 
   const res = await request<
     CreateStudentMutationResponse,
@@ -58,7 +54,7 @@ export async function createStudent(
     data: requestData,
     ...requestConfig,
   });
-  return createStudentMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function createStudentMutationOptions<TContext = unknown>(

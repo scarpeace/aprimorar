@@ -20,7 +20,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getParentsQueryResponseSchema } from "../../schemas/parent/getParentsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getParentsQueryKey = (params?: GetParentsQueryParams) =>
@@ -50,7 +49,7 @@ export async function getParents(
     params,
     ...requestConfig,
   });
-  return getParentsQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getParentsQueryOptions(

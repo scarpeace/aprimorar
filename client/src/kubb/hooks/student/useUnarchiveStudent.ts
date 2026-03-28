@@ -19,7 +19,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import { unarchiveStudentMutationResponseSchema } from "../../schemas/student/unarchiveStudentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const unarchiveStudentMutationKey = () =>
@@ -50,7 +49,7 @@ export async function unarchiveStudent(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return unarchiveStudentMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function unarchiveStudentMutationOptions<TContext = unknown>(

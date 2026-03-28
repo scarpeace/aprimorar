@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
+import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.exception.ProblemDetailResponseDTO;
@@ -17,9 +18,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Student", description = "Student management APIs")
 public interface StudentControllerDocs {
@@ -37,7 +40,7 @@ public interface StudentControllerDocs {
                 content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
     })
-    ResponseEntity<StudentResponseDTO> createStudent(StudentRequestDTO request);
+    ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO request);
 
     @Operation(
             operationId = "getStudents",

@@ -1,13 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import type { AddressResponseDTO, AddressResponseDTOSchema } from "@/kubb";
-import { addressFormSchema, type AddressFormInput } from "../schemas/addressFormSchema";
+import { addressInputSchema, type AddressInputSchema, type AddressResponseSchema } from "./addressSchema";
 
-export function useAddressForm(address?: AddressResponseDTOSchema) {
-
-  const form = useForm<AddressFormInput>({
-    resolver: zodResolver(addressFormSchema),
+export function useAddressForm(address?: AddressResponseSchema) {
+  const form = useForm<AddressInputSchema>({
+    resolver: zodResolver(addressInputSchema),
     mode: "onBlur",
     values: {
       street: address?.street ?? "",

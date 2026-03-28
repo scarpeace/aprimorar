@@ -19,7 +19,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import { deleteStudentMutationResponseSchema } from "../../schemas/student/deleteStudentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteStudentMutationKey = () =>
@@ -50,7 +49,7 @@ export async function deleteStudent(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return deleteStudentMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function deleteStudentMutationOptions<TContext = unknown>(

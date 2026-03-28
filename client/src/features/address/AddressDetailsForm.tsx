@@ -1,20 +1,25 @@
 import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import { addressRequestDTOStateEnum } from "@/kubb";
+import {
+  addressRequestDTOStateEnum,
+} from "@/kubb";
+import type { AddressInputSchema } from "./hooks/addressSchema";
 
-type AddressInfoSectionProps = {
+type AddressDetailsFormProps = {
   register: UseFormRegister<any>;
-  errors: FieldErrors<any>;
+  prefix?: string;
+  errors?: FieldErrors<AddressInputSchema>;
   className?: string;
 };
 
 export function AddressDetailsForm({
   register,
+  prefix,
   errors,
   className,
-}: Readonly<AddressInfoSectionProps>) {
-
+}: Readonly<AddressDetailsFormProps>) {
+  const withPrefix = (field: string) => (prefix ? `${prefix}.${field}` : field);
 
   return (
     <SectionCard
@@ -25,83 +30,82 @@ export function AddressDetailsForm({
         <FormField
           className=""
           label="Rua"
-          htmlFor={`address.street`}
-          error={errors[`address.street`]?.message as string}
+          htmlFor={withPrefix(`street`)}
+          error={errors?.street?.message}
         >
           <input
             className="app-input"
             id="street"
             placeholder="Ex: Rua das Flores"
-            {...register(`address.street`)}
+            {...register(`${withPrefix(`street`)}`)}
           />
         </FormField>
 
         <FormField
           className={"col-span-1"}
           label="Número"
-          htmlFor={`address.number`}
-          error={errors[`address.number`]?.message as string}
+          htmlFor={withPrefix(`number`)}
+          error={errors?.number?.message}
         >
           <input
             className="app-input"
             id="number"
             placeholder="Ex: 123"
-            {...register(`address.number`)}
+            {...register(`${withPrefix(`number`)}`)}
           />
         </FormField>
 
         <FormField
           className=""
           label="Complemento"
-          htmlFor={`address.complement`}
-          error={errors[`address.complement`]?.message as string}
+          htmlFor={withPrefix(`complement`)}
         >
           <input
             className="app-input"
             id="complement"
             placeholder="Apto, bloco, etc"
-            {...register(`address.complement`)}
+            {...register(`${withPrefix(`complement`)}`)}
           />
         </FormField>
 
         <FormField
           className=""
           label="Bairro"
-          htmlFor={`address.district`}
-          error={errors[`address.district`]?.message as string}
+          htmlFor={withPrefix(`district`)}
+          error={errors?.district?.message}
         >
           <input
             className="app-input"
             id="district"
             placeholder="Ex: Centro"
-            {...register(`address.district`)}
+            {...register(`${withPrefix(`district`)}`)}
           />
         </FormField>
 
         <FormField
           className=""
           label="Cidade"
-          htmlFor={`address.city`}
-          error={errors[`address.city`]?.message as string}
+          htmlFor={withPrefix(`city`)}
+          error={errors?.city?.message}
         >
           <input
             className="app-input"
             id="city"
             placeholder="Ex: Brasília"
-            {...register(`address.city`)}
+            {...register(`${withPrefix(`city`)}`)}
           />
         </FormField>
 
         <FormField
           className="shrink"
           label="Estado"
-          htmlFor={`address.state`}
-          error={errors[`address.state`]?.message as string}
+          htmlFor={withPrefix(`state`)}
+          error={errors?.state?.message}
         >
           <select
             className="app-select"
             id="state"
-            {...register(`address.state`)}
+            {...register(`${withPrefix(`state`)}`)}
           >
             {Object.values(addressRequestDTOStateEnum).map((state) => (
               <option key={state} value={state}>
@@ -114,14 +118,14 @@ export function AddressDetailsForm({
         <FormField
           className=""
           label="CEP"
-          htmlFor={`address.zip`}
-          error={errors[`address.zip`]?.message as string}
+          htmlFor={withPrefix(`zip`)}
+          error={errors?.zip?.message}
         >
           <input
             className="app-input"
             id="zip"
             placeholder="00000-000"
-            {...register(`address.zip`)}
+            {...register(`${withPrefix(`zip`)}`)}
           />
         </FormField>
       </div>

@@ -1,19 +1,19 @@
 import { Alert } from "@/components/ui/alert";
 import { ButtonLink } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
-import { useNavigate, useParams } from "react-router-dom";
-import { StudentEditPageState } from "./components/StudentEditPageState";
-import { StudentDetailsForm } from "./components/StudentDetailsForm";
-import { StudentEditActions } from "./components/StudentEditActions";
-import { useStudentForm } from "../../hooks/use-student-form";
-import { StudentEditForm } from "./components/StudentEditForm";
 import { AddressDetailsForm } from "@/features/address/AddressDetailsForm";
-import { getStudentsQueryKey, getStudentSummaryQueryKey, updateStudentMutationKey, useGetStudentById, useUpdateStudent } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
-import type { StudentFormInput } from "../../schemas/studentFormSchema";
 import { ParentDetailsForm } from "@/features/parents/components/ParentDetailsForm";
+import { getStudentsQueryKey, updateStudentMutationKey, useGetStudentById, useUpdateStudent } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { useStudentForm } from "../../hooks/use-student-form";
+import type { StudentFormInput } from "../../schemas/studentFormSchema";
+import { StudentEditActions } from "./components/StudentEditActions";
+import { StudentFormFields } from "./components/StudentFormFields";
+import { StudentPageState } from "./components/StudentPageState";
+import { StudentForm } from "./components/StudentForm";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -56,7 +56,6 @@ export function StudentEditPage() {
   } = useStudentForm(student);
 
   const onSubmit = handleSubmit((data: StudentFormInput) => {
-    console.log(data);
     updateStudent({ studentId, data });
   });
 
@@ -72,14 +71,13 @@ export function StudentEditPage() {
         }
       />
 
-      <StudentEditPageState
-        studentId={studentId}
+      <StudentPageState
         student={student}
         isLoading={isStudentLoading}
         error={studentError}
         onRetry={refetchStudent}
       >
-        <StudentEditForm onSubmit={onSubmit}>
+        <StudentForm onSubmit={onSubmit}>
           {/*<ParentSelectDropdown
             selectedParentId={formSelectedParentId}
             register={register}
@@ -88,7 +86,7 @@ export function StudentEditPage() {
             className="grid grid-cols-1 gap-4"
           />*/}
 
-          <StudentDetailsForm
+          <StudentFormFields
             register={register}
             registerWithMask={registerWithMask}
             errors={errors}
@@ -96,6 +94,7 @@ export function StudentEditPage() {
           />
 
           <ParentDetailsForm
+            prefix="parent"
             register={register}
             registerWithMask={registerWithMask}
             errors={errors}
@@ -103,9 +102,10 @@ export function StudentEditPage() {
           />
 
           <AddressDetailsForm
-            className="grid grid-cols-3 gap-4"
+            prefix="address"
             register={register}
             errors={errors}
+            className="grid grid-cols-3 gap-4"
           />
 
           <StudentEditActions
@@ -116,8 +116,8 @@ export function StudentEditPage() {
           {updateStudentError ? (
             <Alert variant="error" message={updateStudentError.message} />
           ) : null}
-        </StudentEditForm>
-      </StudentEditPageState>
+        </StudentForm>
+      </StudentPageState>
     </div>
   );
 }

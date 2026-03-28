@@ -19,7 +19,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import { archiveEmployeeMutationResponseSchema } from "../../schemas/employee/archiveEmployeeSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const archiveEmployeeMutationKey = () =>
@@ -50,7 +49,7 @@ export async function archiveEmployee(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return archiveEmployeeMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function archiveEmployeeMutationOptions<TContext = unknown>(

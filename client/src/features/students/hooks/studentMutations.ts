@@ -1,4 +1,5 @@
 import {
+  getStudentsQueryKey,
   getStudentSummaryQueryKey,
   updateStudentMutationKey,
   useArchiveStudent,
@@ -6,27 +7,38 @@ import {
   useDeleteStudent,
   useUnarchiveStudent,
   useUpdateStudent,
+  type CreateStudentMutationResponse,
+  type StudentRequestDTO,
 } from "@/kubb";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { studentsQueryKeys } from "./studentQueryKeys";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { studentInputSchema, type StudentFormInput } from "./studentSchema";
 
 export function useCreateStudentMutation() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useCreateStudent({
+
     mutation: {
-      onSuccess: (createdStudent) => {
-        toast.success("Aluno criado com sucesso");
-        queryClient.invalidateQueries({queryKey: updateStudentMutationKey()});
-        queryClient.invalidateQueries({queryKey: getStudentSummaryQueryKey()});
-        navigate(`/students/${createdStudent.id}`);
+      onMutate: (newStudent) => {
+        const { success, error, data } = studentInputSchema.safeParse(newStudent);
+        if (!success) {
+          throw error;
+        }
+        return data;
       },
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
+      },
+      onSuccess: (createdStudent: CreateStudentMutationResponse) => {
+        toast.success("Aluno criado com sucesso");
+        queryClient.invalidateQueries({ queryKey: updateStudentMutationKey() });
+        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
+        navigate(`/students/${createdStudent.id}`);
       },
     },
   });
