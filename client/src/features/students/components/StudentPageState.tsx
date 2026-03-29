@@ -5,27 +5,20 @@ import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import type { ReactNode } from "react";
 
 type StudentPageStateProps = {
-  student?: StudentResponseDTO | undefined;
   isLoading: boolean;
   error: unknown;
-  onRetry?: () => void;
   children: ReactNode;
 };
 
 export function StudentPageState({
-  student,
   isLoading,
-  error,
-  onRetry,
   children,
+  error
 }: Readonly<StudentPageStateProps>) {
-  if (isLoading) {
-    return <PageLoading message="Carregando aluno..." />;
-  }
 
-  if (student && student == undefined) {
-    return <ErrorCard description="Aluno não encontrado." />;
-  }
+  // if (isLoading) {
+    return <PageLoading message="Carregando aluno..." />;
+  // }
 
   //TODO: adicionar um "Voltar" aqui?
   if (error) {
@@ -33,7 +26,6 @@ export function StudentPageState({
       <ErrorCard
         description={getFriendlyErrorMessage(error)}
         actionLabel="Tentar novamente"
-        onAction={onRetry}
       />
     );
   }

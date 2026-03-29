@@ -12,7 +12,10 @@ export function StudentFormActions({
       <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-3">
           <Button type="submit" variant="success" disabled={isSubmitting}>
-            {isSubmitting ? "Salvando..." : "Salvar alterações"}
+
+            {isSubmitting ?
+              <span className="loading loading-spinner loading-xs"/>
+              : "Salvar alterações"}
           </Button>
 
           <ButtonLink to={`/students/`} variant="outline">

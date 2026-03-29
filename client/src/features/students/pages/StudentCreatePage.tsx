@@ -8,6 +8,9 @@ import { StudentFormFields } from "../components/StudentFormFields";
 import { StudentPageState } from "../components/StudentPageState";
 import { useStudentForm } from "../hooks/use-student-form";
 import { useCreateStudentMutation } from "../hooks/use-student-mutation";
+import { PageLoading } from "@/components/ui/page-loading";
+import { ErrorCard } from "@/components/ui/error-card";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 
 export function StudentCreatePage() {
   const {
@@ -23,7 +26,8 @@ export function StudentCreatePage() {
     registerWithMask,
   } = useStudentForm();
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit((data, event) => {
+    event?.preventDefault();
     createStudent({ data });
   });
   return (
@@ -33,10 +37,13 @@ export function StudentCreatePage() {
         description="Preencha os dados do aluno e do responsável."
       />
 
-      <StudentPageState
-        isLoading={isCreatingStudent}
-        error={createStudentError}
-      >
+      {createStudentError ? (
+        <ErrorCard
+          description={getFriendlyErrorMessage(createStudentError)}
+          actionLabel="Tentar novamente"
+        />
+      ) : null}
+
         <StudentForm onSubmit={onSubmit}>
 
           <StudentFormFields
@@ -66,8 +73,7 @@ export function StudentCreatePage() {
           {createStudentError ? (
             <Alert variant="error" error={createStudentError} />
           ) : null}
-        </StudentForm>
-      </StudentPageState>
+      </StudentForm>
     </div>
   );
 }
