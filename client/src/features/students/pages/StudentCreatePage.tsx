@@ -71,7 +71,7 @@ export function StudentCreatePage() {
           <StudentFormActions isSubmitting={isCreatingStudent} />
 
           {createStudentError ? (
-            <Alert variant="error" error={createStudentError} />
+            <Alert variant="error" error={createStudentError.message} />
           ) : null}
       </StudentForm>
     </div>

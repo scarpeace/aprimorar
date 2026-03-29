@@ -3,14 +3,9 @@ import { Button } from "./button";
 
 type PageLoadingProps = {
   message?: string;
-  children?: React.ReactNode;
 };
 
-export function PageLoading({
-  children,
-  message = "Carregando...",
-}: PageLoadingProps) {
-  const start = Date.now();
+export function PageLoading({ message = "Carregando..." }: PageLoadingProps) {
   const navigate = useNavigate();
 
   return (
@@ -20,10 +15,8 @@ export function PageLoading({
           <span className="text-center">{message}</span>
           <span className="loading loading-dots loading-xs"></span>
         </div>
-          <Button onClick={() => navigate(-1)}>Voltar</Button>
+        <Button onClick={() => navigate(-1)}>Voltar</Button>
       </div>
-
-      {children}
     </div>
   );
 }

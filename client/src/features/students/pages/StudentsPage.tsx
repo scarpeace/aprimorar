@@ -7,6 +7,8 @@ import { useDebounce } from "@/lib/shared/use-debounce";
 import { GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { StudentsTable } from "../components/StudentsTable";
+import { PageError } from "@/components/ui/page-error";
+import { PageLoading } from "@/components/ui/page-loading";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -80,6 +82,10 @@ export function StudentsPage() {
       </PageHeader>
 
       <TableRoot>
+
+        {studentsPageError && <PageError message="Ocorreu um erro ao carregar o aluno." error={studentsPageError} />}
+        {isStudentsPageLoading && <PageLoading message="Carregando alunos" />}
+
         <StudentsTable.State
           students={studentsPage?.content}
           isLoading={isStudentsPageLoading}

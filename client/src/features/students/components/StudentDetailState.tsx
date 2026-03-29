@@ -6,14 +6,12 @@ import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 
 type StudentDetailStateProps = {
   isLoading: boolean;
-  error: unknown;
   onBack: () => void;
   children: ReactNode;
 };
 
 export function StudentDetailState({
   isLoading,
-  error,
   onBack,
   children,
 }: Readonly<StudentDetailStateProps>) {

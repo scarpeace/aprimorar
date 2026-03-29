@@ -11,6 +11,10 @@ import { StudentFormFields } from "../components/StudentFormFields";
 import { StudentPageState } from "../components/StudentPageState";
 import type { StudentInputSchema } from "../hooks/studentSchema";
 import { useStudentForm } from "../hooks/use-student-form";
+import { ErrorCard } from "@/components/ui/error-card";
+import { PageLoading } from "@/components/ui/page-loading";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { PageError } from "@/components/ui/page-error";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -19,13 +23,13 @@ export function StudentEditPage() {
   const {
     data: student,
     isLoading: isStudentLoading,
-    error: studentError,
+    error: studentFetchError,
     refetch: refetchStudent,
   } = useGetStudentById(studentId);
 
   const {
     mutate: updateStudent,
-    error: updateStudentError,
+    error: studantUpdateError,
     isPending: isStudentUpdating,
   } = useUpdateStudent();
 
@@ -40,6 +44,16 @@ export function StudentEditPage() {
     updateStudent({ studentId, data });
   });
 
+  if (isStudentLoading) {
+    return <PageLoading message="Carregando aluno..." />;
+  }
+
+  //TODO: revisitar esse comportamento de erro, ele vai servir como base
+// Atualmente a página renderiza por inteiro, as vezes é melhor colocar o erro embaixo do formulário
+  if (studentFetchError) {
+    return <PageError message="Ocorreu um erro ao carregar o aluno." error={studentFetchError} />;
+  }
+
   return (
     <div className="container">
       <PageHeader
@@ -52,46 +66,38 @@ export function StudentEditPage() {
         }
       />
 
-      <StudentPageState
-        student={student}
-        isLoading={isStudentLoading}
-        error={studentError}
-        onRetry={refetchStudent}
-      >
-        <StudentForm onSubmit={onSubmit}>
+      <StudentForm onSubmit={onSubmit}>
+        <StudentFormFields
+          register={register}
+          registerWithMask={registerWithMask}
+          errors={errors}
+          className="grid grid-cols-3 gap-4"
+        />
 
-          <StudentFormFields
-            register={register}
-            registerWithMask={registerWithMask}
-            errors={errors}
-            className="grid grid-cols-3 gap-4"
-          />
+        <ParentDetailsForm
+          prefix="parent"
+          register={register}
+          registerWithMask={registerWithMask}
+          errors={errors}
+          className="grid grid-cols-2 gap-4"
+        />
 
-          <ParentDetailsForm
-            prefix="parent"
-            register={register}
-            registerWithMask={registerWithMask}
-            errors={errors}
-            className="grid grid-cols-2 gap-4"
-          />
+        <AddressDetailsForm
+          prefix="address"
+          register={register}
+          errors={errors}
+          className="grid grid-cols-3 gap-4"
+        />
 
-          <AddressDetailsForm
-            prefix="address"
-            register={register}
-            errors={errors}
-            className="grid grid-cols-3 gap-4"
-          />
+        {studantUpdateError ? (
+          <Alert variant="error" error={studantUpdateError?.message} />
+        ) : null}
 
-          <StudentEditActions
-            studentId={studentId}
-            isSubmitting={isStudentUpdating}
-          />
-
-          {updateStudentError ? (
-            <Alert variant="error" error={updateStudentError} />
-          ) : null}
-        </StudentForm>
-      </StudentPageState>
+        <StudentEditActions
+          studentId={studentId}
+          isSubmitting={isStudentUpdating}
+        />
+      </StudentForm>
     </div>
   );
 }
