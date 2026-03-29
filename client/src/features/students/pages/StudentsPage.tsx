@@ -1,14 +1,12 @@
-import { useState } from "react";
-import { Check, ChevronDown, ChevronUpCircle, GraduationCap, PersonStanding } from "lucide-react";
+import { TableRoot } from "@/components/layout/TableRoot";
+import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { PageHeader } from "@/components/ui/page-header";
-import { ButtonLink } from "@/components/ui/button";
-import styles from "./students-page.module.css";
-import { useDebounce } from "@/lib/shared/use-debounce";
-import { TableRoot } from "@/components/layout/TableRoot";
-import { StudentsTable } from "./components/StudentsTable";
 import { useGetStudents, type StudentResponseDTO } from "@/kubb";
-import path from "path";
+import { useDebounce } from "@/lib/shared/use-debounce";
+import { GraduationCap } from "lucide-react";
+import { useState } from "react";
+import { StudentsTable } from "../components/StudentsTable";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,7 +27,7 @@ export function StudentsPage() {
   });
 
   return (
-    <div className={styles.page}>
+    <div className="animate-[fade-up_280ms_ease-out_both] flex flex-col gap-7">
       <PageHeader
         description="Gerencie cadastros e matrículas."
         title="Alunos"

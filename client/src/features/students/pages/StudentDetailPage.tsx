@@ -3,14 +3,14 @@ import { GraduationCap } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ButtonLink } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
-import styles from "./student-detail-page.module.css";
-import { StudentDetailState } from "./components/StudentDetailState";
-import { StudentEventsSection } from "./components/StudentEventsSection";
-import { StudentSummarySection } from "./components/StudentSummarySection";
 import { AddressSummarySection } from "@/features/address/AddressSumarySection";
 import { Collapse } from "@/components/ui/collapse";
 import { useEventsByStudent } from "@/features/events/query/eventQueries";
 import { useGetStudentById } from "@/kubb";
+import { StudentDetailState } from "../components/StudentDetailState";
+import { StudentEventsSection } from "../components/StudentEventsSection";
+import { StudentSummarySection } from "../components/StudentSummarySection";
+import { useStudentByIdQuery } from "../hooks/use-students-query";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +22,7 @@ export function StudentDetailPage() {
     data: student,
     isLoading: isStudentLoading,
     error: studentError,
-  } = useGetStudentById(studentId);
+  } = useStudentByIdQuery({ studentId });
 
   const {
     data: studentEvents,
@@ -31,7 +31,7 @@ export function StudentDetailPage() {
   } = useEventsByStudent(studentId);
 
   return (
-    <div className={styles.page}>
+    <div className="animate-[fade-up_300ms_ease-out_both] flex flex-col gap-7">
       <PageHeader
         description="Veja e gerencie as informações do aluno"
         title="Detalhes do aluno"
@@ -44,7 +44,6 @@ export function StudentDetailPage() {
       />
 
       <StudentDetailState
-        student={student}
         isLoading={isStudentLoading}
         error={studentError}
         onBack={() => navigate("/students")}

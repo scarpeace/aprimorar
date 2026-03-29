@@ -4,7 +4,6 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { StudentsTable } from "@/features/students/components/StudentsTable/StudentsTable";
 import type { StudentResponseDTO } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { UserCog } from "lucide-react";
@@ -12,7 +11,6 @@ import type { ReactNode } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./parent-detail-page.module.css";
 
-import { useStudentsByParent } from "../students/hooks/studentQueries";
 import { ArchiveParentButton } from "./components/ArchiveParentButton";
 import { DeleteParentButton } from "./components/DeleteParentButton";
 import { EditParentButton } from "./components/EditParentButton";

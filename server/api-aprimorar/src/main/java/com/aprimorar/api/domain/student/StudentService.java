@@ -1,22 +1,10 @@
 package com.aprimorar.api.domain.student;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.parent.ParentMapper;
 import com.aprimorar.api.domain.parent.ParentRules;
+import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
@@ -25,6 +13,17 @@ import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.domain.student.repository.StudentSpecifications;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StudentService {
@@ -98,8 +97,8 @@ public class StudentService {
     public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
         Student student = studentMapper.convertToEntity(studentRequestDto);
 
-        ensureParentUniqueness(student.getParent());
         ensureStudentUniqueness(student);
+        ensureParentUniqueness(student.getParent());
 
         student.setParent(student.getParent());
 
@@ -112,41 +111,40 @@ public class StudentService {
         return studentMapper.convertToDto(savedStudent);
     }
 
-   @Transactional
-public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO dto) {
-    if (GHOST_STUDENT_ID.equals(id)) {
-        throw new IllegalArgumentException("Não é possível modificar o registro de sistema 'Aluno Removido'.");
+    @Transactional
+    public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO dto) {
+        if (GHOST_STUDENT_ID.equals(id)) {
+            throw new IllegalArgumentException("Não é possível modificar o registro de sistema 'Aluno Removido'.");
+        }
+
+        Student entity = findStudentOrThrow(id);
+        Student updatedData = studentMapper.convertToEntity(dto);
+
+        ensureStudentUniquenessForUpdate(updatedData, id);
+        StudentRules.validate(updatedData);
+
+        Parent currentParent = entity.getParent();
+        Parent parentData = updatedData.getParent();
+
+        ensureParentUniquenessForUpdate(parentData, currentParent.getId());
+        ParentRules.validate(parentData);
+
+        currentParent.setName(parentData.getName());
+        currentParent.setContact(parentData.getContact());
+        currentParent.setEmail(parentData.getEmail());
+        currentParent.setCpf(parentData.getCpf());
+
+        entity.setName(updatedData.getName());
+        entity.setContact(updatedData.getContact());
+        entity.setEmail(updatedData.getEmail());
+        entity.setBirthdate(updatedData.getBirthdate());
+        entity.setCpf(updatedData.getCpf());
+        entity.setSchool(updatedData.getSchool());
+        entity.setAddress(updatedData.getAddress());
+
+        log.info("Aluno {} atualizado com sucesso.", entity.getName().toUpperCase());
+        return studentMapper.convertToDto(entity);
     }
-
-    Student entity = findStudentOrThrow(id);
-    Student updatedData = studentMapper.convertToEntity(dto);
-
-    ensureStudentUniquenessForUpdate(updatedData, id);
-    StudentRules.validate(updatedData);
-
-    Parent currentParent = entity.getParent();
-    Parent parentData = updatedData.getParent();
-
-    ensureParentUniquenessForUpdate(parentData, currentParent.getId());
-    ParentRules.validate(parentData);
-
-    currentParent.setName(parentData.getName());
-    currentParent.setContact(parentData.getContact());
-    currentParent.setEmail(parentData.getEmail());
-    currentParent.setCpf(parentData.getCpf());
-
-    entity.setName(updatedData.getName());
-    entity.setContact(updatedData.getContact());
-    entity.setEmail(updatedData.getEmail());
-    entity.setBirthdate(updatedData.getBirthdate());
-    entity.setCpf(updatedData.getCpf());
-    entity.setSchool(updatedData.getSchool());
-    entity.setAddress(updatedData.getAddress());
-
-    log.info("Aluno {} atualizado com sucesso.", entity.getName().toUpperCase());
-    return studentMapper.convertToDto(entity);
-}
-
 
     @Transactional
     public void archiveStudent(UUID studentId) {
@@ -192,37 +190,14 @@ public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO dto) {
     }
 
     private void ensureStudentUniqueness(Student student) {
-        if (studentRepo.existsByCpfAndIdNot(student.getCpf(), student.getId())) {
+        if (studentRepo.existsByCpf(student.getCpf())) {
             throw new StudentAlreadyExistException("Aluno com o CPF informado já existe no banco de dados");
         }
 
-        if (studentRepo.existsByEmailAndIdNot(student.getEmail(), student.getId())) {
+        if (studentRepo.existsByEmail(student.getEmail())) {
             throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
         }
     }
-
-    private void ensureParentUniqueness(Parent parent) {
-        if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parent.getId())) {
-            throw new StudentAlreadyExistException("Aluno com o CPF informado já existe no banco de dados");
-        }
-
-        if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parent.getId())) {
-            throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
-        }
-    }
-
-
-    private void ensureParentUniquenessForUpdate(Parent parent, UUID parentId) {
-        if (parentRepo.existsByCpfAndIdNot(parent.getCpf(),parentId)) {
-        throw new StudentAlreadyExistException("Aluno com o CPF informado já existe no banco de dados");
-    }
-
-    if (parentRepo.existsByEmailAndIdNot(parent.getEmail(),parentId)) {
-        throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
-    }
-    }
-
-
 
     private void ensureStudentUniquenessForUpdate(Student student, UUID studentId) {
         if (studentRepo.existsByCpfAndIdNot(student.getCpf(), studentId)) {
@@ -231,6 +206,26 @@ public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO dto) {
 
         if (studentRepo.existsByEmailAndIdNot(student.getEmail(), studentId)) {
             throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
+        }
+    }
+
+    private void ensureParentUniqueness(Parent parent) {
+        if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parent.getId())) {
+            throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
+        }
+
+        if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parent.getId())) {
+            throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
+        }
+    }
+
+    private void ensureParentUniquenessForUpdate(Parent parent, UUID parentId) {
+        if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parentId)) {
+            throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
+        }
+
+        if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parentId)) {
+            throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
     }
 }

@@ -4,7 +4,7 @@ import { MainLayout } from "@/components/layout/MainLayout"
 import { PageLoading } from "@/components/ui/page-loading"
 import { Toaster } from "sonner"
 import { ErrorBoundary } from "./components/ui/error-boundary"
-import { StudentsPage } from "./features/students/pages/StudentsPage/StudentsPage"
+import { StudentsPage } from "./features/students/pages/StudentsPage"
 
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage").then((module) => ({ default: module.DashboardPage })))
 
@@ -24,9 +24,9 @@ const ParentEditPage = lazy(() => import("@/features/parents/ParentEditPage").th
 
 import { pt } from "zod/locales"
 import z from "zod/v4"
-import { StudentCreatePage } from "./features/students/pages/CreateStudentPage/StudentCreatePage"
-import { StudentEditPage } from "./features/students/pages/EditStudentPage/StudentEditPage"
-import { StudentDetailPage } from "./features/students/pages/DetailStudentPage/StudentDetailPage"
+import { StudentCreatePage } from "./features/students/pages/StudentCreatePage"
+import { StudentEditPage } from "./features/students/pages/StudentEditPage"
+import { StudentDetailPage } from "./features/students/pages/StudentDetailPage"
 
 function App() {
   z.config(pt())

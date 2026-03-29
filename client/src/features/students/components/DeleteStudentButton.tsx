@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 import { useEventsByStudent } from "@/features/events/query/eventQueries";
-import { useDeleteStudentMutation } from "../hooks/studentMutations";
+import { useDeleteStudentMutation } from "../hooks/use-student-mutation";
 import { useNavigate } from "react-router-dom";
 
 export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {

@@ -6,7 +6,7 @@ import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
 import {
   useArchiveStudentMutation,
   useUnarchiveStudentMutation,
-} from "../hooks/studentMutations";
+} from "../hooks/use-student-mutation";
 import {
   archiveStudent,
   archiveStudentMutationKey,

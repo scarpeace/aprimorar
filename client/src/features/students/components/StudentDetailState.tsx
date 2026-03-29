@@ -5,7 +5,6 @@ import { LoadingCard } from "@/components/ui/loading-card";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 
 type StudentDetailStateProps = {
-  student?: StudentResponseDTO;
   isLoading: boolean;
   error: unknown;
   onBack: () => void;
@@ -13,7 +12,6 @@ type StudentDetailStateProps = {
 };
 
 export function StudentDetailState({
-  student,
   isLoading,
   error,
   onBack,
@@ -24,7 +22,7 @@ export function StudentDetailState({
 
   }
 
-  if (error || !student) {
+  if (error) {
     return (
       <ErrorCard
         title="Erro ao carregar aluno"

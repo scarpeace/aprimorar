@@ -3,24 +3,18 @@ import { ButtonLink } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { AddressDetailsForm } from "@/features/address/AddressDetailsForm";
 import { ParentDetailsForm } from "@/features/parents/components/ParentDetailsForm";
-import { getStudentsQueryKey, updateStudentMutationKey, useGetStudentById, useUpdateStudent } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "sonner";
-import { useStudentForm } from "../../hooks/use-student-form";
-import type { StudentFormInput } from "../../schemas/studentFormSchema";
-import { StudentEditActions } from "./components/StudentEditActions";
-import { StudentFormFields } from "./components/StudentFormFields";
-import { StudentPageState } from "./components/StudentPageState";
-import { StudentForm } from "./components/StudentForm";
+import { useGetStudentById, useUpdateStudent } from "@/kubb";
+import { useParams } from "react-router-dom";
+import { StudentEditActions } from "../components/StudentEditActions";
+import { StudentForm } from "../components/StudentForm";
+import { StudentFormFields } from "../components/StudentFormFields";
+import { StudentPageState } from "../components/StudentPageState";
+import type { StudentInputSchema } from "../hooks/studentSchema";
+import { useStudentForm } from "../hooks/use-student-form";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
-  // const [selectedParentId, setSelectedParentId] = useState("");
   const studentId = id ?? "";
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const {
     data: student,
@@ -33,20 +27,7 @@ export function StudentEditPage() {
     mutate: updateStudent,
     error: updateStudentError,
     isPending: isStudentUpdating,
-  } = useUpdateStudent({
-    mutation: {
-      onSuccess: (updatedStudent) => {
-        console.log(updatedStudent)
-        toast.success("Aluno atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: updateStudentMutationKey() });
-        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
-        navigate(`/students/${updatedStudent.id}`);
-      },
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
-      },
-    },
-  });
+  } = useUpdateStudent();
 
   const {
     formState: { errors },
@@ -55,7 +36,7 @@ export function StudentEditPage() {
     registerWithMask,
   } = useStudentForm(student);
 
-  const onSubmit = handleSubmit((data: StudentFormInput) => {
+  const onSubmit = handleSubmit((data: StudentInputSchema) => {
     updateStudent({ studentId, data });
   });
 
@@ -78,13 +59,6 @@ export function StudentEditPage() {
         onRetry={refetchStudent}
       >
         <StudentForm onSubmit={onSubmit}>
-          {/*<ParentSelectDropdown
-            selectedParentId={formSelectedParentId}
-            register={register}
-            setValue={setValue}
-            errors={errors}
-            className="grid grid-cols-1 gap-4"
-          />*/}
 
           <StudentFormFields
             register={register}
@@ -114,7 +88,7 @@ export function StudentEditPage() {
           />
 
           {updateStudentError ? (
-            <Alert variant="error" message={updateStudentError.message} />
+            <Alert variant="error" error={updateStudentError} />
           ) : null}
         </StudentForm>
       </StudentPageState>

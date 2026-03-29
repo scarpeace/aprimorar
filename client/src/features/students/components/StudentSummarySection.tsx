@@ -2,13 +2,14 @@ import type { StudentResponseDTO } from "@/kubb";
 import type { ReactNode } from "react";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { formatDateShortYear } from "@/lib/utils/formatter";
+import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
 import { ArchiveStudentButton } from "@/features/students/components/ArchiveStudentButton";
 import { DeleteStudentButton } from "@/features/students/components/DeleteStudentButton";
 import { EditStudentButton } from "@/features/students/components/EditStudentButton";
+import type { StudentResponseSchema } from "../hooks/studentSchema";
 
 type StudentSummarySectionProps = {
-  student?: StudentResponseDTO;
+  student?: StudentResponseSchema;
   studentId: string;
 };
 
@@ -18,11 +19,10 @@ export function StudentSummarySection({
 }: Readonly<StudentSummarySectionProps>) {
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: student?.name },
-    { label: "CPF", value: student?.cpf },
+    { label: "CPF", value: formatCpf(student?.cpf ?? "") },
     { label: "E-mail", value: student?.email },
     { label: "Idade", value: student?.age },
-    { label: "Contato", value: student?.contact },
-    //TODO: pq esse campo abaixo tem que ser diferente?
+    { label: "Contato", value: formatPhone(student?.contact ?? "") },
     { label: "Data de matrícula", value: formatDateShortYear(student?.createdAt ?? "") },
     { label: "Escola", value: student?.school },
     { label: "Status", value: student?.archivedAt ? "Arquivado" : "Ativo" },

@@ -1,5 +1,6 @@
 import { addressInputSchema, addressResponseSchema } from "@/features/address/hooks/addressSchema";
 import { parentInputSchema, parentResponseSchema } from "@/features/parents/hooks/parentSchema";
+import { formatDateShortYear } from "@/lib/utils/formatter";
 import z from "zod";
 
 export const studentInputSchema = z.object({
@@ -14,15 +15,20 @@ export const studentInputSchema = z.object({
 })
 
 export const studentResponseSchema = z.object({
+  id: z.string(),
   name: z.string(),
   birthdate: z.string(),
   cpf: z.string(),
   contact: z.string(),
   email: z.string(),
   school: z.string(),
-  parent: parentResponseSchema,
+  age: z.number(),
   address: addressResponseSchema,
-})
+  parent: parentResponseSchema,
+  archivedAt: z.string().nullable().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string().nullable().optional(),
+});
 
 export type StudentInputSchema = z.input<typeof studentInputSchema>;
 export type StudentResponseSchema = z.input<typeof studentResponseSchema>;

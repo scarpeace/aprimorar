@@ -1,6 +1,8 @@
 import {
+  getEventsQueryKey,
+  getParentsQueryKey,
+  getStudentByIdQueryKey,
   getStudentsQueryKey,
-  updateStudentMutationKey,
   useArchiveStudent,
   useCreateStudent,
   useDeleteStudent,
@@ -11,9 +13,6 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { studentsQueryKeys } from "./studentQueryKeys";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { studentInputSchema } from "./studentSchema";
 
 export function useCreateStudentMutation() {
   const queryClient = useQueryClient();
@@ -21,21 +20,18 @@ export function useCreateStudentMutation() {
 
   return useCreateStudent({
     mutation: {
-      // onMutate: (newStudent) => {
-      //   const { success, error, data } = studentInputSchema.safeParse(newStudent);
-      //   if (!success) {
-      //     console.log("ERRO DO ZOD:", error)
-      //     throw error;
-      //   }
-      //   return data;
-      // },
-      onError: (error) => {
+      onError: () => {
         toast.error("Algo deu errado ao criar o aluno");
       },
       onSuccess: (createdStudent: StudentResponseDTO) => {
         toast.success("Aluno criado com sucesso");
-        queryClient.invalidateQueries({ queryKey: updateStudentMutationKey() });
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
+        queryClient.setQueryData(
+          getStudentByIdQueryKey(createdStudent.id),
+          createdStudent,
+        );
         navigate(`/students/${createdStudent.id}`);
       },
     },
@@ -50,10 +46,7 @@ export function useUpdateStudentMutation() {
     mutation: {
       onSuccess: (updatedStudent, variables) => {
         toast.success("Aluno atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: studentsQueryKeys.lists() });
-        queryClient.invalidateQueries({queryKey: studentsQueryKeys.detail(variables.studentId)});
-        queryClient.invalidateQueries({queryKey: studentsQueryKeys.summary()});
-
+        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
         navigate(`/students/${updatedStudent.id}`);
       },
       onError: (error) => {
@@ -70,13 +63,10 @@ export function useDeleteStudentMutation() {
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Aluno excluído com sucesso");
-        //TODO: talvez aqui dê pra juntar essas duas queries para todas as listas. Até porque o summary é uma lista, não?
-        queryClient.invalidateQueries({ queryKey: studentsQueryKeys.lists() });
-        queryClient.invalidateQueries({ queryKey: studentsQueryKeys.summary() });
-        queryClient.invalidateQueries({queryKey: studentsQueryKeys.detail(variables.studentId)})
+        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
       },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error("Algo deu errado ao excluir o aluno");
       },
     },
   });
@@ -89,12 +79,10 @@ export function useArchiveStudentMutation() {
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Aluno arquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: studentsQueryKeys.lists() });
-        queryClient.invalidateQueries({queryKey: studentsQueryKeys.summary()});
-        queryClient.invalidateQueries({queryKey: studentsQueryKeys.detail(variables.studentId)});
+        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
       },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error("Algo deu errado ao arquivar o aluno");
       },
     },
   });
@@ -108,12 +96,10 @@ export function useUnarchiveStudentMutation() {
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Aluno desarquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: studentsQueryKeys.lists() });
-        queryClient.invalidateQueries({queryKey: studentsQueryKeys.detail(variables.studentId)});
-        queryClient.invalidateQueries({queryKey: studentsQueryKeys.summary()});
+        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
       },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error("Algo deu errado ao desarquivar o aluno");
       },
     },
   });

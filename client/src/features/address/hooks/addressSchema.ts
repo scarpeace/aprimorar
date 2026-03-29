@@ -14,7 +14,7 @@ export const addressInputSchema = z.object({
 export const addressResponseSchema = z.object({
   street: z.string(),
   number: z.string(),
-  complement: z.string(),
+  complement: z.string().nullable(),
   district: z.string(),
   city: z.string(),
   state: z.enum(addressRequestDTOStateEnum),

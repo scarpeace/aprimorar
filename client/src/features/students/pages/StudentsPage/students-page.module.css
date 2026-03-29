@@ -1,6 +1,0 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-  animation: fade-up 280ms ease-out both;
-}

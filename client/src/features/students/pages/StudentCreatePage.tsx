@@ -2,15 +2,12 @@ import { Alert } from "@/components/ui/alert";
 import { PageHeader } from "@/components/ui/page-header";
 import { AddressDetailsForm } from "@/features/address/AddressDetailsForm";
 import { ParentDetailsForm } from "@/features/parents/components/ParentDetailsForm";
-import { StudentFormActions } from "../../components/StudentFormActions";
-import { useCreateStudentMutation } from "../../hooks/studentMutations";
-import type { StudentInputSchema } from "../../hooks/studentSchema";
-import {
-  useStudentForm,
-} from "../../hooks/use-student-form";
-import { StudentForm } from "../EditStudentPage/components/StudentForm";
-import { StudentFormFields } from "../EditStudentPage/components/StudentFormFields";
-import { StudentPageState } from "../EditStudentPage/components/StudentPageState";
+import { StudentForm } from "../components/StudentForm";
+import { StudentFormActions } from "../components/StudentFormActions";
+import { StudentFormFields } from "../components/StudentFormFields";
+import { StudentPageState } from "../components/StudentPageState";
+import { useStudentForm } from "../hooks/use-student-form";
+import { useCreateStudentMutation } from "../hooks/use-student-mutation";
 
 export function StudentCreatePage() {
   const {
@@ -29,7 +26,6 @@ export function StudentCreatePage() {
   const onSubmit = handleSubmit((data) => {
     createStudent({ data });
   });
-
   return (
     <div className="container">
       <PageHeader
@@ -42,13 +38,6 @@ export function StudentCreatePage() {
         error={createStudentError}
       >
         <StudentForm onSubmit={onSubmit}>
-          {/*<ParentSelectDropdown
-            selectedParentId={formSelectedParentId}
-            register={register}
-            setValue={setValue}
-            errors={errors}
-            className="grid grid-cols-1 gap-4"
-          />*/}
 
           <StudentFormFields
             register={register}
