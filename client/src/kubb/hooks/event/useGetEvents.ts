@@ -20,7 +20,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getEventsQueryResponseSchema } from "../../schemas/event/getEventsSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEventsQueryKey = (params?: GetEventsQueryParams) =>
@@ -50,7 +49,7 @@ export async function getEvents(
     params,
     ...requestConfig,
   });
-  return getEventsQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getEventsQueryOptions(

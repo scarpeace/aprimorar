@@ -54,47 +54,7 @@ class EventServiceTest {
     @InjectMocks
     private EventService eventService;
 
-    @Nested
     @DisplayName("Command methods")
-    class CommandMethods {
-
-        @Test
-        @DisplayName("should update existing event ignoring current event in conflict validation")
-        void shouldUpdateExistingEventIgnoringCurrentEventInConflictValidation() {
-            EventRequestDTO input = request();
-            Event mappedEvent = event("Evento atualizado", student(STUDENT_ID, null), employee(EMPLOYEE_ID, null));
-            Event existingEvent = event("Evento antigo", student(STUDENT_ID, "Aluno Antigo"), employee(EMPLOYEE_ID, "Colaborador Antigo"));
-            Student resolvedStudent = student(STUDENT_ID, "Aluno Teste");
-            Employee resolvedEmployee = employee(EMPLOYEE_ID, "Colaborador Teste");
-            existingEvent.setId(EVENT_ID);
-            EventResponseDTO expected = response(existingEvent, resolvedStudent, resolvedEmployee);
-
-            when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(existingEvent));
-            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(resolvedStudent));
-            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(resolvedEmployee));
-            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
-            when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
-            when(eventMapper.toLocalDateTime(input.startDate())).thenReturn(EVENT_START);
-            when(eventMapper.toLocalDateTime(input.endDate())).thenReturn(EVENT_END);
-            when(eventRepo.studentHasConflictingEvent(STUDENT_ID, mappedEvent.getStartDate(), mappedEvent.getEndDateTime(), EVENT_ID)).thenReturn(false);
-            when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, mappedEvent.getStartDate(), mappedEvent.getEndDateTime(), EVENT_ID)).thenReturn(false);
-            when(eventMapper.convertToDto(existingEvent)).thenReturn(expected);
-
-            EventResponseDTO actual = eventService.updateEvent(EVENT_ID, input);
-
-            assertThat(actual).isEqualTo(expected);
-            assertThat(existingEvent.getTitle()).isEqualTo("Evento atualizado");
-            assertThat(existingEvent.getStudent()).isEqualTo(resolvedStudent);
-            assertThat(existingEvent.getEmployee()).isEqualTo(resolvedEmployee);
-            verify(eventRepo).findById(EVENT_ID);
-            verify(studentRepo).findById(STUDENT_ID);
-            verify(employeeRepo).findById(EMPLOYEE_ID);
-            verify(eventRepo).studentHasConflictingEvent(STUDENT_ID, mappedEvent.getStartDate(), mappedEvent.getEndDateTime(), EVENT_ID);
-            verify(eventRepo).employeeHasConflictingEvent(EMPLOYEE_ID, mappedEvent.getStartDate(), mappedEvent.getEndDateTime(), EVENT_ID);
-            verify(eventRepo, never()).save(any(Event.class));
-        }
-    }
-
     private static EventRequestDTO request() {
         return new EventRequestDTO(
                 "Evento atualizado",

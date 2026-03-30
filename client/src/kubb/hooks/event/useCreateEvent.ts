@@ -19,10 +19,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import {
-  createEventMutationResponseSchema,
-  createEventMutationRequestSchema,
-} from "../../schemas/event/createEventSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createEventMutationKey = () => [{ url: "/v1/events" }] as const;
@@ -42,7 +38,7 @@ export async function createEvent(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const requestData = createEventMutationRequestSchema.parse(data);
+  const requestData = data;
 
   const res = await request<
     CreateEventMutationResponse,
@@ -55,7 +51,7 @@ export async function createEvent(
     data: requestData,
     ...requestConfig,
   });
-  return createEventMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function createEventMutationOptions<TContext = unknown>(

@@ -20,7 +20,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getEmployeeByIdQueryResponseSchema } from "../../schemas/employee/getEmployeeByIdSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEmployeeByIdQueryKey = (
@@ -55,7 +54,7 @@ export async function getEmployeeById(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return getEmployeeByIdQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getEmployeeByIdQueryOptions(

@@ -19,7 +19,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import { deleteParentMutationResponseSchema } from "../../schemas/parent/deleteParentSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteParentMutationKey = () =>
@@ -50,7 +49,7 @@ export async function deleteParent(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return deleteParentMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function deleteParentMutationOptions<TContext = unknown>(

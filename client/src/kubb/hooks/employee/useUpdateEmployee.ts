@@ -20,10 +20,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import {
-  updateEmployeeMutationResponseSchema,
-  updateEmployeeMutationRequestSchema,
-} from "../../schemas/employee/updateEmployeeSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const updateEmployeeMutationKey = () =>
@@ -47,7 +43,7 @@ export async function updateEmployee(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const requestData = updateEmployeeMutationRequestSchema.parse(data);
+  const requestData = data;
 
   const res = await request<
     UpdateEmployeeMutationResponse,
@@ -60,7 +56,7 @@ export async function updateEmployee(
     data: requestData,
     ...requestConfig,
   });
-  return updateEmployeeMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function updateEmployeeMutationOptions<TContext = unknown>(

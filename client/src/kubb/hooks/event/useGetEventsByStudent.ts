@@ -21,7 +21,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getEventsByStudentQueryResponseSchema } from "../../schemas/event/getEventsByStudentSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEventsByStudentQueryKey = (
@@ -60,7 +59,7 @@ export async function getEventsByStudent(
     params,
     ...requestConfig,
   });
-  return getEventsByStudentQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getEventsByStudentQueryOptions(

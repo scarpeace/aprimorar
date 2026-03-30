@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.aprimorar.api.domain.dashboard.dto.DashboardSummaryResponseDTO;
-import com.aprimorar.api.exception.ProblemDetailResponseDTO;
+import com.aprimorar.api.exception.ProblemResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +29,7 @@ public interface DashboardControllerDocs {
                         schema = @Schema(implementation = DashboardSummaryResponseDTO.class))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+                        schema = @Schema(implementation = ProblemResponseDTO.class)))
     })
     ResponseEntity<DashboardSummaryResponseDTO> getDashboardSummary(
             @Parameter(description = "Ano do período (ex: 2026)", example = "2026")

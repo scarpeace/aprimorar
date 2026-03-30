@@ -22,15 +22,19 @@ export type {
   EventRequestDTOContentEnumKey,
 } from "./EventRequestDTO.ts";
 export type { EventResponseDTO } from "./EventResponseDTO.ts";
+export type { PageDTOStudentResponseDTO } from "./PageDTOStudentResponseDTO.ts";
 export type { PageMetadata } from "./PageMetadata.ts";
 export type { PagedModelEmployeeResponseDTO } from "./PagedModelEmployeeResponseDTO.ts";
 export type { PagedModelEventResponseDTO } from "./PagedModelEventResponseDTO.ts";
 export type { PagedModelParentResponseDTO } from "./PagedModelParentResponseDTO.ts";
-export type { PagedModelStudentResponseDTO } from "./PagedModelStudentResponseDTO.ts";
 export type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
 export type { ParentSummaryDTO } from "./ParentSummaryDTO.ts";
-export type { ProblemDetailResponseDTO } from "./ProblemDetailResponseDTO.ts";
+export type {
+  ProblemResponseDTO,
+  ProblemResponseDTOErrorCodeEnumKey,
+  ProblemResponseDTOStatusEnumKey,
+} from "./ProblemResponseDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
 export type { StudentSummaryDTO } from "./StudentSummaryDTO.ts";
@@ -207,69 +211,62 @@ export type {
 } from "./parent/UpdateParent.ts";
 export type {
   ArchiveStudent204,
-  ArchiveStudent400,
   ArchiveStudentMutation,
   ArchiveStudentMutationResponse,
   ArchiveStudentPathParams,
-} from "./student/ArchiveStudent.ts";
+} from "./student-controller/ArchiveStudent.ts";
 export type {
-  CreateStudent200,
-  CreateStudent400,
+  CreateStudent201,
   CreateStudentMutation,
   CreateStudentMutationRequest,
   CreateStudentMutationResponse,
-} from "./student/CreateStudent.ts";
+} from "./student-controller/CreateStudent.ts";
 export type {
   DeleteStudent204,
-  DeleteStudent400,
   DeleteStudentMutation,
   DeleteStudentMutationResponse,
   DeleteStudentPathParams,
-} from "./student/DeleteStudent.ts";
+} from "./student-controller/DeleteStudent.ts";
 export type {
   GetStudentById200,
-  GetStudentById400,
   GetStudentByIdPathParams,
   GetStudentByIdQuery,
   GetStudentByIdQueryResponse,
-} from "./student/GetStudentById.ts";
+} from "./student-controller/GetStudentById.ts";
 export type {
   GetStudentSummary200,
-  GetStudentSummary400,
   GetStudentSummaryQuery,
   GetStudentSummaryQueryResponse,
-} from "./student/GetStudentSummary.ts";
+} from "./student-controller/GetStudentSummary.ts";
 export type {
   GetStudents200,
-  GetStudents400,
   GetStudentsQuery,
   GetStudentsQueryParams,
   GetStudentsQueryResponse,
-} from "./student/GetStudents.ts";
+} from "./student-controller/GetStudents.ts";
 export type {
   GetStudentsByParent200,
-  GetStudentsByParent400,
   GetStudentsByParentPathParams,
   GetStudentsByParentQuery,
   GetStudentsByParentQueryResponse,
-} from "./student/GetStudentsByParent.ts";
+} from "./student-controller/GetStudentsByParent.ts";
 export type {
   UnarchiveStudent204,
-  UnarchiveStudent400,
   UnarchiveStudentMutation,
   UnarchiveStudentMutationResponse,
   UnarchiveStudentPathParams,
-} from "./student/UnarchiveStudent.ts";
+} from "./student-controller/UnarchiveStudent.ts";
 export type {
   UpdateStudent200,
-  UpdateStudent400,
   UpdateStudentMutation,
   UpdateStudentMutationRequest,
   UpdateStudentMutationResponse,
   UpdateStudentPathParams,
-} from "./student/UpdateStudent.ts";
+} from "./student-controller/UpdateStudent.ts";
 export { addressRequestDTOStateEnum } from "./AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./AddressResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./EventRequestDTO.ts";
+export { problemResponseDTOErrorCodeEnum } from "./ProblemResponseDTO.ts";
+export { problemResponseDTOStatusEnum } from "./ProblemResponseDTO.ts";

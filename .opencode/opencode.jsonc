@@ -10,15 +10,24 @@
         "--headless",
         "--isolated",
         "--no-usage-statistics",
-        "--executablePath=/snap/bin/brave"
+        "--executablePath=/snap/bin/brave",
       ],
-      "enabled": true
+      "enabled": true,
     },
     "context7": {
       "type": "remote",
       "url": "https://mcp.context7.com/mcp",
-      "enabled": true
-    }
+      "enabled": true,
+    },
+    // "daisyui-blueprint": {
+    //   "type": "stdio",
+    //   "command": "npx",
+    //   "args": ["-y", "daisyui-blueprint@latest"],
+    //   "env": {
+    //     "LICENSE": "",
+    //     "EMAIL": "",
+    //   },
+    // },
   },
   "agent": {
     "java-reviewer": {
@@ -28,9 +37,9 @@
       "prompt": "Use the `springboot-patterns` skill and the `java-coding-standards` skill. Review backend service/controller/repository changes for architecture, validation, and transaction issues. DO NOT PERFOM ANY CODE CHANGES WITHOUT FIRST CHECKING WITH THE USER.",
       "tools": {
         "write": true,
-        "edit": true
+        "edit": true,
       },
-      "color": "success"
+      "color": "success",
     },
     "tester-tdd": {
       "description": "Reviews code for best practices and potential issues",
@@ -39,9 +48,9 @@
       "prompt": "Use the `springboot-patterns` skill and the `java-coding-standards` skill. Review backend service/controller/repository changes for architecture, validation, and transaction issues. DO NOT PERFOM ANY CODE CHANGES WITHOUT FIRST CHECKING WITH THE USER.",
       "tools": {
         "write": true,
-        "edit": true
+        "edit": true,
       },
-      "color": "secondary"
+      "color": "secondary",
     },
     "springboot-tdd": {
       "description": "Implements Spring Boot backend work with strict TDD",
@@ -51,9 +60,9 @@
       "tools": {
         "write": true,
         "edit": true,
-        "bash": true
+        "bash": true,
       },
-      "color": "info"
+      "color": "info",
     },
     "react-tdd": {
       "description": "Implements React frontend work with disciplined TDD",
@@ -63,9 +72,9 @@
       "tools": {
         "write": true,
         "edit": true,
-        "bash": true
+        "bash": true,
       },
-      "color": "accent"
+      "color": "accent",
     },
     "react-reviewer": {
       "description": "Reviews React code for performance and maintainability",
@@ -74,9 +83,9 @@
       "prompt": "{file:./prompts/react-reviewer.md}",
       "tools": {
         "write": true,
-        "edit": true
+        "edit": true,
       },
-      "color": "warning"
+      "color": "warning",
     },
     "scrum-master": {
       "description": "Plans sprint.md from GitHub backlog context",
@@ -85,9 +94,9 @@
       "prompt": "{file:./prompts/scrum-agent-mcp.md}",
       "tools": {
         "write": true,
-        "edit": true
+        "edit": true,
       },
-      "color": "primary"
-    }
-  }
+      "color": "primary",
+    },
+  },
 }

@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type ArchiveParentPathParams = {
   /**
@@ -21,7 +21,7 @@ export type ArchiveParent204 = any;
 /**
  * @description Responsável não encontrado
  */
-export type ArchiveParent404 = ProblemDetailResponseDTO;
+export type ArchiveParent404 = ProblemResponseDTO;
 
 export type ArchiveParentMutationResponse = ArchiveParent204;
 

@@ -36,6 +36,10 @@ export const addressResponseDTOStateEnum = {
 export type AddressResponseDTOStateEnumKey =
   (typeof addressResponseDTOStateEnum)[keyof typeof addressResponseDTOStateEnum];
 
+/**
+ * @description Endereço do aluno
+ * @example Street Name
+ */
 export type AddressResponseDTO = {
   /**
    * @type string

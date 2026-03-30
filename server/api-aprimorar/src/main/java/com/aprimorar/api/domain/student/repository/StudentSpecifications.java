@@ -32,6 +32,10 @@ public final class StudentSpecifications {
         return (root, query, cb) -> cb.isNull(root.get("archivedAt"));
     }
 
+ public static Specification<Student> archived() {
+        return (root, query, cb) -> cb.isNotNull(root.get("archivedAt"));
+    }
+
     public static Specification<Student> isNotGhost() {
         return (root, query, cb) -> cb.notEqual(root.get("id"), GHOST_STUDENT_ID);
     }

@@ -4,12 +4,11 @@ import { MainLayout } from "@/components/layout/MainLayout"
 import { PageLoading } from "@/components/ui/page-loading"
 import { Toaster } from "sonner"
 import { ErrorBoundary } from "./components/ui/error-boundary"
+import { StudentsPage } from "./features/students/pages/StudentsPage"
 
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage").then((module) => ({ default: module.DashboardPage })))
-const StudentsPage = lazy(() => import("@/features/students/StudentsPage").then((module) => ({ default: module.StudentsPage })))
-const StudentDetailPage = lazy(() => import("@/features/students/StudentDetailPage").then((module) => ({ default: module.StudentDetailPage })))
-const StudentCreatePage = lazy(() => import("@/features/students/StudentCreatePage").then((module) => ({ default: module.StudentCreatePage })))
-const StudentEditPage = lazy(() => import("@/features/students/StudentEditPage").then((module) => ({ default: module.StudentEditPage })))
+
+
 const EmployeesPage = lazy(() => import("@/features/employees/EmployeesPage").then((module) => ({ default: module.EmployeesPage })))
 const EmployeeDetailPage = lazy(() => import("@/features/employees/EmployeeDetailPage").then((module) => ({ default: module.EmployeeDetailPage })))
 const EmployeeCreatePage = lazy(() => import("@/features/employees/EmployeeCreatePage").then((module) => ({ default: module.EmployeeCreatePage })))
@@ -23,7 +22,14 @@ const ParentDetailPage = lazy(() => import("@/features/parents/ParentDetailPage"
 const ParentCreatePage = lazy(() => import("@/features/parents/ParentCreatePage").then((module) => ({ default: module.ParentCreatePage })))
 const ParentEditPage = lazy(() => import("@/features/parents/ParentEditPage").then((module) => ({ default: module.ParentEditPage })))
 
+import { pt } from "zod/locales"
+import z from "zod/v4"
+import { StudentCreatePage } from "./features/students/pages/CreateStudentPage"
+import { StudentEditPage } from "./features/students/pages/EditStudentPage"
+import { StudentDetailPage } from "./features/students/pages/StudentDetailPage"
+
 function App() {
+  z.config(pt())
   return (
     <BrowserRouter>
       <Toaster position="top-right" richColors />

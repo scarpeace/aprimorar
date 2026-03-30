@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type DeleteParentPathParams = {
   /**
@@ -21,7 +21,7 @@ export type DeleteParent200 = any;
 /**
  * @description Requisição inválida
  */
-export type DeleteParent400 = ProblemDetailResponseDTO;
+export type DeleteParent400 = ProblemResponseDTO;
 
 export type DeleteParentMutationResponse = DeleteParent200;
 

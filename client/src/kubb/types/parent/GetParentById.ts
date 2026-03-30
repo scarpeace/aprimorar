@@ -4,7 +4,7 @@
  */
 
 import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetParentByIdPathParams = {
   /**
@@ -22,7 +22,7 @@ export type GetParentById200 = ParentResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type GetParentById400 = ProblemDetailResponseDTO;
+export type GetParentById400 = ProblemResponseDTO;
 
 export type GetParentByIdQueryResponse = GetParentById200;
 

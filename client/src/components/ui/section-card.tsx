@@ -12,7 +12,7 @@ export function SectionCard({ title, description, headerAction, children }: Read
     <section className={`card border app-border app-surface shadow-sm`}>
       <div className={`card-body`}>
         {title || description ? (
-          <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
               {title ? <h2 className="card-title">{title}</h2> : null}
               {description ? <p className="text-sm app-text-muted">{description}</p> : null}

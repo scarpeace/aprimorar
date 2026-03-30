@@ -19,10 +19,6 @@ import type {
   UseMutationResult,
   QueryClient,
 } from "@tanstack/react-query";
-import {
-  createEmployeeMutationResponseSchema,
-  createEmployeeMutationRequestSchema,
-} from "../../schemas/employee/createEmployeeSchema.ts";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createEmployeeMutationKey = () =>
@@ -45,7 +41,7 @@ export async function createEmployee(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const requestData = createEmployeeMutationRequestSchema.parse(data);
+  const requestData = data;
 
   const res = await request<
     CreateEmployeeMutationResponse,
@@ -58,7 +54,7 @@ export async function createEmployee(
     data: requestData,
     ...requestConfig,
   });
-  return createEmployeeMutationResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function createEmployeeMutationOptions<TContext = unknown>(

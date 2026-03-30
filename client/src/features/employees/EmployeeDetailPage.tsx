@@ -9,7 +9,7 @@ import { SummaryItem } from "@/components/ui/summary-item";
 import { dutyLabels } from "@/features/employees/schemas/dutyEnum";
 import { EventsTable } from "@/features/events/components/EventsTable";
 import styles from "@/features/employees/EmployeeDetailPage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useEmployeeDetailQuery } from "@/features/employees/query/useEmployeeQueries";
 import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton";
 import { EditEmployeeButton } from "./components/EditEmployeeButton";

@@ -5,7 +5,7 @@
 
 import type { EmployeeRequestDTO } from "../EmployeeRequestDTO.ts";
 import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 /**
  * @description Funcionário criado com sucesso
@@ -15,7 +15,7 @@ export type CreateEmployee200 = EmployeeResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type CreateEmployee400 = ProblemDetailResponseDTO;
+export type CreateEmployee400 = ProblemResponseDTO;
 
 export type CreateEmployeeMutationRequest = EmployeeRequestDTO;
 

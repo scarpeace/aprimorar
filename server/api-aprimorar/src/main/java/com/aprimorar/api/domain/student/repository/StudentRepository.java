@@ -15,11 +15,9 @@ public interface StudentRepository extends JpaRepository<Student, UUID>, JpaSpec
     boolean existsByParentId(UUID parentId);
 
     boolean existsByCpf(String cpf);
-
-    boolean existsByEmail(String email);
-
     boolean existsByCpfAndIdNot(String cpf, UUID id);
 
+    boolean existsByEmail(String email);
     boolean existsByEmailAndIdNot(String email, UUID id);
 
     boolean existsByIdAndArchivedAtIsNotNull(UUID id);

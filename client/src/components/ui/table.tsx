@@ -1,7 +1,7 @@
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { Pagination } from "@/components/ui/pagination";
 import type { ReactNode } from "react";
 
@@ -24,7 +24,7 @@ export type ColumnDef<T> = {
 
 type TableProps<T> = {
   variant?: "page" | "embedded";
-  data?: PaginatedData<T>;
+  data?: PaginatedData<T> | T[];
   columns: ColumnDef<T>[];
   isLoading: boolean;
   error: unknown;
@@ -68,9 +68,13 @@ export function Table<T>({
     );
   }
 
-  const rows = data?.content ?? [];
-  const totalElements = data?.page?.totalElements ?? 0;
-  const totalPages = data?.page?.totalPages ?? 0;
+  const rows = Array.isArray(data) ? data : data?.content ?? [];
+  const totalElements = Array.isArray(data)
+    ? data.length
+    : data?.page?.totalElements ?? rows.length;
+  const totalPages = Array.isArray(data)
+    ? (data.length > 0 ? 1 : 0)
+    : data?.page?.totalPages ?? 0;
 
   if (totalElements === 0) {
     return <EmptyCard title={emptyTitle} description={emptyDescription} />;

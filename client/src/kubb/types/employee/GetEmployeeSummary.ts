@@ -4,7 +4,7 @@
  */
 
 import type { EmployeeSummaryDTO } from "../EmployeeSummaryDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 /**
  * @description Listagem dos funcionários para opções e dropdown
@@ -14,7 +14,7 @@ export type GetEmployeeSummary200 = EmployeeSummaryDTO[];
 /**
  * @description Requisição inválida
  */
-export type GetEmployeeSummary400 = ProblemDetailResponseDTO;
+export type GetEmployeeSummary400 = ProblemResponseDTO;
 
 export type GetEmployeeSummaryQueryResponse = GetEmployeeSummary200;
 

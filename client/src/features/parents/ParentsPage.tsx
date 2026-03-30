@@ -8,7 +8,7 @@ import { PageLoading } from "@/components/ui/page-loading";
 import { Pagination } from "@/components/ui/pagination";
 import { ButtonLink } from "@/components/ui/button";
 import styles from "@/features/parents/ParentsPage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { useGetParents } from "@/kubb";
 
@@ -75,7 +75,7 @@ export function ParentsPage() {
               {parentsPage?.content?.map((parent) => (
                 <tr
                   className="transition-colors hover:bg-base-200/70"
-                  key={parent.id}
+                  key={parent.parentId}
                 >
                   <td>{parent.name}</td>
                   <td className="hidden whitespace-normal break-all lg:table-cell">
@@ -87,7 +87,7 @@ export function ParentsPage() {
                   <td>
                     <ButtonLink
                       size="sm"
-                      to={`/parents/${parent.id}`}
+                      to={`/parents/${parent.parentId}`}
                       variant="outline"
                     >
                       Detalhes

@@ -1,0 +1,1 @@
+const t={all:["events"],lists:()=>["events","list"],list:e=>["events","list",e],details:()=>["events","detail"],detail:e=>["events","detail",e],byStudentPrefix:()=>["events","by-student"],byStudent:e=>["events","by-student",e],byEmployeePrefix:()=>["events","by-employee"],byEmployee:e=>["events","by-employee",e]};export{t as e};

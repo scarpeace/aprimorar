@@ -11,7 +11,7 @@ import { SummaryItem } from "@/components/ui/summary-item";
 import styles from "@/features/events/EventDetailPage.module.css";
 import { eventContentLabels } from "@/features/events/schemas/eventContentEnum";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useEventDetailQuery } from "./query/useEventQueries";
 import { EditEventButton } from "./components/EditEventButton";
 import { DeleteEventButton } from "./components/DeleteEventButton";

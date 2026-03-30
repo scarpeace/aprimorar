@@ -5,7 +5,7 @@
 
 import type { ParentRequestDTO } from "../ParentRequestDTO.ts";
 import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 /**
  * @description Responsável criado com sucesso
@@ -15,7 +15,7 @@ export type CreateParent200 = ParentResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type CreateParent400 = ProblemDetailResponseDTO;
+export type CreateParent400 = ProblemResponseDTO;
 
 export type CreateParentMutationRequest = ParentRequestDTO;
 

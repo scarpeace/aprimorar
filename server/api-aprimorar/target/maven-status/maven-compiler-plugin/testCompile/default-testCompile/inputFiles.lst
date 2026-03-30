@@ -1,0 +1,5 @@
+/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/test/java/com/aprimorar/api/ApiAprimorarApplicationTests.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/test/java/com/aprimorar/api/domain/dashboard/DashboardSummaryResponseDTOTest.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/test/java/com/aprimorar/api/exception/GlobalExceptionHandlerTest.java

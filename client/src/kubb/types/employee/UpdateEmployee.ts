@@ -5,7 +5,7 @@
 
 import type { EmployeeRequestDTO } from "../EmployeeRequestDTO.ts";
 import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type UpdateEmployeePathParams = {
   /**
@@ -23,7 +23,7 @@ export type UpdateEmployee200 = EmployeeResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type UpdateEmployee400 = ProblemDetailResponseDTO;
+export type UpdateEmployee400 = ProblemResponseDTO;
 
 export type UpdateEmployeeMutationRequest = EmployeeRequestDTO;
 

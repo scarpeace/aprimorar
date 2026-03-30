@@ -9,7 +9,7 @@ import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/events/EventCreatePage.module.css";
 
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
   eventRequestDTOContentEnum,
   updateEventMutationRequestSchema,

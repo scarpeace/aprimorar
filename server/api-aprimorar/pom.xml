@@ -31,7 +31,6 @@
 
     <dependencies>
 
-        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -61,7 +60,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Documentation -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -162,6 +160,7 @@
                             <outputDir>${project.build.directory}/generated/openapi</outputDir>
                         </configuration>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>

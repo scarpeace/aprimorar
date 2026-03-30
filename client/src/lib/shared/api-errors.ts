@@ -3,21 +3,17 @@ import { ZodError } from "zod";
 
 export function getFriendlyErrorMessage(error: unknown): string {
   if (!error) return "";
+//TODO implementar o logging mais pra frente
 
   if (error instanceof ZodError) {
-    return "Resposta da API em formato inesperado"
+    console.error("ZOD: Zod não conseguiu parsear a resposta da API", error.message);
+    return "ZOD : Resposta da API em formato inesperado";
   }
 
   if (axios.isAxiosError(error)) {
-    const status = error.response?.status;
     const apiMessage = error.response?.data?.message;
-
-    if (status === 400) return apiMessage ?? "Dados inválidos";
-    if (status === 404) return apiMessage ?? "Não encontrado";
-    if (status === 409) return apiMessage ?? "Conflito de dados";
+    return apiMessage ?? "Erro fora de escopo, contate o suporte";
   }
 
-  console.info("Algo deu errado ao carregar a página")
-  console.error(error);
-  return "Erro inesperado";
+  return "Erro não reconhecido! Contate o suporte imediatamente";
 }

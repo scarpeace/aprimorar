@@ -4,7 +4,7 @@
  */
 
 import type { PagedModelEventResponseDTO } from "../PagedModelEventResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetEventsByEmployeePathParams = {
   /**
@@ -44,7 +44,7 @@ export type GetEventsByEmployee200 = PagedModelEventResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type GetEventsByEmployee400 = ProblemDetailResponseDTO;
+export type GetEventsByEmployee400 = ProblemResponseDTO;
 
 export type GetEventsByEmployeeQueryResponse = GetEventsByEmployee200;
 

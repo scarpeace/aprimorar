@@ -20,7 +20,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getEmployeesQueryResponseSchema } from "../../schemas/employee/getEmployeesSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEmployeesQueryKey = (params?: GetEmployeesQueryParams) =>
@@ -50,7 +49,7 @@ export async function getEmployees(
     params,
     ...requestConfig,
   });
-  return getEmployeesQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getEmployeesQueryOptions(

@@ -15,6 +15,7 @@
     "@tailwindcss/vite": "^4.2.1",
     "@tanstack/react-query": "^5.90.5",
     "axios": "^1.13.6",
+    "i18next": "^25.10.9",
     "lucide-react": "^0.575.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -24,13 +25,16 @@
     "sonner": "^2.0.7",
     "tailwindcss": "^4.2.1",
     "use-mask-input": "^3.7.4",
-    "zod": "^4.3.6"
+    "zod": "^4.3.6",
+    "zod-i18n-map": "^2.27.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@faker-js/faker": "^10.4.0",
     "@kubb/cli": "^4.36.1",
     "@kubb/core": "^4.36.1",
     "@kubb/plugin-client": "^4.36.1",
+    "@kubb/plugin-faker": "^4.37.0",
     "@kubb/plugin-oas": "^4.36.1",
     "@kubb/plugin-react-query": "^4.36.1",
     "@kubb/plugin-ts": "^4.36.1",

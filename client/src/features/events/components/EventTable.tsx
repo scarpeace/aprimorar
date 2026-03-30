@@ -19,14 +19,22 @@ type EventTableProps = {
 
 function getEventColumns(context: EventTableContext): ColumnDef<EventResponseDTO>[] {
   const baseColumns: ColumnDef<EventResponseDTO>[] = [
+    // {
+    //   header: "Título",
+    //   accessor: (event) => event.title,
+    // },
     {
-      header: "Título",
-      accessor: (event) => event.title,
+      header: "Aluno",
+      accessor: (event) => event.studentName,
     },
     {
-      header: "Conteúdo",
-      accessor: (event) =>event.content,
+      header: "Colaborador",
+      accessor: (event) => event.employeeName,
     },
+    // {
+    //   header: "Conteúdo",
+    //   accessor: (event) => event.content,
+    // },
     {
       header: "Data",
       accessor: (event) => formatDateShortYear(event.startDate),
@@ -35,37 +43,45 @@ function getEventColumns(context: EventTableContext): ColumnDef<EventResponseDTO
       header: "Hora",
       accessor: (event) => formatTime(event.startDate),
     },
+    {
+      header: "Valor",
+      accessor: (event) => brl.format(event.price),
+    },
+    {
+      header: "Pagamento",
+      accessor: (event) => brl.format(event.payment),
+    },
   ];
 
-  if (context !== "student") {
-    baseColumns.push({
-      header: "Aluno",
-      accessor: (event) => event.studentName,
-    });
-  }
+  // if (context !== "student") {
+  //   baseColumns.push({
+  //     header: "Aluno",
+  //     accessor: (event) => event.studentName,
+  //   });
+  // }
 
-  if (context !== "employee") {
-    baseColumns.push({
-      header: "Colaborador",
-      accessor: (event) => event.employeeName,
-    });
-  }
+  // if (context !== "employee") {
+  //   baseColumns.push({
+  //     header: "Colaborador",
+  //     accessor: (event) => event.employeeName,
+  //   });
+  // }
 
-  baseColumns.push(
-    context === "employee"
-      ? {
-          header: "Pagamento",
-          accessor: (event) => brl.format(event.payment),
-          headerClassName: "text-right",
-          cellClassName: "text-right",
-        }
-      : {
-          header: "Preço",
-          accessor: (event) => brl.format(event.price),
-          headerClassName: "text-right",
-          cellClassName: "text-right",
-        },
-  );
+  // baseColumns.push(
+  //   context === "employee"
+  //     ? {
+  //         header: "Pagamento",
+  //         accessor: (event) => brl.format(event.payment),
+  //         headerClassName: "text-right",
+  //         cellClassName: "text-right",
+  //       }
+  //     : {
+  //         header: "Preço",
+  //         accessor: (event) => brl.format(event.price),
+  //         headerClassName: "text-right",
+  //         cellClassName: "text-right",
+  //       },
+  // );
 
   return baseColumns;
 }
@@ -91,7 +107,7 @@ export function EventTable({
       currentPage={currentPage}
       onPageChange={onPageChange}
       itemName={itemName}
-      getRowKey={(event) => event.id}
+      getRowKey={(event) => event.eventId}
       renderActions={renderActions}
       loadingDescription="Carregando eventos..."
       emptyTitle="Nenhum evento encontrado."

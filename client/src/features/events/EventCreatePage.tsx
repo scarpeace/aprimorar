@@ -1,13 +1,21 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, type Resolver } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "@/features/events/EventCreatePage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { useEmployeeOptionsQuery } from "@/features/employees/query/useEmployeeQueries";
-import { useGetStudentOptions } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import {
+  createEventMutationRequestSchema,
+  eventRequestDTOContentEnum,
+  type CreateEventMutationRequestSchema,
+} from "@/kubb";
+import {
+  useEmployeesSummary,
+} from "../employees/query/employeeQueries";
+import { useStudentsSummary } from "../students/hooks/use-students-query";
+import { useCreateEventMutation } from "./query/eventMutations";
 
 export function EventCreatePage() {
   const {
@@ -15,34 +23,39 @@ export function EventCreatePage() {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<EventFormInput>({
-    resolver: zodResolver(
-      eventInputSchema,
-    ) as unknown as Resolver<EventFormInput>,
+  } = useForm<CreateEventMutationRequestSchema>({
+    resolver: zodResolver(createEventMutationRequestSchema),
   });
 
   const studentIdField = register("studentId");
   const employeeIdField = register("employeeId");
 
   // Opções para os dropdowns de aluno e colaborador
-  const studentsQuery = useGetStudentOptions();
-  const employeesQuery = useEmployeeOptionsQuery();
-
-  const students = studentsQuery.data ?? [];
-  const employees = employeesQuery.data ?? [];
+  const {
+    data: studentsSummary,
+    isLoading: isStudentsSummaryLoading,
+    error: studentsSummaryError,
+    refetch: refetchStudentSummary
+  } = useStudentsSummary();
+  const {
+    data: employeesSummary,
+    isLoading: isEmployeesSummaryLoading,
+    error: employeesSummaryError,
+    refetch: refetchEmployeeSummary
+  } = useEmployeesSummary();
 
   const {
     mutate: createEvent,
     isPending: isSubmitting,
     error: submitError,
-  } = useCreateEvent();
+  } = useCreateEventMutation();
 
-  const onSubmit = (data: EventFormInput) => {
-    createEvent(data);
+  const onSubmit = (data: CreateEventMutationRequestSchema) => {
+    createEvent({ data });
   };
 
   const renderContent = () => {
-    if (studentsQuery.isLoading || employeesQuery.isLoading) {
+    if (isStudentsSummaryLoading || isEmployeesSummaryLoading) {
       return (
         <div className="app-inline-loading">
           <span className="loading loading-spinner loading-sm text-primary" />
@@ -51,8 +64,8 @@ export function EventCreatePage() {
       );
     }
 
-    if (studentsQuery.isError || employeesQuery.isError) {
-      const error = studentsQuery.error || employeesQuery.error;
+    if (studentsSummaryError || employeesSummaryError) {
+      const error = studentsSummaryError || employeesSummaryError;
       return (
         <div className="space-y-3">
           <div className="alert alert-error text-sm">
@@ -61,8 +74,8 @@ export function EventCreatePage() {
           <Button
             type="button"
             onClick={() => {
-              void studentsQuery.refetch();
-              void employeesQuery.refetch();
+              refetchStudentSummary();
+              refetchEmployeeSummary();
             }}
             variant="primary"
           >
@@ -110,7 +123,7 @@ export function EventCreatePage() {
               <option value="" disabled>
                 Selecione um aluno
               </option>
-              {students.map((student) => (
+              {studentsSummary?.map((student) => (
                 <option key={student.id} value={student.id}>
                   {student.name}
                 </option>
@@ -139,7 +152,7 @@ export function EventCreatePage() {
               <option value="" disabled>
                 Selecione um colaborador
               </option>
-              {employees.map((employee) => (
+              {employeesSummary?.map((employee) => (
                 <option key={employee.id} value={employee.id}>
                   {employee.name}
                 </option>
@@ -162,9 +175,9 @@ export function EventCreatePage() {
               <option value="" disabled>
                 Selecione um conteúdo
               </option>
-              {eventContentValues.map((content) => (
+              {Object.values(eventRequestDTOContentEnum).map((content) => (
                 <option key={content} value={content}>
-                  {eventContentLabels[content]}
+                  {eventRequestDTOContentEnum[content]}
                 </option>
               ))}
             </select>

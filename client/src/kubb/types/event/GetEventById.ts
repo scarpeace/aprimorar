@@ -4,7 +4,7 @@
  */
 
 import type { EventResponseDTO } from "../EventResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetEventByIdPathParams = {
   /**
@@ -22,7 +22,7 @@ export type GetEventById200 = EventResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type GetEventById400 = ProblemDetailResponseDTO;
+export type GetEventById400 = ProblemResponseDTO;
 
 export type GetEventByIdQueryResponse = GetEventById200;
 

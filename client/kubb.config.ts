@@ -1,9 +1,9 @@
 import { defineConfig } from '@kubb/core'
 import { pluginOas } from '@kubb/plugin-oas'
 import { pluginTs } from '@kubb/plugin-ts'
+import { pluginFaker } from '@kubb/plugin-faker'
 import { pluginZod } from '@kubb/plugin-zod'
 import { pluginReactQuery } from '@kubb/plugin-react-query'
-import { pluginClient } from '@kubb/plugin-client'
 
 export default defineConfig({
   input: {
@@ -13,33 +13,12 @@ export default defineConfig({
     path: './src/kubb',
     clean: true,
     format: 'auto',
-    barrelType: 'named'
   },
 
   plugins: [
     pluginOas({ generators: [] , collisionDetection: true}),
     pluginTs({
-      output: { path: './types' },
-      group: {
-        type: 'tag',
-        name: ({ group }) => group.toLowerCase(),
-      },
-    }),
-    // pluginClient({
-    //   output: { path: './clients' },
-    //   paramsType: 'inline',
-    //   pathParamsType: 'inline',
-    //   parser:'zod',
-    //   group: {
-    //     type: 'tag',
-    //     name: ({ group }) => group.toLowerCase(),
-    //   },
-    // }),
-    pluginZod({
-      output: { path: './schemas' },
-      version: '4',
-      inferred: true,
-      dateType: 'string',
+      output: { path: './types'},
       group: {
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),
@@ -49,15 +28,35 @@ export default defineConfig({
     pluginReactQuery({
       //Quando for implementar a autenticação te que tirar essa BaseURl daqui.
       client: { baseURL: 'http://localhost:8080' },
-      output: { path: './hooks' },
+      output: { path: './hooks', barrelType: 'named' },
       paramsType: 'inline',
       pathParamsType: 'inline',
       group: {
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),
       },
-      parser: 'zod',
       suspense: false,
+      paramsCasing: 'camelcase',
     }),
+
+   // pluginFaker({
+   //    output: {
+   //      path: './mocks',
+   //      banner: '/* eslint-disable no-alert, no-console */',
+   //      barrelType: 'named',
+   //      footer: ''
+   //    },
+   //    group: {
+   //      type: 'tag',
+   //      name: ({ group }) => `${group}Mocks`,
+   //    },
+   //   dateType: 'string',
+   //    // dateParser: 'dayjs',
+   //    unknownType: 'unknown',
+   //    regexGenerator: 'faker',
+   //    seed: [100],
+   //  }),
+
+
   ],
 })

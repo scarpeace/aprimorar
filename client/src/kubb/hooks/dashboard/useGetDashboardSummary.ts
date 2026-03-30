@@ -20,7 +20,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getDashboardSummaryQueryResponseSchema } from "../../schemas/dashboard/getDashboardSummarySchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getDashboardSummaryQueryKey = (
@@ -53,7 +52,7 @@ export async function getDashboardSummary(
     params,
     ...requestConfig,
   });
-  return getDashboardSummaryQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getDashboardSummaryQueryOptions(

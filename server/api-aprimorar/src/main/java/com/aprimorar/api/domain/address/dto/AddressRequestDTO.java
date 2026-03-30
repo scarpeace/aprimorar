@@ -2,23 +2,37 @@ package com.aprimorar.api.domain.address.dto;
 
 import com.aprimorar.api.enums.BrazilianState;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record AddressRequestDTO(
-        @NotBlank(message = "Rua do endereço é obrigatória")
+        @NotBlank(message = "A rua do endereço é obrigatória")
+        @Schema(description = "Rua ou Condomínio", nullable = false, minLength = 3, maxLength = 255)
         String street,
-        @NotBlank(message = "Número do endereço é obrigatório")
+
+        @NotBlank(message = "O número do endereço é obrigatório")
+        @Schema(description = "Número da residência", nullable = false, minLength = 1, maxLength = 10)
         String number,
-        String complement,
-        @NotBlank(message = "Bairro do endereço é obrigatório")
+
+        @NotBlank(message = "O bairro do endereço é obrigatório")
+        @Schema(description = "Bairro do endereço", nullable = false, minLength = 3, maxLength = 255)
         String district,
-        @NotBlank(message = "Cidade do endereço é obrigatória")
+
+        @NotBlank(message = "A cidade do endereço é obrigatória")
+        @Schema(description = "Cidade do endereço", nullable = false, minLength = 3, maxLength = 255)
         String city,
+
         @NotNull(message = "Estado do endereço é obrigatório")
+        @Schema(description = "Estado do endereço")
         BrazilianState state,
-        @NotBlank(message = "CEP do endereço é obrigatório")
-        String zip
-        ) {
+
+        @NotBlank(message = "O CEP do endereço é obrigatório")
+        @Schema(description = "CEP do endereço", nullable = false, minLength = 8, maxLength = 8)
+        String zip,
+
+        @Schema(description = "Complemento do endereço", maxLength = 255)
+        String complement
+) {
 
 }

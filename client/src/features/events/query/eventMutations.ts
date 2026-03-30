@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 
 import { eventQueryKeys } from "./eventQueryKeys";
 import { useCreateEvent, useDeleteEvent, useUpdateEvent } from "@/kubb";

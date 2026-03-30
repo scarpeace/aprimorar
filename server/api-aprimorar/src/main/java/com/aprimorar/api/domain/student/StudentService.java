@@ -2,7 +2,9 @@ package com.aprimorar.api.domain.student;
 
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
+import com.aprimorar.api.domain.parent.ParentMapper;
+import com.aprimorar.api.domain.parent.ParentRules;
+import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
@@ -11,6 +13,8 @@ import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.domain.student.repository.StudentSpecifications;
+import com.aprimorar.api.shared.PageDTO;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -32,28 +36,39 @@ public class StudentService {
     private final ParentRepository parentRepo;
     private final StudentRepository studentRepo;
     private final StudentMapper studentMapper;
+    private final ParentMapper parentMapper;
     private final EventRepository eventRepo;
 
-    public StudentService(ParentRepository parentRepo, StudentRepository studentRepo, StudentMapper studentMapper, EventRepository eventRepo) {
+    public StudentService(
+        ParentRepository parentRepo,
+        StudentRepository studentRepo,
+        StudentMapper studentMapper,
+        ParentMapper parentMapper,
+        EventRepository eventRepo
+    ) {
         this.parentRepo = parentRepo;
         this.studentRepo = studentRepo;
         this.studentMapper = studentMapper;
+        this.parentMapper = parentMapper;
         this.eventRepo = eventRepo;
     }
 
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
-    public Page<StudentResponseDTO> getStudents(Pageable pageable, String search) {
-        Specification<Student> spec = Specification.allOf(StudentSpecifications.isNotGhost(), StudentSpecifications.notArchived());
+    public PageDTO<StudentResponseDTO> getStudents(Pageable pageable, String search, Boolean archived) {
+        Specification<Student> spec = Specification.allOf(
+            StudentSpecifications.isNotGhost(),
+            Boolean.TRUE.equals(archived) ? StudentSpecifications.archived() : StudentSpecifications.notArchived()
+        );
 
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(StudentSpecifications.searchContainsIgnoreCase(search.trim()));
         }
 
         Page<Student> page = studentRepo.findAll(spec, pageable);
+        Page<StudentResponseDTO> studentsDtoPage = page.map(studentMapper::convertToDto);
 
-        log.info("Consulta de alunos finalizada, {} registros encontrados.", page.getTotalElements());
-        return page.map(studentMapper::convertToDto);
+        return new PageDTO<>(studentsDtoPage);
     }
 
     @Transactional(readOnly = true)
@@ -83,9 +98,15 @@ public class StudentService {
     @Transactional
     public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
         Student student = studentMapper.convertToEntity(studentRequestDto);
-        student.setParent(resolveParentOrThrow(studentRequestDto.parentId()));
-        StudentRules.validate(student);
+
         ensureStudentUniqueness(student);
+        ensureParentUniqueness(student.getParent());
+
+        student.setParent(student.getParent());
+
+        // TODO: mover essas regras de validação pra dentro da entidade
+        StudentRules.validate(student);
+
         Student savedStudent = studentRepo.save(student);
 
         log.info("Aluno {} cadastrado com sucesso.", savedStudent.getName().toUpperCase());
@@ -93,29 +114,38 @@ public class StudentService {
     }
 
     @Transactional
-    public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO request) {
+    public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO dto) {
         if (GHOST_STUDENT_ID.equals(id)) {
-            throw new IllegalArgumentException("Não é possível modificar o registro de sistema 'ALUNO ARQUIVADO'.");
+            throw new IllegalArgumentException("Não é possível modificar o registro de sistema 'Aluno Removido'.");
         }
 
-        Student updatedData = studentMapper.convertToEntity(request);
-        Student existingStudent = findStudentOrThrow(id);
+        Student entity = findStudentOrThrow(id);
+        Student updatedData = studentMapper.convertToEntity(dto);
 
         ensureStudentUniquenessForUpdate(updatedData, id);
+        StudentRules.validate(updatedData);
 
-        existingStudent.setName(updatedData.getName());
-        existingStudent.setBirthdate(updatedData.getBirthdate());
-        existingStudent.setCpf(updatedData.getCpf());
-        existingStudent.setSchool(updatedData.getSchool());
-        existingStudent.setContact(updatedData.getContact());
-        existingStudent.setEmail(updatedData.getEmail());
-        existingStudent.setAddress(updatedData.getAddress());
-        existingStudent.setParent(resolveParentOrThrow(request.parentId()));
+        Parent currentParent = entity.getParent();
+        Parent parentData = updatedData.getParent();
 
-        StudentRules.validate(existingStudent);
+        ensureParentUniquenessForUpdate(parentData, currentParent.getId());
+        ParentRules.validate(parentData);
 
-        log.info("Aluno {} atualizado com sucesso.", existingStudent.getName().toUpperCase());
-        return studentMapper.convertToDto(existingStudent);
+        currentParent.setName(parentData.getName());
+        currentParent.setContact(parentData.getContact());
+        currentParent.setEmail(parentData.getEmail());
+        currentParent.setCpf(parentData.getCpf());
+
+        entity.setName(updatedData.getName());
+        entity.setContact(updatedData.getContact());
+        entity.setEmail(updatedData.getEmail());
+        entity.setBirthdate(updatedData.getBirthdate());
+        entity.setCpf(updatedData.getCpf());
+        entity.setSchool(updatedData.getSchool());
+        entity.setAddress(updatedData.getAddress());
+
+        log.info("Aluno {} atualizado com sucesso.", entity.getName().toUpperCase());
+        return studentMapper.convertToDto(entity);
     }
 
     @Transactional
@@ -131,7 +161,7 @@ public class StudentService {
     @Transactional
     public void unarchiveStudent(UUID studentId) {
         if (GHOST_STUDENT_ID.equals(studentId)) {
-            throw new IllegalArgumentException("O registro 'ALUNO ARQUIVADO' não pode ser desarquivado.");
+            throw new IllegalArgumentException("O registro 'Aluno Removido' não pode ser desarquivado.");
         }
         Student student = findStudentOrThrow(studentId);
         student.setArchivedAt(null);
@@ -141,7 +171,7 @@ public class StudentService {
     @Transactional
     public void deleteStudent(UUID studentId) {
         if (GHOST_STUDENT_ID.equals(studentId)) {
-            throw new IllegalArgumentException("Não é possível deletar o registro de sistema 'ALUNO ARQUIVADO'.");
+            throw new IllegalArgumentException("Não é possível deletar o registro de sistema 'Aluno Removido'.");
         }
 
         Student student = findStudentOrThrow(studentId);
@@ -156,7 +186,9 @@ public class StudentService {
 
     /* ----- Helper Methods ----- */
     private Student findStudentOrThrow(UUID studentId) {
-        return studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFoundException("Aluno não encontrado no banco de dados"));
+        return studentRepo
+            .findById(studentId)
+            .orElseThrow(() -> new StudentNotFoundException("Aluno não encontrado no banco de dados"));
     }
 
     private void ensureStudentUniqueness(Student student) {
@@ -179,7 +211,23 @@ public class StudentService {
         }
     }
 
-    private Parent resolveParentOrThrow(UUID parentId) {
-        return parentRepo.findById(parentId).orElseThrow(() -> new ParentNotFoundException("Responsável não encontrado no banco de dados"));
+    private void ensureParentUniqueness(Parent parent) {
+        if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parent.getId())) {
+            throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
+        }
+
+        if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parent.getId())) {
+            throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
+        }
+    }
+
+    private void ensureParentUniquenessForUpdate(Parent parent, UUID parentId) {
+        if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parentId)) {
+            throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
+        }
+
+        if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parentId)) {
+            throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
+        }
     }
 }

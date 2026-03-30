@@ -30,7 +30,7 @@ public class Student extends BaseEntity {
     @Column(name = "school", nullable = false)
     private String school;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "parent_id", referencedColumnName = "id", nullable = false)
     private Parent parent;
 

@@ -6,17 +6,18 @@ import styles from "@/features/events/EventsPage.module.css";
 import { CalendarCheck2 } from "lucide-react";
 import { EventTable } from "./components/EventTable";
 import { useGetEvents } from "@/kubb";
+import { useDebounce } from "@/lib/shared/use-debounce";
 
 export function EventsPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  // const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [currentPage, setCurrentPage] = useState(0);
 
   const {
     data: events,
     isLoading: isEventsLoading,
     error: eventsError,
-  } = useGetEvents();
+  } = useGetEvents({page: currentPage, search: debouncedSearchTerm});
 
   return (
     <div className={styles.page}>
@@ -51,7 +52,7 @@ export function EventsPage() {
           onPageChange={setCurrentPage}
           itemName="eventos"
           renderActions={(event) => (
-            <ButtonLink to={`/events/${event.id}`} size="sm" variant="outline">
+            <ButtonLink to={`/events/${event.eventId}`} size="sm" variant="outline">
               Detalhes
             </ButtonLink>
           )}

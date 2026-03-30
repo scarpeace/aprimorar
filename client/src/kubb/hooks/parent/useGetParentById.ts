@@ -20,7 +20,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getParentByIdQueryResponseSchema } from "../../schemas/parent/getParentByIdSchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getParentByIdQueryKey = (
@@ -51,7 +50,7 @@ export async function getParentById(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return getParentByIdQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getParentByIdQueryOptions(

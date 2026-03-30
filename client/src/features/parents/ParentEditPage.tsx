@@ -10,13 +10,12 @@ import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import styles from "./ParentCreatePage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { DeleteParentButton } from "./components/DeleteParentButton";
 import { updateParentMutationRequestSchema, useGetParentById, useUpdateParent, type UpdateParentMutationRequest } from "@/kubb";
 
 export function ParentEditPage() {
   const { id } = useParams<{ id: string }>();
-  const parentId = id ?? "";
 
   const {
     isError: isParentError,
@@ -24,7 +23,7 @@ export function ParentEditPage() {
     isLoading: isParentLoading,
     data: parentData,
     refetch: refetchParent,
-  } = useGetParentById(parentId);
+  } = useGetParentById(id ?? "");
 
   const { mutate: updateParent, isPending: isUpdating } =
     useUpdateParent();

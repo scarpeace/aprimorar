@@ -1,0 +1,6 @@
+com/aprimorar/api/domain/parent/ParentServiceTest.class
+com/aprimorar/api/domain/dashboard/DashboardSummaryResponseDTOTest.class
+com/aprimorar/api/domain/event/EventServiceTest.class
+com/aprimorar/api/domain/parent/ParentServiceTest$CommandMethods.class
+com/aprimorar/api/ApiAprimorarApplicationTests.class
+com/aprimorar/api/domain/parent/ParentServiceTest$QueryMethods.class

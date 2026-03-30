@@ -19,7 +19,6 @@ import type {
   QueryObserverOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { getEmployeeSummaryQueryResponseSchema } from "../../schemas/employee/getEmployeeSummarySchema.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getEmployeeSummaryQueryKey = () =>
@@ -49,7 +48,7 @@ export async function getEmployeeSummary(
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
-  return getEmployeeSummaryQueryResponseSchema.parse(res.data);
+  return res.data;
 }
 
 export function getEmployeeSummaryQueryOptions(

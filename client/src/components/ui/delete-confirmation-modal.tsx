@@ -2,14 +2,15 @@ import { AlertTriangle } from "lucide-react"
 import { Button } from "./button"
 import type { ReactNode } from "react"
 
+//TODO: esse é um bom candidato para o composition pattern
 interface DeleteConfirmationModalProps {
   isOpen: boolean
   onClose: () => void
   onConfirm: () => void
   title: string
-  isPending: boolean
-  isLoadingEvents?: boolean
-  eventsCount?: number
+  isItemPending: boolean
+  isItemLoading?: boolean
+  itemDeleteCount?: number
   itemName?: string
   isBlocker?: boolean
   phantomWarning?: ReactNode
@@ -22,9 +23,9 @@ export const DeleteConfirmationModal = ({
   onClose,
   onConfirm,
   title,
-  isPending,
-  isLoadingEvents = false,
-  eventsCount = 0,
+  isItemPending,
+  isItemLoading = false,
+  itemDeleteCount = 0,
   itemName = "item",
   isBlocker = false,
   phantomWarning,
@@ -33,7 +34,7 @@ export const DeleteConfirmationModal = ({
 }: DeleteConfirmationModalProps) => {
   if (!isOpen) return null
 
-  const hasEvents = eventsCount > 0
+  const hasEvents = itemDeleteCount > 0
 
   return (
     <dialog className="modal modal-bottom sm:modal-middle modal-open">
@@ -43,7 +44,7 @@ export const DeleteConfirmationModal = ({
           {title}
         </h3>
 
-        {isLoadingEvents ? (
+        {isItemLoading ? (
           <p className="py-4 text-muted-foreground">Verificando dados vinculados...</p>
         ) : hasEvents ? (
           <div className="py-4 space-y-4">
@@ -54,7 +55,7 @@ export const DeleteConfirmationModal = ({
             ) : (
               <>
                 <p>
-                  <strong>Atenção:</strong> Este {itemName} possui <span className="text-secondary font-semibold">{eventsCount}</span> evento(s) vinculado(s).
+                  <strong>Atenção:</strong> Este {itemName} possui <span className="text-secondary font-semibold">{itemDeleteCount}</span> evento(s) vinculado(s).
                 </p>
                 {phantomWarning}
                 <p className="font-semibold mt-2">Deseja prosseguir com a exclusão?</p>
@@ -73,7 +74,7 @@ export const DeleteConfirmationModal = ({
               type="button"
               variant="outline"
               onClick={onClose}
-              disabled={isPending}
+              disabled={isItemPending}
             >
               {isBlocker ? "Entendi" : cancelText}
             </Button>
@@ -82,10 +83,10 @@ export const DeleteConfirmationModal = ({
                 type="button"
                 variant="danger"
                 onClick={onConfirm}
-                disabled={isPending || isLoadingEvents}
+                disabled={isItemPending || isItemLoading}
                 className="ml-2"
               >
-                {isPending ? "Excluindo..." : confirmText}
+                {isItemPending ? "Excluindo..." : confirmText}
               </Button>
             )}
           </form>

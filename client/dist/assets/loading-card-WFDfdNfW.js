@@ -1,0 +1,1 @@
+import{j as r}from"./index-CEeKHB2c.js";function d({description:a,title:e="Carregando dados"}){return r.jsx("div",{className:"app-surface card border border-error/40 shadow-sm",children:r.jsxs("div",{className:"card-body gap-4",children:[r.jsx("h2",{className:"card-title text-error",children:e}),r.jsx("p",{className:"app-text-muted text-sm",children:a})]})})}export{d as L};
