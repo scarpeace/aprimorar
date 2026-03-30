@@ -1,17 +1,14 @@
 import { Alert } from "@/components/ui/alert";
-import { ButtonLink } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { AddressDetailsForm } from "@/features/address/AddressDetailsForm";
 import { ParentDetailsForm } from "@/features/parents/components/ParentDetailsForm";
-import { useGetStudentById, useUpdateStudent } from "@/kubb";
+import { useGetStudentById } from "@/kubb";
 import { useParams } from "react-router-dom";
-import { StudentEditActions } from "../components/StudentEditActions";
 import { StudentForm } from "../components/StudentForm";
 import { StudentFormFields } from "../components/StudentFormFields";
 import type { StudentInputSchema } from "../hooks/studentSchema";
 import { useStudentForm } from "../hooks/use-student-form";
 import { PageLoading } from "@/components/ui/page-loading";
-import { PageError } from "@/components/ui/page-error";
 import { ErrorCard } from "@/components/ui/error-card";
 import { GraduationCap } from "lucide-react";
 import { useUpdateStudentMutation } from "../hooks/use-student-mutation";

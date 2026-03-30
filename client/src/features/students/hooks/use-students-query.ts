@@ -7,6 +7,7 @@ import {
     useGetStudentsByParent,
     type GetStudentByIdPathParams,
     type GetStudentsByParentPathParams,
+    type GetStudentsQueryParams,
 } from "@/kubb";
 import { keepPreviousData } from "@tanstack/react-query";
 

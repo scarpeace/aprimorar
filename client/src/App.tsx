@@ -24,8 +24,8 @@ const ParentEditPage = lazy(() => import("@/features/parents/ParentEditPage").th
 
 import { pt } from "zod/locales"
 import z from "zod/v4"
-import { StudentCreatePage } from "./features/students/pages/StudentCreatePage"
-import { StudentEditPage } from "./features/students/pages/StudentEditPage"
+import { StudentCreatePage } from "./features/students/pages/CreateStudentPage"
+import { StudentEditPage } from "./features/students/pages/EditStudentPage"
 import { StudentDetailPage } from "./features/students/pages/StudentDetailPage"
 
 function App() {
