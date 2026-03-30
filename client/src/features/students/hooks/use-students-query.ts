@@ -5,11 +5,9 @@ import {
     useGetStudentById,
     useGetStudents,
     useGetStudentsByParent,
-    useGetStudentSummary,
     type GetStudentByIdPathParams,
     type GetStudentsByParentPathParams,
 } from "@/kubb";
-import type { GetStudentsQueryParams } from "@/kubb/types/student/GetStudents";
 import { keepPreviousData } from "@tanstack/react-query";
 
 import { studentResponseSchema } from "./studentSchema";
@@ -47,10 +45,5 @@ export function useStudentsByParentQuery(params: GetStudentsByParentPathParams) 
 }
 
 export function useStudentsSummary() {
-  return useGetStudentSummary({
-    query: {
-      queryKey: getStudentsQueryKey(),
-      staleTime: 1000 * 60 * 10,
-    },
-  });
+  return useStudentsSummary();
 }

@@ -15,9 +15,6 @@ public record AddressRequestDTO(
         @Schema(description = "Número da residência", nullable = false, minLength = 1, maxLength = 10)
         String number,
 
-        @Schema(description = "Complemento do endereço", maxLength = 255)
-        String complement,
-
         @NotBlank(message = "O bairro do endereço é obrigatório")
         @Schema(description = "Bairro do endereço", nullable = false, minLength = 3, maxLength = 255)
         String district,
@@ -32,7 +29,10 @@ public record AddressRequestDTO(
 
         @NotBlank(message = "O CEP do endereço é obrigatório")
         @Schema(description = "CEP do endereço", nullable = false, minLength = 8, maxLength = 8)
-        String zip
-        ) {
+        String zip,
+
+        @Schema(description = "Complemento do endereço", maxLength = 255)
+        String complement
+) {
 
 }

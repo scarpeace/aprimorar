@@ -23,10 +23,10 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./GetStudentById.ts";
 export type {
-  GetStudentOptions200,
-  GetStudentOptionsQuery,
-  GetStudentOptionsQueryResponse,
-} from "./GetStudentOptions.ts";
+  GetStudentSummary200,
+  GetStudentSummaryQuery,
+  GetStudentSummaryQueryResponse,
+} from "./GetStudentSummary.ts";
 export type {
   GetStudents200,
   GetStudentsQuery,

@@ -8,65 +8,52 @@ import { useParams } from "react-router-dom";
 import { StudentEditActions } from "../components/StudentEditActions";
 import { StudentForm } from "../components/StudentForm";
 import { StudentFormFields } from "../components/StudentFormFields";
-import { StudentPageState } from "../components/StudentPageState";
 import type { StudentInputSchema } from "../hooks/studentSchema";
 import { useStudentForm } from "../hooks/use-student-form";
-import { ErrorCard } from "@/components/ui/error-card";
 import { PageLoading } from "@/components/ui/page-loading";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { PageError } from "@/components/ui/page-error";
+import { ErrorCard } from "@/components/ui/error-card";
+import { GraduationCap } from "lucide-react";
+import { useUpdateStudentMutation } from "../hooks/use-student-mutation";
+import { StudentFormActions } from "../components/StudentFormActions";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
 
-  const {
-    data: student,
-    isLoading: isStudentLoading,
-    error: studentFetchError,
-    refetch: refetchStudent,
-  } = useGetStudentById(studentId);
-
-  const {
-    mutate: updateStudent,
-    error: studantUpdateError,
-    isPending: isStudentUpdating,
-  } = useUpdateStudent();
+  const studentQuery = useGetStudentById(studentId);
+  const updateStudentMutation = useUpdateStudentMutation();
 
   const {
     formState: { errors },
     handleSubmit,
     register,
     registerWithMask,
-  } = useStudentForm(student);
+  } = useStudentForm(studentQuery.data);
 
   const onSubmit = handleSubmit((data: StudentInputSchema) => {
-    updateStudent({ studentId, data });
+    updateStudentMutation.mutate({ studentId, data });
   });
 
-  if (isStudentLoading) {
+  if (studentQuery.isPending) {
     return <PageLoading message="Carregando aluno..." />;
   }
 
-  //TODO: revisitar esse comportamento de erro, ele vai servir como base
-// Atualmente a página renderiza por inteiro, as vezes é melhor colocar o erro embaixo do formulário
-  if (studentFetchError) {
-    return <PageError message="Ocorreu um erro ao carregar o aluno." error={studentFetchError} />;
-  }
+if (studentQuery.isError) {
+  return <ErrorCard title="Ocorreu um erro ao carregar o aluno." error={studentQuery.error} />
+}
 
   return (
     <div className="container">
       <PageHeader
-        title="Editar aluno"
-        description="Atualize os dados do aluno e do responsável."
-        action={
-          <ButtonLink to={`/students/${studentId}`} variant="outline">
-            Voltar para detalhes
-          </ButtonLink>
-        }
+        title="Criar aluno"
+        description="Preencha os dados do aluno e do responsável."
+        Icon={GraduationCap}
       />
 
       <StudentForm onSubmit={onSubmit}>
+          {updateStudentMutation.isError && <Alert error={updateStudentMutation.error} variant="error" />}
+
         <StudentFormFields
           register={register}
           registerWithMask={registerWithMask}
@@ -75,28 +62,22 @@ export function StudentEditPage() {
         />
 
         <ParentDetailsForm
-          prefix="parent"
           register={register}
           registerWithMask={registerWithMask}
-          errors={errors}
+          prefix="parent"
+          errors={errors.parent}
           className="grid grid-cols-2 gap-4"
         />
 
         <AddressDetailsForm
-          prefix="address"
           register={register}
-          errors={errors}
+          registerWithMask={registerWithMask}
+          errors={errors.address}
+          prefix="address"
           className="grid grid-cols-3 gap-4"
         />
 
-        {studantUpdateError ? (
-          <Alert variant="error" error={studantUpdateError?.message} />
-        ) : null}
-
-        <StudentEditActions
-          studentId={studentId}
-          isSubmitting={isStudentUpdating}
-        />
+        <StudentFormActions isSubmitting={updateStudentMutation.isPending} />
       </StudentForm>
     </div>
   );

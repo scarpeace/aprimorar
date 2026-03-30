@@ -8,11 +8,11 @@ import type { StudentSummaryDTO } from "../StudentSummaryDTO.ts";
 /**
  * @description Lista de opções de alunos retornada com sucesso.
  */
-export type GetStudentOptions200 = StudentSummaryDTO[];
+export type GetStudentSummary200 = StudentSummaryDTO[];
 
-export type GetStudentOptionsQueryResponse = GetStudentOptions200;
+export type GetStudentSummaryQueryResponse = GetStudentSummary200;
 
-export type GetStudentOptionsQuery = {
-  Response: GetStudentOptions200;
+export type GetStudentSummaryQuery = {
+  Response: GetStudentSummary200;
   Errors: any;
 };

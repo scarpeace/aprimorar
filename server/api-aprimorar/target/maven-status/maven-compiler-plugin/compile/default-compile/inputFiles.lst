@@ -69,7 +69,6 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/repository/StudentRepository.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/repository/StudentSpecifications.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/web/StudentController.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/web/StudentControllerDocs.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/enums/BrazilianState.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/enums/Duty.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/enums/EventContent.java

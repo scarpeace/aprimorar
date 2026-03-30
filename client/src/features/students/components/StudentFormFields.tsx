@@ -61,9 +61,10 @@ export function StudentFormFields({
           error={errors.birthdate?.message}
         >
           <input
+          type="date"
             className="app-input"
             id="birthdate"
-            {...registerWithMask("birthdate", "99/99/9999")}
+            {...register("birthdate")}
           />
         </FormField>
 

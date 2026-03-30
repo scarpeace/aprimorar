@@ -25,54 +25,65 @@ export function StudentsPage() {
     archived: showArchived,
   });
 
-if (studentsQuery.isPending) {
-  return <LoadingCard title="Carregando listagem de alunos" />
-}
+  if (studentsQuery.isPending) {
+    return <LoadingCard title="Carregando listagem de alunos" />;
+  }
 
-if (studentsQuery.isError) {
-  return <ErrorCard title="Não foi possível carregar a listagem de alunos" error={studentsQuery.error} />
-}
+  if (studentsQuery.isError) {
+    return (
+      <ErrorCard
+        title="Não foi possível carregar a listagem de alunos"
+        error={studentsQuery.error}
+      />
+    );
+  }
 
   return (
-    //TODO: Mover esse animate pro layout
-    <TableRoot className="animate-[fade-up_280ms_ease-out_both] flex flex-col gap-7">
-
+    <div className=" flex flex-col gap-5">
       <PageHeader
         description="Gerencie cadastros e matrículas."
         title="Alunos"
         Icon={GraduationCap}
       >
-        <ListSearchInput
-          placeholder="Buscar aluno por nome, email ou escola"
-          ariaLabel="Buscar aluno"
-          value={searchTerm}
-          onChange={setSearchTerm}
-        />
-        <ToggleSwitch
-          className="m-2"
-          label="Arquivados"
-          tip="Mostrar alunos arquivados"
-          toggled={showArchived}
-          setToggle={setShowArchived}
-        />
-        <ButtonLink className="sm:ml-auto" to="/students/new" variant="success">
-          Novo aluno
-        </ButtonLink>
+          <div className="flex items-center ml-auto gap-6">
+          <ListSearchInput
+            className="w-80 sm:w-96"
+            placeholder="Buscar aluno por nome, email ou escola"
+            ariaLabel="Buscar aluno"
+            value={searchTerm}
+            onChange={setSearchTerm}
+          />
+          <ToggleSwitch
+            label="Arquivados"
+            tip="Mostrar alunos arquivados"
+            toggled={showArchived}
+            setToggle={setShowArchived}
+          />
+          <ButtonLink
+            className="sm:ml-auto"
+            to="/students/new"
+            variant="success"
+          >
+            Novo aluno
+          </ButtonLink>
+        </div>
       </PageHeader>
+      <TableRoot className="animate-[fade-up_280ms_ease-out_both] flex flex-col gap-7">
+        <StudentsTable.State
+          students={studentsQuery.data.content}
+          isLoading={studentsQuery.isLoading}
+          error={studentsQuery.error}
+        >
+          <StudentsTable.Content students={studentsQuery.data.content} />
 
-      <StudentsTable.State
-        students={studentsQuery.data.content}
-        isLoading={studentsQuery.isLoading}
-        error={studentsQuery.error}
-      >
-        <StudentsTable.Content students={studentsQuery.data.content} />
-
-        <Pagination
-          totalElements={studentsQuery.data.totalElements}
-          totalPages={studentsQuery.data.totalPages}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage} />
-      </StudentsTable.State>
-    </TableRoot>
+          <Pagination
+            totalElements={studentsQuery.data.totalElements}
+            totalPages={studentsQuery.data.totalPages}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        </StudentsTable.State>
+      </TableRoot>
+    </div>
   );
 }

@@ -4,7 +4,7 @@ import z from "zod";
 export const addressInputSchema = z.object({
   street: z.string().min(1, { message: "Rua é obrigatória" }),
   number: z.string().min(1, { message: "Número é obrigatório" }),
-  complement: z.string().min(1, { message: "Complemento é obrigatório" }),
+  complement: z.string().min(1, { message: "Complemento é obrigatório" }).optional(),
   district: z.string().min(1, { message: "Bairro é obrigatório" }),
   city: z.string().min(1, { message: "Cidade é obrigatória" }),
   state: z.enum(addressRequestDTOStateEnum),

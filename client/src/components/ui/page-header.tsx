@@ -15,16 +15,14 @@ export function PageHeader({
   children,
 }: Readonly<PageHeaderProps>) {
   return (
-    <header className="mb-3 flex min-w-0 flex-col gap-4">
-      <div className="flex min-w-0 items-center gap-3">
-          <div className="flex h-26 w-30 items-center justify-center rounded-full bg-success/15">
-            <Icon className="h-16 w-16 text-success" />
-          </div>
-        <div className="w-full flex-col gap-3 flex min-w-0">
+    <header className="flex flex-col   min-w-0 gap-5">
+      <div className="flex flex-row items-center">
+        <Icon className="h-20 w-20 p-3 text-success rounded-full bg-success/15" />
+        <div className="flex flex-col gap-1 min-w-0 ml-3">
           <h1 className="app-text text-3xl font-bold">{title}</h1>
           <p className="text-sm app-text-muted">{description}</p>
-          <div className="flex mt-3">{children}</div>
         </div>
+        {children}
       </div>
     </header>
   );

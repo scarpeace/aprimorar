@@ -26,7 +26,7 @@ export type { ArchiveStudentMutationKey } from "./hooks/student-controller/useAr
 export type { CreateStudentMutationKey } from "./hooks/student-controller/useCreateStudent.ts";
 export type { DeleteStudentMutationKey } from "./hooks/student-controller/useDeleteStudent.ts";
 export type { GetStudentByIdQueryKey } from "./hooks/student-controller/useGetStudentById.ts";
-export type { GetStudentOptionsQueryKey } from "./hooks/student-controller/useGetStudentOptions.ts";
+export type { GetStudentSummaryQueryKey } from "./hooks/student-controller/useGetStudentSummary.ts";
 export type { GetStudentsQueryKey } from "./hooks/student-controller/useGetStudents.ts";
 export type { GetStudentsByParentQueryKey } from "./hooks/student-controller/useGetStudentsByParent.ts";
 export type { UnarchiveStudentMutationKey } from "./hooks/student-controller/useUnarchiveStudent.ts";
@@ -267,10 +267,10 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./types/student-controller/GetStudentById.ts";
 export type {
-  GetStudentOptions200,
-  GetStudentOptionsQuery,
-  GetStudentOptionsQueryResponse,
-} from "./types/student-controller/GetStudentOptions.ts";
+  GetStudentSummary200,
+  GetStudentSummaryQuery,
+  GetStudentSummaryQueryResponse,
+} from "./types/student-controller/GetStudentSummary.ts";
 export type {
   GetStudents200,
   GetStudentsQuery,
@@ -408,10 +408,10 @@ export { getStudentById } from "./hooks/student-controller/useGetStudentById.ts"
 export { getStudentByIdQueryKey } from "./hooks/student-controller/useGetStudentById.ts";
 export { getStudentByIdQueryOptions } from "./hooks/student-controller/useGetStudentById.ts";
 export { useGetStudentById } from "./hooks/student-controller/useGetStudentById.ts";
-export { getStudentOptions } from "./hooks/student-controller/useGetStudentOptions.ts";
-export { getStudentOptionsQueryKey } from "./hooks/student-controller/useGetStudentOptions.ts";
-export { getStudentOptionsQueryOptions } from "./hooks/student-controller/useGetStudentOptions.ts";
-export { useGetStudentOptions } from "./hooks/student-controller/useGetStudentOptions.ts";
+export { getStudentSummary } from "./hooks/student-controller/useGetStudentSummary.ts";
+export { getStudentSummaryQueryKey } from "./hooks/student-controller/useGetStudentSummary.ts";
+export { getStudentSummaryQueryOptions } from "./hooks/student-controller/useGetStudentSummary.ts";
+export { useGetStudentSummary } from "./hooks/student-controller/useGetStudentSummary.ts";
 export { getStudents } from "./hooks/student-controller/useGetStudents.ts";
 export { getStudentsQueryKey } from "./hooks/student-controller/useGetStudents.ts";
 export { getStudentsQueryOptions } from "./hooks/student-controller/useGetStudents.ts";

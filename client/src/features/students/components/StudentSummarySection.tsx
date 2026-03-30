@@ -1,21 +1,15 @@
-import type { StudentResponseDTO } from "@/kubb";
 import type { ReactNode } from "react";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
-import { ArchiveStudentButton } from "@/features/students/components/ArchiveStudentButton";
-import { DeleteStudentButton } from "@/features/students/components/DeleteStudentButton";
-import { EditStudentButton } from "@/features/students/components/EditStudentButton";
 import type { StudentResponseSchema } from "../hooks/studentSchema";
 
 type StudentSummarySectionProps = {
-  student?: StudentResponseSchema;
-  studentId: string;
+  student: StudentResponseSchema;
 };
 
 export function StudentSummarySection({
   student,
-  studentId,
 }: Readonly<StudentSummarySectionProps>) {
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: student?.name },
@@ -33,13 +27,6 @@ export function StudentSummarySection({
     <SectionCard
       title="Resumo do aluno"
       description="Dados de aluno, responsável e endereço em um único resumo."
-      headerAction={
-        <>
-          <EditStudentButton studentId={studentId} />
-          <ArchiveStudentButton studentId={studentId} isArchived={!!student?.archivedAt} />
-          <DeleteStudentButton studentId={studentId} />
-        </>
-      }
     >
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {summaryItems.map((item) => (

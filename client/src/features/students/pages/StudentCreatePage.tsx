@@ -5,14 +5,9 @@ import { ParentDetailsForm } from "@/features/parents/components/ParentDetailsFo
 import { StudentForm } from "../components/StudentForm";
 import { StudentFormActions } from "../components/StudentFormActions";
 import { StudentFormFields } from "../components/StudentFormFields";
-import { StudentPageState } from "../components/StudentPageState";
 import { useStudentForm } from "../hooks/use-student-form";
 import { useCreateStudentMutation } from "../hooks/use-student-mutation";
-import { PageLoading } from "@/components/ui/page-loading";
-import { ErrorCard } from "@/components/ui/error-card";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { GraduationCap } from "lucide-react";
-import { LoadingCard } from "@/components/ui/loading-card";
 
 export function StudentCreatePage() {
   const {
@@ -22,11 +17,11 @@ export function StudentCreatePage() {
     registerWithMask,
   } = useStudentForm();
 
-  const studentMutation = useCreateStudentMutation();
+  const createStudentMutation = useCreateStudentMutation();
 
   const onSubmit = handleSubmit((data) => {
     console.log(data)
-    studentMutation.mutate({ data });
+    createStudentMutation.mutate({ data });
   });
 
   return (
@@ -38,7 +33,7 @@ export function StudentCreatePage() {
       />
 
       <StudentForm onSubmit={onSubmit}>
-        {studentMutation.isError && <Alert error={studentMutation.error} variant="error" />}
+        {createStudentMutation.isError && <Alert error={createStudentMutation.error} variant="error" />}
 
         <StudentFormFields
           register={register}
@@ -63,7 +58,7 @@ export function StudentCreatePage() {
           className="grid grid-cols-3 gap-4"
         />
 
-        <StudentFormActions isSubmitting={studentMutation.isPending} />
+        <StudentFormActions isSubmitting={createStudentMutation.isPending} />
       </StudentForm>
     </div>
   );

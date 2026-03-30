@@ -9,7 +9,7 @@ export type ToggleSwitchProps = {
 export function ToggleSwitch({ toggled, setToggle, className, label, tip }: ToggleSwitchProps) {
   return (
             <div className="tooltip" data-tip={tip}>
-              <label id="showArchived" className="label mx-auto">
+              <label id="showArchived" className="label">
                 <input
                   id="showArchived"
                   type="checkbox"
@@ -17,7 +17,7 @@ export function ToggleSwitch({ toggled, setToggle, className, label, tip }: Togg
                   onChange={() => setToggle(!toggled)}
                   className={`toggle checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800 ${className}`}
                 />
-                <span>{label}</span>
+                <span className="text-sm">{label}</span>
               </label>
       </div>
   );

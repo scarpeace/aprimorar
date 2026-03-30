@@ -12,57 +12,32 @@ type UseStudentFormReturn = UseFormReturn<StudentInputSchema> & {
   registerWithMask: ReturnType<typeof useHookFormMask>;
 };
 
-export const MOCK_STUDENT_DATA = {
-  name: "João Silva Oliveira",
-  birthdate: "2015-05-15",
-  cpf: "123.456.789-01",
-  contact: "(61) 98888-7777",
-  email: "joao.silva@escola.com",
-  school: "Colégio Marista de Brasília",
-  address: {
-    street: "SQN 205 Bloco G",
-    number: "402",
-    complement: "Apartamento",
-    district: "Asa Norte",
-    city: "Brasília",
-    state: "DF",
-    zip: "70735-070",
-  },
-  parent: {
-    name: "Mariana Silva Oliveira",
-    contact: "(61) 99999-8888",
-    email: "mariana.oliveira@email.com",
-    cpf: "987.654.321-00",
-  },
-};
-
-
 export function useStudentForm(student?: StudentResponseDTO) : UseStudentFormReturn {
 
   const form = useForm<StudentInputSchema>({
     resolver: zodResolver(studentInputSchema),
     mode: "onBlur",
     values: {
-      name: student?.name ?? MOCK_STUDENT_DATA.name,
-      birthdate: student?.birthdate ?? MOCK_STUDENT_DATA.birthdate,
-      cpf: student?.cpf ?? MOCK_STUDENT_DATA.cpf,
-      contact: student?.contact ?? MOCK_STUDENT_DATA.contact,
-      email: student?.email ?? MOCK_STUDENT_DATA.email,
-      school: student?.school ?? MOCK_STUDENT_DATA.school,
+      name: student?.name ?? "",
+      birthdate: student?.birthdate ?? "",
+      cpf: student?.cpf ?? "",
+      contact: student?.contact ?? "",
+      email: student?.email ?? "",
+      school: student?.school ?? "",
       address: {
-        street: student?.address?.street ?? MOCK_STUDENT_DATA.address.street,
-        number: student?.address?.number ?? MOCK_STUDENT_DATA.address.number,
-        complement: student?.address?.complement ?? MOCK_STUDENT_DATA.address.complement,
-        district: student?.address?.district ?? MOCK_STUDENT_DATA.address.district,
-        city: student?.address?.city ?? MOCK_STUDENT_DATA.address.city,
-        state: student?.address?.state ?? MOCK_STUDENT_DATA.address.state ,
-        zip: student?.address?.zip ?? MOCK_STUDENT_DATA.address.zip,
+        street: student?.address?.street ?? "",
+        number: student?.address?.number ?? "",
+        complement: student?.address?.complement ?? "",
+        district: student?.address?.district ?? "",
+        city: student?.address?.city ?? "",
+        state: student?.address?.state ?? "DF",
+        zip: student?.address?.zip ?? "",
       },
       parent: {
-        name: student?.parent?.name ?? MOCK_STUDENT_DATA.parent.name,
-        contact: student?.parent?.contact ?? MOCK_STUDENT_DATA.parent.contact,
-        email: student?.parent?.email ?? MOCK_STUDENT_DATA.parent.email,
-        cpf: student?.parent?.cpf ?? MOCK_STUDENT_DATA.parent.cpf,
+        name: student?.parent?.name ?? "",
+        contact: student?.parent?.contact ?? "",
+        email: student?.parent?.email ?? "",
+        cpf: student?.parent?.cpf ?? "",
       },
     },
   });

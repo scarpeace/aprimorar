@@ -13,6 +13,7 @@ public class AddressMapper {
         Address address = new Address();
         address.setStreet(dto.street());
         address.setNumber(dto.number());
+        address.setComplement(dto.complement());
         address.setDistrict(dto.district());
         address.setCity(dto.city());
         address.setState(dto.state());
@@ -26,11 +27,11 @@ public class AddressMapper {
         return new AddressResponseDTO(
                 entity.getStreet(),
                 entity.getNumber(),
-                entity.getComplement(),
                 entity.getDistrict(),
                 entity.getCity(),
                 entity.getState(),
-                MapperUtils.formatZip(entity.getZip())
+                MapperUtils.formatZip(entity.getZip()),
+                entity.getComplement()
         );
     }
 }
