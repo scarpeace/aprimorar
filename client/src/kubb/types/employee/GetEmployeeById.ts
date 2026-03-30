@@ -4,7 +4,7 @@
  */
 
 import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetEmployeeByIdPathParams = {
   /**
@@ -22,7 +22,7 @@ export type GetEmployeeById200 = EmployeeResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type GetEmployeeById400 = ProblemDetailResponseDTO;
+export type GetEmployeeById400 = ProblemResponseDTO;
 
 export type GetEmployeeByIdQueryResponse = GetEmployeeById200;
 

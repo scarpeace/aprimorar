@@ -6,6 +6,9 @@
 import type { AddressResponseDTO } from "./AddressResponseDTO.ts";
 import type { ParentResponseDTO } from "./ParentResponseDTO.ts";
 
+/**
+ * @description Dados do aluno retornados pela API
+ */
 export type StudentResponseDTO = {
   /**
    * @description Indentificador único do aluno

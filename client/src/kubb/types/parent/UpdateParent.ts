@@ -5,7 +5,7 @@
 
 import type { ParentRequestDTO } from "../ParentRequestDTO.ts";
 import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type UpdateParentPathParams = {
   /**
@@ -23,7 +23,7 @@ export type UpdateParent200 = ParentResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type UpdateParent400 = ProblemDetailResponseDTO;
+export type UpdateParent400 = ProblemResponseDTO;
 
 export type UpdateParentMutationRequest = ParentRequestDTO;
 

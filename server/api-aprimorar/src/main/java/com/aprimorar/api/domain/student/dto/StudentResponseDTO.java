@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Schema(description = "Dados do aluno retornados pela API")
 public record StudentResponseDTO(
     @NotNull
     @Schema(description = "Indentificador único do aluno", example = "550e8400-e29b-41d4-a716-446655440000")

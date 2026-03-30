@@ -4,7 +4,7 @@
  */
 
 import type { DashboardSummaryResponseDTO } from "../DashboardSummaryResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetDashboardSummaryQueryParams = {
   /**
@@ -27,7 +27,7 @@ export type GetDashboardSummary200 = DashboardSummaryResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type GetDashboardSummary400 = ProblemDetailResponseDTO;
+export type GetDashboardSummary400 = ProblemResponseDTO;
 
 export type GetDashboardSummaryQueryResponse = GetDashboardSummary200;
 

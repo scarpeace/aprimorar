@@ -1,10 +1,17 @@
 package com.aprimorar.api.domain.student.web;
 
+import com.aprimorar.api.domain.student.StudentService;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
+import com.aprimorar.api.shared.PageDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,19 +26,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
-import com.aprimorar.api.domain.student.StudentService;
-import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
-import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @RestController
 @RequestMapping("/v1/students")
-public class StudentController implements StudentControllerDocs {
+public class StudentController {
 
     private final StudentService studentService;
 
@@ -39,82 +37,82 @@ public class StudentController implements StudentControllerDocs {
         this.studentService = studentService;
     }
 
-    @Override
     @PostMapping
-    public ResponseEntity<StudentResponseDTO> createStudent(
-            @RequestBody @Valid StudentRequestDTO createStudentDto) {
-
+    @Operation(operationId = "createStudent", description = "Cria um novo aluno com os dados fornecidos.")
+    @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso.")
+    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
         StudentResponseDTO response = studentService.createStudent(createStudentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Override
     @GetMapping
-    public ResponseEntity<Page<StudentResponseDTO>> getStudents(
-            @ParameterObject Pageable pageable,
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) Boolean archived
+    @Operation(operationId = "getStudents", description = "Retorna uma lista paginada de alunos.")
+    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
+    public ResponseEntity<PageDTO<StudentResponseDTO>> getStudents(
+        @ParameterObject Pageable pageable,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) Boolean archived
     ) {
-        Page<StudentResponseDTO> students = studentService.getStudents(pageable, search, archived);
+        PageDTO<StudentResponseDTO> students = studentService.getStudents(pageable, search, archived);
         return ResponseEntity.ok(students);
     }
 
-    @Override
     @GetMapping("/options")
+    @Operation(operationId = "getStudentOptions", description = "Retorna uma lista de opções de alunos.")
+    @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
     public ResponseEntity<List<StudentSummaryDTO>> getStudentSummary() {
         List<StudentSummaryDTO> options = studentService.getStudentSummary();
         return ResponseEntity.ok(options);
     }
 
-    @Override
     @GetMapping("/parent/{parentId}")
-    public ResponseEntity<List<StudentResponseDTO>> getStudentsByParent(
-            @PathVariable UUID parentId
-    ) {
+    @Operation(operationId = "getStudentsByParent", description = "Retorna uma lista de alunos por ID do pai.")
+    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
+    public ResponseEntity<List<StudentResponseDTO>> getStudentsByParent(@PathVariable UUID parentId) {
         List<StudentResponseDTO> students = studentService.getStudentsByParent(parentId);
         return ResponseEntity.ok(students);
     }
 
-    @Override
     @GetMapping("/{studentId}")
+    @Operation(operationId = "getStudentById", description = "Retorna um aluno por ID.")
+    @ApiResponse(responseCode = "200", description = "Aluno retornado com sucesso.")
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId) {
-
         StudentResponseDTO foundStudent = studentService.findById(studentId);
         return ResponseEntity.ok(foundStudent);
     }
 
-    @Override
     @PutMapping("/{studentId}")
+    @Operation(operationId = "updateStudent", description = "Atualiza um aluno por ID.")
+    @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso.")
     public ResponseEntity<StudentResponseDTO> updateStudent(
-            @PathVariable UUID studentId,
-            @RequestBody @Valid StudentRequestDTO studentRequestDto) {
-
+        @PathVariable UUID studentId,
+        @RequestBody @Valid StudentRequestDTO studentRequestDto
+    ) {
         StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, studentRequestDto);
         return ResponseEntity.ok(updatedStudent);
     }
 
-    @Override
     @DeleteMapping("/{studentId}")
+    @Operation(operationId = "deleteStudent", description = "Deleta um aluno por ID.")
+    @ApiResponse(responseCode = "204", description = "Aluno deletado com sucesso.")
     public ResponseEntity<Void> deleteStudent(@PathVariable UUID studentId) {
-
         studentService.deleteStudent(studentId);
         return ResponseEntity.noContent().build();
     }
 
-    @Override
     @PatchMapping("/{studentId}/archive")
+    @Operation(operationId = "archiveStudent", description = "Arquiva um aluno por ID.")
+    @ApiResponse(responseCode = "204", description = "Aluno arquivado com sucesso.")
     public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
-
         studentService.archiveStudent(studentId);
         return ResponseEntity.noContent().build();
     }
 
-    @Override
     @PatchMapping("/{studentId}/unarchive")
+    @Operation(operationId = "unarchiveStudent", description = "Desarquiva um aluno por ID.")
+    @ApiResponse(responseCode = "204", description = "Aluno desarquivado com sucesso.")
     public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {
-
         studentService.unarchiveStudent(studentId);
         return ResponseEntity.noContent().build();
     }
-
 }

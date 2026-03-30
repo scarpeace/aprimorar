@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type UnarchiveEmployeePathParams = {
   /**
@@ -21,7 +21,7 @@ export type UnarchiveEmployee204 = any;
 /**
  * @description Requisição inválida
  */
-export type UnarchiveEmployee400 = ProblemDetailResponseDTO;
+export type UnarchiveEmployee400 = ProblemResponseDTO;
 
 export type UnarchiveEmployeeMutationResponse = UnarchiveEmployee204;
 

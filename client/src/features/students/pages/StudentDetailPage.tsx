@@ -16,6 +16,7 @@ import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { PageLoading } from "@/components/ui/page-loading";
 import { Alert } from "@/components/ui/alert";
 import { PageError } from "@/components/ui/page-error";
+import { LoadingCard } from "@/components/ui/loading-card";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -23,20 +24,16 @@ export function StudentDetailPage() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
 
-  const {
-    data: student,
-    isLoading: isStudentLoading,
-    error: studentError,
-  } = useStudentByIdQuery({ studentId });
+  const studentQuery = useStudentByIdQuery({ studentId });
 
-  const {
-    data: studentEvents,
-    isLoading: isStudentEventsLoading,
-    error: studentEventsError,
-  } = useEventsByStudent(studentId);
+  const studentEventsQuery = useEventsByStudent(studentId);
 
-  if (isStudentLoading) {
-    return <PageLoading message="Carregando aluno..." />;
+  if (studentQuery.isError) {
+    return <ErrorCard title="Erro ao carregar aluno" error={studentQuery.error} />
+  }
+
+  if (studentQuery.isPending) {
+    return <LoadingCard title="Carregando listagem de alunos" />
   }
 
   return (
@@ -52,25 +49,18 @@ export function StudentDetailPage() {
         }
       />
 
-      {studentError && (
-        <PageError
-          message="Ocorreu um erro ao carregar o aluno."
-          error={studentError}
-        />
-      )}
-
       <div className="grid gap-2">
-        <StudentSummarySection student={student} studentId={studentId} />
+        <StudentSummarySection student={studentQuery.data} studentId={studentId} />
         <Collapse title="Endereço">
-          <AddressSummarySection address={student?.address} />
+          <AddressSummarySection address={studentQuery.data.address} />
         </Collapse>
       </div>
 
       <StudentEventsSection
         studentId={studentId}
-        events={studentEvents}
-        isLoading={isStudentEventsLoading}
-        error={studentEventsError}
+        events={studentEventsQuery.data?.content}
+        isLoading={studentEventsQuery.isPending}
+        error={studentEventsQuery.error}
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       />

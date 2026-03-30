@@ -18,11 +18,25 @@ export default defineConfig({
   plugins: [
     pluginOas({ generators: [] , collisionDetection: true}),
     pluginTs({
-      output: { path: './types' },
+      output: { path: './types'},
       group: {
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),
       },
+    }),
+
+    pluginReactQuery({
+      //Quando for implementar a autenticação te que tirar essa BaseURl daqui.
+      client: { baseURL: 'http://localhost:8080' },
+      output: { path: './hooks', barrelType: 'named' },
+      paramsType: 'inline',
+      pathParamsType: 'inline',
+      group: {
+        type: 'tag',
+        name: ({ group }) => group.toLowerCase(),
+      },
+      suspense: false,
+      paramsCasing: 'camelcase',
     }),
 
    // pluginFaker({
@@ -43,29 +57,6 @@ export default defineConfig({
    //    seed: [100],
    //  }),
 
-    // pluginZod({
-    //   output: {path: './schemas'},
-    //   version: '4',
-    //   inferred: true,
-    //   importPath: '@/lib/validations/zod',
-    //   dateType: 'string',
-    //   group: {
-    //     type: 'tag',
-    //     name: ({ group }) => group.toLowerCase(),
-    //   },
-    // }),
 
-    pluginReactQuery({
-      //Quando for implementar a autenticação te que tirar essa BaseURl daqui.
-      client: { baseURL: 'http://localhost:8080' },
-      output: { path: './hooks' },
-      paramsType: 'inline',
-      pathParamsType: 'inline',
-      group: {
-        type: 'tag',
-        name: ({ group }) => group.toLowerCase(),
-      },
-      suspense: false,
-    }),
   ],
 })

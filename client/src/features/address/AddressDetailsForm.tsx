@@ -5,9 +5,11 @@ import {
   addressRequestDTOStateEnum,
 } from "@/kubb";
 import type { AddressInputSchema } from "./hooks/addressSchema";
+import type { useHookFormMask } from "use-mask-input";
 
 type AddressDetailsFormProps = {
   register: UseFormRegister<any>;
+  registerWithMask: ReturnType<typeof useHookFormMask>;
   prefix?: string;
   errors?: FieldErrors<AddressInputSchema>;
   className?: string;
@@ -15,6 +17,7 @@ type AddressDetailsFormProps = {
 
 export function AddressDetailsForm({
   register,
+  registerWithMask,
   prefix,
   errors,
   className,
@@ -125,7 +128,7 @@ export function AddressDetailsForm({
             className="app-input"
             id="zip"
             placeholder="00000-000"
-            {...register(`${withPrefix(`zip`)}`)}
+             {...registerWithMask(withPrefix(`zip`), "99999-999")}
           />
         </FormField>
       </div>

@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 import com.aprimorar.api.domain.parent.dto.ParentSummaryDTO;
-import com.aprimorar.api.exception.ProblemDetailResponseDTO;
+import com.aprimorar.api.exception.ProblemResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,7 +36,7 @@ public interface ParentControllerDocs {
                         schema = @Schema(implementation = ParentResponseDTO.class))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+                        schema = @Schema(implementation = ProblemResponseDTO.class)))
     })
     ResponseEntity<ParentResponseDTO> createParent(ParentRequestDTO request);
 
@@ -49,7 +49,7 @@ public interface ParentControllerDocs {
         @ApiResponse(responseCode = "200", description = "Responsáveis listados com sucesso"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+                        schema = @Schema(implementation = ProblemResponseDTO.class)))
     })
     ResponseEntity<Page<ParentResponseDTO>> getParents(
             @ParameterObject Pageable pageable,
@@ -67,7 +67,7 @@ public interface ParentControllerDocs {
                         schema = @Schema(implementation = ParentResponseDTO.class))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+                        schema = @Schema(implementation = ProblemResponseDTO.class)))
     })
     ResponseEntity<ParentResponseDTO> getParentById(
             @Parameter(description = "ID do responsável") UUID parentId
@@ -84,7 +84,7 @@ public interface ParentControllerDocs {
                         array = @ArraySchema(schema = @Schema(implementation = ParentSummaryDTO.class)))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+                        schema = @Schema(implementation = ProblemResponseDTO.class)))
     })
     ResponseEntity<List<ParentSummaryDTO>> getParentSummary();
 
@@ -99,7 +99,7 @@ public interface ParentControllerDocs {
                         schema = @Schema(implementation = ParentResponseDTO.class))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+                        schema = @Schema(implementation = ProblemResponseDTO.class)))
     })
     ResponseEntity<ParentResponseDTO> updateParent(
             @Parameter(description = "ID do responsável") UUID parentId,
@@ -116,7 +116,7 @@ public interface ParentControllerDocs {
         @ApiResponse(responseCode = "200", description = "Responsável deletado com sucesso"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+                        schema = @Schema(implementation = ProblemResponseDTO.class)))
     })
     ResponseEntity<Void> deleteParent(
             @Parameter(description = "ID do responsável") UUID parentId
@@ -131,7 +131,7 @@ public interface ParentControllerDocs {
         @ApiResponse(responseCode = "204", description = "Responsável arquivado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Responsável não encontrado",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+                        schema = @Schema(implementation = ProblemResponseDTO.class)))
     })
     ResponseEntity<Void> archiveParent(
             @Parameter(description = "ID do responsável") UUID parentId
@@ -146,7 +146,7 @@ public interface ParentControllerDocs {
         @ApiResponse(responseCode = "204", description = "Responsável desarquivado com sucesso"),
         @ApiResponse(responseCode = "404", description = "Responsável não encontrado",
                 content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ProblemDetailResponseDTO.class)))
+                        schema = @Schema(implementation = ProblemResponseDTO.class)))
     })
     ResponseEntity<Void> unarchiveParent(
             @Parameter(description = "ID do responsável") UUID parentId

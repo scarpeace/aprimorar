@@ -3,18 +3,11 @@
     "adapter": "Java",
     "request": "launch",
     "label": "Launch Aprimorar API Debugger",
-    // "mainClass": "com.aprimorar.api.ApiAprimorarApplication",
+    "projectName": "api-aprimorar",
+    "mainClass": "com.aprimorar.api.ApiAprimorarApplication",
     "cwd": "$ZED_WORKTREE_ROOT/server/api-aprimorar",
     "stopOnEntry": false,
     "args": [],
     "vmArgs": ["-Dspring.profiles.active=dev"]
   },
-  {
-    "adapter": "Java",
-    "request": "attach",
-    "label": "Attach Aprimorar API :5005",
-    "host": "127.0.0.1",
-    "port": 5005
-  }
 ]
-// para o attach: ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dspring.profiles.active=dev"

@@ -22,15 +22,15 @@ export type { GetParentsQueryKey } from "./hooks/parent/useGetParents.ts";
 export type { GetParentsSummaryQueryKey } from "./hooks/parent/useGetParentsSummary.ts";
 export type { UnarchiveParentMutationKey } from "./hooks/parent/useUnarchiveParent.ts";
 export type { UpdateParentMutationKey } from "./hooks/parent/useUpdateParent.ts";
-export type { ArchiveStudentMutationKey } from "./hooks/student/useArchiveStudent.ts";
-export type { CreateStudentMutationKey } from "./hooks/student/useCreateStudent.ts";
-export type { DeleteStudentMutationKey } from "./hooks/student/useDeleteStudent.ts";
-export type { GetStudentByIdQueryKey } from "./hooks/student/useGetStudentById.ts";
-export type { GetStudentSummaryQueryKey } from "./hooks/student/useGetStudentSummary.ts";
-export type { GetStudentsQueryKey } from "./hooks/student/useGetStudents.ts";
-export type { GetStudentsByParentQueryKey } from "./hooks/student/useGetStudentsByParent.ts";
-export type { UnarchiveStudentMutationKey } from "./hooks/student/useUnarchiveStudent.ts";
-export type { UpdateStudentMutationKey } from "./hooks/student/useUpdateStudent.ts";
+export type { ArchiveStudentMutationKey } from "./hooks/student-controller/useArchiveStudent.ts";
+export type { CreateStudentMutationKey } from "./hooks/student-controller/useCreateStudent.ts";
+export type { DeleteStudentMutationKey } from "./hooks/student-controller/useDeleteStudent.ts";
+export type { GetStudentByIdQueryKey } from "./hooks/student-controller/useGetStudentById.ts";
+export type { GetStudentOptionsQueryKey } from "./hooks/student-controller/useGetStudentOptions.ts";
+export type { GetStudentsQueryKey } from "./hooks/student-controller/useGetStudents.ts";
+export type { GetStudentsByParentQueryKey } from "./hooks/student-controller/useGetStudentsByParent.ts";
+export type { UnarchiveStudentMutationKey } from "./hooks/student-controller/useUnarchiveStudent.ts";
+export type { UpdateStudentMutationKey } from "./hooks/student-controller/useUpdateStudent.ts";
 export type {
   AddressRequestDTO,
   AddressRequestDTOStateEnumKey,
@@ -55,15 +55,19 @@ export type {
   EventRequestDTOContentEnumKey,
 } from "./types/EventRequestDTO.ts";
 export type { EventResponseDTO } from "./types/EventResponseDTO.ts";
+export type { PageDTOStudentResponseDTO } from "./types/PageDTOStudentResponseDTO.ts";
 export type { PageMetadata } from "./types/PageMetadata.ts";
 export type { PagedModelEmployeeResponseDTO } from "./types/PagedModelEmployeeResponseDTO.ts";
 export type { PagedModelEventResponseDTO } from "./types/PagedModelEventResponseDTO.ts";
 export type { PagedModelParentResponseDTO } from "./types/PagedModelParentResponseDTO.ts";
-export type { PagedModelStudentResponseDTO } from "./types/PagedModelStudentResponseDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
 export type { ParentSummaryDTO } from "./types/ParentSummaryDTO.ts";
-export type { ProblemDetailResponseDTO } from "./types/ProblemDetailResponseDTO.ts";
+export type {
+  ProblemResponseDTO,
+  ProblemResponseDTOErrorCodeEnumKey,
+  ProblemResponseDTOStatusEnumKey,
+} from "./types/ProblemResponseDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
 export type { StudentSummaryDTO } from "./types/StudentSummaryDTO.ts";
@@ -240,67 +244,58 @@ export type {
 } from "./types/parent/UpdateParent.ts";
 export type {
   ArchiveStudent204,
-  ArchiveStudent400,
   ArchiveStudentMutation,
   ArchiveStudentMutationResponse,
   ArchiveStudentPathParams,
-} from "./types/student/ArchiveStudent.ts";
+} from "./types/student-controller/ArchiveStudent.ts";
 export type {
-  CreateStudent200,
-  CreateStudent400,
+  CreateStudent201,
   CreateStudentMutation,
   CreateStudentMutationRequest,
   CreateStudentMutationResponse,
-} from "./types/student/CreateStudent.ts";
+} from "./types/student-controller/CreateStudent.ts";
 export type {
   DeleteStudent204,
-  DeleteStudent400,
   DeleteStudentMutation,
   DeleteStudentMutationResponse,
   DeleteStudentPathParams,
-} from "./types/student/DeleteStudent.ts";
+} from "./types/student-controller/DeleteStudent.ts";
 export type {
   GetStudentById200,
-  GetStudentById400,
   GetStudentByIdPathParams,
   GetStudentByIdQuery,
   GetStudentByIdQueryResponse,
-} from "./types/student/GetStudentById.ts";
+} from "./types/student-controller/GetStudentById.ts";
 export type {
-  GetStudentSummary200,
-  GetStudentSummary400,
-  GetStudentSummaryQuery,
-  GetStudentSummaryQueryResponse,
-} from "./types/student/GetStudentSummary.ts";
+  GetStudentOptions200,
+  GetStudentOptionsQuery,
+  GetStudentOptionsQueryResponse,
+} from "./types/student-controller/GetStudentOptions.ts";
 export type {
   GetStudents200,
-  GetStudents400,
   GetStudentsQuery,
   GetStudentsQueryParams,
   GetStudentsQueryResponse,
-} from "./types/student/GetStudents.ts";
+} from "./types/student-controller/GetStudents.ts";
 export type {
   GetStudentsByParent200,
-  GetStudentsByParent400,
   GetStudentsByParentPathParams,
   GetStudentsByParentQuery,
   GetStudentsByParentQueryResponse,
-} from "./types/student/GetStudentsByParent.ts";
+} from "./types/student-controller/GetStudentsByParent.ts";
 export type {
   UnarchiveStudent204,
-  UnarchiveStudent400,
   UnarchiveStudentMutation,
   UnarchiveStudentMutationResponse,
   UnarchiveStudentPathParams,
-} from "./types/student/UnarchiveStudent.ts";
+} from "./types/student-controller/UnarchiveStudent.ts";
 export type {
   UpdateStudent200,
-  UpdateStudent400,
   UpdateStudentMutation,
   UpdateStudentMutationRequest,
   UpdateStudentMutationResponse,
   UpdateStudentPathParams,
-} from "./types/student/UpdateStudent.ts";
+} from "./types/student-controller/UpdateStudent.ts";
 export { getDashboardSummary } from "./hooks/dashboard/useGetDashboardSummary.ts";
 export { getDashboardSummaryQueryKey } from "./hooks/dashboard/useGetDashboardSummary.ts";
 export { getDashboardSummaryQueryOptions } from "./hooks/dashboard/useGetDashboardSummary.ts";
@@ -397,44 +392,46 @@ export { updateParent } from "./hooks/parent/useUpdateParent.ts";
 export { updateParentMutationKey } from "./hooks/parent/useUpdateParent.ts";
 export { updateParentMutationOptions } from "./hooks/parent/useUpdateParent.ts";
 export { useUpdateParent } from "./hooks/parent/useUpdateParent.ts";
-export { archiveStudent } from "./hooks/student/useArchiveStudent.ts";
-export { archiveStudentMutationKey } from "./hooks/student/useArchiveStudent.ts";
-export { archiveStudentMutationOptions } from "./hooks/student/useArchiveStudent.ts";
-export { useArchiveStudent } from "./hooks/student/useArchiveStudent.ts";
-export { createStudent } from "./hooks/student/useCreateStudent.ts";
-export { createStudentMutationKey } from "./hooks/student/useCreateStudent.ts";
-export { createStudentMutationOptions } from "./hooks/student/useCreateStudent.ts";
-export { useCreateStudent } from "./hooks/student/useCreateStudent.ts";
-export { deleteStudent } from "./hooks/student/useDeleteStudent.ts";
-export { deleteStudentMutationKey } from "./hooks/student/useDeleteStudent.ts";
-export { deleteStudentMutationOptions } from "./hooks/student/useDeleteStudent.ts";
-export { useDeleteStudent } from "./hooks/student/useDeleteStudent.ts";
-export { getStudentById } from "./hooks/student/useGetStudentById.ts";
-export { getStudentByIdQueryKey } from "./hooks/student/useGetStudentById.ts";
-export { getStudentByIdQueryOptions } from "./hooks/student/useGetStudentById.ts";
-export { useGetStudentById } from "./hooks/student/useGetStudentById.ts";
-export { getStudentSummary } from "./hooks/student/useGetStudentSummary.ts";
-export { getStudentSummaryQueryKey } from "./hooks/student/useGetStudentSummary.ts";
-export { getStudentSummaryQueryOptions } from "./hooks/student/useGetStudentSummary.ts";
-export { useGetStudentSummary } from "./hooks/student/useGetStudentSummary.ts";
-export { getStudents } from "./hooks/student/useGetStudents.ts";
-export { getStudentsQueryKey } from "./hooks/student/useGetStudents.ts";
-export { getStudentsQueryOptions } from "./hooks/student/useGetStudents.ts";
-export { useGetStudents } from "./hooks/student/useGetStudents.ts";
-export { getStudentsByParent } from "./hooks/student/useGetStudentsByParent.ts";
-export { getStudentsByParentQueryKey } from "./hooks/student/useGetStudentsByParent.ts";
-export { getStudentsByParentQueryOptions } from "./hooks/student/useGetStudentsByParent.ts";
-export { useGetStudentsByParent } from "./hooks/student/useGetStudentsByParent.ts";
-export { unarchiveStudent } from "./hooks/student/useUnarchiveStudent.ts";
-export { unarchiveStudentMutationKey } from "./hooks/student/useUnarchiveStudent.ts";
-export { unarchiveStudentMutationOptions } from "./hooks/student/useUnarchiveStudent.ts";
-export { useUnarchiveStudent } from "./hooks/student/useUnarchiveStudent.ts";
-export { updateStudent } from "./hooks/student/useUpdateStudent.ts";
-export { updateStudentMutationKey } from "./hooks/student/useUpdateStudent.ts";
-export { updateStudentMutationOptions } from "./hooks/student/useUpdateStudent.ts";
-export { useUpdateStudent } from "./hooks/student/useUpdateStudent.ts";
+export { archiveStudent } from "./hooks/student-controller/useArchiveStudent.ts";
+export { archiveStudentMutationKey } from "./hooks/student-controller/useArchiveStudent.ts";
+export { archiveStudentMutationOptions } from "./hooks/student-controller/useArchiveStudent.ts";
+export { useArchiveStudent } from "./hooks/student-controller/useArchiveStudent.ts";
+export { createStudent } from "./hooks/student-controller/useCreateStudent.ts";
+export { createStudentMutationKey } from "./hooks/student-controller/useCreateStudent.ts";
+export { createStudentMutationOptions } from "./hooks/student-controller/useCreateStudent.ts";
+export { useCreateStudent } from "./hooks/student-controller/useCreateStudent.ts";
+export { deleteStudent } from "./hooks/student-controller/useDeleteStudent.ts";
+export { deleteStudentMutationKey } from "./hooks/student-controller/useDeleteStudent.ts";
+export { deleteStudentMutationOptions } from "./hooks/student-controller/useDeleteStudent.ts";
+export { useDeleteStudent } from "./hooks/student-controller/useDeleteStudent.ts";
+export { getStudentById } from "./hooks/student-controller/useGetStudentById.ts";
+export { getStudentByIdQueryKey } from "./hooks/student-controller/useGetStudentById.ts";
+export { getStudentByIdQueryOptions } from "./hooks/student-controller/useGetStudentById.ts";
+export { useGetStudentById } from "./hooks/student-controller/useGetStudentById.ts";
+export { getStudentOptions } from "./hooks/student-controller/useGetStudentOptions.ts";
+export { getStudentOptionsQueryKey } from "./hooks/student-controller/useGetStudentOptions.ts";
+export { getStudentOptionsQueryOptions } from "./hooks/student-controller/useGetStudentOptions.ts";
+export { useGetStudentOptions } from "./hooks/student-controller/useGetStudentOptions.ts";
+export { getStudents } from "./hooks/student-controller/useGetStudents.ts";
+export { getStudentsQueryKey } from "./hooks/student-controller/useGetStudents.ts";
+export { getStudentsQueryOptions } from "./hooks/student-controller/useGetStudents.ts";
+export { useGetStudents } from "./hooks/student-controller/useGetStudents.ts";
+export { getStudentsByParent } from "./hooks/student-controller/useGetStudentsByParent.ts";
+export { getStudentsByParentQueryKey } from "./hooks/student-controller/useGetStudentsByParent.ts";
+export { getStudentsByParentQueryOptions } from "./hooks/student-controller/useGetStudentsByParent.ts";
+export { useGetStudentsByParent } from "./hooks/student-controller/useGetStudentsByParent.ts";
+export { unarchiveStudent } from "./hooks/student-controller/useUnarchiveStudent.ts";
+export { unarchiveStudentMutationKey } from "./hooks/student-controller/useUnarchiveStudent.ts";
+export { unarchiveStudentMutationOptions } from "./hooks/student-controller/useUnarchiveStudent.ts";
+export { useUnarchiveStudent } from "./hooks/student-controller/useUnarchiveStudent.ts";
+export { updateStudent } from "./hooks/student-controller/useUpdateStudent.ts";
+export { updateStudentMutationKey } from "./hooks/student-controller/useUpdateStudent.ts";
+export { updateStudentMutationOptions } from "./hooks/student-controller/useUpdateStudent.ts";
+export { useUpdateStudent } from "./hooks/student-controller/useUpdateStudent.ts";
 export { addressRequestDTOStateEnum } from "./types/AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./types/AddressResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./types/EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./types/EventRequestDTO.ts";
+export { problemResponseDTOErrorCodeEnum } from "./types/ProblemResponseDTO.ts";
+export { problemResponseDTOStatusEnum } from "./types/ProblemResponseDTO.ts";

@@ -1,28 +1,25 @@
-
+import type { PageMetadata } from "@/kubb"
 
 export type PaginationProps = {
-  currentPage: number
   totalElements: number
   totalPages: number
-  currentElementsCount: number
-  itemName: string
+  currentPage: number
   onPageChange: (page: number) => void
 }
 
 export function Pagination({
-  currentPage,
   totalElements,
   totalPages,
-  currentElementsCount,
-  itemName = "itens",
+  currentPage,
   onPageChange,
 }: Readonly<PaginationProps>) {
-  if (totalPages <= 1) return null
+
+  if (totalPages <= 1) return null;
 
   return (
     <div className="mt-4 flex items-center justify-between px-3">
       <p className="text-sm app-text-muted hidden lg:block">
-        Mostrando {currentElementsCount} de {totalElements} {itemName}
+        Mostrando {currentPage + 1} de {totalPages}
       </p>
       <div className="join mx-auto lg:mx-0 mb-3">
         <button

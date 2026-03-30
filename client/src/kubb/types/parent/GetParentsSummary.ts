@@ -4,7 +4,7 @@
  */
 
 import type { ParentSummaryDTO } from "../ParentSummaryDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 /**
  * @description Responsáveis listados com sucesso
@@ -14,7 +14,7 @@ export type GetParentsSummary200 = ParentSummaryDTO[];
 /**
  * @description Requisição inválida
  */
-export type GetParentsSummary400 = ProblemDetailResponseDTO;
+export type GetParentsSummary400 = ProblemResponseDTO;
 
 export type GetParentsSummaryQueryResponse = GetParentsSummary200;
 

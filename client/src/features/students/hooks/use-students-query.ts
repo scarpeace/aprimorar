@@ -14,7 +14,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 
 import { studentResponseSchema } from "./studentSchema";
 
-export function useStudentsQuery(params: GetStudentsQueryParams = {}) {
+export function useStudentsQuery(params: GetStudentsQueryParams) {
   return useGetStudents(params, {
     query: {
       queryKey: getStudentsQueryKey(params),
@@ -35,9 +35,7 @@ export function useStudentByIdQuery(params: GetStudentByIdPathParams) {
   });
 }
 
-export function useStudentsByParentQuery(
-  params: GetStudentsByParentPathParams,
-) {
+export function useStudentsByParentQuery(params: GetStudentsByParentPathParams) {
   return useGetStudentsByParent(params.parentId, {
     query: {
       queryKey: getStudentsByParentQueryKey(params.parentId),

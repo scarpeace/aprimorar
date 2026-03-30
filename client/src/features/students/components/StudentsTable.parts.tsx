@@ -1,76 +1,49 @@
-import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { Pagination } from "@/components/ui/pagination";
 import type { StudentResponseDTO } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
   formatCpf,
   formatPhone,
   formatDateShortYear,
 } from "@/lib/utils/formatter";
 import type { ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
+type StudentsTableContentProps = {
+  students: StudentResponseDTO[];
+};
 
 type StudentsTableStateProps = {
-  students?: StudentResponseDTO[];
+  students: StudentResponseDTO[];
   isLoading: boolean;
   error: unknown;
   children: ReactNode;
 };
 
-type StudentsTableContentProps = {
-  students: StudentResponseDTO[];
-  renderActions?: (student: StudentResponseDTO) => ReactNode;
-};
-
-type StudentsTablePaginationProps = {
-  currentPage: number;
-  totalElements: number;
-  totalPages: number;
-  currentElementsCount: number;
-  onPageChange: (page: number) => void;
-  itemName?: string;
-};
-
-
-
 export function StudentsTableState({
-  students,
   isLoading,
   error,
   children,
 }: Readonly<StudentsTableStateProps>) {
-  if (isLoading) {
-    return <LoadingCard title="Carregando alunos..." />;
-  }
-  if (error) {
-    return (
-      <ErrorCard
-        title="Erro ao carregar alunos"
-        description={getFriendlyErrorMessage(error)}
-      />
-    );
-  }
 
-  if (!students || students.length === 0) {
-    return (
-      <EmptyCard
-        title="Nenhum aluno encontrado."
-        description="Nenhum aluno encontrado para os filtros aplicados."
-      />
-    );
-  }
+  if (isLoading) {
+  return <LoadingCard title="Carregando listagem de alunos" />
+}
+
+if (error) {
+  return <ErrorCard title="Não foi possível carregar a listagem de alunos" error={error} />
+}
 
   return <>{children}</>;
 }
 
 export function StudentsTableContent({
   students,
-  renderActions,
 }: Readonly<StudentsTableContentProps>) {
+  const navigate = useNavigate()
+
   return (
-    <table className="table table-zebra w-full">
+    <table className="table table-zebra w-full p-3 border rounded-xl">
       <thead className="bg-base-200/90">
         <tr>
           <th className="app-th">Nome</th>
@@ -80,7 +53,7 @@ export function StudentsTableContent({
           <th className="app-th">Escola</th>
           <th className="app-th">Matricula</th>
           <th className="app-th">Status</th>
-          {renderActions ? <th className="app-th">Acoes</th> : null}
+          <th className="app-th">Ações</th>
         </tr>
       </thead>
 
@@ -99,32 +72,14 @@ export function StudentsTableContent({
             <td className="app-td">
               {student.archivedAt ? "Arquivado" : "Ativo"}
             </td>
-            {renderActions ? (
-              <td className="app-td">{renderActions(student)}</td>
-            ) : null}
+
+            {/*TODO: Isso aqui tá dando um erro no console do navegador */}
+            <span className="btn m-2 btn-secondary" onClick={()=> navigate(`/students/${student.id}`)}>
+              Detalhes
+            </span>
           </tr>
         ))}
       </tbody>
     </table>
-  );
-}
-
-export function StudentsTablePagination({
-  currentPage,
-  totalElements,
-  totalPages,
-  currentElementsCount,
-  onPageChange,
-  itemName = "alunos",
-}: Readonly<StudentsTablePaginationProps>) {
-  return (
-    <Pagination
-      currentPage={currentPage}
-      totalElements={totalElements}
-      totalPages={totalPages}
-      currentElementsCount={currentElementsCount}
-      itemName={itemName}
-      onPageChange={onPageChange}
-    />
   );
 }

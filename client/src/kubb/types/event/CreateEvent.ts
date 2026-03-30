@@ -5,7 +5,7 @@
 
 import type { EventRequestDTO } from "../EventRequestDTO.ts";
 import type { EventResponseDTO } from "../EventResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 /**
  * @description Evento criado com sucesso
@@ -15,7 +15,7 @@ export type CreateEvent200 = EventResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type CreateEvent400 = ProblemDetailResponseDTO;
+export type CreateEvent400 = ProblemResponseDTO;
 
 export type CreateEventMutationRequest = EventRequestDTO;
 

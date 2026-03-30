@@ -7,7 +7,7 @@ import type { AddressRequestDTO } from "./AddressRequestDTO.ts";
 import type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 
 /**
- * @description Dados do aluno
+ * @description Formato de payload para o cadastro e/ou update de um aluno
  */
 export type StudentRequestDTO = {
   /**

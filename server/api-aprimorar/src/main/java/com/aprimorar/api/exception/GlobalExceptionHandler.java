@@ -1,10 +1,6 @@
 package com.aprimorar.api.exception;
 
-import java.net.URI;
-import java.time.Clock;
-
 import com.aprimorar.api.domain.address.exception.InvalidAddressException;
-import com.aprimorar.api.domain.dashboard.exception.InvalidDashboardRequestException;
 import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventNotFoundException;
@@ -15,138 +11,123 @@ import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
-import com.aprimorar.api.domain.student.exception.InvalidStudentException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
-
-
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import java.time.Clock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final Clock applicationClock;
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @SuppressWarnings("unused")
+    private Clock applicationClock;
 
     public GlobalExceptionHandler(Clock applicationClock) {
         this.applicationClock = applicationClock;
     }
 
-    @ExceptionHandler({
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(
+        {
             EmployeeNotFoundException.class,
             EventNotFoundException.class,
             ParentNotFoundException.class,
-            StudentNotFoundException.class
-    })
-    public ResponseEntity<ProblemDetail> handleNotFoundExceptions(RuntimeException ex, HttpServletRequest request) {
-        return buildProblemDetail(
-                ErrorCode.RESOURCE_NOT_FOUND,
-                HttpStatus.NOT_FOUND,
-                "Recurso não encontrado",
-                ex.getMessage(),
-                request
+            StudentNotFoundException.class,
+        }
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Recurso não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ProblemResponseDTO handleNotFoundExceptions(RuntimeException ex, HttpServletRequest request) {
+        log.error("Erro de Recurso não encontrado: {}", ex.getMessage());
+        return new ProblemResponseDTO(
+            ErrorCode.RESOURCE_NOT_FOUND,
+            HttpStatus.NOT_FOUND,
+            ex.getMessage(),
+            request.getRequestURI()
         );
     }
 
-    @ExceptionHandler({
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(
+        {
             DataIntegrityViolationException.class,
             EmployeeAlreadyExistsException.class,
             EventScheduleConflictException.class,
             ParentHasLinkedStudentsException.class,
             ParentAlreadyExistsException.class,
-            StudentAlreadyExistException.class
-    })
-    public ResponseEntity<ProblemDetail> handleConflictExceptions(
-            RuntimeException ex,
-            HttpServletRequest request) {
-        return buildProblemDetail(
-                ErrorCode.BUSINESS_ERROR,
-                HttpStatus.CONFLICT,
-                resolveConflictTitle(ex),
-                ex.getMessage(),
-                request
+            StudentAlreadyExistException.class,
+        }
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Requisição inválida",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ProblemResponseDTO handleConflictExceptions(RuntimeException ex, HttpServletRequest request) {
+        log.error("Erro de conflito de dados: {}", ex.getMessage());
+        return new ProblemResponseDTO(
+            ErrorCode.CONFLICT,
+            HttpStatus.CONFLICT,
+            ex.getMessage(),
+            request.getRequestURI()
         );
     }
 
-    @ExceptionHandler({
-            InvalidDashboardRequestException.class,
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(
+        {
             InvalidAddressException.class,
             InvalidParentException.class,
             InvalidEventException.class,
-            InvalidStudentException.class,
-            HttpMessageNotReadableException.class,
-            MethodArgumentNotValidException.class
-    })
-    public ResponseEntity<ProblemDetail> handleBadRequestExceptions(
-            Exception ex,
-            HttpServletRequest request) {
-        return buildProblemDetail(
-                ErrorCode.VALIDATION_ERROR,
-                HttpStatus.BAD_REQUEST,
-                resolveBadRequestTitle(ex),
-                resolveBadRequestDetail(ex),
-                request
+            InvalidAddressException.class,
+            InvalidParentException.class,
+        }
+    )
+    @ApiResponse(
+        responseCode = "403",
+        description = "Operação não permitida",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ProblemResponseDTO handleBadRequestExceptions(Exception ex, HttpServletRequest request) {
+        log.error("Erro de validação de entidade: {}", ex.getMessage());
+        return new ProblemResponseDTO(
+            ErrorCode.BUSINESS_ERROR,
+            HttpStatus.FORBIDDEN,
+            ex.getMessage(),
+            request.getRequestURI()
         );
     }
 
-    private String resolveConflictTitle(RuntimeException ex) {
-        if (ex instanceof EventScheduleConflictException) {
-            return "Conflito de agenda";
-        }
-        if (ex instanceof DataIntegrityViolationException) {
-            return "Conflito de dados no sistema, por favor verifique os dados e tente novamente";
-        }
-        return "Conflito de negócio";
-    }
-
-    private String resolveBadRequestTitle(Exception ex) {
-        if (ex instanceof MethodArgumentNotValidException) {
-            return "Falha de validação";
-        }
-        if (ex instanceof HttpMessageNotReadableException) {
-            return "Corpo da requisição inválido";
-        }
-        return "Requisição inválida";
-    }
-
-    private String resolveBadRequestDetail(Exception ex) {
-        if (ex instanceof MethodArgumentNotValidException validationException) {
-            return validationException.getBindingResult()
-                    .getFieldErrors()
-                    .stream()
-                    .map(fieldError -> fieldError.getDefaultMessage())
-                    .filter(java.util.Objects::nonNull)
-                    .findFirst()
-                    .orElse("Dados inválidos");
-        }
-        if (ex instanceof HttpMessageNotReadableException notReadableException) {
-            return notReadableException.getMessage() != null
-                    ? notReadableException.getMessage()
-                    : "Corpo da requisição inválido";
-        }
-        return (ex != null && ex.getMessage() != null) ? ex.getMessage() : "Requisição inválida";
-    }
-
-    private ResponseEntity<ProblemDetail> buildProblemDetail(
-            ErrorCode errorCode,
-            HttpStatus status,
-            String title,
-            String detail,
-            HttpServletRequest request) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
-        problemDetail.setTitle(title);
-        problemDetail.setDetail(detail);
-        problemDetail.setInstance(URI.create(request.getRequestURI()));
-        problemDetail.setProperty("code", errorCode.name());
-        problemDetail.setProperty("timestamp", applicationClock.instant().toString());
-
-        return ResponseEntity.status(status).body(problemDetail);
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({ HttpMessageNotReadableException.class, MethodArgumentNotValidException.class })
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ProblemResponseDTO handle(Exception ex, HttpServletRequest request) {
+        log.error("Ocorreu um erro interno: {}", ex.getMessage());
+        return new ProblemResponseDTO(
+            ErrorCode.VALIDATION_ERROR,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "Um erro interno ocorreu, contate o suporte ou tente novamente mais tarde",
+            request.getRequestURI()
+        );
     }
 }

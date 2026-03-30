@@ -20,10 +20,11 @@ export function useCreateStudentMutation() {
 
   return useCreateStudent({
     mutation: {
-      onError: () => {
+      onError: (error) => {
         toast.error("Algo deu errado ao criar o aluno");
       },
       onSuccess: (createdStudent: StudentResponseDTO) => {
+        console.log(createdStudent)
         toast.success("Aluno criado com sucesso");
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
         queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });

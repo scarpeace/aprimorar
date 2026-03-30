@@ -11,14 +11,10 @@ import { useCreateStudentMutation } from "../hooks/use-student-mutation";
 import { PageLoading } from "@/components/ui/page-loading";
 import { ErrorCard } from "@/components/ui/error-card";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { GraduationCap } from "lucide-react";
+import { LoadingCard } from "@/components/ui/loading-card";
 
 export function StudentCreatePage() {
-  const {
-    mutate: createStudent,
-    error: createStudentError,
-    isPending: isCreatingStudent,
-  } = useCreateStudentMutation();
-
   const {
     formState: { errors },
     handleSubmit,
@@ -26,53 +22,48 @@ export function StudentCreatePage() {
     registerWithMask,
   } = useStudentForm();
 
-  const onSubmit = handleSubmit((data, event) => {
-    event?.preventDefault();
-    createStudent({ data });
+  const studentMutation = useCreateStudentMutation();
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data)
+    studentMutation.mutate({ data });
   });
+
   return (
     <div className="container">
       <PageHeader
         title="Criar aluno"
         description="Preencha os dados do aluno e do responsável."
+        Icon={GraduationCap}
       />
 
-      {createStudentError ? (
-        <ErrorCard
-          description={getFriendlyErrorMessage(createStudentError)}
-          actionLabel="Tentar novamente"
+      <StudentForm onSubmit={onSubmit}>
+        {studentMutation.isError && <Alert error={studentMutation.error} variant="error" />}
+
+        <StudentFormFields
+          register={register}
+          registerWithMask={registerWithMask}
+          errors={errors}
+          className="grid grid-cols-3 gap-4"
         />
-      ) : null}
 
-        <StudentForm onSubmit={onSubmit}>
+        <ParentDetailsForm
+          register={register}
+          registerWithMask={registerWithMask}
+          prefix="parent"
+          errors={errors.parent}
+          className="grid grid-cols-2 gap-4"
+        />
 
-          <StudentFormFields
-            register={register}
-            registerWithMask={registerWithMask}
-            errors={errors}
-            className="grid grid-cols-3 gap-4"
-          />
+        <AddressDetailsForm
+          register={register}
+          registerWithMask={registerWithMask}
+          errors={errors.address}
+          prefix="address"
+          className="grid grid-cols-3 gap-4"
+        />
 
-          <ParentDetailsForm
-            register={register}
-            registerWithMask={registerWithMask}
-            prefix="parent"
-            errors={errors.parent}
-            className="grid grid-cols-2 gap-4"
-          />
-
-          <AddressDetailsForm
-            register={register}
-            errors={errors.address}
-            prefix="address"
-            className="grid grid-cols-3 gap-4"
-          />
-
-          <StudentFormActions isSubmitting={isCreatingStudent} />
-
-          {createStudentError ? (
-            <Alert variant="error" error={createStudentError.message} />
-          ) : null}
+        <StudentFormActions isSubmitting={studentMutation.isPending} />
       </StudentForm>
     </div>
   );

@@ -4,7 +4,7 @@
  */
 
 import type { PagedModelParentResponseDTO } from "../PagedModelParentResponseDTO.ts";
-import type { ProblemDetailResponseDTO } from "../ProblemDetailResponseDTO.ts";
+import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetParentsQueryParams = {
   /**
@@ -41,7 +41,7 @@ export type GetParents200 = PagedModelParentResponseDTO;
 /**
  * @description Requisição inválida
  */
-export type GetParents400 = ProblemDetailResponseDTO;
+export type GetParents400 = ProblemResponseDTO;
 
 export type GetParentsQueryResponse = GetParents200;
 

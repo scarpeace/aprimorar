@@ -5,7 +5,8 @@ import z from "zod";
 
 export const studentInputSchema = z.object({
   name: z.string().min(1, {message: "Nome do aluno é obrigatório"}),
-  birthdate: z.string().min(1, {message: "Data de nascimento é obrigatória"}),
+  birthdate: z.string().min(1, { message: "Data de nascimento é obrigatória" })
+    .transform((value) => new Date(value)),
   cpf: z.string().min(1, {message: "CPF é obrigatório"}),
   contact: z.string().min(1, {message: "Contato é obrigatório"}),
   email: z.string().min(1, {message: "Email é obrigatório"}),

@@ -1,6 +1,4 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/ApiAprimorarApplication.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/annotations/ErrorResponsesAnnotation.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/annotations/StudentsResponseAnnotation.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/config/ClockConfig.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/config/JacksonConfig.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/config/WebCorsConfig.java
@@ -78,8 +76,7 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/enums/Role.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/exception/ErrorCode.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/exception/GlobalExceptionHandler.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/exception/ProblemDetailResponseDTO.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/shared/APIResponse.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/exception/ProblemResponseDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/shared/BaseEntity.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/shared/ErrorDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/shared/MapperUtils.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/api-aprimorar/src/main/java/com/aprimorar/api/shared/PageDTO.java

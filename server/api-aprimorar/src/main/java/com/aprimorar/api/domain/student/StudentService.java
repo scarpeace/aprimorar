@@ -13,6 +13,8 @@ import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.domain.student.repository.StudentSpecifications;
+import com.aprimorar.api.shared.PageDTO;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +55,7 @@ public class StudentService {
 
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
-    public Page<StudentResponseDTO> getStudents(Pageable pageable, String search, Boolean archived) {
+    public PageDTO<StudentResponseDTO> getStudents(Pageable pageable, String search, Boolean archived) {
         Specification<Student> spec = Specification.allOf(
             StudentSpecifications.isNotGhost(),
             Boolean.TRUE.equals(archived) ? StudentSpecifications.archived() : StudentSpecifications.notArchived()
@@ -64,9 +66,9 @@ public class StudentService {
         }
 
         Page<Student> page = studentRepo.findAll(spec, pageable);
+        Page<StudentResponseDTO> studentsDtoPage = page.map(studentMapper::convertToDto);
 
-        log.info("Consulta de alunos finalizada, {} registros encontrados.", page.getTotalElements());
-        return page.map(studentMapper::convertToDto);
+        return new PageDTO<>(studentsDtoPage);
     }
 
     @Transactional(readOnly = true)
