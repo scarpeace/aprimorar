@@ -3,17 +3,16 @@ export type { ArchiveEmployeeMutationKey } from "./hooks/employee/useArchiveEmpl
 export type { CreateEmployeeMutationKey } from "./hooks/employee/useCreateEmployee.ts";
 export type { DeleteEmployeeMutationKey } from "./hooks/employee/useDeleteEmployee.ts";
 export type { GetEmployeeByIdQueryKey } from "./hooks/employee/useGetEmployeeById.ts";
-export type { GetEmployeeSummaryQueryKey } from "./hooks/employee/useGetEmployeeSummary.ts";
+export type { GetEmployeeOptionsQueryKey } from "./hooks/employee/useGetEmployeeOptions.ts";
 export type { GetEmployeesQueryKey } from "./hooks/employee/useGetEmployees.ts";
 export type { UnarchiveEmployeeMutationKey } from "./hooks/employee/useUnarchiveEmployee.ts";
 export type { UpdateEmployeeMutationKey } from "./hooks/employee/useUpdateEmployee.ts";
-export type { CreateEventMutationKey } from "./hooks/event/useCreateEvent.ts";
-export type { DeleteEventMutationKey } from "./hooks/event/useDeleteEvent.ts";
-export type { GetEventByIdQueryKey } from "./hooks/event/useGetEventById.ts";
-export type { GetEventsQueryKey } from "./hooks/event/useGetEvents.ts";
-export type { GetEventsByEmployeeQueryKey } from "./hooks/event/useGetEventsByEmployee.ts";
-export type { GetEventsByStudentQueryKey } from "./hooks/event/useGetEventsByStudent.ts";
-export type { UpdateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
+export type { CreateEventMutationKey } from "./hooks/events/useCreateEvent.ts";
+export type { GetEventByIdQueryKey } from "./hooks/events/useGetEventById.ts";
+export type { GetEventsQueryKey } from "./hooks/events/useGetEvents.ts";
+export type { GetEventsByEmployeeQueryKey } from "./hooks/events/useGetEventsByEmployee.ts";
+export type { GetEventsByStudentQueryKey } from "./hooks/events/useGetEventsByStudent.ts";
+export type { UpdateEventMutationKey } from "./hooks/events/useUpdateEvent.ts";
 export type { ArchiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export type { DeleteParentMutationKey } from "./hooks/parent/useDeleteParent.ts";
 export type { GetParentByIdQueryKey } from "./hooks/parent/useGetParentById.ts";
@@ -39,6 +38,7 @@ export type {
 } from "./types/AddressResponseDTO.ts";
 export type { ClassesByContentDTO } from "./types/ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./types/DashboardSummaryResponseDTO.ts";
+export type { EmployeeOptionsDTO } from "./types/EmployeeOptionsDTO.ts";
 export type {
   EmployeeRequestDTO,
   EmployeeRequestDTODutyEnumKey,
@@ -47,17 +47,15 @@ export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./types/EmployeeResponseDTO.ts";
-export type { EmployeeSummaryDTO } from "./types/EmployeeSummaryDTO.ts";
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
 } from "./types/EventRequestDTO.ts";
 export type { EventResponseDTO } from "./types/EventResponseDTO.ts";
+export type { PageDTOEmployeeResponseDTO } from "./types/PageDTOEmployeeResponseDTO.ts";
+export type { PageDTOEventResponseDTO } from "./types/PageDTOEventResponseDTO.ts";
+export type { PageDTOParentResponseDTO } from "./types/PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./types/PageDTOStudentResponseDTO.ts";
-export type { PageMetadata } from "./types/PageMetadata.ts";
-export type { PagedModelEmployeeResponseDTO } from "./types/PagedModelEmployeeResponseDTO.ts";
-export type { PagedModelEventResponseDTO } from "./types/PagedModelEventResponseDTO.ts";
-export type { PagedModelParentResponseDTO } from "./types/PagedModelParentResponseDTO.ts";
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
@@ -78,112 +76,91 @@ export type {
 } from "./types/dashboard/GetDashboardSummary.ts";
 export type {
   ArchiveEmployee204,
-  ArchiveEmployee400,
   ArchiveEmployeeMutation,
   ArchiveEmployeeMutationResponse,
   ArchiveEmployeePathParams,
 } from "./types/employee/ArchiveEmployee.ts";
 export type {
-  CreateEmployee200,
-  CreateEmployee400,
+  CreateEmployee201,
   CreateEmployeeMutation,
   CreateEmployeeMutationRequest,
   CreateEmployeeMutationResponse,
 } from "./types/employee/CreateEmployee.ts";
 export type {
   DeleteEmployee204,
-  DeleteEmployee400,
   DeleteEmployeeMutation,
   DeleteEmployeeMutationResponse,
   DeleteEmployeePathParams,
 } from "./types/employee/DeleteEmployee.ts";
 export type {
   GetEmployeeById200,
-  GetEmployeeById400,
   GetEmployeeByIdPathParams,
   GetEmployeeByIdQuery,
   GetEmployeeByIdQueryResponse,
 } from "./types/employee/GetEmployeeById.ts";
 export type {
-  GetEmployeeSummary200,
-  GetEmployeeSummary400,
-  GetEmployeeSummaryQuery,
-  GetEmployeeSummaryQueryResponse,
-} from "./types/employee/GetEmployeeSummary.ts";
+  GetEmployeeOptions200,
+  GetEmployeeOptionsQuery,
+  GetEmployeeOptionsQueryResponse,
+} from "./types/employee/GetEmployeeOptions.ts";
 export type {
   GetEmployees200,
-  GetEmployees400,
   GetEmployeesQuery,
   GetEmployeesQueryParams,
   GetEmployeesQueryResponse,
 } from "./types/employee/GetEmployees.ts";
 export type {
   UnarchiveEmployee204,
-  UnarchiveEmployee400,
   UnarchiveEmployeeMutation,
   UnarchiveEmployeeMutationResponse,
   UnarchiveEmployeePathParams,
 } from "./types/employee/UnarchiveEmployee.ts";
 export type {
   UpdateEmployee200,
-  UpdateEmployee400,
   UpdateEmployeeMutation,
   UpdateEmployeeMutationRequest,
   UpdateEmployeeMutationResponse,
   UpdateEmployeePathParams,
 } from "./types/employee/UpdateEmployee.ts";
 export type {
-  CreateEvent200,
-  CreateEvent400,
+  CreateEvent201,
   CreateEventMutation,
   CreateEventMutationRequest,
   CreateEventMutationResponse,
-} from "./types/event/CreateEvent.ts";
-export type {
-  DeleteEvent204,
-  DeleteEvent400,
-  DeleteEventMutation,
-  DeleteEventMutationResponse,
-  DeleteEventPathParams,
-} from "./types/event/DeleteEvent.ts";
+} from "./types/events/CreateEvent.ts";
 export type {
   GetEventById200,
-  GetEventById400,
   GetEventByIdPathParams,
   GetEventByIdQuery,
   GetEventByIdQueryResponse,
-} from "./types/event/GetEventById.ts";
+} from "./types/events/GetEventById.ts";
 export type {
   GetEvents200,
-  GetEvents400,
   GetEventsQuery,
   GetEventsQueryParams,
   GetEventsQueryResponse,
-} from "./types/event/GetEvents.ts";
+} from "./types/events/GetEvents.ts";
 export type {
   GetEventsByEmployee200,
-  GetEventsByEmployee400,
   GetEventsByEmployeePathParams,
   GetEventsByEmployeeQuery,
   GetEventsByEmployeeQueryParams,
   GetEventsByEmployeeQueryResponse,
-} from "./types/event/GetEventsByEmployee.ts";
+} from "./types/events/GetEventsByEmployee.ts";
 export type {
   GetEventsByStudent200,
-  GetEventsByStudent400,
   GetEventsByStudentPathParams,
   GetEventsByStudentQuery,
   GetEventsByStudentQueryParams,
   GetEventsByStudentQueryResponse,
-} from "./types/event/GetEventsByStudent.ts";
+} from "./types/events/GetEventsByStudent.ts";
 export type {
   UpdateEvent200,
-  UpdateEvent400,
   UpdateEventMutation,
   UpdateEventMutationRequest,
   UpdateEventMutationResponse,
   UpdateEventPathParams,
-} from "./types/event/UpdateEvent.ts";
+} from "./types/events/UpdateEvent.ts";
 export type {
   ArchiveParent204,
   ArchiveParentMutation,
@@ -293,10 +270,10 @@ export { getEmployeeById } from "./hooks/employee/useGetEmployeeById.ts";
 export { getEmployeeByIdQueryKey } from "./hooks/employee/useGetEmployeeById.ts";
 export { getEmployeeByIdQueryOptions } from "./hooks/employee/useGetEmployeeById.ts";
 export { useGetEmployeeById } from "./hooks/employee/useGetEmployeeById.ts";
-export { getEmployeeSummary } from "./hooks/employee/useGetEmployeeSummary.ts";
-export { getEmployeeSummaryQueryKey } from "./hooks/employee/useGetEmployeeSummary.ts";
-export { getEmployeeSummaryQueryOptions } from "./hooks/employee/useGetEmployeeSummary.ts";
-export { useGetEmployeeSummary } from "./hooks/employee/useGetEmployeeSummary.ts";
+export { getEmployeeOptions } from "./hooks/employee/useGetEmployeeOptions.ts";
+export { getEmployeeOptionsQueryKey } from "./hooks/employee/useGetEmployeeOptions.ts";
+export { getEmployeeOptionsQueryOptions } from "./hooks/employee/useGetEmployeeOptions.ts";
+export { useGetEmployeeOptions } from "./hooks/employee/useGetEmployeeOptions.ts";
 export { getEmployees } from "./hooks/employee/useGetEmployees.ts";
 export { getEmployeesQueryKey } from "./hooks/employee/useGetEmployees.ts";
 export { getEmployeesQueryOptions } from "./hooks/employee/useGetEmployees.ts";
@@ -309,34 +286,30 @@ export { updateEmployee } from "./hooks/employee/useUpdateEmployee.ts";
 export { updateEmployeeMutationKey } from "./hooks/employee/useUpdateEmployee.ts";
 export { updateEmployeeMutationOptions } from "./hooks/employee/useUpdateEmployee.ts";
 export { useUpdateEmployee } from "./hooks/employee/useUpdateEmployee.ts";
-export { createEvent } from "./hooks/event/useCreateEvent.ts";
-export { createEventMutationKey } from "./hooks/event/useCreateEvent.ts";
-export { createEventMutationOptions } from "./hooks/event/useCreateEvent.ts";
-export { useCreateEvent } from "./hooks/event/useCreateEvent.ts";
-export { deleteEvent } from "./hooks/event/useDeleteEvent.ts";
-export { deleteEventMutationKey } from "./hooks/event/useDeleteEvent.ts";
-export { deleteEventMutationOptions } from "./hooks/event/useDeleteEvent.ts";
-export { useDeleteEvent } from "./hooks/event/useDeleteEvent.ts";
-export { getEventById } from "./hooks/event/useGetEventById.ts";
-export { getEventByIdQueryKey } from "./hooks/event/useGetEventById.ts";
-export { getEventByIdQueryOptions } from "./hooks/event/useGetEventById.ts";
-export { useGetEventById } from "./hooks/event/useGetEventById.ts";
-export { getEvents } from "./hooks/event/useGetEvents.ts";
-export { getEventsQueryKey } from "./hooks/event/useGetEvents.ts";
-export { getEventsQueryOptions } from "./hooks/event/useGetEvents.ts";
-export { useGetEvents } from "./hooks/event/useGetEvents.ts";
-export { getEventsByEmployee } from "./hooks/event/useGetEventsByEmployee.ts";
-export { getEventsByEmployeeQueryKey } from "./hooks/event/useGetEventsByEmployee.ts";
-export { getEventsByEmployeeQueryOptions } from "./hooks/event/useGetEventsByEmployee.ts";
-export { useGetEventsByEmployee } from "./hooks/event/useGetEventsByEmployee.ts";
-export { getEventsByStudent } from "./hooks/event/useGetEventsByStudent.ts";
-export { getEventsByStudentQueryKey } from "./hooks/event/useGetEventsByStudent.ts";
-export { getEventsByStudentQueryOptions } from "./hooks/event/useGetEventsByStudent.ts";
-export { useGetEventsByStudent } from "./hooks/event/useGetEventsByStudent.ts";
-export { updateEvent } from "./hooks/event/useUpdateEvent.ts";
-export { updateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
-export { updateEventMutationOptions } from "./hooks/event/useUpdateEvent.ts";
-export { useUpdateEvent } from "./hooks/event/useUpdateEvent.ts";
+export { createEvent } from "./hooks/events/useCreateEvent.ts";
+export { createEventMutationKey } from "./hooks/events/useCreateEvent.ts";
+export { createEventMutationOptions } from "./hooks/events/useCreateEvent.ts";
+export { useCreateEvent } from "./hooks/events/useCreateEvent.ts";
+export { getEventById } from "./hooks/events/useGetEventById.ts";
+export { getEventByIdQueryKey } from "./hooks/events/useGetEventById.ts";
+export { getEventByIdQueryOptions } from "./hooks/events/useGetEventById.ts";
+export { useGetEventById } from "./hooks/events/useGetEventById.ts";
+export { getEvents } from "./hooks/events/useGetEvents.ts";
+export { getEventsQueryKey } from "./hooks/events/useGetEvents.ts";
+export { getEventsQueryOptions } from "./hooks/events/useGetEvents.ts";
+export { useGetEvents } from "./hooks/events/useGetEvents.ts";
+export { getEventsByEmployee } from "./hooks/events/useGetEventsByEmployee.ts";
+export { getEventsByEmployeeQueryKey } from "./hooks/events/useGetEventsByEmployee.ts";
+export { getEventsByEmployeeQueryOptions } from "./hooks/events/useGetEventsByEmployee.ts";
+export { useGetEventsByEmployee } from "./hooks/events/useGetEventsByEmployee.ts";
+export { getEventsByStudent } from "./hooks/events/useGetEventsByStudent.ts";
+export { getEventsByStudentQueryKey } from "./hooks/events/useGetEventsByStudent.ts";
+export { getEventsByStudentQueryOptions } from "./hooks/events/useGetEventsByStudent.ts";
+export { useGetEventsByStudent } from "./hooks/events/useGetEventsByStudent.ts";
+export { updateEvent } from "./hooks/events/useUpdateEvent.ts";
+export { updateEventMutationKey } from "./hooks/events/useUpdateEvent.ts";
+export { updateEventMutationOptions } from "./hooks/events/useUpdateEvent.ts";
+export { useUpdateEvent } from "./hooks/events/useUpdateEvent.ts";
 export { archiveParent } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationOptions } from "./hooks/parent/useArchiveParent.ts";

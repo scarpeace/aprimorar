@@ -4,7 +4,7 @@
  */
 
 /**
- * @description Dados do aluno retornados pela API
+ * @description Dados do responsável retornados pela API
  * @example Parent Name
  */
 export type ParentResponseDTO = {

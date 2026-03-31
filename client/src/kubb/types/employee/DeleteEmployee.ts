@@ -3,30 +3,22 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
-
 export type DeleteEmployeePathParams = {
   /**
-   * @description ID do funcionário
    * @type string, uuid
    */
   employeeId: string;
 };
 
 /**
- * @description Funcionário deletado com sucesso
+ * @description Colaborador deletado com sucesso.
  */
 export type DeleteEmployee204 = any;
-
-/**
- * @description Requisição inválida
- */
-export type DeleteEmployee400 = ProblemResponseDTO;
 
 export type DeleteEmployeeMutationResponse = DeleteEmployee204;
 
 export type DeleteEmployeeMutation = {
   Response: DeleteEmployee204;
   PathParams: DeleteEmployeePathParams;
-  Errors: DeleteEmployee400;
+  Errors: any;
 };

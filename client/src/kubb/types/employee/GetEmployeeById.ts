@@ -4,30 +4,23 @@
  */
 
 import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetEmployeeByIdPathParams = {
   /**
-   * @description ID do funcionário
    * @type string, uuid
    */
   employeeId: string;
 };
 
 /**
- * @description Listagem do funcionário por ID
+ * @description Colaborador retornado com sucesso.
  */
 export type GetEmployeeById200 = EmployeeResponseDTO;
-
-/**
- * @description Requisição inválida
- */
-export type GetEmployeeById400 = ProblemResponseDTO;
 
 export type GetEmployeeByIdQueryResponse = GetEmployeeById200;
 
 export type GetEmployeeByIdQuery = {
   Response: GetEmployeeById200;
   PathParams: GetEmployeeByIdPathParams;
-  Errors: GetEmployeeById400;
+  Errors: any;
 };

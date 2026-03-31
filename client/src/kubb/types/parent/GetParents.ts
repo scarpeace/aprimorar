@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { PagedModelParentResponseDTO } from "../PagedModelParentResponseDTO.ts";
+import type { PageDTOParentResponseDTO } from "../PageDTOParentResponseDTO.ts";
 
 export type GetParentsQueryParams = {
   /**
@@ -38,7 +38,7 @@ export type GetParentsQueryParams = {
 /**
  * @description Lista de responsáveis retornada com sucesso.
  */
-export type GetParents200 = PagedModelParentResponseDTO;
+export type GetParents200 = PageDTOParentResponseDTO;
 
 export type GetParentsQueryResponse = GetParents200;
 

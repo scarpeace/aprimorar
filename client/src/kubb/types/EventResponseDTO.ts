@@ -3,60 +3,77 @@
  * Do not edit manually.
  */
 
+/**
+ * @description Dados do evento retornados pela API
+ */
 export type EventResponseDTO = {
   /**
+   * @description Identificador único do evento
    * @type string, uuid
    */
   eventId: string;
   /**
+   * @description Título do evento
    * @type string
    */
   title: string;
   /**
-   * @type string
+   * @description Descrição do evento
+   * @type string | undefined
    */
-  description?: string | null;
+  description?: string;
   /**
+   * @description Conteúdo do evento (Atendimento, Mentoria, etc...)
    * @type string
    */
   content: string;
   /**
+   * @description Data/Horário de início do evento
    * @type string, date-time
    */
   startDate: string;
   /**
+   * @description Data/Horário de fim do evento
    * @type string, date-time
    */
   endDate: string;
   /**
+   * @description Preço do evento pago pelo aluno
    * @type number
    */
   price: number;
   /**
+   * @description Preço do evento pago ao colaborador
    * @type number
    */
   payment: number;
   /**
+   * @description ID do estudante vinculado ao evento
    * @type string, uuid
    */
   studentId: string;
   /**
+   * @description Nome do aluno vinculado ao evento
    * @type string
    */
   studentName: string;
   /**
+   * @description ID do colaborador vinculado ao evento
    * @type string, uuid
    */
   employeeId: string;
   /**
+   * @description Nome do colaborador vinculado ao evento
    * @type string
    */
   employeeName: string;
   /**
+   * @description Data de criação do evento
    * @type string, date-time
    */
   createdAt: string;
   /**
+   * @description Data de atualização do evento
    * @type string, date-time
    */
   updatedAt?: string | null;

@@ -25,7 +25,7 @@ export const getStudentsByParentQueryKey = (
   parentId: GetStudentsByParentPathParams["parentId"],
 ) =>
   [
-    { url: "/v1/students/parent/:parentId", params: { parentId: parentId } },
+    { url: "/v1/students/students/:parentId", params: { parentId: parentId } },
   ] as const;
 
 export type GetStudentsByParentQueryKey = ReturnType<
@@ -34,7 +34,7 @@ export type GetStudentsByParentQueryKey = ReturnType<
 
 /**
  * @description Retorna uma lista de alunos por ID do pai.
- * {@link /v1/students/parent/:parentId}
+ * {@link /v1/students/students/:parentId}
  */
 export async function getStudentsByParent(
   parentId: GetStudentsByParentPathParams["parentId"],
@@ -48,7 +48,7 @@ export async function getStudentsByParent(
     unknown
   >({
     method: "GET",
-    url: `/v1/students/parent/${parentId}`,
+    url: `/v1/students/students/${parentId}`,
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
@@ -79,7 +79,7 @@ export function getStudentsByParentQueryOptions(
 
 /**
  * @description Retorna uma lista de alunos por ID do pai.
- * {@link /v1/students/parent/:parentId}
+ * {@link /v1/students/students/:parentId}
  */
 export function useGetStudentsByParent<
   TData = GetStudentsByParentQueryResponse,

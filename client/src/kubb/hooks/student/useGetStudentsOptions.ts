@@ -19,7 +19,7 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getStudentsOptionsQueryKey = () =>
-  [{ url: "/v1/students/options" }] as const;
+  [{ url: "/v1/students/student/options" }] as const;
 
 export type GetStudentsOptionsQueryKey = ReturnType<
   typeof getStudentsOptionsQueryKey
@@ -27,7 +27,7 @@ export type GetStudentsOptionsQueryKey = ReturnType<
 
 /**
  * @description Retorna uma lista de opções de alunos.
- * {@link /v1/students/options}
+ * {@link /v1/students/student/options}
  */
 export async function getStudentsOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
@@ -40,7 +40,7 @@ export async function getStudentsOptions(
     unknown
   >({
     method: "GET",
-    url: `/v1/students/options`,
+    url: `/v1/students/student/options`,
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
@@ -66,7 +66,7 @@ export function getStudentsOptionsQueryOptions(
 
 /**
  * @description Retorna uma lista de opções de alunos.
- * {@link /v1/students/options}
+ * {@link /v1/students/student/options}
  */
 export function useGetStudentsOptions<
   TData = GetStudentsOptionsQueryResponse,

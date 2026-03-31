@@ -27,6 +27,7 @@ export type ParentRequestDTO = {
   contact: string;
   /**
    * @description CPF do responsável
+   * @minLength 1
    * @type string
    */
   cpf: string;

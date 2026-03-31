@@ -17,46 +17,52 @@ export type EventRequestDTOContentEnumKey =
   (typeof eventRequestDTOContentEnum)[keyof typeof eventRequestDTOContentEnum];
 
 /**
- * @description Dados do evento
+ * @description Formato de payload para o cadastro e/ou update de um evento
  */
 export type EventRequestDTO = {
   /**
-   * @minLength 0
-   * @maxLength 100
+   * @description Título do evento
+   * @minLength 1
    * @type string
    */
   title: string;
   /**
-   * @minLength 0
-   * @maxLength 500
+   * @description Descrição do evento
    * @type string | undefined
    */
   description?: string;
   /**
-   * @type string, date-time
-   */
-  startDate: string;
-  /**
-   * @type string, date-time
-   */
-  endDate: string;
-  /**
-   * @type number
-   */
-  price: number;
-  /**
-   * @type number
-   */
-  payment: number;
-  /**
+   * @description Conteúdo do evento (Atendimento, Mentoria, etc...)
    * @type string
    */
   content: EventRequestDTOContentEnumKey;
   /**
+   * @description Data/Horário de início do evento
+   * @type string, date-time
+   */
+  startDate: string;
+  /**
+   * @description Data/Horário de fim do evento
+   * @type string, date-time
+   */
+  endDate: string;
+  /**
+   * @description Preço do evento pago pelo aluno
+   * @type number
+   */
+  price: number;
+  /**
+   * @description Preço do evento pago ao colaborador
+   * @type number
+   */
+  payment: number;
+  /**
+   * @description ID do estudante vinculado ao evento
    * @type string, uuid
    */
   studentId: string;
   /**
+   * @description ID do colaborador vinculado ao evento
    * @type string, uuid
    */
   employeeId: string;

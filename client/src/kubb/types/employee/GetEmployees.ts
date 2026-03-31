@@ -3,8 +3,7 @@
  * Do not edit manually.
  */
 
-import type { PagedModelEmployeeResponseDTO } from "../PagedModelEmployeeResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
+import type { PageDTOEmployeeResponseDTO } from "../PageDTOEmployeeResponseDTO.ts";
 
 export type GetEmployeesQueryParams = {
   /**
@@ -27,26 +26,20 @@ export type GetEmployeesQueryParams = {
    */
   sort?: string[];
   /**
-   * @description Termo de busca
    * @type string | undefined
    */
   search?: string;
 };
 
 /**
- * @description Listagem dos funcionários com paginação
+ * @description Lista de colaboradores retornada com sucesso.
  */
-export type GetEmployees200 = PagedModelEmployeeResponseDTO;
-
-/**
- * @description Requisição inválida
- */
-export type GetEmployees400 = ProblemResponseDTO;
+export type GetEmployees200 = PageDTOEmployeeResponseDTO;
 
 export type GetEmployeesQueryResponse = GetEmployees200;
 
 export type GetEmployeesQuery = {
   Response: GetEmployees200;
   QueryParams: GetEmployeesQueryParams;
-  Errors: GetEmployees400;
+  Errors: any;
 };

@@ -5,24 +5,18 @@
 
 import type { EmployeeRequestDTO } from "../EmployeeRequestDTO.ts";
 import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 /**
- * @description Funcionário criado com sucesso
+ * @description Colaborador criado com sucesso.
  */
-export type CreateEmployee200 = EmployeeResponseDTO;
-
-/**
- * @description Requisição inválida
- */
-export type CreateEmployee400 = ProblemResponseDTO;
+export type CreateEmployee201 = EmployeeResponseDTO;
 
 export type CreateEmployeeMutationRequest = EmployeeRequestDTO;
 
-export type CreateEmployeeMutationResponse = CreateEmployee200;
+export type CreateEmployeeMutationResponse = CreateEmployee201;
 
 export type CreateEmployeeMutation = {
-  Response: CreateEmployee200;
+  Response: CreateEmployee201;
   Request: CreateEmployeeMutationRequest;
-  Errors: CreateEmployee400;
+  Errors: any;
 };

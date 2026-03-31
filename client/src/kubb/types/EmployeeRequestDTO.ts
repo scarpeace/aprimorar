@@ -14,9 +14,6 @@ export const employeeRequestDTODutyEnum = {
 export type EmployeeRequestDTODutyEnumKey =
   (typeof employeeRequestDTODutyEnum)[keyof typeof employeeRequestDTODutyEnum];
 
-/**
- * @description Dados do funcionário
- */
 export type EmployeeRequestDTO = {
   /**
    * @minLength 1

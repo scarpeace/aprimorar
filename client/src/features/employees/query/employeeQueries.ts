@@ -1,4 +1,4 @@
-import { type GetEmployeesQueryParams, useGetEmployees, useGetEmployeeById, useGetEmployeeSummary } from "@/kubb";
+import { type GetEmployeesQueryParams, useGetEmployees, useGetEmployeeById, useGetEmployeeOptions } from "@/kubb";
 import { keepPreviousData } from "@tanstack/react-query";
 import { employeeQueryKeys } from "./employeeQueryKeys";
 
@@ -22,8 +22,8 @@ export function useEmployeeById(employeeId: string) {
   });
 }
 
-export function useEmployeesSummary() {
-  return useGetEmployeeSummary({
+export function useEmployeesOptions() {
+  return useGetEmployeeOptions({
     query: {
       queryKey: employeeQueryKeys.summary(),
       staleTime: 1000 * 60 * 10,

@@ -3,30 +3,22 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
-
 export type ArchiveEmployeePathParams = {
   /**
-   * @description ID do funcionário
    * @type string, uuid
    */
   employeeId: string;
 };
 
 /**
- * @description Funcionário arquivado com sucesso
+ * @description Colaborador arquivado com sucesso.
  */
 export type ArchiveEmployee204 = any;
-
-/**
- * @description Requisição inválida
- */
-export type ArchiveEmployee400 = ProblemResponseDTO;
 
 export type ArchiveEmployeeMutationResponse = ArchiveEmployee204;
 
 export type ArchiveEmployeeMutation = {
   Response: ArchiveEmployee204;
   PathParams: ArchiveEmployeePathParams;
-  Errors: ArchiveEmployee400;
+  Errors: any;
 };
