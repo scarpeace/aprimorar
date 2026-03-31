@@ -111,7 +111,7 @@ public class EventService {
                 event.getStartDate(),
                 event.getEndDateTime(),
                 null);
-        event.validate();
+        event.validateForCreation();
 
         Event savedEvent = eventRepo.save(event);
         log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
@@ -121,6 +121,10 @@ public class EventService {
     @Transactional
     public EventResponseDTO updateEvent(UUID id, EventRequestDTO request) {
         Event event = findEventOrThrow(id);
+        
+        // Verifica a janela de tempo com base no endDate original ANTES de modificar
+        event.validateEditWindow();
+
         Student student = resolveStudentOrThrow(request.studentId());
         Employee employee = resolveEmployeeOrThrow(request.employeeId());
 
@@ -140,7 +144,7 @@ public class EventService {
                 event.getStartDate(),
                 event.getEndDateTime(),
                 id);
-        event.validate();
+        event.validateForUpdate();
 
         log.info("Evento {} atualizado com sucesso.", event.getTitle().toUpperCase());
         return eventMapper.convertToDto(event);

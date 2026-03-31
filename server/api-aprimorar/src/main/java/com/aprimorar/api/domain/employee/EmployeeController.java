@@ -1,4 +1,4 @@
-package com.aprimorar.api.domain.employee.web;
+package com.aprimorar.api.domain.employee;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,18 +20,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aprimorar.api.domain.employee.EmployeeService;
+import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
+import com.aprimorar.api.shared.PageDTO;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/v1/employees")
-public class EmployeeController implements EmployeeControllerDocs {
+@Tag(name = "Employee", description = "Employee management APIs")
+public class EmployeeController{
 
     private final EmployeeService employeeService;
 
@@ -39,65 +43,73 @@ public class EmployeeController implements EmployeeControllerDocs {
         this.employeeService = employeeService;
     }
 
-    @Override
     @PostMapping
+    @Operation(operationId = "createEmployee", description = "Cria um novo colaborador com os dados fornecidos.")
+    @ApiResponse(responseCode = "201", description = "Colaborador criado com sucesso.")
     public ResponseEntity<EmployeeResponseDTO> createEmployee(@RequestBody @Valid EmployeeRequestDTO employeeRequestDto) {
 
         EmployeeResponseDTO response = employeeService.createEmployee(employeeRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Override
     @GetMapping
-    public ResponseEntity<Page<EmployeeResponseDTO>> getEmployees(
+    @Operation(operationId = "getEmployees", description = "Retorna uma lista paginada de colaboradores.")
+    @ApiResponse(responseCode = "200", description = "Lista de colaboradores retornada com sucesso.")
+    public ResponseEntity<PageDTO<EmployeeResponseDTO>> getEmployees(
             @ParameterObject @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) String search) {
 
-        Page<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search);
+        PageDTO<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search);
         return ResponseEntity.ok(employees);
     }
 
-    @Override
     @GetMapping("/options")
-    public ResponseEntity<List<EmployeeSummaryDTO>> getEmployeeSummary() {
-        List<EmployeeSummaryDTO> options = employeeService.getEmployeeSummary();
+    @Operation(operationId = "getEmployeeOptions", description = "Retorna uma lista de opções de colaboradores.")
+    @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
+    public ResponseEntity<List<EmployeeOptionsDTO>> getEmployeeOptions() {
+        List<EmployeeOptionsDTO> options = employeeService.getEmployeeOptions();
         return ResponseEntity.ok(options);
     }
 
-    @Override
     @GetMapping("/{employeeId}")
+    @Operation(operationId = "getEmployeeById", description = "Retorna um colaborador por ID.")
+    @ApiResponse(responseCode = "200", description = "Colaborador retornado com sucesso.")
     public ResponseEntity<EmployeeResponseDTO> getEmployeeById(@PathVariable UUID employeeId) {
 
         EmployeeResponseDTO foundEmployee = employeeService.findById(employeeId);
         return ResponseEntity.ok(foundEmployee);
     }
 
-    @Override
     @PatchMapping("/{employeeId}")
+    @Operation(operationId = "updateEmployee", description = "Atualiza um colaborador por ID.")
+    @ApiResponse(responseCode = "200", description = "Colaborador atualizado com sucesso.")
     public ResponseEntity<EmployeeResponseDTO> updateEmployee(@PathVariable UUID employeeId, @RequestBody @Valid EmployeeRequestDTO request) {
 
         EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(employeeId, request);
         return ResponseEntity.ok(updatedEmployee);
     }
 
-    @Override
     @DeleteMapping("/{employeeId}")
+    @Operation(operationId = "deleteEmployee", description = "Deleta um colaborador por ID.")
+    @ApiResponse(responseCode = "204", description = "Colaborador deletado com sucesso.")
     public ResponseEntity<Void> deleteEmployee(@PathVariable UUID employeeId) {
 
         employeeService.deleteEmployee(employeeId);
         return ResponseEntity.noContent().build();
     }
 
-    @Override
     @PatchMapping("/{employeeId}/archive")
+    @Operation(operationId = "archiveEmployee", description = "Arquiva um colaborador por ID.")
+    @ApiResponse(responseCode = "204", description = "Colaborador arquivado com sucesso.")
     public ResponseEntity<Void> archiveEmployee(@PathVariable UUID employeeId) {
 
         employeeService.archiveEmployee(employeeId);
         return ResponseEntity.noContent().build();
     }
 
-    @Override
     @PatchMapping("/{employeeId}/unarchive")
+    @Operation(operationId = "unarchiveEmployee", description = "Desarquiva um colaborador por ID.")
+    @ApiResponse(responseCode = "204", description = "Colaborador desarquivado com sucesso.")
     public ResponseEntity<Void> unarchiveEmployee(@PathVariable UUID employeeId) {
 
         employeeService.unarchiveEmployee(employeeId);

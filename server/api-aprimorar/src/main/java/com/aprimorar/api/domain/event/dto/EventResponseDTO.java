@@ -7,23 +7,61 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
+@Schema(description = "Dados do evento retornados pela API")
 public record EventResponseDTO(
-        @NotNull UUID eventId,
-        @NotNull String title,
-        @Schema(nullable = true)
-        @Nullable
-        String description,
-        @NotNull String content,
-        @NotNull Instant startDate,
-        @NotNull Instant endDate,
-        @NotNull BigDecimal price,
-        @NotNull BigDecimal payment,
-        @NotNull UUID studentId,
-        @NotNull String studentName,
-        @NotNull UUID employeeId,
-        @NotNull String employeeName,
-        @NotNull Instant createdAt,
-        @Schema(nullable = true)
-        @Nullable
-        Instant updatedAt
+    @NotNull
+    @Schema(nullable = false, description = "Identificador único do evento", example = "550e8400-e29b-41d4-a716-446655440000")
+    UUID eventId,
+
+    @NotNull
+    @Schema(nullable = false, description = "Título do evento", example = "Sessão de Mentoria")
+    String title,
+
+    @Nullable
+    @Schema(nullable = false, description = "Descrição do evento", example = "Sessão focada em revisão de matemática básica")
+    String description,
+
+    @NotNull
+    @Schema(nullable = false, description = "Conteúdo do evento (Atendimento, Mentoria, etc...)", example = "Mentoria")
+    String content,
+
+    @NotNull
+    @Schema(nullable = false, description = "Data/Horário de início do evento", example = "2023-11-20T14:00:00Z")
+    Instant startDate,
+
+    @NotNull
+    @Schema(nullable = false, description = "Data/Horário de fim do evento", example = "2023-11-20T16:00:00Z")
+    Instant endDate,
+
+    @NotNull
+    @Schema(nullable = false, description = "Preço do evento pago pelo aluno", example = "150.00")
+    BigDecimal price,
+
+    @NotNull
+    @Schema(nullable = false, description = "Preço do evento pago ao colaborador", example = "100.00")
+    BigDecimal payment,
+
+    @NotNull
+    @Schema(nullable = false, description = "ID do estudante vinculado ao evento", example = "123e4567-e89b-12d3-a456-426614174000")
+    UUID studentId,
+
+    @NotNull
+    @Schema(nullable = false, description = "Nome do aluno vinculado ao evento", example = "John Doe")
+    String studentName,
+
+    @NotNull
+    @Schema(nullable = false, description = "ID do colaborador vinculado ao evento", example = "123e4567-e89b-12d3-a456-426614174001")
+    UUID employeeId,
+
+    @NotNull
+    @Schema(nullable = false, description = "Nome do colaborador vinculado ao evento", example = "Jane Smith")
+    String employeeName,
+
+    @NotNull
+    @Schema(nullable = false, description = "Data de criação do evento", example = "2023-01-01T00:00:00Z")
+    Instant createdAt,
+
+    @Nullable
+    @Schema(nullable = true, description = "Data de atualização do evento", example = "2023-01-02T00:00:00Z")
+    Instant updatedAt
 ) {}

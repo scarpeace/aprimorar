@@ -21,12 +21,14 @@ import com.aprimorar.api.shared.PageDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/v1/events")
+@Tag(name = "Events", description = "Events management APIs")
 public class EventController {
 
     private final EventService eventService;
@@ -44,7 +46,7 @@ public class EventController {
     }
 
     @GetMapping
-    @Operation(operationId = "getEvent", description = "Retorna uma lista paginada de eventos.")
+    @Operation(operationId = "getEvents", description = "Retorna uma lista paginada de eventos.")
     @ApiResponse(responseCode = "200", description = "Lista de eventos retornada com sucesso.")
     public ResponseEntity<PageDTO<EventResponseDTO>> getEvents(
         @ParameterObject Pageable pageable,

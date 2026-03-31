@@ -1,25 +1,5 @@
 package com.aprimorar.api.domain.event;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.ArgumentMatchers.any;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import com.aprimorar.api.domain.employee.Employee;
 import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
 import com.aprimorar.api.domain.event.dto.EventRequestDTO;
@@ -28,6 +8,15 @@ import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.enums.EventContent;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.UUID;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class EventServiceTest {
@@ -55,15 +44,15 @@ class EventServiceTest {
     private EventService eventService;
 
     @DisplayName("Command methods")
-    private static EventRequestDTO request() {
+       private static EventRequestDTO request() {
         return new EventRequestDTO(
                 "Evento atualizado",
                 "Descrição de teste",
+                EventContent.AULA,
                 EVENT_START.atZone(APP_ZONE).toInstant(),
                 EVENT_END.atZone(APP_ZONE).toInstant(),
                 BigDecimal.valueOf(120),
                 BigDecimal.valueOf(80),
-                EventContent.AULA,
                 STUDENT_ID,
                 EMPLOYEE_ID
         );
@@ -99,20 +88,20 @@ class EventServiceTest {
 
     private static EventResponseDTO response(Event event, Student student, Employee employee) {
         return new EventResponseDTO(
-                event.getId(),
-                event.getTitle(),
-                event.getDescription(),
-                event.getContent().name(),
-                event.getStartDate().atZone(APP_ZONE).toInstant(),
-                event.getEndDateTime().atZone(APP_ZONE).toInstant(),
-                event.getPrice(),
-                event.getPayment(),
-                student.getId(),
-                student.getName(),
-                employee.getId(),
-                employee.getName(),
-                event.getCreatedAt(),
-                event.getUpdatedAt()
+            event.getId(),
+            event.getTitle(),
+            event.getDescription(),
+            event.getContent().name(),
+            event.getStartDate().atZone(APP_ZONE).toInstant(),
+            event.getEndDateTime().atZone(APP_ZONE).toInstant(),
+            event.getPrice(),
+            event.getPayment(),
+            student.getId(),
+            student.getName(),
+            employee.getId(),
+            employee.getName(),
+            event.getCreatedAt(),
+            event.getUpdatedAt()
         );
     }
 }

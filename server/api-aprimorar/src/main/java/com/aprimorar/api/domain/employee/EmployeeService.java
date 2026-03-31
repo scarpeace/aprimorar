@@ -1,13 +1,15 @@
 package com.aprimorar.api.domain.employee;
 
+import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
 import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
 import com.aprimorar.api.domain.employee.repository.EmployeeSpecifications;
 import com.aprimorar.api.enums.Duty;
+import com.aprimorar.api.shared.PageDTO;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -58,26 +60,28 @@ public class EmployeeService {
 
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
-    public Page<EmployeeResponseDTO> getEmployees(Pageable pageable, String search) {
+    public PageDTO<EmployeeResponseDTO> getEmployees(Pageable pageable, String search) {
         Specification<Employee> spec = (root, query, cb) -> cb.notEqual(root.get("duty"), Duty.SYSTEM);
 
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(EmployeeSpecifications.searchContainsIgnoreCase(search.trim()));
         }
 
-        Page<Employee> page = employeeRepo.findAll(spec, pageable);
-        log.info("Consulta de colaboradores finalizada, {} registros encontrados.", page.getTotalElements());
-        return page.map(employeeMapper::convertToDto);
+        Page<Employee> employeePage = employeeRepo.findAll(spec, pageable);
+        Page<EmployeeResponseDTO> parentsDtoPage = employeePage.map(employeeMapper::convertToDto);
+
+        log.info("Consulta de colaboradores finalizada, {} registros encontrados.", employeePage.getTotalElements());
+        return new PageDTO<>(parentsDtoPage);
     }
 
     @Transactional(readOnly = true)
-    public List<EmployeeSummaryDTO> getEmployeeSummary() {
+    public List<EmployeeOptionsDTO> getEmployeeOptions() {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
         return employeeRepo
             .findAll(EmployeeSpecifications.notArchived(), sort)
             .stream()
-            .map(e -> new EmployeeSummaryDTO(e.getId(), e.getName()))
+            .map(e -> new EmployeeOptionsDTO(e.getId(), e.getName()))
             .toList();
     }
 

@@ -107,10 +107,7 @@ public class Event extends BaseEntity {
         if (endDate == null) {
             throw new InvalidEventException("Data de término do evento é obrigatório");
         }
-        if (endDate.isBefore(LocalDateTime.now())) {
-            throw new InvalidEventException("Data de fim do evento nao pode estar no passado");
-        }
-        if (endDate.isBefore(startDate)) {
+        if (startDate != null && endDate.isBefore(startDate)) {
             throw new InvalidEventException("Data de fim do evento nao pode ser anterior a data de inicio");
         }
         this.endDate = endDate;
@@ -178,12 +175,23 @@ public class Event extends BaseEntity {
     }
 
     public void validateEditWindow() {
-        if (LocalDateTime.now().isAfter(endDate.plusWeeks(2))) {
-            throw new NotAllowedToUpdateEventException("A janela para editar as informações do evento encerrou");
+        if (this.endDate != null && LocalDateTime.now().isAfter(this.endDate.plusDays(20))) {
+            throw new NotAllowedToUpdateEventException("A janela de 20 dias para editar as informações do evento encerrou");
         }
     }
 
-    public void validate() {
+    public void validateForCreation() {
+        validateCommonRules();
+        if (this.endDate != null && this.endDate.isBefore(LocalDateTime.now())) {
+            throw new InvalidEventException("Data de fim do evento nao pode estar no passado");
+        }
+    }
+
+    public void validateForUpdate() {
+        validateCommonRules();
+    }
+
+    private void validateCommonRules() {
         setTitle(this.title);
         setDescription(this.description);
         setStartDate(this.startDate);
@@ -193,6 +201,5 @@ public class Event extends BaseEntity {
         setContent(this.content);
         setStudent(this.student);
         setEmployee(this.employee);
-        validateEditWindow();
     }
 }
