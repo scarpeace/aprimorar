@@ -4,7 +4,7 @@ import type { StudentInputSchema } from "@/features/students/hooks/studentSchema
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
 
-type StudentInfoSectionProps = {
+type StudentFormFieldsProps = {
   register: UseFormRegister<any>;
   registerWithMask: ReturnType<typeof useHookFormMask>;
   errors: FieldErrors<StudentInputSchema>;
@@ -16,7 +16,7 @@ export function StudentFormFields({
   registerWithMask,
   errors,
   className,
-}: Readonly<StudentInfoSectionProps>) {
+}: Readonly<StudentFormFieldsProps>) {
 
   return (
     <SectionCard

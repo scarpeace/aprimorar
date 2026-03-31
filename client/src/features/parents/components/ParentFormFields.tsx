@@ -2,10 +2,9 @@ import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
-import z from "zod";
 import type { ParentInputSchema } from "../hooks/parentSchema";
 
-type ParentDetailsFormProps = Readonly<{
+type ParentFormFieldsProps = Readonly<{
   register: UseFormRegister<any>;
   registerWithMask: ReturnType<typeof useHookFormMask>;
   prefix?: string;
@@ -13,13 +12,13 @@ type ParentDetailsFormProps = Readonly<{
   className?: string;
 }>;
 
-export function ParentDetailsForm({
+export function ParentFormFields({
   register,
   registerWithMask,
   prefix,
   errors,
   className,
-}: ParentDetailsFormProps) {
+}: ParentFormFieldsProps) {
 
   const withPrefix = (field: string) => prefix ? `${prefix}.${field}` : field;
 

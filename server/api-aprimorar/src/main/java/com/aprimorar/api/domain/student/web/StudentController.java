@@ -58,10 +58,10 @@ public class StudentController {
     }
 
     @GetMapping("/options")
-    @Operation(operationId = "getStudentSummary", description = "Retorna uma lista de opções de alunos.")
+    @Operation(operationId = "getStudentsOptions", description = "Retorna uma lista de opções de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
-    public ResponseEntity<List<StudentSummaryDTO>> getStudentSummary() {
-        List<StudentSummaryDTO> options = studentService.getStudentSummary();
+    public ResponseEntity<List<StudentSummaryDTO>> getStudentOptions() {
+        List<StudentSummaryDTO> options = studentService.getStudentOptions();
         return ResponseEntity.ok(options);
     }
 

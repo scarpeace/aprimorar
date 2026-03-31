@@ -52,10 +52,6 @@ export type AddressResponseDTO = {
   /**
    * @type string
    */
-  complement?: string | null;
-  /**
-   * @type string
-   */
   district: string;
   /**
    * @type string
@@ -69,4 +65,8 @@ export type AddressResponseDTO = {
    * @type string
    */
   zip: string;
+  /**
+   * @type string
+   */
+  complement?: string | null;
 };

@@ -1,13 +1,14 @@
 import { Alert } from "@/components/ui/alert";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PageHeader } from "@/components/ui/page-header";
-import { AddressDetailsForm } from "@/features/address/AddressDetailsForm";
-import { ParentDetailsForm } from "@/features/parents/components/ParentDetailsForm";
+import { AddressFormFields } from "@/features/address/AddressFormFields";
+import { ParentFormFields } from "@/features/parents/components/ParentFormFields";
+import { GraduationCap } from "lucide-react";
 import { StudentForm } from "../components/StudentForm";
-import { StudentFormActions } from "../components/StudentFormActions";
 import { StudentFormFields } from "../components/StudentFormFields";
 import { useStudentForm } from "../hooks/use-student-form";
 import { useCreateStudentMutation } from "../hooks/use-student-mutation";
-import { GraduationCap } from "lucide-react";
 
 export function StudentCreatePage() {
   const {
@@ -17,49 +18,66 @@ export function StudentCreatePage() {
     registerWithMask,
   } = useStudentForm();
 
-  const createStudentMutation = useCreateStudentMutation();
+  const {
+    mutate: createStudent,
+    isPending: isCreateStudentPending,
+    isError: isCreateStudentError,
+    error: createStudentError,
+  } = useCreateStudentMutation();
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
-    createStudentMutation.mutate({ data });
+    createStudent({ data });
   });
 
   return (
-    <div className="container">
+    <>
       <PageHeader
         title="Criar aluno"
         description="Preencha os dados do aluno e do responsável."
         Icon={GraduationCap}
       />
 
-      <StudentForm onSubmit={onSubmit}>
-        {createStudentMutation.isError && <Alert error={createStudentMutation.error} variant="error" />}
+      <div className="container animate-[fade-up_300ms_ease-out_both]">
+        <StudentForm onSubmit={onSubmit}>
 
-        <StudentFormFields
-          register={register}
-          registerWithMask={registerWithMask}
-          errors={errors}
-          className="grid grid-cols-3 gap-4"
-        />
+          <StudentFormFields
+            register={register}
+            registerWithMask={registerWithMask}
+            errors={errors}
+            className="grid grid-cols-3 gap-4"
+          />
 
-        <ParentDetailsForm
-          register={register}
-          registerWithMask={registerWithMask}
-          prefix="parent"
-          errors={errors.parent}
-          className="grid grid-cols-2 gap-4"
-        />
+          <ParentFormFields
+            register={register}
+            registerWithMask={registerWithMask}
+            prefix="parent"
+            errors={errors.parent}
+            className="grid grid-cols-2 gap-4"
+          />
 
-        <AddressDetailsForm
-          register={register}
-          registerWithMask={registerWithMask}
-          errors={errors.address}
-          prefix="address"
-          className="grid grid-cols-3 gap-4"
-        />
+          <AddressFormFields
+            register={register}
+            registerWithMask={registerWithMask}
+            errors={errors.address}
+            prefix="address"
+            className="grid grid-cols-3 gap-4"
+          />
 
-        <StudentFormActions isSubmitting={createStudentMutation.isPending} />
-      </StudentForm>
-    </div>
+           {isCreateStudentError && (
+            <Alert error={createStudentError} variant="error" />
+          )}
+
+          <div className="flex justify-end flex-wrap gap-3">
+            <Button type="submit" variant="success"disabled={isCreateStudentPending}>
+              {isCreateStudentPending ? <LoadingSpinner text={"Salvando"} /> : "Salvar alterações"}
+            </Button>
+
+            <ButtonLink to={`/students/`} variant="outline">
+              Cancelar
+            </ButtonLink>
+          </div>
+        </StudentForm>
+      </div>
+    </>
   );
 }

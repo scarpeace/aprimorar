@@ -55,12 +55,6 @@ export type AddressRequestDTO = {
    */
   number: string;
   /**
-   * @description Complemento do endereço
-   * @maxLength 255
-   * @type string | undefined
-   */
-  complement?: string;
-  /**
    * @description Bairro do endereço
    * @minLength 3
    * @maxLength 255
@@ -86,4 +80,10 @@ export type AddressRequestDTO = {
    * @type string
    */
   zip: string;
+  /**
+   * @description Complemento do endereço
+   * @maxLength 255
+   * @type string | undefined
+   */
+  complement?: string;
 };

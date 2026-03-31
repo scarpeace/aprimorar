@@ -1,14 +1,12 @@
 import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { PageHeader } from "@/components/ui/page-header";
+import { Pagination } from "@/components/ui/pagination";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetStudents } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { GraduationCap } from "lucide-react";
 import { useState } from "react";
-import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { LoadingCard } from "@/components/ui/loading-card";
-import { ErrorCard } from "@/components/ui/error-card";
-import { Pagination } from "@/components/ui/pagination";
 import { StudentsTable } from "../components/StudentsTable";
 
 export function StudentsPage() {

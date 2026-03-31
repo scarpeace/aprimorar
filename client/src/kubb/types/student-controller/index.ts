@@ -23,11 +23,6 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./GetStudentById.ts";
 export type {
-  GetStudentSummary200,
-  GetStudentSummaryQuery,
-  GetStudentSummaryQueryResponse,
-} from "./GetStudentSummary.ts";
-export type {
   GetStudents200,
   GetStudentsQuery,
   GetStudentsQueryParams,
@@ -39,6 +34,11 @@ export type {
   GetStudentsByParentQuery,
   GetStudentsByParentQueryResponse,
 } from "./GetStudentsByParent.ts";
+export type {
+  GetStudentsOptions200,
+  GetStudentsOptionsQuery,
+  GetStudentsOptionsQueryResponse,
+} from "./GetStudentsOptions.ts";
 export type {
   UnarchiveStudent204,
   UnarchiveStudentMutation,

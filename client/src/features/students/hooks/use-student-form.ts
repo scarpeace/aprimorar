@@ -1,18 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, type UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
 import { studentInputSchema, type StudentInputSchema } from "./studentSchema";
 import type { StudentResponseDTO } from "@/kubb";
-import { formatCpf } from "@/lib/utils/formatter";
 
-//TODO: testar o fluxo completo de criação de aluno depois que arrumar o parent
-//TODO: em tempo, isso é necessario \/?
-type UseStudentFormReturn = UseFormReturn<StudentInputSchema> & {
-  errors: UseFormReturn<StudentInputSchema>["formState"]["errors"];
-  registerWithMask: ReturnType<typeof useHookFormMask>;
-};
-
-export function useStudentForm(student?: StudentResponseDTO) : UseStudentFormReturn {
+export function useStudentForm(student?: StudentResponseDTO) {
 
   const form = useForm<StudentInputSchema>({
     resolver: zodResolver(studentInputSchema),
@@ -27,7 +19,7 @@ export function useStudentForm(student?: StudentResponseDTO) : UseStudentFormRet
       address: {
         street: student?.address?.street ?? "",
         number: student?.address?.number ?? "",
-        complement: student?.address?.complement ?? "",
+        complement: student?.address?.complement ?? "N/A",
         district: student?.address?.district ?? "",
         city: student?.address?.city ?? "",
         state: student?.address?.state ?? "DF",

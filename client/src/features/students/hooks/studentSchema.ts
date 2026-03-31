@@ -1,6 +1,5 @@
 import { addressInputSchema, addressResponseSchema } from "@/features/address/hooks/addressSchema";
 import { parentInputSchema, parentResponseSchema } from "@/features/parents/hooks/parentSchema";
-import { formatDateShortYear } from "@/lib/utils/formatter";
 import z from "zod";
 
 export const studentInputSchema = z.object({

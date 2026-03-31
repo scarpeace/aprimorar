@@ -4,7 +4,7 @@
  */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetStudentSummaryQueryResponse } from "../../types/student-controller/GetStudentSummary.ts";
+import type { GetStudentsOptionsQueryResponse } from "../../types/student-controller/GetStudentsOptions.ts";
 import type {
   Client,
   RequestConfig,
@@ -18,24 +18,24 @@ import type {
 } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getStudentSummaryQueryKey = () =>
+export const getStudentsOptionsQueryKey = () =>
   [{ url: "/v1/students/options" }] as const;
 
-export type GetStudentSummaryQueryKey = ReturnType<
-  typeof getStudentSummaryQueryKey
+export type GetStudentsOptionsQueryKey = ReturnType<
+  typeof getStudentsOptionsQueryKey
 >;
 
 /**
  * @description Retorna uma lista de opções de alunos.
  * {@link /v1/students/options}
  */
-export async function getStudentSummary(
+export async function getStudentsOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
-    GetStudentSummaryQueryResponse,
+    GetStudentsOptionsQueryResponse,
     ResponseErrorConfig<Error>,
     unknown
   >({
@@ -47,19 +47,19 @@ export async function getStudentSummary(
   return res.data;
 }
 
-export function getStudentSummaryQueryOptions(
+export function getStudentsOptionsQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = getStudentSummaryQueryKey();
+  const queryKey = getStudentsOptionsQueryKey();
   return queryOptions<
-    GetStudentSummaryQueryResponse,
+    GetStudentsOptionsQueryResponse,
     ResponseErrorConfig<Error>,
-    GetStudentSummaryQueryResponse,
+    GetStudentsOptionsQueryResponse,
     typeof queryKey
   >({
     queryKey,
     queryFn: async ({ signal }) => {
-      return getStudentSummary({ ...config, signal: config.signal ?? signal });
+      return getStudentsOptions({ ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -68,15 +68,15 @@ export function getStudentSummaryQueryOptions(
  * @description Retorna uma lista de opções de alunos.
  * {@link /v1/students/options}
  */
-export function useGetStudentSummary<
-  TData = GetStudentSummaryQueryResponse,
-  TQueryData = GetStudentSummaryQueryResponse,
-  TQueryKey extends QueryKey = GetStudentSummaryQueryKey,
+export function useGetStudentsOptions<
+  TData = GetStudentsOptionsQueryResponse,
+  TQueryData = GetStudentsOptionsQueryResponse,
+  TQueryKey extends QueryKey = GetStudentsOptionsQueryKey,
 >(
   options: {
     query?: Partial<
       QueryObserverOptions<
-        GetStudentSummaryQueryResponse,
+        GetStudentsOptionsQueryResponse,
         ResponseErrorConfig<Error>,
         TData,
         TQueryData,
@@ -88,11 +88,11 @@ export function useGetStudentSummary<
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey = resolvedOptions?.queryKey ?? getStudentSummaryQueryKey();
+  const queryKey = resolvedOptions?.queryKey ?? getStudentsOptionsQueryKey();
 
   const query = useQuery(
     {
-      ...getStudentSummaryQueryOptions(config),
+      ...getStudentsOptionsQueryOptions(config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,

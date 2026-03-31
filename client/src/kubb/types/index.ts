@@ -234,11 +234,6 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./student-controller/GetStudentById.ts";
 export type {
-  GetStudentSummary200,
-  GetStudentSummaryQuery,
-  GetStudentSummaryQueryResponse,
-} from "./student-controller/GetStudentSummary.ts";
-export type {
   GetStudents200,
   GetStudentsQuery,
   GetStudentsQueryParams,
@@ -250,6 +245,11 @@ export type {
   GetStudentsByParentQuery,
   GetStudentsByParentQueryResponse,
 } from "./student-controller/GetStudentsByParent.ts";
+export type {
+  GetStudentsOptions200,
+  GetStudentsOptionsQuery,
+  GetStudentsOptionsQueryResponse,
+} from "./student-controller/GetStudentsOptions.ts";
 export type {
   UnarchiveStudent204,
   UnarchiveStudentMutation,

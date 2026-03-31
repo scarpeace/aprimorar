@@ -1,15 +1,17 @@
-import type { PagedModelParentResponseDTO, PageDTOStudentResponseDTO, PageMetadata } from "@/kubb";
+import type { PageMetadata } from "@/kubb";
 
 export type PaginationProps = {
   paginationData?: PageMetadata
   currentPage: number;
+  currentSize?: number;
   onPageChange: (page: number) => void;
 };
 
 export function Pagination({
   currentPage,
   onPageChange,
-  paginationData
+  paginationData,
+  currentSize,
 }: Readonly<PaginationProps>) {
 
   if (!paginationData) return null;
@@ -17,7 +19,7 @@ export function Pagination({
   return (
     <div className="mt-4 flex items-center justify-between px-3">
       <p className="text-sm app-text-muted hidden lg:block">
-        Mostrando {paginationData.size} de {paginationData.totalElements}
+        Mostrando {currentSize} de {paginationData.totalElements}
       </p>
       <div className="join mx-auto lg:mx-0 mb-3">
         <button

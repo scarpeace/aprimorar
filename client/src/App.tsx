@@ -26,7 +26,7 @@ import { pt } from "zod/locales"
 import z from "zod/v4"
 import { StudentCreatePage } from "./features/students/pages/CreateStudentPage"
 import { StudentEditPage } from "./features/students/pages/EditStudentPage"
-import { StudentDetailPage } from "./features/students/pages/StudentDetailPage"
+import { StudentDetailsPage } from "./features/students/pages/StudentDetailsPage"
 
 function App() {
   z.config(pt())
@@ -42,7 +42,7 @@ function App() {
               <Route path="/students" element={<StudentsPage />} />
               <Route path="/students/new" element={<StudentCreatePage />} />
               <Route path="/students/edit/:id" element={<StudentEditPage />} />
-              <Route path="/students/:id" element={<StudentDetailPage />} />
+              <Route path="/students/:id" element={<StudentDetailsPage />} />
 
               <Route path="/employees" element={<EmployeesPage />} />
               <Route path="/employees/new" element={<EmployeeCreatePage />} />
