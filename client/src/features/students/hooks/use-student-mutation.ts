@@ -1,12 +1,7 @@
 import {
-  archiveStudentMutationKey,
-  createStudentMutationKey,
   deleteStudentMutationKey,
-  getEventsQueryKey,
-  getParentsQueryKey,
   getStudentByIdQueryKey,
   getStudentsQueryKey,
-  unarchiveStudentMutationKey,
   updateStudentMutationKey,
   useArchiveStudent,
   useCreateStudent,
@@ -25,13 +20,13 @@ export function useCreateStudentMutation() {
 
   return useCreateStudent({
     mutation: {
-      onError: (error) => {
+      onError: () => {
         toast.error("Algo deu errado ao criar o aluno");
       },
       onSuccess: (createdStudent: StudentResponseDTO) => {
         console.log(createdStudent)
         toast.success("Aluno criado com sucesso");
-        queryClient.invalidateQueries({ queryKey: createStudentMutationKey() });
+        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() })
         navigate(`/students/${createdStudent.id}`);
       },
     },
@@ -44,12 +39,14 @@ export function useUpdateStudentMutation() {
 
   return useUpdateStudent({
     mutation: {
-      onSuccess: (updatedStudent, variables) => {
+      onSuccess: (updatedStudent) => {
         toast.success("Aluno atualizado com sucesso");
+        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() })
+        queryClient.invalidateQueries({ queryKey: getStudentByIdQueryKey(updatedStudent.id) })
         queryClient.invalidateQueries({ queryKey: updateStudentMutationKey() });
         navigate(`/students/${updatedStudent.id}`);
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Algo deu errado ao atualizar o aluno");
       },
     },
@@ -61,11 +58,12 @@ export function useDeleteStudentMutation() {
 
   return useDeleteStudent({
     mutation: {
-      onSuccess: (_, variables) => {
+      onSuccess: () => {
         toast.success("Aluno excluído com sucesso");
+        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() })
         queryClient.invalidateQueries({ queryKey: deleteStudentMutationKey() });
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Algo deu errado ao excluir o aluno");
       },
     },
@@ -79,10 +77,10 @@ export function useArchiveStudentMutation() {
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Aluno arquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getStudentByIdQueryKey(variables.studentId) });
+        queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() })
+        queryClient.invalidateQueries({ queryKey: getStudentByIdQueryKey(variables.studentId) })
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Algo deu errado ao arquivar o aluno");
       },
     },
@@ -99,7 +97,7 @@ export function useUnarchiveStudentMutation() {
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
         queryClient.invalidateQueries({ queryKey: getStudentByIdQueryKey(variables.studentId) });
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Algo deu errado ao desarquivar o aluno");
       },
     },

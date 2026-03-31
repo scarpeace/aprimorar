@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, CircleArrowLeft, Home, RefreshCw } from "lucide-react";
+import { AlertTriangle, CircleArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type ErrorCardProps = {
   description?: string;
   title: string;
-  error: any;
+  error?: unknown;
 };
 
 export function ErrorCard({
@@ -14,6 +14,13 @@ export function ErrorCard({
   error,
 }: Readonly<ErrorCardProps>) {
   const navigate = useNavigate();
+
+  const errorMessage =
+    error instanceof Error
+      ? error.message
+      : typeof error === "object" && error !== null && "message" in error
+      ? String(error.message)
+      : undefined;
 
   return (
     <div className="card overflow-hidden border border-error/20 bg-base-100 shadow-md">
@@ -32,7 +39,7 @@ export function ErrorCard({
 
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold text-error">{title}</h2>
-            <p className="max-w-2xl text-sm leading-6 text-base-content/70">{description || error?.message}</p>
+            <p className="max-w-2xl text-sm leading-6 text-base-content/70">{description || errorMessage}</p>
           </div>
 
           <div className="card-actions justify-end pt-2">

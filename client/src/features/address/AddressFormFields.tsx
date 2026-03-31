@@ -1,11 +1,11 @@
 import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import {
-  addressRequestDTOStateEnum,
+    addressRequestDTOStateEnum,
 } from "@/kubb";
-import type { AddressInputSchema } from "./hooks/addressSchema";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
+import type { AddressInputSchema } from "./hooks/addressSchema";
 
 type AddressDetailsFormProps = {
   register: UseFormRegister<any>;
@@ -15,7 +15,7 @@ type AddressDetailsFormProps = {
   className?: string;
 };
 
-export function AddressDetailsForm({
+export function AddressFormFields({
   register,
   registerWithMask,
   prefix,

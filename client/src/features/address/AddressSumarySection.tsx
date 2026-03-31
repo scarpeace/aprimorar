@@ -13,7 +13,7 @@ export function AddressSummarySection({
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Rua", value: address?.street },
     { label: "Número", value: address?.number },
-    { label: "Complemento", value: address?.complement },
+    { label: "Complemento", value: address?.complement ?? "N/A" },
     { label: "Bairro", value: address?.district },
     { label: "Cidade", value: address?.city },
     { label: "Estado", value: address?.state },

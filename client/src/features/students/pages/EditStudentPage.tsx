@@ -1,47 +1,63 @@
 import { Alert } from "@/components/ui/alert";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { ErrorCard } from "@/components/ui/error-card";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PageHeader } from "@/components/ui/page-header";
-import { AddressDetailsForm } from "@/features/address/AddressDetailsForm";
-import { ParentDetailsForm } from "@/features/parents/components/ParentDetailsForm";
-import { useGetStudentById } from "@/kubb";
+import { PageLoading } from "@/components/ui/page-loading";
+import { AddressFormFields } from "@/features/address/AddressFormFields";
+import { ParentFormFields } from "@/features/parents/components/ParentFormFields";
+import { GraduationCap } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { StudentForm } from "../components/StudentForm";
 import { StudentFormFields } from "../components/StudentFormFields";
 import type { StudentInputSchema } from "../hooks/studentSchema";
 import { useStudentForm } from "../hooks/use-student-form";
-import { PageLoading } from "@/components/ui/page-loading";
-import { ErrorCard } from "@/components/ui/error-card";
-import { GraduationCap } from "lucide-react";
 import { useUpdateStudentMutation } from "../hooks/use-student-mutation";
-import { StudentFormActions } from "../components/StudentFormActions";
+import { useStudentByIdQuery } from "../hooks/use-students-query";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
 
-  const studentQuery = useGetStudentById(studentId);
-  const updateStudentMutation = useUpdateStudentMutation();
+  const {
+    data: student,
+    isError: isStudentError,
+    isPending: isStudentPending,
+    error: studentError,
+  } = useStudentByIdQuery({ studentId });
+
+  const {
+    mutate: updateStudent,
+    isPending: isUpdateStudentPending,
+    isError: isUpdateStudentError,
+    error: updateStudentError,
+  } = useUpdateStudentMutation();
 
   const {
     formState: { errors },
     handleSubmit,
     register,
     registerWithMask,
-  } = useStudentForm(studentQuery.data);
+  } = useStudentForm(student);
 
-  const onSubmit = handleSubmit((data: StudentInputSchema) => {
-    updateStudentMutation.mutate({ studentId, data });
-  });
-
-  if (studentQuery.isPending) {
-    return <PageLoading message="Carregando aluno..." />;
+  if (isStudentError) {
+    return (
+      <ErrorCard
+        title="Ocorreu um erro ao carregar o aluno."
+        error={studentError}
+      />
+    );
   }
 
-if (studentQuery.isError) {
-  return <ErrorCard title="Ocorreu um erro ao carregar o aluno." error={studentQuery.error} />
-}
+  if (isStudentPending) {
+    return <PageLoading message="Carregando aluno..." />;
+  }
+  const onSubmit = handleSubmit((data: StudentInputSchema) => {
+    updateStudent({ studentId, data });
+  });
 
   return (
-    <div className="container">
+    <>
       <PageHeader
         title="Criar aluno"
         description="Preencha os dados do aluno e do responsável."
@@ -49,7 +65,10 @@ if (studentQuery.isError) {
       />
 
       <StudentForm onSubmit={onSubmit}>
-          {updateStudentMutation.isError && <Alert error={updateStudentMutation.error} variant="error" />}
+
+        {isUpdateStudentError && (
+          <Alert error={updateStudentError} variant="error" />
+        )}
 
         <StudentFormFields
           register={register}
@@ -58,7 +77,7 @@ if (studentQuery.isError) {
           className="grid grid-cols-3 gap-4"
         />
 
-        <ParentDetailsForm
+        <ParentFormFields
           register={register}
           registerWithMask={registerWithMask}
           prefix="parent"
@@ -66,7 +85,7 @@ if (studentQuery.isError) {
           className="grid grid-cols-2 gap-4"
         />
 
-        <AddressDetailsForm
+        <AddressFormFields
           register={register}
           registerWithMask={registerWithMask}
           errors={errors.address}
@@ -74,8 +93,22 @@ if (studentQuery.isError) {
           className="grid grid-cols-3 gap-4"
         />
 
-        <StudentFormActions isSubmitting={updateStudentMutation.isPending} />
+        <div className="flex flex-wrap justify-end gap-3">
+          <Button
+            type="submit"
+            variant="success"
+            disabled={isUpdateStudentPending}
+          >
+            <Button type="submit" variant="success"disabled={isUpdateStudentPending}>
+              {isUpdateStudentPending ? <LoadingSpinner text={"Salvando"} /> : "Salvar alterações"}
+            </Button>
+          </Button>
+
+          <ButtonLink to={`/students/`} variant="outline">
+            Cancelar
+          </ButtonLink>
+        </div>
       </StudentForm>
-    </div>
+    </>
   );
 }

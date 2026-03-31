@@ -1,104 +1,94 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type { StudentResponseDTO } from "@/kubb";
-import {
-  formatCpf,
-  formatDateShortYear,
-  formatPhone,
-} from "@/lib/utils/formatter";
+import type { EventResponseDTO } from "@/kubb";
+import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
-type StudentsTableStateProps = {
+type EventsTableStateProps = {
   isPending: boolean;
   error: unknown;
 };
 
-export function StudentsTableState({
+export function EventsTableState({
   isPending,
   error,
-}: Readonly<StudentsTableStateProps>) {
-  if (isPending) return <LoadingSpinner text="Carregando Alunos..." />;
+}: Readonly<EventsTableStateProps>) {
 
-  if (error)
-    return (
-      <ErrorCard
-        title="Não foi possível carregar a listagem de alunos"
-        error={error}
-      />
-    );
+  if (isPending) return <LoadingSpinner text="Carregando Eventos..." />;
+
+  if (error) return (
+    <ErrorCard
+      title="Não foi possível carregar a listagem de alunos"
+      error={error}
+    />
+  )
 }
 
-type StudentsTableProps = {
-  students?: StudentResponseDTO[];
+type EventTableProps = {
+  events?: EventResponseDTO[];
   children?: ReactNode;
   isPending: boolean;
   error: unknown;
 };
 
-export function StudentsTable({
-  students,
+export function EventsTable({
+  error,
+  events,
   children,
   isPending,
-  error,
-}: Readonly<StudentsTableProps>) {
+}: Readonly<EventTableProps>) {
   const navigate = useNavigate();
-
   return (
     <>
-      <StudentsTableState isPending={isPending} error={error} />
+      <EventsTableState isPending={isPending} error={error} />
       <div>
         <table className="table table-zebra bg-base-100 overflow-x-auto w-full p-3 rounded-xl animate-[fade-up_280ms_ease-out_both]">
           <thead className="bg-base-300 rounded">
             <tr>
               <th className="text-left font-semibold text-base-content/80">
-                Nome
+                Aluno
               </th>
               <th className="text-left font-semibold text-base-content/80">
-                CPF
+                Colaborador
               </th>
               <th className="text-left font-semibold text-base-content/80">
-                Idade
+                Data
               </th>
               <th className="text-left font-semibold text-base-content/80">
-                Contato
+                Hora
               </th>
               <th className="text-left font-semibold text-base-content/80">
-                Escola
+                Valor
               </th>
               <th className="text-left font-semibold text-base-content/80">
-                Matricula
+                Pagamento
               </th>
-              <th className="text-left font-semibold text-base-content/80">
-                Status
-              </th>
-              <th className="text-left font-semibold text-base-content/80">
+              <th className="text-center pr-6 font-semibold text-base-content/80">
                 Ações
               </th>
             </tr>
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {students?.map((student) => (
+            {events?.map((event) => (
               <tr
-                key={student.id}
+                key={event.eventId}
                 className="transition-colors hover:bg-base-200/70"
               >
-                <td>{student.name}</td>
+                <td>{event.studentName}</td>
 
-                <td>{formatCpf(student.cpf)}</td>
-                <td className="text-center">{student.age}</td>
-                <td>{formatPhone(student.contact)}</td>
+                <td className="text-center">{event.employeeName}</td>
 
-                <td>{student.school}</td>
+                <td>{formatDateShortYear(event.startDate)}</td>
+                <td>{formatTime(event.startDate)}</td>
+                <td>{brl.format(event.price)}</td>
+                <td>{brl.format(event.payment)}</td>
 
-                <td>{formatDateShortYear(student.createdAt)}</td>
-                <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
-
-                <td>
+                <td className="text-center">
                   <span
                     className="btn m-2 btn-secondary"
-                    onClick={() => navigate(`/students/${student.id}`)}
+                    onClick={() => navigate(`/events/${event.eventId}`)}
                   >
                     Detalhes
                   </span>

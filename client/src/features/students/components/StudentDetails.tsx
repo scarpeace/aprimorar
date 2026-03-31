@@ -2,15 +2,15 @@ import type { ReactNode } from "react";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
-import type { StudentResponseSchema } from "../hooks/studentSchema";
+import type { StudentResponseDTO } from "@/kubb";
 
-type StudentSummarySectionProps = {
-  student: StudentResponseSchema;
+type StudentDetailsProps = {
+  student: StudentResponseDTO;
 };
 
-export function StudentSummarySection({
+export function StudentDetails({
   student,
-}: Readonly<StudentSummarySectionProps>) {
+}: Readonly<StudentDetailsProps>) {
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
     { label: "Nome completo", value: student?.name },
     { label: "CPF", value: formatCpf(student?.cpf ?? "") },

@@ -1,12 +1,8 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
+import { useState } from "react";
 
 import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
-import {
-  useArchiveStudent,
-  useUnarchiveStudent,
-} from "@/kubb";
 import { useArchiveStudentMutation, useUnarchiveStudentMutation } from "../hooks/use-student-mutation";
 
 type ArchiveStudentButtonProps = {
