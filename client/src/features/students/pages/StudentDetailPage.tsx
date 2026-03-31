@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { PageHeader } from "@/components/ui/page-header";
 import { AddressSummarySection } from "@/features/address/AddressSumarySection";
 import { useEventsByStudent } from "@/features/events/query/eventQueries";
-import { StudentEventsSection } from "../components/StudentEventsTable";
 import { StudentSummarySection } from "../components/StudentSummary";
 import { useStudentByIdQuery } from "../hooks/use-students-query";
 import { ErrorCard } from "@/components/ui/error-card";
@@ -12,6 +11,7 @@ import { LoadingCard } from "@/components/ui/loading-card";
 import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
 import { DeleteStudentButton } from "../components/DeleteStudentButton";
 import { EditStudentButton } from "../components/EditStudentButton";
+import { StudentEventsTable } from "../components/StudentEventsTable";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -53,7 +53,7 @@ export function StudentDetailPage() {
         <AddressSummarySection address={studentQuery.data.address} />
       </div>
 
-      <StudentEventsSection
+      <StudentEventsTable
         events={studentEventsQuery.data?.content}
         isLoading={studentEventsQuery.isPending}
         error={studentEventsQuery.error}

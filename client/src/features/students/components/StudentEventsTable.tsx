@@ -5,14 +5,14 @@ import type { GetEventsByStudent200 } from "@/kubb";
 
 type StudentEventsSectionProps = {
   studentId: string;
-  events?: GetEventsByStudent200;
+  events: GetEventsByStudent200;
   isLoading: boolean;
   error: unknown;
   currentPage: number;
   onPageChange: (page: number) => void;
 };
 
-export function StudentEventsSection({
+export function StudentEventsTable({
   events,
   isLoading,
   error,
