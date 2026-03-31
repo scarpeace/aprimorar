@@ -99,10 +99,6 @@ public class StudentService {
         ensureParentUniqueness(student.getParent());
 
         student.setParent(student.getParent());
-
-        // TODO: mover essas regras de validação pra dentro da entidade
-        StudentRules.validate(student);
-
         Student savedStudent = studentRepo.save(student);
 
         log.info("Aluno {} cadastrado com sucesso.", savedStudent.getName().toUpperCase());
@@ -119,7 +115,6 @@ public class StudentService {
         Student updatedData = studentMapper.convertToEntity(dto);
 
         ensureStudentUniquenessForUpdate(updatedData, id);
-        StudentRules.validate(updatedData);
 
         Parent currentParent = entity.getParent();
         Parent parentData = updatedData.getParent();
@@ -172,7 +167,6 @@ public class StudentService {
 
         Student student = findStudentOrThrow(studentId);
 
-        // Reatribui eventos para o aluno fantasma antes de deletar
         log.info("Reatribuindo eventos do aluno {} para o Ghost Student.", student.getName().toUpperCase());
         eventRepo.reassignEventsToGhost(studentId, GHOST_STUDENT_ID);
 
