@@ -1,9 +1,9 @@
 package com.aprimorar.api.domain.student.web;
 
 import com.aprimorar.api.domain.student.StudentService;
+import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
 import com.aprimorar.api.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -60,8 +60,8 @@ public class StudentController {
     @GetMapping("/options")
     @Operation(operationId = "getStudentsOptions", description = "Retorna uma lista de opções de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
-    public ResponseEntity<List<StudentSummaryDTO>> getStudentOptions() {
-        List<StudentSummaryDTO> options = studentService.getStudentOptions();
+    public ResponseEntity<List<StudentOptionsDTO>> getStudentOptions() {
+        List<StudentOptionsDTO> options = studentService.getStudentOptions();
         return ResponseEntity.ok(options);
     }
 

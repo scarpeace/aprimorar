@@ -2,13 +2,12 @@ package com.aprimorar.api.domain.student;
 
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.ParentMapper;
 import com.aprimorar.api.domain.parent.ParentRules;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
+import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
@@ -36,20 +35,17 @@ public class StudentService {
     private final ParentRepository parentRepo;
     private final StudentRepository studentRepo;
     private final StudentMapper studentMapper;
-    private final ParentMapper parentMapper;
     private final EventRepository eventRepo;
 
     public StudentService(
         ParentRepository parentRepo,
         StudentRepository studentRepo,
         StudentMapper studentMapper,
-        ParentMapper parentMapper,
         EventRepository eventRepo
     ) {
         this.parentRepo = parentRepo;
         this.studentRepo = studentRepo;
         this.studentMapper = studentMapper;
-        this.parentMapper = parentMapper;
         this.eventRepo = eventRepo;
     }
 
@@ -72,13 +68,13 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudentSummaryDTO> getStudentSummary() {
+    public List<StudentOptionsDTO> getStudentOptions() {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
         return studentRepo
             .findAll(StudentSpecifications.notArchived(), sort)
             .stream()
-            .map(e -> new StudentSummaryDTO(e.getId(), e.getName()))
+            .map(e -> new StudentOptionsDTO(e.getId(), e.getName()))
             .toList();
     }
 
