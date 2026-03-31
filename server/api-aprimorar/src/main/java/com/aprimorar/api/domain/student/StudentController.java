@@ -1,12 +1,12 @@
-package com.aprimorar.api.domain.student.web;
+package com.aprimorar.api.domain.student;
 
-import com.aprimorar.api.domain.student.StudentService;
 import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
 import com.aprimorar.api.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/v1/students")
+@Tag(name = "Student", description = "Student management APIs")
 public class StudentController {
 
     private final StudentService studentService;
@@ -65,7 +66,7 @@ public class StudentController {
         return ResponseEntity.ok(options);
     }
 
-    @GetMapping("/parent/{parentId}")
+    @GetMapping("/students/{parentId}")
     @Operation(operationId = "getStudentsByParent", description = "Retorna uma lista de alunos por ID do pai.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
     public ResponseEntity<List<StudentResponseDTO>> getStudentsByParent(@PathVariable UUID parentId) {

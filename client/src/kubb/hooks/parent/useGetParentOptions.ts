@@ -4,10 +4,7 @@
  */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type {
-  GetParentsSummaryQueryResponse,
-  GetParentsSummary400,
-} from "../../types/parent/GetParentsSummary.ts";
+import type { GetParentOptionsQueryResponse } from "../../types/parent/GetParentOptions.ts";
 import type {
   Client,
   RequestConfig,
@@ -21,26 +18,25 @@ import type {
 } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getParentsSummaryQueryKey = () =>
+export const getParentOptionsQueryKey = () =>
   [{ url: "/v1/parents/summary" }] as const;
 
-export type GetParentsSummaryQueryKey = ReturnType<
-  typeof getParentsSummaryQueryKey
+export type GetParentOptionsQueryKey = ReturnType<
+  typeof getParentOptionsQueryKey
 >;
 
 /**
- * @description Lista todos os responsáveis cadastrados para uso em listas e dropdowns.
- * @summary Listar responsáveis para listas e dropdowns
+ * @description Retorna uma lista de responsáveis para dropdown
  * {@link /v1/parents/summary}
  */
-export async function getParentsSummary(
+export async function getParentOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
-    GetParentsSummaryQueryResponse,
-    ResponseErrorConfig<GetParentsSummary400>,
+    GetParentOptionsQueryResponse,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
@@ -51,38 +47,37 @@ export async function getParentsSummary(
   return res.data;
 }
 
-export function getParentsSummaryQueryOptions(
+export function getParentOptionsQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = getParentsSummaryQueryKey();
+  const queryKey = getParentOptionsQueryKey();
   return queryOptions<
-    GetParentsSummaryQueryResponse,
-    ResponseErrorConfig<GetParentsSummary400>,
-    GetParentsSummaryQueryResponse,
+    GetParentOptionsQueryResponse,
+    ResponseErrorConfig<Error>,
+    GetParentOptionsQueryResponse,
     typeof queryKey
   >({
     queryKey,
     queryFn: async ({ signal }) => {
-      return getParentsSummary({ ...config, signal: config.signal ?? signal });
+      return getParentOptions({ ...config, signal: config.signal ?? signal });
     },
   });
 }
 
 /**
- * @description Lista todos os responsáveis cadastrados para uso em listas e dropdowns.
- * @summary Listar responsáveis para listas e dropdowns
+ * @description Retorna uma lista de responsáveis para dropdown
  * {@link /v1/parents/summary}
  */
-export function useGetParentsSummary<
-  TData = GetParentsSummaryQueryResponse,
-  TQueryData = GetParentsSummaryQueryResponse,
-  TQueryKey extends QueryKey = GetParentsSummaryQueryKey,
+export function useGetParentOptions<
+  TData = GetParentOptionsQueryResponse,
+  TQueryData = GetParentOptionsQueryResponse,
+  TQueryKey extends QueryKey = GetParentOptionsQueryKey,
 >(
   options: {
     query?: Partial<
       QueryObserverOptions<
-        GetParentsSummaryQueryResponse,
-        ResponseErrorConfig<GetParentsSummary400>,
+        GetParentOptionsQueryResponse,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -93,16 +88,16 @@ export function useGetParentsSummary<
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey = resolvedOptions?.queryKey ?? getParentsSummaryQueryKey();
+  const queryKey = resolvedOptions?.queryKey ?? getParentOptionsQueryKey();
 
   const query = useQuery(
     {
-      ...getParentsSummaryQueryOptions(config),
+      ...getParentOptionsQueryOptions(config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<GetParentsSummary400>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
     queryKey: TQueryKey;
   };
 

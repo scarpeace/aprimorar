@@ -3,11 +3,8 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
-
 export type DeleteParentPathParams = {
   /**
-   * @description ID do responsável
    * @type string, uuid
    */
   parentId: string;
@@ -16,17 +13,12 @@ export type DeleteParentPathParams = {
 /**
  * @description Responsável deletado com sucesso
  */
-export type DeleteParent200 = any;
+export type DeleteParent204 = any;
 
-/**
- * @description Requisição inválida
- */
-export type DeleteParent400 = ProblemResponseDTO;
-
-export type DeleteParentMutationResponse = DeleteParent200;
+export type DeleteParentMutationResponse = DeleteParent204;
 
 export type DeleteParentMutation = {
-  Response: DeleteParent200;
+  Response: DeleteParent204;
   PathParams: DeleteParentPathParams;
-  Errors: DeleteParent400;
+  Errors: any;
 };

@@ -27,17 +27,17 @@ export type { PageMetadata } from "./PageMetadata.ts";
 export type { PagedModelEmployeeResponseDTO } from "./PagedModelEmployeeResponseDTO.ts";
 export type { PagedModelEventResponseDTO } from "./PagedModelEventResponseDTO.ts";
 export type { PagedModelParentResponseDTO } from "./PagedModelParentResponseDTO.ts";
+export type { ParentOptionsDTO } from "./ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
-export type { ParentSummaryDTO } from "./ParentSummaryDTO.ts";
 export type {
   ProblemResponseDTO,
   ProblemResponseDTOErrorCodeEnumKey,
   ProblemResponseDTOStatusEnumKey,
 } from "./ProblemResponseDTO.ts";
+export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
-export type { StudentSummaryDTO } from "./StudentSummaryDTO.ts";
 export type {
   GetDashboardSummary200,
   GetDashboardSummary400,
@@ -155,114 +155,93 @@ export type {
 } from "./event/UpdateEvent.ts";
 export type {
   ArchiveParent204,
-  ArchiveParent404,
   ArchiveParentMutation,
   ArchiveParentMutationResponse,
   ArchiveParentPathParams,
 } from "./parent/ArchiveParent.ts";
 export type {
-  CreateParent200,
-  CreateParent400,
-  CreateParentMutation,
-  CreateParentMutationRequest,
-  CreateParentMutationResponse,
-} from "./parent/CreateParent.ts";
-export type {
-  DeleteParent200,
-  DeleteParent400,
+  DeleteParent204,
   DeleteParentMutation,
   DeleteParentMutationResponse,
   DeleteParentPathParams,
 } from "./parent/DeleteParent.ts";
 export type {
   GetParentById200,
-  GetParentById400,
   GetParentByIdPathParams,
   GetParentByIdQuery,
   GetParentByIdQueryResponse,
 } from "./parent/GetParentById.ts";
 export type {
+  GetParentOptions200,
+  GetParentOptionsQuery,
+  GetParentOptionsQueryResponse,
+} from "./parent/GetParentOptions.ts";
+export type {
   GetParents200,
-  GetParents400,
   GetParentsQuery,
   GetParentsQueryParams,
   GetParentsQueryResponse,
 } from "./parent/GetParents.ts";
 export type {
-  GetParentsSummary200,
-  GetParentsSummary400,
-  GetParentsSummaryQuery,
-  GetParentsSummaryQueryResponse,
-} from "./parent/GetParentsSummary.ts";
-export type {
   UnarchiveParent204,
-  UnarchiveParent404,
   UnarchiveParentMutation,
   UnarchiveParentMutationResponse,
   UnarchiveParentPathParams,
 } from "./parent/UnarchiveParent.ts";
 export type {
-  UpdateParent200,
-  UpdateParent400,
-  UpdateParentMutation,
-  UpdateParentMutationRequest,
-  UpdateParentMutationResponse,
-  UpdateParentPathParams,
-} from "./parent/UpdateParent.ts";
-export type {
   ArchiveStudent204,
   ArchiveStudentMutation,
   ArchiveStudentMutationResponse,
   ArchiveStudentPathParams,
-} from "./student-controller/ArchiveStudent.ts";
+} from "./student/ArchiveStudent.ts";
 export type {
   CreateStudent201,
   CreateStudentMutation,
   CreateStudentMutationRequest,
   CreateStudentMutationResponse,
-} from "./student-controller/CreateStudent.ts";
+} from "./student/CreateStudent.ts";
 export type {
   DeleteStudent204,
   DeleteStudentMutation,
   DeleteStudentMutationResponse,
   DeleteStudentPathParams,
-} from "./student-controller/DeleteStudent.ts";
+} from "./student/DeleteStudent.ts";
 export type {
   GetStudentById200,
   GetStudentByIdPathParams,
   GetStudentByIdQuery,
   GetStudentByIdQueryResponse,
-} from "./student-controller/GetStudentById.ts";
+} from "./student/GetStudentById.ts";
 export type {
   GetStudents200,
   GetStudentsQuery,
   GetStudentsQueryParams,
   GetStudentsQueryResponse,
-} from "./student-controller/GetStudents.ts";
+} from "./student/GetStudents.ts";
 export type {
   GetStudentsByParent200,
   GetStudentsByParentPathParams,
   GetStudentsByParentQuery,
   GetStudentsByParentQueryResponse,
-} from "./student-controller/GetStudentsByParent.ts";
+} from "./student/GetStudentsByParent.ts";
 export type {
   GetStudentsOptions200,
   GetStudentsOptionsQuery,
   GetStudentsOptionsQueryResponse,
-} from "./student-controller/GetStudentsOptions.ts";
+} from "./student/GetStudentsOptions.ts";
 export type {
   UnarchiveStudent204,
   UnarchiveStudentMutation,
   UnarchiveStudentMutationResponse,
   UnarchiveStudentPathParams,
-} from "./student-controller/UnarchiveStudent.ts";
+} from "./student/UnarchiveStudent.ts";
 export type {
   UpdateStudent200,
   UpdateStudentMutation,
   UpdateStudentMutationRequest,
   UpdateStudentMutationResponse,
   UpdateStudentPathParams,
-} from "./student-controller/UpdateStudent.ts";
+} from "./student/UpdateStudent.ts";
 export { addressRequestDTOStateEnum } from "./AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./AddressResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./EmployeeRequestDTO.ts";

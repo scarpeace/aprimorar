@@ -8,7 +8,7 @@ import type {
   UpdateStudentMutationRequest,
   UpdateStudentMutationResponse,
   UpdateStudentPathParams,
-} from "../../types/student-controller/UpdateStudent.ts";
+} from "../../types/student/UpdateStudent.ts";
 import type {
   Client,
   RequestConfig,

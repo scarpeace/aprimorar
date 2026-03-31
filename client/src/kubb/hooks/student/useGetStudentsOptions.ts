@@ -4,7 +4,7 @@
  */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetStudentsOptionsQueryResponse } from "../../types/student-controller/GetStudentsOptions.ts";
+import type { GetStudentsOptionsQueryResponse } from "../../types/student/GetStudentsOptions.ts";
 import type {
   Client,
   RequestConfig,

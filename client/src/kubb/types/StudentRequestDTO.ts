@@ -51,7 +51,7 @@ export type StudentRequestDTO = {
    */
   address: AddressRequestDTO;
   /**
-   * @description Dados do responsável
+   * @description Formato de payload para o cadastro e/ou update de um aluno
    * @type object
    */
   parent: ParentRequestDTO;

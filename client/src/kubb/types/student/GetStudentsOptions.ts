@@ -3,12 +3,12 @@
  * Do not edit manually.
  */
 
-import type { StudentSummaryDTO } from "../StudentSummaryDTO.ts";
+import type { StudentOptionsDTO } from "../StudentOptionsDTO.ts";
 
 /**
  * @description Lista de opções de alunos retornada com sucesso.
  */
-export type GetStudentsOptions200 = StudentSummaryDTO[];
+export type GetStudentsOptions200 = StudentOptionsDTO[];
 
 export type GetStudentsOptionsQueryResponse = GetStudentsOptions200;
 

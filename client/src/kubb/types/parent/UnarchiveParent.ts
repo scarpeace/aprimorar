@@ -3,11 +3,8 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
-
 export type UnarchiveParentPathParams = {
   /**
-   * @description ID do responsável
    * @type string, uuid
    */
   parentId: string;
@@ -18,15 +15,10 @@ export type UnarchiveParentPathParams = {
  */
 export type UnarchiveParent204 = any;
 
-/**
- * @description Responsável não encontrado
- */
-export type UnarchiveParent404 = ProblemResponseDTO;
-
 export type UnarchiveParentMutationResponse = UnarchiveParent204;
 
 export type UnarchiveParentMutation = {
   Response: UnarchiveParent204;
   PathParams: UnarchiveParentPathParams;
-  Errors: UnarchiveParent404;
+  Errors: any;
 };

@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetStudentByIdQueryResponse,
   GetStudentByIdPathParams,
-} from "../../types/student-controller/GetStudentById.ts";
+} from "../../types/student/GetStudentById.ts";
 import type {
   Client,
   RequestConfig,

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Schema(description = "Formato de payload para o cadastro e/ou update de um aluno")
 public record StudentRequestDTO(
     @NotBlank(message = "Nome do aluno é obrigatório")
-    @Schema(description = "Nome do aluno", example = "John Doe")
+    @Schema(nullable = false, description = "Nome do aluno", example = "John Doe")
     String name,
 
     @NotNull(message = "Data de nascimento é obrigatória")
@@ -27,25 +27,25 @@ public record StudentRequestDTO(
     String cpf,
 
     @NotBlank(message = "Escola do aluno é obrigatória")
-    @Schema(description = "Escola do aluno", example = "School Name")
+    @Schema(nullable = false,description = "Escola do aluno", example = "School Name")
     String school,
 
     @NotBlank(message = "Contato do aluno é obrigatório")
-    @Schema(description = "Contato do aluno", example = "(61) 99999-9999")
+    @Schema(nullable = false,description = "Contato do aluno", example = "(61) 99999-9999")
     String contact,
 
     @NotBlank(message = "Email do aluno é obrigatório")
     @Email()
-    @Schema(description = "Email do aluno", example = "john.doe@example.com")
+    @Schema(nullable = false,description = "Email do aluno", example = "john.doe@example.com")
     String email,
 
     @NotNull(message = "Endereço do aluno é obrigatório")
-    @Schema(description = "Endereço do aluno", implementation = AddressRequestDTO.class)
+    @Schema(nullable = false,description = "Endereço do aluno", implementation = AddressRequestDTO.class)
     @Valid
     AddressRequestDTO address,
 
     @NotNull(message = "Responsável do aluno é obrigatório")
-    @Schema(description = "Responsável do aluno", implementation = ParentRequestDTO.class)
+    @Schema(nullable = false,description = "Responsável do aluno", implementation = ParentRequestDTO.class)
     @Valid
     ParentRequestDTO parent
 ) {}

@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   ArchiveStudentMutationResponse,
   ArchiveStudentPathParams,
-} from "../../types/student-controller/ArchiveStudent.ts";
+} from "../../types/student/ArchiveStudent.ts";
 import type {
   Client,
   RequestConfig,

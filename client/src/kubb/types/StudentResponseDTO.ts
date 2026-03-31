@@ -56,6 +56,7 @@ export type StudentResponseDTO = {
    */
   address: AddressResponseDTO;
   /**
+   * @description Dados do aluno retornados pela API
    * @type object
    */
   parent: ParentResponseDTO;

@@ -7,7 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   CreateStudentMutationRequest,
   CreateStudentMutationResponse,
-} from "../../types/student-controller/CreateStudent.ts";
+} from "../../types/student/CreateStudent.ts";
 import type {
   Client,
   RequestConfig,

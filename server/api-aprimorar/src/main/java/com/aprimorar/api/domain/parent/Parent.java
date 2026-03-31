@@ -1,6 +1,6 @@
 package com.aprimorar.api.domain.parent;
 
-
+import com.aprimorar.api.domain.parent.exception.InvalidParentException;
 import com.aprimorar.api.shared.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,23 +13,25 @@ public class Parent extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email",nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "contact",nullable = false)
+    @Column(name = "contact", nullable = false)
     private String contact;
 
-    @Column(name = "cpf",nullable = false, unique = true)
+    @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
-    public Parent() {
-    }
+    public Parent() {}
 
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new InvalidParentException("Nome do responsável é obrigatório");
+        }
         this.name = name;
     }
 
@@ -38,6 +40,9 @@ public class Parent extends BaseEntity {
     }
 
     public void setEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new InvalidParentException("Email do responsável é obrigatório");
+        }
         this.email = email;
     }
 
@@ -46,6 +51,9 @@ public class Parent extends BaseEntity {
     }
 
     public void setContact(String contact) {
+        if (contact == null || contact.isBlank()) {
+            throw new InvalidParentException("Contato do responsável é obrigatório");
+        }
         this.contact = contact;
     }
 
@@ -54,6 +62,15 @@ public class Parent extends BaseEntity {
     }
 
     public void setCpf(String cpf) {
+        if (cpf == null || cpf.isBlank()) {
+            throw new InvalidParentException("CPF do responsável é obrigatório");
+        }
         this.cpf = cpf;
+    }
+    public void validate() {
+        setName(this.name);
+        setContact(this.contact);
+        setEmail(this.email);
+        setCpf(this.cpf);
     }
 }

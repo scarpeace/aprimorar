@@ -5,9 +5,9 @@
 
 import fetch from "@kubb/plugin-client/clients/axios";
 import type {
-  GetStudentsQueryResponse,
-  GetStudentsQueryParams,
-} from "../../types/student-controller/GetStudents.ts";
+  GetStudentsByParentQueryResponse,
+  GetStudentsByParentPathParams,
+} from "../../types/student/GetStudentsByParent.ts";
 import type {
   Client,
   RequestConfig,
@@ -21,49 +21,55 @@ import type {
 } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getStudentsQueryKey = (params?: GetStudentsQueryParams) =>
-  [{ url: "/v1/students" }, ...(params ? [params] : [])] as const;
+export const getStudentsByParentQueryKey = (
+  parentId: GetStudentsByParentPathParams["parentId"],
+) =>
+  [
+    { url: "/v1/students/parent/:parentId", params: { parentId: parentId } },
+  ] as const;
 
-export type GetStudentsQueryKey = ReturnType<typeof getStudentsQueryKey>;
+export type GetStudentsByParentQueryKey = ReturnType<
+  typeof getStudentsByParentQueryKey
+>;
 
 /**
- * @description Retorna uma lista paginada de alunos.
- * {@link /v1/students}
+ * @description Retorna uma lista de alunos por ID do pai.
+ * {@link /v1/students/parent/:parentId}
  */
-export async function getStudents(
-  params?: GetStudentsQueryParams,
+export async function getStudentsByParent(
+  parentId: GetStudentsByParentPathParams["parentId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
-    GetStudentsQueryResponse,
+    GetStudentsByParentQueryResponse,
     ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
-    url: `/v1/students`,
+    url: `/v1/students/parent/${parentId}`,
     baseURL: `http://localhost:8080`,
-    params,
     ...requestConfig,
   });
   return res.data;
 }
 
-export function getStudentsQueryOptions(
-  params?: GetStudentsQueryParams,
+export function getStudentsByParentQueryOptions(
+  parentId: GetStudentsByParentPathParams["parentId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = getStudentsQueryKey(params);
+  const queryKey = getStudentsByParentQueryKey(parentId);
   return queryOptions<
-    GetStudentsQueryResponse,
+    GetStudentsByParentQueryResponse,
     ResponseErrorConfig<Error>,
-    GetStudentsQueryResponse,
+    GetStudentsByParentQueryResponse,
     typeof queryKey
   >({
+    enabled: !!parentId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getStudents(params, {
+      return getStudentsByParent(parentId, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -72,19 +78,19 @@ export function getStudentsQueryOptions(
 }
 
 /**
- * @description Retorna uma lista paginada de alunos.
- * {@link /v1/students}
+ * @description Retorna uma lista de alunos por ID do pai.
+ * {@link /v1/students/parent/:parentId}
  */
-export function useGetStudents<
-  TData = GetStudentsQueryResponse,
-  TQueryData = GetStudentsQueryResponse,
-  TQueryKey extends QueryKey = GetStudentsQueryKey,
+export function useGetStudentsByParent<
+  TData = GetStudentsByParentQueryResponse,
+  TQueryData = GetStudentsByParentQueryResponse,
+  TQueryKey extends QueryKey = GetStudentsByParentQueryKey,
 >(
-  params?: GetStudentsQueryParams,
+  parentId: GetStudentsByParentPathParams["parentId"],
   options: {
     query?: Partial<
       QueryObserverOptions<
-        GetStudentsQueryResponse,
+        GetStudentsByParentQueryResponse,
         ResponseErrorConfig<Error>,
         TData,
         TQueryData,
@@ -96,11 +102,12 @@ export function useGetStudents<
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey = resolvedOptions?.queryKey ?? getStudentsQueryKey(params);
+  const queryKey =
+    resolvedOptions?.queryKey ?? getStudentsByParentQueryKey(parentId);
 
   const query = useQuery(
     {
-      ...getStudentsQueryOptions(params, config),
+      ...getStudentsByParentQueryOptions(parentId, config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,

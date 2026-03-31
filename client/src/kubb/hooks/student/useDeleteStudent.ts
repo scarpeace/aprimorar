@@ -5,9 +5,9 @@
 
 import fetch from "@kubb/plugin-client/clients/axios";
 import type {
-  UnarchiveStudentMutationResponse,
-  UnarchiveStudentPathParams,
-} from "../../types/student-controller/UnarchiveStudent.ts";
+  DeleteStudentMutationResponse,
+  DeleteStudentPathParams,
+} from "../../types/student/DeleteStudent.ts";
 import type {
   Client,
   RequestConfig,
@@ -20,63 +20,63 @@ import type {
 } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const unarchiveStudentMutationKey = () =>
-  [{ url: "/v1/students/:studentId/unarchive" }] as const;
+export const deleteStudentMutationKey = () =>
+  [{ url: "/v1/students/:studentId" }] as const;
 
-export type UnarchiveStudentMutationKey = ReturnType<
-  typeof unarchiveStudentMutationKey
+export type DeleteStudentMutationKey = ReturnType<
+  typeof deleteStudentMutationKey
 >;
 
 /**
- * @description Desarquiva um aluno por ID.
- * {@link /v1/students/:studentId/unarchive}
+ * @description Deleta um aluno por ID.
+ * {@link /v1/students/:studentId}
  */
-export async function unarchiveStudent(
-  studentId: UnarchiveStudentPathParams["studentId"],
+export async function deleteStudent(
+  studentId: DeleteStudentPathParams["studentId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
-    UnarchiveStudentMutationResponse,
+    DeleteStudentMutationResponse,
     ResponseErrorConfig<Error>,
     unknown
   >({
-    method: "PATCH",
-    url: `/v1/students/${studentId}/unarchive`,
+    method: "DELETE",
+    url: `/v1/students/${studentId}`,
     baseURL: `http://localhost:8080`,
     ...requestConfig,
   });
   return res.data;
 }
 
-export function unarchiveStudentMutationOptions<TContext = unknown>(
+export function deleteStudentMutationOptions<TContext = unknown>(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const mutationKey = unarchiveStudentMutationKey();
+  const mutationKey = deleteStudentMutationKey();
   return mutationOptions<
-    UnarchiveStudentMutationResponse,
+    DeleteStudentMutationResponse,
     ResponseErrorConfig<Error>,
-    { studentId: UnarchiveStudentPathParams["studentId"] },
+    { studentId: DeleteStudentPathParams["studentId"] },
     TContext
   >({
     mutationKey,
     mutationFn: async ({ studentId }) => {
-      return unarchiveStudent(studentId, config);
+      return deleteStudent(studentId, config);
     },
   });
 }
 
 /**
- * @description Desarquiva um aluno por ID.
- * {@link /v1/students/:studentId/unarchive}
+ * @description Deleta um aluno por ID.
+ * {@link /v1/students/:studentId}
  */
-export function useUnarchiveStudent<TContext>(
+export function useDeleteStudent<TContext>(
   options: {
     mutation?: UseMutationOptions<
-      UnarchiveStudentMutationResponse,
+      DeleteStudentMutationResponse,
       ResponseErrorConfig<Error>,
-      { studentId: UnarchiveStudentPathParams["studentId"] },
+      { studentId: DeleteStudentPathParams["studentId"] },
       TContext
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
@@ -84,22 +84,21 @@ export function useUnarchiveStudent<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? unarchiveStudentMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? deleteStudentMutationKey();
 
-  const baseOptions = unarchiveStudentMutationOptions(
+  const baseOptions = deleteStudentMutationOptions(
     config,
   ) as UseMutationOptions<
-    UnarchiveStudentMutationResponse,
+    DeleteStudentMutationResponse,
     ResponseErrorConfig<Error>,
-    { studentId: UnarchiveStudentPathParams["studentId"] },
+    { studentId: DeleteStudentPathParams["studentId"] },
     TContext
   >;
 
   return useMutation<
-    UnarchiveStudentMutationResponse,
+    DeleteStudentMutationResponse,
     ResponseErrorConfig<Error>,
-    { studentId: UnarchiveStudentPathParams["studentId"] },
+    { studentId: DeleteStudentPathParams["studentId"] },
     TContext
   >(
     {
@@ -109,9 +108,9 @@ export function useUnarchiveStudent<TContext>(
     },
     queryClient,
   ) as UseMutationResult<
-    UnarchiveStudentMutationResponse,
+    DeleteStudentMutationResponse,
     ResponseErrorConfig<Error>,
-    { studentId: UnarchiveStudentPathParams["studentId"] },
+    { studentId: DeleteStudentPathParams["studentId"] },
     TContext
   >;
 }

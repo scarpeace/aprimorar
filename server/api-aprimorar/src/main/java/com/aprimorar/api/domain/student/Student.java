@@ -125,4 +125,15 @@ public class Student extends BaseEntity {
         }
         this.address = address;
     }
+
+    public void validate() {
+        setName(this.name);
+        setContact(this.contact);
+        setEmail(this.email);
+        setBirthdate(this.birthdate);
+        setCpf(this.cpf);
+        setSchool(this.school);
+        setParent(this.parent);
+        setAddress(this.address);
+    }
 }

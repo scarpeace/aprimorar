@@ -4,7 +4,6 @@
  */
 
 import type { PagedModelParentResponseDTO } from "../PagedModelParentResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetParentsQueryParams = {
   /**
@@ -27,26 +26,24 @@ export type GetParentsQueryParams = {
    */
   sort?: string[];
   /**
-   * @description Termo de busca
    * @type string | undefined
    */
   search?: string;
+  /**
+   * @type boolean | undefined
+   */
+  archived?: boolean;
 };
 
 /**
- * @description Responsáveis listados com sucesso
+ * @description Lista de responsáveis retornada com sucesso.
  */
 export type GetParents200 = PagedModelParentResponseDTO;
-
-/**
- * @description Requisição inválida
- */
-export type GetParents400 = ProblemResponseDTO;
 
 export type GetParentsQueryResponse = GetParents200;
 
 export type GetParentsQuery = {
   Response: GetParents200;
   QueryParams: GetParentsQueryParams;
-  Errors: GetParents400;
+  Errors: any;
 };

@@ -24,24 +24,8 @@ import com.aprimorar.api.domain.event.repository.EventSpecifications;
 import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.shared.PageDTO;
 
-/**
- * Centraliza as regras de negócio do evento.
- *
- * <p>
- * Aqui ficam a criação, atualização, consultas e remoção de eventos. Também é
- * esse service que garante que aluno e colaborador existam e que não haja
- * conflito de agenda antes de persistir um evento.
- *
- * <p>
- * Quando um evento é criado ou atualizado, o service valida os participantes,
- * verifica disponibilidade no intervalo informado e devolve a resposta em
- * formato DTO.
- *
- * @author scarpellini
- * @version 1.0
- * @since 2026-03-14
- */
 @Service
 public class EventService {
 
@@ -62,7 +46,7 @@ public class EventService {
 
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
-    public Page<EventResponseDTO> getEvents(Pageable pageable, String search) {
+    public PageDTO<EventResponseDTO> getEvents(Pageable pageable, String search) {
         Page<Event> eventPage;
         if (search != null && !search.trim().isEmpty()) {
             Specification<Event> spec = EventSpecifications.searchContainsIgnoreCase(search.trim());
@@ -70,8 +54,11 @@ public class EventService {
         } else {
             eventPage = eventRepo.findAll(pageable);
         }
+        Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);
+
+
         log.info("Consulta de eventos finalizada, {} registros encontrados.", eventPage.getTotalElements());
-        return eventPage.map(eventMapper::convertToDto);
+        return new PageDTO<>(eventsDtoPage);
     }
 
     @Transactional(readOnly = true)
@@ -83,24 +70,29 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public Page<EventResponseDTO> getEventsByEmployeeId(Pageable pageable, UUID employeeId) {
+    public PageDTO<EventResponseDTO> getEventsByEmployeeId(Pageable pageable, UUID employeeId) {
 
         Page<Event> eventPage = eventRepo.findAllByEmployeeId(employeeId, pageable);
+
+        Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);
         log.info(
                 "Consulta de eventos do colaborador {} finalizada, {} registros encontrados.",
                 employeeId,
                 eventPage.getTotalElements());
-        return eventPage.map(eventMapper::convertToDto);
+
+        return new PageDTO<>(eventsDtoPage);
     }
 
     @Transactional(readOnly = true)
-    public Page<EventResponseDTO> getEventsByStudentId(Pageable pageable, UUID studentId) {
+    public PageDTO<EventResponseDTO> getEventsByStudentId(Pageable pageable, UUID studentId) {
         Page<Event> eventPage = eventRepo.findAllByStudentId(studentId, pageable);
+        Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);
+
         log.info(
                 "Consulta de eventos do aluno {} finalizada, {} registros encontrados.",
                 studentId,
                 eventPage.getTotalElements());
-        return eventPage.map(eventMapper::convertToDto);
+        return new PageDTO<>(eventsDtoPage);
     }
 
     /* ----- Command Methods ----- */
@@ -113,13 +105,14 @@ public class EventService {
         event.setStudent(student);
         event.setEmployee(employee);
 
-        EventRules.validate(event);
         validateParticipantAvailability(
                 student.getId(),
                 employee.getId(),
                 event.getStartDate(),
                 event.getEndDateTime(),
                 null);
+        event.validate();
+
         Event savedEvent = eventRepo.save(event);
         log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
         return eventMapper.convertToDto(savedEvent);
@@ -127,30 +120,30 @@ public class EventService {
 
     @Transactional
     public EventResponseDTO updateEvent(UUID id, EventRequestDTO request) {
-        Event existingEvent = findEventOrThrow(id);
+        Event event = findEventOrThrow(id);
         Student student = resolveStudentOrThrow(request.studentId());
         Employee employee = resolveEmployeeOrThrow(request.employeeId());
 
-        existingEvent.setTitle(request.title());
-        existingEvent.setDescription(request.description());
-        existingEvent.setStartDate(eventMapper.toLocalDateTime(request.startDate()));
-        existingEvent.setEndDateTime(eventMapper.toLocalDateTime(request.endDate()));
-        existingEvent.setPrice(request.price());
-        existingEvent.setPayment(request.payment());
-        existingEvent.setContent(request.content());
-        existingEvent.setStudent(student);
-        existingEvent.setEmployee(employee);
+        event.setTitle(request.title());
+        event.setDescription(request.description());
+        event.setStartDate(eventMapper.toLocalDateTime(request.startDate()));
+        event.setEndDateTime(eventMapper.toLocalDateTime(request.endDate()));
+        event.setPrice(request.price());
+        event.setPayment(request.payment());
+        event.setContent(request.content());
+        event.setStudent(student);
+        event.setEmployee(employee);
 
-        EventRules.validate(existingEvent);
         validateParticipantAvailability(
                 student.getId(),
                 employee.getId(),
-                existingEvent.getStartDate(),
-                existingEvent.getEndDateTime(),
+                event.getStartDate(),
+                event.getEndDateTime(),
                 id);
+        event.validate();
 
-        log.info("Evento {} atualizado com sucesso.", existingEvent.getTitle().toUpperCase());
-        return eventMapper.convertToDto(existingEvent);
+        log.info("Evento {} atualizado com sucesso.", event.getTitle().toUpperCase());
+        return eventMapper.convertToDto(event);
     }
 
     @Transactional

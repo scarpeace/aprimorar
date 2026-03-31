@@ -7,7 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   ArchiveParentMutationResponse,
   ArchiveParentPathParams,
-  ArchiveParent404,
 } from "../../types/parent/ArchiveParent.ts";
 import type {
   Client,
@@ -29,8 +28,7 @@ export type ArchiveParentMutationKey = ReturnType<
 >;
 
 /**
- * @description Arquiva um responsável específico.
- * @summary Arquivar responsável
+ * @description Arquiva um responsável por ID
  * {@link /v1/parents/:parentId/archive}
  */
 export async function archiveParent(
@@ -41,7 +39,7 @@ export async function archiveParent(
 
   const res = await request<
     ArchiveParentMutationResponse,
-    ResponseErrorConfig<ArchiveParent404>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "PATCH",
@@ -58,7 +56,7 @@ export function archiveParentMutationOptions<TContext = unknown>(
   const mutationKey = archiveParentMutationKey();
   return mutationOptions<
     ArchiveParentMutationResponse,
-    ResponseErrorConfig<ArchiveParent404>,
+    ResponseErrorConfig<Error>,
     { parentId: ArchiveParentPathParams["parentId"] },
     TContext
   >({
@@ -70,15 +68,14 @@ export function archiveParentMutationOptions<TContext = unknown>(
 }
 
 /**
- * @description Arquiva um responsável específico.
- * @summary Arquivar responsável
+ * @description Arquiva um responsável por ID
  * {@link /v1/parents/:parentId/archive}
  */
 export function useArchiveParent<TContext>(
   options: {
     mutation?: UseMutationOptions<
       ArchiveParentMutationResponse,
-      ResponseErrorConfig<ArchiveParent404>,
+      ResponseErrorConfig<Error>,
       { parentId: ArchiveParentPathParams["parentId"] },
       TContext
     > & { client?: QueryClient };
@@ -93,14 +90,14 @@ export function useArchiveParent<TContext>(
     config,
   ) as UseMutationOptions<
     ArchiveParentMutationResponse,
-    ResponseErrorConfig<ArchiveParent404>,
+    ResponseErrorConfig<Error>,
     { parentId: ArchiveParentPathParams["parentId"] },
     TContext
   >;
 
   return useMutation<
     ArchiveParentMutationResponse,
-    ResponseErrorConfig<ArchiveParent404>,
+    ResponseErrorConfig<Error>,
     { parentId: ArchiveParentPathParams["parentId"] },
     TContext
   >(
@@ -112,7 +109,7 @@ export function useArchiveParent<TContext>(
     queryClient,
   ) as UseMutationResult<
     ArchiveParentMutationResponse,
-    ResponseErrorConfig<ArchiveParent404>,
+    ResponseErrorConfig<Error>,
     { parentId: ArchiveParentPathParams["parentId"] },
     TContext
   >;
