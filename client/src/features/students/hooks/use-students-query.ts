@@ -34,6 +34,7 @@ export function useStudentByIdQuery(params: GetStudentByIdPathParams) {
   });
 }
 
+//TODO: tem que adicionar o parser do zod em todos esses roles aqui
 export function useStudentsByParentQuery(params: GetStudentsByParentPathParams) {
   return useGetStudentsByParent(params.parentId, {
     query: {

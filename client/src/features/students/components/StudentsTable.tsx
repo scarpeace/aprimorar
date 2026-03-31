@@ -1,9 +1,117 @@
+import { ErrorCard } from "@/components/ui/error-card";
+import { LoadingCard } from "@/components/ui/loading-card";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import type { StudentResponseDTO } from "@/kubb";
 import {
-  StudentsTableContent,
-  StudentsTableState,
-} from "./StudentsTable.parts";
+  formatCpf,
+  formatDateShortYear,
+  formatPhone,
+} from "@/lib/utils/formatter";
+import type { ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const StudentsTable = {
-  State: StudentsTableState,
-  Content: StudentsTableContent,
+type StudentsTableStateProps = {
+  isPending: boolean;
+  error: unknown;
 };
+
+export function StudentsTableState({
+  isPending,
+  error,
+}: Readonly<StudentsTableStateProps>) {
+  if (isPending) {
+    return <LoadingSpinner text="Carregando Alunos" />;
+  }
+
+  if (error) {
+    return (
+      <ErrorCard
+        title="Não foi possível carregar a listagem de alunos"
+        error={error}
+      />
+    );
+  }
+}
+type StudentsTableProps = {
+  students?: StudentResponseDTO[];
+  children?: ReactNode;
+  isPending: boolean;
+  error: unknown;
+};
+
+export function StudentsTable({
+  students,
+  children,
+  isPending,
+  error,
+}: Readonly<StudentsTableProps>) {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <StudentsTableState isPending={isPending} error={error} />
+      <div>
+        <table className="table table-zebra bg-base-100 overflow-x-auto w-full p-3 rounded-xl animate-[fade-up_280ms_ease-out_both]">
+          <thead className="bg-base-300 rounded">
+            <tr>
+              <th className="text-left font-semibold text-base-content/80">
+                Nome
+              </th>
+              <th className="text-left font-semibold text-base-content/80">
+                CPF
+              </th>
+              <th className="text-left font-semibold text-base-content/80">
+                Idade
+              </th>
+              <th className="text-left font-semibold text-base-content/80">
+                Contato
+              </th>
+              <th className="text-left font-semibold text-base-content/80">
+                Escola
+              </th>
+              <th className="text-left font-semibold text-base-content/80">
+                Matricula
+              </th>
+              <th className="text-left font-semibold text-base-content/80">
+                Status
+              </th>
+              <th className="text-left font-semibold text-base-content/80">
+                Ações
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="whitespace-nowrap">
+            {students?.map((student) => (
+              <tr
+                key={student.id}
+                className="transition-colors hover:bg-base-200/70"
+              >
+                <td>{student.name}</td>
+
+                <td>{formatCpf(student.cpf)}</td>
+                <td className="text-center">{student.age}</td>
+                <td>{formatPhone(student.contact)}</td>
+
+                <td>{student.school}</td>
+
+                <td>{formatDateShortYear(student.createdAt)}</td>
+                <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
+
+                <td>
+                  <span
+                    className="btn m-2 btn-secondary"
+                    onClick={() => navigate(`/students/${student.id}`)}
+                  >
+                    Detalhes
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {children}
+      </div>
+    </>
+  );
+}

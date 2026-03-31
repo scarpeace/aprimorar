@@ -10,7 +10,7 @@ export function useAddressForm(address?: AddressResponseSchema) {
     values: {
       street: address?.street ?? "",
       number: address?.number ?? "",
-      complement: address?.complement ?? "",
+      complement: address?.complement ?? "N/A",
       district: address?.district ?? "",
       city: address?.city ?? "",
       state: address?.state ?? "DF",
