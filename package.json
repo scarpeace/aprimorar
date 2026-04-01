@@ -1,0 +1,16 @@
+{
+  "name": "aprimorar-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Unified development environment for Aprimorar full-stack application",
+  "scripts": {
+    "start:backend": "cd server/api-aprimorar && ./mvnw spring-boot:run",
+    "start:frontend": "wait-on http://localhost:8080/v3/api-docs && cd client && npm run sync && npm run dev",
+    "dev": "concurrently -k -p \"[{name}]\" -n \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgGreen.bold\" \"npm run start:backend\" \"npm run start:frontend\"",
+    "dev:frontend": "cd client && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0"
+  }
+}
