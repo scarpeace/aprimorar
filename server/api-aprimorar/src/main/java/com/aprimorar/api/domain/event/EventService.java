@@ -46,7 +46,6 @@ public class EventService {
         this.eventMapper = eventMapper;
     }
 
-    /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
     public PageDTO<EventResponseDTO> getEvents(Pageable pageable, String search) {
         Page<Event> eventPage;
@@ -96,7 +95,6 @@ public class EventService {
         return new PageDTO<>(eventsDtoPage);
     }
 
-    /* ----- Command Methods ----- */
     @Transactional
     public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
         Event event = eventMapper.convertToEntity(eventRequestDTO);
@@ -115,6 +113,8 @@ public class EventService {
         event.setStudent(student);
         event.setEmployee(employee);
 
+        event.validateForCreation();
+
         Event savedEvent = eventRepo.save(event);
         log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
         return eventMapper.convertToDto(savedEvent);
@@ -124,14 +124,16 @@ public class EventService {
     public EventResponseDTO updateEvent(UUID id, EventRequestDTO request) {
         Event event = findEventOrThrow(id);
 
+        event.validateEditWindow();
+
         Student student = resolveStudentOrThrow(request.studentId());
         Employee employee = resolveEmployeeOrThrow(request.employeeId());
 
         validateParticipantAvailability(
             student.getId(),
             employee.getId(),
-            event.getStartDate(),
-            event.getEndDateTime(),
+            eventMapper.toLocalDateTime(request.startDate()),
+            eventMapper.toLocalDateTime(request.endDate()),
             id
         );
 
@@ -144,6 +146,8 @@ public class EventService {
         event.setContent(request.content());
         event.setStudent(student);
         event.setEmployee(employee);
+
+        event.validateForUpdate();
 
         log.info("Evento {} atualizado com sucesso.", event.getTitle().toUpperCase());
         return eventMapper.convertToDto(event);

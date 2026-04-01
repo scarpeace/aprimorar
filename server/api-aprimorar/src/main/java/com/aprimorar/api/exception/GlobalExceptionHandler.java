@@ -114,8 +114,30 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de validação",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ProblemResponseDTO handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getDefaultMessage())
+                .findFirst()
+                .orElse("Erro de validação nos campos informados");
+                
+        log.error("Erro de validação de DTO: {}", errorMessage);
+        return new ProblemResponseDTO(
+            ErrorCode.VALIDATION_ERROR,
+            HttpStatus.BAD_REQUEST,
+            errorMessage,
+            request.getRequestURI()
+        );
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({ HttpMessageNotReadableException.class, MethodArgumentNotValidException.class })
+    @ExceptionHandler({ HttpMessageNotReadableException.class, Exception.class })
     @ApiResponse(
         responseCode = "500",
         description = "Erro interno do sistema",

@@ -134,7 +134,7 @@ class ParentServiceTest {
             ParentResponseDTO expected = response(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "(61) 99999-8888", "123.456.789-01");
 
             when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
-            when(parentRepo.existsByCpf("123.456.789-01")).thenReturn(false);
+            when(parentRepo.existsByCpf("12345678901")).thenReturn(false);
             when(parentRepo.existsByEmail("maria@email.com")).thenReturn(false);
             when(parentRepo.save(mappedParent)).thenReturn(mappedParent);
             when(parentMapper.convertToDto(mappedParent)).thenReturn(expected);
@@ -145,7 +145,7 @@ class ParentServiceTest {
             // Assert
             assertThat(actual).isEqualTo(expected);
             verify(parentMapper).convertToEntity(input);
-            verify(parentRepo).existsByCpf("123.456.789-01");
+            verify(parentRepo).existsByCpf("12345678901");
             verify(parentRepo).existsByEmail("maria@email.com");
             verify(parentRepo).save(mappedParent);
             verify(parentMapper).convertToDto(mappedParent);
@@ -159,7 +159,7 @@ class ParentServiceTest {
             Parent mappedParent = parent(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
-            when(parentRepo.existsByCpf("123.456.789-01")).thenReturn(true);
+            when(parentRepo.existsByCpf("12345678901")).thenReturn(true);
 
             // Act + Assert
             assertThatThrownBy(() -> parentService.createParent(input))
@@ -167,8 +167,8 @@ class ParentServiceTest {
                     .hasMessage("Responsável com o CPF informado já existe no banco de dados");
 
             verify(parentMapper).convertToEntity(input);
-            verify(parentRepo).existsByCpf("123.456.789-01");
-            verify(parentRepo).existsByEmail("maria@email.com");
+            verify(parentRepo).existsByCpf("12345678901");
+            verify(parentRepo, never()).existsByEmail(any());
             verify(parentRepo, never()).save(any());
         }
 
@@ -180,7 +180,7 @@ class ParentServiceTest {
             Parent mappedParent = parent(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
-            when(parentRepo.existsByCpf("123.456.789-01")).thenReturn(false);
+            when(parentRepo.existsByCpf("12345678901")).thenReturn(false);
             when(parentRepo.existsByEmail("maria@email.com")).thenReturn(true);
 
             // Act + Assert
@@ -189,7 +189,7 @@ class ParentServiceTest {
                     .hasMessage("Responsável com o Email informado já existe no banco de dados");
 
             verify(parentMapper).convertToEntity(input);
-            verify(parentRepo).existsByCpf("123.456.789-01");
+            verify(parentRepo).existsByCpf("12345678901");
             verify(parentRepo).existsByEmail("maria@email.com");
             verify(parentRepo, never()).save(any());
         }
@@ -204,8 +204,8 @@ class ParentServiceTest {
             Parent existingParent = parent(inputId, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
             ParentResponseDTO expected = response(inputId, "Maria Souza Atualizada", "maria.atualizada@email.com", "(11) 98888-7777", "987.654.321-00");
 
-            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
             when(parentRepo.findById(inputId)).thenReturn(Optional.of(existingParent));
+            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
             when(parentRepo.existsByCpfAndIdNot("98765432100", inputId)).thenReturn(false);
             when(parentRepo.existsByEmailAndIdNot("maria.atualizada@email.com", inputId)).thenReturn(false);
             when(parentMapper.convertToDto(existingParent)).thenReturn(expected);
@@ -236,8 +236,8 @@ class ParentServiceTest {
             Parent mappedParent = parent(SECOND_PARENT_ID, "Maria Souza Atualizada", "maria.atualizada@email.com", "11988887777", "98765432100");
             Parent existingParent = parent(inputId, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
-            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
             when(parentRepo.findById(inputId)).thenReturn(Optional.of(existingParent));
+            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
             when(parentRepo.existsByCpfAndIdNot("98765432100", inputId)).thenReturn(true);
 
             // Act + Assert
@@ -260,8 +260,8 @@ class ParentServiceTest {
             Parent mappedParent = parent(SECOND_PARENT_ID, "Maria Souza Atualizada", "maria.atualizada@email.com", "11988887777", "98765432100");
             Parent existingParent = parent(inputId, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
-            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
             when(parentRepo.findById(inputId)).thenReturn(Optional.of(existingParent));
+            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
             when(parentRepo.existsByCpfAndIdNot("98765432100", inputId)).thenReturn(false);
             when(parentRepo.existsByEmailAndIdNot("maria.atualizada@email.com", inputId)).thenReturn(true);
 
@@ -282,9 +282,7 @@ class ParentServiceTest {
             // Arrange
             UUID inputId = MISSING_PARENT_ID;
             ParentRequestDTO input = request("Maria Souza Atualizada", "maria.atualizada@email.com", "(11) 98888-7777", "987.654.321-00");
-            Parent mappedParent = parent(SECOND_PARENT_ID, "Maria Souza Atualizada", "maria.atualizada@email.com", "11988887777", "98765432100");
 
-            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
             when(parentRepo.findById(inputId)).thenReturn(Optional.empty());
 
             // Act + Assert
@@ -292,8 +290,8 @@ class ParentServiceTest {
                     .isInstanceOf(ParentNotFoundException.class)
                     .hasMessage("Responsável não encontrado no banco de dados");
 
-            verify(parentMapper).convertToEntity(input);
             verify(parentRepo).findById(inputId);
+            verify(parentMapper, never()).convertToEntity(any());
             verify(parentRepo, never()).existsByCpfAndIdNot(any(), any());
             verify(parentMapper, never()).convertToDto(any());
         }

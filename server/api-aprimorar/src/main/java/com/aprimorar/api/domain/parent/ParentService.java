@@ -87,7 +87,7 @@ public class ParentService {
     public ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO request) {
         Parent parent = findParentOrThrow(parentId);
         Parent updatedParentData = parentMapper.convertToEntity(request);
-        ensureParentUniquenessForUpdate(parent, parentId);
+        ensureParentUniquenessForUpdate(updatedParentData, parentId);
 
         parent.setName(updatedParentData.getName());
         parent.setEmail(updatedParentData.getEmail());
@@ -136,11 +136,11 @@ public class ParentService {
     }
 
     private void ensureParentUniqueness(Parent parent) {
-        if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parent.getId())) {
+        if (parentRepo.existsByCpf(parent.getCpf())) {
             throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
         }
 
-        if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parent.getId())) {
+        if (parentRepo.existsByEmail(parent.getEmail())) {
             throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
     }

@@ -111,15 +111,6 @@ public class Event extends BaseEntity {
             throw new InvalidEventException("Data de fim do evento não pode ser anterior a data de inicio");
         }
 
-        if (this.endDate.isBefore(LocalDateTime.now())) {
-            throw new InvalidEventException("Data de fim do evento não pode estar no passado");
-        }
-
-        if ( LocalDateTime.now().isAfter(this.endDate.plusDays(20))) {
-            throw new NotAllowedToUpdateEventException(
-                "A janela de 20 dias para editar as informações do evento encerrou"
-            );
-        }
         this.endDate = endDate;
     }
 
@@ -182,5 +173,36 @@ public class Event extends BaseEntity {
             throw new InvalidEventException("Um evento não pode existir sem um colaborador");
         }
         this.employee = employee;
+    }
+
+    public void validateForCreation() {
+        validateCommonRules();
+        if (this.endDate != null && this.endDate.isBefore(LocalDateTime.now())) {
+            throw new InvalidEventException("Data de fim do evento não pode estar no passado");
+        }
+    }
+
+    public void validateForUpdate() {
+        validateCommonRules();
+    }
+
+    private void validateCommonRules() {
+        setTitle(this.title);
+        setDescription(this.description);
+        setStartDate(this.startDate);
+        setEndDateTime(this.endDate);
+        setPrice(this.price);
+        setPayment(this.payment);
+        setContent(this.content);
+        setStudent(this.student);
+        setEmployee(this.employee);
+    }
+
+    public void validateEditWindow() {
+        if (this.endDate != null && LocalDateTime.now().isAfter(this.endDate.plusDays(20))) {
+            throw new NotAllowedToUpdateEventException(
+                "A janela de 20 dias para editar as informações do evento encerrou"
+            );
+        }
     }
 }
