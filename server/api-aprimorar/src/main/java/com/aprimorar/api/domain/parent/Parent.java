@@ -67,10 +67,4 @@ public class Parent extends BaseEntity {
         }
         this.cpf = cpf;
     }
-    public void validate() {
-        setName(this.name);
-        setContact(this.contact);
-        setEmail(this.email);
-        setCpf(this.cpf);
-    }
 }

@@ -22,22 +22,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Centraliza as regras de negócio do colaborador.
- *
- * <p>
- * Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
- * Também é esse service que garante que CPF e email não se repitam antes de
- * salvar ou atualizar um colaborador.
- *
- * <p>
- * Quando um colaborador é alterado, o service aplica as validações do domínio,
- * resolve conflitos de unicidade e devolve a resposta em formato DTO.
- *
- * @author scarpellini
- * @version 1.0
- * @since 2026-03-14
- */
 @Service
 public class EmployeeService {
 
@@ -97,7 +81,6 @@ public class EmployeeService {
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
         Employee employee = employeeMapper.convertToEntity(employeeRequestDto);
 
-        EmployeeRules.validate(employee);
         validateEmployeeUniquenessForCreate(employee.getCpf(), employee.getEmail());
 
         Employee savedEmployee = employeeRepo.save(employee);
@@ -120,7 +103,6 @@ public class EmployeeService {
         oldEmployee.setCpf(newEmployee.getCpf());
         oldEmployee.setEmail(newEmployee.getEmail());
         oldEmployee.setDuty(newEmployee.getDuty());
-        EmployeeRules.validate(oldEmployee);
 
         log.info("Colaborador {} atualizado com sucesso.", oldEmployee.getName().toUpperCase());
         return employeeMapper.convertToDto(oldEmployee);

@@ -97,10 +97,8 @@ public class StudentService {
         ensureStudentUniqueness(student);
         ensureParentUniqueness(parent);
 
-        parent.validate();
 
         student.setParent(student.getParent());
-        student.validate();
 
         Student savedStudent = studentRepo.save(student);
 
@@ -123,8 +121,6 @@ public class StudentService {
         Parent updatedParentData = updatedStudentData.getParent();
 
         ensureParentUniquenessForUpdate(updatedParentData, parent.getId());
-        updatedParentData.validate();
-        updatedStudentData.validate();
 
         parent.setName(updatedParentData.getName());
         parent.setContact(updatedParentData.getContact());
@@ -214,7 +210,7 @@ public class StudentService {
             throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
     }
-
+  //TODO: Será que vale a pena jogar alguns dos helper methods pra dentro dos methods para melhorar a legibilidade?
     private void ensureParentUniquenessForUpdate(Parent parent, UUID parentId) {
         if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parentId)) {
             throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");

@@ -1,9 +1,16 @@
 package com.aprimorar.api.domain.employee;
+
 import java.time.LocalDate;
 
+import com.aprimorar.api.domain.employee.exception.InvalidEmployeeException;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.shared.BaseEntity;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_employees")
@@ -31,14 +38,16 @@ public class Employee extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Duty duty;
 
-    public Employee() {
-    }
+    public Employee() {}
 
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new InvalidEmployeeException("Nome do colaborador não pode estar vazio");
+        }
         this.name = name;
     }
 
@@ -47,6 +56,9 @@ public class Employee extends BaseEntity {
     }
 
     public void setBirthdate(LocalDate birthdate) {
+        if (birthdate == null) {
+            throw new InvalidEmployeeException("A data de nascimento do colaborador não pode estar vazia");
+        }
         this.birthdate = birthdate;
     }
 
@@ -63,6 +75,9 @@ public class Employee extends BaseEntity {
     }
 
     public void setContact(String contact) {
+        if (contact == null || contact.isBlank()) {
+            throw new InvalidEmployeeException("Contato do colaborador não pode estar vazio");
+        }
         this.contact = contact;
     }
 
@@ -71,6 +86,9 @@ public class Employee extends BaseEntity {
     }
 
     public void setCpf(String cpf) {
+        if (cpf == null || cpf.isBlank()) {
+            throw new InvalidEmployeeException("CPF do colaborador não pode estar vazio");
+        }
         this.cpf = cpf;
     }
 
@@ -79,6 +97,9 @@ public class Employee extends BaseEntity {
     }
 
     public void setEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new InvalidEmployeeException("Email do colaborador não pode estar vazio");
+        }
         this.email = email;
     }
 

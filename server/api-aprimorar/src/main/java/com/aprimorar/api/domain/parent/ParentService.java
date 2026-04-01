@@ -77,7 +77,6 @@ public class ParentService {
         Parent parent = parentMapper.convertToEntity(parentRequestDto);
 
         ensureParentUniqueness(parent);
-        parent.validate();
         Parent savedParent = parentRepo.save(parent);
 
         log.info("Responsável {} cadastrado com sucesso.", savedParent.getName().toUpperCase());
@@ -94,7 +93,6 @@ public class ParentService {
         parent.setEmail(updatedParentData.getEmail());
         parent.setContact(updatedParentData.getContact());
         parent.setCpf(updatedParentData.getCpf());
-        parent.validate();
 
         log.info("Responsável {} atualizado com sucesso.", updatedParentData.getName().toUpperCase());
         return parentMapper.convertToDto(parent);

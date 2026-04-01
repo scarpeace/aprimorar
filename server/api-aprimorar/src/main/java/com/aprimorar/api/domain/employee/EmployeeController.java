@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +54,7 @@ public class EmployeeController{
     @Operation(operationId = "getEmployees", description = "Retorna uma lista paginada de colaboradores.")
     @ApiResponse(responseCode = "200", description = "Lista de colaboradores retornada com sucesso.")
     public ResponseEntity<PageDTO<EmployeeResponseDTO>> getEmployees(
-            @ParameterObject @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
             @RequestParam(required = false) String search) {
 
         PageDTO<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search);
@@ -67,6 +65,7 @@ public class EmployeeController{
     @Operation(operationId = "getEmployeeOptions", description = "Retorna uma lista de opções de colaboradores.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
     public ResponseEntity<List<EmployeeOptionsDTO>> getEmployeeOptions() {
+
         List<EmployeeOptionsDTO> options = employeeService.getEmployeeOptions();
         return ResponseEntity.ok(options);
     }

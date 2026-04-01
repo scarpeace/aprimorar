@@ -13,6 +13,7 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,7 +51,7 @@ public class StudentController {
     @Operation(operationId = "getStudents", description = "Retorna uma lista paginada de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
     public ResponseEntity<PageDTO<StudentResponseDTO>> getStudents(
-        @ParameterObject Pageable pageable,
+        @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
         @RequestParam(required = false) String search,
         @RequestParam(required = false) Boolean archived
     ) {
