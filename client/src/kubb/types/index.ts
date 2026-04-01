@@ -8,15 +8,19 @@ export type {
 } from "./AddressResponseDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
-export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
 export type {
-  EmployeeRequestDTO,
-  EmployeeRequestDTODutyEnumKey,
-} from "./EmployeeRequestDTO.ts";
+  EmployeeCreateDTO,
+  EmployeeCreateDTODutyEnumKey,
+} from "./EmployeeCreateDTO.ts";
+export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
 export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./EmployeeResponseDTO.ts";
+export type {
+  EmployeeUpdateDTO,
+  EmployeeUpdateDTODutyEnumKey,
+} from "./EmployeeUpdateDTO.ts";
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
@@ -26,24 +30,20 @@ export type { PageDTOEmployeeResponseDTO } from "./PageDTOEmployeeResponseDTO.ts
 export type { PageDTOEventResponseDTO } from "./PageDTOEventResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./PageDTOStudentResponseDTO.ts";
+export type { ParentCreateDTO } from "./ParentCreateDTO.ts";
 export type { ParentOptionsDTO } from "./ParentOptionsDTO.ts";
-export type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
-export type {
-  ProblemResponseDTO,
-  ProblemResponseDTOErrorCodeEnumKey,
-  ProblemResponseDTOStatusEnumKey,
-} from "./ProblemResponseDTO.ts";
+export type { ParentUpdateDTO } from "./ParentUpdateDTO.ts";
+export type { StudentCreateDTO } from "./StudentCreateDTO.ts";
 export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
-export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
+export type { StudentUpdateDTO } from "./StudentUpdateDTO.ts";
 export type {
   GetDashboardSummary200,
-  GetDashboardSummary400,
   GetDashboardSummaryQuery,
   GetDashboardSummaryQueryParams,
   GetDashboardSummaryQueryResponse,
-} from "./dashboard/GetDashboardSummary.ts";
+} from "./dashboard-controller/GetDashboardSummary.ts";
 export type {
   ArchiveEmployee204,
   ArchiveEmployeeMutation,
@@ -222,8 +222,7 @@ export type {
 } from "./student/UpdateStudent.ts";
 export { addressRequestDTOStateEnum } from "./AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./AddressResponseDTO.ts";
-export { employeeRequestDTODutyEnum } from "./EmployeeRequestDTO.ts";
+export { employeeCreateDTODutyEnum } from "./EmployeeCreateDTO.ts";
 export { employeeResponseDTODutyEnum } from "./EmployeeResponseDTO.ts";
+export { employeeUpdateDTODutyEnum } from "./EmployeeUpdateDTO.ts";
 export { eventRequestDTOContentEnum } from "./EventRequestDTO.ts";
-export { problemResponseDTOErrorCodeEnum } from "./ProblemResponseDTO.ts";
-export { problemResponseDTOStatusEnum } from "./ProblemResponseDTO.ts";

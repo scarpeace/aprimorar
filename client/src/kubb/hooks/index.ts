@@ -1,4 +1,4 @@
-export type { GetDashboardSummaryQueryKey } from "./dashboard/useGetDashboardSummary.ts";
+export type { GetDashboardSummaryQueryKey } from "./dashboard-controller/useGetDashboardSummary.ts";
 export type { ArchiveEmployeeMutationKey } from "./employee/useArchiveEmployee.ts";
 export type { CreateEmployeeMutationKey } from "./employee/useCreateEmployee.ts";
 export type { DeleteEmployeeMutationKey } from "./employee/useDeleteEmployee.ts";
@@ -28,10 +28,10 @@ export type { GetStudentsByParentQueryKey } from "./student/useGetStudentsByPare
 export type { GetStudentsOptionsQueryKey } from "./student/useGetStudentsOptions.ts";
 export type { UnarchiveStudentMutationKey } from "./student/useUnarchiveStudent.ts";
 export type { UpdateStudentMutationKey } from "./student/useUpdateStudent.ts";
-export { getDashboardSummary } from "./dashboard/useGetDashboardSummary.ts";
-export { getDashboardSummaryQueryKey } from "./dashboard/useGetDashboardSummary.ts";
-export { getDashboardSummaryQueryOptions } from "./dashboard/useGetDashboardSummary.ts";
-export { useGetDashboardSummary } from "./dashboard/useGetDashboardSummary.ts";
+export { getDashboardSummary } from "./dashboard-controller/useGetDashboardSummary.ts";
+export { getDashboardSummaryQueryKey } from "./dashboard-controller/useGetDashboardSummary.ts";
+export { getDashboardSummaryQueryOptions } from "./dashboard-controller/useGetDashboardSummary.ts";
+export { useGetDashboardSummary } from "./dashboard-controller/useGetDashboardSummary.ts";
 export { archiveEmployee } from "./employee/useArchiveEmployee.ts";
 export { archiveEmployeeMutationKey } from "./employee/useArchiveEmployee.ts";
 export { archiveEmployeeMutationOptions } from "./employee/useArchiveEmployee.ts";

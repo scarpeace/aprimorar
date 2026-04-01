@@ -4,12 +4,12 @@
  */
 
 import type { AddressRequestDTO } from "./AddressRequestDTO.ts";
-import type { ParentRequestDTO } from "./ParentRequestDTO.ts";
+import type { ParentCreateDTO } from "./ParentCreateDTO.ts";
 
 /**
  * @description Formato de payload para o cadastro e/ou update de um aluno
  */
-export type StudentRequestDTO = {
+export type StudentCreateDTO = {
   /**
    * @description Nome do aluno
    * @minLength 1
@@ -54,5 +54,5 @@ export type StudentRequestDTO = {
    * @description Formato de payload para o cadastro e/ou update de um aluno
    * @type object
    */
-  parent: ParentRequestDTO;
+  parent: ParentCreateDTO;
 };

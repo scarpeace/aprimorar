@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { StudentRequestDTO } from "../StudentRequestDTO.ts";
+import type { StudentCreateDTO } from "../StudentCreateDTO.ts";
 import type { StudentResponseDTO } from "../StudentResponseDTO.ts";
 
 /**
@@ -11,7 +11,7 @@ import type { StudentResponseDTO } from "../StudentResponseDTO.ts";
  */
 export type CreateStudent201 = StudentResponseDTO;
 
-export type CreateStudentMutationRequest = StudentRequestDTO;
+export type CreateStudentMutationRequest = StudentCreateDTO;
 
 export type CreateStudentMutationResponse = CreateStudent201;
 

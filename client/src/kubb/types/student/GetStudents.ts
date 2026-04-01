@@ -16,7 +16,7 @@ export type GetStudentsQueryParams = {
   /**
    * @description The size of the page to be returned
    * @minLength 1
-   * @default 20
+   * @default 10
    * @type integer | undefined
    */
   size?: number;

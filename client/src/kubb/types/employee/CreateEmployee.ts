@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { EmployeeRequestDTO } from "../EmployeeRequestDTO.ts";
+import type { EmployeeCreateDTO } from "../EmployeeCreateDTO.ts";
 import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
 
 /**
@@ -11,7 +11,7 @@ import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
  */
 export type CreateEmployee201 = EmployeeResponseDTO;
 
-export type CreateEmployeeMutationRequest = EmployeeRequestDTO;
+export type CreateEmployeeMutationRequest = EmployeeCreateDTO;
 
 export type CreateEmployeeMutationResponse = CreateEmployee201;
 

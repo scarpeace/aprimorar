@@ -4,7 +4,6 @@
  */
 
 import type { DashboardSummaryResponseDTO } from "../DashboardSummaryResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetDashboardSummaryQueryParams = {
   /**
@@ -20,19 +19,14 @@ export type GetDashboardSummaryQueryParams = {
 };
 
 /**
- * @description Resumo do dashboard obtido com sucesso
+ * @description Payload do dashboard retornado com sucesso.
  */
 export type GetDashboardSummary200 = DashboardSummaryResponseDTO;
-
-/**
- * @description Requisição inválida
- */
-export type GetDashboardSummary400 = ProblemResponseDTO;
 
 export type GetDashboardSummaryQueryResponse = GetDashboardSummary200;
 
 export type GetDashboardSummaryQuery = {
   Response: GetDashboardSummary200;
   QueryParams: GetDashboardSummaryQueryParams;
-  Errors: GetDashboardSummary400;
+  Errors: any;
 };

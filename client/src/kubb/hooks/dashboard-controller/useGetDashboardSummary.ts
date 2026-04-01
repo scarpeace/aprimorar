@@ -7,8 +7,7 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetDashboardSummaryQueryResponse,
   GetDashboardSummaryQueryParams,
-  GetDashboardSummary400,
-} from "../../types/dashboard/GetDashboardSummary.ts";
+} from "../../types/dashboard-controller/GetDashboardSummary.ts";
 import type {
   Client,
   RequestConfig,
@@ -31,8 +30,7 @@ export type GetDashboardSummaryQueryKey = ReturnType<
 >;
 
 /**
- * @description Retorna KPIs mensais (alunos ativos, aulas, receita, custo), distribuição por tipo de conteúdo e ponteiros de navegação para o mês anterior e próximo.
- * @summary Obter resumo do dashboard
+ * @description Retorna os indicadores e KPI's do dashboard.
  * {@link /v1/dashboard/summary}
  */
 export async function getDashboardSummary(
@@ -43,7 +41,7 @@ export async function getDashboardSummary(
 
   const res = await request<
     GetDashboardSummaryQueryResponse,
-    ResponseErrorConfig<GetDashboardSummary400>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
@@ -62,7 +60,7 @@ export function getDashboardSummaryQueryOptions(
   const queryKey = getDashboardSummaryQueryKey(params);
   return queryOptions<
     GetDashboardSummaryQueryResponse,
-    ResponseErrorConfig<GetDashboardSummary400>,
+    ResponseErrorConfig<Error>,
     GetDashboardSummaryQueryResponse,
     typeof queryKey
   >({
@@ -78,8 +76,7 @@ export function getDashboardSummaryQueryOptions(
 }
 
 /**
- * @description Retorna KPIs mensais (alunos ativos, aulas, receita, custo), distribuição por tipo de conteúdo e ponteiros de navegação para o mês anterior e próximo.
- * @summary Obter resumo do dashboard
+ * @description Retorna os indicadores e KPI's do dashboard.
  * {@link /v1/dashboard/summary}
  */
 export function useGetDashboardSummary<
@@ -92,7 +89,7 @@ export function useGetDashboardSummary<
     query?: Partial<
       QueryObserverOptions<
         GetDashboardSummaryQueryResponse,
-        ResponseErrorConfig<GetDashboardSummary400>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -113,7 +110,7 @@ export function useGetDashboardSummary<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<GetDashboardSummary400>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
     queryKey: TQueryKey;
   };
 

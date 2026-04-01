@@ -6,7 +6,7 @@
 /**
  * @description Formato de payload para o cadastro e/ou update de um aluno
  */
-export type ParentRequestDTO = {
+export type ParentUpdateDTO = {
   /**
    * @description Nome do responsável
    * @minLength 1
@@ -25,10 +25,4 @@ export type ParentRequestDTO = {
    * @type string
    */
   contact: string;
-  /**
-   * @description CPF do responsável
-   * @minLength 1
-   * @type string
-   */
-  cpf: string;
 };

@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export const employeeRequestDTODutyEnum = {
+export const employeeCreateDTODutyEnum = {
   TEACHER: "TEACHER",
   ADM: "ADM",
   THERAPIST: "THERAPIST",
@@ -11,10 +11,10 @@ export const employeeRequestDTODutyEnum = {
   SYSTEM: "SYSTEM",
 } as const;
 
-export type EmployeeRequestDTODutyEnumKey =
-  (typeof employeeRequestDTODutyEnum)[keyof typeof employeeRequestDTODutyEnum];
+export type EmployeeCreateDTODutyEnumKey =
+  (typeof employeeCreateDTODutyEnum)[keyof typeof employeeCreateDTODutyEnum];
 
-export type EmployeeRequestDTO = {
+export type EmployeeCreateDTO = {
   /**
    * @minLength 1
    * @type string
@@ -49,5 +49,5 @@ export type EmployeeRequestDTO = {
   /**
    * @type string
    */
-  duty: EmployeeRequestDTODutyEnumKey;
+  duty: EmployeeCreateDTODutyEnumKey;
 };
