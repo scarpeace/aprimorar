@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 
 import com.aprimorar.api.domain.address.AddressMapper;
 import com.aprimorar.api.domain.parent.ParentMapper;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentCreateDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentUpdateDTO;
 import com.aprimorar.api.shared.MapperUtils;
 
 @Component
@@ -29,7 +30,7 @@ public class StudentMapper {
         this.parentMapper = parentMapper;
     }
 
-    public Student convertToEntity(StudentRequestDTO dto) {
+    public Student convertToEntityForCreate(StudentCreateDTO dto) {
         Student student = new Student();
 
         student.setName(dto.name());
@@ -39,7 +40,21 @@ public class StudentMapper {
         student.setContact(MapperUtils.normalizeContact(dto.contact()));
         student.setEmail(MapperUtils.normalizeEmail(dto.email()));
         student.setAddress(addressMapper.convertToEntity(dto.address()));
-        student.setParent(parentMapper.convertToEntity(dto.parent()));
+        student.setParent(parentMapper.convertToEntityForCreate(dto.parent()));
+
+        return student;
+    }
+
+public Student convertToEntityForUpdate(StudentUpdateDTO dto) {
+        Student student = new Student();
+
+        student.setName(dto.name());
+        student.setBirthdate(dto.birthdate());
+        student.setSchool(dto.school());
+        student.setContact(MapperUtils.normalizeContact(dto.contact()));
+        student.setEmail(MapperUtils.normalizeEmail(dto.email()));
+        student.setAddress(addressMapper.convertToEntity(dto.address()));
+        student.setParent(parentMapper.convertToEntityForUpdate(dto.parent()));
 
         return student;
     }

@@ -3,30 +3,22 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
-
 export type UnarchiveEmployeePathParams = {
   /**
-   * @description ID do funcionário
    * @type string, uuid
    */
   employeeId: string;
 };
 
 /**
- * @description Funcionário desarquivado com sucesso
+ * @description Colaborador desarquivado com sucesso.
  */
 export type UnarchiveEmployee204 = any;
-
-/**
- * @description Requisição inválida
- */
-export type UnarchiveEmployee400 = ProblemResponseDTO;
 
 export type UnarchiveEmployeeMutationResponse = UnarchiveEmployee204;
 
 export type UnarchiveEmployeeMutation = {
   Response: UnarchiveEmployee204;
   PathParams: UnarchiveEmployeePathParams;
-  Errors: UnarchiveEmployee400;
+  Errors: any;
 };

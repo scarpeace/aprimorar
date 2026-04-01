@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentCreateDTO;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -54,12 +54,10 @@ class GlobalExceptionHandlerTest {
     void shouldReturnProblemDetailForNotFoundExceptions() throws Exception {
         mockMvc.perform(get("/test-errors/not-found"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.title").value("Recurso não encontrado"))
-                .andExpect(jsonPath("$.detail").value("Aluno não encontrado no banco de dados"))
-                .andExpect(jsonPath("$.instance").value("/test-errors/not-found"))
-                .andExpect(jsonPath("$.code").value(ErrorCode.RESOURCE_NOT_FOUND.name()))
-                .andExpect(jsonPath("$.timestamp").value(FIXED_INSTANT.toString()));
+                .andExpect(jsonPath("$.status").value("NOT_FOUND"))
+                .andExpect(jsonPath("$.message").value("Aluno não encontrado no banco de dados"))
+                .andExpect(jsonPath("$.uri").value("/test-errors/not-found"))
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.RESOURCE_NOT_FOUND.name()));
     }
 
     @Test
@@ -67,12 +65,10 @@ class GlobalExceptionHandlerTest {
     void shouldReturnProblemDetailForConflictExceptions() throws Exception {
         mockMvc.perform(post("/test-errors/conflict"))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.status").value(409))
-                .andExpect(jsonPath("$.title").value("Conflito de negócio"))
-                .andExpect(jsonPath("$.detail").value("Responsável já existe no banco de dados"))
-                .andExpect(jsonPath("$.instance").value("/test-errors/conflict"))
-                .andExpect(jsonPath("$.code").value(ErrorCode.BUSINESS_ERROR.name()))
-                .andExpect(jsonPath("$.timestamp").value(FIXED_INSTANT.toString()));
+                .andExpect(jsonPath("$.status").value("CONFLICT"))
+                .andExpect(jsonPath("$.message").value("Responsável já existe no banco de dados"))
+                .andExpect(jsonPath("$.uri").value("/test-errors/conflict"))
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.CONFLICT.name()));
     }
 
     @Test
@@ -101,12 +97,10 @@ class GlobalExceptionHandlerTest {
                                 }
                                 """))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.title").value("Falha de validação"))
-                .andExpect(jsonPath("$.detail").value("Nome do estudante é obrigatório"))
-                .andExpect(jsonPath("$.instance").value("/test-errors/validation"))
-                .andExpect(jsonPath("$.code").value(ErrorCode.VALIDATION_ERROR.name()))
-                .andExpect(jsonPath("$.timestamp").value(FIXED_INSTANT.toString()));
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.message").value("Nome do aluno é obrigatório"))
+                .andExpect(jsonPath("$.uri").value("/test-errors/validation"))
+                .andExpect(jsonPath("$.errorCode").value(ErrorCode.VALIDATION_ERROR.name()));
     }
 
     @RestController
@@ -124,7 +118,7 @@ class GlobalExceptionHandlerTest {
         }
 
         @PostMapping("/validation")
-        void validation(@Valid @RequestBody StudentRequestDTO request) {
+        void validation(@Valid @RequestBody StudentCreateDTO request) {
             // Validation is handled before this method is reached.
         }
     }

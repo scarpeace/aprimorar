@@ -7,7 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetEmployeesQueryResponse,
   GetEmployeesQueryParams,
-  GetEmployees400,
 } from "../../types/employee/GetEmployees.ts";
 import type {
   Client,
@@ -28,8 +27,7 @@ export const getEmployeesQueryKey = (params?: GetEmployeesQueryParams) =>
 export type GetEmployeesQueryKey = ReturnType<typeof getEmployeesQueryKey>;
 
 /**
- * @description Retorna todos os funcionários do banco de dados com paginação.
- * @summary Listar funcionários
+ * @description Retorna uma lista paginada de colaboradores.
  * {@link /v1/employees}
  */
 export async function getEmployees(
@@ -40,7 +38,7 @@ export async function getEmployees(
 
   const res = await request<
     GetEmployeesQueryResponse,
-    ResponseErrorConfig<GetEmployees400>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
@@ -59,7 +57,7 @@ export function getEmployeesQueryOptions(
   const queryKey = getEmployeesQueryKey(params);
   return queryOptions<
     GetEmployeesQueryResponse,
-    ResponseErrorConfig<GetEmployees400>,
+    ResponseErrorConfig<Error>,
     GetEmployeesQueryResponse,
     typeof queryKey
   >({
@@ -74,8 +72,7 @@ export function getEmployeesQueryOptions(
 }
 
 /**
- * @description Retorna todos os funcionários do banco de dados com paginação.
- * @summary Listar funcionários
+ * @description Retorna uma lista paginada de colaboradores.
  * {@link /v1/employees}
  */
 export function useGetEmployees<
@@ -88,7 +85,7 @@ export function useGetEmployees<
     query?: Partial<
       QueryObserverOptions<
         GetEmployeesQueryResponse,
-        ResponseErrorConfig<GetEmployees400>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -108,7 +105,7 @@ export function useGetEmployees<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<GetEmployees400>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
     queryKey: TQueryKey;
   };
 

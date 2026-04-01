@@ -7,7 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetParentsQueryResponse,
   GetParentsQueryParams,
-  GetParents400,
 } from "../../types/parent/GetParents.ts";
 import type {
   Client,
@@ -28,8 +27,7 @@ export const getParentsQueryKey = (params?: GetParentsQueryParams) =>
 export type GetParentsQueryKey = ReturnType<typeof getParentsQueryKey>;
 
 /**
- * @description Lista todos os responsáveis cadastrados.
- * @summary Listar responsáveis
+ * @description Retorna uma lista de responsáveis paginada
  * {@link /v1/parents}
  */
 export async function getParents(
@@ -40,7 +38,7 @@ export async function getParents(
 
   const res = await request<
     GetParentsQueryResponse,
-    ResponseErrorConfig<GetParents400>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
@@ -59,7 +57,7 @@ export function getParentsQueryOptions(
   const queryKey = getParentsQueryKey(params);
   return queryOptions<
     GetParentsQueryResponse,
-    ResponseErrorConfig<GetParents400>,
+    ResponseErrorConfig<Error>,
     GetParentsQueryResponse,
     typeof queryKey
   >({
@@ -71,8 +69,7 @@ export function getParentsQueryOptions(
 }
 
 /**
- * @description Lista todos os responsáveis cadastrados.
- * @summary Listar responsáveis
+ * @description Retorna uma lista de responsáveis paginada
  * {@link /v1/parents}
  */
 export function useGetParents<
@@ -85,7 +82,7 @@ export function useGetParents<
     query?: Partial<
       QueryObserverOptions<
         GetParentsQueryResponse,
-        ResponseErrorConfig<GetParents400>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -105,7 +102,7 @@ export function useGetParents<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<GetParents400>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
     queryKey: TQueryKey;
   };
 

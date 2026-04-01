@@ -7,7 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   UnarchiveEmployeeMutationResponse,
   UnarchiveEmployeePathParams,
-  UnarchiveEmployee400,
 } from "../../types/employee/UnarchiveEmployee.ts";
 import type {
   Client,
@@ -29,8 +28,7 @@ export type UnarchiveEmployeeMutationKey = ReturnType<
 >;
 
 /**
- * @description Desarquiva um funcionário com base no ID fornecido.
- * @summary Desarquivar funcionário
+ * @description Desarquiva um colaborador por ID.
  * {@link /v1/employees/:employeeId/unarchive}
  */
 export async function unarchiveEmployee(
@@ -41,7 +39,7 @@ export async function unarchiveEmployee(
 
   const res = await request<
     UnarchiveEmployeeMutationResponse,
-    ResponseErrorConfig<UnarchiveEmployee400>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "PATCH",
@@ -58,7 +56,7 @@ export function unarchiveEmployeeMutationOptions<TContext = unknown>(
   const mutationKey = unarchiveEmployeeMutationKey();
   return mutationOptions<
     UnarchiveEmployeeMutationResponse,
-    ResponseErrorConfig<UnarchiveEmployee400>,
+    ResponseErrorConfig<Error>,
     { employeeId: UnarchiveEmployeePathParams["employeeId"] },
     TContext
   >({
@@ -70,15 +68,14 @@ export function unarchiveEmployeeMutationOptions<TContext = unknown>(
 }
 
 /**
- * @description Desarquiva um funcionário com base no ID fornecido.
- * @summary Desarquivar funcionário
+ * @description Desarquiva um colaborador por ID.
  * {@link /v1/employees/:employeeId/unarchive}
  */
 export function useUnarchiveEmployee<TContext>(
   options: {
     mutation?: UseMutationOptions<
       UnarchiveEmployeeMutationResponse,
-      ResponseErrorConfig<UnarchiveEmployee400>,
+      ResponseErrorConfig<Error>,
       { employeeId: UnarchiveEmployeePathParams["employeeId"] },
       TContext
     > & { client?: QueryClient };
@@ -94,14 +91,14 @@ export function useUnarchiveEmployee<TContext>(
     config,
   ) as UseMutationOptions<
     UnarchiveEmployeeMutationResponse,
-    ResponseErrorConfig<UnarchiveEmployee400>,
+    ResponseErrorConfig<Error>,
     { employeeId: UnarchiveEmployeePathParams["employeeId"] },
     TContext
   >;
 
   return useMutation<
     UnarchiveEmployeeMutationResponse,
-    ResponseErrorConfig<UnarchiveEmployee400>,
+    ResponseErrorConfig<Error>,
     { employeeId: UnarchiveEmployeePathParams["employeeId"] },
     TContext
   >(
@@ -113,7 +110,7 @@ export function useUnarchiveEmployee<TContext>(
     queryClient,
   ) as UseMutationResult<
     UnarchiveEmployeeMutationResponse,
-    ResponseErrorConfig<UnarchiveEmployee400>,
+    ResponseErrorConfig<Error>,
     { employeeId: UnarchiveEmployeePathParams["employeeId"] },
     TContext
   >;

@@ -3,29 +3,22 @@
  * Do not edit manually.
  */
 
-import type { EmployeeRequestDTO } from "../EmployeeRequestDTO.ts";
 import type { EmployeeResponseDTO } from "../EmployeeResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
+import type { EmployeeUpdateDTO } from "../EmployeeUpdateDTO.ts";
 
 export type UpdateEmployeePathParams = {
   /**
-   * @description ID do funcionário
    * @type string, uuid
    */
   employeeId: string;
 };
 
 /**
- * @description Funcionário atualizado com sucesso
+ * @description Colaborador atualizado com sucesso.
  */
 export type UpdateEmployee200 = EmployeeResponseDTO;
 
-/**
- * @description Requisição inválida
- */
-export type UpdateEmployee400 = ProblemResponseDTO;
-
-export type UpdateEmployeeMutationRequest = EmployeeRequestDTO;
+export type UpdateEmployeeMutationRequest = EmployeeUpdateDTO;
 
 export type UpdateEmployeeMutationResponse = UpdateEmployee200;
 
@@ -33,5 +26,5 @@ export type UpdateEmployeeMutation = {
   Response: UpdateEmployee200;
   Request: UpdateEmployeeMutationRequest;
   PathParams: UpdateEmployeePathParams;
-  Errors: UpdateEmployee400;
+  Errors: any;
 };

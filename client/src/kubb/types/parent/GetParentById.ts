@@ -4,30 +4,24 @@
  */
 
 import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetParentByIdPathParams = {
   /**
-   * @description ID do responsável
    * @type string, uuid
    */
   parentId: string;
 };
 
 /**
- * @description Responsável listado com sucesso
+ * @description Responsável retornado com sucesso
+ * @example Parent Name
  */
 export type GetParentById200 = ParentResponseDTO;
-
-/**
- * @description Requisição inválida
- */
-export type GetParentById400 = ProblemResponseDTO;
 
 export type GetParentByIdQueryResponse = GetParentById200;
 
 export type GetParentByIdQuery = {
   Response: GetParentById200;
   PathParams: GetParentByIdPathParams;
-  Errors: GetParentById400;
+  Errors: any;
 };

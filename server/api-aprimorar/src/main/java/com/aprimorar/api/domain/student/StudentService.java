@@ -2,18 +2,17 @@ package com.aprimorar.api.domain.student;
 
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.ParentRules;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
 import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentCreateDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentUpdateDTO;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.domain.student.repository.StudentSpecifications;
 import com.aprimorar.api.shared.PageDTO;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -61,8 +60,8 @@ public class StudentService {
             spec = spec.and(StudentSpecifications.searchContainsIgnoreCase(search.trim()));
         }
 
-        Page<Student> page = studentRepo.findAll(spec, pageable);
-        Page<StudentResponseDTO> studentsDtoPage = page.map(studentMapper::convertToDto);
+        Page<Student> studentPage = studentRepo.findAll(spec, pageable);
+        Page<StudentResponseDTO> studentsDtoPage = studentPage.map(studentMapper::convertToDto);
 
         return new PageDTO<>(studentsDtoPage);
     }
@@ -92,13 +91,16 @@ public class StudentService {
 
     /* ----- Command Methods ----- */
     @Transactional
-    public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
-        Student student = studentMapper.convertToEntity(studentRequestDto);
+    public StudentResponseDTO createStudent(StudentCreateDTO studentRequestDto) {
+        Student student = studentMapper.convertToEntityForCreate(studentRequestDto);
+        Parent parent = student.getParent();
 
         ensureStudentUniqueness(student);
-        ensureParentUniqueness(student.getParent());
+        ensureParentUniqueness(parent);
+
 
         student.setParent(student.getParent());
+
         Student savedStudent = studentRepo.save(student);
 
         log.info("Aluno {} cadastrado com sucesso.", savedStudent.getName().toUpperCase());
@@ -106,37 +108,34 @@ public class StudentService {
     }
 
     @Transactional
-    public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO dto) {
+    public StudentResponseDTO updateStudent(UUID id, StudentUpdateDTO dto) {
         if (GHOST_STUDENT_ID.equals(id)) {
             throw new IllegalArgumentException("Não é possível modificar o registro de sistema 'Aluno Removido'.");
         }
 
-        Student entity = findStudentOrThrow(id);
-        Student updatedData = studentMapper.convertToEntity(dto);
+        Student student = findStudentOrThrow(id);
+        Student updatedStudentData = studentMapper.convertToEntityForUpdate(dto);
 
-        ensureStudentUniquenessForUpdate(updatedData, id);
+        ensureStudentUniquenessForUpdate(updatedStudentData, id);
 
-        Parent currentParent = entity.getParent();
-        Parent parentData = updatedData.getParent();
+        Parent parent = student.getParent();
+        Parent updatedParentData = updatedStudentData.getParent();
 
-        ensureParentUniquenessForUpdate(parentData, currentParent.getId());
-        ParentRules.validate(parentData);
+        ensureParentUniquenessForUpdate(updatedParentData, parent.getId());
 
-        currentParent.setName(parentData.getName());
-        currentParent.setContact(parentData.getContact());
-        currentParent.setEmail(parentData.getEmail());
-        currentParent.setCpf(parentData.getCpf());
+        parent.setName(updatedParentData.getName());
+        parent.setContact(updatedParentData.getContact());
+        parent.setEmail(updatedParentData.getEmail());
 
-        entity.setName(updatedData.getName());
-        entity.setContact(updatedData.getContact());
-        entity.setEmail(updatedData.getEmail());
-        entity.setBirthdate(updatedData.getBirthdate());
-        entity.setCpf(updatedData.getCpf());
-        entity.setSchool(updatedData.getSchool());
-        entity.setAddress(updatedData.getAddress());
+        student.setName(updatedStudentData.getName());
+        student.setContact(updatedStudentData.getContact());
+        student.setEmail(updatedStudentData.getEmail());
+        student.setBirthdate(updatedStudentData.getBirthdate());
+        student.setSchool(updatedStudentData.getSchool());
+        student.setAddress(updatedStudentData.getAddress());
 
-        log.info("Aluno {} atualizado com sucesso.", entity.getName().toUpperCase());
-        return studentMapper.convertToDto(entity);
+        log.info("Aluno {} atualizado com sucesso.", student.getName().toUpperCase());
+        return studentMapper.convertToDto(student);
     }
 
     @Transactional
@@ -210,7 +209,7 @@ public class StudentService {
             throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
     }
-
+  //TODO: Será que vale a pena jogar alguns dos helper methods pra dentro dos methods para melhorar a legibilidade?
     private void ensureParentUniquenessForUpdate(Parent parent, UUID parentId) {
         if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parentId)) {
             throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");

@@ -1,41 +1,48 @@
 package com.aprimorar.api.domain.event.dto;
 
+import com.aprimorar.api.enums.EventContent;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.aprimorar.api.enums.EventContent;
-
-import jakarta.validation.constraints.*;
-
+@Schema(description = "Formato de payload para o cadastro e/ou update de um evento")
 public record EventRequestDTO(
-        @NotBlank(message = "Título do evento é obrigatório")
-        @Size(max = 100, message = "Título deve ter no máximo 100 caracteres")
-        String title,
+    @NotBlank(message = "Título do evento é obrigatório")
+    @Schema(nullable = false, description = "Título do evento", example = "Sessão de Mentoria")
+    String title,
 
-        @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")
-        String description,
+    @Schema(nullable = false, description = "Descrição do evento", example = "Sessão focada em revisão de matemática básica")
+    String description,
 
-        @NotNull(message = "Data/hora de início do evento é obrigatória")
-        Instant startDate,
+    @NotNull(message = "Conteúdo do evento é obrigatório")
+    @Schema(nullable = false, description = "Conteúdo do evento (Atendimento, Mentoria, etc...)", example = "Mentoria")
+    EventContent content,
 
-        @NotNull(message = "Data/hora de fim do evento é obrigatória")
-        Instant endDate,
+    @NotNull(message = "Data/hora de início do evento é obrigatória")
+    @Schema(nullable = false, description = "Data/Horário de início do evento", example = "2023-11-20T14:00:00Z")
+    Instant startDate,
 
-        @NotNull(message = "Preço é obrigatório")
-        @PositiveOrZero(message = "Preço deve ser maior ou igual a 0")
-        BigDecimal price,
+    @NotNull(message = "Data/hora de fim do evento é obrigatória")
+    @Schema(nullable = false, description = "Data/Horário de fim do evento", example = "2023-11-20T16:00:00Z")
+    Instant endDate,
 
-        @NotNull(message = "Pagamento é obrigatório")
-        @PositiveOrZero(message = "Pagamento deve ser maior ou igual a 0")
-        BigDecimal payment,
+    @NotNull(message = "Preço é obrigatório")
+    @PositiveOrZero(message = "Preço deve ser maior ou igual a 0")
+    @Schema(nullable = false, description = "Preço do evento pago pelo aluno", example = "150.00")
+    BigDecimal price,
 
-        @NotNull(message = "Conteúdo do evento é obrigatório")
-        EventContent content,
+    @NotNull(message = "Pagamento é obrigatório")
+    @PositiveOrZero(message = "Pagamento deve ser maior ou igual a 0")
+    @Schema(nullable = false, description = "Preço do evento pago ao colaborador", example = "100.00")
+    BigDecimal payment,
 
-        @NotNull(message = "ID do estudante é obrigatório")
-        UUID studentId,
+    @NotNull(message = "ID do estudante é obrigatório")
+    @Schema(nullable = false, description = "ID do estudante vinculado ao evento", example = "550e8400-e29b-41d4-a716-446655440000")
+    UUID studentId,
 
-        @NotNull(message = "ID do funcionário é obrigatório")
-        UUID employeeId) {
-}
+    @NotNull(message = "ID do funcionário é obrigatório")
+    @Schema(nullable = false, description = "ID do colaborador vinculado ao evento", example = "123e4567-e89b-12d3-a456-426614174000")
+    UUID employeeId
+) {}

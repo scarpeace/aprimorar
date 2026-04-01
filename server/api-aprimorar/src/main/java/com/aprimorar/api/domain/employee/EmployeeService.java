@@ -1,13 +1,16 @@
 package com.aprimorar.api.domain.employee;
 
-import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeCreateDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeUpdateDTO;
 import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
 import com.aprimorar.api.domain.employee.repository.EmployeeSpecifications;
 import com.aprimorar.api.enums.Duty;
+import com.aprimorar.api.shared.PageDTO;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -20,22 +23,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Centraliza as regras de negócio do colaborador.
- *
- * <p>
- * Aqui ficam a criação, atualização, consultas e ações de arquivar/desarquivar.
- * Também é esse service que garante que CPF e email não se repitam antes de
- * salvar ou atualizar um colaborador.
- *
- * <p>
- * Quando um colaborador é alterado, o service aplica as validações do domínio,
- * resolve conflitos de unicidade e devolve a resposta em formato DTO.
- *
- * @author scarpellini
- * @version 1.0
- * @since 2026-03-14
- */
 @Service
 public class EmployeeService {
 
@@ -58,26 +45,28 @@ public class EmployeeService {
 
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
-    public Page<EmployeeResponseDTO> getEmployees(Pageable pageable, String search) {
+    public PageDTO<EmployeeResponseDTO> getEmployees(Pageable pageable, String search) {
         Specification<Employee> spec = (root, query, cb) -> cb.notEqual(root.get("duty"), Duty.SYSTEM);
 
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(EmployeeSpecifications.searchContainsIgnoreCase(search.trim()));
         }
 
-        Page<Employee> page = employeeRepo.findAll(spec, pageable);
-        log.info("Consulta de colaboradores finalizada, {} registros encontrados.", page.getTotalElements());
-        return page.map(employeeMapper::convertToDto);
+        Page<Employee> employeePage = employeeRepo.findAll(spec, pageable);
+        Page<EmployeeResponseDTO> parentsDtoPage = employeePage.map(employeeMapper::convertToDto);
+
+        log.info("Consulta de colaboradores finalizada, {} registros encontrados.", employeePage.getTotalElements());
+        return new PageDTO<>(parentsDtoPage);
     }
 
     @Transactional(readOnly = true)
-    public List<EmployeeSummaryDTO> getEmployeeSummary() {
+    public List<EmployeeOptionsDTO> getEmployeeOptions() {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
         return employeeRepo
             .findAll(EmployeeSpecifications.notArchived(), sort)
             .stream()
-            .map(e -> new EmployeeSummaryDTO(e.getId(), e.getName()))
+            .map(e -> new EmployeeOptionsDTO(e.getId(), e.getName()))
             .toList();
     }
 
@@ -90,10 +79,9 @@ public class EmployeeService {
 
     /* ----- Command Methods ----- */
     @Transactional
-    public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
-        Employee employee = employeeMapper.convertToEntity(employeeRequestDto);
+    public EmployeeResponseDTO createEmployee(EmployeeCreateDTO employeeRequestDto) {
+        Employee employee = employeeMapper.convertToEntityForCreate(employeeRequestDto);
 
-        EmployeeRules.validate(employee);
         validateEmployeeUniquenessForCreate(employee.getCpf(), employee.getEmail());
 
         Employee savedEmployee = employeeRepo.save(employee);
@@ -103,8 +91,8 @@ public class EmployeeService {
     }
 
     @Transactional
-    public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
-        Employee newEmployee = employeeMapper.convertToEntity(request);
+    public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeUpdateDTO request) {
+        Employee newEmployee = employeeMapper.convertToEntityForUpdate(request);
         Employee oldEmployee = findEmployeeOrThrow(employeeId);
 
         validateEmployeeUniquenessForUpdate(newEmployee.getCpf(), newEmployee.getEmail(), employeeId);
@@ -113,10 +101,8 @@ public class EmployeeService {
         oldEmployee.setBirthdate(newEmployee.getBirthdate());
         oldEmployee.setPix(newEmployee.getPix());
         oldEmployee.setContact(newEmployee.getContact());
-        oldEmployee.setCpf(newEmployee.getCpf());
         oldEmployee.setEmail(newEmployee.getEmail());
         oldEmployee.setDuty(newEmployee.getDuty());
-        EmployeeRules.validate(oldEmployee);
 
         log.info("Colaborador {} atualizado com sucesso.", oldEmployee.getName().toUpperCase());
         return employeeMapper.convertToDto(oldEmployee);

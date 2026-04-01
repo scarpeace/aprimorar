@@ -8,7 +8,6 @@ import type {
   UpdateEmployeeMutationRequest,
   UpdateEmployeeMutationResponse,
   UpdateEmployeePathParams,
-  UpdateEmployee400,
 } from "../../types/employee/UpdateEmployee.ts";
 import type {
   Client,
@@ -30,8 +29,7 @@ export type UpdateEmployeeMutationKey = ReturnType<
 >;
 
 /**
- * @description Atualiza parcialmente um funcionário existente com os dados fornecidos.
- * @summary Atualizar funcionário
+ * @description Atualiza um colaborador por ID.
  * {@link /v1/employees/:employeeId}
  */
 export async function updateEmployee(
@@ -47,7 +45,7 @@ export async function updateEmployee(
 
   const res = await request<
     UpdateEmployeeMutationResponse,
-    ResponseErrorConfig<UpdateEmployee400>,
+    ResponseErrorConfig<Error>,
     UpdateEmployeeMutationRequest
   >({
     method: "PATCH",
@@ -67,7 +65,7 @@ export function updateEmployeeMutationOptions<TContext = unknown>(
   const mutationKey = updateEmployeeMutationKey();
   return mutationOptions<
     UpdateEmployeeMutationResponse,
-    ResponseErrorConfig<UpdateEmployee400>,
+    ResponseErrorConfig<Error>,
     {
       employeeId: UpdateEmployeePathParams["employeeId"];
       data: UpdateEmployeeMutationRequest;
@@ -82,15 +80,14 @@ export function updateEmployeeMutationOptions<TContext = unknown>(
 }
 
 /**
- * @description Atualiza parcialmente um funcionário existente com os dados fornecidos.
- * @summary Atualizar funcionário
+ * @description Atualiza um colaborador por ID.
  * {@link /v1/employees/:employeeId}
  */
 export function useUpdateEmployee<TContext>(
   options: {
     mutation?: UseMutationOptions<
       UpdateEmployeeMutationResponse,
-      ResponseErrorConfig<UpdateEmployee400>,
+      ResponseErrorConfig<Error>,
       {
         employeeId: UpdateEmployeePathParams["employeeId"];
         data: UpdateEmployeeMutationRequest;
@@ -111,7 +108,7 @@ export function useUpdateEmployee<TContext>(
     config,
   ) as UseMutationOptions<
     UpdateEmployeeMutationResponse,
-    ResponseErrorConfig<UpdateEmployee400>,
+    ResponseErrorConfig<Error>,
     {
       employeeId: UpdateEmployeePathParams["employeeId"];
       data: UpdateEmployeeMutationRequest;
@@ -121,7 +118,7 @@ export function useUpdateEmployee<TContext>(
 
   return useMutation<
     UpdateEmployeeMutationResponse,
-    ResponseErrorConfig<UpdateEmployee400>,
+    ResponseErrorConfig<Error>,
     {
       employeeId: UpdateEmployeePathParams["employeeId"];
       data: UpdateEmployeeMutationRequest;
@@ -136,7 +133,7 @@ export function useUpdateEmployee<TContext>(
     queryClient,
   ) as UseMutationResult<
     UpdateEmployeeMutationResponse,
-    ResponseErrorConfig<UpdateEmployee400>,
+    ResponseErrorConfig<Error>,
     {
       employeeId: UpdateEmployeePathParams["employeeId"];
       data: UpdateEmployeeMutationRequest;

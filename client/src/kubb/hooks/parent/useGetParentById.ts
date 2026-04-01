@@ -7,7 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetParentByIdQueryResponse,
   GetParentByIdPathParams,
-  GetParentById400,
 } from "../../types/parent/GetParentById.ts";
 import type {
   Client,
@@ -30,8 +29,7 @@ export const getParentByIdQueryKey = (
 export type GetParentByIdQueryKey = ReturnType<typeof getParentByIdQueryKey>;
 
 /**
- * @description Lista um responsável específico pelo ID.
- * @summary Listar responsável por ID
+ * @description Retorna um responsável por ID
  * {@link /v1/parents/:parentId}
  */
 export async function getParentById(
@@ -42,7 +40,7 @@ export async function getParentById(
 
   const res = await request<
     GetParentByIdQueryResponse,
-    ResponseErrorConfig<GetParentById400>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
@@ -60,7 +58,7 @@ export function getParentByIdQueryOptions(
   const queryKey = getParentByIdQueryKey(parentId);
   return queryOptions<
     GetParentByIdQueryResponse,
-    ResponseErrorConfig<GetParentById400>,
+    ResponseErrorConfig<Error>,
     GetParentByIdQueryResponse,
     typeof queryKey
   >({
@@ -76,8 +74,7 @@ export function getParentByIdQueryOptions(
 }
 
 /**
- * @description Lista um responsável específico pelo ID.
- * @summary Listar responsável por ID
+ * @description Retorna um responsável por ID
  * {@link /v1/parents/:parentId}
  */
 export function useGetParentById<
@@ -90,7 +87,7 @@ export function useGetParentById<
     query?: Partial<
       QueryObserverOptions<
         GetParentByIdQueryResponse,
-        ResponseErrorConfig<GetParentById400>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -110,7 +107,7 @@ export function useGetParentById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<GetParentById400>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
     queryKey: TQueryKey;
   };
 

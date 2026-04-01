@@ -1,12 +1,8 @@
 import { ButtonLink } from "@/components/ui/button";
-import { EmptyCard } from "@/components/ui/empty-card";
-import { ErrorCard } from "@/components/ui/error-card";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
-import { Pagination } from "@/components/ui/pagination";
 import styles from "@/features/employees/EmployeesPage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { UserCog } from "lucide-react";
 import { useState } from "react";
@@ -44,13 +40,9 @@ export function EmployeesPage() {
           description="Gerencie professores e equipe."
           title="Colaboradores"
           Icon={UserCog}
-          iconClassName="text-warning"
-          iconBgClassName="bg-warning/20"
         ></PageHeader>
-        <ErrorCard
-          description={getFriendlyErrorMessage(employeesError)}
-          onAction={refetchEmployees}
-        />
+
+
       </div>
     );
   }
@@ -61,8 +53,6 @@ export function EmployeesPage() {
         description="Gerencie professores e equipe."
         title="Colaboradores"
         Icon={UserCog}
-        iconClassName="text-warning"
-        iconBgClassName="bg-warning/20"
       >
         <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
           <ListSearchInput
@@ -134,27 +124,6 @@ export function EmployeesPage() {
           </table>
         </div>
       </div>
-
-      <Pagination
-        currentPage={currentPage}
-        totalElements={employees?.page?.totalElements ?? 0}
-        totalPages={employees?.page?.totalPages ?? 0}
-        currentElementsCount={employees?.content?.length ?? 0}
-        itemName="colaboradores"
-        onPageChange={setCurrentPage}
-      />
-
-      {employees?.page?.totalElements === 0 && debouncedSearchTerm === "" && (
-        <EmptyCard
-          title="Nenhum colaborador encontrado"
-          description=""
-          action={
-            <ButtonLink to="/employees/new" variant="secondary">
-              Novo aluno
-            </ButtonLink>
-          }
-        />
-      )}
-    </div>
+     </div>
   );
 }

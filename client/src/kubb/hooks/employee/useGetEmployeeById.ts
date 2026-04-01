@@ -7,7 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetEmployeeByIdQueryResponse,
   GetEmployeeByIdPathParams,
-  GetEmployeeById400,
 } from "../../types/employee/GetEmployeeById.ts";
 import type {
   Client,
@@ -34,8 +33,7 @@ export type GetEmployeeByIdQueryKey = ReturnType<
 >;
 
 /**
- * @description Retorna um único funcionário com base no ID fornecido.
- * @summary Obter funcionário por ID
+ * @description Retorna um colaborador por ID.
  * {@link /v1/employees/:employeeId}
  */
 export async function getEmployeeById(
@@ -46,7 +44,7 @@ export async function getEmployeeById(
 
   const res = await request<
     GetEmployeeByIdQueryResponse,
-    ResponseErrorConfig<GetEmployeeById400>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
@@ -64,7 +62,7 @@ export function getEmployeeByIdQueryOptions(
   const queryKey = getEmployeeByIdQueryKey(employeeId);
   return queryOptions<
     GetEmployeeByIdQueryResponse,
-    ResponseErrorConfig<GetEmployeeById400>,
+    ResponseErrorConfig<Error>,
     GetEmployeeByIdQueryResponse,
     typeof queryKey
   >({
@@ -80,8 +78,7 @@ export function getEmployeeByIdQueryOptions(
 }
 
 /**
- * @description Retorna um único funcionário com base no ID fornecido.
- * @summary Obter funcionário por ID
+ * @description Retorna um colaborador por ID.
  * {@link /v1/employees/:employeeId}
  */
 export function useGetEmployeeById<
@@ -94,7 +91,7 @@ export function useGetEmployeeById<
     query?: Partial<
       QueryObserverOptions<
         GetEmployeeByIdQueryResponse,
-        ResponseErrorConfig<GetEmployeeById400>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -115,7 +112,7 @@ export function useGetEmployeeById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<GetEmployeeById400>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
     queryKey: TQueryKey;
   };
 

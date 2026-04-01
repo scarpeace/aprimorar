@@ -7,7 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   CreateEmployeeMutationRequest,
   CreateEmployeeMutationResponse,
-  CreateEmployee400,
 } from "../../types/employee/CreateEmployee.ts";
 import type {
   Client,
@@ -29,8 +28,7 @@ export type CreateEmployeeMutationKey = ReturnType<
 >;
 
 /**
- * @description Cria um novo funcionário com os dados fornecidos.
- * @summary Criar funcionário
+ * @description Cria um novo colaborador com os dados fornecidos.
  * {@link /v1/employees}
  */
 export async function createEmployee(
@@ -45,7 +43,7 @@ export async function createEmployee(
 
   const res = await request<
     CreateEmployeeMutationResponse,
-    ResponseErrorConfig<CreateEmployee400>,
+    ResponseErrorConfig<Error>,
     CreateEmployeeMutationRequest
   >({
     method: "POST",
@@ -65,7 +63,7 @@ export function createEmployeeMutationOptions<TContext = unknown>(
   const mutationKey = createEmployeeMutationKey();
   return mutationOptions<
     CreateEmployeeMutationResponse,
-    ResponseErrorConfig<CreateEmployee400>,
+    ResponseErrorConfig<Error>,
     { data: CreateEmployeeMutationRequest },
     TContext
   >({
@@ -77,15 +75,14 @@ export function createEmployeeMutationOptions<TContext = unknown>(
 }
 
 /**
- * @description Cria um novo funcionário com os dados fornecidos.
- * @summary Criar funcionário
+ * @description Cria um novo colaborador com os dados fornecidos.
  * {@link /v1/employees}
  */
 export function useCreateEmployee<TContext>(
   options: {
     mutation?: UseMutationOptions<
       CreateEmployeeMutationResponse,
-      ResponseErrorConfig<CreateEmployee400>,
+      ResponseErrorConfig<Error>,
       { data: CreateEmployeeMutationRequest },
       TContext
     > & { client?: QueryClient };
@@ -103,14 +100,14 @@ export function useCreateEmployee<TContext>(
     config,
   ) as UseMutationOptions<
     CreateEmployeeMutationResponse,
-    ResponseErrorConfig<CreateEmployee400>,
+    ResponseErrorConfig<Error>,
     { data: CreateEmployeeMutationRequest },
     TContext
   >;
 
   return useMutation<
     CreateEmployeeMutationResponse,
-    ResponseErrorConfig<CreateEmployee400>,
+    ResponseErrorConfig<Error>,
     { data: CreateEmployeeMutationRequest },
     TContext
   >(
@@ -122,7 +119,7 @@ export function useCreateEmployee<TContext>(
     queryClient,
   ) as UseMutationResult<
     CreateEmployeeMutationResponse,
-    ResponseErrorConfig<CreateEmployee400>,
+    ResponseErrorConfig<Error>,
     { data: CreateEmployeeMutationRequest },
     TContext
   >;

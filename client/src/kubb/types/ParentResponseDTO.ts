@@ -3,6 +3,10 @@
  * Do not edit manually.
  */
 
+/**
+ * @description Dados do responsável retornados pela API
+ * @example Parent Name
+ */
 export type ParentResponseDTO = {
   /**
    * @description ID do responsável
@@ -30,14 +34,17 @@ export type ParentResponseDTO = {
    */
   cpf: string;
   /**
+   * @description Data e hora quando o aluno foi arquivado
    * @type string, date-time
    */
   archivedAt?: string | null;
   /**
+   * @description Data e hora quando o aluno foi criado
    * @type string, date-time
    */
   createdAt: string;
   /**
+   * @description Data e hora quando o aluno foi atualizado
    * @type string, date-time
    */
   updatedAt?: string | null;

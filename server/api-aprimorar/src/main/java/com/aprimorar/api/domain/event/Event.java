@@ -1,19 +1,18 @@
 package com.aprimorar.api.domain.event;
 
+import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.domain.event.exception.InvalidEventException;
+import com.aprimorar.api.domain.event.exception.NotAllowedToUpdateEventException;
+import com.aprimorar.api.domain.student.Student;
+import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.shared.BaseEntity;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.aprimorar.api.domain.employee.Employee;
-import com.aprimorar.api.shared.BaseEntity;
-import jakarta.persistence.*;
-
-import com.aprimorar.api.domain.student.Student;
-import com.aprimorar.api.enums.EventContent;
-
 // TODO: Adicionar campos do google calendar para a implementação
-
 @Entity
 @Table(name = "tb_events")
 public class Event extends BaseEntity {
@@ -48,8 +47,7 @@ public class Event extends BaseEntity {
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
 
-    public Event() {
-    }
+    public Event() {}
 
     @Override
     public UUID getId() {
@@ -76,6 +74,9 @@ public class Event extends BaseEntity {
     }
 
     public void setTitle(String title) {
+        if (title == null || title.isBlank()) {
+            throw new InvalidEventException("Título do evento é obrigatório");
+        }
         this.title = title;
     }
 
@@ -92,6 +93,9 @@ public class Event extends BaseEntity {
     }
 
     public void setStartDate(LocalDateTime startDate) {
+        if (startDate == null) {
+            throw new InvalidEventException("Data de início do evento é obrigatório");
+        }
         this.startDate = startDate;
     }
 
@@ -100,6 +104,13 @@ public class Event extends BaseEntity {
     }
 
     public void setEndDateTime(LocalDateTime endDate) {
+        if (endDate == null) {
+            throw new InvalidEventException("Data de término do evento é obrigatório");
+        }
+        if (endDate.isBefore(startDate)) {
+            throw new InvalidEventException("Data de fim do evento não pode ser anterior a data de inicio");
+        }
+
         this.endDate = endDate;
     }
 
@@ -108,6 +119,15 @@ public class Event extends BaseEntity {
     }
 
     public void setPrice(BigDecimal price) {
+        if (price == null) {
+            throw new InvalidEventException("Valor do evento é obrigatório");
+        }
+        if (price.compareTo(this.payment) < 0) {
+            throw new InvalidEventException("O valor do evento não pode ser menor que o pagamento");
+        }
+        if (price.compareTo(BigDecimal.valueOf(50)) < 0) {
+            throw new InvalidEventException("O valor do evento não pode ser menor que R$50,00");
+        }
         this.price = price;
     }
 
@@ -116,6 +136,9 @@ public class Event extends BaseEntity {
     }
 
     public void setPayment(BigDecimal payment) {
+        if (payment == null) {
+            throw new InvalidEventException("Pagamento do evento é obrigatório");
+        }
         this.payment = payment;
     }
 
@@ -124,6 +147,9 @@ public class Event extends BaseEntity {
     }
 
     public void setContent(EventContent content) {
+        if (content == null) {
+            throw new InvalidEventException("O conteúdo do evento é obrigatório");
+        }
         this.content = content;
     }
 
@@ -132,6 +158,9 @@ public class Event extends BaseEntity {
     }
 
     public void setStudent(Student student) {
+        if (student == null) {
+            throw new InvalidEventException("Um evento não pode existir sem um estudante");
+        }
         this.student = student;
     }
 
@@ -140,6 +169,40 @@ public class Event extends BaseEntity {
     }
 
     public void setEmployee(Employee employee) {
+        if (employee == null) {
+            throw new InvalidEventException("Um evento não pode existir sem um colaborador");
+        }
         this.employee = employee;
+    }
+
+    public void validateForCreation() {
+        validateCommonRules();
+        if (this.endDate != null && this.endDate.isBefore(LocalDateTime.now())) {
+            throw new InvalidEventException("Data de fim do evento não pode estar no passado");
+        }
+    }
+
+    public void validateForUpdate() {
+        validateCommonRules();
+    }
+
+    private void validateCommonRules() {
+        setTitle(this.title);
+        setDescription(this.description);
+        setStartDate(this.startDate);
+        setEndDateTime(this.endDate);
+        setPrice(this.price);
+        setPayment(this.payment);
+        setContent(this.content);
+        setStudent(this.student);
+        setEmployee(this.employee);
+    }
+
+    public void validateEditWindow() {
+        if (this.endDate != null && LocalDateTime.now().isAfter(this.endDate.plusDays(20))) {
+            throw new NotAllowedToUpdateEventException(
+                "A janela de 20 dias para editar as informações do evento encerrou"
+            );
+        }
     }
 }
