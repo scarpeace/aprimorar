@@ -12,9 +12,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.aprimorar.api.domain.parent.dto.ParentCreateDTO;
 import com.aprimorar.api.domain.parent.dto.ParentOptionsDTO;
-import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
+import com.aprimorar.api.domain.parent.dto.ParentUpdateDTO;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
@@ -73,8 +74,8 @@ public class ParentService {
 
     /* ----- Command Methods ----- */
     @Transactional
-    public ParentResponseDTO createParent(ParentRequestDTO parentRequestDto) {
-        Parent parent = parentMapper.convertToEntity(parentRequestDto);
+    public ParentResponseDTO createParent(ParentCreateDTO request) {
+        Parent parent = parentMapper.convertToEntityForCreate(request);
 
         ensureParentUniqueness(parent);
         Parent savedParent = parentRepo.save(parent);
@@ -84,15 +85,14 @@ public class ParentService {
     }
 
     @Transactional
-    public ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO request) {
+    public ParentResponseDTO updateParent(UUID parentId, ParentUpdateDTO request) {
         Parent parent = findParentOrThrow(parentId);
-        Parent updatedParentData = parentMapper.convertToEntity(request);
+        Parent updatedParentData = parentMapper.convertToEntityForUpdate(request);
         ensureParentUniquenessForUpdate(updatedParentData, parentId);
 
         parent.setName(updatedParentData.getName());
         parent.setEmail(updatedParentData.getEmail());
         parent.setContact(updatedParentData.getContact());
-        parent.setCpf(updatedParentData.getCpf());
 
         log.info("Responsável {} atualizado com sucesso.", updatedParentData.getName().toUpperCase());
         return parentMapper.convertToDto(parent);
@@ -146,10 +146,6 @@ public class ParentService {
     }
 
     private void ensureParentUniquenessForUpdate(Parent parent, UUID parentId) {
-        if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parentId)) {
-            throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
-        }
-
         if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parentId)) {
             throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }

@@ -5,8 +5,9 @@ import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
 import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentCreateDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentUpdateDTO;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
@@ -90,8 +91,8 @@ public class StudentService {
 
     /* ----- Command Methods ----- */
     @Transactional
-    public StudentResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
-        Student student = studentMapper.convertToEntity(studentRequestDto);
+    public StudentResponseDTO createStudent(StudentCreateDTO studentRequestDto) {
+        Student student = studentMapper.convertToEntityForCreate(studentRequestDto);
         Parent parent = student.getParent();
 
         ensureStudentUniqueness(student);
@@ -107,13 +108,13 @@ public class StudentService {
     }
 
     @Transactional
-    public StudentResponseDTO updateStudent(UUID id, StudentRequestDTO dto) {
+    public StudentResponseDTO updateStudent(UUID id, StudentUpdateDTO dto) {
         if (GHOST_STUDENT_ID.equals(id)) {
             throw new IllegalArgumentException("Não é possível modificar o registro de sistema 'Aluno Removido'.");
         }
 
         Student student = findStudentOrThrow(id);
-        Student updatedStudentData = studentMapper.convertToEntity(dto);
+        Student updatedStudentData = studentMapper.convertToEntityForUpdate(dto);
 
         ensureStudentUniquenessForUpdate(updatedStudentData, id);
 
@@ -125,13 +126,11 @@ public class StudentService {
         parent.setName(updatedParentData.getName());
         parent.setContact(updatedParentData.getContact());
         parent.setEmail(updatedParentData.getEmail());
-        parent.setCpf(updatedParentData.getCpf());
 
         student.setName(updatedStudentData.getName());
         student.setContact(updatedStudentData.getContact());
         student.setEmail(updatedStudentData.getEmail());
         student.setBirthdate(updatedStudentData.getBirthdate());
-        student.setCpf(updatedStudentData.getCpf());
         student.setSchool(updatedStudentData.getSchool());
         student.setAddress(updatedStudentData.getAddress());
 

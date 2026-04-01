@@ -24,8 +24,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
+import com.aprimorar.api.domain.parent.dto.ParentCreateDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
+import com.aprimorar.api.domain.parent.dto.ParentUpdateDTO;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
@@ -58,31 +59,31 @@ class ParentServiceTest {
     @DisplayName("Query methods")
     class QueryMethods {
 
-        // @Test
-        // @DisplayName("should return paged parents using deterministic input and expected values")
-        // void shouldReturnPagedParents() {
-        //     // Arrange
-        //     Pageable input = PageRequest.of(0, 2);
-        //     Parent firstParent = parent(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
-        //     Parent secondParent = parent(SECOND_PARENT_ID, "Carlos Lima", "carlos@email.com", "61999997777", "98765432100");
-        //     Page<Parent> expectedPage = new PageImpl<>(List.of(firstParent, secondParent), input, 2);
-        //     ParentResponseDTO expectedFirst = response(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "(61) 99999-8888", "123.456.789-01");
-        //     ParentResponseDTO expectedSecond = response(SECOND_PARENT_ID, "Carlos Lima", "carlos@email.com", "(61) 99999-7777", "987.654.321-00");
+        @Test
+        @DisplayName("should return paged parents using deterministic input and expected values")
+        void shouldReturnPagedParents() {
+            // Arrange
+            Pageable input = PageRequest.of(0, 2);
+            Parent firstParent = parent(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
+            Parent secondParent = parent(SECOND_PARENT_ID, "Carlos Lima", "carlos@email.com", "61999997777", "98765432100");
+            Page<Parent> expectedPage = new PageImpl<>(List.of(firstParent, secondParent), input, 2);
+            ParentResponseDTO expectedFirst = response(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "(61) 99999-8888", "123.456.789-01");
+            ParentResponseDTO expectedSecond = response(SECOND_PARENT_ID, "Carlos Lima", "carlos@email.com", "(61) 99999-7777", "987.654.321-00");
 
-        //     when(parentRepo.findAll(input)).thenReturn(expectedPage);
-        //     when(parentMapper.convertToDto(firstParent)).thenReturn(expectedFirst);
-        //     when(parentMapper.convertToDto(secondParent)).thenReturn(expectedSecond);
+            when(parentRepo.findAll(input)).thenReturn(expectedPage);
+            when(parentMapper.convertToDto(firstParent)).thenReturn(expectedFirst);
+            when(parentMapper.convertToDto(secondParent)).thenReturn(expectedSecond);
 
-        //     // Act
-        //     PageDTO<ParentResponseDTO> actual = parentService.getParents(input, null);
+            // Act
+            PageDTO<ParentResponseDTO> actual = parentService.getParents(input, null);
 
-        //     // Assert
-        //     assertThat(actual.getContent()).containsExactly(expectedFirst, expectedSecond);
-        //     assertThat(actual.getTotalElements()).isEqualTo(2);
-        //     verify(parentRepo).findAll(input);
-        //     verify(parentMapper).convertToDto(firstParent);
-        //     verify(parentMapper).convertToDto(secondParent);
-        // }
+            // Assert
+            assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
+            assertThat(actual.totalElements()).isEqualTo(2);
+            verify(parentRepo).findAll(input);
+            verify(parentMapper).convertToDto(firstParent);
+            verify(parentMapper).convertToDto(secondParent);
+        }
 
         @Test
         @DisplayName("should return parent by id when parent exists")
@@ -129,11 +130,11 @@ class ParentServiceTest {
         @DisplayName("should create parent when cpf and email are unique")
         void shouldCreateParentWhenCpfAndEmailAreUnique() {
             // Arrange
-            ParentRequestDTO input = request("Maria Souza", "maria@email.com", "(61) 99999-8888", "123.456.789-01");
+            ParentCreateDTO input = createRequest("Maria Souza", "maria@email.com", "(61) 99999-8888", "123.456.789-01");
             Parent mappedParent = parent(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
             ParentResponseDTO expected = response(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "(61) 99999-8888", "123.456.789-01");
 
-            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
+            when(parentMapper.convertToEntityForCreate(input)).thenReturn(mappedParent);
             when(parentRepo.existsByCpf("12345678901")).thenReturn(false);
             when(parentRepo.existsByEmail("maria@email.com")).thenReturn(false);
             when(parentRepo.save(mappedParent)).thenReturn(mappedParent);
@@ -144,7 +145,7 @@ class ParentServiceTest {
 
             // Assert
             assertThat(actual).isEqualTo(expected);
-            verify(parentMapper).convertToEntity(input);
+            verify(parentMapper).convertToEntityForCreate(input);
             verify(parentRepo).existsByCpf("12345678901");
             verify(parentRepo).existsByEmail("maria@email.com");
             verify(parentRepo).save(mappedParent);
@@ -155,10 +156,10 @@ class ParentServiceTest {
         @DisplayName("should throw when creating parent with duplicated cpf")
         void shouldThrowWhenCreatingParentWithDuplicatedCpf() {
             // Arrange
-            ParentRequestDTO input = request("Maria Souza", "maria@email.com", "(61) 99999-8888", "123.456.789-01");
+            ParentCreateDTO input = createRequest("Maria Souza", "maria@email.com", "(61) 99999-8888", "123.456.789-01");
             Parent mappedParent = parent(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
-            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
+            when(parentMapper.convertToEntityForCreate(input)).thenReturn(mappedParent);
             when(parentRepo.existsByCpf("12345678901")).thenReturn(true);
 
             // Act + Assert
@@ -166,7 +167,7 @@ class ParentServiceTest {
                     .isInstanceOf(ParentAlreadyExistsException.class)
                     .hasMessage("Responsável com o CPF informado já existe no banco de dados");
 
-            verify(parentMapper).convertToEntity(input);
+            verify(parentMapper).convertToEntityForCreate(input);
             verify(parentRepo).existsByCpf("12345678901");
             verify(parentRepo, never()).existsByEmail(any());
             verify(parentRepo, never()).save(any());
@@ -176,10 +177,10 @@ class ParentServiceTest {
         @DisplayName("should throw when creating parent with duplicated email")
         void shouldThrowWhenCreatingParentWithDuplicatedEmail() {
             // Arrange
-            ParentRequestDTO input = request("Maria Souza", "maria@email.com", "(61) 99999-8888", "123.456.789-01");
+            ParentCreateDTO input = createRequest("Maria Souza", "maria@email.com", "(61) 99999-8888", "123.456.789-01");
             Parent mappedParent = parent(EXISTING_PARENT_ID, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
-            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
+            when(parentMapper.convertToEntityForCreate(input)).thenReturn(mappedParent);
             when(parentRepo.existsByCpf("12345678901")).thenReturn(false);
             when(parentRepo.existsByEmail("maria@email.com")).thenReturn(true);
 
@@ -188,7 +189,7 @@ class ParentServiceTest {
                     .isInstanceOf(ParentAlreadyExistsException.class)
                     .hasMessage("Responsável com o Email informado já existe no banco de dados");
 
-            verify(parentMapper).convertToEntity(input);
+            verify(parentMapper).convertToEntityForCreate(input);
             verify(parentRepo).existsByCpf("12345678901");
             verify(parentRepo).existsByEmail("maria@email.com");
             verify(parentRepo, never()).save(any());
@@ -199,14 +200,13 @@ class ParentServiceTest {
         void shouldUpdateParentWhenCpfAndEmailAreUniqueForAnotherRecord() {
             // Arrange
             UUID inputId = EXISTING_PARENT_ID;
-            ParentRequestDTO input = request("Maria Souza Atualizada", "maria.atualizada@email.com", "(11) 98888-7777", "987.654.321-00");
+            ParentUpdateDTO input = updateRequest("Maria Souza Atualizada", "maria.atualizada@email.com", "(11) 98888-7777");
             Parent mappedParent = parent(SECOND_PARENT_ID, "Maria Souza Atualizada", "maria.atualizada@email.com", "11988887777", "98765432100");
             Parent existingParent = parent(inputId, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
             ParentResponseDTO expected = response(inputId, "Maria Souza Atualizada", "maria.atualizada@email.com", "(11) 98888-7777", "987.654.321-00");
 
             when(parentRepo.findById(inputId)).thenReturn(Optional.of(existingParent));
-            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
-            when(parentRepo.existsByCpfAndIdNot("98765432100", inputId)).thenReturn(false);
+            when(parentMapper.convertToEntityForUpdate(input)).thenReturn(mappedParent);
             when(parentRepo.existsByEmailAndIdNot("maria.atualizada@email.com", inputId)).thenReturn(false);
             when(parentMapper.convertToDto(existingParent)).thenReturn(expected);
 
@@ -216,39 +216,11 @@ class ParentServiceTest {
             // Assert
             assertThat(actual).isEqualTo(expected);
             assertThat(existingParent.getName()).isEqualTo("Maria Souza Atualizada");
-            assertThat(existingParent.getEmail()).isEqualTo("maria.atualizada@email.com");
-            assertThat(existingParent.getContact()).isEqualTo("11988887777");
-            assertThat(existingParent.getCpf()).isEqualTo("98765432100");
-            verify(parentMapper).convertToEntity(input);
+            verify(parentMapper).convertToEntityForUpdate(input);
             verify(parentRepo).findById(inputId);
-            verify(parentRepo).existsByCpfAndIdNot("98765432100", inputId);
             verify(parentRepo).existsByEmailAndIdNot("maria.atualizada@email.com", inputId);
             verify(parentMapper).convertToDto(existingParent);
             verify(parentRepo, never()).save(any());
-        }
-
-        @Test
-        @DisplayName("should throw when updating parent with duplicated cpf")
-        void shouldThrowWhenUpdatingParentWithDuplicatedCpf() {
-            // Arrange
-            UUID inputId = EXISTING_PARENT_ID;
-            ParentRequestDTO input = request("Maria Souza Atualizada", "maria.atualizada@email.com", "(11) 98888-7777", "987.654.321-00");
-            Parent mappedParent = parent(SECOND_PARENT_ID, "Maria Souza Atualizada", "maria.atualizada@email.com", "11988887777", "98765432100");
-            Parent existingParent = parent(inputId, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
-
-            when(parentRepo.findById(inputId)).thenReturn(Optional.of(existingParent));
-            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
-            when(parentRepo.existsByCpfAndIdNot("98765432100", inputId)).thenReturn(true);
-
-            // Act + Assert
-            assertThatThrownBy(() -> parentService.updateParent(inputId, input))
-                    .isInstanceOf(ParentAlreadyExistsException.class)
-                    .hasMessage("Responsável com o CPF informado já existe no banco de dados");
-
-            verify(parentRepo).findById(inputId);
-            verify(parentRepo).existsByCpfAndIdNot("98765432100", inputId);
-            verify(parentRepo, never()).existsByEmailAndIdNot(any(), any());
-            verify(parentMapper, never()).convertToDto(any());
         }
 
         @Test
@@ -256,13 +228,12 @@ class ParentServiceTest {
         void shouldThrowWhenUpdatingParentWithDuplicatedEmail() {
             // Arrange
             UUID inputId = EXISTING_PARENT_ID;
-            ParentRequestDTO input = request("Maria Souza Atualizada", "maria.atualizada@email.com", "(11) 98888-7777", "987.654.321-00");
-            Parent mappedParent = parent(SECOND_PARENT_ID, "Maria Souza Atualizada", "maria.atualizada@email.com", "11988887777", "98765432100");
+            ParentUpdateDTO input = updateRequest("Maria Souza Atualizada", "maria.atualizada@email.com", "(11) 98888-7777");
+            Parent mappedParent = parent(SECOND_PARENT_ID, "Maria Souza Atualizada", "maria.atualizada@email.com", "11988887777", "12345678901");
             Parent existingParent = parent(inputId, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(inputId)).thenReturn(Optional.of(existingParent));
-            when(parentMapper.convertToEntity(input)).thenReturn(mappedParent);
-            when(parentRepo.existsByCpfAndIdNot("98765432100", inputId)).thenReturn(false);
+            when(parentMapper.convertToEntityForUpdate(input)).thenReturn(mappedParent);
             when(parentRepo.existsByEmailAndIdNot("maria.atualizada@email.com", inputId)).thenReturn(true);
 
             // Act + Assert
@@ -271,7 +242,6 @@ class ParentServiceTest {
                     .hasMessage("Responsável com o Email informado já existe no banco de dados");
 
             verify(parentRepo).findById(inputId);
-            verify(parentRepo).existsByCpfAndIdNot("98765432100", inputId);
             verify(parentRepo).existsByEmailAndIdNot("maria.atualizada@email.com", inputId);
             verify(parentMapper, never()).convertToDto(any());
         }
@@ -281,7 +251,7 @@ class ParentServiceTest {
         void shouldThrowWhenUpdatingParentThatDoesNotExist() {
             // Arrange
             UUID inputId = MISSING_PARENT_ID;
-            ParentRequestDTO input = request("Maria Souza Atualizada", "maria.atualizada@email.com", "(11) 98888-7777", "987.654.321-00");
+            ParentUpdateDTO input = updateRequest("Maria Souza Atualizada", "maria.atualizada@email.com", "(11) 98888-7777");
 
             when(parentRepo.findById(inputId)).thenReturn(Optional.empty());
 
@@ -291,7 +261,7 @@ class ParentServiceTest {
                     .hasMessage("Responsável não encontrado no banco de dados");
 
             verify(parentRepo).findById(inputId);
-            verify(parentMapper, never()).convertToEntity(any());
+            verify(parentMapper, never()).convertToEntityForUpdate(any());
             verify(parentRepo, never()).existsByCpfAndIdNot(any(), any());
             verify(parentMapper, never()).convertToDto(any());
         }
@@ -368,8 +338,12 @@ class ParentServiceTest {
         }
     }
 
-    private static ParentRequestDTO request(String name, String email, String contact, String cpf) {
-        return new ParentRequestDTO(name, email, contact, cpf);
+    private static ParentCreateDTO createRequest(String name, String email, String contact, String cpf) {
+        return new ParentCreateDTO(name, email, contact, cpf);
+    }
+
+    private static ParentUpdateDTO updateRequest(String name, String email, String contact) {
+        return new ParentUpdateDTO(name, email, contact);
     }
 
     private static ParentResponseDTO response(UUID id, String name, String email, String contact, String cpf) {

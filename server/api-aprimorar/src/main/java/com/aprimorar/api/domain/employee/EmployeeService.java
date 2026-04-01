@@ -1,8 +1,9 @@
 package com.aprimorar.api.domain.employee;
 
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeCreateDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeUpdateDTO;
 import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
@@ -78,8 +79,8 @@ public class EmployeeService {
 
     /* ----- Command Methods ----- */
     @Transactional
-    public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
-        Employee employee = employeeMapper.convertToEntity(employeeRequestDto);
+    public EmployeeResponseDTO createEmployee(EmployeeCreateDTO employeeRequestDto) {
+        Employee employee = employeeMapper.convertToEntityForCreate(employeeRequestDto);
 
         validateEmployeeUniquenessForCreate(employee.getCpf(), employee.getEmail());
 
@@ -90,8 +91,8 @@ public class EmployeeService {
     }
 
     @Transactional
-    public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
-        Employee newEmployee = employeeMapper.convertToEntity(request);
+    public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeUpdateDTO request) {
+        Employee newEmployee = employeeMapper.convertToEntityForUpdate(request);
         Employee oldEmployee = findEmployeeOrThrow(employeeId);
 
         validateEmployeeUniquenessForUpdate(newEmployee.getCpf(), newEmployee.getEmail(), employeeId);
@@ -100,7 +101,6 @@ public class EmployeeService {
         oldEmployee.setBirthdate(newEmployee.getBirthdate());
         oldEmployee.setPix(newEmployee.getPix());
         oldEmployee.setContact(newEmployee.getContact());
-        oldEmployee.setCpf(newEmployee.getCpf());
         oldEmployee.setEmail(newEmployee.getEmail());
         oldEmployee.setDuty(newEmployee.getDuty());
 

@@ -1,8 +1,9 @@
 package com.aprimorar.api.domain.student;
 
 import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentCreateDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentUpdateDTO;
 import com.aprimorar.api.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -42,7 +43,7 @@ public class StudentController {
     @PostMapping
     @Operation(operationId = "createStudent", description = "Cria um novo aluno com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso.")
-    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
+    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentCreateDTO createStudentDto) {
         StudentResponseDTO response = studentService.createStudent(createStudentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -88,9 +89,9 @@ public class StudentController {
     @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso.")
     public ResponseEntity<StudentResponseDTO> updateStudent(
         @PathVariable UUID studentId,
-        @RequestBody @Valid StudentRequestDTO studentRequestDto
+        @RequestBody @Valid StudentUpdateDTO studentUpdateDTO
     ) {
-        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, studentRequestDto);
+        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, studentUpdateDTO);
         return ResponseEntity.ok(updatedStudent);
     }
 

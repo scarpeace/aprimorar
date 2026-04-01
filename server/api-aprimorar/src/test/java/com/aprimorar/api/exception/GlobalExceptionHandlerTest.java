@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentCreateDTO;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -118,7 +118,7 @@ class GlobalExceptionHandlerTest {
         }
 
         @PostMapping("/validation")
-        void validation(@Valid @RequestBody StudentRequestDTO request) {
+        void validation(@Valid @RequestBody StudentCreateDTO request) {
             // Validation is handled before this method is reached.
         }
     }

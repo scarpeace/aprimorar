@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 
-public record EmployeeRequestDTO(
+public record EmployeeCreateDTO(
         @NotBlank(message = "Nome do funcionário é obrigatório")
         String name,
         @NotNull(message = "A data de nascimento do funcionário é obrigatória")

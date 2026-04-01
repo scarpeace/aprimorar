@@ -1,19 +1,22 @@
 package com.aprimorar.api.domain.employee;
 
-import java.time.LocalDate;
-
 import com.aprimorar.api.domain.employee.exception.InvalidEmployeeException;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.shared.BaseEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+import java.time.LocalDate;
+
+@Getter
 @Entity
 @Table(name = "tb_employees")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Employee extends BaseEntity {
 
     @Column(name = "name", nullable = false)
@@ -28,6 +31,7 @@ public class Employee extends BaseEntity {
     @Column(name = "contact", nullable = false)
     private String contact;
 
+    @EqualsAndHashCode.Include
     @Column(name = "cpf", nullable = false)
     private String cpf;
 
@@ -46,68 +50,50 @@ public class Employee extends BaseEntity {
 
     public void setName(String name) {
         if (name == null || name.isBlank()) {
-            throw new InvalidEmployeeException("Nome do colaborador não pode estar vazio");
+            throw new InvalidEmployeeException("Nome do colaborador não pode ser null");
         }
         this.name = name;
     }
 
-    public LocalDate getBirthdate() {
-        return birthdate;
-    }
-
     public void setBirthdate(LocalDate birthdate) {
         if (birthdate == null) {
-            throw new InvalidEmployeeException("A data de nascimento do colaborador não pode estar vazia");
+            throw new InvalidEmployeeException("A data de nascimento do colaborador não pode ser null");
         }
         this.birthdate = birthdate;
     }
 
-    public String getPix() {
-        return pix;
-    }
-
     public void setPix(String pix) {
+        if (pix == null || pix.isBlank()) {
+            throw new InvalidEmployeeException("Pix do colaborador não pode ser null");
+        }
         this.pix = pix;
-    }
-
-    public String getContact() {
-        return contact;
     }
 
     public void setContact(String contact) {
         if (contact == null || contact.isBlank()) {
-            throw new InvalidEmployeeException("Contato do colaborador não pode estar vazio");
+            throw new InvalidEmployeeException("Contato do colaborador não pode ser null");
         }
         this.contact = contact;
     }
 
-    public String getCpf() {
-        return cpf;
-    }
-
     public void setCpf(String cpf) {
         if (cpf == null || cpf.isBlank()) {
-            throw new InvalidEmployeeException("CPF do colaborador não pode estar vazio");
+            throw new InvalidEmployeeException("CPF do colaborador não pode ser null");
         }
         this.cpf = cpf;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         if (email == null || email.isBlank()) {
-            throw new InvalidEmployeeException("Email do colaborador não pode estar vazio");
+            throw new InvalidEmployeeException("Email do colaborador não pode ser null");
         }
         this.email = email;
     }
 
-    public Duty getDuty() {
-        return duty;
-    }
-
     public void setDuty(Duty duty) {
+        if (duty == null) {
+            throw new InvalidEmployeeException("Função do colaborador não pode ser null");
+        }
         this.duty = duty;
     }
 }
