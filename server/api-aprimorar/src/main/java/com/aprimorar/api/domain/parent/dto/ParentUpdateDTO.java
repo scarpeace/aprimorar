@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-@Schema(description = "Formato de payload para o cadastro e/ou update de um aluno")
+@Schema(description = "Formato de payload para o update de um responsável")
 public record ParentUpdateDTO(
         @NotBlank(message = "Nome do responsável é obrigatório")
         @Schema(nullable = false, description = "Nome do responsável", example = "João Silva")

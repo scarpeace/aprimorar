@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
-@Schema(description = "Formato de payload para o cadastro e/ou update de um aluno")
+@Schema(description = "Formato de payload para o update de um aluno")
 public record StudentUpdateDTO(
     @NotBlank(message = "Nome do aluno é obrigatório")
     @Schema(nullable = false, description = "Nome do aluno", example = "John Doe")

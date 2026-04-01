@@ -5,12 +5,14 @@ import java.time.LocalDate;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.shared.MapperUtils;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 
+@Schema(description = "Formato de payload para criar um novo colaborador")
 public record EmployeeCreateDTO(
         @NotBlank(message = "Nome do funcionário é obrigatório")
         String name,
