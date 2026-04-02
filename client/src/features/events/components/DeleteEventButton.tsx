@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { useDeleteEvent } from "../query/useEventMutations";
+import { useDeleteEvent } from "../hooks/useEventMutations";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 
 export const DeleteEventButton = ({ eventId }: { eventId: string }) => {

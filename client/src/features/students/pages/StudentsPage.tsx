@@ -1,7 +1,6 @@
 import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { PageHeader } from "@/components/ui/page-header";
-import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetStudents } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
@@ -15,14 +14,13 @@ export function StudentsPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showArchived, setShowArchived] = useState(false);
 
-  const { data: studentsResponse, isPending, error, } = useGetStudents({
+  const { data: students, isPending, error, } = useGetStudents({
     page: currentPage,
     size: 8,
     search: debouncedSearchTerm,
     archived: showArchived,
   });
 
-  const { content: students, ...pageMetadata } = studentsResponse || {}
 
   return (
     <>
@@ -53,15 +51,11 @@ export function StudentsPage() {
 
       <StudentsTable
         students={students}
-         isPending={isPending}
-          error={error}
-      >
-          <Pagination
-            paginationData={pageMetadata}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
-      </StudentsTable>
+        onPageChange={setCurrentPage}
+        currentPage={currentPage}
+        isPending={isPending}
+        error={error}
+      />
     </>
   );
 }

@@ -7,7 +7,7 @@ import { useGetParents } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { GraduationCap, Handshake } from "lucide-react";
 import { useState } from "react";
-import { ParentsTable } from "./components/ParentsTable";
+import { ParentsTable } from "../components/ParentsTable";
 
 export function ParentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,14 +15,17 @@ export function ParentsPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showArchived, setShowArchived] = useState(false);
 
-  const { data: parentsResponse, isPending, error, } = useGetParents({
+  const {
+    data: parents,
+    isPending,
+    error,
+  } = useGetParents({
     page: currentPage,
     size: 8,
     search: debouncedSearchTerm,
     archived: showArchived,
   });
 
-  const { content: parents, ...pageMetadata } = parentsResponse || {}
 
   return (
     <>
@@ -44,15 +47,11 @@ export function ParentsPage() {
 
       <ParentsTable
         parents={parents}
-         isPending={isPending}
-          error={error}
-      >
-          <Pagination
-            paginationData={pageMetadata}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
-      </ParentsTable>
+        isPending={isPending}
+        error={error}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
     </>
   );
 }

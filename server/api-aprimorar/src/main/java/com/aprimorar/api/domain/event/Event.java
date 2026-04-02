@@ -17,6 +17,7 @@ import java.util.UUID;
 @Table(name = "tb_events")
 public class Event extends BaseEntity {
 
+    //TODO: Eu acho que esse titulo nao é necessario sem o google calendar
     @Column(name = "title", nullable = false)
     private String title;
 

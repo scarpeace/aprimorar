@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
-import { useEventsByStudent } from "@/features/events/query/eventQueries";
-import { useDeleteStudentMutation } from "../hooks/use-student-mutation";
+import { Trash2 } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDeleteStudentMutation } from "../hooks/use-student-mutation";
+import { useEventsByStudent } from "@/features/events/hooks/use-event-queries";
 
 export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
   const [isOpen, setIsOpen] = useState(false);

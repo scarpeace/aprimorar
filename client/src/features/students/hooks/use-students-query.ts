@@ -47,7 +47,7 @@ export function useStudentsByParent(
   });
 }
 
-export function useStudentsSummary() {
+export function useStudentsOption() {
   return useGetStudentsOptions({
     query: {
       queryKey: getStudentsOptionsQueryKey(),

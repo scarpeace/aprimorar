@@ -14,6 +14,7 @@ import type { StudentUpdateSchema } from "../hooks/studentSchema";
 import { useStudentForm } from "../hooks/use-student-form";
 import { useUpdateStudentMutation } from "../hooks/use-student-mutation";
 import { useStudentById } from "../hooks/use-students-query";
+import { ComponentState } from "@/components/ui/component-state";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -40,21 +41,13 @@ export function StudentEditPage() {
     registerWithMask,
   } = useStudentForm(student);
 
-  if (isStudentError) {
-    return (
-      <ErrorCard
-        title="Ocorreu um erro ao carregar o aluno."
-        error={studentError}
-      />
-    );
-  }
-
-  if (isStudentPending) {
-    return <PageLoading message="Carregando aluno..." />;
-  }
   const onSubmit = handleSubmit((data: StudentUpdateSchema) => {
     updateStudent({ studentId, data });
   });
+
+  if (isStudentError || isStudentPending) {
+    return <ComponentState error={studentError} isPending={isStudentPending} />;
+  }
 
   return (
     <>

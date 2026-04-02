@@ -36,9 +36,9 @@ export const studentResponseSchema = z.object({
   age: z.number(),
   address: addressResponseSchema,
   parent: parentResponseSchema,
-  archivedAt: z.string().nullable().optional(),
+  archivedAt: z.string().nullable(),
   createdAt: z.string(),
-  updatedAt: z.string().nullable().optional(),
+  updatedAt: z.string().nullable(),
 });
 
 export type StudentCreateSchema = z.input<typeof studentCreateSchema>;

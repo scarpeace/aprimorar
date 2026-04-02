@@ -1,52 +1,47 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type { ParentResponseDTO } from "@/kubb";
+import { Pagination } from "@/components/ui/pagination";
+import type { PageDTOParentResponseDTO } from "@/kubb";
 import {
   formatCpf,
-  formatDateShortYear,
-  formatPhone,
+  formatPhone
 } from "@/lib/utils/formatter";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
-type ParentsTableStateProps = {
-  isPending: boolean;
-  error: unknown;
-};
-
-export function ParentsTableState({
-  isPending,
-  error,
-}: Readonly<ParentsTableStateProps>) {
-  if (isPending) return <LoadingSpinner text="Carregando Alunos..." />;
-
-  if (error)
-    return (
-      <ErrorCard
-        title="Não foi possível carregar a listagem de alunos"
-        error={error}
-      />
-    );
-}
-
 type ParentsTableProps = {
-  parents?: ParentResponseDTO[];
+  parents?: PageDTOParentResponseDTO;
   children?: ReactNode;
+  onPageChange: (page: number) => void;
+  currentPage: number;
   isPending: boolean;
   error: unknown;
 };
 
 export function ParentsTable({
   parents,
-  children,
+  onPageChange,
+  currentPage,
   isPending,
   error,
 }: Readonly<ParentsTableProps>) {
   const navigate = useNavigate();
 
+  if (isPending) {
+    return <LoadingSpinner text="Carregando Responsáveis..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorCard
+        title="Não foi possível carregar a listagem de Responsáveis"
+        error={error}
+      />
+    );
+  }
+
   return (
     <>
-      <ParentsTableState isPending={isPending} error={error} />
       <div>
         <table className="table table-zebra bg-base-100 overflow-x-auto w-full p-3 rounded-xl animate-[fade-up_280ms_ease-out_both]">
           <thead className="bg-base-300 rounded">
@@ -73,7 +68,7 @@ export function ParentsTable({
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {parents?.map((parent) => (
+            {parents?.content.map((parent) => (
               <tr
                 key={parent.parentId}
                 className="transition-colors hover:bg-base-200/70"
@@ -83,7 +78,6 @@ export function ParentsTable({
                 <td>{formatCpf(parent.cpf)}</td>
                 <td>{formatPhone(parent.contact)}</td>
                 <td>{parent.email}</td>
-
 
                 <td>{parent.archivedAt ? "Arquivado" : "Ativo"}</td>
 
@@ -99,7 +93,11 @@ export function ParentsTable({
             ))}
           </tbody>
         </table>
-        {children}
+        <Pagination
+          paginationData={parents}
+          currentPage={currentPage}
+          onPageChange={onPageChange}
+        />
       </div>
     </>
   );

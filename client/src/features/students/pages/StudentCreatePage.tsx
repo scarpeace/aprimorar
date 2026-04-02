@@ -1,4 +1,3 @@
-import { Alert } from "@/components/ui/alert";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PageHeader } from "@/components/ui/page-header";
@@ -9,6 +8,7 @@ import { StudentForm } from "../components/StudentForm";
 import { StudentFormFields } from "../components/StudentFormFields";
 import { useStudentForm } from "../hooks/use-student-form";
 import { useCreateStudentMutation } from "../hooks/use-student-mutation";
+import { Alert } from "@/components/ui/alert";
 
 export function StudentCreatePage() {
   const {

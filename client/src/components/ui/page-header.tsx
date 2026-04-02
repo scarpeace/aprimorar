@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
+import { Button, ButtonLink } from "./button";
+import { useNavigate } from "react-router-dom";
 
 type PageHeaderProps = {
   title: string;
@@ -14,6 +16,7 @@ export function PageHeader({
   Icon,
   children,
 }: Readonly<PageHeaderProps>) {
+  const navigate = useNavigate()
   return (
     <header className="min-w-0 gap-5 mb-6">
       <div className="flex flex-row">
@@ -22,8 +25,11 @@ export function PageHeader({
           <h1 className="app-text text-3xl font-bold">{title}</h1>
           <p className="text-sm app-text-muted">{description}</p>
         </div>
-          <div className="flex items-end ml-auto gap-6">
-          {children}
+        <div className="flex items-end ml-auto gap-6">
+          {/*TODO: tem que pegar o link como props*/}
+          <Button onClick={() => navigate(-1)} variant="outline">
+            Voltar
+          </Button>
           </div>
       </div>
     </header>

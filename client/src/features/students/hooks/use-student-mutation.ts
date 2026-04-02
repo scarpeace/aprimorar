@@ -1,14 +1,13 @@
 import {
-  deleteStudentMutationKey,
-  getStudentByIdQueryKey,
-  getStudentsQueryKey,
-  updateStudentMutationKey,
-  useArchiveStudent,
-  useCreateStudent,
-  useDeleteStudent,
-  useUnarchiveStudent,
-  useUpdateStudent,
-  type StudentResponseDTO,
+    deleteStudentMutationKey,
+    getStudentByIdQueryKey,
+    getStudentsQueryKey,
+    useArchiveStudent,
+    useCreateStudent,
+    useDeleteStudent,
+    useUnarchiveStudent,
+    useUpdateStudent,
+    type StudentResponseDTO
 } from "@/kubb";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -43,7 +42,6 @@ export function useUpdateStudentMutation() {
         toast.success("Aluno atualizado com sucesso");
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() })
         queryClient.invalidateQueries({ queryKey: getStudentByIdQueryKey(updatedStudent.id) })
-        queryClient.invalidateQueries({ queryKey: updateStudentMutationKey() });
         navigate(`/students/${updatedStudent.id}`);
       },
       onError: () => {

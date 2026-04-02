@@ -1,9 +1,12 @@
-import type { PageMetadata } from "@/kubb";
-
+//TODO: voltar aqui depois e ver esse content unknown
 export type PaginationProps = {
-  paginationData?: PageMetadata
+  paginationData?: {
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    content:unknown[]
+  };
   currentPage: number;
-  currentSize?: number;
   onPageChange: (page: number) => void;
 };
 
@@ -11,7 +14,6 @@ export function Pagination({
   currentPage,
   onPageChange,
   paginationData,
-  currentSize,
 }: Readonly<PaginationProps>) {
 
   if (!paginationData) return null;
@@ -19,7 +21,7 @@ export function Pagination({
   return (
     <div className="mt-4 flex items-center justify-between px-3">
       <p className="text-sm app-text-muted hidden lg:block">
-        Mostrando {currentSize} de {paginationData.totalElements}
+        Mostrando {paginationData.content.length} de {paginationData.totalElements}
       </p>
       <div className="join mx-auto lg:mx-0 mb-3">
         <button

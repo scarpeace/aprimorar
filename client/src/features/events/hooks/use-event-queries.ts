@@ -4,14 +4,17 @@ import {
   useGetEventById,
   useGetEventsByStudent,
   useGetEventsByEmployee,
+  getEventsQueryKey,
+  getEventByIdQueryKey,
+  getEventsByStudentQueryKey,
+  getEventsByEmployeeQueryKey,
 } from "@/kubb";
 import { keepPreviousData } from "@tanstack/react-query";
-import { eventQueryKeys } from "./eventQueryKeys";
 
 export function useEvents(params: GetEventsQueryParams = {}) {
   return useGetEvents(params, {
     query: {
-      queryKey: eventQueryKeys.list(params),
+      queryKey: getEventsQueryKey(params),
       placeholderData: keepPreviousData,
       staleTime: 1000 * 60 * 5, // 5 minutos
     },
@@ -21,7 +24,7 @@ export function useEvents(params: GetEventsQueryParams = {}) {
 export function useEventById(eventId: string) {
   return useGetEventById(eventId, {
     query: {
-      queryKey: eventQueryKeys.detail(eventId),
+      queryKey: getEventByIdQueryKey(eventId),
       enabled: !!eventId,
       staleTime: 1000 * 60 * 5,
     },
@@ -34,7 +37,7 @@ export function useEventsByStudent(studentId: string) {
     {size: 10, sort: ["startDate"] },
     {
       query: {
-        queryKey: eventQueryKeys.byStudent(studentId),
+        queryKey: getEventsByStudentQueryKey(studentId),
         staleTime: 1000 * 60 * 10,
         enabled: !!studentId
       },
@@ -48,7 +51,7 @@ export function useEventsByEmployee(employeeId: string) {
     {size: 10, sort: ["startDate"] },
     {
       query: {
-        queryKey: eventQueryKeys.byEmployee(employeeId),
+        queryKey: getEventsByEmployeeQueryKey(employeeId),
         staleTime: 1000 * 60 * 10,
         enabled: !!employeeId
       },

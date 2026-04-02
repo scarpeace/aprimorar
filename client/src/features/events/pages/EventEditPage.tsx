@@ -7,77 +7,57 @@ import { FormField } from "@/components/ui/form-field";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
-import styles from "@/features/events/EventCreatePage.module.css";
 
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import {
-  eventRequestDTOContentEnum,
-  updateEventMutationRequestSchema,
-  useGetEventById,
-  useGetStudentOptions,
-  useUpdateEvent,
-  type UpdateEventMutationRequestSchema,
-} from "@/kubb";
-import { useEmployeeOptionsQuery } from "@/features/employees/query/useEmployeeQueries";
+import { eventContentLabels } from "@/features/events/hooks/eventContentLabels";
 import { formatDateTimeLocal } from "@/lib/utils/formatter";
-import { DeleteEventButton } from "./components/DeleteEventButton";
+import { DeleteEventButton } from "../components/DeleteEventButton";
 import { Alert } from "@/components/ui/alert";
+import { useEventById } from "../hooks/use-event-queries";
+import { useUpdateEventMutation } from "../hooks/use-event-mutations";
+import { useStudentsOption } from "@/features/students/hooks/use-students-query";
+import { useEmployeesOptions } from "@/features/employees/query/employeeQueries";
 
 export function EventEditPage() {
-  const { id: eventId } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
+  const eventId = id ?? "";
 
+  //TODO: como observado abaixo o eventId não vai entre chaves. Padronizar isso em todos os componentes.
   const {
-    data: eventData,
+    data: event,
     isLoading: isEventLoading,
     error: eventError,
     refetch: refetchEvent,
-  } = useGetEventById(eventId ?? "", {
-    query: { enabled: !!eventId },
-  });
+  } = useEventById(eventId);
 
   const {
     mutate: updateEvent,
     isPending: isUpdateEventPending,
     error: updateEventError,
-  } = useUpdateEvent();
+  } = useUpdateEventMutation();
 
   const {
     data: studentOptions,
     isLoading: isStudentOptionsLoading,
     refetch: refetchStudentOptions,
     error: studentOptionsError,
-  } = useGetStudentOptions();
+  } = useStudentsOption();
+
   const {
     data: employeeeOptions,
     isLoading: isEmployeeeOptionsLoading,
     refetch: refetchEmployeeOptions,
     error: employeeeOptionsError,
-  } = useEmployeeOptionsQuery();
+  } = useEmployeesOptions();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
+
+    const {
     formState: { errors },
-  } = useForm<UpdateEventMutationRequestSchema>({
-    resolver: zodResolver(updateEventMutationRequestSchema),
-    mode: "onBlur",
-    values: {
-      title: eventData?.title ?? "",
-      description: eventData?.description ?? "",
-      content:
-        (eventData?.content as UpdateEventMutationRequestSchema["content"]) ??
-        "",
-      startDate: eventData?.startDate
-        ? formatDateTimeLocal(eventData.startDate)
-        : "",
-      endDate: eventData?.endDate ? formatDateTimeLocal(eventData.endDate) : "",
-      price: eventData?.price ?? 0,
-      payment: eventData?.payment ?? 0,
-      studentId: eventData?.studentId ?? "",
-      employeeId: eventData?.employeeId ?? "",
-    },
-  });
+    handleSubmit,
+    register,
+    registerWithMask,
+    } = useEventForm(event);
+
   const studentIdField = register("studentId");
   const employeeIdField = register("employeeId");
 
@@ -89,7 +69,7 @@ export function EventEditPage() {
     eventError || studentOptionsError || employeeeOptionsError;
   if (eventError || studentOptionsError || employeeeOptionsError) {
     return (
-      <div className={styles.page}>
+      <div className="flex flex-col gap-7">
         <ErrorCard
           description={getFriendlyErrorMessage(errorMessage)}
           onAction={() =>
@@ -108,12 +88,12 @@ export function EventEditPage() {
     return <PageLoading message="Carregando evento para edição..." />;
   }
 
-  const onSubmit = (data: UpdateEventMutationRequestSchema) => {
+  const onSubmit = (data: any) => {
     updateEvent({ eventId, data });
   };
 
   return (
-    <div className={styles.page}>
+    <div className="flex flex-col gap-7">
       <PageHeader
         title="Editar evento"
         description="Atualize os dados do atendimento."
@@ -128,10 +108,10 @@ export function EventEditPage() {
         title="Dados do evento"
         description="Atualize data, valores e participantes do atendimento."
       >
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-          <div className={styles.formGrid}>
+        <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
             <FormField
-              className={styles.field}
+              className="flex flex-col gap-2"
               label="Título"
               htmlFor="title"
               error={errors.title?.message}
@@ -145,7 +125,7 @@ export function EventEditPage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className="flex flex-col gap-2"
               label="Aluno"
               htmlFor="studentId"
               error={errors.studentId?.message}
@@ -174,7 +154,7 @@ export function EventEditPage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className="flex flex-col gap-2"
               label="Colaborador"
               htmlFor="employeeId"
               error={errors.employeeId?.message}
@@ -203,7 +183,7 @@ export function EventEditPage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className="flex flex-col gap-2"
               label="Conteúdo"
               htmlFor="content"
               error={errors.content?.message}
@@ -226,7 +206,7 @@ export function EventEditPage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className="flex flex-col gap-2"
               label="Início"
               htmlFor="startDate"
               error={errors.startDate?.message}
@@ -240,7 +220,7 @@ export function EventEditPage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className="flex flex-col gap-2"
               label="Fim"
               htmlFor="endDate"
               error={errors.endDate?.message}
@@ -254,7 +234,7 @@ export function EventEditPage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className="flex flex-col gap-2"
               label="Preço (receita)"
               htmlFor="price"
               error={errors.price?.message}
@@ -273,7 +253,7 @@ export function EventEditPage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className="flex flex-col gap-2"
               label="Pagamento (custo)"
               htmlFor="payment"
               error={errors.payment?.message}
@@ -292,7 +272,7 @@ export function EventEditPage() {
             </FormField>
 
             <FormField
-              className={`${styles.field} ${styles.span2}`}
+              className="flex flex-col gap-2 md:col-span-2"
               label="Descrição (opcional)"
               htmlFor="description"
               error={errors.description?.message}
@@ -306,7 +286,7 @@ export function EventEditPage() {
             </FormField>
           </div>
 
-          <div className={styles.actions}>
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 mt-1">
             <DeleteEventButton eventId={eventId} />
             <ButtonLink to={`/events/${eventId}`} variant="outline">
               Cancelar

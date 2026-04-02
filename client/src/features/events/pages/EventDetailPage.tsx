@@ -1,20 +1,16 @@
-import type { ReactNode } from "react";
-import { Calendar, UserCog } from "lucide-react";
-import { useParams } from "react-router-dom";
-import { ButtonLink } from "@/components/ui/button";
-import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PageHeader } from "@/components/ui/page-header";
-import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import styles from "@/features/events/EventDetailPage.module.css";
-import { eventContentLabels } from "@/features/events/schemas/eventContentEnum";
+import { eventContentLabels } from "@/features/events/hooks/eventContentLabels";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { useEventDetailQuery } from "./query/useEventQueries";
-import { EditEventButton } from "./components/EditEventButton";
-import { DeleteEventButton } from "./components/DeleteEventButton";
+import { Calendar } from "lucide-react";
+import type { ReactNode } from "react";
+import { useParams } from "react-router-dom";
+import { EditEventButton } from "../components/EditEventButton";
+import { useEventById } from "../hooks/use-event-queries";
+import { ComponentState } from "@/components/ui/component-state";
 
 export function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -22,37 +18,19 @@ export function EventDetailPage() {
 
   const {
     data: event,
-    isLoading: isEventLoading,
+    isPending: isEventPending,
+    isError: isEventError,
     error: eventError,
-  } = useEventDetailQuery(eventId);
+  } = useEventById(eventId);
 
-  if (isEventLoading) {
-    return <PageLoading message="Carregando evento..." />;
-  }
-
-  if (eventError) {
-    return (
-      <div className={styles.page}>
-        <ErrorCard description={getFriendlyErrorMessage(eventError)} />
-      </div>
-    );
-  }
-
-  if (!event) {
-    return (
-      <div className={styles.page}>
-        <EmptyCard
-          title="Evento não encontrado"
-          description="Não encontramos os dados deste evento."
-        />
-      </div>
-    );
+  if(isEventPending || isEventError) {
+    return <ComponentState isPending={isEventPending} error={eventError} />;
   }
 
   const profit = Number(event.price) - Number(event.payment);
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "ID", value: String(event.id) },
+    { label: "ID", value: String(event.eventId) },
     { label: "Título", value: event.title },
     { label: "Descrição", value: event.description ?? "-" },
     { label: "Conteúdo", value: eventContentLabels[event.content] },
@@ -70,16 +48,11 @@ export function EventDetailPage() {
   ];
 
   return (
-    <div className={styles.page}>
+    <div className="flex flex-col gap-7">
       <PageHeader
         description="Veja e gerencie as informações do evento"
         Icon={Calendar}
         title="Detalhes do evento"
-        action={
-          <ButtonLink to="/events" variant="outline">
-            Voltar para eventos
-          </ButtonLink>
-        }
       />
 
       <SectionCard
@@ -87,7 +60,7 @@ export function EventDetailPage() {
         title="Resumo do evento"
         description="Dados completos do atendimento, participantes e valores."
       >
-        <div className={styles.summaryGrid}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {summaryItems.map((item) => (
             <SummaryItem
               key={item.label}

@@ -1,6 +1,7 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type { StudentResponseDTO } from "@/kubb";
+import { Pagination } from "@/components/ui/pagination";
+import type { PageDTOStudentResponseDTO } from "@/kubb";
 import {
   formatCpf,
   formatDateShortYear,
@@ -9,44 +10,34 @@ import {
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
-type StudentsTableStateProps = {
-  isPending: boolean;
-  error: unknown;
-};
-
-export function StudentsTableState({
-  isPending,
-  error,
-}: Readonly<StudentsTableStateProps>) {
-  if (isPending) return <LoadingSpinner text="Carregando Alunos..." />;
-
-  if (error)
-    return (
-      <ErrorCard
-        title="Não foi possível carregar a listagem de alunos"
-        error={error}
-      />
-    );
-}
-
 type StudentsTableProps = {
-  students?: StudentResponseDTO[];
+  students?: PageDTOStudentResponseDTO;
   children?: ReactNode;
+  onPageChange: (page: number) => void;
+  currentPage: number;
   isPending: boolean;
   error: unknown;
 };
 
 export function StudentsTable({
   students,
-  children,
+  onPageChange,
+  currentPage,
   isPending,
   error,
 }: Readonly<StudentsTableProps>) {
   const navigate = useNavigate();
 
+  if (isPending) {
+    return <LoadingSpinner text="Carregando Alunos..." />;
+  }
+
+  if (error) {
+    return <ErrorCard title="Não foi possível carregar a listagem de Alunos" error={error} />;
+  }
+
   return (
     <>
-      <StudentsTableState isPending={isPending} error={error} />
       <div>
         <table className="table table-zebra bg-base-100 overflow-x-auto w-full p-3 rounded-xl animate-[fade-up_280ms_ease-out_both]">
           <thead className="bg-base-300 rounded">
@@ -79,7 +70,7 @@ export function StudentsTable({
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {students?.map((student) => (
+            {students?.content.map((student) => (
               <tr
                 key={student.id}
                 className="transition-colors hover:bg-base-200/70"
@@ -107,7 +98,11 @@ export function StudentsTable({
             ))}
           </tbody>
         </table>
-        {children}
+            <Pagination
+            paginationData={students}
+            currentPage={currentPage}
+            onPageChange={onPageChange}
+          />
       </div>
     </>
   );

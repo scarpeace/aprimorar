@@ -2,10 +2,8 @@ import { Collapse } from "@/components/ui/collapse";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { PageHeader } from "@/components/ui/page-header";
-import { Pagination } from "@/components/ui/pagination";
 import { AddressSummarySection } from "@/features/address/AddressSumarySection";
 import { EventsTable } from "@/features/events/components/EventsTable";
-import { useEventsByStudent } from "@/features/events/query/eventQueries";
 import { GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -14,6 +12,7 @@ import { DeleteStudentButton } from "../components/DeleteStudentButton";
 import { EditStudentButton } from "../components/EditStudentButton";
 import { StudentDetails } from "../components/StudentDetails";
 import { useStudentById } from "../hooks/use-students-query";
+import { useEventsByStudent } from "@/features/events/hooks/use-event-queries";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -27,12 +26,11 @@ export function StudentDetailsPage() {
     error: studentError,
   } = useStudentById({ studentId });
   const {
-    data: pagedStudentEvents,
+    data: studentEvents,
     isPending: isStudentEventsPending,
     error: studentEventsError,
   } = useEventsByStudent(studentId);
 
-  const { content: studentEvents, ...pageMetadata } = pagedStudentEvents || {};
 
   if (isStudentError) {
     return <ErrorCard title="Erro ao carregar aluno" error={studentError} />;
@@ -68,17 +66,12 @@ export function StudentDetailsPage() {
         </Collapse>
 
         <EventsTable
-          events={studentEvents}
+          eventsPage={studentEvents}
           isPending={isStudentEventsPending}
           error={studentEventsError}
-        >
-          <Pagination
-            paginationData={pageMetadata.page}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-            currentSize={studentEvents?.length}
-          />
-        </EventsTable>
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </>
   );
