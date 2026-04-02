@@ -14,7 +14,7 @@ import styles from "./parent-detail-page.module.css";
 import { ArchiveParentButton } from "./components/ArchiveParentButton";
 import { DeleteParentButton } from "./components/DeleteParentButton";
 import { EditParentButton } from "./components/EditParentButton";
-import { useParentById } from "./query/parentQueries";
+import { useParentById } from "./hooks/use-parent-queries";
 import {
   formatCpf,
   formatDateShortYear,

@@ -4,7 +4,7 @@
  */
 
 /**
- * @description Formato de payload para o cadastro e/ou update de um aluno
+ * @description Formato de payload para o update de um responsável
  */
 export type ParentUpdateDTO = {
   /**

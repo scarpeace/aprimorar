@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import { studentInputSchema, type StudentInputSchema } from "./studentSchema";
+import { studentCreateSchema, type StudentCreateSchema } from "./studentSchema";
 import type { StudentResponseDTO } from "@/kubb";
 
 export function useStudentForm(student?: StudentResponseDTO) {
 
-  const form = useForm<StudentInputSchema>({
-    resolver: zodResolver(studentInputSchema),
+  const form = useForm<StudentCreateSchema>({
+    resolver: zodResolver(studentCreateSchema),
     mode: "onBlur",
     values: {
       name: student?.name ?? "",

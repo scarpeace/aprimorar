@@ -1,7 +1,7 @@
 import React, { useId, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { useParentsSummary } from "../query/parentQueries";
+import { useParentsSummary } from "../hooks/use-parent-queries";
 import type { ParentSummaryDTO } from "@/kubb";
 import { ButtonLink } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";

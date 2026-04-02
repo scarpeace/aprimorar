@@ -1,14 +1,15 @@
 import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
-import type { StudentInputSchema } from "@/features/students/hooks/studentSchema";
+import type { StudentCreateSchema } from "@/features/students/hooks/studentSchema";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
 
 type StudentFormFieldsProps = {
   register: UseFormRegister<any>;
   registerWithMask: ReturnType<typeof useHookFormMask>;
-  errors: FieldErrors<StudentInputSchema>;
+  errors: FieldErrors<StudentCreateSchema>;
   className?: string;
+  isUpdate?: boolean;
 };
 
 export function StudentFormFields({
@@ -16,8 +17,8 @@ export function StudentFormFields({
   registerWithMask,
   errors,
   className,
+  isUpdate,
 }: Readonly<StudentFormFieldsProps>) {
-
   return (
     <SectionCard
       title="Dados do aluno"
@@ -47,11 +48,7 @@ export function StudentFormFields({
           />
         </FormField>
 
-        <FormField
-          label="Email"
-          htmlFor="email"
-          error={errors.email?.message}
-        >
+        <FormField label="Email" htmlFor="email" error={errors.email?.message}>
           <input className="app-input" id="email" {...register("email")} />
         </FormField>
 
@@ -61,7 +58,7 @@ export function StudentFormFields({
           error={errors.birthdate?.message}
         >
           <input
-          type="date"
+            type="date"
             className="app-input"
             id="birthdate"
             {...register("birthdate")}
@@ -71,17 +68,18 @@ export function StudentFormFields({
         <FormField label="CPF" htmlFor="cpf" error={errors.cpf?.message}>
           <input
             className="app-input"
+            disabled={isUpdate}
             id="cpf"
             {...registerWithMask("cpf", "999.999.999-99")}
           />
         </FormField>
 
-        <FormField label="Escola" htmlFor="school" error={errors.school?.message}>
-          <input
-            className="app-input"
-            id="school"
-            {...register("school")}
-          />
+        <FormField
+          label="Escola"
+          htmlFor="school"
+          error={errors.school?.message}
+        >
+          <input className="app-input" id="school" {...register("school")} />
         </FormField>
       </div>
     </SectionCard>

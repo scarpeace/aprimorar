@@ -10,6 +10,7 @@ type ParentFormFieldsProps = Readonly<{
   prefix?: string;
   errors?: FieldErrors<ParentInputSchema>;
   className?: string;
+  isUpdate?: boolean;
 }>;
 
 export function ParentFormFields({
@@ -18,6 +19,7 @@ export function ParentFormFields({
   prefix,
   errors,
   className,
+  isUpdate
 }: ParentFormFieldsProps) {
 
   const withPrefix = (field: string) => prefix ? `${prefix}.${field}` : field;
@@ -78,6 +80,7 @@ export function ParentFormFields({
         >
           <input
             className="app-input"
+            disabled={isUpdate}
             id={`cpf`}
             placeholder="000.000.000-00"
             {...registerWithMask(withPrefix(`cpf`), "999.999.999-99")}

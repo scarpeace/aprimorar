@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useDeleteParentMutation } from "../query/parentMutations";
+import { useDeleteParentMutation } from "../hooks/use-parent-mutations";
 
 export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
   const [isOpen, setIsOpen] = useState(false);

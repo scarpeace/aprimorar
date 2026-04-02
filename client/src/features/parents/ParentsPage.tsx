@@ -1,132 +1,67 @@
-import { useState } from "react";
-import { Handshake } from "lucide-react";
-import { EmptyCard } from "@/components/ui/empty-card";
-import { ErrorCard } from "@/components/ui/error-card";
+import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { PageHeader } from "@/components/ui/page-header";
-import { PageLoading } from "@/components/ui/page-loading";
 import { Pagination } from "@/components/ui/pagination";
-import { ButtonLink } from "@/components/ui/button";
-import styles from "@/features/parents/ParentsPage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { useDebounce } from "@/lib/shared/use-debounce";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetParents } from "@/kubb";
+import { useDebounce } from "@/lib/shared/use-debounce";
+import { GraduationCap, Handshake } from "lucide-react";
+import { useState } from "react";
+import { ParentsTable } from "./components/ParentsTable";
 
 export function ParentsPage() {
-  const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const pageSize = 10;
+  const [currentPage, setCurrentPage] = useState(0);
+  const [showArchived, setShowArchived] = useState(false);
 
-  const {
-    data: parentsPage,
-    isLoading,
-    error,
-    refetch,
-  } = useGetParents({
+  const { data: parentsResponse, isPending, error, } = useGetParents({
     page: currentPage,
-    size: pageSize,
-    sort: ["name"]
+    size: 8,
+    search: debouncedSearchTerm,
+    archived: showArchived,
   });
 
+  const { content: parents, ...pageMetadata } = parentsResponse || {}
+
   return (
-    <div className={styles.page}>
+    <>
       <PageHeader
         description="Gerencie pais e responsáveis."
-        title="Responsáveis"
+        title="Pais e Responsáveis"
         Icon={Handshake}
-        iconClassName="text-error"
-        iconBgClassName="bg-error/15"
       >
-        <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="flex items-center ml-auto gap-6">
           <ListSearchInput
-            placeholder="Buscar responsável por nome, email ou CPF"
-            ariaLabel="Buscar responsável"
+            className="w-80 sm:w-96"
+            placeholder="Buscar aluno por nome, email ou escola"
+            ariaLabel="Buscar aluno"
             value={searchTerm}
             onChange={setSearchTerm}
           />
-          <ButtonLink
-            className="sm:ml-auto"
-            to="/parents/new"
-            variant="success"
-          >
-            Novo responsável
+          <ToggleSwitch
+            label="Arquivados"
+            tip="Mostrar alunos arquivados"
+            toggled={showArchived}
+            setToggle={setShowArchived}
+          />
+          <ButtonLink to="/parents/new" variant="success">
+            Novo aluno
           </ButtonLink>
         </div>
       </PageHeader>
 
-      {isLoading && <PageLoading message="Carregando responsáveis..." />}
-
-      {error && <ErrorCard description={getFriendlyErrorMessage(error)} onAction={refetch} />}
-
-      <div className="app-table-wrap">
-        <div className="overflow-x-auto">
-          <table className="table table-zebra w-full">
-            <thead className="bg-base-200/90">
-              <tr>
-                <th className="app-th">Nome</th>
-                <th className="app-th hidden lg:table-cell">Email</th>
-                <th className="app-th hidden lg:table-cell">CPF</th>
-                <th className="app-th">Ações</th>
-                <th className="app-th-center">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {parentsPage?.content?.map((parent) => (
-                <tr
-                  className="transition-colors hover:bg-base-200/70"
-                  key={parent.parentId}
-                >
-                  <td>{parent.name}</td>
-                  <td className="hidden whitespace-normal break-all lg:table-cell">
-                    {parent.email}
-                  </td>
-                  <td className="hidden whitespace-normal break-all lg:table-cell">
-                    {parent.cpf}
-                  </td>
-                  <td>
-                    <ButtonLink
-                      size="sm"
-                      to={`/parents/${parent.parentId}`}
-                      variant="outline"
-                    >
-                      Detalhes
-                    </ButtonLink>
-                  </td>
-                  <td className="text-center">
-                    <span
-                      className={`badge ${parent.archivedAt ? "badge-warning" : "badge-success"}`}
-                    >
-                      {parent.archivedAt ? "Arquivado" : "Ativo"}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <Pagination
-        currentPage={currentPage}
-        totalElements={parentsPage?.page?.totalElements ?? 0}
-        totalPages={parentsPage?.page?.totalPages ?? 0}
-        currentElementsCount={parentsPage?.page?.totalElements ?? 0}
-        itemName="responsáveis"
-        onPageChange={setCurrentPage}
-      />
-
-      {parentsPage?.content?.length === 0 && debouncedSearchTerm === "" && (
-        <EmptyCard
-          title="Nenhum responsável encontrado"
-          description=""
-          action={
-            <ButtonLink to="/parents/new" variant="secondary">
-              Novo aluno
-            </ButtonLink>
-          }
-        />
-      )}
-    </div>
+      <ParentsTable
+        parents={parents}
+         isPending={isPending}
+          error={error}
+      >
+          <Pagination
+            paginationData={pageMetadata}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+      </ParentsTable>
+    </>
   );
 }

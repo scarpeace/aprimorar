@@ -10,7 +10,7 @@ import { GraduationCap } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { StudentForm } from "../components/StudentForm";
 import { StudentFormFields } from "../components/StudentFormFields";
-import type { StudentInputSchema } from "../hooks/studentSchema";
+import type { StudentUpdateSchema } from "../hooks/studentSchema";
 import { useStudentForm } from "../hooks/use-student-form";
 import { useUpdateStudentMutation } from "../hooks/use-student-mutation";
 import { useStudentByIdQuery } from "../hooks/use-students-query";
@@ -52,7 +52,7 @@ export function StudentEditPage() {
   if (isStudentPending) {
     return <PageLoading message="Carregando aluno..." />;
   }
-  const onSubmit = handleSubmit((data: StudentInputSchema) => {
+  const onSubmit = handleSubmit((data: StudentUpdateSchema) => {
     updateStudent({ studentId, data });
   });
 
@@ -71,6 +71,7 @@ export function StudentEditPage() {
         )}
 
         <StudentFormFields
+          isUpdate={true}
           register={register}
           registerWithMask={registerWithMask}
           errors={errors}
@@ -78,6 +79,7 @@ export function StudentEditPage() {
         />
 
         <ParentFormFields
+          isUpdate={ true}
           register={register}
           registerWithMask={registerWithMask}
           prefix="parent"

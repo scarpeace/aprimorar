@@ -46,7 +46,7 @@ public class ParentController {
     }
 
     @GetMapping("/summary")
-    @Operation(operationId = "getParentOptions", description = "Retorna uma lista de responsáveis para dropdown")
+    @Operation(operationId = "getParentsOptions", description = "Retorna uma lista de responsáveis para dropdown")
     @ApiResponse(responseCode = "200", description = "Lista de opções retornada com sucesso.")
     public ResponseEntity<List<ParentOptionsDTO>> getParentOptions() {
         return ResponseEntity.ok(parentService.getParentOptions());

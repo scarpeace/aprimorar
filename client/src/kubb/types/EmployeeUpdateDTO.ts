@@ -14,6 +14,9 @@ export const employeeUpdateDTODutyEnum = {
 export type EmployeeUpdateDTODutyEnumKey =
   (typeof employeeUpdateDTODutyEnum)[keyof typeof employeeUpdateDTODutyEnum];
 
+/**
+ * @description Formato de payload para o update do colaborador
+ */
 export type EmployeeUpdateDTO = {
   /**
    * @minLength 1

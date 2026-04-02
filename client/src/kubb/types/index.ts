@@ -150,16 +150,16 @@ export type {
   GetParentByIdQueryResponse,
 } from "./parent/GetParentById.ts";
 export type {
-  GetParentOptions200,
-  GetParentOptionsQuery,
-  GetParentOptionsQueryResponse,
-} from "./parent/GetParentOptions.ts";
-export type {
   GetParents200,
   GetParentsQuery,
   GetParentsQueryParams,
   GetParentsQueryResponse,
 } from "./parent/GetParents.ts";
+export type {
+  GetParentsOptions200,
+  GetParentsOptionsQuery,
+  GetParentsOptionsQueryResponse,
+} from "./parent/GetParentsOptions.ts";
 export type {
   UnarchiveParent204,
   UnarchiveParentMutation,

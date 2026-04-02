@@ -14,6 +14,9 @@ export const employeeCreateDTODutyEnum = {
 export type EmployeeCreateDTODutyEnumKey =
   (typeof employeeCreateDTODutyEnum)[keyof typeof employeeCreateDTODutyEnum];
 
+/**
+ * @description Formato de payload para criar um novo colaborador
+ */
 export type EmployeeCreateDTO = {
   /**
    * @minLength 1

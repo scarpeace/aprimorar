@@ -16,8 +16,8 @@ export type { UpdateEventMutationKey } from "./hooks/events/useUpdateEvent.ts";
 export type { ArchiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export type { DeleteParentMutationKey } from "./hooks/parent/useDeleteParent.ts";
 export type { GetParentByIdQueryKey } from "./hooks/parent/useGetParentById.ts";
-export type { GetParentOptionsQueryKey } from "./hooks/parent/useGetParentOptions.ts";
 export type { GetParentsQueryKey } from "./hooks/parent/useGetParents.ts";
+export type { GetParentsOptionsQueryKey } from "./hooks/parent/useGetParentsOptions.ts";
 export type { UnarchiveParentMutationKey } from "./hooks/parent/useUnarchiveParent.ts";
 export type { ArchiveStudentMutationKey } from "./hooks/student/useArchiveStudent.ts";
 export type { CreateStudentMutationKey } from "./hooks/student/useCreateStudent.ts";
@@ -180,16 +180,16 @@ export type {
   GetParentByIdQueryResponse,
 } from "./types/parent/GetParentById.ts";
 export type {
-  GetParentOptions200,
-  GetParentOptionsQuery,
-  GetParentOptionsQueryResponse,
-} from "./types/parent/GetParentOptions.ts";
-export type {
   GetParents200,
   GetParentsQuery,
   GetParentsQueryParams,
   GetParentsQueryResponse,
 } from "./types/parent/GetParents.ts";
+export type {
+  GetParentsOptions200,
+  GetParentsOptionsQuery,
+  GetParentsOptionsQueryResponse,
+} from "./types/parent/GetParentsOptions.ts";
 export type {
   UnarchiveParent204,
   UnarchiveParentMutation,
@@ -322,14 +322,14 @@ export { getParentById } from "./hooks/parent/useGetParentById.ts";
 export { getParentByIdQueryKey } from "./hooks/parent/useGetParentById.ts";
 export { getParentByIdQueryOptions } from "./hooks/parent/useGetParentById.ts";
 export { useGetParentById } from "./hooks/parent/useGetParentById.ts";
-export { getParentOptions } from "./hooks/parent/useGetParentOptions.ts";
-export { getParentOptionsQueryKey } from "./hooks/parent/useGetParentOptions.ts";
-export { getParentOptionsQueryOptions } from "./hooks/parent/useGetParentOptions.ts";
-export { useGetParentOptions } from "./hooks/parent/useGetParentOptions.ts";
 export { getParents } from "./hooks/parent/useGetParents.ts";
 export { getParentsQueryKey } from "./hooks/parent/useGetParents.ts";
 export { getParentsQueryOptions } from "./hooks/parent/useGetParents.ts";
 export { useGetParents } from "./hooks/parent/useGetParents.ts";
+export { getParentsOptions } from "./hooks/parent/useGetParentsOptions.ts";
+export { getParentsOptionsQueryKey } from "./hooks/parent/useGetParentsOptions.ts";
+export { getParentsOptionsQueryOptions } from "./hooks/parent/useGetParentsOptions.ts";
+export { useGetParentsOptions } from "./hooks/parent/useGetParentsOptions.ts";
 export { unarchiveParent } from "./hooks/parent/useUnarchiveParent.ts";
 export { unarchiveParentMutationKey } from "./hooks/parent/useUnarchiveParent.ts";
 export { unarchiveParentMutationOptions } from "./hooks/parent/useUnarchiveParent.ts";

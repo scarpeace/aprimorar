@@ -6,7 +6,7 @@ import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
 import {
   useArchiveParentMutation,
   useUnarchiveParentMutation,
-} from "../query/parentMutations";
+} from "../hooks/use-parent-mutations";
 
 type ArchiveParentButtonProps = {
   parentId: string;
