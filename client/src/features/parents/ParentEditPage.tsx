@@ -12,21 +12,22 @@ import { SectionCard } from "@/components/ui/section-card";
 import styles from "./ParentCreatePage.module.css";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { DeleteParentButton } from "./components/DeleteParentButton";
-import { updateParentMutationRequestSchema, useGetParentById, useUpdateParent, type UpdateParentMutationRequest } from "@/kubb";
+import { useParentById } from "./hooks/use-parent-queries";
 
 export function ParentEditPage() {
   const { id } = useParams<{ id: string }>();
-
+  const parentId = id ?? ""
+  
   const {
     isError: isParentError,
     error: parentError,
     isLoading: isParentLoading,
     data: parentData,
     refetch: refetchParent,
-  } = useGetParentById(id ?? "");
+  } = useParentById({ parentId });
 
   const { mutate: updateParent, isPending: isUpdating } =
-    useUpdateParent();
+    useUpdateParentMu();
 
   const {
     register,

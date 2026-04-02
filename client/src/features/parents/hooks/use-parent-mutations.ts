@@ -6,11 +6,14 @@ import {
   useDeleteParent,
   useUnarchiveParent
 } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export function useDeleteParentMutation() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useDeleteParent({
     mutation: {
@@ -18,9 +21,10 @@ export function useDeleteParentMutation() {
         toast.success("Responsável excluído com sucesso");
         queryClient.invalidateQueries({ queryKey: getParentsQueryKey() })
         queryClient.invalidateQueries({ queryKey: deleteParentMutationKey() });
+        navigate("/parents");
       },
-      onError: () => {
-        toast.error("Algo deu errado ao excluir o responsável");
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
       },
     },
   });

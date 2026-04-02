@@ -13,7 +13,7 @@ import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
 import { DeleteStudentButton } from "../components/DeleteStudentButton";
 import { EditStudentButton } from "../components/EditStudentButton";
 import { StudentDetails } from "../components/StudentDetails";
-import { useStudentByIdQuery } from "../hooks/use-students-query";
+import { useStudentById } from "../hooks/use-students-query";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -25,7 +25,7 @@ export function StudentDetailsPage() {
     isError: isStudentError,
     isPending: isStudentPending,
     error: studentError,
-  } = useStudentByIdQuery({ studentId });
+  } = useStudentById({ studentId });
   const {
     data: pagedStudentEvents,
     isPending: isStudentEventsPending,
@@ -38,6 +38,8 @@ export function StudentDetailsPage() {
     return <ErrorCard title="Erro ao carregar aluno" error={studentError} />;
   }
 
+  //TODO: colocar isLoading aqui também em todas as páginas que tem esse tratamento de estado
+// as vezes é até bom criar um componente reutilizavel
   if (isStudentPending) {
     return <LoadingCard title="Carregando dados do aluno" />;
   }

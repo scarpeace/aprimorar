@@ -1,7 +1,7 @@
 import { type GetParentsQueryParams, useGetParents, getParentsQueryKey, type GetParentByIdPathParams, useGetParentById, getParentByIdQueryKey, useGetParentsOptions, getParentsOptionsQueryKey } from "@/kubb";
 import { keepPreviousData } from "@tanstack/react-query";
 
-export function useParentsQuery(params: GetParentsQueryParams) {
+export function useParents(params: GetParentsQueryParams) {
   return useGetParents(params, {
     query: {
       queryKey: getParentsQueryKey(params),
@@ -11,7 +11,7 @@ export function useParentsQuery(params: GetParentsQueryParams) {
   });
 }
 
-export function useParentByIdQuery(params: GetParentByIdPathParams) {
+export function useParentById(params: GetParentByIdPathParams) {
   return useGetParentById(params.parentId, {
     query: {
       queryKey: getParentByIdQueryKey(params.parentId),

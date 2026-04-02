@@ -26,8 +26,7 @@ export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
   };
 
   const handleConfirmDelete = () => {
-    deleteStudent(
-      { studentId },
+    deleteStudent({ studentId },
       {
         onSettled: () => {
           setIsOpen(false);
@@ -37,6 +36,7 @@ export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
     );
   };
 
+  //TODO: arrumar aqui
   const eventsCount = eventsData?.page?.totalElements ?? 0;
 
   return (

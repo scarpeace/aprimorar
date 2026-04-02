@@ -130,7 +130,7 @@ public class ParentService {
     private void ensureParentHasNoStudents(UUID parentId) {
         if (studentRepo.existsByParentId(parentId)) {
             throw new ParentHasLinkedStudentsException(
-                "Não é possível excluir um responsável com alunos vinculados. Primeiro, remova o vínculo ou exclua os alunos."
+                "Não é possível excluir um responsável com alunos vinculados. Primeiro, exclua os alunos vinculados e tente novamente."
             );
         }
     }

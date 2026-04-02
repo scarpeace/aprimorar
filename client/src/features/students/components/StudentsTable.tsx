@@ -92,7 +92,7 @@ export function StudentsTable({
 
                 <td>{student.school}</td>
 
-                <td>{formatDateShortYear(student.createdAt)}</td>
+                <td>{formatDateShortYear(student.createdAt ?? "")}</td>
                 <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
 
                 <td>

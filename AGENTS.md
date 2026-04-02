@@ -27,7 +27,7 @@ cd client && npm run sync
 | `npm install` | Install dependencies |
 | `npm run dev` | Dev server |
 | `npm run build` | Build & type check (tsc -b && vite build) |
-| `npm run lint` | ESLint (typescript-eslint + react-hooks) |
+| `npm run lint` | ESLint (typescript-eslint + react-hooks); warns on `@typescript-eslint/no-unused-vars` and `@typescript-eslint/no-explicit-any` |
 | `npm run preview` | Preview production build |
 | `npm run sync` | Regenerate Kubb hooks/schemas/types |
 
@@ -62,6 +62,12 @@ cd client && npm run sync
 - Shared UI: `client/src/components/ui/`
 - Utilities: `client/src/lib/`
 
+**Naming Conventions**
+- Components/Pages/Interfaces: `PascalCase` (e.g., `StudentForm.tsx`, `EventCard`)
+- Hooks: `useXxx` prefix (e.g., `useStudents`, `useStudentMutations`)
+- Variables/Functions/Props: `camelCase` (e.g., `currentPage`, `handleSubmit`)
+- CSS Modules: `PascalCase` when pattern exists nearby
+
 **Imports** (order: React/core → third-party → `@/` aliases → relative)
 - Use `import type` for type-only imports
 - Named exports for components/hooks/helpers; avoid `export default`
@@ -72,6 +78,12 @@ cd client && npm run sync
 - React Hook Form: `zodResolver(schema)` + `mode: "onBlur"`
 - TanStack Query with stable query keys; use `enabled` for deferred inputs
 - Invalidate relevant queries after mutations
+
+**Component Patterns**
+- Explicit prop types near the top of the file
+- Early returns for loading, empty, and error states
+- Prefer descriptive names (e.g., `studentEvents`, `handleSearchChange` over abbreviations)
+- Reuse shared UI primitives before creating new ones
 
 **Error Handling**
 - Portuguese UI errors; use shared `getFriendlyErrorMessage` helper
@@ -92,6 +104,11 @@ cd client && npm run sync
 - Helper methods: `findXOrThrow`, `resolveXOrThrow` (private in services)
 - Exception classes: domain-specific, ending with `Exception`
 
+**Naming Conventions**
+- Classes/Records: `PascalCase` (e.g., `StudentService`, `ParentDto`)
+- Methods/Fields: `camelCase` (e.g., `findBySlug`, `marketRepository`)
+- Constants: `UPPER_SNAKE_CASE`
+
 **Persistence & Contracts**
 - Entities: shared UUID IDs + audit timestamps from base entities
 - Repository queries: explicit, intention-revealing
@@ -102,6 +119,10 @@ cd client && npm run sync
 - `GlobalExceptionHandler` with `ProblemDetail` for HTTP error shaping
 - Throw domain-specific exceptions instead of returning null
 - All validation/business-rule messages in Portuguese
+
+**Logging**
+- Use structured logging with parameters: `log.info("action entity={}", entityId)`
+- Keep logs business-focused; avoid noisy debug logs in normal paths
 
 ### Testing (Backend)
 - **Frameworks**: JUnit 5, AssertJ, Mockito

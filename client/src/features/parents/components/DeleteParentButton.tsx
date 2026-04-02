@@ -4,13 +4,18 @@ import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useDeleteParentMutation } from "../hooks/use-parent-mutations";
 
+import { useNavigate } from "react-router-dom";
+import { useStudentsByParent } from "@/features/students/hooks/use-students-query";
+
+//TODO: O comportamento de exclusão tá meio esquisito, ou coloca o toast ou coloca o alert? alert é só nos formulários?
 export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { mutate: deleteParent, isPending: isDeleting } =
     useDeleteParentMutation();
   const { data: parentStudents, isLoading: isParentStudentsLoading } =
-    useStudentsByParent(parentId);
+    useStudentsByParent({parentId});
 
   const handleOpenClick = () => {
     setIsOpen(true);
@@ -23,10 +28,9 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
   };
 
   const handleConfirmDelete = () => {
-    deleteParent(
-      { parentId },
+    deleteParent({ parentId },
       {
-        onSettled: () => {
+        onSuccess: () => {
           setIsOpen(false);
         },
       },
@@ -46,6 +50,7 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
         {isDeleting ? "Excluindo..." : "Excluir"}
       </Button>
 
+      {/*TODO: esse modal tem que ser mais genérico*/}
       <DeleteConfirmationModal
         isOpen={isOpen}
         onClose={handleClose}
@@ -54,16 +59,14 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
         isItemPending={isDeleting}
         isItemLoading={isParentStudentsLoading}
         itemDeleteCount={parentStudents?.length}
-        itemName="aluno"
+        itemName="responsável"
         phantomWarning={
           <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
-            O seu responsável ainda tem estudantes vinculados, ao excluí-lo, seu
-            histórico pessoal será apagado, mas{" "}
+            Se o seu responsável tiver alunos vinculados não será possível excluí-lo,
             <strong>
-              todos os seus eventos e atendimentos serão transferidos
-              automaticamente para um perfil de "Aluno Removido"
+              {" "} primeiro exclua os alunos vinculados, em seguida volte e exclua o responsável
             </strong>{" "}
-            para manter a consistência financeira e o histórico da escola.
+            para manter a consistência do banco de dados e histórico do sistema.
           </div>
         }
       />

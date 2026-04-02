@@ -13,7 +13,7 @@ import { StudentFormFields } from "../components/StudentFormFields";
 import type { StudentUpdateSchema } from "../hooks/studentSchema";
 import { useStudentForm } from "../hooks/use-student-form";
 import { useUpdateStudentMutation } from "../hooks/use-student-mutation";
-import { useStudentByIdQuery } from "../hooks/use-students-query";
+import { useStudentById } from "../hooks/use-students-query";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -24,7 +24,7 @@ export function StudentEditPage() {
     isError: isStudentError,
     isPending: isStudentPending,
     error: studentError,
-  } = useStudentByIdQuery({ studentId });
+  } = useStudentById({ studentId });
 
   const {
     mutate: updateStudent,

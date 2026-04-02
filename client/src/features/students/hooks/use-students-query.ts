@@ -13,7 +13,7 @@ import {
 } from "@/kubb";
 import { keepPreviousData } from "@tanstack/react-query";
 
-export function useStudentsQuery(params: GetStudentsQueryParams) {
+export function useStudents(params: GetStudentsQueryParams) {
   return useGetStudents(params, {
     query: {
       queryKey: getStudentsQueryKey(params),
@@ -23,7 +23,7 @@ export function useStudentsQuery(params: GetStudentsQueryParams) {
   });
 }
 
-export function useStudentByIdQuery(params: GetStudentByIdPathParams) {
+export function useStudentById(params: GetStudentByIdPathParams) {
   return useGetStudentById(params.studentId, {
     query: {
       queryKey: getStudentByIdQueryKey(params.studentId),
@@ -34,7 +34,7 @@ export function useStudentByIdQuery(params: GetStudentByIdPathParams) {
   });
 }
 
-export function useStudentsByParentQuery(
+export function useStudentsByParent(
   params: GetStudentsByParentPathParams,
 ) {
   return useGetStudentsByParent(params.parentId, {

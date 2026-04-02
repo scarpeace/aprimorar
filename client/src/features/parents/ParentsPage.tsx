@@ -39,15 +39,6 @@ export function ParentsPage() {
             value={searchTerm}
             onChange={setSearchTerm}
           />
-          <ToggleSwitch
-            label="Arquivados"
-            tip="Mostrar alunos arquivados"
-            toggled={showArchived}
-            setToggle={setShowArchived}
-          />
-          <ButtonLink to="/parents/new" variant="success">
-            Novo aluno
-          </ButtonLink>
         </div>
       </PageHeader>
 
