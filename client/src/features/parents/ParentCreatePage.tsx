@@ -1,137 +1,72 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useHookFormMask } from "use-mask-input";
-import { Button, ButtonLink } from "@/components/ui/button";
-import { FormField } from "@/components/ui/form-field";
-import { PageHeader } from "@/components/ui/page-header";
-import { SectionCard } from "@/components/ui/section-card";
-import styles from "./ParentCreatePage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { createParent, createParentMutationRequestSchema, useCreateParent, type CreateParentMutationRequestSchema } from "@/kubb";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { useForm } from "react-hook-form";
+// import { useHookFormMask } from "use-mask-input";
+// import { Button, ButtonLink } from "@/components/ui/button";
+// import { FormField } from "@/components/ui/form-field";
+// import { PageHeader } from "@/components/ui/page-header";
+// import { SectionCard } from "@/components/ui/section-card";
+// import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+// import { Alert } from "@/components/ui/alert";
+// import { LoadingSpinner } from "@/components/ui/loading-spinner";
+// import { GraduationCap } from "lucide-react";
+// import { ParentFormFields } from "./components/ParentFormFields";
 
-export function ParentCreatePage() {
-  const {
-    isPending: isCreateParentPending,
-    isError: isCreateParentError,
-    error: createParentError,
-  } = useCreateParent();
+// //TODO: Eu acho melhor separar todos os formulários de criação como eu tinha pensado antes e criar um "Matricular Aluno"
+// export function ParentCreatePage() {
+//   const {
+//     isPending: isCreateParentPending,
+//     isError: isCreateParentError,
+//     error: createParentError,
+//   } = useCreateParent();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CreateParentMutationRequestSchema>({
-    resolver: zodResolver(createParentMutationRequestSchema),
-  });
-  const registerWithMask = useHookFormMask(register);
+//   const {
+//     register,
+//     handleSubmit,
+//     formState: { errors },
+//   } = useForm<CreateParentMutationRequestSchema>({
+//     resolver: zodResolver(createParentMutationRequestSchema),
+//   });
+//   const registerWithMask = useHookFormMask(register);
 
-  const onSubmit = (data: CreateParentMutationRequestSchema) => {
-    createParent( data );
-  };
+//   const onSubmit = (data: CreateParentMutationRequestSchema) => {
+//     createParent( data );
+//   };
 
-  return (
-    <div className={styles.page}>
-      <PageHeader
-        title="Novo responsável"
-        description="Crie um novo cadastro de responsável."
-        action={
-          <ButtonLink to="/parents" variant="outline">
-            Voltar para responsáveis
-          </ButtonLink>
-        }
-      />
+//    return (
+//     <>
+//       <PageHeader
+//         title="Criar aluno"
+//         description="Preencha os dados do aluno e do responsável."
+//         Icon={GraduationCap}
+//       />
 
-      {isCreateParentError ? (
-        <div className="alert alert-error text-sm">
-          {getFriendlyErrorMessage(createParentError)}
-        </div>
-      ) : null}
+//       <div className="container flex flex-col gap-7">
+//         <ParentForm onSubmit={onSubmit}>
 
-      <SectionCard
-        title="Dados do responsável"
-        description="Preencha as informações abaixo para criar o cadastro."
-      >
-        <form
-          className={styles.form}
-          onSubmit={handleSubmit(onSubmit)}
-          autoComplete="off"
-        >
-          <div className={styles.formGrid}>
-            <FormField
-              className={styles.field}
-              label="Nome completo"
-              htmlFor="name"
-              error={errors.name?.message}
-            >
-              <input
-                className="app-input"
-                id="name"
-                placeholder="Ex: Maria Silva"
-                {...register("name")}
-              />
-            </FormField>
 
-            <FormField
-              className={styles.field}
-              label="Email"
-              htmlFor="email"
-              error={errors.email?.message}
-            >
-              <input
-                className="app-input"
-                id="email"
-                type="email"
-                placeholder="exemplo@dominio.com"
-                {...register("email")}
-              />
-            </FormField>
+//           <ParentFormFields
+//             register={register}
+//             registerWithMask={registerWithMask}
+//             prefix="parent"
+//             errors={errors.parent}
+//             className="grid grid-cols-2 gap-4"
+//           />
 
-            <FormField
-              className={styles.field}
-              label="Contato"
-              htmlFor="contact"
-              error={errors.contact?.message}
-            >
-              <input
-                className="app-input"
-                id="contact"
-                placeholder="(11) 99999-9999"
-                {...registerWithMask("contact", [
-                  "(99) 9999-9999",
-                  "(99) 99999-9999",
-                ])}
-              />
-            </FormField>
+//            {isCreateParentError && (
+//             <Alert error={createParentError} variant="error" />
+//           )}
 
-            <FormField
-              className={styles.field}
-              label="CPF"
-              htmlFor="cpf"
-              error={errors.cpf?.message}
-            >
-              <input
-                className="app-input"
-                id="cpf"
-                placeholder="000.000.000-00"
-                {...registerWithMask("cpf", "999.999.999-99")}
-              />
-            </FormField>
-          </div>
+//           <div className="flex justify-end flex-wrap gap-3">
+//             <Button type="submit" variant="success"disabled={isCreateParentPending}>
+//               {isCreateParentPending ? <LoadingSpinner text={"Salvando"} /> : "Salvar alterações"}
+//             </Button>
 
-          <div className={styles.actions}>
-            <ButtonLink to="/parents" variant="outline">
-              Cancelar
-            </ButtonLink>
-            <Button
-              type="submit"
-              disabled={isCreateParentPending}
-              variant="primary"
-            >
-              {isCreateParentPending ? "Salvando..." : "Criar responsável"}
-            </Button>
-          </div>
-        </form>
-      </SectionCard>
-    </div>
-  );
-}
+//             <ButtonLink to={`/parents/`} variant="outline">
+//               Cancelar
+//             </ButtonLink>
+//           </div>
+//         </ParentForm>
+//       </div>
+//     </>
+//   );
+// }

@@ -9,9 +9,8 @@ import { useStudentsByParent } from "../students/hooks/use-students-query";
 import { ArchiveParentButton } from "./components/ArchiveParentButton";
 import { DeleteParentButton } from "./components/DeleteParentButton";
 import { EditParentButton } from "./components/EditParentButton";
-import { useParentById } from "./hooks/use-parent-queries";
 import { ParentDetails } from "./components/ParentDetails";
-import { Alert } from "@/components/ui/alert";
+import { useParentById } from "./hooks/use-parent-queries";
 
 //TODO: O responsável responsável tá podendo ser arquivado/desarquivado, tem que arrumar
 export function ParentDetailPage() {
@@ -61,7 +60,7 @@ export function ParentDetailPage() {
         </div>
       </PageHeader>
 
-      <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
+      <div className="flex flex-col gap-7">
         <ParentDetails parent={parent} />
         <StudentsTable
           students={parentStudents}
