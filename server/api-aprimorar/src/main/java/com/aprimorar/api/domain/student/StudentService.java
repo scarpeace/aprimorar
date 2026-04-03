@@ -1,18 +1,5 @@
 package com.aprimorar.api.domain.student;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
@@ -25,6 +12,18 @@ import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.domain.student.repository.StudentSpecifications;
 import com.aprimorar.api.shared.PageDTO;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.jaxb.SpringDataJaxb.PageDto;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StudentService {
@@ -67,6 +66,7 @@ public class StudentService {
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
     public PageDTO<StudentResponseDTO> getStudents(Pageable pageable, String search, Boolean archived) {
+        //TODO: Eu acho que dá pra simplificar essa query/especificação do ghost
         Specification<Student> spec = Specification.allOf(
             StudentSpecifications.isNotGhost(),
             Boolean.TRUE.equals(archived) ? StudentSpecifications.archived() : StudentSpecifications.notArchived()
@@ -93,9 +93,10 @@ public class StudentService {
             .toList();
     }
 
-    public List<StudentResponseDTO> getStudentsByParent(UUID parentId) {
-        List<Student> studentParentsList = studentRepo.findAllByParentId(parentId);
-        return studentParentsList.stream().map(studentMapper::convertToDto).toList();
+    public PageDTO<StudentResponseDTO> getStudentsByParent(UUID parentId, Pageable pageable) {
+        Page<Student> studentPage = studentRepo.findAllByParentId(parentId, pageable);
+        Page<StudentResponseDTO> studentsDtoPage = studentPage.map(studentMapper::convertToDto);
+        return new PageDTO<>(studentsDtoPage);
     }
 
     @Transactional(readOnly = true)

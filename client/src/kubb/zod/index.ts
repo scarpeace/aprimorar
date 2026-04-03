@@ -96,6 +96,11 @@ export {
   archiveParentPathParamsSchema,
 } from "./parent/archiveParentSchema.ts";
 export {
+  createParent204Schema,
+  createParentMutationRequestSchema,
+  createParentMutationResponseSchema,
+} from "./parent/createParentSchema.ts";
+export {
   deleteParent204Schema,
   deleteParentMutationResponseSchema,
   deleteParentPathParamsSchema,
@@ -119,7 +124,14 @@ export {
   unarchiveParentMutationResponseSchema,
   unarchiveParentPathParamsSchema,
 } from "./parent/unarchiveParentSchema.ts";
+export {
+  updateParent204Schema,
+  updateParentMutationRequestSchema,
+  updateParentMutationResponseSchema,
+  updateParentPathParamsSchema,
+} from "./parent/updateParentSchema.ts";
 export { parentOptionsDTOSchema } from "./parentOptionsDTOSchema.ts";
+export { parentRequestDTOSchema } from "./parentRequestDTOSchema.ts";
 export { parentResponseDTOSchema } from "./parentResponseDTOSchema.ts";
 export {
   archiveStudent204Schema,
@@ -143,7 +155,7 @@ export {
 } from "./student/getStudentByIdSchema.ts";
 export {
   getStudentsByParent200Schema,
-  getStudentsByParentPathParamsSchema,
+  getStudentsByParentQueryParamsSchema,
   getStudentsByParentQueryResponseSchema,
 } from "./student/getStudentsByParentSchema.ts";
 export {

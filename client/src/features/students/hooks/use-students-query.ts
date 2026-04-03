@@ -1,15 +1,12 @@
 import {
-  getStudentByIdQueryKey,
-  getStudentsByParentQueryKey,
-  getStudentsOptionsQueryKey,
-  getStudentsQueryKey,
-  useGetStudentById,
-  useGetStudents,
-  useGetStudentsByParent,
-  useGetStudentsOptions,
-  type GetStudentByIdPathParams,
-  type GetStudentsByParentPathParams,
-  type GetStudentsQueryParams,
+    getStudentByIdQueryKey,
+    getStudentsOptionsQueryKey,
+    getStudentsQueryKey,
+    useGetStudentById,
+    useGetStudents,
+    useGetStudentsOptions,
+    type GetStudentByIdPathParams,
+    type GetStudentsQueryParams
 } from "@/kubb";
 import { keepPreviousData } from "@tanstack/react-query";
 
@@ -34,18 +31,18 @@ export function useStudentById(params: GetStudentByIdPathParams) {
   });
 }
 
-export function useStudentsByParent(
-  params: GetStudentsByParentPathParams,
-) {
-  return useGetStudentsByParent(params.parentId, {
-    query: {
-      queryKey: getStudentsByParentQueryKey(params.parentId),
-      enabled: !!params.parentId,
-      placeholderData: keepPreviousData,
-      staleTime: 1000 * 60 * 5,
-    },
-  });
-}
+// export function useStudentsByParent(
+//   params: GetStudentsByParentPathParams,
+// ) {
+//   return useGetStudentsByParent(params.parentId, {
+//     query: {
+//       queryKey: getStudentsByParentQueryKey(params.parentId),
+//       enabled: !!params.parentId,
+//       placeholderData: keepPreviousData,
+//       staleTime: 1000 * 60 * 5,
+//     },
+//   });
+// }
 
 export function useStudentsOption() {
   return useGetStudentsOptions({

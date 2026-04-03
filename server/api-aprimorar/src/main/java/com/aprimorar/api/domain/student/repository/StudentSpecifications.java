@@ -28,11 +28,15 @@ public final class StudentSpecifications {
         };
     }
 
+    public static Specification<Student> belongsToParent(UUID parentId) {
+        return (root, query, cb) -> cb.equal(root.get("parentId"), parentId);
+    }
+
     public static Specification<Student> notArchived() {
         return (root, query, cb) -> cb.isNull(root.get("archivedAt"));
     }
 
- public static Specification<Student> archived() {
+    public static Specification<Student> archived() {
         return (root, query, cb) -> cb.isNotNull(root.get("archivedAt"));
     }
 

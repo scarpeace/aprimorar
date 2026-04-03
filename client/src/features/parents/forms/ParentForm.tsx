@@ -1,14 +1,14 @@
 import type { ReactNode } from "react";
 
-type StudentFormProps = {
+type ParentFormProps = {
   onSubmit: React.SubmitEventHandler<HTMLFormElement>;
   children: ReactNode;
 };
 
-export function StudentForm({
+export function ParentForm({
   onSubmit,
   children,
-}: Readonly<StudentFormProps>) {
+}: Readonly<ParentFormProps>) {
   return (
     <form className="flex flex-col gap-3" onSubmit={onSubmit}>
       {children}

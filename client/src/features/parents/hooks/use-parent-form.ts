@@ -2,7 +2,7 @@ import type { ParentResponseDTO } from "@/kubb";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import { parentInputSchema, type ParentInputSchema, type ParentResponseSchema } from "./parentSchema";
+import { parentInputSchema, type ParentInputSchema, type ParentResponseSchema } from "../forms/parentFormSchema";
 
 export function useParentForm(parent?: ParentResponseSchema) {
 

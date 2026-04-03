@@ -25,6 +25,7 @@ export function StudentDetailsPage() {
     isPending: isStudentPending,
     error: studentError,
   } = useStudentById({ studentId });
+
   const {
     data: studentEvents,
     isPending: isStudentEventsPending,
@@ -33,7 +34,7 @@ export function StudentDetailsPage() {
 
 
   if (isStudentError) {
-    return <ErrorCard title="Erro ao carregar aluno" error={studentError} />;
+    return <ErrorCard title="Erro ao carregar aluno" error={studentError || studentEventsError} />;
   }
 
   //TODO: colocar isLoading aqui também em todas as páginas que tem esse tratamento de estado
@@ -49,19 +50,10 @@ export function StudentDetailsPage() {
         title="Detalhes do aluno"
         Icon={GraduationCap}
         backLink="/students"
-      >
-
-      </PageHeader>
-
-        <div className="flex flex-row ml-auto mt-auto gap-3">
-
-        </div>
+      />
 
       <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
-
-
         <StudentDetails student={student} />
-
 
         <Collapse title={"Endereço"}>
           <AddressSummarySection address={student.address} />

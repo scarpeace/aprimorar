@@ -12,10 +12,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aprimorar.api.domain.parent.dto.ParentCreateDTO;
 import com.aprimorar.api.domain.parent.dto.ParentOptionsDTO;
+import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
-import com.aprimorar.api.domain.parent.dto.ParentUpdateDTO;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
@@ -74,8 +73,8 @@ public class ParentService {
 
     /* ----- Command Methods ----- */
     @Transactional
-    public ParentResponseDTO createParent(ParentCreateDTO request) {
-        Parent parent = parentMapper.convertToEntityForCreate(request);
+    public ParentResponseDTO createParent(ParentRequestDTO request) {
+        Parent parent = parentMapper.convertToEntity(request);
 
         ensureParentUniqueness(parent);
         Parent savedParent = parentRepo.save(parent);
@@ -85,9 +84,9 @@ public class ParentService {
     }
 
     @Transactional
-    public ParentResponseDTO updateParent(UUID parentId, ParentUpdateDTO request) {
+    public ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO request) {
         Parent parent = findParentOrThrow(parentId);
-        Parent updatedParentData = parentMapper.convertToEntityForUpdate(request);
+        Parent updatedParentData = parentMapper.convertToEntity(request);
         ensureParentUniquenessForUpdate(updatedParentData, parentId);
 
         parent.setName(updatedParentData.getName());
@@ -149,5 +148,14 @@ public class ParentService {
         if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parentId)) {
             throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
+    }
+
+
+
+    public ParentResponseDTO update(ParentRequestDTO dto, UUID parentId) {
+        Parent parent = parentMapper.convertToEntity(dto);
+        ensureParentUniquenessForUpdate(parent, parentId);
+        parent = parentRepo.save(parent);
+        return parentMapper.convertToDto(parent);
     }
 }

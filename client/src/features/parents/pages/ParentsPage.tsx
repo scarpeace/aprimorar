@@ -33,18 +33,29 @@ export function ParentsPage() {
         description="Gerencie pais e responsáveis."
         title="Pais e Responsáveis"
         Icon={Handshake}
+        backLink="/dashboard"
       >
-        <div className="flex items-center ml-auto gap-6">
-          <ListSearchInput
-            className="w-80 sm:w-96"
-            placeholder="Buscar aluno por nome, email ou escola"
-            ariaLabel="Buscar aluno"
-            value={searchTerm}
-            onChange={setSearchTerm}
-          />
-        </div>
+
       </PageHeader>
 
+        <div className="flex items-center ml-auto gap-6">
+        <ListSearchInput
+          className="w-80 sm:w-96"
+          placeholder="Buscar responsável por nome, email ou escola"
+          ariaLabel="Buscar responsável"
+          value={searchTerm}
+          onChange={setSearchTerm}
+        />
+        <ToggleSwitch
+          label="Arquivados"
+          tip="Mostrar responsáveis arquivados"
+          toggled={showArchived}
+          setToggle={setShowArchived}
+        />
+        <ButtonLink to="/parents/new" variant="success">
+          Novo responsável
+        </ButtonLink>
+      </div>
       <ParentsTable
         parents={parents}
         isPending={isPending}

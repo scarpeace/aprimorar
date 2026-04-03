@@ -4,6 +4,11 @@ export {
   archiveParentPathParamsSchema,
 } from "./archiveParentSchema.ts";
 export {
+  createParent204Schema,
+  createParentMutationRequestSchema,
+  createParentMutationResponseSchema,
+} from "./createParentSchema.ts";
+export {
   deleteParent204Schema,
   deleteParentMutationResponseSchema,
   deleteParentPathParamsSchema,
@@ -27,3 +32,9 @@ export {
   unarchiveParentMutationResponseSchema,
   unarchiveParentPathParamsSchema,
 } from "./unarchiveParentSchema.ts";
+export {
+  updateParent204Schema,
+  updateParentMutationRequestSchema,
+  updateParentMutationResponseSchema,
+  updateParentPathParamsSchema,
+} from "./updateParentSchema.ts";

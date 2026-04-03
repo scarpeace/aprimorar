@@ -5,6 +5,12 @@ export type {
   ArchiveParentPathParams,
 } from "./ArchiveParent.ts";
 export type {
+  CreateParent204,
+  CreateParentMutation,
+  CreateParentMutationRequest,
+  CreateParentMutationResponse,
+} from "./CreateParent.ts";
+export type {
   DeleteParent204,
   DeleteParentMutation,
   DeleteParentMutationResponse,
@@ -33,3 +39,10 @@ export type {
   UnarchiveParentMutationResponse,
   UnarchiveParentPathParams,
 } from "./UnarchiveParent.ts";
+export type {
+  UpdateParent204,
+  UpdateParentMutation,
+  UpdateParentMutationRequest,
+  UpdateParentMutationResponse,
+  UpdateParentPathParams,
+} from "./UpdateParent.ts";

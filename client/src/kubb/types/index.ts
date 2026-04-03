@@ -31,6 +31,7 @@ export type { PageDTOEventResponseDTO } from "./PageDTOEventResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./PageDTOStudentResponseDTO.ts";
 export type { ParentOptionsDTO } from "./ParentOptionsDTO.ts";
+export type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
 export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
@@ -135,6 +136,12 @@ export type {
   ArchiveParentPathParams,
 } from "./parent/ArchiveParent.ts";
 export type {
+  CreateParent204,
+  CreateParentMutation,
+  CreateParentMutationRequest,
+  CreateParentMutationResponse,
+} from "./parent/CreateParent.ts";
+export type {
   DeleteParent204,
   DeleteParentMutation,
   DeleteParentMutationResponse,
@@ -163,6 +170,13 @@ export type {
   UnarchiveParentMutationResponse,
   UnarchiveParentPathParams,
 } from "./parent/UnarchiveParent.ts";
+export type {
+  UpdateParent204,
+  UpdateParentMutation,
+  UpdateParentMutationRequest,
+  UpdateParentMutationResponse,
+  UpdateParentPathParams,
+} from "./parent/UpdateParent.ts";
 export type {
   ArchiveStudent204,
   ArchiveStudentMutation,
@@ -195,8 +209,8 @@ export type {
 } from "./student/GetStudents.ts";
 export type {
   GetStudentsByParent200,
-  GetStudentsByParentPathParams,
   GetStudentsByParentQuery,
+  GetStudentsByParentQueryParams,
   GetStudentsByParentQueryResponse,
 } from "./student/GetStudentsByParent.ts";
 export type {

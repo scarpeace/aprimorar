@@ -1,10 +1,20 @@
 package com.aprimorar.api.domain.student;
 
+import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.shared.PageDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.jaxb.SpringDataJaxb.PageDto;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
-import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.shared.PageDTO;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -62,20 +61,23 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-    @GetMapping("/student/options")
+    @GetMapping("/{parentId}")
+    @Operation(operationId = "getStudentsByParent", description = "Retorna uma lista de alunos pelo ID do pai.")
+    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
+    public ResponseEntity<PageDTO<StudentResponseDTO>> getStudentsByParent(
+        @RequestParam UUID parentId,
+        @ParameterObject Pageable pageable
+    ) {
+        PageDTO<StudentResponseDTO> options = studentService.getStudentsByParent(parentId, pageable);
+        return ResponseEntity.ok(options);
+    }
+
+    @GetMapping("/options")
     @Operation(operationId = "getStudentsOptions", description = "Retorna uma lista de opções de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
     public ResponseEntity<List<StudentOptionsDTO>> getStudentOptions() {
         List<StudentOptionsDTO> options = studentService.getStudentOptions();
         return ResponseEntity.ok(options);
-    }
-
-    @GetMapping("/students/{parentId}")
-    @Operation(operationId = "getStudentsByParent", description = "Retorna uma lista de alunos por ID do pai.")
-    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
-    public ResponseEntity<List<StudentResponseDTO>> getStudentsByParent(@PathVariable UUID parentId) {
-        List<StudentResponseDTO> students = studentService.getStudentsByParent(parentId);
-        return ResponseEntity.ok(students);
     }
 
     @GetMapping("/{studentId}")

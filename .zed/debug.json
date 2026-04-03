@@ -1,0 +1,18 @@
+// Project-local debug tasks
+//
+// For more documentation on how to configure debug tasks,
+// see: https://zed.dev/docs/debugger
+
+[
+  {
+    "adapter": "Java",
+    "request": "launch",
+    "label": "Aprimorar-API Debug",
+    // if your project has multiple entry points, specify the one to use:
+    "mainClass": "com.aprimorar.api.ApiAprimorarApplication",
+    //
+    // this effectively sets a breakpoint at your program entry:
+    "stopOnEntry": false,
+    "cwd": "$ZED_WORKTREE_ROOT/server/api-aprimorar"
+  }
+]

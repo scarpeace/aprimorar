@@ -7,8 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import { StudentForm } from "../components/StudentForm";
-import { StudentFormFields } from "../components/StudentFormFields";
+import { StudentForm } from "../forms/StudentForm";
+import { StudentFormFields } from "../forms/StudentFormFields";
 import { studentFormInputSchema, type StudentFormInputSchema } from "../forms/studentFormSchema";
 import { useCreateStudentMutation } from "../hooks/use-student-mutation";
 
@@ -36,6 +36,7 @@ export function StudentCreatePage() {
         title="Criar aluno"
         description="Preencha os dados do aluno e do responsável."
         Icon={GraduationCap}
+        backLink="/students"
       />
 
       <div className="container animate-[fade-up_300ms_ease-out_both]">
@@ -48,14 +49,7 @@ export function StudentCreatePage() {
             className="grid grid-cols-3 gap-4"
           />
 
-          {/*<ParentFormFields
-            register={register}
-            registerWithMask={registerWithMask}
-            prefix="parent"
-            errors={errors.parent}
-            className="grid grid-cols-2 gap-4"
-          />*/}
-
+          {/*TODO: talvez mover isso pra dentro do student form fields pra tirar o prefix*/}
           <AddressFormFields
             register={register}
             registerWithMask={registerWithMask}

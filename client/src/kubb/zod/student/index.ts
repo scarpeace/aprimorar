@@ -20,7 +20,7 @@ export {
 } from "./getStudentByIdSchema.ts";
 export {
   getStudentsByParent200Schema,
-  getStudentsByParentPathParamsSchema,
+  getStudentsByParentQueryParamsSchema,
   getStudentsByParentQueryResponseSchema,
 } from "./getStudentsByParentSchema.ts";
 export {

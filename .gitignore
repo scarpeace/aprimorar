@@ -20,7 +20,7 @@
 .idea
 .ruff_cache
 .gemini
-.zed
+
 node_modules
 dist
 target

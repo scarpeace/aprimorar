@@ -14,11 +14,13 @@ export type { GetEventsByEmployeeQueryKey } from "./hooks/events/useGetEventsByE
 export type { GetEventsByStudentQueryKey } from "./hooks/events/useGetEventsByStudent.ts";
 export type { UpdateEventMutationKey } from "./hooks/events/useUpdateEvent.ts";
 export type { ArchiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
+export type { CreateParentMutationKey } from "./hooks/parent/useCreateParent.ts";
 export type { DeleteParentMutationKey } from "./hooks/parent/useDeleteParent.ts";
 export type { GetParentByIdQueryKey } from "./hooks/parent/useGetParentById.ts";
 export type { GetParentsQueryKey } from "./hooks/parent/useGetParents.ts";
 export type { GetParentsOptionsQueryKey } from "./hooks/parent/useGetParentsOptions.ts";
 export type { UnarchiveParentMutationKey } from "./hooks/parent/useUnarchiveParent.ts";
+export type { UpdateParentMutationKey } from "./hooks/parent/useUpdateParent.ts";
 export type { ArchiveStudentMutationKey } from "./hooks/student/useArchiveStudent.ts";
 export type { CreateStudentMutationKey } from "./hooks/student/useCreateStudent.ts";
 export type { DeleteStudentMutationKey } from "./hooks/student/useDeleteStudent.ts";
@@ -61,6 +63,7 @@ export type { PageDTOEventResponseDTO } from "./types/PageDTOEventResponseDTO.ts
 export type { PageDTOParentResponseDTO } from "./types/PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./types/PageDTOStudentResponseDTO.ts";
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
+export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
 export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
@@ -165,6 +168,12 @@ export type {
   ArchiveParentPathParams,
 } from "./types/parent/ArchiveParent.ts";
 export type {
+  CreateParent204,
+  CreateParentMutation,
+  CreateParentMutationRequest,
+  CreateParentMutationResponse,
+} from "./types/parent/CreateParent.ts";
+export type {
   DeleteParent204,
   DeleteParentMutation,
   DeleteParentMutationResponse,
@@ -193,6 +202,13 @@ export type {
   UnarchiveParentMutationResponse,
   UnarchiveParentPathParams,
 } from "./types/parent/UnarchiveParent.ts";
+export type {
+  UpdateParent204,
+  UpdateParentMutation,
+  UpdateParentMutationRequest,
+  UpdateParentMutationResponse,
+  UpdateParentPathParams,
+} from "./types/parent/UpdateParent.ts";
 export type {
   ArchiveStudent204,
   ArchiveStudentMutation,
@@ -225,8 +241,8 @@ export type {
 } from "./types/student/GetStudents.ts";
 export type {
   GetStudentsByParent200,
-  GetStudentsByParentPathParams,
   GetStudentsByParentQuery,
+  GetStudentsByParentQueryParams,
   GetStudentsByParentQueryResponse,
 } from "./types/student/GetStudentsByParent.ts";
 export type {
@@ -311,6 +327,10 @@ export { archiveParent } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationOptions } from "./hooks/parent/useArchiveParent.ts";
 export { useArchiveParent } from "./hooks/parent/useArchiveParent.ts";
+export { createParent } from "./hooks/parent/useCreateParent.ts";
+export { createParentMutationKey } from "./hooks/parent/useCreateParent.ts";
+export { createParentMutationOptions } from "./hooks/parent/useCreateParent.ts";
+export { useCreateParent } from "./hooks/parent/useCreateParent.ts";
 export { deleteParent } from "./hooks/parent/useDeleteParent.ts";
 export { deleteParentMutationKey } from "./hooks/parent/useDeleteParent.ts";
 export { deleteParentMutationOptions } from "./hooks/parent/useDeleteParent.ts";
@@ -331,6 +351,10 @@ export { unarchiveParent } from "./hooks/parent/useUnarchiveParent.ts";
 export { unarchiveParentMutationKey } from "./hooks/parent/useUnarchiveParent.ts";
 export { unarchiveParentMutationOptions } from "./hooks/parent/useUnarchiveParent.ts";
 export { useUnarchiveParent } from "./hooks/parent/useUnarchiveParent.ts";
+export { updateParent } from "./hooks/parent/useUpdateParent.ts";
+export { updateParentMutationKey } from "./hooks/parent/useUpdateParent.ts";
+export { updateParentMutationOptions } from "./hooks/parent/useUpdateParent.ts";
+export { useUpdateParent } from "./hooks/parent/useUpdateParent.ts";
 export { archiveStudent } from "./hooks/student/useArchiveStudent.ts";
 export { archiveStudentMutationKey } from "./hooks/student/useArchiveStudent.ts";
 export { archiveStudentMutationOptions } from "./hooks/student/useArchiveStudent.ts";
@@ -471,6 +495,11 @@ export {
   archiveParentPathParamsSchema,
 } from "./zod/parent/archiveParentSchema.ts";
 export {
+  createParent204Schema,
+  createParentMutationRequestSchema,
+  createParentMutationResponseSchema,
+} from "./zod/parent/createParentSchema.ts";
+export {
   deleteParent204Schema,
   deleteParentMutationResponseSchema,
   deleteParentPathParamsSchema,
@@ -494,7 +523,14 @@ export {
   unarchiveParentMutationResponseSchema,
   unarchiveParentPathParamsSchema,
 } from "./zod/parent/unarchiveParentSchema.ts";
+export {
+  updateParent204Schema,
+  updateParentMutationRequestSchema,
+  updateParentMutationResponseSchema,
+  updateParentPathParamsSchema,
+} from "./zod/parent/updateParentSchema.ts";
 export { parentOptionsDTOSchema } from "./zod/parentOptionsDTOSchema.ts";
+export { parentRequestDTOSchema } from "./zod/parentRequestDTOSchema.ts";
 export { parentResponseDTOSchema } from "./zod/parentResponseDTOSchema.ts";
 export {
   archiveStudent204Schema,
@@ -518,7 +554,7 @@ export {
 } from "./zod/student/getStudentByIdSchema.ts";
 export {
   getStudentsByParent200Schema,
-  getStudentsByParentPathParamsSchema,
+  getStudentsByParentQueryParamsSchema,
   getStudentsByParentQueryResponseSchema,
 } from "./zod/student/getStudentsByParentSchema.ts";
 export {
