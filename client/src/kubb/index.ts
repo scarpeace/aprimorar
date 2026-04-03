@@ -60,14 +60,11 @@ export type { PageDTOEmployeeResponseDTO } from "./types/PageDTOEmployeeResponse
 export type { PageDTOEventResponseDTO } from "./types/PageDTOEventResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./types/PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./types/PageDTOStudentResponseDTO.ts";
-export type { ParentCreateDTO } from "./types/ParentCreateDTO.ts";
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
-export type { ParentUpdateDTO } from "./types/ParentUpdateDTO.ts";
-export type { StudentCreateDTO } from "./types/StudentCreateDTO.ts";
 export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
+export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
-export type { StudentUpdateDTO } from "./types/StudentUpdateDTO.ts";
 export type {
   GetDashboardSummary200,
   GetDashboardSummaryQuery,
@@ -497,10 +494,8 @@ export {
   unarchiveParentMutationResponseSchema,
   unarchiveParentPathParamsSchema,
 } from "./zod/parent/unarchiveParentSchema.ts";
-export { parentCreateDTOSchema } from "./zod/parentCreateDTOSchema.ts";
 export { parentOptionsDTOSchema } from "./zod/parentOptionsDTOSchema.ts";
 export { parentResponseDTOSchema } from "./zod/parentResponseDTOSchema.ts";
-export { parentUpdateDTOSchema } from "./zod/parentUpdateDTOSchema.ts";
 export {
   archiveStudent204Schema,
   archiveStudentMutationResponseSchema,
@@ -546,7 +541,6 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./zod/student/updateStudentSchema.ts";
-export { studentCreateDTOSchema } from "./zod/studentCreateDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./zod/studentOptionsDTOSchema.ts";
+export { studentRequestDTOSchema } from "./zod/studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./zod/studentResponseDTOSchema.ts";
-export { studentUpdateDTOSchema } from "./zod/studentUpdateDTOSchema.ts";

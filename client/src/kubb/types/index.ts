@@ -30,14 +30,11 @@ export type { PageDTOEmployeeResponseDTO } from "./PageDTOEmployeeResponseDTO.ts
 export type { PageDTOEventResponseDTO } from "./PageDTOEventResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./PageDTOStudentResponseDTO.ts";
-export type { ParentCreateDTO } from "./ParentCreateDTO.ts";
 export type { ParentOptionsDTO } from "./ParentOptionsDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
-export type { ParentUpdateDTO } from "./ParentUpdateDTO.ts";
-export type { StudentCreateDTO } from "./StudentCreateDTO.ts";
 export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
+export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
-export type { StudentUpdateDTO } from "./StudentUpdateDTO.ts";
 export type {
   GetDashboardSummary200,
   GetDashboardSummaryQuery,

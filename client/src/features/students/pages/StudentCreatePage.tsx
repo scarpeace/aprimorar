@@ -1,22 +1,23 @@
+import { Alert } from "@/components/ui/alert";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PageHeader } from "@/components/ui/page-header";
 import { AddressFormFields } from "@/features/address/AddressFormFields";
-import { ParentFormFields } from "@/features/parents/components/ParentFormFields";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { GraduationCap } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useHookFormMask } from "use-mask-input";
 import { StudentForm } from "../components/StudentForm";
 import { StudentFormFields } from "../components/StudentFormFields";
-import { useStudentForm } from "../hooks/use-student-form";
+import { studentFormInputSchema, type StudentFormInputSchema } from "../forms/studentFormSchema";
 import { useCreateStudentMutation } from "../hooks/use-student-mutation";
-import { Alert } from "@/components/ui/alert";
 
 export function StudentCreatePage() {
-  const {
-    formState: { errors },
-    handleSubmit,
-    register,
-    registerWithMask,
-  } = useStudentForm();
+  const { register, formState: { errors }, handleSubmit } = useForm<StudentFormInputSchema>({
+    resolver: zodResolver(studentFormInputSchema),
+    mode: "onBlur",
+  });
+  const registerWithMask = useHookFormMask(register);
 
   const {
     mutate: createStudent,
@@ -25,7 +26,7 @@ export function StudentCreatePage() {
     error: createStudentError,
   } = useCreateStudentMutation();
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit((data: StudentFormInputSchema) => {
     createStudent({ data });
   });
 
@@ -47,13 +48,13 @@ export function StudentCreatePage() {
             className="grid grid-cols-3 gap-4"
           />
 
-          <ParentFormFields
+          {/*<ParentFormFields
             register={register}
             registerWithMask={registerWithMask}
             prefix="parent"
             errors={errors.parent}
             className="grid grid-cols-2 gap-4"
-          />
+          />*/}
 
           <AddressFormFields
             register={register}

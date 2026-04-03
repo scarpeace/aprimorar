@@ -1,13 +1,18 @@
 import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
-import type { StudentCreateSchema } from "@/features/students/hooks/studentSchema";
+import type {
+  StudentCreateFormValues,
+  StudentUpdateFormValues,
+} from "@/features/students/forms/studentFormSchema";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
+
+type StudentFormValues = StudentCreateFormValues | StudentUpdateFormValues;
 
 type StudentFormFieldsProps = {
   register: UseFormRegister<any>;
   registerWithMask: ReturnType<typeof useHookFormMask>;
-  errors: FieldErrors<StudentCreateSchema>;
+  errors: FieldErrors<StudentFormValues>;
   className?: string;
   isUpdate?: boolean;
 };

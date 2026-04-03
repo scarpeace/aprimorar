@@ -48,19 +48,21 @@ export function StudentDetailsPage() {
         description="Veja e gerencie as informações do aluno"
         title="Detalhes do aluno"
         Icon={GraduationCap}
+        backLink="/students"
       >
-        <div className="flex flex-row ml-auto mt-auto gap-3">
-          <EditStudentButton studentId={studentId} />
-          <ArchiveStudentButton
-            studentId={studentId}
-            isArchived={!!student.archivedAt}
-          />
-          <DeleteStudentButton studentId={studentId} />
-        </div>
+
       </PageHeader>
 
+        <div className="flex flex-row ml-auto mt-auto gap-3">
+
+        </div>
+
       <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
+
+
         <StudentDetails student={student} />
+
+
         <Collapse title={"Endereço"}>
           <AddressSummarySection address={student.address} />
         </Collapse>

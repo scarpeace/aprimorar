@@ -3,8 +3,8 @@
  * Do not edit manually.
  */
 
+import type { StudentRequestDTO } from "../StudentRequestDTO.ts";
 import type { StudentResponseDTO } from "../StudentResponseDTO.ts";
-import type { StudentUpdateDTO } from "../StudentUpdateDTO.ts";
 
 export type UpdateStudentPathParams = {
   /**
@@ -18,7 +18,7 @@ export type UpdateStudentPathParams = {
  */
 export type UpdateStudent200 = StudentResponseDTO;
 
-export type UpdateStudentMutationRequest = StudentUpdateDTO;
+export type UpdateStudentMutationRequest = StudentRequestDTO;
 
 export type UpdateStudentMutationResponse = UpdateStudent200;
 

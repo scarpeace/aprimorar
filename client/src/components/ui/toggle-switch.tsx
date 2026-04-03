@@ -23,7 +23,7 @@ export function ToggleSwitch({
           checked={toggled}
           onChange={() => setToggle(!toggled)}
         />
-        <span className="text-xs">{label}</span>
+        <span className="text-sm">{label}</span>
       </label>
     </div>
   );

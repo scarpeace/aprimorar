@@ -14,7 +14,6 @@ export type GetParentByIdPathParams = {
 
 /**
  * @description Responsável retornado com sucesso
- * @example Parent Name
  */
 export type GetParentById200 = ParentResponseDTO;
 

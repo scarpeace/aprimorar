@@ -14,13 +14,16 @@ export function StudentsPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showArchived, setShowArchived] = useState(false);
 
-  const { data: students, isPending, error, } = useGetStudents({
+  const {
+    data: students,
+    isPending,
+    error,
+  } = useGetStudents({
     page: currentPage,
     size: 8,
     search: debouncedSearchTerm,
     archived: showArchived,
   });
-
 
   return (
     <>
@@ -28,27 +31,26 @@ export function StudentsPage() {
         description="Gerencie cadastros e matrículas."
         title="Alunos"
         Icon={GraduationCap}
-      >
-        <div className="flex items-center ml-auto gap-6">
-          <ListSearchInput
-            className="w-80 sm:w-96"
-            placeholder="Buscar aluno por nome, email ou escola"
-            ariaLabel="Buscar aluno"
-            value={searchTerm}
-            onChange={setSearchTerm}
-          />
-          <ToggleSwitch
-            label="Arquivados"
-            tip="Mostrar alunos arquivados"
-            toggled={showArchived}
-            setToggle={setShowArchived}
-          />
-          <ButtonLink to="/students/new" variant="success">
-            Novo aluno
-          </ButtonLink>
-        </div>
-      </PageHeader>
-
+        backLink="/dashboard"
+      />
+      <div className="flex items-center ml-auto gap-6">
+        <ListSearchInput
+          className="w-80 sm:w-96"
+          placeholder="Buscar aluno por nome, email ou escola"
+          ariaLabel="Buscar aluno"
+          value={searchTerm}
+          onChange={setSearchTerm}
+        />
+        <ToggleSwitch
+          label="Arquivados"
+          tip="Mostrar alunos arquivados"
+          toggled={showArchived}
+          setToggle={setShowArchived}
+        />
+        <ButtonLink to="/students/new" variant="success">
+          Novo aluno
+        </ButtonLink>
+      </div>
       <StudentsTable
         students={students}
         onPageChange={setCurrentPage}

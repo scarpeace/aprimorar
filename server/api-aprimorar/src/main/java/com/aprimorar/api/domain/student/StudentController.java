@@ -1,17 +1,8 @@
 package com.aprimorar.api.domain.student;
 
-import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
-import com.aprimorar.api.domain.student.dto.StudentCreateDTO;
-import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.dto.StudentUpdateDTO;
-import com.aprimorar.api.shared.PageDTO;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,6 +19,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.shared.PageDTO;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RestController
 @RequestMapping("/v1/students")
@@ -43,7 +45,7 @@ public class StudentController {
     @PostMapping
     @Operation(operationId = "createStudent", description = "Cria um novo aluno com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso.")
-    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentCreateDTO createStudentDto) {
+    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
         StudentResponseDTO response = studentService.createStudent(createStudentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -89,9 +91,9 @@ public class StudentController {
     @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso.")
     public ResponseEntity<StudentResponseDTO> updateStudent(
         @PathVariable UUID studentId,
-        @RequestBody @Valid StudentUpdateDTO studentUpdateDTO
+        @RequestBody @Valid StudentRequestDTO dto
     ) {
-        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, studentUpdateDTO);
+        StudentResponseDTO updatedStudent = studentService.updateStudent(dto, studentId);
         return ResponseEntity.ok(updatedStudent);
     }
 

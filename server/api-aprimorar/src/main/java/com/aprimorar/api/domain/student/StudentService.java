@@ -1,21 +1,9 @@
 package com.aprimorar.api.domain.student;
 
-import com.aprimorar.api.domain.event.repository.EventRepository;
-import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
-import com.aprimorar.api.domain.parent.repository.ParentRepository;
-import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
-import com.aprimorar.api.domain.student.dto.StudentCreateDTO;
-import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.dto.StudentUpdateDTO;
-import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
-import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
-import com.aprimorar.api.domain.student.repository.StudentRepository;
-import com.aprimorar.api.domain.student.repository.StudentSpecifications;
-import com.aprimorar.api.shared.PageDTO;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,6 +12,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.parent.Parent;
+import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
+import com.aprimorar.api.domain.parent.repository.ParentRepository;
+import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
+import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.domain.student.repository.StudentSpecifications;
+import com.aprimorar.api.shared.PageDTO;
 
 @Service
 public class StudentService {
@@ -46,6 +47,21 @@ public class StudentService {
         this.studentRepo = studentRepo;
         this.studentMapper = studentMapper;
         this.eventRepo = eventRepo;
+    }
+
+    @Transactional
+    public StudentResponseDTO createStudent(StudentRequestDTO dto) {
+        Student student = studentMapper.convertToEntity(dto);
+
+        Parent parent = findParentOrThrow(dto.parentId());
+        student.setParent(parent);
+
+        ensureStudentUniqueness(student);
+
+        Student savedStudent = studentRepo.save(student);
+
+        log.info("Aluno {} cadastrado com sucesso.", savedStudent.getName().toUpperCase());
+        return studentMapper.convertToDto(savedStudent);
     }
 
     /* ----- Query Methods ----- */
@@ -89,43 +105,16 @@ public class StudentService {
         return studentMapper.convertToDto(student);
     }
 
-    /* ----- Command Methods ----- */
     @Transactional
-    public StudentResponseDTO createStudent(StudentCreateDTO studentRequestDto) {
-        Student student = studentMapper.convertToEntityForCreate(studentRequestDto);
-        Parent parent = student.getParent();
-
-        ensureStudentUniqueness(student);
-        ensureParentUniqueness(parent);
-
-
-        student.setParent(student.getParent());
-
-        Student savedStudent = studentRepo.save(student);
-
-        log.info("Aluno {} cadastrado com sucesso.", savedStudent.getName().toUpperCase());
-        return studentMapper.convertToDto(savedStudent);
-    }
-
-    @Transactional
-    public StudentResponseDTO updateStudent(UUID id, StudentUpdateDTO dto) {
+    public StudentResponseDTO updateStudent(StudentRequestDTO dto, UUID id) {
         if (GHOST_STUDENT_ID.equals(id)) {
             throw new IllegalArgumentException("Não é possível modificar o registro de sistema 'Aluno Removido'.");
         }
 
         Student student = findStudentOrThrow(id);
-        Student updatedStudentData = studentMapper.convertToEntityForUpdate(dto);
+        Student updatedStudentData = studentMapper.convertToEntity(dto);
 
         ensureStudentUniquenessForUpdate(updatedStudentData, id);
-
-        Parent parent = student.getParent();
-        Parent updatedParentData = updatedStudentData.getParent();
-
-        ensureParentUniquenessForUpdate(updatedParentData, parent.getId());
-
-        parent.setName(updatedParentData.getName());
-        parent.setContact(updatedParentData.getContact());
-        parent.setEmail(updatedParentData.getEmail());
 
         student.setName(updatedStudentData.getName());
         student.setContact(updatedStudentData.getContact());
@@ -180,6 +169,12 @@ public class StudentService {
             .orElseThrow(() -> new StudentNotFoundException("Aluno não encontrado no banco de dados"));
     }
 
+    private Parent findParentOrThrow(UUID parentId) {
+        return parentRepo
+            .findById(parentId)
+            .orElseThrow(() -> new IllegalArgumentException("Responsável não encontrado."));
+    }
+
     private void ensureStudentUniqueness(Student student) {
         if (studentRepo.existsByCpf(student.getCpf())) {
             throw new StudentAlreadyExistException("Aluno com o CPF informado já existe no banco de dados");
@@ -209,7 +204,8 @@ public class StudentService {
             throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
     }
-  //TODO: Será que vale a pena jogar alguns dos helper methods pra dentro dos methods para melhorar a legibilidade?
+
+    //TODO: Será que vale a pena jogar alguns dos helper methods pra dentro dos methods para melhorar a legibilidade?
     private void ensureParentUniquenessForUpdate(Parent parent, UUID parentId) {
         if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parentId)) {
             throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");

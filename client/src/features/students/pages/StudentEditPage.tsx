@@ -1,26 +1,30 @@
 import { Alert } from "@/components/ui/alert";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Button, ButtonLink } from "@/components/ui/button";
-import { ErrorCard } from "@/components/ui/error-card";
+import { ComponentState } from "@/components/ui/component-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PageHeader } from "@/components/ui/page-header";
-import { PageLoading } from "@/components/ui/page-loading";
 import { AddressFormFields } from "@/features/address/AddressFormFields";
-import { ParentFormFields } from "@/features/parents/components/ParentFormFields";
+import { studentRequestDTOSchema } from "@/kubb";
 import { GraduationCap } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
+import { useHookFormMask } from "use-mask-input";
 import { StudentForm } from "../components/StudentForm";
 import { StudentFormFields } from "../components/StudentFormFields";
-import type { StudentUpdateSchema } from "../hooks/studentSchema";
-import { useStudentForm } from "../hooks/use-student-form";
+import {
+  studentFormInputSchema,
+  type StudentFormInputSchema
+} from "../forms/studentFormSchema";
 import { useUpdateStudentMutation } from "../hooks/use-student-mutation";
 import { useStudentById } from "../hooks/use-students-query";
-import { ComponentState } from "@/components/ui/component-state";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
 
-  const {
+   const {
     data: student,
     isError: isStudentError,
     isPending: isStudentPending,
@@ -35,13 +39,35 @@ export function StudentEditPage() {
   } = useUpdateStudentMutation();
 
   const {
+    register,
     formState: { errors },
     handleSubmit,
-    register,
-    registerWithMask,
-  } = useStudentForm(student);
+  } = useForm<StudentFormInputSchema>({
+    resolver: zodResolver(studentFormInputSchema),
+    mode: "onBlur",
+    values: {
+      name: student?.name ?? "",
+      cpf: student?.cpf ?? "",
+      birthdate: student?.birthdate ?? "",
+      contact: student?.contact ?? "",
+      email: student?.email ?? "",
+      school: student?.school ?? "",
+      parentId: student?.parentId ?? "",
+      address: {
+        street: student?.address.street ?? "",
+        number: student?.address.number ?? "",
+        complement: student?.address.complement ?? "N/A",
+        district: student?.address.district ?? "",
+        city: student?.address.city ?? "",
+        state: student?.address.state ?? "DF",
+        zip: student?.address.zip ?? "",
+      },
+    },
+  });
+  const registerWithMask = useHookFormMask(register);
 
-  const onSubmit = handleSubmit((data: StudentUpdateSchema) => {
+
+  const onSubmit = handleSubmit((data : StudentFormInputSchema) => {
     updateStudent({ studentId, data });
   });
 
@@ -55,13 +81,12 @@ export function StudentEditPage() {
         title="Criar aluno"
         description="Preencha os dados do aluno e do responsável."
         Icon={GraduationCap}
+        backLink={`/students/${studentId}`}
       />
 
       <StudentForm onSubmit={onSubmit}>
 
-        {isUpdateStudentError && (
-          <Alert error={updateStudentError} variant="error" />
-        )}
+        {isUpdateStudentError && (<Alert error={updateStudentError} variant="error" />)}
 
         <StudentFormFields
           isUpdate={true}
@@ -69,15 +94,6 @@ export function StudentEditPage() {
           registerWithMask={registerWithMask}
           errors={errors}
           className="grid grid-cols-3 gap-4"
-        />
-
-        <ParentFormFields
-          isUpdate={ true}
-          register={register}
-          registerWithMask={registerWithMask}
-          prefix="parent"
-          errors={errors.parent}
-          className="grid grid-cols-2 gap-4"
         />
 
         <AddressFormFields
@@ -89,15 +105,19 @@ export function StudentEditPage() {
         />
 
         <div className="flex flex-wrap justify-end gap-3">
-          <Button
-            type="submit"
-            variant="success"
-            disabled={isUpdateStudentPending}
-          >
-            <Button type="submit" variant="success"disabled={isUpdateStudentPending}>
-              {isUpdateStudentPending ? <LoadingSpinner text={"Salvando"} /> : "Salvar alterações"}
+
+            <Button
+              type="submit"
+              variant="success"
+              disabled={isUpdateStudentPending}
+            >
+              {isUpdateStudentPending ? (
+                <LoadingSpinner text={"Salvando"} />
+              ) : (
+                "Salvar alterações"
+              )}
             </Button>
-          </Button>
+
 
           <ButtonLink to={`/students/`} variant="outline">
             Cancelar

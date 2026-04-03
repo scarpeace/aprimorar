@@ -4,7 +4,6 @@
  */
 
 import { addressResponseDTOSchema } from "./addressResponseDTOSchema.ts";
-import { parentResponseDTOSchema } from "./parentResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 /**
@@ -23,11 +22,7 @@ export const studentResponseDTOSchema = z
     get address() {
       return addressResponseDTOSchema.describe("Endereço do aluno");
     },
-    get parent() {
-      return parentResponseDTOSchema.describe(
-        "Dados do responsável retornados pela API",
-      );
-    },
+    parentId: z.uuid().describe("ID do responsável"),
     archivedAt: z.iso
       .datetime()
       .describe("Data e hora quando o aluno foi arquivado")

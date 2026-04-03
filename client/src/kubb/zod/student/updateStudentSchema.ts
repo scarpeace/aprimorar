@@ -3,8 +3,8 @@
  * Do not edit manually.
  */
 
+import { studentRequestDTOSchema } from "../studentRequestDTOSchema.ts";
 import { studentResponseDTOSchema } from "../studentResponseDTOSchema.ts";
-import { studentUpdateDTOSchema } from "../studentUpdateDTOSchema.ts";
 import { z } from "zod/v4";
 
 export const updateStudentPathParamsSchema = z.object({
@@ -19,8 +19,8 @@ export const updateStudent200Schema = z
   .describe("Dados do aluno retornados pela API");
 
 export const updateStudentMutationRequestSchema = z
-  .lazy(() => studentUpdateDTOSchema)
-  .describe("Formato de payload para o update de um aluno");
+  .lazy(() => studentRequestDTOSchema)
+  .describe("Formato de payload para o cadastro de um aluno");
 
 export const updateStudentMutationResponseSchema = z.lazy(
   () => updateStudent200Schema,

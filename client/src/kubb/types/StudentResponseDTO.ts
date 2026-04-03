@@ -4,7 +4,6 @@
  */
 
 import type { AddressResponseDTO } from "./AddressResponseDTO.ts";
-import type { ParentResponseDTO } from "./ParentResponseDTO.ts";
 
 /**
  * @description Dados do aluno retornados pela API
@@ -56,10 +55,10 @@ export type StudentResponseDTO = {
    */
   address: AddressResponseDTO;
   /**
-   * @description Dados do responsável retornados pela API
-   * @type object
+   * @description ID do responsável
+   * @type string, uuid
    */
-  parent: ParentResponseDTO;
+  parentId: string;
   /**
    * @description Data e hora quando o aluno foi arquivado
    * @type string, date-time

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 type PageHeaderProps = {
   title: string;
   description: string;
+  backLink: string;
   Icon: LucideIcon;
   children?: ReactNode;
 };
@@ -14,7 +15,7 @@ export function PageHeader({
   title,
   description,
   Icon,
-  children,
+  backLink
 }: Readonly<PageHeaderProps>) {
   const navigate = useNavigate()
   return (
@@ -27,9 +28,9 @@ export function PageHeader({
         </div>
         <div className="flex items-end ml-auto gap-6">
           {/*TODO: tem que pegar o link como props*/}
-          <Button onClick={() => navigate(-1)} variant="outline">
+          <ButtonLink to={backLink} variant="outline">
             Voltar
-          </Button>
+          </ButtonLink>
           </div>
       </div>
     </header>

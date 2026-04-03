@@ -4,26 +4,22 @@
  */
 
 import { addressRequestDTOSchema } from "./addressRequestDTOSchema.ts";
-import { parentUpdateDTOSchema } from "./parentUpdateDTOSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description Formato de payload para o update de um aluno
+ * @description Formato de payload para o cadastro de um aluno
  */
-export const studentUpdateDTOSchema = z
+export const studentRequestDTOSchema = z
   .object({
     name: z.string().min(1).describe("Nome do aluno"),
     birthdate: z.iso.date().describe("Data de nascimento do aluno"),
+    cpf: z.string().min(1).describe("CPF do aluno"),
     school: z.string().min(1).describe("Escola do aluno"),
     contact: z.string().min(1).describe("Contato do aluno"),
     email: z.string().min(1).describe("Email do aluno"),
     get address() {
       return addressRequestDTOSchema.describe("Endereço do aluno");
     },
-    get parent() {
-      return parentUpdateDTOSchema.describe(
-        "Formato de payload para o update de um responsável",
-      );
-    },
+    parentId: z.uuid().describe("ID do responsável do aluno"),
   })
-  .describe("Formato de payload para o update de um aluno");
+  .describe("Formato de payload para o cadastro de um aluno");

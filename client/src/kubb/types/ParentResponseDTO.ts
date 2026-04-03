@@ -5,7 +5,6 @@
 
 /**
  * @description Dados do responsável retornados pela API
- * @example Parent Name
  */
 export type ParentResponseDTO = {
   /**

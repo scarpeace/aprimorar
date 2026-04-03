@@ -119,10 +119,8 @@ export {
   unarchiveParentMutationResponseSchema,
   unarchiveParentPathParamsSchema,
 } from "./parent/unarchiveParentSchema.ts";
-export { parentCreateDTOSchema } from "./parentCreateDTOSchema.ts";
 export { parentOptionsDTOSchema } from "./parentOptionsDTOSchema.ts";
 export { parentResponseDTOSchema } from "./parentResponseDTOSchema.ts";
-export { parentUpdateDTOSchema } from "./parentUpdateDTOSchema.ts";
 export {
   archiveStudent204Schema,
   archiveStudentMutationResponseSchema,
@@ -168,7 +166,6 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./student/updateStudentSchema.ts";
-export { studentCreateDTOSchema } from "./studentCreateDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./studentOptionsDTOSchema.ts";
+export { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
-export { studentUpdateDTOSchema } from "./studentUpdateDTOSchema.ts";
