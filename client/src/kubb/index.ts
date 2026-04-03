@@ -376,3 +376,177 @@ export { employeeCreateDTODutyEnum } from "./types/EmployeeCreateDTO.ts";
 export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
 export { employeeUpdateDTODutyEnum } from "./types/EmployeeUpdateDTO.ts";
 export { eventRequestDTOContentEnum } from "./types/EventRequestDTO.ts";
+export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
+export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
+export { classesByContentDTOSchema } from "./zod/classesByContentDTOSchema.ts";
+export {
+  getDashboardSummary200Schema,
+  getDashboardSummaryQueryParamsSchema,
+  getDashboardSummaryQueryResponseSchema,
+} from "./zod/dashboard-controller/getDashboardSummarySchema.ts";
+export { dashboardSummaryResponseDTOSchema } from "./zod/dashboardSummaryResponseDTOSchema.ts";
+export {
+  archiveEmployee204Schema,
+  archiveEmployeeMutationResponseSchema,
+  archiveEmployeePathParamsSchema,
+} from "./zod/employee/archiveEmployeeSchema.ts";
+export {
+  createEmployee201Schema,
+  createEmployeeMutationRequestSchema,
+  createEmployeeMutationResponseSchema,
+} from "./zod/employee/createEmployeeSchema.ts";
+export {
+  deleteEmployee204Schema,
+  deleteEmployeeMutationResponseSchema,
+  deleteEmployeePathParamsSchema,
+} from "./zod/employee/deleteEmployeeSchema.ts";
+export {
+  getEmployeeById200Schema,
+  getEmployeeByIdPathParamsSchema,
+  getEmployeeByIdQueryResponseSchema,
+} from "./zod/employee/getEmployeeByIdSchema.ts";
+export {
+  getEmployeeOptions200Schema,
+  getEmployeeOptionsQueryResponseSchema,
+} from "./zod/employee/getEmployeeOptionsSchema.ts";
+export {
+  getEmployees200Schema,
+  getEmployeesQueryParamsSchema,
+  getEmployeesQueryResponseSchema,
+} from "./zod/employee/getEmployeesSchema.ts";
+export {
+  unarchiveEmployee204Schema,
+  unarchiveEmployeeMutationResponseSchema,
+  unarchiveEmployeePathParamsSchema,
+} from "./zod/employee/unarchiveEmployeeSchema.ts";
+export {
+  updateEmployee200Schema,
+  updateEmployeeMutationRequestSchema,
+  updateEmployeeMutationResponseSchema,
+  updateEmployeePathParamsSchema,
+} from "./zod/employee/updateEmployeeSchema.ts";
+export { employeeCreateDTOSchema } from "./zod/employeeCreateDTOSchema.ts";
+export { employeeOptionsDTOSchema } from "./zod/employeeOptionsDTOSchema.ts";
+export { employeeResponseDTOSchema } from "./zod/employeeResponseDTOSchema.ts";
+export { employeeUpdateDTOSchema } from "./zod/employeeUpdateDTOSchema.ts";
+export { eventRequestDTOSchema } from "./zod/eventRequestDTOSchema.ts";
+export { eventResponseDTOSchema } from "./zod/eventResponseDTOSchema.ts";
+export {
+  createEvent201Schema,
+  createEventMutationRequestSchema,
+  createEventMutationResponseSchema,
+} from "./zod/events/createEventSchema.ts";
+export {
+  getEventById200Schema,
+  getEventByIdPathParamsSchema,
+  getEventByIdQueryResponseSchema,
+} from "./zod/events/getEventByIdSchema.ts";
+export {
+  getEventsByEmployee200Schema,
+  getEventsByEmployeePathParamsSchema,
+  getEventsByEmployeeQueryParamsSchema,
+  getEventsByEmployeeQueryResponseSchema,
+} from "./zod/events/getEventsByEmployeeSchema.ts";
+export {
+  getEventsByStudent200Schema,
+  getEventsByStudentPathParamsSchema,
+  getEventsByStudentQueryParamsSchema,
+  getEventsByStudentQueryResponseSchema,
+} from "./zod/events/getEventsByStudentSchema.ts";
+export {
+  getEvents200Schema,
+  getEventsQueryParamsSchema,
+  getEventsQueryResponseSchema,
+} from "./zod/events/getEventsSchema.ts";
+export {
+  updateEvent200Schema,
+  updateEventMutationRequestSchema,
+  updateEventMutationResponseSchema,
+  updateEventPathParamsSchema,
+} from "./zod/events/updateEventSchema.ts";
+export { pageDTOEmployeeResponseDTOSchema } from "./zod/pageDTOEmployeeResponseDTOSchema.ts";
+export { pageDTOEventResponseDTOSchema } from "./zod/pageDTOEventResponseDTOSchema.ts";
+export { pageDTOParentResponseDTOSchema } from "./zod/pageDTOParentResponseDTOSchema.ts";
+export { pageDTOStudentResponseDTOSchema } from "./zod/pageDTOStudentResponseDTOSchema.ts";
+export {
+  archiveParent204Schema,
+  archiveParentMutationResponseSchema,
+  archiveParentPathParamsSchema,
+} from "./zod/parent/archiveParentSchema.ts";
+export {
+  deleteParent204Schema,
+  deleteParentMutationResponseSchema,
+  deleteParentPathParamsSchema,
+} from "./zod/parent/deleteParentSchema.ts";
+export {
+  getParentById200Schema,
+  getParentByIdPathParamsSchema,
+  getParentByIdQueryResponseSchema,
+} from "./zod/parent/getParentByIdSchema.ts";
+export {
+  getParentsOptions200Schema,
+  getParentsOptionsQueryResponseSchema,
+} from "./zod/parent/getParentsOptionsSchema.ts";
+export {
+  getParents200Schema,
+  getParentsQueryParamsSchema,
+  getParentsQueryResponseSchema,
+} from "./zod/parent/getParentsSchema.ts";
+export {
+  unarchiveParent204Schema,
+  unarchiveParentMutationResponseSchema,
+  unarchiveParentPathParamsSchema,
+} from "./zod/parent/unarchiveParentSchema.ts";
+export { parentCreateDTOSchema } from "./zod/parentCreateDTOSchema.ts";
+export { parentOptionsDTOSchema } from "./zod/parentOptionsDTOSchema.ts";
+export { parentResponseDTOSchema } from "./zod/parentResponseDTOSchema.ts";
+export { parentUpdateDTOSchema } from "./zod/parentUpdateDTOSchema.ts";
+export {
+  archiveStudent204Schema,
+  archiveStudentMutationResponseSchema,
+  archiveStudentPathParamsSchema,
+} from "./zod/student/archiveStudentSchema.ts";
+export {
+  createStudent201Schema,
+  createStudentMutationRequestSchema,
+  createStudentMutationResponseSchema,
+} from "./zod/student/createStudentSchema.ts";
+export {
+  deleteStudent204Schema,
+  deleteStudentMutationResponseSchema,
+  deleteStudentPathParamsSchema,
+} from "./zod/student/deleteStudentSchema.ts";
+export {
+  getStudentById200Schema,
+  getStudentByIdPathParamsSchema,
+  getStudentByIdQueryResponseSchema,
+} from "./zod/student/getStudentByIdSchema.ts";
+export {
+  getStudentsByParent200Schema,
+  getStudentsByParentPathParamsSchema,
+  getStudentsByParentQueryResponseSchema,
+} from "./zod/student/getStudentsByParentSchema.ts";
+export {
+  getStudentsOptions200Schema,
+  getStudentsOptionsQueryResponseSchema,
+} from "./zod/student/getStudentsOptionsSchema.ts";
+export {
+  getStudents200Schema,
+  getStudentsQueryParamsSchema,
+  getStudentsQueryResponseSchema,
+} from "./zod/student/getStudentsSchema.ts";
+export {
+  unarchiveStudent204Schema,
+  unarchiveStudentMutationResponseSchema,
+  unarchiveStudentPathParamsSchema,
+} from "./zod/student/unarchiveStudentSchema.ts";
+export {
+  updateStudent200Schema,
+  updateStudentMutationRequestSchema,
+  updateStudentMutationResponseSchema,
+  updateStudentPathParamsSchema,
+} from "./zod/student/updateStudentSchema.ts";
+export { studentCreateDTOSchema } from "./zod/studentCreateDTOSchema.ts";
+export { studentOptionsDTOSchema } from "./zod/studentOptionsDTOSchema.ts";
+export { studentResponseDTOSchema } from "./zod/studentResponseDTOSchema.ts";
+export { studentUpdateDTOSchema } from "./zod/studentUpdateDTOSchema.ts";

@@ -6,9 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
-@Getter
 @Entity
 @Table(name = "tb_parent")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
@@ -40,6 +38,10 @@ public class Parent extends BaseEntity {
         this.name = name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         if (email == null || email.isBlank()) {
             throw new InvalidParentException("Email do responsável é obrigatório");
@@ -47,11 +49,19 @@ public class Parent extends BaseEntity {
         this.email = email;
     }
 
+    public String getContact() {
+        return contact;
+    }
+
     public void setContact(String contact) {
         if (contact == null || contact.isBlank()) {
             throw new InvalidParentException("Contato do responsável é obrigatório");
         }
         this.contact = contact;
+    }
+
+    public String getCpf() {
+        return cpf;
     }
 
     public void setCpf(String cpf) {

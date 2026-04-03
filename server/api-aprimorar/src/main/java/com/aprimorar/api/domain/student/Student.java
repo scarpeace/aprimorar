@@ -1,15 +1,21 @@
 package com.aprimorar.api.domain.student;
 
+import java.time.LocalDate;
+
 import com.aprimorar.api.domain.address.Address;
 import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.student.exception.InvalidStudentException;
 import com.aprimorar.api.shared.BaseEntity;
-import jakarta.persistence.*;
-import java.time.LocalDate;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
-@Getter
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+
 @Entity
 @Table(name = "tb_students")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
@@ -43,11 +49,19 @@ public class Student extends BaseEntity {
 
     public Student() {}
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         if (name == null || name.isBlank()) {
             throw new InvalidStudentException("Nome do estudante não pode estar vazio");
         }
         this.name = name;
+    }
+
+    public String getContact() {
+        return contact;
     }
 
     public void setContact(String contact) {
@@ -57,11 +71,19 @@ public class Student extends BaseEntity {
         this.contact = contact;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         if (email == null || email.isBlank()) {
             throw new InvalidStudentException("Email do estudante não pode estar vazio");
         }
         this.email = email;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
     }
 
     public void setBirthdate(LocalDate birthdate) {
@@ -71,11 +93,19 @@ public class Student extends BaseEntity {
         this.birthdate = birthdate;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
     public void setCpf(String cpf) {
         if (cpf == null || cpf.isBlank()) {
             throw new InvalidStudentException("CPF do estudante não pode estar vazio");
         }
         this.cpf = cpf;
+    }
+
+    public String getSchool() {
+        return school;
     }
 
     public void setSchool(String school) {
@@ -85,11 +115,19 @@ public class Student extends BaseEntity {
         this.school = school;
     }
 
+    public Parent getParent() {
+        return parent;
+    }
+
     public void setParent(Parent parent) {
         if (parent == null) {
             throw new InvalidStudentException("O ID do responsável não pode ser nulo");
         }
         this.parent = parent;
+    }
+
+    public Address getAddress() {
+        return address;
     }
 
     public void setAddress(Address address) {

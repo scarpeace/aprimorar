@@ -8,12 +8,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-
 import java.time.LocalDate;
+import lombok.EqualsAndHashCode;
 
-@Getter
 @Entity
 @Table(name = "tb_employees")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
@@ -55,11 +52,19 @@ public class Employee extends BaseEntity {
         this.name = name;
     }
 
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
     public void setBirthdate(LocalDate birthdate) {
         if (birthdate == null) {
             throw new InvalidEmployeeException("A data de nascimento do colaborador não pode ser null");
         }
         this.birthdate = birthdate;
+    }
+
+    public String getPix() {
+        return pix;
     }
 
     public void setPix(String pix) {
@@ -69,11 +74,19 @@ public class Employee extends BaseEntity {
         this.pix = pix;
     }
 
+    public String getContact() {
+        return contact;
+    }
+
     public void setContact(String contact) {
         if (contact == null || contact.isBlank()) {
             throw new InvalidEmployeeException("Contato do colaborador não pode ser null");
         }
         this.contact = contact;
+    }
+
+    public String getCpf() {
+        return cpf;
     }
 
     public void setCpf(String cpf) {
@@ -83,11 +96,19 @@ public class Employee extends BaseEntity {
         this.cpf = cpf;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         if (email == null || email.isBlank()) {
             throw new InvalidEmployeeException("Email do colaborador não pode ser null");
         }
         this.email = email;
+    }
+
+    public Duty getDuty() {
+        return duty;
     }
 
     public void setDuty(Duty duty) {
