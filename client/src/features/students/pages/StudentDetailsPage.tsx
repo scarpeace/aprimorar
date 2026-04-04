@@ -5,7 +5,7 @@ import { useGetStudentById } from "@/kubb";
 import { GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { StudentDetails } from "../components/StudentDetails";
+import { StudentSummary } from "../components/StudentSummary";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -34,7 +34,7 @@ export function StudentDetailsPage() {
       />
 
       <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
-        <StudentDetails
+        <StudentSummary
           student={student}
           isPending={isStudentPending}
           error={studentError}

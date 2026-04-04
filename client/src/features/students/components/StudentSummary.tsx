@@ -16,13 +16,13 @@ import { Collapse } from "@/components/ui/collapse";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 
-type StudentDetailsProps = {
+type StudentSummaryProps = {
   student?: StudentResponseDTO;
   isPending: boolean;
   error: unknown;
 };
 
-export function StudentDetails({ student, isPending, error }: Readonly<StudentDetailsProps>) {
+export function StudentSummary({ student, isPending, error }: Readonly<StudentSummaryProps>) {
   if (error) {
     return <ErrorCard title="Erro ao carregar detalhes do aluno" error={error} />;
   }

@@ -49,7 +49,6 @@ export function StudentCreatePage() {
             className="grid grid-cols-3 gap-4"
           />
 
-          {/*TODO: talvez mover isso pra dentro do student form fields pra tirar o prefix*/}
           <AddressFormFields
             register={register}
             registerWithMask={registerWithMask}

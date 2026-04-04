@@ -12,7 +12,10 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useHookFormMask } from "use-mask-input";
 import { useUpdateStudentMutation } from "../hooks/use-student-mutation";
-import { studentFormInputSchema, type StudentFormInputSchema } from "../forms/studentSchema";
+import {
+  studentFormInputSchema,
+  type StudentFormInputSchema,
+} from "../forms/studentSchema";
 import { StudentForm } from "../forms/StudentForm";
 import { StudentFormFields } from "../forms/StudentFormFields";
 
@@ -80,9 +83,6 @@ export function StudentEditPage() {
       />
 
       <StudentForm onSubmit={onSubmit}>
-        {isUpdateStudentError && (
-          <Alert error={updateStudentError} variant="error" />
-        )}
 
         <StudentFormFields
           isUpdate={true}
@@ -100,17 +100,13 @@ export function StudentEditPage() {
           className="grid grid-cols-3 gap-4"
         />
 
+        {isUpdateStudentError && (
+          <Alert error={updateStudentError} variant="error" />
+        )}
+
         <div className="flex flex-wrap justify-end gap-3">
-          <Button
-            type="submit"
-            variant="success"
-            disabled={isUpdateStudentPending}
-          >
-            {isUpdateStudentPending ? (
-              <LoadingSpinner text={"Salvando"} />
-            ) : (
-              "Salvar alterações"
-            )}
+          <Button type="submit" variant="success" disabled={isUpdateStudentPending}>
+            {isUpdateStudentPending ? <LoadingSpinner text={"Atualizando..."} /> : "Salvar alterações"}
           </Button>
 
           <ButtonLink to={`/students/`} variant="outline">

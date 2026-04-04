@@ -13,7 +13,6 @@ export function useCreateParentMutation() {
         toast.error("Algo deu errado ao criar o responsável");
       },
       onSuccess: (createdParent: ParentResponseDTO) => {
-        console.log(createdParent)
         toast.success("Responsável criado com sucesso");
         queryClient.invalidateQueries({ queryKey: getParentsQueryKey() })
         navigate(`/parents/${createdParent.parentId}`);

@@ -31,7 +31,6 @@ export function AddressFormFields({
     >
       <div className={className}>
         <FormField
-          className=""
           label="Rua"
           htmlFor={withPrefix(`street`)}
           error={errors?.street?.message}
