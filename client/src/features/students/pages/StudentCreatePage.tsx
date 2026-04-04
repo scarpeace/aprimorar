@@ -7,10 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
+import { studentFormInputSchema, type StudentFormInputSchema } from "../forms/studentSchema";
+import { useCreateStudentMutation } from "../hooks/use-student-mutation";
 import { StudentForm } from "../forms/StudentForm";
 import { StudentFormFields } from "../forms/StudentFormFields";
-import { studentFormInputSchema, type StudentFormInputSchema } from "../forms/studentFormSchema";
-import { useCreateStudentMutation } from "../hooks/use-student-mutation";
 
 export function StudentCreatePage() {
   const { register, formState: { errors }, handleSubmit } = useForm<StudentFormInputSchema>({

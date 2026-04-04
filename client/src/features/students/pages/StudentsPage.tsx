@@ -15,12 +15,11 @@ export function StudentsPage() {
   const [showArchived, setShowArchived] = useState(false);
 
   const {
+    isPending : isStudentsPending,
     data: students,
-    isPending,
-    error,
+    error: studentsError,
   } = useGetStudents({
     page: currentPage,
-    size: 8,
     search: debouncedSearchTerm,
     archived: showArchived,
   });
@@ -49,15 +48,16 @@ export function StudentsPage() {
           setToggle={setShowArchived}
         />
         <ButtonLink to="/students/new" variant="success">
-          Novo aluno
+          Nova Matrícula
         </ButtonLink>
       </div>
+
       <StudentsTable
         students={students}
         onPageChange={setCurrentPage}
         currentPage={currentPage}
-        isPending={isPending}
-        error={error}
+        isPending={isStudentsPending}
+        error={studentsError}
       />
     </>
   );

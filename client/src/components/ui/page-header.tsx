@@ -15,9 +15,9 @@ export function PageHeader({
   title,
   description,
   Icon,
-  backLink
+  backLink,
 }: Readonly<PageHeaderProps>) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <header className="min-w-0 gap-5 mb-6">
       <div className="flex flex-row items-center">
@@ -26,12 +26,6 @@ export function PageHeader({
           <h1 className="app-text text-3xl font-bold">{title}</h1>
           <p className="text-sm app-text-muted">{description}</p>
         </div>
-        <div className="flex items-end ml-auto gap-6">
-          {/*TODO: tem que pegar o link como props*/}
-          <ButtonLink to={backLink} variant="outline">
-            Voltar
-          </ButtonLink>
-          </div>
       </div>
     </header>
   );

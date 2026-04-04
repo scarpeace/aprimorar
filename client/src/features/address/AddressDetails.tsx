@@ -7,7 +7,7 @@ type AddressSummarySectionProps = {
   address?: AddressResponseDTO;
 };
 
-export function AddressSummarySection({
+export function AddressDetails({
   address,
 }: Readonly<AddressSummarySectionProps>) {
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
@@ -21,15 +21,10 @@ export function AddressSummarySection({
   ];
 
   return (
-    <SectionCard
-      title="Endereço"
-      description="Dados de endereço"
-    >
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {summaryItems.map((item) => (
           <SummaryItem key={item.label} label={item.label} value={item.value} />
         ))}
-      </div>
-    </SectionCard>
+    </div>
   );
 }

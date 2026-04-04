@@ -12,8 +12,9 @@ const StudentCreatePage = lazy(() => import("@/features/students/pages/StudentCr
 const StudentEditPage = lazy(() => import("@/features/students/pages/StudentEditPage").then((module) => ({ default: module.StudentEditPage })))
 const StudentDetailsPage = lazy(() => import("@/features/students/pages/StudentDetailsPage").then((module) => ({ default: module.StudentDetailsPage })))
 
-const ParentDetailPage = lazy(() => import("@/features/parents/pages/ParentDetailPage").then((module) => ({ default: module.ParentDetailPage })))
 const ParentsPage = lazy(() => import("@/features/parents/pages/ParentsPage").then((module) => ({ default: module.ParentsPage })))
+const ParentCreatePage = lazy(() => import("@/features/parents/pages/ParentCreatePage").then((module) => ({ default: module.ParentCreatePage })))
+const ParentDetailPage = lazy(() => import("@/features/parents/pages/ParentDetailPage").then((module) => ({ default: module.ParentDetailPage })))
 
 const EmployeesPage = lazy(() => import("@/features/employees/pages/EmployeesPage").then((module) => ({ default: module.EmployeesPage })))
 const EmployeeDetailPage = lazy(() => import("@/features/employees/pages/EmployeeDetailPage").then((module) => ({ default: module.EmployeeDetailPage })))
@@ -58,6 +59,7 @@ function App() {
               <Route path="/events/:id" element={<EventDetailPage />} />
 
               <Route path="/parents" element={<ParentsPage />} />
+              <Route path="/parents/new" element={<ParentCreatePage/>} />
               <Route path="/parents/:id" element={<ParentDetailPage />} />
             </Route>
           </Routes>

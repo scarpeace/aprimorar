@@ -1,18 +1,11 @@
-import { Collapse } from "@/components/ui/collapse";
-import { ErrorCard } from "@/components/ui/error-card";
-import { LoadingCard } from "@/components/ui/loading-card";
 import { PageHeader } from "@/components/ui/page-header";
-import { AddressSummarySection } from "@/features/address/AddressSumarySection";
 import { EventsTable } from "@/features/events/components/EventsTable";
+import { useEventsByStudent } from "@/features/events/hooks/use-event-queries";
+import { useGetStudentById } from "@/kubb";
 import { GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
-import { DeleteStudentButton } from "../components/DeleteStudentButton";
-import { EditStudentButton } from "../components/EditStudentButton";
 import { StudentDetails } from "../components/StudentDetails";
-import { useStudentById } from "../hooks/use-students-query";
-import { useEventsByStudent } from "@/features/events/hooks/use-event-queries";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,28 +13,16 @@ export function StudentDetailsPage() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const {
-    data: student,
-    isError: isStudentError,
     isPending: isStudentPending,
+    data: student,
     error: studentError,
-  } = useStudentById({ studentId });
+  } = useGetStudentById(studentId);
 
   const {
-    data: studentEvents,
     isPending: isStudentEventsPending,
+    data: studentEvents,
     error: studentEventsError,
   } = useEventsByStudent(studentId);
-
-
-  if (isStudentError) {
-    return <ErrorCard title="Erro ao carregar aluno" error={studentError || studentEventsError} />;
-  }
-
-  //TODO: colocar isLoading aqui também em todas as páginas que tem esse tratamento de estado
-// as vezes é até bom criar um componente reutilizavel
-  if (isStudentPending) {
-    return <LoadingCard title="Carregando dados do aluno" />;
-  }
 
   return (
     <>
@@ -53,11 +34,11 @@ export function StudentDetailsPage() {
       />
 
       <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
-        <StudentDetails student={student} />
-
-        <Collapse title={"Endereço"}>
-          <AddressSummarySection address={student.address} />
-        </Collapse>
+        <StudentDetails
+          student={student}
+          isPending={isStudentPending}
+          error={studentError}
+        />
 
         <EventsTable
           eventsPage={studentEvents}

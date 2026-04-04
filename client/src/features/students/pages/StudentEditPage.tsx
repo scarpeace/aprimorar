@@ -6,30 +6,26 @@ import { ComponentState } from "@/components/ui/component-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PageHeader } from "@/components/ui/page-header";
 import { AddressFormFields } from "@/features/address/AddressFormFields";
-import { studentRequestDTOSchema } from "@/kubb";
+import { useGetStudentById } from "@/kubb";
 import { GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useHookFormMask } from "use-mask-input";
-import { StudentForm } from "../components/StudentForm";
-import { StudentFormFields } from "../components/StudentFormFields";
-import {
-  studentFormInputSchema,
-  type StudentFormInputSchema
-} from "../forms/studentFormSchema";
 import { useUpdateStudentMutation } from "../hooks/use-student-mutation";
-import { useStudentById } from "../hooks/use-students-query";
+import { studentFormInputSchema, type StudentFormInputSchema } from "../forms/studentSchema";
+import { StudentForm } from "../forms/StudentForm";
+import { StudentFormFields } from "../forms/StudentFormFields";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
 
-   const {
+  const {
     data: student,
     isError: isStudentError,
     isPending: isStudentPending,
     error: studentError,
-  } = useStudentById({ studentId });
+  } = useGetStudentById(studentId);
 
   const {
     mutate: updateStudent,
@@ -66,8 +62,7 @@ export function StudentEditPage() {
   });
   const registerWithMask = useHookFormMask(register);
 
-
-  const onSubmit = handleSubmit((data : StudentFormInputSchema) => {
+  const onSubmit = handleSubmit((data: StudentFormInputSchema) => {
     updateStudent({ studentId, data });
   });
 
@@ -85,8 +80,9 @@ export function StudentEditPage() {
       />
 
       <StudentForm onSubmit={onSubmit}>
-
-        {isUpdateStudentError && (<Alert error={updateStudentError} variant="error" />)}
+        {isUpdateStudentError && (
+          <Alert error={updateStudentError} variant="error" />
+        )}
 
         <StudentFormFields
           isUpdate={true}
@@ -105,19 +101,17 @@ export function StudentEditPage() {
         />
 
         <div className="flex flex-wrap justify-end gap-3">
-
-            <Button
-              type="submit"
-              variant="success"
-              disabled={isUpdateStudentPending}
-            >
-              {isUpdateStudentPending ? (
-                <LoadingSpinner text={"Salvando"} />
-              ) : (
-                "Salvar alterações"
-              )}
-            </Button>
-
+          <Button
+            type="submit"
+            variant="success"
+            disabled={isUpdateStudentPending}
+          >
+            {isUpdateStudentPending ? (
+              <LoadingSpinner text={"Salvando"} />
+            ) : (
+              "Salvar alterações"
+            )}
+          </Button>
 
           <ButtonLink to={`/students/`} variant="outline">
             Cancelar
