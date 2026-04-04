@@ -6,24 +6,23 @@
 import { pageDTOStudentResponseDTOSchema } from "../pageDTOStudentResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
-export const getStudentsByParentQueryParamsSchema = z.object({
+export const getStudentsByParentPathParamsSchema = z.object({
   parentId: z.uuid(),
-  page: z.optional(
-    z.coerce
-      .number()
-      .int()
-      .min(0)
-      .default(0)
-      .describe("Zero-based page index (0..N)"),
-  ),
-  size: z.optional(
-    z.coerce
-      .number()
-      .int()
-      .min(1)
-      .default(20)
-      .describe("The size of the page to be returned"),
-  ),
+});
+
+export const getStudentsByParentQueryParamsSchema = z.object({
+  page: z.coerce
+    .number()
+    .int()
+    .min(0)
+    .default(0)
+    .describe("Zero-based page index (0..N)"),
+  size: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .default(20)
+    .describe("The size of the page to be returned"),
   sort: z.optional(
     z
       .array(z.string())

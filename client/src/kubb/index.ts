@@ -241,6 +241,7 @@ export type {
 } from "./types/student/GetStudents.ts";
 export type {
   GetStudentsByParent200,
+  GetStudentsByParentPathParams,
   GetStudentsByParentQuery,
   GetStudentsByParentQueryParams,
   GetStudentsByParentQueryResponse,
@@ -554,6 +555,7 @@ export {
 } from "./zod/student/getStudentByIdSchema.ts";
 export {
   getStudentsByParent200Schema,
+  getStudentsByParentPathParamsSchema,
   getStudentsByParentQueryParamsSchema,
   getStudentsByParentQueryResponseSchema,
 } from "./zod/student/getStudentsByParentSchema.ts";

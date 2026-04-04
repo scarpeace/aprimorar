@@ -5,11 +5,14 @@
 
 import type { PageDTOStudentResponseDTO } from "../PageDTOStudentResponseDTO.ts";
 
-export type GetStudentsByParentQueryParams = {
+export type GetStudentsByParentPathParams = {
   /**
    * @type string, uuid
    */
   parentId: string;
+};
+
+export type GetStudentsByParentQueryParams = {
   /**
    * @description Zero-based page index (0..N)
    * @minLength 0
@@ -40,6 +43,7 @@ export type GetStudentsByParentQueryResponse = GetStudentsByParent200;
 
 export type GetStudentsByParentQuery = {
   Response: GetStudentsByParent200;
+  PathParams: GetStudentsByParentPathParams;
   QueryParams: GetStudentsByParentQueryParams;
   Errors: any;
 };

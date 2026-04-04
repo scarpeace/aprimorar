@@ -209,6 +209,7 @@ export type {
 } from "./student/GetStudents.ts";
 export type {
   GetStudentsByParent200,
+  GetStudentsByParentPathParams,
   GetStudentsByParentQuery,
   GetStudentsByParentQueryParams,
   GetStudentsByParentQueryResponse,

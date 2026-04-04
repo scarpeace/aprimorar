@@ -155,6 +155,7 @@ export {
 } from "./student/getStudentByIdSchema.ts";
 export {
   getStudentsByParent200Schema,
+  getStudentsByParentPathParamsSchema,
   getStudentsByParentQueryParamsSchema,
   getStudentsByParentQueryResponseSchema,
 } from "./student/getStudentsByParentSchema.ts";

@@ -38,9 +38,9 @@ export function StudentsTable({
 
   return (
     <>
-      <div>
-        <table className="table table-zebra bg-base-100 overflow-x-auto w-full p-3 rounded-xl animate-[fade-up_280ms_ease-out_both]">
-          <thead className="bg-base-300 rounded">
+      <div className="overflow-x-auto rounded bg-base-100 p-1 mt-3">
+        <table className="table table-zebra animate-[fade-up_280ms_ease-out_both]">
+          <thead className="bg-base-300 ">
             <tr>
               <th className="text-left font-semibold text-base-content/80">
                 Nome
@@ -60,10 +60,11 @@ export function StudentsTable({
               <th className="text-left font-semibold text-base-content/80">
                 Matricula
               </th>
+              {/*TODO: Trocar esse status por uma bolinha de status e mover as actions pra dentro da row*/}
               <th className="text-left font-semibold text-base-content/80">
                 Status
               </th>
-              <th className="text-left font-semibold text-base-content/80">
+              <th className="text-center font-semibold text-base-content/80">
                 Ações
               </th>
             </tr>
@@ -86,9 +87,9 @@ export function StudentsTable({
                 <td>{formatDateShortYear(student.createdAt ?? "")}</td>
                 <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
 
-                <td>
+                <td className="text-center">
                   <span
-                    className="btn m-2 btn-secondary"
+                    className="btn btn-secondary"
                     onClick={() => navigate(`/students/${student.id}`)}
                   >
                     Detalhes

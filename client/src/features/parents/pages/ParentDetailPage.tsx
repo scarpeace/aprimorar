@@ -26,7 +26,7 @@ export function ParentDetailPage() {
     data: parentStudents,
     isPending: isParentStudentsPending,
     error: parentStudentsError,
-  } = useGetStudentsByParent({parentId} );
+  } = useGetStudentsByParent(parentId );
 
   if (isParentError) {
     return (

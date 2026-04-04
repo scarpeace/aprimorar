@@ -33,9 +33,9 @@ export function StudentsPage() {
         Icon={GraduationCap}
         backLink="/dashboard"
       />
-      <div className="flex items-center ml-auto gap-6">
+      <div className="flex items-center justify-between ml-auto gap-6">
         <ListSearchInput
-          className="w-80 sm:w-96"
+          className="grow"
           placeholder="Buscar aluno por nome, email ou escola"
           ariaLabel="Buscar aluno"
           value={searchTerm}

@@ -61,11 +61,11 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-    @GetMapping("/{parentId}")
+    @GetMapping("/parent/{parentId}")
     @Operation(operationId = "getStudentsByParent", description = "Retorna uma lista de alunos pelo ID do pai.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
     public ResponseEntity<PageDTO<StudentResponseDTO>> getStudentsByParent(
-        @RequestParam UUID parentId,
+        @PathVariable UUID parentId,
         @ParameterObject Pageable pageable
     ) {
         PageDTO<StudentResponseDTO> options = studentService.getStudentsByParent(parentId, pageable);
