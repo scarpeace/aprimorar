@@ -1,7 +1,7 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOStudentResponseDTO } from "@/kubb";
+import type { PageDTOEmployeeResponseDTO } from "@/kubb";
 import {
   formatCpf,
   formatDateShortYear,
@@ -10,8 +10,8 @@ import {
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
-type StudentsTableProps = {
-  students?: PageDTOStudentResponseDTO;
+type EmployeesTableProps = {
+  employees?: PageDTOEmployeeResponseDTO;
   children?: ReactNode;
   onPageChange: (page: number) => void;
   currentPage: number;
@@ -19,21 +19,21 @@ type StudentsTableProps = {
   error: unknown;
 };
 
-export function StudentsTable({
-  students,
+export function EmployeesTable({
+  employees,
   onPageChange,
   currentPage,
   isPending,
   error,
-}: Readonly<StudentsTableProps>) {
+}: Readonly<EmployeesTableProps>) {
   const navigate = useNavigate();
 
   if (isPending) {
-    return <LoadingSpinner text="Carregando Alunos..." />;
+    return <LoadingSpinner text="Carregando Colaboradores..." />;
   }
 
   if (error) {
-    return <ErrorCard title="Não foi possível carregar a listagem de Alunos" error={error} />;
+    return <ErrorCard title="Não foi possível carregar a listagem de Colaboradores" error={error} />;
   }
 
   return (
@@ -49,13 +49,7 @@ export function StudentsTable({
                 CPF
               </th>
               <th className="text-left font-semibold text-base-content/80">
-                Idade
-              </th>
-              <th className="text-left font-semibold text-base-content/80">
                 Contato
-              </th>
-              <th className="text-left font-semibold text-base-content/80">
-                Escola
               </th>
               <th className="text-left font-semibold text-base-content/80">
                 Matricula
@@ -71,26 +65,24 @@ export function StudentsTable({
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {students?.content.map((student) => (
+            {employees?.content.map((employee) => (
               <tr
-                key={student.id}
+                key={employee.id}
                 className="transition-colors hover:bg-base-200/70"
               >
-                <td>{student.name}</td>
+                <td>{employee.name}</td>
 
-                <td>{formatCpf(student.cpf)}</td>
-                <td className="text-center">{student.age}</td>
-                <td>{formatPhone(student.contact)}</td>
+                <td>{formatCpf(employee.cpf)}</td>
+                <td>{formatPhone(employee.contact)}</td>
 
-                <td>{student.school}</td>
 
-                <td>{formatDateShortYear(student.createdAt ?? "")}</td>
-                <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
+                <td>{formatDateShortYear(employee.createdAt ?? "")}</td>
+                <td>{employee.archivedAt ? "Arquivado" : "Ativo"}</td>
 
                 <td className="text-center">
                   <span
                     className="btn btn-secondary"
-                    onClick={() => navigate(`/students/${student.id}`)}
+                    onClick={() => navigate(`/employees/${employee.id}`)}
                   >
                     Detalhes
                   </span>
@@ -100,7 +92,7 @@ export function StudentsTable({
           </tbody>
         </table>
             <Pagination
-            paginationData={students}
+            paginationData={employees}
             currentPage={currentPage}
             onPageChange={onPageChange}
           />

@@ -47,7 +47,7 @@ export function ParentDetailPage() {
         backLink={"/parents"}
       />
 
-      <div className="flex flex-col gap-7">
+      <div className="flex flex-col">
         <ParentDetails parent={parent} />
         <StudentsTable
           students={parentStudents}

@@ -30,12 +30,12 @@ export function StudentDetails({
       title="Resumo do aluno"
       description="Dados de aluno, responsável e endereço em um único resumo."
     >
-        <EditStudentButton studentId={student.id} />
+        {/*<EditStudentButton studentId={student.id} />
           <ArchiveStudentButton
             studentId={student.id}
             isArchived={!!student.archivedAt}
           />
-          <DeleteStudentButton studentId={student.id} />
+          <DeleteStudentButton studentId={student.id} />*/}
 
 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {summaryItems.map((item) => (

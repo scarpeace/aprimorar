@@ -42,6 +42,7 @@ export function StudentsPage() {
           onChange={setSearchTerm}
         />
         <ToggleSwitch
+          className="justify-self-start"
           label="Arquivados"
           tip="Mostrar alunos arquivados"
           toggled={showArchived}
