@@ -113,6 +113,7 @@ public class StudentService {
         }
 
         Student student = findStudentOrThrow(id);
+        Parent parent = findParentOrThrow(dto.parentId());
         Student updatedStudentData = studentMapper.convertToEntity(dto);
 
         ensureStudentUniquenessForUpdate(updatedStudentData, id);
@@ -123,6 +124,7 @@ public class StudentService {
         student.setBirthdate(updatedStudentData.getBirthdate());
         student.setSchool(updatedStudentData.getSchool());
         student.setAddress(updatedStudentData.getAddress());
+        student.setParent(parent);
 
         log.info("Aluno {} atualizado com sucesso.", student.getName().toUpperCase());
         return studentMapper.convertToDto(student);
