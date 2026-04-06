@@ -1,3 +1,4 @@
+import { ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
@@ -7,7 +8,6 @@ import {
   formatPhone
 } from "@/lib/utils/formatter";
 import type { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
 
 type ParentsTableProps = {
   parents?: PageDTOParentResponseDTO;
@@ -25,20 +25,19 @@ export function ParentsTable({
   isPending,
   error,
 }: Readonly<ParentsTableProps>) {
-  const navigate = useNavigate();
-
-  if (isPending) {
-    return <LoadingSpinner text="Carregando Responsáveis..." />;
-  }
 
   if (error) {
     return <ErrorCard title="Não foi possível carregar a listagem de Responsáveis" error={error}/>;
   }
 
+  if (isPending) {
+    return <LoadingSpinner text="Carregando Responsáveis..." />;
+  }
+
   return (
     <>
-      <div className="overflow-x-auto rounded bg-base-100 p-3 mt-3">
-        <table className="table table-zebra animate-[fade-up_280ms_ease-out_both]">
+      <div className=" rounded bg-base-100 mt-3">
+        <table className="table table-auto table-zebra animate-[fade-up_280ms_ease-out_both]">
           <thead className="bg-base-300 rounded">
             <tr>
               <th className="text-left font-semibold text-base-content/80">
@@ -77,23 +76,24 @@ export function ParentsTable({
                 <td>{parent.archivedAt ? "Arquivado" : "Ativo"}</td>
 
                 <td>
-                  <span
-                    className="btn m-2 btn-secondary"
-                    onClick={() => navigate(`/parents/${parent.parentId}`)}
+                  <ButtonLink
+                    className="btn btn-outline btn-info"
+                    to={`/employees/${parent.parentId}`}
                   >
                     Detalhes
-                  </span>
+                  </ButtonLink>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <Pagination
+
+      </div>
+       <Pagination
           paginationData={parents}
           currentPage={currentPage}
           onPageChange={onPageChange}
         />
-      </div>
     </>
   );
 }

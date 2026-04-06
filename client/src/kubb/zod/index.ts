@@ -47,10 +47,9 @@ export {
   updateEmployeeMutationResponseSchema,
   updateEmployeePathParamsSchema,
 } from "./employee/updateEmployeeSchema.ts";
-export { employeeCreateDTOSchema } from "./employeeCreateDTOSchema.ts";
 export { employeeOptionsDTOSchema } from "./employeeOptionsDTOSchema.ts";
+export { employeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./employeeResponseDTOSchema.ts";
-export { employeeUpdateDTOSchema } from "./employeeUpdateDTOSchema.ts";
 export { eventRequestDTOSchema } from "./eventRequestDTOSchema.ts";
 export { eventResponseDTOSchema } from "./eventResponseDTOSchema.ts";
 export {

@@ -5,7 +5,7 @@ import type { useHookFormMask } from "use-mask-input";
 import type { ParentFormSchema } from "./parentFormSchema";
 
 type ParentFormFieldsProps = Readonly<{
-  register: UseFormRegister<any>;
+  register: UseFormRegister<ParentFormSchema>;
   registerWithMask: ReturnType<typeof useHookFormMask>;
   errors?: FieldErrors<ParentFormSchema>;
   className?: string;

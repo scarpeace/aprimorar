@@ -3,7 +3,7 @@ import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
 
 import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
-import { useArchiveStudentMutation, useUnarchiveStudentMutation } from "../hooks/student-mutations";
+import { useStudentMutations } from "../hooks/student-mutations";
 
 type ArchiveStudentButtonProps = {
   studentId: string;
@@ -16,19 +16,26 @@ export const ArchiveStudentButton = ({
 }: ArchiveStudentButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const { mutate: unarchiveStudent, isPending: isUnarchivingStudent } = useUnarchiveStudentMutation();
-  const { mutate: archiveStudent, isPending: isArchivingStudent } = useArchiveStudentMutation();
+  const {
+    archiveStudent: { mutate: archiveStudent, isPending: isArchivingStudent },
+    unarchiveStudent: {
+      mutate: unarchiveStudent,
+      isPending: isUnarchivingStudent,
+    },
+  } = useStudentMutations();
 
-  const handleArchive = () => {
-    archiveStudent({ studentId });
-    setShowConfirm(false);
-  };
-  const handleUnarchive = () => {
-    unarchiveStudent({ studentId });
-    setShowConfirm(false);
-  };
+  const isPending = isArchivingStudent || isUnarchivingStudent;
+  const actionLabel = isArchived ? "Desarquivar" : "Arquivar";
+  const Icon = isArchived ? ArchiveRestoreIcon : ArchiveIcon;
+  const variant = isArchived ? "outline" : "warning";
 
-  if (isUnarchivingStudent || isArchivingStudent) {
+  function handleConfirm() {
+    const action = isArchived ? unarchiveStudent : archiveStudent;
+    action({ studentId });
+    setShowConfirm(false);
+  }
+
+  if (isPending) {
     return (
       <Button type="button" disabled variant="outline">
         <Loader2Icon className="h-4 w-4 animate-spin" />
@@ -41,27 +48,13 @@ export const ArchiveStudentButton = ({
     return (
       <InlineConfirmAlert
         variant={isArchived ? "info" : "warning"}
-        message={`Deseja mesmo ${isArchived ? "Desarquivar" : "Arquivar"} o aluno?`}
-        confirmText={'Sim'}
+        message={`Deseja mesmo ${actionLabel.toLowerCase()} o aluno?`}
+        confirmText="Sim"
         cancelText="Cancelar"
-        onConfirm={isArchived ? handleUnarchive : handleArchive}
+        onConfirm={handleConfirm}
         onCancel={() => setShowConfirm(false)}
         className="p-2"
-        isLoading={isArchivingStudent || isUnarchivingStudent}
       />
-    );
-  }
-
-  if (isArchived) {
-    return (
-      <Button
-        type="button"
-        onClick={() => setShowConfirm(true)}
-        variant="outline"
-      >
-        <ArchiveRestoreIcon className="h-4 w-4" />
-        Desarquivar
-      </Button>
     );
   }
 
@@ -69,10 +62,10 @@ export const ArchiveStudentButton = ({
     <Button
       type="button"
       onClick={() => setShowConfirm(true)}
-      variant="warning"
+      variant={variant}
     >
-      <ArchiveIcon className="h-4 w-4" />
-      Arquivar
+      <Icon className="h-4 w-4" />
+      {actionLabel}
     </Button>
   );
 };

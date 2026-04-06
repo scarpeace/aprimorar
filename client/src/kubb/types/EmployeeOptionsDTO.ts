@@ -3,13 +3,18 @@
  * Do not edit manually.
  */
 
+/**
+ * @description Formato de payload para obter opções de colaboradores
+ */
 export type EmployeeOptionsDTO = {
   /**
-   * @type string, uuid
+   * @description ID do funcionário
+   * @type string | undefined, uuid
    */
-  id: string;
+  id?: string;
   /**
-   * @type string
+   * @description Nome do funcionário
+   * @type string | undefined
    */
-  name: string;
+  name?: string;
 };

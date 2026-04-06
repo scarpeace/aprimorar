@@ -1,3 +1,4 @@
+import { ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
@@ -8,7 +9,6 @@ import {
   formatPhone,
 } from "@/lib/utils/formatter";
 import type { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
 
 type EmployeesTableProps = {
   employees?: PageDTOEmployeeResponseDTO;
@@ -26,7 +26,6 @@ export function EmployeesTable({
   isPending,
   error,
 }: Readonly<EmployeesTableProps>) {
-  const navigate = useNavigate();
 
   if (isPending) {
     return <LoadingSpinner text="Carregando Colaboradores..." />;
@@ -38,9 +37,9 @@ export function EmployeesTable({
 
   return (
     <>
-      <div className="overflow-x-auto rounded bg-base-100 p-3 mt-3">
+      <div className="overflow-x-auto rounded bg-base-100 mt-3 shadow-xl">
         <table className="table table-zebra animate-[fade-up_280ms_ease-out_both]">
-          <thead className="bg-base-300 ">
+          <thead className="bg-base-300">
             <tr>
               <th className="text-left font-semibold text-base-content/80">
                 Nome
@@ -80,23 +79,23 @@ export function EmployeesTable({
                 <td>{employee.archivedAt ? "Arquivado" : "Ativo"}</td>
 
                 <td className="text-center">
-                  <span
-                    className="btn btn-secondary"
-                    onClick={() => navigate(`/employees/${employee.id}`)}
+                  <ButtonLink
+                    className="btn btn-outline btn-info"
+                    to={`/employees/${employee.id}`}
                   >
                     Detalhes
-                  </span>
+                  </ButtonLink>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-            <Pagination
+      </div>
+      <Pagination
             paginationData={employees}
             currentPage={currentPage}
             onPageChange={onPageChange}
           />
-      </div>
     </>
   );
 }

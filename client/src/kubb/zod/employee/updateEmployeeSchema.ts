@@ -3,8 +3,8 @@
  * Do not edit manually.
  */
 
+import { employeeRequestDTOSchema } from "../employeeRequestDTOSchema.ts";
 import { employeeResponseDTOSchema } from "../employeeResponseDTOSchema.ts";
-import { employeeUpdateDTOSchema } from "../employeeUpdateDTOSchema.ts";
 import { z } from "zod/v4";
 
 export const updateEmployeePathParamsSchema = z.object({
@@ -17,8 +17,8 @@ export const updateEmployeePathParamsSchema = z.object({
 export const updateEmployee200Schema = z.lazy(() => employeeResponseDTOSchema);
 
 export const updateEmployeeMutationRequestSchema = z
-  .lazy(() => employeeUpdateDTOSchema)
-  .describe("Formato de payload para o update do colaborador");
+  .lazy(() => employeeRequestDTOSchema)
+  .describe("Formato de payload para criar um novo colaborador");
 
 export const updateEmployeeMutationResponseSchema = z.lazy(
   () => updateEmployee200Schema,

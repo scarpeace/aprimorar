@@ -1,23 +1,23 @@
-import { PageHeader } from "@/components/ui/page-header";
-import { EventsTable } from "@/features/events/components/EventsTable";
-import { useGetEventsByStudent, useGetParentById, useGetStudentById, useGetStudentsByParent } from "@/kubb";
-import { Edit, GraduationCap } from "lucide-react";
-import { useState, type ReactNode } from "react";
-import { useParams } from "react-router-dom";
 import { ButtonLink } from "@/components/ui/button";
 import { Collapse } from "@/components/ui/collapse";
+import { ErrorCard } from "@/components/ui/error-card";
+import { LoadingCard } from "@/components/ui/loading-card";
+import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { AddressDetails } from "@/features/address/AddressDetails";
-import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
-import { DeleteStudentButton } from "../components/DeleteStudentButton";
-import { ErrorCard } from "@/components/ui/error-card";
-import { LoadingCard } from "@/components/ui/loading-card";
+import { EventsTable } from "@/features/events/components/EventsTable";
+import { useGetEventsByStudent, useGetParentById, useGetStudentById } from "@/kubb";
 import {
   formatCpf,
-  formatPhone,
   formatDateShortYear,
+  formatPhone,
 } from "@/lib/utils/formatter";
+import { Edit, GraduationCap } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { useParams } from "react-router-dom";
+import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
+import { DeleteStudentButton } from "../components/DeleteStudentButton";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -73,7 +73,7 @@ export function StudentDetailsPage() {
       ) : (
         <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
           <SectionCard
-            title="Resumo do aluno"
+            title="Aluno"
             description="Dados do aluno"
             headerActions={
               <>
@@ -97,7 +97,7 @@ export function StudentDetailsPage() {
               ))}
             </div>
 
-            <Collapse title={"Endereço"} className="mt-3">
+            <Collapse title={"Endereço"} className="mt-3 shadow-xl">
               <AddressDetails address={student.address} />
             </Collapse>
           </SectionCard>
@@ -107,7 +107,8 @@ export function StudentDetailsPage() {
             isPending={isStudentEventsPending}
             error={studentEventsError}
             currentPage={currentPage}
-            onPageChange={setCurrentPage}
+                onPageChange={setCurrentPage}
+                description={"Eventos vinculados ao aluno"}
           />
         </div>
       )}

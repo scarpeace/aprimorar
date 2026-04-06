@@ -1,17 +1,14 @@
 import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
 
-import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
 import type { StudentFormSchema } from "./studentFormSchema";
-import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
-import { ButtonLink } from "@/components/ui/button";
 
 type StudentFormFieldsProps = {
   register: UseFormRegister<StudentFormSchema>;
   registerWithMask: ReturnType<typeof useHookFormMask>;
   errors: FieldErrors<StudentFormSchema>;
-  control: Control<StudentFormSchema>;
   className?: string;
   isUpdate?: boolean;
 };
@@ -20,7 +17,6 @@ export function StudentFormFields({
   register,
   registerWithMask,
   errors,
-  control,
   className,
   isUpdate,
 }: Readonly<StudentFormFieldsProps>) {

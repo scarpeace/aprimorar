@@ -1,3 +1,4 @@
+import { ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
@@ -8,7 +9,6 @@ import {
   formatPhone,
 } from "@/lib/utils/formatter";
 import type { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
 
 type StudentsTableProps = {
   students?: PageDTOStudentResponseDTO;
@@ -26,19 +26,22 @@ export function StudentsTable({
   isPending,
   error,
 }: Readonly<StudentsTableProps>) {
-  const navigate = useNavigate();
-
   if (isPending) {
     return <LoadingSpinner text="Carregando Alunos..." />;
   }
 
   if (error) {
-    return <ErrorCard title="Não foi possível carregar a listagem de Alunos" error={error} />;
+    return (
+      <ErrorCard
+        title="Não foi possível carregar a listagem de Alunos"
+        error={error}
+      />
+    );
   }
 
   return (
     <>
-      <div className="overflow-x-auto rounded bg-base-100 p-3 mt-3">
+      <div className="overflow-x-auto rounded bg-base-100 mt-3 shadow-xl">
         <table className="table table-zebra animate-[fade-up_280ms_ease-out_both]">
           <thead className="bg-base-300 ">
             <tr>
@@ -88,23 +91,23 @@ export function StudentsTable({
                 <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
 
                 <td className="text-center">
-                  <span
-                    className="btn btn-secondary"
-                    onClick={() => navigate(`/students/${student.id}`)}
+                  <ButtonLink
+                    className="btn btn-outline btn-info"
+                    to={`/employees/${student.id}`}
                   >
                     Detalhes
-                  </span>
+                  </ButtonLink>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-            <Pagination
-            paginationData={students}
-            currentPage={currentPage}
-            onPageChange={onPageChange}
-          />
       </div>
+      <Pagination
+        paginationData={students}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
+      />
     </>
   );
 }

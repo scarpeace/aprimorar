@@ -8,19 +8,13 @@ import { z } from "zod/v4";
 /**
  * @description Formato de payload para criar um novo colaborador
  */
-export const employeeCreateDTOSchema = z
+export const employeeRequestDTOSchema = z
   .object({
     name: z.string().min(1),
     birthdate: z.iso.date(),
     pix: z.string().min(1),
-    contact: z
-      .string()
-      .min(1)
-      .regex(/^\(\d{2}\)\s?\d{4,5}-\d{4}$/),
-    cpf: z
-      .string()
-      .min(1)
-      .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/),
+    contact: z.string().min(1),
+    cpf: z.string().min(1),
     email: z.string().min(1),
     duty: z.enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"]),
   })

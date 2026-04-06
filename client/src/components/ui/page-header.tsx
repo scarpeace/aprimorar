@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 type PageHeaderProps = {
   title: string;
   description: string;
-  backLink: string;
+  backLink?: string;
   Icon: LucideIcon;
   children?: ReactNode;
 };

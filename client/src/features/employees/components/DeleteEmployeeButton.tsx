@@ -1,25 +1,21 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
-import { useDeleteEmployee } from "../query/useEmployeeMutations";
-import { eventsApi } from "@/features/events/api/eventsApi";
-import { eventsQueryKeys } from "@/features/events/query/eventsQueryKeys";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
+import { useGetEventsByEmployee } from "@/kubb";
+import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
 
-export const DeleteEmployeeButton = ({
-  employeeId,
-}: {
-  employeeId: string;
-}) => {
+
+
+export const DeleteEmployeeButton = ({employeeId}: {employeeId: string}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { mutate: deleteEmployee, isPending: isDeleting } = useDeleteEmployee();
 
-  const { data: eventsData, isLoading: isEventsLoading } = useQuery({
-    queryKey: [...eventsQueryKeys.byEmployee(employeeId), { page: 0, size: 1 }],
-    queryFn: () => eventsApi.listByEmployee(employeeId, 0, 1),
-    enabled: isOpen, // Only fetch when the user clicks to delete
-  });
+  const {
+    deleteEmployee: { mutate: deleteEmployee, isPending: isDeleting },
+  } = useEmployeeMutations();
+
+  const { data: eventsData, isLoading: isEventsLoading } =
+    useGetEventsByEmployee(employeeId);
 
   const handleOpenClick = () => {
     setIsOpen(true);
@@ -32,14 +28,17 @@ export const DeleteEmployeeButton = ({
   };
 
   const handleConfirmDelete = () => {
-    deleteEmployee(employeeId, {
-      onSettled: () => {
-        setIsOpen(false);
+    deleteEmployee(
+      { employeeId },
+      {
+        onSettled: () => {
+          setIsOpen(false);
+        },
       },
-    });
+    );
   };
 
-  const eventsCount = eventsData?.page.totalElements ?? 0;
+  const eventsCount = eventsData?.totalElements ?? 0;
 
   return (
     <>
@@ -59,9 +58,9 @@ export const DeleteEmployeeButton = ({
         onClose={handleClose}
         onConfirm={handleConfirmDelete}
         title="Excluir Colaborador"
-        isPending={isDeleting}
-        isLoadingEvents={isEventsLoading}
-        eventsCount={eventsCount}
+        isItemPending={isDeleting}
+        isItemLoading={isEventsLoading}
+        itemDeleteCount={eventsCount}
         itemName="colaborador"
         phantomWarning={
           <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">

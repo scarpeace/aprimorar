@@ -40,19 +40,15 @@ export type {
 } from "./types/AddressResponseDTO.ts";
 export type { ClassesByContentDTO } from "./types/ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./types/DashboardSummaryResponseDTO.ts";
-export type {
-  EmployeeCreateDTO,
-  EmployeeCreateDTODutyEnumKey,
-} from "./types/EmployeeCreateDTO.ts";
 export type { EmployeeOptionsDTO } from "./types/EmployeeOptionsDTO.ts";
+export type {
+  EmployeeRequestDTO,
+  EmployeeRequestDTODutyEnumKey,
+} from "./types/EmployeeRequestDTO.ts";
 export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./types/EmployeeResponseDTO.ts";
-export type {
-  EmployeeUpdateDTO,
-  EmployeeUpdateDTODutyEnumKey,
-} from "./types/EmployeeUpdateDTO.ts";
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
@@ -394,9 +390,8 @@ export { updateStudentMutationOptions } from "./hooks/student/useUpdateStudent.t
 export { useUpdateStudent } from "./hooks/student/useUpdateStudent.ts";
 export { addressRequestDTOStateEnum } from "./types/AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./types/AddressResponseDTO.ts";
-export { employeeCreateDTODutyEnum } from "./types/EmployeeCreateDTO.ts";
+export { employeeRequestDTODutyEnum } from "./types/EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
-export { employeeUpdateDTODutyEnum } from "./types/EmployeeUpdateDTO.ts";
 export { eventRequestDTOContentEnum } from "./types/EventRequestDTO.ts";
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
@@ -447,10 +442,9 @@ export {
   updateEmployeeMutationResponseSchema,
   updateEmployeePathParamsSchema,
 } from "./zod/employee/updateEmployeeSchema.ts";
-export { employeeCreateDTOSchema } from "./zod/employeeCreateDTOSchema.ts";
 export { employeeOptionsDTOSchema } from "./zod/employeeOptionsDTOSchema.ts";
+export { employeeRequestDTOSchema } from "./zod/employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./zod/employeeResponseDTOSchema.ts";
-export { employeeUpdateDTOSchema } from "./zod/employeeUpdateDTOSchema.ts";
 export { eventRequestDTOSchema } from "./zod/eventRequestDTOSchema.ts";
 export { eventResponseDTOSchema } from "./zod/eventResponseDTOSchema.ts";
 export {

@@ -24,14 +24,9 @@ export function EventsPage() {
         description="Gerencie os atendimentos."
         title="Atendimentos"
         Icon={CalendarCheck2}
-      >
-        {/*<div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
-          <ButtonLink className="sm:ml-auto" to="/events/new" variant="success">
-            Novo atendimento
-          </ButtonLink>
-        </div>*/}
-      </PageHeader>
+      ></PageHeader>
 
+      {/*TODO: Mover algumas classes para dentro dos seus componentes como é o exemplo do ListSearchInput*/}
       <div className="flex flex-col gap-2 w-full">
         <div className="flex flex-row">
           <ListSearchInput
@@ -40,11 +35,11 @@ export function EventsPage() {
             ariaLabel="Buscar atendimento"
             value={searchTerm}
             onChange={setSearchTerm}
-        />
-        <ButtonLink className="sm:ml-auto" to="/events/new" variant="success">
+          />
+          <ButtonLink className="sm:ml-auto" to="/events/new" variant="success">
             Novo atendimento
           </ButtonLink>
-          </div>
+        </div>
         <EventsTable
           eventsPage={events}
           currentPage={currentPage}

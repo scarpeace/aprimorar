@@ -3,15 +3,22 @@ import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-mod
 import { useGetStudentsByParent } from "@/kubb";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useDeleteParentMutation } from "../hooks/parent-mutations";
+import { useParentMutations } from "../hooks/parent-mutations";
 
 export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { mutate: deleteParent, isPending: isDeleting } =
-    useDeleteParentMutation();
-  const { data: parentStudents, isLoading: isParentStudentsLoading } =
-    useGetStudentsByParent(parentId);
+  const {
+    deleteParent: {
+      mutate: deleteParent,
+      isPending: isDeleting,
+    },
+  } = useParentMutations();
+
+  const {
+    data: parentStudents,
+    isLoading: isParentStudentsLoading,
+  } = useGetStudentsByParent(parentId);
 
   const handleOpenClick = () => {
     setIsOpen(true);

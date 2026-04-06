@@ -5,7 +5,12 @@
 
 import { z } from "zod/v4";
 
-export const employeeOptionsDTOSchema = z.object({
-  id: z.uuid(),
-  name: z.string(),
-});
+/**
+ * @description Formato de payload para obter opções de colaboradores
+ */
+export const employeeOptionsDTOSchema = z
+  .object({
+    id: z.optional(z.uuid().describe("ID do funcionário")),
+    name: z.optional(z.string().describe("Nome do funcionário")),
+  })
+  .describe("Formato de payload para obter opções de colaboradores");

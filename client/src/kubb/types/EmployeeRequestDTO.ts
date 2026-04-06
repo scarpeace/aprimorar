@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export const employeeUpdateDTODutyEnum = {
+export const employeeRequestDTODutyEnum = {
   TEACHER: "TEACHER",
   ADM: "ADM",
   THERAPIST: "THERAPIST",
@@ -11,13 +11,13 @@ export const employeeUpdateDTODutyEnum = {
   SYSTEM: "SYSTEM",
 } as const;
 
-export type EmployeeUpdateDTODutyEnumKey =
-  (typeof employeeUpdateDTODutyEnum)[keyof typeof employeeUpdateDTODutyEnum];
+export type EmployeeRequestDTODutyEnumKey =
+  (typeof employeeRequestDTODutyEnum)[keyof typeof employeeRequestDTODutyEnum];
 
 /**
- * @description Formato de payload para o update do colaborador
+ * @description Formato de payload para criar um novo colaborador
  */
-export type EmployeeUpdateDTO = {
+export type EmployeeRequestDTO = {
   /**
    * @minLength 1
    * @type string
@@ -34,10 +34,14 @@ export type EmployeeUpdateDTO = {
   pix: string;
   /**
    * @minLength 1
-   * @pattern ^\(\d{2}\)\s?\d{4,5}-\d{4}$
    * @type string
    */
   contact: string;
+  /**
+   * @minLength 1
+   * @type string
+   */
+  cpf: string;
   /**
    * @minLength 1
    * @type string
@@ -46,5 +50,5 @@ export type EmployeeUpdateDTO = {
   /**
    * @type string
    */
-  duty: EmployeeUpdateDTODutyEnumKey;
+  duty: EmployeeRequestDTODutyEnumKey;
 };

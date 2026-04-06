@@ -7,25 +7,34 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import { useCreateStudentMutation } from "../hooks/student-mutations";
 import { StudentForm } from "../forms/StudentForm";
 import { StudentFormFields } from "../forms/StudentFormFields";
-import { type StudentFormSchema, studentFormSchema } from "../forms/studentFormSchema";
-import { DevTool } from "@hookform/devtools";
+import {
+  type StudentFormSchema,
+  studentFormSchema,
+} from "../forms/studentFormSchema";
+import { useStudentMutations } from "../hooks/student-mutations";
 
 export function StudentCreatePage() {
-  const { register, formState: { errors }, handleSubmit, control } = useForm<StudentFormSchema>({
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    control,
+  } = useForm<StudentFormSchema>({
     resolver: zodResolver(studentFormSchema),
     mode: "onBlur",
   });
   const registerWithMask = useHookFormMask(register);
 
   const {
-    mutate: createStudent,
-    isPending: isCreateStudentPending,
-    isError: isCreateStudentError,
-    error: createStudentError,
-  } = useCreateStudentMutation();
+    createStudent: {
+      mutate: createStudent,
+      isPending: isCreateStudentPending,
+      isError: isCreateStudentError,
+      error: createStudentError,
+    },
+  } = useStudentMutations();
 
   const onSubmit = handleSubmit((data: StudentFormSchema) => {
     createStudent({ data });
@@ -42,7 +51,6 @@ export function StudentCreatePage() {
 
       <div className="container animate-[fade-up_300ms_ease-out_both]">
         <StudentForm onSubmit={onSubmit}>
-
           <StudentFormFields
             control={control}
             register={register}
@@ -58,13 +66,21 @@ export function StudentCreatePage() {
             className="grid grid-cols-3 gap-4"
           />
 
-           {isCreateStudentError && (
+          {isCreateStudentError && (
             <Alert error={createStudentError} variant="error" />
           )}
 
           <div className="flex justify-end flex-wrap gap-3">
-            <Button type="submit" variant="success"disabled={isCreateStudentPending}>
-              {isCreateStudentPending ? <LoadingSpinner text={"Salvando"} /> : "Salvar alterações"}
+            <Button
+              type="submit"
+              variant="success"
+              disabled={isCreateStudentPending}
+            >
+              {isCreateStudentPending ? (
+                <LoadingSpinner text={"Salvando"} />
+              ) : (
+                "Salvar alterações"
+              )}
             </Button>
 
             <ButtonLink to={`/students/`} variant="outline">

@@ -102,6 +102,7 @@ public class StudentService {
     @Transactional(readOnly = true)
     public StudentResponseDTO findById(UUID studentId) {
         Student student = findStudentOrThrow(studentId);
+
         log.info("Aluno {} consultado com sucesso.", student.getName().toUpperCase());
         return studentMapper.convertToDto(student);
     }

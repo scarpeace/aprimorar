@@ -12,11 +12,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-export function useCreateParentMutation() {
+export function useParentMutations() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  return useCreateParent({
+  const createParent = useCreateParent({
     mutation: {
       onError: () => {
         toast.error("Algo deu errado ao criar o responsável");
@@ -28,13 +28,9 @@ export function useCreateParentMutation() {
       },
     },
   });
-}
 
-export function useUpdateParentMutation() {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
-  return useUpdateParent({
+  const updateParent = useUpdateParent({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável atualizado com sucesso");
@@ -49,13 +45,9 @@ export function useUpdateParentMutation() {
       },
     },
   });
-}
 
-export function useDeleteParentMutation() {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
-  return useDeleteParent({
+  const deleteParent = useDeleteParent({
     mutation: {
       onSuccess: () => {
         toast.success("Responsável excluído com sucesso");
@@ -68,12 +60,8 @@ export function useDeleteParentMutation() {
       },
     },
   });
-}
 
-export function useArchiveParentMutation() {
-  const queryClient = useQueryClient();
-
-  return useArchiveParent({
+  const archiveParent = useArchiveParent({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável arquivado com sucesso");
@@ -87,12 +75,8 @@ export function useArchiveParentMutation() {
       },
     },
   });
-}
 
-export function useUnarchiveParentMutation() {
-  const queryClient = useQueryClient();
-
-  return useUnarchiveParent({
+  const unarchiveParent = useUnarchiveParent({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável desarquivado com sucesso");
@@ -106,4 +90,12 @@ export function useUnarchiveParentMutation() {
       },
     },
   });
+
+  return {
+    createParent,
+    updateParent,
+    deleteParent,
+    archiveParent,
+    unarchiveParent,
+  }
 }

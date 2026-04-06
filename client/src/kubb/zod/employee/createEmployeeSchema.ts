@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { employeeCreateDTOSchema } from "../employeeCreateDTOSchema.ts";
+import { employeeRequestDTOSchema } from "../employeeRequestDTOSchema.ts";
 import { employeeResponseDTOSchema } from "../employeeResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
@@ -13,7 +13,7 @@ import { z } from "zod/v4";
 export const createEmployee201Schema = z.lazy(() => employeeResponseDTOSchema);
 
 export const createEmployeeMutationRequestSchema = z
-  .lazy(() => employeeCreateDTOSchema)
+  .lazy(() => employeeRequestDTOSchema)
   .describe("Formato de payload para criar um novo colaborador");
 
 export const createEmployeeMutationResponseSchema = z.lazy(

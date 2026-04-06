@@ -5,17 +5,20 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
-import styles from "@/features/employees/EmployeeCreatePage.module.css";
-import { dutyLabels } from "@/features/employees/schemas/dutyEnum";
-import { employeeFormSchema, type EmployeeFormInput } from "@/features/employees/schemas/employee";
-import { useCreateEmployee } from "./query/useEmployeeMutations";
+import {
+  employeeFormSchema,
+  type EmployeeFormSchema,
+} from "../forms/employeeFormSchema";
+import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
+import { FileUser } from "lucide-react";
+import { employeeRequestDTODutyEnum } from "@/kubb";
 
 export function EmployeeCreatePage() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<EmployeeFormInput>({
+  } = useForm<EmployeeFormSchema>({
     resolver: zodResolver(employeeFormSchema),
     defaultValues: {
       duty: "TEACHER",
@@ -23,22 +26,22 @@ export function EmployeeCreatePage() {
   });
   const registerWithMask = useHookFormMask(register);
 
-  const { mutate: createEmployee, isPending: isSubmitting } =
-    useCreateEmployee();
-  const onSubmit = (data: EmployeeFormInput) => {
-    createEmployee(data);
+  //TODO: Aqui eu vou mudar a syntaxe pra não ter que ficar me repetindo no nome.
+  // vai ser createEmployee.isPending, createEmployee.mutate e por aí vai.
+  const {
+    createEmployee: { mutate: createEmployee, isPending: isSubmitting },
+  } = useEmployeeMutations();
+  const onSubmit = (data: EmployeeFormSchema) => {
+    createEmployee({ data });
   };
 
   return (
-    <div className={styles.page}>
+    <div className={""}>
       <PageHeader
         title="Novo colaborador"
         description="Crie um novo cadastro de colaborador."
-        action={
-          <ButtonLink className="sm:ml-auto" to="/employees" variant="outline">
-            Voltar
-          </ButtonLink>
-        }
+        backLink={"/employees"}
+        Icon={FileUser}
       />
 
       <SectionCard
@@ -46,13 +49,13 @@ export function EmployeeCreatePage() {
         description="Preencha as informações abaixo para criar o cadastro."
       >
         <form
-          className={styles.form}
+          className={""}
           onSubmit={handleSubmit(onSubmit)}
           autoComplete="off"
         >
-          <div className={styles.formGrid}>
+          <div className={""}>
             <FormField
-              className={styles.field}
+              className={""}
               label="Nome completo"
               htmlFor="name"
               error={errors.name?.message}
@@ -66,7 +69,7 @@ export function EmployeeCreatePage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className={""}
               label="Data de nascimento"
               htmlFor="birthdate"
               error={errors.birthdate?.message}
@@ -80,7 +83,7 @@ export function EmployeeCreatePage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className={""}
               label="Email"
               htmlFor="email"
               error={errors.email?.message}
@@ -95,7 +98,7 @@ export function EmployeeCreatePage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className={""}
               label="Contato"
               htmlFor="contact"
               error={errors.contact?.message}
@@ -112,7 +115,7 @@ export function EmployeeCreatePage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className={""}
               label="CPF"
               htmlFor="cpf"
               error={errors.cpf?.message}
@@ -126,7 +129,7 @@ export function EmployeeCreatePage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className={""}
               label="Chave PIX"
               htmlFor="pix"
               error={errors.pix?.message}
@@ -140,21 +143,21 @@ export function EmployeeCreatePage() {
             </FormField>
 
             <FormField
-              className={styles.field}
+              className={""}
               label="Função"
               htmlFor="duty"
               error={errors.duty?.message}
             >
               <select id="duty" className="app-select" {...register("duty")}>
-                <option value="TEACHER">{dutyLabels.TEACHER}</option>
-                <option value="ADM">{dutyLabels.ADM}</option>
-                <option value="THERAPIST">{dutyLabels.THERAPIST}</option>
-                <option value="MENTOR">{dutyLabels.MENTOR}</option>
+                <option value="TEACHER">{employeeRequestDTODutyEnum.TEACHER}</option>
+                <option value="ADM">{employeeRequestDTODutyEnum.ADM}</option>
+                <option value="THERAPIST">{employeeRequestDTODutyEnum.THERAPIST}</option>
+                <option value="MENTOR">{employeeRequestDTODutyEnum.MENTOR}</option>
               </select>
             </FormField>
           </div>
 
-          <div className={styles.actions}>
+          <div className={""}>
             <ButtonLink to="/employees" variant="outline">
               Cancelar
             </ButtonLink>

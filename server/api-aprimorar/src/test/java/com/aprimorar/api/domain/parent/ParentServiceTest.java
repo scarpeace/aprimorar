@@ -74,7 +74,7 @@ class ParentServiceTest {
             when(parentMapper.convertToDto(secondParent)).thenReturn(expectedSecond);
 
             // Act
-            PageDTO<ParentResponseDTO> actual = parentService.getParents(input, null);
+            PageDTO<ParentResponseDTO> actual = parentService.getParents(input, null, true);
 
             // Assert
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);

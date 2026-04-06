@@ -1,144 +1,121 @@
-import type { ReactNode } from "react";
-import { UserCog } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
+import { LoadingCard } from "@/components/ui/loading-card";
 import { PageHeader } from "@/components/ui/page-header";
-import { PageLoading } from "@/components/ui/page-loading";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { dutyLabels } from "@/features/employees/schemas/dutyEnum";
 import { EventsTable } from "@/features/events/components/EventsTable";
-import styles from "@/features/employees/EmployeeDetailPage.module.css";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { useEmployeeDetailQuery } from "@/features/employees/query/useEmployeeQueries";
-import { DeleteEmployeeButton } from "./components/DeleteEmployeeButton";
-import { EditEmployeeButton } from "./components/EditEmployeeButton";
-import { ArchiveEmployeeButton } from "./components/ArchiveEmployeeButton";
-import { ButtonLink } from "@/components/ui/button";
+import { employeeResponseDTODutyEnum, useGetEmployeeById, useGetEventsByEmployee } from "@/kubb";
 import { formatDateShortYear } from "@/lib/utils/formatter";
+import { Edit, FileUser } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { useParams } from "react-router-dom";
+import { ArchiveEmployeeButton } from "../components/ArchiveEmployeeButton";
+import { DeleteEmployeeButton } from "../components/DeleteEmployeeButton";
 
 //TODO: Tá renderizando duas (ou quatro não sei) vezes
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const employeeId = id ?? "";
-  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
 
   const {
-    data: employeeData,
-    error: employeeDataError,
-    isLoading: isEmployeeLoading,
-    isFetched: isEmployeeFetched,
-  } = useEmployeeDetailQuery(employeeId);
+    data: employee,
+    error: employeeError,
+    isPending: isEmployeePending,
+  } = useGetEmployeeById(employeeId);
+
+  const {
+    data: employeeEvents,
+    isLoading: isEmployeeEventsLoading,
+    error: employeeEventsError,
+  } = useGetEventsByEmployee(employeeId);
+
+  const isEmployeeLoading = isEmployeePending || !employee;
+  const hasEmployeeError = !!employeeError;
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: employeeData?.name },
-    { label: "E-mail", value: employeeData?.email },
+    { label: "Nome completo", value: employee?.name },
+    { label: "E-mail", value: employee?.email },
     {
       label: "Cargo",
-      value: dutyLabels[employeeData?.duty as keyof typeof dutyLabels],
+      value: employeeResponseDTODutyEnum[employee?.duty as keyof typeof employeeResponseDTODutyEnum] ?? "Desconhecido",
     },
-    { label: "Contato", value: employeeData?.contact },
-    { label: "CPF", value: employeeData?.cpf },
-    { label: "Chave PIX", value: employeeData?.pix },
+    { label: "Contato", value: employee?.contact },
+    { label: "CPF", value: employee?.cpf },
+    { label: "Chave PIX", value: employee?.pix },
     {
       label: "Data de nascimento",
-      value: formatDateShortYear(employeeData?.birthdate ?? ""),
+      value: formatDateShortYear(employee?.birthdate ?? ""),
     },
     {
       label: "Status",
-      value: employeeData?.archivedAt ? "Arquivado" : "Ativo",
+      value: employee?.archivedAt ? "Arquivado" : "Ativo",
     },
     {
       label: "Criado em",
-      value: formatDateShortYear(employeeData?.createdAt ?? ""),
+      value: formatDateShortYear(employee?.createdAt ?? ""),
     },
   ];
 
-  //Ao implementar a tabela geral isso aqui vai funcionar.
-  // const myEventsColumns: ColumnDef<EventResponse>[] = [
-  //   { header: "Aluno", accessor: (event) => event.studentName },
-  //   {
-  //     header: "Data",
-  //     accessor: (event) => formatDateShortYear(event.startDate),
-  //   },
-  //   {
-  //     header: "Horário",
-  //     accessor: (event) =>
-  //       `${formatTime(event.startDate)} às ${formatTime(event.endDate)}`,
-  //   },
-  //   {
-  //     header: "Conteúdo",
-  //     accessor: (event) => eventContentLabels[event.content],
-  //   },
-  //   { header: "Pagamento", accessor: (event) => brl.format(event.payment) },
-  // ];
-
   return (
-    <div className={styles.page}>
+    <>
       <PageHeader
-        description="Gerencie professores e equipe."
-        title="Colaboradores"
-        Icon={UserCog}
-        action={
-          <ButtonLink
-            className="sm:ml-auto"
-            to="/employees/new"
-            variant="success"
-          >
-            Novo colaborador
-          </ButtonLink>
-        }
+        description="Veja e gerencie as informações do colaborador"
+        title="Detalhes do colaborador"
+        Icon={FileUser}
+        backLink="/students"
       />
 
-      {/* RESUMO DO COLABORADOR */}
-      <SectionCard
-        title="Resumo do colaborador"
-        description="Dados completos de cadastro, contato e status."
-        headerAction={
-          <>
-            <EditEmployeeButton employeeId={employeeId} />
-            <ArchiveEmployeeButton
-              employeeId={employeeId}
-              isArchived={!!employeeData?.archivedAt}
-            />
-            <DeleteEmployeeButton employeeId={employeeId} />
-          </>
-        }
-      >
-        {isEmployeeLoading && (
-          <PageLoading message="Carregando colaborador..." />
-        )}
+      {hasEmployeeError ? (
+        <ErrorCard
+          title="Erro ao carregar detalhes do colaborador"
+          error={employeeError}
+        />
+      ) : isEmployeeLoading ? (
+        <LoadingCard title="Carregando detalhes do colaborador" />
+      ) : (
+        <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
+          <SectionCard
+            title="Colaborador "
+            description="Dados do Colaborador"
+            headerActions={
+              <>
+                <ButtonLink to={`/employees/edit/${employee.id}`} variant="primary">
+                  <Edit className="h-4 w-4" />
+                  Editar
+                </ButtonLink>
 
-        {employeeDataError && (
-          <div className={styles.page}>
-            <ErrorCard
-              description={getFriendlyErrorMessage(employeeDataError)}
-              actionLabel="Voltar para listagem de colaboradores"
-              onAction={() => navigate("/employees")}
-            />
-          </div>
-        )}
+                <ArchiveEmployeeButton employeeId={employee.id} isArchived={!!employee.archivedAt} />
+                <DeleteEmployeeButton employeeId={employee.id} />
+              </>
+            }
+          >
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {summaryItems.map((item) => (
+                <SummaryItem
+                  key={item.label}
+                  label={item.label}
+                  value={item.value}
+                />
+              ))}
+            </div>
 
-        {isEmployeeFetched && (
-          <div className={styles.summaryGrid}>
-            {summaryItems.map((item) => (
-              <SummaryItem
-                key={item.label}
-                label={item.label}
-                value={item.value}
-              />
-            ))}
-          </div>
-        )}
-      </SectionCard>
+            {/*<Collapse title={"Endereço"} className="mt-3">
+              <AddressDetails address={employeeData.address} />
+            </Collapse>*/}
+          </SectionCard>
 
-      {/* EVENTOS DO COLABORADOR */}
-      <SectionCard
-        title="Eventos vinculados"
-        description={`Total de eventos vinculados ao colaborador: ${employeeData?.name}`}
-      >
-        <EventsTable variant={"embeddedEmployee"} ownerId={employeeId} />
-      </SectionCard>
-    </div>
+          <EventsTable
+            eventsPage={employeeEvents}
+            isPending={isEmployeeEventsLoading}
+            error={employeeEventsError}
+            currentPage={currentPage}
+                onPageChange={setCurrentPage}
+                description="Eventos vinculados ao Colaborador"
+          />
+        </div>
+      )}
+    </>
   );
 }

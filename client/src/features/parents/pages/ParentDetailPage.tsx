@@ -66,7 +66,7 @@ export function ParentDetailPage() {
 
       <div className="flex flex-col">
         <SectionCard
-          title="Resumo do responsável"
+          title="Responsável"
           description="Dados do responsável"
           headerActions={
             <>

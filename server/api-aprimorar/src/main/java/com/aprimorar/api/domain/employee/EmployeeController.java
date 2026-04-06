@@ -1,9 +1,8 @@
 package com.aprimorar.api.domain.employee;
 
-import com.aprimorar.api.domain.employee.dto.EmployeeCreateDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeUpdateDTO;
 import com.aprimorar.api.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,7 +42,7 @@ public class EmployeeController {
     @Operation(operationId = "createEmployee", description = "Cria um novo colaborador com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Colaborador criado com sucesso.")
     public ResponseEntity<EmployeeResponseDTO> createEmployee(
-        @RequestBody @Valid EmployeeCreateDTO employeeRequestDto
+        @RequestBody @Valid EmployeeRequestDTO employeeRequestDto
     ) {
         EmployeeResponseDTO response = employeeService.createEmployee(employeeRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -81,9 +80,9 @@ public class EmployeeController {
     @ApiResponse(responseCode = "200", description = "Colaborador atualizado com sucesso.")
     public ResponseEntity<EmployeeResponseDTO> updateEmployee(
         @PathVariable UUID employeeId,
-        @RequestBody @Valid EmployeeUpdateDTO updateEmployeeDTO
+        @RequestBody @Valid EmployeeRequestDTO employeeRequestDTO
     ) {
-        EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(employeeId, updateEmployeeDTO);
+        EmployeeResponseDTO updatedEmployee = employeeService.updateEmployee(employeeId, employeeRequestDTO);
         return ResponseEntity.ok(updatedEmployee);
     }
 

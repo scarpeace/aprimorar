@@ -2,7 +2,6 @@ import { Alert } from "@/components/ui/alert";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button, ButtonLink } from "@/components/ui/button";
-import { ComponentState } from "@/components/ui/component-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PageHeader } from "@/components/ui/page-header";
 import { AddressFormFields } from "@/features/address/AddressFormFields";
@@ -11,7 +10,6 @@ import { GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useHookFormMask } from "use-mask-input";
-import { useUpdateStudentMutation } from "../hooks/student-mutations";
 
 import { StudentForm } from "../forms/StudentForm";
 import { StudentFormFields } from "../forms/StudentFormFields";
@@ -21,9 +19,9 @@ import {
 } from "../forms/studentFormSchema";
 import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
 import { SectionCard } from "@/components/ui/section-card";
-import { DevTool } from "@hookform/devtools";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { ErrorCard } from "@/components/ui/error-card";
+import { useStudentMutations } from "../hooks/student-mutations";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -31,17 +29,18 @@ export function StudentEditPage() {
 
   const {
     data: student,
-    isError: isStudentError,
     isPending: isStudentPending,
     error: studentError,
   } = useGetStudentById(studentId);
 
   const {
-    mutate: updateStudent,
-    isPending: isUpdateStudentPending,
-    isError: isUpdateStudentError,
-    error: updateStudentError,
-  } = useUpdateStudentMutation();
+    updateStudent: {
+      mutate: updateStudent,
+      isPending: isUpdateStudentPending,
+      isError: isUpdateStudentError,
+      error: updateStudentError,
+    },
+  } = useStudentMutations();
 
   const {
     register,
@@ -75,10 +74,6 @@ export function StudentEditPage() {
   const onSubmit = handleSubmit((data: StudentFormSchema) => {
     updateStudent({ studentId, data });
   });
-
-  if (isStudentError || isStudentPending) {
-    return <ComponentState error={studentError} isPending={isStudentPending} />;
-  }
 
   return (
     <>
@@ -122,7 +117,6 @@ export function StudentEditPage() {
             register={register}
             registerWithMask={registerWithMask}
             errors={errors}
-            className="grid grid-cols-3 gap-4"
           />
 
           <AddressFormFields

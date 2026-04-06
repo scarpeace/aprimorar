@@ -12,7 +12,7 @@ import {
 } from "@/kubb";
 import {
   useEmployeesSummary,
-} from "../../employees/query/employeeQueries";
+} from "../../employees/hooks/employeeQueries";
 import { useStudentsSummary } from "../../students/hooks/use-students-query";
 import { useCreateEventMutation } from "../hooks/use-event-mutations";
 

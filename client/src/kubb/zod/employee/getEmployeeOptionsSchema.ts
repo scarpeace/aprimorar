@@ -10,7 +10,9 @@ import { z } from "zod/v4";
  * @description Lista de opções de colaboradores retornada com sucesso.
  */
 export const getEmployeeOptions200Schema = z.array(
-  z.lazy(() => employeeOptionsDTOSchema),
+  z
+    .lazy(() => employeeOptionsDTOSchema)
+    .describe("Formato de payload para obter opções de colaboradores"),
 );
 
 export const getEmployeeOptionsQueryResponseSchema = z.lazy(

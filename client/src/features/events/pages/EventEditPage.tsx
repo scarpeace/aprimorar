@@ -16,7 +16,7 @@ import { Alert } from "@/components/ui/alert";
 import { useEventById } from "../hooks/use-event-queries";
 import { useUpdateEventMutation } from "../hooks/use-event-mutations";
 import { useStudentsOption } from "@/features/students/hooks/use-students-query";
-import { useEmployeesOptions } from "@/features/employees/query/employeeQueries";
+import { useEmployeesOptions } from "@/features/employees/hooks/employeeQueries";
 
 export function EventEditPage() {
   const { id } = useParams<{ id: string }>();

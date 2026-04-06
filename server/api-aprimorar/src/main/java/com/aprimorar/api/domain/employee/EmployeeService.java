@@ -1,9 +1,8 @@
 package com.aprimorar.api.domain.employee;
 
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeCreateDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeUpdateDTO;
 import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
@@ -80,10 +79,10 @@ public class EmployeeService {
 
     /* ----- Command Methods ----- */
     @Transactional
-    public EmployeeResponseDTO createEmployee(EmployeeCreateDTO employeeRequestDto) {
-        Employee employee = employeeMapper.convertToEntityForCreate(employeeRequestDto);
+    public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
+        Employee employee = employeeMapper.convertToEntity(employeeRequestDto);
 
-        validateEmployeeUniquenessForCreate(employee.getCpf(), employee.getEmail());
+        ensureEmployeeUniqueness(employee.getCpf(), employee.getEmail());
 
         Employee savedEmployee = employeeRepo.save(employee);
 
@@ -92,21 +91,22 @@ public class EmployeeService {
     }
 
     @Transactional
-    public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeUpdateDTO request) {
-        Employee newEmployee = employeeMapper.convertToEntityForUpdate(request);
-        Employee oldEmployee = findEmployeeOrThrow(employeeId);
+    public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
+        
+        Employee employee = findEmployeeOrThrow(employeeId);
+        Employee updatedEmployeeData = employeeMapper.convertToEntity(request);
 
-        validateEmployeeUniquenessForUpdate(newEmployee.getCpf(), newEmployee.getEmail(), employeeId);
+        ensureEmployeeUniquenessForUpdate(updatedEmployeeData, employeeId);
 
-        oldEmployee.setName(newEmployee.getName());
-        oldEmployee.setBirthdate(newEmployee.getBirthdate());
-        oldEmployee.setPix(newEmployee.getPix());
-        oldEmployee.setContact(newEmployee.getContact());
-        oldEmployee.setEmail(newEmployee.getEmail());
-        oldEmployee.setDuty(newEmployee.getDuty());
+        employee.setName(updatedEmployeeData.getName());
+        employee.setBirthdate(updatedEmployeeData.getBirthdate());
+        employee.setPix(updatedEmployeeData.getPix());
+        employee.setContact(updatedEmployeeData.getContact());
+        employee.setEmail(updatedEmployeeData.getEmail());
+        employee.setDuty(updatedEmployeeData.getDuty());
 
-        log.info("Colaborador {} atualizado com sucesso.", oldEmployee.getName().toUpperCase());
-        return employeeMapper.convertToDto(oldEmployee);
+        log.info("Colaborador {} atualizado com sucesso.", employee.getName().toUpperCase());
+        return employeeMapper.convertToDto(employee);
     }
 
     @Transactional
@@ -136,7 +136,7 @@ public class EmployeeService {
         return employeeRepo.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException("Colaborador não encontrado no Banco de Dados"));
     }
 
-    private void validateEmployeeUniquenessForCreate(String cpf, String email) {
+    private void ensureEmployeeUniqueness(String cpf, String email) {
         if (employeeRepo.existsByCpf(cpf)) {
             throw new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados");
         }
@@ -146,12 +146,12 @@ public class EmployeeService {
         }
     }
 
-    private void validateEmployeeUniquenessForUpdate(String cpf, String email, UUID employeeId) {
-        if (employeeRepo.existsByCpfAndIdNot(cpf, employeeId)) {
+    private void ensureEmployeeUniquenessForUpdate(Employee employee, UUID employeeId) {
+        if (employeeRepo.existsByCpfAndIdNot(employee.getCpf(), employeeId)) {
             throw new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados");
         }
 
-        if (employeeRepo.existsByEmailAndIdNot(email, employeeId)) {
+        if (employeeRepo.existsByEmailAndIdNot(employee.getEmail(), employeeId)) {
             throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
         }
     }

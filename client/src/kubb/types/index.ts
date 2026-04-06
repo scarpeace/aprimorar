@@ -8,19 +8,15 @@ export type {
 } from "./AddressResponseDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
-export type {
-  EmployeeCreateDTO,
-  EmployeeCreateDTODutyEnumKey,
-} from "./EmployeeCreateDTO.ts";
 export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
+export type {
+  EmployeeRequestDTO,
+  EmployeeRequestDTODutyEnumKey,
+} from "./EmployeeRequestDTO.ts";
 export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./EmployeeResponseDTO.ts";
-export type {
-  EmployeeUpdateDTO,
-  EmployeeUpdateDTODutyEnumKey,
-} from "./EmployeeUpdateDTO.ts";
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
@@ -234,7 +230,6 @@ export type {
 } from "./student/UpdateStudent.ts";
 export { addressRequestDTOStateEnum } from "./AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./AddressResponseDTO.ts";
-export { employeeCreateDTODutyEnum } from "./EmployeeCreateDTO.ts";
+export { employeeRequestDTODutyEnum } from "./EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./EmployeeResponseDTO.ts";
-export { employeeUpdateDTODutyEnum } from "./EmployeeUpdateDTO.ts";
 export { eventRequestDTOContentEnum } from "./EventRequestDTO.ts";

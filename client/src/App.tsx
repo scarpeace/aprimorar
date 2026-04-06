@@ -19,6 +19,8 @@ const ParentEditPage = lazy(() => import("@/features/parents/pages/ParentEditPag
 
 const EmployeesPage = lazy(() => import("@/features/employees/pages/EmployeesPage").then((module) => ({ default: module.EmployeesPage })))
 const EmployeeDetailPage = lazy(() => import("@/features/employees/pages/EmployeeDetailPage").then((module) => ({ default: module.EmployeeDetailPage })))
+
+
 const EmployeeCreatePage = lazy(() => import("@/features/employees/pages/EmployeeCreatePage").then((module) => ({ default: module.EmployeeCreatePage })))
 const EmployeeEditPage = lazy(() => import("@/features/employees/pages/EmployeeEditPage").then((module) => ({ default: module.EmployeeEditPage })))
 
