@@ -18,24 +18,11 @@ export function ParentSelectDropdown({
   return (
     <FormField
       className={className}
-      label="Responsável"
+      label=""
       htmlFor="parentId"
       error={error}
     >
-      <Controller          // <select
-          //   id="parentId"
-          //   className="app-input"
-          //   disabled={isPending}
-          //   value={field.value ?? ""}
-          //   onChange={field.onChange}
-          // >
-          //   <option value="">Selecione um responsável</option>
-          //   {parents?.map((parent) => (
-          //     <option key={parent.id} value={parent.id}>
-          //       {parent.name}
-          //     </option>
-          //   ))}
-          // </select>
+      <Controller
         control={control}
         name="parentId"
         render={({ field }) => (

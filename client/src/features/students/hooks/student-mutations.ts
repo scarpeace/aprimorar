@@ -38,6 +38,7 @@ export function useUpdateStudentMutation() {
   return useUpdateStudent({
     mutation: {
       onSuccess: (updatedStudent) => {
+        console.log(updatedStudent)
         toast.success("Aluno atualizado com sucesso");
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() })
         queryClient.invalidateQueries({ queryKey: getStudentByIdQueryKey(updatedStudent.id) })

@@ -5,7 +5,7 @@ import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
 import type { StudentFormSchema } from "./studentFormSchema";
 import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
-
+import { ButtonLink } from "@/components/ui/button";
 
 type StudentFormFieldsProps = {
   register: UseFormRegister<StudentFormSchema>;
@@ -25,13 +25,10 @@ export function StudentFormFields({
   isUpdate,
 }: Readonly<StudentFormFieldsProps>) {
   return (
-    <SectionCard
-      title="Dados do aluno"
-      description={`Não encontrou um responsável cadastrado? ${<a href='/parents/new'>Cadastre-o aqui!</a>}`}
-    >
+    <SectionCard title="Dados do aluno" description={""}>
       <div className={`grid grid-cols-2 gap-4 ${className}`}>
-        <a href='/parents/new'>Cadastre-o aqui!</a>
-        <ParentSelectDropdown className="col-span-3" control={control} error={errors.parentId?.message} />
+      
+
 
         <FormField
           label="Nome completo"
@@ -42,7 +39,7 @@ export function StudentFormFields({
           <input className="app-input" id="name" {...register("name")} />
         </FormField>
 
-           <FormField label="CPF" htmlFor="cpf" error={errors.cpf?.message}>
+        <FormField label="CPF" htmlFor="cpf" error={errors.cpf?.message}>
           <input
             className="app-input"
             disabled={isUpdate}

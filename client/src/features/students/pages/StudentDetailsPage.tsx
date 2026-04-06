@@ -1,6 +1,6 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { EventsTable } from "@/features/events/components/EventsTable";
-import { useGetEventsByStudent, useGetStudentById } from "@/kubb";
+import { useGetEventsByStudent, useGetParentById, useGetStudentById, useGetStudentsByParent } from "@/kubb";
 import { Edit, GraduationCap } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useParams } from "react-router-dom";
@@ -30,6 +30,9 @@ export function StudentDetailsPage() {
     error: studentError,
   } = useGetStudentById(studentId);
 
+
+  const studentParent = useGetParentById(student?.parentId || "")
+
   const {
     isPending: isStudentEventsPending,
     data: studentEvents,
@@ -48,6 +51,7 @@ export function StudentDetailsPage() {
     {label: "Data de matrícula",value: formatDateShortYear(student.createdAt)},
     { label: "Escola", value: student.school },
     { label: "Status", value: student.archivedAt ? "Arquivado" : "Ativo" },
+    { label: "Responsável", value: studentParent.data?.name }
   ] : [];
 
   return (

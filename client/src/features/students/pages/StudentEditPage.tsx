@@ -15,7 +15,13 @@ import { useUpdateStudentMutation } from "../hooks/student-mutations";
 
 import { StudentForm } from "../forms/StudentForm";
 import { StudentFormFields } from "../forms/StudentFormFields";
-import { type StudentFormSchema, studentFormSchema } from "../forms/studentFormSchema";
+import {
+  type StudentFormSchema,
+  studentFormSchema,
+} from "../forms/studentFormSchema";
+import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
+import { SectionCard } from "@/components/ui/section-card";
+import { DevTool } from "@hookform/devtools";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +45,7 @@ export function StudentEditPage() {
     register,
     formState: { errors },
     handleSubmit,
+    control,
   } = useForm<StudentFormSchema>({
     resolver: zodResolver(studentFormSchema),
     mode: "onBlur",
@@ -81,8 +88,28 @@ export function StudentEditPage() {
       />
 
       <StudentForm onSubmit={onSubmit}>
+          <DevTool control={control} />
+
+        <SectionCard title="Responsável" description={""}>
+          <span className="col-span-2">
+            Não encontrou um responsável cadastrado?{" "}
+            <ButtonLink
+              className="btn-xs ml-1"
+              variant="outlineSuccess"
+              to="/parents/new"
+            >
+              Novo responsável
+            </ButtonLink>
+          </span>
+          <ParentSelectDropdown
+            className="col-span-3"
+            control={control}
+            error={errors.parentId?.message}
+          />
+        </SectionCard>
 
         <StudentFormFields
+          control={control}
           isUpdate={true}
           register={register}
           registerWithMask={registerWithMask}
@@ -103,8 +130,16 @@ export function StudentEditPage() {
         )}
 
         <div className="flex flex-wrap justify-end gap-3">
-          <Button type="submit" variant="success" disabled={isUpdateStudentPending}>
-            {isUpdateStudentPending ? <LoadingSpinner text={"Atualizando..."} /> : "Salvar alterações"}
+          <Button
+            type="submit"
+            variant="success"
+            disabled={isUpdateStudentPending}
+          >
+            {isUpdateStudentPending ? (
+              <LoadingSpinner text={"Atualizando..."} />
+            ) : (
+              "Salvar alterações"
+            )}
           </Button>
 
           <ButtonLink to={`/students/`} variant="outline">
