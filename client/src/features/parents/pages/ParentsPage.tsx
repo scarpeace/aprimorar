@@ -1,11 +1,10 @@
 import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { PageHeader } from "@/components/ui/page-header";
-import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { getParentsQueryKey, useGetParents } from "@/kubb";
+import { useGetParents } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
-import { GraduationCap, Handshake } from "lucide-react";
+import { Handshake } from "lucide-react";
 import { useState } from "react";
 import { ParentsTable } from "../components/ParentsTable";
 

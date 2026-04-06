@@ -33,7 +33,7 @@ export {
   unarchiveParentPathParamsSchema,
 } from "./unarchiveParentSchema.ts";
 export {
-  updateParent204Schema,
+  updateParent200Schema,
   updateParentMutationRequestSchema,
   updateParentMutationResponseSchema,
   updateParentPathParamsSchema,

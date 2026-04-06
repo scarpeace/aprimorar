@@ -125,7 +125,7 @@ export {
   unarchiveParentPathParamsSchema,
 } from "./parent/unarchiveParentSchema.ts";
 export {
-  updateParent204Schema,
+  updateParent200Schema,
   updateParentMutationRequestSchema,
   updateParentMutationResponseSchema,
   updateParentPathParamsSchema,
@@ -174,7 +174,7 @@ export {
   unarchiveStudentPathParamsSchema,
 } from "./student/unarchiveStudentSchema.ts";
 export {
-  updateStudent200Schema,
+  updateStudent204Schema,
   updateStudentMutationRequestSchema,
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,

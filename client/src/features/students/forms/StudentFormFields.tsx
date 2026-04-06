@@ -27,8 +27,6 @@ export function StudentFormFields({
   return (
     <SectionCard title="Dados do aluno" description={""}>
       <div className={`grid grid-cols-2 gap-4 ${className}`}>
-      
-
 
         <FormField
           label="Nome completo"

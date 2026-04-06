@@ -1,14 +1,22 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { PageHeader } from "@/components/ui/page-header";
-import { Handshake } from "lucide-react";
+import { Edit, Handshake } from "lucide-react";
 import { useParams } from "react-router-dom";
 
+import { ButtonLink } from "@/components/ui/button";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { useGetStudentsByParent } from "@/kubb";
-import { useState } from "react";
-import { StudentsTable } from "../../students/components/StudentsTable";
-import { ParentDetails } from "../components/ParentDetails";
-import { useParentById } from "../hooks/use-parent-queries";
+import { SectionCard } from "@/components/ui/section-card";
+import { SummaryItem } from "@/components/ui/summary-item";
+import { ArchiveParentButton } from "@/features/parents/components/ArchiveParentButton";
+import { DeleteParentButton } from "@/features/parents/components/DeleteParentButton";
+import { StudentsTable } from "@/features/students/components/StudentsTable";
+import { useGetParentById, useGetStudentsByParent } from "@/kubb";
+import {
+    formatCpf,
+    formatDateShortYear,
+    formatPhone,
+} from "@/lib/utils/formatter";
+import { useState, type ReactNode } from "react";
 
 export function ParentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,13 +28,22 @@ export function ParentDetailPage() {
     isError: isParentError,
     isPending: isParentPending,
     error: parentError,
-  } = useParentById({ parentId });
+  } = useGetParentById(parentId);
 
   const {
     data: parentStudents,
     isPending: isParentStudentsPending,
     error: parentStudentsError,
-  } = useGetStudentsByParent(parentId );
+  } = useGetStudentsByParent(parentId);
+
+  const summaryItems: Array<{ label: string; value: ReactNode }> = [
+    { label: "Nome completo", value: parent?.name },
+    { label: "CPF", value: formatCpf(parent?.cpf ?? "") },
+    { label: "E-mail", value: parent?.email },
+    { label: "Contato", value: formatPhone(parent?.contact ?? "") },
+    { label: "Criado em", value: formatDateShortYear(parent?.createdAt ?? "") },
+    { label: "Status", value: parent?.archivedAt ? "Arquivado" : "Ativo" },
+  ];
 
   if (isParentError) {
     return (
@@ -48,7 +65,34 @@ export function ParentDetailPage() {
       />
 
       <div className="flex flex-col">
-        <ParentDetails parent={parent} />
+        <SectionCard
+          title="Resumo do responsável"
+          description="Dados do responsável"
+          headerActions={
+            <>
+              <ButtonLink to={`/parents/edit/${parentId}`} variant="primary">
+                <Edit className="h-4 w-4" />
+                Editar
+              </ButtonLink>
+
+              <ArchiveParentButton
+                parentId={parentId}
+                isArchived={!!parent.archivedAt}
+              />
+              <DeleteParentButton parentId={parentId} />
+            </>
+          }
+        >
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
+            {summaryItems.map((item) => (
+              <SummaryItem
+                key={item.label}
+                label={item.label}
+                value={item.value}
+              />
+            ))}
+          </div>
+        </SectionCard>
         <StudentsTable
           students={parentStudents}
           onPageChange={setCurrentPage}

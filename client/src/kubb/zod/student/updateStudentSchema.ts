@@ -4,7 +4,6 @@
  */
 
 import { studentRequestDTOSchema } from "../studentRequestDTOSchema.ts";
-import { studentResponseDTOSchema } from "../studentResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 export const updateStudentPathParamsSchema = z.object({
@@ -14,14 +13,12 @@ export const updateStudentPathParamsSchema = z.object({
 /**
  * @description Aluno atualizado com sucesso.
  */
-export const updateStudent200Schema = z
-  .lazy(() => studentResponseDTOSchema)
-  .describe("Dados do aluno retornados pela API");
+export const updateStudent204Schema = z.any();
 
 export const updateStudentMutationRequestSchema = z
   .lazy(() => studentRequestDTOSchema)
   .describe("Formato de payload para o cadastro de um aluno");
 
 export const updateStudentMutationResponseSchema = z.lazy(
-  () => updateStudent200Schema,
+  () => updateStudent204Schema,
 );

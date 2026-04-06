@@ -203,7 +203,7 @@ export type {
   UnarchiveParentPathParams,
 } from "./types/parent/UnarchiveParent.ts";
 export type {
-  UpdateParent204,
+  UpdateParent200,
   UpdateParentMutation,
   UpdateParentMutationRequest,
   UpdateParentMutationResponse,
@@ -258,7 +258,7 @@ export type {
   UnarchiveStudentPathParams,
 } from "./types/student/UnarchiveStudent.ts";
 export type {
-  UpdateStudent200,
+  UpdateStudent204,
   UpdateStudentMutation,
   UpdateStudentMutationRequest,
   UpdateStudentMutationResponse,
@@ -525,7 +525,7 @@ export {
   unarchiveParentPathParamsSchema,
 } from "./zod/parent/unarchiveParentSchema.ts";
 export {
-  updateParent204Schema,
+  updateParent200Schema,
   updateParentMutationRequestSchema,
   updateParentMutationResponseSchema,
   updateParentPathParamsSchema,
@@ -574,7 +574,7 @@ export {
   unarchiveStudentPathParamsSchema,
 } from "./zod/student/unarchiveStudentSchema.ts";
 export {
-  updateStudent200Schema,
+  updateStudent204Schema,
   updateStudentMutationRequestSchema,
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,

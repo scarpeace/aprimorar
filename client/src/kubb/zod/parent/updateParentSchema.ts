@@ -4,6 +4,7 @@
  */
 
 import { parentRequestDTOSchema } from "../parentRequestDTOSchema.ts";
+import { parentResponseDTOSchema } from "../parentResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 export const updateParentPathParamsSchema = z.object({
@@ -13,12 +14,14 @@ export const updateParentPathParamsSchema = z.object({
 /**
  * @description Responsável atualizado com sucesso
  */
-export const updateParent204Schema = z.any();
+export const updateParent200Schema = z
+  .lazy(() => parentResponseDTOSchema)
+  .describe("Dados do responsável retornados pela API");
 
 export const updateParentMutationRequestSchema = z
   .lazy(() => parentRequestDTOSchema)
   .describe("Formato de payload para criar um novo responsável");
 
 export const updateParentMutationResponseSchema = z.lazy(
-  () => updateParent204Schema,
+  () => updateParent200Schema,
 );

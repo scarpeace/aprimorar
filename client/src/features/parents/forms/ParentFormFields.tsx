@@ -2,12 +2,12 @@ import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
-import type { ParentFormInputSchema } from "./parentFormSchema";
+import type { ParentFormSchema } from "./parentFormSchema";
 
 type ParentFormFieldsProps = Readonly<{
   register: UseFormRegister<any>;
   registerWithMask: ReturnType<typeof useHookFormMask>;
-  errors?: FieldErrors<ParentFormInputSchema>;
+  errors?: FieldErrors<ParentFormSchema>;
   className?: string;
   isUpdate?: boolean;
 }>;

@@ -47,7 +47,7 @@ export type {
   UnarchiveStudentPathParams,
 } from "./UnarchiveStudent.ts";
 export type {
-  UpdateStudent200,
+  UpdateStudent204,
   UpdateStudentMutation,
   UpdateStudentMutationRequest,
   UpdateStudentMutationResponse,

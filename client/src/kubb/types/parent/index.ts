@@ -40,7 +40,7 @@ export type {
   UnarchiveParentPathParams,
 } from "./UnarchiveParent.ts";
 export type {
-  UpdateParent204,
+  UpdateParent200,
   UpdateParentMutation,
   UpdateParentMutationRequest,
   UpdateParentMutationResponse,

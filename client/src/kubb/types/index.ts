@@ -171,7 +171,7 @@ export type {
   UnarchiveParentPathParams,
 } from "./parent/UnarchiveParent.ts";
 export type {
-  UpdateParent204,
+  UpdateParent200,
   UpdateParentMutation,
   UpdateParentMutationRequest,
   UpdateParentMutationResponse,
@@ -226,7 +226,7 @@ export type {
   UnarchiveStudentPathParams,
 } from "./student/UnarchiveStudent.ts";
 export type {
-  UpdateStudent200,
+  UpdateStudent204,
   UpdateStudentMutation,
   UpdateStudentMutationRequest,
   UpdateStudentMutationResponse,

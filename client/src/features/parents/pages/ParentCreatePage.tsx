@@ -9,15 +9,15 @@ import { useHookFormMask } from "use-mask-input";
 import { ParentForm } from "../forms/ParentForm";
 import { ParentFormFields } from "../forms/ParentFormFields";
 import {
-    parentFormInputSchema,
-    type ParentFormInputSchema,
+    parentFormSchema,
+    type ParentFormSchema
 } from "../forms/parentFormSchema";
-import { useCreateParent } from "@/kubb";
+import { useCreateParentMutation } from "../hooks/parent-mutations";
 
 export function ParentCreatePage() {
 
-  const { register, formState: { errors }, handleSubmit } = useForm<ParentFormInputSchema>({
-    resolver: zodResolver(parentFormInputSchema),
+  const { register, formState: { errors }, handleSubmit } = useForm<ParentFormSchema>({
+    resolver: zodResolver(parentFormSchema),
     mode: "onBlur",
   });
   const registerWithMask = useHookFormMask(register);
@@ -27,9 +27,9 @@ export function ParentCreatePage() {
     isPending: isCreateParentPending,
     isError: isCreateParentError,
     error: createParentError,
-  } = useCreateParent();
+  } = useCreateParentMutation();
 
-  const onSubmit = handleSubmit((data: ParentFormInputSchema) => {
+  const onSubmit = handleSubmit((data: ParentFormSchema) => {
     createParent({ data });
   });
 

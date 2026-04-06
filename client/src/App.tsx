@@ -15,6 +15,7 @@ const StudentDetailsPage = lazy(() => import("@/features/students/pages/StudentD
 const ParentsPage = lazy(() => import("@/features/parents/pages/ParentsPage").then((module) => ({ default: module.ParentsPage })))
 const ParentCreatePage = lazy(() => import("@/features/parents/pages/ParentCreatePage").then((module) => ({ default: module.ParentCreatePage })))
 const ParentDetailPage = lazy(() => import("@/features/parents/pages/ParentDetailPage").then((module) => ({ default: module.ParentDetailPage })))
+const ParentEditPage = lazy(() => import("@/features/parents/pages/ParentEditPage").then((module) => ({ default: module.ParentEditPage })))
 
 const EmployeesPage = lazy(() => import("@/features/employees/pages/EmployeesPage").then((module) => ({ default: module.EmployeesPage })))
 const EmployeeDetailPage = lazy(() => import("@/features/employees/pages/EmployeeDetailPage").then((module) => ({ default: module.EmployeeDetailPage })))
@@ -61,6 +62,7 @@ function App() {
               <Route path="/parents" element={<ParentsPage />} />
               <Route path="/parents/new" element={<ParentCreatePage/>} />
               <Route path="/parents/:id" element={<ParentDetailPage />} />
+              <Route path="/parents/edit/:id" element={<ParentEditPage />} />
             </Route>
           </Routes>
         </Suspense>

@@ -62,6 +62,7 @@ export function StudentDetailsPage() {
         Icon={GraduationCap}
         backLink="/students"
       />
+
       {hasStudentError ? (
         <ErrorCard
           title="Erro ao carregar detalhes do aluno"

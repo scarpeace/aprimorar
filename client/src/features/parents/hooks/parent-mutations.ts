@@ -1,4 +1,13 @@
-import { useCreateParent, type ParentResponseDTO, getParentsQueryKey, useUpdateParent, getParentByIdQueryKey, useDeleteParent, deleteParentMutationKey, useUnarchiveParent, useArchiveParent } from "@/kubb";
+import {
+  deleteParentMutationKey,
+  getParentByIdQueryKey,
+  getParentsQueryKey,
+  useArchiveParent,
+  useCreateParent,
+  useDeleteParent,
+  useUnarchiveParent,
+  useUpdateParent,
+} from "@/kubb";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -7,18 +16,18 @@ export function useCreateParentMutation() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-//   return useCreateParent({
-//     mutation: {
-//       onError: () => {
-//         toast.error("Algo deu errado ao criar o responsável");
-//       },
-//       onSuccess: (createdParent: ParentResponseDTO) => {
-//         toast.success("Responsável criado com sucesso");
-//         queryClient.invalidateQueries({ queryKey: getParentsQueryKey() })
-//         navigate(`/parents/${createdParent.parentId}`);
-//       },
-//     },
-//   });
+  return useCreateParent({
+    mutation: {
+      onError: () => {
+        toast.error("Algo deu errado ao criar o responsável");
+      },
+      onSuccess: (createdParent) => {
+        toast.success("Responsável criado com sucesso");
+        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
+        navigate(`/parents/${createdParent.parentId}`);
+      },
+    },
+  });
 }
 
 export function useUpdateParentMutation() {
@@ -27,11 +36,13 @@ export function useUpdateParentMutation() {
 
   return useUpdateParent({
     mutation: {
-      onSuccess: (updatedParent) => {
+      onSuccess: (_, variables) => {
         toast.success("Responsável atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() })
-        queryClient.invalidateQueries({ queryKey: getParentByIdQueryKey(updatedParent.id) })
-        navigate(`/parents/${updatedParent.id}`);
+        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
+        queryClient.invalidateQueries({
+          queryKey: getParentByIdQueryKey(variables.parentId),
+        });
+        navigate(`/parents/${variables.parentId}`);
       },
       onError: () => {
         toast.error("Algo deu errado ao atualizar o responsável");
@@ -42,13 +53,15 @@ export function useUpdateParentMutation() {
 
 export function useDeleteParentMutation() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useDeleteParent({
     mutation: {
       onSuccess: () => {
         toast.success("Responsável excluído com sucesso");
-        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() })
+        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
         queryClient.invalidateQueries({ queryKey: deleteParentMutationKey() });
+        navigate("/parents");
       },
       onError: () => {
         toast.error("Algo deu errado ao excluir o responsável");
@@ -64,8 +77,10 @@ export function useArchiveParentMutation() {
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável arquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() })
-        queryClient.invalidateQueries({ queryKey: getParentByIdQueryKey(variables.parentId) })
+        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
+        queryClient.invalidateQueries({
+          queryKey: getParentByIdQueryKey(variables.parentId),
+        });
       },
       onError: () => {
         toast.error("Algo deu errado ao arquivar o responsável");
@@ -82,7 +97,9 @@ export function useUnarchiveParentMutation() {
       onSuccess: (_, variables) => {
         toast.success("Responsável desarquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getParentByIdQueryKey(variables.parentId) });
+        queryClient.invalidateQueries({
+          queryKey: getParentByIdQueryKey(variables.parentId),
+        });
       },
       onError: () => {
         toast.error("Algo deu errado ao desarquivar o responsável");

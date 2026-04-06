@@ -90,13 +90,13 @@ public class StudentController {
 
     @PutMapping("/{studentId}")
     @Operation(operationId = "updateStudent", description = "Atualiza um aluno por ID.")
-    @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso.")
-    public ResponseEntity<StudentResponseDTO> updateStudent(
+    @ApiResponse(responseCode = "204", description = "Aluno atualizado com sucesso.")
+    public ResponseEntity<Void> updateStudent(
         @PathVariable UUID studentId,
         @RequestBody @Valid StudentRequestDTO dto
     ) {
-        StudentResponseDTO updatedStudent = studentService.updateStudent(dto, studentId);
-        return ResponseEntity.ok(updatedStudent);
+        studentService.updateStudent(dto, studentId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{studentId}")

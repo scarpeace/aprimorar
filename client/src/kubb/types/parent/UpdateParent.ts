@@ -4,6 +4,7 @@
  */
 
 import type { ParentRequestDTO } from "../ParentRequestDTO.ts";
+import type { ParentResponseDTO } from "../ParentResponseDTO.ts";
 
 export type UpdateParentPathParams = {
   /**
@@ -15,14 +16,14 @@ export type UpdateParentPathParams = {
 /**
  * @description Responsável atualizado com sucesso
  */
-export type UpdateParent204 = any;
+export type UpdateParent200 = ParentResponseDTO;
 
 export type UpdateParentMutationRequest = ParentRequestDTO;
 
-export type UpdateParentMutationResponse = UpdateParent204;
+export type UpdateParentMutationResponse = UpdateParent200;
 
 export type UpdateParentMutation = {
-  Response: UpdateParent204;
+  Response: UpdateParent200;
   Request: UpdateParentMutationRequest;
   PathParams: UpdateParentPathParams;
   Errors: any;

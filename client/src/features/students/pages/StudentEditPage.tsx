@@ -22,6 +22,8 @@ import {
 import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
 import { SectionCard } from "@/components/ui/section-card";
 import { DevTool } from "@hookform/devtools";
+import { LoadingCard } from "@/components/ui/loading-card";
+import { ErrorCard } from "@/components/ui/error-card";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -87,66 +89,73 @@ export function StudentEditPage() {
         backLink={`/students/${studentId}`}
       />
 
-      <StudentForm onSubmit={onSubmit}>
-          <DevTool control={control} />
+      {studentError ? (
+        <ErrorCard
+          title="Erro ao carregar detalhes do aluno"
+          error={studentError}
+        />
+      ) : isStudentPending ? (
+        <LoadingCard title="Carregando detalhes do aluno" />
+      ) : (
+        <StudentForm onSubmit={onSubmit}>
+          <SectionCard title="Responsável" description={""}>
+            <span className="col-span-2">
+              Não encontrou um responsável cadastrado?{" "}
+              <ButtonLink
+                className="btn-xs ml-1"
+                variant="outlineSuccess"
+                to="/parents/new"
+              >
+                Novo responsável
+              </ButtonLink>
+            </span>
+            <ParentSelectDropdown
+              className="col-span-3"
+              control={control}
+              error={errors.parentId?.message}
+            />
+          </SectionCard>
 
-        <SectionCard title="Responsável" description={""}>
-          <span className="col-span-2">
-            Não encontrou um responsável cadastrado?{" "}
-            <ButtonLink
-              className="btn-xs ml-1"
-              variant="outlineSuccess"
-              to="/parents/new"
-            >
-              Novo responsável
-            </ButtonLink>
-          </span>
-          <ParentSelectDropdown
-            className="col-span-3"
+          <StudentFormFields
             control={control}
-            error={errors.parentId?.message}
+            isUpdate={true}
+            register={register}
+            registerWithMask={registerWithMask}
+            errors={errors}
+            className="grid grid-cols-3 gap-4"
           />
-        </SectionCard>
 
-        <StudentFormFields
-          control={control}
-          isUpdate={true}
-          register={register}
-          registerWithMask={registerWithMask}
-          errors={errors}
-          className="grid grid-cols-3 gap-4"
-        />
+          <AddressFormFields
+            register={register}
+            registerWithMask={registerWithMask}
+            errors={errors.address}
+            prefix="address"
+            className="grid grid-cols-3 gap-4"
+          />
 
-        <AddressFormFields
-          register={register}
-          registerWithMask={registerWithMask}
-          errors={errors.address}
-          prefix="address"
-          className="grid grid-cols-3 gap-4"
-        />
+          {isUpdateStudentError && (
+            <Alert error={updateStudentError} variant="error" />
+          )}
 
-        {isUpdateStudentError && (
-          <Alert error={updateStudentError} variant="error" />
-        )}
+          <div className="flex flex-wrap justify-end gap-3">
+            <Button
+              type="submit"
+              variant="success"
+              disabled={isUpdateStudentPending}
+            >
+              {isUpdateStudentPending ? (
+                <LoadingSpinner text={"Atualizando..."} />
+              ) : (
+                "Salvar alterações"
+              )}
+            </Button>
 
-        <div className="flex flex-wrap justify-end gap-3">
-          <Button
-            type="submit"
-            variant="success"
-            disabled={isUpdateStudentPending}
-          >
-            {isUpdateStudentPending ? (
-              <LoadingSpinner text={"Atualizando..."} />
-            ) : (
-              "Salvar alterações"
-            )}
-          </Button>
-
-          <ButtonLink to={`/students/`} variant="outline">
-            Cancelar
-          </ButtonLink>
-        </div>
-      </StudentForm>
+            <ButtonLink to={`/students/`} variant="outline">
+              Cancelar
+            </ButtonLink>
+          </div>
+        </StudentForm>
+      )}
     </>
   );
 }

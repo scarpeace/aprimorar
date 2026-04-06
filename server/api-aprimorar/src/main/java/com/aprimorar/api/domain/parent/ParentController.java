@@ -72,13 +72,14 @@ public class ParentController {
 
     @PatchMapping("/{parentId}")
     @Operation(operationId = "updateParent", description = "Atualiza um responsável por ID")
-    @ApiResponse(responseCode = "204", description = "Responsável atualizado com sucesso")
-    public ResponseEntity<Void> updateParent(
+    @ApiResponse(responseCode = "200", description = "Responsável atualizado com sucesso")
+    public ResponseEntity<ParentResponseDTO> updateParent(
         @PathVariable UUID parentId,
         @RequestBody ParentRequestDTO parentRequestDTO
     ) {
-        parentService.updateParent(parentId, parentRequestDTO);
-        return ResponseEntity.noContent().build();
+        ParentResponseDTO parent = parentService.updateParent(parentId, parentRequestDTO);
+
+        return ResponseEntity.ok(parent);
     }
 
     @PatchMapping("/{parentId}/archive")

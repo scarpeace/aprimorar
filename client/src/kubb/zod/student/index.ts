@@ -39,7 +39,7 @@ export {
   unarchiveStudentPathParamsSchema,
 } from "./unarchiveStudentSchema.ts";
 export {
-  updateStudent200Schema,
+  updateStudent204Schema,
   updateStudentMutationRequestSchema,
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
