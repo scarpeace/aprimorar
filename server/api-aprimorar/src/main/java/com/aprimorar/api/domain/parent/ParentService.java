@@ -39,14 +39,17 @@ public class ParentService {
     }
 
 @Transactional(readOnly = true)
-    public PageDTO<ParentResponseDTO> getParents(Pageable pageable, String search) {
-        Page<Parent> parentsPage;
+    public PageDTO<ParentResponseDTO> getParents(Pageable pageable, String search, boolean archived) {
+
+        Specification<Parent> spec = Specification.allOf(
+            ParentSpecifications.isNotGhost(),
+            Boolean.TRUE.equals(archived) ? ParentSpecifications.archived() : ParentSpecifications.notArchived()
+        );
+
         if (search != null && !search.trim().isEmpty()) {
-            Specification<Parent> spec = ParentSpecifications.searchContainsIgnoreCase(search.trim());
-            parentsPage = parentRepo.findAll(spec, pageable);
-        } else {
-            parentsPage = parentRepo.findAll(pageable);
+            spec = spec.and(ParentSpecifications.searchContainsIgnoreCase(search.trim()));
         }
+        Page<Parent> parentsPage = parentRepo.findAll(spec, pageable);
         Page<ParentResponseDTO> parentsDtoPage = parentsPage.map(parentMapper::convertToDto);
 
         log.info("Consulta de responsáveis finalizada, {} registros encontrados.", parentsPage.getTotalElements());

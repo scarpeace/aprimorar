@@ -52,7 +52,7 @@ public class ParentController {
         @RequestParam(required = false) String search,
         @RequestParam(required = false) Boolean archived
     ) {
-        return ResponseEntity.ok(parentService.getParents(pageable, search));
+        return ResponseEntity.ok(parentService.getParents(pageable, search, archived));
     }
 
     @GetMapping("/summary")
