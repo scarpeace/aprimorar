@@ -3,7 +3,7 @@ import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
 
 import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
-import { useArchiveStudentMutation, useUnarchiveStudentMutation } from "../hooks/use-student-mutation";
+import { useArchiveStudentMutation, useUnarchiveStudentMutation } from "../hooks/student-mutations";
 
 type ArchiveStudentButtonProps = {
   studentId: string;

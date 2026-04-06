@@ -1,8 +1,6 @@
 package com.aprimorar.api.shared;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,8 +9,6 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
-@Getter
-@Setter
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
     @Id
@@ -31,4 +27,38 @@ public abstract class BaseEntity implements Serializable {
     private Instant updatedAt;
 
     public BaseEntity(){}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public Instant getArchivedAt() {
+		return archivedAt;
+	}
+
+	public void setArchivedAt(Instant archivedAt) {
+		this.archivedAt = archivedAt;
+	}
+
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Instant updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+
 }

@@ -6,21 +6,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import { useCreateParent, createParentMutationRequestSchema } from "@/kubb";
-import {
-  parentFormInputSchema,
-  type ParentFormInputSchema,
-} from "../forms/parentFormSchema";
-import { useCreateParentMutation } from "../hooks/use-parent-mutations";
-import { ParentFormFields } from "../forms/ParentFormFields";
 import { ParentForm } from "../forms/ParentForm";
+import { ParentFormFields } from "../forms/ParentFormFields";
+import {
+    parentFormInputSchema,
+    type ParentFormInputSchema,
+} from "../forms/parentFormSchema";
+import { useCreateParent } from "@/kubb";
 
 export function ParentCreatePage() {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<ParentFormInputSchema>({
+
+  const { register, formState: { errors }, handleSubmit } = useForm<ParentFormInputSchema>({
     resolver: zodResolver(parentFormInputSchema),
     mode: "onBlur",
   });
@@ -31,7 +27,7 @@ export function ParentCreatePage() {
     isPending: isCreateParentPending,
     isError: isCreateParentError,
     error: createParentError,
-  } = useCreateParentMutation();
+  } = useCreateParent();
 
   const onSubmit = handleSubmit((data: ParentFormInputSchema) => {
     createParent({ data });

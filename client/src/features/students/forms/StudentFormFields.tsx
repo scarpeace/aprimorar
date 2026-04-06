@@ -1,15 +1,17 @@
 import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
 
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
-import type { StudentFormInputSchema } from "./studentFormSchema";
+import type { StudentFormSchema } from "./studentFormSchema";
+import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
 
 
 type StudentFormFieldsProps = {
-  register: UseFormRegister<any>;
+  register: UseFormRegister<StudentFormSchema>;
   registerWithMask: ReturnType<typeof useHookFormMask>;
-  errors: FieldErrors<StudentFormInputSchema>;
+  errors: FieldErrors<StudentFormSchema>;
+  control: Control<StudentFormSchema>;
   className?: string;
   isUpdate?: boolean;
 };
@@ -18,21 +20,35 @@ export function StudentFormFields({
   register,
   registerWithMask,
   errors,
+  control,
   className,
   isUpdate,
 }: Readonly<StudentFormFieldsProps>) {
   return (
     <SectionCard
       title="Dados do aluno"
-      description="Atualize os dados pessoais."
+      description={`Não encontrou um responsável cadastrado? ${<a href='/parents/new'>Cadastre-o aqui!</a>}`}
     >
-      <div className={className}>
+      <div className={`grid grid-cols-2 gap-4 ${className}`}>
+        <a href='/parents/new'>Cadastre-o aqui!</a>
+        <ParentSelectDropdown className="col-span-3" control={control} error={errors.parentId?.message} />
+
         <FormField
           label="Nome completo"
           htmlFor="name"
           error={errors.name?.message}
+          className="col-span-2"
         >
           <input className="app-input" id="name" {...register("name")} />
+        </FormField>
+
+           <FormField label="CPF" htmlFor="cpf" error={errors.cpf?.message}>
+          <input
+            className="app-input"
+            disabled={isUpdate}
+            id="cpf"
+            {...registerWithMask("cpf", "999.999.999-99")}
+          />
         </FormField>
 
         <FormField
@@ -64,15 +80,6 @@ export function StudentFormFields({
             className="app-input"
             id="birthdate"
             {...register("birthdate")}
-          />
-        </FormField>
-
-        <FormField label="CPF" htmlFor="cpf" error={errors.cpf?.message}>
-          <input
-            className="app-input"
-            disabled={isUpdate}
-            id="cpf"
-            {...registerWithMask("cpf", "999.999.999-99")}
           />
         </FormField>
 

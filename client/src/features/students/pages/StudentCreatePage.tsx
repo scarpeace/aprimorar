@@ -7,14 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import { studentFormInputSchema, type StudentFormInputSchema } from "../forms/studentSchema";
-import { useCreateStudentMutation } from "../hooks/use-student-mutation";
+import { useCreateStudentMutation } from "../hooks/student-mutations";
 import { StudentForm } from "../forms/StudentForm";
 import { StudentFormFields } from "../forms/StudentFormFields";
+import { type StudentFormSchema, studentFormSchema } from "../forms/studentFormSchema";
 
 export function StudentCreatePage() {
-  const { register, formState: { errors }, handleSubmit } = useForm<StudentFormInputSchema>({
-    resolver: zodResolver(studentFormInputSchema),
+  const { register, formState: { errors }, handleSubmit, control } = useForm<StudentFormSchema>({
+    resolver: zodResolver(studentFormSchema),
     mode: "onBlur",
   });
   const registerWithMask = useHookFormMask(register);
@@ -26,7 +26,7 @@ export function StudentCreatePage() {
     error: createStudentError,
   } = useCreateStudentMutation();
 
-  const onSubmit = handleSubmit((data: StudentFormInputSchema) => {
+  const onSubmit = handleSubmit((data: StudentFormSchema) => {
     createStudent({ data });
   });
 
@@ -43,10 +43,10 @@ export function StudentCreatePage() {
         <StudentForm onSubmit={onSubmit}>
 
           <StudentFormFields
+            control={control}
             register={register}
             registerWithMask={registerWithMask}
             errors={errors}
-            className="grid grid-cols-3 gap-4"
           />
 
           <AddressFormFields

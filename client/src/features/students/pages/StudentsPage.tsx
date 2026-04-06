@@ -10,19 +10,17 @@ import { StudentsTable } from "../components/StudentsTable";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [currentPage, setCurrentPage] = useState(0);
   const [showArchived, setShowArchived] = useState(false);
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const params = { page: currentPage, search: debouncedSearchTerm, archived: showArchived };
+
   const {
-    isPending : isStudentsPending,
+    isPending: isStudentsPending,
     data: students,
     error: studentsError,
-  } = useGetStudents({
-    page: currentPage,
-    search: debouncedSearchTerm,
-    archived: showArchived,
-  });
+  } = useGetStudents(params);
 
   return (
     <>
@@ -32,23 +30,23 @@ export function StudentsPage() {
         Icon={GraduationCap}
         backLink="/dashboard"
       />
-      <div className="flex items-center justify-between ml-auto gap-6">
-        <ListSearchInput
-          className="grow"
-          placeholder="Buscar aluno por nome, email ou escola"
-          ariaLabel="Buscar aluno"
-          value={searchTerm}
-          onChange={setSearchTerm}
-        />
-        <ToggleSwitch
-          className="justify-self-start"
-          label="Arquivados"
-          tip="Mostrar alunos arquivados"
-          toggled={showArchived}
-          setToggle={setShowArchived}
-        />
+      <div className="flex items-center justify-between ml-auto">
+        <div className="flex flex-1 items-center gap-2">
+          <ListSearchInput
+            placeholder="Buscar aluno por nome, email ou escola"
+            ariaLabel="Buscar aluno"
+            value={searchTerm}
+            onChange={setSearchTerm}
+          />
+          <ToggleSwitch
+            label="Arquivados"
+            tip="Mostrar alunos arquivados"
+            toggled={showArchived}
+            setToggle={setShowArchived}
+          />
+        </div>
         <ButtonLink to="/students/new" variant="success">
-          Nova Matrícula
+          Novo Aluno
         </ButtonLink>
       </div>
 

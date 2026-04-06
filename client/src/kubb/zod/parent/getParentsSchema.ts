@@ -17,15 +17,13 @@ export const getParentsQueryParamsSchema = z.object({
     .number()
     .int()
     .min(1)
-    .default(20)
+    .default(10)
     .describe("The size of the page to be returned"),
-  sort: z.optional(
-    z
-      .array(z.string())
-      .describe(
-        "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
-      ),
-  ),
+  sort: z
+    .array(z.string())
+    .describe(
+      "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+    ),
   search: z.optional(z.string()),
   archived: z.optional(z.boolean()),
 });

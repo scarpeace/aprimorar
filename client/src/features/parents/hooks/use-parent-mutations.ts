@@ -7,18 +7,18 @@ export function useCreateParentMutation() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  return useCreateParent({
-    mutation: {
-      onError: () => {
-        toast.error("Algo deu errado ao criar o responsável");
-      },
-      onSuccess: (createdParent: ParentResponseDTO) => {
-        toast.success("Responsável criado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() })
-        navigate(`/parents/${createdParent.parentId}`);
-      },
-    },
-  });
+//   return useCreateParent({
+//     mutation: {
+//       onError: () => {
+//         toast.error("Algo deu errado ao criar o responsável");
+//       },
+//       onSuccess: (createdParent: ParentResponseDTO) => {
+//         toast.success("Responsável criado com sucesso");
+//         queryClient.invalidateQueries({ queryKey: getParentsQueryKey() })
+//         navigate(`/parents/${createdParent.parentId}`);
+//       },
+//     },
+//   });
 }
 
 export function useUpdateParentMutation() {

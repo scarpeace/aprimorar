@@ -8,6 +8,7 @@ import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsExceptio
 import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
 import com.aprimorar.api.domain.employee.repository.EmployeeSpecifications;
+import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.shared.PageDTO;
 
@@ -31,12 +32,12 @@ public class EmployeeService {
     private static final UUID PHANTOM_EMPLOYEE_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
     private final EmployeeRepository employeeRepo;
     private final EmployeeMapper employeeMapper;
-    private final com.aprimorar.api.domain.event.repository.EventRepository eventRepo;
+    private final EventRepository eventRepo;
 
     public EmployeeService(
         EmployeeRepository employeeRepo,
         EmployeeMapper employeeMapper,
-        com.aprimorar.api.domain.event.repository.EventRepository eventRepo
+        EventRepository eventRepo
     ) {
         this.employeeRepo = employeeRepo;
         this.employeeMapper = employeeMapper;

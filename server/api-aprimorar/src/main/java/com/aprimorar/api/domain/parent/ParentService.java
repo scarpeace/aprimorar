@@ -38,18 +38,7 @@ public class ParentService {
         this.studentRepo = studentRepo;
     }
 
-    /* ----- Query Methods ----- */
-    @Transactional(readOnly = true)
-    public List<ParentOptionsDTO> getParentOptions() {
-        List<Parent> list = parentRepo.findByArchivedAtIsNull();
-        log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
-        return list
-            .stream()
-            .map(p -> new ParentOptionsDTO(p.getId(), p.getName()))
-            .toList();
-    }
-
-    @Transactional(readOnly = true)
+@Transactional(readOnly = true)
     public PageDTO<ParentResponseDTO> getParents(Pageable pageable, String search) {
         Page<Parent> parentsPage;
         if (search != null && !search.trim().isEmpty()) {
@@ -62,6 +51,16 @@ public class ParentService {
 
         log.info("Consulta de responsáveis finalizada, {} registros encontrados.", parentsPage.getTotalElements());
         return new PageDTO<>(parentsDtoPage);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ParentOptionsDTO> getParentOptions() {
+        List<Parent> list = parentRepo.findByArchivedAtIsNullOrderByNameAsc();
+        log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
+        return list
+            .stream()
+            .map(p -> new ParentOptionsDTO(p.getId(), p.getName()))
+            .toList();
     }
 
     @Transactional(readOnly = true)

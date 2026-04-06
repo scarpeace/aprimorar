@@ -11,13 +11,11 @@ import { GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useHookFormMask } from "use-mask-input";
-import { useUpdateStudentMutation } from "../hooks/use-student-mutation";
-import {
-  studentFormInputSchema,
-  type StudentFormInputSchema,
-} from "../forms/studentSchema";
+import { useUpdateStudentMutation } from "../hooks/student-mutations";
+
 import { StudentForm } from "../forms/StudentForm";
 import { StudentFormFields } from "../forms/StudentFormFields";
+import { type StudentFormSchema, studentFormSchema } from "../forms/studentFormSchema";
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -41,8 +39,8 @@ export function StudentEditPage() {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<StudentFormInputSchema>({
-    resolver: zodResolver(studentFormInputSchema),
+  } = useForm<StudentFormSchema>({
+    resolver: zodResolver(studentFormSchema),
     mode: "onBlur",
     values: {
       name: student?.name ?? "",
@@ -65,7 +63,7 @@ export function StudentEditPage() {
   });
   const registerWithMask = useHookFormMask(register);
 
-  const onSubmit = handleSubmit((data: StudentFormInputSchema) => {
+  const onSubmit = handleSubmit((data: StudentFormSchema) => {
     updateStudent({ studentId, data });
   });
 

@@ -1,11 +1,23 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { EventsTable } from "@/features/events/components/EventsTable";
-import { useEventsByStudent } from "@/features/events/hooks/use-event-queries";
-import { useGetStudentById } from "@/kubb";
-import { GraduationCap } from "lucide-react";
-import { useState } from "react";
+import { useGetEventsByStudent, useGetStudentById } from "@/kubb";
+import { Edit, GraduationCap } from "lucide-react";
+import { useState, type ReactNode } from "react";
 import { useParams } from "react-router-dom";
-import { StudentSummary } from "../components/StudentSummary";
+import { ButtonLink } from "@/components/ui/button";
+import { Collapse } from "@/components/ui/collapse";
+import { SectionCard } from "@/components/ui/section-card";
+import { SummaryItem } from "@/components/ui/summary-item";
+import { AddressDetails } from "@/features/address/AddressDetails";
+import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
+import { DeleteStudentButton } from "../components/DeleteStudentButton";
+import { ErrorCard } from "@/components/ui/error-card";
+import { LoadingCard } from "@/components/ui/loading-card";
+import {
+  formatCpf,
+  formatPhone,
+  formatDateShortYear,
+} from "@/lib/utils/formatter";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +34,21 @@ export function StudentDetailsPage() {
     isPending: isStudentEventsPending,
     data: studentEvents,
     error: studentEventsError,
-  } = useEventsByStudent(studentId);
+  } = useGetEventsByStudent(studentId);
+
+  const isStudentLoading = isStudentPending || !student;
+  const hasStudentError = !!studentError;
+
+  const summaryItems: Array<{ label: string; value: ReactNode }> = student ? [
+    { label: "Nome completo", value: student.name },
+    { label: "CPF", value: formatCpf(student.cpf) },
+    { label: "E-mail", value: student.email },
+    { label: "Idade", value: student.age },
+    { label: "Contato", value: formatPhone(student.contact) },
+    {label: "Data de matrícula",value: formatDateShortYear(student.createdAt)},
+    { label: "Escola", value: student.school },
+    { label: "Status", value: student.archivedAt ? "Arquivado" : "Ativo" },
+  ] : [];
 
   return (
     <>
@@ -32,22 +58,54 @@ export function StudentDetailsPage() {
         Icon={GraduationCap}
         backLink="/students"
       />
-
-      <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
-        <StudentSummary
-          student={student}
-          isPending={isStudentPending}
+      {hasStudentError ? (
+        <ErrorCard
+          title="Erro ao carregar detalhes do aluno"
           error={studentError}
         />
+      ) : isStudentLoading ? (
+        <LoadingCard title="Carregando detalhes do aluno" />
+      ) : (
+        <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
+          <SectionCard
+            title="Resumo do aluno"
+            description="Dados do aluno"
+            headerActions={
+              <>
+                <ButtonLink to={`/students/edit/${student.id}`} variant="primary">
+                  <Edit className="h-4 w-4" />
+                  Editar
+                </ButtonLink>
 
-        <EventsTable
-          eventsPage={studentEvents}
-          isPending={isStudentEventsPending}
-          error={studentEventsError}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-        />
-      </div>
+                <ArchiveStudentButton studentId={student.id} isArchived={!!student.archivedAt} />
+                <DeleteStudentButton studentId={student.id} />
+              </>
+            }
+          >
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {summaryItems.map((item) => (
+                <SummaryItem
+                  key={item.label}
+                  label={item.label}
+                  value={item.value}
+                />
+              ))}
+            </div>
+
+            <Collapse title={"Endereço"} className="mt-3">
+              <AddressDetails address={student.address} />
+            </Collapse>
+          </SectionCard>
+
+          <EventsTable
+            eventsPage={studentEvents}
+            isPending={isStudentEventsPending}
+            error={studentEventsError}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
     </>
   );
 }
