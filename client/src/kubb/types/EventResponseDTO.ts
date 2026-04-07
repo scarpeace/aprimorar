@@ -3,6 +3,19 @@
  * Do not edit manually.
  */
 
+export const eventResponseDTOContentEnum = {
+  AULA: "AULA",
+  MENTORIA: "MENTORIA",
+  TERAPIA: "TERAPIA",
+  ORIENTACAO_VOCACIONAL: "ORIENTACAO_VOCACIONAL",
+  ENEM: "ENEM",
+  PAS: "PAS",
+  OUTRO: "OUTRO",
+} as const;
+
+export type EventResponseDTOContentEnumKey =
+  (typeof eventResponseDTOContentEnum)[keyof typeof eventResponseDTOContentEnum];
+
 /**
  * @description Dados do evento retornados pela API
  */
@@ -23,10 +36,10 @@ export type EventResponseDTO = {
    */
   description?: string;
   /**
-   * @description Conteúdo do evento (Atendimento, Mentoria, etc...)
+   * @description Tipo de conteúdo ou categoria do atendimento/evento
    * @type string
    */
-  content: string;
+  content: EventResponseDTOContentEnumKey;
   /**
    * @description Data/Horário de início do evento
    * @type string, date-time

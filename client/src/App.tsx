@@ -27,6 +27,7 @@ const EmployeeEditPage = lazy(() => import("@/features/employees/pages/EmployeeE
 const EventsPage = lazy(() => import("@/features/events/pages/EventsPage").then((module) => ({ default: module.EventsPage })))
 const EventDetailPage = lazy(() => import("@/features/events/pages/EventDetailPage").then((module) => ({ default: module.EventDetailPage })))
 const EventCreatePage = lazy(() => import("@/features/events/pages/EventCreatePage").then((module) => ({ default: module.EventCreatePage })))
+const EventEditPage = lazy(() => import("@/features/events/pages/EventEditPage").then((module) => ({ default: module.EventEditPage })))
 
 
 
@@ -58,6 +59,7 @@ function App() {
               <Route path="/events" element={<EventsPage />} />
               <Route path="/events/new" element={<EventCreatePage />} />
               <Route path="/events/:id" element={<EventDetailPage />} />
+              <Route path="/events/edit/:id" element={<EventEditPage />} />
 
               <Route path="/parents" element={<ParentsPage />} />
               <Route path="/parents/new" element={<ParentCreatePage/>} />

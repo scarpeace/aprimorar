@@ -8,7 +8,7 @@ export const eventFormSchema = eventRequestDTOSchema.extend({
   price: z.number().min(1,{message: "O preço do evento é obrigatório" }),
   payment: z.number().min(1,{message: "O pagamento do evento é obrigatório" }),
   content: z.enum(eventRequestDTOContentEnum,{message: "O tipo do evento é obrigatório" }),
-  studentId: z.string().min(1,{message: "O aluno é obrigatório" }),
+  studentId: z.string().min(1, { message: "O aluno é obrigatório" }),
   employeeId: z.string().min(1,{message: "O funcionário é obrigatório" }),
 });
 

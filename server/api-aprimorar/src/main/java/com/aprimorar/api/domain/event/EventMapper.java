@@ -24,7 +24,7 @@ public class EventMapper {
             event.getId(),
             event.getTitle(),
             event.getDescription(),
-            event.getContent().name(),
+            event.getContent(),
             event.getStartDate(),
             event.getEndDateTime(),
             event.getPayment(),

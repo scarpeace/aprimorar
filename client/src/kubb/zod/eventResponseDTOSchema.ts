@@ -14,8 +14,16 @@ export const eventResponseDTOSchema = z
     title: z.string().describe("Título do evento"),
     description: z.optional(z.string().describe("Descrição do evento")),
     content: z
-      .string()
-      .describe("Conteúdo do evento (Atendimento, Mentoria, etc...)"),
+      .enum([
+        "AULA",
+        "MENTORIA",
+        "TERAPIA",
+        "ORIENTACAO_VOCACIONAL",
+        "ENEM",
+        "PAS",
+        "OUTRO",
+      ])
+      .describe("Tipo de conteúdo ou categoria do atendimento/evento"),
     startDate: z.iso.datetime().describe("Data/Horário de início do evento"),
     endDate: z.iso.datetime().describe("Data/Horário de fim do evento"),
     price: z.number().describe("Preço do evento pago pelo aluno"),

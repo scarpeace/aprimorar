@@ -53,7 +53,10 @@ export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
 } from "./types/EventRequestDTO.ts";
-export type { EventResponseDTO } from "./types/EventResponseDTO.ts";
+export type {
+  EventResponseDTO,
+  EventResponseDTOContentEnumKey,
+} from "./types/EventResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./types/PageDTOEmployeeResponseDTO.ts";
 export type { PageDTOEventResponseDTO } from "./types/PageDTOEventResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./types/PageDTOParentResponseDTO.ts";
@@ -393,6 +396,7 @@ export { addressResponseDTOStateEnum } from "./types/AddressResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./types/EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./types/EventRequestDTO.ts";
+export { eventResponseDTOContentEnum } from "./types/EventResponseDTO.ts";
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
 export { classesByContentDTOSchema } from "./zod/classesByContentDTOSchema.ts";

@@ -29,7 +29,6 @@ type HeaderProps = {
 
 type FieldsProps = {
   register: any;
-  control: Control<EventFormSchema>;
   errors: FieldErrors<EventFormSchema>;
 };
 
@@ -54,7 +53,7 @@ export function Header({ title, description, icon }: HeaderProps) {
   return <PageHeader title={title} description={description} Icon={icon} />;
 }
 
-export function Fields({ errors, register, control }: FieldsProps) {
+export function Fields({ errors, register }: FieldsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5  ">
 

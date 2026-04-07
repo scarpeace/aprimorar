@@ -21,7 +21,10 @@ export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
 } from "./EventRequestDTO.ts";
-export type { EventResponseDTO } from "./EventResponseDTO.ts";
+export type {
+  EventResponseDTO,
+  EventResponseDTOContentEnumKey,
+} from "./EventResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./PageDTOEmployeeResponseDTO.ts";
 export type { PageDTOEventResponseDTO } from "./PageDTOEventResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./PageDTOParentResponseDTO.ts";
@@ -233,3 +236,4 @@ export { addressResponseDTOStateEnum } from "./AddressResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./EventRequestDTO.ts";
+export { eventResponseDTOContentEnum } from "./EventResponseDTO.ts";

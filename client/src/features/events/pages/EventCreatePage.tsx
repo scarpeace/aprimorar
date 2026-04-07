@@ -1,15 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { ChevronDownCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
 
-import { useGetEmployeeOptions, useGetStudentsOptions } from "@/kubb";
+import { toInstant } from "@/lib/utils/dateFormater";
 import * as EventFormLayout from "../forms/EventFormLayout";
 import {
   type EventFormSchema,
   eventFormSchema,
 } from "../forms/eventFormSchema";
 import { useEventMutations } from "../hooks/use-event-mutations";
-import { toInstant } from "@/lib/utils/dateFormater";
 export function EventCreatePage() {
   const {
     register,
@@ -20,9 +19,6 @@ export function EventCreatePage() {
     resolver: zodResolver(eventFormSchema),
     mode: "onBlur",
   });
-
-  useGetStudentsOptions();
-  useGetEmployeeOptions();
 
   const { createEvent } = useEventMutations();
 
