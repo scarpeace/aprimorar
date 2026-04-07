@@ -142,8 +142,8 @@ public class EventService {
         event.setDescription(request.description());
         event.setStartDate(request.startDate());
         event.setEndDateTime(request.endDate());
-        event.setPrice(request.price());
         event.setPayment(request.payment());
+        event.setPrice(request.price());
         event.setContent(request.content());
         event.setStudent(student);
         event.setEmployee(employee);

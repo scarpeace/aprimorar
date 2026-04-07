@@ -49,7 +49,6 @@ export function EventCreatePage() {
         <EventFormLayout.Fields
           errors={errors}
           register={register}
-          control={control}
         />
 
         <EventFormLayout.Actions

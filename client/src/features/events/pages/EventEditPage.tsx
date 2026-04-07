@@ -1,17 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { ChevronDownCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
 
-import { eventRequestDTOContentEnum, useGetEmployeeOptions, useGetEventById, useGetStudentsOptions } from "@/kubb";
-import * as EventFormLayout from "../forms/EventFormLayout";
-import {
-  type EventFormSchema,
-  eventFormSchema,
-} from "../forms/eventFormSchema";
-import { useEventMutations } from "../hooks/use-event-mutations";
+import { eventRequestDTOContentEnum, useGetEventById } from "@/kubb";
 import { toDatetimeLocalInput, toInstant } from "@/lib/utils/dateFormater";
 import { useParams } from "react-router-dom";
-import { EventContentLabels } from "@/lib/shared/eventContentLables";
+import * as EventFormLayout from "../forms/EventFormLayout";
+import {
+    type EventFormSchema,
+    eventFormSchema,
+} from "../forms/eventFormSchema";
+import { useEventMutations } from "../hooks/use-event-mutations";
+import { DevTool } from "@hookform/devtools";
 
 export function EventEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -26,8 +26,8 @@ export function EventEditPage() {
     employeeId: event?.employeeId ?? "",
     startDate: toDatetimeLocalInput(event?.startDate),
     endDate: toDatetimeLocalInput(event?.endDate),
-    price: event?.price ?? 0,
     payment: event?.payment ?? 0,
+    price: event?.price ?? 0,
     content: event?.content ?? eventRequestDTOContentEnum.AULA,
     title: event?.title ?? "",
     description: event?.description ?? "",
@@ -54,6 +54,7 @@ export function EventEditPage() {
         description="Edite os dados do evento."
         icon={ChevronDownCircle}
       />
+      <DevTool control={form.control}/>
 
       <EventFormLayout.Root
         title="Dados do evento"

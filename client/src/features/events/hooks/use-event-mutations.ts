@@ -33,10 +33,8 @@ export function useEventMutations() {
       },
       onSuccess: (updatedEvent, variables) => {
         toast.success("Evento atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: getEventByIdQueryKey(variables.eventId),
-        });
+        queryClient.invalidateQueries({ queryKey: getEventsQueryKey() })
+        queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.eventId) })
         navigate(`/events/${updatedEvent.eventId}`);
       },
     },

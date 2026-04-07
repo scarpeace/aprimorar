@@ -29,9 +29,6 @@ const EventDetailPage = lazy(() => import("@/features/events/pages/EventDetailPa
 const EventCreatePage = lazy(() => import("@/features/events/pages/EventCreatePage").then((module) => ({ default: module.EventCreatePage })))
 const EventEditPage = lazy(() => import("@/features/events/pages/EventEditPage").then((module) => ({ default: module.EventEditPage })))
 
-
-
-
 import { pt } from "zod/locales"
 import z from "zod/v4"
 

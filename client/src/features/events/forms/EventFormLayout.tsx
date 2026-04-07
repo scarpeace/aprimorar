@@ -14,6 +14,7 @@ import type {
 import type { Control, FieldErrors } from "react-hook-form";
 import { ContentSelectDropdown } from "../components/ContentSelectDropdown";
 import type { EventFormSchema } from "./eventFormSchema";
+import { DevTool } from "@hookform/devtools";
 
 type FormProps = PropsWithChildren<{
   title: string;
