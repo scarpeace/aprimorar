@@ -8,9 +8,7 @@ import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
 import com.aprimorar.api.domain.employee.repository.EmployeeSpecifications;
 import com.aprimorar.api.domain.event.repository.EventRepository;
-import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.shared.PageDTO;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -33,11 +31,7 @@ public class EmployeeService {
     private final EmployeeMapper employeeMapper;
     private final EventRepository eventRepo;
 
-    public EmployeeService(
-        EmployeeRepository employeeRepo,
-        EmployeeMapper employeeMapper,
-        EventRepository eventRepo
-    ) {
+    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, EventRepository eventRepo) {
         this.employeeRepo = employeeRepo;
         this.employeeMapper = employeeMapper;
         this.eventRepo = eventRepo;
@@ -45,8 +39,11 @@ public class EmployeeService {
 
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
-    public PageDTO<EmployeeResponseDTO> getEmployees(Pageable pageable, String search) {
-        Specification<Employee> spec = (root, query, cb) -> cb.notEqual(root.get("duty"), Duty.SYSTEM);
+    public PageDTO<EmployeeResponseDTO> getEmployees(Pageable pageable, String search, Boolean archived) {
+        Specification<Employee> spec = Specification.allOf(
+            EmployeeSpecifications.isNotGhost(),
+            Boolean.TRUE.equals(archived) ? EmployeeSpecifications.archived() : EmployeeSpecifications.notArchived()
+        );
 
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(EmployeeSpecifications.searchContainsIgnoreCase(search.trim()));
@@ -63,8 +60,10 @@ public class EmployeeService {
     public List<EmployeeOptionsDTO> getEmployeeOptions() {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
+        Specification<Employee> spec = EmployeeSpecifications.isNotGhost();
+
         return employeeRepo
-            .findAll(EmployeeSpecifications.notArchived(), sort)
+            .findAll(spec, sort)
             .stream()
             .map(e -> new EmployeeOptionsDTO(e.getId(), e.getName()))
             .toList();
@@ -92,7 +91,6 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
-        
         Employee employee = findEmployeeOrThrow(employeeId);
         Employee updatedEmployeeData = employeeMapper.convertToEntity(request);
 
@@ -114,7 +112,10 @@ public class EmployeeService {
         Employee employee = findEmployeeOrThrow(employeeId);
         eventRepo.reassignEmployeeEventsToGhost(employeeId, PHANTOM_EMPLOYEE_ID);
         employeeRepo.delete(employee);
-        log.info("Colaborador {} deletado com sucesso. Eventos transferidos para arquivo morto fantasma.", employee.getName().toUpperCase());
+        log.info(
+            "Colaborador {} deletado com sucesso. Eventos transferidos para arquivo morto fantasma.",
+            employee.getName().toUpperCase()
+        );
     }
 
     @Transactional
@@ -133,7 +134,9 @@ public class EmployeeService {
 
     /* ----- Helper Methods ----- */
     private Employee findEmployeeOrThrow(UUID employeeId) {
-        return employeeRepo.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException("Colaborador não encontrado no Banco de Dados"));
+        return employeeRepo
+            .findById(employeeId)
+            .orElseThrow(() -> new EmployeeNotFoundException("Colaborador não encontrado no Banco de Dados"));
     }
 
     private void ensureEmployeeUniqueness(String cpf, String email) {
@@ -142,7 +145,9 @@ public class EmployeeService {
         }
 
         if (employeeRepo.existsByEmail(email)) {
-            throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
+            throw new EmployeeAlreadyExistsException(
+                "Colaborador com o Email informado já cadastrado no banco de dados"
+            );
         }
     }
 
@@ -152,7 +157,9 @@ public class EmployeeService {
         }
 
         if (employeeRepo.existsByEmailAndIdNot(employee.getEmail(), employeeId)) {
-            throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
+            throw new EmployeeAlreadyExistsException(
+                "Colaborador com o Email informado já cadastrado no banco de dados"
+            );
         }
     }
 }

@@ -7,9 +7,9 @@ import com.aprimorar.api.domain.event.repository.EventRepository.EventContentCou
 
 import java.math.BigDecimal;
 import java.time.Clock;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -98,17 +98,18 @@ public class DashboardService {
     }
 
     private DateTimeRange toMonthRange(YearMonth yearMonth) {
-        LocalDate firstDay = yearMonth.atDay(1);
-        LocalDate firstDayNextMonth = yearMonth.plusMonths(1).atDay(1);
+        ZoneId zone = applicationClock.getZone();
+        Instant firstDay = yearMonth.atDay(1).atStartOfDay(zone).toInstant();
+        Instant firstDayNextMonth = yearMonth.plusMonths(1).atDay(1).atStartOfDay(zone).toInstant();
         return new DateTimeRange(
-                firstDay.atStartOfDay(),
-                firstDayNextMonth.atStartOfDay()
+                firstDay,
+                firstDayNextMonth
         );
     }
 
     private record DateTimeRange(
-            LocalDateTime startDateTime,
-            LocalDateTime endExclusiveDateTime
+            Instant startDateTime,
+            Instant endExclusiveDateTime
             ) {
 
     }

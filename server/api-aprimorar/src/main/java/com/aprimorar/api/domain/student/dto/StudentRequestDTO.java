@@ -6,7 +6,6 @@ import java.util.UUID;
 import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

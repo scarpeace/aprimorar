@@ -1,7 +1,7 @@
 import { FormField } from "@/components/ui/form-field";
 import { SectionCard } from "@/components/ui/section-card";
 
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import type {  Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import type { useHookFormMask } from "use-mask-input";
 import type { StudentFormSchema } from "./studentFormSchema";
 
@@ -11,6 +11,7 @@ type StudentFormFieldsProps = {
   errors: FieldErrors<StudentFormSchema>;
   className?: string;
   isUpdate?: boolean;
+  control: Control<StudentFormSchema>
 };
 
 export function StudentFormFields({

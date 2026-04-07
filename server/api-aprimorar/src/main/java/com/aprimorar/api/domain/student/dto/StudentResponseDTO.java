@@ -1,9 +1,9 @@
 package com.aprimorar.api.domain.student.dto;
 
 import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
-import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;

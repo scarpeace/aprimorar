@@ -30,6 +30,7 @@ public class Student extends BaseEntity {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+// TODO: Trocar pra Instant
     @Column(name = "birthdate", nullable = false)
     private LocalDate birthdate;
 

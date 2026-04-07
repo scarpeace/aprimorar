@@ -53,9 +53,10 @@ public class EmployeeController {
     @ApiResponse(responseCode = "200", description = "Lista de colaboradores retornada com sucesso.")
     public ResponseEntity<PageDTO<EmployeeResponseDTO>> getEmployees(
         @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
-        @RequestParam(required = false) String search
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) boolean archived
     ) {
-        PageDTO<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search);
+        PageDTO<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search, archived);
         return ResponseEntity.ok(employees);
     }
 

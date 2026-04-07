@@ -1,6 +1,8 @@
 spring:
   main:
     lazy-initialization: true
+  jackson:
+    time-zone: UTC
 
   datasource:
     url: jdbc:postgresql://localhost:5432/aprimorar
@@ -16,6 +18,8 @@ spring:
     hibernate:
       ddl-auto: validate
       format_sql: true
+      jdbc:
+        time_zone: UTC
 #    show-sql: true
 
   output:

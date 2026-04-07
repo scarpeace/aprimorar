@@ -25,6 +25,7 @@ export const getEmployeesQueryParamsSchema = z.object({
       "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
     ),
   search: z.optional(z.string()),
+  archived: z.optional(z.boolean()),
 });
 
 /**

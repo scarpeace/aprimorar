@@ -58,10 +58,10 @@ public record EventResponseDTO(
     String employeeName,
 
     @NotNull
-    @Schema(nullable = false, description = "Data de criação do evento", example = "2023-01-01T00:00:00Z")
+    @Schema(nullable = false, description = "Data de criação do evento", example = "2024-03-10T15:33:42Z`")
     Instant createdAt,
 
     @Nullable
-    @Schema(nullable = true, description = "Data de atualização do evento", example = "2023-01-02T00:00:00Z")
+    @Schema(nullable = true, description = "Data de atualização do evento", example = "2024-03-10T15:33:42Z`")
     Instant updatedAt
 ) {}

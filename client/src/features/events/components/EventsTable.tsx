@@ -1,12 +1,11 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOEventResponseDTO } from "@/kubb";
+import { eventRequestDTOContentEnum, type PageDTOEventResponseDTO } from "@/kubb";
+import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { eventContentLabels } from "../hooks/eventContentLabels";
-import { SectionCard } from "@/components/ui/section-card";
 
 type EventsTableProps = {
   eventsPage?: PageDTOEventResponseDTO;
@@ -91,7 +90,7 @@ export function EventsTable({
               <td className="p-3 text-center">{formatTime(event.startDate)}</td>
               <td className="p-3 text-center">{formatTime(event.endDate)}</td>
               <td className="p-3 text-center">
-                {eventContentLabels[event.content] || event.content}
+                {EventContentLabels[event.content] || event.content}
               </td>
 
               <td className="p-3">{brl.format(event.price)}</td>
