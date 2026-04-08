@@ -1,5 +1,3 @@
-import { FormField } from "@/components/ui/form-field";
-import type { EventFormSchema } from "@/features/events/forms/eventFormSchema";
 import { useGetEmployeeOptions } from "@/kubb";
 import { TriangleAlert } from "lucide-react";
 import type { UseFormRegisterReturn } from "react-hook-form";

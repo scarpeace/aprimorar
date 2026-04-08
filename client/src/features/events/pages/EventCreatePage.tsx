@@ -1,14 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDownCircle } from "lucide-react";
+import { ChevronDownCircle, GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import { toInstant } from "@/lib/utils/dateFormater";
-import * as EventFormLayout from "../forms/EventFormLayout";
+import * as EventForm from "../forms/EventForm";
 import {
   type EventFormSchema,
   eventFormSchema,
 } from "../forms/eventFormSchema";
 import { useEventMutations } from "../hooks/use-event-mutations";
+import { PageHeader } from "@/components/ui/page-header";
 export function EventCreatePage() {
   const {
     register,
@@ -30,34 +31,32 @@ export function EventCreatePage() {
         endDate: toInstant(data.endDate),
       },
     });
-    console.log(toInstant(data.startDate), toInstant(data.endDate))
   });
 
   return (
     <>
-      <EventFormLayout.Header
-        title="Novo evento"
-        description="Crie um novo atendimento/aula."
-        icon={ChevronDownCircle}
+      <PageHeader
+        title="Novo Atendimento"
+        description="Preencha abaixo os dados do evento."
+        Icon={GraduationCap}
+        backLink="/events"
       />
 
-      <EventFormLayout.Root
+      <EventForm.Root
         title="Dados do evento"
         description="Informe data, valores e participantes do atendimento."
         onSubmit={onSubmit}
       >
-        <EventFormLayout.Fields
+        <EventForm.Fields
           errors={errors}
           register={register}
         />
 
-        <EventFormLayout.Actions
+        <EventForm.Actions
           isSubmitting={createEvent.isPending}
           cancelTo="/events"
-          submitLabel="Criar evento"
-          submittingLabel="Salvando..."
         />
-      </EventFormLayout.Root>
+      </EventForm.Root>
     </>
   );
 }

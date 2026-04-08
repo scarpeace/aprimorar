@@ -1,9 +1,9 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { eventRequestDTOContentEnum, type PageDTOEventResponseDTO } from "@/kubb";
+import { type PageDTOEventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
-import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
+import { formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +14,6 @@ type EventsTableProps = {
   onPageChange: (page: number) => void;
   isPending: boolean;
   error: unknown;
-  description?: string;
 };
 
 export function EventsTable({
@@ -23,7 +22,6 @@ export function EventsTable({
   onPageChange,
   isPending,
   error,
-  description,
 }: Readonly<EventsTableProps>) {
   const navigate = useNavigate();
   if (isPending) {
@@ -41,7 +39,7 @@ export function EventsTable({
 
   return (
     <>
-      <table className="table table-zebra border border-base-200 table-auto bg-base-100 overflow-x-auto w-full rounded  shadow-xl animate-[fade-up_280ms_ease-out_both]">
+      <table className="table table-zebra table-auto bg-base-100 overflow-x-auto rounded shadow-xl animate-[fade-up_280ms_ease-out_both]">
         <thead className="bg-base-300 rounded">
           <tr>
             <th className="text-left font-semibold text-base-content/80">
@@ -54,25 +52,15 @@ export function EventsTable({
               Data
             </th>
             <th className="text-left font-semibold text-base-content/80">
-              Horário incío
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Horário fim
+              Horário
             </th>
             <th className="text-left font-semibold text-base-content/80">
               Conteúdo
             </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Valor
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Pagamento
-            </th>
-
             {/*<th className="text-left font-semibold text-base-content/80">
                 Status
               </th>*/}
-            <th className="text-left font-semibold text-base-content/80">
+            <th className="text-center font-semibold text-base-content/80">
               Ações
             </th>
           </tr>
@@ -84,22 +72,18 @@ export function EventsTable({
               key={event.eventId}
               className="transition-colors hover:bg-base-200/70"
             >
-              <td className="p-3">{event.studentName}</td>
-              <td className="p-3">{event.employeeName}</td>
-              <td className="p-3">{formatDateShortYear(event.startDate)}</td>
-              <td className="p-3 text-center">{formatTime(event.startDate)}</td>
-              <td className="p-3 text-center">{formatTime(event.endDate)}</td>
-              <td className="p-3 text-center">
+              <td className="">{event.studentName}</td>
+              <td>{event.employeeName}</td>
+              <td className="">{formatDateShortYear(event.startDate)}</td>
+              <td className=" text-center">{formatTime(event.startDate)} - {formatTime(event.endDate)}</td>
+              <td className=" text-center">
                 {EventContentLabels[event.content] || event.content}
               </td>
-
-              <td className="p-3">{brl.format(event.price)}</td>
-              <td className="p-3">{brl.format(event.payment)}</td>
               {/*<td>NAO IMPLEMENTADO</td>*/}
 
-              <td className="p-2">
+              <td>
                 <span
-                  className="btn m-2 btn-secondary"
+                  className="btn btn-secondary"
                   onClick={() => navigate(`/events/${event.eventId}`)}
                 >
                   Detalhes

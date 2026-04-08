@@ -1,14 +1,8 @@
-import { Alert } from "@/components/ui/alert";
-import { Button, ButtonLink } from "@/components/ui/button";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PageHeader } from "@/components/ui/page-header";
-import { AddressFormFields } from "@/features/address/AddressFormFields";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useHookFormMask } from "use-mask-input";
-import { StudentForm } from "../forms/StudentForm";
-import { StudentFormFields } from "../forms/StudentFormFields";
+import * as StudentForm from "../forms/StudentForm";
 import {
   type StudentFormSchema,
   studentFormSchema,
@@ -16,79 +10,47 @@ import {
 import { useStudentMutations } from "../hooks/student-mutations";
 
 export function StudentCreatePage() {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    control,
-  } = useForm<StudentFormSchema>({
+  const form = useForm<StudentFormSchema>({
     resolver: zodResolver(studentFormSchema),
     mode: "onBlur",
   });
-  const registerWithMask = useHookFormMask(register);
 
-  const {
-    createStudent: {
-      mutate: createStudent,
-      isPending: isCreateStudentPending,
-      isError: isCreateStudentError,
-      error: createStudentError,
-    },
-  } = useStudentMutations();
+  const { createStudent } = useStudentMutations();
 
-  const onSubmit = handleSubmit((data: StudentFormSchema) => {
-    createStudent({ data });
-  });
+  // const onSubmit = form.handleSubmit((data: StudentFormSchema) => {
+  //   console.log("DISPAROU");
+  //   createStudent.mutate({ data });
+  // });
+
+  const onSubmit = form.handleSubmit(
+  (data) => console.log("valid", data),
+  (errors) => console.log("invalid", errors)
+);
 
   return (
     <>
       <PageHeader
-        title="Criar aluno"
-        description="Preencha os dados do aluno e do responsável."
+        title="Novo Aluno"
+        description="Preencha os dados do aluno no formulário abaixo."
         Icon={GraduationCap}
         backLink="/students"
       />
 
-      <div className="container animate-[fade-up_300ms_ease-out_both]">
-        <StudentForm onSubmit={onSubmit}>
-          <StudentFormFields
-            control={control}
-            register={register}
-            registerWithMask={registerWithMask}
-            errors={errors}
-          />
+      <StudentForm.Root
+        title="Criar aluno"
+        description="Informe os dados do aluno e do selecione um responsável."
+        onSubmit={onSubmit}
+      >
+        <StudentForm.Fields
+          register={form.register}
+          errors={form.formState.errors}
+        />
 
-          <AddressFormFields
-            register={register}
-            registerWithMask={registerWithMask}
-            errors={errors.address}
-            prefix="address"
-            className="grid grid-cols-3 gap-4"
-          />
-
-          {isCreateStudentError && (
-            <Alert error={createStudentError} variant="error" />
-          )}
-
-          <div className="flex justify-end flex-wrap gap-3">
-            <Button
-              type="submit"
-              variant="success"
-              disabled={isCreateStudentPending}
-            >
-              {isCreateStudentPending ? (
-                <LoadingSpinner text={"Salvando"} />
-              ) : (
-                "Salvar alterações"
-              )}
-            </Button>
-
-            <ButtonLink to={`/students/`} variant="outline">
-              Cancelar
-            </ButtonLink>
-          </div>
-        </StudentForm>
-      </div>
+        <StudentForm.Actions
+          isSubmitting={createStudent.isPending}
+          cancelTo="/students"
+        />
+      </StudentForm.Root>
     </>
   );
 }

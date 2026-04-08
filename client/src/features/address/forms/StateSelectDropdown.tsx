@@ -1,20 +1,21 @@
 import { eventRequestDTOContentEnum } from "@/kubb";
+import { brazilianStates } from "@/lib/utils/brazilianStates";
 import { TriangleAlert } from "lucide-react";
 import { type UseFormRegisterReturn } from "react-hook-form";
 
-type ContentSelectDropdownProps = {
+type StateSelectDropdownProps = {
   registration: UseFormRegisterReturn;
   error?: string;
   className?: string;
   label: string;
 };
 
-export function ContentSelectDropdown({
+export function StateSelectDropdown({
   registration,
   error,
   className,
   label,
-}: ContentSelectDropdownProps) {
+}: StateSelectDropdownProps) {
   return (
 
     <fieldset className={`fieldset ${className}`}>
@@ -24,7 +25,7 @@ export function ContentSelectDropdown({
         className="select select-bordered w-full"
         {...registration}
       >
-       {Object.values(eventRequestDTOContentEnum).map((content) => (
+       {Object.values(brazilianStates).map((content) => (
               <option key={content} value={content}>
                 {content}
               </option>

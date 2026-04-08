@@ -121,14 +121,6 @@
     color: var(--app-text);
   }
 
-  .table :where(td) {
-    padding: 0.5rem;
-  }
-
-.table :where(th) {
-    padding: 0.5rem;
-  }
-
   .app-text-muted {
     color: var(--app-text-muted);
   }
@@ -149,14 +141,6 @@
     border-color: var(--app-border);
   }
 
-  .app-th {
-    @apply text-left font-semibold text-base-content/80;
-  }
-
-  .app-th-center {
-    @apply text-center font-semibold text-base-content/80;
-  }
-
   .app-inline-loading {
     @apply flex items-center gap-2 text-sm;
     color: var(--app-text-muted);
@@ -169,13 +153,5 @@
   .app-kpi-value {
     @apply text-2xl font-bold;
     color: var(--app-text);
-  }
-
-  .app-table-wrap {
-    border-radius: 1rem;
-    border: 1px solid var(--app-border);
-    background: var(--app-surface);
-    overflow: hidden;
-    box-shadow: var(--app-elevation-soft);
   }
 }

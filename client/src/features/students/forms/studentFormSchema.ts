@@ -1,4 +1,4 @@
-import { addressFormSchema } from "@/features/address/hooks/addressSchema";
+import { addressFormSchema } from "@/features/address/forms/addressSchema";
 import { studentRequestDTOSchema } from "@/kubb/zod";
 import { z } from "zod/v4";
 

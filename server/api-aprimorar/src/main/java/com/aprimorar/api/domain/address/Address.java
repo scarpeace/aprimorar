@@ -1,7 +1,7 @@
 package com.aprimorar.api.domain.address;
 
 import com.aprimorar.api.domain.address.exception.InvalidAddressException;
-import com.aprimorar.api.enums.BrazilianState;
+import com.aprimorar.api.enums.BrazilianStates;
 import jakarta.persistence.*;
 
 @Embeddable
@@ -21,7 +21,7 @@ public class Address {
 
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
-    private BrazilianState state;
+    private BrazilianStates state;
 
     @Column(name = "zip", nullable = false)
     private String zip;
@@ -74,11 +74,11 @@ public class Address {
         this.city = city;
     }
 
-    public BrazilianState getState() {
+    public BrazilianStates getState() {
         return state;
     }
 
-    public void setState(BrazilianState state) {
+    public void setState(BrazilianStates state) {
         if (state == null) {
             throw new InvalidAddressException("O estado é obrigatório no Endereço");
         }

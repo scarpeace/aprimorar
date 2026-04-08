@@ -1,6 +1,7 @@
 package com.aprimorar.api.enums;
 
-public enum BrazilianState {
+//TODO: Esse estilo de enum deve servir para os outros, tem que documentar pra gerar no kubb
+public enum BrazilianStates {
     AC("Acre"),
     AL("Alagoas"),
     AP("Amapá"),
@@ -31,7 +32,7 @@ public enum BrazilianState {
 
     private final String displayName;
 
-    BrazilianState(String displayName) {
+    BrazilianStates(String displayName) {
         this.displayName = displayName;
     }
 

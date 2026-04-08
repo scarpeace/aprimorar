@@ -19,15 +19,14 @@ export function EventsPage() {
   } = useGetEvents({ page: currentPage, search: debouncedSearchTerm });
 
   return (
-    <div className="flex flex-col gap-7">
+    <>
       <PageHeader
         description="Gerencie os atendimentos."
         title="Atendimentos"
         Icon={CalendarCheck2}
       ></PageHeader>
 
-      {/*TODO: Mover algumas classes para dentro dos seus componentes como é o exemplo do ListSearchInput*/}
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col gap-3 w-full">
         <div className="flex flex-row">
           <ListSearchInput
             className="grow"
@@ -48,6 +47,6 @@ export function EventsPage() {
           error={eventsError}
         />
       </div>
-    </div>
+    </>
   );
 }

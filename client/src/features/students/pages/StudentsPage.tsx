@@ -14,7 +14,11 @@ export function StudentsPage() {
   const [showArchived, setShowArchived] = useState(false);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const params = { page: currentPage, search: debouncedSearchTerm, archived: showArchived };
+  const params = {
+    page: currentPage,
+    search: debouncedSearchTerm,
+    archived: showArchived,
+  };
 
   const {
     isPending: isStudentsPending,
@@ -30,9 +34,10 @@ export function StudentsPage() {
         Icon={GraduationCap}
         backLink="/dashboard"
       />
-      <div className="flex items-center justify-between ml-auto">
-        <div className="flex flex-1 items-center gap-2">
+      <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-row">
           <ListSearchInput
+            className="grow sm:mr-3"
             placeholder="Buscar aluno por nome, email ou escola"
             ariaLabel="Buscar aluno"
             value={searchTerm}
@@ -44,19 +49,23 @@ export function StudentsPage() {
             toggled={showArchived}
             setToggle={setShowArchived}
           />
+          <ButtonLink
+            className="sm:ml-auto"
+            to="/students/new"
+            variant="success"
+          >
+            Novo Aluno
+          </ButtonLink>
         </div>
-        <ButtonLink to="/students/new" variant="success">
-          Novo Aluno
-        </ButtonLink>
-      </div>
 
-      <StudentsTable
-        students={students}
-        onPageChange={setCurrentPage}
-        currentPage={currentPage}
-        isPending={isStudentsPending}
-        error={studentsError}
-      />
+        <StudentsTable
+          students={students}
+          onPageChange={setCurrentPage}
+          currentPage={currentPage}
+          isPending={isStudentsPending}
+          error={studentsError}
+        />
+      </div>
     </>
   );
 }

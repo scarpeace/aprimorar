@@ -14,7 +14,7 @@ export function ToggleSwitch({
   tip,
 }: ToggleSwitchProps) {
   return (
-    <div className="tooltip" data-tip={tip}>
+    <div className="tooltip flex" data-tip={tip}>
       <label id="showArchived" className="label">
         <input
           className={`toggle w-10 h-6 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800 ${className}`}

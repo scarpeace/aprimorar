@@ -4,41 +4,17 @@ import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { EmployeeSelectDropdown } from "@/features/employees/components/EmployeeSelectDropdown";
 import { StudentSelectDropdown } from "@/features/students/components/StudentSelectDropdown";
-import {
-  type LucideIcon
-} from "lucide-react";
-import type {
-  PropsWithChildren,
-  SubmitEventHandler
-} from "react";
-import type { Control, FieldErrors } from "react-hook-form";
+import { type LucideIcon } from "lucide-react";
+import type { PropsWithChildren, SubmitEventHandler } from "react";
+import type { FieldErrors } from "react-hook-form";
 import { ContentSelectDropdown } from "../components/ContentSelectDropdown";
 import type { EventFormSchema } from "./eventFormSchema";
-import { DevTool } from "@hookform/devtools";
 
 type FormProps = PropsWithChildren<{
   title: string;
   description: string;
   onSubmit: SubmitEventHandler<HTMLFormElement>;
 }>;
-
-type HeaderProps = {
-  title: string;
-  description: string;
-  icon: LucideIcon;
-};
-
-type FieldsProps = {
-  register: any;
-  errors: FieldErrors<EventFormSchema>;
-};
-
-type ActionsProps = {
-  isSubmitting: boolean;
-  cancelTo: string;
-  submitLabel: string;
-  submittingLabel: string;
-};
 
 export function Root({ title, description, onSubmit, children }: FormProps) {
   return (
@@ -50,14 +26,14 @@ export function Root({ title, description, onSubmit, children }: FormProps) {
   );
 }
 
-export function Header({ title, description, icon }: HeaderProps) {
-  return <PageHeader title={title} description={description} Icon={icon} />;
-}
+type FieldsProps = {
+  register: any;
+  errors: FieldErrors<EventFormSchema>;
+};
 
 export function Fields({ errors, register }: FieldsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5  ">
-
       <EmployeeSelectDropdown
         registration={register("employeeId")}
         error={errors?.employeeId?.message}
@@ -132,19 +108,19 @@ export function Fields({ errors, register }: FieldsProps) {
   );
 }
 
-export function Actions({
-  isSubmitting,
-  cancelTo,
-  submitLabel,
-  submittingLabel,
-}: ActionsProps) {
+type ActionsProps = {
+  isSubmitting: boolean;
+  cancelTo: string;
+};
+
+export function Actions({ isSubmitting, cancelTo }: ActionsProps) {
   return (
     <div className="mt-1 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
       <ButtonLink to={cancelTo} variant="outline">
         Cancelar
       </ButtonLink>
       <Button type="submit" disabled={isSubmitting} variant="primary">
-        {isSubmitting ? submittingLabel : submitLabel}
+        {isSubmitting ? "Salvando..." : "Salvar"}
       </Button>
     </div>
   );

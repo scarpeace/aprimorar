@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { eventRequestDTOContentEnum, useGetEventById } from "@/kubb";
 import { toDatetimeLocalInput, toInstant } from "@/lib/utils/dateFormater";
 import { useParams } from "react-router-dom";
-import * as EventFormLayout from "../forms/EventFormLayout";
+import * as EventFormLayout from "../forms/EventForm";
 import {
     type EventFormSchema,
     eventFormSchema,

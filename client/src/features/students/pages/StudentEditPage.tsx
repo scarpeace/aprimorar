@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PageHeader } from "@/components/ui/page-header";
-import { AddressFormFields } from "@/features/address/AddressFormFields";
+import { AddressFormFields } from "@/features/address/forms/AddressFormFields";
 import { useGetStudentById } from "@/kubb";
 import { GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";

@@ -41,8 +41,7 @@ export function StudentsTable({
 
   return (
     <>
-      <div className="overflow-x-auto rounded bg-base-100 mt-3 shadow-xl">
-        <table className="table table-zebra animate-[fade-up_280ms_ease-out_both]">
+        <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
           <thead className="bg-base-300 ">
             <tr>
               <th className="text-left font-semibold text-base-content/80">
@@ -102,7 +101,6 @@ export function StudentsTable({
             ))}
           </tbody>
         </table>
-      </div>
       <Pagination
         paginationData={students}
         currentPage={currentPage}

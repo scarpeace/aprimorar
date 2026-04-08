@@ -2,14 +2,16 @@ import { TriangleAlert } from "lucide-react";
 import type { FieldError, UseFormRegister, UseFormRegisterReturn } from "react-hook-form";
 import type { ZodObject } from "zod";
 
-type FieldsetInputProps = {
-  label: string;
-  placeholder: string;
-  registration: UseFormRegisterReturn,
-  error?: string
-  type: string
-  className?: string;
+type NewType = {
+    label: string;
+    placeholder: string;
+    registration: any;
+    error?: string;
+    type: string;
+    className?: string;
 };
+
+type FieldsetInputProps = NewType;
 
 export function FieldsetInput({ label, placeholder, registration, error, type, className }: FieldsetInputProps) {
   return (
