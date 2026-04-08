@@ -1,11 +1,9 @@
 package com.aprimorar.api.domain.address;
 
 import com.aprimorar.api.domain.address.exception.InvalidAddressException;
-import com.aprimorar.api.enums.BrazilianState;
+import com.aprimorar.api.enums.BrazilianStates;
 import jakarta.persistence.*;
-import lombok.Getter;
 
-@Getter
 @Embeddable
 public class Address {
 
@@ -23,7 +21,7 @@ public class Address {
 
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
-    private BrazilianState state;
+    private BrazilianStates state;
 
     @Column(name = "zip", nullable = false)
     private String zip;
@@ -43,11 +41,19 @@ public class Address {
         this.street = street;
     }
 
+    public String getNumber() {
+        return number;
+    }
+
     public void setNumber(String number) {
         if (number == null || number.isBlank()) {
             throw new InvalidAddressException("O numero é obrigatório no Endereço");
         }
         this.number = number;
+    }
+
+    public String getDistrict() {
+        return district;
     }
 
     public void setDistrict(String district) {
@@ -57,6 +63,10 @@ public class Address {
         this.district = district;
     }
 
+    public String getCity() {
+        return city;
+    }
+
     public void setCity(String city) {
         if (city == null || city.isBlank()) {
             throw new InvalidAddressException("A cidade é obrigatória no Endereço");
@@ -64,15 +74,27 @@ public class Address {
         this.city = city;
     }
 
-    public void setState(BrazilianState state) {
+    public BrazilianStates getState() {
+        return state;
+    }
+
+    public void setState(BrazilianStates state) {
         if (state == null) {
             throw new InvalidAddressException("O estado é obrigatório no Endereço");
         }
         this.state = state;
     }
 
+    public String getComplement() {
+        return complement;
+    }
+
     public void setComplement(String complement) {
         this.complement = complement;
+    }
+
+    public String getZip() {
+        return zip;
     }
 
     public void setZip(String zip) {
@@ -81,5 +103,4 @@ public class Address {
         }
         this.zip = zip;
     }
-
 }

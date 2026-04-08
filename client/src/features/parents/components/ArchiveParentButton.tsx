@@ -1,12 +1,10 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
-
 import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
+import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
+import { useState } from "react";
 import {
-  useArchiveParentMutation,
-  useUnarchiveParentMutation,
-} from "../query/parentMutations";
+    useParentMutations
+} from "../hooks/parent-mutations";
 
 type ArchiveParentButtonProps = {
   parentId: string;
@@ -19,21 +17,31 @@ export const ArchiveParentButton = ({
 }: ArchiveParentButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const { mutate: unarchiveParent, isPending: isUnarchivingParent } =
-    useUnarchiveParentMutation();
-  const { mutate: archiveParent, isPending: isArchivingParent } =
-    useArchiveParentMutation();
+  const {
+    archiveParent: {
+      mutate: archiveParent,
+      isPending: isArchivingParent,
+    },
+    unarchiveParent: {
+      mutate: unarchiveParent,
+      isPending: isUnarchivingParent,
+    },
+  } = useParentMutations();
 
-  const handleArchive = () => {
-    archiveParent({ parentId });
-  };
-  const handleUnarchive = () => {
-    unarchiveParent({ parentId });
-  };
+  const isPending = isArchivingParent || isUnarchivingParent;
+  const actionLabel = isArchived ? "Desarquivar" : "Arquivar";
+  const Icon = isArchived ? ArchiveRestoreIcon : ArchiveIcon;
+  const variant = isArchived ? "outline" : "warning";
 
-  if (isUnarchivingParent || isArchivingParent) {
+  function handleConfirm() {
+    const action = isArchived ? unarchiveParent : archiveParent;
+    action({ parentId });
+    setShowConfirm(false);
+  }
+
+  if (isPending) {
     return (
-      <Button type="button" disabled variant="outline" className="sm:mr-auto">
+      <Button type="button" disabled variant="outline">
         <Loader2Icon className="h-4 w-4 animate-spin" />
         Processando...
       </Button>
@@ -44,40 +52,20 @@ export const ArchiveParentButton = ({
     return (
       <InlineConfirmAlert
         variant={isArchived ? "info" : "warning"}
-        message={`Deseja mesmo ${isArchived ? "Desarquivar" : "Arquivar"} o aluno?`}
-        confirmText={`Sim, ${isArchived ? "Desarquivar" : "Arquivar"} o aluno`}
+        message={`Deseja mesmo ${actionLabel.toLowerCase()} o responsável?`}
+        confirmText="Sim"
         cancelText="Cancelar"
-        onConfirm={isArchived ? handleUnarchive : handleArchive}
+        onConfirm={handleConfirm}
         onCancel={() => setShowConfirm(false)}
-        className="sm:mr-auto"
-        isLoading={isArchivingParent || isUnarchivingParent}
+        className="p-2"
       />
     );
   }
 
-  if (isArchived) {
-    return (
-      <Button
-        type="button"
-        onClick={() => setShowConfirm(true)}
-        variant="outline"
-        className="sm:mr-auto"
-      >
-        <ArchiveRestoreIcon className="h-4 w-4" />
-        Desarquivar
-      </Button>
-    );
-  }
-
   return (
-    <Button
-      type="button"
-      onClick={() => setShowConfirm(true)}
-      variant="warning"
-      className="sm:mr-auto"
-    >
-      <ArchiveIcon className="h-4 w-4" />
-      Arquivar
+    <Button type="button" onClick={() => setShowConfirm(true)} variant={variant}>
+      <Icon className="h-4 w-4" />
+      {actionLabel}
     </Button>
   );
 };

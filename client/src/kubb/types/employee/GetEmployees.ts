@@ -29,6 +29,10 @@ export type GetEmployeesQueryParams = {
    * @type string | undefined
    */
   search?: string;
+  /**
+   * @type boolean | undefined
+   */
+  archived?: boolean;
 };
 
 /**

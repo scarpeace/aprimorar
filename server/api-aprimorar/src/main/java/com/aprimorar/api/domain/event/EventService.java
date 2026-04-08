@@ -14,7 +14,8 @@ import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.shared.PageDTO;
-import java.time.LocalDateTime;
+
+import java.time.Instant;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,17 +133,17 @@ public class EventService {
         validateParticipantAvailability(
             student.getId(),
             employee.getId(),
-            eventMapper.toLocalDateTime(request.startDate()),
-            eventMapper.toLocalDateTime(request.endDate()),
+            request.startDate(),
+            request.endDate(),
             id
         );
 
         event.setTitle(request.title());
         event.setDescription(request.description());
-        event.setStartDate(eventMapper.toLocalDateTime(request.startDate()));
-        event.setEndDateTime(eventMapper.toLocalDateTime(request.endDate()));
-        event.setPrice(request.price());
+        event.setStartDate(request.startDate());
+        event.setEndDateTime(request.endDate());
         event.setPayment(request.payment());
+        event.setPrice(request.price());
         event.setContent(request.content());
         event.setStudent(student);
         event.setEmployee(employee);
@@ -184,8 +185,8 @@ public class EventService {
     private void validateParticipantAvailability(
         UUID studentId,
         UUID employeeId,
-        LocalDateTime startDate,
-        LocalDateTime endDate,
+        Instant startDate,
+        Instant endDate,
         UUID ignoredEventId
     ) {
         boolean studentConflict = eventRepo.studentHasConflictingEvent(studentId, startDate, endDate, ignoredEventId);

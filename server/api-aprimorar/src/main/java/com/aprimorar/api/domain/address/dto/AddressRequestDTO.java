@@ -1,6 +1,6 @@
 package com.aprimorar.api.domain.address.dto;
 
-import com.aprimorar.api.enums.BrazilianState;
+import com.aprimorar.api.enums.BrazilianStates;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +25,7 @@ public record AddressRequestDTO(
 
         @NotNull(message = "Estado do endereço é obrigatório")
         @Schema(description = "Estado do endereço")
-        BrazilianState state,
+        BrazilianStates state,
 
         @NotBlank(message = "O CEP do endereço é obrigatório")
         @Schema(description = "CEP do endereço", nullable = false, minLength = 8, maxLength = 8)

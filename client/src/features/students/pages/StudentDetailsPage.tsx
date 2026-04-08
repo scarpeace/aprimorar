@@ -1,19 +1,23 @@
+import { ButtonLink } from "@/components/ui/button";
 import { Collapse } from "@/components/ui/collapse";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { PageHeader } from "@/components/ui/page-header";
-import { Pagination } from "@/components/ui/pagination";
-import { AddressSummarySection } from "@/features/address/AddressSumarySection";
+import { SectionCard } from "@/components/ui/section-card";
+import { SummaryItem } from "@/components/ui/summary-item";
+import { AddressDetails } from "@/features/address/AddressDetails";
 import { EventsTable } from "@/features/events/components/EventsTable";
-import { useEventsByStudent } from "@/features/events/query/eventQueries";
-import { GraduationCap } from "lucide-react";
-import { useState } from "react";
+import { useGetEventsByStudent, useGetParentById, useGetStudentById } from "@/kubb";
+import {
+  formatCpf,
+  formatDateShortYear,
+  formatPhone,
+} from "@/lib/utils/formatter";
+import { Edit, GraduationCap } from "lucide-react";
+import { useState, type ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
 import { DeleteStudentButton } from "../components/DeleteStudentButton";
-import { EditStudentButton } from "../components/EditStudentButton";
-import { StudentDetails } from "../components/StudentDetails";
-import { useStudentByIdQuery } from "../hooks/use-students-query";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,26 +25,34 @@ export function StudentDetailsPage() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const {
-    data: student,
-    isError: isStudentError,
     isPending: isStudentPending,
+    data: student,
     error: studentError,
-  } = useStudentByIdQuery({ studentId });
+  } = useGetStudentById(studentId);
+
+
+  const studentParent = useGetParentById(student?.parentId || "")
+
   const {
-    data: pagedStudentEvents,
     isPending: isStudentEventsPending,
+    data: studentEvents,
     error: studentEventsError,
-  } = useEventsByStudent(studentId);
+  } = useGetEventsByStudent(studentId);
 
-  const { content: studentEvents, ...pageMetadata } = pagedStudentEvents || {};
+  const isStudentLoading = isStudentPending || !student;
+  const hasStudentError = !!studentError;
 
-  if (isStudentError) {
-    return <ErrorCard title="Erro ao carregar aluno" error={studentError} />;
-  }
-
-  if (isStudentPending) {
-    return <LoadingCard title="Carregando dados do aluno" />;
-  }
+  const summaryItems: Array<{ label: string; value: ReactNode }> = student ? [
+    { label: "Nome completo", value: student.name },
+    { label: "CPF", value: formatCpf(student.cpf) },
+    { label: "E-mail", value: student.email },
+    { label: "Idade", value: student.age },
+    { label: "Contato", value: formatPhone(student.contact) },
+    {label: "Data de matrícula",value: formatDateShortYear(student.createdAt)},
+    { label: "Escola", value: student.school },
+    { label: "Status", value: student.archivedAt ? "Arquivado" : "Ativo" },
+    { label: "Responsável", value: studentParent.data?.name }
+  ] : [];
 
   return (
     <>
@@ -48,36 +60,58 @@ export function StudentDetailsPage() {
         description="Veja e gerencie as informações do aluno"
         title="Detalhes do aluno"
         Icon={GraduationCap}
-      >
-        <div className="flex flex-row ml-auto mt-auto gap-3">
-          <EditStudentButton studentId={studentId} />
-          <ArchiveStudentButton
-            studentId={studentId}
-            isArchived={!!student.archivedAt}
-          />
-          <DeleteStudentButton studentId={studentId} />
-        </div>
-      </PageHeader>
+        backLink="/students"
+      />
 
-      <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
-        <StudentDetails student={student} />
-        <Collapse title={"Endereço"}>
-          <AddressSummarySection address={student.address} />
-        </Collapse>
+      {hasStudentError ? (
+        <ErrorCard
+          title="Erro ao carregar detalhes do aluno"
+          error={studentError}
+        />
+      ) : isStudentLoading ? (
+        <LoadingCard title="Carregando detalhes do aluno" />
+      ) : (
+        <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
+          <SectionCard
+            title="Aluno"
+            description="Dados do aluno"
+            headerActions={
+              <>
+                <ButtonLink to={`/students/edit/${student.id}`} variant="primary">
+                  <Edit className="h-4 w-4" />
+                  Editar
+                </ButtonLink>
 
-        <EventsTable
-          events={studentEvents}
-          isPending={isStudentEventsPending}
-          error={studentEventsError}
-        >
-          <Pagination
-            paginationData={pageMetadata.page}
+                <ArchiveStudentButton studentId={student.id} isArchived={!!student.archivedAt} />
+                <DeleteStudentButton studentId={student.id} />
+              </>
+            }
+          >
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {summaryItems.map((item) => (
+                <SummaryItem
+                  key={item.label}
+                  label={item.label}
+                  value={item.value}
+                />
+              ))}
+            </div>
+
+            <Collapse title={"Endereço"} className="mt-3 shadow-xl">
+              <AddressDetails address={student.address} />
+            </Collapse>
+          </SectionCard>
+
+          <EventsTable
+            eventsPage={studentEvents}
+            isPending={isStudentEventsPending}
+            error={studentEventsError}
             currentPage={currentPage}
-            onPageChange={setCurrentPage}
-            currentSize={studentEvents?.length}
+                onPageChange={setCurrentPage}
+                description={"Eventos vinculados ao aluno"}
           />
-        </EventsTable>
-      </div>
+        </div>
+      )}
     </>
   );
 }

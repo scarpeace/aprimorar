@@ -13,23 +13,58 @@
   --app-border: var(--color-base-300);
 
   --app-text: var(--color-base-content);
-  --app-text-muted: color-mix(in srgb, var(--color-base-content) 72%, transparent);
-  --app-text-subtle: color-mix(in srgb, var(--color-base-content) 58%, transparent);
+  --app-text-muted: color-mix(
+    in srgb,
+    var(--color-base-content) 72%,
+    transparent
+  );
+  --app-text-subtle: color-mix(
+    in srgb,
+    var(--color-base-content) 58%,
+    transparent
+  );
 
   --app-primary: var(--color-primary);
   --app-success: var(--color-success);
 
-  --app-overlay-primary-soft: color-mix(in srgb, var(--app-primary) 13%, transparent);
-  --app-overlay-success-soft: color-mix(in srgb, var(--app-success) 11%, transparent);
-  --app-overlay-primary-strong: color-mix(in srgb, var(--app-primary) 26%, transparent);
-  --app-overlay-surface-soft: color-mix(in srgb, var(--app-surface) 88%, transparent);
-  --app-overlay-surface-alt: color-mix(in srgb, var(--app-surface-alt) 95%, transparent);
-  --app-overlay-highlight: color-mix(in srgb, var(--app-surface) 70%, transparent);
+  --app-overlay-primary-soft: color-mix(
+    in srgb,
+    var(--app-primary) 13%,
+    transparent
+  );
+  --app-overlay-success-soft: color-mix(
+    in srgb,
+    var(--app-success) 11%,
+    transparent
+  );
+  --app-overlay-primary-strong: color-mix(
+    in srgb,
+    var(--app-primary) 26%,
+    transparent
+  );
+  --app-overlay-surface-soft: color-mix(
+    in srgb,
+    var(--app-surface) 88%,
+    transparent
+  );
+  --app-overlay-surface-alt: color-mix(
+    in srgb,
+    var(--app-surface-alt) 95%,
+    transparent
+  );
+  --app-overlay-highlight: color-mix(
+    in srgb,
+    var(--app-surface) 70%,
+    transparent
+  );
   --app-selection: color-mix(in srgb, var(--app-primary) 18%, transparent);
 
-  --app-elevation-soft: 0 14px 34px -26px color-mix(in srgb, var(--app-text) 30%, transparent);
-  --app-elevation-strong: 0 22px 46px -30px color-mix(in srgb, var(--app-text) 36%, transparent);
-  --app-elevation-inset: inset 0 1px 0 color-mix(in srgb, var(--app-surface) 80%, transparent);
+  --app-elevation-soft: 0 14px 34px -26px
+    color-mix(in srgb, var(--app-text) 30%, transparent);
+  --app-elevation-strong: 0 22px 46px -30px
+    color-mix(in srgb, var(--app-text) 36%, transparent);
+  --app-elevation-inset: inset 0 1px 0
+    color-mix(in srgb, var(--app-surface) 80%, transparent);
 }
 
 @keyframes fade-up {
@@ -54,8 +89,16 @@
     color: var(--app-text);
     font-family: "Sora", "Segoe UI", "Helvetica Neue", sans-serif;
     background:
-      radial-gradient(1200px 420px at 10% -5%, var(--app-overlay-primary-soft), transparent 55%),
-      radial-gradient(980px 340px at 95% 3%, var(--app-overlay-success-soft), transparent 50%),
+      radial-gradient(
+        1200px 420px at 10% -5%,
+        var(--app-overlay-primary-soft),
+        transparent 55%
+      ),
+      radial-gradient(
+        980px 340px at 95% 3%,
+        var(--app-overlay-success-soft),
+        transparent 50%
+      ),
       var(--app-bg);
     background-attachment: fixed;
   }
@@ -98,14 +141,6 @@
     border-color: var(--app-border);
   }
 
-  .app-th {
-    @apply text-left font-semibold text-base-content/80;
-  }
-
-  .app-th-center {
-    @apply text-center font-semibold text-base-content/80;
-  }
-
   .app-inline-loading {
     @apply flex items-center gap-2 text-sm;
     color: var(--app-text-muted);
@@ -118,13 +153,5 @@
   .app-kpi-value {
     @apply text-2xl font-bold;
     color: var(--app-text);
-  }
-
-  .app-table-wrap {
-    border-radius: 1rem;
-    border: 1px solid var(--app-border);
-    background: var(--app-surface);
-    overflow: hidden;
-    box-shadow: var(--app-elevation-soft);
   }
 }

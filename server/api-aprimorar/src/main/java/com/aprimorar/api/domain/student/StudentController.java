@@ -1,9 +1,8 @@
 package com.aprimorar.api.domain.student;
 
 import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
-import com.aprimorar.api.domain.student.dto.StudentCreateDTO;
+import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.dto.StudentUpdateDTO;
 import com.aprimorar.api.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,7 +42,7 @@ public class StudentController {
     @PostMapping
     @Operation(operationId = "createStudent", description = "Cria um novo aluno com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso.")
-    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentCreateDTO createStudentDto) {
+    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody @Valid StudentRequestDTO createStudentDto) {
         StudentResponseDTO response = studentService.createStudent(createStudentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -60,20 +59,23 @@ public class StudentController {
         return ResponseEntity.ok(students);
     }
 
-    @GetMapping("/student/options")
+    @GetMapping("/parent/{parentId}")
+    @Operation(operationId = "getStudentsByParent", description = "Retorna uma lista de alunos pelo ID do pai.")
+    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
+    public ResponseEntity<PageDTO<StudentResponseDTO>> getStudentsByParent(
+        @PathVariable UUID parentId,
+        @ParameterObject Pageable pageable
+    ) {
+        PageDTO<StudentResponseDTO> options = studentService.getStudentsByParent(parentId, pageable);
+        return ResponseEntity.ok(options);
+    }
+
+    @GetMapping("/options")
     @Operation(operationId = "getStudentsOptions", description = "Retorna uma lista de opções de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
     public ResponseEntity<List<StudentOptionsDTO>> getStudentOptions() {
         List<StudentOptionsDTO> options = studentService.getStudentOptions();
         return ResponseEntity.ok(options);
-    }
-
-    @GetMapping("/students/{parentId}")
-    @Operation(operationId = "getStudentsByParent", description = "Retorna uma lista de alunos por ID do pai.")
-    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
-    public ResponseEntity<List<StudentResponseDTO>> getStudentsByParent(@PathVariable UUID parentId) {
-        List<StudentResponseDTO> students = studentService.getStudentsByParent(parentId);
-        return ResponseEntity.ok(students);
     }
 
     @GetMapping("/{studentId}")
@@ -86,13 +88,13 @@ public class StudentController {
 
     @PutMapping("/{studentId}")
     @Operation(operationId = "updateStudent", description = "Atualiza um aluno por ID.")
-    @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso.")
-    public ResponseEntity<StudentResponseDTO> updateStudent(
+    @ApiResponse(responseCode = "204", description = "Aluno atualizado com sucesso.")
+    public ResponseEntity<Void> updateStudent(
         @PathVariable UUID studentId,
-        @RequestBody @Valid StudentUpdateDTO studentUpdateDTO
+        @RequestBody @Valid StudentRequestDTO dto
     ) {
-        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, studentUpdateDTO);
-        return ResponseEntity.ok(updatedStudent);
+        studentService.updateStudent(dto, studentId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{studentId}")

@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { StudentResponseDTO } from "../StudentResponseDTO.ts";
+import type { PageDTOStudentResponseDTO } from "../PageDTOStudentResponseDTO.ts";
 
 export type GetStudentsByParentPathParams = {
   /**
@@ -12,15 +12,38 @@ export type GetStudentsByParentPathParams = {
   parentId: string;
 };
 
+export type GetStudentsByParentQueryParams = {
+  /**
+   * @description Zero-based page index (0..N)
+   * @minLength 0
+   * @default 0
+   * @type integer | undefined
+   */
+  page?: number;
+  /**
+   * @description The size of the page to be returned
+   * @minLength 1
+   * @default 20
+   * @type integer | undefined
+   */
+  size?: number;
+  /**
+   * @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+   * @type array | undefined
+   */
+  sort?: string[];
+};
+
 /**
  * @description Lista de alunos retornada com sucesso.
  */
-export type GetStudentsByParent200 = StudentResponseDTO[];
+export type GetStudentsByParent200 = PageDTOStudentResponseDTO;
 
 export type GetStudentsByParentQueryResponse = GetStudentsByParent200;
 
 export type GetStudentsByParentQuery = {
   Response: GetStudentsByParent200;
   PathParams: GetStudentsByParentPathParams;
+  QueryParams: GetStudentsByParentQueryParams;
   Errors: any;
 };

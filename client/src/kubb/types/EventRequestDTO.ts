@@ -32,7 +32,7 @@ export type EventRequestDTO = {
    */
   description?: string;
   /**
-   * @description Conteúdo do evento (Atendimento, Mentoria, etc...)
+   * @description Tipo de conteúdo ou categoria do atendimento/evento
    * @type string
    */
   content: EventRequestDTOContentEnumKey;

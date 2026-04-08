@@ -1,10 +1,14 @@
 package com.aprimorar.api.domain.employee.dto;
 
 import java.util.UUID;
-import jakarta.validation.constraints.NotNull;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Formato de payload para obter opções de colaboradores")
 public record EmployeeOptionsDTO(
-        @NotNull UUID id,
-        @NotNull String name
+        @Schema(description = "ID do funcionário")
+        UUID id,
+        @Schema(description = "Nome do funcionário")
+        String name
 ) {
 }

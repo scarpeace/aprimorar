@@ -9,7 +9,7 @@ import com.aprimorar.api.shared.BaseEntity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 // TODO: Adicionar campos do google calendar para a implementação
@@ -17,6 +17,7 @@ import java.util.UUID;
 @Table(name = "tb_events")
 public class Event extends BaseEntity {
 
+    //TODO: Eu acho que esse titulo nao é necessario sem o google calendar
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -24,10 +25,10 @@ public class Event extends BaseEntity {
     private String description;
 
     @Column(name = "start_date_time", nullable = false)
-    private LocalDateTime startDate;
+    private Instant startDate;
 
     @Column(name = "end_date_time", nullable = false)
-    private LocalDateTime endDate;
+    private Instant endDate;
 
     @Column(name = "price", precision = 19, scale = 2, nullable = false)
     private BigDecimal price;
@@ -88,22 +89,22 @@ public class Event extends BaseEntity {
         this.description = description;
     }
 
-    public LocalDateTime getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(Instant startDate) {
         if (startDate == null) {
             throw new InvalidEventException("Data de início do evento é obrigatório");
         }
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDateTime() {
+    public Instant getEndDateTime() {
         return endDate;
     }
 
-    public void setEndDateTime(LocalDateTime endDate) {
+    public void setEndDateTime(Instant endDate) {
         if (endDate == null) {
             throw new InvalidEventException("Data de término do evento é obrigatório");
         }
@@ -112,6 +113,17 @@ public class Event extends BaseEntity {
         }
 
         this.endDate = endDate;
+    }
+
+   public BigDecimal getPayment() {
+        return payment;
+    }
+
+    public void setPayment(BigDecimal payment) {
+        if (payment == null) {
+            throw new InvalidEventException("Pagamento do evento é obrigatório");
+        }
+        this.payment = payment;
     }
 
     public BigDecimal getPrice() {
@@ -131,16 +143,7 @@ public class Event extends BaseEntity {
         this.price = price;
     }
 
-    public BigDecimal getPayment() {
-        return payment;
-    }
 
-    public void setPayment(BigDecimal payment) {
-        if (payment == null) {
-            throw new InvalidEventException("Pagamento do evento é obrigatório");
-        }
-        this.payment = payment;
-    }
 
     public EventContent getContent() {
         return content;
@@ -177,7 +180,7 @@ public class Event extends BaseEntity {
 
     public void validateForCreation() {
         validateCommonRules();
-        if (this.endDate != null && this.endDate.isBefore(LocalDateTime.now())) {
+        if (this.endDate != null && this.endDate.isBefore(Instant.now())) {
             throw new InvalidEventException("Data de fim do evento não pode estar no passado");
         }
     }
@@ -191,15 +194,15 @@ public class Event extends BaseEntity {
         setDescription(this.description);
         setStartDate(this.startDate);
         setEndDateTime(this.endDate);
-        setPrice(this.price);
         setPayment(this.payment);
+        setPrice(this.price);
         setContent(this.content);
         setStudent(this.student);
         setEmployee(this.employee);
     }
 
     public void validateEditWindow() {
-        if (this.endDate != null && LocalDateTime.now().isAfter(this.endDate.plusDays(20))) {
+        if (this.endDate != null && Instant.now().isAfter(this.endDate.plus(20, ChronoUnit.DAYS))) {
             throw new NotAllowedToUpdateEventException(
                 "A janela de 20 dias para editar as informações do evento encerrou"
             );

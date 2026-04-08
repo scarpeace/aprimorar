@@ -1,7 +1,7 @@
 package com.aprimorar.api.domain.event.repository;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,8 +50,8 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
               AND e.employee.id = COALESCE(:employeeId, e.employee.id)
             """)
     Page<Event> findAllWithFilter(
-            @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end,
+            @Param("start") Instant start,
+            @Param("end") Instant end,
             @Param("studentId") UUID studentId,
             @Param("employeeId") UUID employeeId,
             Pageable pageable
@@ -67,8 +67,8 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             """)
     boolean studentHasConflictingEvent(
             @Param("studentId") UUID studentId,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate,
+            @Param("startDate") Instant startDate,
+            @Param("endDate") Instant endDate,
             @Param("ignoredEventId") UUID ignoredEventId
     );
 
@@ -82,12 +82,12 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             """)
     boolean employeeHasConflictingEvent(
             @Param("employeeId") UUID employeeId,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate,
+            @Param("startDate") Instant startDate,
+            @Param("endDate") Instant endDate,
             @Param("ignoredEventId") UUID ignoredEventId
     );
 
-    long countByStartDateGreaterThanEqualAndStartDateLessThan(LocalDateTime startDate, LocalDateTime endDate);
+    long countByStartDateGreaterThanEqualAndStartDateLessThan(Instant startDate, Instant endDate);
 
     @Query("""
             select count(distinct e.student.id)
@@ -97,8 +97,8 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
               and e.student.id <> :excludedStudentId
             """)
     long countDistinctStudentsInPeriodExcludingStudent(
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate,
+            @Param("startDate") Instant startDate,
+            @Param("endDate") Instant endDate,
             @Param("excludedStudentId") UUID excludedStudentId
     );
 
@@ -109,8 +109,8 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
               and e.startDate < :endDate
             """)
     BigDecimal sumPriceInPeriod(
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate
+            @Param("startDate") Instant startDate,
+            @Param("endDate") Instant endDate
     );
 
     @Query("""
@@ -120,8 +120,8 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
               and e.startDate < :endDate
             """)
     BigDecimal sumPaymentInPeriod(
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate
+            @Param("startDate") Instant startDate,
+            @Param("endDate") Instant endDate
     );
 
     @Query("""
@@ -133,8 +133,7 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             order by count(e) desc
             """)
     List<EventContentCount> findContentDistributionInPeriod(
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate
+            @Param("startDate") Instant startDate,
+            @Param("endDate") Instant endDate
     );
-
 }

@@ -32,6 +32,7 @@ export type {
   GetStudentsByParent200,
   GetStudentsByParentPathParams,
   GetStudentsByParentQuery,
+  GetStudentsByParentQueryParams,
   GetStudentsByParentQueryResponse,
 } from "./GetStudentsByParent.ts";
 export type {
@@ -46,7 +47,7 @@ export type {
   UnarchiveStudentPathParams,
 } from "./UnarchiveStudent.ts";
 export type {
-  UpdateStudent200,
+  UpdateStudent204,
   UpdateStudentMutation,
   UpdateStudentMutationRequest,
   UpdateStudentMutationResponse,

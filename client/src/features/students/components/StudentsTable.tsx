@@ -1,55 +1,48 @@
+import { ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type { StudentResponseDTO } from "@/kubb";
+import { Pagination } from "@/components/ui/pagination";
+import type { PageDTOStudentResponseDTO } from "@/kubb";
 import {
   formatCpf,
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
 import type { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
-
-type StudentsTableStateProps = {
-  isPending: boolean;
-  error: unknown;
-};
-
-export function StudentsTableState({
-  isPending,
-  error,
-}: Readonly<StudentsTableStateProps>) {
-  if (isPending) return <LoadingSpinner text="Carregando Alunos..." />;
-
-  if (error)
-    return (
-      <ErrorCard
-        title="Não foi possível carregar a listagem de alunos"
-        error={error}
-      />
-    );
-}
 
 type StudentsTableProps = {
-  students?: StudentResponseDTO[];
+  students?: PageDTOStudentResponseDTO;
   children?: ReactNode;
+  onPageChange: (page: number) => void;
+  currentPage: number;
   isPending: boolean;
   error: unknown;
 };
 
 export function StudentsTable({
   students,
-  children,
+  onPageChange,
+  currentPage,
   isPending,
   error,
 }: Readonly<StudentsTableProps>) {
-  const navigate = useNavigate();
+  if (isPending) {
+    return <LoadingSpinner text="Carregando Alunos..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorCard
+        title="Não foi possível carregar a listagem de Alunos"
+        error={error}
+      />
+    );
+  }
 
   return (
     <>
-      <StudentsTableState isPending={isPending} error={error} />
-      <div>
-        <table className="table table-zebra bg-base-100 overflow-x-auto w-full p-3 rounded-xl animate-[fade-up_280ms_ease-out_both]">
-          <thead className="bg-base-300 rounded">
+        <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
+          <thead className="bg-base-300 ">
             <tr>
               <th className="text-left font-semibold text-base-content/80">
                 Nome
@@ -69,17 +62,18 @@ export function StudentsTable({
               <th className="text-left font-semibold text-base-content/80">
                 Matricula
               </th>
+              {/*TODO: Trocar esse status por uma bolinha de status e mover as actions pra dentro da row*/}
               <th className="text-left font-semibold text-base-content/80">
                 Status
               </th>
-              <th className="text-left font-semibold text-base-content/80">
+              <th className="text-center font-semibold text-base-content/80">
                 Ações
               </th>
             </tr>
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {students?.map((student) => (
+            {students?.content.map((student) => (
               <tr
                 key={student.id}
                 className="transition-colors hover:bg-base-200/70"
@@ -92,23 +86,26 @@ export function StudentsTable({
 
                 <td>{student.school}</td>
 
-                <td>{formatDateShortYear(student.createdAt)}</td>
+                <td>{formatDateShortYear(student.createdAt ?? "")}</td>
                 <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
 
-                <td>
-                  <span
-                    className="btn m-2 btn-secondary"
-                    onClick={() => navigate(`/students/${student.id}`)}
+                <td className="text-center">
+                  <ButtonLink
+                    className="btn btn-outline btn-info"
+                    to={`/employees/${student.id}`}
                   >
                     Detalhes
-                  </span>
+                  </ButtonLink>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        {children}
-      </div>
+      <Pagination
+        paginationData={students}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
+      />
     </>
   );
 }

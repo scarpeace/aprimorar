@@ -12,10 +12,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aprimorar.api.domain.parent.dto.ParentCreateDTO;
 import com.aprimorar.api.domain.parent.dto.ParentOptionsDTO;
+import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
-import com.aprimorar.api.domain.parent.dto.ParentUpdateDTO;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
@@ -39,30 +38,32 @@ public class ParentService {
         this.studentRepo = studentRepo;
     }
 
-    /* ----- Query Methods ----- */
+@Transactional(readOnly = true)
+    public PageDTO<ParentResponseDTO> getParents(Pageable pageable, String search, boolean archived) {
+
+        Specification<Parent> spec = Specification.allOf(
+            ParentSpecifications.isNotGhost(),
+            Boolean.TRUE.equals(archived) ? ParentSpecifications.archived() : ParentSpecifications.notArchived()
+        );
+
+        if (search != null && !search.trim().isEmpty()) {
+            spec = spec.and(ParentSpecifications.searchContainsIgnoreCase(search.trim()));
+        }
+        Page<Parent> parentsPage = parentRepo.findAll(spec, pageable);
+        Page<ParentResponseDTO> parentsDtoPage = parentsPage.map(parentMapper::convertToDto);
+
+        log.info("Consulta de responsáveis finalizada, {} registros encontrados.", parentsPage.getTotalElements());
+        return new PageDTO<>(parentsDtoPage);
+    }
+
     @Transactional(readOnly = true)
     public List<ParentOptionsDTO> getParentOptions() {
-        List<Parent> list = parentRepo.findByArchivedAtIsNull();
+        List<Parent> list = parentRepo.findByArchivedAtIsNullOrderByNameAsc();
         log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
         return list
             .stream()
             .map(p -> new ParentOptionsDTO(p.getId(), p.getName()))
             .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public PageDTO<ParentResponseDTO> getParents(Pageable pageable, String search) {
-        Page<Parent> parentsPage;
-        if (search != null && !search.trim().isEmpty()) {
-            Specification<Parent> spec = ParentSpecifications.searchContainsIgnoreCase(search.trim());
-            parentsPage = parentRepo.findAll(spec, pageable);
-        } else {
-            parentsPage = parentRepo.findAll(pageable);
-        }
-        Page<ParentResponseDTO> parentsDtoPage = parentsPage.map(parentMapper::convertToDto);
-
-        log.info("Consulta de responsáveis finalizada, {} registros encontrados.", parentsPage.getTotalElements());
-        return new PageDTO<>(parentsDtoPage);
     }
 
     @Transactional(readOnly = true)
@@ -74,8 +75,8 @@ public class ParentService {
 
     /* ----- Command Methods ----- */
     @Transactional
-    public ParentResponseDTO createParent(ParentCreateDTO request) {
-        Parent parent = parentMapper.convertToEntityForCreate(request);
+    public ParentResponseDTO createParent(ParentRequestDTO request) {
+        Parent parent = parentMapper.convertToEntity(request);
 
         ensureParentUniqueness(parent);
         Parent savedParent = parentRepo.save(parent);
@@ -85,9 +86,9 @@ public class ParentService {
     }
 
     @Transactional
-    public ParentResponseDTO updateParent(UUID parentId, ParentUpdateDTO request) {
+    public ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO request) {
         Parent parent = findParentOrThrow(parentId);
-        Parent updatedParentData = parentMapper.convertToEntityForUpdate(request);
+        Parent updatedParentData = parentMapper.convertToEntity(request);
         ensureParentUniquenessForUpdate(updatedParentData, parentId);
 
         parent.setName(updatedParentData.getName());
@@ -130,7 +131,7 @@ public class ParentService {
     private void ensureParentHasNoStudents(UUID parentId) {
         if (studentRepo.existsByParentId(parentId)) {
             throw new ParentHasLinkedStudentsException(
-                "Não é possível excluir um responsável com alunos vinculados. Primeiro, remova o vínculo ou exclua os alunos."
+                "Não é possível excluir um responsável com alunos vinculados. Primeiro, exclua os alunos vinculados e tente novamente."
             );
         }
     }
@@ -149,5 +150,14 @@ public class ParentService {
         if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parentId)) {
             throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
+    }
+
+
+
+    public ParentResponseDTO update(ParentRequestDTO dto, UUID parentId) {
+        Parent parent = parentMapper.convertToEntity(dto);
+        ensureParentUniquenessForUpdate(parent, parentId);
+        parent = parentRepo.save(parent);
+        return parentMapper.convertToDto(parent);
     }
 }

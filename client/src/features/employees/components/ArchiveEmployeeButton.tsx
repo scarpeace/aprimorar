@@ -1,33 +1,38 @@
 import { Button } from "@/components/ui/button";
+import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
 import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
-import {
-  useArchiveEmployee,
-  useUnarchiveEmployee,
-} from "../query/useEmployeeMutations";
+import { useState } from "react";
+import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
+
+type ArchiveEmployeeButtonProps = {
+  employeeId: string;
+  isArchived: boolean | null;
+};
 
 export const ArchiveEmployeeButton = ({
   employeeId,
   isArchived,
-}: {
-  employeeId: string;
-  isArchived: boolean | null;
-}) => {
-  const { mutate: unarchiveEmployee, isPending: isUnarchiving } =
-    useUnarchiveEmployee();
-  const { mutate: archiveEmployee, isPending: isArchiving } =
-    useArchiveEmployee();
+}: ArchiveEmployeeButtonProps) => {
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const isLoading = isArchiving || isUnarchiving;
+  const {
+    archiveEmployee: { mutate: archiveEmployee, isPending: isArchiving },
+    unarchiveEmployee: { mutate: unarchiveEmployee, isPending: isUnarchiving },
+  } = useEmployeeMutations();
 
-  const handleArchive = () => {
-    archiveEmployee(employeeId);
-  };
+  const archived = !!isArchived;
+  const isPending = isArchiving || isUnarchiving;
+  const actionLabel = archived ? "Desarquivar" : "Arquivar";
+  const Icon = archived ? ArchiveRestoreIcon : ArchiveIcon;
+  const variant = archived ? "outline" : "warning";
 
-  const handleUnarchive = () => {
-    unarchiveEmployee(employeeId);
-  };
+  function handleConfirm() {
+    const action = archived ? unarchiveEmployee : archiveEmployee;
+    action({ employeeId });
+    setShowConfirm(false);
+  }
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <Button type="button" disabled variant="outline" className="sm:mr-auto">
         <Loader2Icon className="h-4 w-4 animate-spin" />
@@ -36,29 +41,29 @@ export const ArchiveEmployeeButton = ({
     );
   }
 
-  if (isArchived) {
+  if (showConfirm) {
     return (
-      <Button
-        type="button"
-        onClick={handleUnarchive}
-        variant="outline"
-        className="sm:mr-auto"
-      >
-        <ArchiveRestoreIcon className="h-4 w-4" />
-        Desarquivar
-      </Button>
+      <InlineConfirmAlert
+        variant={archived ? "info" : "warning"}
+        message={`Deseja mesmo ${actionLabel.toLowerCase()} o colaborador?`}
+        confirmText="Sim"
+        cancelText="Cancelar"
+        onConfirm={handleConfirm}
+        onCancel={() => setShowConfirm(false)}
+        className="p-2 sm:mr-auto"
+      />
     );
   }
 
   return (
     <Button
       type="button"
-      onClick={handleArchive}
-      variant="warning"
+      onClick={() => setShowConfirm(true)}
+      variant={variant}
       className="sm:mr-auto"
     >
-      <ArchiveIcon className="h-4 w-4" />
-      Arquivar
+      <Icon className="h-4 w-4" />
+      {actionLabel}
     </Button>
   );
 };

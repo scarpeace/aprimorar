@@ -3,6 +3,9 @@ package com.aprimorar.api.domain.event.dto;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
+
+import com.aprimorar.api.enums.EventContent;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +26,7 @@ public record EventResponseDTO(
 
     @NotNull
     @Schema(nullable = false, description = "Conteúdo do evento (Atendimento, Mentoria, etc...)", example = "Mentoria")
-    String content,
+    EventContent content,
 
     @NotNull
     @Schema(nullable = false, description = "Data/Horário de início do evento", example = "2023-11-20T14:00:00Z")
@@ -58,10 +61,10 @@ public record EventResponseDTO(
     String employeeName,
 
     @NotNull
-    @Schema(nullable = false, description = "Data de criação do evento", example = "2023-01-01T00:00:00Z")
+    @Schema(nullable = false, description = "Data de criação do evento", example = "2024-03-10T15:33:42Z`")
     Instant createdAt,
 
     @Nullable
-    @Schema(nullable = true, description = "Data de atualização do evento", example = "2023-01-02T00:00:00Z")
+    @Schema(nullable = true, description = "Data de atualização do evento", example = "2024-03-10T15:33:42Z`")
     Instant updatedAt
 ) {}

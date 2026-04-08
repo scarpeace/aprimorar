@@ -1,9 +1,14 @@
-import type { PageMetadata } from "@/kubb";
+import { Button } from "./button";
 
+//TODO: voltar aqui depois e ver esse content unknown
 export type PaginationProps = {
-  paginationData?: PageMetadata
+  paginationData?: {
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    content:unknown[]
+  };
   currentPage: number;
-  currentSize?: number;
   onPageChange: (page: number) => void;
 };
 
@@ -11,34 +16,37 @@ export function Pagination({
   currentPage,
   onPageChange,
   paginationData,
-  currentSize,
 }: Readonly<PaginationProps>) {
 
   if (!paginationData) return null;
 
   return (
-    <div className="mt-4 flex items-center justify-between px-3">
+    <div className="mt-4 flex items-center justify-between px-3 ">
       <p className="text-sm app-text-muted hidden lg:block">
-        Mostrando {currentSize} de {paginationData.totalElements}
+        Mostrando {paginationData.content.length} de {paginationData.totalElements}
       </p>
-      <div className="join mx-auto lg:mx-0 mb-3">
-        <button
+      <div className="join mx-auto lg:mx-0 mb-3 gap-2">
+        <Button
+          variant="outlineSecondary"
           className="join-item btn btn-sm"
           disabled={currentPage === 0}
           onClick={() => onPageChange(currentPage - 1)}
         >
           Anterior
-        </button>
-        <button className="btn btn-sm join-item no-animation cursor-default">
+        </Button>
+        <Button
+          variant="ghost"
+          className="btn btn-sm join-item no-animation cursor-default">
           Página {currentPage + 1} de {paginationData.totalPages}
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="outlineSecondary"
           className="btn btn-sm join-item"
           disabled={!paginationData.totalPages || currentPage >= paginationData.totalPages - 1}
           onClick={() => onPageChange(currentPage + 1)}
         >
           Próxima
-        </button>
+        </Button>
       </div>
     </div>
   );

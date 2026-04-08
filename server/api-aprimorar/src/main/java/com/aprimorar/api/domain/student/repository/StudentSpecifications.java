@@ -10,8 +10,7 @@ public final class StudentSpecifications {
 
     private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
-    private StudentSpecifications() {
-    }
+    private StudentSpecifications() {}
 
     public static Specification<Student> nameContainsIgnoreCase(String name) {
         return (root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
@@ -28,11 +27,15 @@ public final class StudentSpecifications {
         };
     }
 
+    public static Specification<Student> belongsToParent(UUID parentId) {
+        return (root, query, cb) -> cb.equal(root.get("parentId"), parentId);
+    }
+
     public static Specification<Student> notArchived() {
         return (root, query, cb) -> cb.isNull(root.get("archivedAt"));
     }
 
- public static Specification<Student> archived() {
+    public static Specification<Student> archived() {
         return (root, query, cb) -> cb.isNotNull(root.get("archivedAt"));
     }
 

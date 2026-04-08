@@ -1,7 +1,6 @@
 import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { PageHeader } from "@/components/ui/page-header";
-import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetStudents } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
@@ -11,18 +10,21 @@ import { StudentsTable } from "../components/StudentsTable";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [currentPage, setCurrentPage] = useState(0);
   const [showArchived, setShowArchived] = useState(false);
 
-  const { data: studentsResponse, isPending, error, } = useGetStudents({
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const params = {
     page: currentPage,
-    size: 8,
     search: debouncedSearchTerm,
     archived: showArchived,
-  });
+  };
 
-  const { content: students, ...pageMetadata } = studentsResponse || {}
+  const {
+    isPending: isStudentsPending,
+    data: students,
+    error: studentsError,
+  } = useGetStudents(params);
 
   return (
     <>
@@ -30,10 +32,12 @@ export function StudentsPage() {
         description="Gerencie cadastros e matrículas."
         title="Alunos"
         Icon={GraduationCap}
-      >
-        <div className="flex items-center ml-auto gap-6">
+        backLink="/dashboard"
+      />
+      <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-row">
           <ListSearchInput
-            className="w-80 sm:w-96"
+            className="grow sm:mr-3"
             placeholder="Buscar aluno por nome, email ou escola"
             ariaLabel="Buscar aluno"
             value={searchTerm}
@@ -45,23 +49,23 @@ export function StudentsPage() {
             toggled={showArchived}
             setToggle={setShowArchived}
           />
-          <ButtonLink to="/students/new" variant="success">
-            Novo aluno
+          <ButtonLink
+            className="sm:ml-auto"
+            to="/students/new"
+            variant="success"
+          >
+            Novo Aluno
           </ButtonLink>
         </div>
-      </PageHeader>
 
-      <StudentsTable
-        students={students}
-         isPending={isPending}
-          error={error}
-      >
-          <Pagination
-            paginationData={pageMetadata}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
-      </StudentsTable>
+        <StudentsTable
+          students={students}
+          onPageChange={setCurrentPage}
+          currentPage={currentPage}
+          isPending={isStudentsPending}
+          error={studentsError}
+        />
+      </div>
     </>
   );
 }

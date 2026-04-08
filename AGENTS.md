@@ -1,142 +1,43 @@
 # AGENTS.md
 
-Operational guide for coding agents in the Aprimorar repository.
+## Scope
+- This file applies to the whole repo.
+- Also read `client/AGENTS.md` for SPA work and `server/api-aprimorar/AGENTS.md` for backend work.
 
-## Project Architecture
-- **Frontend**: React 19 + TypeScript + Vite SPA in `client/`
-- **Backend**: Spring Boot 3.5 + Java 21 API in `server/api-aprimorar/`
-- **Database**: PostgreSQL (Docker) with Flyway migrations in `server/api-aprimorar/src/main/resources/db/migration/`
-- **API Contracts**: OpenAPI generates React hooks/types via Kubb into `client/src/kubb/`
-- **Language**: All user-facing strings, validation messages, and API errors MUST be in Portuguese
+## Trust These Sources
+- Prefer repo config over prose docs. `README.md` still mentions a root `.env`, but the verified local dev path is the checked-in Postgres compose file plus `application-dev.yml`.
 
-## Build, Lint, and Test Commands
+## Repo Shape
+- `client/`: React 19 + TypeScript + Vite SPA.
+- `server/api-aprimorar/`: Spring Boot 3.5 / Java 21 API.
+- Main product areas visible in both apps: `dashboard`, `students`, `parents`, `employees`, `events`.
 
-### Full-Stack & Contracts
-```bash
-# Database
-docker compose up -d db  # Run from server/api-aprimorar/
+## Commands That Matter
+- Root dev startup: `npm run dev`
+- Backend only from root: `npm run start:backend`
+- Frontend only from root without backend wait/sync: `npm run dev:frontend`
+- Frontend startup that waits for backend docs and regenerates client first: `npm run start:frontend`
 
-# Sync after backend changes
-cd server/api-aprimorar && ./mvnw -Pgenerate-openapi generate-resources
-cd client && npm run sync
-```
+## Contract / Codegen Workflow
+- Do not edit `client/src/kubb/` manually. `client/kubb.config.ts` writes there with `clean: true`, so regeneration replaces it.
+- Both codegen steps depend on a live backend at `http://localhost:8080`:
+  - backend OpenAPI generation: `./mvnw -Pgenerate-openapi generate-resources`
+  - frontend client generation: `npm run sync` from `client/`
+- If backend DTOs or endpoint signatures change, run them in this order: backend running -> generate OpenAPI -> `npm run sync` from `client/` -> frontend build.
+- Root `npm run start:frontend` already waits on `/v3/api-docs`, runs `npm run sync`, then starts Vite.
 
-### Frontend (`client/`)
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install dependencies |
-| `npm run dev` | Dev server |
-| `npm run build` | Build & type check (tsc -b && vite build) |
-| `npm run lint` | ESLint (typescript-eslint + react-hooks) |
-| `npm run preview` | Preview production build |
-| `npm run sync` | Regenerate Kubb hooks/schemas/types |
+## Backend Local Assumptions
+- Default Spring profile is `dev`.
+- Local DB settings are hardcoded for dev: PostgreSQL at `localhost:5432`, database `aprimorar`, user `myuser`, password `mypassword`.
+- Start the required DB from `server/api-aprimorar/` with `docker compose up -d db`.
+- Flyway is enabled and Hibernate runs with `ddl-auto: validate`; schema changes need a migration under `server/api-aprimorar/src/main/resources/db/migration/`.
 
-### Backend (`server/api-aprimorar/`)
-| Command | Description |
-|---------|-------------|
-| `./mvnw spring-boot:run` | Run locally |
-| `./mvnw package` | Build/package |
-| `./mvnw test` | Run all tests |
-| `./mvnw verify` | Tests + Jacoco coverage (target/site/jacoco/index.html) |
+## Cross-Stack Conventions
+- Keep user-facing strings and backend validation/business messages in Portuguese.
+- Backend pagination is a custom `PageDTO<T>` wrapper, not raw Spring `Page` JSON. Preserve that shape when changing contracts.
+- Frontend uses the `@/*` alias for `client/src/*`.
 
-### Running a Single Test (Backend)
-```bash
-./mvnw -Dtest=ParentServiceTest test                    # Specific class
-./mvnw -Dtest=ParentServiceTest#shouldReturnPagedParents test  # Specific method
-./mvnw -Dtest='*ServiceTest' test                      # Wildcard match
-```
-
-## Code Style Guidelines
-
-### General Workflow
-- Keep diffs tightly scoped; avoid drive-by refactors
-- Preserve local style of touched files; do not mass-reformat unrelated lines
-- Prefer fixing root causes over unsafe casts or workarounds
-- When persistence/API contracts change, update backend, artifacts, and frontend consumers together
-
-### Frontend Guidelines (React/TypeScript)
-
-**Project Structure**
-- Route pages: `*Page.tsx`
-- Feature UI: `client/src/features/<feature>/components/`
-- Shared UI: `client/src/components/ui/`
-- Utilities: `client/src/lib/`
-
-**Imports** (order: React/core → third-party → `@/` aliases → relative)
-- Use `import type` for type-only imports
-- Named exports for components/hooks/helpers; avoid `export default`
-- Never hand-edit `client/src/kubb/` (generated)
-
-**Types, Forms, Data Fetching**
-- Zod schemas with inferred types at form/API boundaries
-- React Hook Form: `zodResolver(schema)` + `mode: "onBlur"`
-- TanStack Query with stable query keys; use `enabled` for deferred inputs
-- Invalidate relevant queries after mutations
-
-**Error Handling**
-- Portuguese UI errors; use shared `getFriendlyErrorMessage` helper
-- Surface API failures through page states, not just `console.log`
-
-### Backend Guidelines (Java/Spring)
-
-**Architecture Layers**
-- **Controllers**: HTTP concerns only (routing, status, validation, response)
-- **Services**: Business rules and transaction boundaries
-- **Repositories**: Persistence and queries
-- **Mappers**: DTO ↔ Entity conversion; entities never leak to controllers
-
-**Java Conventions**
-- Java 21 Records for DTOs with Bean Validation annotations
-- Constructor injection (`@RequiredArgsConstructor` or explicit)
-- `@Transactional(readOnly = true)` for reads; `@Transactional` for writes
-- Helper methods: `findXOrThrow`, `resolveXOrThrow` (private in services)
-- Exception classes: domain-specific, ending with `Exception`
-
-**Persistence & Contracts**
-- Entities: shared UUID IDs + audit timestamps from base entities
-- Repository queries: explicit, intention-revealing
-- DTO field types must align with OpenAPI contract
-- Be explicit about timezone handling at API boundaries
-
-**Error Handling**
-- `GlobalExceptionHandler` with `ProblemDetail` for HTTP error shaping
-- Throw domain-specific exceptions instead of returning null
-- All validation/business-rule messages in Portuguese
-
-### Testing (Backend)
-- **Frameworks**: JUnit 5, AssertJ, Mockito
-- Use `@Nested` classes for organization
-- Deterministic fixtures with fixed UUIDs/timestamps
-- Assert both returned DTOs and side effects (repo calls, conflict checks)
-
-## Common Change Patterns
-
-### New persistent field
-1. Add Flyway migration
-2. Update entity
-3. Update request/response DTOs
-4. Update mapper
-5. Update service rules/repository queries
-6. Update tests
-7. Regenerate OpenAPI + Kubb if exposed to SPA
-
-### New endpoint/contract change
-1. Update controller + service together
-2. Add/update DTOs
-3. Add/update tests
-4. Regenerate OpenAPI
-5. Coordinate with frontend consumers
-
-## Available Skills
-- **java-coding-standards**: Java naming, immutability, Optional, streams
-- **jpa-patterns**: Entity design, relationships, transactions, pagination
-- **springboot-patterns**: REST API, layered services, caching, async
-- **vercel-react-best-practices**: React performance optimization
-
-## Quick Checklist
-- [ ] User-facing strings and validation in Portuguese?
-- [ ] `client/src/kubb/` not edited manually?
-- [ ] Business logic in service, not controller?
-- [ ] Tests updated for changed contracts?
-- [ ] OpenAPI + Kubb regenerated if SPA depends on changes?
-- [ ] Ran `npm run lint` and `npm run build` (frontend) or targeted tests (backend)?
+## Verification
+- Frontend: `npm run lint` and `npm run build` from `client/`.
+- Backend: prefer focused Maven tests while iterating, then broaden as needed.
+- Cross-stack contract changes usually need backend tests plus frontend build after Kubb sync.

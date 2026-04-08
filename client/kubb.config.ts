@@ -25,11 +25,21 @@ export default defineConfig({
       },
     }),
 
+    pluginZod({
+      output: { path: './zod' },
+      // inferred: true,
+      group: {
+        type: 'tag',
+        name: ({ group }) => group.toLowerCase(),
+      },
+    }),
+
     pluginReactQuery({
       //Quando for implementar a autenticação te que tirar essa BaseURl daqui.
       client: { baseURL: 'http://localhost:8080' },
       output: { path: './hooks', barrelType: 'named' },
       paramsType: 'inline',
+      // parser: 'zod',
       pathParamsType: 'inline',
       group: {
         type: 'tag',
