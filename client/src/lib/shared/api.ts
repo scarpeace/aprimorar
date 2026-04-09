@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ZodError } from "zod";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
@@ -8,7 +9,24 @@ export const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error("API Error:", error.response?.data || error.message);
+    console.error(getFriendlyErrorMessage(error));
     return Promise.reject(error);
   }
 );
+
+export function getFriendlyErrorMessage(error: unknown): string {
+  if (!error) return "";
+//TODO implementar o logging mais pra frente
+
+  if (error instanceof ZodError) {
+    console.error("ZOD: Zod não conseguiu parsear a resposta da API", error.message);
+    return "ZOD : Resposta da API em formato inesperado";
+  }
+
+  if (axios.isAxiosError(error)) {
+    const apiMessage = error.message;
+    return apiMessage ?? "Erro fora de escopo, contate o suporte";
+  }
+
+  return "Erro não reconhecido! Contate o suporte imediatamente";
+}

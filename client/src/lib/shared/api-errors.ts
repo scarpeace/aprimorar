@@ -11,7 +11,7 @@ export function getFriendlyErrorMessage(error: unknown): string {
   }
 
   if (axios.isAxiosError(error)) {
-    const apiMessage = error.response?.data?.message;
+    const apiMessage = error.message;
     return apiMessage ?? "Erro fora de escopo, contate o suporte";
   }
 

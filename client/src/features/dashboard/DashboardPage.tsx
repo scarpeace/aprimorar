@@ -19,7 +19,6 @@ export function DashboardPage() {
     month,
   });
 
-
   if (isLoading) {
     return <PageLoading message="Carregando painel..." />;
   }
@@ -42,7 +41,9 @@ export function DashboardPage() {
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
             <h2 className="app-kpi-label">Alunos ativos</h2>
-            <div className="app-kpi-value">{data.activeStudentsInMonth ?? 0}</div>
+            <div className="app-kpi-value">
+              {data.activeStudentsInMonth ?? 0}
+            </div>
           </div>
         </div>
         <div className="card border border-base-300 bg-base-100 shadow-sm">
@@ -62,7 +63,9 @@ export function DashboardPage() {
         <div className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-2">
             <h2 className="app-kpi-label">Custo no mês</h2>
-            <div className="app-kpi-value">{brl.format(data.costInMonth ?? 0)}</div>
+            <div className="app-kpi-value">
+              {brl.format(data.costInMonth ?? 0)}
+            </div>
           </div>
         </div>
       </div>
@@ -83,7 +86,9 @@ export function DashboardPage() {
             <h3 className="text-base-content/40 font-medium italic">
               Gráfico de Evolução
             </h3>
-            <p className="text-xs text-base-content/30 mt-1">Em desenvolvimento</p>
+            <p className="text-xs text-base-content/30 mt-1">
+              Em desenvolvimento
+            </p>
           </div>
         </div>
       </div>
