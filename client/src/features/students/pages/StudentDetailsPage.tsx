@@ -5,9 +5,12 @@ import { LoadingCard } from "@/components/ui/loading-card";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { AddressDetails } from "@/features/address/AddressDetails";
 import { EventsTable } from "@/features/events/components/EventsTable";
-import { useGetEventsByStudent, useGetParentById, useGetStudentById } from "@/kubb";
+import {
+  useGetEventsByStudent,
+  useGetParentById,
+  useGetStudentById,
+} from "@/kubb";
 import {
   formatCpf,
   formatDateShortYear,
@@ -18,6 +21,7 @@ import { useState, type ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
 import { DeleteStudentButton } from "../components/DeleteStudentButton";
+import { AddressDetails } from "@/features/address/components/AddressDetails";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -30,8 +34,7 @@ export function StudentDetailsPage() {
     error: studentError,
   } = useGetStudentById(studentId);
 
-
-  const studentParent = useGetParentById(student?.parentId || "")
+  const studentParent = useGetParentById(student?.parentId || "");
 
   const {
     isPending: isStudentEventsPending,
@@ -42,17 +45,22 @@ export function StudentDetailsPage() {
   const isStudentLoading = isStudentPending || !student;
   const hasStudentError = !!studentError;
 
-  const summaryItems: Array<{ label: string; value: ReactNode }> = student ? [
-    { label: "Nome completo", value: student.name },
-    { label: "CPF", value: formatCpf(student.cpf) },
-    { label: "E-mail", value: student.email },
-    { label: "Idade", value: student.age },
-    { label: "Contato", value: formatPhone(student.contact) },
-    {label: "Data de matrícula",value: formatDateShortYear(student.createdAt)},
-    { label: "Escola", value: student.school },
-    { label: "Status", value: student.archivedAt ? "Arquivado" : "Ativo" },
-    { label: "Responsável", value: studentParent.data?.name }
-  ] : [];
+  const summaryItems: Array<{ label: string; value: ReactNode }> = student
+    ? [
+        { label: "Nome completo", value: student.name },
+        { label: "CPF", value: formatCpf(student.cpf) },
+        { label: "E-mail", value: student.email },
+        { label: "Idade", value: student.age },
+        { label: "Contato", value: formatPhone(student.contact) },
+        {
+          label: "Data de matrícula",
+          value: formatDateShortYear(student.createdAt),
+        },
+        { label: "Escola", value: student.school },
+        { label: "Status", value: student.archivedAt ? "Arquivado" : "Ativo" },
+        { label: "Responsável", value: studentParent.data?.name },
+      ]
+    : [];
 
   return (
     <>
@@ -77,12 +85,18 @@ export function StudentDetailsPage() {
             description="Dados do aluno"
             headerActions={
               <>
-                <ButtonLink to={`/students/edit/${student.id}`} variant="primary">
+                <ButtonLink
+                  to={`/students/edit/${student.id}`}
+                  variant="primary"
+                >
                   <Edit className="h-4 w-4" />
                   Editar
                 </ButtonLink>
 
-                <ArchiveStudentButton studentId={student.id} isArchived={!!student.archivedAt} />
+                <ArchiveStudentButton
+                  studentId={student.id}
+                  isArchived={!!student.archivedAt}
+                />
                 <DeleteStudentButton studentId={student.id} />
               </>
             }
@@ -107,8 +121,7 @@ export function StudentDetailsPage() {
             isPending={isStudentEventsPending}
             error={studentEventsError}
             currentPage={currentPage}
-                onPageChange={setCurrentPage}
-                description={"Eventos vinculados ao aluno"}
+            onPageChange={setCurrentPage}
           />
         </div>
       )}

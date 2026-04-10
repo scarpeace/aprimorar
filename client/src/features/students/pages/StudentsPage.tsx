@@ -14,17 +14,12 @@ export function StudentsPage() {
   const [showArchived, setShowArchived] = useState(false);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const params = {
+
+  const studentsQuery = useGetStudents({
     page: currentPage,
     search: debouncedSearchTerm,
     archived: showArchived,
-  };
-
-  const {
-    isPending: isStudentsPending,
-    data: students,
-    error: studentsError,
-  } = useGetStudents(params);
+  });
 
   return (
     <>
@@ -38,7 +33,7 @@ export function StudentsPage() {
         <div className="flex flex-row">
           <ListSearchInput
             className="grow sm:mr-3"
-            placeholder="Buscar aluno por nome, email ou escola"
+            placeholder="Buscar aluno por nome, email ou CPF"
             ariaLabel="Buscar aluno"
             value={searchTerm}
             onChange={setSearchTerm}
@@ -59,11 +54,11 @@ export function StudentsPage() {
         </div>
 
         <StudentsTable
-          students={students}
+          students={studentsQuery.data}
           onPageChange={setCurrentPage}
           currentPage={currentPage}
-          isPending={isStudentsPending}
-          error={studentsError}
+          isPending={studentsQuery.isPending}
+          error={studentsQuery.error}
         />
       </div>
     </>

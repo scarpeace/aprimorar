@@ -4,6 +4,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { type PageDTOEventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { formatDateShortYear, formatTime } from "@/lib/utils/formatter";
+import { SquareArrowOutUpRightIcon, SquarePen } from "lucide-react";
 import { type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -82,12 +83,9 @@ export function EventsTable({
               {/*<td>NAO IMPLEMENTADO</td>*/}
 
               <td>
-                <span
-                  className="btn btn-secondary"
-                  onClick={() => navigate(`/events/${event.eventId}`)}
-                >
-                  Detalhes
-                </span>
+                <a className="btn btn-primary btn-ou btn-square" href={`/events/${event.eventId}`}>
+                <SquareArrowOutUpRightIcon className="h-4 w-4" />
+                </a>
               </td>
             </tr>
           ))}

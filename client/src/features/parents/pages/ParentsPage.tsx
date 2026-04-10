@@ -27,10 +27,11 @@ export function ParentsPage() {
         backLink="/dashboard"
       />
 
-      <div className="flex items-center justify-between ml-auto">
-        <div className="flex flex-1 items-center gap-2">
+      <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-row">
           <ListSearchInput
-            placeholder="Buscar responsável por nome, email ou escola"
+            className="grow sm:mr-3"
+            placeholder="Buscar responsável por nome, email ou CPF"
             ariaLabel="Buscar responsável"
             value={searchTerm}
             onChange={setSearchTerm}
@@ -41,11 +42,14 @@ export function ParentsPage() {
             toggled={showArchived}
             setToggle={setShowArchived}
           />
+          <ButtonLink
+            className="sm:ml-auto"
+            to="/students/new"
+            variant="success"
+          >
+            Novo Responsável
+          </ButtonLink>
         </div>
-        <ButtonLink to="/parents/new" variant="success">
-          Novo responsável
-        </ButtonLink>
-      </div>
 
       <ParentsTable
         parents={parents}
@@ -54,6 +58,7 @@ export function ParentsPage() {
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       />
+      </div>
     </>
   );
 }

@@ -8,6 +8,7 @@ import {
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
+import { SquareArrowOutUpRightIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 type StudentsTableProps = {
@@ -41,66 +42,66 @@ export function StudentsTable({
 
   return (
     <>
-        <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
-          <thead className="bg-base-300 ">
-            <tr>
-              <th className="text-left font-semibold text-base-content/80">
-                Nome
-              </th>
-              <th className="text-left font-semibold text-base-content/80">
-                CPF
-              </th>
-              <th className="text-left font-semibold text-base-content/80">
-                Idade
-              </th>
-              <th className="text-left font-semibold text-base-content/80">
-                Contato
-              </th>
-              <th className="text-left font-semibold text-base-content/80">
-                Escola
-              </th>
-              <th className="text-left font-semibold text-base-content/80">
-                Matricula
-              </th>
-              {/*TODO: Trocar esse status por uma bolinha de status e mover as actions pra dentro da row*/}
-              <th className="text-left font-semibold text-base-content/80">
-                Status
-              </th>
-              <th className="text-center font-semibold text-base-content/80">
-                Ações
-              </th>
+      <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
+        <thead className="bg-base-300 ">
+          <tr>
+            <th className="text-left font-semibold text-base-content/80">
+              Nome
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
+              CPF
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
+              Idade
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
+              Contato
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
+              Escola
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
+              Matricula
+            </th>
+            {/*TODO: Trocar esse status por uma bolinha de status e mover as actions pra dentro da row*/}
+            <th className="text-left font-semibold text-base-content/80">
+              Status
+            </th>
+            <th className="text-center font-semibold text-base-content/80">
+              Ações
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="whitespace-nowrap">
+          {students?.content.map((student) => (
+            <tr
+              key={student.id}
+              className="transition-colors hover:bg-base-200/70"
+            >
+              <td>{student.name}</td>
+
+              <td>{formatCpf(student.cpf)}</td>
+              <td className="text-center">{student.age}</td>
+              <td>{formatPhone(student.contact)}</td>
+
+              <td>{student.school}</td>
+
+              <td>{formatDateShortYear(student.createdAt ?? "")}</td>
+              <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
+
+              <td>
+                <a
+                  className="btn btn-primary btn-ou btn-square"
+                  href={`/students/${student.id}`}
+                >
+                  <SquareArrowOutUpRightIcon className="h-4 w-4" />
+                </a>
+              </td>
             </tr>
-          </thead>
-
-          <tbody className="whitespace-nowrap">
-            {students?.content.map((student) => (
-              <tr
-                key={student.id}
-                className="transition-colors hover:bg-base-200/70"
-              >
-                <td>{student.name}</td>
-
-                <td>{formatCpf(student.cpf)}</td>
-                <td className="text-center">{student.age}</td>
-                <td>{formatPhone(student.contact)}</td>
-
-                <td>{student.school}</td>
-
-                <td>{formatDateShortYear(student.createdAt ?? "")}</td>
-                <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
-
-                <td className="text-center">
-                  <ButtonLink
-                    className="btn btn-outline btn-info"
-                    to={`/employees/${student.id}`}
-                  >
-                    Detalhes
-                  </ButtonLink>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </tbody>
+      </table>
       <Pagination
         paginationData={students}
         currentPage={currentPage}
