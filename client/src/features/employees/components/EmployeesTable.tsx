@@ -8,6 +8,7 @@ import {
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
+import { SquareArrowOutUpRightIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 type EmployeesTableProps = {
@@ -54,7 +55,7 @@ export function EmployeesTable({
               Contato
             </th>
             <th className="text-left font-semibold text-base-content/80">
-              Matricula
+              Cadastro
             </th>
             {/*TODO: Trocar esse status por uma bolinha de status e mover as actions pra dentro da row*/}
             <th className="text-left font-semibold text-base-content/80">
@@ -80,13 +81,13 @@ export function EmployeesTable({
               <td>{formatDateShortYear(employee.createdAt ?? "")}</td>
               <td>{employee.archivedAt ? "Arquivado" : "Ativo"}</td>
 
-              <td className="text-center">
-                <ButtonLink
-                  className="btn btn-outline btn-info"
-                  to={`/employees/${employee.id}`}
+              <td>
+                <a
+                  className="btn btn-primary btn-ou btn-square"
+                  href={`/employees/${employee.id}`}
                 >
-                  Detalhes
-                </ButtonLink>
+                  <SquareArrowOutUpRightIcon className="h-4 w-4" />
+                </a>
               </td>
             </tr>
           ))}

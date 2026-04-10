@@ -1,6 +1,6 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { PageHeader } from "@/components/ui/page-header";
-import { Edit, Handshake } from "lucide-react";
+import { Edit, Handshake, Section } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import { ButtonLink } from "@/components/ui/button";
@@ -12,9 +12,9 @@ import { DeleteParentButton } from "@/features/parents/components/DeleteParentBu
 import { StudentsTable } from "@/features/students/components/StudentsTable";
 import { useGetParentById, useGetStudentsByParent } from "@/kubb";
 import {
-    formatCpf,
-    formatDateShortYear,
-    formatPhone,
+  formatCpf,
+  formatDateShortYear,
+  formatPhone,
 } from "@/lib/utils/formatter";
 import { useState, type ReactNode } from "react";
 
@@ -64,7 +64,7 @@ export function ParentDetailPage() {
         backLink={"/parents"}
       />
 
-      <div className="flex flex-col">
+      <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
         <SectionCard
           title="Responsável"
           description="Dados do responsável"
@@ -93,13 +93,18 @@ export function ParentDetailPage() {
             ))}
           </div>
         </SectionCard>
-        <StudentsTable
-          students={parentStudents}
-          onPageChange={setCurrentPage}
-          currentPage={currentPage}
-          isPending={isParentStudentsPending}
-          error={parentStudentsError}
-        />
+        <SectionCard
+          title={"Alunos"}
+          description={"Alunos vinculados ao responsável"}
+        >
+          <StudentsTable
+            students={parentStudents}
+            onPageChange={setCurrentPage}
+            currentPage={currentPage}
+            isPending={isParentStudentsPending}
+            error={parentStudentsError}
+          />
+        </SectionCard>
       </div>
     </>
   );

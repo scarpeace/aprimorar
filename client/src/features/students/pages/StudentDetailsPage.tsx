@@ -116,13 +116,15 @@ export function StudentDetailsPage() {
             </Collapse>
           </SectionCard>
 
-          <EventsTable
-            eventsPage={studentEvents}
-            isPending={isStudentEventsPending}
-            error={studentEventsError}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
+          <SectionCard title={"Atendimentos"} description={"Atendimentos vinculados ao aluno"}>
+            <EventsTable
+              eventsPage={studentEvents}
+              isPending={isStudentEventsPending}
+              error={studentEventsError}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
+          </SectionCard>
         </div>
       )}
     </>

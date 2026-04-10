@@ -3,10 +3,9 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { type PageDTOEventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
-import { formatDateShortYear, formatTime } from "@/lib/utils/formatter";
+import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { SquareArrowOutUpRightIcon, SquarePen } from "lucide-react";
 import { type ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
 
 type EventsTableProps = {
   eventsPage?: PageDTOEventResponseDTO;
@@ -24,7 +23,6 @@ export function EventsTable({
   isPending,
   error,
 }: Readonly<EventsTableProps>) {
-  const navigate = useNavigate();
   if (isPending) {
     return <LoadingSpinner text="Carregando Eventos..." />;
   }
@@ -58,9 +56,12 @@ export function EventsTable({
             <th className="text-left font-semibold text-base-content/80">
               Conteúdo
             </th>
-            {/*<th className="text-left font-semibold text-base-content/80">
-                Status
-              </th>*/}
+            <th className="text-left font-semibold text-base-content/80">
+              Valor
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
+              Pagamento
+            </th>
             <th className="text-center font-semibold text-base-content/80">
               Ações
             </th>
@@ -80,7 +81,9 @@ export function EventsTable({
               <td className=" text-center">
                 {EventContentLabels[event.content] || event.content}
               </td>
-              {/*<td>NAO IMPLEMENTADO</td>*/}
+
+              <td>{brl.format(event.price)}</td>
+              <td>{brl.format(event.payment)}</td>
 
               <td>
                 <a className="btn btn-primary btn-ou btn-square" href={`/events/${event.eventId}`}>

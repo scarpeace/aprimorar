@@ -5,7 +5,11 @@ import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { EventsTable } from "@/features/events/components/EventsTable";
-import { employeeResponseDTODutyEnum, useGetEmployeeById, useGetEventsByEmployee } from "@/kubb";
+import {
+  employeeResponseDTODutyEnum,
+  useGetEmployeeById,
+  useGetEventsByEmployee,
+} from "@/kubb";
 import { formatDateShortYear } from "@/lib/utils/formatter";
 import { Edit, FileUser } from "lucide-react";
 import { useState, type ReactNode } from "react";
@@ -13,7 +17,6 @@ import { useParams } from "react-router-dom";
 import { ArchiveEmployeeButton } from "../components/ArchiveEmployeeButton";
 import { DeleteEmployeeButton } from "../components/DeleteEmployeeButton";
 
-//TODO: Tá renderizando duas (ou quatro não sei) vezes
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const employeeId = id ?? "";
@@ -39,7 +42,10 @@ export function EmployeeDetailPage() {
     { label: "E-mail", value: employee?.email },
     {
       label: "Cargo",
-      value: employeeResponseDTODutyEnum[employee?.duty as keyof typeof employeeResponseDTODutyEnum] ?? "Desconhecido",
+      value:
+        employeeResponseDTODutyEnum[
+          employee?.duty as keyof typeof employeeResponseDTODutyEnum
+        ] ?? "Desconhecido",
     },
     { label: "Contato", value: employee?.contact },
     { label: "CPF", value: employee?.cpf },
@@ -81,12 +87,18 @@ export function EmployeeDetailPage() {
             description="Dados do Colaborador"
             headerActions={
               <>
-                <ButtonLink to={`/employees/edit/${employee.id}`} variant="primary">
+                <ButtonLink
+                  to={`/employees/edit/${employee.id}`}
+                  variant="primary"
+                >
                   <Edit className="h-4 w-4" />
                   Editar
                 </ButtonLink>
 
-                <ArchiveEmployeeButton employeeId={employee.id} isArchived={!!employee.archivedAt} />
+                <ArchiveEmployeeButton
+                  employeeId={employee.id}
+                  isArchived={!!employee.archivedAt}
+                />
                 <DeleteEmployeeButton employeeId={employee.id} />
               </>
             }
@@ -106,14 +118,18 @@ export function EmployeeDetailPage() {
             </Collapse>*/}
           </SectionCard>
 
-          <EventsTable
-            eventsPage={employeeEvents}
-            isPending={isEmployeeEventsLoading}
-            error={employeeEventsError}
-            currentPage={currentPage}
-                onPageChange={setCurrentPage}
-                description="Eventos vinculados ao Colaborador"
-          />
+          <SectionCard
+            title={"Atendimentos"}
+            description={"Atendimentos vinculados ao colaborador"}
+          >
+            <EventsTable
+              eventsPage={employeeEvents}
+              isPending={isEmployeeEventsLoading}
+              error={employeeEventsError}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
+          </SectionCard>
         </div>
       )}
     </>
