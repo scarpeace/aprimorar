@@ -38,7 +38,7 @@ export function ParentsTable({
 
   return (
     <>
-      <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
+      <table className="table table-zebra shadow-2xl bg-base-100 animate-[fade-up_280ms_ease-out_both]">
         <thead className="bg-base-300">
           <tr>
             <th className="text-left font-semibold text-base-content/80">

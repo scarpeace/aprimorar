@@ -9,7 +9,7 @@ import {
 import { useHookFormMask } from "use-mask-input";
 import type { ZodObject } from "zod";
 
-type FieldsetInputProps = {
+type TextInputProps = {
   label: string;
   placeholder: string;
   type: string;
@@ -18,14 +18,14 @@ type FieldsetInputProps = {
   mask?: string[];
 };
 
-export function FieldsetInput({
+export function TextInput({
   label,
   placeholder,
   type,
   className,
   identifier,
   mask,
-}: FieldsetInputProps) {
+}: TextInputProps) {
   const { register, formState: { errors } } = useFormContext();
   const registerWithMask = useHookFormMask(register);
   return (
@@ -40,7 +40,7 @@ export function FieldsetInput({
       {errors && (
         <p className="label text-error">
           <TriangleAlert className="w-3 h-3" />
-          {/*{errors.}*/}
+          {errors.}
         </p>
       )}
     </fieldset>

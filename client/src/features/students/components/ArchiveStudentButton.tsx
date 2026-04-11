@@ -53,7 +53,7 @@ export const ArchiveStudentButton = ({
         cancelText="Cancelar"
         onConfirm={handleConfirm}
         onCancel={() => setShowConfirm(false)}
-        className="p-2"
+        className="p-2 animate-[fade-up_300ms_ease-out_both]"
       />
     );
   }

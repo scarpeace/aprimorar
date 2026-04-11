@@ -4,7 +4,7 @@ import { TriangleAlert } from "lucide-react";
 import { type UseFormRegisterReturn } from "react-hook-form";
 
 type StateSelectDropdownProps = {
-  registration: UseFormRegisterReturn;
+  registration?: UseFormRegisterReturn;
   error?: string;
   className?: string;
   label: string;

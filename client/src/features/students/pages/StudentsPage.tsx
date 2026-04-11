@@ -44,11 +44,7 @@ export function StudentsPage() {
             toggled={showArchived}
             setToggle={setShowArchived}
           />
-          <ButtonLink
-            className="sm:ml-auto"
-            to="/students/new"
-            variant="success"
-          >
+          <ButtonLink className="sm:ml-auto" to="/students/new" variant="success">
             Novo Aluno
           </ButtonLink>
         </div>

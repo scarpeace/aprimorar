@@ -1,11 +1,10 @@
-import type { ReactNode } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
 
-type SectionCardProps = {
+type SectionCardProps = PropsWithChildren<{
   title: string;
   description: string;
   headerActions?: ReactNode;
-  children: ReactNode;
-};
+}>;
 
 export function SectionCard({
   title,

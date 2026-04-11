@@ -4,7 +4,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { type PageDTOEventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon, SquarePen } from "lucide-react";
+import { SquareArrowOutUpRightIcon } from "lucide-react";
 import { type ReactNode } from "react";
 
 type EventsTableProps = {
@@ -38,7 +38,7 @@ export function EventsTable({
 
   return (
     <>
-      <table className="table table-zebra table-auto bg-base-100 overflow-x-auto rounded shadow-xl animate-[fade-up_280ms_ease-out_both]">
+      <table className="table table-zebra table-auto bg-base-100 overflow-x-auto shadow-2xl animate-[fade-up_280ms_ease-out_both]">
         <thead className="bg-base-300 rounded">
           <tr>
             <th className="text-left font-semibold text-base-content/80">

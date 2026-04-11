@@ -32,35 +32,39 @@ export function useStudentMutations() {
 
   const updateStudent = useUpdateStudent({
     mutation: {
-      onSuccess: (updatedStudent) => {
+      onError: () => {
+        toast.error("Algo deu errado ao atualizar o aluno");
+      },
+      onSuccess: (_,variables) => {
         toast.success("Aluno atualizado com sucesso");
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getStudentByIdQueryKey(updatedStudent.id),
+          queryKey: getStudentByIdQueryKey(variables.studentId),
         });
-        navigate(`/students/${updatedStudent.id}`);
-      },
-      onError: () => {
-        toast.error("Algo deu errado ao atualizar o aluno");
+        navigate(`/students/${variables.studentId}`);
       },
     },
   });
 
   const deleteStudent = useDeleteStudent({
     mutation: {
+      onError: () => {
+        toast.error("Algo deu errado ao excluir o aluno");
+      },
       onSuccess: () => {
         toast.success("Aluno excluído com sucesso");
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
         queryClient.invalidateQueries({ queryKey: deleteStudentMutationKey() });
-      },
-      onError: () => {
-        toast.error("Algo deu errado ao excluir o aluno");
+        navigate("/students");
       },
     },
   });
 
   const archiveStudent = useArchiveStudent({
     mutation: {
+      onError: () => {
+        toast.error("Algo deu errado ao arquivar o aluno");
+      },
       onSuccess: (_, variables) => {
         toast.success("Aluno arquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
@@ -68,23 +72,20 @@ export function useStudentMutations() {
           queryKey: getStudentByIdQueryKey(variables.studentId),
         });
       },
-      onError: () => {
-        toast.error("Algo deu errado ao arquivar o aluno");
-      },
     },
   });
 
   const unarchiveStudent = useUnarchiveStudent({
     mutation: {
+      onError: () => {
+        toast.error("Algo deu errado ao desarquivar o aluno");
+      },
       onSuccess: (_, variables) => {
         toast.success("Aluno desarquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
         queryClient.invalidateQueries({
           queryKey: getStudentByIdQueryKey(variables.studentId),
         });
-      },
-      onError: () => {
-        toast.error("Algo deu errado ao desarquivar o aluno");
       },
     },
   });
