@@ -1,5 +1,5 @@
 import { ErrorCard } from "@/components/ui/error-card";
-import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { Edit, Handshake } from "lucide-react";
 import { useParams } from "react-router-dom";
 
@@ -12,9 +12,9 @@ import { DeleteParentButton } from "@/features/parents/components/DeleteParentBu
 import { StudentsTable } from "@/features/students/components/StudentsTable";
 import { useGetParentById, useGetStudentsByParent } from "@/kubb";
 import {
-    formatCpf,
-    formatDateShortYear,
-    formatPhone,
+  formatCpf,
+  formatDateShortYear,
+  formatPhone,
 } from "@/lib/utils/formatter";
 import { useState, type ReactNode } from "react";
 
@@ -23,48 +23,44 @@ export function ParentDetailPage() {
   const parentId = id ?? "";
   const [currentPage, setCurrentPage] = useState(0);
 
-  const {
-    data: parent,
-    isError: isParentError,
-    isPending: isParentPending,
-    error: parentError,
-  } = useGetParentById(parentId);
+  const parentQuery = useGetParentById(parentId);
+  const parentStudentsQuery = useGetStudentsByParent(parentId);
 
-  const {
-    data: parentStudents,
-    isPending: isParentStudentsPending,
-    error: parentStudentsError,
-  } = useGetStudentsByParent(parentId);
+  const headerProps = {
+    description: "Veja e gerencie as informações do responsável",
+    title: "Detalhes do Responsável",
+    Icon: Handshake,
+    backLink: "/parents",
+  };
 
-  const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: parent?.name },
-    { label: "CPF", value: formatCpf(parent?.cpf ?? "") },
-    { label: "E-mail", value: parent?.email },
-    { label: "Contato", value: formatPhone(parent?.contact ?? "") },
-    { label: "Criado em", value: formatDateShortYear(parent?.createdAt ?? "") },
-    { label: "Status", value: parent?.archivedAt ? "Arquivado" : "Ativo" },
-  ];
-
-  if (isParentError) {
+  if (parentQuery.isError || parentStudentsQuery.isError) {
     return (
-      <ErrorCard title="Erro ao carregar responsável" error={parentError} />
+      <PageLayout {...headerProps}>
+        <ErrorCard title="Erro ao carregar responsável" error={parentQuery.error || parentStudentsQuery.error} />
+      </PageLayout>
     );
   }
 
-  if (isParentPending) {
-    return <LoadingCard title="Carregando dados do responsável" />;
+  if (parentQuery.isPending || parentStudentsQuery.isPending) {
+    return (
+      <PageLayout {...headerProps}>
+        <LoadingCard title="Carregando dados do responsável" />
+      </PageLayout>
+    );
   }
 
-  return (
-    <>
-      <PageHeader
-        description="Veja e gerencie as informações do responsável"
-        title="Detalhes do Responsável"
-        Icon={Handshake}
-        backLink={"/parents"}
-      />
+  const summaryItems: Array<{ label: string; value: ReactNode }> = [
+    { label: "Nome completo", value: parentQuery.data?.name },
+    { label: "CPF", value: formatCpf(parentQuery.data?.cpf) },
+    { label: "E-mail", value: parentQuery.data?.email },
+    { label: "Contato", value: formatPhone(parentQuery.data?.contact) },
+    { label: "Criado em", value: formatDateShortYear(parentQuery.data?.createdAt ?? "") },
+    { label: "Status", value: parentQuery.data?.archivedAt ? "Arquivado" : "Ativo" },
+  ];
 
-      <div className="flex flex-col">
+  return (
+    <PageLayout {...headerProps}>
+      <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
         <SectionCard
           title="Responsável"
           description="Dados do responsável"
@@ -77,7 +73,7 @@ export function ParentDetailPage() {
 
               <ArchiveParentButton
                 parentId={parentId}
-                isArchived={!!parent.archivedAt}
+                isArchived={!!parentQuery.data?.archivedAt}
               />
               <DeleteParentButton parentId={parentId} />
             </>
@@ -93,14 +89,19 @@ export function ParentDetailPage() {
             ))}
           </div>
         </SectionCard>
-        <StudentsTable
-          students={parentStudents}
-          onPageChange={setCurrentPage}
-          currentPage={currentPage}
-          isPending={isParentStudentsPending}
-          error={parentStudentsError}
-        />
+        <SectionCard
+          title={"Alunos"}
+          description={"Alunos vinculados ao responsável"}
+        >
+          <StudentsTable
+            students={parentStudentsQuery.data}
+            onPageChange={setCurrentPage}
+            currentPage={currentPage}
+            isPending={parentStudentsQuery.isPending}
+            error={parentStudentsQuery.error}
+          />
+        </SectionCard>
       </div>
-    </>
+    </PageLayout>
   );
 }

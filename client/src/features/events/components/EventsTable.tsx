@@ -1,15 +1,14 @@
+import { ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { type PageDTOEventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
-import { formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { type ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
+import { SquareArrowOutUpRightIcon } from "lucide-react";
 
 type EventsTableProps = {
   eventsPage?: PageDTOEventResponseDTO;
-  children?: ReactNode;
   currentPage: number;
   onPageChange: (page: number) => void;
   isPending: boolean;
@@ -23,7 +22,6 @@ export function EventsTable({
   isPending,
   error,
 }: Readonly<EventsTableProps>) {
-  const navigate = useNavigate();
   if (isPending) {
     return <LoadingSpinner text="Carregando Eventos..." />;
   }
@@ -39,7 +37,7 @@ export function EventsTable({
 
   return (
     <>
-      <table className="table table-zebra table-auto bg-base-100 overflow-x-auto rounded shadow-xl animate-[fade-up_280ms_ease-out_both]">
+      <table className="table table-zebra table-auto bg-base-100 overflow-x-auto shadow-2xl animate-[fade-up_280ms_ease-out_both]">
         <thead className="bg-base-300 rounded">
           <tr>
             <th className="text-left font-semibold text-base-content/80">
@@ -57,9 +55,12 @@ export function EventsTable({
             <th className="text-left font-semibold text-base-content/80">
               Conteúdo
             </th>
-            {/*<th className="text-left font-semibold text-base-content/80">
-                Status
-              </th>*/}
+            <th className="text-left font-semibold text-base-content/80">
+              Valor
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
+              Pagamento
+            </th>
             <th className="text-center font-semibold text-base-content/80">
               Ações
             </th>
@@ -79,15 +80,18 @@ export function EventsTable({
               <td className=" text-center">
                 {EventContentLabels[event.content] || event.content}
               </td>
-              {/*<td>NAO IMPLEMENTADO</td>*/}
+
+              <td>{brl.format(event.price)}</td>
+              <td>{brl.format(event.payment)}</td>
 
               <td>
-                <span
-                  className="btn btn-secondary"
-                  onClick={() => navigate(`/events/${event.eventId}`)}
+                <ButtonLink
+                  className="btn-square"
+                  to={`/events/${event.eventId}`}
+                  variant="primary"
                 >
-                  Detalhes
-                </span>
+                  <SquareArrowOutUpRightIcon className="h-4 w-4" />
+                </ButtonLink>
               </td>
             </tr>
           ))}

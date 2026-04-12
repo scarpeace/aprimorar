@@ -1,12 +1,11 @@
 import { Button, ButtonLink } from "@/components/ui/button";
-import { FieldsetInput } from "@/components/ui/fieldset-input";
-import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { EmployeeSelectDropdown } from "@/features/employees/components/EmployeeSelectDropdown";
 import { StudentSelectDropdown } from "@/features/students/components/StudentSelectDropdown";
-import { type LucideIcon } from "lucide-react";
+import { TriangleAlert } from "lucide-react";
 import type { PropsWithChildren, SubmitEventHandler } from "react";
-import type { FieldErrors } from "react-hook-form";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
+
 import { ContentSelectDropdown } from "../components/ContentSelectDropdown";
 import type { EventFormSchema } from "./eventFormSchema";
 
@@ -27,13 +26,13 @@ export function Root({ title, description, onSubmit, children }: FormProps) {
 }
 
 type FieldsProps = {
-  register: any;
+  register: UseFormRegister<EventFormSchema>;
   errors: FieldErrors<EventFormSchema>;
 };
 
 export function Fields({ errors, register }: FieldsProps) {
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5  ">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
       <EmployeeSelectDropdown
         registration={register("employeeId")}
         error={errors?.employeeId?.message}
@@ -52,58 +51,104 @@ export function Fields({ errors, register }: FieldsProps) {
         error={errors.content?.message}
       />
 
-      <FieldsetInput
-        label="Data de Início"
-        placeholder="Data de Início"
-        type="datetime-local"
-        registration={register("startDate")}
-        error={errors?.startDate?.message}
-      />
+      <fieldset className="fieldset">
+        <legend className="fieldset-legend">Data de Início</legend>
+        <input
+          type="datetime-local"
+          className="input"
+          placeholder="Data de Início"
+          {...register("startDate")}
+        />
+        {errors?.startDate && (
+          <p className="label text-error">
+            <TriangleAlert className="w-3 h-3" />
+            {errors.startDate.message}
+          </p>
+        )}
+      </fieldset>
 
-      <FieldsetInput
-        label="Fim"
-        placeholder="Data de Fim"
-        type="datetime-local"
-        registration={register("endDate")}
-        error={errors?.endDate?.message}
-      />
+      <fieldset className="fieldset">
+        <legend className="fieldset-legend">Fim</legend>
+        <input
+          type="datetime-local"
+          className="input"
+          placeholder="Data de Fim"
+          {...register("endDate")}
+        />
+        {errors?.endDate && (
+          <p className="label text-error">
+            <TriangleAlert className="w-3 h-3" />
+            {errors.endDate.message}
+          </p>
+        )}
+      </fieldset>
 
-      <FieldsetInput
-        label="Título"
-        placeholder="Ex: Aula de matemática TRUE"
-        type="text"
-        registration={register("title")}
-        error={errors?.title?.message}
-      />
+      <fieldset className="fieldset">
+        <legend className="fieldset-legend">Título</legend>
+        <input
+          type="text"
+          className="input"
+          placeholder="Ex: Aula de matemática"
+          {...register("title")}
+        />
+        {errors?.title && (
+          <p className="label text-error">
+            <TriangleAlert className="w-3 h-3" />
+            {errors.title.message}
+          </p>
+        )}
+      </fieldset>
 
-      <FieldsetInput
-        label="Preço (receita)"
-        placeholder="Preço (receita)"
-        type="number"
-        registration={register("price", {
+      <fieldset className="fieldset">
+        <legend className="fieldset-legend">Preço (receita)</legend>
+        <input
+          type="number"
+          className="input"
+          placeholder="Preço (receita)"
+          {...register("price", {
           valueAsNumber: true,
         })}
-        error={errors?.price?.message}
-      />
+        />
+        {errors?.price && (
+          <p className="label text-error">
+            <TriangleAlert className="w-3 h-3" />
+            {errors.price.message}
+          </p>
+        )}
+      </fieldset>
 
-      <FieldsetInput
-        label="Pagamento (custo)"
-        placeholder="Pagamento (custo)"
-        type="number"
-        registration={register("payment", {
+      <fieldset className="fieldset">
+        <legend className="fieldset-legend">Pagamento (custo)</legend>
+        <input
+          type="number"
+          className="input"
+          placeholder="Pagamento (custo)"
+          {...register("payment", {
           valueAsNumber: true,
         })}
-        error={errors?.payment?.message}
-      />
+        />
+        {errors?.payment && (
+          <p className="label text-error">
+            <TriangleAlert className="w-3 h-3" />
+            {errors.payment.message}
+          </p>
+        )}
+      </fieldset>
 
-      <FieldsetInput
-        label="Descrição (opcional)"
-        placeholder="Observações do atendimento"
-        registration={register("description")}
-        error={errors?.description?.message}
-        type="text"
-        className="textarea"
-      />
+      <fieldset className="fieldset md:col-span-3">
+        <legend className="fieldset-legend">Descrição (opcional)</legend>
+        <textarea
+          className="textarea textarea-bordered w-full"
+          placeholder="Observações do atendimento"
+          {...register("description")}
+        />
+        {errors?.description && (
+          <p className="label text-error">
+            <TriangleAlert className="w-3 h-3" />
+            {errors.description.message}
+          </p>
+        )}
+      </fieldset>
     </div>
   );
 }
@@ -111,16 +156,23 @@ export function Fields({ errors, register }: FieldsProps) {
 type ActionsProps = {
   isSubmitting: boolean;
   cancelTo: string;
+  submitLabel?: string;
+  submittingLabel?: string;
 };
 
-export function Actions({ isSubmitting, cancelTo }: ActionsProps) {
+export function Actions({
+  isSubmitting,
+  cancelTo,
+  submitLabel = "Salvar",
+  submittingLabel = "Salvando...",
+}: ActionsProps) {
   return (
     <div className="mt-1 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
       <ButtonLink to={cancelTo} variant="outline">
         Cancelar
       </ButtonLink>
       <Button type="submit" disabled={isSubmitting} variant="primary">
-        {isSubmitting ? "Salvando..." : "Salvar"}
+        {isSubmitting ? submittingLabel : submitLabel}
       </Button>
     </div>
   );

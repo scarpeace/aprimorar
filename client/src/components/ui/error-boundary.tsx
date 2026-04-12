@@ -20,7 +20,8 @@ export class ErrorBoundary extends Component<{ children?: ReactNode }, { error: 
                         onAction={() => globalThis.location.reload()}
                 />
                 {/*TODO: Esse botão não tá funcionando*/}
-                    <ButtonLink className="mt-4" to="/">Voltar para a página inicial</ButtonLink>
+                <a href="/">Voltar</a>
+                    {/*<ButtonLink className="mt-4" to="/">Voltar para a página inicial</ButtonLink>*/}
                 </div>
             )
         }

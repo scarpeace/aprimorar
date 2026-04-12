@@ -1,48 +1,66 @@
 import { ButtonLink } from "@/components/ui/button";
-import { ComponentState } from "@/components/ui/component-state";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { useGetEventById } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, Edit } from "lucide-react";
+import { type ReactNode } from "react";
 import { useParams } from "react-router-dom";
 
 export function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const eventId = id ?? "";
 
-  const {
-    data: event,
-    isPending: isEventPending,
-    isError: isEventError,
-    error: eventError,
-  } = useGetEventById(eventId);
+  const eventQuery = useGetEventById(eventId);
 
-  if (isEventPending || isEventError) {
-    return <ComponentState isPending={isEventPending} error={eventError} />;
+  const headerProps = {
+    description: "Veja e gerencie as informações do evento",
+    Icon: Calendar,
+    title: "Detalhes do evento",
+    backLink: "/events",
+  };
+
+  if (eventQuery.isError) {
+    return (
+      <PageLayout {...headerProps}>
+        <ErrorCard title="Erro ao carregar evento" error={eventQuery.error} />
+      </PageLayout>
+    );
   }
 
-  const profit = Number(event.price) - Number(event.payment);
-
-  if (isEventError) {
-    return <ErrorCard title="Erro ao carregar evento" error={eventError} />;
+  if (eventQuery.isPending || !eventQuery.data) {
+    return (
+      <PageLayout {...headerProps}>
+        <LoadingCard title="Carregando dados do evento" />
+      </PageLayout>
+    );
   }
 
-  if (isEventPending) {
-    return <LoadingCard title="Carregando dados do evento" />;
-  }
+  const profit = Number(eventQuery.data.price) - Number(eventQuery.data.payment);
+
+  const summaryItems: Array<{ label: string; value: ReactNode; className?: string }> = [
+    { label: "Data", value: formatDateShortYear(eventQuery.data.startDate) },
+    { label: "Hora", value: formatTime(eventQuery.data.startDate) },
+    { label: "Duração", value: "1 hora" },
+    { label: "Nome do aluno", value: eventQuery.data.studentName ?? "-" },
+    { label: "Nome do colaborador", value: eventQuery.data.employeeName ?? "-" },
+    { label: "Conteúdo", value: eventQuery.data.content ?? "-" },
+    { label: "Valor", value: brl.format(eventQuery.data.price) },
+    { label: "Pagamento", value: brl.format(eventQuery.data.payment) },
+    { label: "Lucro", value: brl.format(profit) },
+    { label: "Título", value: eventQuery.data.title },
+    {
+      label: "Descrição",
+      value: eventQuery.data.description ?? "-",
+      className: "col-span-2",
+    },
+  ];
 
   return (
-    <div className="flex flex-col">
-      <PageHeader
-        description="Veja e gerencie as informações do evento"
-        Icon={Calendar}
-        title="Detalhes do evento"
-      />
-
+    <PageLayout {...headerProps}>
       <SectionCard
         title="Resumo do evento"
         description="Dados completos do atendimento, participantes e valores."
@@ -55,26 +73,18 @@ export function EventDetailPage() {
           </>
         }
       >
-        {/*TODO: aplicar esse padrão para todos os detalhes das entidades*/}
         <div className="grid grid-cols-1 grid-rows-3 md:grid-cols-3 gap-4">
 
-          <SummaryItem key={event.startDate} label="Data" value={formatDateShortYear(event.startDate)} />
-          <SummaryItem key={event.startDate} label="Hora" value={formatTime(event.startDate)} />
-          <SummaryItem key={"duracao"} label="Duração" value={"1 hora"} />
-
-          <SummaryItem key={event.studentName} label="Nome do aluno" value={event.studentName ?? "-"} />
-          <SummaryItem key={event.employeeName} label="Nome do colaborador" value={event.employeeName ?? "-"} />
-          <SummaryItem key={event.content} label="Conteúdo" value={event.content ?? "-"} />
-
-          <SummaryItem key={event.price} label="Valor" value={brl.format(event.price)} />
-          <SummaryItem key={event.payment} label="Pagamento" value={brl.format(event.payment)} />
-          <SummaryItem key={profit} label="Lucro" value={brl.format(profit)} />
-
-          <SummaryItem key={event.title} label="Título" value={event.title} />
-          <SummaryItem className="col-span-2" key={event.description} label="Descrição" value={event.description ?? "-"} />
-
+          {summaryItems.map((item) => (
+            <SummaryItem
+              key={item.label}
+              className={item.className}
+              label={item.label}
+              value={item.value}
+            />
+          ))}
         </div>
       </SectionCard>
-    </div>
+    </PageLayout>
   );
 }

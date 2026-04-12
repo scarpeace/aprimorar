@@ -1,7 +1,7 @@
 import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
-import { PageHeader } from "@/components/ui/page-header";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetStudents } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { GraduationCap } from "lucide-react";
@@ -14,31 +14,27 @@ export function StudentsPage() {
   const [showArchived, setShowArchived] = useState(false);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const params = {
+
+  const studentsQuery = useGetStudents({
     page: currentPage,
     search: debouncedSearchTerm,
     archived: showArchived,
+  });
+
+  const headerProps = {
+    description: "Gerencie cadastros e matrículas.",
+    title: "Alunos",
+    Icon: GraduationCap,
+    backLink: "/dashboard",
   };
 
-  const {
-    isPending: isStudentsPending,
-    data: students,
-    error: studentsError,
-  } = useGetStudents(params);
-
   return (
-    <>
-      <PageHeader
-        description="Gerencie cadastros e matrículas."
-        title="Alunos"
-        Icon={GraduationCap}
-        backLink="/dashboard"
-      />
+    <PageLayout {...headerProps}>
       <div className="flex flex-col gap-3 w-full">
         <div className="flex flex-row">
           <ListSearchInput
             className="grow sm:mr-3"
-            placeholder="Buscar aluno por nome, email ou escola"
+            placeholder="Buscar aluno por nome, email ou CPF"
             ariaLabel="Buscar aluno"
             value={searchTerm}
             onChange={setSearchTerm}
@@ -49,23 +45,19 @@ export function StudentsPage() {
             toggled={showArchived}
             setToggle={setShowArchived}
           />
-          <ButtonLink
-            className="sm:ml-auto"
-            to="/students/new"
-            variant="success"
-          >
+          <ButtonLink className="sm:ml-auto" to="/students/new" variant="success">
             Novo Aluno
           </ButtonLink>
         </div>
 
         <StudentsTable
-          students={students}
+          students={studentsQuery.data}
           onPageChange={setCurrentPage}
           currentPage={currentPage}
-          isPending={isStudentsPending}
-          error={studentsError}
+          isPending={studentsQuery.isPending}
+          error={studentsQuery.error}
         />
       </div>
-    </>
+    </PageLayout>
   );
 }

@@ -1,24 +1,23 @@
+import { Alert } from "@/components/ui/alert";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
+
 import { Button, ButtonLink } from "@/components/ui/button";
-import { FormField } from "@/components/ui/form-field";
-import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { SectionCard } from "@/components/ui/section-card";
+import { employeeRequestDTODutyEnum } from "@/kubb";
 import {
   employeeFormSchema,
   type EmployeeFormSchema,
 } from "../forms/employeeFormSchema";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
-import { FileUser } from "lucide-react";
-import { employeeRequestDTODutyEnum } from "@/kubb";
+import { FileUser, TriangleAlert } from "lucide-react";
 
 export function EmployeeCreatePage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<EmployeeFormSchema>({
+  const { createEmployee } = useEmployeeMutations();
+
+  const { register, handleSubmit, formState: { errors } } = useForm<EmployeeFormSchema>({
     resolver: zodResolver(employeeFormSchema),
     defaultValues: {
       duty: "TEACHER",
@@ -26,147 +25,159 @@ export function EmployeeCreatePage() {
   });
   const registerWithMask = useHookFormMask(register);
 
-  //TODO: Aqui eu vou mudar a syntaxe pra não ter que ficar me repetindo no nome.
-  // vai ser createEmployee.isPending, createEmployee.mutate e por aí vai.
-  const {
-    createEmployee: { mutate: createEmployee, isPending: isSubmitting },
-  } = useEmployeeMutations();
+
   const onSubmit = (data: EmployeeFormSchema) => {
-    createEmployee({ data });
+    createEmployee.mutate({ data });
+  };
+
+  const headerProps = {
+    title: "Novo colaborador",
+    description: "Crie um novo cadastro de colaborador.",
+    backLink: "/employees",
+    Icon: FileUser,
   };
 
   return (
-    <div className={""}>
-      <PageHeader
-        title="Novo colaborador"
-        description="Crie um novo cadastro de colaborador."
-        backLink={"/employees"}
-        Icon={FileUser}
-      />
+    <PageLayout {...headerProps}>
 
       <SectionCard
         title="Dados do colaborador"
         description="Preencha as informações abaixo para criar o cadastro."
       >
-        <form
-          className={""}
-          onSubmit={handleSubmit(onSubmit)}
-          autoComplete="off"
-        >
-          <div className={""}>
-            <FormField
-              className={""}
-              label="Nome completo"
-              htmlFor="name"
-              error={errors.name?.message}
-            >
-              <input
-                className="app-input"
-                id="name"
-                placeholder="Ex: Maria Silva"
-                {...register("name")}
-              />
-            </FormField>
+        {createEmployee.isError && (
+          <Alert error={createEmployee.error} variant="error" />
+        )}
 
-            <FormField
-              className={""}
-              label="Data de nascimento"
-              htmlFor="birthdate"
-              error={errors.birthdate?.message}
-            >
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Nome</legend>
               <input
-                className="app-input"
-                id="birthdate"
+                type="text"
+                className="input"
+                {...register("name")}
+                placeholder="Nome Completo"
+              />
+              {errors?.name && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.name.message}
+                </p>
+              )}
+            </fieldset>
+
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Data de Nascimento</legend>
+              <input
                 type="date"
+                className="input"
                 {...register("birthdate")}
               />
-            </FormField>
+              {errors?.birthdate && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.birthdate.message}
+                </p>
+              )}
+            </fieldset>
 
-            <FormField
-              className={""}
-              label="Email"
-              htmlFor="email"
-              error={errors.email?.message}
-            >
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Email</legend>
               <input
-                className="app-input"
-                id="email"
-                type="email"
-                placeholder="exemplo@dominio.com"
+                type="text"
+                className="input"
                 {...register("email")}
+                placeholder="email@email.com"
               />
-            </FormField>
+              {errors?.email && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.email.message}
+                </p>
+              )}
+            </fieldset>
 
-            <FormField
-              className={""}
-              label="Contato"
-              htmlFor="contact"
-              error={errors.contact?.message}
-            >
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Contato</legend>
               <input
-                className="app-input"
-                id="contact"
-                placeholder="(11) 99999-9999"
+                type="text"
+                className="input"
+                placeholder="Ex: (61) 99633-2332"
                 {...registerWithMask("contact", [
-                  "(99) 9999-9999",
-                  "(99) 99999-9999",
+                  "(##) #####-####",
+                  "(##) ####-####",
                 ])}
               />
-            </FormField>
+              {errors?.contact && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.contact.message}
+                </p>
+              )}
+            </fieldset>
 
-            <FormField
-              className={""}
-              label="CPF"
-              htmlFor="cpf"
-              error={errors.cpf?.message}
-            >
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">CPF</legend>
               <input
-                className="app-input"
-                id="cpf"
-                placeholder="000.000.000-00"
-                {...registerWithMask("cpf", "999.999.999-99")}
+                type="text"
+                className="input"
+                placeholder="Ex: 123.456.789-00"
+                {...registerWithMask("cpf", ["###.###.###-##"])}
               />
-            </FormField>
+              {errors?.cpf && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.cpf.message}
+                </p>
+              )}
+            </fieldset>
 
-            <FormField
-              className={""}
-              label="Chave PIX"
-              htmlFor="pix"
-              error={errors.pix?.message}
-            >
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Chave PIX</legend>
               <input
-                className="app-input"
-                id="pix"
-                placeholder="cpf/email/telefone/chave aleatória"
+                type="text"
+                className="input"
                 {...register("pix")}
+                placeholder="cpf/email/telefone/chave aleatória"
               />
-            </FormField>
+              {errors?.pix && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.pix.message}
+                </p>
+              )}
+            </fieldset>
 
-            <FormField
-              className={""}
-              label="Função"
-              htmlFor="duty"
-              error={errors.duty?.message}
-            >
-              <select id="duty" className="app-select" {...register("duty")}>
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Função</legend>
+              <select
+                className="select select-bordered w-full"
+                {...register("duty")}
+              >
                 <option value="TEACHER">{employeeRequestDTODutyEnum.TEACHER}</option>
                 <option value="ADM">{employeeRequestDTODutyEnum.ADM}</option>
                 <option value="THERAPIST">{employeeRequestDTODutyEnum.THERAPIST}</option>
                 <option value="MENTOR">{employeeRequestDTODutyEnum.MENTOR}</option>
               </select>
-            </FormField>
+              {errors?.duty && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.duty.message}
+                </p>
+              )}
+            </fieldset>
           </div>
 
-          <div className={""}>
+          <div className="mt-1 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
             <ButtonLink to="/employees" variant="outline">
               Cancelar
             </ButtonLink>
-            <Button type="submit" disabled={isSubmitting} variant="primary">
-              {isSubmitting ? "Salvando..." : "Criar colaborador"}
+            <Button type="submit" disabled={createEmployee.isPending} variant="primary">
+              {createEmployee.isPending ? "Salvando..." : "Salvar"}
             </Button>
           </div>
         </form>
       </SectionCard>
-    </div>
+    </PageLayout>
   );
 }

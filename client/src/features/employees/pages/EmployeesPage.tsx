@@ -1,7 +1,7 @@
 import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
-import { PageHeader } from "@/components/ui/page-header";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetEmployees } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { FileUser } from "lucide-react";
@@ -14,49 +14,54 @@ export function EmployeesPage() {
   const [showArchived, setShowArchived] = useState(false);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const params = { page: currentPage, search: debouncedSearchTerm, archived: showArchived };
 
-  const {
-    isPending: isEmployeesPending,
-    data: employees,
-    error: employeesError,
-  } = useGetEmployees(params);
+  const employeesQuery = useGetEmployees({
+    page: currentPage,
+    search: debouncedSearchTerm,
+    archived: showArchived,
+  });
+
+  const headerProps = {
+    description: "Gerencie cadastros e matrículas.",
+    title: "Colaboradores",
+    Icon: FileUser,
+    backLink: "/dashboard",
+  };
 
   return (
-    <>
-      <PageHeader
-        description="Gerencie cadastros e matrículas."
-        title="Alunos"
-        Icon={FileUser}
-        backLink="/dashboard"
-      />
-      <div className="flex items-center justify-between ml-auto">
-        <div className="flex flex-1 items-center gap-2">
+    <PageLayout {...headerProps}>
+      <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-row">
           <ListSearchInput
-            placeholder="Buscar aluno por nome, email ou escola"
-            ariaLabel="Buscar aluno"
+            className="grow sm:mr-3"
+            placeholder="Buscar colaborador por nome, email ou CPF"
+            ariaLabel="Buscar colaborador"
             value={searchTerm}
             onChange={setSearchTerm}
           />
           <ToggleSwitch
             label="Arquivados"
-            tip="Mostrar alunos arquivados"
+            tip="Mostrar colaboradores arquivados"
             toggled={showArchived}
             setToggle={setShowArchived}
           />
+          <ButtonLink
+            className="sm:ml-auto"
+            to="/employees/new"
+            variant="success"
+          >
+            Novo Colaborador
+          </ButtonLink>
         </div>
-        <ButtonLink to="/students/new" variant="success">
-          Novo Aluno
-        </ButtonLink>
-      </div>
 
       <EmployeesTable
-        employees={employees}
+        employees={employeesQuery.data}
         onPageChange={setCurrentPage}
         currentPage={currentPage}
-        isPending={isEmployeesPending}
-        error={employeesError}
-      />
-    </>
+        isPending={employeesQuery.isPending}
+        error={employeesQuery.error}
+        />
+        </div>
+    </PageLayout>
   );
 }

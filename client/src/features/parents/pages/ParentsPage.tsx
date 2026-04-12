@@ -1,7 +1,7 @@
 import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
-import { PageHeader } from "@/components/ui/page-header";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetParents } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { Handshake } from "lucide-react";
@@ -14,23 +14,25 @@ export function ParentsPage() {
   const [showArchived, setShowArchived] = useState(false);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const params = { page: currentPage, search: debouncedSearchTerm, archived: showArchived };
 
-  const { data: parents, isPending, error } = useGetParents(params);
+  const parentsQuery = useGetParents({
+    page: currentPage, search: debouncedSearchTerm, archived: showArchived
+  });
+
+  const headerProps = {
+    description: "Gerencie pais e responsáveis.",
+    title: "Pais e Responsáveis",
+    Icon: Handshake,
+    backLink: "/dashboard",
+  };
 
   return (
-    <>
-      <PageHeader
-        description="Gerencie pais e responsáveis."
-        title="Pais e Responsáveis"
-        Icon={Handshake}
-        backLink="/dashboard"
-      />
-
-      <div className="flex items-center justify-between ml-auto">
-        <div className="flex flex-1 items-center gap-2">
+    <PageLayout {...headerProps}>
+      <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-row">
           <ListSearchInput
-            placeholder="Buscar responsável por nome, email ou escola"
+            className="grow sm:mr-3"
+            placeholder="Buscar responsável por nome, email ou CPF"
             ariaLabel="Buscar responsável"
             value={searchTerm}
             onChange={setSearchTerm}
@@ -41,19 +43,23 @@ export function ParentsPage() {
             toggled={showArchived}
             setToggle={setShowArchived}
           />
+          <ButtonLink
+            className="sm:ml-auto"
+            to="/parents/new"
+            variant="success"
+          >
+            Novo Responsável
+          </ButtonLink>
         </div>
-        <ButtonLink to="/parents/new" variant="success">
-          Novo responsável
-        </ButtonLink>
-      </div>
 
       <ParentsTable
-        parents={parents}
-        isPending={isPending}
-        error={error}
+        parents={parentsQuery.data}
+        isPending={parentsQuery.isPending}
+        error={parentsQuery.error}
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       />
-    </>
+      </div>
+    </PageLayout>
   );
 }
