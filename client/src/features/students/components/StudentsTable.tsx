@@ -4,16 +4,14 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import type { PageDTOStudentResponseDTO } from "@/kubb";
 import {
-  formatCpf,
-  formatDateShortYear,
-  formatPhone,
+    formatCpf,
+    formatDateShortYear,
+    formatPhone,
 } from "@/lib/utils/formatter";
 import { SquareArrowOutUpRightIcon } from "lucide-react";
-import type { ReactNode } from "react";
 
 type StudentsTableProps = {
   students?: PageDTOStudentResponseDTO;
-  children?: ReactNode;
   onPageChange: (page: number) => void;
   currentPage: number;
   isPending: boolean;
@@ -27,10 +25,6 @@ export function StudentsTable({
   isPending,
   error,
 }: Readonly<StudentsTableProps>) {
-  if (isPending) {
-    return <LoadingSpinner text="Carregando Alunos..." />;
-  }
-
   if (error) {
     return (
       <ErrorCard
@@ -38,6 +32,10 @@ export function StudentsTable({
         error={error}
       />
     );
+  }
+
+  if (isPending) {
+    return <LoadingSpinner text="Carregando Alunos..." />;
   }
 
   return (
@@ -91,12 +89,12 @@ export function StudentsTable({
               <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
 
               <td>
-                <a
+                <ButtonLink
                   className="btn btn-primary btn-ou btn-square"
-                  href={`/students/${student.id}`}
+                  to={`/students/${student.id}`}
                 >
                   <SquareArrowOutUpRightIcon className="h-4 w-4" />
-                </a>
+                </ButtonLink>
               </td>
             </tr>
           ))}

@@ -1,6 +1,6 @@
 import { ErrorCard } from "@/components/ui/error-card";
-import { PageHeader } from "@/components/ui/page-header";
-import { Edit, Handshake, Section } from "lucide-react";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { Edit, Handshake } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import { ButtonLink } from "@/components/ui/button";
@@ -36,34 +36,40 @@ export function ParentDetailPage() {
     error: parentStudentsError,
   } = useGetStudentsByParent(parentId);
 
-  const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: parent?.name },
-    { label: "CPF", value: formatCpf(parent?.cpf ?? "") },
-    { label: "E-mail", value: parent?.email },
-    { label: "Contato", value: formatPhone(parent?.contact ?? "") },
-    { label: "Criado em", value: formatDateShortYear(parent?.createdAt ?? "") },
-    { label: "Status", value: parent?.archivedAt ? "Arquivado" : "Ativo" },
-  ];
+  const headerProps = {
+    description: "Veja e gerencie as informações do responsável",
+    title: "Detalhes do Responsável",
+    Icon: Handshake,
+    backLink: "/parents",
+  };
 
   if (isParentError) {
     return (
-      <ErrorCard title="Erro ao carregar responsável" error={parentError} />
+      <PageLayout {...headerProps}>
+        <ErrorCard title="Erro ao carregar responsável" error={parentError} />
+      </PageLayout>
     );
   }
 
   if (isParentPending) {
-    return <LoadingCard title="Carregando dados do responsável" />;
+    return (
+      <PageLayout {...headerProps}>
+        <LoadingCard title="Carregando dados do responsável" />
+      </PageLayout>
+    );
   }
 
-  return (
-    <>
-      <PageHeader
-        description="Veja e gerencie as informações do responsável"
-        title="Detalhes do Responsável"
-        Icon={Handshake}
-        backLink={"/parents"}
-      />
+  const summaryItems: Array<{ label: string; value: ReactNode }> = [
+    { label: "Nome completo", value: parent.name },
+    { label: "CPF", value: formatCpf(parent.cpf) },
+    { label: "E-mail", value: parent.email },
+    { label: "Contato", value: formatPhone(parent.contact) },
+    { label: "Criado em", value: formatDateShortYear(parent.createdAt ?? "") },
+    { label: "Status", value: parent.archivedAt ? "Arquivado" : "Ativo" },
+  ];
 
+  return (
+    <PageLayout {...headerProps}>
       <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
         <SectionCard
           title="Responsável"
@@ -106,6 +112,6 @@ export function ParentDetailPage() {
           />
         </SectionCard>
       </div>
-    </>
+    </PageLayout>
   );
 }

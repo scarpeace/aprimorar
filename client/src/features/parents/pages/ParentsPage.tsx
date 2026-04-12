@@ -1,7 +1,7 @@
 import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
-import { PageHeader } from "@/components/ui/page-header";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetParents } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { Handshake } from "lucide-react";
@@ -18,15 +18,15 @@ export function ParentsPage() {
 
   const { data: parents, isPending, error } = useGetParents(params);
 
-  return (
-    <>
-      <PageHeader
-        description="Gerencie pais e responsáveis."
-        title="Pais e Responsáveis"
-        Icon={Handshake}
-        backLink="/dashboard"
-      />
+  const headerProps = {
+    description: "Gerencie pais e responsáveis.",
+    title: "Pais e Responsáveis",
+    Icon: Handshake,
+    backLink: "/dashboard",
+  };
 
+  return (
+    <PageLayout {...headerProps}>
       <div className="flex flex-col gap-3 w-full">
         <div className="flex flex-row">
           <ListSearchInput
@@ -44,7 +44,7 @@ export function ParentsPage() {
           />
           <ButtonLink
             className="sm:ml-auto"
-            to="/students/new"
+            to="/parents/new"
             variant="success"
           >
             Novo Responsável
@@ -59,6 +59,6 @@ export function ParentsPage() {
         onPageChange={setCurrentPage}
       />
       </div>
-    </>
+    </PageLayout>
   );
 }
