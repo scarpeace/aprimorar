@@ -1,5 +1,7 @@
+import { Alert } from "@/components/ui/alert";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDownCircle, GraduationCap } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import { toInstant } from "@/lib/utils/dateFormater";
@@ -9,13 +11,12 @@ import {
   eventFormSchema,
 } from "../forms/eventFormSchema";
 import { useEventMutations } from "../hooks/use-event-mutations";
-import { PageHeader } from "@/components/ui/page-header";
+
 export function EventCreatePage() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = useForm<EventFormSchema>({
     resolver: zodResolver(eventFormSchema),
     mode: "onBlur",
@@ -33,20 +34,24 @@ export function EventCreatePage() {
     });
   });
 
-  return (
-    <>
-      <PageHeader
-        title="Novo Atendimento"
-        description="Preencha abaixo os dados do evento."
-        Icon={GraduationCap}
-        backLink="/events"
-      />
+  const headerProps = {
+    title: "Novo Atendimento",
+    description: "Preencha abaixo os dados do evento.",
+    Icon: Calendar,
+    backLink: "/events",
+  };
 
+  return (
+    <PageLayout {...headerProps}>
       <EventForm.Root
         title="Dados do evento"
         description="Informe data, valores e participantes do atendimento."
         onSubmit={onSubmit}
       >
+        {createEvent.isError && (
+          <Alert error={createEvent.error} variant="error" />
+        )}
+
         <EventForm.Fields
           errors={errors}
           register={register}
@@ -57,6 +62,6 @@ export function EventCreatePage() {
           cancelTo="/events"
         />
       </EventForm.Root>
-    </>
+    </PageLayout>
   );
 }

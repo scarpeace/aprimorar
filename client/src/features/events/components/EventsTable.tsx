@@ -1,3 +1,4 @@
+import { ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
@@ -5,11 +6,9 @@ import { type PageDTOEventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { SquareArrowOutUpRightIcon } from "lucide-react";
-import { type ReactNode } from "react";
 
 type EventsTableProps = {
   eventsPage?: PageDTOEventResponseDTO;
-  children?: ReactNode;
   currentPage: number;
   onPageChange: (page: number) => void;
   isPending: boolean;
@@ -86,9 +85,13 @@ export function EventsTable({
               <td>{brl.format(event.payment)}</td>
 
               <td>
-                <a className="btn btn-primary btn-ou btn-square" href={`/events/${event.eventId}`}>
-                <SquareArrowOutUpRightIcon className="h-4 w-4" />
-                </a>
+                <ButtonLink
+                  className="btn-square"
+                  to={`/events/${event.eventId}`}
+                  variant="primary"
+                >
+                  <SquareArrowOutUpRightIcon className="h-4 w-4" />
+                </ButtonLink>
               </td>
             </tr>
           ))}

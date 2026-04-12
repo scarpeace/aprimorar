@@ -9,11 +9,9 @@ import {
   formatPhone,
 } from "@/lib/utils/formatter";
 import { SquareArrowOutUpRightIcon } from "lucide-react";
-import type { ReactNode } from "react";
 
 type EmployeesTableProps = {
   employees?: PageDTOEmployeeResponseDTO;
-  children?: ReactNode;
   onPageChange: (page: number) => void;
   currentPage: number;
   isPending: boolean;
@@ -82,12 +80,13 @@ export function EmployeesTable({
               <td>{employee.archivedAt ? "Arquivado" : "Ativo"}</td>
 
               <td>
-                <a
-                  className="btn btn-primary btn-ou btn-square"
-                  href={`/employees/${employee.id}`}
+                <ButtonLink
+                  className="btn-square"
+                  to={`/employees/${employee.id}`}
+                  variant="primary"
                 >
                   <SquareArrowOutUpRightIcon className="h-4 w-4" />
-                </a>
+                </ButtonLink>
               </td>
             </tr>
           ))}
