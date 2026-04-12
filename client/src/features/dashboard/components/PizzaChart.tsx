@@ -67,8 +67,9 @@ export function PizzaChart({
   data,
   isAnimationActive = true,
 }: Readonly<PizzaChartProps>) {
+
   const chartData: ChartDatum[] = data.map((item, index) => ({
-    name: EventContentLabels[item.content] || item.content,
+    name: EventContentLabels[item.content ?? "OUTRO"] ?? item.content ?? "Outro",
     value: item.count ?? 0,
     fill: COLORS[index % COLORS.length],
   }));

@@ -1,6 +1,5 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { PageLoading } from "@/components/ui/page-loading";
-import styles from "@/features/dashboard/DashboardPage.module.css";
 import { useGetDashboardSummary } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { brl } from "@/lib/utils/formatter";
@@ -47,25 +46,24 @@ export function DashboardPage() {
 
   if (dashboardQuery.isError || !dashboardQuery.data) {
     return (
-      <div className={styles.errorWrap}>
+      <div className="app-dashboard-error">
         <h1 className="app-text text-3xl font-bold">Painel</h1>
         <ErrorCard
           title="Ops, não foi possível carregar"
           description={getFriendlyErrorMessage(dashboardQuery.error)}
-          onAction={dashboardQuery.refetch}
         />
       </div>
     );
   }
 
   return (
-    <div className={styles.page}>
+    <div className="app-dashboard-page">
       <h1 className="app-text text-3xl font-bold">Painel</h1>
-      <div className={styles.kpiGrid}>
+      <div className="app-dashboard-kpi-grid">
         {kpiItems.map((item) => (
           <div
             key={item.label}
-            className="card border border-base-300 bg-base-100 shadow-sm"
+            className="card border border-base-300 bg-base-100 shadow-(--app-elevation-soft) transition-[transform,box-shadow] duration-200 hover:-translate-y-[0.5] hover:shadow-(--app-elevation-strong) animate-[fade-up_360ms_ease-out_both]"
           >
             <div className="card-body gap-2">
               <h2 className="app-kpi-label">{item.label}</h2>
@@ -87,7 +85,7 @@ export function DashboardPage() {
             <PizzaChart data={dashboardQuery.data.charts ?? []} />
           </div>
         </div>
-        <div className="card border border-base-300 bg-base-100 shadow-sm flex items-center justify-center min-h-[300px]">
+        <div className="card border border-base-300 bg-base-100 shadow-sm flex items-center justify-center min-h-[75]">
           <div className="text-center p-8">
             <h3 className="text-base-content/40 font-medium italic">
               Gráfico de Evolução
