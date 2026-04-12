@@ -1,13 +1,11 @@
 import { Alert } from "@/components/ui/alert";
 import { Button, ButtonLink } from "@/components/ui/button";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { SectionCard } from "@/components/ui/section-card";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, TriangleAlert } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
-import { ParentForm } from "../forms/ParentForm";
-import { ParentFormFields } from "../forms/ParentFormFields";
 import {
   parentFormSchema,
   type ParentFormSchema,
@@ -38,47 +36,59 @@ export function ParentCreatePage() {
     createParent({ data });
   });
 
+  const headerProps = {
+    title: "Criar responsável",
+    description: "Preencha os dados do responsável.",
+    Icon: GraduationCap,
+    backLink: "/parents",
+  };
+
   return (
-    <>
-      <PageHeader
-        title="Criar responsável"
-        description="Preencha os dados do responsável."
-        Icon={GraduationCap}
-        backLink={"/parents"}
-      />
+    <PageLayout {...headerProps}>
+      <SectionCard
+        title={"Cadastre um novo responsável"}
+        description={"Informe os dados do responsável."}
+      >
+        {isCreateParentError && (
+          <Alert error={createParentError} variant="error" />
+        )}
 
-      <div className="container animate-[fade-up_300ms_ease-out_both]">
-        <ParentForm onSubmit={onSubmit}>
-          <ParentFormFields
-            register={register}
-            registerWithMask={registerWithMask}
-            errors={errors}
-            className="grid grid-cols-2 gap-4"
-          />
+        <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
 
-          {isCreateParentError && (
-            <Alert error={createParentError} variant="error" />
-          )}
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Nome</legend>
+              <input type="text" className="input" {...register("name")}placeholder="Nome Completo"/>
+              {errors?.name && ( <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.name.message}</p>)}
+            </fieldset>
 
-          <div className="flex justify-end flex-wrap gap-3">
-            <Button
-              type="submit"
-              variant="success"
-              disabled={isCreateParentPending}
-            >
-              {isCreateParentPending ? (
-                <LoadingSpinner text={"Salvando"} />
-              ) : (
-                "Salvar alterações"
-              )}
-            </Button>
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Email</legend>
+              <input type="text" className="input" {...register("email")} placeholder="email@email.com"/>
+              {errors?.email && ( <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.email.message}</p>)}
+            </fieldset>
 
-            <ButtonLink to={`/parents/`} variant="outline">
-              Cancelar
-            </ButtonLink>
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Contato</legend>
+              <input type="text" className="input" placeholder="Ex: (61) 99633-2332" {...registerWithMask("contact", ["(##) #####-####", "(##) ####-####"])} />
+              {errors?.contact && ( <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.contact.message}</p>)}
+            </fieldset>
+
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">CPF</legend>
+              <input type="text" className="input" placeholder="Ex: 123.456.789-00" {...registerWithMask("cpf", ["###.###.###-##"])} />
+              {errors?.cpf && ( <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.cpf.message}</p>)}
+            </fieldset>
           </div>
-        </ParentForm>
-      </div>
-    </>
+
+          <div className="mt-1 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <ButtonLink to="/parents" variant="outline">Cancelar</ButtonLink>
+            <Button type="submit" disabled={isCreateParentPending} variant="primary">
+              {isCreateParentPending ? "Salvando..." : "Salvar"}
+            </Button>
+          </div>
+        </form>
+      </SectionCard>
+    </PageLayout>
   );
 }
