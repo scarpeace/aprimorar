@@ -1,4 +1,4 @@
-import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GraduationCap, TriangleAlert } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -13,7 +13,7 @@ import { studentFormSchema, type StudentFormSchema } from "../forms/studentFormS
 import { useStudentMutations } from "../hooks/student-mutations";
 
 export function StudentCreatePage() {
-  const { register, handleSubmit, formState: { errors } } = useForm<StudentFormSchema>({
+  const { register, handleSubmit, control, formState: { errors } } = useForm<StudentFormSchema>({
     resolver: zodResolver(studentFormSchema),
     mode: "onBlur",
   });
@@ -25,22 +25,25 @@ export function StudentCreatePage() {
     createStudent.mutate({ data });
   });
 
+  const headerProps = {
+    title: "Novo Aluno",
+    description: "Preencha os dados do aluno no formulário abaixo.",
+    Icon: GraduationCap,
+    backLink: "/students",
+  };
+
   return (
-    <>
-      <PageHeader
-        title="Novo Aluno"
-        description="Preencha os dados do aluno no formulário abaixo."
-        Icon={GraduationCap}
-        backLink="/students"
-      />
+    <PageLayout {...headerProps}>
 
       <SectionCard title={"Cadastre um novo aluno"} description={"Informe os dados do aluno e do selecione um responsável."}>
+
         {createStudent.isError && (
             <Alert error={createStudent.error} variant="error" />
         )}
+
         <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-            <ParentSelectDropdown className="col-span-3" label="Responsável" register={register} />
+            <ParentSelectDropdown className="col-span-3" label="Responsável" control={control} error={errors.parentId?.message} />
 
           <fieldset className="fieldset">
             <legend className="fieldset-legend">Nome</legend>
@@ -137,6 +140,6 @@ export function StudentCreatePage() {
         </div>
       </form>
       </SectionCard>
-    </>
+    </PageLayout>
   );
 }

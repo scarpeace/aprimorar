@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { PageLayout } from "@/components/layout/PageLayout";
 import { Button, ButtonLink } from "@/components/ui/button";
-import { PageHeader } from "@/components/ui/page-header";
+import { ErrorCard } from "@/components/ui/error-card";
+import { LoadingCard } from "@/components/ui/loading-card";
 import { useGetStudentById } from "@/kubb";
 import { GraduationCap, TriangleAlert } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -52,14 +54,34 @@ export function StudentEditPage() {
     updateStudent.mutate({studentId, data });
   });
 
+  const headerProps = {
+    title: "Editar aluno",
+    description: "Preencha os dados do aluno e do responsável.",
+    Icon: GraduationCap,
+    backLink: `/students/${studentId}`,
+  };
+
+  if (studentQuery.isError) {
+    return (
+      <PageLayout {...headerProps}>
+        <ErrorCard
+          title="Erro ao carregar detalhes do aluno"
+          error={studentQuery.error}
+        />
+      </PageLayout>
+    );
+  }
+
+  if (studentQuery.isPending || !studentQuery.data) {
+    return (
+      <PageLayout {...headerProps}>
+        <LoadingCard title="Carregando detalhes do aluno" />
+      </PageLayout>
+    );
+  }
+
   return (
-    <>
-      <PageHeader
-        title="Editar aluno"
-        description="Preencha os dados do aluno e do responsável."
-        Icon={GraduationCap}
-        backLink={`/students/${studentId}`}
-      />
+    <PageLayout {...headerProps}>
       <SectionCard title={"Cadastre um novo aluno"} description={"Informe os dados do aluno e do selecione um responsável."}>
 
       <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
@@ -161,6 +183,6 @@ export function StudentEditPage() {
           </div>
         </form>
       </SectionCard>
-    </>
+    </PageLayout>
   );
 }

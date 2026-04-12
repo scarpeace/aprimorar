@@ -1,7 +1,7 @@
 import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
-import { PageHeader } from "@/components/ui/page-header";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetStudents } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { GraduationCap } from "lucide-react";
@@ -21,14 +21,15 @@ export function StudentsPage() {
     archived: showArchived,
   });
 
+  const headerProps = {
+    description: "Gerencie cadastros e matrículas.",
+    title: "Alunos",
+    Icon: GraduationCap,
+    backLink: "/dashboard",
+  };
+
   return (
-    <>
-      <PageHeader
-        description="Gerencie cadastros e matrículas."
-        title="Alunos"
-        Icon={GraduationCap}
-        backLink="/dashboard"
-      />
+    <PageLayout {...headerProps}>
       <div className="flex flex-col gap-3 w-full">
         <div className="flex flex-row">
           <ListSearchInput
@@ -57,6 +58,6 @@ export function StudentsPage() {
           error={studentsQuery.error}
         />
       </div>
-    </>
+    </PageLayout>
   );
 }
