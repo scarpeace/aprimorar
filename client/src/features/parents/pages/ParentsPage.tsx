@@ -14,9 +14,8 @@ export function ParentsPage() {
   const [showArchived, setShowArchived] = useState(false);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const params = { page: currentPage, search: debouncedSearchTerm, archived: showArchived };
 
-  const { data: parents, isPending, error } = useGetParents(params);
+  const parentsQuery = useGetParents({ page: currentPage, search: debouncedSearchTerm, archived: showArchived });
 
   const headerProps = {
     description: "Gerencie pais e responsáveis.",
@@ -52,9 +51,9 @@ export function ParentsPage() {
         </div>
 
       <ParentsTable
-        parents={parents}
-        isPending={isPending}
-        error={error}
+        parents={parentsQuery.data}
+        isPending={parentsQuery.isPending}
+        error={parentsQuery.error}
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       />

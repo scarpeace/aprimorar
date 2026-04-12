@@ -103,6 +103,7 @@ export function StudentEditPage() {
            <fieldset className="fieldset">
             <legend className="fieldset-legend">CPF</legend>
               <input type="text" className="input"
+                disabled={true}
                 placeholder="Ex: 123.456.789-00"
                 {...registerWithMask("cpf", ["###.###.###-##"])}
               />

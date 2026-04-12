@@ -23,18 +23,9 @@ export function ParentDetailPage() {
   const parentId = id ?? "";
   const [currentPage, setCurrentPage] = useState(0);
 
-  const {
-    data: parent,
-    isError: isParentError,
-    isPending: isParentPending,
-    error: parentError,
-  } = useGetParentById(parentId);
+  const parentQuery = useGetParentById(parentId);
 
-  const {
-    data: parentStudents,
-    isPending: isParentStudentsPending,
-    error: parentStudentsError,
-  } = useGetStudentsByParent(parentId);
+  const parentStudentsQuery = useGetStudentsByParent(parentId);
 
   const headerProps = {
     description: "Veja e gerencie as informações do responsável",
@@ -43,15 +34,15 @@ export function ParentDetailPage() {
     backLink: "/parents",
   };
 
-  if (isParentError) {
+  if (parentQuery.isError || parentStudentsQuery.isError) {
     return (
       <PageLayout {...headerProps}>
-        <ErrorCard title="Erro ao carregar responsável" error={parentError} />
+        <ErrorCard title="Erro ao carregar responsável" error={parentQuery.error || parentStudentsQuery.error} />
       </PageLayout>
     );
   }
 
-  if (isParentPending) {
+  if (parentQuery.isPending || parentStudentsQuery.isPending) {
     return (
       <PageLayout {...headerProps}>
         <LoadingCard title="Carregando dados do responsável" />
@@ -60,12 +51,12 @@ export function ParentDetailPage() {
   }
 
   const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: parent.name },
-    { label: "CPF", value: formatCpf(parent.cpf) },
-    { label: "E-mail", value: parent.email },
-    { label: "Contato", value: formatPhone(parent.contact) },
-    { label: "Criado em", value: formatDateShortYear(parent.createdAt ?? "") },
-    { label: "Status", value: parent.archivedAt ? "Arquivado" : "Ativo" },
+    { label: "Nome completo", value: parentQuery.data?.name },
+    { label: "CPF", value: formatCpf(parentQuery.data?.cpf) },
+    { label: "E-mail", value: parentQuery.data?.email },
+    { label: "Contato", value: formatPhone(parentQuery.data?.contact) },
+    { label: "Criado em", value: formatDateShortYear(parentQuery.data?.createdAt ?? "") },
+    { label: "Status", value: parentQuery.data?.archivedAt ? "Arquivado" : "Ativo" },
   ];
 
   return (
@@ -83,7 +74,7 @@ export function ParentDetailPage() {
 
               <ArchiveParentButton
                 parentId={parentId}
-                isArchived={!!parent.archivedAt}
+                isArchived={!!parentQuery.data?.archivedAt}
               />
               <DeleteParentButton parentId={parentId} />
             </>
@@ -104,11 +95,11 @@ export function ParentDetailPage() {
           description={"Alunos vinculados ao responsável"}
         >
           <StudentsTable
-            students={parentStudents}
+            students={parentStudentsQuery.data}
             onPageChange={setCurrentPage}
             currentPage={currentPage}
-            isPending={isParentStudentsPending}
-            error={parentStudentsError}
+            isPending={parentStudentsQuery.isPending}
+            error={parentStudentsQuery.error}
           />
         </SectionCard>
       </div>

@@ -23,17 +23,10 @@ export function ParentCreatePage() {
   });
   const registerWithMask = useHookFormMask(register);
 
-  const {
-    createParent: {
-      mutate: createParent,
-      isPending: isCreateParentPending,
-      isError: isCreateParentError,
-      error: createParentError,
-    },
-  } = useParentMutations();
+  const { createParent } = useParentMutations();
 
   const onSubmit = handleSubmit((data: ParentFormSchema) => {
-    createParent({ data });
+    createParent.mutate({ data });
   });
 
   const headerProps = {
@@ -49,8 +42,8 @@ export function ParentCreatePage() {
         title={"Cadastre um novo responsável"}
         description={"Informe os dados do responsável."}
       >
-        {isCreateParentError && (
-          <Alert error={createParentError} variant="error" />
+        {createParent.error && (
+          <Alert error={createParent.error} variant="error" />
         )}
 
         <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
@@ -83,8 +76,8 @@ export function ParentCreatePage() {
 
           <div className="mt-1 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
             <ButtonLink to="/parents" variant="outline">Cancelar</ButtonLink>
-            <Button type="submit" disabled={isCreateParentPending} variant="primary">
-              {isCreateParentPending ? "Salvando..." : "Salvar"}
+            <Button type="submit" disabled={createParent.isPending} variant="primary">
+              {createParent.isPending ? "Salvando..." : "Salvar"}
             </Button>
           </div>
         </form>
