@@ -24,8 +24,7 @@ export function EmployeeEditPage() {
   const employeeId = id ?? "";
 
   const employeeQuery = useGetEmployeeById(employeeId);
-
-  const {updateEmployee} = useEmployeeMutations();
+  const { updateEmployee } = useEmployeeMutations();
 
   const {
     register,

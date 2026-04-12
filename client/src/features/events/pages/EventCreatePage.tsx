@@ -13,6 +13,8 @@ import {
 import { useEventMutations } from "../hooks/use-event-mutations";
 
 export function EventCreatePage() {
+  const { createEvent } = useEventMutations();
+
   const {
     register,
     handleSubmit,
@@ -21,8 +23,6 @@ export function EventCreatePage() {
     resolver: zodResolver(eventFormSchema),
     mode: "onBlur",
   });
-
-  const { createEvent } = useEventMutations();
 
   const onSubmit = handleSubmit((data: EventFormSchema) => {
     createEvent.mutate({
@@ -52,10 +52,7 @@ export function EventCreatePage() {
           <Alert error={createEvent.error} variant="error" />
         )}
 
-        <EventForm.Fields
-          errors={errors}
-          register={register}
-        />
+        <EventForm.Fields errors={errors} register={register} />
 
         <EventForm.Actions
           isSubmitting={createEvent.isPending}

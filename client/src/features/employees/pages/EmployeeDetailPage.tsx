@@ -27,7 +27,6 @@ export function EmployeeDetailPage() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const employeeQuery = useGetEmployeeById(employeeId);
-
   const employeeEventsQuery = useGetEventsByEmployee(employeeId);
 
   const headerProps = {

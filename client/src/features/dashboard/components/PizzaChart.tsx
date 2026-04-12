@@ -6,9 +6,16 @@ import {
   Tooltip,
   type PieLabelRenderProps,
 } from "recharts";
+
 import { type DashboardSummaryResponseDTO } from "@/kubb";
+import { EventContentLabels } from "@/lib/shared/eventContentLables";
 
 type ClassesByContentDTO = NonNullable<DashboardSummaryResponseDTO["charts"]>[number];
+type ChartDatum = {
+  name: string;
+  value: number;
+  fill: string;
+};
 
 const COLORS = [
   "#3b82f6",
@@ -20,6 +27,7 @@ const COLORS = [
   "#06b6d4",
 ];
 const RADIAN = Math.PI / 180;
+
 const renderCustomizedLabel = ({
   cx,
   cy,
@@ -49,19 +57,22 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
+
 interface PizzaChartProps {
   data: ClassesByContentDTO[];
   isAnimationActive?: boolean;
 }
+
 export function PizzaChart({
   data,
   isAnimationActive = true,
 }: Readonly<PizzaChartProps>) {
-  const chartData = data.map((item, index) => ({
-    name: item.content,
+  const chartData: ChartDatum[] = data.map((item, index) => ({
+    name: EventContentLabels[item.content] || item.content,
     value: item.count ?? 0,
     fill: COLORS[index % COLORS.length],
   }));
+
   if (chartData.length === 0) {
     return (
       <div className="flex h-64 w-full items-center justify-center rounded-lg border border-dashed border-base-300 italic text-base-content/50">
@@ -69,6 +80,7 @@ export function PizzaChart({
       </div>
     );
   }
+
   return (
     <div className="h-80 w-full min-h-80">
       <ResponsiveContainer width="100%" height="100%">
@@ -83,7 +95,7 @@ export function PizzaChart({
             dataKey="value"
             isAnimationActive={isAnimationActive}
           />
-          <Tooltip formatter={(value) => [`${value ?? ""}`]} />
+          <Tooltip formatter={(value) => [String(value ?? ""), "Quantidade"]} />
           <Legend
             verticalAlign="bottom"
             height={36}

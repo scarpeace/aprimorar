@@ -24,7 +24,6 @@ export function ParentDetailPage() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const parentQuery = useGetParentById(parentId);
-
   const parentStudentsQuery = useGetStudentsByParent(parentId);
 
   const headerProps = {

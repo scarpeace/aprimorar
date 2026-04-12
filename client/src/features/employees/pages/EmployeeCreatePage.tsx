@@ -15,11 +15,9 @@ import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
 import { FileUser, TriangleAlert } from "lucide-react";
 
 export function EmployeeCreatePage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<EmployeeFormSchema>({
+  const { createEmployee } = useEmployeeMutations();
+
+  const { register, handleSubmit, formState: { errors } } = useForm<EmployeeFormSchema>({
     resolver: zodResolver(employeeFormSchema),
     defaultValues: {
       duty: "TEACHER",
@@ -27,7 +25,7 @@ export function EmployeeCreatePage() {
   });
   const registerWithMask = useHookFormMask(register);
 
-  const {createEmployee} = useEmployeeMutations();
+
   const onSubmit = (data: EmployeeFormSchema) => {
     createEmployee.mutate({ data });
   };

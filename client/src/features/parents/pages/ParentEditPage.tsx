@@ -21,19 +21,8 @@ export function ParentEditPage() {
   const { id } = useParams<{ id: string }>();
   const parentId = id ?? "";
 
-  const {
-    updateParent: {
-      mutate: updateParent,
-      isPending: isUpdatingParent,
-      error: updateParentError,
-    },
-  } = useParentMutations();
-
-  const {
-    isPending: isParentPending,
-    error: parentError,
-    data: parentData,
-  } = useGetParentById(parentId);
+  const { updateParent } = useParentMutations();
+  const parentQuery = useGetParentById(parentId);
 
   const {
     register,
@@ -42,16 +31,16 @@ export function ParentEditPage() {
   } = useForm<ParentFormSchema>({
     resolver: zodResolver(parentFormSchema),
     values: {
-      name: parentData?.name ?? "",
-      email: parentData?.email ?? "",
-      contact: parentData?.contact ?? "",
-      cpf: parentData?.cpf ?? "",
+      name: parentQuery.data?.name ?? "",
+      email: parentQuery.data?.email ?? "",
+      contact: parentQuery.data?.contact ?? "",
+      cpf: parentQuery.data?.cpf ?? "",
     },
   });
   const registerWithMask = useHookFormMask(register);
 
   const onSubmit = handleSubmit((data: ParentFormSchema) => {
-    updateParent({ parentId, data });
+    updateParent.mutate({ parentId, data });
   });
 
   const headerProps = {
@@ -61,18 +50,18 @@ export function ParentEditPage() {
     Icon: Handshake,
   };
 
-  if (parentError) {
+  if (parentQuery.error) {
     return (
       <PageLayout {...headerProps}>
         <ErrorCard
           title="Erro ao carregar detalhes do responsável"
-          error={parentError}
+          error={parentQuery.error}
         />
       </PageLayout>
     );
   }
 
-  if (isParentPending || !parentData) {
+  if (parentQuery.isPending || !parentQuery.data) {
     return (
       <PageLayout {...headerProps}>
         <LoadingCard title="Carregando detalhes do responsável" />
@@ -86,8 +75,8 @@ export function ParentEditPage() {
         title={"Editar responsável"}
         description={"Atualize os dados do responsável."}
       >
-        {updateParentError && (
-          <Alert error={updateParentError} variant="error" />
+        {updateParent.isError && (
+          <Alert error={updateParent.error} variant="error" />
         )}
 
         <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
@@ -162,8 +151,8 @@ export function ParentEditPage() {
             <ButtonLink to={`/parents/${parentId}`} variant="outline">
               Cancelar
             </ButtonLink>
-            <Button type="submit" disabled={isUpdatingParent} variant="primary">
-              {isUpdatingParent ? "Salvando..." : "Salvar"}
+            <Button type="submit" disabled={updateParent.isPending} variant="primary">
+              {updateParent.isPending ? "Salvando..." : "Salvar"}
             </Button>
           </div>
         </form>

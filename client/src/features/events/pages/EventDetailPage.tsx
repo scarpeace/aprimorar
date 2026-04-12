@@ -14,12 +14,7 @@ export function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const eventId = id ?? "";
 
-  const {
-    data: event,
-    isPending: isEventPending,
-    isError: isEventError,
-    error: eventError,
-  } = useGetEventById(eventId);
+  const eventQuery = useGetEventById(eventId);
 
   const headerProps = {
     description: "Veja e gerencie as informações do evento",
@@ -28,15 +23,15 @@ export function EventDetailPage() {
     backLink: "/events",
   };
 
-  if (isEventError) {
+  if (eventQuery.isError) {
     return (
       <PageLayout {...headerProps}>
-        <ErrorCard title="Erro ao carregar evento" error={eventError} />
+        <ErrorCard title="Erro ao carregar evento" error={eventQuery.error} />
       </PageLayout>
     );
   }
 
-  if (isEventPending || !event) {
+  if (eventQuery.isPending || !eventQuery.data) {
     return (
       <PageLayout {...headerProps}>
         <LoadingCard title="Carregando dados do evento" />
@@ -44,22 +39,22 @@ export function EventDetailPage() {
     );
   }
 
-  const profit = Number(event.price) - Number(event.payment);
+  const profit = Number(eventQuery.data.price) - Number(eventQuery.data.payment);
 
   const summaryItems: Array<{ label: string; value: ReactNode; className?: string }> = [
-    { label: "Data", value: formatDateShortYear(event.startDate) },
-    { label: "Hora", value: formatTime(event.startDate) },
+    { label: "Data", value: formatDateShortYear(eventQuery.data.startDate) },
+    { label: "Hora", value: formatTime(eventQuery.data.startDate) },
     { label: "Duração", value: "1 hora" },
-    { label: "Nome do aluno", value: event.studentName ?? "-" },
-    { label: "Nome do colaborador", value: event.employeeName ?? "-" },
-    { label: "Conteúdo", value: event.content ?? "-" },
-    { label: "Valor", value: brl.format(event.price) },
-    { label: "Pagamento", value: brl.format(event.payment) },
+    { label: "Nome do aluno", value: eventQuery.data.studentName ?? "-" },
+    { label: "Nome do colaborador", value: eventQuery.data.employeeName ?? "-" },
+    { label: "Conteúdo", value: eventQuery.data.content ?? "-" },
+    { label: "Valor", value: brl.format(eventQuery.data.price) },
+    { label: "Pagamento", value: brl.format(eventQuery.data.payment) },
     { label: "Lucro", value: brl.format(profit) },
-    { label: "Título", value: event.title },
+    { label: "Título", value: eventQuery.data.title },
     {
       label: "Descrição",
-      value: event.description ?? "-",
+      value: eventQuery.data.description ?? "-",
       className: "col-span-2",
     },
   ];

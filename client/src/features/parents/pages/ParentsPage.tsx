@@ -15,7 +15,9 @@ export function ParentsPage() {
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const parentsQuery = useGetParents({ page: currentPage, search: debouncedSearchTerm, archived: showArchived });
+  const parentsQuery = useGetParents({
+    page: currentPage, search: debouncedSearchTerm, archived: showArchived
+  });
 
   const headerProps = {
     description: "Gerencie pais e responsáveis.",

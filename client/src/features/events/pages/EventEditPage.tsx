@@ -20,25 +20,21 @@ export function EventEditPage() {
   const { id } = useParams<{ id: string }>();
   const eventId = id ?? "";
 
-  const {
-    data: event,
-    isPending: isEventPending,
-    error: eventError,
-  } = useGetEventById(eventId);
+  const eventQuery = useGetEventById(eventId);
 
   const form = useForm<EventFormSchema>({
     resolver: zodResolver(eventFormSchema),
     mode: "onBlur",
     values: {
-      studentId: event?.studentId ?? "",
-      employeeId: event?.employeeId ?? "",
-      startDate: toDatetimeLocalInput(event?.startDate),
-      endDate: toDatetimeLocalInput(event?.endDate),
-      payment: event?.payment ?? 0,
-      price: event?.price ?? 0,
-      content: event?.content ?? eventRequestDTOContentEnum.AULA,
-      title: event?.title ?? "",
-      description: event?.description ?? "",
+      studentId: eventQuery.data?.studentId ?? "",
+      employeeId: eventQuery.data?.employeeId ?? "",
+      startDate: toDatetimeLocalInput(eventQuery.data?.startDate),
+      endDate: toDatetimeLocalInput(eventQuery.data?.endDate),
+      payment: eventQuery.data?.payment ?? 0,
+      price: eventQuery.data?.price ?? 0,
+      content: eventQuery.data?.content ?? eventRequestDTOContentEnum.AULA,
+      title: eventQuery.data?.title ?? "",
+      description: eventQuery.data?.description ?? "",
     },
   });
 
@@ -62,18 +58,18 @@ export function EventEditPage() {
     backLink: `/events/${eventId}`,
   };
 
-  if (eventError) {
+  if (eventQuery.isError) {
     return (
       <PageLayout {...headerProps}>
         <ErrorCard
           title="Erro ao carregar detalhes do evento"
-          error={eventError}
+          error={eventQuery.error}
         />
       </PageLayout>
     );
   }
 
-  if (isEventPending || !event) {
+  if (eventQuery.isPending || !eventQuery.data) {
     return (
       <PageLayout {...headerProps}>
         <LoadingCard title="Carregando dados do evento" />
