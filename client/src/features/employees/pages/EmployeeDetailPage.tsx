@@ -1,7 +1,7 @@
 import { ButtonLink } from "@/components/ui/button";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { PageHeader } from "@/components/ui/page-header";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { EventsTable } from "@/features/events/components/EventsTable";
@@ -37,50 +37,61 @@ export function EmployeeDetailPage() {
   const isEmployeeLoading = isEmployeePending || !employee;
   const hasEmployeeError = !!employeeError;
 
-  const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: employee?.name },
-    { label: "E-mail", value: employee?.email },
-    {
-      label: "Cargo",
-      value:
-        employeeResponseDTODutyEnum[
-          employee?.duty as keyof typeof employeeResponseDTODutyEnum
-        ] ?? "Desconhecido",
-    },
-    { label: "Contato", value: employee?.contact },
-    { label: "CPF", value: employee?.cpf },
-    { label: "Chave PIX", value: employee?.pix },
-    {
-      label: "Data de nascimento",
-      value: formatDateShortYear(employee?.birthdate ?? ""),
-    },
-    {
-      label: "Status",
-      value: employee?.archivedAt ? "Arquivado" : "Ativo",
-    },
-    {
-      label: "Criado em",
-      value: formatDateShortYear(employee?.createdAt ?? ""),
-    },
-  ];
+  const headerProps = {
+    description: "Veja e gerencie as informações do colaborador",
+    title: "Detalhes do colaborador",
+    Icon: FileUser,
+    backLink: "/employees",
+  };
 
-  return (
-    <>
-      <PageHeader
-        description="Veja e gerencie as informações do colaborador"
-        title="Detalhes do colaborador"
-        Icon={FileUser}
-        backLink="/students"
-      />
-
-      {hasEmployeeError ? (
+  if (hasEmployeeError) {
+    return (
+      <PageLayout {...headerProps}>
         <ErrorCard
           title="Erro ao carregar detalhes do colaborador"
           error={employeeError}
         />
-      ) : isEmployeeLoading ? (
+      </PageLayout>
+    );
+  }
+
+  if (isEmployeeLoading) {
+    return (
+      <PageLayout {...headerProps}>
         <LoadingCard title="Carregando detalhes do colaborador" />
-      ) : (
+      </PageLayout>
+    );
+  }
+
+  const summaryItems: Array<{ label: string; value: ReactNode }> = [
+    { label: "Nome completo", value: employee.name },
+    { label: "E-mail", value: employee.email },
+    {
+      label: "Cargo",
+      value:
+        employeeResponseDTODutyEnum[
+          employee.duty as keyof typeof employeeResponseDTODutyEnum
+        ] ?? "Desconhecido",
+    },
+    { label: "Contato", value: employee.contact },
+    { label: "CPF", value: employee.cpf },
+    { label: "Chave PIX", value: employee.pix },
+    {
+      label: "Data de nascimento",
+      value: formatDateShortYear(employee.birthdate ?? ""),
+    },
+    {
+      label: "Status",
+      value: employee.archivedAt ? "Arquivado" : "Ativo",
+    },
+    {
+      label: "Criado em",
+      value: formatDateShortYear(employee.createdAt ?? ""),
+    },
+  ];
+
+  return (
+    <PageLayout {...headerProps}>
         <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
           <SectionCard
             title="Colaborador "
@@ -131,7 +142,6 @@ export function EmployeeDetailPage() {
             />
           </SectionCard>
         </div>
-      )}
-    </>
+    </PageLayout>
   );
 }

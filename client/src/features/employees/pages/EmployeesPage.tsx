@@ -1,7 +1,7 @@
 import { ButtonLink } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
-import { PageHeader } from "@/components/ui/page-header";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetEmployees } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { FileUser } from "lucide-react";
@@ -21,14 +21,15 @@ export function EmployeesPage() {
     archived: showArchived,
   });
 
+  const headerProps = {
+    description: "Gerencie cadastros e matrículas.",
+    title: "Colaboradores",
+    Icon: FileUser,
+    backLink: "/dashboard",
+  };
+
   return (
-    <>
-      <PageHeader
-        description="Gerencie cadastros e matrículas."
-        title="Colaboradores"
-        Icon={FileUser}
-        backLink="/dashboard"
-      />
+    <PageLayout {...headerProps}>
       <div className="flex flex-col gap-3 w-full">
         <div className="flex flex-row">
           <ListSearchInput
@@ -46,7 +47,7 @@ export function EmployeesPage() {
           />
           <ButtonLink
             className="sm:ml-auto"
-            to="/students/new"
+            to="/employees/new"
             variant="success"
           >
             Novo Colaborador
@@ -61,6 +62,6 @@ export function EmployeesPage() {
         error={employeesQuery.error}
         />
         </div>
-    </>
+    </PageLayout>
   );
 }

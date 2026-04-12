@@ -2,40 +2,30 @@ import { Alert } from "@/components/ui/alert";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { PageHeader } from "@/components/ui/page-header";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { SectionCard } from "@/components/ui/section-card";
 import { useGetEmployeeById } from "@/kubb";
 import { formatDateInputValue } from "@/lib/utils/formatter";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown } from "lucide-react";
+import { FileUser, TriangleAlert } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useHookFormMask } from "use-mask-input";
-import { EmployeeForm } from "../forms/EmployeeForm";
-import { EmployeeFormFields } from "../forms/EmployeeFormFields";
 import {
   employeeFormSchema,
   type EmployeeFormSchema,
 } from "../forms/employeeFormSchema";
+import { employeeRequestDTODutyEnum } from "@/kubb";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
 
+//TODO: Arrumar o layout da página, os campos estão muito distantes
 export function EmployeeEditPage() {
   const { id } = useParams<{ id: string }>();
   const employeeId = id ?? "";
 
-  const {
-    data: employeeData,
-    isPending: isEmployeePending,
-    error: employeeError,
-  } = useGetEmployeeById(employeeId);
+  const employeeQuery = useGetEmployeeById(employeeId);
 
-  const {
-    updateEmployee: {
-      mutate: updateEmployee,
-      isPending: isUpdateEmployeePending,
-      error: updateEmployeeError,
-    },
-  } = useEmployeeMutations();
+  const {updateEmployee} = useEmployeeMutations();
 
   const {
     register,
@@ -44,71 +34,190 @@ export function EmployeeEditPage() {
   } = useForm<EmployeeFormSchema>({
     resolver: zodResolver(employeeFormSchema),
     values: {
-      name: employeeData?.name ?? "",
-      email: employeeData?.email ?? "",
-      contact: employeeData?.contact ?? "",
-      cpf: employeeData?.cpf ?? "",
-      pix: employeeData?.pix ?? "",
-      birthdate: employeeData?.birthdate
-        ? formatDateInputValue(employeeData.birthdate)
+      name: employeeQuery.data?.name ?? "",
+      email: employeeQuery.data?.email ?? "",
+      contact: employeeQuery.data?.contact ?? "",
+      cpf: employeeQuery.data?.cpf ?? "",
+      pix: employeeQuery.data?.pix ?? "",
+      birthdate: employeeQuery.data?.birthdate
+        ? formatDateInputValue(employeeQuery.data.birthdate)
         : "",
-      duty: employeeData?.duty ?? "TEACHER",
+      duty: employeeQuery.data?.duty ?? "TEACHER",
     },
   });
   const registerWithMask = useHookFormMask(register);
 
   const onSubmit = handleSubmit((data: EmployeeFormSchema) => {
-    updateEmployee({ employeeId, data });
+    updateEmployee.mutate({ employeeId, data });
   });
 
-  return (
-    <div className={""}>
-      <PageHeader
-        title="Editar colaborador"
-        description="Atualize os dados do colaborador."
-        backLink={""}
-        Icon={ChevronDown}
-      />
+  const headerProps = {
+    title: "Editar colaborador",
+    description: "Atualize os dados do colaborador.",
+    backLink: `/employees/${employeeId}`,
+    Icon: FileUser,
+  };
 
-      {employeeError ? (
+  if (employeeQuery.error) {
+    return (
+      <PageLayout {...headerProps}>
         <ErrorCard
           title="Erro ao carregar detalhes do colaborador"
-          error={employeeError}
+          error={employeeQuery.error}
         />
-      ) : isEmployeePending ? (
+      </PageLayout>
+    );
+  }
+
+  if (employeeQuery.isPending || !employeeQuery.data) {
+    return (
+      <PageLayout {...headerProps}>
         <LoadingCard title="Carregando detalhes do colaborador" />
-      ) : (
-        <EmployeeForm onSubmit={onSubmit}>
-          <EmployeeFormFields
-            isUpdate={true}
-            register={register}
-            registerWithMask={registerWithMask}
-            errors={errors}
-          />
+      </PageLayout>
+    );
+  }
 
-          {updateEmployeeError && (
-            <Alert error={updateEmployeeError} variant="error" />
-          )}
+  return (
+    <PageLayout {...headerProps}>
+      <SectionCard
+        title="Editar colaborador"
+        description="Atualize os dados do colaborador."
+      >
+        {updateEmployee.isError && (
+          <Alert error={updateEmployee.error} variant="error" />
+        )}
 
-          <div className="flex flex-wrap justify-end gap-3">
-            <Button
-              type="submit"
-              variant="success"
-              disabled={isUpdateEmployeePending}
-            >
-              {isUpdateEmployeePending ? (
-                <LoadingSpinner text={"Atualizando..."} />
-              ) : (
-                "Salvar alterações"
+        <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Nome</legend>
+              <input
+                type="text"
+                className="input"
+                {...register("name")}
+                placeholder="Nome Completo"
+              />
+              {errors?.name && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.name.message}
+                </p>
               )}
-            </Button>
+            </fieldset>
 
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Data de Nascimento</legend>
+              <input
+                type="date"
+                className="input"
+                {...register("birthdate")}
+              />
+              {errors?.birthdate && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.birthdate.message}
+                </p>
+              )}
+            </fieldset>
+
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Email</legend>
+              <input
+                type="text"
+                className="input"
+                {...register("email")}
+                placeholder="email@email.com"
+              />
+              {errors?.email && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.email.message}
+                </p>
+              )}
+            </fieldset>
+
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Contato</legend>
+              <input
+                type="text"
+                className="input"
+                placeholder="Ex: (61) 99633-2332"
+                {...registerWithMask("contact", [
+                  "(##) #####-####",
+                  "(##) ####-####",
+                ])}
+              />
+              {errors?.contact && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.contact.message}
+                </p>
+              )}
+            </fieldset>
+
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">CPF</legend>
+              <input
+                type="text"
+                className="input"
+                disabled={true}
+                placeholder="Ex: 123.456.789-00"
+                {...registerWithMask("cpf", ["###.###.###-##"])}
+              />
+              {errors?.cpf && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.cpf.message}
+                </p>
+              )}
+            </fieldset>
+
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Chave PIX</legend>
+              <input
+                type="text"
+                className="input"
+                {...register("pix")}
+                placeholder="cpf/email/telefone/chave aleatória"
+              />
+              {errors?.pix && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.pix.message}
+                </p>
+              )}
+            </fieldset>
+
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Função</legend>
+              <select
+                className="select select-bordered w-full"
+                {...register("duty")}
+              >
+                <option value="TEACHER">{employeeRequestDTODutyEnum.TEACHER}</option>
+                <option value="ADM">{employeeRequestDTODutyEnum.ADM}</option>
+                <option value="THERAPIST">{employeeRequestDTODutyEnum.THERAPIST}</option>
+                <option value="MENTOR">{employeeRequestDTODutyEnum.MENTOR}</option>
+              </select>
+              {errors?.duty && (
+                <p className="label text-error">
+                  <TriangleAlert className="w-3 h-3" />
+                  {errors.duty.message}
+                </p>
+              )}
+            </fieldset>
+          </div>
+
+          <div className="mt-1 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
             <ButtonLink to={`/employees/${employeeId}`} variant="outline">
               Cancelar
             </ButtonLink>
+            <Button type="submit" variant="primary" disabled={updateEmployee.isPending}>
+              {updateEmployee.isPending ? "Salvando..." : "Salvar"}
+            </Button>
           </div>
-        </EmployeeForm>
-      )}
-    </div>
+        </form>
+      </SectionCard>
+    </PageLayout>
   );
 }
