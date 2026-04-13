@@ -1,4 +1,5 @@
 import { AlertTriangle } from "lucide-react"
+import { createPortal } from "react-dom"
 import { Button } from "./button"
 import type { ReactNode } from "react"
 
@@ -33,9 +34,11 @@ export const DeleteConfirmationModal = ({
 }: DeleteConfirmationModalProps) => {
   if (!isOpen) return null
 
+  if (typeof document === "undefined") return null
+
   const hasEvents = itemDeleteCount > 0
 
-  return (
+  const modalContent = (
     <dialog className="modal modal-bottom sm:modal-middle modal-open">
       <div className="modal-box">
         <h3 className="font-bold text-lg flex items-center gap-2 text-error">
@@ -98,4 +101,6 @@ export const DeleteConfirmationModal = ({
       </form>
     </dialog>
   )
+
+  return createPortal(modalContent, document.body)
 }
