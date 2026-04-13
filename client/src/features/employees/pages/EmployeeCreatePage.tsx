@@ -62,7 +62,7 @@ export function EmployeeCreatePage() {
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Data de Nascimento</legend>
-              <input type="date" className="input" {...register("birthdate")} />
+              <input type="text" className="input" {...registerWithMask("birthdate", ["##/##/####"])} />
               {errors?.birthdate && (<p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.birthdate.message}</p>)}
             </fieldset>
 

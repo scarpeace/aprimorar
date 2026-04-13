@@ -30,11 +30,11 @@ public class Event extends BaseEntity {
     @Column(name = "end_date_time", nullable = false)
     private Instant endDate;
 
-    @Column(name = "price", precision = 19, scale = 2, nullable = false)
-    private BigDecimal price;
-
     @Column(name = "payment", precision = 19, scale = 2, nullable = false)
     private BigDecimal payment;
+
+    @Column(name = "price", precision = 19, scale = 2, nullable = false)
+    private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -115,7 +115,7 @@ public class Event extends BaseEntity {
         this.endDate = endDate;
     }
 
-   public BigDecimal getPayment() {
+    public BigDecimal getPayment() {
         return payment;
     }
 
@@ -142,8 +142,6 @@ public class Event extends BaseEntity {
         }
         this.price = price;
     }
-
-
 
     public EventContent getContent() {
         return content;

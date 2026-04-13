@@ -38,26 +38,8 @@ export function EventDetailPage() {
       </PageLayout>
     );
   }
-
   const profit = Number(eventQuery.data.price) - Number(eventQuery.data.payment);
 
-  const summaryItems: Array<{ label: string; value: ReactNode; className?: string }> = [
-    { label: "Data", value: formatDateShortYear(eventQuery.data.startDate) },
-    { label: "Hora", value: formatTime(eventQuery.data.startDate) },
-    { label: "Duração", value: "1 hora" },
-    { label: "Nome do aluno", value: eventQuery.data.studentName ?? "-" },
-    { label: "Nome do colaborador", value: eventQuery.data.employeeName ?? "-" },
-    { label: "Conteúdo", value: eventQuery.data.content ?? "-" },
-    { label: "Valor", value: brl.format(eventQuery.data.price) },
-    { label: "Pagamento", value: brl.format(eventQuery.data.payment) },
-    { label: "Lucro", value: brl.format(profit) },
-    { label: "Título", value: eventQuery.data.title },
-    {
-      label: "Descrição",
-      value: eventQuery.data.description ?? "-",
-      className: "col-span-2",
-    },
-  ];
 
   return (
     <PageLayout {...headerProps}>
@@ -67,23 +49,29 @@ export function EventDetailPage() {
         headerActions={
           <>
             <ButtonLink to={`/events/edit/${eventId}`} variant="primary">
-              <Edit className="h-4 w-4" />
-              Editar
+              <Edit className="h-4 w-4" /> Editar
             </ButtonLink>
           </>
         }
       >
-        <div className="grid grid-cols-1 grid-rows-3 md:grid-cols-3 gap-4">
-
-          {summaryItems.map((item) => (
-            <SummaryItem
-              key={item.label}
-              className={item.className}
-              label={item.label}
-              value={item.value}
-            />
-          ))}
-        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <SummaryItem label="Data" value={formatDateShortYear(eventQuery.data.startDate)}/>
+          <div className="flex gap-3">
+            <SummaryItem className="w-full" label="Horário início" value={formatTime(eventQuery.data.startDate)} />
+            {/*<SummaryItem label="Duração" value="1 hora" />*/}
+            <SummaryItem className="w-full" label="Horário fim" value={formatTime(eventQuery.data.endDate)}/>
+          </div>
+          <SummaryItem label="Nome do aluno" value={eventQuery.data.studentName} />
+          <SummaryItem label="Nome do colaborador" value={eventQuery.data.employeeName}/>
+          <SummaryItem label="Conteúdo" value={eventQuery.data.content} />
+          <div className="flex gap-3">
+            <SummaryItem className="w-full" label="Valor" value={brl.format(eventQuery.data.price)} />
+            <SummaryItem className="w-full" label="Pagamento" value={brl.format(eventQuery.data.payment)}/>
+            <SummaryItem className="w-full" label="Lucro" value={brl.format(profit)} />
+          </div>
+          {/*<SummaryItem label="Título" value={eventQuery.data.title} />*/}
+          <SummaryItem className="md:col-span-3 h-30" label="Observações" value={eventQuery.data.description}/>
+      </div>
       </SectionCard>
     </PageLayout>
   );

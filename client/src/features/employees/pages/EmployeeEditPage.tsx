@@ -18,7 +18,6 @@ import {
 import { employeeRequestDTODutyEnum } from "@/kubb";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
 
-//TODO: Arrumar o layout da página, os campos estão muito distantes
 export function EmployeeEditPage() {
   const { id } = useParams<{ id: string }>();
   const employeeId = id ?? "";
@@ -90,101 +89,41 @@ export function EmployeeEditPage() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Nome</legend>
-              <input
-                type="text"
-                className="input"
-                {...register("name")}
-                placeholder="Nome Completo"
-              />
-              {errors?.name && (
-                <p className="label text-error">
-                  <TriangleAlert className="w-3 h-3" />
-                  {errors.name.message}
-                </p>
-              )}
+              <input type="text" className="input" {...register("name")} placeholder="Nome Completo"/>
+              {errors?.name && (<p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.name.message}</p>)}
             </fieldset>
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Data de Nascimento</legend>
-              <input
-                type="date"
-                className="input"
-                {...register("birthdate")}
-              />
-              {errors?.birthdate && (
-                <p className="label text-error">
-                  <TriangleAlert className="w-3 h-3" />
-                  {errors.birthdate.message}
-                </p>
-              )}
+              <input type="text" className="input" {...registerWithMask("birthdate", ["##/##/####"])} placeholder="dd/mm/yyyy"/>
+              {errors?.birthdate && (<p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.birthdate.message}</p>)}
             </fieldset>
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Email</legend>
-              <input
-                type="text"
-                className="input"
-                {...register("email")}
-                placeholder="email@email.com"
-              />
-              {errors?.email && (
-                <p className="label text-error">
-                  <TriangleAlert className="w-3 h-3" />
-                  {errors.email.message}
-                </p>
-              )}
+              <input type="text" className="input" {...register("email")} placeholder="email@email.com"/>
+              {errors?.email && (<p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.email.message}</p>)}
             </fieldset>
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Contato</legend>
-              <input
-                type="text"
-                className="input"
-                placeholder="Ex: (61) 99633-2332"
-                {...registerWithMask("contact", [
-                  "(##) #####-####",
-                  "(##) ####-####",
-                ])}
-              />
-              {errors?.contact && (
-                <p className="label text-error">
-                  <TriangleAlert className="w-3 h-3" />
-                  {errors.contact.message}
-                </p>
-              )}
+              <input type="text" className="input" placeholder="Ex: (61) 99633-2332" {...registerWithMask("contact", [
+                "(##) #####-####",
+                "(##) ####-####",
+              ])}/>
+              {errors?.contact && (<p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.contact.message}</p>)}
             </fieldset>
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">CPF</legend>
-              <input
-                type="text"
-                className="input"
-                disabled={true}
-                placeholder="Ex: 123.456.789-00"
-                {...registerWithMask("cpf", ["###.###.###-##"])}
-              />
-              {errors?.cpf && (
-                <p className="label text-error">
-                  <TriangleAlert className="w-3 h-3" />
-                  {errors.cpf.message}
-                </p>
-              )}
+              <input type="text" className="input" disabled={true} placeholder="Ex: 123.456.789-00" {...registerWithMask("cpf", ["###.###.###-##"])} />
+              {errors?.cpf && (<p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.cpf.message}</p>)}
             </fieldset>
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Chave PIX</legend>
-              <input
-                type="text"
-                className="input"
-                {...register("pix")}
-                placeholder="cpf/email/telefone/chave aleatória"
-              />
-              {errors?.pix && (
-                <p className="label text-error">
-                  <TriangleAlert className="w-3 h-3" />
-                  {errors.pix.message}
-                </p>
-              )}
+              <input type="text" className="input" {...register("pix")} placeholder="cpf/email/telefone/chave aleatória"/>
+              {errors?.pix && (<p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.pix.message}</p>)}
             </fieldset>
 
             <fieldset className="fieldset">

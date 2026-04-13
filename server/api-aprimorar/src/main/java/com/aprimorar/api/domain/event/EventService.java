@@ -14,7 +14,6 @@ import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.shared.PageDTO;
-
 import java.time.Instant;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -45,6 +44,31 @@ public class EventService {
         this.studentRepo = studentRepo;
         this.employeeRepo = employeeRepo;
         this.eventMapper = eventMapper;
+    }
+
+    @Transactional
+    public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
+        Event event = eventMapper.convertToEntity(eventRequestDTO);
+
+        Student student = resolveStudentOrThrow(eventRequestDTO.studentId());
+        Employee employee = resolveEmployeeOrThrow(eventRequestDTO.employeeId());
+
+        validateParticipantAvailability(
+            student.getId(),
+            employee.getId(),
+            event.getStartDate(),
+            event.getEndDateTime(),
+            null
+        );
+
+        event.setStudent(student);
+        event.setEmployee(employee);
+
+        event.validateForCreation();
+
+        Event savedEvent = eventRepo.save(event);
+        log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
+        return eventMapper.convertToDto(savedEvent);
     }
 
     @Transactional(readOnly = true)
@@ -97,31 +121,6 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
-        Event event = eventMapper.convertToEntity(eventRequestDTO);
-
-        Student student = resolveStudentOrThrow(eventRequestDTO.studentId());
-        Employee employee = resolveEmployeeOrThrow(eventRequestDTO.employeeId());
-
-        validateParticipantAvailability(
-            student.getId(),
-            employee.getId(),
-            event.getStartDate(),
-            event.getEndDateTime(),
-            null
-        );
-
-        event.setStudent(student);
-        event.setEmployee(employee);
-
-        event.validateForCreation();
-
-        Event savedEvent = eventRepo.save(event);
-        log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
-        return eventMapper.convertToDto(savedEvent);
-    }
-
-    @Transactional
     public EventResponseDTO updateEvent(UUID id, EventRequestDTO request) {
         Event event = findEventOrThrow(id);
 
@@ -130,13 +129,7 @@ public class EventService {
         Student student = resolveStudentOrThrow(request.studentId());
         Employee employee = resolveEmployeeOrThrow(request.employeeId());
 
-        validateParticipantAvailability(
-            student.getId(),
-            employee.getId(),
-            request.startDate(),
-            request.endDate(),
-            id
-        );
+        validateParticipantAvailability(student.getId(), employee.getId(), request.startDate(), request.endDate(), id);
 
         event.setTitle(request.title());
         event.setDescription(request.description());

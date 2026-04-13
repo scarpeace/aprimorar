@@ -16,7 +16,7 @@ import {
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 
 export function ParentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -74,9 +74,11 @@ export function ParentDetailPage() {
           <SummaryItem label="Nome completo" value={parentQuery.data?.name} />
           <SummaryItem label="CPF" value={formatCpf(parentQuery.data?.cpf)} />
           <SummaryItem label="E-mail" value={parentQuery.data?.email} />
-          <SummaryItem label="Contato" value={formatPhone(parentQuery.data?.contact)} />
-          <SummaryItem label="Criado em" value={formatDateShortYear(parentQuery.data?.createdAt ?? "")} />
-          <SummaryItem label="Status" value={parentQuery.data?.archivedAt ? "Arquivado" : "Ativo"} />
+          <div className="flex gap-3">
+            <SummaryItem className="grow" label="Contato" value={formatPhone(parentQuery.data?.contact)} />
+            <SummaryItem label="Criado em" value={formatDateShortYear(parentQuery.data?.createdAt ?? "")} />
+            <SummaryItem label="Status" value={parentQuery.data?.archivedAt ? "Arquivado" : "Ativo"} />
+          </div>
         </div>
       </SectionCard>
 
