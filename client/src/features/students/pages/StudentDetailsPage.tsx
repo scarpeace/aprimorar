@@ -39,18 +39,24 @@ export function StudentDetailsPage() {
     backLink: "/students",
   };
 
-  if (studentQuery.isError) {
+  if (studentQuery.isError || studentParent.isError || studentEvents.isError) {
     return (
       <PageLayout {...headerProps}>
         <ErrorCard
           title="Erro ao carregar detalhes do aluno"
-          error={studentQuery.error}
+          error={
+            studentQuery.error || studentParent.error || studentEvents.error
+          }
         />
       </PageLayout>
     );
   }
 
-  if (studentQuery.isPending || !studentQuery.data) {
+  if (
+    studentQuery.isPending ||
+    studentParent.isPending ||
+    studentEvents.isPending
+  ) {
     return (
       <PageLayout {...headerProps}>
         <LoadingCard title="Carregando detalhes do aluno" />
@@ -58,33 +64,12 @@ export function StudentDetailsPage() {
     );
   }
 
-  const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: studentQuery.data.name },
-    { label: "CPF", value: formatCpf(studentQuery.data.cpf) },
-    { label: "E-mail", value: studentQuery.data.email },
-    { label: "Idade", value: studentQuery.data.age },
-    { label: "Contato", value: formatPhone(studentQuery.data.contact) },
-    {
-      label: "Data de matrícula",
-      value: formatDateShortYear(studentQuery.data.createdAt),
-    },
-    { label: "Escola", value: studentQuery.data.school },
-    {
-      label: "Status",
-      value: studentQuery.data.archivedAt ? "Arquivado" : "Ativo",
-    },
-    { label: "Responsável", value: studentParent.data?.name },
-    { label: "Contato do Responsável", value: studentParent.data?.contact },
-    {
-      label: "CPF do Responsável",
-      value: formatCpf(studentParent.data?.cpf || ""),
-    },
-  ];
-
   return (
     <PageLayout {...headerProps}>
       <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
-        <SectionCard title="Aluno" description="Dados do aluno"
+        <SectionCard
+          title="Aluno"
+          description="Dados do aluno"
           headerActions={
             <>
               <ButtonLink
@@ -104,13 +89,20 @@ export function StudentDetailsPage() {
           }
         >
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {summaryItems.map((item) => (
-              <SummaryItem
-                key={item.label}
-                label={item.label}
-                value={item.value}
-              />
-            ))}
+            <SummaryItem label="Nome completo" value={studentQuery.data.name} />
+            <SummaryItem label="CPF" value={formatCpf(studentQuery.data.cpf)} />
+            <SummaryItem className="col-span-2" label="E-mail" value={studentQuery.data.email} />
+            <div className=" flex gap-3 justify-between">
+            <SummaryItem className="grow" label="Data de nascimento" value={formatDateShortYear(studentQuery.data.birthdate)} />
+            <SummaryItem className="text-center" label="Idade" value={studentQuery.data.age} />
+            </div>
+            <SummaryItem label="Contato" value={formatPhone(studentQuery.data.contact)}/>
+            <SummaryItem label="Data de matrícula" value={formatDateShortYear(studentQuery.data.createdAt)}/>
+            <SummaryItem label="Escola" value={studentQuery.data.school} />
+            <SummaryItem label="Status" value={studentQuery.data.archivedAt ? "Arquivado" : "Ativo"} />
+            <SummaryItem label="Responsável" value={studentParent.data?.name} />
+            <SummaryItem label="Contato do Responsável" value={formatPhone(studentParent.data?.contact)} />
+            <SummaryItem label="CPF do Responsável" value={formatCpf(studentParent.data?.cpf)} />
           </div>
 
           <Collapse title={"Endereço"} className="mt-3 shadow-xl">

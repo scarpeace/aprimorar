@@ -11,7 +11,6 @@ import { z } from "zod/v4";
 export const addressRequestDTOSchema = z
   .object({
     street: z.string().min(3).max(255).describe("Rua ou Condomínio"),
-    number: z.string().min(1).max(10).describe("Número da residência"),
     district: z.string().min(3).max(255).describe("Bairro do endereço"),
     city: z.string().min(3).max(255).describe("Cidade do endereço"),
     state: z

@@ -35,7 +35,6 @@ CREATE TABLE tb_students (
     school VARCHAR(255) NOT NULL,
     parent_id UUID NOT NULL,
     street VARCHAR(255) NOT NULL,
-    number VARCHAR(255) NOT NULL,
     district VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
     state VARCHAR(2) NOT NULL,
@@ -78,7 +77,7 @@ VALUES ('ffffffff-ffff-ffff-ffff-ffffffffffff', 'SISTEMA', 'sistema@aprimorar.co
 -- Ghost student
 INSERT INTO tb_students (
     id, name, contact, email, birthdate, cpf, school, parent_id,
-    street, number, district, city, state, zip, created_at, archived_at
+    street, district, city, state, zip, created_at, archived_at
 )
 VALUES (
     '00000000-0000-0000-0000-000000000000',
@@ -90,7 +89,6 @@ VALUES (
     'SISTEMA',
     'ffffffff-ffff-ffff-ffff-ffffffffffff',
     'SISTEMA',
-    '0',
     'SISTEMA',
     'SISTEMA',
     'DF',

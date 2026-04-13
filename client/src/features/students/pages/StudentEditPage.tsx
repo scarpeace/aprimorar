@@ -19,6 +19,16 @@ import {
 } from "../forms/studentFormSchema";
 import { useStudentMutations } from "../hooks/student-mutations";
 
+function formatBirthdateForForm(birthdate?: string) {
+  if (!birthdate) return "";
+
+  const [year, month, day] = birthdate.split("-");
+
+  if (!year || !month || !day) return birthdate;
+
+  return `${day}/${month}/${year}`;
+}
+
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
@@ -32,14 +42,13 @@ export function StudentEditPage() {
     values: {
       name: studentQuery.data?.name ?? "",
       cpf: studentQuery.data?.cpf ?? "",
-      birthdate: studentQuery.data?.birthdate ?? "",
+      birthdate: formatBirthdateForForm(studentQuery.data?.birthdate),
       contact: studentQuery.data?.contact ?? "",
       email: studentQuery.data?.email ?? "",
       school: studentQuery.data?.school ?? "",
       parentId: studentQuery.data?.parentId ?? "",
       address: {
         street: studentQuery.data?.address.street ?? "",
-        number: studentQuery.data?.address.number ?? "",
         complement: studentQuery.data?.address.complement ?? "N/A",
         district: studentQuery.data?.address.district ?? "",
         city: studentQuery.data?.address.city ?? "",
@@ -96,7 +105,7 @@ export function StudentEditPage() {
 
            <fieldset className="fieldset">
             <legend className="fieldset-legend">Data de Nascimento</legend>
-            <input type="date" className="input" {...register("birthdate")} placeholder="Ex: 01/01/1990"/>
+            <input type="text" className="input" {...registerWithMask("birthdate", ["##/##/####"])} placeholder="Ex: 01/01/1990"/>
             {errors?.birthdate && (<p className="label text-error"><TriangleAlert className="w-3 h-3" />{errors.birthdate.message}</p>)}
           </fieldset>
 

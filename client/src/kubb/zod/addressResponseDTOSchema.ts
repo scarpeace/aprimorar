@@ -11,7 +11,6 @@ import { z } from "zod/v4";
 export const addressResponseDTOSchema = z
   .object({
     street: z.string(),
-    number: z.string(),
     district: z.string(),
     city: z.string(),
     state: z.enum([

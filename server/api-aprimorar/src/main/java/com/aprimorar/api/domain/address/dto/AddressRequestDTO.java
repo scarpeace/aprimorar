@@ -11,10 +11,6 @@ public record AddressRequestDTO(
         @Schema(description = "Rua ou Condomínio", nullable = false, minLength = 3, maxLength = 255)
         String street,
 
-        @NotBlank(message = "O número do endereço é obrigatório")
-        @Schema(description = "Número da residência", nullable = false, minLength = 1, maxLength = 10)
-        String number,
-
         @NotBlank(message = "O bairro do endereço é obrigatório")
         @Schema(description = "Bairro do endereço", nullable = false, minLength = 3, maxLength = 255)
         String district,

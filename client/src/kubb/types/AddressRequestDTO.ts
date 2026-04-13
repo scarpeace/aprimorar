@@ -48,13 +48,6 @@ export type AddressRequestDTO = {
    */
   street: string;
   /**
-   * @description Número da residência
-   * @minLength 1
-   * @maxLength 10
-   * @type string
-   */
-  number: string;
-  /**
    * @description Bairro do endereço
    * @minLength 3
    * @maxLength 255
