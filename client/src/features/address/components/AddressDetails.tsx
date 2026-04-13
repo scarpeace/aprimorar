@@ -1,7 +1,5 @@
-import type { AddressResponseDTO } from "@/kubb";
-import type { ReactNode } from "react";
-import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
+import type { AddressResponseDTO } from "@/kubb";
 
 type AddressSummarySectionProps = {
   address?: AddressResponseDTO;
