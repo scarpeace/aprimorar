@@ -4,12 +4,14 @@ import { useGetDashboardSummary } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { brl } from "@/lib/utils/formatter";
 import { PizzaChart } from "./components/PizzaChart";
+import { DashboardKpiCard } from "./components/DashboardKpiCard";
 
+//FIX: Remover esse + 1 do ano quando for fazer o deploy
 function getCurrentYearMonth() {
   const now = new Date();
 
   return {
-    year: now.getFullYear(),
+    year: now.getFullYear() + 1,
     month: now.getMonth() + 1,
   };
 }
@@ -20,25 +22,6 @@ export function DashboardPage() {
     year,
     month,
   });
-
-  const kpiItems = [
-    {
-      label: "Alunos ativos",
-      value: dashboardQuery.data?.activeStudentsInMonth ?? 0,
-    },
-    {
-      label: "Aulas no mês",
-      value: dashboardQuery.data?.classesInMonth ?? 0,
-    },
-    {
-      label: "Receita no mês",
-      value: brl.format(dashboardQuery.data?.revenueInMonth ?? 0),
-    },
-    {
-      label: "Custo no mês",
-      value: brl.format(dashboardQuery.data?.costInMonth ?? 0),
-    },
-  ];
 
   if (dashboardQuery.isPending) {
     return <PageLoading message="Carregando painel..." />;
@@ -60,17 +43,10 @@ export function DashboardPage() {
     <div className="app-dashboard-page">
       <h1 className="app-text text-3xl font-bold">Painel</h1>
       <div className="app-dashboard-kpi-grid">
-        {kpiItems.map((item) => (
-          <div
-            key={item.label}
-            className="card border border-base-300 bg-base-100 shadow-(--app-elevation-soft) transition-[transform,box-shadow] duration-200 hover:-translate-y-[0.5] hover:shadow-(--app-elevation-strong) animate-[fade-up_360ms_ease-out_both]"
-          >
-            <div className="card-body gap-2">
-              <h2 className="app-kpi-label">{item.label}</h2>
-              <div className="app-kpi-value">{item.value}</div>
-            </div>
-          </div>
-        ))}
+        <DashboardKpiCard label="Alunos ativos" value={dashboardQuery.data.activeStudentsInMonth ?? 0} />
+        <DashboardKpiCard label="Aulas no mês" value={dashboardQuery.data.classesInMonth ?? 0} />
+        <DashboardKpiCard label="Receita no mês" value={brl.format(dashboardQuery.data.revenueInMonth ?? 0)} />
+        <DashboardKpiCard label="Custo no mês" value={brl.format(dashboardQuery.data.costInMonth ?? 0)} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
