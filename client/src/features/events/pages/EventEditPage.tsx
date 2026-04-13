@@ -10,10 +10,7 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
 import * as EventForm from "../forms/EventForm";
-import {
-  type EventFormSchema,
-  eventFormSchema,
-} from "../forms/eventFormSchema";
+import { type EventFormSchema, eventFormSchema } from "../forms/eventFormSchema";
 import { useEventMutations } from "../hooks/use-event-mutations";
 
 export function EventEditPage() {
@@ -52,8 +49,8 @@ export function EventEditPage() {
   });
 
   const headerProps = {
-    title: "Editar evento",
-    description: "Edite os dados do evento.",
+    title: "Editar atendimento",
+    description: "Edite os dados do atendimento.",
     Icon: Calendar,
     backLink: `/events/${eventId}`,
   };
@@ -61,10 +58,7 @@ export function EventEditPage() {
   if (eventQuery.isError) {
     return (
       <PageLayout {...headerProps}>
-        <ErrorCard
-          title="Erro ao carregar detalhes do evento"
-          error={eventQuery.error}
-        />
+        <ErrorCard title="Erro ao carregar detalhes do atendimento" error={eventQuery.error}/>
       </PageLayout>
     );
   }
@@ -72,7 +66,7 @@ export function EventEditPage() {
   if (eventQuery.isPending || !eventQuery.data) {
     return (
       <PageLayout {...headerProps}>
-        <LoadingCard title="Carregando dados do evento" />
+        <LoadingCard title="Carregando dados do atendimento" />
       </PageLayout>
     );
   }
@@ -80,13 +74,11 @@ export function EventEditPage() {
   return (
     <PageLayout {...headerProps}>
       <EventForm.Root
-        title="Dados do evento"
+        title="Dados do atendimento"
         description="Informe data, valores e participantes do atendimento."
         onSubmit={onSubmit}
       >
-        {updateEvent.isError && (
-          <Alert error={updateEvent.error} variant="error" />
-        )}
+        {updateEvent.isError && (<Alert error={updateEvent.error} variant="error" />)}
 
         <EventForm.Fields
           errors={form.formState.errors}

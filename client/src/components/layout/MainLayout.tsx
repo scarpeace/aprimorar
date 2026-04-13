@@ -12,7 +12,7 @@ const navigation = [
   { name: "Alunos", href: "/students", icon: GraduationCap },
   { name: "Pais e Responsáveis", href: "/parents", icon: Handshake },
   { name: "Colaboradores", href: "/employees", icon: UserCog },
-  { name: "Eventos", href: "/events", icon: Calendar },
+  { name: "Atendimentos", href: "/events", icon: Calendar },
 ]
 
 

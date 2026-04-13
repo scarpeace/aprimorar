@@ -87,7 +87,7 @@ export function EmployeeEditPage() {
         )}
 
         <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Nome</legend>
               <input
@@ -193,10 +193,10 @@ export function EmployeeEditPage() {
                 className="select select-bordered w-full"
                 {...register("duty")}
               >
-                <option value="TEACHER">{employeeRequestDTODutyEnum.TEACHER}</option>
-                <option value="ADM">{employeeRequestDTODutyEnum.ADM}</option>
-                <option value="THERAPIST">{employeeRequestDTODutyEnum.THERAPIST}</option>
-                <option value="MENTOR">{employeeRequestDTODutyEnum.MENTOR}</option>
+                <option value={employeeRequestDTODutyEnum.TEACHER}>PROFESSOR</option>
+                <option value={employeeRequestDTODutyEnum.ADM}>ADM</option>
+                <option value={employeeRequestDTODutyEnum.THERAPIST}>TERAPEUTA</option>
+                <option value={employeeRequestDTODutyEnum.MENTOR}>MENTOR</option>
               </select>
               {errors?.duty && (
                 <p className="label text-error">

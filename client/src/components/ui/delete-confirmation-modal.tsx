@@ -2,7 +2,6 @@ import { AlertTriangle } from "lucide-react"
 import { Button } from "./button"
 import type { ReactNode } from "react"
 
-//TODO: esse é um bom candidato para o composition pattern
 interface DeleteConfirmationModalProps {
   isOpen: boolean
   onClose: () => void
