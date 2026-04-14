@@ -21,6 +21,7 @@ import {
 import { useEventMutations } from "../hooks/use-event-mutations";
 import { DateTimeInput } from "@/components/ui/date-time-input";
 import DatePicker from "react-datepicker";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 export function EventCreatePage() {
   const { createEvent } = useEventMutations();
@@ -33,6 +34,12 @@ export function EventCreatePage() {
   } = useForm<EventFormSchema>({
     resolver: zodResolver(eventFormSchema),
     mode: "onBlur",
+    defaultValues: {
+      price: 0,
+      payment: 0,
+      startDate: "",
+      endDate: "",
+    }
   });
 
   const onSubmit = handleSubmit((data: EventFormSchema) => {
@@ -58,7 +65,6 @@ export function EventCreatePage() {
         title="Dados do evento"
         description="Informe data, valores e participantes do atendimento."
       >
-        {createEvent.isError && (<Alert error={createEvent.error} variant="error" />)}
 
         {/*<DevTool control={control}/>*/}
         <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">

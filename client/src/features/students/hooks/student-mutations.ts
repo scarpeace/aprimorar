@@ -19,7 +19,7 @@ export function useStudentMutations() {
 
   const createStudent = useCreateStudent({
     mutation: {
-      onError: () => {
+      onError: (error) => {
         toast.error("Algo deu errado ao criar o aluno");
       },
       onSuccess: (createdStudent: StudentResponseDTO) => {

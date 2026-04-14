@@ -1,11 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap");
 @import "tailwindcss";
-@import "react-datepicker/dist/react-datepicker.css";
 
 @plugin "daisyui" {
   themes: corporate --default;
   logs: false;
 }
+@import "react-datepicker/dist/react-datepicker.css";
 
 :root {
   --app-bg: var(--color-base-200);

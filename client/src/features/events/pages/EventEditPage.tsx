@@ -28,7 +28,12 @@ export function EventEditPage() {
 
   const eventQuery = useGetEventById(eventId);
 
-  const form = useForm<EventFormSchema>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<EventFormSchema>({
     resolver: zodResolver(eventFormSchema),
     mode: "onBlur",
     values: {
@@ -46,7 +51,7 @@ export function EventEditPage() {
 
   const { updateEvent } = useEventMutations();
 
-  const onSubmit = form.handleSubmit((data: EventFormSchema) => {
+  const onSubmit = handleSubmit((data: EventFormSchema) => {
     updateEvent.mutate({
       eventId,
       data: {
@@ -86,87 +91,71 @@ export function EventEditPage() {
         title="Dados do atendimento"
         description="Informe data, valores e participantes do atendimento."
       >
-        {updateEvent.isError && (
-          <Alert error={updateEvent.error} variant="error" />
-        )}
 
         <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
             <EmployeeSelectDropdown
-              registration={form.register("employeeId")}
-              error={form.formState.errors.employeeId?.message}
+              registration={register("employeeId")}
+              error={errors.employeeId?.message}
               label="Colaborador"
             />
 
             <StudentSelectDropdown
-              registration={form.register("studentId")}
-              error={form.formState.errors.studentId?.message}
+              registration={register("studentId")}
+              error={errors.studentId?.message}
               label="Aluno"
             />
 
             <ContentSelectDropdown
               label="Atendimento"
-              registration={form.register("content")}
-              error={form.formState.errors.content?.message}
+              registration={register("content")}
+              error={errors.content?.message}
             />
-
-            <Controller
-              control={form.control}
-              name="startDate"
-              render={({ field }) => (
-                <DateTimeInput
-                  label="Início"
-                  selected={field.value ? new Date(field.value) : null}
-                  onChange={(date) => field.onChange(fromDateToDatetimeLocalInput(date))}
-                  error={form.formState.errors.startDate?.message}
-                  placeholderText="Selecione a data de início"
-                />
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Data Início</legend>
+              <DateTimeInput control={control} name="startDate" placeholderText="Início" />
+              {errors?.startDate && (
+                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.startDate.message}</p>
               )}
-            />
+            </fieldset>
 
-            <Controller
-              control={form.control}
-              name="endDate"
-              render={({ field }) => (
-                <DateTimeInput
-                  label="Fim"
-                  selected={field.value ? new Date(field.value) : null}
-                  onChange={(date) => field.onChange(fromDateToDatetimeLocalInput(date))}
-                  error={form.formState.errors.endDate?.message}
-                  placeholderText="Selecione a data de fim"
-                />
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Data Fim</legend>
+              <DateTimeInput control={control} name="endDate" placeholderText="Fim" />
+              {errors?.endDate && (
+                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.endDate.message}</p>
               )}
-            />
+            </fieldset>
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Título</legend>
-              <input type="text" className="input" placeholder="Ex: Aula de matemática" {...form.register("title")} />
-              {form.formState.errors?.title && (
-                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {form.formState.errors.title.message}</p>
+              <input type="text" className="input" placeholder="Ex: Aula de matemática" {...register("title")} />
+              {errors?.title && (
+                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.title.message}</p>
               )}
             </fieldset>
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Preço (receita)</legend>
-              <input type="number" className="input" placeholder="Preço (receita)" {...form.register("price", { valueAsNumber: true })} />
-              {form.formState.errors?.price && (
-                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {form.formState.errors.price.message}</p>
+              <input type="number" className="input" placeholder="Preço (receita)" {...register("price", { valueAsNumber: true })} />
+              {errors?.price && (
+                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.price.message}</p>
               )}
             </fieldset>
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Pagamento (custo)</legend>
-              <input type="number" className="input" placeholder="Pagamento (custo)" {...form.register("payment", { valueAsNumber: true })} />
-              {form.formState.errors?.payment && (
-                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {form.formState.errors.payment.message}</p>
+              <input type="number" className="input" placeholder="Pagamento (custo)" {...register("payment", { valueAsNumber: true })} />
+              {errors?.payment && (
+                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.payment.message}</p>
               )}
             </fieldset>
 
             <fieldset className="fieldset md:col-span-3">
               <legend className="fieldset-legend">Descrição (opcional)</legend>
-              <textarea className="textarea textarea-bordered w-full" placeholder="Observações do atendimento" {...form.register("description")} />
-              {form.formState.errors?.description && (
-                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {form.formState.errors.description.message}</p>
+              <textarea className="textarea textarea-bordered w-full" placeholder="Observações do atendimento" {...register("description")} />
+              {errors?.description && (
+                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.description.message}</p>
               )}
             </fieldset>
           </div>
