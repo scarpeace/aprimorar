@@ -13,14 +13,6 @@ export function ErrorCard({
   title = "Não foi possível carregar",
   error,
 }: Readonly<ErrorCardProps>) {
-  const navigate = useNavigate();
-
-  const errorMessage =
-    error instanceof Error
-      ? error.message
-      : typeof error === "object" && error !== null && "message" in error
-      ? String(error.message)
-      : undefined;
 
   return (
     <div className="card overflow-hidden border border-error/20 bg-base-100 shadow-md">
@@ -39,14 +31,15 @@ export function ErrorCard({
 
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold text-error">{title}</h2>
-            <p className="max-w-2xl text-sm leading-6 text-base-content/70">{description || errorMessage}</p>
+            <p className="max-w-2xl text-md leading-6 text-base-content/70">{description}</p>
+            <p className="max-w-2xl text-lg text-red-400 leading-6">"{error instanceof Error ? error.message : String(error)}"</p>
           </div>
 
           <div className="card-actions justify-end pt-2">
-            <Button onClick={() => navigate(-1)} variant="outlineSecondary">
+            <a className="btn btn-secondary" href="/">
               <CircleArrowLeft className="h-4 w-4" />
               Voltar
-            </Button>
+            </a>
           </div>
         </div>
       </div>

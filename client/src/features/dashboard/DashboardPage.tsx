@@ -38,7 +38,6 @@ export function DashboardPage() {
       </div>
     );
   }
-
   return (
     <div className="app-dashboard-page">
       <h1 className="app-text text-3xl font-bold">Painel</h1>
