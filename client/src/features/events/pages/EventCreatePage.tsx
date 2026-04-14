@@ -97,16 +97,9 @@ export function EventCreatePage() {
                 {errors?.endDate && (
                 <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.endDate.message}</p>
               )}
-              </fieldset>
-
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">Título</legend>
-              <input type="text" className="input" placeholder="Ex: Aula de matemática" {...register("title")} />
-              {errors?.title && (
-                <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.title.message}</p>
-              )}
             </fieldset>
 
+            <div className="flex gap-3">
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Preço (receita)</legend>
               <input type="number" className="input" placeholder="Preço (receita)" {...register("price", { valueAsNumber: true })} />
@@ -121,7 +114,8 @@ export function EventCreatePage() {
               {errors?.payment && (
                 <p className="label text-error"> <TriangleAlert className="w-3 h-3" /> {errors.payment.message}</p>
               )}
-            </fieldset>
+              </fieldset>
+              </div>
 
             <fieldset className="fieldset md:col-span-3">
               <legend className="fieldset-legend">Descrição (opcional)</legend>

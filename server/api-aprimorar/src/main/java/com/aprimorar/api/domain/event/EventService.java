@@ -50,8 +50,12 @@ public class EventService {
     public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
         Event event = eventMapper.convertToEntity(eventRequestDTO);
 
-        Student student = resolveStudentOrThrow(eventRequestDTO.studentId());
-        Employee employee = resolveEmployeeOrThrow(eventRequestDTO.employeeId());
+        Student student = findStudentOrThrow(eventRequestDTO.studentId());
+        Employee employee = findEmployeeOrThrow(eventRequestDTO.employeeId());
+
+        String title = generateTitle(eventRequestDTO, student, employee)
+
+        event.setTitle(title);
 
         validateParticipantAvailability(
             student.getId(),
@@ -126,12 +130,14 @@ public class EventService {
 
         event.validateEditWindow();
 
-        Student student = resolveStudentOrThrow(request.studentId());
-        Employee employee = resolveEmployeeOrThrow(request.employeeId());
+        Student student = findStudentOrThrow(request.studentId());
+        Employee employee = findEmployeeOrThrow(request.employeeId());
+
+        String title = generateTitle(request, student, employee);
 
         validateParticipantAvailability(student.getId(), employee.getId(), request.startDate(), request.endDate(), id);
 
-        event.setTitle(request.title());
+        event.setTitle(title);
         event.setDescription(request.description());
         event.setStartDate(request.startDate());
         event.setEndDateTime(request.endDate());
@@ -159,7 +165,7 @@ public class EventService {
         return eventRepo.findById(eventId).orElseThrow(EventNotFoundException::new);
     }
 
-    private Student resolveStudentOrThrow(UUID studentId) {
+    private Student findStudentOrThrow(UUID studentId) {
         return studentRepo
             .findById(studentId)
             .orElseThrow(() ->
@@ -167,7 +173,7 @@ public class EventService {
             );
     }
 
-    private Employee resolveEmployeeOrThrow(UUID employeeId) {
+    private Employee findEmployeeOrThrow(UUID employeeId) {
         return employeeRepo
             .findById(employeeId)
             .orElseThrow(() ->
@@ -203,5 +209,15 @@ public class EventService {
         if (employeeRepo.existsByIdAndArchivedAtIsNotNull(employeeId)) {
             throw new InvalidEventException("Evento não pode ter colaboradores arquivados");
         }
+    }
+
+    private String generateTitle(EventRequestDTO eventRequestDTO, Student student, Employee employee) {
+        return new StringBuilder()
+            .append(eventRequestDTO.content())
+            .append(" - ")
+            .append("Col: " + employee.getName())
+            .append(" - ")
+            .append(student.getName())
+            .toString();
     }
 }

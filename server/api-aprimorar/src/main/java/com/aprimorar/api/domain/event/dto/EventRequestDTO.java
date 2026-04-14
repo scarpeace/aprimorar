@@ -9,9 +9,6 @@ import java.util.UUID;
 
 @Schema(description = "Formato de payload para o cadastro e/ou update de um evento")
 public record EventRequestDTO(
-    @NotBlank(message = "Título do evento é obrigatório")
-    @Schema(nullable = false, description = "Título do evento", example = "Sessão de Mentoria")
-    String title,
 
     @Schema(nullable = false, description = "Descrição do evento", example = "Sessão focada em revisão de matemática básica")
     String description,

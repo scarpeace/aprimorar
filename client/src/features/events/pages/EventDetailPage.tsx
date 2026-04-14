@@ -39,7 +39,6 @@ export function EventDetailPage() {
   }
   const profit = Number(eventQuery.data.price) - Number(eventQuery.data.payment);
 
-
   return (
     <PageLayout {...headerProps}>
       <SectionCard

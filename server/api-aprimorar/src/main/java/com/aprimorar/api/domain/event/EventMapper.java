@@ -9,7 +9,6 @@ public class EventMapper {
 
     public Event convertToEntity(EventRequestDTO request) {
         Event event = new Event();
-        event.setTitle(request.title());
         event.setDescription(request.description());
         event.setStartDate(request.startDate());
         event.setEndDateTime(request.endDate());
@@ -22,7 +21,6 @@ public class EventMapper {
     public EventResponseDTO convertToDto(Event event) {
         return new EventResponseDTO(
             event.getId(),
-            event.getTitle(),
             event.getDescription(),
             event.getContent(),
             event.getStartDate(),

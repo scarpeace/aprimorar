@@ -26,11 +26,6 @@ export type EventResponseDTO = {
    */
   eventId: string;
   /**
-   * @description Título do evento
-   * @type string
-   */
-  title: string;
-  /**
    * @description Descrição do evento
    * @type string | undefined
    */
