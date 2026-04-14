@@ -10,6 +10,7 @@ import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
 import com.aprimorar.api.domain.event.dto.EventRequestDTO;
 import com.aprimorar.api.domain.event.dto.EventResponseDTO;
+import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.student.Student;
@@ -19,6 +20,7 @@ import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.EventContent;
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -41,6 +43,7 @@ class EventServiceTest {
     private static final Instant EVENT_END = Instant.parse("2026-03-25T14:00:00Z");
     private static final Instant CREATED_AT = Instant.parse("2026-03-20T10:00:00Z");
     private static final Instant UPDATED_AT = Instant.parse("2026-03-21T10:00:00Z");
+    private static final Instant CURRENT_TIME = Instant.parse("2026-03-24T10:00:00Z");
 
     @Mock
     private EventRepository eventRepo;
@@ -53,6 +56,9 @@ class EventServiceTest {
 
     @Mock
     private EventMapper eventMapper;
+
+    @Mock
+    private Clock clock;
 
     @InjectMocks
     private EventService eventService;
@@ -73,6 +79,7 @@ class EventServiceTest {
             EventResponseDTO expected = response();
 
             when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
+            when(clock.instant()).thenReturn(CURRENT_TIME);
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
@@ -104,10 +111,71 @@ class EventServiceTest {
                 .isInstanceOf(StudentNotFoundException.class)
                 .hasMessage("Estudante com o ID informado não encontrado no banco de dados");
         }
+
+        @Test
+        @DisplayName("should throw when employee is not found during creation")
+        void shouldThrowWhenEmployeeIsNotFoundDuringCreation() {
+            //Arrange
+            EventRequestDTO input = request();
+            Event mappedEvent = event();
+            Student student = student();
+
+            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
+            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
+            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.empty());
+
+            //Act + Assert
+            assertThatThrownBy(() -> eventService.createEvent(input))
+                .isInstanceOf(EmployeeNotFoundException.class)
+                .hasMessage("Colaborador com o ID informado não encontrado no banco de dados");
+        }
+
+        @Test
+        @DisplayName("should throw when student has conflicting events")
+        void shouldThrowWhenStudentHasConflictingEvent() {
+            //Arrange
+            EventRequestDTO input = request();
+            Event mappedEvent = event();
+            Student student = student();
+            Employee employee = employee();
+
+            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
+            when(clock.instant()).thenReturn(CURRENT_TIME);
+            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
+            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
+            when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(true);
+
+            //Assert + act
+            assertThatThrownBy(() -> eventService.createEvent(input))
+                .isInstanceOf(EventScheduleConflictException.class)
+                .hasMessage("O estudante informado já possui um evento no intervalo");
+        }
+
+        @Test
+        @DisplayName("should throw when student has conflicting events")
+        void shouldThrowWhenEmployeeHasConflictingEvent() {
+            //Arrange
+            EventRequestDTO input = request();
+            Event mappedEvent = event();
+            Student student = student();
+            Employee employee = employee();
+
+            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
+            when(clock.instant()).thenReturn(CURRENT_TIME);
+            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
+            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
+            when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
+            when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(true);
+
+            //Assert + act
+            assertThatThrownBy(() -> eventService.createEvent(input))
+                .isInstanceOf(EventScheduleConflictException.class)
+                .hasMessage("O colaborador informado já possui um evento no intervalo");
+        }
     }
 
     private static EventRequestDTO request() {
-        return new EventRequestDTO(vou começar a integração com o google calendar hoje
+        return new EventRequestDTO(
             "Descrição de teste",
             EventContent.AULA,
             EVENT_START,

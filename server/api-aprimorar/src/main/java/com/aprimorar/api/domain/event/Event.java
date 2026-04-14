@@ -175,14 +175,14 @@ public class Event extends BaseEntity {
         this.employee = employee;
     }
 
-    public void validateForCreation() {
-        if (this.endDate != null && this.endDate.isBefore(Instant.now())) {
+    public void validateDatesForCreation(Instant now) {
+        if (this.endDate != null && this.endDate.isBefore(now)) {
             throw new InvalidEventException("Data de fim do evento não pode estar no passado");
         }
     }
 
-    public void validateEditWindow() {
-        if (this.endDate != null && Instant.now().isAfter(this.endDate.plus(20, ChronoUnit.DAYS))) {
+    public void validateEditWindow(Instant now) {
+        if (this.endDate != null && now.isAfter(this.endDate.plus(20, ChronoUnit.DAYS))) {
             throw new NotAllowedToUpdateEventException(
                 "A janela de 20 dias para editar as informações do evento encerrou"
             );

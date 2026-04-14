@@ -67,7 +67,7 @@
   "auto_indent": "none",
   "auto_indent_on_paste": false,
   "soft_wrap": "preferred_line_length",
-  "preferred_line_length": 150,
+  "preferred_line_length": 200,
   "horizontal_scroll_margin": 1,
   "vertical_scroll_margin": 1,
   "cursor_blink": true,
@@ -139,7 +139,7 @@
     }
   },
   "prettier": {
-    "printWidth": 120
+    "printWidth": 140
   },
 
   // Aparencia

@@ -14,6 +14,7 @@ import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.shared.PageDTO;
+import java.time.Clock;
 import java.time.Instant;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -33,17 +34,20 @@ public class EventService {
     private final StudentRepository studentRepo;
     private final EmployeeRepository employeeRepo;
     private final EventMapper eventMapper;
+    private final Clock clock;
 
     public EventService(
         EventRepository eventRepo,
         StudentRepository studentRepo,
         EmployeeRepository employeeRepo,
-        EventMapper eventMapper
+        EventMapper eventMapper,
+        Clock clock
     ) {
         this.eventRepo = eventRepo;
         this.studentRepo = studentRepo;
         this.employeeRepo = employeeRepo;
         this.eventMapper = eventMapper;
+        this.clock = clock;
     }
 
     @Transactional
@@ -55,6 +59,7 @@ public class EventService {
 
         String title = generateTitle(eventRequestDTO, student, employee);
 
+        event.validateDatesForCreation(Instant.now(clock));
         validateParticipantAvailability(
             student.getId(),
             employee.getId(),
@@ -125,7 +130,7 @@ public class EventService {
     public EventResponseDTO updateEvent(UUID id, EventRequestDTO request) {
         Event event = findEventOrThrow(id);
 
-        event.validateEditWindow();
+        event.validateEditWindow(Instant.now(clock));
 
         Student student = findStudentOrThrow(request.studentId());
         Employee employee = findEmployeeOrThrow(request.employeeId());
@@ -165,7 +170,7 @@ public class EventService {
             .findById(studentId)
             .orElseThrow(() ->
                 new StudentNotFoundException("Estudante com o ID informado não encontrado no banco de dados")
-        );
+            );
     }
 
     private Employee findEmployeeOrThrow(UUID employeeId) {
@@ -173,7 +178,7 @@ public class EventService {
             .findById(employeeId)
             .orElseThrow(() ->
                 new EmployeeNotFoundException("Colaborador com o ID informado não encontrado no banco de dados")
-        );
+            );
     }
 
     private void validateParticipantAvailability(
@@ -185,7 +190,7 @@ public class EventService {
     ) {
         boolean studentConflict = eventRepo.studentHasConflictingEvent(studentId, startDate, endDate, ignoredEventId);
         if (studentConflict) {
-            throw new EventScheduleConflictException("O estudante informado já possui evento no intervalo");
+            throw new EventScheduleConflictException("O estudante informado já possui um evento no intervalo");
         }
 
         boolean employeeConflict = eventRepo.employeeHasConflictingEvent(
@@ -195,7 +200,7 @@ public class EventService {
             ignoredEventId
         );
         if (employeeConflict) {
-            throw new EventScheduleConflictException("O colaborador informado já possui evento no intervalo");
+            throw new EventScheduleConflictException("O colaborador informado já possui um evento no intervalo");
         }
         if (studentRepo.existsByIdAndArchivedAtIsNotNull(studentId)) {
             throw new InvalidEventException("Evento não pode ter estudantes arquivados");
