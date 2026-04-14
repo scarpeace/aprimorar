@@ -1,5 +1,5 @@
-import { ButtonLink } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
+import { ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { SectionCard } from "@/components/ui/section-card";
@@ -7,7 +7,6 @@ import { SummaryItem } from "@/components/ui/summary-item";
 import { useGetEventById } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, Edit } from "lucide-react";
-import { type ReactNode } from "react";
 import { useParams } from "react-router-dom";
 
 export function EventDetailPage() {

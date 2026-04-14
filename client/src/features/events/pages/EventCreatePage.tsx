@@ -1,27 +1,22 @@
-import { Alert } from "@/components/ui/alert";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { SectionCard } from "@/components/ui/section-card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar, TriangleAlert } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-import { DevTool } from "@hookform/devtools";
-import {
-  fromDateToDatetimeLocalInput,
-  toInstant,
-} from "@/lib/utils/dateFormater";
-import { ContentSelectDropdown } from "../components/ContentSelectDropdown";
+import { DateTimeInput } from "@/components/ui/date-time-input";
 import { EmployeeSelectDropdown } from "@/features/employees/components/EmployeeSelectDropdown";
 import { StudentSelectDropdown } from "@/features/students/components/StudentSelectDropdown";
+import {
+  toInstant
+} from "@/lib/utils/dateFormater";
+import { ContentSelectDropdown } from "../components/ContentSelectDropdown";
 import {
   type EventFormSchema,
   eventFormSchema,
 } from "../forms/eventFormSchema";
 import { useEventMutations } from "../hooks/use-event-mutations";
-import { DateTimeInput } from "@/components/ui/date-time-input";
-import DatePicker from "react-datepicker";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 export function EventCreatePage() {
   const { createEvent } = useEventMutations();

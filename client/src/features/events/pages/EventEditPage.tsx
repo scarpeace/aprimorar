@@ -1,4 +1,3 @@
-import { Alert } from "@/components/ui/alert";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { DateTimeInput } from "@/components/ui/date-time-input";
@@ -7,18 +6,17 @@ import { LoadingCard } from "@/components/ui/loading-card";
 import { SectionCard } from "@/components/ui/section-card";
 import { eventRequestDTOContentEnum, useGetEventById } from "@/kubb";
 import {
-  fromDateToDatetimeLocalInput,
-  toDatetimeLocalInput,
-  toInstant,
+    toDatetimeLocalInput,
+    toInstant
 } from "@/lib/utils/dateFormater";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar, TriangleAlert } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
-import { ContentSelectDropdown } from "../components/ContentSelectDropdown";
 import { EmployeeSelectDropdown } from "@/features/employees/components/EmployeeSelectDropdown";
 import { StudentSelectDropdown } from "@/features/students/components/StudentSelectDropdown";
+import { ContentSelectDropdown } from "../components/ContentSelectDropdown";
 import { type EventFormSchema, eventFormSchema } from "../forms/eventFormSchema";
 import { useEventMutations } from "../hooks/use-event-mutations";
 
