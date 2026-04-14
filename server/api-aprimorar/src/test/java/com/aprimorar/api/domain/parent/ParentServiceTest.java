@@ -53,7 +53,6 @@ class ParentServiceTest {
     @InjectMocks
     private ParentService parentService;
 
-//TODO: voltar aqui e arrumar esse teste
     @Nested
     @DisplayName("Query methods")
     class QueryMethods {

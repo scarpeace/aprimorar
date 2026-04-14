@@ -176,26 +176,9 @@ public class Event extends BaseEntity {
     }
 
     public void validateForCreation() {
-        validateCommonRules();
         if (this.endDate != null && this.endDate.isBefore(Instant.now())) {
             throw new InvalidEventException("Data de fim do evento não pode estar no passado");
         }
-    }
-
-    public void validateForUpdate() {
-        validateCommonRules();
-    }
-
-    private void validateCommonRules() {
-        setTitle(this.title);
-        setDescription(this.description);
-        setStartDate(this.startDate);
-        setEndDateTime(this.endDate);
-        setPayment(this.payment);
-        setPrice(this.price);
-        setContent(this.content);
-        setStudent(this.student);
-        setEmployee(this.employee);
     }
 
     public void validateEditWindow() {

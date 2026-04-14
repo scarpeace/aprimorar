@@ -53,9 +53,7 @@ public class EventService {
         Student student = findStudentOrThrow(eventRequestDTO.studentId());
         Employee employee = findEmployeeOrThrow(eventRequestDTO.employeeId());
 
-        String title = generateTitle(eventRequestDTO, student, employee)
-
-        event.setTitle(title);
+        String title = generateTitle(eventRequestDTO, student, employee);
 
         validateParticipantAvailability(
             student.getId(),
@@ -65,10 +63,9 @@ public class EventService {
             null
         );
 
+        event.setTitle(title);
         event.setStudent(student);
         event.setEmployee(employee);
-
-        event.validateForCreation();
 
         Event savedEvent = eventRepo.save(event);
         log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
@@ -147,8 +144,6 @@ public class EventService {
         event.setStudent(student);
         event.setEmployee(employee);
 
-        event.validateForUpdate();
-
         log.info("Evento {} atualizado com sucesso.", event.getTitle().toUpperCase());
         return eventMapper.convertToDto(event);
     }
@@ -170,7 +165,7 @@ public class EventService {
             .findById(studentId)
             .orElseThrow(() ->
                 new StudentNotFoundException("Estudante com o ID informado não encontrado no banco de dados")
-            );
+        );
     }
 
     private Employee findEmployeeOrThrow(UUID employeeId) {
@@ -178,7 +173,7 @@ public class EventService {
             .findById(employeeId)
             .orElseThrow(() ->
                 new EmployeeNotFoundException("Colaborador com o ID informado não encontrado no banco de dados")
-            );
+        );
     }
 
     private void validateParticipantAvailability(
@@ -202,7 +197,6 @@ public class EventService {
         if (employeeConflict) {
             throw new EventScheduleConflictException("O colaborador informado já possui evento no intervalo");
         }
-
         if (studentRepo.existsByIdAndArchivedAtIsNotNull(studentId)) {
             throw new InvalidEventException("Evento não pode ter estudantes arquivados");
         }
