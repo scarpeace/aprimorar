@@ -64,7 +64,7 @@ public class EventController {
         return ResponseEntity.ok(foundEvent);
     }
 
-    @GetMapping("/events/{studentId}")
+    @GetMapping("/student/{studentId}")
     @Operation(operationId = "getEventsByStudent", description = "Retorna uma lista de eventos por ID do aluno.")
     @ApiResponse(responseCode = "200", description = "Lista de eventos do aluno retornada com sucesso.")
     public ResponseEntity<PageDTO<EventResponseDTO>> getEventsByStudent(

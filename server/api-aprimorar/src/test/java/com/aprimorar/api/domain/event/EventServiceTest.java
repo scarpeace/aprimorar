@@ -88,13 +88,11 @@ class EventServiceTest {
         void shouldCreateEventWhenInputIsValid() {
             // Arrange
             EventRequestDTO input = request();
-            Event mappedEvent = event();
             Student student = student();
             Employee employee = employee();
             Event savedEvent = eventWithRelations(student, employee);
             EventResponseDTO expected = response();
 
-            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
             when(clock.instant()).thenReturn(CURRENT_TIME);
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
@@ -102,7 +100,7 @@ class EventServiceTest {
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
             when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
-            when(eventRepo.save(mappedEvent)).thenReturn(savedEvent);
+            when(eventRepo.save(any(Event.class))).thenReturn(savedEvent);
             when(eventMapper.convertToDto(savedEvent)).thenReturn(expected);
 
             // Act
@@ -309,9 +307,6 @@ class EventServiceTest {
         void shouldThrowWhenStudentIsNotFoundDuringCreation() {
             // Arrange
             EventRequestDTO input = request();
-            Event mappedEvent = event();
-
-            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.empty());
 
             // Act + Assert
@@ -325,10 +320,8 @@ class EventServiceTest {
         void shouldThrowWhenEmployeeIsNotFoundDuringCreation() {
             //Arrange
             EventRequestDTO input = request();
-            Event mappedEvent = event();
             Student student = student();
 
-            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.empty());
 
@@ -343,12 +336,9 @@ class EventServiceTest {
         void shouldThrowWhenStudentHasConflictingEvent() {
             //Arrange
             EventRequestDTO input = request();
-            Event mappedEvent = event();
             Student student = student();
             Employee employee = employee();
 
-            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
-            when(clock.instant()).thenReturn(CURRENT_TIME);
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(true);
@@ -364,12 +354,9 @@ class EventServiceTest {
         void shouldThrowWhenEmployeeHasConflictingEvent() {
             //Arrange
             EventRequestDTO input = request();
-            Event mappedEvent = event();
             Student student = student();
             Employee employee = employee();
 
-            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
-            when(clock.instant()).thenReturn(CURRENT_TIME);
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
@@ -386,12 +373,9 @@ class EventServiceTest {
         void shouldThrowWhenStudentIsArchived() {
             //Arrange
             EventRequestDTO input = request();
-            Event mappedEvent = event();
             Student student = student();
             Employee employee = employee();
 
-            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
-            when(clock.instant()).thenReturn(CURRENT_TIME);
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
@@ -409,12 +393,9 @@ class EventServiceTest {
         void shouldThrowWhenEmployeeIsArchived() {
             //Arrange
             EventRequestDTO input = request();
-            Event mappedEvent = event();
             Student student = student();
             Employee employee = employee();
 
-            when(eventMapper.convertToEntity(input)).thenReturn(mappedEvent);
-            when(clock.instant()).thenReturn(CURRENT_TIME);
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
@@ -523,34 +504,48 @@ class EventServiceTest {
     private static Event event() {
         Event input = new Event();
         input.setId(EVENT_ID);
-        input.setTitle("Título temporário");
-        input.setDescription("Descrição de teste");
-        input.setStartDate(EVENT_START);
-        input.setEndDateTime(EVENT_END);
-        input.setPayment(BigDecimal.valueOf(80));
-        input.setPrice(BigDecimal.valueOf(120));
-        input.setContent(EventContent.AULA);
+        input.updateDetails(
+                "Descrição de teste",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.AULA,
+                student(),
+                employee()
+        );
         return input;
     }
 
     private static Event eventWithRelations(Student student, Employee employee) {
-        Event input = event();
-        input.setTitle("AULA - Col: Ana Paula - João Silva");
-        input.setStudent(student);
-        input.setEmployee(employee);
+        Event input = new Event();
+        input.setId(EVENT_ID);
+        input.updateDetails(
+                "Descrição de teste",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.AULA,
+                student,
+                employee
+        );
         return input;
     }
 
     private static Event secondEvent() {
         Event input = new Event();
         input.setId(UUID.fromString("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"));
-        input.setTitle("MENTORIA - Col: Ana Paula - João Silva");
-        input.setDescription("Descrição de teste 2");
-        input.setStartDate(Instant.parse("2026-03-26T13:00:00Z"));
-        input.setEndDateTime(Instant.parse("2026-03-26T14:00:00Z"));
-        input.setPayment(BigDecimal.valueOf(90));
-        input.setPrice(BigDecimal.valueOf(130));
-        input.setContent(EventContent.MENTORIA);
+        input.updateDetails(
+                "Descrição de teste 2",
+                Instant.parse("2026-03-26T13:00:00Z"),
+                Instant.parse("2026-03-26T14:00:00Z"),
+                BigDecimal.valueOf(90),
+                BigDecimal.valueOf(130),
+                EventContent.MENTORIA,
+                student(),
+                employee()
+        );
         return input;
     }
 

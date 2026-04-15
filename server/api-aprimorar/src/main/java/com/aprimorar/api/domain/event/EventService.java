@@ -14,11 +14,9 @@ import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.shared.PageDTO;
-
 import java.time.Clock;
 import java.time.Instant;
 import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -39,11 +37,11 @@ public class EventService {
     private final Clock clock;
 
     public EventService(
-            EventRepository eventRepo,
-            StudentRepository studentRepo,
-            EmployeeRepository employeeRepo,
-            EventMapper eventMapper,
-            Clock clock
+        EventRepository eventRepo,
+        StudentRepository studentRepo,
+        EmployeeRepository employeeRepo,
+        EventMapper eventMapper,
+        Clock clock
     ) {
         this.eventRepo = eventRepo;
         this.studentRepo = studentRepo;
@@ -54,25 +52,30 @@ public class EventService {
 
     @Transactional
     public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
-        Event event = eventMapper.convertToEntity(eventRequestDTO);
+        Event event = new Event();
 
         Student student = findStudentOrThrow(eventRequestDTO.studentId());
         Employee employee = findEmployeeOrThrow(eventRequestDTO.employeeId());
 
-        String title = generateTitle(eventRequestDTO, student, employee);
-
-        event.validateDatesForCreation(Instant.now(clock));
         validateParticipantAvailability(
-                student.getId(),
-                employee.getId(),
-                event.getStartDate(),
-                event.getEndDateTime(),
-                null
+            student.getId(),
+            employee.getId(),
+            eventRequestDTO.startDate(),
+            eventRequestDTO.endDate(),
+            null
         );
 
-        event.setTitle(title);
-        event.setStudent(student);
-        event.setEmployee(employee);
+        event.updateDetails(
+            eventRequestDTO.description(),
+            eventRequestDTO.startDate(),
+            eventRequestDTO.endDate(),
+            eventRequestDTO.payment(),
+            eventRequestDTO.price(),
+            eventRequestDTO.content(),
+            student,
+            employee
+        );
+        event.validateDatesForCreation(Instant.now(clock));
 
         Event savedEvent = eventRepo.save(event);
         log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
@@ -107,9 +110,9 @@ public class EventService {
 
         Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);
         log.info(
-                "Consulta de eventos do colaborador {} finalizada, {} registros encontrados.",
-                employeeId,
-                eventPage.getTotalElements()
+            "Consulta de eventos do colaborador {} finalizada, {} registros encontrados.",
+            employeeId,
+            eventPage.getTotalElements()
         );
 
         return new PageDTO<>(eventsDtoPage);
@@ -121,9 +124,9 @@ public class EventService {
         Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);
 
         log.info(
-                "Consulta de eventos do aluno {} finalizada, {} registros encontrados.",
-                studentId,
-                eventPage.getTotalElements()
+            "Consulta de eventos do aluno {} finalizada, {} registros encontrados.",
+            studentId,
+            eventPage.getTotalElements()
         );
         return new PageDTO<>(eventsDtoPage);
     }
@@ -137,19 +140,18 @@ public class EventService {
         Student student = findStudentOrThrow(request.studentId());
         Employee employee = findEmployeeOrThrow(request.employeeId());
 
-        String title = generateTitle(request, student, employee);
-
         validateParticipantAvailability(student.getId(), employee.getId(), request.startDate(), request.endDate(), id);
 
-        event.setTitle(title);
-        event.setDescription(request.description());
-        event.setStartDate(request.startDate());
-        event.setEndDateTime(request.endDate());
-        event.setPayment(request.payment());
-        event.setPrice(request.price());
-        event.setContent(request.content());
-        event.setStudent(student);
-        event.setEmployee(employee);
+        event.updateDetails(
+            request.description(),
+            request.startDate(),
+            request.endDate(),
+            request.payment(),
+            request.price(),
+            request.content(),
+            student,
+            employee
+        );
 
         log.info("Evento {} atualizado com sucesso.", event.getTitle().toUpperCase());
         return eventMapper.convertToDto(event);
@@ -169,26 +171,26 @@ public class EventService {
 
     private Student findStudentOrThrow(UUID studentId) {
         return studentRepo
-                .findById(studentId)
-                .orElseThrow(() ->
-                        new StudentNotFoundException("Estudante com o ID informado não encontrado no banco de dados")
-                );
+            .findById(studentId)
+            .orElseThrow(() ->
+                new StudentNotFoundException("Estudante com o ID informado não encontrado no banco de dados")
+            );
     }
 
     private Employee findEmployeeOrThrow(UUID employeeId) {
         return employeeRepo
-                .findById(employeeId)
-                .orElseThrow(() ->
-                        new EmployeeNotFoundException("Colaborador com o ID informado não encontrado no banco de dados")
-                );
+            .findById(employeeId)
+            .orElseThrow(() ->
+                new EmployeeNotFoundException("Colaborador com o ID informado não encontrado no banco de dados")
+            );
     }
 
     private void validateParticipantAvailability(
-            UUID studentId,
-            UUID employeeId,
-            Instant startDate,
-            Instant endDate,
-            UUID ignoredEventId
+        UUID studentId,
+        UUID employeeId,
+        Instant startDate,
+        Instant endDate,
+        UUID ignoredEventId
     ) {
         boolean studentConflict = eventRepo.studentHasConflictingEvent(studentId, startDate, endDate, ignoredEventId);
         if (studentConflict) {
@@ -196,10 +198,10 @@ public class EventService {
         }
 
         boolean employeeConflict = eventRepo.employeeHasConflictingEvent(
-                employeeId,
-                startDate,
-                endDate,
-                ignoredEventId
+            employeeId,
+            startDate,
+            endDate,
+            ignoredEventId
         );
         if (employeeConflict) {
             throw new EventScheduleConflictException("O colaborador informado já possui um evento no intervalo");
@@ -212,13 +214,4 @@ public class EventService {
         }
     }
 
-    private String generateTitle(EventRequestDTO eventRequestDTO, Student student, Employee employee) {
-        return new StringBuilder()
-                .append(eventRequestDTO.content())
-                .append(" - ")
-                .append("Col: " + employee.getName())
-                .append(" - ")
-                .append(student.getName())
-                .toString();
-    }
 }

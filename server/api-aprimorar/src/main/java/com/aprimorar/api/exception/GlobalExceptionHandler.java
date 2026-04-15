@@ -6,6 +6,7 @@ import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
 import com.aprimorar.api.domain.event.exception.InvalidEventException;
+import com.aprimorar.api.domain.event.exception.NotAllowedToUpdateEventException;
 import com.aprimorar.api.domain.parent.exception.InvalidParentException;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
@@ -97,6 +98,7 @@ public class GlobalExceptionHandler {
             InvalidEventException.class,
             InvalidAddressException.class,
             InvalidParentException.class,
+            NotAllowedToUpdateEventException.class
         }
     )
     @ApiResponse(

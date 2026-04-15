@@ -3,11 +3,16 @@ package com.aprimorar.api.domain.event;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.aprimorar.api.domain.employee.Employee;
 import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.event.exception.NotAllowedToUpdateEventException;
+import com.aprimorar.api.domain.student.Student;
+import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.EventContent;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,44 +28,59 @@ class EventTest {
     class ValidationMethods {
 
         @Test
-        @DisplayName("should set title when value is valid")
-        void shouldSetTitleWhenValueIsValid() {
+        @DisplayName("should update details when values are valid")
+        void shouldUpdateDetailsWhenValuesAreValid() {
             // Arrange
             Event input = new Event();
-            String expected = "Aula de matemática";
+            Student student = student();
+            Employee employee = employee();
 
             // Act
-            input.setTitle(expected);
+            input.updateDetails(
+                "Aula de matemática",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.AULA,
+                student,
+                employee
+            );
 
             // Assert
-            assertThat(input.getTitle()).isEqualTo(expected);
+            assertThat(input.getTitle()).isEqualTo("AULA - Col: Ana Paula - João Silva");
+            assertThat(input.getDescription()).isEqualTo("Aula de matemática");
+            assertThat(input.getStartDate()).isEqualTo(EVENT_START);
+            assertThat(input.getEndDateTime()).isEqualTo(EVENT_END);
+            assertThat(input.getPayment()).isEqualByComparingTo(BigDecimal.valueOf(80));
+            assertThat(input.getPrice()).isEqualByComparingTo(BigDecimal.valueOf(120));
+            assertThat(input.getContent()).isEqualTo(EventContent.AULA);
+            assertThat(input.getStudent()).isEqualTo(student);
+            assertThat(input.getEmployee()).isEqualTo(employee);
         }
 
         @Test
-        @DisplayName("should throw when title is blank")
-        void shouldThrowWhenTitleIsBlank() {
+        @DisplayName("should allow blank description")
+        void shouldAllowBlankDescription() {
             // Arrange
             Event input = new Event();
-
-            // Act + Assert
-            assertThatThrownBy(() -> input.setTitle(" "))
-                .isInstanceOf(InvalidEventException.class)
-                .hasMessage("Título do evento é obrigatório");
-        }
-
-        @Test
-        @DisplayName("should set end date when value is valid")
-        void shouldSetEndDateWhenValueIsValid() {
-            // Arrange
-            Event input = new Event();
-            Instant expected = EVENT_END;
-            input.setStartDate(EVENT_START);
+            Student student = student();
+            Employee employee = employee();
 
             // Act
-            input.setEndDateTime(expected);
+            input.updateDetails(
+                " ",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.AULA,
+                student,
+                employee
+            );
 
             // Assert
-            assertThat(input.getEndDateTime()).isEqualTo(expected);
+            assertThat(input.getDescription()).isEqualTo(" ");
         }
 
         @Test
@@ -68,27 +88,22 @@ class EventTest {
         void shouldThrowWhenEndDateIsBeforeStartDate() {
             // Arrange
             Event input = new Event();
-            input.setStartDate(EVENT_END);
+            Student student = student();
+            Employee employee = employee();
 
             // Act + Assert
-            assertThatThrownBy(() -> input.setEndDateTime(EVENT_START))
+            assertThatThrownBy(() -> input.updateDetails(
+                "Descrição",
+                EVENT_END,
+                EVENT_START,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.AULA,
+                student,
+                employee
+            ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("Data de fim do evento não pode ser anterior a data de inicio");
-        }
-
-        @Test
-        @DisplayName("should set price when value is valid")
-        void shouldSetPriceWhenValueIsValid() {
-            // Arrange
-            Event input = new Event();
-            BigDecimal expected = BigDecimal.valueOf(120);
-            input.setPayment(BigDecimal.valueOf(80));
-
-            // Act
-            input.setPrice(expected);
-
-            // Assert
-            assertThat(input.getPrice()).isEqualTo(expected);
         }
 
         @Test
@@ -96,10 +111,20 @@ class EventTest {
         void shouldThrowWhenPriceIsLessThanPayment() {
             // Arrange
             Event input = new Event();
-            input.setPayment(BigDecimal.valueOf(100));
+            Student student = student();
+            Employee employee = employee();
 
             // Act + Assert
-            assertThatThrownBy(() -> input.setPrice(BigDecimal.valueOf(80)))
+            assertThatThrownBy(() -> input.updateDetails(
+                "Descrição",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(100),
+                BigDecimal.valueOf(80),
+                EventContent.AULA,
+                student,
+                employee
+            ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O valor do evento não pode ser menor que o pagamento");
         }
@@ -109,35 +134,52 @@ class EventTest {
         void shouldThrowWhenPriceIsLessThanFifty() {
             // Arrange
             Event input = new Event();
-            input.setPayment(BigDecimal.valueOf(40));
+            Student student = student();
+            Employee employee = employee();
 
             // Act + Assert
-            assertThatThrownBy(() -> input.setPrice(BigDecimal.valueOf(49)))
+            assertThatThrownBy(() -> input.updateDetails(
+                "Descrição",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(40),
+                BigDecimal.valueOf(49),
+                EventContent.AULA,
+                student,
+                employee
+            ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O valor do evento não pode ser menor que R$50,00");
         }
 
         @Test
-        @DisplayName("should set content when value is valid")
-        void shouldSetContentWhenValueIsValid() {
+        @DisplayName("should throw when content is null")
+        void shouldThrowWhenContentIsNull() {
             // Arrange
             Event input = new Event();
-            EventContent expected = EventContent.AULA;
+            Student student = student();
+            Employee employee = employee();
 
-            // Act
-            input.setContent(expected);
-
-            // Assert
-            assertThat(input.getContent()).isEqualTo(expected);
+            // Act + Assert
+            assertThatThrownBy(() -> input.updateDetails(
+                "Descrição",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                null,
+                student,
+                employee
+            ))
+                .isInstanceOf(InvalidEventException.class)
+                .hasMessage("O conteúdo do evento é obrigatório");
         }
 
         @Test
         @DisplayName("should validate dates for creation when end date is in the future")
         void shouldValidateDatesForCreationWhenEndDateIsInTheFuture() {
             // Arrange
-            Event input = new Event();
-            input.setStartDate(EVENT_START);
-            input.setEndDateTime(EVENT_END);
+            Event input = validEvent();
 
             // Act
             input.validateDatesForCreation(CURRENT_TIME);
@@ -150,10 +192,8 @@ class EventTest {
         @DisplayName("should throw when end date is in the past during creation")
         void shouldThrowWhenEndDateIsInThePastDuringCreation() {
             // Arrange
-            Event input = new Event();
+            Event input = validEvent();
             Instant now = EVENT_END.plusSeconds(1);
-            input.setStartDate(EVENT_START);
-            input.setEndDateTime(EVENT_END);
 
             // Act + Assert
             assertThatThrownBy(() -> input.validateDatesForCreation(now))
@@ -165,10 +205,8 @@ class EventTest {
         @DisplayName("should validate edit window when deadline is still open")
         void shouldValidateEditWindowWhenDeadlineIsStillOpen() {
             // Arrange
-            Event input = new Event();
+            Event input = validEvent();
             Instant now = EVENT_END.plusSeconds(20L * 24 * 60 * 60);
-            input.setStartDate(EVENT_START);
-            input.setEndDateTime(EVENT_END);
 
             // Act
             input.validateEditWindow(now);
@@ -181,15 +219,80 @@ class EventTest {
         @DisplayName("should throw when edit window is closed")
         void shouldThrowWhenEditWindowIsClosed() {
             // Arrange
-            Event input = new Event();
+            Event input = validEvent();
             Instant now = EVENT_END.plusSeconds(20L * 24 * 60 * 60 + 1);
-            input.setStartDate(EVENT_START);
-            input.setEndDateTime(EVENT_END);
 
             // Act + Assert
             assertThatThrownBy(() -> input.validateEditWindow(now))
                 .isInstanceOf(NotAllowedToUpdateEventException.class)
                 .hasMessage("A janela de 20 dias para editar as informações do evento encerrou");
+        }
+
+        @Test
+        @DisplayName("should update details and generate title")
+        void shouldUpdateDetailsAndGenerateTitle() {
+            // Arrange
+            Event input = new Event();
+            Student student = student();
+            Employee employee = employee();
+
+            // Act
+            input.updateDetails(
+                "Revisão para prova",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.MENTORIA,
+                student,
+                employee
+            );
+
+            // Assert
+            assertThat(input.getTitle()).isEqualTo("MENTORIA - Col: Ana Paula - João Silva");
+            assertThat(input.getDescription()).isEqualTo("Revisão para prova");
+            assertThat(input.getStartDate()).isEqualTo(EVENT_START);
+            assertThat(input.getEndDateTime()).isEqualTo(EVENT_END);
+            assertThat(input.getPayment()).isEqualByComparingTo(BigDecimal.valueOf(80));
+            assertThat(input.getPrice()).isEqualByComparingTo(BigDecimal.valueOf(120));
+            assertThat(input.getContent()).isEqualTo(EventContent.MENTORIA);
+            assertThat(input.getStudent()).isEqualTo(student);
+            assertThat(input.getEmployee()).isEqualTo(employee);
+        }
+
+        private Event validEvent() {
+            Event input = new Event();
+            input.updateDetails(
+                "Descrição válida",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.AULA,
+                student(),
+                employee()
+            );
+            return input;
+        }
+
+        private Student student() {
+            Student input = new Student();
+            input.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            input.setName("João Silva");
+            return input;
+        }
+
+        private Employee employee() {
+            Employee input = new Employee();
+            input.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            input.setName("Ana Paula");
+            input.setBirthdate(LocalDate.of(1990, 8, 20));
+            input.setPix("ana@email.com");
+            input.setContact("61988888888");
+            input.setCpf("10987654321");
+            input.setEmail("ana@email.com");
+            input.setDuty(Duty.TEACHER);
+            return input;
         }
     }
 }
