@@ -1,21 +1,9 @@
 package com.aprimorar.api.domain.student;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.aprimorar.api.domain.address.Address;
+import com.aprimorar.api.domain.address.AddressMapper;
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
 import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
@@ -24,7 +12,19 @@ import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.domain.student.repository.StudentSpecifications;
+import com.aprimorar.api.shared.MapperUtils;
 import com.aprimorar.api.shared.PageDTO;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StudentService {
@@ -35,28 +35,44 @@ public class StudentService {
     private final ParentRepository parentRepo;
     private final StudentRepository studentRepo;
     private final StudentMapper studentMapper;
+    private final AddressMapper addressMapper;
     private final EventRepository eventRepo;
 
     public StudentService(
         ParentRepository parentRepo,
         StudentRepository studentRepo,
         StudentMapper studentMapper,
+        AddressMapper addressMapper,
         EventRepository eventRepo
     ) {
         this.parentRepo = parentRepo;
         this.studentRepo = studentRepo;
         this.studentMapper = studentMapper;
+        this.addressMapper = addressMapper;
         this.eventRepo = eventRepo;
     }
 
     @Transactional
     public StudentResponseDTO createStudent(StudentRequestDTO dto) {
-        Student student = studentMapper.convertToEntity(dto);
-
         Parent parent = findParentOrThrow(dto.parentId());
-        student.setParent(parent);
+        Address address = addressMapper.convertToEntity(dto.address());
 
-        ensureStudentUniqueness(student);
+        String normalizedContact = MapperUtils.normalizeContact(dto.contact());
+        String normalizedEmail = MapperUtils.normalizeEmail(dto.email());
+        String normalizedCpf = MapperUtils.normalizeCpf(dto.cpf());
+
+        Student student = new Student(
+            dto.name(),
+            normalizedContact,
+            normalizedEmail,
+            dto.birthdate(),
+            normalizedCpf,
+            dto.school(),
+            parent,
+            address
+        );
+
+        ensureStudentUniqueness(student.getCpf(), student.getEmail());
 
         Student savedStudent = studentRepo.save(student);
 
@@ -67,11 +83,11 @@ public class StudentService {
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
     public PageDTO<StudentResponseDTO> getStudents(Pageable pageable, String search, Boolean archived) {
-        //TODO: Eu acho que dá pra simplificar essa query/especificação do ghost
-        Specification<Student> spec = Specification.allOf(
-            StudentSpecifications.isNotGhost(),
-            Boolean.TRUE.equals(archived) ? StudentSpecifications.archived() : StudentSpecifications.notArchived()
-        );
+        Specification<Student> spec = StudentSpecifications.isNotGhost();
+
+        if (Boolean.TRUE.equals(archived)) {
+            spec = spec.and(StudentSpecifications.archived());
+        }
 
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(StudentSpecifications.searchContainsIgnoreCase(search.trim()));
@@ -116,17 +132,22 @@ public class StudentService {
 
         Student student = findStudentOrThrow(id);
         Parent parent = findParentOrThrow(dto.parentId());
-        Student updatedStudentData = studentMapper.convertToEntity(dto);
+        Address address = addressMapper.convertToEntity(dto.address());
 
-        ensureStudentUniquenessForUpdate(updatedStudentData, id);
+        String normalizedContact = MapperUtils.normalizeContact(dto.contact());
+        String normalizedEmail = MapperUtils.normalizeEmail(dto.email());
 
-        student.setName(updatedStudentData.getName());
-        student.setContact(updatedStudentData.getContact());
-        student.setEmail(updatedStudentData.getEmail());
-        student.setBirthdate(updatedStudentData.getBirthdate());
-        student.setSchool(updatedStudentData.getSchool());
-        student.setAddress(updatedStudentData.getAddress());
-        student.setParent(parent);
+        ensureStudentUniquenessForUpdate(normalizedEmail, id);
+
+        student.updateDetails(
+            dto.name(),
+            normalizedContact,
+            normalizedEmail,
+            dto.birthdate(),
+            dto.school(),
+            parent,
+            address
+        );
 
         log.info("Aluno {} atualizado com sucesso.", student.getName().toUpperCase());
         return studentMapper.convertToDto(student);
@@ -180,44 +201,19 @@ public class StudentService {
             .orElseThrow(() -> new IllegalArgumentException("Responsável não encontrado."));
     }
 
-    private void ensureStudentUniqueness(Student student) {
-        if (studentRepo.existsByCpf(student.getCpf())) {
+    private void ensureStudentUniqueness(String cpf, String email) {
+        if (studentRepo.existsByCpf(cpf)) {
             throw new StudentAlreadyExistException("Aluno com o CPF informado já existe no banco de dados");
         }
 
-        if (studentRepo.existsByEmail(student.getEmail())) {
+        if (studentRepo.existsByEmail(email)) {
             throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
         }
     }
 
-    private void ensureStudentUniquenessForUpdate(Student student, UUID studentId) {
-        if (studentRepo.existsByCpfAndIdNot(student.getCpf(), studentId)) {
-            throw new StudentAlreadyExistException("Aluno com o CPF informado já existe no banco de dados");
-        }
-
-        if (studentRepo.existsByEmailAndIdNot(student.getEmail(), studentId)) {
+    private void ensureStudentUniquenessForUpdate(String email, UUID studentId) {
+        if (studentRepo.existsByEmailAndIdNot(email, studentId)) {
             throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
-        }
-    }
-
-    private void ensureParentUniqueness(Parent parent) {
-        if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parent.getId())) {
-            throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
-        }
-
-        if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parent.getId())) {
-            throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
-        }
-    }
-
-    //TODO: Será que vale a pena jogar alguns dos helper methods pra dentro dos methods para melhorar a legibilidade?
-    private void ensureParentUniquenessForUpdate(Parent parent, UUID parentId) {
-        if (parentRepo.existsByCpfAndIdNot(parent.getCpf(), parentId)) {
-            throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
-        }
-
-        if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parentId)) {
-            throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
     }
 }

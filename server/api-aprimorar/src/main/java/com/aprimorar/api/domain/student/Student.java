@@ -45,16 +45,36 @@ public class Student extends BaseEntity {
     @Embedded
     private Address address;
 
-    public Student() {}
+    protected Student() {}
+
+    public Student(
+        String name,
+        String contact,
+        String email,
+        LocalDate birthdate,
+        String cpf,
+        String school,
+        Parent parent,
+        Address address
+    ) {
+        validateRequiredFields(name, contact, email, birthdate, school, parent, address);
+        validateCpf(cpf);
+
+        this.name = name;
+        this.contact = contact;
+        this.email = email;
+        this.birthdate = birthdate;
+        this.cpf = cpf;
+        this.school = school;
+        this.parent = parent;
+        this.address = address;
+    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new InvalidStudentException("Nome do estudante não pode estar vazio");
-        }
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -62,10 +82,7 @@ public class Student extends BaseEntity {
         return contact;
     }
 
-    public void setContact(String contact) {
-        if (contact == null || contact.isBlank()) {
-            throw new InvalidStudentException("Contato do estudante não pode estar vazio");
-        }
+    private void setContact(String contact) {
         this.contact = contact;
     }
 
@@ -73,10 +90,7 @@ public class Student extends BaseEntity {
         return email;
     }
 
-    public void setEmail(String email) {
-        if (email == null || email.isBlank()) {
-            throw new InvalidStudentException("Email do estudante não pode estar vazio");
-        }
+    private void setEmail(String email) {
         this.email = email;
     }
 
@@ -84,10 +98,7 @@ public class Student extends BaseEntity {
         return birthdate;
     }
 
-    public void setBirthdate(LocalDate birthdate) {
-        if (birthdate == null) {
-            throw new InvalidStudentException("A data de nascimento não pode estar vazio");
-        }
+    private void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 
@@ -95,10 +106,7 @@ public class Student extends BaseEntity {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
-        if (cpf == null || cpf.isBlank()) {
-            throw new InvalidStudentException("CPF do estudante não pode estar vazio");
-        }
+    private void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
@@ -106,10 +114,7 @@ public class Student extends BaseEntity {
         return school;
     }
 
-    public void setSchool(String school) {
-        if (school == null || school.isBlank()) {
-            throw new InvalidStudentException("Escola do estudante não pode estar vazio");
-        }
+    private void setSchool(String school) {
         this.school = school;
     }
 
@@ -117,10 +122,7 @@ public class Student extends BaseEntity {
         return parent;
     }
 
-    public void setParent(Parent parent) {
-        if (parent == null) {
-            throw new InvalidStudentException("O ID do responsável não pode ser nulo");
-        }
+    private void setParent(Parent parent) {
         this.parent = parent;
     }
 
@@ -128,10 +130,65 @@ public class Student extends BaseEntity {
         return address;
     }
 
-    public void setAddress(Address address) {
+    private void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public void updateDetails(
+        String name,
+        String contact,
+        String email,
+        LocalDate birthdate,
+        String school,
+        Parent parent,
+        Address address
+    ) {
+        validateRequiredFields(name, contact, email, birthdate, school, parent, address);
+
+        setName(name);
+        setContact(contact);
+        setEmail(email);
+        setBirthdate(birthdate);
+        setSchool(school);
+        setParent(parent);
+        setAddress(address);
+    }
+
+    private void validateRequiredFields(
+        String name,
+        String contact,
+        String email,
+        LocalDate birthdate,
+        String school,
+        Parent parent,
+        Address address
+    ) {
+        if (name == null || name.isBlank()) {
+            throw new InvalidStudentException("Nome do estudante não pode estar vazio");
+        }
+        if (contact == null || contact.isBlank()) {
+            throw new InvalidStudentException("Contato do estudante não pode estar vazio");
+        }
+        if (email == null || email.isBlank()) {
+            throw new InvalidStudentException("Email do estudante não pode estar vazio");
+        }
+        if (birthdate == null) {
+            throw new InvalidStudentException("A data de nascimento não pode estar vazio");
+        }
+        if (school == null || school.isBlank()) {
+            throw new InvalidStudentException("Escola do estudante não pode estar vazio");
+        }
+        if (parent == null) {
+            throw new InvalidStudentException("O ID do responsável não pode ser nulo");
+        }
         if (address == null) {
             throw new InvalidStudentException("O endereço do aluno não pode ser nulo");
         }
-        this.address = address;
+    }
+
+    private void validateCpf(String cpf) {
+        if (cpf == null || cpf.isBlank()) {
+            throw new InvalidStudentException("CPF do estudante não pode estar vazio");
+        }
     }
 }
