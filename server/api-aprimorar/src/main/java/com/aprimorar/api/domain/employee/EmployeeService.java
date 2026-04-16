@@ -40,13 +40,11 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
-        Employee employee = new Employee();
-
         String normalizedContact = MapperUtils.normalizeContact(employeeRequestDto.contact());
         String normalizedCpf = MapperUtils.normalizeCpf(employeeRequestDto.cpf());
         String normalizedEmail = MapperUtils.normalizeEmail(employeeRequestDto.email());
 
-        employee.updateDetails(
+        Employee employee = new Employee(
             employeeRequestDto.name(),
             employeeRequestDto.birthdate(),
             employeeRequestDto.pix(),
@@ -108,17 +106,15 @@ public class EmployeeService {
         Employee employee = findEmployeeOrThrow(employeeId);
 
         String normalizedContact = MapperUtils.normalizeContact(request.contact());
-        String normalizedCpf = MapperUtils.normalizeCpf(request.cpf());
         String normalizedEmail = MapperUtils.normalizeEmail(request.email());
 
-        ensureEmployeeUniquenessForUpdate(normalizedCpf, normalizedEmail, employeeId);
+        ensureEmployeeUniquenessForUpdate(normalizedEmail, employeeId);
 
         employee.updateDetails(
             request.name(),
             request.birthdate(),
             request.pix(),
             normalizedContact,
-            normalizedCpf,
             normalizedEmail,
             request.duty()
         );
@@ -171,11 +167,7 @@ public class EmployeeService {
         }
     }
 
-    private void ensureEmployeeUniquenessForUpdate(String cpf, String email, UUID employeeId) {
-        if (employeeRepo.existsByCpfAndIdNot(cpf, employeeId)) {
-            throw new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados");
-        }
-
+    private void ensureEmployeeUniquenessForUpdate(String email, UUID employeeId) {
         if (employeeRepo.existsByEmailAndIdNot(email, employeeId)) {
             throw new EmployeeAlreadyExistsException(
                 "Colaborador com o Email informado já cadastrado no banco de dados"

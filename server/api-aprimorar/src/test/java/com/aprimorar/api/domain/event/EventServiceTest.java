@@ -95,12 +95,8 @@ class EventServiceTest {
                 EMPLOYEE_ID
             );
 
-            Parent parent = new Parent();
+            Parent parent = new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
             parent.setId(UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"));
-            parent.setName("Maria Silva");
-            parent.setEmail("maria@email.com");
-            parent.setContact("61977777777");
-            parent.setCpf("98765432100");
 
             Address address = new Address();
             address.setStreet("Rua A");
@@ -121,9 +117,7 @@ class EventServiceTest {
             student.setParent(parent);
             student.setAddress(address);
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -132,6 +126,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             Event savedEvent = new Event();
             savedEvent.setId(EVENT_ID);
@@ -187,9 +182,7 @@ class EventServiceTest {
             student.setId(STUDENT_ID);
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -198,6 +191,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             Event firstEvent = new Event();
             firstEvent.setId(EVENT_ID);
@@ -278,9 +272,7 @@ class EventServiceTest {
             student.setId(STUDENT_ID);
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -289,6 +281,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             Event event = new Event();
             event.setId(EVENT_ID);
@@ -337,9 +330,7 @@ class EventServiceTest {
             student.setId(STUDENT_ID);
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -348,6 +339,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             Event firstEvent = new Event();
             firstEvent.setId(EVENT_ID);
@@ -428,9 +420,7 @@ class EventServiceTest {
             student.setId(STUDENT_ID);
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -439,6 +429,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             Event firstEvent = new Event();
             firstEvent.setId(EVENT_ID);
@@ -520,9 +511,7 @@ class EventServiceTest {
             student.setId(STUDENT_ID);
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -531,6 +520,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             Event firstEvent = new Event();
             firstEvent.setId(UUID.fromString("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"));
@@ -587,12 +577,8 @@ class EventServiceTest {
                 EMPLOYEE_ID
             );
 
-            Parent parent = new Parent();
+            Parent parent = new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
             parent.setId(UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"));
-            parent.setName("Maria Silva");
-            parent.setEmail("maria@email.com");
-            parent.setContact("61977777777");
-            parent.setCpf("98765432100");
 
             Address address = new Address();
             address.setStreet("Rua A");
@@ -613,9 +599,7 @@ class EventServiceTest {
             student.setParent(parent);
             student.setAddress(address);
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -624,6 +608,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             Event existingEvent = new Event();
             existingEvent.setId(EVENT_ID);
@@ -709,9 +694,7 @@ class EventServiceTest {
             student.setId(STUDENT_ID);
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -720,6 +703,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             Event expected = new Event();
             expected.setId(EVENT_ID);
@@ -788,12 +772,8 @@ class EventServiceTest {
                 EMPLOYEE_ID
             );
 
-            Parent parent = new Parent();
+            Parent parent = new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
             parent.setId(UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"));
-            parent.setName("Maria Silva");
-            parent.setEmail("maria@email.com");
-            parent.setContact("61977777777");
-            parent.setCpf("98765432100");
 
             Address address = new Address();
             address.setStreet("Rua A");
@@ -836,12 +816,8 @@ class EventServiceTest {
                 EMPLOYEE_ID
             );
 
-            Parent parent = new Parent();
+            Parent parent = new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
             parent.setId(UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"));
-            parent.setName("Maria Silva");
-            parent.setEmail("maria@email.com");
-            parent.setContact("61977777777");
-            parent.setCpf("98765432100");
 
             Address address = new Address();
             address.setStreet("Rua A");
@@ -862,9 +838,7 @@ class EventServiceTest {
             student.setParent(parent);
             student.setAddress(address);
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -873,6 +847,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
@@ -897,12 +872,8 @@ class EventServiceTest {
                 EMPLOYEE_ID
             );
 
-            Parent parent = new Parent();
+            Parent parent = new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
             parent.setId(UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"));
-            parent.setName("Maria Silva");
-            parent.setEmail("maria@email.com");
-            parent.setContact("61977777777");
-            parent.setCpf("98765432100");
 
             Address address = new Address();
             address.setStreet("Rua A");
@@ -923,9 +894,7 @@ class EventServiceTest {
             student.setParent(parent);
             student.setAddress(address);
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -934,6 +903,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
@@ -959,12 +929,8 @@ class EventServiceTest {
                 EMPLOYEE_ID
             );
 
-            Parent parent = new Parent();
+            Parent parent = new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
             parent.setId(UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"));
-            parent.setName("Maria Silva");
-            parent.setEmail("maria@email.com");
-            parent.setContact("61977777777");
-            parent.setCpf("98765432100");
 
             Address address = new Address();
             address.setStreet("Rua A");
@@ -985,9 +951,7 @@ class EventServiceTest {
             student.setParent(parent);
             student.setAddress(address);
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -996,6 +960,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
@@ -1022,12 +987,8 @@ class EventServiceTest {
                 EMPLOYEE_ID
             );
 
-            Parent parent = new Parent();
+            Parent parent = new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
             parent.setId(UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"));
-            parent.setName("Maria Silva");
-            parent.setEmail("maria@email.com");
-            parent.setContact("61977777777");
-            parent.setCpf("98765432100");
 
             Address address = new Address();
             address.setStreet("Rua A");
@@ -1048,9 +1009,7 @@ class EventServiceTest {
             student.setParent(parent);
             student.setAddress(address);
 
-            Employee employee = new Employee();
-            employee.setId(EMPLOYEE_ID);
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -1059,6 +1018,7 @@ class EventServiceTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(EMPLOYEE_ID);
 
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));

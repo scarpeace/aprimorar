@@ -1,17 +1,5 @@
 package com.aprimorar.api.domain.parent;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.aprimorar.api.domain.parent.dto.ParentOptionsDTO;
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
@@ -21,7 +9,18 @@ import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
 import com.aprimorar.api.domain.parent.repository.ParentSpecifications;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.shared.MapperUtils;
 import com.aprimorar.api.shared.PageDTO;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ParentService {
@@ -38,13 +37,28 @@ public class ParentService {
         this.studentRepo = studentRepo;
     }
 
-@Transactional(readOnly = true)
-    public PageDTO<ParentResponseDTO> getParents(Pageable pageable, String search, boolean archived) {
+    @Transactional
+    public ParentResponseDTO createParent(ParentRequestDTO request) {
+        String normalizedEmail = normalizeEmail(request.email());
+        String normalizedContact = normalizeContact(request.contact());
+        String normalizedCpf = normalizeCpf(request.cpf());
 
-        Specification<Parent> spec = Specification.allOf(
-            ParentSpecifications.isNotGhost(),
-            Boolean.TRUE.equals(archived) ? ParentSpecifications.archived() : ParentSpecifications.notArchived()
-        );
+        Parent parent = new Parent(request.name(), normalizedEmail, normalizedContact, normalizedCpf);
+
+        ensureParentUniqueness(parent.getCpf(), parent.getEmail());
+        Parent savedParent = parentRepo.save(parent);
+
+        log.info("Responsável {} cadastrado com sucesso.", savedParent.getName().toUpperCase());
+        return parentMapper.convertToDto(savedParent);
+    }
+
+    @Transactional(readOnly = true)
+    public PageDTO<ParentResponseDTO> getParents(Pageable pageable, String search, boolean archived) {
+        Specification<Parent> spec = ParentSpecifications.isNotGhost();
+
+        if (Boolean.TRUE.equals(archived)) {
+            spec = spec.and(ParentSpecifications.archived());
+        }
 
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(ParentSpecifications.searchContainsIgnoreCase(search.trim()));
@@ -73,29 +87,16 @@ public class ParentService {
         return parentMapper.convertToDto(parent);
     }
 
-    /* ----- Command Methods ----- */
-    @Transactional
-    public ParentResponseDTO createParent(ParentRequestDTO request) {
-        Parent parent = parentMapper.convertToEntity(request);
-
-        ensureParentUniqueness(parent);
-        Parent savedParent = parentRepo.save(parent);
-
-        log.info("Responsável {} cadastrado com sucesso.", savedParent.getName().toUpperCase());
-        return parentMapper.convertToDto(savedParent);
-    }
-
     @Transactional
     public ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO request) {
         Parent parent = findParentOrThrow(parentId);
-        Parent updatedParentData = parentMapper.convertToEntity(request);
-        ensureParentUniquenessForUpdate(updatedParentData, parentId);
+        String normalizedEmail = normalizeEmail(request.email());
+        String normalizedContact = normalizeContact(request.contact());
+        ensureParentUniquenessForUpdate(normalizedEmail, parentId);
 
-        parent.setName(updatedParentData.getName());
-        parent.setEmail(updatedParentData.getEmail());
-        parent.setContact(updatedParentData.getContact());
+        parent.updateDetails(request.name(), normalizedEmail, normalizedContact);
 
-        log.info("Responsável {} atualizado com sucesso.", updatedParentData.getName().toUpperCase());
+        log.info("Responsável {} atualizado com sucesso.", parent.getName().toUpperCase());
         return parentMapper.convertToDto(parent);
     }
 
@@ -136,28 +137,31 @@ public class ParentService {
         }
     }
 
-    private void ensureParentUniqueness(Parent parent) {
-        if (parentRepo.existsByCpf(parent.getCpf())) {
+    private void ensureParentUniqueness(String cpf, String email) {
+        if (parentRepo.existsByCpf(cpf)) {
             throw new ParentAlreadyExistsException("Responsável com o CPF informado já existe no banco de dados");
         }
 
-        if (parentRepo.existsByEmail(parent.getEmail())) {
+        if (parentRepo.existsByEmail(email)) {
             throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
     }
 
-    private void ensureParentUniquenessForUpdate(Parent parent, UUID parentId) {
-        if (parentRepo.existsByEmailAndIdNot(parent.getEmail(), parentId)) {
+    private void ensureParentUniquenessForUpdate(String email, UUID parentId) {
+        if (parentRepo.existsByEmailAndIdNot(email, parentId)) {
             throw new ParentAlreadyExistsException("Responsável com o Email informado já existe no banco de dados");
         }
     }
 
+    private String normalizeEmail(String email) {
+        return MapperUtils.normalizeEmail(email);
+    }
 
+    private String normalizeContact(String contact) {
+        return MapperUtils.normalizeContact(contact);
+    }
 
-    public ParentResponseDTO update(ParentRequestDTO dto, UUID parentId) {
-        Parent parent = parentMapper.convertToEntity(dto);
-        ensureParentUniquenessForUpdate(parent, parentId);
-        parent = parentRepo.save(parent);
-        return parentMapper.convertToDto(parent);
+    private String normalizeCpf(String cpf) {
+        return MapperUtils.normalizeCpf(cpf);
     }
 }

@@ -25,16 +25,23 @@ public class Parent extends BaseEntity {
     @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
-    public Parent() {}
+    protected Parent() {}
+
+    public Parent(String name, String email, String contact, String cpf) {
+        validateRequiredFields(name, email, contact);
+        validateCpf(cpf);
+
+        this.name = name;
+        this.email = email;
+        this.contact = contact;
+        this.cpf = cpf;
+    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new InvalidParentException("Nome do responsável é obrigatório");
-        }
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -42,10 +49,7 @@ public class Parent extends BaseEntity {
         return email;
     }
 
-    public void setEmail(String email) {
-        if (email == null || email.isBlank()) {
-            throw new InvalidParentException("Email do responsável é obrigatório");
-        }
+    private void setEmail(String email) {
         this.email = email;
     }
 
@@ -53,10 +57,7 @@ public class Parent extends BaseEntity {
         return contact;
     }
 
-    public void setContact(String contact) {
-        if (contact == null || contact.isBlank()) {
-            throw new InvalidParentException("Contato do responsável é obrigatório");
-        }
+    private void setContact(String contact) {
         this.contact = contact;
     }
 
@@ -64,10 +65,33 @@ public class Parent extends BaseEntity {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
+    private void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public void updateDetails(String name, String email, String contact) {
+        validateRequiredFields(name, email, contact);
+
+        setName(name);
+        setEmail(email);
+        setContact(contact);
+    }
+
+    private void validateRequiredFields(String name, String email, String contact) {
+        if (name == null || name.isBlank()) {
+            throw new InvalidParentException("Nome do responsável é obrigatório");
+        }
+        if (email == null || email.isBlank()) {
+            throw new InvalidParentException("Email do responsável é obrigatório");
+        }
+        if (contact == null || contact.isBlank()) {
+            throw new InvalidParentException("Contato do responsável é obrigatório");
+        }
+    }
+
+    private void validateCpf(String cpf) {
         if (cpf == null || cpf.isBlank()) {
             throw new InvalidParentException("CPF do responsável é obrigatório");
         }
-        this.cpf = cpf;
     }
 }

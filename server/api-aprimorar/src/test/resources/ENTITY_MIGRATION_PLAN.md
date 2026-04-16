@@ -28,19 +28,6 @@ Observations:
 - the aggregate is assembled across mapper + service
 - this is the closest match to the old `Event` shape before refactor
 
-### Employee
-
-Current flow:
-
-- `EmployeeMapper.convertToEntity(...)` creates an entity
-- `EmployeeService.updateEmployee(...)` copies fields one by one
-
-Observations:
-
-- simpler than `Student`
-- no cross-field validation today, mostly required-field validation
-- easiest migration candidate
-
 ### Parent
 
 Current flow:
@@ -60,7 +47,7 @@ Observations:
 2. Mappers still build domain entities directly.
 3. Services still copy fields one by one.
 4. Tests and fixtures build entities through setters heavily.
-5. `Parent` update behavior needs a business decision on CPF mutability before locking the API down.
+5. `Parent` and `Employee` update flows must keep CPF immutable.
 
 ## Recommended Entity APIs
 
@@ -98,38 +85,12 @@ Migration notes:
 - `AddressMapper` can still convert request DTO -> `Address`
 - `StudentMapper` should stop creating `Student`
 
-### Employee
-
-Add:
-
-```java
-public void updateDetails(
-    String name,
-    LocalDate birthdate,
-    String pix,
-    String contact,
-    String cpf,
-    String email,
-    Duty duty
-) {
-    validateRequiredFields(name, birthdate, pix, contact, cpf, email, duty);
-
-    this.name = name;
-    this.birthdate = birthdate;
-    this.pix = pix;
-    this.contact = contact;
-    this.cpf = cpf;
-    this.email = email;
-    this.duty = duty;
-}
-```
-
 ### Parent
 
 Add:
 
 ```java
-public void updateDetails(String name, String email, String contact, String cpf) {
+public void createDetails(String name, String email, String contact, String cpf) {
     validateRequiredFields(name, email, contact, cpf);
 
     this.name = name;
@@ -137,12 +98,15 @@ public void updateDetails(String name, String email, String contact, String cpf)
     this.contact = contact;
     this.cpf = cpf;
 }
+
+public void updateDetails(String name, String email, String contact) {
+    validateRequiredFields(name, email, contact);
+
+    this.name = name;
+    this.email = email;
+    this.contact = contact;
+}
 ```
-
-Decision needed before implementation:
-
-- should CPF remain editable on update?
-- current service behavior suggests `no`, but create/update DTO shape suggests `yes`
 
 ## Service Migration
 
@@ -174,39 +138,29 @@ Target update flow:
 - remove `updatedStudentData`
 - call `student.updateDetails(...)` directly on the managed entity
 
-### EmployeeService
-
-Target create/update:
-
-```java
-employee.updateDetails(
-    request.name(),
-    request.birthdate(),
-    request.pix(),
-    MapperUtils.normalizeContact(request.contact()),
-    MapperUtils.normalizeCpf(request.cpf()),
-    MapperUtils.normalizeEmail(request.email()),
-    request.duty()
-);
-```
-
 ### ParentService
 
 Target create/update:
 
 ```java
-parent.updateDetails(
+parent.createDetails(
     request.name(),
     MapperUtils.normalizeEmail(request.email()),
     MapperUtils.normalizeContact(request.contact()),
     MapperUtils.normalizeCpf(request.cpf())
+);
+
+parent.updateDetails(
+    request.name(),
+    MapperUtils.normalizeEmail(request.email()),
+    MapperUtils.normalizeContact(request.contact())
 );
 ```
 
 Also cleanup:
 
 - remove the duplicate `update(...)` method in `ParentService`
-- align uniqueness checks with the final rule for CPF mutability
+- keep CPF immutable on update
 
 ## Mapper Migration
 
@@ -225,10 +179,6 @@ Reason:
 
 - `Student` should no longer be assembled outside the entity/service mutation path
 
-### EmployeeMapper
-
-Keep only DTO mapping.
-
 ### ParentMapper
 
 Keep only DTO mapping.
@@ -246,42 +196,22 @@ Same direction used in `Event`:
 Suggested setters to lock down:
 
 - `Student`: `setName`, `setContact`, `setEmail`, `setBirthdate`, `setCpf`, `setSchool`, `setParent`, `setAddress`
-- `Employee`: `setName`, `setBirthdate`, `setPix`, `setContact`, `setCpf`, `setEmail`, `setDuty`
 - `Parent`: `setName`, `setEmail`, `setContact`, `setCpf`
 
 ## Rollout Order
 
-### Phase 1: Employee
-
-Why first:
-
-- smallest surface area
-- no relation or embedded object complexity
-
-Steps:
-
-1. add `Employee.updateDetails(...)`
-2. update `EmployeeService`
-3. remove `EmployeeMapper.convertToEntity(...)`
-4. make setters private
-5. update tests
-
 ### Phase 2: Parent
 
-Why second:
-
-- also simple
-- but needs CPF update decision first
+Current phase.
 
 Steps:
 
-1. decide CPF mutability
-2. add `Parent.updateDetails(...)`
-3. update `ParentService`
-4. remove duplicate `update(...)`
-5. remove `ParentMapper.convertToEntity(...)`
-6. make setters private
-7. update tests
+1. add `Parent.createDetails(...)` and `Parent.updateDetails(...)`
+2. update `ParentService`
+3. remove duplicate `update(...)`
+4. remove `ParentMapper.convertToEntity(...)`
+5. make setters private
+6. update tests
 
 ### Phase 3: Student
 
@@ -326,10 +256,10 @@ student.updateDetails(
 
 ## Open Decisions
 
-1. Can `Parent.cpf` be updated after creation?
+1. Reminder: remove employee CPF editing from update flow and contract.
 2. Should `Student.parent` remain mutable on update? Current API says yes.
 3. Should `Student.birthdate` keep `LocalDate` for now, or is the `TODO` an active near-term change?
 
 ## Recommended Next Step
 
-Start with `Employee` first. It is the smallest, gives a fast proof that the pattern scales beyond `Event`, and will make the later `Parent` and `Student` refactors more predictable.
+Finish `Parent`, then move to `Student`.

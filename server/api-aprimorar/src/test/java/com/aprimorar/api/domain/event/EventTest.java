@@ -36,9 +36,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -47,6 +45,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
 
             // Act
             input.updateDetails(
@@ -81,9 +80,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -92,6 +89,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
 
             // Act
             input.updateDetails(
@@ -118,9 +116,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -129,6 +125,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
 
             // Act + Assert
             assertThatThrownBy(() ->
@@ -156,9 +153,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -167,6 +162,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
 
             // Act + Assert
             assertThatThrownBy(() ->
@@ -194,9 +190,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -205,6 +199,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
 
             // Act + Assert
             assertThatThrownBy(() ->
@@ -232,9 +227,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -243,6 +236,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
 
             // Act + Assert
             assertThatThrownBy(() ->
@@ -270,9 +264,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -281,6 +273,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
             input.updateDetails(
                 "Descrição válida",
                 EVENT_START,
@@ -308,9 +301,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -319,6 +310,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
             input.updateDetails(
                 "Descrição válida",
                 EVENT_START,
@@ -346,9 +338,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -357,6 +347,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
             input.updateDetails(
                 "Descrição válida",
                 EVENT_START,
@@ -385,9 +376,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -396,6 +385,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
             input.updateDetails(
                 "Descrição válida",
                 EVENT_START,
@@ -423,9 +413,7 @@ class EventTest {
             student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
             student.setName("João Silva");
 
-            Employee employee = new Employee();
-            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            employee.updateDetails(
+            Employee employee = new Employee(
                 "Ana Paula",
                 LocalDate.of(1990, 8, 20),
                 "ana@email.com",
@@ -434,6 +422,7 @@ class EventTest {
                 "ana@email.com",
                 Duty.TEACHER
             );
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
 
             // Act
             input.updateDetails(

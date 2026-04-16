@@ -39,7 +39,28 @@ public class Employee extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Duty duty;
 
-    public Employee() {}
+    protected Employee() {}
+
+    public Employee(
+        String name,
+        LocalDate birthdate,
+        String pix,
+        String contact,
+        String cpf,
+        String email,
+        Duty duty
+    ) {
+        validateRequiredFields(name, birthdate, pix, contact, email, duty);
+        validateCpf(cpf);
+
+        this.name = name;
+        this.birthdate = birthdate;
+        this.pix = pix;
+        this.contact = contact;
+        this.cpf = cpf;
+        this.email = email;
+        this.duty = duty;
+    }
 
     public String getName() {
         return name;
@@ -102,17 +123,15 @@ public class Employee extends BaseEntity {
         LocalDate birthdate,
         String pix,
         String contact,
-        String cpf,
         String email,
         Duty duty
     ) {
-        validateRequiredFields(name, birthdate, pix, contact, cpf, email, duty);
+        validateRequiredFields(name, birthdate, pix, contact, email, duty);
 
         setName(name);
         setBirthdate(birthdate);
         setPix(pix);
         setContact(contact);
-        setCpf(cpf);
         setEmail(email);
         setDuty(duty);
     }
@@ -122,7 +141,6 @@ public class Employee extends BaseEntity {
         LocalDate birthdate,
         String pix,
         String contact,
-        String cpf,
         String email,
         Duty duty
     ) {
@@ -138,14 +156,17 @@ public class Employee extends BaseEntity {
         if (contact == null || contact.isBlank()) {
             throw new InvalidEmployeeException("Contato do colaborador não pode ser null");
         }
-        if (cpf == null || cpf.isBlank()) {
-            throw new InvalidEmployeeException("CPF do colaborador não pode ser null");
-        }
         if (email == null || email.isBlank()) {
             throw new InvalidEmployeeException("Email do colaborador não pode ser null");
         }
         if (duty == null) {
             throw new InvalidEmployeeException("Função do colaborador não pode ser null");
+        }
+    }
+
+    private void validateCpf(String cpf) {
+        if (cpf == null || cpf.isBlank()) {
+            throw new InvalidEmployeeException("CPF do colaborador não pode ser null");
         }
     }
 }
