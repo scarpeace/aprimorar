@@ -8,6 +8,7 @@ import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
 import com.aprimorar.api.domain.employee.repository.EmployeeSpecifications;
 import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.shared.MapperUtils;
 import com.aprimorar.api.shared.PageDTO;
 import java.time.Instant;
 import java.util.List;
@@ -37,13 +38,39 @@ public class EmployeeService {
         this.eventRepo = eventRepo;
     }
 
-    /* ----- Query Methods ----- */
+    @Transactional
+    public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
+        Employee employee = new Employee();
+
+        String normalizedContact = MapperUtils.normalizeContact(employeeRequestDto.contact());
+        String normalizedCpf = MapperUtils.normalizeCpf(employeeRequestDto.cpf());
+        String normalizedEmail = MapperUtils.normalizeEmail(employeeRequestDto.email());
+
+        employee.updateDetails(
+            employeeRequestDto.name(),
+            employeeRequestDto.birthdate(),
+            employeeRequestDto.pix(),
+            normalizedContact,
+            normalizedCpf,
+            normalizedEmail,
+            employeeRequestDto.duty()
+        );
+
+        ensureEmployeeUniqueness(employee.getCpf(), employee.getEmail());
+
+        Employee savedEmployee = employeeRepo.save(employee);
+
+        log.info("Colaborador {} cadastrado com sucesso.", savedEmployee.getName().toUpperCase());
+        return employeeMapper.convertToDto(savedEmployee);
+    }
+
     @Transactional(readOnly = true)
     public PageDTO<EmployeeResponseDTO> getEmployees(Pageable pageable, String search, Boolean archived) {
-        Specification<Employee> spec = Specification.allOf(
-            EmployeeSpecifications.isNotGhost(),
-            Boolean.TRUE.equals(archived) ? EmployeeSpecifications.archived() : EmployeeSpecifications.notArchived()
-        );
+        Specification<Employee> spec = EmployeeSpecifications.isNotGhost();
+
+        if(Boolean.TRUE.equals(archived)){
+            spec = spec.and(EmployeeSpecifications.archived());
+        }
 
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(EmployeeSpecifications.searchContainsIgnoreCase(search.trim()));
@@ -76,32 +103,25 @@ public class EmployeeService {
         return employeeMapper.convertToDto(employee);
     }
 
-    /* ----- Command Methods ----- */
-    @Transactional
-    public EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto) {
-        Employee employee = employeeMapper.convertToEntity(employeeRequestDto);
-
-        ensureEmployeeUniqueness(employee.getCpf(), employee.getEmail());
-
-        Employee savedEmployee = employeeRepo.save(employee);
-
-        log.info("Colaborador {} cadastrado com sucesso.", savedEmployee.getName().toUpperCase());
-        return employeeMapper.convertToDto(savedEmployee);
-    }
-
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
         Employee employee = findEmployeeOrThrow(employeeId);
-        Employee updatedEmployeeData = employeeMapper.convertToEntity(request);
 
-        ensureEmployeeUniquenessForUpdate(updatedEmployeeData, employeeId);
+        String normalizedContact = MapperUtils.normalizeContact(request.contact());
+        String normalizedCpf = MapperUtils.normalizeCpf(request.cpf());
+        String normalizedEmail = MapperUtils.normalizeEmail(request.email());
 
-        employee.setName(updatedEmployeeData.getName());
-        employee.setBirthdate(updatedEmployeeData.getBirthdate());
-        employee.setPix(updatedEmployeeData.getPix());
-        employee.setContact(updatedEmployeeData.getContact());
-        employee.setEmail(updatedEmployeeData.getEmail());
-        employee.setDuty(updatedEmployeeData.getDuty());
+        ensureEmployeeUniquenessForUpdate(normalizedCpf, normalizedEmail, employeeId);
+
+        employee.updateDetails(
+            request.name(),
+            request.birthdate(),
+            request.pix(),
+            normalizedContact,
+            normalizedCpf,
+            normalizedEmail,
+            request.duty()
+        );
 
         log.info("Colaborador {} atualizado com sucesso.", employee.getName().toUpperCase());
         return employeeMapper.convertToDto(employee);
@@ -151,12 +171,12 @@ public class EmployeeService {
         }
     }
 
-    private void ensureEmployeeUniquenessForUpdate(Employee employee, UUID employeeId) {
-        if (employeeRepo.existsByCpfAndIdNot(employee.getCpf(), employeeId)) {
+    private void ensureEmployeeUniquenessForUpdate(String cpf, String email, UUID employeeId) {
+        if (employeeRepo.existsByCpfAndIdNot(cpf, employeeId)) {
             throw new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados");
         }
 
-        if (employeeRepo.existsByEmailAndIdNot(employee.getEmail(), employeeId)) {
+        if (employeeRepo.existsByEmailAndIdNot(email, employeeId)) {
             throw new EmployeeAlreadyExistsException(
                 "Colaborador com o Email informado já cadastrado no banco de dados"
             );

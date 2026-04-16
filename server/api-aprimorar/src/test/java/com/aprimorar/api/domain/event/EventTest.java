@@ -32,8 +32,21 @@ class EventTest {
         void shouldUpdateDetailsWhenValuesAreValid() {
             // Arrange
             Event input = new Event();
-            Student student = student();
-            Employee employee = employee();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
 
             // Act
             input.updateDetails(
@@ -64,8 +77,21 @@ class EventTest {
         void shouldAllowBlankDescription() {
             // Arrange
             Event input = new Event();
-            Student student = student();
-            Employee employee = employee();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
 
             // Act
             input.updateDetails(
@@ -88,20 +114,35 @@ class EventTest {
         void shouldThrowWhenEndDateIsBeforeStartDate() {
             // Arrange
             Event input = new Event();
-            Student student = student();
-            Employee employee = employee();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
 
             // Act + Assert
-            assertThatThrownBy(() -> input.updateDetails(
-                "Descrição",
-                EVENT_END,
-                EVENT_START,
-                BigDecimal.valueOf(80),
-                BigDecimal.valueOf(120),
-                EventContent.AULA,
-                student,
-                employee
-            ))
+            assertThatThrownBy(() ->
+                input.updateDetails(
+                    "Descrição",
+                    EVENT_END,
+                    EVENT_START,
+                    BigDecimal.valueOf(80),
+                    BigDecimal.valueOf(120),
+                    EventContent.AULA,
+                    student,
+                    employee
+                )
+            )
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("Data de fim do evento não pode ser anterior a data de inicio");
         }
@@ -111,20 +152,35 @@ class EventTest {
         void shouldThrowWhenPriceIsLessThanPayment() {
             // Arrange
             Event input = new Event();
-            Student student = student();
-            Employee employee = employee();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
 
             // Act + Assert
-            assertThatThrownBy(() -> input.updateDetails(
-                "Descrição",
-                EVENT_START,
-                EVENT_END,
-                BigDecimal.valueOf(100),
-                BigDecimal.valueOf(80),
-                EventContent.AULA,
-                student,
-                employee
-            ))
+            assertThatThrownBy(() ->
+                input.updateDetails(
+                    "Descrição",
+                    EVENT_START,
+                    EVENT_END,
+                    BigDecimal.valueOf(100),
+                    BigDecimal.valueOf(80),
+                    EventContent.AULA,
+                    student,
+                    employee
+                )
+            )
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O valor do evento não pode ser menor que o pagamento");
         }
@@ -134,20 +190,35 @@ class EventTest {
         void shouldThrowWhenPriceIsLessThanFifty() {
             // Arrange
             Event input = new Event();
-            Student student = student();
-            Employee employee = employee();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
 
             // Act + Assert
-            assertThatThrownBy(() -> input.updateDetails(
-                "Descrição",
-                EVENT_START,
-                EVENT_END,
-                BigDecimal.valueOf(40),
-                BigDecimal.valueOf(49),
-                EventContent.AULA,
-                student,
-                employee
-            ))
+            assertThatThrownBy(() ->
+                input.updateDetails(
+                    "Descrição",
+                    EVENT_START,
+                    EVENT_END,
+                    BigDecimal.valueOf(40),
+                    BigDecimal.valueOf(49),
+                    EventContent.AULA,
+                    student,
+                    employee
+                )
+            )
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O valor do evento não pode ser menor que R$50,00");
         }
@@ -157,20 +228,35 @@ class EventTest {
         void shouldThrowWhenContentIsNull() {
             // Arrange
             Event input = new Event();
-            Student student = student();
-            Employee employee = employee();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
 
             // Act + Assert
-            assertThatThrownBy(() -> input.updateDetails(
-                "Descrição",
-                EVENT_START,
-                EVENT_END,
-                BigDecimal.valueOf(80),
-                BigDecimal.valueOf(120),
-                null,
-                student,
-                employee
-            ))
+            assertThatThrownBy(() ->
+                input.updateDetails(
+                    "Descrição",
+                    EVENT_START,
+                    EVENT_END,
+                    BigDecimal.valueOf(80),
+                    BigDecimal.valueOf(120),
+                    null,
+                    student,
+                    employee
+                )
+            )
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O conteúdo do evento é obrigatório");
         }
@@ -179,7 +265,32 @@ class EventTest {
         @DisplayName("should validate dates for creation when end date is in the future")
         void shouldValidateDatesForCreationWhenEndDateIsInTheFuture() {
             // Arrange
-            Event input = validEvent();
+            Event input = new Event();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
+            input.updateDetails(
+                "Descrição válida",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.AULA,
+                student,
+                employee
+            );
 
             // Act
             input.validateDatesForCreation(CURRENT_TIME);
@@ -192,7 +303,32 @@ class EventTest {
         @DisplayName("should throw when end date is in the past during creation")
         void shouldThrowWhenEndDateIsInThePastDuringCreation() {
             // Arrange
-            Event input = validEvent();
+            Event input = new Event();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
+            input.updateDetails(
+                "Descrição válida",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.AULA,
+                student,
+                employee
+            );
             Instant now = EVENT_END.plusSeconds(1);
 
             // Act + Assert
@@ -205,7 +341,32 @@ class EventTest {
         @DisplayName("should validate edit window when deadline is still open")
         void shouldValidateEditWindowWhenDeadlineIsStillOpen() {
             // Arrange
-            Event input = validEvent();
+            Event input = new Event();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
+            input.updateDetails(
+                "Descrição válida",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.AULA,
+                student,
+                employee
+            );
             Instant now = EVENT_END.plusSeconds(20L * 24 * 60 * 60);
 
             // Act
@@ -219,7 +380,32 @@ class EventTest {
         @DisplayName("should throw when edit window is closed")
         void shouldThrowWhenEditWindowIsClosed() {
             // Arrange
-            Event input = validEvent();
+            Event input = new Event();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
+            input.updateDetails(
+                "Descrição válida",
+                EVENT_START,
+                EVENT_END,
+                BigDecimal.valueOf(80),
+                BigDecimal.valueOf(120),
+                EventContent.AULA,
+                student,
+                employee
+            );
             Instant now = EVENT_END.plusSeconds(20L * 24 * 60 * 60 + 1);
 
             // Act + Assert
@@ -233,8 +419,21 @@ class EventTest {
         void shouldUpdateDetailsAndGenerateTitle() {
             // Arrange
             Event input = new Event();
-            Student student = student();
-            Employee employee = employee();
+            Student student = new Student();
+            student.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
+            student.setName("João Silva");
+
+            Employee employee = new Employee();
+            employee.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
+            employee.updateDetails(
+                "Ana Paula",
+                LocalDate.of(1990, 8, 20),
+                "ana@email.com",
+                "61988888888",
+                "10987654321",
+                "ana@email.com",
+                Duty.TEACHER
+            );
 
             // Act
             input.updateDetails(
@@ -258,41 +457,6 @@ class EventTest {
             assertThat(input.getContent()).isEqualTo(EventContent.MENTORIA);
             assertThat(input.getStudent()).isEqualTo(student);
             assertThat(input.getEmployee()).isEqualTo(employee);
-        }
-
-        private Event validEvent() {
-            Event input = new Event();
-            input.updateDetails(
-                "Descrição válida",
-                EVENT_START,
-                EVENT_END,
-                BigDecimal.valueOf(80),
-                BigDecimal.valueOf(120),
-                EventContent.AULA,
-                student(),
-                employee()
-            );
-            return input;
-        }
-
-        private Student student() {
-            Student input = new Student();
-            input.setId(UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"));
-            input.setName("João Silva");
-            return input;
-        }
-
-        private Employee employee() {
-            Employee input = new Employee();
-            input.setId(UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc"));
-            input.setName("Ana Paula");
-            input.setBirthdate(LocalDate.of(1990, 8, 20));
-            input.setPix("ana@email.com");
-            input.setContact("61988888888");
-            input.setCpf("10987654321");
-            input.setEmail("ana@email.com");
-            input.setDuty(Duty.TEACHER);
-            return input;
         }
     }
 }

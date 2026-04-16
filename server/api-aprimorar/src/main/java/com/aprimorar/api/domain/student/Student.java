@@ -1,12 +1,9 @@
 package com.aprimorar.api.domain.student;
 
-import java.time.LocalDate;
-
 import com.aprimorar.api.domain.address.Address;
 import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.student.exception.InvalidStudentException;
 import com.aprimorar.api.shared.BaseEntity;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -14,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import lombok.EqualsAndHashCode;
 
 @Entity
@@ -30,7 +28,6 @@ public class Student extends BaseEntity {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-// TODO: Trocar pra Instant
     @Column(name = "birthdate", nullable = false)
     private LocalDate birthdate;
 
