@@ -95,38 +95,38 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | TBD | Pending |
-| AUTH-02 | TBD | Pending |
-| AUTH-03 | TBD | Pending |
-| AUTH-04 | TBD | Pending |
-| STUD-01 | TBD | Pending |
-| STUD-02 | TBD | Pending |
-| STUD-03 | TBD | Pending |
-| STUD-04 | TBD | Pending |
-| PARN-01 | TBD | Pending |
-| PARN-02 | TBD | Pending |
-| PARN-03 | TBD | Pending |
-| PARN-04 | TBD | Pending |
-| EMPL-01 | TBD | Pending |
-| EMPL-02 | TBD | Pending |
-| EMPL-03 | TBD | Pending |
-| EMPL-04 | TBD | Pending |
-| EVNT-01 | TBD | Pending |
-| EVNT-02 | TBD | Pending |
-| EVNT-03 | TBD | Pending |
-| EVNT-04 | TBD | Pending |
-| EVNT-05 | TBD | Pending |
-| FIN-01 | TBD | Pending |
-| FIN-02 | TBD | Pending |
-| FIN-03 | TBD | Pending |
-| DASH-01 | TBD | Pending |
-| DASH-02 | TBD | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| AUTH-04 | Phase 1 | Pending |
+| STUD-01 | Phase 2 | Pending |
+| STUD-02 | Phase 2 | Pending |
+| STUD-03 | Phase 2 | Pending |
+| STUD-04 | Phase 2 | Pending |
+| PARN-01 | Phase 2 | Pending |
+| PARN-02 | Phase 2 | Pending |
+| PARN-03 | Phase 2 | Pending |
+| PARN-04 | Phase 2 | Pending |
+| EMPL-01 | Phase 3 | Pending |
+| EMPL-02 | Phase 3 | Pending |
+| EMPL-03 | Phase 3 | Pending |
+| EMPL-04 | Phase 3 | Pending |
+| EVNT-01 | Phase 3 | Pending |
+| EVNT-02 | Phase 3 | Pending |
+| EVNT-03 | Phase 3 | Pending |
+| EVNT-04 | Phase 3 | Pending |
+| EVNT-05 | Phase 3 | Pending |
+| FIN-01 | Phase 4 | Pending |
+| FIN-02 | Phase 4 | Pending |
+| FIN-03 | Phase 4 | Pending |
+| DASH-01 | Phase 5 | Pending |
+| DASH-02 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 26 total
-- Mapped to phases: 0
-- Unmapped: 26 ⚠
+- Mapped to phases: 26
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-17*
-*Last updated: 2026-04-17 after initial definition*
+*Last updated: 2026-04-17 after roadmap creation*
