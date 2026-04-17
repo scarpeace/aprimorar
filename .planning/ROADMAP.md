@@ -30,6 +30,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Authenticated user can log out from the app and protected pages stop being accessible immediately.
   4. Unauthenticated visitor cannot open dashboard, student, parent, employee, event, or finance workflows directly.
 **Plans**: 3 plans
+Plans:
+- [ ] 01-01-PLAN.md — Create Spring Security session auth, internal-user persistence, and protected backend routes.
+- [ ] 01-02-PLAN.md — Regenerate auth contracts and build the frontend login/bootstrap infrastructure.
+- [ ] 01-03-PLAN.md — Wire protected routing and logout UX across the SPA.
 **UI hint**: yes
 
 ### Phase 2: Student & Parent Registry Hardening
