@@ -47,26 +47,32 @@ public class Event extends BaseEntity {
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
 
-    public Event() {}
+    protected Event() {}
 
-    @Override
-    public UUID getId() {
-        return super.getId();
-    }
+    public Event(
+        String description,
+        Instant startDate,
+        Instant endDate,
+        BigDecimal payment,
+        BigDecimal price,
+        EventContent content,
+        Student student,
+        Employee employee
+    ) {
+        validateDates(startDate, endDate);
+        validateAmounts(payment, price);
+        validateParticipants(student, employee);
+        validateContent(content);
 
-    @Override
-    public void setId(UUID id) {
-        super.setId(id);
-    }
-
-    @Override
-    public Instant getCreatedAt() {
-        return super.getCreatedAt();
-    }
-
-    @Override
-    public Instant getUpdatedAt() {
-        return super.getUpdatedAt();
+        this.title = buildTitle(content, student, employee);
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.payment = payment;
+        this.price = price;
+        this.content = content;
+        this.student = student;
+        this.employee = employee;
     }
 
     public String getTitle() {

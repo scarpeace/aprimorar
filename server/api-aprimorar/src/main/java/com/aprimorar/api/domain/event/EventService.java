@@ -52,8 +52,6 @@ public class EventService {
 
     @Transactional
     public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
-        Event event = new Event();
-
         Student student = findStudentOrThrow(eventRequestDTO.studentId());
         Employee employee = findEmployeeOrThrow(eventRequestDTO.employeeId());
 
@@ -65,7 +63,7 @@ public class EventService {
             null
         );
 
-        event.updateDetails(
+        Event event = new Event(
             eventRequestDTO.description(),
             eventRequestDTO.startDate(),
             eventRequestDTO.endDate(),

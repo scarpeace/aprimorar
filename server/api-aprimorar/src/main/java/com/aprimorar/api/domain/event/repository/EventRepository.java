@@ -34,6 +34,12 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
     Page<Event> findAll(Specification<Event> spec, Pageable pageable);
 
     @EntityGraph(attributePaths = { "student", "employee" })
+    Page<Event> findAll(Pageable pageable);
+
+    @EntityGraph(attributePaths = { "student", "employee" })
+    java.util.Optional<Event> findById(UUID id);
+
+    @EntityGraph(attributePaths = { "student", "employee" })
     Page<Event> findAllByEmployeeId(UUID employeeId, Pageable pageable);
 
     @EntityGraph(attributePaths = { "student", "employee" })
