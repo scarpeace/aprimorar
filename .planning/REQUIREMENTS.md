@@ -9,10 +9,10 @@ Requirements for the initial secretary/administrator-focused release. Existing b
 
 ### Authentication
 
-- [ ] **AUTH-01**: Internal user can sign in with email or username and password
-- [ ] **AUTH-02**: Authenticated user session persists across browser refresh until logout or session expiry
-- [ ] **AUTH-03**: Authenticated user can log out securely from the app
-- [ ] **AUTH-04**: Unauthenticated users cannot access protected student, parent, employee, event, finance, or dashboard workflows
+- [x] **AUTH-01**: Internal user can sign in with email or username and password
+- [x] **AUTH-02**: Authenticated user session persists across browser refresh until logout or session expiry
+- [x] **AUTH-03**: Authenticated user can log out securely from the app
+- [x] **AUTH-04**: Unauthenticated users cannot access protected student, parent, employee, event, finance, or dashboard workflows
 
 ### Students
 
@@ -95,10 +95,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
+| AUTH-04 | Phase 1 | Complete |
 | STUD-01 | Phase 2 | Pending |
 | STUD-02 | Phase 2 | Pending |
 | STUD-03 | Phase 2 | Pending |

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 1 UI-SPEC approved
-last_updated: "2026-04-17T19:01:05.120Z"
-last_activity: 2026-04-17 -- Phase 1 planning complete
+stopped_at: Completed 01-authentication-protected-access-01-PLAN.md
+last_updated: "2026-04-18T11:53:32.604Z"
+last_activity: 2026-04-18
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 3
-  completed_plans: 0
-  percent: 0
+  completed_plans: 1
+  percent: 33
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-17)
 
 **Core value:** The secretary must be able to manage the school day to day from the app without depending on scattered spreadsheets.
-**Current focus:** Phase 1 - Authentication & Protected Access
+**Current focus:** Phase 01 — authentication-protected-access
 
 ## Current Position
 
-Phase: 1 of 5 (Authentication & Protected Access)
-Plan: 0 of 3 in current phase
+Phase: 01 (authentication-protected-access) — EXECUTING
+Plan: 2 of 3
 Status: Ready to execute
-Last activity: 2026-04-17 -- Phase 1 planning complete
+Last activity: 2026-04-18
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -51,6 +51,8 @@ Progress: [░░░░░░░░░░] 0%
 - Last 5 plans: none
 - Trend: Stable
 
+| Phase 01-authentication-protected-access P01 | 604 | 3 tasks | 16 files |
+
 ## Accumulated Context
 
 ### Decisions
@@ -60,6 +62,9 @@ Recent decisions affecting current work:
 
 - [Roadmap] Sequence work as secure access → brownfield module hardening → finance → dashboard.
 - [Roadmap] Treat existing student, parent, employee, event, and dashboard areas as hardening targets, not rewrite candidates.
+- [Phase 01-authentication-protected-access]: Use Spring Security server-managed sessions for immediate logout and refresh persistence.
+- [Phase 01-authentication-protected-access]: Store internal staff credentials in tb_internal_users linked to employees instead of adding passwords to employee records.
+- [Phase 01-authentication-protected-access]: Return stable Portuguese JSON auth failures with a dedicated UNAUTHORIZED error code.
 
 ### Pending Todos
 
@@ -82,6 +87,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-04-17T19:01:05.117Z
-Stopped at: Phase 1 UI-SPEC approved
-Resume file: .planning/phases/01-authentication-protected-access/01-UI-SPEC.md
+Last session: 2026-04-18T11:53:32.600Z
+Stopped at: Completed 01-authentication-protected-access-01-PLAN.md
+Resume file: None
