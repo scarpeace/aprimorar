@@ -16,11 +16,11 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -43,8 +43,12 @@ class AuthServiceTest {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final Clock applicationClock = Clock.fixed(FIXED_INSTANT, ZoneOffset.UTC);
 
-    @InjectMocks
-    private AuthService authService = new AuthService(internalUserRepository, passwordEncoder, applicationClock);
+    private AuthService authService;
+
+    @BeforeEach
+    void setUp() {
+        authService = new AuthService(internalUserRepository, passwordEncoder, applicationClock);
+    }
 
     @Nested
     @DisplayName("Login")

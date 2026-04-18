@@ -1,6 +1,7 @@
 package com.aprimorar.api.exception;
 
 public enum ErrorCode {
+    UNAUTHORIZED,
     VALIDATION_ERROR,
     BUSINESS_ERROR,
     INVALID_DATE_RANGE,

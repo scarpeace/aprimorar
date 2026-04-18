@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -134,6 +137,23 @@ public class GlobalExceptionHandler {
             ErrorCode.VALIDATION_ERROR,
             HttpStatus.BAD_REQUEST,
             errorMessage,
+            request.getRequestURI()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler({ AuthenticationCredentialsNotFoundException.class, BadCredentialsException.class, DisabledException.class })
+    @ApiResponse(
+        responseCode = "401",
+        description = "Não autenticado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ProblemResponseDTO handleUnauthorizedExceptions(RuntimeException ex, HttpServletRequest request) {
+        log.error("Erro de autenticação: {}", ex.getMessage());
+        return new ProblemResponseDTO(
+            ErrorCode.UNAUTHORIZED,
+            HttpStatus.UNAUTHORIZED,
+            ex.getMessage(),
             request.getRequestURI()
         );
     }
