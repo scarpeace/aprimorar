@@ -37,8 +37,6 @@ class AuthServiceTest {
     private static final String USERNAME = "beatriz.santos";
     private static final String EMAIL = "beatriz.santos@731aprimorar.dev";
     private static final String PASSWORD = "admin123";
-    private static final String PASSWORD_HASH = "$2a$10$V.e87EVXrIgVbF0W1h0P7es5X2xbYF9bBlt3F4iAfDdc0AGJi/7lu";
-
     @Mock
     private InternalUserRepository internalUserRepository;
 
@@ -150,7 +148,7 @@ class AuthServiceTest {
         );
         employee.setId(EMPLOYEE_ID);
 
-        InternalUser internalUser = new InternalUser(employee, USERNAME, PASSWORD_HASH, active);
+        InternalUser internalUser = new InternalUser(employee, USERNAME, passwordEncoder.encode(PASSWORD), active);
         internalUser.setId(INTERNAL_USER_ID);
         return internalUser;
     }
