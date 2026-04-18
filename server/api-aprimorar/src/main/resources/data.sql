@@ -41,6 +41,10 @@ INSERT INTO tb_employees (id, name, birthdate, pix, contact, cpf, email, duty, c
 ('711dfe8e-eace-45bd-be3d-d7b60add38bb', 'Lucas Soares', '2008-01-14', '72421515033', '61995948842', '53863514947', 'lucas.soares@286aprimorar.dev', 'TEACHER', NOW(), NOW())
 ON CONFLICT (id) DO NOTHING;
 
+INSERT INTO tb_internal_users (id, employee_id, username, password_hash, active, last_login_at, created_at, updated_at) VALUES
+('8ccdb801-d0af-4561-8d45-56d196350001', 'b71fa3e6-31f0-4ef5-a650-1bccae83302e', 'beatriz.santos', '$2y$10$U06GVi2DgZtxl9XD0Th93.uBWF9dXUnvqgedCljpmsQh3M93zEeAq', TRUE, NULL, NOW(), NOW())
+ON CONFLICT (id) DO NOTHING;
+
 INSERT INTO tb_students (id, name, contact, email, birthdate, cpf, school, parent_id, street, district, city, state, zip, created_at, updated_at) VALUES
 ('eb529f0f-eb1d-4973-ac4c-c21cdc884bd1', 'Rafael Fernandes', '61926546513', 'rafael.fernandes@147estudante.com', '2011-04-05', '47751630191', 'Escola D', '910019ee-3f97-4cab-9960-86952fc20bea', 'Rua Ficticia', 'Bairro Centro', 'Brasilia', 'DF', '70000000', NOW(), NOW()),
 ('464cb12c-2370-4914-b98a-064c08031921', 'Pedro Souza', '61992664113', 'pedro.souza@673estudante.com', '2017-11-30', '44604100012', 'Escola A', 'e4f03008-9e99-4369-b458-0343987f8e3f', 'Rua Ficticia', 'Bairro Centro', 'Brasilia', 'DF', '70000000', NOW(), NOW()),
