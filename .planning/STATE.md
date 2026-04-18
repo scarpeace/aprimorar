@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 01-authentication-protected-access-02-PLAN.md
-last_updated: "2026-04-18T12:18:35.671Z"
+status: verifying
+stopped_at: Completed 01-authentication-protected-access-03-PLAN.md
+last_updated: "2026-04-18T12:23:58.977Z"
 last_activity: 2026-04-18
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
-  percent: 67
+  completed_plans: 3
+  percent: 100
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-17)
 
 Phase: 01 (authentication-protected-access) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-18
 
 Progress: [░░░░░░░░░░] 0%
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 
 | Phase 01-authentication-protected-access P01 | 604 | 3 tasks | 16 files |
 | Phase 01-authentication-protected-access P02 | 15 | 2 tasks | 26 files |
+| Phase 01-authentication-protected-access P03 | 1 min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,8 @@ Recent decisions affecting current work:
 - [Phase 01-authentication-protected-access]: Return stable Portuguese JSON auth failures with a dedicated UNAUTHORIZED error code.
 - [Phase 01-authentication-protected-access]: Wrap generated auth hooks in useAuthSession so login/logout invalidation and current-user bootstrap stay centralized.
 - [Phase 01-authentication-protected-access]: Configure Kubb's shared axios client for withCredentials plus Spring Security XSRF names instead of storing auth state in browser storage.
+- [Phase 01-authentication-protected-access]: Keep /login as the only public SPA entry and gate every existing workflow branch with the shared AuthGate.
+- [Phase 01-authentication-protected-access]: Remove protected query cache entries after logout before redirecting so signed-out users cannot keep browsing stale secretary data.
 
 ### Pending Todos
 
@@ -90,6 +93,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-04-18T12:18:35.668Z
-Stopped at: Completed 01-authentication-protected-access-02-PLAN.md
+Last session: 2026-04-18T12:23:58.974Z
+Stopped at: Completed 01-authentication-protected-access-03-PLAN.md
 Resume file: None

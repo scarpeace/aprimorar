@@ -12,7 +12,7 @@ This roadmap turns the current brownfield school-management monorepo into a secr
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Authentication & Protected Access** - Add secure sign-in and protect all secretary/admin workflows.
+- [x] **Phase 1: Authentication & Protected Access** - Add secure sign-in and protect all secretary/admin workflows. (completed 2026-04-18)
 - [ ] **Phase 2: Student & Parent Registry Hardening** - Make existing registry flows reliable enough to replace student/responsible-party spreadsheets.
 - [ ] **Phase 3: Employee & Event Operations Hardening** - Tighten employee and event workflows for dependable day-to-day scheduling operations.
 - [ ] **Phase 4: Finance Tracking Core** - Introduce charges, payments, and simple balance visibility for internal school finance tracking.
@@ -89,7 +89,7 @@ Phases execute in numeric order: 2 → 2.1 → 2.2 → 3 → 3.1 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Authentication & Protected Access | 1/3 | In Progress | - |
+| 1. Authentication & Protected Access | 3/3 | Complete   | 2026-04-18 |
 | 2. Student & Parent Registry Hardening | 0/3 | Not started | - |
 | 3. Employee & Event Operations Hardening | 0/3 | Not started | - |
 | 4. Finance Tracking Core | 0/3 | Not started | - |
