@@ -42,7 +42,11 @@ INSERT INTO tb_employees (id, name, birthdate, pix, contact, cpf, email, duty, c
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO tb_internal_users (id, employee_id, username, password_hash, active, last_login_at, created_at, updated_at) VALUES
-('8ccdb801-d0af-4561-8d45-56d196350001', 'b71fa3e6-31f0-4ef5-a650-1bccae83302e', 'beatriz.santos', '$2y$10$U06GVi2DgZtxl9XD0Th93.uBWF9dXUnvqgedCljpmsQh3M93zEeAq', TRUE, NULL, NOW(), NOW())
+('8ccdb801-d0af-4561-8d45-56d196350001', 'b71fa3e6-31f0-4ef5-a650-1bccae83302e', 'beatriz.santos', '$2y$10$U06GVi2DgZtxl9XD0Th93.uBWF9dXUnvqgedCljpmsQh3M93zEeAq', TRUE, NULL, NOW(), NOW()),
+('8ccdb801-d0af-4561-8d45-56d196350002', '6c3c3276-2c08-446f-ad33-112754ce36fc', 'maria.santos', '$2y$10$U06GVi2DgZtxl9XD0Th93.uBWF9dXUnvqgedCljpmsQh3M93zEeAq', TRUE, NULL, NOW(), NOW()),
+('8ccdb801-d0af-4561-8d45-56d196350003', '3e813e14-18c6-4143-b84c-765ab2ef47c6', 'felipe.vieira', '$2y$10$U06GVi2DgZtxl9XD0Th93.uBWF9dXUnvqgedCljpmsQh3M93zEeAq', TRUE, NULL, NOW(), NOW()),
+('8ccdb801-d0af-4561-8d45-56d196350004', '0d4068f2-a185-4c0c-abfe-8f8571783b93', 'ana.pereira', '$2y$10$U06GVi2DgZtxl9XD0Th93.uBWF9dXUnvqgedCljpmsQh3M93zEeAq', TRUE, NULL, NOW(), NOW()),
+('8ccdb801-d0af-4561-8d45-56d196350005', '32eb3daf-d3d9-41a0-a851-af6ede9c0997', 'sophia.ribeiro', '$2y$10$U06GVi2DgZtxl9XD0Th93.uBWF9dXUnvqgedCljpmsQh3M93zEeAq', TRUE, NULL, NOW(), NOW())
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO tb_students (id, name, contact, email, birthdate, cpf, school, parent_id, street, district, city, state, zip, created_at, updated_at) VALUES

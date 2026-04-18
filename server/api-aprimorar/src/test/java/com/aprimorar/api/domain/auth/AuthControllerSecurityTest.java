@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.aprimorar.api.config.SecurityConfig;
 import com.aprimorar.api.config.WebCorsConfig;
-import com.aprimorar.api.domain.auth.repository.InternalUserRepository;
+import com.aprimorar.api.domain.auth.repository.StaffAccountRepository;
 import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
 import com.aprimorar.api.domain.employee.Employee;
 import com.aprimorar.api.domain.student.StudentController;
@@ -22,6 +22,7 @@ import java.time.ZoneId;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -37,10 +38,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = { AuthController.class, StudentController.class })
-@Import({ SecurityConfig.class, WebCorsConfig.class, GlobalExceptionHandler.class, AuthService.class, InternalUserDetailsService.class })
+@Import({ SecurityConfig.class, WebCorsConfig.class, GlobalExceptionHandler.class, AuthService.class, StaffAccountDetailsService.class })
 class AuthControllerSecurityTest {
 
-    private static final UUID INTERNAL_USER_ID = UUID.fromString("8ccdb801-d0af-4561-8d45-56d196350001");
+    private static final UUID STAFF_ACCOUNT_ID = UUID.fromString("8ccdb801-d0af-4561-8d45-56d196350001");
     private static final UUID EMPLOYEE_ID = UUID.fromString("b71fa3e6-31f0-4ef5-a650-1bccae83302e");
     private static final Instant FIXED_INSTANT = Instant.parse("2026-04-18T12:00:00Z");
 
@@ -48,7 +49,7 @@ class AuthControllerSecurityTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private InternalUserRepository internalUserRepository;
+    private StaffAccountRepository staffAccountRepository;
 
     @MockitoBean
     private StudentService studentService;
@@ -60,14 +61,41 @@ class AuthControllerSecurityTest {
     void setUp() {
         when(applicationClock.instant()).thenReturn(FIXED_INSTANT);
         when(applicationClock.getZone()).thenReturn(ZoneId.of("UTC"));
-        when(internalUserRepository.findByUsernameOrEmployeeEmail("beatriz.santos")).thenReturn(Optional.of(activeInternalUser()));
-        when(internalUserRepository.findByUsernameOrEmployeeEmail("beatriz.santos@731aprimorar.dev"))
-            .thenReturn(Optional.of(activeInternalUser()));
+        when(staffAccountRepository.findByUsernameOrEmployeeEmail("beatriz.santos")).thenReturn(Optional.of(activeStaffAccount()));
+        when(staffAccountRepository.findByUsernameOrEmployeeEmail("beatriz.santos@731aprimorar.dev"))
+            .thenReturn(Optional.of(activeStaffAccount()));
     }
 
     @Nested
     @DisplayName("Authentication endpoints")
     class AuthenticationEndpoints {
+
+        @Test
+        @DisplayName("should issue CSRF cookie for SPA bootstrap and accept login with returned token")
+        @WithAnonymousUser
+        void shouldIssueCsrfCookieForSpaBootstrapAndAcceptLoginWithReturnedToken() throws Exception {
+            MvcResult bootstrapResult = mockMvc.perform(get("/v1/auth/me"))
+                .andExpect(status().isUnauthorized())
+                .andReturn();
+
+            Cookie csrfCookie = bootstrapResult.getResponse().getCookie("XSRF-TOKEN");
+
+            org.assertj.core.api.Assertions.assertThat(csrfCookie).isNotNull();
+            org.assertj.core.api.Assertions.assertThat(csrfCookie.getValue()).isNotBlank();
+
+            mockMvc.perform(post("/v1/auth/login")
+                    .cookie(csrfCookie)
+                    .header("X-XSRF-TOKEN", csrfCookie.getValue())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("""
+                        {
+                          \"identifier\": \"beatriz.santos\",
+                          \"password\": \"admin123\"
+                        }
+                        """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("beatriz.santos"));
+        }
 
         @Test
         @DisplayName("should login and establish server session")
@@ -82,7 +110,7 @@ class AuthControllerSecurityTest {
                     }
                     """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(INTERNAL_USER_ID.toString()))
+                .andExpect(jsonPath("$.id").value(STAFF_ACCOUNT_ID.toString()))
                 .andExpect(jsonPath("$.username").value("beatriz.santos"))
                 .andExpect(jsonPath("$.displayName").value("Beatriz Santos"))
                 .andExpect(jsonPath("$.email").value("beatriz.santos@731aprimorar.dev"))
@@ -139,7 +167,7 @@ class AuthControllerSecurityTest {
 
     private static AuthCurrentUserResponseDTO currentUser() {
         return new AuthCurrentUserResponseDTO(
-            INTERNAL_USER_ID,
+            STAFF_ACCOUNT_ID,
             "beatriz.santos",
             "Beatriz Santos",
             "beatriz.santos@731aprimorar.dev",
@@ -162,7 +190,7 @@ class AuthControllerSecurityTest {
             .andReturn();
     }
 
-    private static InternalUser activeInternalUser() {
+    private static StaffAccount activeStaffAccount() {
         Employee employee = new Employee(
             "Beatriz Santos",
             LocalDate.of(2008, 12, 18),
@@ -174,13 +202,13 @@ class AuthControllerSecurityTest {
         );
         employee.setId(EMPLOYEE_ID);
 
-        InternalUser internalUser = new InternalUser(
+        StaffAccount staffAccount = new StaffAccount(
             employee,
             "beatriz.santos",
             "$2y$10$U06GVi2DgZtxl9XD0Th93.uBWF9dXUnvqgedCljpmsQh3M93zEeAq",
             true
         );
-        internalUser.setId(INTERNAL_USER_ID);
-        return internalUser;
+        staffAccount.setId(STAFF_ACCOUNT_ID);
+        return staffAccount;
     }
 }

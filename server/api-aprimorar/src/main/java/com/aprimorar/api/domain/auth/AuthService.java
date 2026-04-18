@@ -1,7 +1,7 @@
 package com.aprimorar.api.domain.auth;
 
 import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
-import com.aprimorar.api.domain.auth.repository.InternalUserRepository;
+import com.aprimorar.api.domain.auth.repository.StaffAccountRepository;
 import java.time.Clock;
 import java.time.Instant;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,44 +12,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
-    private final InternalUserRepository internalUserRepository;
+    private final StaffAccountRepository staffAccountRepository;
     private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
     private final Clock applicationClock;
 
     public AuthService(
-        InternalUserRepository internalUserRepository,
+        StaffAccountRepository staffAccountRepository,
         org.springframework.security.crypto.password.PasswordEncoder passwordEncoder,
         Clock applicationClock
     ) {
-        this.internalUserRepository = internalUserRepository;
+        this.staffAccountRepository = staffAccountRepository;
         this.passwordEncoder = passwordEncoder;
         this.applicationClock = applicationClock;
     }
 
     @Transactional
     public AuthCurrentUserResponseDTO login(String identifier, String password) {
-        InternalUser internalUser = findByIdentifierOrThrow(identifier);
+        StaffAccount staffAccount = findByIdentifierOrThrow(identifier);
 
-        if (!internalUser.isActive()) {
+        if (!staffAccount.isActive()) {
             throw new DisabledException("Usuário interno inativo");
         }
 
-        if (!passwordEncoder.matches(password, internalUser.getPasswordHash())) {
+        if (!passwordEncoder.matches(password, staffAccount.getPasswordHash())) {
             throw new BadCredentialsException("Credenciais inválidas");
         }
 
-        internalUser.registerLoginAt(Instant.now(applicationClock));
-        internalUserRepository.save(internalUser);
+        staffAccount.registerLoginAt(Instant.now(applicationClock));
+        staffAccountRepository.save(staffAccount);
 
-        return getCurrentUser(internalUser);
+        return getCurrentUser(staffAccount);
     }
 
     @Transactional
     public AuthCurrentUserResponseDTO registerAuthenticatedSession(String username) {
-        InternalUser internalUser = findByIdentifierOrThrow(username);
-        internalUser.registerLoginAt(Instant.now(applicationClock));
-        internalUserRepository.save(internalUser);
-        return getCurrentUser(internalUser);
+        StaffAccount staffAccount = findByIdentifierOrThrow(username);
+        staffAccount.registerLoginAt(Instant.now(applicationClock));
+        staffAccountRepository.save(staffAccount);
+        return getCurrentUser(staffAccount);
     }
 
     @Transactional(readOnly = true)
@@ -58,19 +58,19 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public AuthCurrentUserResponseDTO getCurrentUser(InternalUser internalUser) {
+    public AuthCurrentUserResponseDTO getCurrentUser(StaffAccount staffAccount) {
         return new AuthCurrentUserResponseDTO(
-            internalUser.getId(),
-            internalUser.getUsername(),
-            internalUser.getEmployee().getName(),
-            internalUser.getEmployee().getEmail(),
-            internalUser.getEmployee().getId(),
-            internalUser.getEmployee().getDuty()
+            staffAccount.getId(),
+            staffAccount.getUsername(),
+            staffAccount.getEmployee().getName(),
+            staffAccount.getEmployee().getEmail(),
+            staffAccount.getEmployee().getId(),
+            staffAccount.getEmployee().getDuty()
         );
     }
 
-    private InternalUser findByIdentifierOrThrow(String identifier) {
-        return internalUserRepository.findByUsernameOrEmployeeEmail(identifier)
+    private StaffAccount findByIdentifierOrThrow(String identifier) {
+        return staffAccountRepository.findByUsernameOrEmployeeEmail(identifier)
             .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas"));
     }
 }

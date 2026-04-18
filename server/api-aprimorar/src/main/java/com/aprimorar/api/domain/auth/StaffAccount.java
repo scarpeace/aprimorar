@@ -6,15 +6,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
 
 @Entity
 @Table(name = "tb_internal_users")
-public class InternalUser extends BaseEntity {
+public class StaffAccount extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "employee_id", nullable = false, unique = true)
     private Employee employee;
 
@@ -30,9 +30,9 @@ public class InternalUser extends BaseEntity {
     @Column(name = "last_login_at")
     private Instant lastLoginAt;
 
-    protected InternalUser() {}
+    protected StaffAccount() {}
 
-    public InternalUser(Employee employee, String username, String passwordHash, boolean active) {
+    public StaffAccount(Employee employee, String username, String passwordHash, boolean active) {
         this.employee = employee;
         this.username = username;
         this.passwordHash = passwordHash;

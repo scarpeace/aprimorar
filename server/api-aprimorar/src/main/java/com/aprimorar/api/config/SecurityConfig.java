@@ -4,6 +4,11 @@ import com.aprimorar.api.exception.ErrorCode;
 import com.aprimorar.api.exception.ProblemResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.function.Supplier;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -21,20 +26,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 public class SecurityConfig {
 
-    private final com.aprimorar.api.domain.auth.InternalUserDetailsService internalUserDetailsService;
+    private final com.aprimorar.api.domain.auth.StaffAccountDetailsService staffAccountDetailsService;
     private final ObjectMapper objectMapper;
 
     public SecurityConfig(
-        com.aprimorar.api.domain.auth.InternalUserDetailsService internalUserDetailsService,
+        com.aprimorar.api.domain.auth.StaffAccountDetailsService staffAccountDetailsService,
         ObjectMapper objectMapper
     ) {
-        this.internalUserDetailsService = internalUserDetailsService;
+        this.staffAccountDetailsService = staffAccountDetailsService;
         this.objectMapper = objectMapper;
     }
 
@@ -42,10 +54,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider)
         throws Exception {
         http
-            .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+            .csrf(csrf -> csrf
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+                .ignoringRequestMatchers(new AntPathRequestMatcher("/v1/auth/login", "POST"))
+            )
             .cors(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authenticationProvider(authenticationProvider)
+            .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
             .exceptionHandling(exceptionHandling -> exceptionHandling
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler())
@@ -78,7 +95,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(internalUserDetailsService);
+        provider.setUserDetailsService(staffAccountDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
@@ -110,5 +127,45 @@ public class SecurityConfig {
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         objectMapper.writeValue(response.getOutputStream(), new ProblemResponseDTO(errorCode, status, message, uri));
+    }
+
+    private static final class CsrfCookieFilter extends OncePerRequestFilter {
+
+        @Override
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+            Object attribute = request.getAttribute(CsrfToken.class.getName());
+
+            if (attribute instanceof Supplier<?> csrfTokenSupplier) {
+                Object token = csrfTokenSupplier.get();
+                if (token instanceof CsrfToken csrfToken) {
+                    csrfToken.getToken();
+                }
+            } else if (attribute instanceof CsrfToken csrfToken) {
+                csrfToken.getToken();
+            }
+
+            filterChain.doFilter(request, response);
+        }
+    }
+
+    private static final class SpaCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
+
+        private final CsrfTokenRequestHandler plainRequestHandler = new CsrfTokenRequestAttributeHandler();
+        private final CsrfTokenRequestHandler xorRequestHandler = new XorCsrfTokenRequestAttributeHandler();
+
+        @Override
+        public void handle(HttpServletRequest request, HttpServletResponse response, Supplier<CsrfToken> csrfToken) {
+            xorRequestHandler.handle(request, response, csrfToken);
+        }
+
+        @Override
+        public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
+            if (StringUtils.hasText(request.getHeader(csrfToken.getHeaderName()))) {
+                return plainRequestHandler.resolveCsrfTokenValue(request, csrfToken);
+            }
+
+            return xorRequestHandler.resolveCsrfTokenValue(request, csrfToken);
+        }
     }
 }

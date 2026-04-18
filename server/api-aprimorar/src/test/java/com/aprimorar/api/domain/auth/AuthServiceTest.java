@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
-import com.aprimorar.api.domain.auth.repository.InternalUserRepository;
+import com.aprimorar.api.domain.auth.repository.StaffAccountRepository;
 import com.aprimorar.api.domain.employee.Employee;
 import com.aprimorar.api.enums.Duty;
 import java.time.Clock;
@@ -31,14 +31,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
-    private static final UUID INTERNAL_USER_ID = UUID.fromString("8ccdb801-d0af-4561-8d45-56d196350001");
+    private static final UUID STAFF_ACCOUNT_ID = UUID.fromString("8ccdb801-d0af-4561-8d45-56d196350001");
     private static final UUID EMPLOYEE_ID = UUID.fromString("b71fa3e6-31f0-4ef5-a650-1bccae83302e");
     private static final Instant FIXED_INSTANT = Instant.parse("2026-04-18T12:00:00Z");
     private static final String USERNAME = "beatriz.santos";
     private static final String EMAIL = "beatriz.santos@731aprimorar.dev";
     private static final String PASSWORD = "admin123";
     @Mock
-    private InternalUserRepository internalUserRepository;
+    private StaffAccountRepository staffAccountRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final Clock applicationClock = Clock.fixed(FIXED_INSTANT, ZoneOffset.UTC);
@@ -47,7 +47,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        authService = new AuthService(internalUserRepository, passwordEncoder, applicationClock);
+        authService = new AuthService(staffAccountRepository, passwordEncoder, applicationClock);
     }
 
     @Nested
@@ -57,38 +57,38 @@ class AuthServiceTest {
         @Test
         @DisplayName("should authenticate with username identifier")
         void shouldAuthenticateWithUsernameIdentifier() {
-            InternalUser internalUser = activeInternalUser();
+            StaffAccount staffAccount = activeStaffAccount();
 
-            when(internalUserRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(internalUser));
+            when(staffAccountRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(staffAccount));
 
             AuthCurrentUserResponseDTO response = authService.login(USERNAME, PASSWORD);
 
-            assertThat(response.id()).isEqualTo(INTERNAL_USER_ID);
+            assertThat(response.id()).isEqualTo(STAFF_ACCOUNT_ID);
             assertThat(response.username()).isEqualTo(USERNAME);
             assertThat(response.email()).isEqualTo(EMAIL);
-            assertThat(internalUser.getLastLoginAt()).isEqualTo(FIXED_INSTANT);
-            verify(internalUserRepository).save(internalUser);
+            assertThat(staffAccount.getLastLoginAt()).isEqualTo(FIXED_INSTANT);
+            verify(staffAccountRepository).save(staffAccount);
         }
 
         @Test
         @DisplayName("should authenticate with employee email identifier")
         void shouldAuthenticateWithEmployeeEmailIdentifier() {
-            InternalUser internalUser = activeInternalUser();
+            StaffAccount staffAccount = activeStaffAccount();
 
-            when(internalUserRepository.findByUsernameOrEmployeeEmail(EMAIL)).thenReturn(Optional.of(internalUser));
+            when(staffAccountRepository.findByUsernameOrEmployeeEmail(EMAIL)).thenReturn(Optional.of(staffAccount));
 
             AuthCurrentUserResponseDTO response = authService.login(EMAIL, PASSWORD);
 
-            assertThat(response.id()).isEqualTo(INTERNAL_USER_ID);
+            assertThat(response.id()).isEqualTo(STAFF_ACCOUNT_ID);
             assertThat(response.username()).isEqualTo(USERNAME);
             assertThat(response.email()).isEqualTo(EMAIL);
-            verify(internalUserRepository).save(internalUser);
+            verify(staffAccountRepository).save(staffAccount);
         }
 
         @Test
         @DisplayName("should reject invalid password")
         void shouldRejectInvalidPassword() {
-            when(internalUserRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(activeInternalUser()));
+            when(staffAccountRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(activeStaffAccount()));
 
             assertThatThrownBy(() -> authService.login(USERNAME, "senha-invalida"))
                 .isInstanceOf(BadCredentialsException.class)
@@ -97,14 +97,14 @@ class AuthServiceTest {
 
         @Test
         @DisplayName("should reject inactive internal user")
-        void shouldRejectInactiveInternalUser() {
-            when(internalUserRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(inactiveInternalUser()));
+        void shouldRejectInactiveStaffAccount() {
+            when(staffAccountRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(inactiveStaffAccount()));
 
             assertThatThrownBy(() -> authService.login(USERNAME, PASSWORD))
                 .isInstanceOf(DisabledException.class)
                 .hasMessage("Usuário interno inativo");
 
-            verify(internalUserRepository).findByUsernameOrEmployeeEmail(USERNAME);
+            verify(staffAccountRepository).findByUsernameOrEmployeeEmail(USERNAME);
         }
     }
 
@@ -115,9 +115,9 @@ class AuthServiceTest {
         @Test
         @DisplayName("should map authenticated principal to current-user dto")
         void shouldMapAuthenticatedPrincipalToCurrentUserDto() {
-            InternalUser internalUser = activeInternalUser();
+            StaffAccount staffAccount = activeStaffAccount();
 
-            AuthCurrentUserResponseDTO response = authService.getCurrentUser(internalUser);
+            AuthCurrentUserResponseDTO response = authService.getCurrentUser(staffAccount);
 
             assertThat(response)
                 .extracting(
@@ -128,19 +128,19 @@ class AuthServiceTest {
                     AuthCurrentUserResponseDTO::employeeId,
                     AuthCurrentUserResponseDTO::duty
                 )
-                .containsExactly(INTERNAL_USER_ID, USERNAME, "Beatriz Santos", EMAIL, EMPLOYEE_ID, Duty.ADM);
+                .containsExactly(STAFF_ACCOUNT_ID, USERNAME, "Beatriz Santos", EMAIL, EMPLOYEE_ID, Duty.ADM);
         }
     }
 
-    private InternalUser activeInternalUser() {
-        return internalUser(true);
+    private StaffAccount activeStaffAccount() {
+        return staffAccount(true);
     }
 
-    private InternalUser inactiveInternalUser() {
-        return internalUser(false);
+    private StaffAccount inactiveStaffAccount() {
+        return staffAccount(false);
     }
 
-    private InternalUser internalUser(boolean active) {
+    private StaffAccount staffAccount(boolean active) {
         Employee employee = new Employee(
             "Beatriz Santos",
             LocalDate.of(2008, 12, 18),
@@ -152,8 +152,8 @@ class AuthServiceTest {
         );
         employee.setId(EMPLOYEE_ID);
 
-        InternalUser internalUser = new InternalUser(employee, USERNAME, passwordEncoder.encode(PASSWORD), active);
-        internalUser.setId(INTERNAL_USER_ID);
-        return internalUser;
+        StaffAccount staffAccount = new StaffAccount(employee, USERNAME, passwordEncoder.encode(PASSWORD), active);
+        staffAccount.setId(STAFF_ACCOUNT_ID);
+        return staffAccount;
     }
 }

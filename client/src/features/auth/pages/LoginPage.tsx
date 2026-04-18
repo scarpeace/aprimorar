@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LockKeyhole, TriangleAlert } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,6 @@ function getLoginErrorMessage(error: unknown) {
 }
 
 export function LoginPage() {
-  const navigate = useNavigate();
   const { currentUserQuery, isAuthenticated, login } = useAuthSession();
   const {
     register,
@@ -44,7 +43,6 @@ export function LoginPage() {
     try {
       await login.mutateAsync({ data });
       loggedIn = true;
-      navigate("/");
     } catch {
       // error state is handled by the mutation itself
     } finally {
