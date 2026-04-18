@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-authentication-protected-access-01-PLAN.md
-last_updated: "2026-04-18T11:53:32.604Z"
+stopped_at: Completed 01-authentication-protected-access-02-PLAN.md
+last_updated: "2026-04-18T12:18:35.671Z"
 last_activity: 2026-04-18
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
-  percent: 33
+  completed_plans: 2
+  percent: 67
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-17)
 ## Current Position
 
 Phase: 01 (authentication-protected-access) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-18
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: Stable
 
 | Phase 01-authentication-protected-access P01 | 604 | 3 tasks | 16 files |
+| Phase 01-authentication-protected-access P02 | 15 | 2 tasks | 26 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,8 @@ Recent decisions affecting current work:
 - [Phase 01-authentication-protected-access]: Use Spring Security server-managed sessions for immediate logout and refresh persistence.
 - [Phase 01-authentication-protected-access]: Store internal staff credentials in tb_internal_users linked to employees instead of adding passwords to employee records.
 - [Phase 01-authentication-protected-access]: Return stable Portuguese JSON auth failures with a dedicated UNAUTHORIZED error code.
+- [Phase 01-authentication-protected-access]: Wrap generated auth hooks in useAuthSession so login/logout invalidation and current-user bootstrap stay centralized.
+- [Phase 01-authentication-protected-access]: Configure Kubb's shared axios client for withCredentials plus Spring Security XSRF names instead of storing auth state in browser storage.
 
 ### Pending Todos
 
@@ -87,6 +90,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-04-18T11:53:32.600Z
-Stopped at: Completed 01-authentication-protected-access-01-PLAN.md
+Last session: 2026-04-18T12:18:35.668Z
+Stopped at: Completed 01-authentication-protected-access-02-PLAN.md
 Resume file: None
