@@ -1,7 +1,9 @@
 import { MainLayout } from "@/components/layout/MainLayout"
 import { PageLoading } from "@/components/ui/page-loading"
+import { AuthGate } from "@/features/auth/components/AuthGate"
+import { useAuthSession } from "@/features/auth/hooks/useAuthSession"
 import { Suspense, lazy } from "react"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { Toaster } from "sonner"
 import { ErrorBoundary } from "./components/ui/error-boundary"
 
@@ -26,19 +28,36 @@ const EventsPage = lazy(() => import("@/features/events/pages/EventsPage").then(
 const EventDetailPage = lazy(() => import("@/features/events/pages/EventDetailPage").then((module) => ({ default: module.EventDetailPage })))
 const EventCreatePage = lazy(() => import("@/features/events/pages/EventCreatePage").then((module) => ({ default: module.EventCreatePage })))
 const EventEditPage = lazy(() => import("@/features/events/pages/EventEditPage").then((module) => ({ default: module.EventEditPage })))
+const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage").then((module) => ({ default: module.LoginPage })))
 
 import { pt } from "zod/locales"
 import z from "zod/v4"
 
 function App() {
+  const { isAuthenticated, isCheckingSession } = useAuthSession()
+
   z.config(pt())
+
   return (
     <BrowserRouter>
       <Toaster position="top-right" richColors />
       <ErrorBoundary>
         <Suspense fallback={<PageLoading message="Carregando tela..." />}>
           <Routes>
-            <Route element={<MainLayout />}>
+            <Route path="/login" element={<LoginPage />} />
+
+            <Route
+              element={(
+                <AuthGate
+                  isPending={isCheckingSession}
+                  isAuthenticated={isAuthenticated}
+                  fallback={<Navigate to="/login" replace />}
+                  loadingMessage="Verificando sua sessão..."
+                >
+                  <MainLayout />
+                </AuthGate>
+              )}
+            >
               <Route path="/" element={<DashboardPage />} />
 
               <Route path="/students" element={<StudentsPage />} />
@@ -61,6 +80,8 @@ function App() {
               <Route path="/parents/:id" element={<ParentDetailPage />} />
               <Route path="/parents/edit/:id" element={<ParentEditPage />} />
             </Route>
+
+            <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />} />
           </Routes>
         </Suspense>
       </ErrorBoundary>
