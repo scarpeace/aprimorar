@@ -1,3 +1,6 @@
+export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
+export type { LogoutMutationKey } from "./hooks/auth/useLogout.ts";
+export type { MeQueryKey } from "./hooks/auth/useMe.ts";
 export type { GetDashboardSummaryQueryKey } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
 export type { ArchiveEmployeeMutationKey } from "./hooks/employee/useArchiveEmployee.ts";
 export type { CreateEmployeeMutationKey } from "./hooks/employee/useCreateEmployee.ts";
@@ -38,6 +41,11 @@ export type {
   AddressResponseDTO,
   AddressResponseDTOStateEnumKey,
 } from "./types/AddressResponseDTO.ts";
+export type {
+  AuthCurrentUserResponseDTO,
+  AuthCurrentUserResponseDTODutyEnumKey,
+} from "./types/AuthCurrentUserResponseDTO.ts";
+export type { AuthLoginRequestDTO } from "./types/AuthLoginRequestDTO.ts";
 export type { ClassesByContentDTO } from "./types/ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./types/DashboardSummaryResponseDTO.ts";
 export type { EmployeeOptionsDTO } from "./types/EmployeeOptionsDTO.ts";
@@ -67,6 +75,18 @@ export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
 export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
+export type {
+  Login200,
+  LoginMutation,
+  LoginMutationRequest,
+  LoginMutationResponse,
+} from "./types/auth/Login.ts";
+export type {
+  Logout200,
+  LogoutMutation,
+  LogoutMutationResponse,
+} from "./types/auth/Logout.ts";
+export type { Me200, MeQuery, MeQueryResponse } from "./types/auth/Me.ts";
 export type {
   GetDashboardSummary200,
   GetDashboardSummaryQuery,
@@ -263,6 +283,18 @@ export type {
   UpdateStudentMutationResponse,
   UpdateStudentPathParams,
 } from "./types/student/UpdateStudent.ts";
+export { login } from "./hooks/auth/useLogin.ts";
+export { loginMutationKey } from "./hooks/auth/useLogin.ts";
+export { loginMutationOptions } from "./hooks/auth/useLogin.ts";
+export { useLogin } from "./hooks/auth/useLogin.ts";
+export { logout } from "./hooks/auth/useLogout.ts";
+export { logoutMutationKey } from "./hooks/auth/useLogout.ts";
+export { logoutMutationOptions } from "./hooks/auth/useLogout.ts";
+export { useLogout } from "./hooks/auth/useLogout.ts";
+export { me } from "./hooks/auth/useMe.ts";
+export { meQueryKey } from "./hooks/auth/useMe.ts";
+export { meQueryOptions } from "./hooks/auth/useMe.ts";
+export { useMe } from "./hooks/auth/useMe.ts";
 export { getDashboardSummary } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
 export { getDashboardSummaryQueryKey } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
 export { getDashboardSummaryQueryOptions } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
@@ -393,12 +425,25 @@ export { updateStudentMutationOptions } from "./hooks/student/useUpdateStudent.t
 export { useUpdateStudent } from "./hooks/student/useUpdateStudent.ts";
 export { addressRequestDTOStateEnum } from "./types/AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./types/AddressResponseDTO.ts";
+export { authCurrentUserResponseDTODutyEnum } from "./types/AuthCurrentUserResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./types/EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./types/EventRequestDTO.ts";
 export { eventResponseDTOContentEnum } from "./types/EventResponseDTO.ts";
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
+export {
+  login200Schema,
+  loginMutationRequestSchema,
+  loginMutationResponseSchema,
+} from "./zod/auth/loginSchema.ts";
+export {
+  logout200Schema,
+  logoutMutationResponseSchema,
+} from "./zod/auth/logoutSchema.ts";
+export { me200Schema, meQueryResponseSchema } from "./zod/auth/meSchema.ts";
+export { authCurrentUserResponseDTOSchema } from "./zod/authCurrentUserResponseDTOSchema.ts";
+export { authLoginRequestDTOSchema } from "./zod/authLoginRequestDTOSchema.ts";
 export { classesByContentDTOSchema } from "./zod/classesByContentDTOSchema.ts";
 export {
   getDashboardSummary200Schema,

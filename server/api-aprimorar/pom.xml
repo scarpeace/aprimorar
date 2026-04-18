@@ -154,7 +154,7 @@
                     <plugin>
                         <groupId>org.springdoc</groupId>
                         <artifactId>springdoc-openapi-maven-plugin</artifactId>
-                        <version>${springdoc.version}</version>
+                        <version>1.5</version>
                         <executions>
                             <execution>
                                 <phase>generate-resources</phase>

@@ -2,6 +2,7 @@ package com.aprimorar.api.domain.auth;
 
 import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
 import com.aprimorar.api.domain.auth.dto.AuthLoginRequestDTO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/auth")
+@Tag(name = "Auth")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
