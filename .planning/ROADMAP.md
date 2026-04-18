@@ -29,11 +29,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Authenticated user stays signed in after browser refresh until logout or session expiry.
   3. Authenticated user can log out from the app and protected pages stop being accessible immediately.
   4. Unauthenticated visitor cannot open dashboard, student, parent, employee, event, or finance workflows directly.
-**Plans**: 3 plans
+**Plans**: 4 plans
 Plans:
 - [ ] 01-01-PLAN.md — Create Spring Security session auth, internal-user persistence, and protected backend routes.
 - [ ] 01-02-PLAN.md — Regenerate auth contracts and build the frontend login/bootstrap infrastructure.
 - [ ] 01-03-PLAN.md — Wire protected routing and logout UX across the SPA.
+- [ ] 01-04-PLAN.md — Restore auth client bootstrap and real session-backed refresh/logout behavior after UAT gaps.
 **UI hint**: yes
 
 ### Phase 2: Student & Parent Registry Hardening
@@ -89,7 +90,7 @@ Phases execute in numeric order: 2 → 2.1 → 2.2 → 3 → 3.1 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Authentication & Protected Access | 3/3 | Complete   | 2026-04-18 |
+| 1. Authentication & Protected Access | 4/4 | Complete   | 2026-04-18 |
 | 2. Student & Parent Registry Hardening | 0/3 | Not started | - |
 | 3. Employee & Event Operations Hardening | 0/3 | Not started | - |
 | 4. Finance Tracking Core | 0/3 | Not started | - |
