@@ -61,9 +61,11 @@ class AuthServiceTest {
 
             AuthCurrentUserResponseDTO response = authService.login(USERNAME, PASSWORD);
 
+            assertThat(response.id()).isEqualTo(INTERNAL_USER_ID);
             assertThat(response.username()).isEqualTo(USERNAME);
             assertThat(response.email()).isEqualTo(EMAIL);
             assertThat(internalUser.getLastLoginAt()).isEqualTo(FIXED_INSTANT);
+            verify(internalUserRepository).save(internalUser);
         }
 
         @Test
@@ -75,6 +77,7 @@ class AuthServiceTest {
 
             AuthCurrentUserResponseDTO response = authService.login(EMAIL, PASSWORD);
 
+            assertThat(response.id()).isEqualTo(INTERNAL_USER_ID);
             assertThat(response.username()).isEqualTo(USERNAME);
             assertThat(response.email()).isEqualTo(EMAIL);
             verify(internalUserRepository).save(internalUser);
@@ -98,6 +101,8 @@ class AuthServiceTest {
             assertThatThrownBy(() -> authService.login(USERNAME, PASSWORD))
                 .isInstanceOf(DisabledException.class)
                 .hasMessage("Usuário interno inativo");
+
+            verify(internalUserRepository).findByUsernameOrEmployeeEmail(USERNAME);
         }
     }
 
