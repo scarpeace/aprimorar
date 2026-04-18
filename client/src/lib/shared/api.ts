@@ -8,6 +8,7 @@ const sharedApiConfig = {
   baseURL: apiBaseUrl,
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
+  withXSRFToken: true,
   xsrfCookieName: "XSRF-TOKEN",
   xsrfHeaderName: "X-XSRF-TOKEN",
 } as const;
