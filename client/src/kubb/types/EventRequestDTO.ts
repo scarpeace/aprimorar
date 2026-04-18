@@ -21,12 +21,6 @@ export type EventRequestDTOContentEnumKey =
  */
 export type EventRequestDTO = {
   /**
-   * @description Título do evento
-   * @minLength 1
-   * @type string
-   */
-  title: string;
-  /**
    * @description Descrição do evento
    * @type string | undefined
    */

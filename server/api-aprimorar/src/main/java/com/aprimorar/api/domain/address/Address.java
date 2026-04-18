@@ -10,9 +10,6 @@ public class Address {
     @Column(name = "street", nullable = false)
     private String street;
 
-    @Column(name = "number", nullable = false)
-    private String number;
-
     @Column(name = "district", nullable = false)
     private String district;
 
@@ -39,17 +36,6 @@ public class Address {
             throw new InvalidAddressException("A rua é obrigatória no Endereço");
         }
         this.street = street;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        if (number == null || number.isBlank()) {
-            throw new InvalidAddressException("O numero é obrigatório no Endereço");
-        }
-        this.number = number;
     }
 
     public String getDistrict() {

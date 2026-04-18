@@ -39,16 +39,34 @@ public class Employee extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Duty duty;
 
-    public Employee() {}
+    protected Employee() {}
+
+    public Employee(
+        String name,
+        LocalDate birthdate,
+        String pix,
+        String contact,
+        String cpf,
+        String email,
+        Duty duty
+    ) {
+        validateRequiredFields(name, birthdate, pix, contact, email, duty);
+        validateCpf(cpf);
+
+        this.name = name;
+        this.birthdate = birthdate;
+        this.pix = pix;
+        this.contact = contact;
+        this.cpf = cpf;
+        this.email = email;
+        this.duty = duty;
+    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new InvalidEmployeeException("Nome do colaborador não pode ser null");
-        }
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -56,10 +74,7 @@ public class Employee extends BaseEntity {
         return birthdate;
     }
 
-    public void setBirthdate(LocalDate birthdate) {
-        if (birthdate == null) {
-            throw new InvalidEmployeeException("A data de nascimento do colaborador não pode ser null");
-        }
+    private void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 
@@ -67,10 +82,7 @@ public class Employee extends BaseEntity {
         return pix;
     }
 
-    public void setPix(String pix) {
-        if (pix == null || pix.isBlank()) {
-            throw new InvalidEmployeeException("Pix do colaborador não pode ser null");
-        }
+    private void setPix(String pix) {
         this.pix = pix;
     }
 
@@ -78,10 +90,7 @@ public class Employee extends BaseEntity {
         return contact;
     }
 
-    public void setContact(String contact) {
-        if (contact == null || contact.isBlank()) {
-            throw new InvalidEmployeeException("Contato do colaborador não pode ser null");
-        }
+    private void setContact(String contact) {
         this.contact = contact;
     }
 
@@ -89,10 +98,7 @@ public class Employee extends BaseEntity {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
-        if (cpf == null || cpf.isBlank()) {
-            throw new InvalidEmployeeException("CPF do colaborador não pode ser null");
-        }
+    private void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
@@ -100,10 +106,7 @@ public class Employee extends BaseEntity {
         return email;
     }
 
-    public void setEmail(String email) {
-        if (email == null || email.isBlank()) {
-            throw new InvalidEmployeeException("Email do colaborador não pode ser null");
-        }
+    private void setEmail(String email) {
         this.email = email;
     }
 
@@ -111,10 +114,59 @@ public class Employee extends BaseEntity {
         return duty;
     }
 
-    public void setDuty(Duty duty) {
+    private void setDuty(Duty duty) {
+        this.duty = duty;
+    }
+
+    public void updateDetails(
+        String name,
+        LocalDate birthdate,
+        String pix,
+        String contact,
+        String email,
+        Duty duty
+    ) {
+        validateRequiredFields(name, birthdate, pix, contact, email, duty);
+
+        setName(name);
+        setBirthdate(birthdate);
+        setPix(pix);
+        setContact(contact);
+        setEmail(email);
+        setDuty(duty);
+    }
+
+    private void validateRequiredFields(
+        String name,
+        LocalDate birthdate,
+        String pix,
+        String contact,
+        String email,
+        Duty duty
+    ) {
+        if (name == null || name.isBlank()) {
+            throw new InvalidEmployeeException("Nome do colaborador não pode ser null");
+        }
+        if (birthdate == null) {
+            throw new InvalidEmployeeException("A data de nascimento do colaborador não pode ser null");
+        }
+        if (pix == null || pix.isBlank()) {
+            throw new InvalidEmployeeException("Pix do colaborador não pode ser null");
+        }
+        if (contact == null || contact.isBlank()) {
+            throw new InvalidEmployeeException("Contato do colaborador não pode ser null");
+        }
+        if (email == null || email.isBlank()) {
+            throw new InvalidEmployeeException("Email do colaborador não pode ser null");
+        }
         if (duty == null) {
             throw new InvalidEmployeeException("Função do colaborador não pode ser null");
         }
-        this.duty = duty;
+    }
+
+    private void validateCpf(String cpf) {
+        if (cpf == null || cpf.isBlank()) {
+            throw new InvalidEmployeeException("CPF do colaborador não pode ser null");
+        }
     }
 }

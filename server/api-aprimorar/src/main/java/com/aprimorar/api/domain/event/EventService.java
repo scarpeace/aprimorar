@@ -14,7 +14,7 @@ import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.shared.PageDTO;
-
+import java.time.Clock;
 import java.time.Instant;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -34,17 +34,50 @@ public class EventService {
     private final StudentRepository studentRepo;
     private final EmployeeRepository employeeRepo;
     private final EventMapper eventMapper;
+    private final Clock clock;
 
     public EventService(
         EventRepository eventRepo,
         StudentRepository studentRepo,
         EmployeeRepository employeeRepo,
-        EventMapper eventMapper
+        EventMapper eventMapper,
+        Clock clock
     ) {
         this.eventRepo = eventRepo;
         this.studentRepo = studentRepo;
         this.employeeRepo = employeeRepo;
         this.eventMapper = eventMapper;
+        this.clock = clock;
+    }
+
+    @Transactional
+    public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
+        Student student = findStudentOrThrow(eventRequestDTO.studentId());
+        Employee employee = findEmployeeOrThrow(eventRequestDTO.employeeId());
+
+        validateParticipantAvailability(
+            student.getId(),
+            employee.getId(),
+            eventRequestDTO.startDate(),
+            eventRequestDTO.endDate(),
+            null
+        );
+
+        Event event = new Event(
+            eventRequestDTO.description(),
+            eventRequestDTO.startDate(),
+            eventRequestDTO.endDate(),
+            eventRequestDTO.payment(),
+            eventRequestDTO.price(),
+            eventRequestDTO.content(),
+            student,
+            employee
+        );
+        event.validateDatesForCreation(Instant.now(clock));
+
+        Event savedEvent = eventRepo.save(event);
+        log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
+        return eventMapper.convertToDto(savedEvent);
     }
 
     @Transactional(readOnly = true)
@@ -97,58 +130,26 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponseDTO createEvent(EventRequestDTO eventRequestDTO) {
-        Event event = eventMapper.convertToEntity(eventRequestDTO);
-
-        Student student = resolveStudentOrThrow(eventRequestDTO.studentId());
-        Employee employee = resolveEmployeeOrThrow(eventRequestDTO.employeeId());
-
-        validateParticipantAvailability(
-            student.getId(),
-            employee.getId(),
-            event.getStartDate(),
-            event.getEndDateTime(),
-            null
-        );
-
-        event.setStudent(student);
-        event.setEmployee(employee);
-
-        event.validateForCreation();
-
-        Event savedEvent = eventRepo.save(event);
-        log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
-        return eventMapper.convertToDto(savedEvent);
-    }
-
-    @Transactional
     public EventResponseDTO updateEvent(UUID id, EventRequestDTO request) {
         Event event = findEventOrThrow(id);
 
-        event.validateEditWindow();
+        event.validateEditWindow(Instant.now(clock));
 
-        Student student = resolveStudentOrThrow(request.studentId());
-        Employee employee = resolveEmployeeOrThrow(request.employeeId());
+        Student student = findStudentOrThrow(request.studentId());
+        Employee employee = findEmployeeOrThrow(request.employeeId());
 
-        validateParticipantAvailability(
-            student.getId(),
-            employee.getId(),
+        validateParticipantAvailability(student.getId(), employee.getId(), request.startDate(), request.endDate(), id);
+
+        event.updateDetails(
+            request.description(),
             request.startDate(),
             request.endDate(),
-            id
+            request.payment(),
+            request.price(),
+            request.content(),
+            student,
+            employee
         );
-
-        event.setTitle(request.title());
-        event.setDescription(request.description());
-        event.setStartDate(request.startDate());
-        event.setEndDateTime(request.endDate());
-        event.setPayment(request.payment());
-        event.setPrice(request.price());
-        event.setContent(request.content());
-        event.setStudent(student);
-        event.setEmployee(employee);
-
-        event.validateForUpdate();
 
         log.info("Evento {} atualizado com sucesso.", event.getTitle().toUpperCase());
         return eventMapper.convertToDto(event);
@@ -166,7 +167,7 @@ public class EventService {
         return eventRepo.findById(eventId).orElseThrow(EventNotFoundException::new);
     }
 
-    private Student resolveStudentOrThrow(UUID studentId) {
+    private Student findStudentOrThrow(UUID studentId) {
         return studentRepo
             .findById(studentId)
             .orElseThrow(() ->
@@ -174,7 +175,7 @@ public class EventService {
             );
     }
 
-    private Employee resolveEmployeeOrThrow(UUID employeeId) {
+    private Employee findEmployeeOrThrow(UUID employeeId) {
         return employeeRepo
             .findById(employeeId)
             .orElseThrow(() ->
@@ -191,7 +192,7 @@ public class EventService {
     ) {
         boolean studentConflict = eventRepo.studentHasConflictingEvent(studentId, startDate, endDate, ignoredEventId);
         if (studentConflict) {
-            throw new EventScheduleConflictException("O estudante informado já possui evento no intervalo");
+            throw new EventScheduleConflictException("O estudante informado já possui um evento no intervalo");
         }
 
         boolean employeeConflict = eventRepo.employeeHasConflictingEvent(
@@ -201,9 +202,8 @@ public class EventService {
             ignoredEventId
         );
         if (employeeConflict) {
-            throw new EventScheduleConflictException("O colaborador informado já possui evento no intervalo");
+            throw new EventScheduleConflictException("O colaborador informado já possui um evento no intervalo");
         }
-
         if (studentRepo.existsByIdAndArchivedAtIsNotNull(studentId)) {
             throw new InvalidEventException("Evento não pode ter estudantes arquivados");
         }
@@ -211,4 +211,5 @@ public class EventService {
             throw new InvalidEventException("Evento não pode ter colaboradores arquivados");
         }
     }
+
 }

@@ -25,7 +25,7 @@ export function StudentsPage() {
     description: "Gerencie cadastros e matrículas.",
     title: "Alunos",
     Icon: GraduationCap,
-    backLink: "/dashboard",
+    backLink: "/",
   };
 
   return (

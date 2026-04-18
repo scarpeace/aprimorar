@@ -25,7 +25,7 @@ export function EmployeesPage() {
     description: "Gerencie cadastros e matrículas.",
     title: "Colaboradores",
     Icon: FileUser,
-    backLink: "/dashboard",
+    backLink: "/",
   };
 
   return (

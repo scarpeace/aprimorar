@@ -18,7 +18,7 @@ export function EventsPage() {
     description: "Gerencie os atendimentos.",
     title: "Atendimentos",
     Icon: CalendarCheck2,
-    backLink: "/dashboard",
+    backLink: "/",
   };
 
   return (

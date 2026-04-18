@@ -23,7 +23,7 @@ export function ParentsPage() {
     description: "Gerencie pais e responsáveis.",
     title: "Pais e Responsáveis",
     Icon: Handshake,
-    backLink: "/dashboard",
+    backLink: "/",
   };
 
   return (

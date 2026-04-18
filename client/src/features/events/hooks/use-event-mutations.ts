@@ -17,6 +17,7 @@ export function useEventMutations() {
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
+        return error
       },
       onSuccess: (createdEvent) => {
         toast.success("Evento criado com sucesso");

@@ -48,10 +48,6 @@ export type AddressResponseDTO = {
   /**
    * @type string
    */
-  number: string;
-  /**
-   * @type string
-   */
   district: string;
   /**
    * @type string

@@ -1,5 +1,17 @@
 export { addressRequestDTOSchema } from "./addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./addressResponseDTOSchema.ts";
+export {
+  login200Schema,
+  loginMutationRequestSchema,
+  loginMutationResponseSchema,
+} from "./auth/loginSchema.ts";
+export {
+  logout200Schema,
+  logoutMutationResponseSchema,
+} from "./auth/logoutSchema.ts";
+export { me200Schema, meQueryResponseSchema } from "./auth/meSchema.ts";
+export { authCurrentUserResponseDTOSchema } from "./authCurrentUserResponseDTOSchema.ts";
+export { authLoginRequestDTOSchema } from "./authLoginRequestDTOSchema.ts";
 export { classesByContentDTOSchema } from "./classesByContentDTOSchema.ts";
 export {
   getDashboardSummary200Schema,

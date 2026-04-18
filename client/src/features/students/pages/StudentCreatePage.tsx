@@ -22,6 +22,7 @@ export function StudentCreatePage() {
   const { createStudent } = useStudentMutations();
 
   const onSubmit = handleSubmit((data: StudentFormSchema) => {
+    console.log("Before parse",data.birthdate)
     createStudent.mutate({ data });
   });
 
@@ -53,23 +54,19 @@ export function StudentCreatePage() {
 
            <fieldset className="fieldset">
             <legend className="fieldset-legend">Data de Nascimento</legend>
-            <input type="text" className="input" {...register("birthdate")} placeholder="Ex: 01/01/1990"/>
+            <input type="text" className="input" {...registerWithMask("birthdate",["##/##/####"])} placeholder="Ex: 01/01/1990"/>
             {errors?.birthdate && (<p className="label text-error"><TriangleAlert className="w-3 h-3" />{errors.birthdate.message}</p>)}
           </fieldset>
 
            <fieldset className="fieldset">
             <legend className="fieldset-legend">CPF</legend>
-              <input type="text" className="input"
-                placeholder="Ex: 123.456.789-00"
-                {...registerWithMask("cpf", ["###.###.###-##"])}
-              />
+            <input type="text" className="input" placeholder="Ex: 123.456.789-00" {...registerWithMask("cpf", ["###.###.###-##"])}/>
             {errors?.cpf && (<p className="label text-error"><TriangleAlert className="w-3 h-3" />{errors.cpf.message}</p>)}
           </fieldset>
 
           <fieldset className="fieldset">
             <legend className="fieldset-legend">Contato</legend>
-              <input type="text" className="input"
-                placeholder="Ex: (61) 99633-2332"
+              <input type="text" className="input" placeholder="Ex: (61) 99633-2332"
                 {...registerWithMask("contact", ["(##) #####-####", "(##) ####-####"])}
               />
             {errors?.contact && (<p className="label text-error"><TriangleAlert className="w-3 h-3" />{errors.contact.message}</p>)}
@@ -89,31 +86,31 @@ export function StudentCreatePage() {
 
             <div className="divider col-span-3 m-0" />
 
-            <fieldset className="fieldset">
+          <fieldset className="fieldset">
             <legend className="fieldset-legend">Rua</legend>
             <input type="text" className="input" {...register("address.street")} placeholder="Ex: SQS 406, Bloco C"/>
             {errors?.address?.street && (<p className="label text-error"><TriangleAlert className="w-3 h-3" />{errors.address.street.message}</p>)}
-            </fieldset>
+          </fieldset>
 
-            <fieldset className="fieldset">
+          <fieldset className="fieldset">
             <legend className="fieldset-legend">Bairro</legend>
             <input type="text" className="input" {...register("address.district")} placeholder="Ex: Asa sul"/>
             {errors?.address?.district && (<p className="label text-error"><TriangleAlert className="w-3 h-3" />{errors.address.district.message}</p>)}
-            </fieldset>
+          </fieldset>
 
-             <fieldset className="fieldset">
+          <fieldset className="fieldset">
             <legend className="fieldset-legend">Complemento</legend>
             <input type="text" className="input" {...register("address.complement")} placeholder="Ex: Apto 101"/>
             {errors?.address?.complement && (<p className="label text-error"><TriangleAlert className="w-3 h-3" />{errors.address.complement.message}</p>)}
-            </fieldset>
+          </fieldset>
 
-            <fieldset className="fieldset">
+          <fieldset className="fieldset">
             <legend className="fieldset-legend">Cidade</legend>
             <input type="text" className="input" {...register("address.city")} placeholder="Ex: Brasília"/>
             {errors?.address?.city && (<p className="label text-error"><TriangleAlert className="w-3 h-3" />{errors.address.city.message}</p>)}
-            </fieldset>
+          </fieldset>
 
-            <fieldset className="fieldset">
+          <fieldset className="fieldset">
             <legend className="fieldset-legend">Estado</legend>
              <select className="select select-bordered w-full" {...register("address.state")}>
                 {Object.values(brazilianStates).map((content) => (
@@ -123,13 +120,13 @@ export function StudentCreatePage() {
                 ))}
             </select>
             {errors?.address?.state && (<p className="label text-error"><TriangleAlert className="w-3 h-3" />{errors.address.state.message}</p>)}
-            </fieldset>
+          </fieldset>
 
-            <fieldset className="fieldset">
+          <fieldset className="fieldset">
             <legend className="fieldset-legend">CEP</legend>
-            <input type="text" className="input" {...register("address.zip")} placeholder="Ex: 70254-010"/>
+            <input type="text" className="input" {...registerWithMask("address.zip", ["#####-###"])} placeholder="Ex: 70254-010"/>
             {errors?.address?.zip && (<p className="label text-error"><TriangleAlert className="w-3 h-3" />{errors.address.zip.message}</p>)}
-            </fieldset>
+          </fieldset>
         </div>
 
         <div className="mt-1 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">

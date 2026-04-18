@@ -12,7 +12,6 @@ public class AddressMapper {
     public Address convertToEntity(AddressRequestDTO dto) {
         Address address = new Address();
         address.setStreet(dto.street());
-        address.setNumber(dto.number());
         address.setComplement(dto.complement());
         address.setDistrict(dto.district());
         address.setCity(dto.city());
@@ -26,7 +25,6 @@ public class AddressMapper {
 
         return new AddressResponseDTO(
                 entity.getStreet(),
-                entity.getNumber(),
                 entity.getDistrict(),
                 entity.getCity(),
                 entity.getState(),

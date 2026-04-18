@@ -16,7 +16,7 @@ import {
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 
 export function ParentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -49,15 +49,6 @@ export function ParentDetailPage() {
     );
   }
 
-  const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: parentQuery.data?.name },
-    { label: "CPF", value: formatCpf(parentQuery.data?.cpf) },
-    { label: "E-mail", value: parentQuery.data?.email },
-    { label: "Contato", value: formatPhone(parentQuery.data?.contact) },
-    { label: "Criado em", value: formatDateShortYear(parentQuery.data?.createdAt ?? "") },
-    { label: "Status", value: parentQuery.data?.archivedAt ? "Arquivado" : "Ativo" },
-  ];
-
   return (
     <PageLayout {...headerProps}>
       <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
@@ -79,29 +70,31 @@ export function ParentDetailPage() {
             </>
           }
         >
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
-            {summaryItems.map((item) => (
-              <SummaryItem
-                key={item.label}
-                label={item.label}
-                value={item.value}
-              />
-            ))}
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
+          <SummaryItem label="Nome completo" value={parentQuery.data?.name} />
+          <SummaryItem label="CPF" value={formatCpf(parentQuery.data?.cpf)} />
+          <SummaryItem label="E-mail" value={parentQuery.data?.email} />
+          <div className="flex gap-3">
+            <SummaryItem className="grow" label="Contato" value={formatPhone(parentQuery.data?.contact)} />
+            <SummaryItem label="Criado em" value={formatDateShortYear(parentQuery.data?.createdAt ?? "")} />
+            <SummaryItem label="Status" value={parentQuery.data?.archivedAt ? "Arquivado" : "Ativo"} />
           </div>
-        </SectionCard>
-        <SectionCard
-          title={"Alunos"}
-          description={"Alunos vinculados ao responsável"}
-        >
-          <StudentsTable
-            students={parentStudentsQuery.data}
-            onPageChange={setCurrentPage}
-            currentPage={currentPage}
-            isPending={parentStudentsQuery.isPending}
-            error={parentStudentsQuery.error}
-          />
-        </SectionCard>
-      </div>
-    </PageLayout>
-  );
+        </div>
+      </SectionCard>
+
+      <SectionCard
+        title={"Alunos"}
+        description={"Alunos vinculados ao responsável"}
+      >
+        <StudentsTable
+          students={parentStudentsQuery.data}
+          onPageChange={setCurrentPage}
+          currentPage={currentPage}
+          isPending={parentStudentsQuery.isPending}
+          error={parentStudentsQuery.error}
+        />
+      </SectionCard>
+    </div>
+  </PageLayout>
+);
 }

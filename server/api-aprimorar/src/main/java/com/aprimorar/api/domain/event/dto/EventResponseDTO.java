@@ -16,10 +16,6 @@ public record EventResponseDTO(
     @Schema(nullable = false, description = "Identificador único do evento", example = "550e8400-e29b-41d4-a716-446655440000")
     UUID eventId,
 
-    @NotNull
-    @Schema(nullable = false, description = "Título do evento", example = "Sessão de Mentoria")
-    String title,
-
     @Nullable
     @Schema(nullable = false, description = "Descrição do evento", example = "Sessão focada em revisão de matemática básica")
     String description,

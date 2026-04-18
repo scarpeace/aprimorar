@@ -7,9 +7,7 @@ import java.time.Period;
 import org.springframework.stereotype.Component;
 
 import com.aprimorar.api.domain.address.AddressMapper;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.shared.MapperUtils;
 
 @Component
 public class StudentMapper {
@@ -20,20 +18,6 @@ public class StudentMapper {
     public StudentMapper(Clock applicationClock, AddressMapper addressMapper) {
         this.applicationClock = applicationClock;
         this.addressMapper = addressMapper;
-    }
-
-    public Student convertToEntity(StudentRequestDTO dto) {
-        Student student = new Student();
-
-        student.setName(dto.name());
-        student.setBirthdate(dto.birthdate());
-        student.setCpf(MapperUtils.normalizeCpf(dto.cpf()));
-        student.setSchool(dto.school());
-        student.setContact(MapperUtils.normalizeContact(dto.contact()));
-        student.setEmail(MapperUtils.normalizeEmail(dto.email()));
-        student.setAddress(addressMapper.convertToEntity(dto.address()));
-
-        return student;
     }
 
     public StudentResponseDTO convertToDto(Student entity) {

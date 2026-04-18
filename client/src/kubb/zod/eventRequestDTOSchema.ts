@@ -10,7 +10,6 @@ import { z } from "zod/v4";
  */
 export const eventRequestDTOSchema = z
   .object({
-    title: z.string().min(1).describe("Título do evento"),
     description: z.optional(z.string().describe("Descrição do evento")),
     content: z
       .enum([

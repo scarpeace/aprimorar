@@ -1,7 +1,5 @@
-import type { AddressResponseDTO } from "@/kubb";
-import type { ReactNode } from "react";
-import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
+import type { AddressResponseDTO } from "@/kubb";
 
 type AddressSummarySectionProps = {
   address?: AddressResponseDTO;
@@ -10,21 +8,17 @@ type AddressSummarySectionProps = {
 export function AddressDetails({
   address,
 }: Readonly<AddressSummarySectionProps>) {
-  const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Rua", value: address?.street },
-    { label: "Número", value: address?.number },
-    { label: "Complemento", value: address?.complement ?? "N/A" },
-    { label: "Bairro", value: address?.district },
-    { label: "Cidade", value: address?.city },
-    { label: "Estado", value: address?.state },
-    { label: "CEP", value: address?.zip },
-  ];
 
   return (
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {summaryItems.map((item) => (
-          <SummaryItem key={item.label} label={item.label} value={item.value} />
-        ))}
+       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <SummaryItem className="md:col-span-2" label="Rua" value={address?.street} />
+      <SummaryItem label="Complemento" value={address?.complement ?? "N/A"} />
+      <SummaryItem label="Bairro" value={address?.district} />
+      <div className="flex gap-3 justify-between">
+        <SummaryItem className="grow" label="Cidade" value={address?.city}/>
+        <SummaryItem label="Estado" value={address?.state}/>
+      </div>
+        <SummaryItem label="CEP" value={address?.zip} />
     </div>
   );
 }

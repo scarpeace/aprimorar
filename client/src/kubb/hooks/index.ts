@@ -1,3 +1,6 @@
+export type { LoginMutationKey } from "./auth/useLogin.ts";
+export type { LogoutMutationKey } from "./auth/useLogout.ts";
+export type { MeQueryKey } from "./auth/useMe.ts";
 export type { GetDashboardSummaryQueryKey } from "./dashboard-controller/useGetDashboardSummary.ts";
 export type { ArchiveEmployeeMutationKey } from "./employee/useArchiveEmployee.ts";
 export type { CreateEmployeeMutationKey } from "./employee/useCreateEmployee.ts";
@@ -30,6 +33,18 @@ export type { GetStudentsByParentQueryKey } from "./student/useGetStudentsByPare
 export type { GetStudentsOptionsQueryKey } from "./student/useGetStudentsOptions.ts";
 export type { UnarchiveStudentMutationKey } from "./student/useUnarchiveStudent.ts";
 export type { UpdateStudentMutationKey } from "./student/useUpdateStudent.ts";
+export { login } from "./auth/useLogin.ts";
+export { loginMutationKey } from "./auth/useLogin.ts";
+export { loginMutationOptions } from "./auth/useLogin.ts";
+export { useLogin } from "./auth/useLogin.ts";
+export { logout } from "./auth/useLogout.ts";
+export { logoutMutationKey } from "./auth/useLogout.ts";
+export { logoutMutationOptions } from "./auth/useLogout.ts";
+export { useLogout } from "./auth/useLogout.ts";
+export { me } from "./auth/useMe.ts";
+export { meQueryKey } from "./auth/useMe.ts";
+export { meQueryOptions } from "./auth/useMe.ts";
+export { useMe } from "./auth/useMe.ts";
 export { getDashboardSummary } from "./dashboard-controller/useGetDashboardSummary.ts";
 export { getDashboardSummaryQueryKey } from "./dashboard-controller/useGetDashboardSummary.ts";
 export { getDashboardSummaryQueryOptions } from "./dashboard-controller/useGetDashboardSummary.ts";

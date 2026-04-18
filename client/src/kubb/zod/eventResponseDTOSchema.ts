@@ -11,7 +11,6 @@ import { z } from "zod/v4";
 export const eventResponseDTOSchema = z
   .object({
     eventId: z.uuid().describe("Identificador único do evento"),
-    title: z.string().describe("Título do evento"),
     description: z.optional(z.string().describe("Descrição do evento")),
     content: z
       .enum([

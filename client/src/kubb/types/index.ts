@@ -6,6 +6,11 @@ export type {
   AddressResponseDTO,
   AddressResponseDTOStateEnumKey,
 } from "./AddressResponseDTO.ts";
+export type {
+  AuthCurrentUserResponseDTO,
+  AuthCurrentUserResponseDTODutyEnumKey,
+} from "./AuthCurrentUserResponseDTO.ts";
+export type { AuthLoginRequestDTO } from "./AuthLoginRequestDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
 export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
@@ -35,6 +40,18 @@ export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
 export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
+export type {
+  Login200,
+  LoginMutation,
+  LoginMutationRequest,
+  LoginMutationResponse,
+} from "./auth/Login.ts";
+export type {
+  Logout200,
+  LogoutMutation,
+  LogoutMutationResponse,
+} from "./auth/Logout.ts";
+export type { Me200, MeQuery, MeQueryResponse } from "./auth/Me.ts";
 export type {
   GetDashboardSummary200,
   GetDashboardSummaryQuery,
@@ -233,6 +250,7 @@ export type {
 } from "./student/UpdateStudent.ts";
 export { addressRequestDTOStateEnum } from "./AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./AddressResponseDTO.ts";
+export { authCurrentUserResponseDTODutyEnum } from "./AuthCurrentUserResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./EventRequestDTO.ts";

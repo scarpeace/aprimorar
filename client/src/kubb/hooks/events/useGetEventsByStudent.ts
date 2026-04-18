@@ -27,7 +27,7 @@ export const getEventsByStudentQueryKey = (
   params?: GetEventsByStudentQueryParams,
 ) =>
   [
-    { url: "/v1/events/events/:studentId", params: { studentId: studentId } },
+    { url: "/v1/events/student/:studentId", params: { studentId: studentId } },
     ...(params ? [params] : []),
   ] as const;
 
@@ -37,7 +37,7 @@ export type GetEventsByStudentQueryKey = ReturnType<
 
 /**
  * @description Retorna uma lista de eventos por ID do aluno.
- * {@link /v1/events/events/:studentId}
+ * {@link /v1/events/student/:studentId}
  */
 export async function getEventsByStudent(
   studentId: GetEventsByStudentPathParams["studentId"],
@@ -52,7 +52,7 @@ export async function getEventsByStudent(
     unknown
   >({
     method: "GET",
-    url: `/v1/events/events/${studentId}`,
+    url: `/v1/events/student/${studentId}`,
     baseURL: `http://localhost:8080`,
     params,
     ...requestConfig,
@@ -85,7 +85,7 @@ export function getEventsByStudentQueryOptions(
 
 /**
  * @description Retorna uma lista de eventos por ID do aluno.
- * {@link /v1/events/events/:studentId}
+ * {@link /v1/events/student/:studentId}
  */
 export function useGetEventsByStudent<
   TData = GetEventsByStudentQueryResponse,
