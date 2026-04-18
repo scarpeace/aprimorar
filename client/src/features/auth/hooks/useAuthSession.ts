@@ -34,8 +34,7 @@ export function useAuthSession() {
   const login = useLogin({
     mutation: {
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: currentUserQueryKey });
-        await currentUserQuery.refetch();
+        await refetchCurrentUser();
         toast.success("Login realizado com sucesso");
       },
     },
@@ -54,7 +53,7 @@ export function useAuthSession() {
   return {
     currentUserQuery,
     currentUser: currentUserQuery.data,
-    isAuthenticated: Boolean(currentUserQuery.data),
+    isAuthenticated: currentUserQuery.isSuccess && Boolean(currentUserQuery.data),
     isCheckingSession: currentUserQuery.isPending,
     login,
     logout,
