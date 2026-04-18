@@ -119,7 +119,7 @@
 - Examples: `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/repository/StudentSpecifications.java`, `.../event/repository/EventRepository.java`, `.../parent/repository/ParentSpecifications.java`
 - Pattern: Use Spring Data specifications for text/archive filters and repository-level JPQL for schedule conflicts, aggregations, and reassignment updates.
 
-**Ghost/phantom record fallback:**
+**Ghost/phantom record fallback:**e
 - Purpose: Preserve event referential integrity when deleting linked students or employees.
 - Examples: constants in `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java` and `.../employee/EmployeeService.java`, reassignment queries in `.../event/repository/EventRepository.java`
 - Pattern: Services reassign foreign-key references before deleting primary records.
