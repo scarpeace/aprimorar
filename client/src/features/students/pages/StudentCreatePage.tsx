@@ -22,7 +22,6 @@ export function StudentCreatePage() {
   const { createStudent } = useStudentMutations();
 
   const onSubmit = handleSubmit((data: StudentFormSchema) => {
-    console.log("Before parse",data.birthdate)
     createStudent.mutate({ data });
   });
 
@@ -36,7 +35,7 @@ export function StudentCreatePage() {
   return (
     <PageLayout {...headerProps}>
 
-      <SectionCard title={"Cadastre um novo aluno"} description={"Informe os dados do aluno e do selecione um responsável."}>
+      <SectionCard title={"Cadastre um novo aluno"} description={"Informe os dados do aluno e selecione um responsável."}>
 
         {createStudent.isError && (
             <Alert error={createStudent.error} variant="error" />
