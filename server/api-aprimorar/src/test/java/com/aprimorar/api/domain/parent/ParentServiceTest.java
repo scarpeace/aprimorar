@@ -29,6 +29,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
 import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
+import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
 import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
 import com.aprimorar.api.shared.PageDTO;
@@ -264,13 +265,31 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
-
             // Act
             parentService.archiveParent(input);
 
             // Assert
             assertThat(expected.getArchivedAt()).isNotNull();
             verify(parentRepo).findById(input);
+        }
+
+        @Test
+        @DisplayName("should block archiving parent with active linked students")
+        void shouldBlockArchivingParentWithActiveLinkedStudents() {
+            // Arrange
+            UUID input = EXISTING_PARENT_ID;
+            Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
+
+            when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
+            when(studentRepo.existsByParentId(input)).thenReturn(true);
+
+            // Act + Assert
+            assertThatThrownBy(() -> parentService.archiveParent(input))
+                    .isInstanceOf(ParentHasLinkedStudentsException.class)
+                    .hasMessage("Não é possível arquivar um responsável com alunos ativos vinculados.");
+
+            verify(parentRepo).findById(input);
+            verify(studentRepo).existsByParentId(input);
         }
 
         @Test
@@ -308,6 +327,26 @@ class ParentServiceTest {
             verify(parentRepo).findById(input);
             verify(studentRepo).existsByParentId(input);
             verify((org.springframework.data.repository.CrudRepository<Parent, java.util.UUID>) parentRepo).delete((Parent) expected);
+        }
+
+        @Test
+        @DisplayName("should block deleting parent with active linked students")
+        void shouldBlockDeletingParentWithActiveLinkedStudents() {
+            // Arrange
+            UUID input = EXISTING_PARENT_ID;
+            Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
+
+            when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
+            when(studentRepo.existsByParentId(input)).thenReturn(true);
+
+            // Act + Assert
+            assertThatThrownBy(() -> parentService.deleteParent(input))
+                    .isInstanceOf(ParentHasLinkedStudentsException.class)
+                    .hasMessage("Não é possível excluir um responsável com alunos ativos vinculados.");
+
+            verify(parentRepo).findById(input);
+            verify(studentRepo).existsByParentId(input);
+            verify((org.springframework.data.repository.CrudRepository<Parent, java.util.UUID>) parentRepo, never()).delete(any());
         }
 
         @Test
