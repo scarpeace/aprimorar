@@ -63,7 +63,7 @@ Each task was committed atomically:
 2. **Task 2: Harden responsável archive and delete rules around active student links** - `8a988c53` (test), `66786cb5` (fix)
 3. **Task 3: Regenerate OpenAPI and Kubb contracts for student and responsável flows** - `5b64e5ef` (chore)
 
-**Plan metadata:** Pending final docs commit
+**Plan metadata:** `057f0746` (docs)
 
 ## Files Created/Modified
 - `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/dto/StudentResponsibleSummaryDTO.java` - New embedded responsible summary contract.
