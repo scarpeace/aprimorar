@@ -25,6 +25,7 @@ import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.shared.PageDTO;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -153,6 +154,28 @@ class StudentServiceTest {
         }
 
         @Test
+        @DisplayName("should reject creating student without responsible id")
+        void shouldRejectCreatingStudentWithoutResponsibleId() {
+            StudentRequestDTO input = new StudentRequestDTO(
+                "João Silva",
+                LocalDate.of(2010, 5, 10),
+                "123.456.789-01",
+                "Escola Central",
+                "(61) 99999-9999",
+                "joao@email.com",
+                addressRequest(),
+                null
+            );
+
+            assertThatThrownBy(() -> studentService.createStudent(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Responsável do aluno é obrigatório.");
+
+            verify(addressMapper, never()).convertToEntity(any());
+            verify(studentRepo, never()).save(any());
+        }
+
+        @Test
         @DisplayName("should update student when input is valid")
         void shouldUpdateStudentWhenInputIsValid() {
             StudentRequestDTO input = updatedRequest();
@@ -209,6 +232,29 @@ class StudentServiceTest {
                 .hasMessage("Aluno não encontrado no banco de dados");
 
             verify(parentRepo, never()).findById(any());
+            verify(studentMapper, never()).convertToDto(any());
+        }
+
+        @Test
+        @DisplayName("should reject updating student without responsible id")
+        void shouldRejectUpdatingStudentWithoutResponsibleId() {
+            StudentRequestDTO input = new StudentRequestDTO(
+                "João Pedro",
+                LocalDate.of(2011, 6, 15),
+                "999.999.999-99",
+                "Nova Escola",
+                "(11) 98888-7777",
+                "joao.pedro@email.com",
+                secondAddressRequest(),
+                null
+            );
+
+            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
+
+            assertThatThrownBy(() -> studentService.updateStudent(input, STUDENT_ID))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Responsável do aluno é obrigatório.");
+
             verify(studentMapper, never()).convertToDto(any());
         }
 
@@ -345,6 +391,15 @@ class StudentServiceTest {
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
+        }
+
+        @Test
+        @DisplayName("should expose responsible summary in student read contract")
+        void shouldExposeResponsibleSummaryInStudentReadContract() {
+            assertThat(
+                Arrays.stream(StudentResponseDTO.class.getRecordComponents())
+                    .anyMatch(component -> component.getName().equals("responsible"))
+            ).isTrue();
         }
     }
 
