@@ -46,7 +46,12 @@ Plans:
   2. Secretary can create, view, update, and archive parent or responsible-party records with billing and contact data intact.
   3. Secretary can link the correct responsible party to a student and see that relationship preserved consistently when records are viewed or edited later.
   4. Secretary can quickly find the needed student record through search, filters, pagination, and archived-record visibility controls.
-**Plans**: 3 plans
+**Plans**: 4 plans
+Plans:
+- [ ] 02-01-PLAN.md — Replace the legacy single-parent storage model with multi-responsável relationship links and migration guardrails.
+- [ ] 02-02-PLAN.md — Update student/responsável backend contracts, lifecycle rules, and generated API clients for the new link model.
+- [ ] 02-03-PLAN.md — Rebuild student create/edit/detail/list flows around direct multi-responsável management.
+- [ ] 02-04-PLAN.md — Harden responsável CRUD/detail/archive screens and terminology against the new integrity rules.
 **UI hint**: yes
 
 ### Phase 3: Employee & Event Operations Hardening
