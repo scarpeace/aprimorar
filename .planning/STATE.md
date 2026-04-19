@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-04-19T14:50:01.316Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-04-19T15:09:34.741Z"
 last_activity: 2026-04-19
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 8
-  completed_plans: 5
-  percent: 63
+  completed_plans: 6
+  percent: 75
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 ## Current Position
 
 Phase: 02 (student-parent-registry-hardening) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-04-19
 
-Progress: [███░░░░░░░] 27%
+Progress: [████████░░] 75%
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Progress: [███░░░░░░░] 27%
 | Phase 01-authentication-protected-access P03 | 1 min | 2 tasks | 3 files |
 | Phase 01-authentication-protected-access P04 | 1min | 2 tasks | 3 files |
 | Phase 02 P01 | 4 min | 2 tasks | 3 files |
+| Phase 02 P02 | 19 min | 3 tasks | 22 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,8 @@ Recent decisions affecting current work:
 - [Phase 01-authentication-protected-access]: Use /v1/auth/me refetch as the single source of truth for post-login auth state instead of optimistic cache writes.
 - [Phase 02]: Keep the existing tb_students.parent_id mapping and harden it instead of redesigning the relationship model.
 - [Phase 02]: Use repository-level EntityGraph annotations so student reads load the linked responsável intentionally.
+- [Phase 02]: Embed StudentResponsibleSummaryDTO in student read responses while preserving parentId as the only write-side linkage.
+- [Phase 02]: Block responsável archive/delete only when active students still reference the record so archived history remains intact.
 
 ### Pending Todos
 
@@ -99,6 +102,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-04-19T14:50:01.313Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-04-19T15:09:34.737Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None

@@ -19,13 +19,13 @@ Requirements for the initial secretary/administrator-focused release. Existing b
 - [x] **STUD-01**: Secretary can create a student record with all required registration data
 - [x] **STUD-02**: Secretary can view and update an existing student record
 - [x] **STUD-03**: Secretary can archive a student record without losing historical references
-- [ ] **STUD-04**: Secretary can find students through search, filters, pagination, and archive visibility controls
+- [x] **STUD-04**: Secretary can find students through search, filters, pagination, and archive visibility controls
 
 ### Parents
 
 - [ ] **PARN-01**: Secretary can create a parent or responsible-party record with billing and contact data
-- [ ] **PARN-02**: Secretary can view and update an existing parent or responsible-party record
-- [ ] **PARN-03**: Secretary can archive a parent or responsible-party record without breaking linked records
+- [x] **PARN-02**: Secretary can view and update an existing parent or responsible-party record
+- [x] **PARN-03**: Secretary can archive a parent or responsible-party record without breaking linked records
 - [x] **PARN-04**: Secretary can link the correct responsible party to a student and preserve that relationship consistently
 
 ### Employees
@@ -102,10 +102,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | STUD-01 | Phase 2 | Complete |
 | STUD-02 | Phase 2 | Complete |
 | STUD-03 | Phase 2 | Complete |
-| STUD-04 | Phase 2 | Pending |
+| STUD-04 | Phase 2 | Complete |
 | PARN-01 | Phase 2 | Pending |
-| PARN-02 | Phase 2 | Pending |
-| PARN-03 | Phase 2 | Pending |
+| PARN-02 | Phase 2 | Complete |
+| PARN-03 | Phase 2 | Complete |
 | PARN-04 | Phase 2 | Complete |
 | EMPL-01 | Phase 3 | Pending |
 | EMPL-02 | Phase 3 | Pending |
