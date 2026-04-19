@@ -27,11 +27,11 @@
 | Option | Description | Selected |
 |--------|-------------|----------|
 | Multi + primary | Student has one or more responsibles, with one marked primary/financial | |
-| Multi, no primary | Student has one or more responsibles, all treated equally | ✓ |
-| Single responsible | Keep exactly one responsible per student | |
+| Multi, no primary | Student has one or more responsibles, all treated equally | |
+| Single responsible | Keep exactly one responsible per student | ✓ |
 
-**User's choice:** Multi, no primary
-**Notes:** The user wants a student to support multiple responsibles but does not want to introduce a primary/financial rule in this phase.
+**User's choice:** Single responsible
+**Notes:** Superseded on 2026-04-19 during Phase 2 quick update. Phase 2 keeps the current one-student-to-one-responsável relation and removes the many-to-many migration scope.
 
 ---
 
@@ -39,12 +39,12 @@
 
 | Option | Description | Selected |
 |--------|-------------|----------|
-| Student form first | Select one or more responsibles during student creation/edit | ✓ |
-| Detail page manage | Create the student, then add/remove responsibles later | |
+| Student form first | Select the required responsável during student creation/edit | ✓ |
+| Detail page manage | Create the student, then change the responsável later | |
 | Both | Allow basic linking in form and later adjustments in detail/edit screens | |
 
 **User's choice:** Student form first
-**Notes:** The student flow should own the linking experience.
+**Notes:** The student flow should own the required responsável experience.
 
 ---
 
@@ -53,11 +53,11 @@
 | Option | Description | Selected |
 |--------|-------------|----------|
 | Yes, required | Every link must say mãe, pai, tutor, avó, or similar | |
-| Yes, optional | Support relationship type, but do not force it on every link yet | ✓ |
+| Yes, optional | Support relationship type, but do not force it on every link yet | |
 | No, just linked | Only store the link for now | |
 
-**User's choice:** Yes, optional
-**Notes:** The user wants flexibility without forcing extra registry friction.
+**User's choice:** Deferred / not in Phase 2 scope
+**Notes:** Relationship-type metadata was tied to the removed many-to-many direction and is no longer part of the regenerated Phase 2 plans.
 
 ---
 
@@ -91,22 +91,22 @@
 
 | Option | Description | Selected |
 |--------|-------------|----------|
-| Count + full detail | Student list shows quantity/summary; detail shows full responsible list | |
+| Count + full detail | List shows quantity/summary; detail shows full responsible information | |
 | Show names inline | List and detail screens show responsible names directly wherever possible | |
-| Minimal for now | Only show responsibles clearly on student detail/edit flow, keep list pages simpler | ✓ |
+| Minimal for now | Only show the responsible clearly on student detail/edit flow, keep list pages simpler | ✓ |
 
 **User's choice:** Minimal for now
-**Notes:** The user prefers simpler list/detail surfaces while the model becomes more flexible.
+**Notes:** The user prefers simpler list/detail surfaces while keeping the current single-responsável model.
 
 ---
 
 ## the agent's Discretion
 
-- Exact UI pattern for editing multiple responsibles inside the student flow.
-- Exact presentation of optional relationship types.
-- Exact detail-page layout for multiple responsibles while keeping screens uncluttered.
+- Exact UI pattern for the current responsible selector inside the student flow.
+- Exact detail-page layout for the responsible summary while keeping screens uncluttered.
 
 ## Deferred Ideas
 
 - Separate enrollment workflow — future phase if the product needs real enrollment lifecycle/status.
+- Many-to-many student/responsável links — removed from Phase 2 scope.
 - Primary or financial responsible — likely future finance-phase decision.

@@ -48,10 +48,10 @@ Plans:
   4. Secretary can quickly find the needed student record through search, filters, pagination, and archived-record visibility controls.
 **Plans**: 4 plans
 Plans:
-- [ ] 02-01-PLAN.md — Replace the legacy single-parent storage model with multi-responsável relationship links and migration guardrails.
-- [ ] 02-02-PLAN.md — Update student/responsável backend contracts, lifecycle rules, and generated API clients for the new link model.
-- [ ] 02-03-PLAN.md — Rebuild student create/edit/detail/list flows around direct multi-responsável management.
-- [ ] 02-04-PLAN.md — Harden responsável CRUD/detail/archive screens and terminology against the new integrity rules.
+- [ ] 02-01-PLAN.md — Harden the existing single-responsável backend invariants and fetch paths without changing the relationship model.
+- [ ] 02-02-PLAN.md — Update student/responsável backend contracts, lifecycle rules, and generated API clients around the current single-responsável flow.
+- [ ] 02-03-PLAN.md — Refine student create/edit/detail/list flows around the existing single-responsável registration experience.
+- [ ] 02-04-PLAN.md — Harden responsável CRUD/detail/archive screens and terminology while preserving one responsável to many students.
 **UI hint**: yes
 
 ### Phase 3: Employee & Event Operations Hardening
@@ -96,7 +96,7 @@ Phases execute in numeric order: 2 → 2.1 → 2.2 → 3 → 3.1 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Authentication & Protected Access | 4/4 | Complete   | 2026-04-18 |
-| 2. Student & Parent Registry Hardening | 0/3 | Not started | - |
+| 2. Student & Parent Registry Hardening | 0/4 | Not started | - |
 | 3. Employee & Event Operations Hardening | 0/3 | Not started | - |
 | 4. Finance Tracking Core | 0/3 | Not started | - |
 | 5. Unified Daily Dashboard | 0/2 | Not started | - |
