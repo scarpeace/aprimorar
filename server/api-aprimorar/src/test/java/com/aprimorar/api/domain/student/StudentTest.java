@@ -5,15 +5,34 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.aprimorar.api.domain.address.Address;
 import com.aprimorar.api.domain.parent.Parent;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.domain.student.exception.InvalidStudentException;
 import com.aprimorar.api.enums.BrazilianStates;
 import java.time.LocalDate;
+import java.lang.reflect.Method;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class StudentTest {
+
+    @Test
+    @DisplayName("should mark student read queries to fetch responsável explicitly")
+    void shouldMarkStudentReadQueriesToFetchResponsavelExplicitly() throws NoSuchMethodException {
+        Method findById = StudentRepository.class.getMethod("findById", Object.class);
+        Method findAllByParentId = StudentRepository.class.getMethod(
+            "findAllByParentId",
+            UUID.class,
+            org.springframework.data.domain.Pageable.class
+        );
+
+        assertThat(entityGraph(findById)).isNotNull();
+        assertThat(entityGraph(findById).attributePaths()).containsExactly("parent");
+        assertThat(entityGraph(findAllByParentId)).isNotNull();
+        assertThat(entityGraph(findAllByParentId).attributePaths()).containsExactly("parent");
+    }
 
     @Nested
     @DisplayName("Validation methods")
@@ -219,6 +238,10 @@ class StudentTest {
         Parent parent = new Parent(name, email, contact, cpf);
         parent.setId(id);
         return parent;
+    }
+
+    private EntityGraph entityGraph(Method method) {
+        return method.getAnnotation(EntityGraph.class);
     }
 
     private Address address() {
