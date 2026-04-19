@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 2 context and plans updated for single-responsável scope
-last_updated: "2026-04-19T14:30:00.000Z"
+status: executing
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-04-19T14:50:01.316Z"
 last_activity: 2026-04-19
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
-  percent: 100
+  total_plans: 8
+  completed_plans: 5
+  percent: 63
 ---
 
 # Project State
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: 02 (student-parent-registry-hardening)
-Plan: Not started
-Status: Ready to plan Phase 02
+Phase: 02 (student-parent-registry-hardening) — EXECUTING
+Plan: 2 of 4
+Status: Ready to execute
 Last activity: 2026-04-19
 
 Progress: [███░░░░░░░] 27%
@@ -55,6 +55,7 @@ Progress: [███░░░░░░░] 27%
 | Phase 01-authentication-protected-access P02 | 15 | 2 tasks | 26 files |
 | Phase 01-authentication-protected-access P03 | 1 min | 2 tasks | 3 files |
 | Phase 01-authentication-protected-access P04 | 1min | 2 tasks | 3 files |
+| Phase 02 P01 | 4 min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,8 @@ Recent decisions affecting current work:
 - [Phase 01-authentication-protected-access]: Remove protected query cache entries after logout before redirecting so signed-out users cannot keep browsing stale secretary data.
 - [Phase 01-authentication-protected-access]: Import the shared API bootstrap from main.tsx so generated auth hooks always inherit credential and XSRF defaults.
 - [Phase 01-authentication-protected-access]: Use /v1/auth/me refetch as the single source of truth for post-login auth state instead of optimistic cache writes.
+- [Phase 02]: Keep the existing tb_students.parent_id mapping and harden it instead of redesigning the relationship model.
+- [Phase 02]: Use repository-level EntityGraph annotations so student reads load the linked responsável intentionally.
 
 ### Pending Todos
 
@@ -96,6 +99,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-04-19T14:30:00.000Z
-Stopped at: Phase 2 context and plans updated for single-responsável scope
-Resume file: .planning/phases/02-student-parent-registry-hardening/02-CONTEXT.md
+Last session: 2026-04-19T14:50:01.313Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
