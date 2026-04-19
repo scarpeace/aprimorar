@@ -9,7 +9,6 @@ import { AddressDetails } from "@/features/address/components/AddressDetails";
 import { EventsTable } from "@/features/events/components/EventsTable";
 import {
   useGetEventsByStudent,
-  useGetParentById,
   useGetStudentById,
 } from "@/kubb";
 import {
@@ -18,7 +17,7 @@ import {
   formatPhone,
 } from "@/lib/utils/formatter";
 import { Edit, GraduationCap } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
 import { DeleteStudentButton } from "../components/DeleteStudentButton";
@@ -29,7 +28,6 @@ export function StudentDetailsPage() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const studentQuery = useGetStudentById(studentId);
-  const studentParent = useGetParentById(studentQuery.data?.parentId || "");
   const studentEvents = useGetEventsByStudent(studentId);
 
   const headerProps = {
@@ -39,13 +37,13 @@ export function StudentDetailsPage() {
     backLink: "/students",
   };
 
-  if (studentQuery.isError || studentParent.isError || studentEvents.isError) {
+  if (studentQuery.isError || studentEvents.isError) {
     return (
       <PageLayout {...headerProps}>
         <ErrorCard
           title="Erro ao carregar detalhes do aluno"
           error={
-            studentQuery.error || studentParent.error || studentEvents.error
+            studentQuery.error || studentEvents.error
           }
         />
       </PageLayout>
@@ -54,7 +52,6 @@ export function StudentDetailsPage() {
 
   if (
     studentQuery.isPending ||
-    studentParent.isPending ||
     studentEvents.isPending
   ) {
     return (
@@ -100,9 +97,9 @@ export function StudentDetailsPage() {
             <SummaryItem label="Data de matrícula" value={formatDateShortYear(studentQuery.data.createdAt)}/>
             <SummaryItem label="Escola" value={studentQuery.data.school} />
             <SummaryItem label="Status" value={studentQuery.data.archivedAt ? "Arquivado" : "Ativo"} />
-            <SummaryItem label="Responsável" value={studentParent.data?.name} />
-            <SummaryItem label="Contato do Responsável" value={formatPhone(studentParent.data?.contact)} />
-            <SummaryItem label="CPF do Responsável" value={formatCpf(studentParent.data?.cpf)} />
+            <SummaryItem label="Responsável" value={studentQuery.data.responsible?.name} />
+            <SummaryItem label="Contato do Responsável" value={formatPhone(studentQuery.data.responsible?.contact)} />
+            <SummaryItem label="CPF do Responsável" value={formatCpf(studentQuery.data.responsible?.cpf)} />
           </div>
 
           <Collapse title={"Endereço"} className="mt-3 shadow-xl">
