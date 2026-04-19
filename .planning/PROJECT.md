@@ -17,11 +17,11 @@ The secretary must be able to manage the school day to day from the app without 
 - ✓ Parent management flows already exist in the current codebase — existing
 - ✓ Employee management flows already exist in the current codebase — existing
 - ✓ Event management flows already exist in the current codebase — existing
+- ✓ Simple authentication for secretary/administrator access is implemented with protected internal routes — Phase 1
 
 ### Active
 
 - [ ] Make employee, parent, student, and event CRUD fully functional for v1 with the required business rules for school operations
-- [ ] Add simple authentication for secretary/administrator access
 - [ ] Introduce basic financial tracking for charges, payments, overdue balances, and simple summaries
 - [ ] Provide a small but useful dashboard summary that combines daily operational visibility with financial visibility
 - [ ] Remove the need to use Google Sheets for student and event management in day-to-day work
@@ -38,7 +38,7 @@ The secretary must be able to manage the school day to day from the app without 
 
 The school currently manages students and events in Google Drive spreadsheets, with no meaningful integration across those flows. Financial control is still fuzzy, there are no reports, and payment invoices or overdue balances are not being tracked in a structured system at all.
 
-This repository is a brownfield monorepo with a Spring Boot backend and a React SPA frontend. The codebase already contains domain areas for dashboard, students, parents, employees, and events, plus generated OpenAPI-based frontend clients. Authentication is not currently present in the architecture, so that will be a net-new capability.
+This repository is a brownfield monorepo with a Spring Boot backend and a React SPA frontend. The codebase already contains domain areas for dashboard, students, parents, employees, and events, plus generated OpenAPI-based frontend clients. Authentication is now present for internal staff through server-managed sessions and protected SPA/API routes, providing the secured base for the next hardening phases.
 
 The immediate product user is the school secretary/administrator. Future milestones are expected to open access to teachers, parents, students, and other school employees once the operational core is stable.
 
@@ -58,6 +58,7 @@ The immediate product user is the school secretary/administrator. Future milesto
 | Treat finance in v1 as basic internal tracking, not a full billing platform | The immediate pain is lack of visibility and control, not advanced invoicing infrastructure | - Pending |
 | Keep the first dashboard focused on both operational and financial snapshot data | Daily decision-making needs both school activity visibility and overdue/payment visibility | - Pending |
 | Defer teacher, parent, and student access | Multi-role access would expand scope before the core administration workflow is stable | - Pending |
+| Use Spring Security server-managed sessions instead of JWT | Immediate logout and browser refresh persistence matter more than token portability for this internal SPA | Implemented in Phase 1 |
 
 ## Evolution
 
@@ -77,4 +78,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-17 after initialization*
+*Last updated: 2026-04-19 after Phase 1*
