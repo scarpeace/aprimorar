@@ -31,10 +31,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Unauthenticated visitor cannot open dashboard, student, parent, employee, event, or finance workflows directly.
 **Plans**: 4 plans
 Plans:
-- [ ] 01-01-PLAN.md — Create Spring Security session auth, internal-user persistence, and protected backend routes.
-- [ ] 01-02-PLAN.md — Regenerate auth contracts and build the frontend login/bootstrap infrastructure.
-- [ ] 01-03-PLAN.md — Wire protected routing and logout UX across the SPA.
-- [ ] 01-04-PLAN.md — Restore auth client bootstrap and real session-backed refresh/logout behavior after UAT gaps.
+- [x] 01-01-PLAN.md — Create Spring Security session auth, internal-user persistence, and protected backend routes.
+- [x] 01-02-PLAN.md — Regenerate auth contracts and build the frontend login/bootstrap infrastructure.
+- [x] 01-03-PLAN.md — Wire protected routing and logout UX across the SPA.
+- [x] 01-04-PLAN.md — Restore auth client bootstrap and real session-backed refresh/logout behavior after UAT gaps.
 **UI hint**: yes
 
 ### Phase 2: Student & Parent Registry Hardening
