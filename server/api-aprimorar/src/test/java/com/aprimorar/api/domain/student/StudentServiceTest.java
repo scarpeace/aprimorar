@@ -18,6 +18,7 @@ import com.aprimorar.api.domain.parent.repository.ParentRepository;
 import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponsibleSummaryDTO;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
@@ -517,9 +518,10 @@ class StudentServiceTest {
             15,
             new AddressResponseDTO("Rua A", "Centro", "Brasília", BrazilianStates.DF, "70000-000", "Casa"),
             PARENT_ID,
+            responsibleSummary(),
             null,
-            CREATED_AT,
-            UPDATED_AT
+            UPDATED_AT,
+            CREATED_AT
         );
     }
 
@@ -535,9 +537,10 @@ class StudentServiceTest {
             14,
             new AddressResponseDTO("Rua B", "Asa Sul", "Brasília", BrazilianStates.DF, "70200-000", "Apto 101"),
             PARENT_ID,
+            responsibleSummary(),
             null,
-            CREATED_AT,
-            UPDATED_AT
+            UPDATED_AT,
+            CREATED_AT
         );
     }
 
@@ -553,9 +556,14 @@ class StudentServiceTest {
             13,
             new AddressResponseDTO("Rua B", "Asa Sul", "Brasília", BrazilianStates.DF, "70200-000", "Apto 101"),
             PARENT_ID,
+            responsibleSummary(),
             null,
-            CREATED_AT,
-            UPDATED_AT
+            UPDATED_AT,
+            CREATED_AT
         );
+    }
+
+    private static StudentResponsibleSummaryDTO responsibleSummary() {
+        return new StudentResponsibleSummaryDTO(PARENT_ID, "Maria Silva", "61977777777", "98765432100");
     }
 }

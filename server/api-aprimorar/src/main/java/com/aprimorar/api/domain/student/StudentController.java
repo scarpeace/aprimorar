@@ -60,7 +60,7 @@ public class StudentController {
     }
 
     @GetMapping("/parent/{parentId}")
-    @Operation(operationId = "getStudentsByParent", description = "Retorna uma lista de alunos pelo ID do pai.")
+    @Operation(operationId = "getStudentsByParent", description = "Retorna uma lista de alunos pelo ID do responsável.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
     public ResponseEntity<PageDTO<StudentResponseDTO>> getStudentsByParent(
         @PathVariable UUID parentId,

@@ -110,6 +110,7 @@ public class StudentService {
             .toList();
     }
 
+    @Transactional(readOnly = true)
     public PageDTO<StudentResponseDTO> getStudentsByParent(UUID parentId, Pageable pageable) {
         Page<Student> studentPage = studentRepo.findAllByParentId(parentId, pageable);
         Page<StudentResponseDTO> studentsDtoPage = studentPage.map(studentMapper::convertToDto);
@@ -196,6 +197,10 @@ public class StudentService {
     }
 
     private Parent findParentOrThrow(UUID parentId) {
+        if (parentId == null) {
+            throw new IllegalArgumentException("Responsável do aluno é obrigatório.");
+        }
+
         return parentRepo
             .findById(parentId)
             .orElseThrow(() -> new IllegalArgumentException("Responsável não encontrado."));

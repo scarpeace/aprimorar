@@ -45,6 +45,6 @@ public record StudentRequestDTO(
 
     //TODO: Mover os @Valid para essa camada do DTO?
     @NotNull(message = "Responsável do aluno é obrigatório")
-    @Schema(nullable = false,description = "ID do responsável do aluno")
+    @Schema(nullable = false,description = "ID do responsável atual do aluno")
     UUID parentId
 ) {}
