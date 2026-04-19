@@ -40,6 +40,7 @@ export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
 export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
+export type { StudentResponsibleSummaryDTO } from "./StudentResponsibleSummaryDTO.ts";
 export type {
   Login200,
   LoginMutation,

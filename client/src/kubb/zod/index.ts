@@ -193,3 +193,4 @@ export {
 export { studentOptionsDTOSchema } from "./studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
+export { studentResponsibleSummaryDTOSchema } from "./studentResponsibleSummaryDTOSchema.ts";

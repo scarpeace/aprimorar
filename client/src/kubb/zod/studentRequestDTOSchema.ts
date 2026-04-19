@@ -20,6 +20,6 @@ export const studentRequestDTOSchema = z
     get address() {
       return addressRequestDTOSchema.describe("Endereço do aluno");
     },
-    parentId: z.uuid().describe("ID do responsável do aluno"),
+    parentId: z.uuid().describe("ID do responsável atual do aluno"),
   })
   .describe("Formato de payload para o cadastro de um aluno");

@@ -75,6 +75,7 @@ export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
 export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
+export type { StudentResponsibleSummaryDTO } from "./types/StudentResponsibleSummaryDTO.ts";
 export type {
   Login200,
   LoginMutation,
@@ -625,3 +626,4 @@ export {
 export { studentOptionsDTOSchema } from "./zod/studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./zod/studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./zod/studentResponseDTOSchema.ts";
+export { studentResponsibleSummaryDTOSchema } from "./zod/studentResponsibleSummaryDTOSchema.ts";

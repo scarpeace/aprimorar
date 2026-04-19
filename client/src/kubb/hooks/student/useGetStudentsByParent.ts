@@ -36,7 +36,7 @@ export type GetStudentsByParentQueryKey = ReturnType<
 >;
 
 /**
- * @description Retorna uma lista de alunos pelo ID do pai.
+ * @description Retorna uma lista de alunos pelo ID do responsável.
  * {@link /v1/students/parent/:parentId}
  */
 export async function getStudentsByParent(
@@ -84,7 +84,7 @@ export function getStudentsByParentQueryOptions(
 }
 
 /**
- * @description Retorna uma lista de alunos pelo ID do pai.
+ * @description Retorna uma lista de alunos pelo ID do responsável.
  * {@link /v1/students/parent/:parentId}
  */
 export function useGetStudentsByParent<
