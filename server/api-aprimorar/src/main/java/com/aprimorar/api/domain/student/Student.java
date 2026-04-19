@@ -19,6 +19,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Student extends BaseEntity {
 
+    private static final String REQUIRED_PARENT_MESSAGE = "O estudante deve ter exatamente um responsável";
+
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -154,6 +156,12 @@ public class Student extends BaseEntity {
         setAddress(address);
     }
 
+    private void validateParent(Parent parent) {
+        if (parent == null) {
+            throw new InvalidStudentException(REQUIRED_PARENT_MESSAGE);
+        }
+    }
+
     private void validateRequiredFields(
         String name,
         String contact,
@@ -178,9 +186,7 @@ public class Student extends BaseEntity {
         if (school == null || school.isBlank()) {
             throw new InvalidStudentException("Escola do estudante não pode estar vazio");
         }
-        if (parent == null) {
-            throw new InvalidStudentException("O ID do responsável não pode ser nulo");
-        }
+        validateParent(parent);
         if (address == null) {
             throw new InvalidStudentException("O endereço do aluno não pode ser nulo");
         }
