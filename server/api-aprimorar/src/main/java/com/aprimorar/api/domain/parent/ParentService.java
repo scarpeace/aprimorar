@@ -103,6 +103,7 @@ public class ParentService {
     @Transactional
     public void archiveParent(UUID id) {
         Parent parent = findParentOrThrow(id);
+        ensureParentHasNoActiveStudents(id, "arquivar");
         parent.setArchivedAt(Instant.now());
         log.info("Responsável {} arquivado com sucesso.", parent.getName().toUpperCase());
     }
@@ -117,7 +118,7 @@ public class ParentService {
     @Transactional
     public void deleteParent(UUID id) {
         Parent parent = findParentOrThrow(id);
-        ensureParentHasNoStudents(id);
+        ensureParentHasNoActiveStudents(id, "excluir");
         parentRepo.delete(parent);
         log.info("Responsável {} deletado com sucesso.", parent.getName().toUpperCase());
     }
@@ -129,10 +130,10 @@ public class ParentService {
             .orElseThrow(() -> new ParentNotFoundException("Responsável não encontrado no banco de dados"));
     }
 
-    private void ensureParentHasNoStudents(UUID parentId) {
-        if (studentRepo.existsByParentId(parentId)) {
+    private void ensureParentHasNoActiveStudents(UUID parentId, String action) {
+        if (studentRepo.existsByParentIdAndArchivedAtIsNull(parentId)) {
             throw new ParentHasLinkedStudentsException(
-                "Não é possível excluir um responsável com alunos vinculados. Primeiro, exclua os alunos vinculados e tente novamente."
+                "Não é possível %s um responsável com alunos ativos vinculados.".formatted(action)
             );
         }
     }

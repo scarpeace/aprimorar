@@ -265,12 +265,14 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
+            when(studentRepo.existsByParentIdAndArchivedAtIsNull(input)).thenReturn(false);
             // Act
             parentService.archiveParent(input);
 
             // Assert
             assertThat(expected.getArchivedAt()).isNotNull();
             verify(parentRepo).findById(input);
+            verify(studentRepo).existsByParentIdAndArchivedAtIsNull(input);
         }
 
         @Test
@@ -281,7 +283,7 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
-            when(studentRepo.existsByParentId(input)).thenReturn(true);
+            when(studentRepo.existsByParentIdAndArchivedAtIsNull(input)).thenReturn(true);
 
             // Act + Assert
             assertThatThrownBy(() -> parentService.archiveParent(input))
@@ -289,7 +291,7 @@ class ParentServiceTest {
                     .hasMessage("Não é possível arquivar um responsável com alunos ativos vinculados.");
 
             verify(parentRepo).findById(input);
-            verify(studentRepo).existsByParentId(input);
+            verify(studentRepo).existsByParentIdAndArchivedAtIsNull(input);
         }
 
         @Test
@@ -318,14 +320,14 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
-            when(studentRepo.existsByParentId(input)).thenReturn(false);
+            when(studentRepo.existsByParentIdAndArchivedAtIsNull(input)).thenReturn(false);
 
             // Act
             parentService.deleteParent(input);
 
             // Assert
             verify(parentRepo).findById(input);
-            verify(studentRepo).existsByParentId(input);
+            verify(studentRepo).existsByParentIdAndArchivedAtIsNull(input);
             verify((org.springframework.data.repository.CrudRepository<Parent, java.util.UUID>) parentRepo).delete((Parent) expected);
         }
 
@@ -337,7 +339,7 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
-            when(studentRepo.existsByParentId(input)).thenReturn(true);
+            when(studentRepo.existsByParentIdAndArchivedAtIsNull(input)).thenReturn(true);
 
             // Act + Assert
             assertThatThrownBy(() -> parentService.deleteParent(input))
@@ -345,7 +347,7 @@ class ParentServiceTest {
                     .hasMessage("Não é possível excluir um responsável com alunos ativos vinculados.");
 
             verify(parentRepo).findById(input);
-            verify(studentRepo).existsByParentId(input);
+            verify(studentRepo).existsByParentIdAndArchivedAtIsNull(input);
             verify((org.springframework.data.repository.CrudRepository<Parent, java.util.UUID>) parentRepo, never()).delete(any());
         }
 
