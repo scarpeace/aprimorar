@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 02-04-PLAN.md
-last_updated: "2026-04-20T12:02:05.079Z"
+status: verifying
+stopped_at: Completed 02-05-PLAN.md
+last_updated: "2026-04-20T12:34:51.869Z"
 last_activity: 2026-04-20
 progress:
   total_phases: 5
-  completed_phases: 2
-  total_plans: 8
-  completed_plans: 8
-  percent: 100
+  completed_phases: 1
+  total_plans: 11
+  completed_plans: 9
+  percent: 82
 ---
 
 # Project State
@@ -25,18 +25,18 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: 02 (student-parent-registry-hardening) — COMPLETE
-Plan: 4 of 4
-Status: Completed
+Phase: 02 (student-parent-registry-hardening) — IN PROGRESS
+Plan: 5 of 7
+Status: Verifying
 Last activity: 2026-04-20
 
-Progress: [██████████] 100%
+Progress: [████████░░] 82%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 4
+- Total plans completed: 9
 - Average duration: 0 min
 - Total execution time: 0.0 hours
 
@@ -58,6 +58,7 @@ Progress: [██████████] 100%
 | Phase 02 P01 | 4 min | 2 tasks | 3 files |
 | Phase 02 P02 | 19 min | 3 tasks | 22 files |
 | Phase 02 P04 | 20 min | 2 tasks | 8 files |
+| Phase 02-student-parent-registry-hardening P05 | 5 min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Block responsável archive/delete only when active students still reference the record so archived history remains intact.
 - [Phase 02]: Use Responsável as the primary user-facing term across parent CRUD screens while preserving the existing contact-only data model.
 - [Phase 02]: Show linked-student context on the responsible detail page and route archive/delete failures through shared Portuguese toast messaging.
+- [Phase 02-student-parent-registry-hardening]: Treat archived=false and archived omission as the same active-list path so archived student data is not disclosed by default.
+- [Phase 02-student-parent-registry-hardening]: Extend the existing student search specification directly with CPF matching instead of adding a separate filter path.
 
 ### Pending Todos
 
@@ -105,6 +108,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-04-20T12:02:05.075Z
-Stopped at: Completed 02-04-PLAN.md
+Last session: 2026-04-20T12:34:34.968Z
+Stopped at: Completed 02-05-PLAN.md
 Resume file: None
