@@ -99,7 +99,7 @@ Phases execute in numeric order: 2 → 2.1 → 2.2 → 3 → 3.1 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Authentication & Protected Access | 4/4 | Complete   | 2026-04-18 |
-| 2. Student & Parent Registry Hardening | 5/7 | In progress | - |
+| 2. Student & Parent Registry Hardening | 6/7 | In progress | - |
 | 3. Employee & Event Operations Hardening | 0/3 | Not started | - |
 | 4. Finance Tracking Core | 0/3 | Not started | - |
 | 5. Unified Daily Dashboard | 0/2 | Not started | - |
