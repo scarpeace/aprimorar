@@ -9,6 +9,7 @@ import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { ArchiveParentButton } from "@/features/parents/components/ArchiveParentButton";
 import { DeleteParentButton } from "@/features/parents/components/DeleteParentButton";
+import { getActiveLinkedStudentsCount } from "@/features/parents/utils/getActiveLinkedStudentsCount";
 import { StudentsTable } from "@/features/students/components/StudentsTable";
 import { useGetParentById, useGetStudentsByParent } from "@/kubb";
 import {
@@ -24,28 +25,70 @@ export function ParentDetailPage() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const parentQuery = useGetParentById(parentId);
+  const linkedStudentsMetaQuery = useGetStudentsByParent(parentId, {
+    page: 0,
+    size: 1,
+  });
   const parentStudentsQuery = useGetStudentsByParent(parentId, {
     page: currentPage,
   });
-  const linkedStudentsCount = parentStudentsQuery.data?.totalElements ?? 0;
-  const hasLinkedStudents = linkedStudentsCount > 0;
+  const linkedStudentsCount = linkedStudentsMetaQuery.data?.totalElements ?? 0;
+  const linkedStudentsSummaryQuery = useGetStudentsByParent(
+    parentId,
+    {
+      page: 0,
+      size: linkedStudentsCount,
+    },
+    {
+      query: {
+        enabled: !!parentId && linkedStudentsCount > 0,
+      },
+    },
+  );
+  const activeLinkedStudentsCount = getActiveLinkedStudentsCount(
+    linkedStudentsSummaryQuery.data,
+  );
+  const archivedLinkedStudentsCount = Math.max(
+    linkedStudentsCount - activeLinkedStudentsCount,
+    0,
+  );
+  const hasActiveLinkedStudents = activeLinkedStudentsCount > 0;
+  const hasArchivedLinkedStudents = archivedLinkedStudentsCount > 0;
 
   const headerProps = {
-    description: "Veja os dados do responsável e os vínculos atuais com alunos.",
+    description: "Veja os dados do responsável, os vínculos ativos e o histórico arquivado com alunos.",
     title: "Detalhes do Responsável",
     Icon: Handshake,
     backLink: "/parents",
   };
 
-  if (parentQuery.isError || parentStudentsQuery.isError) {
+  if (
+    parentQuery.isError ||
+    parentStudentsQuery.isError ||
+    linkedStudentsMetaQuery.isError ||
+    linkedStudentsSummaryQuery.isError
+  ) {
     return (
       <PageLayout {...headerProps}>
-        <ErrorCard title="Erro ao carregar responsável" error={parentQuery.error || parentStudentsQuery.error} />
+        <ErrorCard
+          title="Erro ao carregar responsável"
+          error={
+            parentQuery.error ||
+            parentStudentsQuery.error ||
+            linkedStudentsMetaQuery.error ||
+            linkedStudentsSummaryQuery.error
+          }
+        />
       </PageLayout>
     );
   }
 
-  if (parentQuery.isPending || parentStudentsQuery.isPending) {
+  if (
+    parentQuery.isPending ||
+    parentStudentsQuery.isPending ||
+    linkedStudentsMetaQuery.isPending ||
+    linkedStudentsSummaryQuery.isPending
+  ) {
     return (
       <PageLayout {...headerProps}>
         <LoadingCard title="Carregando dados do responsável" />
@@ -96,15 +139,17 @@ export function ParentDetailPage() {
           </div>
 
           <div className="rounded-xl border border-base-300 bg-base-200/60 p-4 text-sm text-base-content/80">
-            {hasLinkedStudents
-              ? `Este responsável possui ${linkedStudentsCount} aluno(s) vinculado(s). Enquanto houver vínculo ativo, ações de arquivar ou excluir podem ser bloqueadas para preservar a integridade do cadastro.`
-              : "Este responsável não possui alunos vinculados no momento. O cadastro continua válido mesmo sem vínculo ativo."}
+            {hasActiveLinkedStudents
+              ? `Este responsável possui ${activeLinkedStudentsCount} aluno(s) ativo(s) vinculado(s). Enquanto esses vínculos estiverem ativos, ações de arquivar ou excluir podem ser bloqueadas para preservar a integridade do cadastro.`
+              : hasArchivedLinkedStudents
+                ? `Este responsável não possui vínculos ativos no momento, mas mantém ${archivedLinkedStudentsCount} aluno(s) apenas no histórico arquivado. Esse histórico continua disponível para consulta e não bloqueia a exclusão.`
+                : "Este responsável não possui alunos vinculados no momento. O cadastro continua válido mesmo sem vínculo ativo."}
           </div>
         </SectionCard>
 
         <SectionCard
           title="Alunos vinculados"
-          description="Relação atual de alunos associados a este responsável."
+          description="Relação de alunos ativos e histórico arquivado associados a este responsável."
         >
           <StudentsTable
             students={parentStudentsQuery.data}
