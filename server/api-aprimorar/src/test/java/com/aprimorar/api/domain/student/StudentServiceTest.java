@@ -30,10 +30,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Root;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -333,6 +338,53 @@ class StudentServiceTest {
         }
 
         @Test
+        @DisplayName("should exclude archived students by default when archived filter is false")
+        void shouldExcludeArchivedStudentsByDefaultWhenArchivedFilterIsFalse() {
+            Pageable input = PageRequest.of(0, 2);
+            Page<Student> expectedPage = new PageImpl<>(List.of(student()), input, 1);
+
+            when(studentRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
+            when(studentMapper.convertToDto(any(Student.class))).thenReturn(response());
+
+            studentService.getStudents(input, null, false);
+
+            Specification<Student> specification = captureStudentListSpecification(input);
+            assertUsesArchivedFlag(specification, false);
+        }
+
+        @Test
+        @DisplayName("should exclude archived students by default when archived filter is omitted")
+        void shouldExcludeArchivedStudentsByDefaultWhenArchivedFilterIsOmitted() {
+            Pageable input = PageRequest.of(0, 2);
+            Page<Student> expectedPage = new PageImpl<>(List.of(student()), input, 1);
+
+            when(studentRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
+            when(studentMapper.convertToDto(any(Student.class))).thenReturn(response());
+
+            studentService.getStudents(input, null, null);
+
+            Specification<Student> specification = captureStudentListSpecification(input);
+            assertUsesArchivedFlag(specification, false);
+        }
+
+        @Test
+        @DisplayName("should return archived students when archived filter is true")
+        void shouldReturnArchivedStudentsWhenArchivedFilterIsTrue() {
+            Pageable input = PageRequest.of(0, 2);
+            Student archivedStudent = student();
+            archivedStudent.setArchivedAt(ARCHIVED_AT);
+            Page<Student> expectedPage = new PageImpl<>(List.of(archivedStudent), input, 1);
+
+            when(studentRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
+            when(studentMapper.convertToDto(any(Student.class))).thenReturn(response());
+
+            studentService.getStudents(input, null, true);
+
+            Specification<Student> specification = captureStudentListSpecification(input);
+            assertUsesArchivedFlag(specification, true);
+        }
+
+        @Test
         @DisplayName("should return student by id")
         void shouldReturnStudentById() {
             Student input = student();
@@ -565,5 +617,38 @@ class StudentServiceTest {
 
     private static StudentResponsibleSummaryDTO responsibleSummary() {
         return new StudentResponsibleSummaryDTO(PARENT_ID, "Maria Silva", "61977777777", "98765432100");
+    }
+
+    @SuppressWarnings("unchecked")
+    private Specification<Student> captureStudentListSpecification(Pageable pageable) {
+        ArgumentCaptor<Specification<Student>> specificationCaptor = ArgumentCaptor.forClass(Specification.class);
+        verify(studentRepo).findAll(specificationCaptor.capture(), eq(pageable));
+        return specificationCaptor.getValue();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void assertUsesArchivedFlag(Specification<Student> specification, boolean archivedOnly) {
+        Root<Student> root = org.mockito.Mockito.mock(Root.class);
+        CriteriaQuery<?> query = org.mockito.Mockito.mock(CriteriaQuery.class);
+        CriteriaBuilder criteriaBuilder = org.mockito.Mockito.mock(CriteriaBuilder.class);
+        Path<Object> idPath = org.mockito.Mockito.mock(Path.class);
+        Path<Instant> archivedAtPath = org.mockito.Mockito.mock(Path.class);
+        when(root.get("id")).thenReturn(idPath);
+        when(root.<Instant>get("archivedAt")).thenReturn(archivedAtPath);
+        when(criteriaBuilder.notEqual(idPath, GHOST_STUDENT_ID)).thenReturn(org.mockito.Mockito.mock(jakarta.persistence.criteria.Predicate.class));
+
+        if (archivedOnly) {
+            when(criteriaBuilder.isNotNull(archivedAtPath)).thenReturn(org.mockito.Mockito.mock(jakarta.persistence.criteria.Predicate.class));
+        } else {
+            when(criteriaBuilder.isNull(archivedAtPath)).thenReturn(org.mockito.Mockito.mock(jakarta.persistence.criteria.Predicate.class));
+        }
+
+        specification.toPredicate(root, query, criteriaBuilder);
+
+        if (archivedOnly) {
+            verify(criteriaBuilder).isNotNull(archivedAtPath);
+        } else {
+            verify(criteriaBuilder).isNull(archivedAtPath);
+        }
     }
 }
