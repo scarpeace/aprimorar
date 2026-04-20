@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-04-19T15:09:34.741Z"
-last_activity: 2026-04-19
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-04-20T12:02:05.079Z"
+last_activity: 2026-04-20
 progress:
   total_phases: 5
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 8
-  completed_plans: 6
-  percent: 75
+  completed_plans: 8
+  percent: 100
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-04-19)
 
 ## Current Position
 
-Phase: 02 (student-parent-registry-hardening) — EXECUTING
-Plan: 3 of 4
-Status: Ready to execute
-Last activity: 2026-04-19
+Phase: 02 (student-parent-registry-hardening) — COMPLETE
+Plan: 4 of 4
+Status: Completed
+Last activity: 2026-04-20
 
-Progress: [████████░░] 75%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Progress: [████████░░] 75%
 | Phase 01-authentication-protected-access P04 | 1min | 2 tasks | 3 files |
 | Phase 02 P01 | 4 min | 2 tasks | 3 files |
 | Phase 02 P02 | 19 min | 3 tasks | 22 files |
+| Phase 02 P04 | 20 min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Use repository-level EntityGraph annotations so student reads load the linked responsável intentionally.
 - [Phase 02]: Embed StudentResponsibleSummaryDTO in student read responses while preserving parentId as the only write-side linkage.
 - [Phase 02]: Block responsável archive/delete only when active students still reference the record so archived history remains intact.
+- [Phase 02]: Use Responsável as the primary user-facing term across parent CRUD screens while preserving the existing contact-only data model.
+- [Phase 02]: Show linked-student context on the responsible detail page and route archive/delete failures through shared Portuguese toast messaging.
 
 ### Pending Todos
 
@@ -102,6 +105,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-04-19T15:09:34.737Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-04-20T12:02:05.075Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None

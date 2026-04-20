@@ -23,7 +23,7 @@ Requirements for the initial secretary/administrator-focused release. Existing b
 
 ### Parents
 
-- [ ] **PARN-01**: Secretary can create a parent or responsible-party record with billing and contact data
+- [x] **PARN-01**: Secretary can create a parent or responsible-party record with billing and contact data
 - [x] **PARN-02**: Secretary can view and update an existing parent or responsible-party record
 - [x] **PARN-03**: Secretary can archive a parent or responsible-party record without breaking linked records
 - [x] **PARN-04**: Secretary can link the correct responsible party to a student and preserve that relationship consistently
@@ -103,7 +103,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | STUD-02 | Phase 2 | Complete |
 | STUD-03 | Phase 2 | Complete |
 | STUD-04 | Phase 2 | Complete |
-| PARN-01 | Phase 2 | Pending |
+| PARN-01 | Phase 2 | Complete |
 | PARN-02 | Phase 2 | Complete |
 | PARN-03 | Phase 2 | Complete |
 | PARN-04 | Phase 2 | Complete |

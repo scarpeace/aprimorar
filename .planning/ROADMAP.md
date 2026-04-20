@@ -50,7 +50,7 @@ Plans:
 Plans:
 - [ ] 02-01-PLAN.md — Harden the existing single-responsável backend invariants and fetch paths without changing the relationship model.
 - [ ] 02-02-PLAN.md — Update student/responsável backend contracts, lifecycle rules, and generated API clients around the current single-responsável flow.
-- [ ] 02-03-PLAN.md — Refine student create/edit/detail/list flows around the existing single-responsável registration experience.
+- [x] 02-03-PLAN.md — Refine student create/edit/detail/list flows around the existing single-responsável registration experience.
 - [ ] 02-04-PLAN.md — Harden responsável CRUD/detail/archive screens and terminology while preserving one responsável to many students.
 **UI hint**: yes
 
@@ -96,7 +96,7 @@ Phases execute in numeric order: 2 → 2.1 → 2.2 → 3 → 3.1 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Authentication & Protected Access | 4/4 | Complete   | 2026-04-18 |
-| 2. Student & Parent Registry Hardening | 2/4 | In Progress|  |
+| 2. Student & Parent Registry Hardening | 4/4 | Complete | 2026-04-20 |
 | 3. Employee & Event Operations Hardening | 0/3 | Not started | - |
 | 4. Finance Tracking Core | 0/3 | Not started | - |
 | 5. Unified Daily Dashboard | 0/2 | Not started | - |
