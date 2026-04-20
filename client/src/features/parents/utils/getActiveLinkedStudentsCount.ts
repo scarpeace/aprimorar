@@ -1,7 +1,10 @@
-import type { PageDTOStudentResponseDTO, StudentResponseDTO } from "@/kubb";
+type LinkedStudentSummary = {
+  archivedAt?: string | null;
+} & Record<string, unknown>;
 
-type LinkedStudentsPage = Pick<PageDTOStudentResponseDTO, "content"> | null | undefined;
-type LinkedStudentSummary = Pick<StudentResponseDTO, "archivedAt">;
+type LinkedStudentsPage = {
+  content: LinkedStudentSummary[];
+} | null | undefined;
 
 export function getActiveLinkedStudentsCount(linkedStudentsPage: LinkedStudentsPage) {
   return (linkedStudentsPage?.content ?? []).filter(

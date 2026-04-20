@@ -7,6 +7,7 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { SectionCard } from "@/components/ui/section-card";
 import { employeeRequestDTODutyEnum } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
   employeeFormSchema,
   type EmployeeFormSchema,
@@ -46,7 +47,12 @@ export function EmployeeCreatePage() {
         title="Dados do colaborador"
         description="Preencha as informações abaixo para criar o cadastro."
       >
-        {createEmployee.isError && (<Alert error={createEmployee.error} variant="error" />)}
+        {createEmployee.isError && (
+          <Alert
+            error={getFriendlyErrorMessage(createEmployee.error)}
+            variant="error"
+          />
+        )}
 
         <form
           className="flex flex-col gap-3"

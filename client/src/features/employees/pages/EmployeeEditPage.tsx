@@ -5,6 +5,7 @@ import { LoadingCard } from "@/components/ui/loading-card";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { SectionCard } from "@/components/ui/section-card";
 import { useGetEmployeeById } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { formatDateInputValue } from "@/lib/utils/formatter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileUser, TriangleAlert } from "lucide-react";
@@ -82,7 +83,10 @@ export function EmployeeEditPage() {
         description="Atualize os dados do colaborador."
       >
         {updateEmployee.isError && (
-          <Alert error={updateEmployee.error} variant="error" />
+          <Alert
+            error={getFriendlyErrorMessage(updateEmployee.error)}
+            variant="error"
+          />
         )}
 
         <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">

@@ -5,6 +5,7 @@ import { LoadingCard } from "@/components/ui/loading-card";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { SectionCard } from "@/components/ui/section-card";
 import { useGetParentById } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Handshake, TriangleAlert } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -75,7 +76,10 @@ export function ParentEditPage() {
         description="Revise e atualize os dados de contato do responsável."
       >
         {updateParent.isError && (
-          <Alert error={updateParent.error} variant="error" />
+          <Alert
+            error={getFriendlyErrorMessage(updateParent.error)}
+            variant="error"
+          />
         )}
 
         <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">

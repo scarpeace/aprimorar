@@ -84,22 +84,6 @@ export function Fields({ errors, register }: FieldsProps) {
       </fieldset>
 
       <fieldset className="fieldset">
-        <legend className="fieldset-legend">Título</legend>
-        <input
-          type="text"
-          className="input"
-          placeholder="Ex: Aula de matemática"
-          {...register("title")}
-        />
-        {errors?.title && (
-          <p className="label text-error">
-            <TriangleAlert className="w-3 h-3" />
-            {errors.title.message}
-          </p>
-        )}
-      </fieldset>
-
-      <fieldset className="fieldset">
         <legend className="fieldset-legend">Preço (receita)</legend>
         <input
           type="number"

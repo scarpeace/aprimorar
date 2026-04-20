@@ -2,6 +2,7 @@ import { Alert } from "@/components/ui/alert";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { SectionCard } from "@/components/ui/section-card";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Handshake, TriangleAlert } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -43,7 +44,10 @@ export function ParentCreatePage() {
         description="Informe os dados principais do responsável."
       >
         {createParent.error && (
-          <Alert error={createParent.error} variant="error" />
+          <Alert
+            error={getFriendlyErrorMessage(createParent.error)}
+            variant="error"
+          />
         )}
 
         <form

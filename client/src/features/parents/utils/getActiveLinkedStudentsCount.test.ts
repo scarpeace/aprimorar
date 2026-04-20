@@ -6,10 +6,6 @@ import { getActiveLinkedStudentsCount } from "./getActiveLinkedStudentsCount";
 describe("getActiveLinkedStudentsCount", () => {
   it("returns zero when all linked students are archived", () => {
     const result = getActiveLinkedStudentsCount({
-      page: 0,
-      size: 10,
-      totalElements: 2,
-      totalPages: 1,
       content: [
         {
           id: "student-1",
@@ -29,10 +25,6 @@ describe("getActiveLinkedStudentsCount", () => {
 
   it("counts only active linked students when the page mixes active and archived records", () => {
     const result = getActiveLinkedStudentsCount({
-      page: 0,
-      size: 10,
-      totalElements: 4,
-      totalPages: 1,
       content: [
         {
           id: "student-1",
@@ -63,10 +55,6 @@ describe("getActiveLinkedStudentsCount", () => {
     assert.equal(getActiveLinkedStudentsCount(undefined), 0);
     assert.equal(
       getActiveLinkedStudentsCount({
-        page: 0,
-        size: 10,
-        totalElements: 0,
-        totalPages: 0,
         content: [],
       }),
       0,
