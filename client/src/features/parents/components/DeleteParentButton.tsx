@@ -94,8 +94,6 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
         <Trash2 className="h-4 w-4" />
         {isDeleting ? "Excluindo..." : "Excluir"}
       </Button>
-
-      {/*TODO: esse modal tem que ser mais genérico*/}
       <DeleteConfirmationModal
         isOpen={isOpen}
         onClose={handleClose}
