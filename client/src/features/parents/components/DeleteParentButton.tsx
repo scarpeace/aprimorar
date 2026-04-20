@@ -19,6 +19,8 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
     data: parentStudents,
     isLoading: isParentStudentsLoading,
   } = useGetStudentsByParent(parentId);
+  const linkedStudentsCount = parentStudents?.totalElements ?? 0;
+  const hasLinkedStudents = linkedStudentsCount > 0;
 
   const handleOpenClick = () => {
     setIsOpen(true);
@@ -59,21 +61,17 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
         isOpen={isOpen}
         onClose={handleClose}
         onConfirm={handleConfirmDelete}
-        title="Excluir Aluno"
+        title="Excluir responsável"
         isItemPending={isDeleting}
         isItemLoading={isParentStudentsLoading}
-        itemDeleteCount={parentStudents?.totalElements}
+        itemDeleteCount={linkedStudentsCount}
         itemName="responsável"
+        isBlocker={hasLinkedStudents}
         phantomWarning={
           <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
-            Se o seu responsável tiver alunos vinculados não será possível
-            excluí-lo,
-            <strong>
-              {" "}
-              primeiro exclua os alunos vinculados, em seguida volte e exclua o
-              responsável
-            </strong>{" "}
-            para manter a consistência do banco de dados e histórico do sistema.
+            Não é possível excluir este responsável enquanto houver alunos ativos
+            vinculados. Para manter a integridade do cadastro, atualize ou
+            arquive os alunos relacionados antes de tentar novamente.
           </div>
         }
       />

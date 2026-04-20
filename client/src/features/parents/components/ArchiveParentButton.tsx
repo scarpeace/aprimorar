@@ -2,9 +2,7 @@ import { Button } from "@/components/ui/button";
 import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
 import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
 import { useState } from "react";
-import {
-    useParentMutations
-} from "../hooks/parent-mutations";
+import { useParentMutations } from "../hooks/parent-mutations";
 
 type ArchiveParentButtonProps = {
   parentId: string;
@@ -49,10 +47,14 @@ export const ArchiveParentButton = ({
   }
 
   if (showConfirm) {
+    const message = isArchived
+      ? "Deseja mesmo desarquivar o responsável?"
+      : "Deseja mesmo arquivar o responsável? A ação será bloqueada se houver alunos ativos vinculados.";
+
     return (
       <InlineConfirmAlert
         variant={isArchived ? "info" : "warning"}
-        message={`Deseja mesmo ${actionLabel.toLowerCase()} o responsável?`}
+        message={message}
         confirmText="Sim"
         cancelText="Cancelar"
         onConfirm={handleConfirm}

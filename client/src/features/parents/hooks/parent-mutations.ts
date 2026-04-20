@@ -2,12 +2,14 @@ import {
   deleteParentMutationKey,
   getParentByIdQueryKey,
   getParentsQueryKey,
+  getStudentsByParentQueryKey,
   useArchiveParent,
   useCreateParent,
   useDeleteParent,
   useUnarchiveParent,
   useUpdateParent,
 } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -18,8 +20,11 @@ export function useParentMutations() {
 
   const createParent = useCreateParent({
     mutation: {
-      onError: () => {
-        toast.error("Algo deu errado ao criar o responsável");
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao criar o responsável",
+        );
       },
       onSuccess: (createdParent) => {
         toast.success("Responsável criado com sucesso");
@@ -40,8 +45,11 @@ export function useParentMutations() {
         });
         navigate(`/parents/${variables.parentId}`);
       },
-      onError: () => {
-        toast.error("Algo deu errado ao atualizar o responsável");
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao atualizar o responsável",
+        );
       },
     },
   });
@@ -55,8 +63,11 @@ export function useParentMutations() {
         queryClient.invalidateQueries({ queryKey: deleteParentMutationKey() });
         navigate("/parents");
       },
-      onError: () => {
-        toast.error("Algo deu errado ao excluir o responsável");
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao excluir o responsável",
+        );
       },
     },
   });
@@ -69,9 +80,15 @@ export function useParentMutations() {
         queryClient.invalidateQueries({
           queryKey: getParentByIdQueryKey(variables.parentId),
         });
+        queryClient.invalidateQueries({
+          queryKey: getStudentsByParentQueryKey(variables.parentId),
+        });
       },
-      onError: () => {
-        toast.error("Algo deu errado ao arquivar o responsável");
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao arquivar o responsável",
+        );
       },
     },
   });
@@ -84,9 +101,15 @@ export function useParentMutations() {
         queryClient.invalidateQueries({
           queryKey: getParentByIdQueryKey(variables.parentId),
         });
+        queryClient.invalidateQueries({
+          queryKey: getStudentsByParentQueryKey(variables.parentId),
+        });
       },
-      onError: () => {
-        toast.error("Algo deu errado ao desarquivar o responsável");
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao desarquivar o responsável",
+        );
       },
     },
   });
@@ -97,5 +120,5 @@ export function useParentMutations() {
     deleteParent,
     archiveParent,
     unarchiveParent,
-  }
+  };
 }
