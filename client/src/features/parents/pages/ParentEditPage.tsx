@@ -44,7 +44,7 @@ export function ParentEditPage() {
 
   const headerProps = {
     title: "Editar responsável",
-    description: "Atualize os dados do responsável.",
+    description: "Atualize os dados principais do responsável.",
     backLink: `/parents/${parentId}`,
     Icon: Handshake,
   };
@@ -71,8 +71,8 @@ export function ParentEditPage() {
   return (
     <PageLayout {...headerProps}>
       <SectionCard
-        title={"Editar responsável"}
-        description={"Atualize os dados do responsável."}
+        title="Editar responsável"
+        description="Revise e atualize os dados de contato do responsável."
       >
         {updateParent.isError && (
           <Alert error={updateParent.error} variant="error" />

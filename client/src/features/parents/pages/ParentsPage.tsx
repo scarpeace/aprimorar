@@ -20,8 +20,8 @@ export function ParentsPage() {
   });
 
   const headerProps = {
-    description: "Gerencie pais e responsáveis.",
-    title: "Pais e Responsáveis",
+    description: "Gerencie os responsáveis cadastrados no sistema.",
+    title: "Responsáveis",
     Icon: Handshake,
     backLink: "/",
   };
@@ -48,17 +48,17 @@ export function ParentsPage() {
             to="/parents/new"
             variant="success"
           >
-            Novo Responsável
+            Cadastrar responsável
           </ButtonLink>
         </div>
 
-      <ParentsTable
-        parents={parentsQuery.data}
-        isPending={parentsQuery.isPending}
-        error={parentsQuery.error}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-      />
+        <ParentsTable
+          parents={parentsQuery.data}
+          isPending={parentsQuery.isPending}
+          error={parentsQuery.error}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </PageLayout>
   );

@@ -55,7 +55,7 @@ export function ParentsTable({
               Status
             </th>
             <th className="text-left font-semibold text-base-content/80">
-              Ações
+              Detalhes
             </th>
           </tr>
         </thead>
