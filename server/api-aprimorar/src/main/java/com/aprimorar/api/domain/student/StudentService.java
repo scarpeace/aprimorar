@@ -87,6 +87,8 @@ public class StudentService {
 
         if (Boolean.TRUE.equals(archived)) {
             spec = spec.and(StudentSpecifications.archived());
+        } else {
+            spec = spec.and(StudentSpecifications.notArchived());
         }
 
         if (search != null && !search.trim().isEmpty()) {
