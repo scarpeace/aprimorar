@@ -13,8 +13,8 @@ Este roadmap transforma o atual monorepo brownfield de gestão escolar em um sis
 Fases decimais aparecem entre os inteiros circundantes em ordem numérica.
 
 - [x] **Fase 1: Autenticação & Acesso Protegido** - Adicionar login seguro e proteger todos os fluxos de trabalho da secretária/admin. (concluído 18-04-2026)
-- [ ] **Fase 2: Fortalecimento do Registro de Alunos & Responsáveis** - Tornar os fluxos de registro existentes confiáveis o suficiente para substituir as planilhas de alunos/partes responsáveis.
-- [ ] **Fase 3: Fortalecimento das Operações de Funcionários & Eventos** - Refinar os fluxos de funcionários e eventos para operações de agendamento diárias confiáveis.
+- [x] **Fase 2: Fortalecimento do Registro de Alunos & Responsáveis** - Tornar os fluxos de registro existentes confiáveis o suficiente para substituir as planilhas de alunos/partes responsáveis. (concluído 20-04-2026)
+- [x] **Fase 3: Fortalecimento das Operações de Funcionários & Eventos** - Refinar os fluxos de funcionários e eventos para operações de agendamento diárias confiáveis. (concluído 21-04-2026)
 - [ ] **Fase 4: Núcleo de Acompanhamento Financeiro** - Introduzir cobranças, pagamentos e visibilidade simples de saldo para o acompanhamento financeiro interno da escola.
 - [ ] **Fase 5: Dashboard Diário Unificado** - Combinar indicadores operacionais e financeiros em um snapshot diário confiável.
 
@@ -48,13 +48,13 @@ Planos:
   4. A secretária pode encontrar rapidamente o registro do aluno necessário por meio de busca, filtros, paginação e controles de visibilidade de registros arquivados.
 **Planos**: 7 planos
 Planos:
-- [ ] 02-01-PLAN.md — Fortalecer as invariantes existentes de backend para um único responsável e os caminhos de busca sem alterar o modelo de relacionamento.
-- [ ] 02-02-PLAN.md — Atualizar contratos de backend de aluno/responsável, regras de ciclo de vida e clientes de API gerados em torno do fluxo atual de responsável único.
+- [x] 02-01-PLAN.md — Fortalecer as invariantes existentes de backend para um único responsável e os caminhos de busca sem alterar o modelo de relacionamento.
+- [x] 02-02-PLAN.md — Atualizar contratos de backend de aluno/responsável, regras de ciclo de vida e clientes de API gerados em torno do fluxo atual de responsável único.
 - [x] 02-03-PLAN.md — Refinar fluxos de criação/edição/detalhe/lista de alunos em torno da experiência de registro de responsável único existente.
-- [ ] 02-04-PLAN.md — Fortalecer telas e terminologia de CRUD/detalhe/arquivamento de responsáveis, preservando a relação de um responsável para muitos alunos.
-- [ ] 02-05-PLAN.md — Fechar a lacuna semântica de busca por CPF de aluno e alternância de arquivado no fluxo de lista de backend.
-- [ ] 02-06-PLAN.md — Alinhar a UX de detalhe/exclusão de responsável com as regras de integridade de aluno vinculado apenas ativos.
-- [ ] 02-07-PLAN.md — Remover os bloqueadores restantes de build do frontend para que a Fase 2 seja operacionalmente entregável.
+- [x] 02-04-PLAN.md — Fortalecer telas e terminologia de CRUD/detalhe/arquivamento de responsáveis, preservando a relação de um responsável para muitos alunos.
+- [x] 02-05-PLAN.md — Fechar a lacuna semântica de busca por CPF de aluno e alternância de arquivado no fluxo de lista de backend.
+- [x] 02-06-PLAN.md — Alinhar a UX de detalhe/exclusão de responsável com as regras de integridade de aluno vinculado apenas ativos.
+- [x] 02-07-PLAN.md — Remover os bloqueadores restantes de build do frontend para que a Fase 2 seja operacionalmente entregável.
 **Dica de UI**: sim
 
 ### Fase 3: Fortalecimento das Operações de Funcionários & Eventos
@@ -68,10 +68,10 @@ Planos:
   4. A secretária pode abrir telas operacionais que mostram os próximos eventos necessários para o planejamento diário.
 **Planos**: 4 planos
 Planos:
-- [ ] 03-01-PLAN.md — Estabelecer a infraestrutura de status de eventos, descrições de funções e integridade de conflitos no backend.
-- [ ] 03-02-PLAN.md — Expor filtros operacionais e status via API e sincronizar contratos com o frontend (Kubb).
-- [ ] 03-03-PLAN.md — Fortalecer a interface de funcionários com descrições amigáveis dos papéis em português.
-- [ ] 03-04-PLAN.md — Adicionar badges de status, filtros operacionais rápidos e gerenciamento de ciclo de vida na interface de eventos.
+- [x] 03-01-PLAN.md — Estabelecer a infraestrutura de status de eventos, descrições de funções e integridade de conflitos no backend.
+- [x] 03-02-PLAN.md — Expor filtros operacionais e status via API e sincronizar contratos com o frontend (Kubb).
+- [x] 03-03-PLAN.md — Fortalecer a interface de funcionários com descrições amigáveis dos papéis em português.
+- [x] 03-04-PLAN.md — Adicionar badges de status, filtros operacionais rápidos e gerenciamento de ciclo de vida na interface de eventos.
 **Dica de UI**: sim
 
 ### Fase 4: Núcleo de Acompanhamento Financeiro
@@ -104,7 +104,7 @@ As fases são executadas em ordem numérica: 2 → 2.1 → 2.2 → 3 → 3.1 →
 | Fase | Planos Concluídos | Status | Concluído |
 |-------|----------------|--------|-----------|
 | 1. Autenticação & Acesso Protegido | 4/4 | Concluído   | 18-04-2026 |
-| 2. Fortalecimento do Registro de Alunos & Responsáveis | 6/7 | Em progresso | - |
-| 3. Fortalecimento das Operações de Funcionários & Eventos | 0/4 | Não iniciado | - |
+| 2. Fortalecimento do Registro de Alunos & Responsáveis | 7/7 | Concluído | 20-04-2026 |
+| 3. Fortalecimento das Operações de Funcionários & Eventos | 4/4 | Concluído | 21-04-2026 |
 | 4. Núcleo de Acompanhamento Financeiro | 0/3 | Não iniciado | - |
 | 5. Dashboard Diário Unificado | 0/2 | Não iniciado | - |

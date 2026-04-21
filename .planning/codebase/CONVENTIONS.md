@@ -1,108 +1,108 @@
-# Coding Conventions
+# Convenções de Código
 
-**Analysis Date:** 2026-04-17
+**Data da Análise:** 17-04-2026
 
-## Naming Patterns
+## Padrões de Nomenclatura
 
-**Files:**
-- Frontend React pages use `*Page.tsx` under `client/src/features/**/pages/`, for example `client/src/features/students/pages/StudentsPage.tsx` and `client/src/features/events/pages/EventCreatePage.tsx`.
-- Frontend reusable UI files are kebab-case under `client/src/components/ui/`, for example `client/src/components/ui/list-search-input.tsx` and `client/src/components/ui/page-loading.tsx`.
-- Frontend hooks are function-based and usually live in `hooks/` with kebab-case filenames, for example `client/src/features/events/hooks/use-event-mutations.ts` and `client/src/features/students/hooks/student-mutations.ts`.
-- Frontend schemas follow `*Schema.ts` naming, for example `client/src/features/students/forms/studentFormSchema.ts` and `client/src/features/address/forms/addressSchema.ts`.
-- Backend classes, records, and tests use PascalCase in mirrored package paths, for example `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java` and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`.
+**Arquivos:**
+- As páginas React do frontend usam `*Page.tsx` em `client/src/features/**/pages/`, por exemplo, `client/src/features/students/pages/StudentsPage.tsx` e `client/src/features/events/pages/EventCreatePage.tsx`.
+- Arquivos de UI reutilizáveis do frontend usam kebab-case em `client/src/components/ui/`, por exemplo, `client/src/components/ui/list-search-input.tsx` e `client/src/components/ui/page-loading.tsx`.
+- Os hooks do frontend são baseados em funções e geralmente residem em `hooks/` com nomes de arquivos em kebab-case, por exemplo, `client/src/features/events/hooks/use-event-mutations.ts` e `client/src/features/students/hooks/student-mutations.ts`.
+- Os esquemas do frontend seguem a nomenclatura `*Schema.ts`, por exemplo, `client/src/features/students/forms/studentFormSchema.ts` e `client/src/features/address/forms/addressSchema.ts`.
+- Classes, registros (records) e testes do backend usam PascalCase em caminhos de pacotes espelhados, por exemplo, `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`.
 
-**Functions:**
-- Frontend components and helpers use `camelCase` or `PascalCase` depending on export type: `StudentsPage` in `client/src/features/students/pages/StudentsPage.tsx`, `getFriendlyErrorMessage` in `client/src/lib/shared/api-errors.ts`, and `useEmployeeMutations` in `client/src/features/employees/hooks/emlpoyee-mutations.ts`.
-- Backend methods use `camelCase` with intention-revealing verbs, such as `createStudent`, `findById`, `archiveStudent`, and `ensureStudentUniqueness` in `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
+**Funções:**
+- Componentes e auxiliares (helpers) do frontend usam `camelCase` ou `PascalCase` dependendo do tipo de exportação: `StudentsPage` em `client/src/features/students/pages/StudentsPage.tsx`, `getFriendlyErrorMessage` em `client/src/lib/shared/api-errors.ts`, e `useEmployeeMutations` em `client/src/features/employees/hooks/emlpoyee-mutations.ts`.
+- Métodos do backend usam `camelCase` com verbos que revelam a intenção, como `createStudent`, `findById`, `archiveStudent`, e `ensureStudentUniqueness` em `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
 
-**Variables:**
-- Use descriptive `camelCase` names for local state and query results, such as `searchTerm`, `currentPage`, `showArchived`, and `studentsQuery` in `client/src/features/students/pages/StudentsPage.tsx`.
-- Backend services prefer explicit names like `normalizedContact`, `normalizedEmail`, `savedStudent`, and `studentPage` in `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
+**Variáveis:**
+- Usar nomes descritivos em `camelCase` para o estado local e resultados de consulta, como `searchTerm`, `currentPage`, `showArchived`, e `studentsQuery` em `client/src/features/students/pages/StudentsPage.tsx`.
+- Serviços de backend preferem nomes explícitos como `normalizedContact`, `normalizedEmail`, `savedStudent`, e `studentPage` em `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
 
-**Types:**
-- Frontend exported props and schema types use `PascalCase`, such as `ListSearchInputProps` in `client/src/components/ui/list-search-input.tsx` and `StudentFormSchema` in `client/src/features/students/forms/studentFormSchema.ts`.
-- Backend request/response contracts are Java records with `*RequestDTO`, `*ResponseDTO`, `*OptionsDTO`, and shared wrappers like `PageDTO<T>` in `server/api-aprimorar/src/main/java/com/aprimorar/api/shared/PageDTO.java`.
+**Tipos:**
+- Props exportadas do frontend e tipos de esquema usam `PascalCase`, como `ListSearchInputProps` em `client/src/components/ui/list-search-input.tsx` e `StudentFormSchema` em `client/src/features/students/forms/studentFormSchema.ts`.
+- Contratos de requisição/resposta do backend são registros (records) Java com `*RequestDTO`, `*ResponseDTO`, `*OptionsDTO`, e wrappers compartilhados como `PageDTO<T>` em `server/api-aprimorar/src/main/java/com/aprimorar/api/shared/PageDTO.java`.
 
-## Code Style
+## Estilo de Código
 
-**Formatting:**
-- Frontend formatting is enforced indirectly through `eslint .` in `client/package.json` and the flat config in `client/eslint.config.js`.
-- `prettier` is installed in `client/package.json`, but no checked-in Prettier config file was detected under `client/`; follow the surrounding file style instead of introducing mass reformatting.
-- TypeScript strict mode is enabled in `client/tsconfig.app.json` with `strict: true`, while unused locals and parameters are not compile-blocking (`noUnusedLocals: false`, `noUnusedParameters: false`).
-- No dedicated backend formatter or lint config was detected; backend style is established by the existing Java source layout in `server/api-aprimorar/src/main/java/` and tests in `server/api-aprimorar/src/test/java/`.
+**Formatação:**
+- A formatação do frontend é imposta indiretamente através de `eslint .` em `client/package.json` e a configuração flat em `client/eslint.config.js`.
+- O `prettier` está instalado em `client/package.json`, mas nenhum arquivo de configuração do Prettier foi detectado no diretório `client/`; siga o estilo do arquivo ao redor em vez de introduzir formatações em massa.
+- O modo estrito do TypeScript está ativado em `client/tsconfig.app.json` com `strict: true`, enquanto variáveis locais e parâmetros não utilizados não bloqueiam a compilação (`noUnusedLocals: false`, `noUnusedParameters: false`).
+- Nenhum formatador de backend dedicado ou configuração de lint foi detectado; o estilo do backend é estabelecido pelo layout de origem Java existente em `server/api-aprimorar/src/main/java/` e testes em `server/api-aprimorar/src/test/java/`.
 
 **Linting:**
-- Frontend ESLint extends `@eslint/js`, `typescript-eslint`, `react-hooks`, and `react-refresh` in `client/eslint.config.js`.
-- Frontend warnings are configured for `@typescript-eslint/no-unused-vars` and `@typescript-eslint/no-explicit-any` in `client/eslint.config.js`; these are tolerated as warnings, not errors.
-- Backend quality gates are test-oriented through Maven and JaCoCo in `server/api-aprimorar/pom.xml`; no Checkstyle, SpotBugs, or Spotless config was detected.
+- O ESLint do frontend estende `@eslint/js`, `typescript-eslint`, `react-hooks`, e `react-refresh` em `client/eslint.config.js`.
+- Avisos (warnings) do frontend são configurados para `@typescript-eslint/no-unused-vars` e `@typescript-eslint/no-explicit-any` em `client/eslint.config.js`; estes são tolerados como avisos, não como erros.
+- Portões de qualidade do backend são orientados a testes através de Maven e JaCoCo em `server/api-aprimorar/pom.xml`; nenhuma configuração de Checkstyle, SpotBugs ou Spotless foi detectada.
 
-## Import Organization
+## Organização de Importações
 
-**Order:**
-1. React/core libraries, for example `client/src/App.tsx` and `client/src/main.tsx`.
-2. Third-party packages, for example `@tanstack/react-query`, `react-router-dom`, `sonner`, and `lucide-react` in `client/src/features/employees/hooks/emlpoyee-mutations.ts` and `client/src/features/events/pages/EventCreatePage.tsx`.
-3. `@/` alias imports for shared and cross-feature modules, for example `@/components/layout/PageLayout` and `@/lib/shared/api-errors` in `client/src/features/students/pages/StudentCreatePage.tsx`.
-4. Relative imports for same-feature modules, for example `../forms/studentFormSchema` in `client/src/features/students/pages/StudentCreatePage.tsx` and `../components/ContentSelectDropdown` in `client/src/features/events/pages/EventCreatePage.tsx`.
+**Ordem:**
+1. React/bibliotecas core, por exemplo, `client/src/App.tsx` e `client/src/main.tsx`.
+2. Pacotes de terceiros, por exemplo, `@tanstack/react-query`, `react-router-dom`, `sonner`, e `lucide-react` em `client/src/features/employees/hooks/emlpoyee-mutations.ts` e `client/src/features/events/pages/EventCreatePage.tsx`.
+3. Importações de alias `@/` para módulos compartilhados e entre funcionalidades, por exemplo, `@/components/layout/PageLayout` e `@/lib/shared/api-errors` em `client/src/features/students/pages/StudentCreatePage.tsx`.
+4. Importações relativas para módulos da mesma funcionalidade, por exemplo, `../forms/studentFormSchema` em `client/src/features/students/pages/StudentCreatePage.tsx` e `../components/ContentSelectDropdown` em `client/src/features/events/pages/EventCreatePage.tsx`.
 
-**Path Aliases:**
-- Use the `@/*` alias mapped to `client/src/*` in `client/tsconfig.app.json`.
-- Prefer `import type` for type-only frontend imports, as seen in `client/src/features/events/forms/EventForm.tsx`, `client/src/components/layout/PageLayout.tsx`, and `client/src/features/address/components/AddressDetails.tsx`.
+**Aliases de Caminho:**
+- Usar o alias `@/*` mapeado para `client/src/*` em `client/tsconfig.app.json`.
+- Preferir `import type` para importações de apenas tipos no frontend, como visto em `client/src/features/events/forms/EventForm.tsx`, `client/src/components/layout/PageLayout.tsx`, e `client/src/features/address/components/AddressDetails.tsx`.
 
-## Error Handling
+## Tratamento de Erros
 
-**Patterns:**
-- Frontend mutation handlers surface failures through toast notifications, usually with Portuguese messages or `getFriendlyErrorMessage(error)`, as in `client/src/features/events/hooks/use-event-mutations.ts`, `client/src/features/employees/hooks/emlpoyee-mutations.ts`, and `client/src/features/parents/hooks/parent-mutations.ts`.
-- Frontend page-level failures are routed into dedicated UI states such as `ErrorBoundary` in `client/src/App.tsx` and shared error components under `client/src/components/ui/`.
-- Frontend form validation should flow through Zod schemas and `zodResolver`, as in `client/src/features/students/pages/StudentCreatePage.tsx`, `client/src/features/events/pages/EventCreatePage.tsx`, and `client/src/features/students/forms/studentFormSchema.ts`.
-- Backend services throw domain-specific exceptions and centralize response shaping in `server/api-aprimorar/src/main/java/com/aprimorar/api/exception/GlobalExceptionHandler.java`.
-- Backend validation and business-rule messages are written in Portuguese, for example `"Aluno não encontrado no banco de dados"` in `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java` and handler responses in `server/api-aprimorar/src/main/java/com/aprimorar/api/exception/GlobalExceptionHandler.java`.
+**Padrões:**
+- Os tratadores de mutação do frontend exibem falhas através de notificações toast, geralmente com mensagens em português ou `getFriendlyErrorMessage(error)`, como em `client/src/features/events/hooks/use-event-mutations.ts`, `client/src/features/employees/hooks/emlpoyee-mutations.ts`, e `client/src/features/parents/hooks/parent-mutations.ts`.
+- As falhas no nível da página do frontend são roteadas para estados de UI dedicados, como `ErrorBoundary` em `client/src/App.tsx` e componentes de erro compartilhados sob `client/src/components/ui/`.
+- A validação de formulários do frontend deve fluir através de esquemas Zod e `zodResolver`, como em `client/src/features/students/pages/StudentCreatePage.tsx`, `client/src/features/events/pages/EventCreatePage.tsx`, e `client/src/features/students/forms/studentFormSchema.ts`.
+- Os serviços do backend lançam exceções específicas de domínio e centralizam a formatação da resposta em `server/api-aprimorar/src/main/java/com/aprimorar/api/exception/GlobalExceptionHandler.java`.
+- As mensagens de validação e de regras de negócio do backend são escritas em português, por exemplo, `"Aluno não encontrado no banco de dados"` em `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java` e respostas do tratador em `server/api-aprimorar/src/main/java/com/aprimorar/api/exception/GlobalExceptionHandler.java`.
 
 ## Logging
 
 **Framework:**
-- Backend logging uses SLF4J via `LoggerFactory`, for example in `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java` and `server/api-aprimorar/src/main/java/com/aprimorar/api/exception/GlobalExceptionHandler.java`.
-- Frontend still uses `console.error` in `client/src/lib/shared/api-errors.ts` and `client/src/lib/shared/api.ts`; there is no dedicated browser logging abstraction yet.
+- O logging do backend usa SLF4J via `LoggerFactory`, por exemplo, em `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java` e `server/api-aprimorar/src/main/java/com/aprimorar/api/exception/GlobalExceptionHandler.java`.
+- O frontend ainda usa `console.error` em `client/src/lib/shared/api-errors.ts` e `client/src/lib/shared/api.ts`; ainda não há uma abstração de logging dedicada para o navegador.
 
-**Patterns:**
-- Backend services log successful business actions with user-facing context, such as create/update/archive/delete flows in `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
-- Backend exception handling logs errors centrally in `server/api-aprimorar/src/main/java/com/aprimorar/api/exception/GlobalExceptionHandler.java`.
-- Frontend should prefer shared error-message helpers over raw thrown text, using `getFriendlyErrorMessage` from `client/src/lib/shared/api-errors.ts`.
+**Padrões:**
+- Os serviços do backend registram ações de negócio bem-sucedidas com contexto voltado para o usuário, como fluxos de create/update/archive/delete em `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
+- O tratamento de exceções do backend registra erros centralmente em `server/api-aprimorar/src/main/java/com/aprimorar/api/exception/GlobalExceptionHandler.java`.
+- O frontend deve preferir auxiliares de mensagens de erro compartilhados em vez de texto bruto lançado, usando `getFriendlyErrorMessage` de `client/src/lib/shared/api-errors.ts`.
 
-## Comments
+## Comentários
 
-**When to Comment:**
-- Existing code keeps comments sparse in production files and uses them mainly for TODOs or test section labels, for example `//TODO implementar o logging mais pra frente` in `client/src/lib/shared/api-errors.ts` and `/* ----- Query Methods ----- */` in `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
-- Tests sometimes use Arrange/Act/Assert comments for readability, especially in `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`.
+**Quando Comentar:**
+- O código existente mantém os comentários esparsos em arquivos de produção e os usa principalmente para TODOs ou rótulos de seção de teste, por exemplo, `//TODO implementar o logging mais pra frente` em `client/src/lib/shared/api-errors.ts` e `/* ----- Query Methods ----- */` em `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
+- Os testes às vezes usam comentários Arrange/Act/Assert para legibilidade, especialmente em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`.
 
 **JSDoc/TSDoc:**
-- Not detected in the sampled frontend files under `client/src/`.
-- Backend documentation is annotation-driven rather than Javadoc-heavy, using Swagger annotations in controllers such as `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentController.java`.
+- Não detectado nos arquivos de frontend amostrados sob `client/src/`.
+- A documentação do backend é orientada por anotações em vez de ser pesada em Javadoc, usando anotações Swagger em controllers como `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentController.java`.
 
-## Function Design
+## Design de Funções
 
-**Size:**
-- Keep frontend pages orchestration-focused and push reusable UI into child components or feature helpers, matching `client/src/features/students/pages/StudentsPage.tsx` and `client/src/features/events/pages/EventCreatePage.tsx`.
-- Backend services keep public methods focused and move repeated lookups into private helpers such as `findStudentOrThrow` and `findParentOrThrow` in `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
+**Tamanho:**
+- Manter as páginas do frontend focadas em orquestração e mover a UI reutilizável para componentes filhos ou auxiliares de funcionalidade, conforme `client/src/features/students/pages/StudentsPage.tsx` e `client/src/features/events/pages/EventCreatePage.tsx`.
+- Os serviços de backend mantêm os métodos públicos focados e movem as buscas repetidas para auxiliares privados, como `findStudentOrThrow` e `findParentOrThrow` em `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
 
-**Parameters:**
-- Frontend form pages strongly type `useForm` with schema input types, for example `useForm<StudentFormSchema>` in `client/src/features/students/pages/StudentCreatePage.tsx`.
-- Backend controllers accept `@Valid` request DTO records and `UUID` path variables, as in `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentController.java`.
+**Parâmetros:**
+- As páginas de formulário do frontend tipam fortemente o `useForm` com tipos de entrada de esquema, por exemplo, `useForm<StudentFormSchema>` em `client/src/features/students/pages/StudentCreatePage.tsx`.
+- Os controllers do backend aceitam registros DTO de requisição `@Valid` e variáveis de caminho `UUID`, como em `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentController.java`.
 
-**Return Values:**
-- Frontend mutation hooks usually return a bag of TanStack Query mutation objects, as in `client/src/features/employees/hooks/emlpoyee-mutations.ts` and `client/src/features/events/hooks/use-event-mutations.ts`.
-- Backend services return DTOs or `PageDTO<T>` for reads and commands, and `void` for archive/delete actions, as in `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
+**Valores de Retorno:**
+- Os hooks de mutação do frontend geralmente retornam um conjunto de objetos de mutação do TanStack Query, como em `client/src/features/employees/hooks/emlpoyee-mutations.ts` e `client/src/features/events/hooks/use-event-mutations.ts`.
+- Os serviços de backend retornam DTOs ou `PageDTO<T>` para leituras e comandos, e `void` para ações de arquivamento/exclusão, como em `server/api-aprimorar/src/main/java/com/aprimorar/api/domain/student/StudentService.java`.
 
-## Module Design
+## Design de Módulos
 
-**Exports:**
-- Frontend prefers named exports for most components, hooks, and helpers, for example `StudentsPage`, `ListSearchInput`, and `useEventMutations`.
-- `export default` is limited to special entry/config files such as `client/src/App.tsx` and `client/eslint.config.js`.
-- Backend uses one public top-level type per file throughout `server/api-aprimorar/src/main/java/` and `server/api-aprimorar/src/test/java/`.
+**Exportações:**
+- O frontend prefere exportações nomeadas para a maioria dos componentes, hooks e auxiliares, por exemplo, `StudentsPage`, `ListSearchInput` e `useEventMutations`.
+- `export default` limita-se a arquivos especiais de entrada/configuração, como `client/src/App.tsx` e `client/eslint.config.js`.
+- O backend usa um tipo público de nível superior por arquivo em `server/api-aprimorar/src/main/java/` e `server/api-aprimorar/src/test/java/`.
 
-**Barrel Files:**
-- No handwritten barrel files were detected in the sampled frontend features; imports usually point directly to implementation files.
-- Generated exports under `client/src/kubb/` are consumed directly, for example `useGetStudents` in `client/src/features/students/pages/StudentsPage.tsx` and query-key helpers in `client/src/features/employees/hooks/emlpoyee-mutations.ts`.
+**Arquivos Barrel (index.ts):**
+- Não foram detectados arquivos barrel escritos manualmente nas funcionalidades de frontend amostradas; as importações geralmente apontam diretamente para os arquivos de implementação.
+- As exportações geradas sob `client/src/kubb/` são consumidas diretamente, por exemplo, `useGetStudents` em `client/src/features/students/pages/StudentsPage.tsx` e auxiliares de chaves de consulta em `client/src/features/employees/hooks/emlpoyee-mutations.ts`.
 
 ---
 
-*Convention analysis: 2026-04-17*
+*Análise de convenções: 17-04-2026*

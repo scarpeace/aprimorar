@@ -19,6 +19,7 @@ public class EventMapper {
             event.getStudent().getName(),
             event.getEmployee().getId(),
             event.getEmployee().getName(),
+            event.getStatus(),
             event.getCreatedAt(),
             event.getUpdatedAt()
         );

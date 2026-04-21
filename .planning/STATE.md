@@ -2,119 +2,107 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 02-07-PLAN.md
-last_updated: "2026-04-20T12:49:51.113Z"
-last_activity: 2026-04-20
+status: aguardando_planejamento
+stopped_at: Concluído Fase 03
+last_updated: "2026-04-21T16:00:00.000Z"
+last_activity: 21-04-2026
 progress:
   total_phases: 5
-  completed_phases: 2
-  total_plans: 11
-  completed_plans: 11
+  completed_phases: 3
+  total_plans: 15
+  completed_plans: 15
   percent: 100
 ---
 
-# Project State
+# Estado do Projeto
 
-## Project Reference
+## Referência do Projeto
 
-See: .planning/PROJECT.md (updated 2026-04-19)
+Veja: .planning/PROJECT.md (atualizado em 19-04-2026)
 
-**Core value:** The secretary must be able to manage the school day to day from the app without depending on scattered spreadsheets.
-**Current focus:** Phase 02 — student-parent-registry-hardening
+**Valor central:** A secretária deve ser capaz de gerenciar o dia a dia da escola a partir do app, sem depender de planilhas espalhadas.
+**Foco atual:** Fase 04 — Núcleo de Acompanhamento Financeiro
 
-## Current Position
+## Posição Atual
 
-Phase: 02 (student-parent-registry-hardening) — IN PROGRESS
-Plan: 7 of 7
-Status: Ready to execute
-Last activity: 2026-04-20
+Fase: 03 (fortalecimento das operações de funcionários e eventos) — CONCLUÍDA
+Plano: 4 de 4
+Status: Fase 03 encerrada com sucesso.
+Última atividade: 21-04-2026
 
-Progress: [█████████░] 91%
+Progresso: [██████████] 100%
 
-## Performance Metrics
+## Métricas de Desempenho
 
-**Velocity:**
+**Velocidade:**
 
-- Total plans completed: 10
-- Average duration: 0 min
-- Total execution time: 0.0 hours
+- Total de planos concluídos: 15
+- Duração média: 0 min
+- Tempo total de execução: 0.0 horas
 
-**By Phase:**
+**Por Fase:**
 
-| Phase | Plans | Total | Avg/Plan |
+| Fase | Planos | Total | Média/Plano |
 |-------|-------|-------|----------|
 | 01 | 4 | - | - |
+| 02 | 7 | - | - |
+| 03 | 4 | - | - |
 
-**Recent Trend:**
+**Tendência Recente:**
 
-- Last 5 plans: none
-- Trend: Stable
+- Últimos 5 planos: 03-01, 03-02, 03-03, 03-04
+- Tendência: Estável
 
-| Phase 01-authentication-protected-access P01 | 604 | 3 tasks | 16 files |
-| Phase 01-authentication-protected-access P02 | 15 | 2 tasks | 26 files |
-| Phase 01-authentication-protected-access P03 | 1 min | 2 tasks | 3 files |
-| Phase 01-authentication-protected-access P04 | 1min | 2 tasks | 3 files |
-| Phase 02 P01 | 4 min | 2 tasks | 3 files |
-| Phase 02 P02 | 19 min | 3 tasks | 22 files |
-| Phase 02 P04 | 20 min | 2 tasks | 8 files |
-| Phase 02-student-parent-registry-hardening P05 | 5 min | 2 tasks | 4 files |
-| Phase 02 P06 | 4 min | 2 tasks | 5 files |
-| Phase 02-student-parent-registry-hardening P07 | 4 min | 2 tasks | 11 files |
+| Plano | Duração | Tarefas | Arquivos |
+|-------|---------|---------|----------|
+| Fase 01 P01 | 604 | 3 | 16 |
+| Fase 01 P02 | 15 | 2 | 26 |
+| Fase 01 P03 | 1 | 2 | 3 |
+| Fase 01 P04 | 1 | 2 | 3 |
+| Fase 02 P01 | 4 | 2 | 3 |
+| Fase 02 P02 | 19 | 3 | 22 |
+| Fase 02 P04 | 20 | 2 | 8 |
+| Fase 02 P05 | 5 | 2 | 4 |
+| Fase 02 P06 | 4 | 2 | 5 |
+| Fase 02 P07 | 4 | 2 | 11 |
+| Fase 03 P01 | - | 3 | 8 |
+| Fase 03 P02 | - | 2 | 6 |
+| Fase 03 P03 | - | 1 | 2 |
+| Fase 03 P04 | - | 2 | 6 |
 
-## Accumulated Context
+## Contexto Acumulado
 
-### Decisions
+### Decisões
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
+As decisões são registradas na tabela de Decisões Chave do PROJECT.md.
+Decisões recentes que afetam o trabalho atual:
 
-- [Roadmap] Sequence work as secure access → brownfield module hardening → finance → dashboard.
-- [Roadmap] Treat existing student, parent, employee, event, and dashboard areas as hardening targets, not rewrite candidates.
-- [Phase 01-authentication-protected-access]: Use Spring Security server-managed sessions for immediate logout and refresh persistence.
-- [Phase 01-authentication-protected-access]: Store internal staff credentials in tb_internal_users linked to employees instead of adding passwords to employee records.
-- [Phase 01-authentication-protected-access]: Return stable Portuguese JSON auth failures with a dedicated UNAUTHORIZED error code.
-- [Phase 01-authentication-protected-access]: Wrap generated auth hooks in useAuthSession so login/logout invalidation and current-user bootstrap stay centralized.
-- [Phase 01-authentication-protected-access]: Configure Kubb's shared axios client for withCredentials plus Spring Security XSRF names instead of storing auth state in browser storage.
-- [Phase 01-authentication-protected-access]: Keep /login as the only public SPA entry and gate every existing workflow branch with the shared AuthGate.
-- [Phase 01-authentication-protected-access]: Remove protected query cache entries after logout before redirecting so signed-out users cannot keep browsing stale secretary data.
-- [Phase 01-authentication-protected-access]: Import the shared API bootstrap from main.tsx so generated auth hooks always inherit credential and XSRF defaults.
-- [Phase 01-authentication-protected-access]: Use /v1/auth/me refetch as the single source of truth for post-login auth state instead of optimistic cache writes.
-- [Phase 02]: Keep the existing tb_students.parent_id mapping and harden it instead of redesigning the relationship model.
-- [Phase 02]: Use repository-level EntityGraph annotations so student reads load the linked responsável intentionally.
-- [Phase 02]: Embed StudentResponsibleSummaryDTO in student read responses while preserving parentId as the only write-side linkage.
-- [Phase 02]: Block responsável archive/delete only when active students still reference the record so archived history remains intact.
-- [Phase 02]: Use Responsável as the primary user-facing term across parent CRUD screens while preserving the existing contact-only data model.
-- [Phase 02]: Show linked-student context on the responsible detail page and route archive/delete failures through shared Portuguese toast messaging.
-- [Phase 02-student-parent-registry-hardening]: Treat archived=false and archived omission as the same active-list path so archived student data is not disclosed by default.
-- [Phase 02-student-parent-registry-hardening]: Extend the existing student search specification directly with CPF matching instead of adding a separate filter path.
-- [Phase 02]: Use a full linked-student summary query for blocker calculations so delete guidance is based on the real relationship set, not only the visible table page.
-- [Phase 02]: Keep archived student history visible in responsible detail and delete flows while reserving destructive blockers for active links only.
-- [Phase 02-student-parent-registry-hardening]: Pin react-router-dom to 7.14.1 instead of patching installed type files for frontend build stability.
-- [Phase 02-student-parent-registry-hardening]: Convert page-level mutation errors through getFriendlyErrorMessage before rendering the shared Alert banner.
-- [Phase 02-student-parent-registry-hardening]: Remove stale event form title typing and simplify linked-student helper test inputs to clear existing TypeScript build blockers.
+- [Fase 03]: Introduzir o status SCHEDULED, COMPLETED, CANCELED para eventos, garantindo que conflitos de horário ignorem eventos cancelados.
+- [Fase 03]: Mapear o enum Duty (Função) para labels amigáveis em português no frontend.
+- [Fase 03]: Adicionar filtragem por intervalo de datas e status na listagem de eventos.
+- [Fase 03]: Bloquear a criação de eventos para estudantes ou funcionários arquivados no nível de serviço.
+- [Fase 03]: Implementar ações rápidas de alteração de status na página de detalhes do evento.
 
-### Pending Todos
+### Pendências (Todos)
 
-None yet.
+Nenhuma por enquanto.
 
-### Blockers/Concerns
+### Bloqueadores/Preocupações
 
-- Finance policies such as partial payments, discounts, and reversals will need tighter phase planning before implementation.
-- Dashboard KPI definitions must stay aligned with finance and operations semantics to avoid trust issues.
+- Nenhuma identificada na fase atual.
 
-## Deferred Items
+## Itens Adiados
 
-Items acknowledged and carried forward from previous milestone close:
+Itens reconhecidos e levados adiante do encerramento do marco anterior:
 
-| Category | Item | Status | Deferred At |
+| Categoria | Item | Status | Adiado em |
 |----------|------|--------|-------------|
-| Access Expansion | Teacher, parent, and student self-service portals | Deferred | v1 planning |
-| Finance Expansion | Payment gateway integration and advanced billing policies | Deferred | v1 planning |
-| Reporting | Advanced reports and analytics | Deferred | v1 planning |
+| Expansão de Acesso | Portais de autoatendimento para professores, pais e alunos | Adiado | planejamento v1 |
+| Expansão Financeira | Integração com gateway de pagamento e políticas de faturamento avançadas | Adiado | planejamento v1 |
+| Relatórios | Relatórios avançados e análises | Adiado | planejamento v1 |
 
-## Session Continuity
+## Continuidade da Sessão
 
-Last session: 2026-04-20T12:49:51.108Z
-Stopped at: Completed 02-07-PLAN.md
-Resume file: None
+Última sessão: 2026-04-21T16:00:00.000Z
+Parou em: Concluída Fase 03
+Arquivo de retomada: Nenhum

@@ -53,8 +53,12 @@ public record EventResponseDTO(
     UUID employeeId,
 
     @NotNull
-    @Schema(nullable = false, description = "Nome do colaborador vinculado ao evento", example = "Jane Smith")
+    @Schema(nullable = false, description = "Nome do colaborador vinculado ao evento", example = "Jane Doe")
     String employeeName,
+
+    @NotNull
+    @Schema(nullable = false, description = "Status do evento", example = "SCHEDULED")
+    com.aprimorar.api.enums.EventStatus status,
 
     @NotNull
     @Schema(nullable = false, description = "Data de criação do evento", example = "2024-03-10T15:33:42Z`")

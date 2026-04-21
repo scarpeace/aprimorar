@@ -13,6 +13,7 @@ import com.aprimorar.api.domain.event.repository.EventSpecifications;
 import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.enums.EventStatus;
 import com.aprimorar.api.shared.PageDTO;
 import java.time.Clock;
 import java.time.Instant;
@@ -81,14 +82,19 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public PageDTO<EventResponseDTO> getEvents(Pageable pageable, String search) {
-        Page<Event> eventPage;
-        if (search != null && !search.trim().isEmpty()) {
-            Specification<Event> spec = EventSpecifications.searchContainsIgnoreCase(search.trim());
-            eventPage = eventRepo.findAll(spec, pageable);
-        } else {
-            eventPage = eventRepo.findAll(pageable);
-        }
+    public PageDTO<EventResponseDTO> getEvents(
+        Pageable pageable,
+        String search,
+        Instant startDate,
+        Instant endDate,
+        EventStatus status
+    ) {
+        Specification<Event> spec = Specification.where(EventSpecifications.searchContainsIgnoreCase(search))
+            .and(EventSpecifications.withStartDateAfter(startDate))
+            .and(EventSpecifications.withEndDateBefore(endDate))
+            .and(EventSpecifications.withStatus(status));
+
+        Page<Event> eventPage = eventRepo.findAll(spec, pageable);
         Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);
 
         log.info("Consulta de eventos finalizada, {} registros encontrados.", eventPage.getTotalElements());
@@ -148,7 +154,8 @@ public class EventService {
             request.price(),
             request.content(),
             student,
-            employee
+            employee,
+            request.status()
         );
 
         log.info("Evento {} atualizado com sucesso.", event.getTitle().toUpperCase());

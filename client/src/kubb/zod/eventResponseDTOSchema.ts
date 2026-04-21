@@ -33,6 +33,9 @@ export const eventResponseDTOSchema = z
     employeeName: z
       .string()
       .describe("Nome do colaborador vinculado ao evento"),
+    status: z
+      .enum(["SCHEDULED", "COMPLETED", "CANCELED"])
+      .describe("Status do evento"),
     createdAt: z.iso.datetime().describe("Data de criação do evento"),
     updatedAt: z.iso
       .datetime()

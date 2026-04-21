@@ -39,6 +39,7 @@ export type AuthCurrentUserResponseDTO = {
    */
   employeeId: string;
   /**
+   * @description Função/Papel do funcionário
    * @type string
    */
   duty: AuthCurrentUserResponseDTODutyEnumKey;

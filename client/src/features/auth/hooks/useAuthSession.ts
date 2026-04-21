@@ -1,4 +1,5 @@
 import { useLogin, useLogout, useMe, meQueryKey } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
@@ -37,6 +38,12 @@ export function useAuthSession() {
         await refetchCurrentUser();
         toast.success("Login realizado com sucesso");
       },
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "E-mail/nome de usuário ou senha incorretos",
+        );
+      },
     },
   });
 
@@ -46,6 +53,12 @@ export function useAuthSession() {
         queryClient.setQueryData(currentUserQueryKey, undefined);
         queryClient.removeQueries({ queryKey: currentUserQueryKey });
         toast.success("Sessão encerrada com sucesso");
+      },
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao encerrar a sessão",
+        );
       },
     },
   });

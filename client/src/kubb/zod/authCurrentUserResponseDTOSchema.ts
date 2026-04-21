@@ -15,6 +15,8 @@ export const authCurrentUserResponseDTOSchema = z
     displayName: z.string(),
     email: z.string(),
     employeeId: z.uuid(),
-    duty: z.enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"]),
+    duty: z
+      .enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"])
+      .describe("Função/Papel do funcionário"),
   })
   .describe("Dados do usuário autenticado");

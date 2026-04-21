@@ -1,102 +1,102 @@
-# Technology Stack
+# Stack Tecnológica
 
-**Analysis Date:** 2026-04-17
+**Data da Análise:** 17-04-2026
 
-## Languages
+## Linguagens
 
-**Primary:**
-- Java 21 - Backend API in `server/api-aprimorar/pom.xml` and `server/api-aprimorar/src/main/java/com/aprimorar/api/ApiAprimorarApplication.java`
-- TypeScript 5.9 - Frontend SPA in `client/package.json`, `client/src/main.tsx`, and `client/src/App.tsx`
+**Primárias:**
+- Java 21 - API Backend em `server/api-aprimorar/pom.xml` e `server/api-aprimorar/src/main/java/com/aprimorar/api/ApiAprimorarApplication.java`
+- TypeScript 5.9 - SPA Frontend em `client/package.json`, `client/src/main.tsx` e `client/src/App.tsx`
 
-**Secondary:**
-- SQL - Flyway schema migration in `server/api-aprimorar/src/main/resources/db/migration/V1__init.sql`
-- JavaScript (ES modules) - frontend/build config in `client/eslint.config.js` and root orchestration scripts in `package.json`
-- YAML - Spring configuration in `server/api-aprimorar/src/main/resources/application.yml` and `server/api-aprimorar/src/main/resources/application-dev.yml`
+**Secundárias:**
+- SQL - Migração de esquema Flyway em `server/api-aprimorar/src/main/resources/db/migration/V1__init.sql`
+- JavaScript (módulos ES) - configuração de frontend/build em `client/eslint.config.js` e scripts de orquestração raiz no `package.json`
+- YAML - Configuração do Spring em `server/api-aprimorar/src/main/resources/application.yml` e `server/api-aprimorar/src/main/resources/application-dev.yml`
 
-## Runtime
+## Tempo de Execução (Runtime)
 
-**Environment:**
-- JVM 21 for the Spring Boot API, pinned by `server/api-aprimorar/pom.xml`
-- Node.js runtime for frontend/build tooling; npm is used, but no repo-pinned Node version file was detected (`package-lock.json` present at repo root and in `client/`)
-- Browser runtime for the React SPA in `client/src/main.tsx`
+**Ambiente:**
+- JVM 21 para a API Spring Boot, fixada por `server/api-aprimorar/pom.xml`
+- Tempo de execução Node.js para ferramentas de frontend/build; o npm é utilizado, mas nenhum arquivo de versão do Node fixado no repositório foi detectado (`package-lock.json` presente na raiz do repositório e em `client/`)
+- Tempo de execução do navegador para o SPA React em `client/src/main.tsx`
 
-**Package Manager:**
-- npm - root workspace scripts in `package.json` and frontend dependencies in `client/package.json`
-- Maven Wrapper (`./mvnw`) - backend build entrypoint in `server/api-aprimorar/mvnw`
-- Lockfile: present in `package-lock.json` and `client/package-lock.json`
+**Gerenciador de Pacotes:**
+- npm - scripts de workspace raiz no `package.json` e dependências de frontend em `client/package.json`
+- Maven Wrapper (`./mvnw`) - ponto de entrada de build do backend em `server/api-aprimorar/mvnw`
+- Lockfile: presente em `package-lock.json` e `client/package-lock.json`
 
 ## Frameworks
 
 **Core:**
-- Spring Boot 3.5.7 - REST API platform in `server/api-aprimorar/pom.xml`
-- Spring Web MVC - HTTP layer via `spring-boot-starter-web` in `server/api-aprimorar/pom.xml`
-- Spring Data JPA - persistence layer via `spring-boot-starter-data-jpa` in `server/api-aprimorar/pom.xml`
-- React 19.2 - SPA UI in `client/package.json` and `client/src/main.tsx`
-- React Router 7 - client routing in `client/package.json` and `client/src/App.tsx`
+- Spring Boot 3.5.7 - Plataforma de API REST em `server/api-aprimorar/pom.xml`
+- Spring Web MVC - Camada HTTP via `spring-boot-starter-web` em `server/api-aprimorar/pom.xml`
+- Spring Data JPA - Camada de persistência via `spring-boot-starter-data-jpa` em `server/api-aprimorar/pom.xml`
+- React 19.2 - UI do SPA em `client/package.json` e `client/src/main.tsx`
+- React Router 7 - Roteamento do cliente em `client/package.json` e `client/src/App.tsx`
 
-**Testing:**
-- Spring Boot Test - backend test bundle in `server/api-aprimorar/pom.xml`
-- JUnit 5 / Mockito / AssertJ - included through `spring-boot-starter-test`; test tree under `server/api-aprimorar/src/test/java/`
-- No dedicated frontend test framework detected; `client/AGENTS.md` states none is configured
+**Testes:**
+- Spring Boot Test - pacote de testes de backend em `server/api-aprimorar/pom.xml`
+- JUnit 5 / Mockito / AssertJ - incluídos através do `spring-boot-starter-test`; árvore de testes sob `server/api-aprimorar/src/test/java/`
+- Nenhum framework de teste de frontend dedicado detectado; `client/AGENTS.md` afirma que nenhum está configurado
 
 **Build/Dev:**
-- Vite 7 - frontend dev server and bundler in `client/package.json` and `client/vite.config.ts`
-- TypeScript compiler - frontend type-check/build in `client/package.json`
-- Tailwind CSS 4 with `@tailwindcss/vite` - styling pipeline in `client/package.json` and `client/vite.config.ts`
-- ESLint 9 + typescript-eslint - frontend linting in `client/eslint.config.js`
-- Kubb 4 - OpenAPI client/codegen in `client/package.json` and `client/kubb.config.ts`
-- Springdoc OpenAPI 2.8.9 - API documentation generation in `server/api-aprimorar/pom.xml` and `server/api-aprimorar/src/main/resources/application.yml`
-- Flyway - database migrations in `server/api-aprimorar/pom.xml` and `server/api-aprimorar/src/main/resources/application.yml`
-- JaCoCo - backend coverage reporting in `server/api-aprimorar/pom.xml`
-- Docker Compose - local Postgres dependency per `AGENTS.md` and `server/api-aprimorar/docker-compose.yml`
+- Vite 7 - Servidor de desenvolvimento e empacotador (bundler) de frontend em `client/package.json` e `client/vite.config.ts`
+- Compilador TypeScript - verificação de tipo/build do frontend em `client/package.json`
+- Tailwind CSS 4 com `@tailwindcss/vite` - pipeline de estilização em `client/package.json` e `client/vite.config.ts`
+- ESLint 9 + typescript-eslint - linting do frontend em `client/eslint.config.js`
+- Kubb 4 - codegen/cliente OpenAPI em `client/package.json` e `client/kubb.config.ts`
+- Springdoc OpenAPI 2.8.9 - geração de documentação de API em `server/api-aprimorar/pom.xml` e `server/api-aprimorar/src/main/resources/application.yml`
+- Flyway - migrações de banco de dados em `server/api-aprimorar/pom.xml` e `server/api-aprimorar/src/main/resources/application.yml`
+- JaCoCo - relatórios de cobertura do backend em `server/api-aprimorar/pom.xml`
+- Docker Compose - dependência do Postgres local conforme `AGENTS.md` e `server/api-aprimorar/docker-compose.yml`
 
-## Key Dependencies
+## Dependências Chave
 
-**Critical:**
-- `org.springframework.boot:spring-boot-starter-web` - serves the backend REST API from `server/api-aprimorar/pom.xml`
-- `org.springframework.boot:spring-boot-starter-data-jpa` - backs entity/repository persistence in `server/api-aprimorar/pom.xml`
-- `org.postgresql:postgresql` - runtime database driver in `server/api-aprimorar/pom.xml`
-- `org.flywaydb:flyway-database-postgresql` - schema migration engine in `server/api-aprimorar/pom.xml`
-- `@tanstack/react-query` - frontend server-state caching in `client/package.json` and `client/src/lib/shared/queryClient.ts`
-- `axios` - frontend HTTP client in `client/package.json` and `client/src/lib/shared/api.ts`
-- `react-hook-form` + `zod` + `@hookform/resolvers` - form and validation boundary stack in `client/package.json` and feature form files such as `client/src/features/students/pages/StudentCreatePage.tsx`
+**Críticas:**
+- `org.springframework.boot:spring-boot-starter-web` - serve a API REST do backend em `server/api-aprimorar/pom.xml`
+- `org.springframework.boot:spring-boot-starter-data-jpa` - sustenta a persistência de entidade/repositório em `server/api-aprimorar/pom.xml`
+- `org.postgresql:postgresql` - driver de banco de dados em tempo de execução em `server/api-aprimorar/pom.xml`
+- `org.flywaydb:flyway-database-postgresql` - motor de migração de esquema em `server/api-aprimorar/pom.xml`
+- `@tanstack/react-query` - cache de estado de servidor do frontend em `client/package.json` e `client/src/lib/shared/queryClient.ts`
+- `axios` - cliente HTTP do frontend em `client/package.json` e `client/src/lib/shared/api.ts`
+- `react-hook-form` + `zod` + `@hookform/resolvers` - pilha de limite de formulário e validação em `client/package.json` e arquivos de formulário de funcionalidades como `client/src/features/students/pages/StudentCreatePage.tsx`
 
-**Infrastructure:**
-- `org.springdoc:springdoc-openapi-starter-webmvc-ui` - exposes `/v3/api-docs` and Swagger UI configured in `server/api-aprimorar/src/main/resources/application.yml`
-- `@kubb/cli` and Kubb plugins - generate TS types, Zod schemas, and React Query hooks in `client/kubb.config.ts`
-- `@vitejs/plugin-react` - React integration for Vite in `client/package.json` and `client/vite.config.ts`
-- `lucide-react` - icon library across UI files such as `client/src/App.tsx`
-- `react-datepicker` - date input UI in `client/src/components/ui/date-time-input.tsx`
-- `recharts` - dashboard charts in `client/src/features/dashboard/components/PizzaChart.tsx`
-- `sonner` - toast notifications in `client/src/App.tsx`
-- `spring-boot-docker-compose` - Spring-side Docker Compose integration dependency in `server/api-aprimorar/pom.xml`
+**Infraestrutura:**
+- `org.springdoc:springdoc-openapi-starter-webmvc-ui` - expõe `/v3/api-docs` e a UI do Swagger configurada em `server/api-aprimorar/src/main/resources/application.yml`
+- `@kubb/cli` e plugins Kubb - geram tipos TS, esquemas Zod e hooks do React Query em `client/kubb.config.ts`
+- `@vitejs/plugin-react` - integração do React para o Vite em `client/package.json` e `client/vite.config.ts`
+- `lucide-react` - biblioteca de ícones em todos os arquivos de UI, como `client/src/App.tsx`
+- `react-datepicker` - UI de entrada de data em `client/src/components/ui/date-time-input.tsx`
+- `recharts` - gráficos de dashboard em `client/src/features/dashboard/components/PizzaChart.tsx`
+- `sonner` - notificações toast em `client/src/App.tsx`
+- `spring-boot-docker-compose` - dependência de integração do Docker Compose no lado do Spring em `server/api-aprimorar/pom.xml`
 
-## Configuration
+## Configuração
 
-**Environment:**
-- Spring uses the `dev` profile by default in `server/api-aprimorar/src/main/resources/application.yml`
-- Local backend datasource, Hibernate, logging, and Jackson dev settings live in `server/api-aprimorar/src/main/resources/application-dev.yml`
-- Frontend API base URL is configurable with optional `VITE_API_URL` in `client/src/lib/shared/api.ts`
-- No `.env` files were detected in the repository root, `client/`, or `server/api-aprimorar/`
+**Ambiente:**
+- O Spring usa o perfil `dev` por padrão em `server/api-aprimorar/src/main/resources/application.yml`
+- O datasource do backend local, Hibernate, logging e as configurações de desenvolvimento do Jackson residem em `server/api-aprimorar/src/main/resources/application-dev.yml`
+- A URL base da API do frontend é configurável com a opção `VITE_API_URL` em `client/src/lib/shared/api.ts`
+- Nenhum arquivo `.env` foi detectado na raiz do repositório, em `client/` ou em `server/api-aprimorar/`
 
 **Build:**
-- Root orchestration scripts live in `package.json`
-- Frontend build config lives in `client/vite.config.ts`, `client/tsconfig.json`, and `client/eslint.config.js`
-- Backend build config lives in `server/api-aprimorar/pom.xml`
-- OpenAPI client generation config lives in `client/kubb.config.ts`
+- Os scripts de orquestração raiz residem no `package.json`
+- A configuração de build do frontend reside em `client/vite.config.ts`, `client/tsconfig.json` e `client/eslint.config.js`
+- A configuração de build do backend reside em `server/api-aprimorar/pom.xml`
+- A configuração de geração do cliente OpenAPI reside em `client/kubb.config.ts`
 
-## Platform Requirements
+## Requisitos da Plataforma
 
-**Development:**
-- Java 21 for the backend per `server/api-aprimorar/pom.xml`
-- Node.js + npm for the root and frontend scripts in `package.json` and `client/package.json`
-- PostgreSQL available locally at `localhost:5432` for the dev profile in `server/api-aprimorar/src/main/resources/application-dev.yml`
-- Docker / Docker Compose for local database startup per root `AGENTS.md`, `server/api-aprimorar/AGENTS.md`, and `server/api-aprimorar/docker-compose.yml`
+**Desenvolvimento:**
+- Java 21 para o backend conforme `server/api-aprimorar/pom.xml`
+- Node.js + npm para a raiz e os scripts de frontend no `package.json` e `client/package.json`
+- PostgreSQL disponível localmente em `localhost:5432` para o perfil de desenvolvimento em `server/api-aprimorar/src/main/resources/application-dev.yml`
+- Docker / Docker Compose para inicialização do banco de dados local conforme `AGENTS.md` raiz, `server/api-aprimorar/AGENTS.md` e `server/api-aprimorar/docker-compose.yml`
 
-**Production:**
-- Deployment target is not explicitly codified in repo config
-- Current code assumes a Spring Boot HTTP service exposing OpenAPI (`server/api-aprimorar/src/main/resources/application.yml`) and a separately hosted/static Vite-built SPA (`client/package.json`)
+**Produção:**
+- O alvo de implantação não está explicitamente codificado na configuração do repositório
+- O código atual assume um serviço HTTP Spring Boot expondo OpenAPI (`server/api-aprimorar/src/main/resources/application.yml`) e um SPA construído com Vite e hospedado separadamente ou como estático (`client/package.json`)
 
 ---
 
-*Stack analysis: 2026-04-17*
+*Análise da stack: 17-04-2026*

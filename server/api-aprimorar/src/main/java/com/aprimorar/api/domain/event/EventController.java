@@ -1,5 +1,6 @@
 package com.aprimorar.api.domain.event;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aprimorar.api.domain.event.dto.EventRequestDTO;
 import com.aprimorar.api.domain.event.dto.EventResponseDTO;
+import com.aprimorar.api.enums.EventStatus;
 import com.aprimorar.api.shared.PageDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,9 +53,11 @@ public class EventController {
     public ResponseEntity<PageDTO<EventResponseDTO>> getEvents(
         @ParameterObject Pageable pageable,
         @RequestParam(required = false) String search,
-        @RequestParam(required = false) Boolean archived
+        @RequestParam(required = false) Instant startDate,
+        @RequestParam(required = false) Instant endDate,
+        @RequestParam(required = false) EventStatus status
     ) {
-        return ResponseEntity.ok(eventService.getEvents(pageable, search));
+        return ResponseEntity.ok(eventService.getEvents(pageable, search, startDate, endDate, status));
     }
 
     @GetMapping("/{eventId}")

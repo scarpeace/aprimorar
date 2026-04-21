@@ -1,147 +1,147 @@
-# Architecture Patterns
+# Padrões de Arquitetura
 
-**Domain:** private school management application
-**Researched:** 2026-04-17
+**Domínio:** aplicativo de gestão de escola particular
+**Pesquisado:** 17-04-2026
 
-## Recommended Architecture
+## Arquitetura Recomendada
 
-Extend the existing **modular monolith** instead of introducing microservices. Keep the current Spring Boot + PostgreSQL backend and React SPA, but formalize the app into six bounded areas: **Identity & Access**, **School Registry**, **Operations**, **Finance**, **Dashboard/Reporting**, and **Shared Platform**.
+Estender o **monolito modular** existente em vez de introduzir microsserviços. Manter o backend atual Spring Boot + PostgreSQL e o SPA React, mas formalizar o app em seis áreas delimitadas (bounded areas): **Identidade & Acesso**, **Registro Escolar**, **Operações**, **Financeiro**, **Dashboard/Relatórios** e **Plataforma Compartilhada**.
 
-The existing codebase already behaves like a domain-organized modular monolith: backend packages are split by domain (`student`, `parent`, `employee`, `event`, `dashboard`), the frontend is split by feature folders, and contracts flow through OpenAPI + Kubb. The safest extension path is to preserve that shape and add missing capabilities as new modules, not as cross-cutting hacks inside `event` or `dashboard`.
+A base de código existente já se comporta como um monolito modular organizado por domínio: os pacotes do backend são divididos por domínio (`student`, `parent`, `employee`, `event`, `dashboard`), o frontend é dividido por pastas de funcionalidades (features) e os contratos fluem através de OpenAPI + Kubb. O caminho de extensão mais seguro é preservar esse formato e adicionar as capacidades ausentes como novos módulos, não como hacks transversais dentro de `event` ou `dashboard`.
 
 ```text
 React SPA
-├── Auth shell (login, session bootstrap, protected app routes)
-├── Feature pages (dashboard, students, parents, employees, events, finance)
-└── Shared API/query layer (Kubb + TanStack Query)
+├── Shell de Autenticação (login, bootstrap de sessão, rotas protegidas)
+├── Páginas de Funcionalidades (dashboard, alunos, responsáveis, funcionários, eventos, financeiro)
+└── Camada compartilhada de API/query (Kubb + TanStack Query)
         ↓
-Spring Boot modular monolith
-├── identity/         -> login, logout, current user, role checks
-├── student/          -> student master data
-├── parent/           -> parent/responsável master data
-├── employee/         -> employee master data
-├── event/            -> scheduling / atendimento operations
-├── finance/          -> charges, payments, balance rules
-├── dashboard/        -> aggregated read models only
-└── shared/           -> error handling, pagination, clock, config
+Monolito modular Spring Boot
+├── identity/         -> login, logout, usuário atual, verificações de papel
+├── student/          -> dados mestres de alunos
+├── parent/           -> dados mestres de pais/responsáveis
+├── employee/         -> dados mestres de funcionários
+├── event/            -> operações de agendamento / atendimento
+├── finance/          -> cobranças, pagamentos, regras de saldo
+├── dashboard/        -> apenas modelos de leitura agregados
+└── shared/           -> tratamento de erros, paginação, clock, configuração
         ↓
 PostgreSQL
-├── registry tables
-├── operations tables
-├── finance tables
-└── auth tables
+├── tabelas de registro
+├── tabelas de operações
+├── tabelas financeiras
+└── tabelas de autenticação
 ```
 
-### Component Boundaries
+### Limites dos Componentes
 
-| Component | Responsibility | Communicates With |
+| Componente | Responsabilidade | Comunica-se com |
 |-----------|---------------|-------------------|
-| Auth UI | Login form, logout, session bootstrap, route guard, current-user context | Identity API, protected routes |
-| Main app shell | Navigation, section visibility, layout, global error/loading states | Auth UI, feature pages |
-| Student module | Student CRUD, search, archive, parent link | Parent module, Dashboard read model |
-| Parent module | Parent CRUD and lookup for student assignment | Student module |
-| Employee module | Employee CRUD and lookup for scheduling/ownership | Event module, Identity bootstrap |
-| Event module | Atendimentos/classes scheduling, conflicts, links to student + employee | Student, Employee, Dashboard |
-| Finance module | Receivables/payments ledger, overdue tracking, financial summaries | Student, Parent, Dashboard |
-| Dashboard module | Consolidated KPIs and charts exposed as read endpoints only | Event, Finance, Student |
-| Identity module | User account, password hash, session lifecycle, role claims | Employee (optional reference), all protected controllers |
-| Shared platform | ProblemDetail/error shaping, pagination, clock, CORS/security config, auditing | All backend modules |
+| UI de Autenticação | Formulário de login, logout, bootstrap de sessão, guarda de rota, contexto de usuário atual | API de Identidade, rotas protegidas |
+| Shell principal do app | Navegação, visibilidade de seção, layout, estados globais de erro/carregamento | UI de Autenticação, páginas de funcionalidades |
+| Módulo de Aluno | CRUD de aluno, busca, arquivamento, vínculo com responsável | Módulo de Responsável, modelo de leitura do Dashboard |
+| Módulo de Responsável | CRUD de responsável e busca para atribuição de aluno | Módulo de Aluno |
+| Módulo de Funcionário | CRUD de funcionário e busca para agendamento/propriedade | Módulo de Evento, bootstrap de Identidade |
+| Módulo de Evento | Agendamento de atendimentos/aulas, conflitos, vínculos com aluno + funcionário | Aluno, Funcionário, Dashboard |
+| Módulo Financeiro | Livro-razão de recebíveis/pagamentos, rastreamento de atrasos, resumos financeiros | Aluno, Responsável, Dashboard |
+| Módulo de Dashboard | KPIs e gráficos consolidados expostos apenas como endpoints de leitura | Evento, Financeiro, Aluno |
+| Módulo de Identidade | Conta de usuário, hash de senha, ciclo de vida da sessão, claims de papel | Funcionário (referência opcional), todos os controllers protegidos |
+| Plataforma compartilhada | ProblemDetail/formatação de erro, paginação, clock, config de CORS/segurança, auditoria | Todos os módulos do backend |
 
-## Data Flow
+## Fluxo de Dados
 
-### 1. Authentication and app bootstrap
+### 1. Autenticação e bootstrap do app
 
-1. User opens SPA.
-2. SPA calls `GET /v1/auth/me` (or equivalent bootstrap endpoint).
-3. Backend resolves session from Spring Security and returns current user + role + permitted navigation areas.
-4. React app renders either:
-   - login route for anonymous users, or
-   - protected layout for authenticated users.
-5. TanStack Query caches the session payload; logout clears session-related queries.
+1. O usuário abre o SPA.
+2. O SPA chama `GET /v1/auth/me` (ou endpoint de bootstrap equivalente).
+3. O backend resolve a sessão a partir do Spring Security e retorna o usuário atual + papel (role) + áreas de navegação permitidas.
+4. O app React renderiza:
+   - a rota de login para usuários anônimos, ou
+   - o layout protegido para usuários autenticados.
+5. O TanStack Query armazena em cache o payload da sessão; o logout limpa as consultas relacionadas à sessão.
 
-### 2. Protected business flow
+### 2. Fluxo de negócio protegido
 
-1. User navigates to a protected page.
-2. Route guard/layout checks cached session state.
-3. Page calls generated Kubb hook.
-4. Backend controller delegates to service.
-5. Service enforces business rules and authorization.
-6. Repository persists/reads data.
-7. DTO response returns through OpenAPI-generated client.
-8. Mutation invalidates relevant query keys so list/detail/dashboard data refreshes.
+1. O usuário navega para uma página protegida.
+2. O guarda de rota/layout verifica o estado da sessão em cache.
+3. A página chama o hook Kubb gerado.
+4. O controller do backend delega para o serviço.
+5. O serviço aplica as regras de negócio e autorização.
+6. O repositório persiste/lê os dados.
+7. A resposta DTO retorna através do cliente gerado pelo OpenAPI.
+8. A mutação invalida as chaves de consulta relevantes para que os dados de lista/detalhe/dashboard sejam atualizados.
 
-### 3. Dashboard flow
+### 3. Fluxo do Dashboard
 
-1. Dashboard UI calls a small number of aggregated read endpoints.
-2. Dashboard service composes summary data from Event + Finance + Student repositories/services.
-3. UI renders KPIs/charts without reconstructing business logic client-side.
+1. A UI do Dashboard chama um pequeno número de endpoints de leitura agregados.
+2. O serviço de Dashboard compõe os dados de resumo a partir dos repositórios/serviços de Evento + Financeiro + Aluno.
+3. A UI renderiza KPIs/gráficos sem reconstruir a lógica de negócio no lado do cliente.
 
-### 4. Finance flow
+### 4. Fluxo Financeiro
 
-1. Secretary creates or updates a charge for a student/responsável.
-2. Finance service calculates status (`ABERTO`, `PAGO`, `VENCIDO`, `PARCIAL`, etc.).
-3. Payment postings update balance history.
-4. Dashboard reads pre-defined finance summaries; finance pages read ledger-style endpoints.
+1. A secretária cria ou atualiza uma cobrança para um aluno/responsável.
+2. O serviço financeiro calcula o status (`ABERTO`, `PAGO`, `VENCIDO`, `PARCIAL`, etc.).
+3. Os lançamentos de pagamento atualizam o histórico de saldo.
+4. O Dashboard lê resumos financeiros pré-definidos; as páginas financeiras leem endpoints estilo livro-razão.
 
-## Patterns to Follow
+## Padrões a Seguir
 
-### Pattern 1: Keep authentication as a first-class module, not a frontend-only guard
-**What:** Add a backend identity boundary with session-backed authentication, current-user endpoint, and role-based authorization.
-**When:** Immediately, before finance and dashboard visibility changes.
-**Why:** In this repo, authentication does not exist yet, and all current routes are implicitly public. Adding page guards without server enforcement creates a false sense of security.
+### Padrão 1: Manter a autenticação como um módulo de primeira classe, não apenas um guarda de frontend
+**O quê:** Adicionar um limite de identidade no backend com autenticação baseada em sessão, endpoint de usuário atual e autorização baseada em papéis.
+**Quando:** Imediatamente, antes das mudanças de visibilidade do financeiro e dashboard.
+**Por quê:** Neste repositório, a autenticação ainda não existe e todas as rotas atuais são implicitamente públicas. Adicionar guardas de página sem imposição no servidor cria uma falsa sensação de segurança.
 
-**Recommended shape:**
+**Formato recomendado:**
 
 ```text
 identity/
-├── AuthController      -> login, logout, me, csrf if needed
-├── AuthService         -> credential verification, bootstrap DTO
-├── UserAccount         -> username/email, password hash, active flag
-├── UserRole            -> ADMIN, SECRETARIA (start simple)
-└── SecurityConfig      -> Spring Security filter chain
+├── AuthController      -> login, logout, me, csrf se necessário
+├── AuthService         -> verificação de credenciais, DTO de bootstrap
+├── UserAccount         -> usuário/e-mail, hash de senha, flag ativa
+├── UserRole            -> ADMIN, SECRETARIA (começar simples)
+└── SecurityConfig      -> cadeia de filtros do Spring Security
 ```
 
-**Recommendation:** Use **server-side session auth with secure cookies**, not JWT, for v1. This is a same-product SPA + Spring backend, not a public multi-client API platform. Sessions are simpler to revoke, simpler to reason about, and align with Spring Security defaults. If the SPA stays on a different origin in dev/prod, configure CORS and credentialed requests explicitly.
+**Recomendação:** Usar **autenticação de sessão no lado do servidor com cookies seguros**, não JWT, para a v1. Este é um par SPA + backend Spring do mesmo produto, não uma plataforma de API pública para múltiplos clientes. As sessões são mais simples de revogar, mais simples de entender e se alinham com os padrões do Spring Security. Se o SPA permanecer em uma origem diferente em dev/prod, configure o CORS e as requisições com credenciais explicitamente.
 
-### Pattern 2: Separate finance from events even if dashboard currently derives money from events
-**What:** Create a dedicated `finance` module instead of extending `Event` as the source of truth for receivables.
-**When:** As soon as overdue balances and payment tracking are introduced.
-**Why:** The existing `Event` entity already contains `price` and `payment`, and the dashboard sums those values today. That works for class economics, but it is the wrong core model for school receivables. Charges/payments need their own lifecycle, due dates, status, and audit trail.
+### Padrão 2: Separar o financeiro dos eventos, mesmo que o dashboard atualmente derive dinheiro dos eventos
+**O quê:** Criar um módulo `finance` dedicado em vez de estender `Event` como a fonte da verdade para os recebíveis.
+**Quando:** Assim que os saldos vencidos e o rastreamento de pagamentos forem introduzidos.
+**Por quê:** A entidade `Event` existente já contém `price` e `payment`, e o dashboard soma esses valores hoje. Isso funciona para a economia das aulas, mas é o modelo core errado para os recebíveis da escola. As cobranças/pagamentos precisam de seu próprio ciclo de vida, datas de vencimento, status e trilha de auditoria.
 
-**Recommended finance core:**
+**Núcleo financeiro recomendado:**
 
 ```text
 finance/
-├── Charge             -> amount due, due date, student/parent reference, status
-├── Payment            -> amount paid, paid at, method, note
-├── FinanceService     -> create charge, register payment, compute balance
-├── FinanceController  -> list charges, overdue summary, post payments
-└── FinanceSummaryService -> dashboard-oriented aggregation
+├── Charge             -> valor devido, data de vencimento, referência de aluno/responsável, status
+├── Payment            -> valor pago, pago em, método, observação
+├── FinanceService     -> criar cobrança, registrar pagamento, calcular saldo
+├── FinanceController  -> listar cobranças, resumo de atrasos, lançar pagamentos
+└── FinanceSummaryService -> agregação orientada ao dashboard
 ```
 
-**Integration rule:** link finance records to `student` (primary) and optionally `parent`, but do not make them children of `event`.
+**Regra de integração:** vincular registros financeiros ao `student` (primário) e opcionalmente ao `parent`, mas não torná-los filhos de `event`.
 
-### Pattern 3: Dashboard as read model, not transaction owner
-**What:** Keep dashboard endpoints thin and aggregate-only.
-**When:** Always.
-**Why:** Dashboards change faster than transactional rules. If dashboard code becomes the place where finance logic lives, every KPI tweak risks corrupting business rules.
+### Padrão 3: Dashboard como modelo de leitura, não dono da transação
+**O quê:** Manter os endpoints do dashboard enxutos e apenas com agregações.
+**Quando:** Sempre.
+**Por quê:** Os dashboards mudam mais rápido que as regras transacionais. Se o código do dashboard se tornar o local onde a lógica financeira reside, cada ajuste de KPI corre o risco de corromper as regras de negócio.
 
-**Good split:**
-- `finance` owns overdue and balance calculations.
-- `event` owns schedule and class economics.
-- `dashboard` only asks those modules for summarized data.
+**Boa divisão:**
+- `finance` detém os cálculos de atraso e saldo.
+- `event` detém o cronograma e a economia das aulas.
+- `dashboard` apenas solicita a esses módulos os dados resumidos.
 
-### Pattern 4: Frontend auth shell above feature routes
-**What:** Introduce a small app shell that resolves session state before rendering the protected layout.
-**When:** First frontend auth increment.
-**Why:** The current app mounts `MainLayout` directly for all routes. That makes auth, nav visibility, and anonymous redirects hard to add cleanly.
+### Padrão 4: Shell de autenticação no frontend acima das rotas de funcionalidades
+**O quê:** Introduzir um pequeno shell de app que resolva o estado da sessão antes de renderizar o layout protegido.
+**Quando:** Primeiro incremento de autenticação no frontend.
+**Por quê:** O app atual monta o `MainLayout` diretamente para todas as rotas. Isso torna difícil adicionar autenticação, visibilidade de navegação e redirecionamentos anônimos de forma limpa.
 
-**Recommended flow:**
+**Fluxo recomendado:**
 
 ```text
 <BrowserRouter>
-  /login -> public
-  /app/* -> protected layout
+  /login -> público
+  /app/* -> layout protegido
             ├── dashboard
             ├── students
             ├── parents
@@ -150,108 +150,108 @@ finance/
             └── finance
 ```
 
-If the team later adopts React Router data routers, move auth checks into route loaders/middleware. For now, a protected layout + bootstrap query is the lowest-risk retrofit.
+Se a equipe adotar posteriormente os data routers do React Router, mova as verificações de autenticação para os loaders/middleware de rota. Por enquanto, um layout protegido + consulta de bootstrap é a adaptação de menor risco.
 
-### Pattern 5: Preserve contract-first integration
-**What:** All new auth, finance, and dashboard DTOs flow through backend OpenAPI generation and frontend Kubb sync.
-**When:** Every contract change.
-**Why:** This repo already depends on generated clients. Bypassing that pattern for auth or finance will create the highest integration risk in the milestone.
+### Padrão 5: Preservar a integração baseada em contrato (contract-first)
+**O quê:** Todos os novos DTOs de autenticação, financeiro e dashboard fluem através da geração OpenAPI do backend e sincronização Kubb no frontend.
+**Quando:** Em cada mudança de contrato.
+**Por quê:** Este repositório já depende de clientes gerados. Ignorar esse padrão para autenticação ou financeiro criará o maior risco de integração no marco (milestone).
 
-## Suggested Build Order
+## Ordem de Construção Sugerida
 
-### Step 1: Backend identity foundation
-Add Spring Security, user accounts, password hashing, login/logout/current-user endpoints, and baseline role checks.
+### Passo 1: Fundação de identidade no backend
+Adicionar Spring Security, contas de usuário, hashing de senha, endpoints de login/logout/usuário atual e verificações básicas de papel.
 
-**Why first:** it is the only net-new cross-cutting capability. Finance and dashboard visibility depend on knowing who is logged in.
+**Por que primeiro:** é a única capacidade transversal totalmente nova. A visibilidade do financeiro e do dashboard depende de saber quem está logado.
 
-### Step 2: Frontend auth shell and protected routing
-Add login page, bootstrap query, protected layout, logout, and nav visibility.
+### Passo 2: Shell de autenticação no frontend e roteamento protegido
+Adicionar página de login, consulta de bootstrap, layout protegido, logout e visibilidade de navegação.
 
-**Why second:** this exposes auth safely without forcing immediate domain rewrites. Existing student/parent/employee/event pages can remain mostly unchanged behind the shell.
+**Por que segundo:** isso expõe a autenticação com segurança sem forçar reescritas imediatas de domínio. As páginas existentes de aluno/responsável/funcionário/evento podem permanecer praticamente inalteradas atrás do shell.
 
-### Step 3: Authorization tightening on existing modules
-Protect current backend endpoints and ensure the SPA handles `401/403` cleanly.
+### Passo 3: Reforço da autorização nos módulos existentes
+Proteger os endpoints atuais do backend e garantir que o SPA trate erros `401/403` de forma limpa.
 
-**Why third:** minimizes brownfield risk. First make auth work, then make the old app respect it.
+**Por que terceiro:** minimiza o risco em brownfield. Primeiro faça a autenticação funcionar, depois faça o app antigo respeitá-la.
 
-### Step 4: Finance domain as a separate module
-Add charge/payment tables, services, CRUD/list endpoints, overdue rules, and summary endpoints.
+### Passo 4: Domínio financeiro como um módulo separado
+Adicionar tabelas de cobrança/pagamento, serviços, endpoints de CRUD/lista, regras de atraso e endpoints de resumo.
 
-**Why fourth:** finance has the most domain risk and should be implemented after auth, but before dashboard redesign. This avoids building dashboard metrics on temporary finance logic.
+**Por que quarto:** o financeiro tem o maior risco de domínio e deve ser implementado após a autenticação, mas antes do redesenho do dashboard. Isso evita construir métricas de dashboard sobre uma lógica financeira temporária.
 
-### Step 5: Dashboard rewrite to compose operational + financial summaries
-Refactor dashboard service so it reads from finance summaries plus existing operational/event metrics.
+### Passo 5: Reescrita do dashboard para compor resumos operacionais + financeiros
+Refatorar o serviço de dashboard para que ele leia os resumos financeiros mais as métricas operacionais/de eventos existentes.
 
-**Why fifth:** dashboard should be the consumer of finished modules, not the prototype surface where unfinished finance logic leaks.
+**Por que quinto:** o dashboard deve ser o consumidor de módulos finalizados, não a superfície de protótipo onde a lógica financeira inacabada vaza.
 
-### Step 6: Optional visibility refinement
-Only after the above, add more granular role-based visibility, feature flags, or future portals for teachers/parents/students.
+### Passo 6: Refinamento opcional de visibilidade
+Apenas após o acima, adicionar visibilidade mais granular baseada em papéis, flags de funcionalidades (feature flags) ou futuros portais para professores/pais/alunos.
 
-**Why last:** v1 explicitly does not need complex permissions.
+**Por que por último:** a v1 explicitamente não precisa de permissões complexas.
 
-## Integration Guidance for Authentication and Finance in This Existing Stack
+## Orientação de Integração para Autenticação e Financeiro nesta Stack Existente
 
-### Backend integration guidance
+### Orientação de integração no backend
 
-- Add `spring-boot-starter-security`; it is not present today in `pom.xml`.
-- Keep security config centralized under `config/` plus an `identity/` domain package.
-- Reuse the existing global error shape by adding explicit `401` and `403` handlers/entry points.
-- Because the SPA runs on `http://localhost:5173`, update CORS for credentialed requests when session auth is introduced.
-- Add auth-related Flyway migrations before exposing login.
-- Keep `ADMIN` and `SECRETARIA` only for v1; do not model the full future role matrix yet.
+- Adicionar `spring-boot-starter-security`; não está presente hoje no `pom.xml`.
+- Manter a configuração de segurança centralizada em `config/` mais um pacote de domínio `identity/`.
+- Reutilizar o formato de erro global existente adicionando tratadores/pontos de entrada explícitos para `401` e `403`.
+- Como o SPA roda em `http://localhost:5173`, atualize o CORS para requisições com credenciais quando a autenticação de sessão for introduzida.
+- Adicionar migrações Flyway relacionadas à autenticação antes de expor o login.
+- Manter apenas `ADMIN` e `SECRETARIA` para a v1; não modele toda a futura matriz de papéis ainda.
 
-### Frontend integration guidance
+### Orientação de integração no frontend
 
-- Add a dedicated auth feature folder instead of spreading auth logic through `MainLayout`.
-- Keep session state in TanStack Query, not in ad hoc global state.
-- On successful login/logout, invalidate or clear `me`, dashboard, and any user-scoped queries.
-- Derive navigation visibility from the `me` payload instead of hardcoding every menu item forever.
-- Keep generated Kubb hooks as the source of truth; do not special-case auth with handwritten fetch code unless unavoidable.
+- Adicionar uma pasta de funcionalidade de autenticação dedicada em vez de espalhar a lógica de autenticação pelo `MainLayout`.
+- Manter o estado da sessão no TanStack Query, não em um estado global ad hoc.
+- Após o login/logout bem-sucedido, invalide ou limpe o `me`, o dashboard e quaisquer consultas escopadas ao usuário.
+- Derive a visibilidade da navegação do payload `me` em vez de fixar cada item do menu para sempre no código.
+- Manter os hooks Kubb gerados como a fonte da verdade; não trate a autenticação como caso especial com código de fetch escrito manualmente, a menos que seja inevitável.
 
-### Brownfield migration guidance
+### Orientação de migração em brownfield
 
-- Do **not** rewrite students/parents/employees/events to “fit auth”. Wrap them with auth first.
-- Do **not** retrofit finance into the existing `event` table just because revenue/cost already exists there.
-- Do **not** expand permissions beyond what the current milestone needs.
-- Change dashboard last among the user-facing surfaces; it is the easiest place to recompose data once the underlying modules are stable.
+- **Não** reescreva alunos/responsáveis/funcionários/eventos para "caber na autenticação". Envolva-os com a autenticação primeiro.
+- **Não** adapte o financeiro na tabela `event` existente apenas porque a receita/custo já existe lá.
+- **Não** expanda as permissões além do que o marco atual necessita.
+- Altere o dashboard por último entre as superfícies voltadas para o usuário; é o lugar mais fácil para recompor dados uma vez que os módulos subjacentes estejam estáveis.
 
-## Anti-Patterns to Avoid
+## Antipadrões a Evitar
 
-### Anti-Pattern 1: Using `Employee` as the login account model
-**What:** Treating employee records as authentication records.
-**Why bad:** HR/person data and login credentials evolve differently. Not every employee should become a user, and password/account lock concerns do not belong in the employee aggregate.
-**Instead:** Create `UserAccount` and optionally link it to `Employee`.
+### Antipadrão 1: Usar `Employee` como o modelo de conta de login
+**O quê:** Tratar registros de funcionários como registros de autenticação.
+**Por que é ruim:** Dados de RH/pessoa e credenciais de login evoluem de forma diferente. Nem todo funcionário deve se tornar um usuário, e as preocupações com senha/bloqueio de conta não pertencem ao agregado de funcionário.
+**Em vez disso:** Crie um `UserAccount` e opcionalmente vincule-o ao `Employee`.
 
-### Anti-Pattern 2: Keeping finance inside dashboard queries
-**What:** Computing overdue balances directly inside dashboard services/controllers.
-**Why bad:** Business rules become duplicated and untestable.
-**Instead:** Put balance rules in `finance`, expose dashboard-friendly summary methods.
+### Antipadrão 2: Manter o financeiro dentro das consultas do dashboard
+**O quê:** Calcular saldos vencidos diretamente dentro dos serviços/controllers de dashboard.
+**Por que é ruim:** As regras de negócio tornam-se duplicadas e impossíveis de testar.
+**Em vez disso:** Coloque as regras de saldo em `finance`, exponha métodos de resumo amigáveis ao dashboard.
 
-### Anti-Pattern 3: JWT-first complexity for an internal admin SPA
-**What:** Adding token issuance, refresh token rotation, storage strategy, and custom interceptors for v1.
-**Why bad:** More moving parts than the product needs right now.
-**Instead:** Use secure session cookies first; revisit JWT only if external/mobile/public clients appear.
+### Antipadrão 3: Complexidade de JWT primeiro para um SPA administrativo interno
+**O quê:** Adicionar emissão de token, rotação de refresh token, estratégia de armazenamento e interceptores customizados para a v1.
+**Por que é ruim:** Mais partes móveis do que o produto precisa agora.
+**Em vez disso:** Use cookies de sessão seguros primeiro; revisite o JWT apenas se surgirem clientes externos/mobile/públicos.
 
-### Anti-Pattern 4: Frontend-only authorization
-**What:** Hiding routes/menu items without server-side protection.
-**Why bad:** Anyone can still call the API.
-**Instead:** Enforce auth in Spring Security and use frontend visibility only as UX.
+### Antipadrão 4: Autorização apenas no frontend
+**O quê:** Esconder rotas/itens de menu sem proteção no lado do servidor.
+**Por que é ruim:** Qualquer pessoa ainda pode chamar a API.
+**Em vez disso:** Imponha a autenticação no Spring Security e use a visibilidade do frontend apenas como UX.
 
-## Scalability Considerations
+## Considerações de Escalabilidade
 
-| Concern | At 100 users | At 10K users | At 1M users |
+| Preocupação | Com 100 usuários | Com 10 mil usuários | Com 1 milhão de usuários |
 |---------|--------------|--------------|-------------|
-| Authentication | In-memory/local session okay for dev; DB-backed accounts | Consider Spring Session if multiple app instances | Dedicated identity platform likely needed |
-| Dashboard aggregation | Direct repository aggregation is fine | Add summary queries/materialized views for finance KPIs | Separate analytics/read pipeline |
-| Finance ledger | Simple charge/payment tables sufficient | Add indexes on due date, student, status | Partitioning/archive strategy likely needed |
-| API composition | Module-to-module service calls inside monolith | Keep clear boundaries, avoid circular service dependencies | Consider extraction only if org/scale demands it |
-| Frontend data loading | Page-level queries are fine | Consolidate summary endpoints to reduce waterfalls | BFF/edge caching may be justified |
+| Autenticação | Sessão em memória/local ok para dev; contas no DB | Considere Spring Session se houver múltiplas instâncias | Provavelmente necessária plataforma de identidade dedicada |
+| Agregação do dashboard | Agregação direta no repositório está ok | Adicionar consultas de resumo/views materializadas para KPIs financeiros | Pipeline de leitura/analytics separado |
+| Livro-razão financeiro | Tabelas simples de cobrança/pagamento são suficientes | Adicionar índices em data de vencimento, aluno, status | Provavelmente necessária estratégia de particionamento/arquivamento |
+| Composição da API | Chamadas de serviço de módulo para módulo dentro do monolito | Manter limites claros, evitar dependências circulares de serviço | Considere a extração apenas se a organização/escala exigir |
+| Carregamento de dados no frontend | Consultas no nível da página estão ok | Consolidar endpoints de resumo para reduzir cascatas (waterfalls) | Caching em BFF/edge pode ser justificado |
 
-## Sources
+## Fontes
 
-- Repository inspection: existing domain packages, routing structure, dashboard/event coupling, CORS config, and OpenAPI/Kubb workflow in this codebase. **Confidence: HIGH**
-- Spring Security session management reference: https://docs.spring.io/spring-security/reference/servlet/authentication/session-management.html **Confidence: HIGH**
-- Spring Security CSRF reference for SPAs: https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html **Confidence: HIGH**
-- Spring Security CORS integration reference: https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html **Confidence: HIGH**
-- React Router route object and middleware docs: https://reactrouter.com/start/data/route-object **Confidence: MEDIUM** (useful for future router evolution; current app still uses declarative routes)
-- TanStack Query invalidation guidance: https://tanstack.com/query/latest/docs/framework/react/guides/invalidations-from-mutations **Confidence: HIGH**
+- Inspeção do repositório: pacotes de domínio existentes, estrutura de roteamento, acoplamento dashboard/evento, config de CORS e fluxo OpenAPI/Kubb nesta base de código. **Confiança: ALTA**
+- Referência de gerenciamento de sessão do Spring Security: https://docs.spring.io/spring-security/reference/servlet/authentication/session-management.html **Confiança: ALTA**
+- Referência de CSRF do Spring Security para SPAs: https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html **Confiança: ALTA**
+- Referência de integração CORS do Spring Security: https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html **Confiança: ALTA**
+- Documentação de objeto de rota e middleware do React Router: https://reactrouter.com/start/data/route-object **Confiança: MÉDIA** (útil para a evolução futura do roteador; o app atual ainda usa rotas declarativas)
+- Orientação de invalidação do TanStack Query: https://tanstack.com/query/latest/docs/framework/react/guides/invalidations-from-mutations **Confiança: ALTA**

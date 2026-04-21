@@ -172,11 +172,11 @@ class EventServiceTest {
             EventResponseDTO expectedSecond = secondResponse();
             Page<Event> expectedPage = new PageImpl<>(List.of(firstEvent, secondEvent), input, 2);
 
-            when(eventRepo.findAll(input)).thenReturn(expectedPage);
+            when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expectedFirst);
             when(eventMapper.convertToDto(secondEvent)).thenReturn(expectedSecond);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, null, null, null);
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
@@ -194,7 +194,28 @@ class EventServiceTest {
             when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expected);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, search);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, search, null, null, null);
+
+            assertThat(actual.content()).containsExactly(expected);
+            assertThat(actual.totalElements()).isEqualTo(1);
+        }
+
+        @Test
+        @DisplayName("should return paged events when filters are informed")
+        void shouldReturnPagedEventsWhenFiltersAreInformed() {
+            Pageable input = PageRequest.of(0, 2);
+            Instant start = EVENT_START;
+            Instant end = EVENT_END;
+            com.aprimorar.api.enums.EventStatus status = com.aprimorar.api.enums.EventStatus.SCHEDULED;
+
+            Event firstEvent = event();
+            EventResponseDTO expected = response();
+            Page<Event> expectedPage = new PageImpl<>(List.of(firstEvent), input, 1);
+
+            when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
+            when(eventMapper.convertToDto(firstEvent)).thenReturn(expected);
+
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, start, end, status);
 
             assertThat(actual.content()).containsExactly(expected);
             assertThat(actual.totalElements()).isEqualTo(1);
@@ -377,7 +398,8 @@ class EventServiceTest {
             BigDecimal.valueOf(120),
             BigDecimal.valueOf(80),
             STUDENT_ID,
-            EMPLOYEE_ID
+            EMPLOYEE_ID,
+            com.aprimorar.api.enums.EventStatus.SCHEDULED
         );
     }
 
@@ -390,7 +412,8 @@ class EventServiceTest {
             BigDecimal.valueOf(140),
             BigDecimal.valueOf(90),
             STUDENT_ID,
-            EMPLOYEE_ID
+            EMPLOYEE_ID,
+            com.aprimorar.api.enums.EventStatus.COMPLETED
         );
     }
 
@@ -407,6 +430,7 @@ class EventServiceTest {
             "João Silva",
             EMPLOYEE_ID,
             "Ana Paula",
+            com.aprimorar.api.enums.EventStatus.SCHEDULED,
             CREATED_AT,
             UPDATED_AT
         );
@@ -425,6 +449,7 @@ class EventServiceTest {
             "João Silva",
             EMPLOYEE_ID,
             "Ana Paula",
+            com.aprimorar.api.enums.EventStatus.SCHEDULED,
             CREATED_AT,
             UPDATED_AT
         );
@@ -443,6 +468,7 @@ class EventServiceTest {
             "João Silva",
             EMPLOYEE_ID,
             "Ana Paula",
+            com.aprimorar.api.enums.EventStatus.COMPLETED,
             CREATED_AT,
             UPDATED_AT
         );
@@ -459,7 +485,8 @@ class EventServiceTest {
             BigDecimal.valueOf(120),
             EventContent.AULA,
             student(),
-            employee()
+            employee(),
+            com.aprimorar.api.enums.EventStatus.SCHEDULED
         );
         return input;
     }
@@ -475,7 +502,8 @@ class EventServiceTest {
             BigDecimal.valueOf(120),
             EventContent.AULA,
             student,
-            employee
+            employee,
+            com.aprimorar.api.enums.EventStatus.SCHEDULED
         );
         return input;
     }
@@ -491,7 +519,8 @@ class EventServiceTest {
             BigDecimal.valueOf(130),
             EventContent.MENTORIA,
             student(),
-            employee()
+            employee(),
+            com.aprimorar.api.enums.EventStatus.SCHEDULED
         );
         return input;
     }

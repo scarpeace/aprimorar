@@ -14,6 +14,7 @@ export type {
   GetEvents200,
   GetEventsQuery,
   GetEventsQueryParams,
+  GetEventsQueryParamsStatusEnumKey,
   GetEventsQueryResponse,
 } from "./GetEvents.ts";
 export type {
@@ -37,3 +38,4 @@ export type {
   UpdateEventMutationResponse,
   UpdateEventPathParams,
 } from "./UpdateEvent.ts";
+export { getEventsQueryParamsStatusEnum } from "./GetEvents.ts";

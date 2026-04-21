@@ -25,10 +25,12 @@ export type {
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
+  EventRequestDTOStatusEnumKey,
 } from "./EventRequestDTO.ts";
 export type {
   EventResponseDTO,
   EventResponseDTOContentEnumKey,
+  EventResponseDTOStatusEnumKey,
 } from "./EventResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./PageDTOEmployeeResponseDTO.ts";
 export type { PageDTOEventResponseDTO } from "./PageDTOEventResponseDTO.ts";
@@ -123,6 +125,7 @@ export type {
   GetEvents200,
   GetEventsQuery,
   GetEventsQueryParams,
+  GetEventsQueryParamsStatusEnumKey,
   GetEventsQueryResponse,
 } from "./events/GetEvents.ts";
 export type {
@@ -255,4 +258,7 @@ export { authCurrentUserResponseDTODutyEnum } from "./AuthCurrentUserResponseDTO
 export { employeeRequestDTODutyEnum } from "./EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./EventRequestDTO.ts";
+export { eventRequestDTOStatusEnum } from "./EventRequestDTO.ts";
 export { eventResponseDTOContentEnum } from "./EventResponseDTO.ts";
+export { eventResponseDTOStatusEnum } from "./EventResponseDTO.ts";
+export { getEventsQueryParamsStatusEnum } from "./events/GetEvents.ts";

@@ -1,81 +1,81 @@
 # Aprimorar
 
-## What This Is
+## O que é isto
 
-Aprimorar is a school management application for a private class school that replaces spreadsheet-driven operational and financial control with a centralized system. It is currently oriented around secretary and administrator workflows, with the product expected to expand later to teachers, parents, students, and other employees.
+O Aprimorar é um aplicativo de gestão escolar para uma escola de aulas particulares que substitui o controle operacional e financeiro baseado em planilhas por um sistema centralizado. Atualmente, está orientado para fluxos de trabalho de secretaria e administradores, com a expectativa de que o produto seja expandido posteriormente para professores, pais, alunos e outros funcionários.
 
-## Core Value
+## Valor Central
 
-The secretary must be able to manage the school day to day from the app without depending on scattered spreadsheets.
+A secretária deve ser capaz de gerenciar o dia a dia da escola a partir do app, sem depender de planilhas espalhadas.
 
-## Requirements
+## Requisitos
 
-### Validated
+### Validados
 
-- ✓ Dashboard summary endpoint and dashboard UI exist for high-level operational visibility — existing
-- ✓ Student management flows already exist in the current codebase — existing
-- ✓ Parent management flows already exist in the current codebase — existing
-- ✓ Employee management flows already exist in the current codebase — existing
-- ✓ Event management flows already exist in the current codebase — existing
-- ✓ Simple authentication for secretary/administrator access is implemented with protected internal routes — Phase 1
+- ✓ Endpoint de resumo do dashboard e UI do dashboard existem para visibilidade operacional de alto nível — existente
+- ✓ Fluxos de gestão de alunos já existem na base de código atual — existente
+- ✓ Fluxos de gestão de responsáveis já existem na base de código atual — existente
+- ✓ Fluxos de gestão de funcionários já existem na base de código atual — existente
+- ✓ Fluxos de gestão de eventos já existem na base de código atual — existente
+- ✓ Autenticação simples para acesso de secretária/administrador está implementada com rotas internas protegidas — Fase 1
 
-### Active
+### Ativos
 
-- [ ] Make employee, parent, student, and event CRUD fully functional for v1 with the required business rules for school operations
-- [ ] Introduce basic financial tracking for charges, payments, overdue balances, and simple summaries
-- [ ] Provide a small but useful dashboard summary that combines daily operational visibility with financial visibility
-- [ ] Remove the need to use Google Sheets for student and event management in day-to-day work
+- [ ] Tornar o CRUD de funcionários, responsáveis, alunos e eventos totalmente funcional para a v1 com as regras de negócio exigidas para as operações escolares
+- [ ] Introduzir o acompanhamento financeiro básico para cobranças, pagamentos, saldos vencidos e resumos simples
+- [ ] Fornecer um resumo de dashboard pequeno, mas útil, que combine visibilidade operacional diária com visibilidade financeira
+- [ ] Eliminar a necessidade de usar o Google Sheets para a gestão de alunos e eventos no trabalho do dia a dia
 
-### Out of Scope
+### Fora de Escopo
 
-- Teacher, parent, and student self-service access in v1 — deferred until the secretary/administrator workflow is solid
-- Advanced reports and richer analytics in v1 — the first release only needs enough visibility for daily decisions
-- Notifications and messaging in v1 — not required to replace the spreadsheet workflow
-- Payment gateway integrations in v1 — basic internal financial tracking is the priority first
-- Complex permissions and role models in v1 — simple authentication is enough for the initial release
+- Acesso de autoatendimento para professores, pais e alunos na v1 — adiado até que o fluxo de trabalho da secretária/administrador esteja sólido
+- Relatórios avançados e análises mais ricas na v1 — o primeiro lançamento precisa apenas de visibilidade suficiente para decisões diárias
+- Notificações e mensagens na v1 — não são necessárias para substituir o fluxo de trabalho de planilhas
+- Integrações com gateways de pagamento na v1 — o acompanhamento financeiro interno básico é a prioridade inicial
+- Modelos de permissões e papéis complexos na v1 — a autenticação simples é suficiente para o lançamento inicial
 
-## Context
+## Contexto
 
-The school currently manages students and events in Google Drive spreadsheets, with no meaningful integration across those flows. Financial control is still fuzzy, there are no reports, and payment invoices or overdue balances are not being tracked in a structured system at all.
+A escola atualmente gerencia alunos e eventos em planilhas do Google Drive, sem integração significativa entre esses fluxos. O controle financeiro ainda é impreciso, não há relatórios e as faturas de pagamento ou saldos vencidos não estão sendo acompanhados em um sistema estruturado.
 
-This repository is a brownfield monorepo with a Spring Boot backend and a React SPA frontend. The codebase already contains domain areas for dashboard, students, parents, employees, and events, plus generated OpenAPI-based frontend clients. Authentication is now present for internal staff through server-managed sessions and protected SPA/API routes, providing the secured base for the next hardening phases.
+Este repositório é um monorepo brownfield com um backend Spring Boot e um frontend SPA React. A base de código já contém áreas de domínio para dashboard, alunos, responsáveis, funcionários e eventos, além de clientes frontend gerados baseados em OpenAPI. A autenticação agora está presente para a equipe interna por meio de sessões gerenciadas pelo servidor e rotas protegidas de SPA/API, fornecendo a base segura para as próximas fases de endurecimento (hardening).
 
-The immediate product user is the school secretary/administrator. Future milestones are expected to open access to teachers, parents, students, and other school employees once the operational core is stable.
+O usuário imediato do produto é a secretária/administrador da escola. Marcos (milestones) futuros devem abrir o acesso a professores, pais, alunos e outros funcionários da escola assim que o núcleo operacional estiver estável.
 
-## Constraints
+## Restrições
 
-- **Product scope**: v1 must focus on secretary/administrator workflows — later user portals are intentionally deferred to keep the first release operationally useful
-- **Brownfield**: Existing student, parent, employee, event, and dashboard areas must be extended carefully rather than replaced — current code and patterns already exist
-- **Tech stack**: Keep working within the current React SPA + Spring Boot + PostgreSQL architecture — this is the established repo direction
-- **Integration boundary**: Frontend API types and hooks are generated from backend OpenAPI — backend contract changes must flow through codegen
-- **Operational goal**: The app must be good enough to stop relying on spreadsheets for daily school administration — otherwise v1 has not delivered the core value
+- **Escopo do produto**: a v1 deve focar nos fluxos de trabalho da secretária/administrador — portais de usuários posteriores são intencionalmente adiados para manter o primeiro lançamento operacionalmente útil
+- **Brownfield**: as áreas existentes de alunos, responsáveis, funcionários, eventos e dashboard devem ser estendidas cuidadosamente em vez de substituídas — o código e os padrões atuais já existem
+- **Stack tecnológica**: continuar trabalhando dentro da arquitetura atual React SPA + Spring Boot + PostgreSQL — esta é a direção estabelecida para o repositório
+- **Limite de integração**: os tipos e hooks da API do frontend são gerados a partir do OpenAPI do backend — as mudanças de contrato do backend devem fluir através da geração de código (codegen)
+- **Objetivo operacional**: o app deve ser bom o suficiente para parar de depender de planilhas para a administração diária da escola — caso contrário, a v1 não terá entregue o valor central
 
-## Key Decisions
+## Decisões Chave
 
-| Decision | Rationale | Outcome |
+| Decisão | Justificativa | Resultado |
 |----------|-----------|---------|
-| Prioritize secretary/administrator workflows first | This is the real day-to-day user and the fastest path to replacing spreadsheet operations | - Pending |
-| Treat finance in v1 as basic internal tracking, not a full billing platform | The immediate pain is lack of visibility and control, not advanced invoicing infrastructure | - Pending |
-| Keep the first dashboard focused on both operational and financial snapshot data | Daily decision-making needs both school activity visibility and overdue/payment visibility | - Pending |
-| Defer teacher, parent, and student access | Multi-role access would expand scope before the core administration workflow is stable | - Pending |
-| Use Spring Security server-managed sessions instead of JWT | Immediate logout and browser refresh persistence matter more than token portability for this internal SPA | Implemented in Phase 1 |
+| Priorizar os fluxos de trabalho da secretária/administrador primeiro | Este é o usuário real do dia a dia e o caminho mais rápido para substituir as operações por planilhas | - Pendente |
+| Tratar as finanças na v1 como acompanhamento interno básico, não uma plataforma de faturamento completa | A dor imediata é a falta de visibilidade e controle, não a infraestrutura avançada de faturamento | - Pendente |
+| Manter o primeiro dashboard focado em dados operacionais e financeiros instantâneos | A tomada de decisão diária precisa de visibilidade tanto da atividade escolar quanto de pagamentos/atrasos | - Pendente |
+| Adiar o acesso de professores, pais e alunos | O acesso multi-papel expandiria o escopo antes que o fluxo de administração central esteja estável | - Pendente |
+| Usar sessões gerenciadas pelo servidor do Spring Security em vez de JWT | O logout imediato e a persistência de atualização do navegador importam mais do que a portabilidade do token para este SPA interno | Implementado na Fase 1 |
 
-## Evolution
+## Evolução
 
-This document evolves at phase transitions and milestone boundaries.
+Este documento evolui nas transições de fase e limites de marcos (milestones).
 
-**After each phase transition** (via `/gsd-transition`):
-1. Requirements invalidated? -> Move to Out of Scope with reason
-2. Requirements validated? -> Move to Validated with phase reference
-3. New requirements emerged? -> Add to Active
-4. Decisions to log? -> Add to Key Decisions
-5. "What This Is" still accurate? -> Update if drifted
+**Após cada transição de fase** (via `/gsd-transition`):
+1. Requisitos invalidados? -> Mover para Fora de Escopo com o motivo
+2. Requisitos validados? -> Mover para Validados com referência à fase
+3. Novos requisitos surgiram? -> Adicionar aos Ativos
+4. Decisões para registrar? -> Adicionar às Decisões Chave
+5. "O que é isto" ainda está preciso? -> Atualizar se houver desvio
 
-**After each milestone** (via `/gsd-complete-milestone`):
-1. Full review of all sections
-2. Core Value check - still the right priority?
-3. Audit Out of Scope - reasons still valid?
-4. Update Context with current state
+**Após cada marco (milestone)** (via `/gsd-complete-milestone`):
+1. Revisão completa de todas as seções
+2. Verificação do Valor Central - ainda é a prioridade certa?
+3. Auditoria do Fora de Escopo - os motivos ainda são válidos?
+4. Atualizar o Contexto com o estado atual
 
 ---
-*Last updated: 2026-04-19 after Phase 1*
+*Última atualização: 19-04-2026 após a Fase 1*

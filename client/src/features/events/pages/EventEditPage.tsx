@@ -4,7 +4,7 @@ import { DateTimeInput } from "@/components/ui/date-time-input";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { SectionCard } from "@/components/ui/section-card";
-import { eventRequestDTOContentEnum, useGetEventById } from "@/kubb";
+import { eventRequestDTOContentEnum, eventRequestDTOStatusEnum, useGetEventById } from "@/kubb";
 import {
     toDatetimeLocalInput,
     toInstant
@@ -17,6 +17,7 @@ import { useParams } from "react-router-dom";
 import { EmployeeSelectDropdown } from "@/features/employees/components/EmployeeSelectDropdown";
 import { StudentSelectDropdown } from "@/features/students/components/StudentSelectDropdown";
 import { ContentSelectDropdown } from "../components/ContentSelectDropdown";
+import { StatusSelectDropdown } from "../components/StatusSelectDropdown";
 import { type EventFormSchema, eventFormSchema } from "../forms/eventFormSchema";
 import { useEventMutations } from "../hooks/use-event-mutations";
 
@@ -42,6 +43,7 @@ export function EventEditPage() {
       payment: eventQuery.data?.payment ?? 0,
       price: eventQuery.data?.price ?? 0,
       content: eventQuery.data?.content ?? eventRequestDTOContentEnum.AULA,
+      status: eventQuery.data?.status ?? eventRequestDTOStatusEnum.SCHEDULED,
       description: eventQuery.data?.description ?? "",
     },
   });
@@ -108,6 +110,13 @@ export function EventEditPage() {
               registration={register("content")}
               error={errors.content?.message}
             />
+
+            <StatusSelectDropdown
+              label="Status"
+              registration={register("status")}
+              error={errors.status?.message}
+            />
+
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Data Início</legend>
               <DateTimeInput control={control} name="startDate" placeholderText="Início" />

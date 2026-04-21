@@ -48,6 +48,7 @@ export type EmployeeRequestDTO = {
    */
   email: string;
   /**
+   * @description Função/Papel do funcionário
    * @type string
    */
   duty: EmployeeRequestDTODutyEnumKey;

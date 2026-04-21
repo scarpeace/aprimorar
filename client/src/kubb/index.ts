@@ -60,10 +60,12 @@ export type {
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
+  EventRequestDTOStatusEnumKey,
 } from "./types/EventRequestDTO.ts";
 export type {
   EventResponseDTO,
   EventResponseDTOContentEnumKey,
+  EventResponseDTOStatusEnumKey,
 } from "./types/EventResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./types/PageDTOEmployeeResponseDTO.ts";
 export type { PageDTOEventResponseDTO } from "./types/PageDTOEventResponseDTO.ts";
@@ -158,6 +160,7 @@ export type {
   GetEvents200,
   GetEventsQuery,
   GetEventsQueryParams,
+  GetEventsQueryParamsStatusEnumKey,
   GetEventsQueryResponse,
 } from "./types/events/GetEvents.ts";
 export type {
@@ -430,7 +433,10 @@ export { authCurrentUserResponseDTODutyEnum } from "./types/AuthCurrentUserRespo
 export { employeeRequestDTODutyEnum } from "./types/EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./types/EventRequestDTO.ts";
+export { eventRequestDTOStatusEnum } from "./types/EventRequestDTO.ts";
 export { eventResponseDTOContentEnum } from "./types/EventResponseDTO.ts";
+export { eventResponseDTOStatusEnum } from "./types/EventResponseDTO.ts";
+export { getEventsQueryParamsStatusEnum } from "./types/events/GetEvents.ts";
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
 export {

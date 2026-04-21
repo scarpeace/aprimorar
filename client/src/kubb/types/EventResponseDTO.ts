@@ -16,6 +16,15 @@ export const eventResponseDTOContentEnum = {
 export type EventResponseDTOContentEnumKey =
   (typeof eventResponseDTOContentEnum)[keyof typeof eventResponseDTOContentEnum];
 
+export const eventResponseDTOStatusEnum = {
+  SCHEDULED: "SCHEDULED",
+  COMPLETED: "COMPLETED",
+  CANCELED: "CANCELED",
+} as const;
+
+export type EventResponseDTOStatusEnumKey =
+  (typeof eventResponseDTOStatusEnum)[keyof typeof eventResponseDTOStatusEnum];
+
 /**
  * @description Dados do evento retornados pela API
  */
@@ -75,6 +84,11 @@ export type EventResponseDTO = {
    * @type string
    */
   employeeName: string;
+  /**
+   * @description Status do evento
+   * @type string
+   */
+  status: EventResponseDTOStatusEnumKey;
   /**
    * @description Data de criação do evento
    * @type string, date-time

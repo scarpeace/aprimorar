@@ -27,7 +27,11 @@ export const getEventsQueryParamsSchema = z.object({
       ),
   ),
   search: z.optional(z.string()),
-  archived: z.optional(z.boolean()),
+  startDate: z.optional(z.iso.datetime()),
+  endDate: z.optional(z.iso.datetime()),
+  status: z.optional(
+    z.enum(["SCHEDULED", "COMPLETED", "CANCELED"]).describe("Status do evento"),
+  ),
 });
 
 /**

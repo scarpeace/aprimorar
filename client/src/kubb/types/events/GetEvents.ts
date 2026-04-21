@@ -5,6 +5,15 @@
 
 import type { PageDTOEventResponseDTO } from "../PageDTOEventResponseDTO.ts";
 
+export const getEventsQueryParamsStatusEnum = {
+  SCHEDULED: "SCHEDULED",
+  COMPLETED: "COMPLETED",
+  CANCELED: "CANCELED",
+} as const;
+
+export type GetEventsQueryParamsStatusEnumKey =
+  (typeof getEventsQueryParamsStatusEnum)[keyof typeof getEventsQueryParamsStatusEnum];
+
 export type GetEventsQueryParams = {
   /**
    * @description Zero-based page index (0..N)
@@ -30,9 +39,18 @@ export type GetEventsQueryParams = {
    */
   search?: string;
   /**
-   * @type boolean | undefined
+   * @type string | undefined, date-time
    */
-  archived?: boolean;
+  startDate?: string;
+  /**
+   * @type string | undefined, date-time
+   */
+  endDate?: string;
+  /**
+   * @description Status do evento
+   * @type string | undefined
+   */
+  status?: GetEventsQueryParamsStatusEnumKey;
 };
 
 /**

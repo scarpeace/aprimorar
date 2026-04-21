@@ -167,7 +167,8 @@ public class Event extends BaseEntity {
         BigDecimal price,
         EventContent content,
         Student student,
-        Employee employee
+        Employee employee,
+        com.aprimorar.api.enums.EventStatus status
     ) {
         validateDates(startDate, endDate);
         validateAmounts(payment, price);
@@ -183,6 +184,9 @@ public class Event extends BaseEntity {
         setContent(content);
         setStudent(student);
         setEmployee(employee);
+        if (status != null) {
+            setStatus(status);
+        }
     }
 
     public void validateDatesForCreation(Instant now) {

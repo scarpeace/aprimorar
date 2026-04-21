@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -53,6 +54,9 @@ export function EventsTable({
               Horário
             </th>
             <th className="text-left font-semibold text-base-content/80">
+              Status
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
               Conteúdo
             </th>
             <th className="text-left font-semibold text-base-content/80">
@@ -77,6 +81,11 @@ export function EventsTable({
               <td>{event.employeeName}</td>
               <td className="">{formatDateShortYear(event.startDate)}</td>
               <td className=" text-center">{formatTime(event.startDate)} - {formatTime(event.endDate)}</td>
+              <td>
+                {event.status === "SCHEDULED" && <Badge variant="primary" className="p-1 px-2">Agendado</Badge>}
+                {event.status === "COMPLETED" && <Badge variant="success" className="p-1 px-2">Concluído</Badge>}
+                {event.status === "CANCELED" && <Badge variant="error" className="p-1 px-2">Cancelado</Badge>}
+              </td>
               <td className=" text-center">
                 {EventContentLabels[event.content] || event.content}
               </td>

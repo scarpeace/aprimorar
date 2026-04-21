@@ -7,6 +7,7 @@ import type { PropsWithChildren, SubmitEventHandler } from "react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import { ContentSelectDropdown } from "../components/ContentSelectDropdown";
+import { StatusSelectDropdown } from "../components/StatusSelectDropdown";
 import type { EventFormSchema } from "./eventFormSchema";
 
 type FormProps = PropsWithChildren<{
@@ -49,6 +50,12 @@ export function Fields({ errors, register }: FieldsProps) {
         label="Atendimento"
         registration={register("content")}
         error={errors.content?.message}
+      />
+
+      <StatusSelectDropdown
+        label="Status"
+        registration={register("status")}
+        error={errors.status?.message}
       />
 
       <fieldset className="fieldset">

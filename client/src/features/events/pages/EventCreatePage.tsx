@@ -12,6 +12,7 @@ import {
   toInstant
 } from "@/lib/utils/dateFormater";
 import { ContentSelectDropdown } from "../components/ContentSelectDropdown";
+import { StatusSelectDropdown } from "../components/StatusSelectDropdown";
 import {
   type EventFormSchema,
   eventFormSchema,
@@ -34,6 +35,7 @@ export function EventCreatePage() {
       payment: 0,
       startDate: "",
       endDate: "",
+      status: "SCHEDULED",
     }
   });
 
@@ -80,6 +82,12 @@ export function EventCreatePage() {
               label="Atendimento"
               registration={register("content")}
               error={errors.content?.message}
+            />
+
+            <StatusSelectDropdown
+              label="Status"
+              registration={register("status")}
+              error={errors.status?.message}
             />
 
 
