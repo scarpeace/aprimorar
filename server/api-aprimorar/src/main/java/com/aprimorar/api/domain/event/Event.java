@@ -39,6 +39,10 @@ public class Event extends BaseEntity {
     @Column(nullable = false)
     private EventContent content;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private com.aprimorar.api.enums.EventStatus status = com.aprimorar.api.enums.EventStatus.SCHEDULED;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
     private Student student;
@@ -129,6 +133,14 @@ public class Event extends BaseEntity {
 
     private void setContent(EventContent content) {
         this.content = content;
+    }
+
+    public com.aprimorar.api.enums.EventStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(com.aprimorar.api.enums.EventStatus status) {
+        this.status = status;
     }
 
     public Student getStudent() {

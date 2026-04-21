@@ -33,6 +33,21 @@ class EventTest {
     class ValidationMethods {
 
         @Test
+        @DisplayName("should initialize with SCHEDULED status")
+        void shouldInitializeWithScheduledStatus() {
+            Event input = new Event();
+            assertThat(input.getStatus()).isEqualTo(com.aprimorar.api.enums.EventStatus.SCHEDULED);
+        }
+
+        @Test
+        @DisplayName("should allow updating status")
+        void shouldAllowUpdatingStatus() {
+            Event input = new Event();
+            input.setStatus(com.aprimorar.api.enums.EventStatus.COMPLETED);
+            assertThat(input.getStatus()).isEqualTo(com.aprimorar.api.enums.EventStatus.COMPLETED);
+        }
+
+        @Test
         @DisplayName("should update details when values are valid")
         void shouldUpdateDetailsWhenValuesAreValid() {
             Event input = new Event();
