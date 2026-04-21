@@ -62,7 +62,8 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
                 student,
-                employee
+                employee,
+                com.aprimorar.api.enums.EventStatus.SCHEDULED
             );
 
             assertThat(input.getTitle()).isEqualTo("AULA - Col: Ana Paula - João Silva");
@@ -89,7 +90,8 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
                 student(),
-                employee()
+                employee(),
+                com.aprimorar.api.enums.EventStatus.SCHEDULED
             );
 
             assertThat(input.getDescription()).isEqualTo(" ");
@@ -108,7 +110,8 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
                 student(),
-                employee()
+                employee(),
+                com.aprimorar.api.enums.EventStatus.SCHEDULED
             ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("Data de fim do evento não pode ser anterior a data de inicio");
@@ -127,7 +130,8 @@ class EventTest {
                 BigDecimal.valueOf(80),
                 EventContent.AULA,
                 student(),
-                employee()
+                employee(),
+                com.aprimorar.api.enums.EventStatus.SCHEDULED
             ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O valor do evento não pode ser menor que o pagamento");
@@ -146,7 +150,8 @@ class EventTest {
                 BigDecimal.valueOf(49),
                 EventContent.AULA,
                 student(),
-                employee()
+                employee(),
+                com.aprimorar.api.enums.EventStatus.SCHEDULED
             ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O valor do evento não pode ser menor que R$50,00");
@@ -165,7 +170,8 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 null,
                 student(),
-                employee()
+                employee(),
+                com.aprimorar.api.enums.EventStatus.SCHEDULED
             ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O conteúdo do evento é obrigatório");
@@ -229,7 +235,8 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 EventContent.MENTORIA,
                 student,
-                employee
+                employee,
+                com.aprimorar.api.enums.EventStatus.SCHEDULED
             );
 
             assertThat(input.getTitle()).isEqualTo("MENTORIA - Col: Ana Paula - João Silva");
@@ -253,7 +260,8 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
                 student(),
-                employee()
+                employee(),
+                com.aprimorar.api.enums.EventStatus.SCHEDULED
             );
             return input;
         }

@@ -71,6 +71,7 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             where e.student.id = :studentId
               and e.startDate < :endDate
               and e.endDate > :startDate
+              and e.status <> com.aprimorar.api.enums.EventStatus.CANCELED
               and (:ignoredEventId is null or e.id <> :ignoredEventId)
         """
     )
@@ -88,6 +89,7 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             where e.employee.id = :employeeId
               and e.startDate < :endDate
               and e.endDate > :startDate
+              and e.status <> com.aprimorar.api.enums.EventStatus.CANCELED
               and (:ignoredEventId is null or e.id <> :ignoredEventId)
         """
     )
