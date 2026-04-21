@@ -79,10 +79,15 @@ Planos:
 **Depende de**: Fase 3
 **Requisitos**: FIN-01, FIN-02, FIN-03
 **Critérios de Sucesso** (o que deve ser VERDADE):
-  1. A secretária pode criar uma cobrança vinculada ao aluno ou parte responsável correta.
-  2. A secretária pode registrar um pagamento com valor e data de pagamento contra uma cobrança existente e ver o saldo restante ser atualizado corretamente.
-  3. A secretária pode visualizar resumos financeiros básicos para saldo total em aberto, valores recebidos e totais de cobrança.
-**Planos**: 3 planos
+  1. A secretária pode visualizar resumos financeiros básicos para saldo total em aberto, valores recebidos e totais de cobrança.
+  2. A secretária pode registrar um pagamento (baixa) contra um evento concluído ou despesa geral.
+  3. A secretária pode gerenciar despesas gerais não relacionadas a eventos.
+**Planos**: 4 planos
+Planos:
+- [ ] 04-01-PLAN.md — Estabelecer os modelos de domínio e esquema de banco de dados para rastreamento financeiro (FinancialStatus, GeneralExpense).
+- [ ] 04-02-PLAN.md — Implementar a lógica de negócios e endpoints de API para rastreamento financeiro e liquidação de eventos.
+- [ ] 04-03-PLAN.md — Implementar a infraestrutura frontend para finanças e o módulo de gerenciamento de Despesas Gerais.
+- [ ] 04-04-PLAN.md — Implementar o Dashboard Financeiro e o fluxo de trabalho de Liquidação de Eventos (Baixa).
 **Dica de UI**: sim
 
 ### Fase 5: Dashboard Diário Unificado
@@ -106,5 +111,5 @@ As fases são executadas em ordem numérica: 2 → 2.1 → 2.2 → 3 → 3.1 →
 | 1. Autenticação & Acesso Protegido | 4/4 | Concluído   | 18-04-2026 |
 | 2. Fortalecimento do Registro de Alunos & Responsáveis | 7/7 | Concluído | 20-04-2026 |
 | 3. Fortalecimento das Operações de Funcionários & Eventos | 4/4 | Concluído | 21-04-2026 |
-| 4. Núcleo de Acompanhamento Financeiro | 0/3 | Não iniciado | - |
+| 4. Núcleo de Acompanhamento Financeiro | 0/4 | Não iniciado | - |
 | 5. Dashboard Diário Unificado | 0/2 | Não iniciado | - |
