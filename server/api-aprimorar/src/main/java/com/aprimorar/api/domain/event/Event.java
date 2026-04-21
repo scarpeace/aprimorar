@@ -5,6 +5,7 @@ import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.event.exception.NotAllowedToUpdateEventException;
 import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.enums.FinancialStatus;
 import com.aprimorar.api.shared.BaseEntity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -42,6 +43,14 @@ public class Event extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private com.aprimorar.api.enums.EventStatus status = com.aprimorar.api.enums.EventStatus.SCHEDULED;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "income_status", nullable = false)
+    private FinancialStatus incomeStatus = FinancialStatus.PENDING;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "expense_status", nullable = false)
+    private FinancialStatus expenseStatus = FinancialStatus.PENDING;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
@@ -141,6 +150,22 @@ public class Event extends BaseEntity {
 
     public void setStatus(com.aprimorar.api.enums.EventStatus status) {
         this.status = status;
+    }
+
+    public FinancialStatus getIncomeStatus() {
+        return incomeStatus;
+    }
+
+    public void setIncomeStatus(FinancialStatus incomeStatus) {
+        this.incomeStatus = incomeStatus;
+    }
+
+    public FinancialStatus getExpenseStatus() {
+        return expenseStatus;
+    }
+
+    public void setExpenseStatus(FinancialStatus expenseStatus) {
+        this.expenseStatus = expenseStatus;
     }
 
     public Student getStudent() {
