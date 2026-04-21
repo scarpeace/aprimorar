@@ -12,14 +12,7 @@ import { useState, type ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import { ArchiveEmployeeButton } from "../components/ArchiveEmployeeButton";
 import { DeleteEmployeeButton } from "../components/DeleteEmployeeButton";
-
-const employeeDutyLabels = {
-  TEACHER: "Professor",
-  ADM: "Administrativo",
-  THERAPIST: "Terapeuta",
-  MENTOR: "Mentor",
-  SYSTEM: "Sistema",
-} as const;
+import { dutyLabels } from "../utils/dutyLabels";
 
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -60,7 +53,7 @@ export function EmployeeDetailPage() {
     { label: "E-mail", value: employeeQuery.data.email },
     {
       label: "Cargo",
-      value: employeeDutyLabels[employeeQuery.data.duty] ?? "Desconhecido",
+      value: dutyLabels[employeeQuery.data.duty] ?? "Desconhecido",
     },
     { label: "Contato", value: employeeQuery.data.contact },
     { label: "CPF", value: employeeQuery.data.cpf },
@@ -102,7 +95,7 @@ export function EmployeeDetailPage() {
          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <SummaryItem label="Nome completo" value={employeeQuery.data.name} />
           <SummaryItem label="E-mail" value={employeeQuery.data.email} />
-          <SummaryItem label="Cargo" value={employeeDutyLabels[employeeQuery.data.duty] ?? "Desconhecido"} />
+          <SummaryItem label="Cargo" value={dutyLabels[employeeQuery.data.duty] ?? "Desconhecido"} />
           <SummaryItem label="Contato" value={formatPhone(employeeQuery.data.contact)} />
           <SummaryItem label="CPF" value={formatCpf(employeeQuery.data.cpf)} />
           <SummaryItem label="Data de nascimento" value={formatDateShortYear(employeeQuery.data.birthdate ?? "")} />

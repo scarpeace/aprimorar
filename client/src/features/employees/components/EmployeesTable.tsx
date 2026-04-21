@@ -3,6 +3,7 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import type { PageDTOEmployeeResponseDTO } from "@/kubb";
+import { dutyLabels } from "../utils/dutyLabels";
 import {
   formatCpf,
   formatDateShortYear,
@@ -47,6 +48,9 @@ export function EmployeesTable({
               Nome
             </th>
             <th className="text-left font-semibold text-base-content/80">
+              Cargo
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
               CPF
             </th>
             <th className="text-left font-semibold text-base-content/80">
@@ -72,6 +76,7 @@ export function EmployeesTable({
               className="transition-colors hover:bg-base-200/70"
             >
               <td>{employee.name}</td>
+              <td>{dutyLabels[employee.duty]}</td>
 
               <td>{formatCpf(employee.cpf)}</td>
               <td>{formatPhone(employee.contact)}</td>
