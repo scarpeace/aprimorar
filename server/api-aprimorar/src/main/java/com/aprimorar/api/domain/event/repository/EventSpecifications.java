@@ -40,4 +40,12 @@ public final class EventSpecifications {
     public static Specification<Event> withStatus(EventStatus status) {
         return (root, query, cb) -> status == null ? null : cb.equal(root.get("status"), status);
     }
+
+    public static Specification<Event> withStudentId(java.util.UUID studentId) {
+        return (root, query, cb) -> studentId == null ? null : cb.equal(root.join("student").get("id"), studentId);
+    }
+
+    public static Specification<Event> withEmployeeId(java.util.UUID employeeId) {
+        return (root, query, cb) -> employeeId == null ? null : cb.equal(root.join("employee").get("id"), employeeId);
+    }
 }

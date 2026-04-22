@@ -1,15 +1,18 @@
 export { addressRequestDTOSchema } from "./addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./addressResponseDTOSchema.ts";
 export {
+  authMe200Schema,
+  authMeQueryResponseSchema,
+} from "./auth/authMeSchema.ts";
+export {
   login200Schema,
   loginMutationRequestSchema,
   loginMutationResponseSchema,
 } from "./auth/loginSchema.ts";
 export {
-  logout200Schema,
+  logout204Schema,
   logoutMutationResponseSchema,
 } from "./auth/logoutSchema.ts";
-export { me200Schema, meQueryResponseSchema } from "./auth/meSchema.ts";
 export { authCurrentUserResponseDTOSchema } from "./authCurrentUserResponseDTOSchema.ts";
 export { authLoginRequestDTOSchema } from "./authLoginRequestDTOSchema.ts";
 export { classesByContentDTOSchema } from "./classesByContentDTOSchema.ts";
@@ -62,84 +65,77 @@ export {
 export { employeeOptionsDTOSchema } from "./employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./employeeResponseDTOSchema.ts";
-export { eventRequestDTOSchema } from "./eventRequestDTOSchema.ts";
-export { eventResponseDTOSchema } from "./eventResponseDTOSchema.ts";
 export {
   createEvent201Schema,
   createEventMutationRequestSchema,
   createEventMutationResponseSchema,
-} from "./events/createEventSchema.ts";
+} from "./event/createEventSchema.ts";
+export {
+  deleteEvent204Schema,
+  deleteEventMutationResponseSchema,
+  deleteEventPathParamsSchema,
+} from "./event/deleteEventSchema.ts";
 export {
   getEventById200Schema,
   getEventByIdPathParamsSchema,
   getEventByIdQueryResponseSchema,
-} from "./events/getEventByIdSchema.ts";
-export {
-  getEventsByEmployee200Schema,
-  getEventsByEmployeePathParamsSchema,
-  getEventsByEmployeeQueryParamsSchema,
-  getEventsByEmployeeQueryResponseSchema,
-} from "./events/getEventsByEmployeeSchema.ts";
-export {
-  getEventsByStudent200Schema,
-  getEventsByStudentPathParamsSchema,
-  getEventsByStudentQueryParamsSchema,
-  getEventsByStudentQueryResponseSchema,
-} from "./events/getEventsByStudentSchema.ts";
+} from "./event/getEventByIdSchema.ts";
 export {
   getEvents200Schema,
   getEventsQueryParamsSchema,
   getEventsQueryResponseSchema,
-} from "./events/getEventsSchema.ts";
+} from "./event/getEventsSchema.ts";
 export {
   updateEvent200Schema,
   updateEventMutationRequestSchema,
   updateEventMutationResponseSchema,
   updateEventPathParamsSchema,
-} from "./events/updateEventSchema.ts";
+} from "./event/updateEventSchema.ts";
 export {
   updateExpenseStatus200Schema,
   updateExpenseStatusMutationResponseSchema,
   updateExpenseStatusPathParamsSchema,
   updateExpenseStatusQueryParamsSchema,
-} from "./events/updateExpenseStatusSchema.ts";
+} from "./event/updateExpenseStatusSchema.ts";
 export {
   updateIncomeStatus200Schema,
   updateIncomeStatusMutationResponseSchema,
   updateIncomeStatusPathParamsSchema,
   updateIncomeStatusQueryParamsSchema,
-} from "./events/updateIncomeStatusSchema.ts";
+} from "./event/updateIncomeStatusSchema.ts";
+export { eventRequestDTOSchema } from "./eventRequestDTOSchema.ts";
+export { eventResponseDTOSchema } from "./eventResponseDTOSchema.ts";
 export {
   getFinanceSummary200Schema,
   getFinanceSummaryQueryResponseSchema,
 } from "./finance/getFinanceSummarySchema.ts";
 export { financeSummaryDTOSchema } from "./financeSummaryDTOSchema.ts";
 export {
-  create201Schema,
-  createMutationRequestSchema,
-  createMutationResponseSchema,
-} from "./general expenses/createSchema.ts";
+  createGeneralExpense201Schema,
+  createGeneralExpenseMutationRequestSchema,
+  createGeneralExpenseMutationResponseSchema,
+} from "./general expenses/createGeneralExpenseSchema.ts";
 export {
-  delete204Schema,
-  deleteMutationResponseSchema,
-  deletePathParamsSchema,
-} from "./general expenses/deleteSchema.ts";
+  deleteGeneralExpense204Schema,
+  deleteGeneralExpenseMutationResponseSchema,
+  deleteGeneralExpensePathParamsSchema,
+} from "./general expenses/deleteGeneralExpenseSchema.ts";
 export {
-  findAll200Schema,
-  findAllQueryParamsSchema,
-  findAllQueryResponseSchema,
-} from "./general expenses/findAllSchema.ts";
+  getGeneralExpenseById200Schema,
+  getGeneralExpenseByIdPathParamsSchema,
+  getGeneralExpenseByIdQueryResponseSchema,
+} from "./general expenses/getGeneralExpenseByIdSchema.ts";
 export {
-  findById200Schema,
-  findByIdPathParamsSchema,
-  findByIdQueryResponseSchema,
-} from "./general expenses/findByIdSchema.ts";
+  getGeneralExpenses200Schema,
+  getGeneralExpensesQueryParamsSchema,
+  getGeneralExpensesQueryResponseSchema,
+} from "./general expenses/getGeneralExpensesSchema.ts";
 export {
-  update200Schema,
-  updateMutationRequestSchema,
-  updateMutationResponseSchema,
-  updatePathParamsSchema,
-} from "./general expenses/updateSchema.ts";
+  updateGeneralExpense200Schema,
+  updateGeneralExpenseMutationRequestSchema,
+  updateGeneralExpenseMutationResponseSchema,
+  updateGeneralExpensePathParamsSchema,
+} from "./general expenses/updateGeneralExpenseSchema.ts";
 export { generalExpenseRequestDTOSchema } from "./generalExpenseRequestDTOSchema.ts";
 export { generalExpenseResponseDTOSchema } from "./generalExpenseResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./pageDTOEmployeeResponseDTOSchema.ts";

@@ -14,6 +14,7 @@ import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.enums.EventStatus;
+import com.aprimorar.api.enums.FinancialStatus;
 import com.aprimorar.api.shared.PageDTO;
 import java.time.Clock;
 import java.time.Instant;
@@ -87,12 +88,16 @@ public class EventService {
         String search,
         Instant startDate,
         Instant endDate,
-        EventStatus status
+        EventStatus status,
+        UUID studentId,
+        UUID employeeId
     ) {
         Specification<Event> spec = Specification.where(EventSpecifications.searchContainsIgnoreCase(search))
             .and(EventSpecifications.withStartDateAfter(startDate))
             .and(EventSpecifications.withEndDateBefore(endDate))
-            .and(EventSpecifications.withStatus(status));
+            .and(EventSpecifications.withStatus(status))
+            .and(EventSpecifications.withStudentId(studentId))
+            .and(EventSpecifications.withEmployeeId(employeeId));
 
         Page<Event> eventPage = eventRepo.findAll(spec, pageable);
         Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);
@@ -167,6 +172,28 @@ public class EventService {
         Event foundEvent = findEventOrThrow(eventId);
         eventRepo.delete(foundEvent);
         log.info("Evento {} deletado com sucesso.", foundEvent.getTitle().toUpperCase());
+    }
+
+    @Transactional
+    public EventResponseDTO updateIncomeStatus(UUID id, FinancialStatus status) {
+        Event event = findEventOrThrow(id);
+        if (status == FinancialStatus.PAID && event.getStatus() != EventStatus.COMPLETED) {
+            throw new InvalidEventException("Não é possível marcar como pago um evento que não está concluído");
+        }
+        event.setIncomeStatus(status);
+        log.info("Status financeiro (receita) do evento {} atualizado para {}.", event.getTitle(), status);
+        return eventMapper.convertToDto(event);
+    }
+
+    @Transactional
+    public EventResponseDTO updateExpenseStatus(UUID id, FinancialStatus status) {
+        Event event = findEventOrThrow(id);
+        if (status == FinancialStatus.PAID && event.getStatus() != EventStatus.COMPLETED) {
+            throw new InvalidEventException("Não é possível marcar como pago um evento que não está concluído");
+        }
+        event.setExpenseStatus(status);
+        log.info("Status financeiro (despesa) do evento {} atualizado para {}.", event.getTitle(), status);
+        return eventMapper.convertToDto(event);
     }
 
     /* ----- Helper Methods ----- */

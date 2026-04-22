@@ -1,6 +1,6 @@
+export type { AuthMeQueryKey } from "./hooks/auth/useAuthMe.ts";
 export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
 export type { LogoutMutationKey } from "./hooks/auth/useLogout.ts";
-export type { MeQueryKey } from "./hooks/auth/useMe.ts";
 export type { GetDashboardSummaryQueryKey } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
 export type { ArchiveEmployeeMutationKey } from "./hooks/employee/useArchiveEmployee.ts";
 export type { CreateEmployeeMutationKey } from "./hooks/employee/useCreateEmployee.ts";
@@ -10,20 +10,19 @@ export type { GetEmployeeOptionsQueryKey } from "./hooks/employee/useGetEmployee
 export type { GetEmployeesQueryKey } from "./hooks/employee/useGetEmployees.ts";
 export type { UnarchiveEmployeeMutationKey } from "./hooks/employee/useUnarchiveEmployee.ts";
 export type { UpdateEmployeeMutationKey } from "./hooks/employee/useUpdateEmployee.ts";
-export type { CreateEventMutationKey } from "./hooks/events/useCreateEvent.ts";
-export type { GetEventByIdQueryKey } from "./hooks/events/useGetEventById.ts";
-export type { GetEventsQueryKey } from "./hooks/events/useGetEvents.ts";
-export type { GetEventsByEmployeeQueryKey } from "./hooks/events/useGetEventsByEmployee.ts";
-export type { GetEventsByStudentQueryKey } from "./hooks/events/useGetEventsByStudent.ts";
-export type { UpdateEventMutationKey } from "./hooks/events/useUpdateEvent.ts";
-export type { UpdateExpenseStatusMutationKey } from "./hooks/events/useUpdateExpenseStatus.ts";
-export type { UpdateIncomeStatusMutationKey } from "./hooks/events/useUpdateIncomeStatus.ts";
+export type { CreateEventMutationKey } from "./hooks/event/useCreateEvent.ts";
+export type { DeleteEventMutationKey } from "./hooks/event/useDeleteEvent.ts";
+export type { GetEventByIdQueryKey } from "./hooks/event/useGetEventById.ts";
+export type { GetEventsQueryKey } from "./hooks/event/useGetEvents.ts";
+export type { UpdateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
+export type { UpdateExpenseStatusMutationKey } from "./hooks/event/useUpdateExpenseStatus.ts";
+export type { UpdateIncomeStatusMutationKey } from "./hooks/event/useUpdateIncomeStatus.ts";
 export type { GetFinanceSummaryQueryKey } from "./hooks/finance/useGetFinanceSummary.ts";
-export type { CreateMutationKey } from "./hooks/general expenses/useCreate.ts";
-export type { DeleteMutationKey } from "./hooks/general expenses/useDelete.ts";
-export type { FindAllQueryKey } from "./hooks/general expenses/useFindAll.ts";
-export type { FindByIdQueryKey } from "./hooks/general expenses/useFindById.ts";
-export type { UpdateMutationKey } from "./hooks/general expenses/useUpdate.ts";
+export type { CreateGeneralExpenseMutationKey } from "./hooks/general expenses/useCreateGeneralExpense.ts";
+export type { DeleteGeneralExpenseMutationKey } from "./hooks/general expenses/useDeleteGeneralExpense.ts";
+export type { GetGeneralExpenseByIdQueryKey } from "./hooks/general expenses/useGetGeneralExpenseById.ts";
+export type { GetGeneralExpensesQueryKey } from "./hooks/general expenses/useGetGeneralExpenses.ts";
+export type { UpdateGeneralExpenseMutationKey } from "./hooks/general expenses/useUpdateGeneralExpense.ts";
 export type { ArchiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export type { CreateParentMutationKey } from "./hooks/parent/useCreateParent.ts";
 export type { DeleteParentMutationKey } from "./hooks/parent/useDeleteParent.ts";
@@ -101,17 +100,21 @@ export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
 export type { StudentResponsibleSummaryDTO } from "./types/StudentResponsibleSummaryDTO.ts";
 export type {
+  AuthMe200,
+  AuthMeQuery,
+  AuthMeQueryResponse,
+} from "./types/auth/AuthMe.ts";
+export type {
   Login200,
   LoginMutation,
   LoginMutationRequest,
   LoginMutationResponse,
 } from "./types/auth/Login.ts";
 export type {
-  Logout200,
+  Logout204,
   LogoutMutation,
   LogoutMutationResponse,
 } from "./types/auth/Logout.ts";
-export type { Me200, MeQuery, MeQueryResponse } from "./types/auth/Me.ts";
 export type {
   GetDashboardSummary200,
   GetDashboardSummaryQuery,
@@ -171,41 +174,33 @@ export type {
   CreateEventMutation,
   CreateEventMutationRequest,
   CreateEventMutationResponse,
-} from "./types/events/CreateEvent.ts";
+} from "./types/event/CreateEvent.ts";
+export type {
+  DeleteEvent204,
+  DeleteEventMutation,
+  DeleteEventMutationResponse,
+  DeleteEventPathParams,
+} from "./types/event/DeleteEvent.ts";
 export type {
   GetEventById200,
   GetEventByIdPathParams,
   GetEventByIdQuery,
   GetEventByIdQueryResponse,
-} from "./types/events/GetEventById.ts";
+} from "./types/event/GetEventById.ts";
 export type {
   GetEvents200,
   GetEventsQuery,
   GetEventsQueryParams,
   GetEventsQueryParamsStatusEnumKey,
   GetEventsQueryResponse,
-} from "./types/events/GetEvents.ts";
-export type {
-  GetEventsByEmployee200,
-  GetEventsByEmployeePathParams,
-  GetEventsByEmployeeQuery,
-  GetEventsByEmployeeQueryParams,
-  GetEventsByEmployeeQueryResponse,
-} from "./types/events/GetEventsByEmployee.ts";
-export type {
-  GetEventsByStudent200,
-  GetEventsByStudentPathParams,
-  GetEventsByStudentQuery,
-  GetEventsByStudentQueryParams,
-  GetEventsByStudentQueryResponse,
-} from "./types/events/GetEventsByStudent.ts";
+} from "./types/event/GetEvents.ts";
 export type {
   UpdateEvent200,
   UpdateEventMutation,
   UpdateEventMutationRequest,
   UpdateEventMutationResponse,
   UpdateEventPathParams,
-} from "./types/events/UpdateEvent.ts";
+} from "./types/event/UpdateEvent.ts";
 export type {
   UpdateExpenseStatus200,
   UpdateExpenseStatusMutation,
@@ -213,7 +208,7 @@ export type {
   UpdateExpenseStatusPathParams,
   UpdateExpenseStatusQueryParams,
   UpdateExpenseStatusQueryParamsStatusEnumKey,
-} from "./types/events/UpdateExpenseStatus.ts";
+} from "./types/event/UpdateExpenseStatus.ts";
 export type {
   UpdateIncomeStatus200,
   UpdateIncomeStatusMutation,
@@ -221,44 +216,44 @@ export type {
   UpdateIncomeStatusPathParams,
   UpdateIncomeStatusQueryParams,
   UpdateIncomeStatusQueryParamsStatusEnumKey,
-} from "./types/events/UpdateIncomeStatus.ts";
+} from "./types/event/UpdateIncomeStatus.ts";
 export type {
   GetFinanceSummary200,
   GetFinanceSummaryQuery,
   GetFinanceSummaryQueryResponse,
 } from "./types/finance/GetFinanceSummary.ts";
 export type {
-  Create201,
-  CreateMutation,
-  CreateMutationRequest,
-  CreateMutationResponse,
-} from "./types/general expenses/Create.ts";
+  CreateGeneralExpense201,
+  CreateGeneralExpenseMutation,
+  CreateGeneralExpenseMutationRequest,
+  CreateGeneralExpenseMutationResponse,
+} from "./types/general expenses/CreateGeneralExpense.ts";
 export type {
-  Delete204,
-  DeleteMutation,
-  DeleteMutationResponse,
-  DeletePathParams,
-} from "./types/general expenses/Delete.ts";
+  DeleteGeneralExpense204,
+  DeleteGeneralExpenseMutation,
+  DeleteGeneralExpenseMutationResponse,
+  DeleteGeneralExpensePathParams,
+} from "./types/general expenses/DeleteGeneralExpense.ts";
 export type {
-  FindAll200,
-  FindAllQuery,
-  FindAllQueryParams,
-  FindAllQueryParamsCategoryEnumKey,
-  FindAllQueryResponse,
-} from "./types/general expenses/FindAll.ts";
+  GetGeneralExpenseById200,
+  GetGeneralExpenseByIdPathParams,
+  GetGeneralExpenseByIdQuery,
+  GetGeneralExpenseByIdQueryResponse,
+} from "./types/general expenses/GetGeneralExpenseById.ts";
 export type {
-  FindById200,
-  FindByIdPathParams,
-  FindByIdQuery,
-  FindByIdQueryResponse,
-} from "./types/general expenses/FindById.ts";
+  GetGeneralExpenses200,
+  GetGeneralExpensesQuery,
+  GetGeneralExpensesQueryParams,
+  GetGeneralExpensesQueryParamsCategoryEnumKey,
+  GetGeneralExpensesQueryResponse,
+} from "./types/general expenses/GetGeneralExpenses.ts";
 export type {
-  Update200,
-  UpdateMutation,
-  UpdateMutationRequest,
-  UpdateMutationResponse,
-  UpdatePathParams,
-} from "./types/general expenses/Update.ts";
+  UpdateGeneralExpense200,
+  UpdateGeneralExpenseMutation,
+  UpdateGeneralExpenseMutationRequest,
+  UpdateGeneralExpenseMutationResponse,
+  UpdateGeneralExpensePathParams,
+} from "./types/general expenses/UpdateGeneralExpense.ts";
 export type {
   ArchiveParent204,
   ArchiveParentMutation,
@@ -362,6 +357,10 @@ export type {
   UpdateStudentMutationResponse,
   UpdateStudentPathParams,
 } from "./types/student/UpdateStudent.ts";
+export { authMe } from "./hooks/auth/useAuthMe.ts";
+export { authMeQueryKey } from "./hooks/auth/useAuthMe.ts";
+export { authMeQueryOptions } from "./hooks/auth/useAuthMe.ts";
+export { useAuthMe } from "./hooks/auth/useAuthMe.ts";
 export { login } from "./hooks/auth/useLogin.ts";
 export { loginMutationKey } from "./hooks/auth/useLogin.ts";
 export { loginMutationOptions } from "./hooks/auth/useLogin.ts";
@@ -370,10 +369,6 @@ export { logout } from "./hooks/auth/useLogout.ts";
 export { logoutMutationKey } from "./hooks/auth/useLogout.ts";
 export { logoutMutationOptions } from "./hooks/auth/useLogout.ts";
 export { useLogout } from "./hooks/auth/useLogout.ts";
-export { me } from "./hooks/auth/useMe.ts";
-export { meQueryKey } from "./hooks/auth/useMe.ts";
-export { meQueryOptions } from "./hooks/auth/useMe.ts";
-export { useMe } from "./hooks/auth/useMe.ts";
 export { getDashboardSummary } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
 export { getDashboardSummaryQueryKey } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
 export { getDashboardSummaryQueryOptions } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
@@ -410,62 +405,58 @@ export { updateEmployee } from "./hooks/employee/useUpdateEmployee.ts";
 export { updateEmployeeMutationKey } from "./hooks/employee/useUpdateEmployee.ts";
 export { updateEmployeeMutationOptions } from "./hooks/employee/useUpdateEmployee.ts";
 export { useUpdateEmployee } from "./hooks/employee/useUpdateEmployee.ts";
-export { createEvent } from "./hooks/events/useCreateEvent.ts";
-export { createEventMutationKey } from "./hooks/events/useCreateEvent.ts";
-export { createEventMutationOptions } from "./hooks/events/useCreateEvent.ts";
-export { useCreateEvent } from "./hooks/events/useCreateEvent.ts";
-export { getEventById } from "./hooks/events/useGetEventById.ts";
-export { getEventByIdQueryKey } from "./hooks/events/useGetEventById.ts";
-export { getEventByIdQueryOptions } from "./hooks/events/useGetEventById.ts";
-export { useGetEventById } from "./hooks/events/useGetEventById.ts";
-export { getEvents } from "./hooks/events/useGetEvents.ts";
-export { getEventsQueryKey } from "./hooks/events/useGetEvents.ts";
-export { getEventsQueryOptions } from "./hooks/events/useGetEvents.ts";
-export { useGetEvents } from "./hooks/events/useGetEvents.ts";
-export { getEventsByEmployee } from "./hooks/events/useGetEventsByEmployee.ts";
-export { getEventsByEmployeeQueryKey } from "./hooks/events/useGetEventsByEmployee.ts";
-export { getEventsByEmployeeQueryOptions } from "./hooks/events/useGetEventsByEmployee.ts";
-export { useGetEventsByEmployee } from "./hooks/events/useGetEventsByEmployee.ts";
-export { getEventsByStudent } from "./hooks/events/useGetEventsByStudent.ts";
-export { getEventsByStudentQueryKey } from "./hooks/events/useGetEventsByStudent.ts";
-export { getEventsByStudentQueryOptions } from "./hooks/events/useGetEventsByStudent.ts";
-export { useGetEventsByStudent } from "./hooks/events/useGetEventsByStudent.ts";
-export { updateEvent } from "./hooks/events/useUpdateEvent.ts";
-export { updateEventMutationKey } from "./hooks/events/useUpdateEvent.ts";
-export { updateEventMutationOptions } from "./hooks/events/useUpdateEvent.ts";
-export { useUpdateEvent } from "./hooks/events/useUpdateEvent.ts";
-export { updateExpenseStatus } from "./hooks/events/useUpdateExpenseStatus.ts";
-export { updateExpenseStatusMutationKey } from "./hooks/events/useUpdateExpenseStatus.ts";
-export { updateExpenseStatusMutationOptions } from "./hooks/events/useUpdateExpenseStatus.ts";
-export { useUpdateExpenseStatus } from "./hooks/events/useUpdateExpenseStatus.ts";
-export { updateIncomeStatus } from "./hooks/events/useUpdateIncomeStatus.ts";
-export { updateIncomeStatusMutationKey } from "./hooks/events/useUpdateIncomeStatus.ts";
-export { updateIncomeStatusMutationOptions } from "./hooks/events/useUpdateIncomeStatus.ts";
-export { useUpdateIncomeStatus } from "./hooks/events/useUpdateIncomeStatus.ts";
+export { createEvent } from "./hooks/event/useCreateEvent.ts";
+export { createEventMutationKey } from "./hooks/event/useCreateEvent.ts";
+export { createEventMutationOptions } from "./hooks/event/useCreateEvent.ts";
+export { useCreateEvent } from "./hooks/event/useCreateEvent.ts";
+export { deleteEvent } from "./hooks/event/useDeleteEvent.ts";
+export { deleteEventMutationKey } from "./hooks/event/useDeleteEvent.ts";
+export { deleteEventMutationOptions } from "./hooks/event/useDeleteEvent.ts";
+export { useDeleteEvent } from "./hooks/event/useDeleteEvent.ts";
+export { getEventById } from "./hooks/event/useGetEventById.ts";
+export { getEventByIdQueryKey } from "./hooks/event/useGetEventById.ts";
+export { getEventByIdQueryOptions } from "./hooks/event/useGetEventById.ts";
+export { useGetEventById } from "./hooks/event/useGetEventById.ts";
+export { getEvents } from "./hooks/event/useGetEvents.ts";
+export { getEventsQueryKey } from "./hooks/event/useGetEvents.ts";
+export { getEventsQueryOptions } from "./hooks/event/useGetEvents.ts";
+export { useGetEvents } from "./hooks/event/useGetEvents.ts";
+export { updateEvent } from "./hooks/event/useUpdateEvent.ts";
+export { updateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
+export { updateEventMutationOptions } from "./hooks/event/useUpdateEvent.ts";
+export { useUpdateEvent } from "./hooks/event/useUpdateEvent.ts";
+export { updateExpenseStatus } from "./hooks/event/useUpdateExpenseStatus.ts";
+export { updateExpenseStatusMutationKey } from "./hooks/event/useUpdateExpenseStatus.ts";
+export { updateExpenseStatusMutationOptions } from "./hooks/event/useUpdateExpenseStatus.ts";
+export { useUpdateExpenseStatus } from "./hooks/event/useUpdateExpenseStatus.ts";
+export { updateIncomeStatus } from "./hooks/event/useUpdateIncomeStatus.ts";
+export { updateIncomeStatusMutationKey } from "./hooks/event/useUpdateIncomeStatus.ts";
+export { updateIncomeStatusMutationOptions } from "./hooks/event/useUpdateIncomeStatus.ts";
+export { useUpdateIncomeStatus } from "./hooks/event/useUpdateIncomeStatus.ts";
 export { getFinanceSummary } from "./hooks/finance/useGetFinanceSummary.ts";
 export { getFinanceSummaryQueryKey } from "./hooks/finance/useGetFinanceSummary.ts";
 export { getFinanceSummaryQueryOptions } from "./hooks/finance/useGetFinanceSummary.ts";
 export { useGetFinanceSummary } from "./hooks/finance/useGetFinanceSummary.ts";
-export { create } from "./hooks/general expenses/useCreate.ts";
-export { createMutationKey } from "./hooks/general expenses/useCreate.ts";
-export { createMutationOptions } from "./hooks/general expenses/useCreate.ts";
-export { useCreate } from "./hooks/general expenses/useCreate.ts";
-export { _delete } from "./hooks/general expenses/useDelete.ts";
-export { deleteMutationKey } from "./hooks/general expenses/useDelete.ts";
-export { deleteMutationOptions } from "./hooks/general expenses/useDelete.ts";
-export { useDelete } from "./hooks/general expenses/useDelete.ts";
-export { findAll } from "./hooks/general expenses/useFindAll.ts";
-export { findAllQueryKey } from "./hooks/general expenses/useFindAll.ts";
-export { findAllQueryOptions } from "./hooks/general expenses/useFindAll.ts";
-export { useFindAll } from "./hooks/general expenses/useFindAll.ts";
-export { findById } from "./hooks/general expenses/useFindById.ts";
-export { findByIdQueryKey } from "./hooks/general expenses/useFindById.ts";
-export { findByIdQueryOptions } from "./hooks/general expenses/useFindById.ts";
-export { useFindById } from "./hooks/general expenses/useFindById.ts";
-export { update } from "./hooks/general expenses/useUpdate.ts";
-export { updateMutationKey } from "./hooks/general expenses/useUpdate.ts";
-export { updateMutationOptions } from "./hooks/general expenses/useUpdate.ts";
-export { useUpdate } from "./hooks/general expenses/useUpdate.ts";
+export { createGeneralExpense } from "./hooks/general expenses/useCreateGeneralExpense.ts";
+export { createGeneralExpenseMutationKey } from "./hooks/general expenses/useCreateGeneralExpense.ts";
+export { createGeneralExpenseMutationOptions } from "./hooks/general expenses/useCreateGeneralExpense.ts";
+export { useCreateGeneralExpense } from "./hooks/general expenses/useCreateGeneralExpense.ts";
+export { deleteGeneralExpense } from "./hooks/general expenses/useDeleteGeneralExpense.ts";
+export { deleteGeneralExpenseMutationKey } from "./hooks/general expenses/useDeleteGeneralExpense.ts";
+export { deleteGeneralExpenseMutationOptions } from "./hooks/general expenses/useDeleteGeneralExpense.ts";
+export { useDeleteGeneralExpense } from "./hooks/general expenses/useDeleteGeneralExpense.ts";
+export { getGeneralExpenseById } from "./hooks/general expenses/useGetGeneralExpenseById.ts";
+export { getGeneralExpenseByIdQueryKey } from "./hooks/general expenses/useGetGeneralExpenseById.ts";
+export { getGeneralExpenseByIdQueryOptions } from "./hooks/general expenses/useGetGeneralExpenseById.ts";
+export { useGetGeneralExpenseById } from "./hooks/general expenses/useGetGeneralExpenseById.ts";
+export { getGeneralExpenses } from "./hooks/general expenses/useGetGeneralExpenses.ts";
+export { getGeneralExpensesQueryKey } from "./hooks/general expenses/useGetGeneralExpenses.ts";
+export { getGeneralExpensesQueryOptions } from "./hooks/general expenses/useGetGeneralExpenses.ts";
+export { useGetGeneralExpenses } from "./hooks/general expenses/useGetGeneralExpenses.ts";
+export { updateGeneralExpense } from "./hooks/general expenses/useUpdateGeneralExpense.ts";
+export { updateGeneralExpenseMutationKey } from "./hooks/general expenses/useUpdateGeneralExpense.ts";
+export { updateGeneralExpenseMutationOptions } from "./hooks/general expenses/useUpdateGeneralExpense.ts";
+export { useUpdateGeneralExpense } from "./hooks/general expenses/useUpdateGeneralExpense.ts";
 export { archiveParent } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationOptions } from "./hooks/parent/useArchiveParent.ts";
@@ -547,22 +538,25 @@ export { eventResponseDTOIncomeStatusEnum } from "./types/EventResponseDTO.ts";
 export { eventResponseDTOStatusEnum } from "./types/EventResponseDTO.ts";
 export { generalExpenseRequestDTOCategoryEnum } from "./types/GeneralExpenseRequestDTO.ts";
 export { generalExpenseResponseDTOCategoryEnum } from "./types/GeneralExpenseResponseDTO.ts";
-export { getEventsQueryParamsStatusEnum } from "./types/events/GetEvents.ts";
-export { updateExpenseStatusQueryParamsStatusEnum } from "./types/events/UpdateExpenseStatus.ts";
-export { updateIncomeStatusQueryParamsStatusEnum } from "./types/events/UpdateIncomeStatus.ts";
-export { findAllQueryParamsCategoryEnum } from "./types/general expenses/FindAll.ts";
+export { getEventsQueryParamsStatusEnum } from "./types/event/GetEvents.ts";
+export { updateExpenseStatusQueryParamsStatusEnum } from "./types/event/UpdateExpenseStatus.ts";
+export { updateIncomeStatusQueryParamsStatusEnum } from "./types/event/UpdateIncomeStatus.ts";
+export { getGeneralExpensesQueryParamsCategoryEnum } from "./types/general expenses/GetGeneralExpenses.ts";
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
+export {
+  authMe200Schema,
+  authMeQueryResponseSchema,
+} from "./zod/auth/authMeSchema.ts";
 export {
   login200Schema,
   loginMutationRequestSchema,
   loginMutationResponseSchema,
 } from "./zod/auth/loginSchema.ts";
 export {
-  logout200Schema,
+  logout204Schema,
   logoutMutationResponseSchema,
 } from "./zod/auth/logoutSchema.ts";
-export { me200Schema, meQueryResponseSchema } from "./zod/auth/meSchema.ts";
 export { authCurrentUserResponseDTOSchema } from "./zod/authCurrentUserResponseDTOSchema.ts";
 export { authLoginRequestDTOSchema } from "./zod/authLoginRequestDTOSchema.ts";
 export { classesByContentDTOSchema } from "./zod/classesByContentDTOSchema.ts";
@@ -615,84 +609,77 @@ export {
 export { employeeOptionsDTOSchema } from "./zod/employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./zod/employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./zod/employeeResponseDTOSchema.ts";
-export { eventRequestDTOSchema } from "./zod/eventRequestDTOSchema.ts";
-export { eventResponseDTOSchema } from "./zod/eventResponseDTOSchema.ts";
 export {
   createEvent201Schema,
   createEventMutationRequestSchema,
   createEventMutationResponseSchema,
-} from "./zod/events/createEventSchema.ts";
+} from "./zod/event/createEventSchema.ts";
+export {
+  deleteEvent204Schema,
+  deleteEventMutationResponseSchema,
+  deleteEventPathParamsSchema,
+} from "./zod/event/deleteEventSchema.ts";
 export {
   getEventById200Schema,
   getEventByIdPathParamsSchema,
   getEventByIdQueryResponseSchema,
-} from "./zod/events/getEventByIdSchema.ts";
-export {
-  getEventsByEmployee200Schema,
-  getEventsByEmployeePathParamsSchema,
-  getEventsByEmployeeQueryParamsSchema,
-  getEventsByEmployeeQueryResponseSchema,
-} from "./zod/events/getEventsByEmployeeSchema.ts";
-export {
-  getEventsByStudent200Schema,
-  getEventsByStudentPathParamsSchema,
-  getEventsByStudentQueryParamsSchema,
-  getEventsByStudentQueryResponseSchema,
-} from "./zod/events/getEventsByStudentSchema.ts";
+} from "./zod/event/getEventByIdSchema.ts";
 export {
   getEvents200Schema,
   getEventsQueryParamsSchema,
   getEventsQueryResponseSchema,
-} from "./zod/events/getEventsSchema.ts";
+} from "./zod/event/getEventsSchema.ts";
 export {
   updateEvent200Schema,
   updateEventMutationRequestSchema,
   updateEventMutationResponseSchema,
   updateEventPathParamsSchema,
-} from "./zod/events/updateEventSchema.ts";
+} from "./zod/event/updateEventSchema.ts";
 export {
   updateExpenseStatus200Schema,
   updateExpenseStatusMutationResponseSchema,
   updateExpenseStatusPathParamsSchema,
   updateExpenseStatusQueryParamsSchema,
-} from "./zod/events/updateExpenseStatusSchema.ts";
+} from "./zod/event/updateExpenseStatusSchema.ts";
 export {
   updateIncomeStatus200Schema,
   updateIncomeStatusMutationResponseSchema,
   updateIncomeStatusPathParamsSchema,
   updateIncomeStatusQueryParamsSchema,
-} from "./zod/events/updateIncomeStatusSchema.ts";
+} from "./zod/event/updateIncomeStatusSchema.ts";
+export { eventRequestDTOSchema } from "./zod/eventRequestDTOSchema.ts";
+export { eventResponseDTOSchema } from "./zod/eventResponseDTOSchema.ts";
 export {
   getFinanceSummary200Schema,
   getFinanceSummaryQueryResponseSchema,
 } from "./zod/finance/getFinanceSummarySchema.ts";
 export { financeSummaryDTOSchema } from "./zod/financeSummaryDTOSchema.ts";
 export {
-  create201Schema,
-  createMutationRequestSchema,
-  createMutationResponseSchema,
-} from "./zod/general expenses/createSchema.ts";
+  createGeneralExpense201Schema,
+  createGeneralExpenseMutationRequestSchema,
+  createGeneralExpenseMutationResponseSchema,
+} from "./zod/general expenses/createGeneralExpenseSchema.ts";
 export {
-  delete204Schema,
-  deleteMutationResponseSchema,
-  deletePathParamsSchema,
-} from "./zod/general expenses/deleteSchema.ts";
+  deleteGeneralExpense204Schema,
+  deleteGeneralExpenseMutationResponseSchema,
+  deleteGeneralExpensePathParamsSchema,
+} from "./zod/general expenses/deleteGeneralExpenseSchema.ts";
 export {
-  findAll200Schema,
-  findAllQueryParamsSchema,
-  findAllQueryResponseSchema,
-} from "./zod/general expenses/findAllSchema.ts";
+  getGeneralExpenseById200Schema,
+  getGeneralExpenseByIdPathParamsSchema,
+  getGeneralExpenseByIdQueryResponseSchema,
+} from "./zod/general expenses/getGeneralExpenseByIdSchema.ts";
 export {
-  findById200Schema,
-  findByIdPathParamsSchema,
-  findByIdQueryResponseSchema,
-} from "./zod/general expenses/findByIdSchema.ts";
+  getGeneralExpenses200Schema,
+  getGeneralExpensesQueryParamsSchema,
+  getGeneralExpensesQueryResponseSchema,
+} from "./zod/general expenses/getGeneralExpensesSchema.ts";
 export {
-  update200Schema,
-  updateMutationRequestSchema,
-  updateMutationResponseSchema,
-  updatePathParamsSchema,
-} from "./zod/general expenses/updateSchema.ts";
+  updateGeneralExpense200Schema,
+  updateGeneralExpenseMutationRequestSchema,
+  updateGeneralExpenseMutationResponseSchema,
+  updateGeneralExpensePathParamsSchema,
+} from "./zod/general expenses/updateGeneralExpenseSchema.ts";
 export { generalExpenseRequestDTOSchema } from "./zod/generalExpenseRequestDTOSchema.ts";
 export { generalExpenseResponseDTOSchema } from "./zod/generalExpenseResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./zod/pageDTOEmployeeResponseDTOSchema.ts";

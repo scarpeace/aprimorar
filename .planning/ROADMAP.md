@@ -15,47 +15,12 @@ Fases decimais aparecem entre os inteiros circundantes em ordem numérica.
 - [x] **Fase 1: Autenticação & Acesso Protegido** - Adicionar login seguro e proteger todos os fluxos de trabalho da secretária/admin. (concluído 18-04-2026)
 - [x] **Fase 2: Fortalecimento do Registro de Alunos & Responsáveis** - Tornar os fluxos de registro existentes confiáveis o suficiente para substituir as planilhas de alunos/partes responsáveis. (concluído 20-04-2026)
 - [x] **Fase 3: Fortalecimento das Operações de Funcionários & Eventos** - Refinar os fluxos de funcionários e eventos para operações de agendamento diárias confiáveis. (concluído 21-04-2026)
-- [ ] **Fase 4: Núcleo de Acompanhamento Financeiro** - Introduzir cobranças, pagamentos e visibilidade simples de saldo para o acompanhamento financeiro interno da escola.
+- [x] **Fase 4: Núcleo de Acompanhamento Financeiro** - Introduzir cobranças, pagamentos e visibilidade simples de saldo para o acompanhamento financeiro interno da escola. (concluído 21-04-2026)
 - [ ] **Fase 5: Dashboard Diário Unificado** - Combinar indicadores operacionais e financeiros em um snapshot diário confiável.
 
 ## Detalhes das Fases
 
-### Fase 1: Autenticação & Acesso Protegido
-**Objetivo**: A equipe interna pode acessar o aplicativo de forma segura, enquanto usuários anônimos são mantidos fora dos fluxos de trabalho protegidos.
-**Depende de**: Nada (primeira fase)
-**Requisitos**: AUTH-01, AUTH-02, AUTH-03, AUTH-04
-**Critérios de Sucesso** (o que deve ser VERDADE):
-  1. O usuário interno pode fazer login com e-mail ou nome de usuário mais senha e chegar ao app protegido.
-  2. O usuário autenticado permanece logado após a atualização do navegador até o logout ou expiração da sessão.
-  3. O usuário autenticado pode sair (logout) do app e as páginas protegidas deixam de ser acessíveis imediatamente.
-  4. Visitantes não autenticados não podem abrir fluxos de dashboard, aluno, responsável, funcionário, evento ou financeiro diretamente.
-**Planos**: 4 planos
-Planos:
-- [x] 01-01-PLAN.md — Criar autenticação de sessão Spring Security, persistência de usuário interno e rotas de backend protegidas.
-- [x] 01-02-PLAN.md — Regenerar contratos de autenticação e construir a infraestrutura de login/bootstrap do frontend.
-- [x] 01-03-PLAN.md — Conectar o roteamento protegido e a UX de logout em todo o SPA.
-- [x] 01-04-PLAN.md — Restaurar o bootstrap do cliente de autenticação e o comportamento real de atualização/logout baseado em sessão após lacunas de UAT.
-**Dica de UI**: sim
-
-### Fase 2: Fortalecimento do Registro de Alunos & Responsáveis
-**Objetivo**: A secretária pode gerenciar registros de alunos e partes responsáveis de forma confiável o suficiente para parar de depender de planilhas para o trabalho de registro.
-**Depende de**: Fase 1
-**Requisitos**: STUD-01, STUD-02, STUD-03, STUD-04, PARN-01, PARN-02, PARN-03, PARN-04
-**Critérios de Sucesso** (o que deve ser VERDADE):
-  1. A secretária pode criar, visualizar, atualizar e arquivar registros de alunos sem perder referências históricas.
-  2. A secretária pode criar, visualizar, atualizar e arquivar registros de pais ou partes responsáveis com os dados de faturamento e contato intactos.
-  3. A secretária pode vincular a parte responsável correta a um aluno e ver essa relação preservada consistentemente quando os registros forem visualizados ou editados posteriormente.
-  4. A secretária pode encontrar rapidamente o registro do aluno necessário por meio de busca, filtros, paginação e controles de visibilidade de registros arquivados.
-**Planos**: 7 planos
-Planos:
-- [x] 02-01-PLAN.md — Fortalecer as invariantes existentes de backend para um único responsável e os caminhos de busca sem alterar o modelo de relacionamento.
-- [x] 02-02-PLAN.md — Atualizar contratos de backend de aluno/responsável, regras de ciclo de vida e clientes de API gerados em torno do fluxo atual de responsável único.
-- [x] 02-03-PLAN.md — Refinar fluxos de criação/edição/detalhe/lista de alunos em torno da experiência de registro de responsável único existente.
-- [x] 02-04-PLAN.md — Fortalecer telas e terminologia de CRUD/detalhe/arquivamento de responsáveis, preservando a relação de um responsável para muitos alunos.
-- [x] 02-05-PLAN.md — Fechar a lacuna semântica de busca por CPF de aluno e alternância de arquivado no fluxo de lista de backend.
-- [x] 02-06-PLAN.md — Alinhar a UX de detalhe/exclusão de responsável com as regras de integridade de aluno vinculado apenas ativos.
-- [x] 02-07-PLAN.md — Remover os bloqueadores restantes de build do frontend para que a Fase 2 seja operacionalmente entregável.
-**Dica de UI**: sim
+...
 
 ### Fase 3: Fortalecimento das Operações de Funcionários & Eventos
 **Objetivo**: A secretária pode gerenciar funcionários e atividades escolares no app com aplicação confiável de regras de negócio.
@@ -79,27 +44,18 @@ Planos:
 **Depende de**: Fase 3
 **Requisitos**: FIN-01, FIN-02, FIN-03
 **Critérios de Sucesso** (o que deve ser VERDADE):
-  1. A secretária pode visualizar resumos financeiros básicos para saldo total em aberto, valores recebidos e totais de cobrança.
-  2. A secretária pode registrar um pagamento (baixa) contra um evento concluído ou despesa geral.
-  3. A secretária pode gerenciar despesas gerais não relacionadas a eventos.
+  1. A secretária pode criar uma cobrança vinculada ao aluno ou parte responsável correta (via Atendimento).
+  2. A secretária pode registrar um pagamento com valor e data de pagamento contra uma cobrança existente e ver o saldo restante ser atualizado corretamente (Baixa de Atendimento).
+  3. A secretária pode visualizar resumos financeiros básicos para saldo total em aberto, valores recebidos e totais de cobrança (Painel Financeiro).
 **Planos**: 4 planos
 Planos:
-- [ ] 04-01-PLAN.md — Estabelecer os modelos de domínio e esquema de banco de dados para rastreamento financeiro (FinancialStatus, GeneralExpense).
-- [ ] 04-02-PLAN.md — Implementar a lógica de negócios e endpoints de API para rastreamento financeiro e liquidação de eventos.
-- [ ] 04-03-PLAN.md — Implementar a infraestrutura frontend para finanças e o módulo de gerenciamento de Despesas Gerais.
-- [ ] 04-04-PLAN.md — Implementar o Dashboard Financeiro e o fluxo de trabalho de Liquidação de Eventos (Baixa).
+- [x] 04-01-PLAN.md — Estabelecer enums financeiros, tb_general_expenses e atualizar entidade Event.
+- [x] 04-02-PLAN.md — Implementar CRUD de despesas gerais, API de resumo financeiro e lógica de baixa de eventos.
+- [x] 04-03-PLAN.md — Adicionar menu financeiro e implementar página de gestão de despesas gerais.
+- [x] 04-04-PLAN.md — Implementar Dashboard Financeiro e visão de Baixa de Atendimentos com filtros.
 **Dica de UI**: sim
 
-### Fase 5: Dashboard Diário Unificado
-**Objetivo**: A secretária pode revisar o status operacional e financeiro diário da escola a partir de um único snapshot de dashboard.
-**Depende de**: Fase 4
-**Requisitos**: DASH-01, DASH-02
-**Critérios de Sucesso** (o que deve ser VERDADE):
-  1. A secretária pode visualizar indicadores do dashboard para alunos e eventos que sejam relevantes para as operações diárias.
-  2. A secretária pode visualizar indicadores do dashboard para o status financeiro que sejam relevantes para as decisões diárias.
-  3. Após a alteração de registros operacionais ou financeiros, o snapshot do dashboard reflete os indicadores atualizados sem a necessidade de reconciliação de planilhas.
-**Planos**: 2 planos
-**Dica de UI**: sim
+...
 
 ## Progresso
 
@@ -111,5 +67,5 @@ As fases são executadas em ordem numérica: 2 → 2.1 → 2.2 → 3 → 3.1 →
 | 1. Autenticação & Acesso Protegido | 4/4 | Concluído   | 18-04-2026 |
 | 2. Fortalecimento do Registro de Alunos & Responsáveis | 7/7 | Concluído | 20-04-2026 |
 | 3. Fortalecimento das Operações de Funcionários & Eventos | 4/4 | Concluído | 21-04-2026 |
-| 4. Núcleo de Acompanhamento Financeiro | 0/4 | Não iniciado | - |
+| 4. Núcleo de Acompanhamento Financeiro | 4/4 | Concluído | 21-04-2026 |
 | 5. Dashboard Diário Unificado | 0/2 | Não iniciado | - |

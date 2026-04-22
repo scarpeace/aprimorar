@@ -24,6 +24,7 @@ import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.enums.FinancialStatus;
 import com.aprimorar.api.shared.PageDTO;
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -80,6 +81,57 @@ class EventServiceTest {
     @Nested
     @DisplayName("Command methods")
     class CommandMethods {
+
+        @Test
+        @DisplayName("should update income status when event is completed")
+        void shouldUpdateIncomeStatusWhenEventIsCompleted() {
+            UUID inputId = EVENT_ID;
+            FinancialStatus status = FinancialStatus.PAID;
+            Event event = event();
+            event.setStatus(com.aprimorar.api.enums.EventStatus.COMPLETED);
+            EventResponseDTO expected = response();
+
+            when(eventRepo.findById(inputId)).thenReturn(Optional.of(event));
+            when(eventMapper.convertToDto(event)).thenReturn(expected);
+
+            EventResponseDTO actual = eventService.updateIncomeStatus(inputId, status);
+
+            assertThat(actual).isEqualTo(expected);
+            assertThat(event.getIncomeStatus()).isEqualTo(status);
+        }
+
+        @Test
+        @DisplayName("should throw when updating income status to PAID and event is NOT completed")
+        void shouldThrowWhenUpdatingIncomeStatusToPaidAndEventIsNotCompleted() {
+            UUID inputId = EVENT_ID;
+            FinancialStatus status = FinancialStatus.PAID;
+            Event event = event();
+            event.setStatus(com.aprimorar.api.enums.EventStatus.SCHEDULED);
+
+            when(eventRepo.findById(inputId)).thenReturn(Optional.of(event));
+
+            assertThatThrownBy(() -> eventService.updateIncomeStatus(inputId, status))
+                .isInstanceOf(InvalidEventException.class)
+                .hasMessage("Não é possível marcar como pago um evento que não está concluído");
+        }
+
+        @Test
+        @DisplayName("should update expense status when event is completed")
+        void shouldUpdateExpenseStatusWhenEventIsCompleted() {
+            UUID inputId = EVENT_ID;
+            FinancialStatus status = FinancialStatus.PAID;
+            Event event = event();
+            event.setStatus(com.aprimorar.api.enums.EventStatus.COMPLETED);
+            EventResponseDTO expected = response();
+
+            when(eventRepo.findById(inputId)).thenReturn(Optional.of(event));
+            when(eventMapper.convertToDto(event)).thenReturn(expected);
+
+            EventResponseDTO actual = eventService.updateExpenseStatus(inputId, status);
+
+            assertThat(actual).isEqualTo(expected);
+            assertThat(event.getExpenseStatus()).isEqualTo(status);
+        }
 
         @Test
         @DisplayName("should create event when input is valid")
@@ -176,7 +228,7 @@ class EventServiceTest {
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expectedFirst);
             when(eventMapper.convertToDto(secondEvent)).thenReturn(expectedSecond);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, null, null, null);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, null, null, null, null, null);
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
@@ -194,7 +246,7 @@ class EventServiceTest {
             when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expected);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, search, null, null, null);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, search, null, null, null,null,null);
 
             assertThat(actual.content()).containsExactly(expected);
             assertThat(actual.totalElements()).isEqualTo(1);
@@ -215,7 +267,7 @@ class EventServiceTest {
             when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expected);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, start, end, status);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, start, end, status, null, null);
 
             assertThat(actual.content()).containsExactly(expected);
             assertThat(actual.totalElements()).isEqualTo(1);
@@ -431,6 +483,8 @@ class EventServiceTest {
             EMPLOYEE_ID,
             "Ana Paula",
             com.aprimorar.api.enums.EventStatus.SCHEDULED,
+            FinancialStatus.PENDING,
+            FinancialStatus.PENDING,
             CREATED_AT,
             UPDATED_AT
         );
@@ -450,6 +504,8 @@ class EventServiceTest {
             EMPLOYEE_ID,
             "Ana Paula",
             com.aprimorar.api.enums.EventStatus.SCHEDULED,
+            FinancialStatus.PENDING,
+            FinancialStatus.PENDING,
             CREATED_AT,
             UPDATED_AT
         );
@@ -469,6 +525,8 @@ class EventServiceTest {
             EMPLOYEE_ID,
             "Ana Paula",
             com.aprimorar.api.enums.EventStatus.COMPLETED,
+            FinancialStatus.PENDING,
+            FinancialStatus.PENDING,
             CREATED_AT,
             UPDATED_AT
         );

@@ -4,13 +4,13 @@
  */
 
 /**
- * @description OK
+ * @description Sessão encerrada com sucesso.
  */
-export type Logout200 = any;
+export type Logout204 = any;
 
-export type LogoutMutationResponse = Logout200;
+export type LogoutMutationResponse = Logout204;
 
 export type LogoutMutation = {
-  Response: Logout200;
+  Response: Logout204;
   Errors: any;
 };

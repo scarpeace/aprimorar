@@ -45,9 +45,9 @@ Requisitos para o lançamento inicial focado em secretária/administrador. Módu
 
 ### Financeiro
 
-- [ ] **FIN-01**: A secretária pode criar um registro de cobrança vinculado ao aluno ou parte responsável correta
-- [ ] **FIN-02**: A secretária pode registrar um pagamento com valor e data de pagamento contra uma cobrança existente
-- [ ] **FIN-03**: A secretária pode visualizar resumos financeiros básicos para o saldo total em aberto, valores recebidos e totais de cobranças
+- [x] **FIN-01**: A secretária pode criar um registro de cobrança vinculado ao aluno ou parte responsável correta (via Atendimento)
+- [x] **FIN-02**: A secretária pode registrar um pagamento com valor e data de pagamento contra uma cobrança existente (Baixa de Atendimento)
+- [x] **FIN-03**: A secretária pode visualizar resumos financeiros básicos para o saldo total em aberto, valores recebidos e totais de cobranças (Dashboard Financeiro)
 
 ### Dashboard
 
@@ -85,9 +85,9 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 | EVNT-03 | Fase 3 | Completo |
 | EVNT-04 | Fase 3 | Completo |
 | EVNT-05 | Fase 3 | Completo |
-| FIN-01 | Fase 4 | Pendente |
-| FIN-02 | Fase 4 | Pendente |
-| FIN-03 | Fase 4 | Pendente |
+| FIN-01 | Fase 4 | Completo |
+| FIN-02 | Fase 4 | Completo |
+| FIN-03 | Fase 4 | Completo |
 | DASH-01 | Fase 5 | Pendente |
 | DASH-02 | Fase 5 | Pendente |
 
@@ -98,4 +98,4 @@ Quais fases cobrem quais requisitos. Atualizado durante a criação do roadmap.
 
 ---
 *Requisitos definidos: 17-04-2026*
-*Última atualização: 21-04-2026 após conclusão da Fase 3*
+*Última atualização: 21-04-2026 após conclusão da Fase 4*

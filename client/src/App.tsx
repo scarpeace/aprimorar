@@ -30,6 +30,8 @@ const EventCreatePage = lazy(() => import("@/features/events/pages/EventCreatePa
 const EventEditPage = lazy(() => import("@/features/events/pages/EventEditPage").then((module) => ({ default: module.EventEditPage })))
 
 const GeneralExpensesPage = lazy(() => import("@/features/finance/pages/GeneralExpensesPage").then((module) => ({ default: module.GeneralExpensesPage })))
+const FinanceDashboardPage = lazy(() => import("@/features/finance/pages/FinanceDashboardPage").then((module) => ({ default: module.FinanceDashboardPage })))
+const EventSettlementPage = lazy(() => import("@/features/finance/pages/EventSettlementPage").then((module) => ({ default: module.EventSettlementPage })))
 
 const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage").then((module) => ({ default: module.LoginPage })))
 
@@ -83,7 +85,9 @@ function App() {
               <Route path="/parents/:id" element={<ParentDetailPage />} />
               <Route path="/parents/edit/:id" element={<ParentEditPage />} />
 
+              <Route path="/finance" element={<FinanceDashboardPage />} />
               <Route path="/finance/expenses" element={<GeneralExpensesPage />} />
+              <Route path="/finance/settlement" element={<EventSettlementPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />} />

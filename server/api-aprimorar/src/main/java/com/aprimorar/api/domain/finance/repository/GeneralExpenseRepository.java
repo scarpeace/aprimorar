@@ -22,4 +22,7 @@ public interface GeneralExpenseRepository extends JpaRepository<GeneralExpense, 
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             Pageable pageable);
+
+    @Query("SELECT COALESCE(SUM(g.amount), 0) FROM GeneralExpense g")
+    java.math.BigDecimal sumTotalGeneralExpenses();
 }

@@ -2,6 +2,8 @@ package com.aprimorar.api.domain.auth;
 
 import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
 import com.aprimorar.api.domain.auth.dto.AuthLoginRequestDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,6 +38,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(operationId = "login", description = "Autentica um usuário e inicia a sessão.")
+    @ApiResponse(responseCode = "200", description = "Login realizado com sucesso.")
     public ResponseEntity<AuthCurrentUserResponseDTO> login(
         @RequestBody @Valid AuthLoginRequestDTO request,
         HttpServletRequest httpServletRequest
@@ -59,6 +63,8 @@ public class AuthController {
     }
 
     @GetMapping("/me")
+    @Operation(operationId = "authMe", description = "Retorna os dados do usuário autenticado na sessão.")
+    @ApiResponse(responseCode = "200", description = "Dados do usuário retornados com sucesso.")
     public ResponseEntity<AuthCurrentUserResponseDTO> me(Authentication authentication) {
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             throw new AuthenticationCredentialsNotFoundException("Usuário não autenticado");
@@ -68,6 +74,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
+    @Operation(operationId = "logout", description = "Encerra a sessão do usuário.")
+    @ApiResponse(responseCode = "204", description = "Sessão encerrada com sucesso.")
     public ResponseEntity<Void> logout(
         Authentication authentication,
         HttpServletRequest request,
