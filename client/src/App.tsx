@@ -28,6 +28,9 @@ const EventsPage = lazy(() => import("@/features/events/pages/EventsPage").then(
 const EventDetailPage = lazy(() => import("@/features/events/pages/EventDetailPage").then((module) => ({ default: module.EventDetailPage })))
 const EventCreatePage = lazy(() => import("@/features/events/pages/EventCreatePage").then((module) => ({ default: module.EventCreatePage })))
 const EventEditPage = lazy(() => import("@/features/events/pages/EventEditPage").then((module) => ({ default: module.EventEditPage })))
+
+const GeneralExpensesPage = lazy(() => import("@/features/finance/pages/GeneralExpensesPage").then((module) => ({ default: module.GeneralExpensesPage })))
+
 const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage").then((module) => ({ default: module.LoginPage })))
 
 import { pt } from "zod/locales"
@@ -79,6 +82,8 @@ function App() {
               <Route path="/parents/new" element={<ParentCreatePage/>} />
               <Route path="/parents/:id" element={<ParentDetailPage />} />
               <Route path="/parents/edit/:id" element={<ParentEditPage />} />
+
+              <Route path="/finance/expenses" element={<GeneralExpensesPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />} />
