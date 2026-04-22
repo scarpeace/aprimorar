@@ -16,6 +16,14 @@ export type { GetEventsQueryKey } from "./hooks/events/useGetEvents.ts";
 export type { GetEventsByEmployeeQueryKey } from "./hooks/events/useGetEventsByEmployee.ts";
 export type { GetEventsByStudentQueryKey } from "./hooks/events/useGetEventsByStudent.ts";
 export type { UpdateEventMutationKey } from "./hooks/events/useUpdateEvent.ts";
+export type { UpdateExpenseStatusMutationKey } from "./hooks/events/useUpdateExpenseStatus.ts";
+export type { UpdateIncomeStatusMutationKey } from "./hooks/events/useUpdateIncomeStatus.ts";
+export type { GetFinanceSummaryQueryKey } from "./hooks/finance/useGetFinanceSummary.ts";
+export type { CreateMutationKey } from "./hooks/general expenses/useCreate.ts";
+export type { DeleteMutationKey } from "./hooks/general expenses/useDelete.ts";
+export type { FindAllQueryKey } from "./hooks/general expenses/useFindAll.ts";
+export type { FindByIdQueryKey } from "./hooks/general expenses/useFindById.ts";
+export type { UpdateMutationKey } from "./hooks/general expenses/useUpdate.ts";
 export type { ArchiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export type { CreateParentMutationKey } from "./hooks/parent/useCreateParent.ts";
 export type { DeleteParentMutationKey } from "./hooks/parent/useDeleteParent.ts";
@@ -65,12 +73,26 @@ export type {
 export type {
   EventResponseDTO,
   EventResponseDTOContentEnumKey,
+  EventResponseDTOExpenseStatusEnumKey,
+  EventResponseDTOIncomeStatusEnumKey,
   EventResponseDTOStatusEnumKey,
 } from "./types/EventResponseDTO.ts";
+export type { FinanceSummaryDTO } from "./types/FinanceSummaryDTO.ts";
+export type {
+  GeneralExpenseRequestDTO,
+  GeneralExpenseRequestDTOCategoryEnumKey,
+} from "./types/GeneralExpenseRequestDTO.ts";
+export type {
+  GeneralExpenseResponseDTO,
+  GeneralExpenseResponseDTOCategoryEnumKey,
+} from "./types/GeneralExpenseResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./types/PageDTOEmployeeResponseDTO.ts";
 export type { PageDTOEventResponseDTO } from "./types/PageDTOEventResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./types/PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./types/PageDTOStudentResponseDTO.ts";
+export type { PageMetadata } from "./types/PageMetadata.ts";
+export type { Pageable } from "./types/Pageable.ts";
+export type { PagedModelGeneralExpenseResponseDTO } from "./types/PagedModelGeneralExpenseResponseDTO.ts";
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
@@ -184,6 +206,59 @@ export type {
   UpdateEventMutationResponse,
   UpdateEventPathParams,
 } from "./types/events/UpdateEvent.ts";
+export type {
+  UpdateExpenseStatus200,
+  UpdateExpenseStatusMutation,
+  UpdateExpenseStatusMutationResponse,
+  UpdateExpenseStatusPathParams,
+  UpdateExpenseStatusQueryParams,
+  UpdateExpenseStatusQueryParamsStatusEnumKey,
+} from "./types/events/UpdateExpenseStatus.ts";
+export type {
+  UpdateIncomeStatus200,
+  UpdateIncomeStatusMutation,
+  UpdateIncomeStatusMutationResponse,
+  UpdateIncomeStatusPathParams,
+  UpdateIncomeStatusQueryParams,
+  UpdateIncomeStatusQueryParamsStatusEnumKey,
+} from "./types/events/UpdateIncomeStatus.ts";
+export type {
+  GetFinanceSummary200,
+  GetFinanceSummaryQuery,
+  GetFinanceSummaryQueryResponse,
+} from "./types/finance/GetFinanceSummary.ts";
+export type {
+  Create201,
+  CreateMutation,
+  CreateMutationRequest,
+  CreateMutationResponse,
+} from "./types/general expenses/Create.ts";
+export type {
+  Delete204,
+  DeleteMutation,
+  DeleteMutationResponse,
+  DeletePathParams,
+} from "./types/general expenses/Delete.ts";
+export type {
+  FindAll200,
+  FindAllQuery,
+  FindAllQueryParams,
+  FindAllQueryParamsCategoryEnumKey,
+  FindAllQueryResponse,
+} from "./types/general expenses/FindAll.ts";
+export type {
+  FindById200,
+  FindByIdPathParams,
+  FindByIdQuery,
+  FindByIdQueryResponse,
+} from "./types/general expenses/FindById.ts";
+export type {
+  Update200,
+  UpdateMutation,
+  UpdateMutationRequest,
+  UpdateMutationResponse,
+  UpdatePathParams,
+} from "./types/general expenses/Update.ts";
 export type {
   ArchiveParent204,
   ArchiveParentMutation,
@@ -359,6 +434,38 @@ export { updateEvent } from "./hooks/events/useUpdateEvent.ts";
 export { updateEventMutationKey } from "./hooks/events/useUpdateEvent.ts";
 export { updateEventMutationOptions } from "./hooks/events/useUpdateEvent.ts";
 export { useUpdateEvent } from "./hooks/events/useUpdateEvent.ts";
+export { updateExpenseStatus } from "./hooks/events/useUpdateExpenseStatus.ts";
+export { updateExpenseStatusMutationKey } from "./hooks/events/useUpdateExpenseStatus.ts";
+export { updateExpenseStatusMutationOptions } from "./hooks/events/useUpdateExpenseStatus.ts";
+export { useUpdateExpenseStatus } from "./hooks/events/useUpdateExpenseStatus.ts";
+export { updateIncomeStatus } from "./hooks/events/useUpdateIncomeStatus.ts";
+export { updateIncomeStatusMutationKey } from "./hooks/events/useUpdateIncomeStatus.ts";
+export { updateIncomeStatusMutationOptions } from "./hooks/events/useUpdateIncomeStatus.ts";
+export { useUpdateIncomeStatus } from "./hooks/events/useUpdateIncomeStatus.ts";
+export { getFinanceSummary } from "./hooks/finance/useGetFinanceSummary.ts";
+export { getFinanceSummaryQueryKey } from "./hooks/finance/useGetFinanceSummary.ts";
+export { getFinanceSummaryQueryOptions } from "./hooks/finance/useGetFinanceSummary.ts";
+export { useGetFinanceSummary } from "./hooks/finance/useGetFinanceSummary.ts";
+export { create } from "./hooks/general expenses/useCreate.ts";
+export { createMutationKey } from "./hooks/general expenses/useCreate.ts";
+export { createMutationOptions } from "./hooks/general expenses/useCreate.ts";
+export { useCreate } from "./hooks/general expenses/useCreate.ts";
+export { _delete } from "./hooks/general expenses/useDelete.ts";
+export { deleteMutationKey } from "./hooks/general expenses/useDelete.ts";
+export { deleteMutationOptions } from "./hooks/general expenses/useDelete.ts";
+export { useDelete } from "./hooks/general expenses/useDelete.ts";
+export { findAll } from "./hooks/general expenses/useFindAll.ts";
+export { findAllQueryKey } from "./hooks/general expenses/useFindAll.ts";
+export { findAllQueryOptions } from "./hooks/general expenses/useFindAll.ts";
+export { useFindAll } from "./hooks/general expenses/useFindAll.ts";
+export { findById } from "./hooks/general expenses/useFindById.ts";
+export { findByIdQueryKey } from "./hooks/general expenses/useFindById.ts";
+export { findByIdQueryOptions } from "./hooks/general expenses/useFindById.ts";
+export { useFindById } from "./hooks/general expenses/useFindById.ts";
+export { update } from "./hooks/general expenses/useUpdate.ts";
+export { updateMutationKey } from "./hooks/general expenses/useUpdate.ts";
+export { updateMutationOptions } from "./hooks/general expenses/useUpdate.ts";
+export { useUpdate } from "./hooks/general expenses/useUpdate.ts";
 export { archiveParent } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationOptions } from "./hooks/parent/useArchiveParent.ts";
@@ -435,8 +542,15 @@ export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./types/EventRequestDTO.ts";
 export { eventRequestDTOStatusEnum } from "./types/EventRequestDTO.ts";
 export { eventResponseDTOContentEnum } from "./types/EventResponseDTO.ts";
+export { eventResponseDTOExpenseStatusEnum } from "./types/EventResponseDTO.ts";
+export { eventResponseDTOIncomeStatusEnum } from "./types/EventResponseDTO.ts";
 export { eventResponseDTOStatusEnum } from "./types/EventResponseDTO.ts";
+export { generalExpenseRequestDTOCategoryEnum } from "./types/GeneralExpenseRequestDTO.ts";
+export { generalExpenseResponseDTOCategoryEnum } from "./types/GeneralExpenseResponseDTO.ts";
 export { getEventsQueryParamsStatusEnum } from "./types/events/GetEvents.ts";
+export { updateExpenseStatusQueryParamsStatusEnum } from "./types/events/UpdateExpenseStatus.ts";
+export { updateIncomeStatusQueryParamsStatusEnum } from "./types/events/UpdateIncomeStatus.ts";
+export { findAllQueryParamsCategoryEnum } from "./types/general expenses/FindAll.ts";
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
 export {
@@ -536,10 +650,58 @@ export {
   updateEventMutationResponseSchema,
   updateEventPathParamsSchema,
 } from "./zod/events/updateEventSchema.ts";
+export {
+  updateExpenseStatus200Schema,
+  updateExpenseStatusMutationResponseSchema,
+  updateExpenseStatusPathParamsSchema,
+  updateExpenseStatusQueryParamsSchema,
+} from "./zod/events/updateExpenseStatusSchema.ts";
+export {
+  updateIncomeStatus200Schema,
+  updateIncomeStatusMutationResponseSchema,
+  updateIncomeStatusPathParamsSchema,
+  updateIncomeStatusQueryParamsSchema,
+} from "./zod/events/updateIncomeStatusSchema.ts";
+export {
+  getFinanceSummary200Schema,
+  getFinanceSummaryQueryResponseSchema,
+} from "./zod/finance/getFinanceSummarySchema.ts";
+export { financeSummaryDTOSchema } from "./zod/financeSummaryDTOSchema.ts";
+export {
+  create201Schema,
+  createMutationRequestSchema,
+  createMutationResponseSchema,
+} from "./zod/general expenses/createSchema.ts";
+export {
+  delete204Schema,
+  deleteMutationResponseSchema,
+  deletePathParamsSchema,
+} from "./zod/general expenses/deleteSchema.ts";
+export {
+  findAll200Schema,
+  findAllQueryParamsSchema,
+  findAllQueryResponseSchema,
+} from "./zod/general expenses/findAllSchema.ts";
+export {
+  findById200Schema,
+  findByIdPathParamsSchema,
+  findByIdQueryResponseSchema,
+} from "./zod/general expenses/findByIdSchema.ts";
+export {
+  update200Schema,
+  updateMutationRequestSchema,
+  updateMutationResponseSchema,
+  updatePathParamsSchema,
+} from "./zod/general expenses/updateSchema.ts";
+export { generalExpenseRequestDTOSchema } from "./zod/generalExpenseRequestDTOSchema.ts";
+export { generalExpenseResponseDTOSchema } from "./zod/generalExpenseResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./zod/pageDTOEmployeeResponseDTOSchema.ts";
 export { pageDTOEventResponseDTOSchema } from "./zod/pageDTOEventResponseDTOSchema.ts";
 export { pageDTOParentResponseDTOSchema } from "./zod/pageDTOParentResponseDTOSchema.ts";
 export { pageDTOStudentResponseDTOSchema } from "./zod/pageDTOStudentResponseDTOSchema.ts";
+export { pageMetadataSchema } from "./zod/pageMetadataSchema.ts";
+export { pageableSchema } from "./zod/pageableSchema.ts";
+export { pagedModelGeneralExpenseResponseDTOSchema } from "./zod/pagedModelGeneralExpenseResponseDTOSchema.ts";
 export {
   archiveParent204Schema,
   archiveParentMutationResponseSchema,

@@ -97,10 +97,58 @@ export {
   updateEventMutationResponseSchema,
   updateEventPathParamsSchema,
 } from "./events/updateEventSchema.ts";
+export {
+  updateExpenseStatus200Schema,
+  updateExpenseStatusMutationResponseSchema,
+  updateExpenseStatusPathParamsSchema,
+  updateExpenseStatusQueryParamsSchema,
+} from "./events/updateExpenseStatusSchema.ts";
+export {
+  updateIncomeStatus200Schema,
+  updateIncomeStatusMutationResponseSchema,
+  updateIncomeStatusPathParamsSchema,
+  updateIncomeStatusQueryParamsSchema,
+} from "./events/updateIncomeStatusSchema.ts";
+export {
+  getFinanceSummary200Schema,
+  getFinanceSummaryQueryResponseSchema,
+} from "./finance/getFinanceSummarySchema.ts";
+export { financeSummaryDTOSchema } from "./financeSummaryDTOSchema.ts";
+export {
+  create201Schema,
+  createMutationRequestSchema,
+  createMutationResponseSchema,
+} from "./general expenses/createSchema.ts";
+export {
+  delete204Schema,
+  deleteMutationResponseSchema,
+  deletePathParamsSchema,
+} from "./general expenses/deleteSchema.ts";
+export {
+  findAll200Schema,
+  findAllQueryParamsSchema,
+  findAllQueryResponseSchema,
+} from "./general expenses/findAllSchema.ts";
+export {
+  findById200Schema,
+  findByIdPathParamsSchema,
+  findByIdQueryResponseSchema,
+} from "./general expenses/findByIdSchema.ts";
+export {
+  update200Schema,
+  updateMutationRequestSchema,
+  updateMutationResponseSchema,
+  updatePathParamsSchema,
+} from "./general expenses/updateSchema.ts";
+export { generalExpenseRequestDTOSchema } from "./generalExpenseRequestDTOSchema.ts";
+export { generalExpenseResponseDTOSchema } from "./generalExpenseResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./pageDTOEmployeeResponseDTOSchema.ts";
 export { pageDTOEventResponseDTOSchema } from "./pageDTOEventResponseDTOSchema.ts";
 export { pageDTOParentResponseDTOSchema } from "./pageDTOParentResponseDTOSchema.ts";
 export { pageDTOStudentResponseDTOSchema } from "./pageDTOStudentResponseDTOSchema.ts";
+export { pageMetadataSchema } from "./pageMetadataSchema.ts";
+export { pageableSchema } from "./pageableSchema.ts";
+export { pagedModelGeneralExpenseResponseDTOSchema } from "./pagedModelGeneralExpenseResponseDTOSchema.ts";
 export {
   archiveParent204Schema,
   archiveParentMutationResponseSchema,

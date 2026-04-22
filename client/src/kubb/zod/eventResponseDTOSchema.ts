@@ -36,6 +36,8 @@ export const eventResponseDTOSchema = z
     status: z
       .enum(["SCHEDULED", "COMPLETED", "CANCELED"])
       .describe("Status do evento"),
+    incomeStatus: z.enum(["PENDING", "PAID"]).describe("Status financeiro"),
+    expenseStatus: z.enum(["PENDING", "PAID"]).describe("Status financeiro"),
     createdAt: z.iso.datetime().describe("Data de criação do evento"),
     updatedAt: z.iso
       .datetime()

@@ -38,4 +38,22 @@ export type {
   UpdateEventMutationResponse,
   UpdateEventPathParams,
 } from "./UpdateEvent.ts";
+export type {
+  UpdateExpenseStatus200,
+  UpdateExpenseStatusMutation,
+  UpdateExpenseStatusMutationResponse,
+  UpdateExpenseStatusPathParams,
+  UpdateExpenseStatusQueryParams,
+  UpdateExpenseStatusQueryParamsStatusEnumKey,
+} from "./UpdateExpenseStatus.ts";
+export type {
+  UpdateIncomeStatus200,
+  UpdateIncomeStatusMutation,
+  UpdateIncomeStatusMutationResponse,
+  UpdateIncomeStatusPathParams,
+  UpdateIncomeStatusQueryParams,
+  UpdateIncomeStatusQueryParamsStatusEnumKey,
+} from "./UpdateIncomeStatus.ts";
 export { getEventsQueryParamsStatusEnum } from "./GetEvents.ts";
+export { updateExpenseStatusQueryParamsStatusEnum } from "./UpdateExpenseStatus.ts";
+export { updateIncomeStatusQueryParamsStatusEnum } from "./UpdateIncomeStatus.ts";

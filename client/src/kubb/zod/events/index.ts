@@ -31,3 +31,15 @@ export {
   updateEventMutationResponseSchema,
   updateEventPathParamsSchema,
 } from "./updateEventSchema.ts";
+export {
+  updateExpenseStatus200Schema,
+  updateExpenseStatusMutationResponseSchema,
+  updateExpenseStatusPathParamsSchema,
+  updateExpenseStatusQueryParamsSchema,
+} from "./updateExpenseStatusSchema.ts";
+export {
+  updateIncomeStatus200Schema,
+  updateIncomeStatusMutationResponseSchema,
+  updateIncomeStatusPathParamsSchema,
+  updateIncomeStatusQueryParamsSchema,
+} from "./updateIncomeStatusSchema.ts";

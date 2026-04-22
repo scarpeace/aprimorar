@@ -25,6 +25,22 @@ export const eventResponseDTOStatusEnum = {
 export type EventResponseDTOStatusEnumKey =
   (typeof eventResponseDTOStatusEnum)[keyof typeof eventResponseDTOStatusEnum];
 
+export const eventResponseDTOIncomeStatusEnum = {
+  PENDING: "PENDING",
+  PAID: "PAID",
+} as const;
+
+export type EventResponseDTOIncomeStatusEnumKey =
+  (typeof eventResponseDTOIncomeStatusEnum)[keyof typeof eventResponseDTOIncomeStatusEnum];
+
+export const eventResponseDTOExpenseStatusEnum = {
+  PENDING: "PENDING",
+  PAID: "PAID",
+} as const;
+
+export type EventResponseDTOExpenseStatusEnumKey =
+  (typeof eventResponseDTOExpenseStatusEnum)[keyof typeof eventResponseDTOExpenseStatusEnum];
+
 /**
  * @description Dados do evento retornados pela API
  */
@@ -89,6 +105,16 @@ export type EventResponseDTO = {
    * @type string
    */
   status: EventResponseDTOStatusEnumKey;
+  /**
+   * @description Status financeiro
+   * @type string
+   */
+  incomeStatus: EventResponseDTOIncomeStatusEnumKey;
+  /**
+   * @description Status financeiro
+   * @type string
+   */
+  expenseStatus: EventResponseDTOExpenseStatusEnumKey;
   /**
    * @description Data de criação do evento
    * @type string, date-time
