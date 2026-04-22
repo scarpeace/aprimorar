@@ -1,24 +1,17 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { NumericFormat } from "react-number-format";
 import { Button } from "@/components/ui/button";
-import { generalExpenseRequestDTOCategoryEnum } from "@/kubb/types/GeneralExpenseRequestDTO";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 import { TriangleAlert } from "lucide-react";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { getGeneralExpensesQueryKey, useCreateGeneralExpense } from "@/kubb";
-
-const expenseFormSchema = z.object({
-  description: z.string().min(1, "A descrição é obrigatória"),
-  amount: z.string().min(1, "O valor é obrigatório"),
-  date: z.string().min(1, "A data é obrigatória"),
-  category: z.nativeEnum(generalExpenseRequestDTOCategoryEnum),
-});
-
-type ExpenseFormValues = z.infer<typeof expenseFormSchema>;
+import { useExpenseMutations } from "../hooks/use-expense-mutations";
+import {
+  generalExpenseFormSchema,
+  type GeneralExpenseFormSchema,
+} from "../forms/generalExpenseFormSchema";
+import type { GeneralExpenseResponseDTO } from "@/kubb";
 
 interface GeneralExpenseFormProps {
+  initialData?: GeneralExpenseResponseDTO | null;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -32,50 +25,39 @@ const categoryLabels: Record<string, string> = {
   MATERIAIS: "Materiais",
 };
 
-export function GeneralExpenseForm({ onCancel }: GeneralExpenseFormProps) {
-  const queryClient = useQueryClient();
-  const { mutate: createExpense, isPending } = useCreateGeneralExpense({
-    mutation: {
-      onSuccess: () => {
-        toast.success("Despesa cadastrada com sucesso");
-        queryClient.invalidateQueries({ queryKey: getGeneralExpensesQueryKey() });
-      },
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Erro ao cadastrar despesa");
-      },
-    },
-  });
+export function GeneralExpenseForm({ initialData, onSuccess, onCancel }: GeneralExpenseFormProps) {
+  const { createExpense, updateExpense } = useExpenseMutations({ onSuccessCallback: onSuccess });
+
+  const isEditMode = !!initialData;
 
   const {
     register,
     handleSubmit,
-    setValue,
+    control,
     formState: { errors },
-  } = useForm<ExpenseFormValues>({
-    resolver: zodResolver(expenseFormSchema),
+  } = useForm<GeneralExpenseFormSchema>({
+    resolver: zodResolver(generalExpenseFormSchema),
     defaultValues: {
-      date: new Date().toISOString().split("T")[0],
-      category: "CONTAS",
+      description: initialData?.description ?? "",
+      amount: initialData?.amount ?? undefined,
+      date: initialData?.date ?? new Date().toISOString().split("T")[0],
+      category: initialData?.category ?? "CONTAS",
     },
     mode: "onBlur",
   });
 
-  const onSubmit = (values: ExpenseFormValues) => {
-    // Converte valor formatado (ex: 1.234,56) para number (ex: 1234.56)
-    const numericAmount = parseFloat(
-      values.amount.replace(/\./g, "").replace(",", ".")
-    );
+  const onSubmit = handleSubmit((data: GeneralExpenseFormSchema) => {
+    if (isEditMode && initialData.id) {
+      updateExpense.mutate({ id: initialData.id, data });
+    } else {
+      createExpense.mutate({ data });
+    }
+  });
 
-    createExpense({
-      data: {
-        ...values,
-        amount: numericAmount,
-      },
-    });
-  };
+  const isPending = createExpense.isPending || updateExpense.isPending;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" autoComplete="off">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4" autoComplete="off">
       <fieldset className="fieldset">
         <legend className="fieldset-legend">Descrição</legend>
         <input
@@ -94,20 +76,28 @@ export function GeneralExpenseForm({ onCancel }: GeneralExpenseFormProps) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Valor (R$)</legend>
-          <input
-            type="text"
-            className="input w-full"
-            placeholder="0,00"
-            {...register("amount")}
-            onChange={(e) => {
-              // Máscara simples de moeda
-              let value = e.target.value.replace(/\D/g, "");
-              value = (Number(value) / 100).toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              });
-              setValue("amount", value);
-            }}
+          <legend className="fieldset-legend">Valor</legend>
+          <Controller
+            control={control}
+            name="amount"
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <NumericFormat
+                getInputRef={ref}
+                className="input w-full"
+                placeholder="R$ 0,00"
+                value={value}
+                onBlur={onBlur}
+                onValueChange={(values) => {
+                  onChange(values.floatValue);
+                }}
+                thousandSeparator="."
+                decimalSeparator=","
+                prefix="R$ "
+                decimalScale={2}
+                fixedDecimalScale
+                allowNegative={false}
+              />
+            )}
           />
           {errors?.amount && (
             <p className="label text-error">
@@ -158,7 +148,7 @@ export function GeneralExpenseForm({ onCancel }: GeneralExpenseFormProps) {
           Cancelar
         </Button>
         <Button type="submit" variant="primary" disabled={isPending}>
-          {isPending ? "Salvando..." : "Salvar Despesa"}
+          {isPending ? "Salvando..." : (isEditMode ? "Atualizar Despesa" : "Salvar Despesa")}
         </Button>
       </div>
     </form>
