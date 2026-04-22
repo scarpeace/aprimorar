@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.aprimorar.api.config.SecurityConfig;
+import com.aprimorar.api.config.PasswordEncoderConfig;
 import com.aprimorar.api.config.WebCorsConfig;
 import com.aprimorar.api.domain.auth.repository.StaffAccountRepository;
 import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
@@ -38,8 +39,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = { AuthController.class, StudentController.class })
-@Import({ SecurityConfig.class, WebCorsConfig.class, GlobalExceptionHandler.class, AuthService.class, StaffAccountDetailsService.class })
-class AuthControllerSecurityTest {
+@Import({ SecurityConfig.class, PasswordEncoderConfig.class, WebCorsConfig.class, GlobalExceptionHandler.class, AuthService.class })
+class AuthControllerTest {
 
     private static final UUID STAFF_ACCOUNT_ID = UUID.fromString("8ccdb801-d0af-4561-8d45-56d196350001");
     private static final UUID EMPLOYEE_ID = UUID.fromString("b71fa3e6-31f0-4ef5-a650-1bccae83302e");
@@ -89,8 +90,8 @@ class AuthControllerSecurityTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("""
                         {
-                          \"identifier\": \"beatriz.santos\",
-                          \"password\": \"admin123\"
+                          "identifier": "beatriz.santos",
+                          "password": "admin123"
                         }
                         """))
                 .andExpect(status().isOk())
@@ -105,8 +106,8 @@ class AuthControllerSecurityTest {
                     .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                     {
-                      \"identifier\": \"beatriz.santos\",
-                      \"password\": \"admin123\"
+                      "identifier": "beatriz.santos",
+                      "password": "admin123"
                     }
                     """))
                 .andExpect(status().isOk())
@@ -182,8 +183,8 @@ class AuthControllerSecurityTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                     {
-                      \"identifier\": \"beatriz.santos\",
-                      \"password\": \"admin123\"
+                      "identifier": "beatriz.santos",
+                      "password": "admin123"
                     }
                     """))
             .andExpect(status().isOk())

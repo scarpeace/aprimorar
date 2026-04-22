@@ -2,13 +2,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { useCreateGeneralExpense } from "@/kubb/hooks/general-expenses/useCreateGeneralExpense";
-import { getGeneralExpensesQueryKey } from "@/kubb/hooks/general-expenses/useGetGeneralExpenses";
 import { generalExpenseRequestDTOCategoryEnum } from "@/kubb/types/GeneralExpenseRequestDTO";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { TriangleAlert } from "lucide-react";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { getGeneralExpensesQueryKey, useCreateGeneralExpense } from "@/kubb";
 
 const expenseFormSchema = z.object({
   description: z.string().min(1, "A descrição é obrigatória"),
@@ -33,14 +32,13 @@ const categoryLabels: Record<string, string> = {
   MATERIAIS: "Materiais",
 };
 
-export function GeneralExpenseForm({ onSuccess, onCancel }: GeneralExpenseFormProps) {
+export function GeneralExpenseForm({ onCancel }: GeneralExpenseFormProps) {
   const queryClient = useQueryClient();
   const { mutate: createExpense, isPending } = useCreateGeneralExpense({
     mutation: {
       onSuccess: () => {
         toast.success("Despesa cadastrada com sucesso");
         queryClient.invalidateQueries({ queryKey: getGeneralExpensesQueryKey() });
-        onSuccess();
       },
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error) || "Erro ao cadastrar despesa");

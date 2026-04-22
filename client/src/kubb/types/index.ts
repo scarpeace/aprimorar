@@ -48,7 +48,6 @@ export type { PageDTOEventResponseDTO } from "./PageDTOEventResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./PageDTOStudentResponseDTO.ts";
 export type { PageMetadata } from "./PageMetadata.ts";
-export type { Pageable } from "./Pageable.ts";
 export type { PagedModelGeneralExpenseResponseDTO } from "./PagedModelGeneralExpenseResponseDTO.ts";
 export type { ParentOptionsDTO } from "./ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./ParentRequestDTO.ts";

@@ -4,15 +4,13 @@ import { Banknote, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GeneralExpensesTable } from "../components/GeneralExpensesTable";
 import { GeneralExpenseForm } from "../components/GeneralExpenseForm";
-import { useGetGeneralExpenses } from "@/kubb/hooks/general-expenses/useGetGeneralExpenses";
+import { useGetGeneralExpenses } from "@/kubb";
 
 export function GeneralExpensesPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const { data, isPending, error } = useGetGeneralExpenses({
-    pageable: { page: currentPage, size: 20 },
-  });
+  const { data, isPending, error } = useGetGeneralExpenses({ page: currentPage, size: 20 });
 
   return (
     <PageLayout

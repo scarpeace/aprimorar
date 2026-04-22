@@ -35,8 +35,8 @@ export function GeneralExpensesTable({
   onEdit,
   onDelete,
 }: GeneralExpensesTableProps) {
-  if (isPending) return <LoadingSpinner label="Carregando despesas..." />;
-  if (error) return <ErrorCard title="Erro ao carregar despesas" message={error.message} />;
+  if (isPending) return <LoadingSpinner text={"Carregando despesas..."} />;
+  if (error) return <ErrorCard title="Erro ao carregar despesas" error={error.message} />;
   if (!expenses?.content || expenses.content.length === 0) {
     return <EmptyCard title="Nenhuma despesa encontrada" description="Tente ajustar os filtros ou cadastrar uma nova despesa." />;
   }
@@ -94,7 +94,6 @@ export function GeneralExpensesTable({
         <div className="p-4 border-t">
           <Pagination
             currentPage={currentPage}
-            totalPages={Number(expenses.page.totalPages)}
             onPageChange={onPageChange}
           />
         </div>

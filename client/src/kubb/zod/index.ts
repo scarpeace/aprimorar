@@ -143,7 +143,6 @@ export { pageDTOEventResponseDTOSchema } from "./pageDTOEventResponseDTOSchema.t
 export { pageDTOParentResponseDTOSchema } from "./pageDTOParentResponseDTOSchema.ts";
 export { pageDTOStudentResponseDTOSchema } from "./pageDTOStudentResponseDTOSchema.ts";
 export { pageMetadataSchema } from "./pageMetadataSchema.ts";
-export { pageableSchema } from "./pageableSchema.ts";
 export { pagedModelGeneralExpenseResponseDTOSchema } from "./pagedModelGeneralExpenseResponseDTOSchema.ts";
 export {
   archiveParent204Schema,

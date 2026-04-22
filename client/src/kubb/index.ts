@@ -90,7 +90,6 @@ export type { PageDTOEventResponseDTO } from "./types/PageDTOEventResponseDTO.ts
 export type { PageDTOParentResponseDTO } from "./types/PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./types/PageDTOStudentResponseDTO.ts";
 export type { PageMetadata } from "./types/PageMetadata.ts";
-export type { Pageable } from "./types/Pageable.ts";
 export type { PagedModelGeneralExpenseResponseDTO } from "./types/PagedModelGeneralExpenseResponseDTO.ts";
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
@@ -687,7 +686,6 @@ export { pageDTOEventResponseDTOSchema } from "./zod/pageDTOEventResponseDTOSche
 export { pageDTOParentResponseDTOSchema } from "./zod/pageDTOParentResponseDTOSchema.ts";
 export { pageDTOStudentResponseDTOSchema } from "./zod/pageDTOStudentResponseDTOSchema.ts";
 export { pageMetadataSchema } from "./zod/pageMetadataSchema.ts";
-export { pageableSchema } from "./zod/pageableSchema.ts";
 export { pagedModelGeneralExpenseResponseDTOSchema } from "./zod/pagedModelGeneralExpenseResponseDTOSchema.ts";
 export {
   archiveParent204Schema,

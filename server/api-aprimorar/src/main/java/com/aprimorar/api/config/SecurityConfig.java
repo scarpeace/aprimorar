@@ -39,14 +39,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Configuration
 public class SecurityConfig {
 
-    private final com.aprimorar.api.domain.auth.StaffAccountDetailsService staffAccountDetailsService;
+    private final com.aprimorar.api.domain.auth.AuthService authService;
     private final ObjectMapper objectMapper;
 
     public SecurityConfig(
-        com.aprimorar.api.domain.auth.StaffAccountDetailsService staffAccountDetailsService,
+        com.aprimorar.api.domain.auth.AuthService authService,
         ObjectMapper objectMapper
     ) {
-        this.staffAccountDetailsService = staffAccountDetailsService;
+        this.authService = authService;
         this.objectMapper = objectMapper;
     }
 
@@ -88,14 +88,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(staffAccountDetailsService);
+        provider.setUserDetailsService(authService);
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
