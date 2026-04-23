@@ -3,52 +3,24 @@ import { brl } from "@/lib/utils/formatter";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Check, Clock } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useUpdateIncomeStatus } from "@/kubb/hooks/events/useUpdateIncomeStatus";
-import { useUpdateExpenseStatus } from "@/kubb/hooks/events/useUpdateExpenseStatus";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
-import { getEventsQueryKey } from "@/kubb/hooks/events/useGetEvents";
-import { getFinanceSummaryQueryKey } from "@/kubb/hooks/finance/useGetFinanceSummary";
+import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
 
 interface SettlementTableProps {
   events: EventResponseDTO[];
 }
 
 export function SettlementTable({ events }: SettlementTableProps) {
-  const queryClient = useQueryClient();
-
-  const { mutate: updateIncome, isPending: isUpdatingIncome } = useUpdateIncomeStatus({
-    mutation: {
-      onSuccess: () => {
-        toast.success("Recebimento atualizado");
-        queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
-      },
-      onError: () => toast.error("Erro ao atualizar recebimento"),
-    },
-  });
-
-  const { mutate: updateExpense, isPending: isUpdatingExpense } = useUpdateExpenseStatus({
-    mutation: {
-      onSuccess: () => {
-        toast.success("Pagamento ao colaborador atualizado");
-        queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
-      },
-      onError: () => toast.error("Erro ao atualizar pagamento"),
-    },
-  });
+  const { settleIncomeEvent, settleExpenseEvent } = useEventMutations({ onSuccessCallback: () => {} });
 
   const handleToggleIncome = (event: EventResponseDTO) => {
     const newStatus = event.incomeStatus === "PAID" ? "PENDING" : "PAID";
-    updateIncome({ eventId: event.eventId, params: { status: newStatus } });
+    settleIncomeEvent.mutate({ id: event.eventId, params: { status: newStatus } });
   };
 
   const handleToggleExpense = (event: EventResponseDTO) => {
     const newStatus = event.expenseStatus === "PAID" ? "PENDING" : "PAID";
-    updateExpense({ eventId: event.eventId, params: { status: newStatus } });
+    settleExpenseEvent.mutate({ id: event.eventId, params: { status: newStatus } });
   };
 
   return (
@@ -87,7 +59,7 @@ export function SettlementTable({ events }: SettlementTableProps) {
                       size="xs"
                       variant={event.incomeStatus === "PAID" ? "success" : "outline"}
                       onClick={() => handleToggleIncome(event)}
-                      isPending={isUpdatingIncome}
+                      disabled={settleIncomeEvent.isPending}
                     >
                       {event.incomeStatus === "PAID" ? (
                         <>
@@ -108,7 +80,7 @@ export function SettlementTable({ events }: SettlementTableProps) {
                       size="xs"
                       variant={event.expenseStatus === "PAID" ? "success" : "outline"}
                       onClick={() => handleToggleExpense(event)}
-                      isPending={isUpdatingExpense}
+                      disabled={settleExpenseEvent.isPending}
                     >
                       {event.expenseStatus === "PAID" ? (
                         <>

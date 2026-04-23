@@ -7,6 +7,11 @@ import {
   getEventsQueryKey,
   useCreateEvent,
   useUpdateEvent,
+  useCompleteEvent,
+  useCancelEvent,
+  useRescheduleEvent,
+  useSettleIncomeEvent,
+  useSettleExpenseEvent,
   type EventResponseDTO,
 } from "@/kubb";
 
@@ -54,29 +59,72 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
     },
   });
 
+  const handleStatusSuccess = (message: string, eventId: string) => {
+    toast.success(message);
+    queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(eventId) });
+    if (onSuccessCallback) {
+      onSuccessCallback();
+    }
+  };
+
+  const handleStatusError = (error: any) => {
+    toast.error(getFriendlyErrorMessage(error));
+  };
+
+  const completeEvent = useCompleteEvent({
+    mutation: {
+      onSuccess: (_, variables) => handleStatusSuccess("Evento concluído com sucesso", variables.id),
+      onError: handleStatusError,
+    }
+  });
+
+  const cancelEvent = useCancelEvent({
+    mutation: {
+      onSuccess: (_, variables) => handleStatusSuccess("Evento cancelado com sucesso", variables.id),
+      onError: handleStatusError,
+    }
+  });
+
+  const rescheduleEvent = useRescheduleEvent({
+    mutation: {
+      onSuccess: (_, variables) => handleStatusSuccess("Evento re-agendado com sucesso", variables.id),
+      onError: handleStatusError,
+    }
+  });
+
+  const settleIncomeEvent = useSettleIncomeEvent({
+    mutation: {
+      onSuccess: (_, variables) => handleStatusSuccess("Baixa de recebimento atualizada", variables.id),
+      onError: handleStatusError,
+    }
+  });
+
+  const settleExpenseEvent = useSettleExpenseEvent({
+    mutation: {
+      onSuccess: (_, variables) => handleStatusSuccess("Baixa de pagamento atualizada", variables.id),
+      onError: handleStatusError,
+    }
+  });
+
   const changeEventStatus = (
     event: EventResponseDTO,
     newStatus: "SCHEDULED" | "COMPLETED" | "CANCELED"
   ) => {
-    updateEvent.mutate({
-      eventId: event.eventId,
-      data: {
-        studentId: event.studentId,
-        employeeId: event.employeeId,
-        startDate: event.startDate,
-        endDate: event.endDate,
-        payment: event.payment,
-        price: event.price,
-        content: event.content,
-        description: event.description || "",
-        status: newStatus,
-      },
-    });
+    if (newStatus === "COMPLETED") {
+      completeEvent.mutate({ id: event.eventId });
+    } else if (newStatus === "CANCELED") {
+      cancelEvent.mutate({ id: event.eventId });
+    } else if (newStatus === "SCHEDULED") {
+      rescheduleEvent.mutate({ id: event.eventId });
+    }
   };
 
   return {
     createEvent,
     updateEvent,
     changeEventStatus,
+    settleIncomeEvent,
+    settleExpenseEvent,
   };
 }

@@ -66,6 +66,16 @@ export { employeeOptionsDTOSchema } from "./employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./employeeResponseDTOSchema.ts";
 export {
+  cancelEvent200Schema,
+  cancelEventMutationResponseSchema,
+  cancelEventPathParamsSchema,
+} from "./event/cancelEventSchema.ts";
+export {
+  completeEvent200Schema,
+  completeEventMutationResponseSchema,
+  completeEventPathParamsSchema,
+} from "./event/completeEventSchema.ts";
+export {
   createEvent201Schema,
   createEventMutationRequestSchema,
   createEventMutationResponseSchema,
@@ -98,23 +108,28 @@ export {
   getEventsQueryResponseSchema,
 } from "./event/getEventsSchema.ts";
 export {
+  rescheduleEvent200Schema,
+  rescheduleEventMutationResponseSchema,
+  rescheduleEventPathParamsSchema,
+} from "./event/rescheduleEventSchema.ts";
+export {
+  settleExpenseEvent200Schema,
+  settleExpenseEventMutationResponseSchema,
+  settleExpenseEventPathParamsSchema,
+  settleExpenseEventQueryParamsSchema,
+} from "./event/settleExpenseEventSchema.ts";
+export {
+  settleIncomeEvent200Schema,
+  settleIncomeEventMutationResponseSchema,
+  settleIncomeEventPathParamsSchema,
+  settleIncomeEventQueryParamsSchema,
+} from "./event/settleIncomeEventSchema.ts";
+export {
   updateEvent200Schema,
   updateEventMutationRequestSchema,
   updateEventMutationResponseSchema,
   updateEventPathParamsSchema,
 } from "./event/updateEventSchema.ts";
-export {
-  updateExpenseStatus200Schema,
-  updateExpenseStatusMutationResponseSchema,
-  updateExpenseStatusPathParamsSchema,
-  updateExpenseStatusQueryParamsSchema,
-} from "./event/updateExpenseStatusSchema.ts";
-export {
-  updateIncomeStatus200Schema,
-  updateIncomeStatusMutationResponseSchema,
-  updateIncomeStatusPathParamsSchema,
-  updateIncomeStatusQueryParamsSchema,
-} from "./event/updateIncomeStatusSchema.ts";
 export { eventRequestDTOSchema } from "./eventRequestDTOSchema.ts";
 export { eventResponseDTOSchema } from "./eventResponseDTOSchema.ts";
 export {

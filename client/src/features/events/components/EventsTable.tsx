@@ -6,7 +6,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { type PageDTOEventResponseDTO, type EventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon, Pencil, CheckCircle2 } from "lucide-react";
+import { SquareArrowOutUpRightIcon, Pencil, CheckCircle2, XCircle } from "lucide-react";
 import { useEventMutations } from "../hooks/use-event-mutations";
 
 type EventsTableProps = {
@@ -72,7 +72,7 @@ export function EventsTable({
               Pagamento
             </th>
             <th className="text-right font-semibold text-base-content/80 pr-4">
-              Ações
+              AçõeschangeEventStatus
             </th>
           </tr>
         </thead>

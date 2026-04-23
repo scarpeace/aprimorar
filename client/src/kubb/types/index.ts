@@ -127,6 +127,18 @@ export type {
   UpdateEmployeePathParams,
 } from "./employee/UpdateEmployee.ts";
 export type {
+  CancelEvent200,
+  CancelEventMutation,
+  CancelEventMutationResponse,
+  CancelEventPathParams,
+} from "./event/CancelEvent.ts";
+export type {
+  CompleteEvent200,
+  CompleteEventMutation,
+  CompleteEventMutationResponse,
+  CompleteEventPathParams,
+} from "./event/CompleteEvent.ts";
+export type {
   CreateEvent201,
   CreateEventMutation,
   CreateEventMutationRequest,
@@ -166,28 +178,34 @@ export type {
   GetEventsByStudentIdQueryResponse,
 } from "./event/GetEventsByStudentId.ts";
 export type {
+  RescheduleEvent200,
+  RescheduleEventMutation,
+  RescheduleEventMutationResponse,
+  RescheduleEventPathParams,
+} from "./event/RescheduleEvent.ts";
+export type {
+  SettleExpenseEvent200,
+  SettleExpenseEventMutation,
+  SettleExpenseEventMutationResponse,
+  SettleExpenseEventPathParams,
+  SettleExpenseEventQueryParams,
+  SettleExpenseEventQueryParamsStatusEnumKey,
+} from "./event/SettleExpenseEvent.ts";
+export type {
+  SettleIncomeEvent200,
+  SettleIncomeEventMutation,
+  SettleIncomeEventMutationResponse,
+  SettleIncomeEventPathParams,
+  SettleIncomeEventQueryParams,
+  SettleIncomeEventQueryParamsStatusEnumKey,
+} from "./event/SettleIncomeEvent.ts";
+export type {
   UpdateEvent200,
   UpdateEventMutation,
   UpdateEventMutationRequest,
   UpdateEventMutationResponse,
   UpdateEventPathParams,
 } from "./event/UpdateEvent.ts";
-export type {
-  UpdateExpenseStatus200,
-  UpdateExpenseStatusMutation,
-  UpdateExpenseStatusMutationResponse,
-  UpdateExpenseStatusPathParams,
-  UpdateExpenseStatusQueryParams,
-  UpdateExpenseStatusQueryParamsStatusEnumKey,
-} from "./event/UpdateExpenseStatus.ts";
-export type {
-  UpdateIncomeStatus200,
-  UpdateIncomeStatusMutation,
-  UpdateIncomeStatusMutationResponse,
-  UpdateIncomeStatusPathParams,
-  UpdateIncomeStatusQueryParams,
-  UpdateIncomeStatusQueryParamsStatusEnumKey,
-} from "./event/UpdateIncomeStatus.ts";
 export type {
   CreateGeneralExpense201,
   CreateGeneralExpenseMutation,
@@ -342,6 +360,6 @@ export { eventResponseDTOStatusEnum } from "./EventResponseDTO.ts";
 export { generalExpenseRequestDTOCategoryEnum } from "./GeneralExpenseRequestDTO.ts";
 export { generalExpenseResponseDTOCategoryEnum } from "./GeneralExpenseResponseDTO.ts";
 export { getEventsQueryParamsStatusEnum } from "./event/GetEvents.ts";
-export { updateExpenseStatusQueryParamsStatusEnum } from "./event/UpdateExpenseStatus.ts";
-export { updateIncomeStatusQueryParamsStatusEnum } from "./event/UpdateIncomeStatus.ts";
+export { settleExpenseEventQueryParamsStatusEnum } from "./event/SettleExpenseEvent.ts";
+export { settleIncomeEventQueryParamsStatusEnum } from "./event/SettleIncomeEvent.ts";
 export { getGeneralExpensesQueryParamsCategoryEnum } from "./finance/GetGeneralExpenses.ts";
