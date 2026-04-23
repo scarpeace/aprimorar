@@ -6,11 +6,15 @@ import java.time.Clock;
 import java.time.Instant;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class AuthService {
+public class AuthService implements UserDetailsService {
 
     private final StaffAccountRepository staffAccountRepository;
     private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
@@ -24,6 +28,19 @@ public class AuthService {
         this.staffAccountRepository = staffAccountRepository;
         this.passwordEncoder = passwordEncoder;
         this.applicationClock = applicationClock;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        StaffAccount staffAccount = staffAccountRepository.findByUsernameOrEmployeeEmail(identifier)
+            .orElseThrow(() -> new UsernameNotFoundException("Credenciais inválidas"));
+
+        return User.withUsername(staffAccount.getUsername())
+            .password(staffAccount.getPasswordHash())
+            .disabled(!staffAccount.isActive())
+            .authorities("ROLE_INTERNAL")
+            .build();
     }
 
     @Transactional

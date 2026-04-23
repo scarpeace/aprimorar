@@ -18,7 +18,7 @@ export const studentFormSchema = studentRequestDTOSchema.extend({
   school: z.string().min(1, { message: "Escola é obrigatória" }),
   address: addressFormSchema,
   parentId: z.string()
-    .min(1, { message: "Um aluno não pode ser cadatrado sem um responsável" })
+    .min(1, { message: "Um aluno não pode ser cadastrado sem um responsável" })
     .uuid({ message: "Responsável inválido" })
 });
 

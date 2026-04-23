@@ -1,10 +1,10 @@
-import { ButtonLink } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOParentResponseDTO } from "@/kubb";
+import type { PageDTOParentResponseDTO, ParentResponseDTO } from "@/kubb";
 import { formatCpf, formatPhone } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon } from "lucide-react";
+import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
 
 type ParentsTableProps = {
   parents?: PageDTOParentResponseDTO;
@@ -12,6 +12,7 @@ type ParentsTableProps = {
   currentPage: number;
   isPending: boolean;
   error: unknown;
+  onEdit: (parent: ParentResponseDTO) => void;
 };
 
 export function ParentsTable({
@@ -20,6 +21,7 @@ export function ParentsTable({
   currentPage,
   isPending,
   error,
+  onEdit,
 }: Readonly<ParentsTableProps>) {
   if (error) {
     return (
@@ -54,7 +56,7 @@ export function ParentsTable({
             <th className="text-left font-semibold text-base-content/80">
               Status
             </th>
-            <th className="text-left font-semibold text-base-content/80">
+            <th className="text-right font-semibold text-base-content/80 pr-4">
               Ações
             </th>
           </tr>
@@ -74,10 +76,18 @@ export function ParentsTable({
 
               <td>{parent.archivedAt ? "Arquivado" : "Ativo"}</td>
 
-              <td>
+              <td className="text-right flex justify-end gap-2 pr-2">
+                <Button
+                  className="btn-square btn-ghost btn-xs text-info"
+                  onClick={() => onEdit(parent)}
+                  title="Editar"
+                >
+                  <Pencil size={16} />
+                </Button>
                 <ButtonLink
-                  className="btn btn-primary btn-ou btn-square"
+                  className="btn btn-primary btn-xs btn-square"
                   to={`/parents/${parent.parentId}`}
+                  title="Detalhes"
                 >
                   <SquareArrowOutUpRightIcon className="h-4 w-4" />
                 </ButtonLink>

@@ -12,6 +12,7 @@ interface DeleteConfirmationModalProps {
   isItemLoading?: boolean
   itemDeleteCount?: number
   itemName?: string
+  linkedItemsLabel?: string
   isBlocker?: boolean
   phantomWarning?: ReactNode
   confirmText?: string
@@ -27,6 +28,7 @@ export const DeleteConfirmationModal = ({
   isItemLoading = false,
   itemDeleteCount = 0,
   itemName = "item",
+  linkedItemsLabel = "evento(s)",
   isBlocker = false,
   phantomWarning,
   confirmText = "Sim, Excluir",
@@ -57,7 +59,7 @@ export const DeleteConfirmationModal = ({
             ) : (
               <>
                 <p>
-                  <strong>Atenção:</strong> Este {itemName} possui <span className="text-secondary font-semibold">{itemDeleteCount}</span> evento(s) vinculado(s).
+                  <strong>Atenção:</strong> Este {itemName} possui <span className="text-secondary font-semibold">{itemDeleteCount}</span> {linkedItemsLabel} vinculado(s).
                 </p>
                 {phantomWarning}
                 <p className="font-semibold mt-2">Deseja prosseguir com a exclusão?</p>

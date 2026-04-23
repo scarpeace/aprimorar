@@ -41,5 +41,8 @@ public record EventRequestDTO(
 
     @NotNull(message = "ID do funcionário é obrigatório")
     @Schema(nullable = false, description = "ID do colaborador vinculado ao evento", example = "123e4567-e89b-12d3-a456-426614174000")
-    UUID employeeId
+    UUID employeeId,
+
+    @Schema(nullable = true, description = "Status do evento (SCHEDULED, COMPLETED, CANCELED)", example = "SCHEDULED")
+    com.aprimorar.api.enums.EventStatus status
 ) {}

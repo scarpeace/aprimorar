@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.aprimorar.api.domain.address.AddressMapper;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponsibleSummaryDTO;
 
 @Component
 public class StudentMapper {
@@ -32,9 +33,19 @@ public class StudentMapper {
             calculateAge(entity.getBirthdate()),
             addressMapper.convertToDto(entity.getAddress()),
             entity.getParent().getId(),
+            convertResponsibleSummary(entity),
             entity.getArchivedAt(),
             entity.getUpdatedAt(),
             entity.getCreatedAt()
+        );
+    }
+
+    private StudentResponsibleSummaryDTO convertResponsibleSummary(Student entity) {
+        return new StudentResponsibleSummaryDTO(
+            entity.getParent().getId(),
+            entity.getParent().getName(),
+            entity.getParent().getContact(),
+            entity.getParent().getCpf()
         );
     }
 

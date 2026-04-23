@@ -1,14 +1,14 @@
-import { ButtonLink } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOStudentResponseDTO } from "@/kubb";
+import type { PageDTOStudentResponseDTO, StudentResponseDTO } from "@/kubb";
 import {
     formatCpf,
     formatDateShortYear,
     formatPhone,
 } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon } from "lucide-react";
+import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
 
 type StudentsTableProps = {
   students?: PageDTOStudentResponseDTO;
@@ -16,6 +16,7 @@ type StudentsTableProps = {
   currentPage: number;
   isPending: boolean;
   error: unknown;
+  onEdit: (student: StudentResponseDTO) => void;
 };
 
 export function StudentsTable({
@@ -24,6 +25,7 @@ export function StudentsTable({
   currentPage,
   isPending,
   error,
+  onEdit,
 }: Readonly<StudentsTableProps>) {
   if (error) {
     return (
@@ -47,6 +49,9 @@ export function StudentsTable({
               Nome
             </th>
             <th className="text-left font-semibold text-base-content/80">
+              Responsável
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
               CPF
             </th>
             <th className="text-left font-semibold text-base-content/80">
@@ -65,7 +70,7 @@ export function StudentsTable({
             <th className="text-left font-semibold text-base-content/80">
               Status
             </th>
-            <th className="text-center font-semibold text-base-content/80">
+            <th className="text-right font-semibold text-base-content/80 pr-4">
               Ações
             </th>
           </tr>
@@ -78,6 +83,7 @@ export function StudentsTable({
               className="transition-colors hover:bg-base-200/70"
             >
               <td>{student.name}</td>
+              <td>{student.responsible?.name || "-"}</td>
 
               <td>{formatCpf(student.cpf)}</td>
               <td className="text-center">{student.age}</td>
@@ -88,10 +94,18 @@ export function StudentsTable({
               <td>{formatDateShortYear(student.createdAt ?? "")}</td>
               <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
 
-              <td>
+              <td className="text-right flex justify-end gap-2 pr-2">
+                <Button
+                  className="btn-square btn-ghost btn-xs text-info"
+                  onClick={() => onEdit(student)}
+                  title="Editar"
+                >
+                  <Pencil size={16} />
+                </Button>
                 <ButtonLink
-                  className="btn btn-primary btn-ou btn-square"
+                  className="btn btn-primary btn-xs btn-square"
                   to={`/students/${student.id}`}
+                  title="Detalhes"
                 >
                   <SquareArrowOutUpRightIcon className="h-4 w-4" />
                 </ButtonLink>

@@ -1,14 +1,15 @@
-import { ButtonLink } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOEmployeeResponseDTO } from "@/kubb";
+import type { PageDTOEmployeeResponseDTO, EmployeeResponseDTO } from "@/kubb";
+import { dutyLabels } from "../utils/dutyLabels";
 import {
   formatCpf,
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon } from "lucide-react";
+import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
 
 type EmployeesTableProps = {
   employees?: PageDTOEmployeeResponseDTO;
@@ -16,6 +17,7 @@ type EmployeesTableProps = {
   currentPage: number;
   isPending: boolean;
   error: unknown;
+  onEdit: (employee: EmployeeResponseDTO) => void;
 };
 
 export function EmployeesTable({
@@ -24,6 +26,7 @@ export function EmployeesTable({
   currentPage,
   isPending,
   error,
+  onEdit,
 }: Readonly<EmployeesTableProps>) {
   if (isPending) {
     return <LoadingSpinner text="Carregando Colaboradores..." />;
@@ -47,6 +50,9 @@ export function EmployeesTable({
               Nome
             </th>
             <th className="text-left font-semibold text-base-content/80">
+              Cargo
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
               CPF
             </th>
             <th className="text-left font-semibold text-base-content/80">
@@ -59,7 +65,7 @@ export function EmployeesTable({
             <th className="text-left font-semibold text-base-content/80">
               Status
             </th>
-            <th className="text-center font-semibold text-base-content/80">
+            <th className="text-right font-semibold text-base-content/80 pr-4">
               Ações
             </th>
           </tr>
@@ -72,6 +78,7 @@ export function EmployeesTable({
               className="transition-colors hover:bg-base-200/70"
             >
               <td>{employee.name}</td>
+              <td>{dutyLabels[employee.duty]}</td>
 
               <td>{formatCpf(employee.cpf)}</td>
               <td>{formatPhone(employee.contact)}</td>
@@ -79,11 +86,19 @@ export function EmployeesTable({
               <td>{formatDateShortYear(employee.createdAt ?? "")}</td>
               <td>{employee.archivedAt ? "Arquivado" : "Ativo"}</td>
 
-              <td>
+              <td className="text-right flex justify-end gap-2 pr-2">
+                <Button
+                  className="btn-square btn-ghost btn-xs text-info"
+                  onClick={() => onEdit(employee)}
+                  title="Editar"
+                >
+                  <Pencil size={16} />
+                </Button>
                 <ButtonLink
-                  className="btn-square"
+                  className="btn-square btn-xs"
                   to={`/employees/${employee.id}`}
                   variant="primary"
+                  title="Detalhes"
                 >
                   <SquareArrowOutUpRightIcon className="h-4 w-4" />
                 </ButtonLink>

@@ -22,6 +22,7 @@ export const logoutMutationKey = () => [{ url: "/v1/auth/logout" }] as const;
 export type LogoutMutationKey = ReturnType<typeof logoutMutationKey>;
 
 /**
+ * @description Encerra a sessão do usuário.
  * {@link /v1/auth/logout}
  */
 export async function logout(
@@ -60,6 +61,7 @@ export function logoutMutationOptions<TContext = unknown>(
 }
 
 /**
+ * @description Encerra a sessão do usuário.
  * {@link /v1/auth/logout}
  */
 export function useLogout<TContext>(

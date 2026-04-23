@@ -21,10 +21,8 @@ function buildBadgeClassName(variant: BadgeVariant, className?: string) {
     VARIANT_CLASSES[variant],
     "h-auto",
     "whitespace-normal",
-    "px-3",
-    "py-2",
-    "text-left",
-    "text-sm",
+    "text-center",
+    "text-xs",
     className,
   ]
     .filter(Boolean)

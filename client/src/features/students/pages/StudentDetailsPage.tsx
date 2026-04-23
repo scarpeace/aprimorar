@@ -1,4 +1,4 @@
-import { ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Collapse } from "@/components/ui/collapse";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
@@ -9,7 +9,6 @@ import { AddressDetails } from "@/features/address/components/AddressDetails";
 import { EventsTable } from "@/features/events/components/EventsTable";
 import {
   useGetEventsByStudent,
-  useGetParentById,
   useGetStudentById,
 } from "@/kubb";
 import {
@@ -18,18 +17,19 @@ import {
   formatPhone,
 } from "@/lib/utils/formatter";
 import { Edit, GraduationCap } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
 import { DeleteStudentButton } from "../components/DeleteStudentButton";
+import { StudentForm } from "../components/StudentForm";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
   const [currentPage, setCurrentPage] = useState(0);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const studentQuery = useGetStudentById(studentId);
-  const studentParent = useGetParentById(studentQuery.data?.parentId || "");
   const studentEvents = useGetEventsByStudent(studentId);
 
   const headerProps = {
@@ -39,13 +39,13 @@ export function StudentDetailsPage() {
     backLink: "/students",
   };
 
-  if (studentQuery.isError || studentParent.isError || studentEvents.isError) {
+  if (studentQuery.isError || studentEvents.isError) {
     return (
       <PageLayout {...headerProps}>
         <ErrorCard
           title="Erro ao carregar detalhes do aluno"
           error={
-            studentQuery.error || studentParent.error || studentEvents.error
+            studentQuery.error || studentEvents.error
           }
         />
       </PageLayout>
@@ -54,7 +54,6 @@ export function StudentDetailsPage() {
 
   if (
     studentQuery.isPending ||
-    studentParent.isPending ||
     studentEvents.isPending
   ) {
     return (
@@ -71,21 +70,18 @@ export function StudentDetailsPage() {
           title="Aluno"
           description="Dados do aluno"
           headerActions={
-            <>
-              <ButtonLink
-                to={`/students/edit/${studentQuery.data.id}`}
-                variant="primary"
-              >
-                <Edit className="h-4 w-4" />
+            <div className="flex gap-2 items-center flex-wrap justify-end">
+              <Button onClick={() => setIsFormOpen(true)} variant="primary">
+                <Edit className="h-4 w-4 mr-2" />
                 Editar
-              </ButtonLink>
+              </Button>
 
               <ArchiveStudentButton
                 studentId={studentQuery.data.id}
                 isArchived={!!studentQuery.data.archivedAt}
               />
               <DeleteStudentButton studentId={studentQuery.data.id} />
-            </>
+            </div>
           }
         >
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -100,9 +96,9 @@ export function StudentDetailsPage() {
             <SummaryItem label="Data de matrícula" value={formatDateShortYear(studentQuery.data.createdAt)}/>
             <SummaryItem label="Escola" value={studentQuery.data.school} />
             <SummaryItem label="Status" value={studentQuery.data.archivedAt ? "Arquivado" : "Ativo"} />
-            <SummaryItem label="Responsável" value={studentParent.data?.name} />
-            <SummaryItem label="Contato do Responsável" value={formatPhone(studentParent.data?.contact)} />
-            <SummaryItem label="CPF do Responsável" value={formatCpf(studentParent.data?.cpf)} />
+            <SummaryItem label="Responsável" value={studentQuery.data.responsible?.name} />
+            <SummaryItem label="Contato do Responsável" value={formatPhone(studentQuery.data.responsible?.contact)} />
+            <SummaryItem label="CPF do Responsável" value={formatCpf(studentQuery.data.responsible?.cpf)} />
           </div>
 
           <Collapse title={"Endereço"} className="mt-3 shadow-xl">
@@ -122,6 +118,19 @@ export function StudentDetailsPage() {
             onPageChange={setCurrentPage}
           />
         </SectionCard>
+
+        {isFormOpen && (
+          <div className="modal modal-open">
+            <div className="modal-box max-w-4xl">
+              <h3 className="font-bold text-lg mb-4">Editar Aluno</h3>
+              <StudentForm
+                initialData={studentQuery.data}
+                onSuccess={() => setIsFormOpen(false)}
+                onCancel={() => setIsFormOpen(false)}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </PageLayout>
   );

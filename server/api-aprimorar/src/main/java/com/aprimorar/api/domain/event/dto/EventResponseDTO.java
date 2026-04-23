@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.enums.FinancialStatus;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
@@ -53,8 +54,20 @@ public record EventResponseDTO(
     UUID employeeId,
 
     @NotNull
-    @Schema(nullable = false, description = "Nome do colaborador vinculado ao evento", example = "Jane Smith")
+    @Schema(nullable = false, description = "Nome do colaborador vinculado ao evento", example = "Jane Doe")
     String employeeName,
+
+    @NotNull
+    @Schema(nullable = false, description = "Status do evento", example = "SCHEDULED")
+    com.aprimorar.api.enums.EventStatus status,
+
+    @NotNull
+    @Schema(nullable = false, description = "Status financeiro da receita", example = "PENDING")
+    FinancialStatus incomeStatus,
+
+    @NotNull
+    @Schema(nullable = false, description = "Status financeiro da despesa", example = "PENDING")
+    FinancialStatus expenseStatus,
 
     @NotNull
     @Schema(nullable = false, description = "Data de criação do evento", example = "2024-03-10T15:33:42Z`")

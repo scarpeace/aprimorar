@@ -8,7 +8,7 @@ import { authLoginRequestDTOSchema } from "../authLoginRequestDTOSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description OK
+ * @description Login realizado com sucesso.
  */
 export const login200Schema = z
   .lazy(() => authCurrentUserResponseDTOSchema)

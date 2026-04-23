@@ -12,6 +12,8 @@ import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.enums.EventStatus;
+import com.aprimorar.api.enums.FinancialStatus;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -31,6 +33,70 @@ class EventTest {
     @Nested
     @DisplayName("Validation methods")
     class ValidationMethods {
+
+        @Test
+        @DisplayName("should initialize with SCHEDULED status and PENDING financial status")
+        void shouldInitializeWithScheduledStatus() {
+            Event input = new Event();
+            assertThat(input.getStatus()).isEqualTo(EventStatus.SCHEDULED);
+            assertThat(input.getIncomeStatus()).isEqualTo(FinancialStatus.PENDING);
+            assertThat(input.getExpenseStatus()).isEqualTo(FinancialStatus.PENDING);
+        }
+
+        @Test
+        @DisplayName("should complete event")
+        void shouldCompleteEvent() {
+            Event input = new Event();
+            input.complete();
+            assertThat(input.getStatus()).isEqualTo(EventStatus.COMPLETED);
+        }
+
+        @Test
+        @DisplayName("should cancel event and reset financial status")
+        void shouldCancelEvent() {
+            Event input = new Event();
+            input.complete();
+            input.settleIncome();
+            input.settleExpense();
+            
+            input.cancel();
+            
+            assertThat(input.getStatus()).isEqualTo(EventStatus.CANCELED);
+            assertThat(input.getIncomeStatus()).isEqualTo(FinancialStatus.PENDING);
+            assertThat(input.getExpenseStatus()).isEqualTo(FinancialStatus.PENDING);
+        }
+
+        @Test
+        @DisplayName("should reschedule event and reset financial status")
+        void shouldRescheduleEvent() {
+            Event input = new Event();
+            input.complete();
+            input.settleIncome();
+            
+            input.reschedule();
+            
+            assertThat(input.getStatus()).isEqualTo(EventStatus.SCHEDULED);
+            assertThat(input.getIncomeStatus()).isEqualTo(FinancialStatus.PENDING);
+            assertThat(input.getExpenseStatus()).isEqualTo(FinancialStatus.PENDING);
+        }
+
+        @Test
+        @DisplayName("should settle income when completed")
+        void shouldSettleIncomeWhenCompleted() {
+            Event input = new Event();
+            input.complete();
+            input.settleIncome();
+            assertThat(input.getIncomeStatus()).isEqualTo(FinancialStatus.PAID);
+        }
+
+        @Test
+        @DisplayName("should throw when settling income on incomplete event")
+        void shouldThrowWhenSettlingIncomeOnIncompleteEvent() {
+            Event input = new Event();
+            assertThatThrownBy(input::settleIncome)
+                .isInstanceOf(InvalidEventException.class)
+                .hasMessage("Não é possível dar baixa no recebimento de um evento não concluído");
+        }
 
         @Test
         @DisplayName("should update details when values are valid")

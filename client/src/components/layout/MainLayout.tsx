@@ -5,7 +5,8 @@ import {
   LogOut,
   UserCog,
   GraduationCap,
-  Handshake
+  Handshake,
+  Banknote
 } from "lucide-react"
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 
@@ -21,6 +22,7 @@ const navigation = [
   { name: "Pais e Responsáveis", href: "/parents", icon: Handshake },
   { name: "Colaboradores", href: "/employees", icon: UserCog },
   { name: "Atendimentos", href: "/events", icon: Calendar },
+  { name: "Financeiro", href: "/finance/expenses", icon: Banknote },
 ]
 
 const dutyLabels = {

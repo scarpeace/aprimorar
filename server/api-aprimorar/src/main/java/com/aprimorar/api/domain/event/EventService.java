@@ -13,6 +13,8 @@ import com.aprimorar.api.domain.event.repository.EventSpecifications;
 import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.enums.EventStatus;
+import com.aprimorar.api.enums.FinancialStatus;
 import com.aprimorar.api.shared.PageDTO;
 import java.time.Clock;
 import java.time.Instant;
@@ -81,14 +83,23 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public PageDTO<EventResponseDTO> getEvents(Pageable pageable, String search) {
-        Page<Event> eventPage;
-        if (search != null && !search.trim().isEmpty()) {
-            Specification<Event> spec = EventSpecifications.searchContainsIgnoreCase(search.trim());
-            eventPage = eventRepo.findAll(spec, pageable);
-        } else {
-            eventPage = eventRepo.findAll(pageable);
-        }
+    public PageDTO<EventResponseDTO> getEvents(
+        Pageable pageable,
+        String search,
+        Instant startDate,
+        Instant endDate,
+        EventStatus status,
+        UUID studentId,
+        UUID employeeId
+    ) {
+        Specification<Event> spec = Specification.where(EventSpecifications.searchContainsIgnoreCase(search))
+            .and(EventSpecifications.withStartDateAfter(startDate))
+            .and(EventSpecifications.withEndDateBefore(endDate))
+            .and(EventSpecifications.withStatus(status))
+            .and(EventSpecifications.withStudentId(studentId))
+            .and(EventSpecifications.withEmployeeId(employeeId));
+
+        Page<Event> eventPage = eventRepo.findAll(spec, pageable);
         Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);
 
         log.info("Consulta de eventos finalizada, {} registros encontrados.", eventPage.getTotalElements());
@@ -160,6 +171,54 @@ public class EventService {
         Event foundEvent = findEventOrThrow(eventId);
         eventRepo.delete(foundEvent);
         log.info("Evento {} deletado com sucesso.", foundEvent.getTitle().toUpperCase());
+    }
+
+    @Transactional
+    public EventResponseDTO completeEvent(UUID id) {
+        Event event = findEventOrThrow(id);
+        event.complete();
+        log.info("Evento {} concluído com sucesso.", event.getTitle().toUpperCase());
+        return eventMapper.convertToDto(event);
+    }
+
+    @Transactional
+    public EventResponseDTO cancelEvent(UUID id) {
+        Event event = findEventOrThrow(id);
+        event.cancel();
+        log.info("Evento {} cancelado com sucesso.", event.getTitle().toUpperCase());
+        return eventMapper.convertToDto(event);
+    }
+
+    @Transactional
+    public EventResponseDTO rescheduleEvent(UUID id) {
+        Event event = findEventOrThrow(id);
+        event.reschedule();
+        log.info("Evento {} re-agendado com sucesso.", event.getTitle().toUpperCase());
+        return eventMapper.convertToDto(event);
+    }
+
+    @Transactional
+    public EventResponseDTO settleIncome(UUID id, FinancialStatus status) {
+        Event event = findEventOrThrow(id);
+        if (status == FinancialStatus.PAID) {
+            event.settleIncome();
+        } else {
+            event.unsettleIncome();
+        }
+        log.info("Status financeiro (receita) do evento {} atualizado para {}.", event.getTitle(), status);
+        return eventMapper.convertToDto(event);
+    }
+
+    @Transactional
+    public EventResponseDTO settleExpense(UUID id, FinancialStatus status) {
+        Event event = findEventOrThrow(id);
+        if (status == FinancialStatus.PAID) {
+            event.settleExpense();
+        } else {
+            event.unsettleExpense();
+        }
+        log.info("Status financeiro (despesa) do evento {} atualizado para {}.", event.getTitle(), status);
+        return eventMapper.convertToDto(event);
     }
 
     /* ----- Helper Methods ----- */

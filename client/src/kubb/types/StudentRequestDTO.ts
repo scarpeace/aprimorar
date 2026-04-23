@@ -50,7 +50,7 @@ export type StudentRequestDTO = {
    */
   address: AddressRequestDTO;
   /**
-   * @description ID do responsável do aluno
+   * @description ID do responsável atual do aluno
    * @type string, uuid
    */
   parentId: string;

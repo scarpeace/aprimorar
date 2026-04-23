@@ -87,6 +87,8 @@ public class StudentService {
 
         if (Boolean.TRUE.equals(archived)) {
             spec = spec.and(StudentSpecifications.archived());
+        } else {
+            spec = spec.and(StudentSpecifications.notArchived());
         }
 
         if (search != null && !search.trim().isEmpty()) {
@@ -110,6 +112,7 @@ public class StudentService {
             .toList();
     }
 
+    @Transactional(readOnly = true)
     public PageDTO<StudentResponseDTO> getStudentsByParent(UUID parentId, Pageable pageable) {
         Page<Student> studentPage = studentRepo.findAllByParentId(parentId, pageable);
         Page<StudentResponseDTO> studentsDtoPage = studentPage.map(studentMapper::convertToDto);
@@ -196,6 +199,10 @@ public class StudentService {
     }
 
     private Parent findParentOrThrow(UUID parentId) {
+        if (parentId == null) {
+            throw new IllegalArgumentException("Responsável do aluno é obrigatório.");
+        }
+
         return parentRepo
             .findById(parentId)
             .orElseThrow(() -> new IllegalArgumentException("Responsável não encontrado."));

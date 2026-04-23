@@ -91,7 +91,7 @@ export function StudentEditPage() {
 
   return (
     <PageLayout {...headerProps}>
-      <SectionCard title={"Cadastre um novo aluno"} description={"Informe os dados do aluno e do selecione um responsável."}>
+      <SectionCard title={"Edite os dados do aluno"} description={"Atualize os dados do aluno e o responsável selecionado."}>
 
       <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">

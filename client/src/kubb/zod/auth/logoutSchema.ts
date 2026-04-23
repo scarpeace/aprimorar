@@ -6,8 +6,8 @@
 import { z } from "zod/v4";
 
 /**
- * @description OK
+ * @description Sessão encerrada com sucesso.
  */
-export const logout200Schema = z.any();
+export const logout204Schema = z.any();
 
-export const logoutMutationResponseSchema = z.lazy(() => logout200Schema);
+export const logoutMutationResponseSchema = z.lazy(() => logout204Schema);

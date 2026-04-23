@@ -4,6 +4,7 @@
  */
 
 import { addressResponseDTOSchema } from "./addressResponseDTOSchema.ts";
+import { studentResponsibleSummaryDTOSchema } from "./studentResponsibleSummaryDTOSchema.ts";
 import { z } from "zod/v4";
 
 /**
@@ -23,16 +24,21 @@ export const studentResponseDTOSchema = z
       return addressResponseDTOSchema.describe("Endereço do aluno");
     },
     parentId: z.uuid().describe("ID do responsável"),
+    get responsible() {
+      return studentResponsibleSummaryDTOSchema.describe(
+        "Resumo do responsável vinculado ao aluno",
+      );
+    },
     archivedAt: z.iso
       .datetime()
       .describe("Data e hora quando o aluno foi arquivado")
       .nullish(),
-    createdAt: z.iso
-      .datetime()
-      .describe("Data e hora quando o aluno foi criado"),
     updatedAt: z.iso
       .datetime()
       .describe("Data e hora quando o aluno foi atualizado")
       .nullish(),
+    createdAt: z.iso
+      .datetime()
+      .describe("Data e hora quando o aluno foi criado"),
   })
   .describe("Dados do aluno retornados pela API");

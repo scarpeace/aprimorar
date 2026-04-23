@@ -7,7 +7,7 @@ import type { AuthCurrentUserResponseDTO } from "../AuthCurrentUserResponseDTO.t
 import type { AuthLoginRequestDTO } from "../AuthLoginRequestDTO.ts";
 
 /**
- * @description OK
+ * @description Login realizado com sucesso.
  */
 export type Login200 = AuthCurrentUserResponseDTO;
 

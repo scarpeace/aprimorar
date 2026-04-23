@@ -7,6 +7,7 @@ import { Alert } from "@/components/ui/alert";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { SectionCard } from "@/components/ui/section-card";
 import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { brazilianStates } from "@/lib/utils/brazilianStates";
 import { useHookFormMask } from "use-mask-input";
 import { studentFormSchema, type StudentFormSchema } from "../forms/studentFormSchema";
@@ -22,7 +23,6 @@ export function StudentCreatePage() {
   const { createStudent } = useStudentMutations();
 
   const onSubmit = handleSubmit((data: StudentFormSchema) => {
-    console.log("Before parse",data.birthdate)
     createStudent.mutate({ data });
   });
 
@@ -36,10 +36,10 @@ export function StudentCreatePage() {
   return (
     <PageLayout {...headerProps}>
 
-      <SectionCard title={"Cadastre um novo aluno"} description={"Informe os dados do aluno e do selecione um responsável."}>
+      <SectionCard title={"Cadastre um novo aluno"} description={"Informe os dados do aluno e selecione um responsável."}>
 
         {createStudent.isError && (
-            <Alert error={createStudent.error} variant="error" />
+            <Alert error={getFriendlyErrorMessage(createStudent.error)} variant="error" />
         )}
 
         <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">

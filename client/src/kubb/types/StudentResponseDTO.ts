@@ -4,6 +4,7 @@
  */
 
 import type { AddressResponseDTO } from "./AddressResponseDTO.ts";
+import type { StudentResponsibleSummaryDTO } from "./StudentResponsibleSummaryDTO.ts";
 
 /**
  * @description Dados do aluno retornados pela API
@@ -60,18 +61,23 @@ export type StudentResponseDTO = {
    */
   parentId: string;
   /**
+   * @description Resumo do responsável vinculado ao aluno
+   * @type object
+   */
+  responsible: StudentResponsibleSummaryDTO;
+  /**
    * @description Data e hora quando o aluno foi arquivado
    * @type string, date-time
    */
   archivedAt?: string | null;
   /**
-   * @description Data e hora quando o aluno foi criado
-   * @type string, date-time
-   */
-  createdAt: string;
-  /**
    * @description Data e hora quando o aluno foi atualizado
    * @type string, date-time
    */
   updatedAt?: string | null;
+  /**
+   * @description Data e hora quando o aluno foi criado
+   * @type string, date-time
+   */
+  createdAt: string;
 };

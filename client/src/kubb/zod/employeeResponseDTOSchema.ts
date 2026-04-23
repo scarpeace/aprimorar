@@ -13,7 +13,9 @@ export const employeeResponseDTOSchema = z.object({
   contact: z.string(),
   cpf: z.string(),
   email: z.string(),
-  duty: z.enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"]),
+  duty: z
+    .enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"])
+    .describe("Função/Papel do funcionário"),
   archivedAt: z.iso.datetime().nullish(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime().nullish(),

@@ -9,6 +9,7 @@ import {
   useUpdateStudent,
   type StudentResponseDTO,
 } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -20,7 +21,7 @@ export function useStudentMutations() {
   const createStudent = useCreateStudent({
     mutation: {
       onError: (error) => {
-        toast.error("Algo deu errado ao criar o aluno");
+        toast.error(getFriendlyErrorMessage(error));
       },
       onSuccess: (createdStudent: StudentResponseDTO) => {
         toast.success("Aluno criado com sucesso");
@@ -32,8 +33,8 @@ export function useStudentMutations() {
 
   const updateStudent = useUpdateStudent({
     mutation: {
-      onError: () => {
-        toast.error("Algo deu errado ao atualizar o aluno");
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
       },
       onSuccess: (_,variables) => {
         toast.success("Aluno atualizado com sucesso");
@@ -48,8 +49,8 @@ export function useStudentMutations() {
 
   const deleteStudent = useDeleteStudent({
     mutation: {
-      onError: () => {
-        toast.error("Algo deu errado ao excluir o aluno");
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
       },
       onSuccess: () => {
         toast.success("Aluno excluído com sucesso");
@@ -62,8 +63,8 @@ export function useStudentMutations() {
 
   const archiveStudent = useArchiveStudent({
     mutation: {
-      onError: () => {
-        toast.error("Algo deu errado ao arquivar o aluno");
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
       },
       onSuccess: (_, variables) => {
         toast.success("Aluno arquivado com sucesso");
@@ -77,8 +78,8 @@ export function useStudentMutations() {
 
   const unarchiveStudent = useUnarchiveStudent({
     mutation: {
-      onError: () => {
-        toast.error("Algo deu errado ao desarquivar o aluno");
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
       },
       onSuccess: (_, variables) => {
         toast.success("Aluno desarquivado com sucesso");

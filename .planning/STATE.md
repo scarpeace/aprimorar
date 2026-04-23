@@ -2,100 +2,98 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 01-authentication-protected-access-04-PLAN.md
-last_updated: "2026-04-18T18:11:08.919Z"
-last_activity: 2026-04-18
+status: aguardando_planejamento
+stopped_at: Concluído Fase 04
+last_updated: "2026-04-21T18:30:00.000Z"
+last_activity: 21-04-2026
 progress:
   total_phases: 5
-  completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
+  completed_phases: 4
+  total_plans: 19
+  completed_plans: 19
   percent: 100
 ---
 
-# Project State
+# Estado do Projeto
 
-## Project Reference
+## Referência do Projeto
 
-See: .planning/PROJECT.md (updated 2026-04-17)
+Veja: .planning/PROJECT.md (atualizado em 19-04-2026)
 
-**Core value:** The secretary must be able to manage the school day to day from the app without depending on scattered spreadsheets.
-**Current focus:** Phase 01 — authentication-protected-access
+**Valor central:** A secretária deve ser capaz de gerenciar o dia a dia da escola a partir do app, sem depender de planilhas espalhadas.
+**Foco atual:** Fase 05 — Dashboard Diário Unificado
 
-## Current Position
+## Posição Atual
 
-Phase: 01 (authentication-protected-access) — COMPLETE
-Plan: 4 of 4
-Status: Phase 01 complete
-Last activity: 2026-04-18
+Fase: 04 (Núcleo de Acompanhamento Financeiro) — CONCLUÍDA
+Plano: 4 de 4
+Status: Fase 04 encerrada com sucesso. Financeiro operacional integrado.
+Última atividade: 21-04-2026
 
-Progress: [██████████] 100%
+Progresso: [██████████] 100%
 
-## Performance Metrics
+## Métricas de Desempenho
 
-**Velocity:**
+**Velocidade:**
 
-- Total plans completed: 0
-- Average duration: 0 min
-- Total execution time: 0.0 hours
+- Total de planos concluídos: 19
+- Duração média: 0 min
+- Tempo total de execução: 0.0 horas
 
-**By Phase:**
+**Por Fase:**
 
-| Phase | Plans | Total | Avg/Plan |
+| Fase | Planos | Total | Média/Plano |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 01 | 4 | - | - |
+| 02 | 7 | - | - |
+| 03 | 4 | - | - |
+| 04 | 4 | - | - |
 
-**Recent Trend:**
+**Tendência Recente:**
 
-- Last 5 plans: none
-- Trend: Stable
+- Últimos 5 planos: 04-01, 04-02, 04-03, 04-04
+- Tendência: Estável
 
-| Phase 01-authentication-protected-access P01 | 604 | 3 tasks | 16 files |
-| Phase 01-authentication-protected-access P02 | 15 | 2 tasks | 26 files |
-| Phase 01-authentication-protected-access P03 | 1 min | 2 tasks | 3 files |
-| Phase 01-authentication-protected-access P04 | 1min | 2 tasks | 3 files |
+| Plano | Duração | Tarefas | Arquivos |
+|-------|---------|---------|----------|
+| Fase 04 P01 | - | 3 | 7 |
+| Fase 04 P02 | - | 3 | 8 |
+| Fase 04 P03 | - | 3 | 6 |
+| Fase 04 P04 | - | 3 | 5 |
 
-## Accumulated Context
+## Contexto Acumulado
 
-### Decisions
+### Decisões
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
+As decisões são registradas na tabela de Decisões Chave do PROJECT.md.
+Decisões recentes que afetam o trabalho atual:
 
-- [Roadmap] Sequence work as secure access → brownfield module hardening → finance → dashboard.
-- [Roadmap] Treat existing student, parent, employee, event, and dashboard areas as hardening targets, not rewrite candidates.
-- [Phase 01-authentication-protected-access]: Use Spring Security server-managed sessions for immediate logout and refresh persistence.
-- [Phase 01-authentication-protected-access]: Store internal staff credentials in tb_internal_users linked to employees instead of adding passwords to employee records.
-- [Phase 01-authentication-protected-access]: Return stable Portuguese JSON auth failures with a dedicated UNAUTHORIZED error code.
-- [Phase 01-authentication-protected-access]: Wrap generated auth hooks in useAuthSession so login/logout invalidation and current-user bootstrap stay centralized.
-- [Phase 01-authentication-protected-access]: Configure Kubb's shared axios client for withCredentials plus Spring Security XSRF names instead of storing auth state in browser storage.
-- [Phase 01-authentication-protected-access]: Keep /login as the only public SPA entry and gate every existing workflow branch with the shared AuthGate.
-- [Phase 01-authentication-protected-access]: Remove protected query cache entries after logout before redirecting so signed-out users cannot keep browsing stale secretary data.
-- [Phase 01-authentication-protected-access]: Import the shared API bootstrap from main.tsx so generated auth hooks always inherit credential and XSRF defaults.
-- [Phase 01-authentication-protected-access]: Use /v1/auth/me refetch as the single source of truth for post-login auth state instead of optimistic cache writes.
+- [Fase 04]: O financeiro é baseado em Atendimentos (Eventos) e Despesas Gerais manuais.
+- [Fase 04]: Cada evento possui `incomeStatus` e `expenseStatus` independentes.
+- [Fase 04]: Somente eventos com status `COMPLETED` podem ter baixa financeira (PAID).
+- [Fase 04]: Despesas Gerais não possuem arquivamento (exclusão física permitida ou simplificada).
+- [Fase 04]: Uso rigoroso de `BigDecimal` (Java) e `NUMERIC(19,2)` (SQL) para precisão monetária.
 
-### Pending Todos
+### Pendências (Todos)
 
-None yet.
+Nenhuma por enquanto.
 
-### Blockers/Concerns
+### Bloqueadores/Preocupações
 
-- Finance policies such as partial payments, discounts, and reversals will need tighter phase planning before implementation.
-- Dashboard KPI definitions must stay aligned with finance and operations semantics to avoid trust issues.
+- Nenhuma identificada na fase atual.
 
-## Deferred Items
+## Itens Adiados
 
-Items acknowledged and carried forward from previous milestone close:
+Itens reconhecidos e levados adiante do encerramento do marco anterior:
 
-| Category | Item | Status | Deferred At |
+| Categoria | Item | Status | Adiado em |
 |----------|------|--------|-------------|
-| Access Expansion | Teacher, parent, and student self-service portals | Deferred | v1 planning |
-| Finance Expansion | Payment gateway integration and advanced billing policies | Deferred | v1 planning |
-| Reporting | Advanced reports and analytics | Deferred | v1 planning |
+| Expansão de Acesso | Portais de autoatendimento para professores, pais e alunos | Adiado | planejamento v1 |
+| Expansão Financeira | Integração com gateway de pagamento e políticas de faturamento avançadas | Adiado | planejamento v1 |
+| Relatórios | Relatórios financeiros avançados e análises por período longo | Adiado | planejamento v1 |
 
-## Session Continuity
+## Continuidade da Sessão
 
-Last session: 2026-04-18T18:11:08.915Z
-Stopped at: Completed 01-authentication-protected-access-04-PLAN.md
-Resume file: None
+Última sessão: 2026-04-21T18:30:00.000Z
+Parou em: Concluída Fase 04
+Arquivo de retomada: Nenhum

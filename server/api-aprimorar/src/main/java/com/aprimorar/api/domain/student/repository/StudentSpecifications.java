@@ -22,7 +22,8 @@ public final class StudentSpecifications {
             return cb.or(
                     cb.like(cb.lower(root.get("name")), likeTerm),
                     cb.like(cb.lower(root.get("email")), likeTerm),
-                    cb.like(cb.lower(root.get("school")), likeTerm)
+                    cb.like(cb.lower(root.get("school")), likeTerm),
+                    cb.like(cb.lower(root.get("cpf")), likeTerm)
             );
         };
     }

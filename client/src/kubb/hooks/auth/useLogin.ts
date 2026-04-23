@@ -25,6 +25,7 @@ export const loginMutationKey = () => [{ url: "/v1/auth/login" }] as const;
 export type LoginMutationKey = ReturnType<typeof loginMutationKey>;
 
 /**
+ * @description Autentica um usuário e inicia a sessão.
  * {@link /v1/auth/login}
  */
 export async function login(
@@ -71,6 +72,7 @@ export function loginMutationOptions<TContext = unknown>(
 }
 
 /**
+ * @description Autentica um usuário e inicia a sessão.
  * {@link /v1/auth/login}
  */
 export function useLogin<TContext>(

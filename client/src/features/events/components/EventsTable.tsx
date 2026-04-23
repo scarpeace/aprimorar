@@ -1,11 +1,13 @@
-import { ButtonLink } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ButtonLink, Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { type PageDTOEventResponseDTO } from "@/kubb";
+import { type PageDTOEventResponseDTO, type EventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon } from "lucide-react";
+import { SquareArrowOutUpRightIcon, Pencil, CheckCircle2, XCircle } from "lucide-react";
+import { useEventMutations } from "../hooks/use-event-mutations";
 
 type EventsTableProps = {
   eventsPage?: PageDTOEventResponseDTO;
@@ -13,6 +15,7 @@ type EventsTableProps = {
   onPageChange: (page: number) => void;
   isPending: boolean;
   error: unknown;
+  onEdit?: (event: EventResponseDTO) => void;
 };
 
 export function EventsTable({
@@ -21,7 +24,11 @@ export function EventsTable({
   onPageChange,
   isPending,
   error,
+  onEdit,
 }: Readonly<EventsTableProps>) {
+  const { changeEventStatus, isStatusPending } = useEventMutations();
+
+
   if (isPending) {
     return <LoadingSpinner text="Carregando Eventos..." />;
   }
@@ -53,6 +60,9 @@ export function EventsTable({
               Horário
             </th>
             <th className="text-left font-semibold text-base-content/80">
+              Status
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
               Conteúdo
             </th>
             <th className="text-left font-semibold text-base-content/80">
@@ -61,7 +71,7 @@ export function EventsTable({
             <th className="text-left font-semibold text-base-content/80">
               Pagamento
             </th>
-            <th className="text-center font-semibold text-base-content/80">
+            <th className="text-center font-semibold text-base-content/80 pr-4">
               Ações
             </th>
           </tr>
@@ -77,6 +87,11 @@ export function EventsTable({
               <td>{event.employeeName}</td>
               <td className="">{formatDateShortYear(event.startDate)}</td>
               <td className=" text-center">{formatTime(event.startDate)} - {formatTime(event.endDate)}</td>
+              <td>
+                {event.status === "SCHEDULED" && <Badge variant="primary">Agendado</Badge>}
+                {event.status === "COMPLETED" && <Badge variant="success" className="p-1 px-2">Concluído</Badge>}
+                {event.status === "CANCELED" && <Badge variant="error" className="p-1 px-2">Cancelado</Badge>}
+              </td>
               <td className=" text-center">
                 {EventContentLabels[event.content] || event.content}
               </td>
@@ -84,11 +99,41 @@ export function EventsTable({
               <td>{brl.format(event.price)}</td>
               <td>{brl.format(event.payment)}</td>
 
-              <td>
+              <td className="text-right flex justify-end gap-1 pr-2">
+                {event.status !== "COMPLETED" && event.status !== "CANCELED" && (
+                  <Button
+                    className="btn-square btn-ghost btn-xs text-success"
+                    onClick={() => changeEventStatus(event, "COMPLETED")}
+                    title="Concluir"
+                    disabled={isStatusPending}
+                  >
+                    <CheckCircle2 size={16} />
+                  </Button>
+                )}
+                {event.status !== "CANCELED" && (
+                  <Button
+                    className="btn-square btn-ghost btn-xs text-error"
+                    onClick={() => changeEventStatus(event, "CANCELED")}
+                    title="Cancelar"
+                    disabled={isStatusPending}
+                  >
+                    <XCircle size={16} />
+                  </Button>
+                )}
+                {onEdit && (
+                  <Button
+                    className="btn-square btn-ghost btn-xs text-info"
+                    onClick={() => onEdit(event)}
+                    title="Editar"
+                  >
+                    <Pencil size={16} />
+                  </Button>
+                )}
                 <ButtonLink
-                  className="btn-square"
+                  className="btn-square btn-xs"
                   to={`/events/${event.eventId}`}
                   variant="primary"
+                  title="Detalhes"
                 >
                   <SquareArrowOutUpRightIcon className="h-4 w-4" />
                 </ButtonLink>

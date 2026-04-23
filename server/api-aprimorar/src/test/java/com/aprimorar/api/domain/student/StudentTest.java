@@ -5,22 +5,67 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.aprimorar.api.domain.address.Address;
 import com.aprimorar.api.domain.parent.Parent;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.domain.student.exception.InvalidStudentException;
 import com.aprimorar.api.enums.BrazilianStates;
 import java.time.LocalDate;
+import java.lang.reflect.Method;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class StudentTest {
 
+    @Test
+    @DisplayName("should mark student read queries to fetch responsável explicitly")
+    void shouldMarkStudentReadQueriesToFetchResponsavelExplicitly() throws NoSuchMethodException {
+        Method findById = StudentRepository.class.getMethod("findById", Object.class);
+        Method findAllByParentId = StudentRepository.class.getMethod(
+            "findAllByParentId",
+            UUID.class,
+            org.springframework.data.domain.Pageable.class
+        );
+
+        assertThat(entityGraph(findById)).isNotNull();
+        assertThat(entityGraph(findById).attributePaths()).containsExactly("parent");
+        assertThat(entityGraph(findAllByParentId)).isNotNull();
+        assertThat(entityGraph(findAllByParentId).attributePaths()).containsExactly("parent");
+    }
+
     @Nested
     @DisplayName("Validation methods")
     class ValidationMethods {
 
         @Test
+        @DisplayName("should reject creation without responsável")
+        void shouldRejectCreationWithoutResponsavel() {
+            assertThatThrownBy(() -> new Student(
+                "João Silva",
+                "61999999999",
+                "joao@email.com",
+                LocalDate.of(2010, 5, 10),
+                "12345678901",
+                "Escola Central",
+                null,
+                address()
+            ))
+                .isInstanceOf(InvalidStudentException.class)
+                .hasMessage("O estudante deve ter exatamente um responsável");
+        }
+
+        @Test
         @DisplayName("should create when values are valid")
         void shouldCreateWhenValuesAreValid() {
+            Parent responsavel = parent(
+                UUID.fromString("00000000-0000-0000-0000-000000000101"),
+                "Maria Silva",
+                "maria@email.com",
+                "61977777777",
+                "98765432100"
+            );
+
             Student input = new Student(
                 "João Silva",
                 "61999999999",
@@ -28,9 +73,11 @@ class StudentTest {
                 LocalDate.of(2010, 5, 10),
                 "12345678901",
                 "Escola Central",
-                parent(),
+                responsavel,
                 address()
             );
+
+            input.setId(UUID.fromString("00000000-0000-0000-0000-000000000201"));
 
             assertThat(input.getName()).isEqualTo("João Silva");
             assertThat(input.getContact()).isEqualTo("61999999999");
@@ -38,13 +85,22 @@ class StudentTest {
             assertThat(input.getBirthdate()).isEqualTo(LocalDate.of(2010, 5, 10));
             assertThat(input.getCpf()).isEqualTo("12345678901");
             assertThat(input.getSchool()).isEqualTo("Escola Central");
-            assertThat(input.getParent().getName()).isEqualTo("Maria Silva");
+            assertThat(input.getId()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000201"));
+            assertThat(input.getParent()).isSameAs(responsavel);
             assertThat(input.getAddress().getCity()).isEqualTo("Brasília");
         }
 
         @Test
         @DisplayName("should update details without changing cpf")
         void shouldUpdateDetailsWithoutChangingCpf() {
+            Parent initialResponsavel = parent(
+                UUID.fromString("00000000-0000-0000-0000-000000000101"),
+                "Maria Silva",
+                "maria@email.com",
+                "61977777777",
+                "98765432100"
+            );
+
             Student input = new Student(
                 "João Silva",
                 "61999999999",
@@ -52,11 +108,17 @@ class StudentTest {
                 LocalDate.of(2010, 5, 10),
                 "12345678901",
                 "Escola Central",
-                parent(),
+                initialResponsavel,
                 address()
             );
 
-            Parent updatedParent = new Parent("Carlos Silva", "carlos@email.com", "61988888888", "98765432100");
+            Parent updatedParent = parent(
+                UUID.fromString("00000000-0000-0000-0000-000000000102"),
+                "Carlos Silva",
+                "carlos@email.com",
+                "61988888888",
+                "98765432100"
+            );
             Address updatedAddress = new Address();
             updatedAddress.setStreet("Rua B");
             updatedAddress.setDistrict("Asa Sul");
@@ -80,7 +142,7 @@ class StudentTest {
             assertThat(input.getEmail()).isEqualTo("joao.pedro@email.com");
             assertThat(input.getBirthdate()).isEqualTo(LocalDate.of(2011, 6, 15));
             assertThat(input.getSchool()).isEqualTo("Escola Atualizada");
-            assertThat(input.getParent().getName()).isEqualTo("Carlos Silva");
+            assertThat(input.getParent()).isSameAs(updatedParent);
             assertThat(input.getAddress().getStreet()).isEqualTo("Rua B");
             assertThat(input.getCpf()).isEqualTo("12345678901");
         }
@@ -95,7 +157,13 @@ class StudentTest {
                 LocalDate.of(2010, 5, 10),
                 " ",
                 "Escola Central",
-                parent(),
+                parent(
+                    UUID.fromString("00000000-0000-0000-0000-000000000101"),
+                    "Maria Silva",
+                    "maria@email.com",
+                    "61977777777",
+                    "98765432100"
+                ),
                 address()
             ))
                 .isInstanceOf(InvalidStudentException.class)
@@ -105,7 +173,7 @@ class StudentTest {
         @Test
         @DisplayName("should throw when parent is null during update")
         void shouldThrowWhenParentIsNullDuringUpdate() {
-            Student input = new Student();
+            Student input = student();
 
             assertThatThrownBy(() -> input.updateDetails(
                 "João Silva",
@@ -117,7 +185,7 @@ class StudentTest {
                 address()
             ))
                 .isInstanceOf(InvalidStudentException.class)
-                .hasMessage("O ID do responsável não pode ser nulo");
+                .hasMessage("O estudante deve ter exatamente um responsável");
         }
 
         @Test
@@ -131,7 +199,13 @@ class StudentTest {
                 "joao@email.com",
                 LocalDate.of(2010, 5, 10),
                 "Escola Central",
-                parent(),
+                parent(
+                    UUID.fromString("00000000-0000-0000-0000-000000000101"),
+                    "Maria Silva",
+                    "maria@email.com",
+                    "61977777777",
+                    "98765432100"
+                ),
                 null
             ))
                 .isInstanceOf(InvalidStudentException.class)
@@ -139,8 +213,35 @@ class StudentTest {
         }
     }
 
-    private Parent parent() {
-        return new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
+    private Student student() {
+        Student student = new Student(
+            "João Silva",
+            "61999999999",
+            "joao@email.com",
+            LocalDate.of(2010, 5, 10),
+            "12345678901",
+            "Escola Central",
+            parent(
+                UUID.fromString("00000000-0000-0000-0000-000000000101"),
+                "Maria Silva",
+                "maria@email.com",
+                "61977777777",
+                "98765432100"
+            ),
+            address()
+        );
+        student.setId(UUID.fromString("00000000-0000-0000-0000-000000000201"));
+        return student;
+    }
+
+    private Parent parent(UUID id, String name, String email, String contact, String cpf) {
+        Parent parent = new Parent(name, email, contact, cpf);
+        parent.setId(id);
+        return parent;
+    }
+
+    private EntityGraph entityGraph(Method method) {
+        return method.getAnnotation(EntityGraph.class);
     }
 
     private Address address() {

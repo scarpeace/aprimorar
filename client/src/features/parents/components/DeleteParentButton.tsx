@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
+import { getActiveLinkedStudentsCount } from "@/features/parents/utils/getActiveLinkedStudentsCount";
 import { useGetStudentsByParent } from "@/kubb";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -16,9 +17,49 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
   } = useParentMutations();
 
   const {
-    data: parentStudents,
-    isLoading: isParentStudentsLoading,
-  } = useGetStudentsByParent(parentId);
+    data: linkedStudentsMeta,
+    isLoading: isLinkedStudentsMetaLoading,
+  } = useGetStudentsByParent(parentId, {
+    page: 0,
+    size: 1,
+  });
+
+  const linkedStudentsCount = linkedStudentsMeta?.totalElements ?? 0;
+
+  const {
+    data: linkedStudentsSummary,
+    isLoading: isLinkedStudentsSummaryLoading,
+  } = useGetStudentsByParent(
+    parentId,
+    {
+      page: 0,
+      size: linkedStudentsCount,
+    },
+    {
+      query: {
+        enabled: !!parentId && linkedStudentsCount > 0,
+      },
+    },
+  );
+
+  const activeLinkedStudentsCount = getActiveLinkedStudentsCount(linkedStudentsSummary);
+  const archivedLinkedStudentsCount = Math.max(
+    linkedStudentsCount - activeLinkedStudentsCount,
+    0,
+  );
+  const hasActiveLinkedStudents = activeLinkedStudentsCount > 0;
+  const isParentStudentsLoading =
+    isLinkedStudentsMetaLoading || isLinkedStudentsSummaryLoading;
+
+  const linkedStudentsWarning = hasActiveLinkedStudents ? (
+    <div className="rounded-md bg-warning/10 p-4 text-sm text-warning-content">
+      Não é possível excluir este responsável enquanto houver {activeLinkedStudentsCount} aluno(s) ativo(s) vinculado(s). Atualize ou arquive esses cadastros antes de tentar novamente.
+    </div>
+  ) : archivedLinkedStudentsCount > 0 ? (
+    <div className="rounded-md bg-base-200 p-4 text-sm text-base-content/80">
+      Este responsável mantém {archivedLinkedStudentsCount} vínculo(s) apenas no histórico arquivado. Esse histórico continuará visível para consulta e não bloqueia a exclusão.
+    </div>
+  ) : null;
 
   const handleOpenClick = () => {
     setIsOpen(true);
@@ -48,34 +89,23 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
         onClick={handleOpenClick}
         disabled={isDeleting}
         variant="danger"
-        className="sm:mr-auto"
       >
         <Trash2 className="h-4 w-4" />
         {isDeleting ? "Excluindo..." : "Excluir"}
       </Button>
-
-      {/*TODO: esse modal tem que ser mais genérico*/}
       <DeleteConfirmationModal
         isOpen={isOpen}
         onClose={handleClose}
         onConfirm={handleConfirmDelete}
-        title="Excluir Aluno"
+        title="Excluir responsável"
         isItemPending={isDeleting}
         isItemLoading={isParentStudentsLoading}
-        itemDeleteCount={parentStudents?.totalElements}
+        itemDeleteCount={hasActiveLinkedStudents ? activeLinkedStudentsCount : archivedLinkedStudentsCount}
         itemName="responsável"
-        phantomWarning={
-          <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
-            Se o seu responsável tiver alunos vinculados não será possível
-            excluí-lo,
-            <strong>
-              {" "}
-              primeiro exclua os alunos vinculados, em seguida volte e exclua o
-              responsável
-            </strong>{" "}
-            para manter a consistência do banco de dados e histórico do sistema.
-          </div>
-        }
+        linkedItemsLabel="aluno(s)"
+        isBlocker={hasActiveLinkedStudents}
+        phantomWarning={linkedStudentsWarning}
+        confirmText="Sim, excluir responsável"
       />
     </>
   );

@@ -1,9 +1,9 @@
-import { useLogin, useLogout, useMe, meQueryKey } from "@/kubb";
+import { useLogin, useLogout, useAuthMe, authMeQueryKey } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 
-const currentUserQueryKey = meQueryKey();
 
 function isUnauthorizedError(error: unknown) {
   return axios.isAxiosError(error) && error.response?.status === 401;
@@ -12,9 +12,9 @@ function isUnauthorizedError(error: unknown) {
 export function useAuthSession() {
   const queryClient = useQueryClient();
 
-  const currentUserQuery = useMe({
+  const currentUserQuery = useAuthMe({
     query: {
-      queryKey: currentUserQueryKey,
+      queryKey: authMeQueryKey(),
       retry: (failureCount, error) => {
         if (isUnauthorizedError(error)) {
           return false;
@@ -27,7 +27,7 @@ export function useAuthSession() {
   });
 
   const refetchCurrentUser = async () => {
-    await queryClient.invalidateQueries({ queryKey: currentUserQueryKey });
+    await queryClient.invalidateQueries({ queryKey: authMeQueryKey() });
     return currentUserQuery.refetch();
   };
 
@@ -37,15 +37,27 @@ export function useAuthSession() {
         await refetchCurrentUser();
         toast.success("Login realizado com sucesso");
       },
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "E-mail/nome de usuário ou senha incorretos",
+        );
+      },
     },
   });
 
   const logout = useLogout({
     mutation: {
       onSuccess: async () => {
-        queryClient.setQueryData(currentUserQueryKey, undefined);
-        queryClient.removeQueries({ queryKey: currentUserQueryKey });
+        queryClient.setQueryData(authMeQueryKey(), undefined);
+        queryClient.removeQueries({ queryKey: authMeQueryKey() });
         toast.success("Sessão encerrada com sucesso");
+      },
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao encerrar a sessão",
+        );
       },
     },
   });

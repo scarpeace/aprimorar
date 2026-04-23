@@ -8,6 +8,28 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+
 import com.aprimorar.api.domain.address.Address;
 import com.aprimorar.api.domain.address.AddressMapper;
 import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
@@ -18,29 +40,17 @@ import com.aprimorar.api.domain.parent.repository.ParentRepository;
 import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentResponsibleSummaryDTO;
 import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.shared.PageDTO;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Root;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
@@ -153,6 +163,28 @@ class StudentServiceTest {
         }
 
         @Test
+        @DisplayName("should reject creating student without responsible id")
+        void shouldRejectCreatingStudentWithoutResponsibleId() {
+            StudentRequestDTO input = new StudentRequestDTO(
+                "João Silva",
+                LocalDate.of(2010, 5, 10),
+                "123.456.789-01",
+                "Escola Central",
+                "(61) 99999-9999",
+                "joao@email.com",
+                addressRequest(),
+                null
+            );
+
+            assertThatThrownBy(() -> studentService.createStudent(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Responsável do aluno é obrigatório.");
+
+            verify(addressMapper, never()).convertToEntity(any());
+            verify(studentRepo, never()).save(any());
+        }
+
+        @Test
         @DisplayName("should update student when input is valid")
         void shouldUpdateStudentWhenInputIsValid() {
             StudentRequestDTO input = updatedRequest();
@@ -209,6 +241,29 @@ class StudentServiceTest {
                 .hasMessage("Aluno não encontrado no banco de dados");
 
             verify(parentRepo, never()).findById(any());
+            verify(studentMapper, never()).convertToDto(any());
+        }
+
+        @Test
+        @DisplayName("should reject updating student without responsible id")
+        void shouldRejectUpdatingStudentWithoutResponsibleId() {
+            StudentRequestDTO input = new StudentRequestDTO(
+                "João Pedro",
+                LocalDate.of(2011, 6, 15),
+                "999.999.999-99",
+                "Nova Escola",
+                "(11) 98888-7777",
+                "joao.pedro@email.com",
+                secondAddressRequest(),
+                null
+            );
+
+            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
+
+            assertThatThrownBy(() -> studentService.updateStudent(input, STUDENT_ID))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Responsável do aluno é obrigatório.");
+
             verify(studentMapper, never()).convertToDto(any());
         }
 
@@ -286,6 +341,53 @@ class StudentServiceTest {
         }
 
         @Test
+        @DisplayName("should exclude archived students by default when archived filter is false")
+        void shouldExcludeArchivedStudentsByDefaultWhenArchivedFilterIsFalse() {
+            Pageable input = PageRequest.of(0, 2);
+            Page<Student> expectedPage = new PageImpl<>(List.of(student()), input, 1);
+
+            when(studentRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
+            when(studentMapper.convertToDto(any(Student.class))).thenReturn(response());
+
+            studentService.getStudents(input, null, false);
+
+            Specification<Student> specification = captureStudentListSpecification(input);
+            assertUsesArchivedFlag(specification, false);
+        }
+
+        @Test
+        @DisplayName("should exclude archived students by default when archived filter is omitted")
+        void shouldExcludeArchivedStudentsByDefaultWhenArchivedFilterIsOmitted() {
+            Pageable input = PageRequest.of(0, 2);
+            Page<Student> expectedPage = new PageImpl<>(List.of(student()), input, 1);
+
+            when(studentRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
+            when(studentMapper.convertToDto(any(Student.class))).thenReturn(response());
+
+            studentService.getStudents(input, null, null);
+
+            Specification<Student> specification = captureStudentListSpecification(input);
+            assertUsesArchivedFlag(specification, false);
+        }
+
+        @Test
+        @DisplayName("should return archived students when archived filter is true")
+        void shouldReturnArchivedStudentsWhenArchivedFilterIsTrue() {
+            Pageable input = PageRequest.of(0, 2);
+            Student archivedStudent = student();
+            archivedStudent.setArchivedAt(ARCHIVED_AT);
+            Page<Student> expectedPage = new PageImpl<>(List.of(archivedStudent), input, 1);
+
+            when(studentRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
+            when(studentMapper.convertToDto(any(Student.class))).thenReturn(response());
+
+            studentService.getStudents(input, null, true);
+
+            Specification<Student> specification = captureStudentListSpecification(input);
+            assertUsesArchivedFlag(specification, true);
+        }
+
+        @Test
         @DisplayName("should return student by id")
         void shouldReturnStudentById() {
             Student input = student();
@@ -345,6 +447,15 @@ class StudentServiceTest {
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
+        }
+
+        @Test
+        @DisplayName("should expose responsible summary in student read contract")
+        void shouldExposeResponsibleSummaryInStudentReadContract() {
+            assertThat(
+                Arrays.stream(StudentResponseDTO.class.getRecordComponents())
+                    .anyMatch(component -> component.getName().equals("responsible"))
+            ).isTrue();
         }
     }
 
@@ -462,9 +573,10 @@ class StudentServiceTest {
             15,
             new AddressResponseDTO("Rua A", "Centro", "Brasília", BrazilianStates.DF, "70000-000", "Casa"),
             PARENT_ID,
+            responsibleSummary(),
             null,
-            CREATED_AT,
-            UPDATED_AT
+            UPDATED_AT,
+            CREATED_AT
         );
     }
 
@@ -480,9 +592,10 @@ class StudentServiceTest {
             14,
             new AddressResponseDTO("Rua B", "Asa Sul", "Brasília", BrazilianStates.DF, "70200-000", "Apto 101"),
             PARENT_ID,
+            responsibleSummary(),
             null,
-            CREATED_AT,
-            UPDATED_AT
+            UPDATED_AT,
+            CREATED_AT
         );
     }
 
@@ -498,9 +611,47 @@ class StudentServiceTest {
             13,
             new AddressResponseDTO("Rua B", "Asa Sul", "Brasília", BrazilianStates.DF, "70200-000", "Apto 101"),
             PARENT_ID,
+            responsibleSummary(),
             null,
-            CREATED_AT,
-            UPDATED_AT
+            UPDATED_AT,
+            CREATED_AT
         );
+    }
+
+    private static StudentResponsibleSummaryDTO responsibleSummary() {
+        return new StudentResponsibleSummaryDTO(PARENT_ID, "Maria Silva", "61977777777", "98765432100");
+    }
+
+    @SuppressWarnings("unchecked")
+    private Specification<Student> captureStudentListSpecification(Pageable pageable) {
+        ArgumentCaptor<Specification<Student>> specificationCaptor = ArgumentCaptor.forClass(Specification.class);
+        verify(studentRepo).findAll(specificationCaptor.capture(), eq(pageable));
+        return specificationCaptor.getValue();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void assertUsesArchivedFlag(Specification<Student> specification, boolean archivedOnly) {
+        Root<Student> root = org.mockito.Mockito.mock(Root.class);
+        CriteriaQuery<?> query = org.mockito.Mockito.mock(CriteriaQuery.class);
+        CriteriaBuilder criteriaBuilder = org.mockito.Mockito.mock(CriteriaBuilder.class);
+        Path<Object> idPath = org.mockito.Mockito.mock(Path.class);
+        Path<Instant> archivedAtPath = org.mockito.Mockito.mock(Path.class);
+        when(root.get("id")).thenReturn(idPath);
+        when(root.<Instant>get("archivedAt")).thenReturn(archivedAtPath);
+        when(criteriaBuilder.notEqual(idPath, GHOST_STUDENT_ID)).thenReturn(org.mockito.Mockito.mock(jakarta.persistence.criteria.Predicate.class));
+
+        if (archivedOnly) {
+            when(criteriaBuilder.isNotNull(archivedAtPath)).thenReturn(org.mockito.Mockito.mock(jakarta.persistence.criteria.Predicate.class));
+        } else {
+            when(criteriaBuilder.isNull(archivedAtPath)).thenReturn(org.mockito.Mockito.mock(jakarta.persistence.criteria.Predicate.class));
+        }
+
+        specification.toPredicate(root, query, criteriaBuilder);
+
+        if (archivedOnly) {
+            verify(criteriaBuilder).isNotNull(archivedAtPath);
+        } else {
+            verify(criteriaBuilder).isNull(archivedAtPath);
+        }
     }
 }

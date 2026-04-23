@@ -1,34 +1,34 @@
-# Testing Patterns
+# Padrões de Teste
 
-**Analysis Date:** 2026-04-17
+**Data da Análise:** 17-04-2026
 
-## Test Framework
+## Framework de Teste
 
-**Runner:**
-- Backend tests run on JUnit 5 via `spring-boot-starter-test` in `server/api-aprimorar/pom.xml`.
-- Config: `server/api-aprimorar/pom.xml`
+**Executor (Runner):**
+- Os testes de backend são executados no JUnit 5 via `spring-boot-starter-test` em `server/api-aprimorar/pom.xml`.
+- Configuração: `server/api-aprimorar/pom.xml`
 
-**Assertion Library:**
-- AssertJ is the primary assertion style, visible in `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`, `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java`, and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`.
+**Biblioteca de Asserção:**
+- AssertJ é o estilo de asserção primário, visível em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`, `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`.
 
-**Run Commands:**
+**Comandos de Execução:**
 ```bash
-cd server/api-aprimorar && ./mvnw test                 # Run backend tests
-cd server/api-aprimorar && ./mvnw -Dtest=StudentServiceTest test   # Run one backend test class
-cd server/api-aprimorar && ./mvnw verify               # Run backend verification and Jacoco report
+cd server/api-aprimorar && ./mvnw test                 # Executar testes de backend
+cd server/api-aprimorar && ./mvnw -Dtest=StudentServiceTest test   # Executar uma classe de teste de backend específica
+cd server/api-aprimorar && ./mvnw verify               # Executar verificação de backend e relatório Jacoco
 ```
 
-## Test File Organization
+## Organização de Arquivos de Teste
 
-**Location:**
-- Backend tests live in a separate mirrored tree under `server/api-aprimorar/src/test/java/`.
-- Frontend has no dedicated test runner or checked-in test files under `client/src/`, per `client/AGENTS.md` and the absence of `*.test.*` / `*.spec.*` files in `client/src/`.
+**Localização:**
+- Os testes de backend residem em uma árvore espelhada separada sob `server/api-aprimorar/src/test/java/`.
+- O frontend não possui um executor de testes dedicado ou arquivos de teste comitados sob `client/src/`, conforme `client/AGENTS.md` e a ausência de arquivos `*.test.*` / `*.spec.*` em `client/src/`.
 
-**Naming:**
-- Service/unit tests use `*Test.java`, for example `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java` and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java`.
-- The Spring context smoke test uses `ApiAprimorarApplicationTests` in `server/api-aprimorar/src/test/java/com/aprimorar/api/ApiAprimorarApplicationTests.java`.
+**Nomenclatura:**
+- Os testes unitários/de serviço usam `*Test.java`, por exemplo, `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java`.
+- O teste de fumaça (smoke test) do contexto Spring usa `ApiAprimorarApplicationTests` em `server/api-aprimorar/src/test/java/com/aprimorar/api/ApiAprimorarApplicationTests.java`.
 
-**Structure:**
+**Estrutura:**
 ```
 server/api-aprimorar/src/test/java/com/aprimorar/api/
 ├── ApiAprimorarApplicationTests.java
@@ -45,11 +45,11 @@ server/api-aprimorar/src/test/java/com/aprimorar/api/
     └── dashboard/DashboardSummaryResponseDTOTest.java
 ```
 
-## Test Structure
+## Estrutura do Teste
 
-**Suite Organization:**
+**Organização da Suite:**
 ```typescript
-// Java pattern from `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`
+// Padrão Java de `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
@@ -71,21 +71,21 @@ class StudentServiceTest {
 }
 ```
 
-**Patterns:**
-- Use `@Nested` to separate command and query behaviors, as in `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`, `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java`, and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`.
-- Use `@DisplayName` on test classes and methods for readable intent, as seen across all backend tests.
-- Keep deterministic constants at the top of the class for IDs and timestamps, for example in `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java` and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java`.
-- Add helper factory methods at the bottom of the test class to build DTOs and entities, as in `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java` and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java`.
+**Padrões:**
+- Usar `@Nested` para separar os comportamentos de comando e consulta, como em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`, `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`.
+- Usar `@DisplayName` em classes e métodos de teste para uma intenção legível, como visto em todos os testes de backend.
+- Manter constantes determinísticas no topo da classe para IDs e timestamps, por exemplo, em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java`.
+- Adicionar métodos de fábrica auxiliares (helper factory methods) no final da classe de teste para construir DTOs e entidades, como em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java`.
 
-## Mocking
+## Mocking (Simulação)
 
 **Framework:**
-- Mockito with JUnit 5 extension is the default backend mocking approach in `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`, `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java`, and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`.
-- Mockito test resource configuration is present at `server/api-aprimorar/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker`.
+- Mockito com extensão JUnit 5 é a abordagem de simulação padrão do backend em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`, `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`.
+- A configuração do recurso de teste do Mockito está presente em `server/api-aprimorar/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker`.
 
-**Patterns:**
+**Padrões:**
 ```typescript
-// Java pattern from `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`
+// Padrão Java de `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`
 @Mock
 private ParentRepository parentRepo;
 
@@ -100,20 +100,20 @@ assertThat(actual).isEqualTo(expected);
 verify(parentRepo).findById(id);
 ```
 
-**What to Mock:**
-- Mock repositories, mappers, and infrastructure collaborators when testing service logic, as in `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`.
-- Mock `Clock` for time-sensitive business rules, as in `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java`.
-- Use `MockMvcBuilders.standaloneSetup(...)` for exception-handler/controller boundary tests instead of full application startup, as in `server/api-aprimorar/src/test/java/com/aprimorar/api/exception/GlobalExceptionHandlerTest.java`.
+**O que simular (Mock):**
+- Simular repositórios, mappers e colaboradores de infraestrutura ao testar a lógica de serviço, como em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`.
+- Simular o `Clock` para regras de negócio sensíveis ao tempo, como em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java`.
+- Usar `MockMvcBuilders.standaloneSetup(...)` para testes de limite de tratador de exceção/controller em vez da inicialização completa da aplicação, como em `server/api-aprimorar/src/test/java/com/aprimorar/api/exception/GlobalExceptionHandlerTest.java`.
 
-**What NOT to Mock:**
-- Do not mock the domain entity under validation in pure domain tests; instantiate real entities directly, as in `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java` and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentTest.java`.
-- Do not add frontend mocks today because there is no configured frontend test harness under `client/`.
+**O que NÃO simular:**
+- Não simule a entidade de domínio sob validação em testes de domínio puros; instancie entidades reais diretamente, como em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentTest.java`.
+- Não adicione simulações de frontend hoje porque não há um harness de teste de frontend configurado sob `client/`.
 
-## Fixtures and Factories
+## Fixtures e Fábricas
 
-**Test Data:**
+**Dados de Teste:**
 ```typescript
-// Java pattern from `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`
+// Padrão Java de `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`
 private static final UUID STUDENT_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
 private static final Instant CREATED_AT = Instant.parse("2026-01-05T08:00:00Z");
 
@@ -122,50 +122,50 @@ private static StudentRequestDTO request() {
 }
 ```
 
-**Location:**
-- Fixtures are defined inline inside each backend test class rather than centralized in shared factories, for example `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java` and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java`.
+**Localização:**
+- As fixtures são definidas inline dentro de cada classe de teste do backend, em vez de serem centralizadas em fábricas compartilhadas, por exemplo, em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventServiceTest.java`.
 
-## Coverage
+## Cobertura
 
-**Requirements:**
-- JaCoCo reporting is configured in `server/api-aprimorar/pom.xml`, but no explicit minimum coverage threshold was detected.
-- `./mvnw verify` is the broadest documented backend verification command in `server/api-aprimorar/AGENTS.md`.
+**Requisitos:**
+- O relatório JaCoCo está configurado em `server/api-aprimorar/pom.xml`, mas nenhum limite de cobertura mínimo explícito foi detectado.
+- `./mvnw verify` é o comando de verificação de backend mais amplo documentado no `server/api-aprimorar/AGENTS.md`.
 
-**View Coverage:**
+**Visualizar Cobertura:**
 ```bash
-cd server/api-aprimorar && ./mvnw verify   # Generates target/site/jacoco/index.html
+cd server/api-aprimorar && ./mvnw verify   # Gera target/site/jacoco/index.html
 ```
 
-## Test Types
+## Tipos de Teste
 
-**Unit Tests:**
-- Most backend tests are unit tests around services and domain entities using Mockito or direct object construction, for example `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java` and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java`.
+**Testes Unitários:**
+- A maioria dos testes de backend são testes unitários em torno de serviços e entidades de domínio usando Mockito ou construção direta de objetos, por exemplo, `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java`.
 
-**Integration Tests:**
-- Lightweight MVC integration exists for exception handling in `server/api-aprimorar/src/test/java/com/aprimorar/api/exception/GlobalExceptionHandlerTest.java` using `MockMvc` with a standalone controller.
-- A minimal Spring context smoke test exists in `server/api-aprimorar/src/test/java/com/aprimorar/api/ApiAprimorarApplicationTests.java`; it excludes datasource, JPA, Flyway, and repository auto-configuration to keep startup isolated from the database.
+**Testes de Integração:**
+- Existe integração MVC leve para tratamento de exceções em `server/api-aprimorar/src/test/java/com/aprimorar/api/exception/GlobalExceptionHandlerTest.java` usando `MockMvc` com um controller standalone.
+- Existe um teste de fumaça de contexto Spring mínimo em `server/api-aprimorar/src/test/java/com/aprimorar/api/ApiAprimorarApplicationTests.java`; ele exclui a autoconfiguração de datasource, JPA, Flyway e repositório para manter a inicialização isolada do banco de dados.
 
-**E2E Tests:**
-- Not used. No Playwright, Cypress, or frontend E2E config was detected in the repository root, `client/`, or `server/api-aprimorar/`.
+**Testes E2E:**
+- Não utilizados. Nenhuma configuração de Playwright, Cypress ou E2E de frontend foi detectada na raiz do repositório, em `client/` ou em `server/api-aprimorar/`.
 
-## Common Patterns
+## Padrões Comuns
 
-**Async Testing:**
+**Testes Assíncronos:**
 ```typescript
-Not applicable in current checked-in tests. No async/await-heavy frontend tests or asynchronous backend test flows were detected.
+Não aplicável nos testes atuais. Não foram detectados testes de frontend pesados em async/await ou fluxos de teste de backend assíncronos.
 ```
 
-**Error Testing:**
+**Testes de Erro:**
 ```typescript
-// Java pattern from `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java`
+// Padrão Java de `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java`
 assertThatThrownBy(() -> input.updateDetails(...))
     .isInstanceOf(InvalidEventException.class)
     .hasMessage("Data de fim do evento não pode ser anterior a data de inicio");
 ```
 
-- Prefer `assertThatThrownBy` with both exception type and Portuguese message checks, as in `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`, `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java`, and `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`.
-- For HTTP error responses, assert both status and JSON body fields using `jsonPath`, as in `server/api-aprimorar/src/test/java/com/aprimorar/api/exception/GlobalExceptionHandlerTest.java`.
+- Preferir `assertThatThrownBy` com o tipo de exceção e verificações de mensagem em português, como em `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/student/StudentServiceTest.java`, `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/event/EventTest.java` e `server/api-aprimorar/src/test/java/com/aprimorar/api/domain/parent/ParentServiceTest.java`.
+- Para respostas de erro HTTP, assevere tanto o status quanto os campos do corpo JSON usando `jsonPath`, como em `server/api-aprimorar/src/test/java/com/aprimorar/api/exception/GlobalExceptionHandlerTest.java`.
 
 ---
 
-*Testing analysis: 2026-04-17*
+*Análise de testes: 17-04-2026*

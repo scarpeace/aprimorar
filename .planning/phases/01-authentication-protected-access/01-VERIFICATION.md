@@ -1,7 +1,7 @@
 ---
 phase: 01-authentication-protected-access
-verified: 2026-04-18T18:18:59Z
-status: human_needed
+verified: 2026-04-19T12:20:00Z
+status: passed
 score: 7/7 must-haves verified
 overrides_applied: 0
 re_verification:
@@ -28,9 +28,19 @@ human_verification:
 # Phase 1: Authentication & Protected Access Verification Report
 
 **Phase Goal:** Internal staff can securely access the application, while anonymous users are kept out of protected workflows.
-**Verified:** 2026-04-18T18:18:59Z
-**Status:** human_needed
+**Verified:** 2026-04-19T12:20:00Z
+**Status:** passed
 **Re-verification:** Yes — after UAT gap-closure plan 01-04
+
+## Human Verification Outcome
+
+Human verification was completed through `01-HUMAN-UAT.md`.
+
+- Fresh-browser login handshake: pass
+- Refresh persistence on protected page: pass
+- Logout teardown from protected navigation: pass
+
+Phase 1 now has both automated verification and completed browser UAT coverage.
 
 ## Goal Achievement
 
@@ -112,31 +122,31 @@ No orphaned Phase 1 requirement IDs were found in `REQUIREMENTS.md`; all four ph
 | `client/src/lib/shared/api.ts` | 30 | `//TODO implementar o logging mais pra frente` | ℹ️ Info | Logging cleanup remains, but auth/bootstrap behavior is implemented and wired. |
 | `client/src/lib/shared/api-errors.ts` | 6 | `//TODO implementar o logging mais pra frente` | ℹ️ Info | Error logging is still ad hoc, but user-facing auth errors still resolve to Portuguese messages. |
 
-### Human Verification Required
+### Human Verification Completed
 
 ### 1. Fresh-browser login handshake
 
 **Test:** Open `/login` in a clean browser session and sign in with the seeded user (`beatriz.santos` / `admin123`).
 **Expected:** Login succeeds, redirects to `/`, and no CSRF/cookie error appears.
-**Why human:** This requires a real browser to validate cross-origin cookie and XSRF behavior.
+**Why human:** This required a real browser to validate cross-origin cookie and XSRF behavior.
 
 ### 2. Refresh persistence on a protected route
 
 **Test:** After logging in, open `/students` and refresh the page.
 **Expected:** The session remains active and the app stays on the protected route instead of redirecting to `/login`.
-**Why human:** Real refresh persistence depends on browser cookie resend behavior that static review and MockMvc do not fully reproduce.
+**Why human:** Real refresh persistence depended on browser cookie resend behavior that static review and MockMvc do not fully reproduce.
 
 ### 3. Logout teardown from protected navigation
 
 **Test:** From `/students` or another protected page, click `Sair`, then revisit `/students` directly or use the browser back button.
 **Expected:** Logout completes without the `Acesso negado` toast and protected screens redirect to `/login` without stale private data remaining visible.
-**Why human:** Needs end-to-end validation of CSRF handling, navigation history, and visible cache teardown.
+**Why human:** This needed end-to-end validation of CSRF handling, navigation history, and visible cache teardown.
 
 ### Gaps Summary
 
-No code-level implementation gaps remain against Phase 1 roadmap success criteria or plan must-haves. Plan 01-04 closes the previously diagnosed refresh/logout issues in code by importing the shared API bootstrap at startup, enabling cross-origin XSRF forwarding, and making auth state depend on a real `/v1/auth/me` refetch. Phase status remains `human_needed` because those browser-level behaviors still need live re-testing.
+No code-level implementation gaps remain against Phase 1 roadmap success criteria or plan must-haves. Plan 01-04 closed the previously diagnosed refresh/logout issues in code by importing the shared API bootstrap at startup, enabling cross-origin XSRF forwarding, and making auth state depend on a real `/v1/auth/me` refetch. Browser UAT is now complete, so the phase no longer carries verification debt.
 
 ---
 
-_Verified: 2026-04-18T18:18:59Z_
+_Verified: 2026-04-19T12:20:00Z_
 _Verifier: the agent (gsd-verifier)_

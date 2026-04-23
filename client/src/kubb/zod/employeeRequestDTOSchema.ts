@@ -16,6 +16,8 @@ export const employeeRequestDTOSchema = z
     contact: z.string().min(1),
     cpf: z.string().min(1),
     email: z.string().min(1),
-    duty: z.enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"]),
+    duty: z
+      .enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"])
+      .describe("Função/Papel do funcionário"),
   })
   .describe("Formato de payload para criar um novo colaborador");
