@@ -79,9 +79,7 @@ function App() {
               <Route path="/events/edit/:id" element={<EventEditPage />} />
 
               <Route path="/parents" element={<ParentsPage />} />
-              <Route path="/parents/new" element={<ParentCreatePage/>} />
               <Route path="/parents/:id" element={<ParentDetailPage />} />
-              <Route path="/parents/edit/:id" element={<ParentEditPage />} />
 
               <Route path="/finance" element={<FinanceDashboardPage />} />
               <Route path="/finance/expenses" element={<GeneralExpensesPage />} />
