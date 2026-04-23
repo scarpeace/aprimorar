@@ -120,10 +120,16 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
     }
   };
 
+  const isStatusPending =
+    completeEvent.isPending ||
+    cancelEvent.isPending ||
+    rescheduleEvent.isPending;
+
   return {
     createEvent,
     updateEvent,
     changeEventStatus,
+    isStatusPending,
     settleIncomeEvent,
     settleExpenseEvent,
   };

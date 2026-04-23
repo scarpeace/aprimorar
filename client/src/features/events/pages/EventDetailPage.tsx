@@ -22,7 +22,7 @@ export function EventDetailPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const eventQuery = useGetEventById(eventId);
-  const { updateEvent, changeEventStatus } = useEventMutations({ onSuccessCallback: () => {} });
+  const { updateEvent, changeEventStatus, isStatusPending } = useEventMutations({ onSuccessCallback: () => {} });
 
   const headerProps = {
     description: "Veja e gerencie as informações do evento",

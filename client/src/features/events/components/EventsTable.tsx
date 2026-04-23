@@ -71,8 +71,8 @@ export function EventsTable({
             <th className="text-left font-semibold text-base-content/80">
               Pagamento
             </th>
-            <th className="text-right font-semibold text-base-content/80 pr-4">
-              AçõeschangeEventStatus
+            <th className="text-center font-semibold text-base-content/80 pr-4">
+              Ações
             </th>
           </tr>
         </thead>
@@ -103,9 +103,9 @@ export function EventsTable({
                 {event.status !== "COMPLETED" && event.status !== "CANCELED" && (
                   <Button
                     className="btn-square btn-ghost btn-xs text-success"
-                    onClick={() => handleStatusChange(event, "COMPLETED")}
+                    onClick={() => changeEventStatus(event, "COMPLETED")}
                     title="Concluir"
-                    disabled={updateEvent.isPending}
+                    disabled={isStatusPending}
                   >
                     <CheckCircle2 size={16} />
                   </Button>
@@ -113,9 +113,9 @@ export function EventsTable({
                 {event.status !== "CANCELED" && (
                   <Button
                     className="btn-square btn-ghost btn-xs text-error"
-                    onClick={() => handleStatusChange(event, "CANCELED")}
+                    onClick={() => changeEventStatus(event, "CANCELED")}
                     title="Cancelar"
-                    disabled={updateEvent.isPending}
+                    disabled={isStatusPending}
                   >
                     <XCircle size={16} />
                   </Button>
