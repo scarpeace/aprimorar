@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { InlineConfirmAlert } from "@/components/ui/inline-confirm-alert";
-import { ArchiveIcon, ArchiveRestoreIcon, Loader2Icon } from "lucide-react";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { ArchiveIcon, ArchiveRestoreIcon } from "lucide-react";
 import { useState } from "react";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
 
@@ -25,44 +25,41 @@ export const ArchiveEmployeeButton = ({
   const actionLabel = archived ? "Desarquivar" : "Arquivar";
   const Icon = archived ? ArchiveRestoreIcon : ArchiveIcon;
   const variant = archived ? "outline" : "warning";
+  const modalVariant = archived ? "info" : "warning";
 
   function handleConfirm() {
     const action = archived ? unarchiveEmployee : archiveEmployee;
-    action({ employeeId });
-    setShowConfirm(false);
-  }
-
-  if (isPending) {
-    return (
-      <Button type="button" disabled variant="outline">
-        <Loader2Icon className="h-4 w-4 animate-spin" />
-        Processando...
-      </Button>
-    );
-  }
-
-  if (showConfirm) {
-    return (
-      <InlineConfirmAlert
-        variant={archived ? "info" : "warning"}
-        message={`Deseja mesmo ${actionLabel.toLowerCase()} o colaborador?`}
-        confirmText="Sim"
-        cancelText="Cancelar"
-        onConfirm={handleConfirm}
-        onCancel={() => setShowConfirm(false)}
-        className="p-2"
-      />
+    action(
+      { employeeId },
+      {
+        onSettled: () => setShowConfirm(false),
+      }
     );
   }
 
   return (
-    <Button
-      type="button"
-      onClick={() => setShowConfirm(true)}
-      variant={variant}
-    >
-      <Icon className="h-4 w-4" />
-      {actionLabel}
-    </Button>
+    <>
+      <Button
+        type="button"
+        onClick={() => setShowConfirm(true)}
+        variant={variant}
+        disabled={isPending}
+      >
+        <Icon className="h-4 w-4" />
+        {isPending ? "Processando..." : actionLabel}
+      </Button>
+
+      <ConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleConfirm}
+        title={`${actionLabel} Colaborador`}
+        message={`Deseja mesmo ${actionLabel.toLowerCase()} o colaborador?`}
+        isPending={isPending}
+        confirmText="Sim"
+        cancelText="Cancelar"
+        variant={modalVariant}
+      />
+    </>
   );
 };
