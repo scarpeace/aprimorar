@@ -6,6 +6,7 @@ import type { PagedModelGeneralExpenseResponseDTO } from "@/kubb/types/PagedMode
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Pencil, Trash2 } from "lucide-react";
+import type { GeneralExpenseResponseDTO } from "@/kubb";
 
 interface GeneralExpensesTableProps {
   expenses?: PagedModelGeneralExpenseResponseDTO;
@@ -13,7 +14,7 @@ interface GeneralExpensesTableProps {
   currentPage: number;
   isPending: boolean;
   error: Error | null;
-  onEdit: (expense: any) => void;
+  onEdit: (expense: GeneralExpenseResponseDTO) => void;
   onDelete: (id: string) => void;
 }
 

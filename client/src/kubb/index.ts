@@ -17,12 +17,12 @@ export type { GetEventsQueryKey } from "./hooks/event/useGetEvents.ts";
 export type { UpdateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
 export type { UpdateExpenseStatusMutationKey } from "./hooks/event/useUpdateExpenseStatus.ts";
 export type { UpdateIncomeStatusMutationKey } from "./hooks/event/useUpdateIncomeStatus.ts";
+export type { CreateGeneralExpenseMutationKey } from "./hooks/finance/useCreateGeneralExpense.ts";
+export type { DeleteGeneralExpenseMutationKey } from "./hooks/finance/useDeleteGeneralExpense.ts";
 export type { GetFinanceSummaryQueryKey } from "./hooks/finance/useGetFinanceSummary.ts";
-export type { CreateGeneralExpenseMutationKey } from "./hooks/general expenses/useCreateGeneralExpense.ts";
-export type { DeleteGeneralExpenseMutationKey } from "./hooks/general expenses/useDeleteGeneralExpense.ts";
-export type { GetGeneralExpenseByIdQueryKey } from "./hooks/general expenses/useGetGeneralExpenseById.ts";
-export type { GetGeneralExpensesQueryKey } from "./hooks/general expenses/useGetGeneralExpenses.ts";
-export type { UpdateGeneralExpenseMutationKey } from "./hooks/general expenses/useUpdateGeneralExpense.ts";
+export type { GetGeneralExpenseByIdQueryKey } from "./hooks/finance/useGetGeneralExpenseById.ts";
+export type { GetGeneralExpensesQueryKey } from "./hooks/finance/useGetGeneralExpenses.ts";
+export type { UpdateGeneralExpenseMutationKey } from "./hooks/finance/useUpdateGeneralExpense.ts";
 export type { ArchiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export type { CreateParentMutationKey } from "./hooks/parent/useCreateParent.ts";
 export type { DeleteParentMutationKey } from "./hooks/parent/useDeleteParent.ts";
@@ -217,42 +217,42 @@ export type {
   UpdateIncomeStatusQueryParamsStatusEnumKey,
 } from "./types/event/UpdateIncomeStatus.ts";
 export type {
-  GetFinanceSummary200,
-  GetFinanceSummaryQuery,
-  GetFinanceSummaryQueryResponse,
-} from "./types/finance/GetFinanceSummary.ts";
-export type {
   CreateGeneralExpense201,
   CreateGeneralExpenseMutation,
   CreateGeneralExpenseMutationRequest,
   CreateGeneralExpenseMutationResponse,
-} from "./types/general expenses/CreateGeneralExpense.ts";
+} from "./types/finance/CreateGeneralExpense.ts";
 export type {
   DeleteGeneralExpense204,
   DeleteGeneralExpenseMutation,
   DeleteGeneralExpenseMutationResponse,
   DeleteGeneralExpensePathParams,
-} from "./types/general expenses/DeleteGeneralExpense.ts";
+} from "./types/finance/DeleteGeneralExpense.ts";
+export type {
+  GetFinanceSummary200,
+  GetFinanceSummaryQuery,
+  GetFinanceSummaryQueryResponse,
+} from "./types/finance/GetFinanceSummary.ts";
 export type {
   GetGeneralExpenseById200,
   GetGeneralExpenseByIdPathParams,
   GetGeneralExpenseByIdQuery,
   GetGeneralExpenseByIdQueryResponse,
-} from "./types/general expenses/GetGeneralExpenseById.ts";
+} from "./types/finance/GetGeneralExpenseById.ts";
 export type {
   GetGeneralExpenses200,
   GetGeneralExpensesQuery,
   GetGeneralExpensesQueryParams,
   GetGeneralExpensesQueryParamsCategoryEnumKey,
   GetGeneralExpensesQueryResponse,
-} from "./types/general expenses/GetGeneralExpenses.ts";
+} from "./types/finance/GetGeneralExpenses.ts";
 export type {
   UpdateGeneralExpense200,
   UpdateGeneralExpenseMutation,
   UpdateGeneralExpenseMutationRequest,
   UpdateGeneralExpenseMutationResponse,
   UpdateGeneralExpensePathParams,
-} from "./types/general expenses/UpdateGeneralExpense.ts";
+} from "./types/finance/UpdateGeneralExpense.ts";
 export type {
   ArchiveParent204,
   ArchiveParentMutation,
@@ -432,30 +432,30 @@ export { updateIncomeStatus } from "./hooks/event/useUpdateIncomeStatus.ts";
 export { updateIncomeStatusMutationKey } from "./hooks/event/useUpdateIncomeStatus.ts";
 export { updateIncomeStatusMutationOptions } from "./hooks/event/useUpdateIncomeStatus.ts";
 export { useUpdateIncomeStatus } from "./hooks/event/useUpdateIncomeStatus.ts";
+export { createGeneralExpense } from "./hooks/finance/useCreateGeneralExpense.ts";
+export { createGeneralExpenseMutationKey } from "./hooks/finance/useCreateGeneralExpense.ts";
+export { createGeneralExpenseMutationOptions } from "./hooks/finance/useCreateGeneralExpense.ts";
+export { useCreateGeneralExpense } from "./hooks/finance/useCreateGeneralExpense.ts";
+export { deleteGeneralExpense } from "./hooks/finance/useDeleteGeneralExpense.ts";
+export { deleteGeneralExpenseMutationKey } from "./hooks/finance/useDeleteGeneralExpense.ts";
+export { deleteGeneralExpenseMutationOptions } from "./hooks/finance/useDeleteGeneralExpense.ts";
+export { useDeleteGeneralExpense } from "./hooks/finance/useDeleteGeneralExpense.ts";
 export { getFinanceSummary } from "./hooks/finance/useGetFinanceSummary.ts";
 export { getFinanceSummaryQueryKey } from "./hooks/finance/useGetFinanceSummary.ts";
 export { getFinanceSummaryQueryOptions } from "./hooks/finance/useGetFinanceSummary.ts";
 export { useGetFinanceSummary } from "./hooks/finance/useGetFinanceSummary.ts";
-export { createGeneralExpense } from "./hooks/general expenses/useCreateGeneralExpense.ts";
-export { createGeneralExpenseMutationKey } from "./hooks/general expenses/useCreateGeneralExpense.ts";
-export { createGeneralExpenseMutationOptions } from "./hooks/general expenses/useCreateGeneralExpense.ts";
-export { useCreateGeneralExpense } from "./hooks/general expenses/useCreateGeneralExpense.ts";
-export { deleteGeneralExpense } from "./hooks/general expenses/useDeleteGeneralExpense.ts";
-export { deleteGeneralExpenseMutationKey } from "./hooks/general expenses/useDeleteGeneralExpense.ts";
-export { deleteGeneralExpenseMutationOptions } from "./hooks/general expenses/useDeleteGeneralExpense.ts";
-export { useDeleteGeneralExpense } from "./hooks/general expenses/useDeleteGeneralExpense.ts";
-export { getGeneralExpenseById } from "./hooks/general expenses/useGetGeneralExpenseById.ts";
-export { getGeneralExpenseByIdQueryKey } from "./hooks/general expenses/useGetGeneralExpenseById.ts";
-export { getGeneralExpenseByIdQueryOptions } from "./hooks/general expenses/useGetGeneralExpenseById.ts";
-export { useGetGeneralExpenseById } from "./hooks/general expenses/useGetGeneralExpenseById.ts";
-export { getGeneralExpenses } from "./hooks/general expenses/useGetGeneralExpenses.ts";
-export { getGeneralExpensesQueryKey } from "./hooks/general expenses/useGetGeneralExpenses.ts";
-export { getGeneralExpensesQueryOptions } from "./hooks/general expenses/useGetGeneralExpenses.ts";
-export { useGetGeneralExpenses } from "./hooks/general expenses/useGetGeneralExpenses.ts";
-export { updateGeneralExpense } from "./hooks/general expenses/useUpdateGeneralExpense.ts";
-export { updateGeneralExpenseMutationKey } from "./hooks/general expenses/useUpdateGeneralExpense.ts";
-export { updateGeneralExpenseMutationOptions } from "./hooks/general expenses/useUpdateGeneralExpense.ts";
-export { useUpdateGeneralExpense } from "./hooks/general expenses/useUpdateGeneralExpense.ts";
+export { getGeneralExpenseById } from "./hooks/finance/useGetGeneralExpenseById.ts";
+export { getGeneralExpenseByIdQueryKey } from "./hooks/finance/useGetGeneralExpenseById.ts";
+export { getGeneralExpenseByIdQueryOptions } from "./hooks/finance/useGetGeneralExpenseById.ts";
+export { useGetGeneralExpenseById } from "./hooks/finance/useGetGeneralExpenseById.ts";
+export { getGeneralExpenses } from "./hooks/finance/useGetGeneralExpenses.ts";
+export { getGeneralExpensesQueryKey } from "./hooks/finance/useGetGeneralExpenses.ts";
+export { getGeneralExpensesQueryOptions } from "./hooks/finance/useGetGeneralExpenses.ts";
+export { useGetGeneralExpenses } from "./hooks/finance/useGetGeneralExpenses.ts";
+export { updateGeneralExpense } from "./hooks/finance/useUpdateGeneralExpense.ts";
+export { updateGeneralExpenseMutationKey } from "./hooks/finance/useUpdateGeneralExpense.ts";
+export { updateGeneralExpenseMutationOptions } from "./hooks/finance/useUpdateGeneralExpense.ts";
+export { useUpdateGeneralExpense } from "./hooks/finance/useUpdateGeneralExpense.ts";
 export { archiveParent } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationOptions } from "./hooks/parent/useArchiveParent.ts";
@@ -540,7 +540,7 @@ export { generalExpenseResponseDTOCategoryEnum } from "./types/GeneralExpenseRes
 export { getEventsQueryParamsStatusEnum } from "./types/event/GetEvents.ts";
 export { updateExpenseStatusQueryParamsStatusEnum } from "./types/event/UpdateExpenseStatus.ts";
 export { updateIncomeStatusQueryParamsStatusEnum } from "./types/event/UpdateIncomeStatus.ts";
-export { getGeneralExpensesQueryParamsCategoryEnum } from "./types/general expenses/GetGeneralExpenses.ts";
+export { getGeneralExpensesQueryParamsCategoryEnum } from "./types/finance/GetGeneralExpenses.ts";
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
 export {
@@ -649,36 +649,36 @@ export {
 export { eventRequestDTOSchema } from "./zod/eventRequestDTOSchema.ts";
 export { eventResponseDTOSchema } from "./zod/eventResponseDTOSchema.ts";
 export {
-  getFinanceSummary200Schema,
-  getFinanceSummaryQueryResponseSchema,
-} from "./zod/finance/getFinanceSummarySchema.ts";
-export { financeSummaryDTOSchema } from "./zod/financeSummaryDTOSchema.ts";
-export {
   createGeneralExpense201Schema,
   createGeneralExpenseMutationRequestSchema,
   createGeneralExpenseMutationResponseSchema,
-} from "./zod/general expenses/createGeneralExpenseSchema.ts";
+} from "./zod/finance/createGeneralExpenseSchema.ts";
 export {
   deleteGeneralExpense204Schema,
   deleteGeneralExpenseMutationResponseSchema,
   deleteGeneralExpensePathParamsSchema,
-} from "./zod/general expenses/deleteGeneralExpenseSchema.ts";
+} from "./zod/finance/deleteGeneralExpenseSchema.ts";
+export {
+  getFinanceSummary200Schema,
+  getFinanceSummaryQueryResponseSchema,
+} from "./zod/finance/getFinanceSummarySchema.ts";
 export {
   getGeneralExpenseById200Schema,
   getGeneralExpenseByIdPathParamsSchema,
   getGeneralExpenseByIdQueryResponseSchema,
-} from "./zod/general expenses/getGeneralExpenseByIdSchema.ts";
+} from "./zod/finance/getGeneralExpenseByIdSchema.ts";
 export {
   getGeneralExpenses200Schema,
   getGeneralExpensesQueryParamsSchema,
   getGeneralExpensesQueryResponseSchema,
-} from "./zod/general expenses/getGeneralExpensesSchema.ts";
+} from "./zod/finance/getGeneralExpensesSchema.ts";
 export {
   updateGeneralExpense200Schema,
   updateGeneralExpenseMutationRequestSchema,
   updateGeneralExpenseMutationResponseSchema,
   updateGeneralExpensePathParamsSchema,
-} from "./zod/general expenses/updateGeneralExpenseSchema.ts";
+} from "./zod/finance/updateGeneralExpenseSchema.ts";
+export { financeSummaryDTOSchema } from "./zod/financeSummaryDTOSchema.ts";
 export { generalExpenseRequestDTOSchema } from "./zod/generalExpenseRequestDTOSchema.ts";
 export { generalExpenseResponseDTOSchema } from "./zod/generalExpenseResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./zod/pageDTOEmployeeResponseDTOSchema.ts";

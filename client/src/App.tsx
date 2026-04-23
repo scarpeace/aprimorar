@@ -71,8 +71,6 @@ function App() {
               <Route path="/students/:id" element={<StudentDetailsPage />} />
 
               <Route path="/employees" element={<EmployeesPage />} />
-              <Route path="/employees/new" element={<EmployeeCreatePage />} />
-              <Route path="/employees/edit/:id" element={<EmployeeEditPage />} />
               <Route path="/employees/:id" element={<EmployeeDetailPage />} />
 
               <Route path="/events" element={<EventsPage />} />

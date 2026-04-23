@@ -4,8 +4,7 @@ import { Banknote, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GeneralExpensesTable } from "../components/GeneralExpensesTable";
 import { GeneralExpenseForm } from "../components/GeneralExpenseForm";
-import { useGetGeneralExpenses } from "@/kubb/hooks/general-expenses/useGetGeneralExpenses";
-import type { GeneralExpenseResponseDTO } from "@/kubb";
+import { useGetGeneralExpenses, type GeneralExpenseResponseDTO } from "@/kubb";
 import { useExpenseMutations } from "../hooks/use-expense-mutations";
 
 export function GeneralExpensesPage() {
@@ -13,10 +12,7 @@ export function GeneralExpensesPage() {
   const [selectedExpense, setSelectedExpense] = useState<GeneralExpenseResponseDTO | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const { data, isPending, error } = useGetGeneralExpenses({
-    pageable: { page: currentPage, size: 20 },
-  });
-
+  const { data, isPending, error } = useGetGeneralExpenses({page: currentPage, size: 20});
   const { deleteExpense } = useExpenseMutations();
 
   const handleOpenForm = (expense?: GeneralExpenseResponseDTO) => {

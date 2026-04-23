@@ -106,36 +106,36 @@ export {
 export { eventRequestDTOSchema } from "./eventRequestDTOSchema.ts";
 export { eventResponseDTOSchema } from "./eventResponseDTOSchema.ts";
 export {
-  getFinanceSummary200Schema,
-  getFinanceSummaryQueryResponseSchema,
-} from "./finance/getFinanceSummarySchema.ts";
-export { financeSummaryDTOSchema } from "./financeSummaryDTOSchema.ts";
-export {
   createGeneralExpense201Schema,
   createGeneralExpenseMutationRequestSchema,
   createGeneralExpenseMutationResponseSchema,
-} from "./general expenses/createGeneralExpenseSchema.ts";
+} from "./finance/createGeneralExpenseSchema.ts";
 export {
   deleteGeneralExpense204Schema,
   deleteGeneralExpenseMutationResponseSchema,
   deleteGeneralExpensePathParamsSchema,
-} from "./general expenses/deleteGeneralExpenseSchema.ts";
+} from "./finance/deleteGeneralExpenseSchema.ts";
+export {
+  getFinanceSummary200Schema,
+  getFinanceSummaryQueryResponseSchema,
+} from "./finance/getFinanceSummarySchema.ts";
 export {
   getGeneralExpenseById200Schema,
   getGeneralExpenseByIdPathParamsSchema,
   getGeneralExpenseByIdQueryResponseSchema,
-} from "./general expenses/getGeneralExpenseByIdSchema.ts";
+} from "./finance/getGeneralExpenseByIdSchema.ts";
 export {
   getGeneralExpenses200Schema,
   getGeneralExpensesQueryParamsSchema,
   getGeneralExpensesQueryResponseSchema,
-} from "./general expenses/getGeneralExpensesSchema.ts";
+} from "./finance/getGeneralExpensesSchema.ts";
 export {
   updateGeneralExpense200Schema,
   updateGeneralExpenseMutationRequestSchema,
   updateGeneralExpenseMutationResponseSchema,
   updateGeneralExpensePathParamsSchema,
-} from "./general expenses/updateGeneralExpenseSchema.ts";
+} from "./finance/updateGeneralExpenseSchema.ts";
+export { financeSummaryDTOSchema } from "./financeSummaryDTOSchema.ts";
 export { generalExpenseRequestDTOSchema } from "./generalExpenseRequestDTOSchema.ts";
 export { generalExpenseResponseDTOSchema } from "./generalExpenseResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./pageDTOEmployeeResponseDTOSchema.ts";

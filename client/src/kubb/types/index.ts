@@ -175,42 +175,42 @@ export type {
   UpdateIncomeStatusQueryParamsStatusEnumKey,
 } from "./event/UpdateIncomeStatus.ts";
 export type {
-  GetFinanceSummary200,
-  GetFinanceSummaryQuery,
-  GetFinanceSummaryQueryResponse,
-} from "./finance/GetFinanceSummary.ts";
-export type {
   CreateGeneralExpense201,
   CreateGeneralExpenseMutation,
   CreateGeneralExpenseMutationRequest,
   CreateGeneralExpenseMutationResponse,
-} from "./general expenses/CreateGeneralExpense.ts";
+} from "./finance/CreateGeneralExpense.ts";
 export type {
   DeleteGeneralExpense204,
   DeleteGeneralExpenseMutation,
   DeleteGeneralExpenseMutationResponse,
   DeleteGeneralExpensePathParams,
-} from "./general expenses/DeleteGeneralExpense.ts";
+} from "./finance/DeleteGeneralExpense.ts";
+export type {
+  GetFinanceSummary200,
+  GetFinanceSummaryQuery,
+  GetFinanceSummaryQueryResponse,
+} from "./finance/GetFinanceSummary.ts";
 export type {
   GetGeneralExpenseById200,
   GetGeneralExpenseByIdPathParams,
   GetGeneralExpenseByIdQuery,
   GetGeneralExpenseByIdQueryResponse,
-} from "./general expenses/GetGeneralExpenseById.ts";
+} from "./finance/GetGeneralExpenseById.ts";
 export type {
   GetGeneralExpenses200,
   GetGeneralExpensesQuery,
   GetGeneralExpensesQueryParams,
   GetGeneralExpensesQueryParamsCategoryEnumKey,
   GetGeneralExpensesQueryResponse,
-} from "./general expenses/GetGeneralExpenses.ts";
+} from "./finance/GetGeneralExpenses.ts";
 export type {
   UpdateGeneralExpense200,
   UpdateGeneralExpenseMutation,
   UpdateGeneralExpenseMutationRequest,
   UpdateGeneralExpenseMutationResponse,
   UpdateGeneralExpensePathParams,
-} from "./general expenses/UpdateGeneralExpense.ts";
+} from "./finance/UpdateGeneralExpense.ts";
 export type {
   ArchiveParent204,
   ArchiveParentMutation,
@@ -330,4 +330,4 @@ export { generalExpenseResponseDTOCategoryEnum } from "./GeneralExpenseResponseD
 export { getEventsQueryParamsStatusEnum } from "./event/GetEvents.ts";
 export { updateExpenseStatusQueryParamsStatusEnum } from "./event/UpdateExpenseStatus.ts";
 export { updateIncomeStatusQueryParamsStatusEnum } from "./event/UpdateIncomeStatus.ts";
-export { getGeneralExpensesQueryParamsCategoryEnum } from "./general expenses/GetGeneralExpenses.ts";
+export { getGeneralExpensesQueryParamsCategoryEnum } from "./finance/GetGeneralExpenses.ts";
