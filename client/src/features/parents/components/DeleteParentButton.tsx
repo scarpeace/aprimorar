@@ -89,7 +89,6 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
         onClick={handleOpenClick}
         disabled={isDeleting}
         variant="danger"
-        className="sm:mr-auto"
       >
         <Trash2 className="h-4 w-4" />
         {isDeleting ? "Excluindo..." : "Excluir"}

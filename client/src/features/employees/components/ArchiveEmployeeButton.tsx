@@ -34,7 +34,7 @@ export const ArchiveEmployeeButton = ({
 
   if (isPending) {
     return (
-      <Button type="button" disabled variant="outline" className="sm:mr-auto">
+      <Button type="button" disabled variant="outline">
         <Loader2Icon className="h-4 w-4 animate-spin" />
         Processando...
       </Button>
@@ -50,7 +50,7 @@ export const ArchiveEmployeeButton = ({
         cancelText="Cancelar"
         onConfirm={handleConfirm}
         onCancel={() => setShowConfirm(false)}
-        className="p-2 sm:mr-auto"
+        className="p-2"
       />
     );
   }
@@ -60,7 +60,6 @@ export const ArchiveEmployeeButton = ({
       type="button"
       onClick={() => setShowConfirm(true)}
       variant={variant}
-      className="sm:mr-auto"
     >
       <Icon className="h-4 w-4" />
       {actionLabel}

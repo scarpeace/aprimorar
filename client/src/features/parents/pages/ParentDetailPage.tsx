@@ -3,7 +3,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { Edit, Handshake } from "lucide-react";
 import { useParams } from "react-router-dom";
 
-import { ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
@@ -18,11 +18,13 @@ import {
   formatPhone,
 } from "@/lib/utils/formatter";
 import { useState } from "react";
+import { ParentForm } from "../components/ParentForm";
 
 export function ParentDetailPage() {
   const { id } = useParams<{ id: string }>();
   const parentId = id ?? "";
   const [currentPage, setCurrentPage] = useState(0);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const parentQuery = useGetParentById(parentId);
   const linkedStudentsMetaQuery = useGetStudentsByParent(parentId, {
@@ -103,18 +105,18 @@ export function ParentDetailPage() {
           title="Responsável"
           description="Dados cadastrais e regras atuais de vínculo."
           headerActions={
-            <>
-              <ButtonLink to={`/parents/edit/${parentId}`} variant="primary">
-                <Edit className="h-4 w-4" />
+            <div className="flex gap-2 items-center flex-wrap justify-end">
+              <Button onClick={() => setIsFormOpen(true)} variant="primary">
+                <Edit className="h-4 w-4 mr-2" />
                 Editar
-              </ButtonLink>
+              </Button>
 
               <ArchiveParentButton
                 parentId={parentId}
                 isArchived={!!parentQuery.data?.archivedAt}
               />
               <DeleteParentButton parentId={parentId} />
-            </>
+            </div>
           }
         >
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
@@ -159,6 +161,19 @@ export function ParentDetailPage() {
             error={parentStudentsQuery.error}
           />
         </SectionCard>
+
+        {isFormOpen && (
+          <div className="modal modal-open">
+            <div className="modal-box max-w-2xl">
+              <h3 className="font-bold text-lg mb-4">Editar Responsável</h3>
+              <ParentForm
+                initialData={parentQuery.data}
+                onSuccess={() => setIsFormOpen(false)}
+                onCancel={() => setIsFormOpen(false)}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </PageLayout>
   );

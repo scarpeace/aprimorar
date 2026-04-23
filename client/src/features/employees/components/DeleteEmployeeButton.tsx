@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
-import { useGetEventsByEmployee } from "@/kubb";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
+import { useGetEventsByEmployeeId } from "@/kubb";
 
 
 
@@ -15,7 +15,7 @@ export const DeleteEmployeeButton = ({employeeId}: {employeeId: string}) => {
   } = useEmployeeMutations();
 
   const { data: eventsData, isLoading: isEventsLoading } =
-    useGetEventsByEmployee(employeeId);
+    useGetEventsByEmployeeId(employeeId);
 
   const handleOpenClick = () => {
     setIsOpen(true);
@@ -47,7 +47,6 @@ export const DeleteEmployeeButton = ({employeeId}: {employeeId: string}) => {
         onClick={handleOpenClick}
         disabled={isDeleting}
         variant="danger"
-        className="sm:mr-auto"
       >
         <Trash2 className="h-4 w-4" />
         {isDeleting ? "Excluindo..." : "Excluir"}

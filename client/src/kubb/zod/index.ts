@@ -81,6 +81,18 @@ export {
   getEventByIdQueryResponseSchema,
 } from "./event/getEventByIdSchema.ts";
 export {
+  getEventsByEmployeeId200Schema,
+  getEventsByEmployeeIdPathParamsSchema,
+  getEventsByEmployeeIdQueryParamsSchema,
+  getEventsByEmployeeIdQueryResponseSchema,
+} from "./event/getEventsByEmployeeIdSchema.ts";
+export {
+  getEventsByStudentId200Schema,
+  getEventsByStudentIdPathParamsSchema,
+  getEventsByStudentIdQueryParamsSchema,
+  getEventsByStudentIdQueryResponseSchema,
+} from "./event/getEventsByStudentIdSchema.ts";
+export {
   getEvents200Schema,
   getEventsQueryParamsSchema,
   getEventsQueryResponseSchema,

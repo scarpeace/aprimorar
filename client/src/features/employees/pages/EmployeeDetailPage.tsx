@@ -1,26 +1,28 @@
-import { ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { EventsTable } from "@/features/events/components/EventsTable";
-import { useGetEmployeeById, useGetEventsByEmployee } from "@/kubb";
+import { useGetEmployeeById, useGetEventsByEmployeeId } from "@/kubb";
 import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
 import { Edit, FileUser } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ArchiveEmployeeButton } from "../components/ArchiveEmployeeButton";
 import { DeleteEmployeeButton } from "../components/DeleteEmployeeButton";
+import { EmployeeForm } from "../components/EmployeeForm";
 import { dutyLabels } from "../utils/dutyLabels";
 
 export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const employeeId = id ?? "";
   const [currentPage, setCurrentPage] = useState(0);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const employeeQuery = useGetEmployeeById(employeeId);
-  const employeeEventsQuery = useGetEventsByEmployee(employeeId);
+  const employeeEventsQuery = useGetEventsByEmployeeId(employeeId);
 
   const headerProps = {
     description: "Veja e gerencie as informações do colaborador",
@@ -48,48 +50,24 @@ export function EmployeeDetailPage() {
     );
   }
 
-  const summaryItems: Array<{ label: string; value: ReactNode }> = [
-    { label: "Nome completo", value: employeeQuery.data.name },
-    { label: "E-mail", value: employeeQuery.data.email },
-    {
-      label: "Cargo",
-      value: dutyLabels[employeeQuery.data.duty] ?? "Desconhecido",
-    },
-    { label: "Contato", value: employeeQuery.data.contact },
-    { label: "CPF", value: employeeQuery.data.cpf },
-    { label: "Chave PIX", value: employeeQuery.data.pix },
-    {
-      label: "Data de nascimento",
-      value: formatDateShortYear(employeeQuery.data.birthdate ?? ""),
-    },
-    {
-      label: "Status",
-      value: employeeQuery.data.archivedAt ? "Arquivado" : "Ativo",
-    },
-    {
-      label: "Criado em",
-      value: formatDateShortYear(employeeQuery.data.createdAt ?? ""),
-    },
-  ];
-
   return (
     <PageLayout {...headerProps}>
       <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
         <SectionCard
-          title="Colaborador "
+          title="Colaborador"
           description="Dados do Colaborador"
           headerActions={
-            <>
-              <ButtonLink to={`/employees/edit/${employeeQuery.data.id}`} variant="primary">
-                <Edit className="h-4 w-4" />Editar
-              </ButtonLink>
+            <div className="flex gap-2 items-center flex-wrap justify-end">
+              <Button onClick={() => setIsFormOpen(true)} variant="primary">
+                <Edit className="h-4 w-4 mr-2" />Editar
+              </Button>
 
               <ArchiveEmployeeButton
                 employeeId={employeeQuery.data.id}
                 isArchived={!!employeeQuery.data.archivedAt}
               />
               <DeleteEmployeeButton employeeId={employeeQuery.data.id} />
-            </>
+            </div>
           }
         >
          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -108,7 +86,7 @@ export function EmployeeDetailPage() {
         {/*<Collapse title={"Endereço"} className="mt-3">
           <AddressDetails address={employeeData.address} />
         </Collapse>*/}
-      </SectionCard>
+        </SectionCard>
 
       <SectionCard
         title={"Atendimentos"}
@@ -122,6 +100,19 @@ export function EmployeeDetailPage() {
           onPageChange={setCurrentPage}
         />
       </SectionCard>
+
+      {isFormOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-2xl">
+            <h3 className="font-bold text-lg mb-4">Editar Colaborador</h3>
+            <EmployeeForm
+              initialData={employeeQuery.data}
+              onSuccess={() => setIsFormOpen(false)}
+              onCancel={() => setIsFormOpen(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   </PageLayout>
 );

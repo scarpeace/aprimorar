@@ -14,6 +14,8 @@ export type { CreateEventMutationKey } from "./hooks/event/useCreateEvent.ts";
 export type { DeleteEventMutationKey } from "./hooks/event/useDeleteEvent.ts";
 export type { GetEventByIdQueryKey } from "./hooks/event/useGetEventById.ts";
 export type { GetEventsQueryKey } from "./hooks/event/useGetEvents.ts";
+export type { GetEventsByEmployeeIdQueryKey } from "./hooks/event/useGetEventsByEmployeeId.ts";
+export type { GetEventsByStudentIdQueryKey } from "./hooks/event/useGetEventsByStudentId.ts";
 export type { UpdateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
 export type { UpdateExpenseStatusMutationKey } from "./hooks/event/useUpdateExpenseStatus.ts";
 export type { UpdateIncomeStatusMutationKey } from "./hooks/event/useUpdateIncomeStatus.ts";
@@ -193,6 +195,20 @@ export type {
   GetEventsQueryParamsStatusEnumKey,
   GetEventsQueryResponse,
 } from "./types/event/GetEvents.ts";
+export type {
+  GetEventsByEmployeeId200,
+  GetEventsByEmployeeIdPathParams,
+  GetEventsByEmployeeIdQuery,
+  GetEventsByEmployeeIdQueryParams,
+  GetEventsByEmployeeIdQueryResponse,
+} from "./types/event/GetEventsByEmployeeId.ts";
+export type {
+  GetEventsByStudentId200,
+  GetEventsByStudentIdPathParams,
+  GetEventsByStudentIdQuery,
+  GetEventsByStudentIdQueryParams,
+  GetEventsByStudentIdQueryResponse,
+} from "./types/event/GetEventsByStudentId.ts";
 export type {
   UpdateEvent200,
   UpdateEventMutation,
@@ -420,6 +436,14 @@ export { getEvents } from "./hooks/event/useGetEvents.ts";
 export { getEventsQueryKey } from "./hooks/event/useGetEvents.ts";
 export { getEventsQueryOptions } from "./hooks/event/useGetEvents.ts";
 export { useGetEvents } from "./hooks/event/useGetEvents.ts";
+export { getEventsByEmployeeId } from "./hooks/event/useGetEventsByEmployeeId.ts";
+export { getEventsByEmployeeIdQueryKey } from "./hooks/event/useGetEventsByEmployeeId.ts";
+export { getEventsByEmployeeIdQueryOptions } from "./hooks/event/useGetEventsByEmployeeId.ts";
+export { useGetEventsByEmployeeId } from "./hooks/event/useGetEventsByEmployeeId.ts";
+export { getEventsByStudentId } from "./hooks/event/useGetEventsByStudentId.ts";
+export { getEventsByStudentIdQueryKey } from "./hooks/event/useGetEventsByStudentId.ts";
+export { getEventsByStudentIdQueryOptions } from "./hooks/event/useGetEventsByStudentId.ts";
+export { useGetEventsByStudentId } from "./hooks/event/useGetEventsByStudentId.ts";
 export { updateEvent } from "./hooks/event/useUpdateEvent.ts";
 export { updateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
 export { updateEventMutationOptions } from "./hooks/event/useUpdateEvent.ts";
@@ -623,6 +647,18 @@ export {
   getEventByIdPathParamsSchema,
   getEventByIdQueryResponseSchema,
 } from "./zod/event/getEventByIdSchema.ts";
+export {
+  getEventsByEmployeeId200Schema,
+  getEventsByEmployeeIdPathParamsSchema,
+  getEventsByEmployeeIdQueryParamsSchema,
+  getEventsByEmployeeIdQueryResponseSchema,
+} from "./zod/event/getEventsByEmployeeIdSchema.ts";
+export {
+  getEventsByStudentId200Schema,
+  getEventsByStudentIdPathParamsSchema,
+  getEventsByStudentIdQueryParamsSchema,
+  getEventsByStudentIdQueryResponseSchema,
+} from "./zod/event/getEventsByStudentIdSchema.ts";
 export {
   getEvents200Schema,
   getEventsQueryParamsSchema,

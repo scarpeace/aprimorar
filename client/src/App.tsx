@@ -15,14 +15,10 @@ const StudentEditPage = lazy(() => import("@/features/students/pages/StudentEdit
 const StudentDetailsPage = lazy(() => import("@/features/students/pages/StudentDetailsPage").then((module) => ({ default: module.StudentDetailsPage })))
 
 const ParentsPage = lazy(() => import("@/features/parents/pages/ParentsPage").then((module) => ({ default: module.ParentsPage })))
-const ParentCreatePage = lazy(() => import("@/features/parents/pages/ParentCreatePage").then((module) => ({ default: module.ParentCreatePage })))
 const ParentDetailPage = lazy(() => import("@/features/parents/pages/ParentDetailPage").then((module) => ({ default: module.ParentDetailPage })))
-const ParentEditPage = lazy(() => import("@/features/parents/pages/ParentEditPage").then((module) => ({ default: module.ParentEditPage })))
 
 const EmployeesPage = lazy(() => import("@/features/employees/pages/EmployeesPage").then((module) => ({ default: module.EmployeesPage })))
 const EmployeeDetailPage = lazy(() => import("@/features/employees/pages/EmployeeDetailPage").then((module) => ({ default: module.EmployeeDetailPage })))
-const EmployeeCreatePage = lazy(() => import("@/features/employees/pages/EmployeeCreatePage").then((module) => ({ default: module.EmployeeCreatePage })))
-const EmployeeEditPage = lazy(() => import("@/features/employees/pages/EmployeeEditPage").then((module) => ({ default: module.EmployeeEditPage })))
 
 const EventsPage = lazy(() => import("@/features/events/pages/EventsPage").then((module) => ({ default: module.EventsPage })))
 const EventDetailPage = lazy(() => import("@/features/events/pages/EventDetailPage").then((module) => ({ default: module.EventDetailPage })))

@@ -152,6 +152,20 @@ export type {
   GetEventsQueryResponse,
 } from "./event/GetEvents.ts";
 export type {
+  GetEventsByEmployeeId200,
+  GetEventsByEmployeeIdPathParams,
+  GetEventsByEmployeeIdQuery,
+  GetEventsByEmployeeIdQueryParams,
+  GetEventsByEmployeeIdQueryResponse,
+} from "./event/GetEventsByEmployeeId.ts";
+export type {
+  GetEventsByStudentId200,
+  GetEventsByStudentIdPathParams,
+  GetEventsByStudentIdQuery,
+  GetEventsByStudentIdQueryParams,
+  GetEventsByStudentIdQueryResponse,
+} from "./event/GetEventsByStudentId.ts";
+export type {
   UpdateEvent200,
   UpdateEventMutation,
   UpdateEventMutationRequest,
