@@ -1,7 +1,7 @@
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { SectionCard } from "@/components/ui/section-card";
@@ -13,10 +13,13 @@ import { useParams } from "react-router-dom";
 import { useEventMutations } from "../hooks/use-event-mutations";
 import { EventStatusLabels } from "@/lib/shared/eventStatusLabels";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
+import { useState } from "react";
+import { EventForm } from "../components/EventForm";
 
 export function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const eventId = id ?? "";
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const eventQuery = useGetEventById(eventId);
   const { updateEvent } = useEventMutations();
@@ -68,7 +71,7 @@ export function EventDetailPage() {
 
   return (
     <PageLayout {...headerProps}>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 animate-[fade-up_300ms_ease-out_both]">
         {isCanceled && (
           <Alert variant="error" title="Atendimento Cancelado">
             Este atendimento foi marcado como cancelado e não será contabilizado em certas métricas ou conflitos de horário.
@@ -79,7 +82,7 @@ export function EventDetailPage() {
           title="Resumo do evento"
           description="Dados completos do atendimento, participantes e valores."
           headerActions={
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 items-center justify-end">
               {!isCompleted && !isCanceled && (
                 <Button
                   variant="success"
@@ -110,9 +113,9 @@ export function EventDetailPage() {
                   <Calendar className="h-4 w-4 mr-1" /> Re-agendar
                 </Button>
               )}
-              <ButtonLink to={`/events/edit/${eventId}`} variant="primary" size="sm">
-                <Edit className="h-4 w-4" /> Editar
-              </ButtonLink>
+              <Button onClick={() => setIsFormOpen(true)} variant="primary" size="sm">
+                <Edit className="h-4 w-4 mr-1" /> Editar
+              </Button>
             </div>
           }
         >
@@ -149,6 +152,19 @@ export function EventDetailPage() {
             <SummaryItem className="md:col-span-3 h-30" label="Observações" value={eventQuery.data.description}/>
         </div>
         </SectionCard>
+
+        {isFormOpen && (
+          <div className="modal modal-open">
+            <div className="modal-box max-w-4xl">
+              <h3 className="font-bold text-lg mb-4">Editar Atendimento</h3>
+              <EventForm
+                initialData={eventQuery.data}
+                onSuccess={() => setIsFormOpen(false)}
+                onCancel={() => setIsFormOpen(false)}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </PageLayout>
   );

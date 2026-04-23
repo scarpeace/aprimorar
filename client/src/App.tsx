@@ -22,8 +22,6 @@ const EmployeeDetailPage = lazy(() => import("@/features/employees/pages/Employe
 
 const EventsPage = lazy(() => import("@/features/events/pages/EventsPage").then((module) => ({ default: module.EventsPage })))
 const EventDetailPage = lazy(() => import("@/features/events/pages/EventDetailPage").then((module) => ({ default: module.EventDetailPage })))
-const EventCreatePage = lazy(() => import("@/features/events/pages/EventCreatePage").then((module) => ({ default: module.EventCreatePage })))
-const EventEditPage = lazy(() => import("@/features/events/pages/EventEditPage").then((module) => ({ default: module.EventEditPage })))
 
 const GeneralExpensesPage = lazy(() => import("@/features/finance/pages/GeneralExpensesPage").then((module) => ({ default: module.GeneralExpensesPage })))
 const FinanceDashboardPage = lazy(() => import("@/features/finance/pages/FinanceDashboardPage").then((module) => ({ default: module.FinanceDashboardPage })))
@@ -83,6 +81,15 @@ function App() {
             </Route>
 
             <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />} />
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
+    </BrowserRouter>
+  )
+}
+
+export default App
+n"} replace />} />
           </Routes>
         </Suspense>
       </ErrorBoundary>

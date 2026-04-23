@@ -1,12 +1,12 @@
 import { Badge } from "@/components/ui/badge";
-import { ButtonLink } from "@/components/ui/button";
+import { ButtonLink, Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { type PageDTOEventResponseDTO } from "@/kubb";
+import { type PageDTOEventResponseDTO, type EventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon } from "lucide-react";
+import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
 
 type EventsTableProps = {
   eventsPage?: PageDTOEventResponseDTO;
@@ -14,6 +14,7 @@ type EventsTableProps = {
   onPageChange: (page: number) => void;
   isPending: boolean;
   error: unknown;
+  onEdit?: (event: EventResponseDTO) => void;
 };
 
 export function EventsTable({
@@ -22,6 +23,7 @@ export function EventsTable({
   onPageChange,
   isPending,
   error,
+  onEdit,
 }: Readonly<EventsTableProps>) {
   if (isPending) {
     return <LoadingSpinner text="Carregando Eventos..." />;
@@ -65,7 +67,7 @@ export function EventsTable({
             <th className="text-left font-semibold text-base-content/80">
               Pagamento
             </th>
-            <th className="text-center font-semibold text-base-content/80">
+            <th className="text-right font-semibold text-base-content/80 pr-4">
               Ações
             </th>
           </tr>
@@ -93,11 +95,21 @@ export function EventsTable({
               <td>{brl.format(event.price)}</td>
               <td>{brl.format(event.payment)}</td>
 
-              <td>
+              <td className="text-right flex justify-end gap-2 pr-2">
+                {onEdit && (
+                  <Button
+                    className="btn-square btn-ghost btn-xs text-info"
+                    onClick={() => onEdit(event)}
+                    title="Editar"
+                  >
+                    <Pencil size={16} />
+                  </Button>
+                )}
                 <ButtonLink
-                  className="btn-square"
+                  className="btn-square btn-xs"
                   to={`/events/${event.eventId}`}
                   variant="primary"
+                  title="Detalhes"
                 >
                   <SquareArrowOutUpRightIcon className="h-4 w-4" />
                 </ButtonLink>

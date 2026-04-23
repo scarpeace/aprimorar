@@ -1,11 +1,13 @@
 import { useState, useMemo } from "react";
 import { ListSearchInput } from "@/components/ui/list-search-input";
-import { ButtonLink, Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { CalendarCheck2, Filter } from "lucide-react";
+import { CalendarCheck2, Filter, Plus } from "lucide-react";
 import { EventsTable } from "../components/EventsTable";
 import { useGetEvents } from "@/kubb";
+import type { EventResponseDTO } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
+import { EventForm } from "../components/EventForm";
 
 type DateFilter = "all" | "today" | "week";
 
@@ -14,6 +16,8 @@ export function EventsPage() {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [currentPage, setCurrentPage] = useState(0);
   const [dateFilter, setDateFilter] = useState<DateFilter>("all");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<EventResponseDTO | null>(null);
 
   const queryParams = useMemo(() => {
     const params: Record<string, any> = { page: currentPage };
@@ -53,6 +57,16 @@ export function EventsPage() {
     setCurrentPage(0);
   };
 
+  const handleOpenForm = (event?: EventResponseDTO) => {
+    setSelectedEvent(event || null);
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setSelectedEvent(null);
+    setIsFormOpen(false);
+  };
+
   return (
     <PageLayout {...headerProps}>
       <div className="flex flex-col gap-3 w-full">
@@ -67,9 +81,14 @@ export function EventsPage() {
               setCurrentPage(0);
             }}
           />
-          <ButtonLink className="sm:ml-auto" to="/events/new" variant="success">
+          <Button
+            className="sm:ml-auto"
+            onClick={() => handleOpenForm()}
+            variant="success"
+          >
+            <Plus className="h-4 w-4 mr-2" />
             Novo atendimento
-          </ButtonLink>
+          </Button>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 bg-base-200/50 p-2 rounded-lg">
@@ -106,7 +125,23 @@ export function EventsPage() {
           onPageChange={setCurrentPage}
           isPending={eventsQuery.isPending}
           error={eventsQuery.error}
+          onEdit={(event) => handleOpenForm(event)}
         />
+
+        {isFormOpen && (
+          <div className="modal modal-open">
+            <div className="modal-box max-w-4xl">
+              <h3 className="font-bold text-lg mb-4">
+                {selectedEvent ? "Editar Atendimento" : "Cadastrar Novo Atendimento"}
+              </h3>
+              <EventForm
+                initialData={selectedEvent}
+                onSuccess={handleCloseForm}
+                onCancel={handleCloseForm}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </PageLayout>
   );
