@@ -152,8 +152,8 @@ export function EventDetailPage() {
             <SummaryItem className="md:col-span-3 h-30" label="Observações" value={eventQuery.data.description}/>
         </div>
         </SectionCard>
-
-        {isFormOpen && (
+      </div>
+      {isFormOpen && (
           <div className="modal modal-open">
             <div className="modal-box max-w-4xl">
               <h3 className="font-bold text-lg mb-4">Editar Atendimento</h3>
@@ -165,7 +165,6 @@ export function EventDetailPage() {
             </div>
           </div>
         )}
-      </div>
     </PageLayout>
   );
 }

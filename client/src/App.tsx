@@ -10,8 +10,6 @@ import { ErrorBoundary } from "./components/ui/error-boundary"
 const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage").then((module) => ({ default: module.DashboardPage })))
 
 const StudentsPage = lazy(() => import("@/features/students/pages/StudentsPage").then((module) => ({ default: module.StudentsPage })))
-const StudentCreatePage = lazy(() => import("@/features/students/pages/StudentCreatePage").then((module) => ({ default: module.StudentCreatePage })))
-const StudentEditPage = lazy(() => import("@/features/students/pages/StudentEditPage").then((module) => ({ default: module.StudentEditPage })))
 const StudentDetailsPage = lazy(() => import("@/features/students/pages/StudentDetailsPage").then((module) => ({ default: module.StudentDetailsPage })))
 
 const ParentsPage = lazy(() => import("@/features/parents/pages/ParentsPage").then((module) => ({ default: module.ParentsPage })))
@@ -60,17 +58,13 @@ function App() {
               <Route path="/" element={<DashboardPage />} />
 
               <Route path="/students" element={<StudentsPage />} />
-              <Route path="/students/new" element={<StudentCreatePage />} />
-              <Route path="/students/edit/:id" element={<StudentEditPage />} />
               <Route path="/students/:id" element={<StudentDetailsPage />} />
 
               <Route path="/employees" element={<EmployeesPage />} />
               <Route path="/employees/:id" element={<EmployeeDetailPage />} />
 
               <Route path="/events" element={<EventsPage />} />
-              <Route path="/events/new" element={<EventCreatePage />} />
               <Route path="/events/:id" element={<EventDetailPage />} />
-              <Route path="/events/edit/:id" element={<EventEditPage />} />
 
               <Route path="/parents" element={<ParentsPage />} />
               <Route path="/parents/:id" element={<ParentDetailPage />} />
@@ -81,15 +75,6 @@ function App() {
             </Route>
 
             <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />} />
-          </Routes>
-        </Suspense>
-      </ErrorBoundary>
-    </BrowserRouter>
-  )
-}
-
-export default App
-n"} replace />} />
           </Routes>
         </Suspense>
       </ErrorBoundary>

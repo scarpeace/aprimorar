@@ -84,7 +84,7 @@ export function EventsTable({
               <td className="">{formatDateShortYear(event.startDate)}</td>
               <td className=" text-center">{formatTime(event.startDate)} - {formatTime(event.endDate)}</td>
               <td>
-                {event.status === "SCHEDULED" && <Badge variant="primary" className="p-1 px-2">Agendado</Badge>}
+                {event.status === "SCHEDULED" && <Badge variant="primary">Agendado</Badge>}
                 {event.status === "COMPLETED" && <Badge variant="success" className="p-1 px-2">Concluído</Badge>}
                 {event.status === "CANCELED" && <Badge variant="error" className="p-1 px-2">Cancelado</Badge>}
               </td>
@@ -95,7 +95,27 @@ export function EventsTable({
               <td>{brl.format(event.price)}</td>
               <td>{brl.format(event.payment)}</td>
 
-              <td className="text-right flex justify-end gap-2 pr-2">
+              <td className="text-right flex justify-end gap-1 pr-2">
+                {event.status !== "COMPLETED" && event.status !== "CANCELED" && (
+                  <Button
+                    className="btn-square btn-ghost btn-xs text-success"
+                    onClick={() => handleStatusChange(event, "COMPLETED")}
+                    title="Concluir"
+                    disabled={updateEvent.isPending}
+                  >
+                    <CheckCircle2 size={16} />
+                  </Button>
+                )}
+                {event.status !== "CANCELED" && (
+                  <Button
+                    className="btn-square btn-ghost btn-xs text-error"
+                    onClick={() => handleStatusChange(event, "CANCELED")}
+                    title="Cancelar"
+                    disabled={updateEvent.isPending}
+                  >
+                    <XCircle size={16} />
+                  </Button>
+                )}
                 {onEdit && (
                   <Button
                     className="btn-square btn-ghost btn-xs text-info"
