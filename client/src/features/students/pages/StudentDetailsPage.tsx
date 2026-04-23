@@ -1,4 +1,4 @@
-import { ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Collapse } from "@/components/ui/collapse";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
@@ -21,11 +21,13 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
 import { DeleteStudentButton } from "../components/DeleteStudentButton";
+import { StudentForm } from "../components/StudentForm";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
   const [currentPage, setCurrentPage] = useState(0);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const studentQuery = useGetStudentById(studentId);
   const studentEvents = useGetEventsByStudent(studentId);
@@ -68,21 +70,18 @@ export function StudentDetailsPage() {
           title="Aluno"
           description="Dados do aluno"
           headerActions={
-            <>
-              <ButtonLink
-                to={`/students/edit/${studentQuery.data.id}`}
-                variant="primary"
-              >
-                <Edit className="h-4 w-4" />
+            <div className="flex gap-2 items-center flex-wrap justify-end">
+              <Button onClick={() => setIsFormOpen(true)} variant="primary">
+                <Edit className="h-4 w-4 mr-2" />
                 Editar
-              </ButtonLink>
+              </Button>
 
               <ArchiveStudentButton
                 studentId={studentQuery.data.id}
                 isArchived={!!studentQuery.data.archivedAt}
               />
               <DeleteStudentButton studentId={studentQuery.data.id} />
-            </>
+            </div>
           }
         >
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -119,6 +118,19 @@ export function StudentDetailsPage() {
             onPageChange={setCurrentPage}
           />
         </SectionCard>
+
+        {isFormOpen && (
+          <div className="modal modal-open">
+            <div className="modal-box max-w-4xl">
+              <h3 className="font-bold text-lg mb-4">Editar Aluno</h3>
+              <StudentForm
+                initialData={studentQuery.data}
+                onSuccess={() => setIsFormOpen(false)}
+                onCancel={() => setIsFormOpen(false)}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </PageLayout>
   );
