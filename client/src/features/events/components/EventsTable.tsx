@@ -6,7 +6,8 @@ import { Pagination } from "@/components/ui/pagination";
 import { type PageDTOEventResponseDTO, type EventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
+import { SquareArrowOutUpRightIcon, Pencil, CheckCircle2 } from "lucide-react";
+import { useEventMutations } from "../hooks/use-event-mutations";
 
 type EventsTableProps = {
   eventsPage?: PageDTOEventResponseDTO;
@@ -25,6 +26,9 @@ export function EventsTable({
   error,
   onEdit,
 }: Readonly<EventsTableProps>) {
+  const { updateEvent } = useEventMutations();
+
+
   if (isPending) {
     return <LoadingSpinner text="Carregando Eventos..." />;
   }

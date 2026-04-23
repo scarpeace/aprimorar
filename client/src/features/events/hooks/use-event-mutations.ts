@@ -7,6 +7,7 @@ import {
   getEventsQueryKey,
   useCreateEvent,
   useUpdateEvent,
+  type EventResponseDTO,
 } from "@/kubb";
 
 interface UseEventMutationsProps {
@@ -53,8 +54,29 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
     },
   });
 
+  const changeEventStatus = (
+    event: EventResponseDTO,
+    newStatus: "SCHEDULED" | "COMPLETED" | "CANCELED"
+  ) => {
+    updateEvent.mutate({
+      eventId: event.eventId,
+      data: {
+        studentId: event.studentId,
+        employeeId: event.employeeId,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        payment: event.payment,
+        price: event.price,
+        content: event.content,
+        description: event.description || "",
+        status: newStatus,
+      },
+    });
+  };
+
   return {
     createEvent,
     updateEvent,
+    changeEventStatus,
   };
 }

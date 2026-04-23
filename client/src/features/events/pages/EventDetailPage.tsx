@@ -22,26 +22,7 @@ export function EventDetailPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const eventQuery = useGetEventById(eventId);
-  const { updateEvent } = useEventMutations();
-
-  const handleStatusChange = (newStatus: "SCHEDULED" | "COMPLETED" | "CANCELED") => {
-    if (!eventQuery.data) return;
-
-    updateEvent.mutate({
-      eventId,
-      data: {
-        studentId: eventQuery.data.studentId,
-        employeeId: eventQuery.data.employeeId,
-        startDate: eventQuery.data.startDate,
-        endDate: eventQuery.data.endDate,
-        payment: eventQuery.data.payment,
-        price: eventQuery.data.price,
-        content: eventQuery.data.content,
-        description: eventQuery.data.description,
-        status: newStatus,
-      },
-    });
-  };
+  const { updateEvent, changeEventStatus } = useEventMutations({ onSuccessCallback: () => {} });
 
   const headerProps = {
     description: "Veja e gerencie as informações do evento",
@@ -73,9 +54,7 @@ export function EventDetailPage() {
     <PageLayout {...headerProps}>
       <div className="flex flex-col gap-4 animate-[fade-up_300ms_ease-out_both]">
         {isCanceled && (
-          <Alert variant="error" title="Atendimento Cancelado">
-            Este atendimento foi marcado como cancelado e não será contabilizado em certas métricas ou conflitos de horário.
-          </Alert>
+          <Alert variant="error" title="Atendimento Cancelado" error="Este atendimento foi marcado como cancelado e não será contabilizado em certas métricas ou conflitos de horário."/>
         )}
 
         <SectionCard
@@ -87,7 +66,7 @@ export function EventDetailPage() {
                 <Button
                   variant="success"
                   size="sm"
-                  onClick={() => handleStatusChange("COMPLETED")}
+                  onClick={() => changeEventStatus(eventQuery.data, "COMPLETED")}
                   disabled={updateEvent.isPending}
                 >
                   <CheckCircle2 className="h-4 w-4 mr-1" /> Concluir
@@ -97,7 +76,7 @@ export function EventDetailPage() {
                 <Button
                   variant="error"
                   size="sm"
-                  onClick={() => handleStatusChange("CANCELED")}
+                  onClick={() => changeEventStatus(eventQuery.data, "CANCELED")}
                   disabled={updateEvent.isPending}
                 >
                   <XCircle className="h-4 w-4 mr-1" /> Cancelar
@@ -107,7 +86,7 @@ export function EventDetailPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleStatusChange("SCHEDULED")}
+                  onClick={() => changeEventStatus(eventQuery.data, "SCHEDULED")}
                   disabled={updateEvent.isPending}
                 >
                   <Calendar className="h-4 w-4 mr-1" /> Re-agendar
@@ -122,6 +101,7 @@ export function EventDetailPage() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <SummaryItem
               label="Status"
+              // TODO: Acho que cabe uma refatoração aqui
               value={
                 <Badge
                   variant={
