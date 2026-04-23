@@ -159,8 +159,7 @@ public class EventService {
             request.price(),
             request.content(),
             student,
-            employee,
-            request.status()
+            employee
         );
 
         log.info("Evento {} atualizado com sucesso.", event.getTitle().toUpperCase());
@@ -175,23 +174,49 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponseDTO updateIncomeStatus(UUID id, FinancialStatus status) {
+    public EventResponseDTO completeEvent(UUID id) {
         Event event = findEventOrThrow(id);
-        if (status == FinancialStatus.PAID && event.getStatus() != EventStatus.COMPLETED) {
-            throw new InvalidEventException("Não é possível marcar como pago um evento que não está concluído");
+        event.complete();
+        log.info("Evento {} concluído com sucesso.", event.getTitle().toUpperCase());
+        return eventMapper.convertToDto(event);
+    }
+
+    @Transactional
+    public EventResponseDTO cancelEvent(UUID id) {
+        Event event = findEventOrThrow(id);
+        event.cancel();
+        log.info("Evento {} cancelado com sucesso.", event.getTitle().toUpperCase());
+        return eventMapper.convertToDto(event);
+    }
+
+    @Transactional
+    public EventResponseDTO rescheduleEvent(UUID id) {
+        Event event = findEventOrThrow(id);
+        event.reschedule();
+        log.info("Evento {} re-agendado com sucesso.", event.getTitle().toUpperCase());
+        return eventMapper.convertToDto(event);
+    }
+
+    @Transactional
+    public EventResponseDTO settleIncome(UUID id, FinancialStatus status) {
+        Event event = findEventOrThrow(id);
+        if (status == FinancialStatus.PAID) {
+            event.settleIncome();
+        } else {
+            event.unsettleIncome();
         }
-        event.setIncomeStatus(status);
         log.info("Status financeiro (receita) do evento {} atualizado para {}.", event.getTitle(), status);
         return eventMapper.convertToDto(event);
     }
 
     @Transactional
-    public EventResponseDTO updateExpenseStatus(UUID id, FinancialStatus status) {
+    public EventResponseDTO settleExpense(UUID id, FinancialStatus status) {
         Event event = findEventOrThrow(id);
-        if (status == FinancialStatus.PAID && event.getStatus() != EventStatus.COMPLETED) {
-            throw new InvalidEventException("Não é possível marcar como pago um evento que não está concluído");
+        if (status == FinancialStatus.PAID) {
+            event.settleExpense();
+        } else {
+            event.unsettleExpense();
         }
-        event.setExpenseStatus(status);
         log.info("Status financeiro (despesa) do evento {} atualizado para {}.", event.getTitle(), status);
         return eventMapper.convertToDto(event);
     }

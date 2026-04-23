@@ -26,7 +26,7 @@ export function EventsTable({
   error,
   onEdit,
 }: Readonly<EventsTableProps>) {
-  const { updateEvent } = useEventMutations();
+  const { changeEventStatus, isStatusPending } = useEventMutations();
 
 
   if (isPending) {

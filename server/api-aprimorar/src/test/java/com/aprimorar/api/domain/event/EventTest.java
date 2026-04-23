@@ -12,6 +12,8 @@ import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.enums.EventStatus;
+import com.aprimorar.api.enums.FinancialStatus;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -33,18 +35,67 @@ class EventTest {
     class ValidationMethods {
 
         @Test
-        @DisplayName("should initialize with SCHEDULED status")
+        @DisplayName("should initialize with SCHEDULED status and PENDING financial status")
         void shouldInitializeWithScheduledStatus() {
             Event input = new Event();
-            assertThat(input.getStatus()).isEqualTo(com.aprimorar.api.enums.EventStatus.SCHEDULED);
+            assertThat(input.getStatus()).isEqualTo(EventStatus.SCHEDULED);
+            assertThat(input.getIncomeStatus()).isEqualTo(FinancialStatus.PENDING);
+            assertThat(input.getExpenseStatus()).isEqualTo(FinancialStatus.PENDING);
         }
 
         @Test
-        @DisplayName("should allow updating status")
-        void shouldAllowUpdatingStatus() {
+        @DisplayName("should complete event")
+        void shouldCompleteEvent() {
             Event input = new Event();
-            input.setStatus(com.aprimorar.api.enums.EventStatus.COMPLETED);
-            assertThat(input.getStatus()).isEqualTo(com.aprimorar.api.enums.EventStatus.COMPLETED);
+            input.complete();
+            assertThat(input.getStatus()).isEqualTo(EventStatus.COMPLETED);
+        }
+
+        @Test
+        @DisplayName("should cancel event and reset financial status")
+        void shouldCancelEvent() {
+            Event input = new Event();
+            input.complete();
+            input.settleIncome();
+            input.settleExpense();
+            
+            input.cancel();
+            
+            assertThat(input.getStatus()).isEqualTo(EventStatus.CANCELED);
+            assertThat(input.getIncomeStatus()).isEqualTo(FinancialStatus.PENDING);
+            assertThat(input.getExpenseStatus()).isEqualTo(FinancialStatus.PENDING);
+        }
+
+        @Test
+        @DisplayName("should reschedule event and reset financial status")
+        void shouldRescheduleEvent() {
+            Event input = new Event();
+            input.complete();
+            input.settleIncome();
+            
+            input.reschedule();
+            
+            assertThat(input.getStatus()).isEqualTo(EventStatus.SCHEDULED);
+            assertThat(input.getIncomeStatus()).isEqualTo(FinancialStatus.PENDING);
+            assertThat(input.getExpenseStatus()).isEqualTo(FinancialStatus.PENDING);
+        }
+
+        @Test
+        @DisplayName("should settle income when completed")
+        void shouldSettleIncomeWhenCompleted() {
+            Event input = new Event();
+            input.complete();
+            input.settleIncome();
+            assertThat(input.getIncomeStatus()).isEqualTo(FinancialStatus.PAID);
+        }
+
+        @Test
+        @DisplayName("should throw when settling income on incomplete event")
+        void shouldThrowWhenSettlingIncomeOnIncompleteEvent() {
+            Event input = new Event();
+            assertThatThrownBy(input::settleIncome)
+                .isInstanceOf(InvalidEventException.class)
+                .hasMessage("Não é possível dar baixa no recebimento de um evento não concluído");
         }
 
         @Test
@@ -62,8 +113,7 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
                 student,
-                employee,
-                com.aprimorar.api.enums.EventStatus.SCHEDULED
+                employee
             );
 
             assertThat(input.getTitle()).isEqualTo("AULA - Col: Ana Paula - João Silva");
@@ -90,8 +140,7 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
                 student(),
-                employee(),
-                com.aprimorar.api.enums.EventStatus.SCHEDULED
+                employee()
             );
 
             assertThat(input.getDescription()).isEqualTo(" ");
@@ -110,8 +159,7 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
                 student(),
-                employee(),
-                com.aprimorar.api.enums.EventStatus.SCHEDULED
+                employee()
             ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("Data de fim do evento não pode ser anterior a data de inicio");
@@ -130,8 +178,7 @@ class EventTest {
                 BigDecimal.valueOf(80),
                 EventContent.AULA,
                 student(),
-                employee(),
-                com.aprimorar.api.enums.EventStatus.SCHEDULED
+                employee()
             ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O valor do evento não pode ser menor que o pagamento");
@@ -150,8 +197,7 @@ class EventTest {
                 BigDecimal.valueOf(49),
                 EventContent.AULA,
                 student(),
-                employee(),
-                com.aprimorar.api.enums.EventStatus.SCHEDULED
+                employee()
             ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O valor do evento não pode ser menor que R$50,00");
@@ -170,8 +216,7 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 null,
                 student(),
-                employee(),
-                com.aprimorar.api.enums.EventStatus.SCHEDULED
+                employee()
             ))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("O conteúdo do evento é obrigatório");
@@ -235,8 +280,7 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 EventContent.MENTORIA,
                 student,
-                employee,
-                com.aprimorar.api.enums.EventStatus.SCHEDULED
+                employee
             );
 
             assertThat(input.getTitle()).isEqualTo("MENTORIA - Col: Ana Paula - João Silva");
@@ -260,8 +304,7 @@ class EventTest {
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
                 student(),
-                employee(),
-                com.aprimorar.api.enums.EventStatus.SCHEDULED
+                employee()
             );
             return input;
         }

@@ -57,7 +57,6 @@ export const ConfirmModal = ({
             </Button>
             <Button
               type="button"
-              variant={variant}
               onClick={onConfirm}
               disabled={isPending}
               className="ml-2"

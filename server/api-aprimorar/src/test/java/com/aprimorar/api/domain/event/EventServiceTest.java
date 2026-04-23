@@ -24,6 +24,7 @@ import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.enums.EventStatus;
 import com.aprimorar.api.enums.FinancialStatus;
 import com.aprimorar.api.shared.PageDTO;
 import java.math.BigDecimal;
@@ -94,7 +95,7 @@ class EventServiceTest {
             when(eventRepo.findById(inputId)).thenReturn(Optional.of(event));
             when(eventMapper.convertToDto(event)).thenReturn(expected);
 
-            EventResponseDTO actual = eventService.updateIncomeStatus(inputId, status);
+            EventResponseDTO actual = eventService.settleIncome(inputId, status);
 
             assertThat(actual).isEqualTo(expected);
             assertThat(event.getIncomeStatus()).isEqualTo(status);
@@ -110,7 +111,7 @@ class EventServiceTest {
 
             when(eventRepo.findById(inputId)).thenReturn(Optional.of(event));
 
-            assertThatThrownBy(() -> eventService.updateIncomeStatus(inputId, status))
+            assertThatThrownBy(() -> eventService.settleExpense(inputId, status))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("Não é possível marcar como pago um evento que não está concluído");
         }
@@ -121,13 +122,13 @@ class EventServiceTest {
             UUID inputId = EVENT_ID;
             FinancialStatus status = FinancialStatus.PAID;
             Event event = event();
-            event.setStatus(com.aprimorar.api.enums.EventStatus.COMPLETED);
+            event.setStatus(EventStatus.COMPLETED);
             EventResponseDTO expected = response();
 
             when(eventRepo.findById(inputId)).thenReturn(Optional.of(event));
             when(eventMapper.convertToDto(event)).thenReturn(expected);
 
-            EventResponseDTO actual = eventService.updateExpenseStatus(inputId, status);
+            EventResponseDTO actual = eventService.completeEvent(inputId);
 
             assertThat(actual).isEqualTo(expected);
             assertThat(event.getExpenseStatus()).isEqualTo(status);
@@ -543,8 +544,7 @@ class EventServiceTest {
             BigDecimal.valueOf(120),
             EventContent.AULA,
             student(),
-            employee(),
-            com.aprimorar.api.enums.EventStatus.SCHEDULED
+            employee()
         );
         return input;
     }
@@ -560,8 +560,7 @@ class EventServiceTest {
             BigDecimal.valueOf(120),
             EventContent.AULA,
             student,
-            employee,
-            com.aprimorar.api.enums.EventStatus.SCHEDULED
+            employee
         );
         return input;
     }
@@ -577,8 +576,7 @@ class EventServiceTest {
             BigDecimal.valueOf(130),
             EventContent.MENTORIA,
             student(),
-            employee(),
-            com.aprimorar.api.enums.EventStatus.SCHEDULED
+            employee()
         );
         return input;
     }

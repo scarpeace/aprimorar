@@ -192,8 +192,7 @@ public class Event extends BaseEntity {
         BigDecimal price,
         EventContent content,
         Student student,
-        Employee employee,
-        com.aprimorar.api.enums.EventStatus status
+        Employee employee
     ) {
         validateDates(startDate, endDate);
         validateAmounts(payment, price);
@@ -209,9 +208,47 @@ public class Event extends BaseEntity {
         setContent(content);
         setStudent(student);
         setEmployee(employee);
-        if (status != null) {
-            setStatus(status);
+    }
+
+    public void complete() {
+        if (this.status == com.aprimorar.api.enums.EventStatus.CANCELED) {
+            throw new InvalidEventException("Não é possível concluir um evento cancelado");
         }
+        this.status = com.aprimorar.api.enums.EventStatus.COMPLETED;
+    }
+
+    public void cancel() {
+        this.status = com.aprimorar.api.enums.EventStatus.CANCELED;
+        this.incomeStatus = FinancialStatus.PENDING;
+        this.expenseStatus = FinancialStatus.PENDING;
+    }
+
+    public void reschedule() {
+        this.status = com.aprimorar.api.enums.EventStatus.SCHEDULED;
+        this.incomeStatus = FinancialStatus.PENDING;
+        this.expenseStatus = FinancialStatus.PENDING;
+    }
+
+    public void settleIncome() {
+        if (this.status != com.aprimorar.api.enums.EventStatus.COMPLETED) {
+            throw new InvalidEventException("Não é possível dar baixa no recebimento de um evento não concluído");
+        }
+        this.incomeStatus = FinancialStatus.PAID;
+    }
+
+    public void unsettleIncome() {
+        this.incomeStatus = FinancialStatus.PENDING;
+    }
+
+    public void settleExpense() {
+        if (this.status != com.aprimorar.api.enums.EventStatus.COMPLETED) {
+            throw new InvalidEventException("Não é possível dar baixa no pagamento de um evento não concluído");
+        }
+        this.expenseStatus = FinancialStatus.PAID;
+    }
+
+    public void unsettleExpense() {
+        this.expenseStatus = FinancialStatus.PENDING;
     }
 
     public void validateDatesForCreation(Instant now) {
