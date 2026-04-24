@@ -1,5 +1,5 @@
 import { generalExpenseRequestDTOSchema } from "@/kubb";
-import z from "zod";
+import { z } from "zod/v4";
 
 export const generalExpenseFormSchema = generalExpenseRequestDTOSchema.extend({
   description: z.string().min(1, { message: "A descrição é obrigatória" }),

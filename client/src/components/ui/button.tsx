@@ -10,14 +10,13 @@ type ButtonVariant =
   | "danger"
   | "outline"
   | "ghost"
-  | "outlinePrimary"
-  | "outlineSecondary"
-  | "outlineSuccess"
-  | "outlineWarning"
-  | "outlineError"
-  | "outlineDanger"
+  | "primary-outline"
+  | "secondary-outline"
+  | "success-outline"
+  | "warning-outline"
+  | "error-outline"
 
-type ButtonSize = "md" | "sm"
+type ButtonSize = "md" | "sm" | "xs" | "lg"
 
 type CommonButtonProps = {
   variant?: ButtonVariant
@@ -25,40 +24,42 @@ type CommonButtonProps = {
   className?: string
 }
 
-const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: "btn-primary",
-  secondary: "btn-secondary",
-  success: "btn-success",
-  warning: "btn-warning",
-  error: "btn-error",
-  danger: "btn-error",
-  outline: "btn-outline",
-  ghost: "btn-ghost",
-  outlinePrimary: "btn-outline btn-primary",
-  outlineSecondary: "btn-outline btn-secondary",
-  outlineSuccess: "btn-outline btn-success",
-  outlineWarning: "btn-outline btn-warning",
-  outlineError: "btn-outline btn-error",
-  outlineDanger: "btn-outline btn-error",
-}
-
-const SIZE_CLASSES: Record<ButtonSize, string> = {
-  md: "",
-  sm: "btn-sm",
-}
-
-function buildButtonClassName({ variant = "primary", size = "md", className }: CommonButtonProps) {
-  return ["btn", VARIANT_CLASSES[variant], SIZE_CLASSES[size], className].filter(Boolean).join(" ")
+function getVariantClass(variant: ButtonVariant) {
+  switch (variant) {
+    case "primary-outline": return "btn-outline btn-primary"
+    case "secondary-outline": return "btn-outline btn-secondary"
+    case "success-outline": return "btn-outline btn-success"
+    case "warning-outline": return "btn-outline btn-warning"
+    case "error-outline": return "btn-outline btn-error"
+    case "danger": return "btn-error"
+    default: return `btn-${variant}`
+  }
 }
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & CommonButtonProps
 
-export function Button({ variant = "primary", size = "md", className, ...props }: ButtonProps) {
-  return <button className={buildButtonClassName({ variant, size, className })} {...props} />
+export function Button({ variant = "primary", size = "md", className = "", ...props }: ButtonProps) {
+  const sizeClass = size === "md" ? "" : `btn-${size}`
+  const variantClass = getVariantClass(variant)
+  
+  return (
+    <button 
+      className={`btn ${variantClass} ${sizeClass} ${className}`.trim()} 
+      {...props} 
+    />
+  )
 }
 
 export type ButtonLinkProps = ComponentProps<typeof Link> & CommonButtonProps
 
-export function ButtonLink({ variant = "primary", size = "md", className, ...props }: ButtonLinkProps) {
-  return <Link className={buildButtonClassName({ variant, size, className })} {...props} />
+export function ButtonLink({ variant = "primary", size = "md", className = "", ...props }: ButtonLinkProps) {
+  const sizeClass = size === "md" ? "" : `btn-${size}`
+  const variantClass = getVariantClass(variant)
+
+  return (
+    <Link 
+      className={`btn ${variantClass} ${sizeClass} ${className}`.trim()} 
+      {...props} 
+    />
+  )
 }

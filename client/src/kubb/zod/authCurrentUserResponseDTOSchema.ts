@@ -18,5 +18,6 @@ export const authCurrentUserResponseDTOSchema = z
     duty: z
       .enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"])
       .describe("Função/Papel do funcionário"),
+    role: z.enum(["STUDENT", "EMPLOYEE", "PARENT", "ADMIN"]),
   })
   .describe("Dados do usuário autenticado");

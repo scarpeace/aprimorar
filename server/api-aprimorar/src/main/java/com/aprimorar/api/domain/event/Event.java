@@ -5,6 +5,7 @@ import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.event.exception.NotAllowedToUpdateEventException;
 import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.enums.EventStatus;
 import com.aprimorar.api.enums.FinancialStatus;
 import com.aprimorar.api.shared.BaseEntity;
 import jakarta.persistence.*;
@@ -42,7 +43,7 @@ public class Event extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private com.aprimorar.api.enums.EventStatus status = com.aprimorar.api.enums.EventStatus.SCHEDULED;
+    private EventStatus status = EventStatus.SCHEDULED;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "income_status", nullable = false)
@@ -211,7 +212,7 @@ public class Event extends BaseEntity {
     }
 
     public void complete() {
-        if (this.status == com.aprimorar.api.enums.EventStatus.CANCELED) {
+        if (this.status == EventStatus.CANCELED) {
             throw new InvalidEventException("Não é possível concluir um evento cancelado");
         }
         this.status = com.aprimorar.api.enums.EventStatus.COMPLETED;
@@ -230,7 +231,7 @@ public class Event extends BaseEntity {
     }
 
     public void settleIncome() {
-        if (this.status != com.aprimorar.api.enums.EventStatus.COMPLETED) {
+        if (this.status != EventStatus.COMPLETED) {
             throw new InvalidEventException("Não é possível dar baixa no recebimento de um evento não concluído");
         }
         this.incomeStatus = FinancialStatus.PAID;

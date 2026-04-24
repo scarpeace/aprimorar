@@ -264,3 +264,19 @@ export { studentOptionsDTOSchema } from "./studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
 export { studentResponsibleSummaryDTOSchema } from "./studentResponsibleSummaryDTOSchema.ts";
+export {
+  createUser201Schema,
+  createUserMutationRequestSchema,
+  createUserMutationResponseSchema,
+} from "./user management/createUserSchema.ts";
+export {
+  deleteUser204Schema,
+  deleteUserMutationResponseSchema,
+  deleteUserPathParamsSchema,
+} from "./user management/deleteUserSchema.ts";
+export {
+  listUsers200Schema,
+  listUsersQueryResponseSchema,
+} from "./user management/listUsersSchema.ts";
+export { userCreateRequestDTOSchema } from "./userCreateRequestDTOSchema.ts";
+export { userResponseDTOSchema } from "./userResponseDTOSchema.ts";

@@ -1,9 +1,12 @@
 package com.aprimorar.api.domain.auth;
 
 import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.enums.Role;
 import com.aprimorar.api.shared.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -11,8 +14,8 @@ import jakarta.persistence.Table;
 import java.time.Instant;
 
 @Entity
-@Table(name = "tb_internal_users")
-public class StaffAccount extends BaseEntity {
+@Table(name = "tb_users")
+public class User extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "employee_id", nullable = false, unique = true)
@@ -27,16 +30,21 @@ public class StaffAccount extends BaseEntity {
     @Column(name = "active", nullable = false)
     private boolean active;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
     @Column(name = "last_login_at")
     private Instant lastLoginAt;
 
-    protected StaffAccount() {}
+    protected User() {}
 
-    public StaffAccount(Employee employee, String username, String passwordHash, boolean active) {
+    public User(Employee employee, String username, String passwordHash, boolean active, Role role) {
         this.employee = employee;
         this.username = username;
         this.passwordHash = passwordHash;
         this.active = active;
+        this.role = role;
     }
 
     public Employee getEmployee() {
@@ -53,6 +61,10 @@ public class StaffAccount extends BaseEntity {
 
     public boolean isActive() {
         return active;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public Instant getLastLoginAt() {

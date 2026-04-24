@@ -45,6 +45,9 @@ export type { GetStudentsByParentQueryKey } from "./hooks/student/useGetStudents
 export type { GetStudentsOptionsQueryKey } from "./hooks/student/useGetStudentsOptions.ts";
 export type { UnarchiveStudentMutationKey } from "./hooks/student/useUnarchiveStudent.ts";
 export type { UpdateStudentMutationKey } from "./hooks/student/useUpdateStudent.ts";
+export type { CreateUserMutationKey } from "./hooks/user management/useCreateUser.ts";
+export type { DeleteUserMutationKey } from "./hooks/user management/useDeleteUser.ts";
+export type { ListUsersQueryKey } from "./hooks/user management/useListUsers.ts";
 export type {
   AddressRequestDTO,
   AddressRequestDTOStateEnumKey,
@@ -56,6 +59,7 @@ export type {
 export type {
   AuthCurrentUserResponseDTO,
   AuthCurrentUserResponseDTODutyEnumKey,
+  AuthCurrentUserResponseDTORoleEnumKey,
 } from "./types/AuthCurrentUserResponseDTO.ts";
 export type { AuthLoginRequestDTO } from "./types/AuthLoginRequestDTO.ts";
 export type { ClassesByContentDTO } from "./types/ClassesByContentDTO.ts";
@@ -103,6 +107,14 @@ export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
 export type { StudentResponsibleSummaryDTO } from "./types/StudentResponsibleSummaryDTO.ts";
+export type {
+  UserCreateRequestDTO,
+  UserCreateRequestDTORoleEnumKey,
+} from "./types/UserCreateRequestDTO.ts";
+export type {
+  UserResponseDTO,
+  UserResponseDTORoleEnumKey,
+} from "./types/UserResponseDTO.ts";
 export type {
   AuthMe200,
   AuthMeQuery,
@@ -393,6 +405,23 @@ export type {
   UpdateStudentMutationResponse,
   UpdateStudentPathParams,
 } from "./types/student/UpdateStudent.ts";
+export type {
+  CreateUser201,
+  CreateUserMutation,
+  CreateUserMutationRequest,
+  CreateUserMutationResponse,
+} from "./types/user management/CreateUser.ts";
+export type {
+  DeleteUser204,
+  DeleteUserMutation,
+  DeleteUserMutationResponse,
+  DeleteUserPathParams,
+} from "./types/user management/DeleteUser.ts";
+export type {
+  ListUsers200,
+  ListUsersQuery,
+  ListUsersQueryResponse,
+} from "./types/user management/ListUsers.ts";
 export { authMe } from "./hooks/auth/useAuthMe.ts";
 export { authMeQueryKey } from "./hooks/auth/useAuthMe.ts";
 export { authMeQueryOptions } from "./hooks/auth/useAuthMe.ts";
@@ -581,9 +610,22 @@ export { updateStudent } from "./hooks/student/useUpdateStudent.ts";
 export { updateStudentMutationKey } from "./hooks/student/useUpdateStudent.ts";
 export { updateStudentMutationOptions } from "./hooks/student/useUpdateStudent.ts";
 export { useUpdateStudent } from "./hooks/student/useUpdateStudent.ts";
+export { createUser } from "./hooks/user management/useCreateUser.ts";
+export { createUserMutationKey } from "./hooks/user management/useCreateUser.ts";
+export { createUserMutationOptions } from "./hooks/user management/useCreateUser.ts";
+export { useCreateUser } from "./hooks/user management/useCreateUser.ts";
+export { deleteUser } from "./hooks/user management/useDeleteUser.ts";
+export { deleteUserMutationKey } from "./hooks/user management/useDeleteUser.ts";
+export { deleteUserMutationOptions } from "./hooks/user management/useDeleteUser.ts";
+export { useDeleteUser } from "./hooks/user management/useDeleteUser.ts";
+export { listUsers } from "./hooks/user management/useListUsers.ts";
+export { listUsersQueryKey } from "./hooks/user management/useListUsers.ts";
+export { listUsersQueryOptions } from "./hooks/user management/useListUsers.ts";
+export { useListUsers } from "./hooks/user management/useListUsers.ts";
 export { addressRequestDTOStateEnum } from "./types/AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./types/AddressResponseDTO.ts";
 export { authCurrentUserResponseDTODutyEnum } from "./types/AuthCurrentUserResponseDTO.ts";
+export { authCurrentUserResponseDTORoleEnum } from "./types/AuthCurrentUserResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./types/EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./types/EventRequestDTO.ts";
@@ -594,6 +636,8 @@ export { eventResponseDTOIncomeStatusEnum } from "./types/EventResponseDTO.ts";
 export { eventResponseDTOStatusEnum } from "./types/EventResponseDTO.ts";
 export { generalExpenseRequestDTOCategoryEnum } from "./types/GeneralExpenseRequestDTO.ts";
 export { generalExpenseResponseDTOCategoryEnum } from "./types/GeneralExpenseResponseDTO.ts";
+export { userCreateRequestDTORoleEnum } from "./types/UserCreateRequestDTO.ts";
+export { userResponseDTORoleEnum } from "./types/UserResponseDTO.ts";
 export { getEventsQueryParamsStatusEnum } from "./types/event/GetEvents.ts";
 export { settleExpenseEventQueryParamsStatusEnum } from "./types/event/SettleExpenseEvent.ts";
 export { settleIncomeEventQueryParamsStatusEnum } from "./types/event/SettleIncomeEvent.ts";
@@ -864,3 +908,19 @@ export { studentOptionsDTOSchema } from "./zod/studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./zod/studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./zod/studentResponseDTOSchema.ts";
 export { studentResponsibleSummaryDTOSchema } from "./zod/studentResponsibleSummaryDTOSchema.ts";
+export {
+  createUser201Schema,
+  createUserMutationRequestSchema,
+  createUserMutationResponseSchema,
+} from "./zod/user management/createUserSchema.ts";
+export {
+  deleteUser204Schema,
+  deleteUserMutationResponseSchema,
+  deleteUserPathParamsSchema,
+} from "./zod/user management/deleteUserSchema.ts";
+export {
+  listUsers200Schema,
+  listUsersQueryResponseSchema,
+} from "./zod/user management/listUsersSchema.ts";
+export { userCreateRequestDTOSchema } from "./zod/userCreateRequestDTOSchema.ts";
+export { userResponseDTOSchema } from "./zod/userResponseDTOSchema.ts";

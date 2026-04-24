@@ -10,12 +10,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.aprimorar.api.config.SecurityConfig;
 import com.aprimorar.api.config.PasswordEncoderConfig;
 import com.aprimorar.api.config.WebCorsConfig;
-import com.aprimorar.api.domain.auth.repository.StaffAccountRepository;
+import com.aprimorar.api.domain.auth.repository.UserRepository;
 import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
 import com.aprimorar.api.domain.employee.Employee;
 import com.aprimorar.api.domain.student.StudentController;
 import com.aprimorar.api.domain.student.StudentService;
 import com.aprimorar.api.enums.Duty;
+import com.aprimorar.api.enums.Role;
 import com.aprimorar.api.exception.GlobalExceptionHandler;
 import java.time.Clock;
 import java.time.Instant;
@@ -42,7 +43,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import({ SecurityConfig.class, PasswordEncoderConfig.class, WebCorsConfig.class, GlobalExceptionHandler.class, AuthService.class })
 class AuthControllerTest {
 
-    private static final UUID STAFF_ACCOUNT_ID = UUID.fromString("8ccdb801-d0af-4561-8d45-56d196350001");
+    private static final UUID USER_ID = UUID.fromString("8ccdb801-d0af-4561-8d45-56d196350001");
     private static final UUID EMPLOYEE_ID = UUID.fromString("b71fa3e6-31f0-4ef5-a650-1bccae83302e");
     private static final Instant FIXED_INSTANT = Instant.parse("2026-04-18T12:00:00Z");
 
@@ -50,7 +51,7 @@ class AuthControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private StaffAccountRepository staffAccountRepository;
+    private UserRepository userRepository;
 
     @MockitoBean
     private StudentService studentService;
@@ -62,9 +63,9 @@ class AuthControllerTest {
     void setUp() {
         when(applicationClock.instant()).thenReturn(FIXED_INSTANT);
         when(applicationClock.getZone()).thenReturn(ZoneId.of("UTC"));
-        when(staffAccountRepository.findByUsernameOrEmployeeEmail("beatriz.santos")).thenReturn(Optional.of(activeStaffAccount()));
-        when(staffAccountRepository.findByUsernameOrEmployeeEmail("beatriz.santos@731aprimorar.dev"))
-            .thenReturn(Optional.of(activeStaffAccount()));
+        when(userRepository.findByUsernameOrEmployeeEmail("beatriz.santos")).thenReturn(Optional.of(activeUser()));
+        when(userRepository.findByUsernameOrEmployeeEmail("beatriz.santos@731aprimorar.dev"))
+            .thenReturn(Optional.of(activeUser()));
     }
 
     @Nested
@@ -111,12 +112,13 @@ class AuthControllerTest {
                     }
                     """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(STAFF_ACCOUNT_ID.toString()))
+                .andExpect(jsonPath("$.id").value(USER_ID.toString()))
                 .andExpect(jsonPath("$.username").value("beatriz.santos"))
                 .andExpect(jsonPath("$.displayName").value("Beatriz Santos"))
                 .andExpect(jsonPath("$.email").value("beatriz.santos@731aprimorar.dev"))
                 .andExpect(jsonPath("$.employeeId").value(EMPLOYEE_ID.toString()))
                 .andExpect(jsonPath("$.duty").value(Duty.ADM.name()))
+                .andExpect(jsonPath("$.role").value(Role.EMPLOYEE.name()))
                 .andExpect(result -> org.assertj.core.api.Assertions.assertThat(result.getRequest().getSession(false)).isNotNull());
         }
 
@@ -128,7 +130,8 @@ class AuthControllerTest {
             mockMvc.perform(get("/v1/auth/me")
                     .session((org.springframework.mock.web.MockHttpSession) loginResult.getRequest().getSession(false)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("beatriz.santos"));
+                .andExpect(jsonPath("$.username").value("beatriz.santos"))
+                .andExpect(jsonPath("$.role").value(Role.EMPLOYEE.name()));
         }
 
         @Test
@@ -168,12 +171,13 @@ class AuthControllerTest {
 
     private static AuthCurrentUserResponseDTO currentUser() {
         return new AuthCurrentUserResponseDTO(
-            STAFF_ACCOUNT_ID,
+            USER_ID,
             "beatriz.santos",
             "Beatriz Santos",
             "beatriz.santos@731aprimorar.dev",
             EMPLOYEE_ID,
-            Duty.ADM
+            Duty.ADM,
+            Role.EMPLOYEE
         );
     }
 
@@ -191,7 +195,7 @@ class AuthControllerTest {
             .andReturn();
     }
 
-    private static StaffAccount activeStaffAccount() {
+    private static User activeUser() {
         Employee employee = new Employee(
             "Beatriz Santos",
             LocalDate.of(2008, 12, 18),
@@ -203,13 +207,14 @@ class AuthControllerTest {
         );
         employee.setId(EMPLOYEE_ID);
 
-        StaffAccount staffAccount = new StaffAccount(
+        User user = new User(
             employee,
             "beatriz.santos",
             "$2y$10$U06GVi2DgZtxl9XD0Th93.uBWF9dXUnvqgedCljpmsQh3M93zEeAq",
-            true
+            true,
+            Role.EMPLOYEE
         );
-        staffAccount.setId(STAFF_ACCOUNT_ID);
-        return staffAccount;
+        user.setId(USER_ID);
+        return user;
     }
 }
