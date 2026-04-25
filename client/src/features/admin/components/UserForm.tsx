@@ -98,10 +98,10 @@ export function UserForm({ onSuccess, onCancel }: UserFormProps) {
             className={`select w-full ${errors.role ? "select-error" : ""}`}
             {...register("role")}
           >
-            <option value="EMPLOYEE">Colaborador (Padrão)</option>
+            <option value="SECRETARY">Secretaria (Padrão)</option>
             <option value="ADMIN">Administrador</option>
-            <option value="STUDENT">Aluno</option>
-            <option value="PARENT">Responsável</option>
+            <option value="TEACHER">Professor</option>
+            <option value="MENTOR">Mentor</option>
           </select>
           {errors?.role && (
             <p className="label text-error">
