@@ -16,11 +16,9 @@ export type AuthCurrentUserResponseDTODutyEnumKey =
 
 export const authCurrentUserResponseDTORoleEnum = {
   STUDENT: "STUDENT",
+  EMPLOYEE: "EMPLOYEE",
   PARENT: "PARENT",
   ADMIN: "ADMIN",
-  SECRETARY: "SECRETARY",
-  TEACHER: "TEACHER",
-  MENTOR: "MENTOR",
 } as const;
 
 export type AuthCurrentUserResponseDTORoleEnumKey =

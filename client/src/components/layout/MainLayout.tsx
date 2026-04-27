@@ -93,7 +93,7 @@ export function MainLayout() {
 
           <Button
             type="button"
-            variant="outlineDanger"
+            variant="error-outline"
             className="w-full justify-between"
             onClick={handleLogout}
             disabled={logout.isPending}

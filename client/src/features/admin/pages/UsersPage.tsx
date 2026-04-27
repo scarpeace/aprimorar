@@ -1,13 +1,14 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
-import { ListSearchInput } from "@/components/ui/list-search-input";
-import { SectionCard } from "@/components/ui/section-card";
-import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, Plus, Trash2, User } from "lucide-react";
-import { useState } from "react";
-import { useUsers, useUserMutations } from "../hooks/user-management-hooks";
-import { UserForm } from "../components/UserForm";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { ListSearchInput } from "@/components/ui/list-search-input";
+import { Plus, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { UserForm } from "../components/UserForm";
+import { UsersTable } from "../components/UsersTable";
+import { useUserMutations, useUsers } from "../hooks/user-management-hooks";
+
+
 
 export function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -53,67 +54,12 @@ export function UsersPage() {
           </Button>
         </div>
 
-        <SectionCard title={""} description={""}>
-          <div className="overflow-x-auto">
-            <table className="table w-full">
-              <thead>
-                <tr>
-                  <th>Usuário</th>
-                  <th>Colaborador</th>
-                  <th>Papel</th>
-                  <th>Status</th>
-                  <th className="text-right">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {usersQuery.isPending && (
-                  <tr>
-                    <td colSpan={5} className="text-center py-8">Carregando usuários...</td>
-                  </tr>
-                )}
-                {filteredUsers?.map((user) => (
-                  <tr key={user.id}>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-base-content/50" />
-                        <span className="font-medium">{user.username}</span>
-                      </div>
-                    </td>
-                    <td>{user.employeeName}</td>
-                    <td>
-                      <Badge variant={user.role === "ADMIN" ? "warning" : "neutral"}>
-                        {user.role}
-                      </Badge>
-                    </td>
-                    <td>
-                      <Badge variant={user.active ? "success" : "danger"}>
-                        {user.active ? "Ativo" : "Inativo"}
-                      </Badge>
-                    </td>
-                    <td className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-error"
-                        onClick={() => setUserToDelete(user.id)}
-                        disabled={deleteUser.isPending}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-                {!usersQuery.isPending && filteredUsers?.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="text-center py-8 text-base-content/50">
-                      Nenhum usuário encontrado.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </SectionCard>
+        <UsersTable
+          query={usersQuery}
+          filteredUsers={filteredUsers}
+          onDelete={setUserToDelete}
+          isDeleting={deleteUser.isPending}
+        />
       </div>
 
       {isFormOpen && (

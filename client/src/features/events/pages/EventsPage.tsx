@@ -52,10 +52,6 @@ export function EventsPage() {
     backLink: "/",
   };
 
-  const handleDateFilterChange = (filter: DateFilter) => {
-    setDateFilter(filter);
-    setCurrentPage(0);
-  };
 
   const handleOpenForm = (event?: EventResponseDTO) => {
     setSelectedEvent(event || null);
@@ -91,7 +87,7 @@ export function EventsPage() {
           </Button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 bg-base-200/50 p-2 rounded-lg">
+        {/*<div className="flex flex-wrap items-center gap-2 bg-base-200/50 p-2 rounded-lg">
           <div className="flex items-center gap-2 mr-2 text-sm font-medium text-base-content/70">
             <Filter className="h-4 w-4" />
             <span>Filtros Rápidos:</span>
@@ -117,7 +113,7 @@ export function EventsPage() {
           >
             Próximos 7 dias
           </Button>
-        </div>
+        </div>*/}
 
         <EventsTable
           eventsPage={eventsQuery.data}
@@ -146,4 +142,3 @@ export function EventsPage() {
     </PageLayout>
   );
 }
-

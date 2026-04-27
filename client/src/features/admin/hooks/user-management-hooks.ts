@@ -2,23 +2,21 @@ import { api } from "@/lib/shared/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import type { UserCreateRequestDTO, UserResponseDTO } from "@/kubb";
 
-// Manual types for User management if not yet in Kubb
-// export type UserResponse = {
-//   id: string;
-//   username: string;
-//   employeeName: string;
-//   role: "ADMIN" | "EMPLOYEE" | "STUDENT" | "PARENT";
-//   active: boolean;
-// };
+export type UserResponse = {
+  id: string;
+  username: string;
+  employeeName: string;
+  role: "ADMIN" | "SECRETARY" | "TEACHER" | "MENTOR";
+  active: boolean;
+};
 
-// export type UserCreateRequest = {
-//   employeeId: string;
-//   username: string;
-//   password: string;
-//   role: string;
-// };
+export type UserCreateRequest = {
+  employeeId: string;
+  username: string;
+  password: string;
+  role: string;
+};
 
 export const getUsersQueryKey = () => ["/v1/admin/users"];
 
@@ -26,7 +24,7 @@ export function useUsers() {
   return useQuery({
     queryKey: getUsersQueryKey(),
     queryFn: async () => {
-      const response = await api.get<UserResponseDTO[]>("/v1/admin/users");
+      const response = await api.get<UserResponse[]>("/v1/admin/users");
       return response.data;
     },
   });
@@ -36,8 +34,8 @@ export function useUserMutations() {
   const queryClient = useQueryClient();
 
   const createUser = useMutation({
-    mutationFn: async (data: UserCreateRequestDTO) => {
-      const response = await api.post<UserResponseDTO>("/v1/admin/users", data);
+    mutationFn: async (data: UserCreateRequest) => {
+      const response = await api.post<UserResponse>("/v1/admin/users", data);
       return response.data;
     },
     onSuccess: () => {
