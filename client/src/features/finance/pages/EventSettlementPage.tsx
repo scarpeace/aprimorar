@@ -15,7 +15,6 @@ export function EventSettlementPage() {
   const { data: eventsPage, isPending } = useGetEvents({
       studentId: studentId || undefined,
       employeeId: employeeId || undefined,
-      status: "COMPLETED",
       size: 100,
     },
   );

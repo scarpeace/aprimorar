@@ -5,8 +5,6 @@ import java.time.Instant;
 import java.util.UUID;
 
 import com.aprimorar.api.enums.EventContent;
-import com.aprimorar.api.enums.FinancialStatus;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -58,16 +56,12 @@ public record EventResponseDTO(
     String employeeName,
 
     @NotNull
-    @Schema(nullable = false, description = "Status do evento", example = "SCHEDULED")
-    com.aprimorar.api.enums.EventStatus status,
+    @Schema(nullable = false, description = "Indica se a cobrança do aluno já foi baixada", example = "false")
+    boolean studentCharged,
 
     @NotNull
-    @Schema(nullable = false, description = "Status financeiro da receita", example = "PENDING")
-    FinancialStatus incomeStatus,
-
-    @NotNull
-    @Schema(nullable = false, description = "Status financeiro da despesa", example = "PENDING")
-    FinancialStatus expenseStatus,
+    @Schema(nullable = false, description = "Indica se o pagamento do colaborador já foi baixado", example = "false")
+    boolean employeePaid,
 
     @NotNull
     @Schema(nullable = false, description = "Data de criação do evento", example = "2024-03-10T15:33:42Z`")

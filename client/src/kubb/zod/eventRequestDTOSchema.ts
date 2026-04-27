@@ -28,9 +28,5 @@ export const eventRequestDTOSchema = z
     payment: z.number().describe("Preço do evento pago ao colaborador"),
     studentId: z.uuid().describe("ID do estudante vinculado ao evento"),
     employeeId: z.uuid().describe("ID do colaborador vinculado ao evento"),
-    status: z
-      .enum(["SCHEDULED", "COMPLETED", "CANCELED"])
-      .describe("Status do evento")
-      .nullish(),
   })
   .describe("Formato de payload para o cadastro e/ou update de um evento");

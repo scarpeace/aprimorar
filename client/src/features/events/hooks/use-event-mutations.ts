@@ -6,13 +6,9 @@ import {
   getEventByIdQueryKey,
   getEventsQueryKey,
   useCreateEvent,
+  useSettleEmployeePaymentEvent,
+  useSettleStudentChargeEvent,
   useUpdateEvent,
-  useCompleteEvent,
-  useCancelEvent,
-  useRescheduleEvent,
-  useSettleIncomeEvent,
-  useSettleExpenseEvent,
-  type EventResponseDTO,
 } from "@/kubb";
 
 interface UseEventMutationsProps {
@@ -49,7 +45,7 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
       onSuccess: (updatedEvent, variables) => {
         toast.success("Evento atualizado com sucesso");
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.eventId) });
+        queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
         if (onSuccessCallback) {
           onSuccessCallback();
         } else {
@@ -72,65 +68,24 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
     toast.error(getFriendlyErrorMessage(error));
   };
 
-  const completeEvent = useCompleteEvent({
+  const settleStudentCharge = useSettleStudentChargeEvent({
     mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Evento concluído com sucesso", variables.id),
+      onSuccess: (_, variables) => handleStatusSuccess("Baixa de cobrança do aluno atualizada", variables.id),
       onError: handleStatusError,
-    }
+    },
   });
 
-  const cancelEvent = useCancelEvent({
+  const settleEmployeePayment = useSettleEmployeePaymentEvent({
     mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Evento cancelado com sucesso", variables.id),
+      onSuccess: (_, variables) => handleStatusSuccess("Baixa de pagamento do colaborador atualizada", variables.id),
       onError: handleStatusError,
-    }
+    },
   });
-
-  const rescheduleEvent = useRescheduleEvent({
-    mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Evento re-agendado com sucesso", variables.id),
-      onError: handleStatusError,
-    }
-  });
-
-  const settleIncomeEvent = useSettleIncomeEvent({
-    mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Baixa de recebimento atualizada", variables.id),
-      onError: handleStatusError,
-    }
-  });
-
-  const settleExpenseEvent = useSettleExpenseEvent({
-    mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Baixa de pagamento atualizada", variables.id),
-      onError: handleStatusError,
-    }
-  });
-
-  const changeEventStatus = (
-    event: EventResponseDTO,
-    newStatus: "SCHEDULED" | "COMPLETED" | "CANCELED"
-  ) => {
-    if (newStatus === "COMPLETED") {
-      completeEvent.mutate({ id: event.eventId });
-    } else if (newStatus === "CANCELED") {
-      cancelEvent.mutate({ id: event.eventId });
-    } else if (newStatus === "SCHEDULED") {
-      rescheduleEvent.mutate({ id: event.eventId });
-    }
-  };
-
-  const isStatusPending =
-    completeEvent.isPending ||
-    cancelEvent.isPending ||
-    rescheduleEvent.isPending;
 
   return {
     createEvent,
     updateEvent,
-    changeEventStatus,
-    isStatusPending,
-    settleIncomeEvent,
-    settleExpenseEvent,
+    settleStudentCharge,
+    settleEmployeePayment,
   };
 }

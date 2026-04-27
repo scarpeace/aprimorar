@@ -1,11 +1,9 @@
 package com.aprimorar.api.domain.event.repository;
 
-import java.time.Instant;
-
-import org.springframework.data.jpa.domain.Specification;
-
 import com.aprimorar.api.domain.event.Event;
-import com.aprimorar.api.enums.EventStatus;
+import java.time.Instant;
+import java.util.UUID;
+import org.springframework.data.jpa.domain.Specification;
 
 public final class EventSpecifications {
 
@@ -37,15 +35,11 @@ public final class EventSpecifications {
         return (root, query, cb) -> endDate == null ? null : cb.lessThanOrEqualTo(root.get("endDate"), endDate);
     }
 
-    public static Specification<Event> withStatus(EventStatus status) {
-        return (root, query, cb) -> status == null ? null : cb.equal(root.get("status"), status);
-    }
-
-    public static Specification<Event> withStudentId(java.util.UUID studentId) {
+    public static Specification<Event> withStudentId(UUID studentId) {
         return (root, query, cb) -> studentId == null ? null : cb.equal(root.join("student").get("id"), studentId);
     }
 
-    public static Specification<Event> withEmployeeId(java.util.UUID employeeId) {
+    public static Specification<Event> withEmployeeId(UUID employeeId) {
         return (root, query, cb) -> employeeId == null ? null : cb.equal(root.join("employee").get("id"), employeeId);
     }
 }

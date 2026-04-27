@@ -7,10 +7,9 @@ import { Button } from "@/components/ui/button";
 import { DateTimeInput } from "@/components/ui/date-time-input";
 import { EmployeeSelectDropdown } from "@/features/employees/components/EmployeeSelectDropdown";
 import { StudentSelectDropdown } from "@/features/students/components/StudentSelectDropdown";
+import type { EventRequestDTO, EventResponseDTO } from "@/kubb";
 import { toInstant } from "@/lib/utils/dateFormater";
 import { ContentSelectDropdown } from "./ContentSelectDropdown";
-import { StatusSelectDropdown } from "./StatusSelectDropdown";
-import type { EventResponseDTO } from "@/kubb";
 import { eventFormSchema, type EventFormSchema } from "../forms/eventFormSchema";
 import { useEventMutations } from "../hooks/use-event-mutations";
 
@@ -41,7 +40,6 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
       payment: initialData?.payment ?? undefined,
       startDate: formatDateTimeForInput(initialData?.startDate),
       endDate: formatDateTimeForInput(initialData?.endDate),
-      status: initialData?.status ?? "SCHEDULED",
       content: initialData?.content ?? undefined,
       studentId: initialData?.studentId ?? "",
       employeeId: initialData?.employeeId ?? "",
@@ -50,14 +48,14 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
   });
 
   const onSubmit = handleSubmit((data: EventFormSchema) => {
-    const formattedData = {
+    const formattedData: EventRequestDTO = {
       ...data,
       startDate: toInstant(data.startDate),
       endDate: toInstant(data.endDate),
     };
 
     if (isEditMode && initialData.eventId) {
-      updateEvent.mutate({ eventId: initialData.eventId, data: formattedData });
+      updateEvent.mutate({ id: initialData.eventId, data: formattedData });
     } else {
       createEvent.mutate({ data: formattedData });
     }
@@ -84,12 +82,6 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
           label="Atendimento"
           registration={register("content")}
           error={errors.content?.message}
-        />
-
-        <StatusSelectDropdown
-          label="Status"
-          registration={register("status")}
-          error={errors.status?.message}
         />
 
         <fieldset className="fieldset">

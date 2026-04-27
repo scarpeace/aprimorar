@@ -19,9 +19,8 @@ public class EventMapper {
             event.getStudent().getName(),
             event.getEmployee().getId(),
             event.getEmployee().getName(),
-            event.getStatus(),
-            event.getIncomeStatus(),
-            event.getExpenseStatus(),
+            event.isStudentCharged(),
+            event.isEmployeePaid(),
             event.getCreatedAt(),
             event.getUpdatedAt()
         );

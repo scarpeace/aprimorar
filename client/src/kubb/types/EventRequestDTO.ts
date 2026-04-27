@@ -16,15 +16,6 @@ export const eventRequestDTOContentEnum = {
 export type EventRequestDTOContentEnumKey =
   (typeof eventRequestDTOContentEnum)[keyof typeof eventRequestDTOContentEnum];
 
-export const eventRequestDTOStatusEnum = {
-  SCHEDULED: "SCHEDULED",
-  COMPLETED: "COMPLETED",
-  CANCELED: "CANCELED",
-} as const;
-
-export type EventRequestDTOStatusEnumKey =
-  (typeof eventRequestDTOStatusEnum)[keyof typeof eventRequestDTOStatusEnum];
-
 /**
  * @description Formato de payload para o cadastro e/ou update de um evento
  */
@@ -69,9 +60,4 @@ export type EventRequestDTO = {
    * @type string, uuid
    */
   employeeId: string;
-  /**
-   * @description Status do evento
-   * @type string
-   */
-  status?: EventRequestDTOStatusEnumKey | null;
 };

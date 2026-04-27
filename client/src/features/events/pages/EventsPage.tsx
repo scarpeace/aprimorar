@@ -52,7 +52,6 @@ export function EventsPage() {
     backLink: "/",
   };
 
-
   const handleOpenForm = (event?: EventResponseDTO) => {
     setSelectedEvent(event || null);
     setIsFormOpen(true);

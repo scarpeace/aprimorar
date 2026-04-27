@@ -10,17 +10,14 @@ export type { GetEmployeeOptionsQueryKey } from "./hooks/employee/useGetEmployee
 export type { GetEmployeesQueryKey } from "./hooks/employee/useGetEmployees.ts";
 export type { UnarchiveEmployeeMutationKey } from "./hooks/employee/useUnarchiveEmployee.ts";
 export type { UpdateEmployeeMutationKey } from "./hooks/employee/useUpdateEmployee.ts";
-export type { CancelEventMutationKey } from "./hooks/event/useCancelEvent.ts";
-export type { CompleteEventMutationKey } from "./hooks/event/useCompleteEvent.ts";
 export type { CreateEventMutationKey } from "./hooks/event/useCreateEvent.ts";
 export type { DeleteEventMutationKey } from "./hooks/event/useDeleteEvent.ts";
 export type { GetEventByIdQueryKey } from "./hooks/event/useGetEventById.ts";
 export type { GetEventsQueryKey } from "./hooks/event/useGetEvents.ts";
 export type { GetEventsByEmployeeIdQueryKey } from "./hooks/event/useGetEventsByEmployeeId.ts";
 export type { GetEventsByStudentIdQueryKey } from "./hooks/event/useGetEventsByStudentId.ts";
-export type { RescheduleEventMutationKey } from "./hooks/event/useRescheduleEvent.ts";
-export type { SettleExpenseEventMutationKey } from "./hooks/event/useSettleExpenseEvent.ts";
-export type { SettleIncomeEventMutationKey } from "./hooks/event/useSettleIncomeEvent.ts";
+export type { SettleEmployeePaymentEventMutationKey } from "./hooks/event/useSettleEmployeePaymentEvent.ts";
+export type { SettleStudentChargeEventMutationKey } from "./hooks/event/useSettleStudentChargeEvent.ts";
 export type { UpdateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
 export type { CreateGeneralExpenseMutationKey } from "./hooks/finance/useCreateGeneralExpense.ts";
 export type { DeleteGeneralExpenseMutationKey } from "./hooks/finance/useDeleteGeneralExpense.ts";
@@ -76,14 +73,10 @@ export type {
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
-  EventRequestDTOStatusEnumKey,
 } from "./types/EventRequestDTO.ts";
 export type {
   EventResponseDTO,
   EventResponseDTOContentEnumKey,
-  EventResponseDTOExpenseStatusEnumKey,
-  EventResponseDTOIncomeStatusEnumKey,
-  EventResponseDTOStatusEnumKey,
 } from "./types/EventResponseDTO.ts";
 export type { FinanceSummaryDTO } from "./types/FinanceSummaryDTO.ts";
 export type {
@@ -186,18 +179,6 @@ export type {
   UpdateEmployeePathParams,
 } from "./types/employee/UpdateEmployee.ts";
 export type {
-  CancelEvent200,
-  CancelEventMutation,
-  CancelEventMutationResponse,
-  CancelEventPathParams,
-} from "./types/event/CancelEvent.ts";
-export type {
-  CompleteEvent200,
-  CompleteEventMutation,
-  CompleteEventMutationResponse,
-  CompleteEventPathParams,
-} from "./types/event/CompleteEvent.ts";
-export type {
   CreateEvent201,
   CreateEventMutation,
   CreateEventMutationRequest,
@@ -219,7 +200,6 @@ export type {
   GetEvents200,
   GetEventsQuery,
   GetEventsQueryParams,
-  GetEventsQueryParamsStatusEnumKey,
   GetEventsQueryResponse,
 } from "./types/event/GetEvents.ts";
 export type {
@@ -237,27 +217,19 @@ export type {
   GetEventsByStudentIdQueryResponse,
 } from "./types/event/GetEventsByStudentId.ts";
 export type {
-  RescheduleEvent200,
-  RescheduleEventMutation,
-  RescheduleEventMutationResponse,
-  RescheduleEventPathParams,
-} from "./types/event/RescheduleEvent.ts";
+  SettleEmployeePaymentEvent200,
+  SettleEmployeePaymentEventMutation,
+  SettleEmployeePaymentEventMutationResponse,
+  SettleEmployeePaymentEventPathParams,
+  SettleEmployeePaymentEventQueryParams,
+} from "./types/event/SettleEmployeePaymentEvent.ts";
 export type {
-  SettleExpenseEvent200,
-  SettleExpenseEventMutation,
-  SettleExpenseEventMutationResponse,
-  SettleExpenseEventPathParams,
-  SettleExpenseEventQueryParams,
-  SettleExpenseEventQueryParamsStatusEnumKey,
-} from "./types/event/SettleExpenseEvent.ts";
-export type {
-  SettleIncomeEvent200,
-  SettleIncomeEventMutation,
-  SettleIncomeEventMutationResponse,
-  SettleIncomeEventPathParams,
-  SettleIncomeEventQueryParams,
-  SettleIncomeEventQueryParamsStatusEnumKey,
-} from "./types/event/SettleIncomeEvent.ts";
+  SettleStudentChargeEvent200,
+  SettleStudentChargeEventMutation,
+  SettleStudentChargeEventMutationResponse,
+  SettleStudentChargeEventPathParams,
+  SettleStudentChargeEventQueryParams,
+} from "./types/event/SettleStudentChargeEvent.ts";
 export type {
   UpdateEvent200,
   UpdateEventMutation,
@@ -470,14 +442,6 @@ export { updateEmployee } from "./hooks/employee/useUpdateEmployee.ts";
 export { updateEmployeeMutationKey } from "./hooks/employee/useUpdateEmployee.ts";
 export { updateEmployeeMutationOptions } from "./hooks/employee/useUpdateEmployee.ts";
 export { useUpdateEmployee } from "./hooks/employee/useUpdateEmployee.ts";
-export { cancelEvent } from "./hooks/event/useCancelEvent.ts";
-export { cancelEventMutationKey } from "./hooks/event/useCancelEvent.ts";
-export { cancelEventMutationOptions } from "./hooks/event/useCancelEvent.ts";
-export { useCancelEvent } from "./hooks/event/useCancelEvent.ts";
-export { completeEvent } from "./hooks/event/useCompleteEvent.ts";
-export { completeEventMutationKey } from "./hooks/event/useCompleteEvent.ts";
-export { completeEventMutationOptions } from "./hooks/event/useCompleteEvent.ts";
-export { useCompleteEvent } from "./hooks/event/useCompleteEvent.ts";
 export { createEvent } from "./hooks/event/useCreateEvent.ts";
 export { createEventMutationKey } from "./hooks/event/useCreateEvent.ts";
 export { createEventMutationOptions } from "./hooks/event/useCreateEvent.ts";
@@ -502,18 +466,14 @@ export { getEventsByStudentId } from "./hooks/event/useGetEventsByStudentId.ts";
 export { getEventsByStudentIdQueryKey } from "./hooks/event/useGetEventsByStudentId.ts";
 export { getEventsByStudentIdQueryOptions } from "./hooks/event/useGetEventsByStudentId.ts";
 export { useGetEventsByStudentId } from "./hooks/event/useGetEventsByStudentId.ts";
-export { rescheduleEvent } from "./hooks/event/useRescheduleEvent.ts";
-export { rescheduleEventMutationKey } from "./hooks/event/useRescheduleEvent.ts";
-export { rescheduleEventMutationOptions } from "./hooks/event/useRescheduleEvent.ts";
-export { useRescheduleEvent } from "./hooks/event/useRescheduleEvent.ts";
-export { settleExpenseEvent } from "./hooks/event/useSettleExpenseEvent.ts";
-export { settleExpenseEventMutationKey } from "./hooks/event/useSettleExpenseEvent.ts";
-export { settleExpenseEventMutationOptions } from "./hooks/event/useSettleExpenseEvent.ts";
-export { useSettleExpenseEvent } from "./hooks/event/useSettleExpenseEvent.ts";
-export { settleIncomeEvent } from "./hooks/event/useSettleIncomeEvent.ts";
-export { settleIncomeEventMutationKey } from "./hooks/event/useSettleIncomeEvent.ts";
-export { settleIncomeEventMutationOptions } from "./hooks/event/useSettleIncomeEvent.ts";
-export { useSettleIncomeEvent } from "./hooks/event/useSettleIncomeEvent.ts";
+export { settleEmployeePaymentEvent } from "./hooks/event/useSettleEmployeePaymentEvent.ts";
+export { settleEmployeePaymentEventMutationKey } from "./hooks/event/useSettleEmployeePaymentEvent.ts";
+export { settleEmployeePaymentEventMutationOptions } from "./hooks/event/useSettleEmployeePaymentEvent.ts";
+export { useSettleEmployeePaymentEvent } from "./hooks/event/useSettleEmployeePaymentEvent.ts";
+export { settleStudentChargeEvent } from "./hooks/event/useSettleStudentChargeEvent.ts";
+export { settleStudentChargeEventMutationKey } from "./hooks/event/useSettleStudentChargeEvent.ts";
+export { settleStudentChargeEventMutationOptions } from "./hooks/event/useSettleStudentChargeEvent.ts";
+export { useSettleStudentChargeEvent } from "./hooks/event/useSettleStudentChargeEvent.ts";
 export { updateEvent } from "./hooks/event/useUpdateEvent.ts";
 export { updateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
 export { updateEventMutationOptions } from "./hooks/event/useUpdateEvent.ts";
@@ -629,18 +589,11 @@ export { authCurrentUserResponseDTORoleEnum } from "./types/AuthCurrentUserRespo
 export { employeeRequestDTODutyEnum } from "./types/EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./types/EventRequestDTO.ts";
-export { eventRequestDTOStatusEnum } from "./types/EventRequestDTO.ts";
 export { eventResponseDTOContentEnum } from "./types/EventResponseDTO.ts";
-export { eventResponseDTOExpenseStatusEnum } from "./types/EventResponseDTO.ts";
-export { eventResponseDTOIncomeStatusEnum } from "./types/EventResponseDTO.ts";
-export { eventResponseDTOStatusEnum } from "./types/EventResponseDTO.ts";
 export { generalExpenseRequestDTOCategoryEnum } from "./types/GeneralExpenseRequestDTO.ts";
 export { generalExpenseResponseDTOCategoryEnum } from "./types/GeneralExpenseResponseDTO.ts";
 export { userCreateRequestDTORoleEnum } from "./types/UserCreateRequestDTO.ts";
 export { userResponseDTORoleEnum } from "./types/UserResponseDTO.ts";
-export { getEventsQueryParamsStatusEnum } from "./types/event/GetEvents.ts";
-export { settleExpenseEventQueryParamsStatusEnum } from "./types/event/SettleExpenseEvent.ts";
-export { settleIncomeEventQueryParamsStatusEnum } from "./types/event/SettleIncomeEvent.ts";
 export { getGeneralExpensesQueryParamsCategoryEnum } from "./types/finance/GetGeneralExpenses.ts";
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
@@ -710,16 +663,6 @@ export { employeeOptionsDTOSchema } from "./zod/employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./zod/employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./zod/employeeResponseDTOSchema.ts";
 export {
-  cancelEvent200Schema,
-  cancelEventMutationResponseSchema,
-  cancelEventPathParamsSchema,
-} from "./zod/event/cancelEventSchema.ts";
-export {
-  completeEvent200Schema,
-  completeEventMutationResponseSchema,
-  completeEventPathParamsSchema,
-} from "./zod/event/completeEventSchema.ts";
-export {
   createEvent201Schema,
   createEventMutationRequestSchema,
   createEventMutationResponseSchema,
@@ -752,22 +695,17 @@ export {
   getEventsQueryResponseSchema,
 } from "./zod/event/getEventsSchema.ts";
 export {
-  rescheduleEvent200Schema,
-  rescheduleEventMutationResponseSchema,
-  rescheduleEventPathParamsSchema,
-} from "./zod/event/rescheduleEventSchema.ts";
+  settleEmployeePaymentEvent200Schema,
+  settleEmployeePaymentEventMutationResponseSchema,
+  settleEmployeePaymentEventPathParamsSchema,
+  settleEmployeePaymentEventQueryParamsSchema,
+} from "./zod/event/settleEmployeePaymentEventSchema.ts";
 export {
-  settleExpenseEvent200Schema,
-  settleExpenseEventMutationResponseSchema,
-  settleExpenseEventPathParamsSchema,
-  settleExpenseEventQueryParamsSchema,
-} from "./zod/event/settleExpenseEventSchema.ts";
-export {
-  settleIncomeEvent200Schema,
-  settleIncomeEventMutationResponseSchema,
-  settleIncomeEventPathParamsSchema,
-  settleIncomeEventQueryParamsSchema,
-} from "./zod/event/settleIncomeEventSchema.ts";
+  settleStudentChargeEvent200Schema,
+  settleStudentChargeEventMutationResponseSchema,
+  settleStudentChargeEventPathParamsSchema,
+  settleStudentChargeEventQueryParamsSchema,
+} from "./zod/event/settleStudentChargeEventSchema.ts";
 export {
   updateEvent200Schema,
   updateEventMutationRequestSchema,

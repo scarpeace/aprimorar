@@ -71,7 +71,6 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             where e.student.id = :studentId
               and e.startDate < :endDate
               and e.endDate > :startDate
-              and e.status <> com.aprimorar.api.enums.EventStatus.CANCELED
               and (:ignoredEventId is null or e.id <> :ignoredEventId)
         """
     )
@@ -89,7 +88,6 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             where e.employee.id = :employeeId
               and e.startDate < :endDate
               and e.endDate > :startDate
-              and e.status <> com.aprimorar.api.enums.EventStatus.CANCELED
               and (:ignoredEventId is null or e.id <> :ignoredEventId)
         """
     )
@@ -152,15 +150,15 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
         @Param("endDate") Instant endDate
     );
 
-    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.incomeStatus = com.aprimorar.api.enums.FinancialStatus.PAID AND e.status = com.aprimorar.api.enums.EventStatus.COMPLETED")
+    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.studentCharged = true")
     BigDecimal sumTotalIncome();
 
-    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.incomeStatus = com.aprimorar.api.enums.FinancialStatus.PENDING AND e.status = com.aprimorar.api.enums.EventStatus.COMPLETED")
+    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.studentCharged = false")
     BigDecimal sumTotalIncomePending();
 
-    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.expenseStatus = com.aprimorar.api.enums.FinancialStatus.PAID AND e.status = com.aprimorar.api.enums.EventStatus.COMPLETED")
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employeePaid = true")
     BigDecimal sumTotalExpenseTeacher();
 
-    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.expenseStatus = com.aprimorar.api.enums.FinancialStatus.PENDING AND e.status = com.aprimorar.api.enums.EventStatus.COMPLETED")
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employeePaid = false")
     BigDecimal sumTotalExpenseTeacherPending();
 }
