@@ -1,27 +1,24 @@
 import { useState } from "react";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { CheckCircle2, User, Users } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { SettlementTable } from "../components/SettlementTable";
-import { useGetEvents } from "@/kubb/hooks/events/useGetEvents";
-import { useGetStudentOptions } from "@/kubb/hooks/student/useGetStudentOptions";
 import { useGetEmployeeOptions } from "@/kubb/hooks/employee/useGetEmployeeOptions";
-import { FormField } from "@/components/ui/form-field";
+import { useGetEvents, useGetStudentsOptions } from "@/kubb";
 
 export function EventSettlementPage() {
   const [studentId, setStudentId] = useState<string>("");
   const [employeeId, setEmployeeId] = useState<string>("");
 
-  const studentOptions = useGetStudentOptions();
+  const studentOptions = useGetStudentsOptions();
   const employeeOptions = useGetEmployeeOptions();
 
   const { data: eventsPage, isPending } = useGetEvents({
-    params: {
       studentId: studentId || undefined,
       employeeId: employeeId || undefined,
-      status: "COMPLETED", // Apenas aulas concluídas podem ser pagas
+      status: "COMPLETED",
       size: 100,
     },
-  });
+  );
 
   return (
     <PageLayout
@@ -32,7 +29,8 @@ export function EventSettlementPage() {
     >
       <div className="flex flex-col gap-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-base-200/50 p-4 rounded-xl border border-base-200">
-          <FormField label="Filtrar por Aluno" Icon={User}>
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Filtrar por Aluno</legend>
             <select
               className="select select-bordered w-full"
               value={studentId}
@@ -45,9 +43,10 @@ export function EventSettlementPage() {
                 </option>
               ))}
             </select>
-          </FormField>
+          </fieldset>
 
-          <FormField label="Filtrar por Colaborador" Icon={Users}>
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Filtrar por Colaborador</legend>
             <select
               className="select select-bordered w-full"
               value={employeeId}
@@ -60,7 +59,7 @@ export function EventSettlementPage() {
                 </option>
               ))}
             </select>
-          </FormField>
+          </fieldset>
         </div>
 
         {isPending ? (

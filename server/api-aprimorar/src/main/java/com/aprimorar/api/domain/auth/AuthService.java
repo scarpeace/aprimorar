@@ -1,12 +1,11 @@
 package com.aprimorar.api.domain.auth;
 
 import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
-import com.aprimorar.api.domain.auth.repository.StaffAccountRepository;
+import com.aprimorar.api.domain.auth.repository.UserRepository;
 import java.time.Clock;
 import java.time.Instant;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,16 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService implements UserDetailsService {
 
-    private final StaffAccountRepository staffAccountRepository;
+    private final UserRepository userRepository;
     private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
     private final Clock applicationClock;
 
     public AuthService(
-        StaffAccountRepository staffAccountRepository,
+        UserRepository userRepository,
         org.springframework.security.crypto.password.PasswordEncoder passwordEncoder,
         Clock applicationClock
     ) {
-        this.staffAccountRepository = staffAccountRepository;
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.applicationClock = applicationClock;
     }
@@ -33,40 +32,40 @@ public class AuthService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        StaffAccount staffAccount = staffAccountRepository.findByUsernameOrEmployeeEmail(identifier)
+        User user = userRepository.findByUsernameOrEmployeeEmail(identifier)
             .orElseThrow(() -> new UsernameNotFoundException("Credenciais inválidas"));
 
-        return User.withUsername(staffAccount.getUsername())
-            .password(staffAccount.getPasswordHash())
-            .disabled(!staffAccount.isActive())
-            .authorities("ROLE_INTERNAL")
+        return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
+            .password(user.getPasswordHash())
+            .disabled(!user.isActive())
+            .authorities("ROLE_" + user.getRole().name())
             .build();
     }
 
     @Transactional
     public AuthCurrentUserResponseDTO login(String identifier, String password) {
-        StaffAccount staffAccount = findByIdentifierOrThrow(identifier);
+        User user = findByIdentifierOrThrow(identifier);
 
-        if (!staffAccount.isActive()) {
+        if (!user.isActive()) {
             throw new DisabledException("Usuário interno inativo");
         }
 
-        if (!passwordEncoder.matches(password, staffAccount.getPasswordHash())) {
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new BadCredentialsException("Credenciais inválidas");
         }
 
-        staffAccount.registerLoginAt(Instant.now(applicationClock));
-        staffAccountRepository.save(staffAccount);
+        user.registerLoginAt(Instant.now(applicationClock));
+        userRepository.save(user);
 
-        return getCurrentUser(staffAccount);
+        return getCurrentUser(user);
     }
 
     @Transactional
     public AuthCurrentUserResponseDTO registerAuthenticatedSession(String username) {
-        StaffAccount staffAccount = findByIdentifierOrThrow(username);
-        staffAccount.registerLoginAt(Instant.now(applicationClock));
-        staffAccountRepository.save(staffAccount);
-        return getCurrentUser(staffAccount);
+        User user = findByIdentifierOrThrow(username);
+        user.registerLoginAt(Instant.now(applicationClock));
+        userRepository.save(user);
+        return getCurrentUser(user);
     }
 
     @Transactional(readOnly = true)
@@ -75,19 +74,20 @@ public class AuthService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public AuthCurrentUserResponseDTO getCurrentUser(StaffAccount staffAccount) {
+    public AuthCurrentUserResponseDTO getCurrentUser(User user) {
         return new AuthCurrentUserResponseDTO(
-            staffAccount.getId(),
-            staffAccount.getUsername(),
-            staffAccount.getEmployee().getName(),
-            staffAccount.getEmployee().getEmail(),
-            staffAccount.getEmployee().getId(),
-            staffAccount.getEmployee().getDuty()
+            user.getId(),
+            user.getUsername(),
+            user.getEmployee().getName(),
+            user.getEmployee().getEmail(),
+            user.getEmployee().getId(),
+            user.getEmployee().getDuty(),
+            user.getRole()
         );
     }
 
-    private StaffAccount findByIdentifierOrThrow(String identifier) {
-        return staffAccountRepository.findByUsernameOrEmployeeEmail(identifier)
+    private User findByIdentifierOrThrow(String identifier) {
+        return userRepository.findByUsernameOrEmployeeEmail(identifier)
             .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas"));
     }
 }

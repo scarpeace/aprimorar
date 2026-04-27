@@ -76,7 +76,6 @@ public class EventService {
             employee
         );
         event.validateDatesForCreation(Instant.now(clock));
-
         Event savedEvent = eventRepo.save(event);
         log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
         return eventMapper.convertToDto(savedEvent);

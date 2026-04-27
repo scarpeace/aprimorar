@@ -6,7 +6,8 @@ import {
   UserCog,
   GraduationCap,
   Handshake,
-  Banknote
+  Banknote,
+  ShieldCheck
 } from "lucide-react"
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 
@@ -23,6 +24,7 @@ const navigation = [
   { name: "Colaboradores", href: "/employees", icon: UserCog },
   { name: "Atendimentos", href: "/events", icon: Calendar },
   { name: "Financeiro", href: "/finance/expenses", icon: Banknote },
+  { name: "Usuários", href: "/admin/users", icon: ShieldCheck, adminOnly: true },
 ]
 
 const dutyLabels = {
@@ -65,19 +67,21 @@ export function MainLayout() {
           </div>
         </div>
         <nav className="app-main-nav">
-          {navigation.map((item) => {
-            const isActive = isNavigationActive(location.pathname, item.href)
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`app-main-nav-link ${isActive ? "app-main-nav-link-active" : ""}`.trim()}
-              >
-                <item.icon className="h-5 w-5" />
-                {item.name}
-              </Link>
-            )
-          })}
+          {navigation
+            .filter((item) => !item.adminOnly || currentUser?.role === "ADMIN")
+            .map((item) => {
+              const isActive = isNavigationActive(location.pathname, item.href)
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`app-main-nav-link ${isActive ? "app-main-nav-link-active" : ""}`.trim()}
+                >
+                  <item.icon className="h-5 w-5" />
+                  {item.name}
+                </Link>
+              )
+            })}
         </nav>
         <div className="border-t border-base-300/70 px-4 py-4">
           <div className="mb-4 rounded-2xl border border-base-300/70 bg-base-100/70 p-4 shadow-sm">
@@ -89,7 +93,7 @@ export function MainLayout() {
 
           <Button
             type="button"
-            variant="outlineDanger"
+            variant="error-outline"
             className="w-full justify-between"
             onClick={handleLogout}
             disabled={logout.isPending}

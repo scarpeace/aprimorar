@@ -452,7 +452,7 @@ class EventServiceTest {
             BigDecimal.valueOf(80),
             STUDENT_ID,
             EMPLOYEE_ID,
-            com.aprimorar.api.enums.EventStatus.SCHEDULED
+            EventStatus.SCHEDULED
         );
     }
 

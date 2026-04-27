@@ -1,6 +1,7 @@
 import { MainLayout } from "@/components/layout/MainLayout"
 import { PageLoading } from "@/components/ui/page-loading"
 import { AuthGate } from "@/features/auth/components/AuthGate"
+import { AdminGuard } from "@/features/admin/components/AdminGuard"
 import { useAuthSession } from "@/features/auth/hooks/useAuthSession"
 import { Suspense, lazy } from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
@@ -26,6 +27,8 @@ const FinanceDashboardPage = lazy(() => import("@/features/finance/pages/Finance
 const EventSettlementPage = lazy(() => import("@/features/finance/pages/EventSettlementPage").then((module) => ({ default: module.EventSettlementPage })))
 
 const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage").then((module) => ({ default: module.LoginPage })))
+
+const UsersPage = lazy(() => import("@/features/admin/pages/UsersPage").then((module) => ({ default: module.UsersPage })))
 
 import { pt } from "zod/locales"
 import z from "zod/v4"
@@ -72,6 +75,15 @@ function App() {
               <Route path="/finance" element={<FinanceDashboardPage />} />
               <Route path="/finance/expenses" element={<GeneralExpensesPage />} />
               <Route path="/finance/settlement" element={<EventSettlementPage />} />
+
+              <Route
+                path="/admin/users"
+                element={
+                  <AdminGuard>
+                    <UsersPage />
+                  </AdminGuard>
+                }
+              />
             </Route>
 
             <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />} />

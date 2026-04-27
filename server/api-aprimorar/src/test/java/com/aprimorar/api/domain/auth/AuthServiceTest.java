@@ -2,14 +2,14 @@ package com.aprimorar.api.domain.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
-import com.aprimorar.api.domain.auth.repository.StaffAccountRepository;
+import com.aprimorar.api.domain.auth.repository.UserRepository;
 import com.aprimorar.api.domain.employee.Employee;
 import com.aprimorar.api.enums.Duty;
+import com.aprimorar.api.enums.Role;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -31,14 +31,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
-    private static final UUID STAFF_ACCOUNT_ID = UUID.fromString("8ccdb801-d0af-4561-8d45-56d196350001");
+    private static final UUID USER_ID = UUID.fromString("8ccdb801-d0af-4561-8d45-56d196350001");
     private static final UUID EMPLOYEE_ID = UUID.fromString("b71fa3e6-31f0-4ef5-a650-1bccae83302e");
     private static final Instant FIXED_INSTANT = Instant.parse("2026-04-18T12:00:00Z");
     private static final String USERNAME = "beatriz.santos";
     private static final String EMAIL = "beatriz.santos@731aprimorar.dev";
     private static final String PASSWORD = "admin123";
+
     @Mock
-    private StaffAccountRepository staffAccountRepository;
+    private UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final Clock applicationClock = Clock.fixed(FIXED_INSTANT, ZoneOffset.UTC);
@@ -47,7 +48,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        authService = new AuthService(staffAccountRepository, passwordEncoder, applicationClock);
+        authService = new AuthService(userRepository, passwordEncoder, applicationClock);
     }
 
     @Nested
@@ -57,38 +58,38 @@ class AuthServiceTest {
         @Test
         @DisplayName("should authenticate with username identifier")
         void shouldAuthenticateWithUsernameIdentifier() {
-            StaffAccount staffAccount = activeStaffAccount();
+            User user = activeUser();
 
-            when(staffAccountRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(staffAccount));
+            when(userRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(user));
 
             AuthCurrentUserResponseDTO response = authService.login(USERNAME, PASSWORD);
 
-            assertThat(response.id()).isEqualTo(STAFF_ACCOUNT_ID);
+            assertThat(response.id()).isEqualTo(USER_ID);
             assertThat(response.username()).isEqualTo(USERNAME);
             assertThat(response.email()).isEqualTo(EMAIL);
-            assertThat(staffAccount.getLastLoginAt()).isEqualTo(FIXED_INSTANT);
-            verify(staffAccountRepository).save(staffAccount);
+            assertThat(user.getLastLoginAt()).isEqualTo(FIXED_INSTANT);
+            verify(userRepository).save(user);
         }
 
         @Test
         @DisplayName("should authenticate with employee email identifier")
         void shouldAuthenticateWithEmployeeEmailIdentifier() {
-            StaffAccount staffAccount = activeStaffAccount();
+            User user = activeUser();
 
-            when(staffAccountRepository.findByUsernameOrEmployeeEmail(EMAIL)).thenReturn(Optional.of(staffAccount));
+            when(userRepository.findByUsernameOrEmployeeEmail(EMAIL)).thenReturn(Optional.of(user));
 
             AuthCurrentUserResponseDTO response = authService.login(EMAIL, PASSWORD);
 
-            assertThat(response.id()).isEqualTo(STAFF_ACCOUNT_ID);
+            assertThat(response.id()).isEqualTo(USER_ID);
             assertThat(response.username()).isEqualTo(USERNAME);
             assertThat(response.email()).isEqualTo(EMAIL);
-            verify(staffAccountRepository).save(staffAccount);
+            verify(userRepository).save(user);
         }
 
         @Test
         @DisplayName("should reject invalid password")
         void shouldRejectInvalidPassword() {
-            when(staffAccountRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(activeStaffAccount()));
+            when(userRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(activeUser()));
 
             assertThatThrownBy(() -> authService.login(USERNAME, "senha-invalida"))
                 .isInstanceOf(BadCredentialsException.class)
@@ -96,15 +97,15 @@ class AuthServiceTest {
         }
 
         @Test
-        @DisplayName("should reject inactive internal user")
-        void shouldRejectInactiveStaffAccount() {
-            when(staffAccountRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(inactiveStaffAccount()));
+        @DisplayName("should reject inactive user")
+        void shouldRejectInactiveUser() {
+            when(userRepository.findByUsernameOrEmployeeEmail(USERNAME)).thenReturn(Optional.of(inactiveUser()));
 
             assertThatThrownBy(() -> authService.login(USERNAME, PASSWORD))
                 .isInstanceOf(DisabledException.class)
                 .hasMessage("Usuário interno inativo");
 
-            verify(staffAccountRepository).findByUsernameOrEmployeeEmail(USERNAME);
+            verify(userRepository).findByUsernameOrEmployeeEmail(USERNAME);
         }
     }
 
@@ -115,9 +116,9 @@ class AuthServiceTest {
         @Test
         @DisplayName("should map authenticated principal to current-user dto")
         void shouldMapAuthenticatedPrincipalToCurrentUserDto() {
-            StaffAccount staffAccount = activeStaffAccount();
+            User user = activeUser();
 
-            AuthCurrentUserResponseDTO response = authService.getCurrentUser(staffAccount);
+            AuthCurrentUserResponseDTO response = authService.getCurrentUser(user);
 
             assertThat(response)
                 .extracting(
@@ -126,21 +127,22 @@ class AuthServiceTest {
                     AuthCurrentUserResponseDTO::displayName,
                     AuthCurrentUserResponseDTO::email,
                     AuthCurrentUserResponseDTO::employeeId,
-                    AuthCurrentUserResponseDTO::duty
+                    AuthCurrentUserResponseDTO::duty,
+                    AuthCurrentUserResponseDTO::role
                 )
-                .containsExactly(STAFF_ACCOUNT_ID, USERNAME, "Beatriz Santos", EMAIL, EMPLOYEE_ID, Duty.ADM);
+                .containsExactly(USER_ID, USERNAME, "Beatriz Santos", EMAIL, EMPLOYEE_ID, Duty.ADM, Role.EMPLOYEE);
         }
     }
 
-    private StaffAccount activeStaffAccount() {
-        return staffAccount(true);
+    private User activeUser() {
+        return user(true);
     }
 
-    private StaffAccount inactiveStaffAccount() {
-        return staffAccount(false);
+    private User inactiveUser() {
+        return user(false);
     }
 
-    private StaffAccount staffAccount(boolean active) {
+    private User user(boolean active) {
         Employee employee = new Employee(
             "Beatriz Santos",
             LocalDate.of(2008, 12, 18),
@@ -152,8 +154,8 @@ class AuthServiceTest {
         );
         employee.setId(EMPLOYEE_ID);
 
-        StaffAccount staffAccount = new StaffAccount(employee, USERNAME, passwordEncoder.encode(PASSWORD), active);
-        staffAccount.setId(STAFF_ACCOUNT_ID);
-        return staffAccount;
+        User user = new User(employee, USERNAME, passwordEncoder.encode(PASSWORD), active, Role.EMPLOYEE);
+        user.setId(USER_ID);
+        return user;
     }
 }

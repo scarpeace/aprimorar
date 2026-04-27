@@ -49,6 +49,7 @@ class EventTest {
             Event input = new Event();
             input.complete();
             assertThat(input.getStatus()).isEqualTo(EventStatus.COMPLETED);
+
         }
 
         @Test

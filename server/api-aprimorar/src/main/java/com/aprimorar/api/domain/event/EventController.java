@@ -32,7 +32,8 @@ public class EventController {
     @Operation(operationId = "createEvent", description = "Cadastra um novo evento no sistema.")
     @ApiResponse(responseCode = "201", description = "Evento cadastrado com sucesso.")
     public ResponseEntity<EventResponseDTO> createEvent(@RequestBody @Valid EventRequestDTO eventRequestDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(eventRequestDTO));
+        EventResponseDTO created = eventService.createEvent(eventRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping

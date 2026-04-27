@@ -1,10 +1,10 @@
-import { EventResponseDTO } from "@/kubb/types/EventResponseDTO";
 import { brl } from "@/lib/utils/formatter";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Check, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
+import type { EventResponseDTO } from "@/kubb";
 
 interface SettlementTableProps {
   events: EventResponseDTO[];
@@ -56,7 +56,6 @@ export function SettlementTable({ events }: SettlementTableProps) {
                   <div className="flex flex-col items-end gap-1">
                     <span className="font-bold">{brl.format(event.price)}</span>
                     <Button
-                      size="xs"
                       variant={event.incomeStatus === "PAID" ? "success" : "outline"}
                       onClick={() => handleToggleIncome(event)}
                       disabled={settleIncomeEvent.isPending}
@@ -77,7 +76,6 @@ export function SettlementTable({ events }: SettlementTableProps) {
                   <div className="flex flex-col items-end gap-1">
                     <span className="font-bold">{brl.format(event.payment)}</span>
                     <Button
-                      size="xs"
                       variant={event.expenseStatus === "PAID" ? "success" : "outline"}
                       onClick={() => handleToggleExpense(event)}
                       disabled={settleExpenseEvent.isPending}

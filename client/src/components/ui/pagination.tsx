@@ -1,48 +1,48 @@
 import { Button } from "./button";
 
-//TODO: voltar aqui depois e ver esse content unknown
-export type PaginationProps = {
+export type PaginationProps<T = any> = {
   paginationData?: {
     size: number;
     totalElements: number;
     totalPages: number;
-    content:unknown[]
+    content: T[];
   };
   currentPage: number;
   onPageChange: (page: number) => void;
 };
 
-export function Pagination({
+export function Pagination<T>({
   currentPage,
   onPageChange,
   paginationData,
-}: Readonly<PaginationProps>) {
+}: Readonly<PaginationProps<T>>) {
 
-  if (!paginationData) return null;
+  if (!paginationData || paginationData.totalPages <= 1) return null;
 
   return (
-    <div className="mt-4 flex items-center justify-between px-3 ">
-      <p className="text-sm app-text-muted hidden lg:block">
-        Mostrando {paginationData.content.length} de {paginationData.totalElements}
+    <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
+      <p className="text-sm text-base-content/60">
+        Mostrando <span className="font-semibold text-base-content">{paginationData.content.length}</span> de <span className="font-semibold text-base-content">{paginationData.totalElements}</span> registros
       </p>
-      <div className="join mx-auto lg:mx-0 mb-3 gap-2">
+      
+      <div className="join shadow-sm border border-base-300">
         <Button
-          variant="outlineSecondary"
-          className="join-item btn btn-sm"
+          variant="ghost"
+          className="join-item btn-sm"
           disabled={currentPage === 0}
           onClick={() => onPageChange(currentPage - 1)}
         >
           Anterior
         </Button>
+        
+        <div className="join-item btn btn-sm btn-ghost no-animation cursor-default border-x border-base-300 bg-base-200/30">
+          Página {currentPage + 1} de {paginationData.totalPages}
+        </div>
+        
         <Button
           variant="ghost"
-          className="btn btn-sm join-item no-animation cursor-default">
-          Página {currentPage + 1} de {paginationData.totalPages}
-        </Button>
-        <Button
-          variant="outlineSecondary"
-          className="btn btn-sm join-item"
-          disabled={!paginationData.totalPages || currentPage >= paginationData.totalPages - 1}
+          className="join-item btn-sm"
+          disabled={currentPage >= paginationData.totalPages - 1}
           onClick={() => onPageChange(currentPage + 1)}
         >
           Próxima

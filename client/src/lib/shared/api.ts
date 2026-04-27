@@ -20,6 +20,9 @@ Object.assign(axiosInstance.defaults, sharedApiConfig);
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      window.location.href = "/login";
+    }
     console.error(getFriendlyErrorMessage(error));
     return Promise.reject(error);
   },

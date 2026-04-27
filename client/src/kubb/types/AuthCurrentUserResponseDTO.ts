@@ -14,6 +14,16 @@ export const authCurrentUserResponseDTODutyEnum = {
 export type AuthCurrentUserResponseDTODutyEnumKey =
   (typeof authCurrentUserResponseDTODutyEnum)[keyof typeof authCurrentUserResponseDTODutyEnum];
 
+export const authCurrentUserResponseDTORoleEnum = {
+  STUDENT: "STUDENT",
+  EMPLOYEE: "EMPLOYEE",
+  PARENT: "PARENT",
+  ADMIN: "ADMIN",
+} as const;
+
+export type AuthCurrentUserResponseDTORoleEnumKey =
+  (typeof authCurrentUserResponseDTORoleEnum)[keyof typeof authCurrentUserResponseDTORoleEnum];
+
 /**
  * @description Dados do usuário autenticado
  */
@@ -43,4 +53,8 @@ export type AuthCurrentUserResponseDTO = {
    * @type string
    */
   duty: AuthCurrentUserResponseDTODutyEnumKey;
+  /**
+   * @type string
+   */
+  role: AuthCurrentUserResponseDTORoleEnumKey;
 };

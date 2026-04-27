@@ -9,6 +9,7 @@ export type {
 export type {
   AuthCurrentUserResponseDTO,
   AuthCurrentUserResponseDTODutyEnumKey,
+  AuthCurrentUserResponseDTORoleEnumKey,
 } from "./AuthCurrentUserResponseDTO.ts";
 export type { AuthLoginRequestDTO } from "./AuthLoginRequestDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
@@ -56,6 +57,14 @@ export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
 export type { StudentResponsibleSummaryDTO } from "./StudentResponsibleSummaryDTO.ts";
+export type {
+  UserCreateRequestDTO,
+  UserCreateRequestDTORoleEnumKey,
+} from "./UserCreateRequestDTO.ts";
+export type {
+  UserResponseDTO,
+  UserResponseDTORoleEnumKey,
+} from "./UserResponseDTO.ts";
 export type {
   AuthMe200,
   AuthMeQuery,
@@ -346,9 +355,27 @@ export type {
   UpdateStudentMutationResponse,
   UpdateStudentPathParams,
 } from "./student/UpdateStudent.ts";
+export type {
+  CreateUser201,
+  CreateUserMutation,
+  CreateUserMutationRequest,
+  CreateUserMutationResponse,
+} from "./user management/CreateUser.ts";
+export type {
+  DeleteUser204,
+  DeleteUserMutation,
+  DeleteUserMutationResponse,
+  DeleteUserPathParams,
+} from "./user management/DeleteUser.ts";
+export type {
+  ListUsers200,
+  ListUsersQuery,
+  ListUsersQueryResponse,
+} from "./user management/ListUsers.ts";
 export { addressRequestDTOStateEnum } from "./AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./AddressResponseDTO.ts";
 export { authCurrentUserResponseDTODutyEnum } from "./AuthCurrentUserResponseDTO.ts";
+export { authCurrentUserResponseDTORoleEnum } from "./AuthCurrentUserResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./EventRequestDTO.ts";
@@ -359,6 +386,8 @@ export { eventResponseDTOIncomeStatusEnum } from "./EventResponseDTO.ts";
 export { eventResponseDTOStatusEnum } from "./EventResponseDTO.ts";
 export { generalExpenseRequestDTOCategoryEnum } from "./GeneralExpenseRequestDTO.ts";
 export { generalExpenseResponseDTOCategoryEnum } from "./GeneralExpenseResponseDTO.ts";
+export { userCreateRequestDTORoleEnum } from "./UserCreateRequestDTO.ts";
+export { userResponseDTORoleEnum } from "./UserResponseDTO.ts";
 export { getEventsQueryParamsStatusEnum } from "./event/GetEvents.ts";
 export { settleExpenseEventQueryParamsStatusEnum } from "./event/SettleExpenseEvent.ts";
 export { settleIncomeEventQueryParamsStatusEnum } from "./event/SettleIncomeEvent.ts";

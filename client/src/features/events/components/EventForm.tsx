@@ -96,7 +96,7 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
           <legend className="fieldset-legend">Data Início</legend>
           <DateTimeInput control={control} name="startDate" placeholderText="Início" />
           {errors?.startDate && (
-            <p className="label text-error"> 
+            <p className="label text-error">
               <TriangleAlert className="w-3 h-3" /> {errors.startDate.message}
             </p>
           )}
@@ -106,7 +106,7 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
           <legend className="fieldset-legend">Data Fim</legend>
           <DateTimeInput control={control} name="endDate" placeholderText="Fim" />
           {errors?.endDate && (
-            <p className="label text-error"> 
+            <p className="label text-error">
               <TriangleAlert className="w-3 h-3" /> {errors.endDate.message}
             </p>
           )}
@@ -136,7 +136,7 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
               )}
             />
             {errors?.price && (
-              <p className="label text-error"> 
+              <p className="label text-error">
                 <TriangleAlert className="w-3 h-3" /> {errors.price.message}
               </p>
             )}
@@ -165,7 +165,7 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
               )}
             />
             {errors?.payment && (
-              <p className="label text-error"> 
+              <p className="label text-error">
                 <TriangleAlert className="w-3 h-3" /> {errors.payment.message}
               </p>
             )}
@@ -176,7 +176,7 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
           <legend className="fieldset-legend">Descrição (opcional)</legend>
           <textarea className="textarea textarea-bordered w-full" placeholder="Observações do atendimento" {...register("description")} />
           {errors?.description && (
-            <p className="label text-error"> 
+            <p className="label text-error">
               <TriangleAlert className="w-3 h-3" /> {errors.description.message}
             </p>
           )}
