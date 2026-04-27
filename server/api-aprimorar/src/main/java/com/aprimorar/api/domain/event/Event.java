@@ -8,6 +8,7 @@ import com.aprimorar.api.enums.EventContent;
 import com.aprimorar.api.shared.BaseEntity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -53,6 +54,14 @@ public class Event extends BaseEntity {
     private Employee employee;
 
     protected Event() {}
+
+    @Transient
+    public Double getDuration() {
+        if (startDate == null || endDate == null) {
+            return 0.0;
+        }
+        return (double) Duration.between(startDate, endDate).toMinutes() / 60.0;
+    }
 
     public Event(
         String description,

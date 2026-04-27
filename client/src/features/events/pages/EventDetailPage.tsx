@@ -20,7 +20,9 @@ export function EventDetailPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const eventQuery = useGetEventById(eventId);
-  const { settleStudentCharge, settleEmployeePayment } = useEventMutations({ onSuccessCallback: () => {} });
+  const { settleStudentCharge, settleEmployeePayment } = useEventMutations({
+    onSuccessCallback: () => {},
+  });
 
   const headerProps = {
     description: "Veja e gerencie as informações do evento",
@@ -44,10 +46,12 @@ export function EventDetailPage() {
       </PageLayout>
     );
   }
-  const profit = Number(eventQuery.data.price) - Number(eventQuery.data.payment);
+  const profit =
+    Number(eventQuery.data.price) - Number(eventQuery.data.payment);
   const isIncomePaid = eventQuery.data.studentCharged;
   const isExpensePaid = eventQuery.data.employeePaid;
-  const isFinancialPending = settleStudentCharge.isPending || settleEmployeePayment.isPending;
+  const isFinancialPending =
+    settleStudentCharge.isPending || settleEmployeePayment.isPending;
 
   const handleToggleIncomeStatus = () => {
     settleStudentCharge.mutate({
@@ -71,80 +75,152 @@ export function EventDetailPage() {
           description="Dados completos do atendimento, participantes e valores."
           headerActions={
             <div className="flex flex-wrap gap-2 items-center justify-end">
-              <Button onClick={() => setIsFormOpen(true)} variant="primary" size="sm">
+              <Button
+                onClick={() => setIsFormOpen(true)}
+                variant="primary"
+                size="sm"
+              >
                 <Edit className="h-4 w-4 mr-1" /> Editar
               </Button>
             </div>
           }
         >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <SummaryItem label="Data" value={formatDateShortYear(eventQuery.data.startDate)}/>
-            <div className="flex gap-3">
-              <SummaryItem className="w-full" label="Horário início" value={formatTime(eventQuery.data.startDate)} />
-              <SummaryItem className="w-full" label="Horário fim" value={formatTime(eventQuery.data.endDate)}/>
-            </div>
-            <SummaryItem label="Nome do aluno" value={eventQuery.data.studentName} />
-            <SummaryItem label="Nome do colaborador" value={eventQuery.data.employeeName}/>
-            <SummaryItem label="Conteúdo" value={EventContentLabels[eventQuery.data.content] || eventQuery.data.content} />
-            <div className="flex gap-3">
-              <SummaryItem className="w-full" label="Valor" value={brl.format(eventQuery.data.price)} />
-              <SummaryItem className="w-full" label="Pagamento" value={brl.format(eventQuery.data.payment)}/>
-              <SummaryItem className="w-full" label="Lucro" value={brl.format(profit)} />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Informações Básicas */}
+            <SummaryItem
+              label="Data"
+              value={formatDateShortYear(eventQuery.data.startDate)}
+            />
+            <SummaryItem
+              label="Início"
+              value={formatTime(eventQuery.data.startDate)}
+            />
+            <SummaryItem
+              label="Fim"
+              value={formatTime(eventQuery.data.endDate)}
+            />
+
+            <SummaryItem
+              label="Nome do aluno"
+              value={eventQuery.data.studentName}
+            />
+            <SummaryItem
+              label="Nome do colaborador"
+              value={eventQuery.data.employeeName}
+            />
+            <SummaryItem
+              label="Conteúdo"
+              value={
+                EventContentLabels[eventQuery.data.content] ||
+                eventQuery.data.content
+              }
+            />
+
+            {/* Linha Financeira */}
+            <SummaryItem
+              label="Lucro"
+              value={
+                <div className="flex flex-col gap-1">
+                  <span className="text-2xl font-bold text-success">
+                    {brl.format(profit)}
+                  </span>
+                  <span className="text-[10px] uppercase opacity-50 font-bold">
+                    Resultado líquido
+                  </span>
+                </div>
+              }
+            />
+
             <SummaryItem
               label="Recebimento do aluno"
               value={
-                <div className="flex flex-wrap items-center gap-3">
-                  <Badge variant={isIncomePaid ? "success" : "warning"}>
-                    {isIncomePaid ? "Pago" : "Pendente"}
-                  </Badge>
-                  <Button
-                    size="sm"
-                    variant={isIncomePaid ? "outline" : "success"}
-                    onClick={handleToggleIncomeStatus}
-                    disabled={isFinancialPending}
-                  >
-                    {isIncomePaid ? <Clock3 className="h-4 w-4 mr-1" /> : <Check className="h-4 w-4 mr-1" />}
-                    {isIncomePaid ? "Marcar como pendente" : "Marcar como pago"}
-                  </Button>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge variant={isIncomePaid ? "success" : "warning"}>
+                      {isIncomePaid ? "Pago" : "Pendente"}
+                    </Badge>
+                    <Button
+                      size="sm"
+                      variant={isIncomePaid ? "outline" : "success"}
+                      onClick={handleToggleIncomeStatus}
+                      disabled={isFinancialPending}
+                      className="h-7 px-2 text-xs"
+                    >
+                      {isIncomePaid ? (
+                        <Clock3 className="h-3 w-3 mr-1" />
+                      ) : (
+                        <Check className="h-3 w-3 mr-1" />
+                      )}
+                      {isIncomePaid ? "Marcar Pendente" : "Marcar Pago"}
+                    </Button>
+                  </div>
+                  <div className="p-2 bg-base-300/30 rounded border border-base-300/50">
+                    <p className="text-[10px] uppercase opacity-60 font-bold">
+                      Valor
+                    </p>
+                    <p className="text-lg font-bold">
+                      {brl.format(eventQuery.data.price)}
+                    </p>
+                  </div>
                 </div>
               }
             />
+
             <SummaryItem
               label="Pagamento do colaborador"
               value={
-                <div className="flex flex-wrap items-center gap-3">
-                  <Badge variant={isExpensePaid ? "success" : "warning"}>
-                    {isExpensePaid ? "Pago" : "Pendente"}
-                  </Badge>
-                  <Button
-                    size="sm"
-                    variant={isExpensePaid ? "outline" : "success"}
-                    onClick={handleToggleExpenseStatus}
-                    disabled={isFinancialPending}
-                  >
-                    {isExpensePaid ? <Clock3 className="h-4 w-4 mr-1" /> : <Check className="h-4 w-4 mr-1" />}
-                    {isExpensePaid ? "Marcar como pendente" : "Marcar como pago"}
-                  </Button>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge variant={isExpensePaid ? "success" : "warning"}>
+                      {isExpensePaid ? "Pago" : "Pendente"}
+                    </Badge>
+                    <Button
+                      size="sm"
+                      variant={isExpensePaid ? "outline" : "success"}
+                      onClick={handleToggleExpenseStatus}
+                      disabled={isFinancialPending}
+                      className="h-7 px-2 text-xs"
+                    >
+                      {isExpensePaid ? (
+                        <Clock3 className="h-3 w-3 mr-1" />
+                      ) : (
+                        <Check className="h-3 w-3 mr-1" />
+                      )}
+                      {isExpensePaid ? "Marcar Pendente" : "Marcar Pago"}
+                    </Button>
+                  </div>
+                  <div className="p-2 bg-base-300/30 rounded border border-base-300/50">
+                    <p className="text-[10px] uppercase opacity-60 font-bold">
+                      Pagamento
+                    </p>
+                    <p className="text-lg font-bold">
+                      {brl.format(eventQuery.data.payment)}
+                    </p>
+                  </div>
                 </div>
               }
             />
-            <SummaryItem className="md:col-span-3 h-30" label="Observações" value={eventQuery.data.description}/>
-        </div>
+
+            <SummaryItem
+              className="md:col-span-3 min-h-[100px]"
+              label="Observações"
+              value={eventQuery.data.description || "Nenhuma observação."}
+            />
+          </div>
         </SectionCard>
       </div>
       {isFormOpen && (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-4xl">
-              <h3 className="font-bold text-lg mb-4">Editar Atendimento</h3>
-              <EventForm
-                initialData={eventQuery.data}
-                onSuccess={() => setIsFormOpen(false)}
-                onCancel={() => setIsFormOpen(false)}
-              />
-            </div>
+        <div className="modal modal-open">
+          <div className="modal-box max-w-4xl">
+            <h3 className="font-bold text-lg mb-4">Editar Atendimento</h3>
+            <EventForm
+              initialData={eventQuery.data}
+              onSuccess={() => setIsFormOpen(false)}
+              onCancel={() => setIsFormOpen(false)}
+            />
           </div>
-        )}
+        </div>
+      )}
     </PageLayout>
   );
 }

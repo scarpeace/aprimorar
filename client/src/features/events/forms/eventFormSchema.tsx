@@ -14,7 +14,7 @@ export const eventFormSchema = z.object({
     error: "O tipo do evento é obrigatório",
   }),
   startDate: z.string().min(1, { message: "A data de início do evento é obrigatória" }),
-  endDate: z.string().min(1, { message: "A data de término do evento é obrigatória" }),
+  duration: z.number({ error: "A duração do evento é obrigatória" }).min(0.5, { message: "A duração mínima é de 30 minutos (0.5h)" }),
   price: z
     .number({ error: "O preço do evento é obrigatório" })
     .min(0, { message: "O preço deve ser maior ou igual a zero" }),

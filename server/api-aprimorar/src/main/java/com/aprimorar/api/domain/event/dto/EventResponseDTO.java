@@ -32,6 +32,10 @@ public record EventResponseDTO(
     Instant endDate,
 
     @NotNull
+    @Schema(nullable = false, description = "Duração do evento em horas", example = "1.5")
+    Double duration,
+
+    @NotNull
     @Schema(nullable = false, description = "Preço do evento pago pelo aluno", example = "150.00")
     BigDecimal price,
 

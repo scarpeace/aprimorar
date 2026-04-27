@@ -75,7 +75,7 @@ export function EventsTable({
             <tr
               onClick={() => navigate(`/events/${event.eventId}`)}
               key={event.eventId}
-              className="transition-colors hover:bg-base-200/70 hover:cursor-pointer"
+              className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
             >
               <td className="">{event.studentName}</td>
               <td>{event.employeeName}</td>

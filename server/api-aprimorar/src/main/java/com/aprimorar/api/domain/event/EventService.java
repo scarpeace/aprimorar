@@ -16,6 +16,7 @@ import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.shared.PageDTO;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,12 +56,13 @@ public class EventService {
         Student student = findStudentOrThrow(dto.studentId());
         Employee employee = findEmployeeOrThrow(dto.employeeId());
 
-        validateParticipantAvailability(student, employee, dto.startDate(), dto.endDate(), null);
+        Instant calculatedEndDate = dto.startDate().plus((long) (dto.duration() * 60), ChronoUnit.MINUTES);
+        validateParticipantAvailability(student, employee, dto.startDate(), calculatedEndDate, null);
 
         Event event = new Event(
             dto.description(),
             dto.startDate(),
-            dto.endDate(),
+            calculatedEndDate,
             dto.payment(),
             dto.price(),
             dto.content(),
@@ -127,12 +129,13 @@ public class EventService {
         Student student = findStudentOrThrow(dto.studentId());
         Employee employee = findEmployeeOrThrow(dto.employeeId());
 
-        validateParticipantAvailability(student, employee, dto.startDate(), dto.endDate(), id);
+        Instant calculatedEndDate = dto.startDate().plus((long) (dto.duration() * 60), ChronoUnit.MINUTES);
+        validateParticipantAvailability(student, employee, dto.startDate(), calculatedEndDate, id);
 
         event.update(
             dto.description(),
             dto.startDate(),
-            dto.endDate(),
+            calculatedEndDate,
             dto.payment(),
             dto.price(),
             dto.content(),

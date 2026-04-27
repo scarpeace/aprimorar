@@ -55,14 +55,6 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
     },
   });
 
-  const handleStatusSuccess = (message: string, eventId: string) => {
-    toast.success(message);
-    queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
-    queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(eventId) });
-    if (onSuccessCallback) {
-      onSuccessCallback();
-    }
-  };
 
   const handleStatusError = (error: any) => {
     toast.error(getFriendlyErrorMessage(error));
@@ -70,14 +62,22 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
 
   const settleStudentCharge = useSettleStudentChargeEvent({
     mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Baixa de cobrança do aluno atualizada", variables.id),
+      onSuccess: (_, variables) => {
+        toast.success("Status da cobrança atualizado");
+        queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
+      },
       onError: handleStatusError,
     },
   });
 
   const settleEmployeePayment = useSettleEmployeePaymentEvent({
     mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Baixa de pagamento do colaborador atualizada", variables.id),
+      onSuccess: (_, variables) => {
+        toast.success("Status do pagamento atualizado");
+        queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
+      },
       onError: handleStatusError,
     },
   });
