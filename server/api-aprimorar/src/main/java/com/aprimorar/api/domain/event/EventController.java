@@ -59,8 +59,12 @@ public class EventController {
     @GetMapping("/{id}/employee")
     @Operation(operationId = "getEventsByEmployeeId", description = "Retorna eventos por ID do colaborador.")
     @ApiResponse(responseCode = "200", description = "Página de eventos do colaborador retornada com sucesso.")
-    public ResponseEntity<PageDTO<EventResponseDTO>> getEventByEmployeeId(@ParameterObject Pageable pageable, @PathVariable UUID id) {
-        return ResponseEntity.ok(eventService.getEventsByEmployeeId(pageable, id));
+    public ResponseEntity<PageDTO<EventResponseDTO>> getEventByEmployeeId(
+        @ParameterObject Pageable pageable,
+        @PathVariable UUID id,
+        @RequestParam(required = false) String studentName
+    ) {
+        return ResponseEntity.ok(eventService.getEventsByEmployeeId(pageable, id, studentName));
     }
 
     @GetMapping("/{id}/student")
