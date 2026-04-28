@@ -1,71 +1,50 @@
-# Roadmap: Aprimorar
+# Roadmap: v1.1 Gestão Financeira e Detalhes do Colaborador
 
-## Visão Geral
+## Phases
 
-Este roadmap transforma o atual monorepo brownfield de gestão escolar em um sistema operacional focado na secretária que pode substituir o trabalho diário baseado em planilhas. Ele começa garantindo a segurança do acesso, depois fortalece os módulos existentes de alunos, responsáveis, funcionários e eventos, adiciona o financeiro como o principal domínio novo e finaliza com um dashboard que combina visibilidade operacional e financeira.
+- [ ] **Phase 01: Employee Events Tracking** - Users can view and search an employee's events on their detail page
+- [ ] **Phase 02: Event Payment Workflow** - Users can process payments for events and track pending work
+- [ ] **Phase 03: Financial KPIs Dashboard** - Users can instantly see the financial summary for an employee
 
-## Fases
+## Phase Details
 
-**Numeração das Fases:**
-- Fases inteiras (1, 2, 3): Trabalho de marco (milestone) planejado
-- Fases decimais (2.1, 2.2): Inserções urgentes (marcadas com INSERIDO)
+### Phase 01: Employee Events Tracking
+**Goal**: Users can view and search an employee's events on their detail page
+**Depends on**: None
+**Requirements**: TAB-01, TAB-02
+**Success Criteria** (what must be TRUE):
+  1. User navigating to an employee's detail page sees a list of only that employee's events.
+  2. Events are automatically ordered with the most recent first.
+  3. User can type a student's name in a search bar to instantly filter the events list.
+**Plans**: TBD
+**UI hint**: yes
 
-Fases decimais aparecem entre os inteiros circundantes em ordem numérica.
+### Phase 02: Event Payment Workflow
+**Goal**: Users can process payments for events and track pending work
+**Depends on**: Phase 01
+**Requirements**: TAB-03, TAB-04
+**Success Criteria** (what must be TRUE):
+  1. User can mark an event as paid and register the exact date of payment.
+  2. User can turn on a "Hide Paid" toggle to clear paid events from the list view.
+  3. Filtering functionality (search and toggle) works together consistently.
+**Plans**: TBD
+**UI hint**: yes
 
-- [x] **Fase 1: Autenticação & Acesso Protegido** - Adicionar login seguro e proteger todos os fluxos de trabalho da secretária/admin. (concluído 18-04-2026)
-- [x] **Fase 2: Fortalecimento do Registro de Alunos & Responsáveis** - Tornar os fluxos de registro existentes confiáveis o suficiente para substituir as planilhas de alunos/partes responsáveis. (concluído 20-04-2026)
-- [x] **Fase 3: Fortalecimento das Operações de Funcionários & Eventos** - Refinar os fluxos de funcionários e eventos para operações de agendamento diárias confiáveis. (concluído 21-04-2026)
-- [x] **Fase 4: Núcleo de Acompanhamento Financeiro** - Introduzir cobranças, pagamentos e visibilidade simples de saldo para o acompanhamento financeiro interno da escola. (concluído 21-04-2026)
-- [ ] **Fase 5: Dashboard Diário Unificado** - Combinar indicadores operacionais e financeiros em um snapshot diário confiável.
+### Phase 03: Financial KPIs Dashboard
+**Goal**: Users can instantly see the financial summary for an employee
+**Depends on**: Phase 02
+**Requirements**: KPI-01, KPI-02
+**Success Criteria** (what must be TRUE):
+  1. User sees a summary panel showing "Total pago", "Total a pagar", and "Total de eventos".
+  2. Marking an event as paid in the table automatically updates the KPI values without a page reload.
+  3. User can toggle the KPI panel between "Mensal" (current month) and "Histórico" (all time) summaries.
+**Plans**: TBD
+**UI hint**: yes
 
-## Detalhes das Fases
+## Progress
 
-...
-
-### Fase 3: Fortalecimento das Operações de Funcionários & Eventos
-**Objetivo**: A secretária pode gerenciar funcionários e atividades escolares no app com aplicação confiável de regras de negócio.
-**Depende de**: Fase 2
-**Requisitos**: EMPL-01, EMPL-02, EMPL-03, EMPL-04, EVNT-01, EVNT-02, EVNT-03, EVNT-04, EVNT-05
-**Critérios de Sucesso** (o que deve ser VERDADE):
-  1. A secretária pode criar, visualizar, atualizar, arquivar e encontrar registros de funcionários por meio de busca, filtros, paginação e controles de arquivamento.
-  2. A secretária pode criar, visualizar, atualizar e arquivar registros de eventos para aulas, mentorias e outras atividades escolares mantendo a visibilidade histórica.
-  3. A secretária não pode salvar um evento que quebre as regras de negócio de agendamento ou propriedade e recebe feedback claro em vez disso.
-  4. A secretária pode abrir telas operacionais que mostram os próximos eventos necessários para o planejamento diário.
-**Planos**: 4 planos
-Planos:
-- [x] 03-01-PLAN.md — Estabelecer a infraestrutura de status de eventos, descrições de funções e integridade de conflitos no backend.
-- [x] 03-02-PLAN.md — Expor filtros operacionais e status via API e sincronizar contratos com o frontend (Kubb).
-- [x] 03-03-PLAN.md — Fortalecer a interface de funcionários com descrições amigáveis dos papéis em português.
-- [x] 03-04-PLAN.md — Adicionar badges de status, filtros operacionais rápidos e gerenciamento de ciclo de vida na interface de eventos.
-**Dica de UI**: sim
-
-### Fase 4: Núcleo de Acompanhamento Financeiro
-**Objetivo**: A secretária pode acompanhar cobranças, pagamentos e saldos dentro do app em vez de planilhas financeiras informais.
-**Depende de**: Fase 3
-**Requisitos**: FIN-01, FIN-02, FIN-03
-**Critérios de Sucesso** (o que deve ser VERDADE):
-  1. A secretária pode criar uma cobrança vinculada ao aluno ou parte responsável correta (via Atendimento).
-  2. A secretária pode registrar um pagamento com valor e data de pagamento contra uma cobrança existente e ver o saldo restante ser atualizado corretamente (Baixa de Atendimento).
-  3. A secretária pode visualizar resumos financeiros básicos para saldo total em aberto, valores recebidos e totais de cobrança (Painel Financeiro).
-**Planos**: 4 planos
-Planos:
-- [x] 04-01-PLAN.md — Estabelecer enums financeiros, tb_general_expenses e atualizar entidade Event.
-- [x] 04-02-PLAN.md — Implementar CRUD de despesas gerais, API de resumo financeiro e lógica de baixa de eventos.
-- [x] 04-03-PLAN.md — Adicionar menu financeiro e implementar página de gestão de despesas gerais.
-- [x] 04-04-PLAN.md — Implementar Dashboard Financeiro e visão de Baixa de Atendimentos com filtros.
-**Dica de UI**: sim
-
-...
-
-## Progresso
-
-**Ordem de Execução:**
-As fases são executadas em ordem numérica: 2 → 2.1 → 2.2 → 3 → 3.1 → 4
-
-| Fase | Planos Concluídos | Status | Concluído |
+| Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Autenticação & Acesso Protegido | 4/4 | Concluído   | 18-04-2026 |
-| 2. Fortalecimento do Registro de Alunos & Responsáveis | 7/7 | Concluído | 20-04-2026 |
-| 3. Fortalecimento das Operações de Funcionários & Eventos | 4/4 | Concluído | 21-04-2026 |
-| 4. Núcleo de Acompanhamento Financeiro | 4/4 | Concluído | 21-04-2026 |
-| 5. Dashboard Diário Unificado | 0/2 | Não iniciado | - |
+| 01. Employee Events Tracking | 0/0 | Not started | - |
+| 02. Event Payment Workflow | 0/0 | Not started | - |
+| 03. Financial KPIs Dashboard | 0/0 | Not started | - |

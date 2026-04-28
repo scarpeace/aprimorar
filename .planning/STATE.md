@@ -1,64 +1,26 @@
----
-gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Gestão Financeira e Detalhes do Colaborador
-status: defining_requirements
-stopped_at: 
-last_updated: "2026-04-28T00:00:00.000Z"
-last_activity: 28-04-2026
-progress:
-  total_phases: 0
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
----
+# Current State
 
-# Estado do Projeto
+## Project Reference
+**Core Value:** Aprimorar centralizes school management for the secretary, replacing fragmented spreadsheets with an integrated, secure operational workflow.
+**Current Focus:** v1.1 Gestão Financeira e Detalhes do Colaborador - Refactoring the employee detail page to include a dedicated event table and financial KPI dashboard, enabling event management and payment tracking.
 
-## Referência do Projeto
+## Current Position
+**Phase:** 01. Employee Events Tracking
+**Plan:** None
+**Status:** Planning phase structure
 
-Veja: .planning/PROJECT.md
+## Accumulated Context
+**Decisions:**
+- Phase 01: Build the event table and student search first to establish the foundation of the detail page.
+- Phase 02: Implement the payment mutation and "hide paid" state to manage the workflow.
+- Phase 03: Finally, introduce the aggregated KPI sidebar to provide the financial summary.
+- The roadmap avoids horizontal slicing (Backend -> API -> UI) to ensure each phase delivers a coherent user-facing capability.
 
-**Valor central:** A secretária deve ser capaz de gerenciar o dia a dia da escola a partir do app, sem depender de planilhas espalhadas.
-**Foco atual:** Levantamento de requisitos para a v1.1.
+**Todos:**
+- [ ] Plan Phase 01
 
-## Posição Atual
+**Blockers:**
+- None
 
-Fase: Não iniciada (definindo requisitos)
-Plano: —
-Status: Definindo requisitos
-Última atividade: 28-04-2026 — Milestone v1.1 iniciado
-
-Progresso: [          ] 0%
-
-## Contexto Acumulado
-
-### Decisões
-
-As decisões são registradas na tabela de Decisões Chave do PROJECT.md.
-Decisões recentes que afetam o trabalho atual:
-
-- [Fase 04]: O financeiro é baseado em Atendimentos (Eventos) e Despesas Gerais manuais.
-- [Fase 04]: Cada evento possui `incomeStatus` e `expenseStatus` independentes.
-- [Fase 04]: Somente eventos com status `COMPLETED` podem ter baixa financeira (PAID).
-- [Fase 04]: Despesas Gerais não possuem arquivamento (exclusão física permitida ou simplificada).
-- [Fase 04]: Uso rigoroso de `BigDecimal` (Java) e `NUMERIC(19,2)` (SQL) para precisão monetária.
-
-### Pendências (Todos)
-
-Nenhuma por enquanto.
-
-### Bloqueadores/Preocupações
-
-- Nenhuma identificada na fase atual.
-
-## Itens Adiados
-
-Itens reconhecidos e levados adiante do encerramento do marco anterior:
-
-| Categoria | Item | Status | Adiado em |
-|----------|------|--------|-------------|
-| Expansão de Acesso | Portais de autoatendimento para professores, pais e alunos | Adiado | planejamento v1 |
-| Expansão Financeira | Integração com gateway de pagamento e políticas de faturamento avançadas | Adiado | planejamento v1 |
-| Relatórios | Relatórios financeiros avançados e análises por período longo | Adiado | planejamento v1 |
+## Session Continuity
+- State generated alongside new v1.1 Roadmap creation.

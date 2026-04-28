@@ -21,3 +21,12 @@
 - **Integração com Gateways de Pagamento**: Pagamentos continuarão ocorrendo manualmente, usando apenas o sistema como registro de transações.
 
 ## Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| TAB-01 | Phase 01 | Pending |
+| TAB-02 | Phase 01 | Pending |
+| TAB-03 | Phase 02 | Pending |
+| TAB-04 | Phase 02 | Pending |
+| KPI-01 | Phase 03 | Pending |
+| KPI-02 | Phase 03 | Pending |
