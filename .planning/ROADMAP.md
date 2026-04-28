@@ -16,7 +16,9 @@
   1. User navigating to an employee's detail page sees a list of only that employee's events.
   2. Events are automatically ordered with the most recent first.
   3. User can type a student's name in a search bar to instantly filter the events list.
-**Plans**: TBD
+**Plans**: 2 plans
+- [ ] 01-01-PLAN.md — Backend API & Hook synchronization
+- [ ] 01-02-PLAN.md — Frontend Search UI & Pagination logic
 **UI hint**: yes
 
 ### Phase 02: Event Payment Workflow
@@ -45,6 +47,6 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 01. Employee Events Tracking | 0/0 | Not started | - |
+| 01. Employee Events Tracking | 0/2 | Not started | - |
 | 02. Event Payment Workflow | 0/0 | Not started | - |
 | 03. Financial KPIs Dashboard | 0/0 | Not started | - |
