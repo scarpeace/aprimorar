@@ -8,6 +8,17 @@ O Aprimorar é um aplicativo de gestão escolar para uma escola de aulas particu
 
 A secretária deve ser capaz de gerenciar o dia a dia da escola a partir do app, sem depender de planilhas espalhadas.
 
+## Current Milestone: v1.1 Gestão Financeira e Detalhes do Colaborador
+
+**Goal:** Refatorar a página de detalhes do funcionário para incluir uma tabela de eventos exclusiva e um painel de KPIs financeiros, permitindo o gerenciamento e pagamento de eventos diretamente na página.
+
+**Target features:**
+- Tabela de eventos específica para o funcionário com ordenação por data e busca por aluno.
+- Filtro na tabela para ocultar eventos já "pagos".
+- Registro e gravação da data exata do pagamento de cada aula ao marcar como pago.
+- Resumo KPI lateral: Total pago no mês, Total a pagar no mês e Total de eventos no mês.
+- Switch (alternador) no KPI para trocar entre visualização "Mensal" e "Histórico (desde a criação)".
+
 ## Requisitos
 
 ### Validados
@@ -25,6 +36,7 @@ A secretária deve ser capaz de gerenciar o dia a dia da escola a partir do app,
 - [ ] Introduzir o acompanhamento financeiro básico para cobranças, pagamentos, saldos vencidos e resumos simples
 - [ ] Fornecer um resumo de dashboard pequeno, mas útil, que combine visibilidade operacional diária com visibilidade financeira
 - [ ] Eliminar a necessidade de usar o Google Sheets para a gestão de alunos e eventos no trabalho do dia a dia
+- [ ] Refatorar página do colaborador para incluir tabela exclusiva de eventos e painel de KPIs de pagamento.
 
 ### Fora de Escopo
 
