@@ -42,4 +42,14 @@ public final class EventSpecifications {
     public static Specification<Event> withEmployeeId(UUID employeeId) {
         return (root, query, cb) -> employeeId == null ? null : cb.equal(root.join("employee").get("id"), employeeId);
     }
+
+    public static Specification<Event> withStudentNameIgnoreCase(String term) {
+        return (root, query, cb) -> {
+            if (term == null || term.trim().isEmpty()) {
+                return null;
+            }
+            String pattern = "%" + term.toLowerCase() + "%";
+            return cb.like(cb.lower(root.join("student").get("name")), pattern);
+        };
+    }
 }
