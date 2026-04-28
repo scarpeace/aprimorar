@@ -14,6 +14,7 @@ export type {
 export type { AuthLoginRequestDTO } from "./AuthLoginRequestDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
+export type { EmployeeMonthlySummaryDTO } from "./EmployeeMonthlySummaryDTO.ts";
 export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
 export type {
   EmployeeRequestDTO,
@@ -107,6 +108,13 @@ export type {
   GetEmployeeByIdQuery,
   GetEmployeeByIdQueryResponse,
 } from "./employee/GetEmployeeById.ts";
+export type {
+  GetEmployeeMonthlySummary200,
+  GetEmployeeMonthlySummaryPathParams,
+  GetEmployeeMonthlySummaryQuery,
+  GetEmployeeMonthlySummaryQueryParams,
+  GetEmployeeMonthlySummaryQueryResponse,
+} from "./employee/GetEmployeeMonthlySummary.ts";
 export type {
   GetEmployeeOptions200,
   GetEmployeeOptionsQuery,

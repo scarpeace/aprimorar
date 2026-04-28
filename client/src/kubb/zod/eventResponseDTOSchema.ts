@@ -25,6 +25,7 @@ export const eventResponseDTOSchema = z
       .describe("Tipo de conteúdo ou categoria do atendimento/evento"),
     startDate: z.iso.datetime().describe("Data/Horário de início do evento"),
     endDate: z.iso.datetime().describe("Data/Horário de fim do evento"),
+    duration: z.number().describe("Duração do evento em horas"),
     price: z.number().describe("Preço do evento pago pelo aluno"),
     payment: z.number().describe("Preço do evento pago ao colaborador"),
     studentId: z.uuid().describe("ID do estudante vinculado ao evento"),

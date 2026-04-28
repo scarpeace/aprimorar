@@ -5,7 +5,7 @@ import { LoadingCard } from "@/components/ui/loading-card";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { EventsTable } from "@/features/events/components/EventsTable";
-import { useGetEmployeeById, useGetEventsByEmployeeId } from "@/kubb";
+import { useGetEmployeeById, useGetEmployeeMonthlySummary, useGetEventsByEmployeeId } from "@/kubb";
 import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
 import { Edit, FileUser } from "lucide-react";
 import { useState } from "react";
@@ -23,6 +23,7 @@ export function EmployeeDetailPage() {
 
   const employeeQuery = useGetEmployeeById(employeeId);
   const employeeEventsQuery = useGetEventsByEmployeeId(employeeId);
+  const employeeMonthlySummaryQuery = useGetEmployeeMonthlySummary(employeeId);
 
   const headerProps = {
     description: "Veja e gerencie as informações do colaborador",
@@ -53,6 +54,7 @@ export function EmployeeDetailPage() {
   return (
     <PageLayout {...headerProps}>
       <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
+        <div className="flex gap-3">
         <SectionCard
           title="Colaborador"
           description="Dados do Colaborador"
@@ -78,20 +80,24 @@ export function EmployeeDetailPage() {
           <SummaryItem label="CPF" value={formatCpf(employeeQuery.data.cpf)} />
           <SummaryItem label="Data de nascimento" value={formatDateShortYear(employeeQuery.data.birthdate ?? "")} />
           <SummaryItem label="Chave PIX" value={employeeQuery.data.pix} />
-            <div className="flex gap-3">
-              <SummaryItem label="Status" value={employeeQuery.data.archivedAt ? "Arquivado" : "Ativo"} />
-              <SummaryItem className="grow" label="Criado em" value={formatDateShortYear(employeeQuery.data.createdAt ?? "")} />
-            </div>
-          </div>
-        {/*<Collapse title={"Endereço"} className="mt-3">
-          <AddressDetails address={employeeData.address} />
-        </Collapse>*/}
+          <SummaryItem label="Status" value={employeeQuery.data.archivedAt ? "Arquivado" : "Ativo"} />
+          <SummaryItem className="grow" label="Criado em" value={formatDateShortYear(employeeQuery.data.createdAt ?? "")} />
+         </div>
         </SectionCard>
+
+        <SectionCard
+          title={"Resumo mensal"}
+          description={"Resumo dos atendimentos do colaborador no mês"}
+        >
+
+        </SectionCard>
+
+          </div>
 
       <SectionCard
         title={"Atendimentos"}
         description={"Atendimentos vinculados ao colaborador"}
-      >
+        >
         <EventsTable
           eventsPage={employeeEventsQuery.data}
           isPending={employeeEventsQuery.isPending}

@@ -46,6 +46,11 @@ export type EventResponseDTO = {
    */
   endDate: string;
   /**
+   * @description Duração do evento em horas
+   * @type number, double
+   */
+  duration: number;
+  /**
    * @description Preço do evento pago pelo aluno
    * @type number
    */

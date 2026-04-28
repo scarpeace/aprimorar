@@ -13,6 +13,7 @@ import { toInstant } from "@/lib/utils/dateFormater";
 import { ContentSelectDropdown } from "./ContentSelectDropdown";
 import { eventFormSchema, type EventFormSchema } from "../forms/eventFormSchema";
 import { useEventMutations } from "../hooks/use-event-mutations";
+import { formatDateTimeLocal } from "@/lib/utils/formatter";
 
 function formatDateTimeForInput(dateTimeStr?: string) {
   if (!dateTimeStr) return "";
@@ -24,7 +25,7 @@ function formatDateTimeForInput(dateTimeStr?: string) {
 }
 
 interface EventFormProps {
-  initialData?: (EventResponseDTO & { duration: number }) | null;
+  initialData?: EventResponseDTO | null;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -51,18 +52,23 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
   const startDateValue = watch("startDate");
   const durationValue = watch("duration");
 
-  const calculatedEndDate = useMemo(() => {
-    if (!startDateValue || !durationValue) return null;
+  const displayEndTime = useMemo(() => {
+    if (!startDateValue || !durationValue) return "";
+
     const start = new Date(startDateValue);
-    if (isNaN(start.getTime())) return null;
-    return new Date(start.getTime() + durationValue * 60 * 60 * 1000);
+    if (isNaN(start.getTime())) return "";
+
+    const hoursInMs = durationValue * 60 * 60 * 1000;
+    const end = new Date(start.getTime() + hoursInMs);
+
+    return formatDateTimeLocal(end);
   }, [startDateValue, durationValue]);
 
   const onSubmit = handleSubmit((data: EventFormSchema) => {
     const formattedData: EventRequestDTO = {
       ...data,
       startDate: toInstant(data.startDate),
-    } as any; // Cast as any because generated Kubb types might not be updated yet
+    } as any;
 
     if (isEditMode && initialData.eventId) {
       updateEvent.mutate({ id: initialData.eventId, data: formattedData });
@@ -109,13 +115,13 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Duração (horas)</legend>
-          <input 
-            type="number" 
-            className="input w-full" 
-            min="0.5" 
-            step="0.5" 
-            {...register("duration", { valueAsNumber: true })} 
-            placeholder="1.0" 
+          <input
+            type="number"
+            className="input w-full"
+            min="0.5"
+            step="0.5"
+            {...register("duration", { valueAsNumber: true })}
+            placeholder="1.0"
           />
           {errors?.duration && (
             <p className="label text-error">
@@ -126,11 +132,11 @@ export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) 
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Fim (calculado)</legend>
-          <input 
-            type="text" 
-            className="input w-full bg-base-200" 
-            value={calculatedEndDate ? calculatedEndDate.toLocaleString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : ""} 
-            placeholder="--" 
+          <input
+            type="text"
+            className="input w-full bg-base-200"
+            value={displayEndTime}
+            placeholder="--"
             disabled
           />
         </fieldset>

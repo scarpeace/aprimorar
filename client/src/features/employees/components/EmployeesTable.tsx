@@ -9,7 +9,7 @@ import {
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type EmployeesTableProps = {
   employees?: PageDTOEmployeeResponseDTO;
@@ -28,6 +28,8 @@ export function EmployeesTable({
   error,
   onEdit,
 }: Readonly<EmployeesTableProps>) {
+  const navigate = useNavigate();
+
   if (isPending) {
     return <LoadingSpinner text="Carregando Colaboradores..." />;
   }
@@ -62,11 +64,8 @@ export function EmployeesTable({
               Cadastro
             </th>
             {/*TODO: Trocar esse status por uma bolinha de status e mover as actions pra dentro da row*/}
-            <th className="text-left font-semibold text-base-content/80">
+            <th className="text-center font-semibold text-base-content/80">
               Status
-            </th>
-            <th className="text-right font-semibold text-base-content/80 pr-4">
-              Ações
             </th>
           </tr>
         </thead>
@@ -75,7 +74,8 @@ export function EmployeesTable({
           {employees?.content.map((employee) => (
             <tr
               key={employee.id}
-              className="transition-colors hover:bg-base-200/70"
+              onClick={() => navigate(`/employees/${employee.id}`)}
+              className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
             >
               <td>{employee.name}</td>
               <td>{dutyLabels[employee.duty]}</td>
@@ -84,24 +84,12 @@ export function EmployeesTable({
               <td>{formatPhone(employee.contact)}</td>
 
               <td>{formatDateShortYear(employee.createdAt ?? "")}</td>
-              <td>{employee.archivedAt ? "Arquivado" : "Ativo"}</td>
-
-              <td className="text-right flex justify-end gap-2 pr-2">
-                <Button
-                  className="btn-square btn-ghost btn-xs text-info"
-                  onClick={() => onEdit(employee)}
-                  title="Editar"
-                >
-                  <Pencil size={16} />
-                </Button>
-                <ButtonLink
-                  className="btn-square btn-xs"
-                  to={`/employees/${employee.id}`}
-                  variant="primary"
-                  title="Detalhes"
-                >
-                  <SquareArrowOutUpRightIcon className="h-4 w-4" />
-                </ButtonLink>
+              <td className="text-center">
+                {employee.archivedAt ? (
+                  <div className="badge badge-soft badge-error">Arquivado</div>
+                ) : (
+                  <div className="badge badge-soft badge-info">Ativo</div>
+                )}
               </td>
             </tr>
           ))}

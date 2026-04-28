@@ -36,10 +36,10 @@ export type EventRequestDTO = {
    */
   startDate: string;
   /**
-   * @description Data/Horário de fim do evento
-   * @type string, date-time
+   * @description Duração do evento em horas
+   * @type number, double
    */
-  endDate: string;
+  duration: number;
   /**
    * @description Preço do evento pago pelo aluno
    * @type number

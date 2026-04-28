@@ -45,7 +45,7 @@ export function StudentsPage() {
   return (
     <PageLayout {...headerProps}>
       <div className="flex flex-col gap-3 w-full">
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col justify-between sm:flex-row gap-3">
           <ListSearchInput
             className="grow sm:mr-3"
             placeholder="Buscar aluno por nome, email ou CPF"
@@ -54,12 +54,12 @@ export function StudentsPage() {
             onChange={setSearchTerm}
           />
           <div className="flex justify-between sm:justify-end w-full sm:w-auto items-center gap-3">
-            <ToggleSwitch
+            {/*<ToggleSwitch
               label="Arquivados"
               tip="Mostrar alunos arquivados"
               toggled={showArchived}
               setToggle={setShowArchived}
-            />
+            />*/}
             <Button
               className="sm:ml-auto"
               onClick={() => handleOpenForm()}

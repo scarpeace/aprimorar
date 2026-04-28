@@ -9,6 +9,7 @@ import {
     formatPhone,
 } from "@/lib/utils/formatter";
 import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type StudentsTableProps = {
   students?: PageDTOStudentResponseDTO;
@@ -27,6 +28,8 @@ export function StudentsTable({
   error,
   onEdit,
 }: Readonly<StudentsTableProps>) {
+  const navigate = useNavigate();
+
   if (error) {
     return (
       <ErrorCard
@@ -70,9 +73,6 @@ export function StudentsTable({
             <th className="text-left font-semibold text-base-content/80">
               Status
             </th>
-            <th className="text-right font-semibold text-base-content/80 pr-4">
-              Ações
-            </th>
           </tr>
         </thead>
 
@@ -81,6 +81,8 @@ export function StudentsTable({
             <tr
               key={student.id}
               className="transition-colors hover:bg-base-200/70"
+              onClick={() => navigate(`/students/${student.id}`)}
+
             >
               <td>{student.name}</td>
               <td>{student.responsible?.name || "-"}</td>
@@ -92,23 +94,12 @@ export function StudentsTable({
               <td>{student.school}</td>
 
               <td>{formatDateShortYear(student.createdAt ?? "")}</td>
-              <td>{student.archivedAt ? "Arquivado" : "Ativo"}</td>
-
-              <td className="text-right flex justify-end gap-2 pr-2">
-                <Button
-                  className="btn-square btn-ghost btn-xs text-info"
-                  onClick={() => onEdit(student)}
-                  title="Editar"
-                >
-                  <Pencil size={16} />
-                </Button>
-                <ButtonLink
-                  className="btn btn-primary btn-xs btn-square"
-                  to={`/students/${student.id}`}
-                  title="Detalhes"
-                >
-                  <SquareArrowOutUpRightIcon className="h-4 w-4" />
-                </ButtonLink>
+              <td className="text-center">
+                {student.archivedAt ? (
+                  <div className="badge badge-soft badge-error">Arquivado</div>
+                ) : (
+                  <div className="badge badge-soft badge-info">Ativo</div>
+                )}
               </td>
             </tr>
           ))}

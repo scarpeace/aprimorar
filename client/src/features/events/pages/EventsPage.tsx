@@ -45,13 +45,6 @@ export function EventsPage() {
 
   const eventsQuery = useGetEvents(queryParams);
 
-  const headerProps = {
-    description: "Gerencie os atendimentos.",
-    title: "Atendimentos",
-    Icon: CalendarCheck2,
-    backLink: "/",
-  };
-
   const handleOpenForm = (event?: EventResponseDTO) => {
     setSelectedEvent(event || null);
     setIsFormOpen(true);
@@ -63,7 +56,7 @@ export function EventsPage() {
   };
 
   return (
-    <PageLayout {...headerProps}>
+    <PageLayout description="Gerencie os atendimentos." title="Atendimentos" Icon={CalendarCheck2} backLink="/">
       <div className="flex flex-col gap-3 w-full">
         <div className="flex flex-col sm:flex-row gap-3">
           <ListSearchInput

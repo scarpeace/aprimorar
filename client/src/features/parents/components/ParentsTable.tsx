@@ -5,6 +5,7 @@ import { Pagination } from "@/components/ui/pagination";
 import type { PageDTOParentResponseDTO, ParentResponseDTO } from "@/kubb";
 import { formatCpf, formatPhone } from "@/lib/utils/formatter";
 import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type ParentsTableProps = {
   parents?: PageDTOParentResponseDTO;
@@ -23,6 +24,8 @@ export function ParentsTable({
   error,
   onEdit,
 }: Readonly<ParentsTableProps>) {
+  const navigate = useNavigate();
+
   if (error) {
     return (
       <ErrorCard
@@ -53,12 +56,6 @@ export function ParentsTable({
             <th className="text-left font-semibold text-base-content/80">
               CPF
             </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Status
-            </th>
-            <th className="text-right font-semibold text-base-content/80 pr-4">
-              Ações
-            </th>
           </tr>
         </thead>
 
@@ -66,32 +63,14 @@ export function ParentsTable({
           {parents?.content.map((parent) => (
             <tr
               key={parent.parentId}
-              className="transition-colors hover:bg-base-200/70"
+              className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
+              onClick={() => navigate(`/parents/${parent.parentId}`)}
             >
               <td>{parent.name}</td>
 
               <td>{formatPhone(parent.contact)}</td>
               <td>{parent.email}</td>
               <td>{formatCpf(parent.cpf)}</td>
-
-              <td>{parent.archivedAt ? "Arquivado" : "Ativo"}</td>
-
-              <td className="text-right flex justify-end gap-2 pr-2">
-                <Button
-                  className="btn-square btn-ghost btn-xs text-info"
-                  onClick={() => onEdit(parent)}
-                  title="Editar"
-                >
-                  <Pencil size={16} />
-                </Button>
-                <ButtonLink
-                  className="btn btn-primary btn-xs btn-square"
-                  to={`/parents/${parent.parentId}`}
-                  title="Detalhes"
-                >
-                  <SquareArrowOutUpRightIcon className="h-4 w-4" />
-                </ButtonLink>
-              </td>
             </tr>
           ))}
         </tbody>
