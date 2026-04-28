@@ -145,11 +145,11 @@ class EventServiceTest {
             EventResponseDTO expectedSecond = secondResponse();
             Page<Event> expectedPage = new PageImpl<>(List.of(firstEvent, secondEvent), input, 2);
 
-            when(eventRepo.findAllByEmployeeId(EMPLOYEE_ID, input)).thenReturn(expectedPage);
+            when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expectedFirst);
             when(eventMapper.convertToDto(secondEvent)).thenReturn(expectedSecond);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEventsByEmployeeId(input, EMPLOYEE_ID);
+            PageDTO<EventResponseDTO> actual = eventService.getEventsByEmployeeId(input, EMPLOYEE_ID, null);
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
