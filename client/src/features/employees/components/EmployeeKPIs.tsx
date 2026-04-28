@@ -1,0 +1,41 @@
+import { KpiCard } from "@/components/ui/kpi-card";
+import { SectionCard } from "@/components/ui/section-card";
+import { useGetEmployeeMonthlySummary } from "@/kubb";
+import { brl } from "@/lib/utils/formatter";
+
+interface EmployeeKPIsProps {
+  employeeId: string;
+}
+
+export function EmployeeKPIs({ employeeId }: EmployeeKPIsProps) {
+  const summaryQuery = useGetEmployeeMonthlySummary(employeeId);
+
+  return (
+    <SectionCard
+      title="Resumo mensal"
+      description="Resumo dos atendimentos do colaborador no mês"
+    >
+      {summaryQuery.isPending ? (
+        <div className="flex flex-col gap-3">
+          <div className="h-24 w-full animate-pulse rounded-lg bg-base-200" />
+          <div className="h-24 w-full animate-pulse rounded-lg bg-base-200" />
+        </div>
+      ) : summaryQuery.isError ? (
+        <div className="alert alert-error">
+          <span className="text-sm">Erro ao carregar o resumo mensal.</span>
+        </div>
+      ) : (
+        <div className="grid gap-3">
+          <KpiCard
+            label="Total de atendimentos"
+            value={summaryQuery.data?.totalEvents ?? 0}
+          />
+          <KpiCard
+            label="Valor a receber"
+            value={brl.format(summaryQuery.data?.totalPayment ?? 0)}
+          />
+        </div>
+      )}
+    </SectionCard>
+  );
+}
