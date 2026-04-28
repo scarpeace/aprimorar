@@ -71,28 +71,38 @@ export function EventsTable({
         </thead>
 
         <tbody className="whitespace-nowrap">
-          {eventsPage?.content?.map((event) => (
-            <tr
-              onClick={() => navigate(`/events/${event.eventId}`)}
-              key={event.eventId}
-              className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
-            >
-              <td className="">{event.studentName}</td>
-              <td>{event.employeeName}</td>
-              <td className="">{formatDateShortYear(event.startDate)}</td>
-              <td className=" text-center">{formatTime(event.startDate)} - {formatTime(event.endDate)}</td>
-              <td className=" text-center">
-                {EventContentLabels[event.content] || event.content}
+          {eventsPage?.content?.length === 0 ? (
+            <tr>
+              <td colSpan={8} className="text-center py-8 text-base-content/50">
+                Nenhum atendimento encontrado.
               </td>
+            </tr>
+          ) : (
+            eventsPage?.content?.map((event) => (
+              <tr
+                onClick={() => navigate(`/events/${event.eventId}`)}
+                key={event.eventId}
+                className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
+              >
+                <td className="">{event.studentName}</td>
+                <td>{event.employeeName}</td>
+                <td className="">{formatDateShortYear(event.startDate)}</td>
+                <td className=" text-center">
+                  {formatTime(event.startDate)} - {formatTime(event.endDate)}
+                </td>
+                <td className=" text-center">
+                  {EventContentLabels[event.content] || event.content}
+                </td>
 
-              <td>{brl.format(event.price)}</td>
-              <td>{brl.format(event.payment)}</td>
+                <td>{brl.format(event.price)}</td>
+                <td>{brl.format(event.payment)}</td>
 
-              <td className="text-center flex justify-center gap-1">
-                <EventStatusBadge event={event}/>
-              </td>
+                <td className="text-center flex justify-center gap-1">
+                  <EventStatusBadge event={event} />
+                </td>
               </tr>
-          ))}
+            ))
+          )}
         </tbody>
       </table>
       <Pagination
