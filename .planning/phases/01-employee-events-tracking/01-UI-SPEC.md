@@ -48,9 +48,9 @@ Exceptions: none
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | 14px | 400 | 1.5 |
-| Label | 14px | 500 | 1.2 |
+| Label | 14px | 600 | 1.2 |
 | Heading | 20px | 600 | 1.2 |
-| Display | 24px | 700 | 1.2 |
+| Display | 24px | 600 | 1.2 |
 
 ---
 
