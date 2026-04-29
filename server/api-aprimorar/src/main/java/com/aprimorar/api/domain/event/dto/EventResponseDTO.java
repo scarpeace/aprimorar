@@ -67,6 +67,14 @@ public record EventResponseDTO(
     @Schema(nullable = false, description = "Indica se o pagamento do colaborador já foi baixado", example = "false")
     boolean employeePaid,
 
+    @Nullable
+    @Schema(nullable = true, description = "Data de pagamento ao colaborador", example = "2024-03-10T15:33:42Z")
+    Instant employeePaymentDate,
+
+    @Nullable
+    @Schema(nullable = true, description = "Data de cobrança do aluno", example = "2024-03-10T15:33:42Z")
+    Instant studentChargeDate,
+
     @NotNull
     @Schema(nullable = false, description = "Data de criação do evento", example = "2024-03-10T15:33:42Z`")
     Instant createdAt,
