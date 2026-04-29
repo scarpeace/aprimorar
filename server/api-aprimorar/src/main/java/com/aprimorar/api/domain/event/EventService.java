@@ -162,6 +162,7 @@ public class EventService {
     public EventResponseDTO settleStudentCharge(UUID id, boolean charged) {
         Event event = findEventOrThrow(id);
         event.setStudentCharged(charged);
+        event.setStudentChargeDate(charged ? Instant.now(clock) : null);
         log.info("Status da cobrança do aluno no evento {} atualizado para {}.", event.getTitle(), charged);
         return eventMapper.convertToDto(event);
     }
@@ -170,6 +171,7 @@ public class EventService {
     public EventResponseDTO settleEmployeePayment(UUID id, boolean paid) {
         Event event = findEventOrThrow(id);
         event.setEmployeePaid(paid);
+        event.setEmployeePaymentDate(paid ? Instant.now(clock) : null);
         log.info("Status do pagamento do colaborador no evento {} atualizado para {}.", event.getTitle(), paid);
         return eventMapper.convertToDto(event);
     }
