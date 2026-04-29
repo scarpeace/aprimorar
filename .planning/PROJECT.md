@@ -30,13 +30,14 @@ A secretária deve ser capaz de gerenciar o dia a dia da escola a partir do app,
 - ✓ Fluxos de gestão de eventos já existem na base de código atual — existente
 - ✓ Autenticação simples para acesso de secretária/administrador está implementada com rotas internas protegidas — Fase 1
 
+- ✓ Refatorar página do colaborador para incluir tabela exclusiva de eventos e painel de KPIs de pagamento — v1.1
+
 ### Ativos
 
 - [ ] Tornar o CRUD de funcionários, responsáveis, alunos e eventos totalmente funcional para a v1 com as regras de negócio exigidas para as operações escolares
 - [ ] Introduzir o acompanhamento financeiro básico para cobranças, pagamentos, saldos vencidos e resumos simples
 - [ ] Fornecer um resumo de dashboard pequeno, mas útil, que combine visibilidade operacional diária com visibilidade financeira
 - [ ] Eliminar a necessidade de usar o Google Sheets para a gestão de alunos e eventos no trabalho do dia a dia
-- [ ] Refatorar página do colaborador para incluir tabela exclusiva de eventos e painel de KPIs de pagamento.
 
 ### Fora de Escopo
 

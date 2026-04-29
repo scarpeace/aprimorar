@@ -8,7 +8,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { AddressDetails } from "@/features/address/components/AddressDetails";
 import { EventsTable } from "@/features/events/components/EventsTable";
 import {
-  useGetEventsByStudent,
+  useGetEventsByStudentId,
   useGetStudentById,
 } from "@/kubb";
 import {
@@ -30,7 +30,7 @@ export function StudentDetailsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const studentQuery = useGetStudentById(studentId);
-  const studentEvents = useGetEventsByStudent(studentId);
+  const studentEvents = useGetEventsByStudentId(studentId);
 
   const headerProps = {
     description: "Veja e gerencie as informações do aluno",
