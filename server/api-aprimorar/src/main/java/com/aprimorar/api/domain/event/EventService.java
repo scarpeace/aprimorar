@@ -169,20 +169,18 @@ public class EventService {
     }
 
     @Transactional
-    public EventResponseDTO settleStudentCharge(UUID id, boolean charged) {
+    public EventResponseDTO toggleStudentCharge(UUID id) {
         Event event = findEventOrThrow(id);
-        event.setStudentCharged(charged);
-        event.setStudentChargeDate(charged ? Instant.now(clock) : null);
-        log.info("Status da cobrança do aluno no evento {} atualizado para {}.", event.getTitle(), charged);
+        event.toggleStudentCharge(Instant.now(clock));
+        log.info("Status da cobrança do aluno no evento {} atualizado para {}.", event.getTitle(), event.isStudentCharged());
         return eventMapper.convertToDto(event);
     }
 
     @Transactional
-    public EventResponseDTO settleEmployeePayment(UUID id, boolean paid) {
+    public EventResponseDTO toggleEmployeePayment(UUID id) {
         Event event = findEventOrThrow(id);
-        event.setEmployeePaid(paid);
-        event.setEmployeePaymentDate(paid ? Instant.now(clock) : null);
-        log.info("Status do pagamento do colaborador no evento {} atualizado para {}.", event.getTitle(), paid);
+        event.toggleEmployeePayment(Instant.now(clock));
+        log.info("Status do pagamento do colaborador no evento {} atualizado para {}.", event.getTitle(), event.isEmployeePaid());
         return eventMapper.convertToDto(event);
     }
 

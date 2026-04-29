@@ -20,9 +20,7 @@ export function EventDetailPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const eventQuery = useGetEventById(eventId);
-  const { settleStudentCharge, settleEmployeePayment } = useEventMutations({
-    onSuccessCallback: () => {},
-  });
+  const { toggleStudentCharge, toggleEmployeePayment } = useEventMutations();
 
   const headerProps = {
     description: "Veja e gerencie as informações do evento",
@@ -46,24 +44,16 @@ export function EventDetailPage() {
       </PageLayout>
     );
   }
-  const profit =
-    Number(eventQuery.data.price) - Number(eventQuery.data.payment);
-  const isIncomePaid = eventQuery.data.studentCharged;
-  const isExpensePaid = eventQuery.data.employeePaid;
-  const isFinancialPending =
-    settleStudentCharge.isPending || settleEmployeePayment.isPending;
 
   const handleToggleIncomeStatus = () => {
-    settleStudentCharge.mutate({
+    toggleStudentCharge.mutate({
       id: eventQuery.data.eventId,
-      params: { charged: !isIncomePaid },
     });
   };
 
   const handleToggleExpenseStatus = () => {
-    settleEmployeePayment.mutate({
+    toggleEmployeePayment.mutate({
       id: eventQuery.data.eventId,
-      params: { paid: !isExpensePaid },
     });
   };
 
@@ -122,7 +112,7 @@ export function EventDetailPage() {
               value={
                 <div className="flex flex-col gap-1">
                   <span className="text-2xl font-bold text-success">
-                    {brl.format(profit)}
+                    {brl.format(eventQuery.data.profit)}
                   </span>
                   <span className="text-[10px] uppercase opacity-50 font-bold">
                     Resultado líquido
@@ -136,22 +126,22 @@ export function EventDetailPage() {
               value={
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between gap-2">
-                    <Badge variant={isIncomePaid ? "success" : "warning"}>
-                      {isIncomePaid ? "Pago" : "Pendente"}
+                    <Badge variant={eventQuery.data.studentCharged ? "success" : "warning"}>
+                      {eventQuery.data.studentCharged ? "Pago" : "Pendente"}
                     </Badge>
                     <Button
                       size="sm"
-                      variant={isIncomePaid ? "outline" : "success"}
+                      variant={eventQuery.data.studentCharged ? "outline" : "success"}
                       onClick={handleToggleIncomeStatus}
-                      disabled={isFinancialPending}
+                      disabled={toggleStudentCharge.isPending}
                       className="h-7 px-2 text-xs"
                     >
-                      {isIncomePaid ? (
+                      {eventQuery.data.studentCharged ? (
                         <Clock3 className="h-3 w-3 mr-1" />
                       ) : (
                         <Check className="h-3 w-3 mr-1" />
                       )}
-                      {isIncomePaid ? "Marcar Pendente" : "Marcar Pago"}
+                      {eventQuery.data.studentCharged ? "Marcar Pendente" : "Marcar Pago"}
                     </Button>
                   </div>
                   <div className="p-2 bg-base-300/30 rounded border border-base-300/50">
@@ -171,22 +161,22 @@ export function EventDetailPage() {
               value={
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between gap-2">
-                    <Badge variant={isExpensePaid ? "success" : "warning"}>
-                      {isExpensePaid ? "Pago" : "Pendente"}
+                    <Badge variant={eventQuery.data.employeePaid ? "success" : "warning"}>
+                      {eventQuery.data.employeePaid ? "Pago" : "Pendente"}
                     </Badge>
                     <Button
                       size="sm"
-                      variant={isExpensePaid ? "outline" : "success"}
+                      variant={eventQuery.data.employeePaid ? "outline" : "success"}
                       onClick={handleToggleExpenseStatus}
-                      disabled={isFinancialPending}
+                      disabled={toggleEmployeePayment.isPending}
                       className="h-7 px-2 text-xs"
                     >
-                      {isExpensePaid ? (
+                      {eventQuery.data.employeePaid ? (
                         <Clock3 className="h-3 w-3 mr-1" />
                       ) : (
                         <Check className="h-3 w-3 mr-1" />
                       )}
-                      {isExpensePaid ? "Marcar Pendente" : "Marcar Pago"}
+                      {eventQuery.data.employeePaid ? "Marcar Pendente" : "Marcar Pago"}
                     </Button>
                   </div>
                   <div className="p-2 bg-base-300/30 rounded border border-base-300/50">
@@ -202,7 +192,7 @@ export function EventDetailPage() {
             />
 
             <SummaryItem
-              className="md:col-span-3 min-h-[100px]"
+              className="md:col-span-3 min-h-25"
               label="Observações"
               value={eventQuery.data.description || "Nenhuma observação."}
             />

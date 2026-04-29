@@ -63,10 +63,12 @@ public class Event extends BaseEntity {
 
     @Transient
     public Double getDuration() {
-        if (startDate == null || endDate == null) {
-            return 0.0;
-        }
         return (double) Duration.between(startDate, endDate).toMinutes() / 60.0;
+    }
+
+    @Transient
+    public BigDecimal getProfit(){
+        return price.subtract(payment);
     }
 
     public Event(
@@ -132,6 +134,14 @@ public class Event extends BaseEntity {
         return employeePaid;
     }
 
+    public Instant getEmployeePaymentDate() {
+        return employeePaymentDate;
+    }
+
+    public Instant getStudentChargeDate() {
+        return studentChargeDate;
+    }
+
     public Student getStudent() {
         return student;
     }
@@ -140,7 +150,7 @@ public class Event extends BaseEntity {
         return employee;
     }
 
-    public void update(
+    public Event update(
         String description,
         Instant startDate,
         Instant endDate,
@@ -166,30 +176,27 @@ public class Event extends BaseEntity {
         this.content = content;
         this.student = student;
         this.employee = employee;
+
+        return this;
     }
 
-    public void setStudentCharged(boolean studentCharged) {
-        this.studentCharged = studentCharged;
+
+    public void toggleStudentCharge(Instant now) {
+        this.studentCharged = !this.studentCharged;
+        if (this.studentCharged) {
+            this.studentChargeDate = now;
+        } else {
+            this.studentChargeDate = null;
+        }
     }
 
-    public void setEmployeePaid(boolean employeePaid) {
-        this.employeePaid = employeePaid;
-    }
-
-    public Instant getEmployeePaymentDate() {
-        return employeePaymentDate;
-    }
-
-    public void setEmployeePaymentDate(Instant employeePaymentDate) {
-        this.employeePaymentDate = employeePaymentDate;
-    }
-
-    public Instant getStudentChargeDate() {
-        return studentChargeDate;
-    }
-
-    public void setStudentChargeDate(Instant studentChargeDate) {
-        this.studentChargeDate = studentChargeDate;
+    public void toggleEmployeePayment(Instant now) {
+        this.employeePaid = !this.employeePaid;
+        if (this.employeePaid) {
+            this.employeePaymentDate = now;
+        } else {
+            this.employeePaymentDate = null;
+        }
     }
 
     public void validateEditWindow(Instant now) {

@@ -3,19 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
+  getEmployeeMonthlySummaryQueryKey,
   getEventByIdQueryKey,
+  getEventsByEmployeeIdQueryKey,
+  getEventsByStudentIdQueryKey,
   getEventsQueryKey,
+  getFinanceSummaryQueryKey,
   useCreateEvent,
-  useSettleEmployeePaymentEvent,
-  useSettleStudentChargeEvent,
+  useToggleEmployeeEventPayment,
+  useToggleStudentEventCharge,
   useUpdateEvent,
 } from "@/kubb";
 
-interface UseEventMutationsProps {
-  onSuccessCallback?: () => void;
-}
-
-export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps = {}) {
+export function useEventMutations() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -28,11 +28,17 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
       onSuccess: (createdEvent) => {
         toast.success("Evento criado com sucesso");
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
-        if (onSuccessCallback) {
-          onSuccessCallback();
-        } else {
-          navigate(`/events/${createdEvent.eventId}`);
-        }
+        queryClient.invalidateQueries({
+          queryKey: getEventsByEmployeeIdQueryKey(createdEvent.employeeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getEmployeeMonthlySummaryQueryKey(createdEvent.employeeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getEventsByStudentIdQueryKey(createdEvent.studentId),
+        });
+        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        navigate(`/events/${createdEvent.eventId}`);
       },
     },
   });
@@ -46,46 +52,61 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
         toast.success("Evento atualizado com sucesso");
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
         queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
-        if (onSuccessCallback) {
-          onSuccessCallback();
-        } else {
-          navigate(`/events/${updatedEvent.eventId}`);
-        }
+        queryClient.invalidateQueries({
+          queryKey: getEventsByEmployeeIdQueryKey(updatedEvent.employeeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getEmployeeMonthlySummaryQueryKey(updatedEvent.employeeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getEventsByStudentIdQueryKey(updatedEvent.studentId),
+        });
+        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        navigate(`/events/${updatedEvent.eventId}`);
       },
     },
   });
 
-
-  const handleStatusError = (error: any) => {
-    toast.error(getFriendlyErrorMessage(error));
-  };
-
-  const settleStudentCharge = useSettleStudentChargeEvent({
+  const toggleStudentCharge = useToggleStudentEventCharge({
     mutation: {
-      onSuccess: (_, variables) => {
+      onSuccess: (updatedEvent, variables) => {
         toast.success("Status da cobrança atualizado");
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
         queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
+        queryClient.invalidateQueries({
+          queryKey: getEventsByStudentIdQueryKey(updatedEvent.studentId),
+        });
+        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
       },
-      onError: handleStatusError,
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
+      },
     },
   });
 
-  const settleEmployeePayment = useSettleEmployeePaymentEvent({
+  const toggleEmployeePayment = useToggleEmployeeEventPayment({
     mutation: {
-      onSuccess: (_, variables) => {
+      onSuccess: (updatedEvent, variables) => {
         toast.success("Status do pagamento atualizado");
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
         queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
+        queryClient.invalidateQueries({
+          queryKey: getEventsByEmployeeIdQueryKey(updatedEvent.employeeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getEmployeeMonthlySummaryQueryKey(updatedEvent.employeeId),
+        });
       },
-      onError: handleStatusError,
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
+      },
     },
   });
 
   return {
     createEvent,
     updateEvent,
-    settleStudentCharge,
-    settleEmployeePayment,
+    toggleStudentCharge,
+    toggleEmployeePayment,
   };
 }

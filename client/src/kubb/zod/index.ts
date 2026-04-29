@@ -105,17 +105,15 @@ export {
   getEventsQueryResponseSchema,
 } from "./event/getEventsSchema.ts";
 export {
-  settleEmployeePaymentEvent200Schema,
-  settleEmployeePaymentEventMutationResponseSchema,
-  settleEmployeePaymentEventPathParamsSchema,
-  settleEmployeePaymentEventQueryParamsSchema,
-} from "./event/settleEmployeePaymentEventSchema.ts";
+  toggleEmployeeEventPayment200Schema,
+  toggleEmployeeEventPaymentMutationResponseSchema,
+  toggleEmployeeEventPaymentPathParamsSchema,
+} from "./event/toggleEmployeeEventPaymentSchema.ts";
 export {
-  settleStudentChargeEvent200Schema,
-  settleStudentChargeEventMutationResponseSchema,
-  settleStudentChargeEventPathParamsSchema,
-  settleStudentChargeEventQueryParamsSchema,
-} from "./event/settleStudentChargeEventSchema.ts";
+  toggleStudentEventCharge200Schema,
+  toggleStudentEventChargeMutationResponseSchema,
+  toggleStudentEventChargePathParamsSchema,
+} from "./event/toggleStudentEventChargeSchema.ts";
 export {
   updateEvent200Schema,
   updateEventMutationRequestSchema,

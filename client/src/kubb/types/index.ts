@@ -178,19 +178,17 @@ export type {
   GetEventsByStudentIdQueryResponse,
 } from "./event/GetEventsByStudentId.ts";
 export type {
-  SettleEmployeePaymentEvent200,
-  SettleEmployeePaymentEventMutation,
-  SettleEmployeePaymentEventMutationResponse,
-  SettleEmployeePaymentEventPathParams,
-  SettleEmployeePaymentEventQueryParams,
-} from "./event/SettleEmployeePaymentEvent.ts";
+  ToggleEmployeeEventPayment200,
+  ToggleEmployeeEventPaymentMutation,
+  ToggleEmployeeEventPaymentMutationResponse,
+  ToggleEmployeeEventPaymentPathParams,
+} from "./event/ToggleEmployeeEventPayment.ts";
 export type {
-  SettleStudentChargeEvent200,
-  SettleStudentChargeEventMutation,
-  SettleStudentChargeEventMutationResponse,
-  SettleStudentChargeEventPathParams,
-  SettleStudentChargeEventQueryParams,
-} from "./event/SettleStudentChargeEvent.ts";
+  ToggleStudentEventCharge200,
+  ToggleStudentEventChargeMutation,
+  ToggleStudentEventChargeMutationResponse,
+  ToggleStudentEventChargePathParams,
+} from "./event/ToggleStudentEventCharge.ts";
 export type {
   UpdateEvent200,
   UpdateEventMutation,

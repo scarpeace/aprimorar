@@ -17,8 +17,8 @@ export type { GetEventByIdQueryKey } from "./hooks/event/useGetEventById.ts";
 export type { GetEventsQueryKey } from "./hooks/event/useGetEvents.ts";
 export type { GetEventsByEmployeeIdQueryKey } from "./hooks/event/useGetEventsByEmployeeId.ts";
 export type { GetEventsByStudentIdQueryKey } from "./hooks/event/useGetEventsByStudentId.ts";
-export type { SettleEmployeePaymentEventMutationKey } from "./hooks/event/useSettleEmployeePaymentEvent.ts";
-export type { SettleStudentChargeEventMutationKey } from "./hooks/event/useSettleStudentChargeEvent.ts";
+export type { ToggleEmployeeEventPaymentMutationKey } from "./hooks/event/useToggleEmployeeEventPayment.ts";
+export type { ToggleStudentEventChargeMutationKey } from "./hooks/event/useToggleStudentEventCharge.ts";
 export type { UpdateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
 export type { CreateGeneralExpenseMutationKey } from "./hooks/finance/useCreateGeneralExpense.ts";
 export type { DeleteGeneralExpenseMutationKey } from "./hooks/finance/useDeleteGeneralExpense.ts";
@@ -226,19 +226,17 @@ export type {
   GetEventsByStudentIdQueryResponse,
 } from "./types/event/GetEventsByStudentId.ts";
 export type {
-  SettleEmployeePaymentEvent200,
-  SettleEmployeePaymentEventMutation,
-  SettleEmployeePaymentEventMutationResponse,
-  SettleEmployeePaymentEventPathParams,
-  SettleEmployeePaymentEventQueryParams,
-} from "./types/event/SettleEmployeePaymentEvent.ts";
+  ToggleEmployeeEventPayment200,
+  ToggleEmployeeEventPaymentMutation,
+  ToggleEmployeeEventPaymentMutationResponse,
+  ToggleEmployeeEventPaymentPathParams,
+} from "./types/event/ToggleEmployeeEventPayment.ts";
 export type {
-  SettleStudentChargeEvent200,
-  SettleStudentChargeEventMutation,
-  SettleStudentChargeEventMutationResponse,
-  SettleStudentChargeEventPathParams,
-  SettleStudentChargeEventQueryParams,
-} from "./types/event/SettleStudentChargeEvent.ts";
+  ToggleStudentEventCharge200,
+  ToggleStudentEventChargeMutation,
+  ToggleStudentEventChargeMutationResponse,
+  ToggleStudentEventChargePathParams,
+} from "./types/event/ToggleStudentEventCharge.ts";
 export type {
   UpdateEvent200,
   UpdateEventMutation,
@@ -479,14 +477,14 @@ export { getEventsByStudentId } from "./hooks/event/useGetEventsByStudentId.ts";
 export { getEventsByStudentIdQueryKey } from "./hooks/event/useGetEventsByStudentId.ts";
 export { getEventsByStudentIdQueryOptions } from "./hooks/event/useGetEventsByStudentId.ts";
 export { useGetEventsByStudentId } from "./hooks/event/useGetEventsByStudentId.ts";
-export { settleEmployeePaymentEvent } from "./hooks/event/useSettleEmployeePaymentEvent.ts";
-export { settleEmployeePaymentEventMutationKey } from "./hooks/event/useSettleEmployeePaymentEvent.ts";
-export { settleEmployeePaymentEventMutationOptions } from "./hooks/event/useSettleEmployeePaymentEvent.ts";
-export { useSettleEmployeePaymentEvent } from "./hooks/event/useSettleEmployeePaymentEvent.ts";
-export { settleStudentChargeEvent } from "./hooks/event/useSettleStudentChargeEvent.ts";
-export { settleStudentChargeEventMutationKey } from "./hooks/event/useSettleStudentChargeEvent.ts";
-export { settleStudentChargeEventMutationOptions } from "./hooks/event/useSettleStudentChargeEvent.ts";
-export { useSettleStudentChargeEvent } from "./hooks/event/useSettleStudentChargeEvent.ts";
+export { toggleEmployeeEventPayment } from "./hooks/event/useToggleEmployeeEventPayment.ts";
+export { toggleEmployeeEventPaymentMutationKey } from "./hooks/event/useToggleEmployeeEventPayment.ts";
+export { toggleEmployeeEventPaymentMutationOptions } from "./hooks/event/useToggleEmployeeEventPayment.ts";
+export { useToggleEmployeeEventPayment } from "./hooks/event/useToggleEmployeeEventPayment.ts";
+export { toggleStudentEventCharge } from "./hooks/event/useToggleStudentEventCharge.ts";
+export { toggleStudentEventChargeMutationKey } from "./hooks/event/useToggleStudentEventCharge.ts";
+export { toggleStudentEventChargeMutationOptions } from "./hooks/event/useToggleStudentEventCharge.ts";
+export { useToggleStudentEventCharge } from "./hooks/event/useToggleStudentEventCharge.ts";
 export { updateEvent } from "./hooks/event/useUpdateEvent.ts";
 export { updateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
 export { updateEventMutationOptions } from "./hooks/event/useUpdateEvent.ts";
@@ -715,17 +713,15 @@ export {
   getEventsQueryResponseSchema,
 } from "./zod/event/getEventsSchema.ts";
 export {
-  settleEmployeePaymentEvent200Schema,
-  settleEmployeePaymentEventMutationResponseSchema,
-  settleEmployeePaymentEventPathParamsSchema,
-  settleEmployeePaymentEventQueryParamsSchema,
-} from "./zod/event/settleEmployeePaymentEventSchema.ts";
+  toggleEmployeeEventPayment200Schema,
+  toggleEmployeeEventPaymentMutationResponseSchema,
+  toggleEmployeeEventPaymentPathParamsSchema,
+} from "./zod/event/toggleEmployeeEventPaymentSchema.ts";
 export {
-  settleStudentChargeEvent200Schema,
-  settleStudentChargeEventMutationResponseSchema,
-  settleStudentChargeEventPathParamsSchema,
-  settleStudentChargeEventQueryParamsSchema,
-} from "./zod/event/settleStudentChargeEventSchema.ts";
+  toggleStudentEventCharge200Schema,
+  toggleStudentEventChargeMutationResponseSchema,
+  toggleStudentEventChargePathParamsSchema,
+} from "./zod/event/toggleStudentEventChargeSchema.ts";
 export {
   updateEvent200Schema,
   updateEventMutationRequestSchema,

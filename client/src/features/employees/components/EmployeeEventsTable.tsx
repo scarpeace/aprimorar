@@ -10,6 +10,9 @@ import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { EventStatusBadge } from "@/features/events/components/EventStatusBadge";
 import { Pagination } from "@/components/ui/pagination";
 import { useNavigate } from "react-router-dom";
+import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { CircleCheck, CircleDollarSign, Info, SquareArrowOutDownRight, SquareArrowOutUpRight } from "lucide-react";
 
 interface EmployeeEventsTableProps {
   employeeId: string;
@@ -27,10 +30,22 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
     sort: ["startDate,desc"],
   });
 
+  const { toggleEmployeePayment } = useEventMutations();
+
+  const handleToggleEmployeePayment = (eventId: string) => {
+    toggleEmployeePayment.mutate({ id: eventId });
+  };
+
   if (eventsQuery.error) {
     return (
-      <SectionCard title="Atendimentos" description="Erro ao carregar atendimentos">
-        <ErrorCard title="Não foi possível carregar a listagem de Eventos" error={eventsQuery.error} />
+      <SectionCard
+        title="Atendimentos"
+        description="Erro ao carregar atendimentos"
+      >
+        <ErrorCard
+          title="Não foi possível carregar a listagem de Eventos"
+          error={eventsQuery.error}
+        />
       </SectionCard>
     );
   }
@@ -41,7 +56,7 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
       description="Atendimentos vinculados ao colaborador"
       headerActions={
         <ListSearchInput
-          placeholder="Buscar aluno"
+          placeholder="Buscar por aluno"
           value={searchTerm}
           onChange={(val) => {
             setSearchTerm(val);
@@ -60,28 +75,42 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
         <table className="table table-zebra table-auto bg-base-100 overflow-x-auto shadow-sm animate-[fade-up_280ms_ease-out_both]">
           <thead className="bg-base-300 rounded">
             <tr>
-              <th className="text-left font-semibold text-base-content/80">Aluno</th>
-              <th className="text-left font-semibold text-base-content/80">Data</th>
-              <th className="text-center font-semibold text-base-content/80">Horário</th>
-              <th className="text-center font-semibold text-base-content/80">Conteúdo</th>
-              <th className="text-right font-semibold text-base-content/80">Pagamento</th>
-              <th className="text-center font-semibold text-base-content/80 pr-4">Status</th>
+              <th className="text-left font-semibold text-base-content/80">
+                Aluno
+              </th>
+              <th className="text-left font-semibold text-base-content/80">
+                Data
+              </th>
+              <th className="text-center font-semibold text-base-content/80">
+                Horário
+              </th>
+              <th className="text-center font-semibold text-base-content/80">
+                Conteúdo
+              </th>
+              <th className="text-right font-semibold text-base-content/80">
+                Repasse
+              </th>
+              <th className="text-center font-semibold text-base-content/80 pr-4">
+                Status
+              </th>
             </tr>
           </thead>
 
           <tbody className="whitespace-nowrap">
             {eventsQuery.data?.content?.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center py-8 text-base-content/50">
+                <td
+                  colSpan={6}
+                  className="text-center py-8 text-base-content/50"
+                >
                   Nenhum atendimento encontrado.
                 </td>
               </tr>
             ) : (
               eventsQuery.data?.content?.map((event) => (
                 <tr
-                  onClick={() => navigate(`/events/${event.eventId}`)}
                   key={event.eventId}
-                  className="transition-colors hover:bg-base-300/70 hover:cursor-pointer group"
+                  className="transition-colors hover:bg-base-300/70"
                 >
                   <td className="font-medium">{event.studentName}</td>
                   <td>{formatDateShortYear(event.startDate)}</td>
@@ -89,13 +118,38 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
                     {formatTime(event.startDate)} - {formatTime(event.endDate)}
                   </td>
                   <td className="text-center">
-                    <span className="text-xs uppercase opacity-70">
+                    <span className="text-xs uppercase font-bold">
                       {EventContentLabels[event.content] || event.content}
                     </span>
                   </td>
-                  <td className="text-right text-sm">{brl.format(event.payment)}</td>
+                  <td className="text-right text-sm">
+                    {brl.format(event.payment)}
+                  </td>
                   <td className="text-center flex justify-center gap-1">
-                    <EventStatusBadge event={event} />
+                    <div className="tooltip" data-tip={event.employeePaid ? "Cancelar Pagamento" : "Marcar como Pago"}>
+                    <Button
+                      disabled={toggleEmployeePayment.isPending}
+                      className="w-10 p-0"
+                      size="sm"
+                      variant={event.employeePaid ? "success" : "warning"}
+                      onClick={() => handleToggleEmployeePayment(event.eventId)}
+                    >
+                      {event.employeePaid ? (
+                        <CircleCheck size={20} />
+                      ) : (
+                        <CircleDollarSign size={20}/>
+                      )}
+                      </Button>
+                    </div>
+                    <div className="tooltip" data-tip={"Detalhes do Evento"}>
+
+                    <ButtonLink
+                      to={`/events/${event.eventId}`}
+                      size="sm"
+                      className="w-10 p-0"
+                      variant="primary"
+                    ><SquareArrowOutUpRight size={20}/></ButtonLink>
+                    </div>
                   </td>
                 </tr>
               ))

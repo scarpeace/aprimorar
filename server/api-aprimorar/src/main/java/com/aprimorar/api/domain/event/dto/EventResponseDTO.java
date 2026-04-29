@@ -44,6 +44,10 @@ public record EventResponseDTO(
     BigDecimal payment,
 
     @NotNull
+    @Schema(nullable = false, description = "Lucro do evento", example = "50.00")
+    BigDecimal profit,
+
+    @NotNull
     @Schema(nullable = false, description = "ID do estudante vinculado ao evento", example = "123e4567-e89b-12d3-a456-426614174000")
     UUID studentId,
 

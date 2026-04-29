@@ -56,6 +56,8 @@ class EventServiceTest {
     private static final Instant UPDATED_EVENT_START = Instant.parse("2026-03-26T13:00:00Z");
     private static final Instant UPDATED_EVENT_END = Instant.parse("2026-03-26T14:00:00Z");
     private static final Instant CREATED_AT = Instant.parse("2026-03-20T10:00:00Z");
+    private static final Instant EMPLOYEE_PAID_DATE = Instant.parse("2026-03-21T10:00:00Z");
+    private static final Instant STUDENT_PAID_DATE = Instant.parse("2026-03-21T10:00:00Z");
     private static final Instant UPDATED_AT = Instant.parse("2026-03-21T10:00:00Z");
     private static final Instant CURRENT_TIME = Instant.parse("2026-03-24T10:00:00Z");
 
@@ -149,7 +151,7 @@ class EventServiceTest {
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expectedFirst);
             when(eventMapper.convertToDto(secondEvent)).thenReturn(expectedSecond);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEventsByEmployeeId(input, EMPLOYEE_ID, null);
+            PageDTO<EventResponseDTO> actual = eventService.getEventsByEmployeeId(input, EMPLOYEE_ID, null, null);
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
@@ -434,6 +436,8 @@ class EventServiceTest {
             "Ana Paula",
             false,
             false,
+            EMPLOYEE_PAID_DATE,
+            STUDENT_PAID_DATE,
             CREATED_AT,
             UPDATED_AT
         );
@@ -455,6 +459,8 @@ class EventServiceTest {
             "Ana Paula",
             false,
             false,
+            EMPLOYEE_PAID_DATE,
+            STUDENT_PAID_DATE,
             CREATED_AT,
             UPDATED_AT
         );
@@ -476,6 +482,8 @@ class EventServiceTest {
             "Ana Paula",
             false,
             false,
+            null,
+            null,
             CREATED_AT,
             UPDATED_AT
         );

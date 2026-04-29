@@ -37,27 +37,27 @@ class EventControllerTest {
         UUID employeeId = UUID.randomUUID();
         String studentName = "John";
         
-        when(eventService.getEventsByEmployeeId(any(Pageable.class), eq(employeeId), eq(studentName)))
+        when(eventService.getEventsByEmployeeId(any(Pageable.class), eq(employeeId), eq(studentName), any()))
             .thenReturn(new PageDTO<>(new PageImpl<>(Collections.emptyList())));
 
         mockMvc.perform(get("/v1/events/{id}/employee", employeeId)
                 .param("studentName", studentName))
             .andExpect(status().isOk());
 
-        verify(eventService).getEventsByEmployeeId(any(Pageable.class), eq(employeeId), eq(studentName));
+        verify(eventService).getEventsByEmployeeId(any(Pageable.class), eq(employeeId), eq(studentName), any());
     }
 
     @Test
     void getEventsByEmployeeId_WithSort_ShouldHandlePageable() throws Exception {
         UUID employeeId = UUID.randomUUID();
         
-        when(eventService.getEventsByEmployeeId(any(Pageable.class), eq(employeeId), any()))
+        when(eventService.getEventsByEmployeeId(any(Pageable.class), eq(employeeId), any(), any()))
             .thenReturn(new PageDTO<>(new PageImpl<>(Collections.emptyList())));
 
         mockMvc.perform(get("/v1/events/{id}/employee", employeeId)
                 .param("sort", "startDate,desc"))
             .andExpect(status().isOk());
 
-        verify(eventService).getEventsByEmployeeId(any(Pageable.class), eq(employeeId), any());
+        verify(eventService).getEventsByEmployeeId(any(Pageable.class), eq(employeeId), any(), any());
     }
 }

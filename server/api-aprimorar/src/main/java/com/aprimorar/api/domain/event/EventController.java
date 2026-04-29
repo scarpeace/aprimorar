@@ -90,17 +90,17 @@ public class EventController {
         eventService.deleteEvent(id);
     }
 
-    @PatchMapping("/{id}/settle-student-charge")
-    @Operation(operationId = "settleStudentChargeEvent", description = "Dá baixa na cobrança do aluno no evento.")
-    @ApiResponse(responseCode = "200", description = "Baixa atualizada com sucesso.")
-    public ResponseEntity<EventResponseDTO> settleStudentChargeEvent(@PathVariable UUID id, @RequestParam boolean charged) {
-        return ResponseEntity.ok(eventService.settleStudentCharge(id, charged));
+    @PatchMapping("/{id}/toggle-student-charge")
+    @Operation(operationId = "toggleStudentEventCharge", description = "Dá baixa na cobrança do aluno no evento.")
+    @ApiResponse(responseCode = "200", description = "Cobrança do aluno atualizada com sucesso.")
+    public ResponseEntity<EventResponseDTO> toggleStudentEventCharge(@PathVariable UUID id) {
+        return ResponseEntity.ok(eventService.toggleStudentCharge(id));
     }
 
-    @PatchMapping("/{id}/settle-employee-payment")
-    @Operation(operationId = "settleEmployeePaymentEvent", description = "Dá baixa no pagamento do colaborador no evento.")
-    @ApiResponse(responseCode = "200", description = "Baixa atualizada com sucesso.")
-    public ResponseEntity<EventResponseDTO> settleEmployeePaymentEvent(@PathVariable UUID id, @RequestParam boolean paid) {
-        return ResponseEntity.ok(eventService.settleEmployeePayment(id, paid));
+    @PatchMapping("/{id}/toggle-employee-payment")
+    @Operation(operationId = "toggleEmployeeEventPayment", description = "Dá baixa no pagamento do colaborador no evento.")
+    @ApiResponse(responseCode = "200", description = "Pagamento do colaborador atualizado com sucesso.")
+    public ResponseEntity<EventResponseDTO> toggleEmployeeEventPayment(@PathVariable UUID id) {
+        return ResponseEntity.ok(eventService.toggleEmployeePayment(id));
     }
 }

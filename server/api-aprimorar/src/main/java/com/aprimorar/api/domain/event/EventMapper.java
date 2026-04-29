@@ -16,6 +16,7 @@ public class EventMapper {
             event.getDuration(),
             event.getPrice(),
             event.getPayment(),
+            event.getProfit(),
             event.getStudent().getId(),
             event.getStudent().getName(),
             event.getEmployee().getId(),

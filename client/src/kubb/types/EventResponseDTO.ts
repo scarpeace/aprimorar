@@ -61,6 +61,11 @@ export type EventResponseDTO = {
    */
   payment: number;
   /**
+   * @description Lucro do evento
+   * @type number
+   */
+  profit: number;
+  /**
    * @description ID do estudante vinculado ao evento
    * @type string, uuid
    */
@@ -90,6 +95,16 @@ export type EventResponseDTO = {
    * @type boolean
    */
   employeePaid: boolean;
+  /**
+   * @description Data de pagamento ao colaborador
+   * @type string, date-time
+   */
+  employeePaymentDate?: string | null;
+  /**
+   * @description Data de cobrança do aluno
+   * @type string, date-time
+   */
+  studentChargeDate?: string | null;
   /**
    * @description Data de criação do evento
    * @type string, date-time
