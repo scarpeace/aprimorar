@@ -52,4 +52,8 @@ public final class EventSpecifications {
             return cb.like(cb.lower(root.join("student").get("name")), pattern);
         };
     }
+
+    public static Specification<Event> withEmployeePaid(Boolean paid) {
+        return (root, query, cb) -> paid == null ? null : cb.equal(root.get("employeePaid"), paid);
+    }
 }
