@@ -105,14 +105,24 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public PageDTO<EventResponseDTO> getEventsByEmployeeId(Pageable pageable, UUID employeeId, String studentName) {
+    public PageDTO<EventResponseDTO> getEventsByEmployeeId(
+        Pageable pageable,
+        UUID employeeId,
+        String studentName,
+        Boolean hidePaid
+    ) {
         Specification<Event> spec = Specification.where(EventSpecifications.withEmployeeId(employeeId))
-            .and(EventSpecifications.withStudentNameIgnoreCase(studentName));
+            .and(EventSpecifications.withStudentNameIgnoreCase(studentName))
+            .and(EventSpecifications.withEmployeePaid(hidePaid != null && hidePaid ? false : null));
 
         Page<Event> eventPage = eventRepo.findAll(spec, pageable);
 
         Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);
-        log.info("Consulta de eventos do colaborador {} finalizada, {} registros encontrados.", employeeId, eventPage.getTotalElements());
+        log.info(
+            "Consulta de eventos do colaborador {} finalizada, {} registros encontrados.",
+            employeeId,
+            eventPage.getTotalElements()
+        );
 
         return new PageDTO<>(eventsDtoPage);
     }

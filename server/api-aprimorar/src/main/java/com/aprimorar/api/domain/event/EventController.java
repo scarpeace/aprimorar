@@ -62,9 +62,10 @@ public class EventController {
     public ResponseEntity<PageDTO<EventResponseDTO>> getEventByEmployeeId(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
-        @RequestParam(required = false) String studentName
+        @RequestParam(required = false) String studentName,
+        @RequestParam(required = false) Boolean hidePaid
     ) {
-        return ResponseEntity.ok(eventService.getEventsByEmployeeId(pageable, id, studentName));
+        return ResponseEntity.ok(eventService.getEventsByEmployeeId(pageable, id, studentName, hidePaid));
     }
 
     @GetMapping("/{id}/student")
