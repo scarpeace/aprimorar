@@ -45,6 +45,12 @@ public class Event extends BaseEntity {
     @Column(name = "employee_paid", nullable = false)
     private boolean employeePaid;
 
+    @Column(name = "employee_payment_date")
+    private Instant employeePaymentDate;
+
+    @Column(name = "student_charge_date")
+    private Instant studentChargeDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
     private Student student;
@@ -168,6 +174,22 @@ public class Event extends BaseEntity {
 
     public void setEmployeePaid(boolean employeePaid) {
         this.employeePaid = employeePaid;
+    }
+
+    public Instant getEmployeePaymentDate() {
+        return employeePaymentDate;
+    }
+
+    public void setEmployeePaymentDate(Instant employeePaymentDate) {
+        this.employeePaymentDate = employeePaymentDate;
+    }
+
+    public Instant getStudentChargeDate() {
+        return studentChargeDate;
+    }
+
+    public void setStudentChargeDate(Instant studentChargeDate) {
+        this.studentChargeDate = studentChargeDate;
     }
 
     public void validateEditWindow(Instant now) {
