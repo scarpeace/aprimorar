@@ -7,33 +7,69 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { ErrorCard } from "@/components/ui/error-card";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
-import { EventStatusBadge } from "@/features/events/components/EventStatusBadge";
 import { Pagination } from "@/components/ui/pagination";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
 import { Button, ButtonLink } from "@/components/ui/button";
-import { CircleCheck, CircleDollarSign, Info, SquareArrowOutDownRight, SquareArrowOutUpRight } from "lucide-react";
+import { CircleCheck, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
 
 interface EmployeeEventsTableProps {
   employeeId: string;
 }
 
+const MONTHS = [
+  { value: 1, label: "Janeiro" },
+  { value: 2, label: "Fevereiro" },
+  { value: 3, label: "Março" },
+  { value: 4, label: "Abril" },
+  { value: 5, label: "Maio" },
+  { value: 6, label: "Junho" },
+  { value: 7, label: "Julho" },
+  { value: 8, label: "Agosto" },
+  { value: 9, label: "Setembro" },
+  { value: 10, label: "Outubro" },
+  { value: 11, label: "Novembro" },
+  { value: 12, label: "Dezembro" },
+];
+
+const currentYear = new Date().getFullYear();
+const YEARS = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
+
 export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  const month = parseInt(searchParams.get("month") ?? String(new Date().getMonth() + 1));
+  const year = parseInt(searchParams.get("year") ?? String(new Date().getFullYear()));
 
   const eventsQuery = useGetEventsByEmployeeId(employeeId, {
     page: currentPage,
     studentName: debouncedSearchTerm,
     sort: ["startDate,desc"],
+    month,
+    year,
   });
 
   const { toggleEmployeePayment } = useEventMutations();
 
   const handleToggleEmployeePayment = (eventId: string) => {
     toggleEmployeePayment.mutate({ id: eventId });
+  };
+
+  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("month", e.target.value);
+    setSearchParams(newParams);
+    setCurrentPage(0);
+  };
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("year", e.target.value);
+    setSearchParams(newParams);
+    setCurrentPage(0);
   };
 
   if (eventsQuery.error) {
@@ -55,14 +91,38 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
       title="Atendimentos"
       description="Atendimentos vinculados ao colaborador"
       headerActions={
-        <ListSearchInput
-          placeholder="Buscar por aluno"
-          value={searchTerm}
-          onChange={(val) => {
-            setSearchTerm(val);
-            setCurrentPage(0);
-          }}
-        />
+        <div className="flex gap-2 items-center flex-wrap justify-end">
+          <select
+            className="select select-sm select-bordered"
+            value={month}
+            onChange={handleMonthChange}
+          >
+            {MONTHS.map((m) => (
+              <option key={m.value} value={m.value}>
+                {m.label}
+              </option>
+            ))}
+          </select>
+          <select
+            className="select select-sm select-bordered"
+            value={year}
+            onChange={handleYearChange}
+          >
+            {YEARS.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+          <ListSearchInput
+            placeholder="Buscar por aluno"
+            value={searchTerm}
+            onChange={(val) => {
+              setSearchTerm(val);
+              setCurrentPage(0);
+            }}
+          />
+        </div>
       }
     >
       <div className="relative min-h-50">

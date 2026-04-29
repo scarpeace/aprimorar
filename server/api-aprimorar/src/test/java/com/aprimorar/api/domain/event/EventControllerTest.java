@@ -33,31 +33,31 @@ class EventControllerTest {
     private java.time.Clock clock;
 
     @Test
-    void getEventsByEmployeeId_WithStudentName_ShouldCallServiceWithParam() throws Exception {
+    void getEventsByEmployeeId_ShouldCallServiceWithCorrectParams() throws Exception {
         UUID employeeId = UUID.randomUUID();
         String studentName = "John";
-        
-        when(eventService.getEventsByEmployeeId(any(Pageable.class), eq(employeeId), eq(studentName), any()))
+
+        when(eventService.getEventsByEmployeeId(any(Pageable.class), eq(employeeId), eq(studentName), any(), any(), any()))
             .thenReturn(new PageDTO<>(new PageImpl<>(Collections.emptyList())));
 
         mockMvc.perform(get("/v1/events/{id}/employee", employeeId)
                 .param("studentName", studentName))
             .andExpect(status().isOk());
 
-        verify(eventService).getEventsByEmployeeId(any(Pageable.class), eq(employeeId), eq(studentName), any());
+        verify(eventService).getEventsByEmployeeId(any(Pageable.class), eq(employeeId), eq(studentName), any(), any(), any());
     }
 
     @Test
     void getEventsByEmployeeId_WithSort_ShouldHandlePageable() throws Exception {
         UUID employeeId = UUID.randomUUID();
-        
-        when(eventService.getEventsByEmployeeId(any(Pageable.class), eq(employeeId), any(), any()))
+
+        when(eventService.getEventsByEmployeeId(any(Pageable.class), eq(employeeId), any(), any(), any(), any()))
             .thenReturn(new PageDTO<>(new PageImpl<>(Collections.emptyList())));
 
         mockMvc.perform(get("/v1/events/{id}/employee", employeeId)
                 .param("sort", "startDate,desc"))
             .andExpect(status().isOk());
 
-        verify(eventService).getEventsByEmployeeId(any(Pageable.class), eq(employeeId), any(), any());
+        verify(eventService).getEventsByEmployeeId(any(Pageable.class), eq(employeeId), any(), any(), any(), any());
     }
 }

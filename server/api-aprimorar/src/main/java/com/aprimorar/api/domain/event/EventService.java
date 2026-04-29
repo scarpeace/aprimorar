@@ -16,6 +16,10 @@ import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.shared.PageDTO;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -109,11 +113,22 @@ public class EventService {
         Pageable pageable,
         UUID employeeId,
         String studentName,
-        Boolean hidePaid
+        Boolean hidePaid,
+        Integer month,
+        Integer year
     ) {
         Specification<Event> spec = Specification.where(EventSpecifications.withEmployeeId(employeeId))
             .and(EventSpecifications.withStudentNameIgnoreCase(studentName))
             .and(EventSpecifications.withEmployeePaid(hidePaid != null && hidePaid ? false : null));
+
+        if (month != null && year != null) {
+            ZoneId zone = clock.getZone();
+            Instant startOfMonth = YearMonth.of(year, month).atDay(1).atStartOfDay(zone).toInstant();
+            Instant endOfMonth = YearMonth.of(year, month).atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant();
+
+            spec = spec.and(EventSpecifications.withStartDateAfter(startOfMonth))
+                       .and(EventSpecifications.withEndDateBefore(endOfMonth));
+        }
 
         Page<Event> eventPage = eventRepo.findAll(spec, pageable);
 

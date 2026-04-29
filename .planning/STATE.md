@@ -20,16 +20,17 @@ progress:
 
 ## Current Position
 
-**Phase:** 02. Event Payment Workflow
+**Phase:** 02. Event Payment Workflow (Remaining tasks)
 **Plan:** 02-02. Frontend Toggle & Payment Action
-**Status:** Executing Plan 02-02
+**Status:** Ready to complete Phase 02
 
 ## Accumulated Context
 
 **Decisions:**
 
 - Phase 01: Completed. Modularized EmployeeDetailPage into EmployeeKPIs and EmployeeEventsTable.
-- Phase 02: Next focus is the payment registration and status filtering.
+- Phase 03: Completed. Implemented period-based navigation (month/year) via URL params, syncing table and KPIs.
+- Phase 02: Partially completed. Payment toggle logic implemented. Remaining: "Hide Paid" toggle and UI adjustments.
 
 **Todos:**
 

@@ -151,7 +151,7 @@ class EventServiceTest {
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expectedFirst);
             when(eventMapper.convertToDto(secondEvent)).thenReturn(expectedSecond);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEventsByEmployeeId(input, EMPLOYEE_ID, null, null);
+            PageDTO<EventResponseDTO> actual = eventService.getEventsByEmployeeId(input, EMPLOYEE_ID, null, null, null, null);
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
