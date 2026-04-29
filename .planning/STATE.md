@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: next-milestone
+milestone: v1.1
+milestone_name: milestone
 status: planning
-last_updated: "2026-04-29T08:30:00.000Z"
+last_updated: "2026-04-29T08:45:00.000Z"
 progress:
-  total_phases: 0
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_phases: 3
+  completed_phases: 1
+  total_plans: 2
+  completed_plans: 2
 ---
 
 # Current State
@@ -16,18 +16,22 @@ progress:
 ## Project Reference
 
 **Core Value:** Aprimorar centralizes school management for the secretary, replacing fragmented spreadsheets with an integrated, secure operational workflow.
-**Current Focus:** Definition of next milestone.
+**Current Focus:** v1.1 Gestão Financeira e Detalhes do Colaborador - Refactoring the employee detail page to include a dedicated event table and financial KPI dashboard.
 
 ## Current Position
 
-**Phase:** TBD
+**Phase:** 02. Event Payment Workflow
 **Plan:** None
-**Status:** Waiting for next milestone definition
+**Status:** Planning Phase 02
 
 ## Accumulated Context
 
 **Decisions:**
-- v1.1 completed: Refactored employee detail page with modular components and custom events table.
+- Phase 01: Completed. Modularized EmployeeDetailPage into EmployeeKPIs and EmployeeEventsTable.
+- Phase 02: Next focus is the payment registration and status filtering.
 
 **Todos:**
-- [ ] Define next milestone goals.
+- [ ] Plan Phase 02
+
+**Blockers:**
+- None

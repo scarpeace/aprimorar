@@ -29,8 +29,7 @@ A secretária deve ser capaz de gerenciar o dia a dia da escola a partir do app,
 - ✓ Fluxos de gestão de funcionários já existem na base de código atual — existente
 - ✓ Fluxos de gestão de eventos já existem na base de código atual — existente
 - ✓ Autenticação simples para acesso de secretária/administrador está implementada com rotas internas protegidas — Fase 1
-
-- ✓ Refatorar página do colaborador para incluir tabela exclusiva de eventos e painel de KPIs de pagamento — v1.1
+- ✓ Refatorar página do colaborador para incluir tabela exclusiva de eventos e busca por aluno — v1.1 Phase 01
 
 ### Ativos
 
@@ -38,6 +37,8 @@ A secretária deve ser capaz de gerenciar o dia a dia da escola a partir do app,
 - [ ] Introduzir o acompanhamento financeiro básico para cobranças, pagamentos, saldos vencidos e resumos simples
 - [ ] Fornecer um resumo de dashboard pequeno, mas útil, que combine visibilidade operacional diária com visibilidade financeira
 - [ ] Eliminar a necessidade de usar o Google Sheets para a gestão de alunos e eventos no trabalho do dia a dia
+- [ ] Implementar fluxo de pagamento e filtros de "ocultar pagos" na tabela de eventos do colaborador.
+- [ ] Implementar painel de KPIs financeiros dinâmicos (Mensal/Histórico) na página do colaborador.
 
 ### Fora de Escopo
 
@@ -72,6 +73,7 @@ O usuário imediato do produto é a secretária/administrador da escola. Marcos 
 | Manter o primeiro dashboard focado em dados operacionais e financeiros instantâneos | A tomada de decisão diária precisa de visibilidade tanto da atividade escolar quanto de pagamentos/atrasos | - Pendente |
 | Adiar o acesso de professores, pais e alunos | O acesso multi-papel expandiria o escopo antes que o fluxo de administração central esteja estável | - Pendente |
 | Usar sessões gerenciadas pelo servidor do Spring Security em vez de JWT | O logout imediato e a persistência de atualização do navegador importam mais do que a portabilidade do token para este SPA interno | Implementado na Fase 1 |
+| Modularizar a EmployeeDetailPage | Facilitar a inclusão de KPIs e tabelas de eventos complexas mantendo o código limpo | Implementado na v1.1 |
 
 ## Evolução
 
@@ -91,4 +93,4 @@ Este documento evolui nas transições de fase e limites de marcos (milestones).
 4. Atualizar o Contexto com o estado atual
 
 ---
-*Última atualização: 19-04-2026 após a Fase 1*
+*Última atualização: 29-04-2026 após a Fase 1 da v1.1*
