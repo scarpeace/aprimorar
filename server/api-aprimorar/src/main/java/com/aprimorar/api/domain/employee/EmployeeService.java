@@ -1,5 +1,6 @@
 package com.aprimorar.api.domain.employee;
 
+import com.aprimorar.api.domain.auth.repository.UserRepository;
 import com.aprimorar.api.domain.employee.dto.EmployeeMonthlySummaryDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
@@ -39,12 +40,14 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepo;
     private final EmployeeMapper employeeMapper;
     private final EventRepository eventRepo;
+    private final UserRepository userRepo;
     private final Clock clock;
 
-    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, EventRepository eventRepo, Clock clock) {
+    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, EventRepository eventRepo, UserRepository userRepo, Clock clock) {
         this.employeeRepo = employeeRepo;
         this.employeeMapper = employeeMapper;
         this.eventRepo = eventRepo;
+        this.userRepo = userRepo;
         this.clock = clock;
     }
 
@@ -152,6 +155,12 @@ public class EmployeeService {
     public void deleteEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
         eventRepo.reassignEmployeeEventsToGhost(employeeId, PHANTOM_EMPLOYEE_ID);
+        
+        userRepo.findByEmployeeId(employeeId).ifPresent(user -> {
+            userRepo.delete(user);
+            log.info("Usuário associado ao colaborador {} deletado com sucesso.", employee.getName().toUpperCase());
+        });
+
         employeeRepo.delete(employee);
         log.info(
             "Colaborador {} deletado com sucesso. Eventos transferidos para arquivo morto fantasma.",

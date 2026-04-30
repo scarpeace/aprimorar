@@ -38,23 +38,33 @@ class EventTest {
     }
 
     @Test
-    @DisplayName("should set student charged explicitly")
-    void shouldSetStudentChargedExplicitly() {
+    @DisplayName("should toggle student charged and set date")
+    void shouldToggleStudentChargedAndSetDate() {
         Event event = createEvent(EVENT_START, EVENT_END, CURRENT_TIME);
+        Instant now = Instant.now();
 
-        event.setStudentCharged(true);
-
+        event.toggleStudentCharge(now);
         assertThat(event.isStudentCharged()).isTrue();
+        assertThat(event.getStudentChargeDate()).isEqualTo(now);
+
+        event.toggleStudentCharge(now);
+        assertThat(event.isStudentCharged()).isFalse();
+        assertThat(event.getStudentChargeDate()).isNull();
     }
 
     @Test
-    @DisplayName("should set employee paid explicitly")
-    void shouldSetEmployeePaidExplicitly() {
+    @DisplayName("should toggle employee paid and set date")
+    void shouldToggleEmployeePaidAndSetDate() {
         Event event = createEvent(EVENT_START, EVENT_END, CURRENT_TIME);
+        Instant now = Instant.now();
 
-        event.setEmployeePaid(true);
-
+        event.toggleEmployeePayment(now);
         assertThat(event.isEmployeePaid()).isTrue();
+        assertThat(event.getEmployeePaymentDate()).isEqualTo(now);
+
+        event.toggleEmployeePayment(now);
+        assertThat(event.isEmployeePaid()).isFalse();
+        assertThat(event.getEmployeePaymentDate()).isNull();
     }
 
     @Test

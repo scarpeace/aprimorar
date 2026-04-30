@@ -21,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
         """
     )
     Optional<User> findByUsernameOrEmployeeEmail(@Param("identifier") String identifier);
+
+    Optional<User> findByEmployeeId(UUID employeeId);
 }

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.aprimorar.api.domain.auth.repository.UserRepository;
 import com.aprimorar.api.domain.employee.dto.EmployeeMonthlySummaryDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
@@ -59,6 +60,9 @@ class EmployeeServiceTest {
 
     @Mock
     private EventRepository eventRepo;
+
+    @Mock
+    private UserRepository userRepo;
 
     @Mock
     private Clock clock;
@@ -194,15 +198,32 @@ class EmployeeServiceTest {
         }
 
         @Test
-        @DisplayName("should delete employee and reassign events to ghost")
-        void shouldDeleteEmployeeAndReassignEventsToGhost() {
+        @DisplayName("should delete employee, user and reassign events to ghost")
+        void shouldDeleteEmployeeUserAndReassignEventsToGhost() {
             Employee existingEmployee = employee();
 
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(existingEmployee));
+            when(userRepo.findByEmployeeId(EMPLOYEE_ID)).thenReturn(Optional.empty());
 
             employeeService.deleteEmployee(EMPLOYEE_ID);
 
             verify(eventRepo).reassignEmployeeEventsToGhost(EMPLOYEE_ID, GHOST_EMPLOYEE_ID);
+            verify(userRepo).findByEmployeeId(EMPLOYEE_ID);
+            verify(employeeRepo).delete(existingEmployee);
+        }
+
+        @Test
+        @DisplayName("should delete associated user when employee is deleted")
+        void shouldDeleteAssociatedUserWhenEmployeeIsDeleted() {
+            Employee existingEmployee = employee();
+            com.aprimorar.api.domain.auth.User associatedUser = org.mockito.Mockito.mock(com.aprimorar.api.domain.auth.User.class);
+
+            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(existingEmployee));
+            when(userRepo.findByEmployeeId(EMPLOYEE_ID)).thenReturn(Optional.of(associatedUser));
+
+            employeeService.deleteEmployee(EMPLOYEE_ID);
+
+            verify(userRepo).delete(associatedUser);
             verify(employeeRepo).delete(existingEmployee);
         }
     }
@@ -263,20 +284,24 @@ class EmployeeServiceTest {
             ZoneId zoneId = ZoneId.of("UTC");
             Instant fixedInstant = Instant.parse("2026-04-15T10:00:00Z");
             long totalEvents = 10L;
-            BigDecimal totalPayment = new BigDecimal("1500.00");
+            BigDecimal totalPaid = new BigDecimal("1000.00");
+            BigDecimal totalUnpaid = new BigDecimal("500.00");
 
             when(employeeRepo.existsById(EMPLOYEE_ID)).thenReturn(true);
             when(clock.instant()).thenReturn(fixedInstant);
             when(clock.getZone()).thenReturn(zoneId);
             when(eventRepo.countByEmployeeIdAndStartDateBetween(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
                 .thenReturn(totalEvents);
-            when(eventRepo.sumPaymentByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
-                .thenReturn(totalPayment);
+            when(eventRepo.sumPaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+                .thenReturn(totalPaid);
+            when(eventRepo.sumUnpaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+                .thenReturn(totalUnpaid);
 
             EmployeeMonthlySummaryDTO actual = employeeService.getMonthlySummary(EMPLOYEE_ID, month, year);
 
             assertThat(actual.totalEvents()).isEqualTo(totalEvents);
-            assertThat(actual.totalPayment()).isEqualTo(totalPayment);
+            assertThat(actual.totalPaid()).isEqualTo(totalPaid);
+            assertThat(actual.totalUnpaid()).isEqualTo(totalUnpaid);
             verify(employeeRepo).existsById(EMPLOYEE_ID);
         }
 
@@ -285,19 +310,24 @@ class EmployeeServiceTest {
         void shouldReturnMonthlySummaryUsingCurrentDateWhenMonthAndYearAreNull() {
             ZoneId zoneId = ZoneId.of("UTC");
             Instant fixedInstant = Instant.parse("2026-04-15T10:00:00Z");
+            BigDecimal totalPaid = new BigDecimal("500.00");
+            BigDecimal totalUnpaid = new BigDecimal("250.00");
 
             when(employeeRepo.existsById(EMPLOYEE_ID)).thenReturn(true);
             when(clock.instant()).thenReturn(fixedInstant);
             when(clock.getZone()).thenReturn(zoneId);
             when(eventRepo.countByEmployeeIdAndStartDateBetween(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
                 .thenReturn(5L);
-            when(eventRepo.sumPaymentByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
-                .thenReturn(new BigDecimal("750.00"));
+            when(eventRepo.sumPaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+                .thenReturn(totalPaid);
+            when(eventRepo.sumUnpaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+                .thenReturn(totalUnpaid);
 
             EmployeeMonthlySummaryDTO actual = employeeService.getMonthlySummary(EMPLOYEE_ID, null, null);
 
             assertThat(actual.totalEvents()).isEqualTo(5L);
-            assertThat(actual.totalPayment()).isEqualTo(new BigDecimal("750.00"));
+            assertThat(actual.totalPaid()).isEqualTo(totalPaid);
+            assertThat(actual.totalUnpaid()).isEqualTo(totalUnpaid);
         }
 
         @Test

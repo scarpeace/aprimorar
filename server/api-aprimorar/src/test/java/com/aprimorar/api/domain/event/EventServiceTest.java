@@ -84,30 +84,30 @@ class EventServiceTest {
     class CommandMethods {
 
         @Test
-        @DisplayName("should settle student charge to true")
-        void shouldSettleStudentChargeToTrue() {
+        @DisplayName("should toggle student charge")
+        void shouldToggleStudentCharge() {
             Event event = event();
             EventResponseDTO expected = response();
 
             when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(event));
             when(eventMapper.convertToDto(event)).thenReturn(expected);
 
-            EventResponseDTO actual = eventService.settleStudentCharge(EVENT_ID, true);
+            EventResponseDTO actual = eventService.toggleStudentCharge(EVENT_ID);
 
             assertThat(actual).isEqualTo(expected);
             assertThat(event.isStudentCharged()).isTrue();
         }
 
         @Test
-        @DisplayName("should settle employee payment to true")
-        void shouldSettleEmployeePaymentToTrue() {
+        @DisplayName("should toggle employee payment")
+        void shouldToggleEmployeePayment() {
             Event event = event();
             EventResponseDTO expected = response();
 
             when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(event));
             when(eventMapper.convertToDto(event)).thenReturn(expected);
 
-            EventResponseDTO actual = eventService.settleEmployeePayment(EVENT_ID, true);
+            EventResponseDTO actual = eventService.toggleEmployeePayment(EVENT_ID);
 
             assertThat(actual).isEqualTo(expected);
             assertThat(event.isEmployeePaid()).isTrue();
@@ -430,6 +430,7 @@ class EventServiceTest {
             1.0,
             BigDecimal.valueOf(120),
             BigDecimal.valueOf(80),
+            BigDecimal.valueOf(40),
             STUDENT_ID,
             "João Silva",
             EMPLOYEE_ID,
@@ -453,6 +454,7 @@ class EventServiceTest {
             1.0,
             BigDecimal.valueOf(130),
             BigDecimal.valueOf(90),
+            BigDecimal.valueOf(40),
             STUDENT_ID,
             "João Silva",
             EMPLOYEE_ID,
@@ -476,6 +478,7 @@ class EventServiceTest {
             1.0,
             BigDecimal.valueOf(140),
             BigDecimal.valueOf(90),
+            BigDecimal.valueOf(50),
             STUDENT_ID,
             "João Silva",
             EMPLOYEE_ID,
