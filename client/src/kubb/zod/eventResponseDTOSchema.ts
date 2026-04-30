@@ -35,12 +35,6 @@ export const eventResponseDTOSchema = z
     employeeName: z
       .string()
       .describe("Nome do colaborador vinculado ao evento"),
-    studentCharged: z
-      .boolean()
-      .describe("Indica se a cobrança do aluno já foi baixada"),
-    employeePaid: z
-      .boolean()
-      .describe("Indica se o pagamento do colaborador já foi baixado"),
     employeePaymentDate: z.iso
       .datetime()
       .describe("Data de pagamento ao colaborador")

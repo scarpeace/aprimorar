@@ -54,6 +54,7 @@ export type AddressResponseDTO = {
    */
   city: string;
   /**
+   * @description Estados Brasileiros
    * @type string
    */
   state: AddressResponseDTOStateEnumKey;

@@ -39,17 +39,17 @@ export function EmployeeKPIs({ employeeId }: EmployeeKPIsProps) {
         <div className="flex justify-between gap-3">
           <KpiCard
             label="Total de atendimentos"
-            value={summaryQuery.data?.totalEvents ?? 0}
+            value={summaryQuery.data?.totalEventsInPeriod ?? 0}
           />
           <KpiCard
             className="grow"
             label="Total Pago"
-            value={brl.format(summaryQuery.data?.totalPaid ?? 0)}
+            value={brl.format(summaryQuery.data?.totalPaidInPeriod ?? 0)}
           />
           <KpiCard
             className="grow"
             label="Total Pendente"
-            value={brl.format(summaryQuery.data?.totalUnpaid ?? 0)}
+            value={brl.format(summaryQuery.data?.totalUnpaidInPeriod ?? 0)}
           />
         </div>
       )}

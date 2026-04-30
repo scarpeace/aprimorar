@@ -126,22 +126,22 @@ export function EventDetailPage() {
               value={
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between gap-2">
-                    <Badge variant={eventQuery.data.studentCharged ? "success" : "warning"}>
-                      {eventQuery.data.studentCharged ? "Pago" : "Pendente"}
+                    <Badge variant={eventQuery.data.studentChargeDate != null ? "success" : "warning"}>
+                      {eventQuery.data.studentChargeDate != null ? "Pago" : "Pendente"}
                     </Badge>
                     <Button
                       size="sm"
-                      variant={eventQuery.data.studentCharged ? "outline" : "success"}
+                      variant={eventQuery.data.studentChargeDate != null ? "outline" : "success"}
                       onClick={handleToggleIncomeStatus}
                       disabled={toggleStudentCharge.isPending}
                       className="h-7 px-2 text-xs"
                     >
-                      {eventQuery.data.studentCharged ? (
+                      {eventQuery.data.studentChargeDate != null ? (
                         <Clock3 className="h-3 w-3 mr-1" />
                       ) : (
                         <Check className="h-3 w-3 mr-1" />
                       )}
-                      {eventQuery.data.studentCharged ? "Marcar Pendente" : "Marcar Pago"}
+                      {eventQuery.data.studentChargeDate != null ? "Marcar Pendente" : "Marcar Pago"}
                     </Button>
                   </div>
                   <div className="p-2 bg-base-300/30 rounded border border-base-300/50">
@@ -161,22 +161,22 @@ export function EventDetailPage() {
               value={
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between gap-2">
-                    <Badge variant={eventQuery.data.employeePaid ? "success" : "warning"}>
-                      {eventQuery.data.employeePaid ? "Pago" : "Pendente"}
+                    <Badge variant={eventQuery.data.employeePaymentDate != null ? "success" : "warning"}>
+                      {eventQuery.data.employeePaymentDate != null ? "Pago" : "Pendente"}
                     </Badge>
                     <Button
                       size="sm"
-                      variant={eventQuery.data.employeePaid ? "outline" : "success"}
+                      variant={eventQuery.data.employeePaymentDate != null ? "outline" : "success"}
                       onClick={handleToggleExpenseStatus}
                       disabled={toggleEmployeePayment.isPending}
                       className="h-7 px-2 text-xs"
                     >
-                      {eventQuery.data.employeePaid ? (
+                      {eventQuery.data.employeePaymentDate != null ? (
                         <Clock3 className="h-3 w-3 mr-1" />
                       ) : (
                         <Check className="h-3 w-3 mr-1" />
                       )}
-                      {eventQuery.data.employeePaid ? "Marcar Pendente" : "Marcar Pago"}
+                      {eventQuery.data.employeePaymentDate != null ? "Marcar Pendente" : "Marcar Pago"}
                     </Button>
                   </div>
                   <div className="p-2 bg-base-300/30 rounded border border-base-300/50">

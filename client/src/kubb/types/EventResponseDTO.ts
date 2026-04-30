@@ -86,16 +86,6 @@ export type EventResponseDTO = {
    */
   employeeName: string;
   /**
-   * @description Indica se a cobrança do aluno já foi baixada
-   * @type boolean
-   */
-  studentCharged: boolean;
-  /**
-   * @description Indica se o pagamento do colaborador já foi baixado
-   * @type boolean
-   */
-  employeePaid: boolean;
-  /**
    * @description Data de pagamento ao colaborador
    * @type string, date-time
    */

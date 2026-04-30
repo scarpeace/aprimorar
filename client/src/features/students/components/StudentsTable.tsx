@@ -69,7 +69,6 @@ export function StudentsTable({
             <th className="text-left font-semibold text-base-content/80">
               Matricula
             </th>
-            {/*TODO: Trocar esse status por uma bolinha de status e mover as actions pra dentro da row*/}
             <th className="text-left font-semibold text-base-content/80">
               Status
             </th>

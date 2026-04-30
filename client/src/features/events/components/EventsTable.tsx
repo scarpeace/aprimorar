@@ -52,20 +52,17 @@ export function EventsTable({
             <th className="text-left font-semibold text-base-content/80">
               Data
             </th>
-            <th className="text-left font-semibold text-base-content/80">
+            <th className="text-center font-semibold text-base-content/80">
               Horário
             </th>
             <th className="text-left font-semibold text-base-content/80">
               Conteúdo
             </th>
             <th className="text-left font-semibold text-base-content/80">
-              Valor
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
               Pagamento
             </th>
-            <th className="text-center font-semibold text-base-content/80 pr-4">
-              Status
+            <th className="text-left font-semibold text-base-content/80">
+              Repasse
             </th>
           </tr>
         </thead>
@@ -94,12 +91,24 @@ export function EventsTable({
                   {EventContentLabels[event.content] || event.content}
                 </td>
 
-                <td>{brl.format(event.price)}</td>
-                <td>{brl.format(event.payment)}</td>
-
-                <td className="text-center flex justify-center gap-1">
-                  <EventStatusBadge event={event} />
+                <td>
+                  <div
+                    aria-label="status"
+                    className={`status mr-2 mb-1 ${event.studentChargeDate != null ? "status-warning" : "status-success"}`}
+                  />
+                  {brl.format(event.price)}
                 </td>
+                <td>
+                  <div
+                    aria-label="status"
+                    className={`status mr-2 mb-1 ${event.employeePaymentDate != null ? "status-warning" : "status-success"}`}
+                  />
+                  {brl.format(event.payment)}
+                </td>
+
+                {/*<td className="text-center flex justify-center gap-1">
+                  <EventStatusBadge event={event} />
+                </td>*/}
               </tr>
             ))
           )}

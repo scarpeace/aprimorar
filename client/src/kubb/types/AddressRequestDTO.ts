@@ -62,7 +62,7 @@ export type AddressRequestDTO = {
    */
   city: string;
   /**
-   * @description Estado do endereço
+   * @description Estados Brasileiros
    * @type string
    */
   state: AddressRequestDTOStateEnumKey;

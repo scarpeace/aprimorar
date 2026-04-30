@@ -155,19 +155,15 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
                     {brl.format(event.payment)}
                   </td>
                   <td className="text-center flex justify-center gap-1">
-                    <div className="tooltip" data-tip={event.employeePaid ? "Cancelar Pagamento" : "Marcar como Pago"}>
+                    <div className="tooltip" data-tip={event.employeePaymentDate != null ? "Cancelar Pagamento" : "Marcar como Pago"}>
                     <Button
                       disabled={toggleEmployeePayment.isPending}
                       className="w-10 p-0"
                       size="sm"
-                      variant={event.employeePaid ? "success" : "warning"}
+                      variant={event.employeePaymentDate != null ? "success" : "warning"}
                       onClick={() => handleToggleEmployeePayment(event.eventId)}
                     >
-                      {event.employeePaid ? (
-                        <CircleCheck size={20} />
-                      ) : (
                         <CircleDollarSign size={20}/>
-                      )}
                       </Button>
                     </div>
                     <div className="tooltip" data-tip={"Detalhes do Evento"}>

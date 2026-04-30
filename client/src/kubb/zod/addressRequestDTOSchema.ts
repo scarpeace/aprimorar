@@ -43,7 +43,7 @@ export const addressRequestDTOSchema = z
         "SE",
         "TO",
       ])
-      .describe("Estado do endereço"),
+      .describe("Estados Brasileiros"),
     zip: z.string().min(8).max(8).describe("CEP do endereço"),
     complement: z.optional(
       z.string().max(255).describe("Complemento do endereço"),
