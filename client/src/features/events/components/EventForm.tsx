@@ -30,8 +30,8 @@ interface EventFormProps {
   onCancel: () => void;
 }
 
-export function EventForm({ initialData, onSuccess, onCancel }: EventFormProps) {
-  const { createEvent, updateEvent } = useEventMutations({ onSuccessCallback: onSuccess });
+export function EventForm({ initialData, onCancel }: EventFormProps) {
+  const { createEvent, updateEvent } = useEventMutations();
   const isEditMode = !!initialData;
 
   const { register, handleSubmit, control, watch, formState: { errors } } = useForm<EventFormSchema>({

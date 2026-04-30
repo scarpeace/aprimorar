@@ -12,33 +12,18 @@ import { useSearchParams } from "react-router-dom";
 import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { CircleCheck, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
+import { MonthYearPicker } from "@/components/ui/month-year-input";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
 
 interface EmployeeEventsTableProps {
   employeeId: string;
 }
 
-const MONTHS = [
-  { value: 1, label: "Janeiro" },
-  { value: 2, label: "Fevereiro" },
-  { value: 3, label: "Março" },
-  { value: 4, label: "Abril" },
-  { value: 5, label: "Maio" },
-  { value: 6, label: "Junho" },
-  { value: 7, label: "Julho" },
-  { value: 8, label: "Agosto" },
-  { value: 9, label: "Setembro" },
-  { value: 10, label: "Outubro" },
-  { value: 11, label: "Novembro" },
-  { value: 12, label: "Dezembro" },
-];
-
-const currentYear = new Date().getFullYear();
-const YEARS = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
-
 export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [hidePaid, setHidePaid] = useState(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const month = parseInt(searchParams.get("month") ?? String(new Date().getMonth() + 1));
@@ -50,26 +35,30 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
     sort: ["startDate,desc"],
     month,
     year,
+    hidePaid
   });
 
   const { toggleEmployeePayment } = useEventMutations();
+  const selectedDate = new Date(year, month - 1, 1);
 
   const handleToggleEmployeePayment = (eventId: string) => {
     toggleEmployeePayment.mutate({ id: eventId });
   };
 
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleDateChange = (date: Date) => {
     const newParams = new URLSearchParams(searchParams);
-    newParams.set("month", e.target.value);
+    newParams.set("month", String(date.getMonth() + 1));
+    newParams.set("year", String(date.getFullYear()));
     setSearchParams(newParams);
     setCurrentPage(0);
   };
 
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleHidePaid = () => {
     const newParams = new URLSearchParams(searchParams);
-    newParams.set("year", e.target.value);
+    newParams.set("paid", "false");
     setSearchParams(newParams);
     setCurrentPage(0);
+    setHidePaid(!hidePaid)
   };
 
   if (eventsQuery.error) {
@@ -91,29 +80,9 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
       title="Atendimentos"
       description="Atendimentos vinculados ao colaborador"
       headerActions={
-        <div className="flex gap-2 items-center flex-wrap justify-end">
-          <select
-            className="select select-sm select-bordered"
-            value={month}
-            onChange={handleMonthChange}
-          >
-            {MONTHS.map((m) => (
-              <option key={m.value} value={m.value}>
-                {m.label}
-              </option>
-            ))}
-          </select>
-          <select
-            className="select select-sm select-bordered"
-            value={year}
-            onChange={handleYearChange}
-          >
-            {YEARS.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
+        <div className="flex gap-6 items-center justify-end">
+          <MonthYearPicker onChange={handleDateChange} selectedDate={selectedDate}/>
+          <ToggleSwitch toggled={hidePaid} setToggle={handleHidePaid} label={"Ocultar Pagos"} />
           <ListSearchInput
             placeholder="Buscar por aluno"
             value={searchTerm}
@@ -125,7 +94,7 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
         </div>
       }
     >
-      <div className="relative min-h-50">
+      <div className="min-h-30">
         {eventsQuery.isPending && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-base-100/50 backdrop-blur-[1px]">
             <LoadingSpinner text="Carregando atendimentos..." />
