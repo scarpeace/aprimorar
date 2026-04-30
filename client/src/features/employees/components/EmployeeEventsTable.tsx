@@ -132,7 +132,7 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
                   colSpan={6}
                   className="text-center py-8 text-base-content/50"
                 >
-                  Nenhum atendimento encontrado.
+                  Nenhum atendimento encontrado no período selecionado.
                 </td>
               </tr>
             ) : (

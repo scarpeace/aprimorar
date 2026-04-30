@@ -126,10 +126,11 @@ public class EmployeeService {
         Instant endOfMonth = YearMonth.of(targetYear, targetMonth).atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant();
 
         long totalEvents = eventRepo.countByEmployeeIdAndStartDateBetween(employeeId, startOfMonth, endOfMonth);
-        BigDecimal totalPayment = eventRepo.sumPaymentByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
+        BigDecimal totalPaid = eventRepo.sumPaidByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
+        BigDecimal totalUnpaid = eventRepo.sumUnpaidByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
 
         log.info("Resumo mensal gerado para o colaborador {} no mês {}/{}", employeeId, targetMonth, targetYear);
-        return new EmployeeMonthlySummaryDTO(totalEvents, totalPayment);
+        return new EmployeeMonthlySummaryDTO(totalEvents, totalPaid, totalUnpaid);
     }
 
     @Transactional

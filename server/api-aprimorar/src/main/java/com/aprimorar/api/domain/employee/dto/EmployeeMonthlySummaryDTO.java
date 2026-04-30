@@ -10,6 +10,9 @@ public record EmployeeMonthlySummaryDTO(
   Long totalEvents,
 
   @Schema(description = "Total de pagamento")
-  BigDecimal totalPayment
+  BigDecimal totalPaid,
+
+  @Schema(description = "Total de pagamento")
+  BigDecimal totalUnpaid
 ) {
 }

@@ -47,8 +47,11 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
     @Query("UPDATE Event e SET e.employee.id = :ghostId WHERE e.employee.id = :employeeId")
     void reassignEmployeeEventsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
 
-    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.startDate BETWEEN :startDate AND :endDate")
-    BigDecimal sumPaymentByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.startDate BETWEEN :startDate AND :endDate AND e.employeePaid IS TRUE")
+    BigDecimal sumPaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.startDate BETWEEN :startDate AND :endDate AND e.employeePaid IS FALSE")
+    BigDecimal sumUnpaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     @EntityGraph(attributePaths = { "student", "employee" })
     @Query(

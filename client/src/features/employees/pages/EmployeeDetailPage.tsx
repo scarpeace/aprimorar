@@ -52,8 +52,6 @@ export function EmployeeDetailPage() {
   return (
     <PageLayout {...headerProps}>
       <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-          <div className="lg:col-span-2">
             <SectionCard
               title="Colaborador"
               description="Dados do Colaborador"
@@ -83,12 +81,8 @@ export function EmployeeDetailPage() {
               <SummaryItem className="grow" label="Criado em" value={formatDateShortYear(employeeQuery.data.createdAt ?? "")} />
              </div>
             </SectionCard>
-          </div>
 
-          <div className="lg:col-span-1">
             <EmployeeKPIs employeeId={employeeId} />
-          </div>
-        </div>
 
         <EmployeeEventsTable employeeId={employeeId} />
       </div>
