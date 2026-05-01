@@ -19,6 +19,12 @@ export {
   getStudentByIdQueryResponseSchema,
 } from "./getStudentByIdSchema.ts";
 export {
+  getStudentMonthlySummary200Schema,
+  getStudentMonthlySummaryPathParamsSchema,
+  getStudentMonthlySummaryQueryParamsSchema,
+  getStudentMonthlySummaryQueryResponseSchema,
+} from "./getStudentMonthlySummarySchema.ts";
+export {
   getStudentsByParent200Schema,
   getStudentsByParentPathParamsSchema,
   getStudentsByParentQueryParamsSchema,

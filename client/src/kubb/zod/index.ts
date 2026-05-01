@@ -225,6 +225,12 @@ export {
   getStudentByIdQueryResponseSchema,
 } from "./student/getStudentByIdSchema.ts";
 export {
+  getStudentMonthlySummary200Schema,
+  getStudentMonthlySummaryPathParamsSchema,
+  getStudentMonthlySummaryQueryParamsSchema,
+  getStudentMonthlySummaryQueryResponseSchema,
+} from "./student/getStudentMonthlySummarySchema.ts";
+export {
   getStudentsByParent200Schema,
   getStudentsByParentPathParamsSchema,
   getStudentsByParentQueryParamsSchema,
@@ -250,6 +256,7 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./student/updateStudentSchema.ts";
+export { studentMonthlySummaryDTOSchema } from "./studentMonthlySummaryDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";

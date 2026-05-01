@@ -1,8 +1,7 @@
-import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOEmployeeResponseDTO, EmployeeResponseDTO } from "@/kubb";
+import type { PageDTOEmployeeResponseDTO } from "@/kubb";
 import { dutyLabels } from "../utils/dutyLabels";
 import {
   formatCpf,
@@ -10,7 +9,6 @@ import {
   formatPhone,
 } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
-import { SquareArrowOutUpRight } from "lucide-react";
 
 type EmployeesTableProps = {
   employees?: PageDTOEmployeeResponseDTO;
@@ -27,6 +25,8 @@ export function EmployeesTable({
   isPending,
   error,
 }: Readonly<EmployeesTableProps>) {
+
+  const navigate = useNavigate();
 
   if (isPending) {
     return <LoadingSpinner text="Carregando Colaboradores..." />;
@@ -61,9 +61,6 @@ export function EmployeesTable({
             <th className="text-left font-semibold text-base-content/80">
               Cadastro
             </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Ações
-            </th>
           </tr>
         </thead>
 
@@ -71,7 +68,8 @@ export function EmployeesTable({
           {employees?.content.map((employee) => (
             <tr
               key={employee.id}
-              className="transition-colors hover:bg-base-300/70"
+              className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
+              onClick={() => navigate(`/employees/${employee.id}`)}
             >
               <td>
                 <div className="flex items-center gap-3">
@@ -85,17 +83,7 @@ export function EmployeesTable({
               <td>{formatCpf(employee.cpf)}</td>
               <td>{formatPhone(employee.contact)}</td>
 
-              <td>{formatDateShortYear(employee.createdAt ?? "")}</td>
-              <td className="text-center p-0">
-                <ButtonLink
-                  to={`/employees/${employee.id}`}
-                  size="sm"
-                  className="w-10 p-0"
-                  variant="primary"
-                >
-                  <SquareArrowOutUpRight size={20} />
-                </ButtonLink>
-              </td>
+              <td>{formatDateShortYear(employee.createdAt)}</td>
             </tr>
           ))}
         </tbody>

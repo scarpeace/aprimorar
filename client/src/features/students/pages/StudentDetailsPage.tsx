@@ -6,11 +6,7 @@ import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { AddressDetails } from "@/features/address/components/AddressDetails";
-import { EventsTable } from "@/features/events/components/EventsTable";
-import {
-  useGetEventsByStudentId,
-  useGetStudentById,
-} from "@/kubb";
+import { useGetStudentById } from "@/kubb";
 import {
   formatCpf,
   formatDateShortYear,
@@ -22,15 +18,15 @@ import { useParams } from "react-router-dom";
 import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
 import { DeleteStudentButton } from "../components/DeleteStudentButton";
 import { StudentForm } from "../components/StudentForm";
+import { StudentKPIs } from "../components/StudentKPIs";
+import { StudentEventsTable } from "../components/StudentEventsTable";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
-  const [currentPage, setCurrentPage] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const studentQuery = useGetStudentById(studentId);
-  const studentEvents = useGetEventsByStudentId(studentId);
 
   const headerProps = {
     description: "Veja e gerencie as informações do aluno",
@@ -39,23 +35,18 @@ export function StudentDetailsPage() {
     backLink: "/students",
   };
 
-  if (studentQuery.isError || studentEvents.isError) {
+  if (studentQuery.isError) {
     return (
       <PageLayout {...headerProps}>
         <ErrorCard
           title="Erro ao carregar detalhes do aluno"
-          error={
-            studentQuery.error || studentEvents.error
-          }
+          error={studentQuery.error}
         />
       </PageLayout>
     );
   }
 
-  if (
-    studentQuery.isPending ||
-    studentEvents.isPending
-  ) {
+  if (studentQuery.isPending) {
     return (
       <PageLayout {...headerProps}>
         <LoadingCard title="Carregando detalhes do aluno" />
@@ -106,18 +97,8 @@ export function StudentDetailsPage() {
           </Collapse>
         </SectionCard>
 
-        <SectionCard
-          title={"Atendimentos"}
-          description={"Atendimentos vinculados ao aluno"}
-        >
-          <EventsTable
-            eventsPage={studentEvents.data}
-            isPending={studentEvents.isPending}
-            error={studentEvents.error}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
-        </SectionCard>
+        <StudentKPIs studentId={studentId} />
+        <StudentEventsTable studentId={studentId} />
 
         {isFormOpen && (
           <div className="modal modal-open">

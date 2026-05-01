@@ -50,6 +50,7 @@ export type { PagedModelGeneralExpenseResponseDTO } from "./PagedModelGeneralExp
 export type { ParentOptionsDTO } from "./ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
+export type { StudentMonthlySummaryDTO } from "./StudentMonthlySummaryDTO.ts";
 export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
@@ -305,6 +306,13 @@ export type {
   GetStudentByIdQuery,
   GetStudentByIdQueryResponse,
 } from "./student/GetStudentById.ts";
+export type {
+  GetStudentMonthlySummary200,
+  GetStudentMonthlySummaryPathParams,
+  GetStudentMonthlySummaryQuery,
+  GetStudentMonthlySummaryQueryParams,
+  GetStudentMonthlySummaryQueryResponse,
+} from "./student/GetStudentMonthlySummary.ts";
 export type {
   GetStudents200,
   GetStudentsQuery,

@@ -1,11 +1,10 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { type EventResponseDTO, type PageDTOEventResponseDTO } from "@/kubb";
+import { type PageDTOEventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
-import { EventStatusBadge } from "./EventStatusBadge";
 
 type EventsTableProps = {
   eventsPage?: PageDTOEventResponseDTO;
@@ -13,7 +12,6 @@ type EventsTableProps = {
   onPageChange: (page: number) => void;
   isPending: boolean;
   error: unknown;
-  onEdit?: (event: EventResponseDTO) => void;
 };
 
 export function EventsTable({
@@ -22,7 +20,6 @@ export function EventsTable({
   onPageChange,
   isPending,
   error,
-  onEdit,
 }: Readonly<EventsTableProps>) {
   const navigate = useNavigate();
   if (isPending) {
@@ -94,14 +91,14 @@ export function EventsTable({
                 <td>
                   <div
                     aria-label="status"
-                    className={`status mr-2 mb-1 ${event.studentChargeDate != null ? "status-warning" : "status-success"}`}
+                    className={`status mr-2 mb-1 ${event.studentChargeDate != null ? "status-success" : "status-warning"}`}
                   />
                   {brl.format(event.price)}
                 </td>
                 <td>
                   <div
                     aria-label="status"
-                    className={`status mr-2 mb-1 ${event.employeePaymentDate != null ? "status-warning" : "status-success"}`}
+                    className={`status mr-2 mb-1 ${event.employeePaymentDate != null ? "status-success" : "status-warning"}`}
                   />
                   {brl.format(event.payment)}
                 </td>
