@@ -1,6 +1,11 @@
 package com.aprimorar.api.enums;
 
-//TODO: Esse estilo de enum deve servir para os outros, tem que documentar pra gerar no kubb
+import io.swagger.v3.oas.annotations.media.Schema;
+
+/**
+ * Representa os estados brasileiros.
+ */
+@Schema(description = "Estados Brasileiros")
 public enum BrazilianStates {
     AC("Acre"),
     AL("Alagoas"),

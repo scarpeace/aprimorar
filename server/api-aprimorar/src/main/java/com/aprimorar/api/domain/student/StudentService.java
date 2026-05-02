@@ -14,6 +14,13 @@ import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.domain.student.repository.StudentSpecifications;
 import com.aprimorar.api.shared.MapperUtils;
 import com.aprimorar.api.shared.PageDTO;
+import com.aprimorar.api.domain.student.dto.StudentMonthlySummaryDTO;
+import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -37,19 +44,44 @@ public class StudentService {
     private final StudentMapper studentMapper;
     private final AddressMapper addressMapper;
     private final EventRepository eventRepo;
+    private final Clock clock;
 
     public StudentService(
         ParentRepository parentRepo,
         StudentRepository studentRepo,
         StudentMapper studentMapper,
         AddressMapper addressMapper,
-        EventRepository eventRepo
+        EventRepository eventRepo,
+        Clock clock
     ) {
         this.parentRepo = parentRepo;
         this.studentRepo = studentRepo;
         this.studentMapper = studentMapper;
         this.addressMapper = addressMapper;
         this.eventRepo = eventRepo;
+        this.clock = clock;
+    }
+
+    @Transactional(readOnly = true)
+    public StudentMonthlySummaryDTO getMonthlySummary(UUID studentId, Integer month, Integer year) {
+        if (!studentRepo.existsById(studentId)) {
+            throw new StudentNotFoundException("Aluno com o ID informado não encontrado");
+        }
+
+        LocalDate now = LocalDate.now(clock);
+        int targetMonth = (month != null) ? month : now.getMonthValue();
+        int targetYear = (year != null) ? year : now.getYear();
+
+        ZoneId zone = clock.getZone();
+        Instant startOfMonth = YearMonth.of(targetYear, targetMonth).atDay(1).atStartOfDay(zone).toInstant();
+        Instant endOfMonth = YearMonth.of(targetYear, targetMonth).atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant();
+
+        long totalEventsInPeriod = eventRepo.countByStudentIdAndStartDateBetween(studentId, startOfMonth, endOfMonth);
+        BigDecimal totalChargedInPeriod = eventRepo.sumChargedByStudentIdInPeriod(studentId, startOfMonth, endOfMonth);
+        BigDecimal totalPendingInPeriod = eventRepo.sumPendingByStudentIdInPeriod(studentId, startOfMonth, endOfMonth);
+
+        log.info("Resumo mensal gerado para o aluno {} no mês {}/{}", studentId, targetMonth, targetYear);
+        return new StudentMonthlySummaryDTO(totalEventsInPeriod, totalChargedInPeriod, totalPendingInPeriod);
     }
 
     @Transactional
@@ -185,7 +217,7 @@ public class StudentService {
         Student student = findStudentOrThrow(studentId);
 
         log.info("Reatribuindo eventos do aluno {} para o Ghost Student.", student.getName().toUpperCase());
-        eventRepo.reassignEventsToGhost(studentId, GHOST_STUDENT_ID);
+        eventRepo.reassignStudentEventsToGhost(studentId, GHOST_STUDENT_ID);
 
         studentRepo.delete(student);
         log.info("Aluno {} deletado com sucesso.", student.getName().toUpperCase());

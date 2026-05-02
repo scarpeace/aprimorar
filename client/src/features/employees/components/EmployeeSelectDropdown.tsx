@@ -7,6 +7,7 @@ type EmployeeSelectDropdownProps = {
   error?: string;
   className?: string;
   label: string;
+  defaultValue?: { id: string; name: string };
 };
 
 export function EmployeeSelectDropdown({
@@ -14,8 +15,12 @@ export function EmployeeSelectDropdown({
   error,
   className,
   label,
+  defaultValue,
 }: EmployeeSelectDropdownProps) {
   const { data: employees, isPending } = useGetEmployeeOptions();
+
+  const hasDefaultValue = defaultValue?.id && defaultValue?.name;
+  const isDefaultInOptions = employees?.some((e) => e.id === defaultValue?.id);
 
   return (
     <fieldset className={`fieldset ${className}`}>
@@ -23,10 +28,17 @@ export function EmployeeSelectDropdown({
 
       <select
         className="select select-bordered w-full"
-        disabled={isPending}
+        disabled={isPending && !hasDefaultValue}
         {...registration}
       >
-        <option value="">Selecione um colaborador</option>
+        {!hasDefaultValue && (
+          <option value="">Selecione um colaborador</option>
+        )}
+        
+        {hasDefaultValue && !isDefaultInOptions && (
+          <option value={defaultValue.id}>{defaultValue.name}</option>
+        )}
+
         {employees?.map((employee) => (
           <option key={employee.id} value={employee.id}>
             {employee.name}

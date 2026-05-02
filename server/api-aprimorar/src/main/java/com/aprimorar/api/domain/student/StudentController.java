@@ -3,6 +3,7 @@ package com.aprimorar.api.domain.student;
 import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.dto.StudentMonthlySummaryDTO;
 import com.aprimorar.api.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -84,6 +85,21 @@ public class StudentController {
     public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable UUID studentId) {
         StudentResponseDTO foundStudent = studentService.findById(studentId);
         return ResponseEntity.ok(foundStudent);
+    }
+
+    @GetMapping("/{id}/summary")
+    @Operation(
+        operationId = "getStudentMonthlySummary",
+        description = "Retorna um resumo mensal dos atendimentos de um aluno."
+    )
+    @ApiResponse(responseCode = "200", description = "Resumo retornado com sucesso.")
+    public ResponseEntity<StudentMonthlySummaryDTO> getMonthlySummary(
+        @PathVariable UUID id,
+        @RequestParam(required = false) Integer month,
+        @RequestParam(required = false) Integer year
+    ) {
+        StudentMonthlySummaryDTO summary = studentService.getMonthlySummary(id, month, year);
+        return ResponseEntity.ok(summary);
     }
 
     @PutMapping("/{studentId}")

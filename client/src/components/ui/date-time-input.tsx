@@ -40,7 +40,6 @@ export function DateTimeInput({
           showIcon
           icon={<Calendar/>}
           timeFormat="HH:mm"
-          // minDate={new Date()}
           minTime={setTime(new Date(), 8, 0)}
           maxTime={setTime(new Date(), 17, 0)}
           timeIntervals={30}

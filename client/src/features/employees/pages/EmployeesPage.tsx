@@ -45,21 +45,21 @@ export function EmployeesPage() {
   return (
     <PageLayout {...headerProps}>
       <div className="flex flex-col gap-3 w-full">
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col justify-between sm:flex-row gap-3">
           <ListSearchInput
-            className="grow sm:mr-3"
+            className="grow"
             placeholder="Buscar colaborador por nome, email ou CPF"
             ariaLabel="Buscar colaborador"
             value={searchTerm}
             onChange={setSearchTerm}
           />
           <div className="flex justify-between sm:justify-end w-full sm:w-auto items-center gap-3">
-            <ToggleSwitch
+            {/*<ToggleSwitch
               label="Arquivados"
               tip="Mostrar colaboradores arquivados"
               toggled={showArchived}
               setToggle={setShowArchived}
-            />
+            />*/}
             <Button
               className="sm:ml-auto"
               onClick={() => handleOpenForm()}

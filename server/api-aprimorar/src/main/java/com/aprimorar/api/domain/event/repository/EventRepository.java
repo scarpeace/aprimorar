@@ -22,14 +22,6 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
         long getCount();
     }
 
-    @Modifying
-    @Query("UPDATE Event e SET e.student.id = :ghostId WHERE e.student.id = :studentId")
-    void reassignEventsToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
-
-    @Modifying
-    @Query("UPDATE Event e SET e.employee.id = :ghostId WHERE e.employee.id = :employeeId")
-    void reassignEmployeeEventsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
-
     @EntityGraph(attributePaths = { "student", "employee" })
     Page<Event> findAll(Specification<Event> spec, Pageable pageable);
 
@@ -45,24 +37,42 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
     @EntityGraph(attributePaths = { "student", "employee" })
     Page<Event> findAllByStudentId(UUID studentId, Pageable pageable);
 
-    @EntityGraph(attributePaths = { "student", "employee" })
-    @Query(
-        """
-        SELECT e
-        FROM Event e
-        WHERE e.startDate >= COALESCE(:start, e.startDate)
-          AND e.startDate <= COALESCE(:end, e.startDate)
-          AND e.student.id = COALESCE(:studentId, e.student.id)
-          AND e.employee.id = COALESCE(:employeeId, e.employee.id)
-        """
-    )
-    Page<Event> findAllWithFilter(
-        @Param("start") Instant start,
-        @Param("end") Instant end,
-        @Param("studentId") UUID studentId,
-        @Param("employeeId") UUID employeeId,
-        Pageable pageable
-    );
+
+    @Modifying
+    @Query("UPDATE Event e SET e.student.id = :ghostId WHERE e.student.id = :studentId")
+    void reassignStudentEventsToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
+
+    @Modifying
+    @Query("UPDATE Event e SET e.employee.id = :ghostId WHERE e.employee.id = :employeeId")
+    void reassignEmployeeEventsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
+
+    long countByEmployeeIdAndStartDateBetween(UUID employeeId, Instant startDate, Instant endDate);
+
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employeePaymentDate IS NOT NULL")
+    BigDecimal sumTotalEmployeePayment();
+
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employeePaymentDate IS NULL")
+    BigDecimal sumTotalEmployeePaymentPending();
+
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.startDate BETWEEN :startDate AND :endDate AND e.employeePaymentDate IS NOT NULL")
+    BigDecimal sumPaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.startDate BETWEEN :startDate AND :endDate AND e.employeePaymentDate IS NULL")
+    BigDecimal sumUnpaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    long countByStudentIdAndStartDateBetween(UUID studentId, Instant startDate, Instant endDate);
+
+    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.studentChargeDate IS NOT NULL")
+    BigDecimal sumTotalStudentIncome();
+
+    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.studentChargeDate IS NULL")
+    BigDecimal sumTotalStudentIncomePending();
+
+    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.student.id = :studentId AND e.startDate BETWEEN :startDate AND :endDate AND e.studentChargeDate IS NOT NULL")
+    BigDecimal sumChargedByStudentIdInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.student.id = :studentId AND e.startDate BETWEEN :startDate AND :endDate AND e.studentChargeDate IS NULL")
+    BigDecimal sumPendingByStudentIdInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     @Query(
         """
@@ -71,7 +81,6 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             where e.student.id = :studentId
               and e.startDate < :endDate
               and e.endDate > :startDate
-              and e.status <> com.aprimorar.api.enums.EventStatus.CANCELED
               and (:ignoredEventId is null or e.id <> :ignoredEventId)
         """
     )
@@ -89,7 +98,6 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
             where e.employee.id = :employeeId
               and e.startDate < :endDate
               and e.endDate > :startDate
-              and e.status <> com.aprimorar.api.enums.EventStatus.CANCELED
               and (:ignoredEventId is null or e.id <> :ignoredEventId)
         """
     )
@@ -99,8 +107,6 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
         @Param("endDate") Instant endDate,
         @Param("ignoredEventId") UUID ignoredEventId
     );
-
-    long countByStartDateGreaterThanEqualAndStartDateLessThan(Instant startDate, Instant endDate);
 
     @Query(
         """
@@ -147,20 +153,7 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
         order by count(e) desc
         """
     )
-    List<EventContentCount> findContentDistributionInPeriod(
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
-    );
+    List<EventContentCount> findContentDistributionInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
-    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.incomeStatus = com.aprimorar.api.enums.FinancialStatus.PAID AND e.status = com.aprimorar.api.enums.EventStatus.COMPLETED")
-    BigDecimal sumTotalIncome();
-
-    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.incomeStatus = com.aprimorar.api.enums.FinancialStatus.PENDING AND e.status = com.aprimorar.api.enums.EventStatus.COMPLETED")
-    BigDecimal sumTotalIncomePending();
-
-    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.expenseStatus = com.aprimorar.api.enums.FinancialStatus.PAID AND e.status = com.aprimorar.api.enums.EventStatus.COMPLETED")
-    BigDecimal sumTotalExpenseTeacher();
-
-    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.expenseStatus = com.aprimorar.api.enums.FinancialStatus.PENDING AND e.status = com.aprimorar.api.enums.EventStatus.COMPLETED")
-    BigDecimal sumTotalExpenseTeacherPending();
+    long countByStartDateGreaterThanEqualAndStartDateLessThan(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 }

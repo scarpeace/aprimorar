@@ -1,15 +1,14 @@
-import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOEmployeeResponseDTO, EmployeeResponseDTO } from "@/kubb";
+import type { PageDTOEmployeeResponseDTO } from "@/kubb";
 import { dutyLabels } from "../utils/dutyLabels";
 import {
   formatCpf,
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type EmployeesTableProps = {
   employees?: PageDTOEmployeeResponseDTO;
@@ -17,7 +16,6 @@ type EmployeesTableProps = {
   currentPage: number;
   isPending: boolean;
   error: unknown;
-  onEdit: (employee: EmployeeResponseDTO) => void;
 };
 
 export function EmployeesTable({
@@ -26,8 +24,10 @@ export function EmployeesTable({
   currentPage,
   isPending,
   error,
-  onEdit,
 }: Readonly<EmployeesTableProps>) {
+
+  const navigate = useNavigate();
+
   if (isPending) {
     return <LoadingSpinner text="Carregando Colaboradores..." />;
   }
@@ -61,13 +61,6 @@ export function EmployeesTable({
             <th className="text-left font-semibold text-base-content/80">
               Cadastro
             </th>
-            {/*TODO: Trocar esse status por uma bolinha de status e mover as actions pra dentro da row*/}
-            <th className="text-left font-semibold text-base-content/80">
-              Status
-            </th>
-            <th className="text-right font-semibold text-base-content/80 pr-4">
-              Ações
-            </th>
           </tr>
         </thead>
 
@@ -75,34 +68,22 @@ export function EmployeesTable({
           {employees?.content.map((employee) => (
             <tr
               key={employee.id}
-              className="transition-colors hover:bg-base-200/70"
+              className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
+              onClick={() => navigate(`/employees/${employee.id}`)}
             >
-              <td>{employee.name}</td>
+              <td>
+                <div className="flex items-center gap-3">
+                <div aria-label="status" className={`status ${employee.archivedAt != null ? "status-secondary" : "status-success"}`}
+                  />
+                  {employee.name}
+                </div>
+              </td>
               <td>{dutyLabels[employee.duty]}</td>
 
               <td>{formatCpf(employee.cpf)}</td>
               <td>{formatPhone(employee.contact)}</td>
 
-              <td>{formatDateShortYear(employee.createdAt ?? "")}</td>
-              <td>{employee.archivedAt ? "Arquivado" : "Ativo"}</td>
-
-              <td className="text-right flex justify-end gap-2 pr-2">
-                <Button
-                  className="btn-square btn-ghost btn-xs text-info"
-                  onClick={() => onEdit(employee)}
-                  title="Editar"
-                >
-                  <Pencil size={16} />
-                </Button>
-                <ButtonLink
-                  className="btn-square btn-xs"
-                  to={`/employees/${employee.id}`}
-                  variant="primary"
-                  title="Detalhes"
-                >
-                  <SquareArrowOutUpRightIcon className="h-4 w-4" />
-                </ButtonLink>
-              </td>
+              <td>{formatDateShortYear(employee.createdAt)}</td>
             </tr>
           ))}
         </tbody>

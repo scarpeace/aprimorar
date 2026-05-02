@@ -1,4 +1,3 @@
-import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
@@ -8,10 +7,9 @@ import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { useGetEventById } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { Calendar, Edit, CheckCircle2, XCircle } from "lucide-react";
+import { Calendar, Check, Edit, Clock3 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useEventMutations } from "../hooks/use-event-mutations";
-import { EventStatusLabels } from "@/lib/shared/eventStatusLabels";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { useState } from "react";
 import { EventForm } from "../components/EventForm";
@@ -22,7 +20,7 @@ export function EventDetailPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const eventQuery = useGetEventById(eventId);
-  const { updateEvent, changeEventStatus, isStatusPending } = useEventMutations({ onSuccessCallback: () => {} });
+  const { toggleStudentCharge, toggleEmployeePayment } = useEventMutations();
 
   const headerProps = {
     description: "Veja e gerencie as informações do evento",
@@ -46,105 +44,173 @@ export function EventDetailPage() {
       </PageLayout>
     );
   }
-  const profit = Number(eventQuery.data.price) - Number(eventQuery.data.payment);
-  const isCanceled = eventQuery.data.status === "CANCELED";
-  const isCompleted = eventQuery.data.status === "COMPLETED";
+
+  const handleToggleIncomeStatus = () => {
+    toggleStudentCharge.mutate({
+      id: eventQuery.data.eventId,
+    });
+  };
+
+  const handleToggleExpenseStatus = () => {
+    toggleEmployeePayment.mutate({
+      id: eventQuery.data.eventId,
+    });
+  };
 
   return (
     <PageLayout {...headerProps}>
       <div className="flex flex-col gap-4 animate-[fade-up_300ms_ease-out_both]">
-        {isCanceled && (
-          <Alert variant="error" title="Atendimento Cancelado" error="Este atendimento foi marcado como cancelado e não será contabilizado em certas métricas ou conflitos de horário."/>
-        )}
-
         <SectionCard
           title="Resumo do evento"
           description="Dados completos do atendimento, participantes e valores."
           headerActions={
             <div className="flex flex-wrap gap-2 items-center justify-end">
-              {!isCompleted && !isCanceled && (
-                <Button
-                  variant="success"
-                  size="sm"
-                  onClick={() => changeEventStatus(eventQuery.data, "COMPLETED")}
-                  disabled={updateEvent.isPending}
-                >
-                  <CheckCircle2 className="h-4 w-4 mr-1" /> Concluir
-                </Button>
-              )}
-              {!isCanceled && (
-                <Button
-                  variant="error"
-                  size="sm"
-                  onClick={() => changeEventStatus(eventQuery.data, "CANCELED")}
-                  disabled={updateEvent.isPending}
-                >
-                  <XCircle className="h-4 w-4 mr-1" /> Cancelar
-                </Button>
-              )}
-              {isCanceled && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => changeEventStatus(eventQuery.data, "SCHEDULED")}
-                  disabled={updateEvent.isPending}
-                >
-                  <Calendar className="h-4 w-4 mr-1" /> Re-agendar
-                </Button>
-              )}
-              <Button onClick={() => setIsFormOpen(true)} variant="primary" size="sm">
+              <Button
+                onClick={() => setIsFormOpen(true)}
+                variant="primary"
+                size="sm"
+              >
                 <Edit className="h-4 w-4 mr-1" /> Editar
               </Button>
             </div>
           }
         >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Informações Básicas */}
             <SummaryItem
-              label="Status"
-              // TODO: Acho que cabe uma refatoração aqui
+              label="Data"
+              value={formatDateShortYear(eventQuery.data.startDate)}
+            />
+            <SummaryItem
+              label="Início"
+              value={formatTime(eventQuery.data.startDate)}
+            />
+            <SummaryItem
+              label="Fim"
+              value={formatTime(eventQuery.data.endDate)}
+            />
+
+            <SummaryItem
+              label="Nome do aluno"
+              value={eventQuery.data.studentName}
+            />
+            <SummaryItem
+              label="Nome do colaborador"
+              value={eventQuery.data.employeeName}
+            />
+            <SummaryItem
+              label="Conteúdo"
               value={
-                <Badge
-                  variant={
-                    eventQuery.data.status === "COMPLETED"
-                      ? "success"
-                      : eventQuery.data.status === "CANCELED"
-                      ? "error"
-                      : "primary"
-                  }
-                >
-                  {EventStatusLabels[eventQuery.data.status] || eventQuery.data.status}
-                </Badge>
+                EventContentLabels[eventQuery.data.content] ||
+                eventQuery.data.content
               }
             />
-            <SummaryItem label="Data" value={formatDateShortYear(eventQuery.data.startDate)}/>
-            <div className="flex gap-3">
-              <SummaryItem className="w-full" label="Horário início" value={formatTime(eventQuery.data.startDate)} />
-              <SummaryItem className="w-full" label="Horário fim" value={formatTime(eventQuery.data.endDate)}/>
-            </div>
-            <SummaryItem label="Nome do aluno" value={eventQuery.data.studentName} />
-            <SummaryItem label="Nome do colaborador" value={eventQuery.data.employeeName}/>
-            <SummaryItem label="Conteúdo" value={EventContentLabels[eventQuery.data.content] || eventQuery.data.content} />
-            <div className="flex gap-3">
-              <SummaryItem className="w-full" label="Valor" value={brl.format(eventQuery.data.price)} />
-              <SummaryItem className="w-full" label="Pagamento" value={brl.format(eventQuery.data.payment)}/>
-              <SummaryItem className="w-full" label="Lucro" value={brl.format(profit)} />
-            </div>
-            <SummaryItem className="md:col-span-3 h-30" label="Observações" value={eventQuery.data.description}/>
-        </div>
+
+            {/* Linha Financeira */}
+            <SummaryItem
+              label="Lucro"
+              value={
+                <div className="flex flex-col gap-1">
+                  <span className="text-2xl font-bold text-success">
+                    {brl.format(eventQuery.data.profit)}
+                  </span>
+                  <span className="text-[10px] uppercase opacity-50 font-bold">
+                    Resultado líquido
+                  </span>
+                </div>
+              }
+            />
+
+            <SummaryItem
+              label="Recebimento do aluno"
+              value={
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge variant={eventQuery.data.studentChargeDate != null ? "success" : "warning"}>
+                      {eventQuery.data.studentChargeDate != null ? "Pago" : "Pendente"}
+                    </Badge>
+                    <Button
+                      size="sm"
+                      variant={eventQuery.data.studentChargeDate != null ? "outline" : "success"}
+                      onClick={handleToggleIncomeStatus}
+                      disabled={toggleStudentCharge.isPending}
+                      className="h-7 px-2 text-xs"
+                    >
+                      {eventQuery.data.studentChargeDate != null ? (
+                        <Clock3 className="h-3 w-3 mr-1" />
+                      ) : (
+                        <Check className="h-3 w-3 mr-1" />
+                      )}
+                      {eventQuery.data.studentChargeDate != null ? "Marcar Pendente" : "Marcar Pago"}
+                    </Button>
+                  </div>
+                  <div className="p-2 bg-base-300/30 rounded border border-base-300/50">
+                    <p className="text-[10px] uppercase opacity-60 font-bold">
+                      Valor
+                    </p>
+                    <p className="text-lg font-bold">
+                      {brl.format(eventQuery.data.price)}
+                    </p>
+                  </div>
+                </div>
+              }
+            />
+
+            <SummaryItem
+              label="Pagamento do colaborador"
+              value={
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge variant={eventQuery.data.employeePaymentDate != null ? "success" : "warning"}>
+                      {eventQuery.data.employeePaymentDate != null ? "Pago" : "Pendente"}
+                    </Badge>
+                    <Button
+                      size="sm"
+                      variant={eventQuery.data.employeePaymentDate != null ? "outline" : "success"}
+                      onClick={handleToggleExpenseStatus}
+                      disabled={toggleEmployeePayment.isPending}
+                      className="h-7 px-2 text-xs"
+                    >
+                      {eventQuery.data.employeePaymentDate != null ? (
+                        <Clock3 className="h-3 w-3 mr-1" />
+                      ) : (
+                        <Check className="h-3 w-3 mr-1" />
+                      )}
+                      {eventQuery.data.employeePaymentDate != null ? "Marcar Pendente" : "Marcar Pago"}
+                    </Button>
+                  </div>
+                  <div className="p-2 bg-base-300/30 rounded border border-base-300/50">
+                    <p className="text-[10px] uppercase opacity-60 font-bold">
+                      Pagamento
+                    </p>
+                    <p className="text-lg font-bold">
+                      {brl.format(eventQuery.data.payment)}
+                    </p>
+                  </div>
+                </div>
+              }
+            />
+
+            <SummaryItem
+              className="md:col-span-3 min-h-25"
+              label="Observações"
+              value={eventQuery.data.description || "Nenhuma observação."}
+            />
+          </div>
         </SectionCard>
       </div>
       {isFormOpen && (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-4xl">
-              <h3 className="font-bold text-lg mb-4">Editar Atendimento</h3>
-              <EventForm
-                initialData={eventQuery.data}
-                onSuccess={() => setIsFormOpen(false)}
-                onCancel={() => setIsFormOpen(false)}
-              />
-            </div>
+        <div className="modal modal-open">
+          <div className="modal-box max-w-4xl">
+            <h3 className="font-bold text-lg mb-4">Editar Atendimento</h3>
+            <EventForm
+              initialData={eventQuery.data}
+              onSuccess={() => setIsFormOpen(false)}
+              onCancel={() => setIsFormOpen(false)}
+            />
           </div>
-        )}
+        </div>
+      )}
     </PageLayout>
   );
 }

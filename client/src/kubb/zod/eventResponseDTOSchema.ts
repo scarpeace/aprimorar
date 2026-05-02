@@ -25,19 +25,24 @@ export const eventResponseDTOSchema = z
       .describe("Tipo de conteúdo ou categoria do atendimento/evento"),
     startDate: z.iso.datetime().describe("Data/Horário de início do evento"),
     endDate: z.iso.datetime().describe("Data/Horário de fim do evento"),
+    duration: z.number().describe("Duração do evento em horas"),
     price: z.number().describe("Preço do evento pago pelo aluno"),
     payment: z.number().describe("Preço do evento pago ao colaborador"),
+    profit: z.number().describe("Lucro do evento"),
     studentId: z.uuid().describe("ID do estudante vinculado ao evento"),
     studentName: z.string().describe("Nome do aluno vinculado ao evento"),
     employeeId: z.uuid().describe("ID do colaborador vinculado ao evento"),
     employeeName: z
       .string()
       .describe("Nome do colaborador vinculado ao evento"),
-    status: z
-      .enum(["SCHEDULED", "COMPLETED", "CANCELED"])
-      .describe("Status do evento"),
-    incomeStatus: z.enum(["PENDING", "PAID"]).describe("Status financeiro"),
-    expenseStatus: z.enum(["PENDING", "PAID"]).describe("Status financeiro"),
+    employeePaymentDate: z.iso
+      .datetime()
+      .describe("Data de pagamento ao colaborador")
+      .nullish(),
+    studentChargeDate: z.iso
+      .datetime()
+      .describe("Data de cobrança do aluno")
+      .nullish(),
     createdAt: z.iso.datetime().describe("Data de criação do evento"),
     updatedAt: z.iso
       .datetime()

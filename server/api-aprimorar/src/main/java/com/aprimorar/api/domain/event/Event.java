@@ -5,14 +5,12 @@ import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.event.exception.NotAllowedToUpdateEventException;
 import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.enums.EventContent;
-import com.aprimorar.api.enums.EventStatus;
-import com.aprimorar.api.enums.FinancialStatus;
 import com.aprimorar.api.shared.BaseEntity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.UUID;
 
 // TODO: Adicionar campos do google calendar para a implementação
 @Entity
@@ -41,17 +39,11 @@ public class Event extends BaseEntity {
     @Column(nullable = false)
     private EventContent content;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private EventStatus status = EventStatus.SCHEDULED;
+    @Column(name = "employee_payment_date", nullable = true)
+    private Instant employeePaymentDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "income_status", nullable = false)
-    private FinancialStatus incomeStatus = FinancialStatus.PENDING;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "expense_status", nullable = false)
-    private FinancialStatus expenseStatus = FinancialStatus.PENDING;
+    @Column(name = "student_charge_date", nullable = true)
+    private Instant studentChargeDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
@@ -66,14 +58,17 @@ public class Event extends BaseEntity {
     public Event(
         String description,
         Instant startDate,
-        Instant endDate,
+        Double duration,
         BigDecimal payment,
         BigDecimal price,
         EventContent content,
         Student student,
-        Employee employee
+        Employee employee,
+        Instant now
     ) {
-        validateDates(startDate, endDate);
+        this.endDate = calculateEndDate(startDate, duration);
+        validateDates(startDate);
+        validateNotPast(now);
         validateAmounts(payment, price);
         validateParticipants(student, employee);
         validateContent(content);
@@ -81,200 +76,148 @@ public class Event extends BaseEntity {
         this.title = buildTitle(content, student, employee);
         this.description = description;
         this.startDate = startDate;
-        this.endDate = endDate;
         this.payment = payment;
         this.price = price;
         this.content = content;
         this.student = student;
         this.employee = employee;
+    }
+
+    @Transient
+    public Double getDuration() {
+        return (double) Duration.between(startDate, endDate).toMinutes() / 60.0;
+    }
+
+    @Transient
+    public BigDecimal getProfit() {
+        return price.subtract(payment);
     }
 
     public String getTitle() {
         return title;
     }
 
-    private void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    private void setDescription(String description) {
-        this.description = description;
     }
 
     public Instant getStartDate() {
         return startDate;
     }
 
-    private void setStartDate(Instant startDate) {
-        this.startDate = startDate;
-    }
-
     public Instant getEndDateTime() {
         return endDate;
-    }
-
-    private void setEndDateTime(Instant endDate) {
-        this.endDate = endDate;
     }
 
     public BigDecimal getPayment() {
         return payment;
     }
 
-    private void setPayment(BigDecimal payment) {
-        this.payment = payment;
-    }
-
     public BigDecimal getPrice() {
         return price;
-    }
-
-    private void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public EventContent getContent() {
         return content;
     }
 
-    private void setContent(EventContent content) {
-        this.content = content;
+    public Instant getEmployeePaymentDate() {
+        return employeePaymentDate;
     }
 
-    public com.aprimorar.api.enums.EventStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(com.aprimorar.api.enums.EventStatus status) {
-        this.status = status;
-    }
-
-    public FinancialStatus getIncomeStatus() {
-        return incomeStatus;
-    }
-
-    public void setIncomeStatus(FinancialStatus incomeStatus) {
-        this.incomeStatus = incomeStatus;
-    }
-
-    public FinancialStatus getExpenseStatus() {
-        return expenseStatus;
-    }
-
-    public void setExpenseStatus(FinancialStatus expenseStatus) {
-        this.expenseStatus = expenseStatus;
+    public Instant getStudentChargeDate() {
+        return studentChargeDate;
     }
 
     public Student getStudent() {
         return student;
     }
 
-    private void setStudent(Student student) {
-        this.student = student;
-    }
-
     public Employee getEmployee() {
         return employee;
     }
 
-    private void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public void updateDetails(
+    public Event update(
         String description,
         Instant startDate,
-        Instant endDate,
+        Double duration,
         BigDecimal payment,
         BigDecimal price,
         EventContent content,
         Student student,
-        Employee employee
+        Employee employee,
+        Instant now
     ) {
-        validateDates(startDate, endDate);
+        this.endDate = calculateEndDate(startDate, duration);
+        validateEditWindow(now);
+        validateDates(startDate);
         validateAmounts(payment, price);
         validateParticipants(student, employee);
         validateContent(content);
 
-        setTitle(buildTitle(content, student, employee));
-        setDescription(description);
-        setStartDate(startDate);
-        setEndDateTime(endDate);
-        setPayment(payment);
-        setPrice(price);
-        setContent(content);
-        setStudent(student);
-        setEmployee(employee);
+        this.title = buildTitle(content, student, employee);
+        this.description = description;
+        this.startDate = startDate;
+        this.payment = payment;
+        this.price = price;
+        this.content = content;
+        this.student = student;
+        this.employee = employee;
+
+        return this;
     }
 
-    public void complete() {
-        if (this.status == EventStatus.CANCELED) {
-            throw new InvalidEventException("Não é possível concluir um evento cancelado");
+    public void toggleStudentCharge(Instant now) {
+        if (this.studentChargeDate != null) {
+            this.studentChargeDate = null;
+        } else {
+            this.studentChargeDate = now;
         }
-        this.status = com.aprimorar.api.enums.EventStatus.COMPLETED;
     }
 
-    public void cancel() {
-        this.status = com.aprimorar.api.enums.EventStatus.CANCELED;
-        this.incomeStatus = FinancialStatus.PENDING;
-        this.expenseStatus = FinancialStatus.PENDING;
-    }
-
-    public void reschedule() {
-        this.status = com.aprimorar.api.enums.EventStatus.SCHEDULED;
-        this.incomeStatus = FinancialStatus.PENDING;
-        this.expenseStatus = FinancialStatus.PENDING;
-    }
-
-    public void settleIncome() {
-        if (this.status != EventStatus.COMPLETED) {
-            throw new InvalidEventException("Não é possível dar baixa no recebimento de um evento não concluído");
+    public void toggleEmployeePayment(Instant now) {
+        if (this.employeePaymentDate != null) {
+            this.employeePaymentDate = null;
+        } else {
+            this.employeePaymentDate = now;
         }
-        this.incomeStatus = FinancialStatus.PAID;
     }
 
-    public void unsettleIncome() {
-        this.incomeStatus = FinancialStatus.PENDING;
+    @Transient
+    public boolean isStudentCharged() {
+        return this.studentChargeDate != null;
     }
 
-    public void settleExpense() {
-        if (this.status != com.aprimorar.api.enums.EventStatus.COMPLETED) {
-            throw new InvalidEventException("Não é possível dar baixa no pagamento de um evento não concluído");
+    @Transient
+    public boolean isEmployeePaid() {
+        return this.employeePaymentDate != null;
+    }
+
+    public static Instant calculateEndDate(Instant startDate, Double duration) {
+        if (startDate == null) {
+            throw new InvalidEventException("Data de início do evento é obrigatório");
         }
-        this.expenseStatus = FinancialStatus.PAID;
-    }
-
-    public void unsettleExpense() {
-        this.expenseStatus = FinancialStatus.PENDING;
-    }
-
-    public void validateDatesForCreation(Instant now) {
-        if (this.endDate != null && this.endDate.isBefore(now)) {
-            throw new InvalidEventException("Data de fim do evento não pode estar no passado");
+        if (duration == null) {
+            throw new InvalidEventException("Duração do evento é obrigatória");
         }
+        return startDate.plus((long) (duration * 60), ChronoUnit.MINUTES);
     }
 
     public void validateEditWindow(Instant now) {
         if (this.endDate != null && now.isAfter(this.endDate.plus(20, ChronoUnit.DAYS))) {
-            throw new NotAllowedToUpdateEventException(
-                "A janela de 20 dias para editar as informações do evento encerrou"
-            );
+            throw new NotAllowedToUpdateEventException("A janela de 20 dias para editar as informações do evento encerrou");
         }
     }
 
-    private void validateDates(Instant startDate, Instant endDate) {
-        if (startDate == null) {
-            throw new InvalidEventException("Data de início do evento é obrigatório");
-        }
-        if (endDate == null) {
-            throw new InvalidEventException("Data de término do evento é obrigatório");
-        }
-        if (endDate.isBefore(startDate)) {
+    private void validateDates(Instant startDate) {
+        if (this.endDate.isBefore(startDate)) {
             throw new InvalidEventException("Data de fim do evento não pode ser anterior a data de inicio");
+        }
+    }
+
+    private void validateNotPast(Instant now) {
+        if (this.endDate.isBefore(now)) {
+            throw new InvalidEventException("Data de fim do evento não pode estar no passado");
         }
     }
 

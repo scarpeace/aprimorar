@@ -2,8 +2,6 @@ package com.aprimorar.api.domain.event;
 
 import com.aprimorar.api.domain.event.dto.EventRequestDTO;
 import com.aprimorar.api.domain.event.dto.EventResponseDTO;
-import com.aprimorar.api.enums.EventStatus;
-import com.aprimorar.api.enums.FinancialStatus;
 import com.aprimorar.api.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,12 +42,10 @@ public class EventController {
         @RequestParam(required = false) String search,
         @RequestParam(required = false) Instant startDate,
         @RequestParam(required = false) Instant endDate,
-        @RequestParam(required = false) EventStatus status,
         @RequestParam(required = false) UUID studentId,
         @RequestParam(required = false) UUID employeeId
     ) {
-        PageDTO<EventResponseDTO> events = eventService.getEvents(pageable, search, startDate, endDate, status, studentId, employeeId);
-        return ResponseEntity.ok(events);
+        return ResponseEntity.ok(eventService.getEvents(pageable, search, startDate, endDate, studentId, employeeId));
     }
 
     @GetMapping("/{id}")
@@ -63,17 +59,29 @@ public class EventController {
     @GetMapping("/{id}/employee")
     @Operation(operationId = "getEventsByEmployeeId", description = "Retorna eventos por ID do colaborador.")
     @ApiResponse(responseCode = "200", description = "Página de eventos do colaborador retornada com sucesso.")
-    public ResponseEntity<PageDTO<EventResponseDTO>> getEventByEmployeeId(@ParameterObject Pageable pageable, @PathVariable UUID id) {
-        PageDTO<EventResponseDTO> foundEvent = eventService.getEventsByEmployeeId(pageable, id);
-        return ResponseEntity.ok(foundEvent);
+    public ResponseEntity<PageDTO<EventResponseDTO>> getEventByEmployeeId(
+        @ParameterObject Pageable pageable,
+        @PathVariable UUID id,
+        @RequestParam(required = false) String studentName,
+        @RequestParam(required = false) Boolean hidePaid,
+        @RequestParam(required = false) Integer month,
+        @RequestParam(required = false) Integer year
+    ) {
+        return ResponseEntity.ok(eventService.getEventsByEmployeeId(pageable, id, studentName, hidePaid, month, year));
     }
 
     @GetMapping("/{id}/student")
     @Operation(operationId = "getEventsByStudentId", description = "Retorna eventos por ID do aluno.")
     @ApiResponse(responseCode = "200", description = "Página de eventos do aluno retornada com sucesso.")
-    public ResponseEntity<PageDTO<EventResponseDTO>> getEventByStudentId(@ParameterObject Pageable pageable, @PathVariable UUID id) {
-        PageDTO<EventResponseDTO> foundEvent = eventService.getEventsByStudentId(pageable, id);
-        return ResponseEntity.ok(foundEvent);
+    public ResponseEntity<PageDTO<EventResponseDTO>> getEventByStudentId(
+        @ParameterObject Pageable pageable, 
+        @PathVariable UUID id,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) Boolean hideCharged,
+        @RequestParam(required = false) Instant startDate,
+        @RequestParam(required = false) Instant endDate
+    ) {
+        return ResponseEntity.ok(eventService.getEventsByStudentId(pageable, id, search, hideCharged, startDate, endDate));
     }
 
     @PutMapping("/{id}")
@@ -91,38 +99,17 @@ public class EventController {
         eventService.deleteEvent(id);
     }
 
-    @PatchMapping("/{id}/complete")
-    @Operation(operationId = "completeEvent", description = "Conclui o atendimento.")
-    @ApiResponse(responseCode = "200", description = "Evento concluído com sucesso.")
-    public ResponseEntity<EventResponseDTO> completeEvent(@PathVariable UUID id) {
-        return ResponseEntity.ok(eventService.completeEvent(id));
+    @PatchMapping("/{id}/toggle-student-charge")
+    @Operation(operationId = "toggleStudentEventCharge", description = "Dá baixa na cobrança do aluno no evento.")
+    @ApiResponse(responseCode = "200", description = "Cobrança do aluno atualizada com sucesso.")
+    public ResponseEntity<EventResponseDTO> toggleStudentEventCharge(@PathVariable UUID id) {
+        return ResponseEntity.ok(eventService.toggleStudentCharge(id));
     }
 
-    @PatchMapping("/{id}/cancel")
-    @Operation(operationId = "cancelEvent", description = "Cancela o atendimento.")
-    @ApiResponse(responseCode = "200", description = "Evento cancelado com sucesso.")
-    public ResponseEntity<EventResponseDTO> cancelEvent(@PathVariable UUID id) {
-        return ResponseEntity.ok(eventService.cancelEvent(id));
-    }
-
-    @PatchMapping("/{id}/reschedule")
-    @Operation(operationId = "rescheduleEvent", description = "Re-agenda um evento cancelado.")
-    @ApiResponse(responseCode = "200", description = "Evento re-agendado com sucesso.")
-    public ResponseEntity<EventResponseDTO> rescheduleEvent(@PathVariable UUID id) {
-        return ResponseEntity.ok(eventService.rescheduleEvent(id));
-    }
-
-    @PatchMapping("/{id}/settle-income")
-    @Operation(operationId = "settleIncomeEvent", description = "Dá baixa no recebimento (aluno) do evento.")
-    @ApiResponse(responseCode = "200", description = "Baixa atualizada com sucesso.")
-    public ResponseEntity<EventResponseDTO> settleIncomeEvent(@PathVariable UUID id, @RequestParam FinancialStatus status) {
-        return ResponseEntity.ok(eventService.settleIncome(id, status));
-    }
-
-    @PatchMapping("/{id}/settle-expense")
-    @Operation(operationId = "settleExpenseEvent", description = "Dá baixa no repasse (colaborador) do evento.")
-    @ApiResponse(responseCode = "200", description = "Baixa atualizada com sucesso.")
-    public ResponseEntity<EventResponseDTO> settleExpenseEvent(@PathVariable UUID id, @RequestParam FinancialStatus status) {
-        return ResponseEntity.ok(eventService.settleExpense(id, status));
+    @PatchMapping("/{id}/toggle-employee-payment")
+    @Operation(operationId = "toggleEmployeeEventPayment", description = "Dá baixa no pagamento do colaborador no evento.")
+    @ApiResponse(responseCode = "200", description = "Pagamento do colaborador atualizado com sucesso.")
+    public ResponseEntity<EventResponseDTO> toggleEmployeeEventPayment(@PathVariable UUID id) {
+        return ResponseEntity.ok(eventService.toggleEmployeePayment(id));
     }
 }

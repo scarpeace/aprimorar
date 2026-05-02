@@ -1,5 +1,7 @@
 package com.aprimorar.api.domain.employee;
 
+import com.aprimorar.api.domain.auth.repository.UserRepository;
+import com.aprimorar.api.domain.employee.dto.EmployeeMonthlySummaryDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
@@ -10,7 +12,14 @@ import com.aprimorar.api.domain.employee.repository.EmployeeSpecifications;
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.shared.MapperUtils;
 import com.aprimorar.api.shared.PageDTO;
+
+import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -31,11 +40,15 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepo;
     private final EmployeeMapper employeeMapper;
     private final EventRepository eventRepo;
+    private final UserRepository userRepo;
+    private final Clock clock;
 
-    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, EventRepository eventRepo) {
+    public EmployeeService(EmployeeRepository employeeRepo, EmployeeMapper employeeMapper, EventRepository eventRepo, UserRepository userRepo, Clock clock) {
         this.employeeRepo = employeeRepo;
         this.employeeMapper = employeeMapper;
         this.eventRepo = eventRepo;
+        this.userRepo = userRepo;
+        this.clock = clock;
     }
 
     @Transactional
@@ -66,7 +79,7 @@ public class EmployeeService {
     public PageDTO<EmployeeResponseDTO> getEmployees(Pageable pageable, String search, Boolean archived) {
         Specification<Employee> spec = EmployeeSpecifications.isNotGhost();
 
-        if(Boolean.TRUE.equals(archived)){
+        if (Boolean.TRUE.equals(archived)) {
             spec = spec.and(EmployeeSpecifications.archived());
         }
 
@@ -101,6 +114,28 @@ public class EmployeeService {
         return employeeMapper.convertToDto(employee);
     }
 
+    @Transactional(readOnly = true)
+    public EmployeeMonthlySummaryDTO getMonthlySummary(UUID employeeId, Integer month, Integer year) {
+        if (!employeeRepo.existsById(employeeId)) {
+            throw new EmployeeNotFoundException("Colaborador com o ID informado não encontrado");
+        }
+
+        LocalDate now = LocalDate.now(clock);
+        int targetMonth = (month != null) ? month : now.getMonthValue();
+        int targetYear = (year != null) ? year : now.getYear();
+
+        ZoneId zone = clock.getZone();
+        Instant startOfMonth = YearMonth.of(targetYear, targetMonth).atDay(1).atStartOfDay(zone).toInstant();
+        Instant endOfMonth = YearMonth.of(targetYear, targetMonth).atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant();
+
+        long totalEventsInPeriod = eventRepo.countByEmployeeIdAndStartDateBetween(employeeId, startOfMonth, endOfMonth);
+        BigDecimal totalPaidInPeriod = eventRepo.sumPaidByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
+        BigDecimal totalUnpaidInPeriod = eventRepo.sumUnpaidByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
+
+        log.info("Resumo mensal gerado para o colaborador {} no mês {}/{}", employeeId, targetMonth, targetYear);
+        return new EmployeeMonthlySummaryDTO(totalEventsInPeriod, totalPaidInPeriod, totalUnpaidInPeriod);
+    }
+
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
         Employee employee = findEmployeeOrThrow(employeeId);
@@ -110,14 +145,7 @@ public class EmployeeService {
 
         ensureEmployeeUniquenessForUpdate(normalizedEmail, employeeId);
 
-        employee.updateDetails(
-            request.name(),
-            request.birthdate(),
-            request.pix(),
-            normalizedContact,
-            normalizedEmail,
-            request.duty()
-        );
+        employee.updateDetails(request.name(), request.birthdate(), request.pix(), normalizedContact, normalizedEmail, request.duty());
 
         log.info("Colaborador {} atualizado com sucesso.", employee.getName().toUpperCase());
         return employeeMapper.convertToDto(employee);
@@ -127,6 +155,12 @@ public class EmployeeService {
     public void deleteEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
         eventRepo.reassignEmployeeEventsToGhost(employeeId, PHANTOM_EMPLOYEE_ID);
+
+        userRepo.findByEmployeeId(employeeId).ifPresent(user -> {
+            userRepo.delete(user);
+            log.info("Usuário associado ao colaborador {} deletado com sucesso.", employee.getName().toUpperCase());
+        });
+
         employeeRepo.delete(employee);
         log.info(
             "Colaborador {} deletado com sucesso. Eventos transferidos para arquivo morto fantasma.",
@@ -161,17 +195,13 @@ public class EmployeeService {
         }
 
         if (employeeRepo.existsByEmail(email)) {
-            throw new EmployeeAlreadyExistsException(
-                "Colaborador com o Email informado já cadastrado no banco de dados"
-            );
+            throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
         }
     }
 
     private void ensureEmployeeUniquenessForUpdate(String email, UUID employeeId) {
         if (employeeRepo.existsByEmailAndIdNot(email, employeeId)) {
-            throw new EmployeeAlreadyExistsException(
-                "Colaborador com o Email informado já cadastrado no banco de dados"
-            );
+            throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
         }
     }
 }

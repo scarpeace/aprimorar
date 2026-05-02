@@ -3,23 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
+  getEmployeeMonthlySummaryQueryKey,
   getEventByIdQueryKey,
+  getEventsByEmployeeIdQueryKey,
+  getEventsByStudentIdQueryKey,
   getEventsQueryKey,
+  getFinanceSummaryQueryKey,
   useCreateEvent,
+  useToggleEmployeeEventPayment,
+  useToggleStudentEventCharge,
   useUpdateEvent,
-  useCompleteEvent,
-  useCancelEvent,
-  useRescheduleEvent,
-  useSettleIncomeEvent,
-  useSettleExpenseEvent,
-  type EventResponseDTO,
 } from "@/kubb";
 
-interface UseEventMutationsProps {
-  onSuccessCallback?: () => void;
-}
-
-export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps = {}) {
+export function useEventMutations() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -32,11 +28,17 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
       onSuccess: (createdEvent) => {
         toast.success("Evento criado com sucesso");
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
-        if (onSuccessCallback) {
-          onSuccessCallback();
-        } else {
-          navigate(`/events/${createdEvent.eventId}`);
-        }
+        queryClient.invalidateQueries({
+          queryKey: getEventsByEmployeeIdQueryKey(createdEvent.employeeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getEmployeeMonthlySummaryQueryKey(createdEvent.employeeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getEventsByStudentIdQueryKey(createdEvent.studentId),
+        });
+        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        navigate(`/events/${createdEvent.eventId}`);
       },
     },
   });
@@ -49,88 +51,62 @@ export function useEventMutations({ onSuccessCallback }: UseEventMutationsProps 
       onSuccess: (updatedEvent, variables) => {
         toast.success("Evento atualizado com sucesso");
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.eventId) });
-        if (onSuccessCallback) {
-          onSuccessCallback();
-        } else {
-          navigate(`/events/${updatedEvent.eventId}`);
-        }
+        queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
+        queryClient.invalidateQueries({
+          queryKey: getEventsByEmployeeIdQueryKey(updatedEvent.employeeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getEmployeeMonthlySummaryQueryKey(updatedEvent.employeeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getEventsByStudentIdQueryKey(updatedEvent.studentId),
+        });
+        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        navigate(`/events/${updatedEvent.eventId}`);
       },
     },
   });
 
-  const handleStatusSuccess = (message: string, eventId: string) => {
-    toast.success(message);
-    queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
-    queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(eventId) });
-    if (onSuccessCallback) {
-      onSuccessCallback();
-    }
-  };
-
-  const handleStatusError = (error: any) => {
-    toast.error(getFriendlyErrorMessage(error));
-  };
-
-  const completeEvent = useCompleteEvent({
+  const toggleStudentCharge = useToggleStudentEventCharge({
     mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Evento concluído com sucesso", variables.id),
-      onError: handleStatusError,
-    }
+      onSuccess: (updatedEvent, variables) => {
+        toast.success("Status da cobrança atualizado");
+        queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
+        queryClient.invalidateQueries({
+          queryKey: getEventsByStudentIdQueryKey(updatedEvent.studentId),
+        });
+        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+      },
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
+      },
+    },
   });
 
-  const cancelEvent = useCancelEvent({
+  const toggleEmployeePayment = useToggleEmployeeEventPayment({
     mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Evento cancelado com sucesso", variables.id),
-      onError: handleStatusError,
-    }
+      onSuccess: (updatedEvent, variables) => {
+        toast.success("Status do pagamento atualizado");
+        queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
+        queryClient.invalidateQueries({
+          queryKey: getEventsByEmployeeIdQueryKey(updatedEvent.employeeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: getEmployeeMonthlySummaryQueryKey(updatedEvent.employeeId),
+        });
+      },
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
+      },
+    },
   });
-
-  const rescheduleEvent = useRescheduleEvent({
-    mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Evento re-agendado com sucesso", variables.id),
-      onError: handleStatusError,
-    }
-  });
-
-  const settleIncomeEvent = useSettleIncomeEvent({
-    mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Baixa de recebimento atualizada", variables.id),
-      onError: handleStatusError,
-    }
-  });
-
-  const settleExpenseEvent = useSettleExpenseEvent({
-    mutation: {
-      onSuccess: (_, variables) => handleStatusSuccess("Baixa de pagamento atualizada", variables.id),
-      onError: handleStatusError,
-    }
-  });
-
-  const changeEventStatus = (
-    event: EventResponseDTO,
-    newStatus: "SCHEDULED" | "COMPLETED" | "CANCELED"
-  ) => {
-    if (newStatus === "COMPLETED") {
-      completeEvent.mutate({ id: event.eventId });
-    } else if (newStatus === "CANCELED") {
-      cancelEvent.mutate({ id: event.eventId });
-    } else if (newStatus === "SCHEDULED") {
-      rescheduleEvent.mutate({ id: event.eventId });
-    }
-  };
-
-  const isStatusPending =
-    completeEvent.isPending ||
-    cancelEvent.isPending ||
-    rescheduleEvent.isPending;
 
   return {
     createEvent,
     updateEvent,
-    changeEventStatus,
-    isStatusPending,
-    settleIncomeEvent,
-    settleExpenseEvent,
+    toggleStudentCharge,
+    toggleEmployeePayment,
   };
 }

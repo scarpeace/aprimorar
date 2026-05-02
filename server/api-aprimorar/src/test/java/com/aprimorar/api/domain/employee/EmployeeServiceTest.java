@@ -8,6 +8,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.aprimorar.api.domain.auth.repository.UserRepository;
+import com.aprimorar.api.domain.employee.dto.EmployeeMonthlySummaryDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
@@ -17,8 +19,11 @@ import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.shared.PageDTO;
+import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,6 +60,12 @@ class EmployeeServiceTest {
 
     @Mock
     private EventRepository eventRepo;
+
+    @Mock
+    private UserRepository userRepo;
+
+    @Mock
+    private Clock clock;
 
     @InjectMocks
     private EmployeeService employeeService;
@@ -187,15 +198,32 @@ class EmployeeServiceTest {
         }
 
         @Test
-        @DisplayName("should delete employee and reassign events to ghost")
-        void shouldDeleteEmployeeAndReassignEventsToGhost() {
+        @DisplayName("should delete employee, user and reassign events to ghost")
+        void shouldDeleteEmployeeUserAndReassignEventsToGhost() {
             Employee existingEmployee = employee();
 
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(existingEmployee));
+            when(userRepo.findByEmployeeId(EMPLOYEE_ID)).thenReturn(Optional.empty());
 
             employeeService.deleteEmployee(EMPLOYEE_ID);
 
             verify(eventRepo).reassignEmployeeEventsToGhost(EMPLOYEE_ID, GHOST_EMPLOYEE_ID);
+            verify(userRepo).findByEmployeeId(EMPLOYEE_ID);
+            verify(employeeRepo).delete(existingEmployee);
+        }
+
+        @Test
+        @DisplayName("should delete associated user when employee is deleted")
+        void shouldDeleteAssociatedUserWhenEmployeeIsDeleted() {
+            Employee existingEmployee = employee();
+            com.aprimorar.api.domain.auth.User associatedUser = org.mockito.Mockito.mock(com.aprimorar.api.domain.auth.User.class);
+
+            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(existingEmployee));
+            when(userRepo.findByEmployeeId(EMPLOYEE_ID)).thenReturn(Optional.of(associatedUser));
+
+            employeeService.deleteEmployee(EMPLOYEE_ID);
+
+            verify(userRepo).delete(associatedUser);
             verify(employeeRepo).delete(existingEmployee);
         }
     }
@@ -246,6 +274,70 @@ class EmployeeServiceTest {
             assertThatThrownBy(() -> employeeService.findById(MISSING_EMPLOYEE_ID))
                 .isInstanceOf(EmployeeNotFoundException.class)
                 .hasMessage("Colaborador não encontrado no Banco de Dados");
+        }
+
+        @Test
+        @DisplayName("should return monthly summary for employee")
+        void shouldReturnMonthlySummaryForEmployee() {
+            int month = 4;
+            int year = 2026;
+            ZoneId zoneId = ZoneId.of("UTC");
+            Instant fixedInstant = Instant.parse("2026-04-15T10:00:00Z");
+            long totalEvents = 10L;
+            BigDecimal totalPaid = new BigDecimal("1000.00");
+            BigDecimal totalUnpaid = new BigDecimal("500.00");
+
+            when(employeeRepo.existsById(EMPLOYEE_ID)).thenReturn(true);
+            when(clock.instant()).thenReturn(fixedInstant);
+            when(clock.getZone()).thenReturn(zoneId);
+            when(eventRepo.countByEmployeeIdAndStartDateBetween(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+                .thenReturn(totalEvents);
+            when(eventRepo.sumPaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+                .thenReturn(totalPaid);
+            when(eventRepo.sumUnpaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+                .thenReturn(totalUnpaid);
+
+            EmployeeMonthlySummaryDTO actual = employeeService.getMonthlySummary(EMPLOYEE_ID, month, year);
+
+            assertThat(actual.totalEventsInPeriod()).isEqualTo(totalEvents);
+            assertThat(actual.totalPaidInPeriod()).isEqualTo(totalPaid);
+            assertThat(actual.totalUnpaidInPeriod()).isEqualTo(totalUnpaid);
+            verify(employeeRepo).existsById(EMPLOYEE_ID);
+        }
+
+        @Test
+        @DisplayName("should return monthly summary using current date when month and year are null")
+        void shouldReturnMonthlySummaryUsingCurrentDateWhenMonthAndYearAreNull() {
+            ZoneId zoneId = ZoneId.of("UTC");
+            Instant fixedInstant = Instant.parse("2026-04-15T10:00:00Z");
+            BigDecimal totalPaid = new BigDecimal("500.00");
+            BigDecimal totalUnpaid = new BigDecimal("250.00");
+
+            when(employeeRepo.existsById(EMPLOYEE_ID)).thenReturn(true);
+            when(clock.instant()).thenReturn(fixedInstant);
+            when(clock.getZone()).thenReturn(zoneId);
+            when(eventRepo.countByEmployeeIdAndStartDateBetween(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+                .thenReturn(5L);
+            when(eventRepo.sumPaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+                .thenReturn(totalPaid);
+            when(eventRepo.sumUnpaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+                .thenReturn(totalUnpaid);
+
+            EmployeeMonthlySummaryDTO actual = employeeService.getMonthlySummary(EMPLOYEE_ID, null, null);
+
+            assertThat(actual.totalEventsInPeriod()).isEqualTo(5L);
+            assertThat(actual.totalPaidInPeriod()).isEqualTo(totalPaid);
+            assertThat(actual.totalUnpaidInPeriod()).isEqualTo(totalUnpaid);
+        }
+
+        @Test
+        @DisplayName("should throw when employee is not found for monthly summary")
+        void shouldThrowWhenEmployeeIsNotFoundForMonthlySummary() {
+            when(employeeRepo.existsById(MISSING_EMPLOYEE_ID)).thenReturn(false);
+
+            assertThatThrownBy(() -> employeeService.getMonthlySummary(MISSING_EMPLOYEE_ID, 4, 2026))
+                .isInstanceOf(EmployeeNotFoundException.class)
+                .hasMessage("Colaborador com o ID informado não encontrado");
         }
 
         @Test

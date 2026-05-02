@@ -19,6 +19,12 @@ export {
   getEmployeeByIdQueryResponseSchema,
 } from "./getEmployeeByIdSchema.ts";
 export {
+  getEmployeeMonthlySummary200Schema,
+  getEmployeeMonthlySummaryPathParamsSchema,
+  getEmployeeMonthlySummaryQueryParamsSchema,
+  getEmployeeMonthlySummaryQueryResponseSchema,
+} from "./getEmployeeMonthlySummarySchema.ts";
+export {
   getEmployeeOptions200Schema,
   getEmployeeOptionsQueryResponseSchema,
 } from "./getEmployeeOptionsSchema.ts";

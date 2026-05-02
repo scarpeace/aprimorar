@@ -1,6 +1,7 @@
 package com.aprimorar.api.domain.employee;
 
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeMonthlySummaryDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
 import com.aprimorar.api.shared.PageDTO;
@@ -66,6 +67,20 @@ public class EmployeeController {
     public ResponseEntity<List<EmployeeOptionsDTO>> getEmployeeOptions() {
         List<EmployeeOptionsDTO> options = employeeService.getEmployeeOptions();
         return ResponseEntity.ok(options);
+    }
+
+    @GetMapping("/{id}/monthly-summary")
+    @Operation(
+        operationId = "getEmployeeMonthlySummary",
+        description = "Retorna o resumo de atendimentos e pagamentos do colaborador em um mês específico."
+    )
+    @ApiResponse(responseCode = "200", description = "Resumo retornado com sucesso.")
+    public ResponseEntity<EmployeeMonthlySummaryDTO> getMonthlySummary(
+        @PathVariable UUID id,
+        @RequestParam(required = false) Integer month,
+        @RequestParam(required = false) Integer year
+    ) {
+        return ResponseEntity.ok(employeeService.getMonthlySummary(id, month, year));
     }
 
     @GetMapping("/{employeeId}")

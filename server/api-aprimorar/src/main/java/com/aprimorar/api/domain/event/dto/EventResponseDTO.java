@@ -5,8 +5,6 @@ import java.time.Instant;
 import java.util.UUID;
 
 import com.aprimorar.api.enums.EventContent;
-import com.aprimorar.api.enums.FinancialStatus;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -34,12 +32,20 @@ public record EventResponseDTO(
     Instant endDate,
 
     @NotNull
+    @Schema(nullable = false, description = "Duração do evento em horas", example = "1.5")
+    Double duration,
+
+    @NotNull
     @Schema(nullable = false, description = "Preço do evento pago pelo aluno", example = "150.00")
     BigDecimal price,
 
     @NotNull
     @Schema(nullable = false, description = "Preço do evento pago ao colaborador", example = "100.00")
     BigDecimal payment,
+
+    @NotNull
+    @Schema(nullable = false, description = "Lucro do evento", example = "50.00")
+    BigDecimal profit,
 
     @NotNull
     @Schema(nullable = false, description = "ID do estudante vinculado ao evento", example = "123e4567-e89b-12d3-a456-426614174000")
@@ -57,17 +63,13 @@ public record EventResponseDTO(
     @Schema(nullable = false, description = "Nome do colaborador vinculado ao evento", example = "Jane Doe")
     String employeeName,
 
-    @NotNull
-    @Schema(nullable = false, description = "Status do evento", example = "SCHEDULED")
-    com.aprimorar.api.enums.EventStatus status,
+    @Nullable
+    @Schema(nullable = true, description = "Data de pagamento ao colaborador", example = "2024-03-10T15:33:42Z")
+    Instant employeePaymentDate,
 
-    @NotNull
-    @Schema(nullable = false, description = "Status financeiro da receita", example = "PENDING")
-    FinancialStatus incomeStatus,
-
-    @NotNull
-    @Schema(nullable = false, description = "Status financeiro da despesa", example = "PENDING")
-    FinancialStatus expenseStatus,
+    @Nullable
+    @Schema(nullable = true, description = "Data de cobrança do aluno", example = "2024-03-10T15:33:42Z")
+    Instant studentChargeDate,
 
     @NotNull
     @Schema(nullable = false, description = "Data de criação do evento", example = "2024-03-10T15:33:42Z`")

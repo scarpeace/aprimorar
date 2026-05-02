@@ -43,7 +43,6 @@ public record StudentRequestDTO(
     @Schema(nullable = false,description = "Endereço do aluno", implementation = AddressRequestDTO.class)
     AddressRequestDTO address,
 
-    //TODO: Mover os @Valid para essa camada do DTO?
     @NotNull(message = "Responsável do aluno é obrigatório")
     @Schema(nullable = false,description = "ID do responsável atual do aluno")
     UUID parentId

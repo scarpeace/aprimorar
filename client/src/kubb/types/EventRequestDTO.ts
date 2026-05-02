@@ -16,15 +16,6 @@ export const eventRequestDTOContentEnum = {
 export type EventRequestDTOContentEnumKey =
   (typeof eventRequestDTOContentEnum)[keyof typeof eventRequestDTOContentEnum];
 
-export const eventRequestDTOStatusEnum = {
-  SCHEDULED: "SCHEDULED",
-  COMPLETED: "COMPLETED",
-  CANCELED: "CANCELED",
-} as const;
-
-export type EventRequestDTOStatusEnumKey =
-  (typeof eventRequestDTOStatusEnum)[keyof typeof eventRequestDTOStatusEnum];
-
 /**
  * @description Formato de payload para o cadastro e/ou update de um evento
  */
@@ -45,10 +36,10 @@ export type EventRequestDTO = {
    */
   startDate: string;
   /**
-   * @description Data/Horário de fim do evento
-   * @type string, date-time
+   * @description Duração do evento em horas
+   * @type number, double
    */
-  endDate: string;
+  duration: number;
   /**
    * @description Preço do evento pago pelo aluno
    * @type number
@@ -69,9 +60,4 @@ export type EventRequestDTO = {
    * @type string, uuid
    */
   employeeId: string;
-  /**
-   * @description Status do evento
-   * @type string
-   */
-  status?: EventRequestDTOStatusEnumKey | null;
 };

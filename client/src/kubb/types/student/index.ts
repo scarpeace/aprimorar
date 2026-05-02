@@ -23,6 +23,13 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./GetStudentById.ts";
 export type {
+  GetStudentMonthlySummary200,
+  GetStudentMonthlySummaryPathParams,
+  GetStudentMonthlySummaryQuery,
+  GetStudentMonthlySummaryQueryParams,
+  GetStudentMonthlySummaryQueryResponse,
+} from "./GetStudentMonthlySummary.ts";
+export type {
   GetStudents200,
   GetStudentsQuery,
   GetStudentsQueryParams,

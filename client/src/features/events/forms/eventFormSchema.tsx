@@ -1,35 +1,28 @@
 import {
   eventRequestDTOContentEnum,
-  eventRequestDTOStatusEnum,
-  eventRequestDTOSchema,
+  type EventRequestDTOContentEnumKey,
 } from "@/kubb";
-import z from "zod";
+import { z } from "zod/v4";
 
-export const eventFormSchema = eventRequestDTOSchema.extend({
-  startDate: z
-    .string()
-    .min(1, { message: "A data de início do evento é obrigatória" }),
-  endDate: z
-    .string()
-    .min(1, { message: "A data de término do evento é obrigatória" }),
-  price: z.number({
-    required_error: "O preço do evento é obrigatório",
-    invalid_type_error: "O preço do evento é obrigatório",
-  }).min(0, { message: "O preço deve ser maior ou igual a zero" }),
-  payment: z.number({
-    required_error: "O pagamento do evento é obrigatório",
-    invalid_type_error: "O pagamento do evento é obrigatório",
-  }).min(0, { message: "O pagamento deve ser maior ou igual a zero" }),
-  content: z.enum(eventRequestDTOContentEnum, {
-    required_error: "O tipo do evento é obrigatório",
+const eventContentOptions = Object.values(
+  eventRequestDTOContentEnum,
+) as [EventRequestDTOContentEnumKey, ...EventRequestDTOContentEnumKey[]];
+
+export const eventFormSchema = z.object({
+  description: z.string().optional(),
+  content: z.enum(eventContentOptions, {
+    error: "O tipo do evento é obrigatório",
   }),
+  startDate: z.string().min(1, { message: "A data de início do evento é obrigatória" }),
+  duration: z.number({ error: "A duração do evento é obrigatória" }).min(0.5, { message: "A duração mínima é de 30 minutos (0.5h)" }),
+  price: z
+    .number({ error: "O preço do evento é obrigatório" })
+    .min(0, { message: "O preço deve ser maior ou igual a zero" }),
+  payment: z
+    .number({ error: "O pagamento do evento é obrigatório" })
+    .min(0, { message: "O pagamento deve ser maior ou igual a zero" }),
   studentId: z.string().min(1, { message: "O aluno é obrigatório" }),
   employeeId: z.string().min(1, { message: "O funcionário é obrigatório" }),
-  status: z
-    .enum(eventRequestDTOStatusEnum, {
-      required_error: "O status do evento é obrigatório",
-    })
-    .default("SCHEDULED"),
 });
 
 export type EventFormSchema = z.input<typeof eventFormSchema>;

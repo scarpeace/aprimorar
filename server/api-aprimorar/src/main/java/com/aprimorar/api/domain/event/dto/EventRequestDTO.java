@@ -21,9 +21,10 @@ public record EventRequestDTO(
     @Schema(nullable = false, description = "Data/Horário de início do evento", example = "2023-11-20T14:00:00Z")
     Instant startDate,
 
-    @NotNull(message = "Data/hora de fim do evento é obrigatória")
-    @Schema(nullable = false, description = "Data/Horário de fim do evento", example = "2023-11-20T16:00:00Z")
-    Instant endDate,
+    @NotNull(message = "A duração do evento é obrigatória")
+    @Positive(message = "A duração deve ser maior que zero")
+    @Schema(nullable = false, description = "Duração do evento em horas", example = "1.5")
+    Double duration,
 
     @NotNull(message = "Preço é obrigatório")
     @PositiveOrZero(message = "Preço deve ser maior ou igual a 0")
@@ -41,8 +42,5 @@ public record EventRequestDTO(
 
     @NotNull(message = "ID do funcionário é obrigatório")
     @Schema(nullable = false, description = "ID do colaborador vinculado ao evento", example = "123e4567-e89b-12d3-a456-426614174000")
-    UUID employeeId,
-
-    @Schema(nullable = true, description = "Status do evento (SCHEDULED, COMPLETED, CANCELED)", example = "SCHEDULED")
-    com.aprimorar.api.enums.EventStatus status
+    UUID employeeId
 ) {}

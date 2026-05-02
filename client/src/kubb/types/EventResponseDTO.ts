@@ -16,31 +16,6 @@ export const eventResponseDTOContentEnum = {
 export type EventResponseDTOContentEnumKey =
   (typeof eventResponseDTOContentEnum)[keyof typeof eventResponseDTOContentEnum];
 
-export const eventResponseDTOStatusEnum = {
-  SCHEDULED: "SCHEDULED",
-  COMPLETED: "COMPLETED",
-  CANCELED: "CANCELED",
-} as const;
-
-export type EventResponseDTOStatusEnumKey =
-  (typeof eventResponseDTOStatusEnum)[keyof typeof eventResponseDTOStatusEnum];
-
-export const eventResponseDTOIncomeStatusEnum = {
-  PENDING: "PENDING",
-  PAID: "PAID",
-} as const;
-
-export type EventResponseDTOIncomeStatusEnumKey =
-  (typeof eventResponseDTOIncomeStatusEnum)[keyof typeof eventResponseDTOIncomeStatusEnum];
-
-export const eventResponseDTOExpenseStatusEnum = {
-  PENDING: "PENDING",
-  PAID: "PAID",
-} as const;
-
-export type EventResponseDTOExpenseStatusEnumKey =
-  (typeof eventResponseDTOExpenseStatusEnum)[keyof typeof eventResponseDTOExpenseStatusEnum];
-
 /**
  * @description Dados do evento retornados pela API
  */
@@ -71,6 +46,11 @@ export type EventResponseDTO = {
    */
   endDate: string;
   /**
+   * @description Duração do evento em horas
+   * @type number, double
+   */
+  duration: number;
+  /**
    * @description Preço do evento pago pelo aluno
    * @type number
    */
@@ -80,6 +60,11 @@ export type EventResponseDTO = {
    * @type number
    */
   payment: number;
+  /**
+   * @description Lucro do evento
+   * @type number
+   */
+  profit: number;
   /**
    * @description ID do estudante vinculado ao evento
    * @type string, uuid
@@ -101,20 +86,15 @@ export type EventResponseDTO = {
    */
   employeeName: string;
   /**
-   * @description Status do evento
-   * @type string
+   * @description Data de pagamento ao colaborador
+   * @type string, date-time
    */
-  status: EventResponseDTOStatusEnumKey;
+  employeePaymentDate?: string | null;
   /**
-   * @description Status financeiro
-   * @type string
+   * @description Data de cobrança do aluno
+   * @type string, date-time
    */
-  incomeStatus: EventResponseDTOIncomeStatusEnumKey;
-  /**
-   * @description Status financeiro
-   * @type string
-   */
-  expenseStatus: EventResponseDTOExpenseStatusEnumKey;
+  studentChargeDate?: string | null;
   /**
    * @description Data de criação do evento
    * @type string, date-time

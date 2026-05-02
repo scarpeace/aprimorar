@@ -7,6 +7,7 @@ type StudentSelectDropdownProps = {
   error?: string;
   className?: string;
   label: string;
+  defaultValue?: { id: string; name: string };
 };
 
 export function StudentSelectDropdown({
@@ -14,8 +15,12 @@ export function StudentSelectDropdown({
   error,
   className,
   label,
+  defaultValue,
 }: StudentSelectDropdownProps) {
   const { data: students, isPending } = useGetStudentsOptions();
+
+  const hasDefaultValue = defaultValue?.id && defaultValue?.name;
+  const isDefaultInOptions = students?.some((s) => s.id === defaultValue?.id);
 
   return (
     <fieldset className={`fieldset ${className}`}>
@@ -23,10 +28,17 @@ export function StudentSelectDropdown({
 
       <select
         className="select select-bordered w-full"
-        disabled={isPending}
+        disabled={isPending && !hasDefaultValue}
         {...registration}
       >
-        <option value="">Selecione um aluno</option>
+        {!hasDefaultValue && (
+          <option value="">Selecione um aluno</option>
+        )}
+
+        {hasDefaultValue && !isDefaultInOptions && (
+          <option value={defaultValue.id}>{defaultValue.name}</option>
+        )}
+
         {students?.map((student) => (
           <option key={student.id} value={student.id}>
             {student.name}

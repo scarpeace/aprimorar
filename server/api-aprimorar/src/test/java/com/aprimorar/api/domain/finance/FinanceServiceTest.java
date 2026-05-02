@@ -31,10 +31,10 @@ class FinanceServiceTest {
     @Test
     @DisplayName("should calculate finance summary correctly")
     void shouldCalculateFinanceSummaryCorrectly() {
-        when(eventRepository.sumTotalIncome()).thenReturn(new BigDecimal("5000.00"));
-        when(eventRepository.sumTotalIncomePending()).thenReturn(new BigDecimal("1200.00"));
-        when(eventRepository.sumTotalExpenseTeacher()).thenReturn(new BigDecimal("3000.00"));
-        when(eventRepository.sumTotalExpenseTeacherPending()).thenReturn(new BigDecimal("800.00"));
+        when(eventRepository.sumTotalStudentIncome()).thenReturn(new BigDecimal("5000.00"));
+        when(eventRepository.sumTotalStudentIncomePending()).thenReturn(new BigDecimal("1200.00"));
+        when(eventRepository.sumTotalEmployeePayment()).thenReturn(new BigDecimal("3000.00"));
+        when(eventRepository.sumTotalEmployeePaymentPending()).thenReturn(new BigDecimal("800.00"));
         when(generalExpenseRepository.sumTotalGeneralExpenses()).thenReturn(new BigDecimal("500.00"));
 
         FinanceSummaryDTO actual = financeService.getFinanceSummary();

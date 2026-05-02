@@ -24,8 +24,6 @@ import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.EventContent;
-import com.aprimorar.api.enums.EventStatus;
-import com.aprimorar.api.enums.FinancialStatus;
 import com.aprimorar.api.shared.PageDTO;
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -58,6 +56,8 @@ class EventServiceTest {
     private static final Instant UPDATED_EVENT_START = Instant.parse("2026-03-26T13:00:00Z");
     private static final Instant UPDATED_EVENT_END = Instant.parse("2026-03-26T14:00:00Z");
     private static final Instant CREATED_AT = Instant.parse("2026-03-20T10:00:00Z");
+    private static final Instant EMPLOYEE_PAID_DATE = Instant.parse("2026-03-21T10:00:00Z");
+    private static final Instant STUDENT_PAID_DATE = Instant.parse("2026-03-21T10:00:00Z");
     private static final Instant UPDATED_AT = Instant.parse("2026-03-21T10:00:00Z");
     private static final Instant CURRENT_TIME = Instant.parse("2026-03-24T10:00:00Z");
 
@@ -84,54 +84,35 @@ class EventServiceTest {
     class CommandMethods {
 
         @Test
-        @DisplayName("should update income status when event is completed")
-        void shouldUpdateIncomeStatusWhenEventIsCompleted() {
-            UUID inputId = EVENT_ID;
-            FinancialStatus status = FinancialStatus.PAID;
+        @DisplayName("should toggle student charge")
+        void shouldToggleStudentCharge() {
             Event event = event();
-            event.setStatus(com.aprimorar.api.enums.EventStatus.COMPLETED);
             EventResponseDTO expected = response();
 
-            when(eventRepo.findById(inputId)).thenReturn(Optional.of(event));
+            when(clock.instant()).thenReturn(CURRENT_TIME);
+            when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(event));
             when(eventMapper.convertToDto(event)).thenReturn(expected);
 
-            EventResponseDTO actual = eventService.settleIncome(inputId, status);
+            EventResponseDTO actual = eventService.toggleStudentCharge(EVENT_ID);
 
             assertThat(actual).isEqualTo(expected);
-            assertThat(event.getIncomeStatus()).isEqualTo(status);
+            assertThat(event.isStudentCharged()).isTrue();
         }
 
         @Test
-        @DisplayName("should throw when updating income status to PAID and event is NOT completed")
-        void shouldThrowWhenUpdatingIncomeStatusToPaidAndEventIsNotCompleted() {
-            UUID inputId = EVENT_ID;
-            FinancialStatus status = FinancialStatus.PAID;
+        @DisplayName("should toggle employee payment")
+        void shouldToggleEmployeePayment() {
             Event event = event();
-            event.setStatus(com.aprimorar.api.enums.EventStatus.SCHEDULED);
-
-            when(eventRepo.findById(inputId)).thenReturn(Optional.of(event));
-
-            assertThatThrownBy(() -> eventService.settleExpense(inputId, status))
-                .isInstanceOf(InvalidEventException.class)
-                .hasMessage("Não é possível marcar como pago um evento que não está concluído");
-        }
-
-        @Test
-        @DisplayName("should update expense status when event is completed")
-        void shouldUpdateExpenseStatusWhenEventIsCompleted() {
-            UUID inputId = EVENT_ID;
-            FinancialStatus status = FinancialStatus.PAID;
-            Event event = event();
-            event.setStatus(EventStatus.COMPLETED);
             EventResponseDTO expected = response();
 
-            when(eventRepo.findById(inputId)).thenReturn(Optional.of(event));
+            when(clock.instant()).thenReturn(CURRENT_TIME);
+            when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(event));
             when(eventMapper.convertToDto(event)).thenReturn(expected);
 
-            EventResponseDTO actual = eventService.completeEvent(inputId);
+            EventResponseDTO actual = eventService.toggleEmployeePayment(EVENT_ID);
 
             assertThat(actual).isEqualTo(expected);
-            assertThat(event.getExpenseStatus()).isEqualTo(status);
+            assertThat(event.isEmployeePaid()).isTrue();
         }
 
         @Test
@@ -146,10 +127,10 @@ class EventServiceTest {
             when(clock.instant()).thenReturn(CURRENT_TIME);
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
-            when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
-            when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
             when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
+            when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
+            when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(eventRepo.save(any(Event.class))).thenReturn(savedEvent);
             when(eventMapper.convertToDto(savedEvent)).thenReturn(expected);
 
@@ -162,18 +143,17 @@ class EventServiceTest {
         @DisplayName("should return the eventsByEmployee page when success")
         void shouldReturnEventsByEmployeePageWhenSuccess() {
             Pageable input = PageRequest.of(0, 2);
-            UUID inputEmployeeId = EMPLOYEE_ID;
             Event firstEvent = event();
             Event secondEvent = secondEvent();
             EventResponseDTO expectedFirst = response();
             EventResponseDTO expectedSecond = secondResponse();
             Page<Event> expectedPage = new PageImpl<>(List.of(firstEvent, secondEvent), input, 2);
 
-            when(eventRepo.findAllByEmployeeId(inputEmployeeId, input)).thenReturn(expectedPage);
+            when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expectedFirst);
             when(eventMapper.convertToDto(secondEvent)).thenReturn(expectedSecond);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEventsByEmployeeId(input, inputEmployeeId);
+            PageDTO<EventResponseDTO> actual = eventService.getEventsByEmployeeId(input, EMPLOYEE_ID, null, null, null, null);
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
@@ -182,14 +162,13 @@ class EventServiceTest {
         @Test
         @DisplayName("should return the event by id when success")
         void shouldReturnEventBasedOnId() {
-            UUID input = EVENT_ID;
             Event event = event();
             EventResponseDTO expected = response();
 
-            when(eventRepo.findById(input)).thenReturn(Optional.of(event));
+            when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(event));
             when(eventMapper.convertToDto(event)).thenReturn(expected);
 
-            EventResponseDTO actual = eventService.findById(input);
+            EventResponseDTO actual = eventService.findById(EVENT_ID);
 
             assertThat(actual).isEqualTo(expected);
         }
@@ -198,18 +177,17 @@ class EventServiceTest {
         @DisplayName("should return the eventsByStudent page when success")
         void shouldReturnEventsByStudentPageWhenSuccess() {
             Pageable input = PageRequest.of(0, 2);
-            UUID inputStudentId = STUDENT_ID;
             Event firstEvent = event();
             Event secondEvent = secondEvent();
             EventResponseDTO expectedFirst = response();
             EventResponseDTO expectedSecond = secondResponse();
             Page<Event> expectedPage = new PageImpl<>(List.of(firstEvent, secondEvent), input, 2);
 
-            when(eventRepo.findAllByStudentId(inputStudentId, input)).thenReturn(expectedPage);
+            when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expectedFirst);
             when(eventMapper.convertToDto(secondEvent)).thenReturn(expectedSecond);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEventsByStudentId(input, inputStudentId);
+            PageDTO<EventResponseDTO> actual = eventService.getEventsByStudentId(input, STUDENT_ID, null, null, null, null);
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
@@ -229,7 +207,7 @@ class EventServiceTest {
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expectedFirst);
             when(eventMapper.convertToDto(secondEvent)).thenReturn(expectedSecond);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, null, null, null, null, null);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, null, null, null, null);
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
@@ -239,7 +217,6 @@ class EventServiceTest {
         @DisplayName("should return paged events when search is informed")
         void shouldReturnPagedEventsWhenSearchIsInformed() {
             Pageable input = PageRequest.of(0, 2);
-            String search = " mentoria ";
             Event firstEvent = secondEvent();
             EventResponseDTO expected = secondResponse();
             Page<Event> expectedPage = new PageImpl<>(List.of(firstEvent), input, 1);
@@ -247,7 +224,7 @@ class EventServiceTest {
             when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expected);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, search, null, null, null,null,null);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, " mentoria ", null, null, null, null);
 
             assertThat(actual.content()).containsExactly(expected);
             assertThat(actual.totalElements()).isEqualTo(1);
@@ -257,10 +234,6 @@ class EventServiceTest {
         @DisplayName("should return paged events when filters are informed")
         void shouldReturnPagedEventsWhenFiltersAreInformed() {
             Pageable input = PageRequest.of(0, 2);
-            Instant start = EVENT_START;
-            Instant end = EVENT_END;
-            com.aprimorar.api.enums.EventStatus status = com.aprimorar.api.enums.EventStatus.SCHEDULED;
-
             Event firstEvent = event();
             EventResponseDTO expected = response();
             Page<Event> expectedPage = new PageImpl<>(List.of(firstEvent), input, 1);
@@ -268,7 +241,7 @@ class EventServiceTest {
             when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expected);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, start, end, status, null, null);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, EVENT_START, EVENT_END, STUDENT_ID, EMPLOYEE_ID);
 
             assertThat(actual.content()).containsExactly(expected);
             assertThat(actual.totalElements()).isEqualTo(1);
@@ -277,24 +250,23 @@ class EventServiceTest {
         @Test
         @DisplayName("should update event when input is valid")
         void shouldUpdateEventWhenInputIsValid() {
-            UUID input = EVENT_ID;
             EventRequestDTO request = updateRequest();
             Student student = student();
             Employee employee = employee();
             Event existingEvent = eventWithRelations(student, employee);
             EventResponseDTO expected = updatedResponse();
 
-            when(eventRepo.findById(input)).thenReturn(Optional.of(existingEvent));
+            when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(existingEvent));
             when(clock.instant()).thenReturn(CURRENT_TIME);
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
-            when(eventRepo.studentHasConflictingEvent(STUDENT_ID, UPDATED_EVENT_START, UPDATED_EVENT_END, input)).thenReturn(false);
-            when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, UPDATED_EVENT_START, UPDATED_EVENT_END, input)).thenReturn(false);
             when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
             when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
+            when(eventRepo.studentHasConflictingEvent(STUDENT_ID, UPDATED_EVENT_START, UPDATED_EVENT_END, EVENT_ID)).thenReturn(false);
+            when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, UPDATED_EVENT_START, UPDATED_EVENT_END, EVENT_ID)).thenReturn(false);
             when(eventMapper.convertToDto(existingEvent)).thenReturn(expected);
 
-            EventResponseDTO actual = eventService.updateEvent(input, request);
+            EventResponseDTO actual = eventService.updateEvent(EVENT_ID, request);
 
             assertThat(actual).isEqualTo(expected);
             assertThat(existingEvent.getDescription()).isEqualTo("Descrição atualizada");
@@ -304,19 +276,14 @@ class EventServiceTest {
             assertThat(existingEvent.getPrice()).isEqualByComparingTo(BigDecimal.valueOf(140));
             assertThat(existingEvent.getContent()).isEqualTo(EventContent.MENTORIA);
             assertThat(existingEvent.getTitle()).isEqualTo("MENTORIA - Col: Ana Paula - João Silva");
-            assertThat(existingEvent.getStudent()).isEqualTo(student);
-            assertThat(existingEvent.getEmployee()).isEqualTo(employee);
         }
 
         @Test
         @DisplayName("should throw when updating an event that does not exist")
         void shouldThrowWhenUpdatingEventThatDoesNotExist() {
-            UUID input = EVENT_ID;
-            EventRequestDTO request = updateRequest();
+            when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.empty());
 
-            when(eventRepo.findById(input)).thenReturn(Optional.empty());
-
-            assertThatThrownBy(() -> eventService.updateEvent(input, request))
+            assertThatThrownBy(() -> eventService.updateEvent(EVENT_ID, updateRequest()))
                 .isInstanceOf(EventNotFoundException.class)
                 .hasMessage("Evento não encontrado no banco de dados");
         }
@@ -324,12 +291,11 @@ class EventServiceTest {
         @Test
         @DisplayName("should delete event when it exists")
         void shouldDeleteEventWhenItExists() {
-            UUID input = EVENT_ID;
             Event expected = eventWithRelations(student(), employee());
 
-            when(eventRepo.findById(input)).thenReturn(Optional.of(expected));
+            when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(expected));
 
-            eventService.deleteEvent(input);
+            eventService.deleteEvent(EVENT_ID);
 
             verify(eventRepo).delete(expected);
         }
@@ -337,11 +303,9 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when deleting an event that does not exist")
         void shouldThrowWhenDeletingEventThatDoesNotExist() {
-            UUID input = EVENT_ID;
+            when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.empty());
 
-            when(eventRepo.findById(input)).thenReturn(Optional.empty());
-
-            assertThatThrownBy(() -> eventService.deleteEvent(input))
+            assertThatThrownBy(() -> eventService.deleteEvent(EVENT_ID))
                 .isInstanceOf(EventNotFoundException.class)
                 .hasMessage("Evento não encontrado no banco de dados");
         }
@@ -349,10 +313,9 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when student is not found during creation")
         void shouldThrowWhenStudentIsNotFoundDuringCreation() {
-            EventRequestDTO input = request();
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.empty());
 
-            assertThatThrownBy(() -> eventService.createEvent(input))
+            assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(StudentNotFoundException.class)
                 .hasMessage("Estudante com o ID informado não encontrado no banco de dados");
         }
@@ -360,12 +323,10 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when employee is not found during creation")
         void shouldThrowWhenEmployeeIsNotFoundDuringCreation() {
-            EventRequestDTO input = request();
-
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.empty());
 
-            assertThatThrownBy(() -> eventService.createEvent(input))
+            assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(EmployeeNotFoundException.class)
                 .hasMessage("Colaborador com o ID informado não encontrado no banco de dados");
         }
@@ -373,13 +334,13 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when student has conflicting events")
         void shouldThrowWhenStudentHasConflictingEvent() {
-            EventRequestDTO input = request();
-
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee()));
+            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
+            when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(true);
 
-            assertThatThrownBy(() -> eventService.createEvent(input))
+            assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(EventScheduleConflictException.class)
                 .hasMessage("O estudante informado já possui um evento no intervalo");
         }
@@ -387,14 +348,14 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when employee has conflicting events")
         void shouldThrowWhenEmployeeHasConflictingEvent() {
-            EventRequestDTO input = request();
-
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee()));
+            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
+            when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(true);
 
-            assertThatThrownBy(() -> eventService.createEvent(input))
+            assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(EventScheduleConflictException.class)
                 .hasMessage("O colaborador informado já possui um evento no intervalo");
         }
@@ -402,15 +363,11 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when creating an event with an archived student")
         void shouldThrowWhenStudentIsArchived() {
-            EventRequestDTO input = request();
-
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee()));
-            when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
-            when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(true);
 
-            assertThatThrownBy(() -> eventService.createEvent(input))
+            assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("Evento não pode ter estudantes arquivados");
         }
@@ -418,15 +375,12 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when creating an event with an archived employee")
         void shouldThrowWhenEmployeeIsArchived() {
-            EventRequestDTO input = request();
-
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee()));
-            when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
-            when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
+            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
             when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(true);
 
-            assertThatThrownBy(() -> eventService.createEvent(input))
+            assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessage("Evento não pode ter colaboradores arquivados");
         }
@@ -447,12 +401,11 @@ class EventServiceTest {
             "Descrição de teste",
             EventContent.AULA,
             EVENT_START,
-            EVENT_END,
+            1.0,
             BigDecimal.valueOf(120),
             BigDecimal.valueOf(80),
             STUDENT_ID,
-            EMPLOYEE_ID,
-            EventStatus.SCHEDULED
+            EMPLOYEE_ID
         );
     }
 
@@ -461,12 +414,11 @@ class EventServiceTest {
             "Descrição atualizada",
             EventContent.MENTORIA,
             UPDATED_EVENT_START,
-            UPDATED_EVENT_END,
+            1.0,
             BigDecimal.valueOf(140),
             BigDecimal.valueOf(90),
             STUDENT_ID,
-            EMPLOYEE_ID,
-            com.aprimorar.api.enums.EventStatus.COMPLETED
+            EMPLOYEE_ID
         );
     }
 
@@ -477,15 +429,16 @@ class EventServiceTest {
             EventContent.AULA,
             EVENT_START,
             EVENT_END,
+            1.0,
             BigDecimal.valueOf(120),
             BigDecimal.valueOf(80),
+            BigDecimal.valueOf(40),
             STUDENT_ID,
             "João Silva",
             EMPLOYEE_ID,
             "Ana Paula",
-            com.aprimorar.api.enums.EventStatus.SCHEDULED,
-            FinancialStatus.PENDING,
-            FinancialStatus.PENDING,
+            EMPLOYEE_PAID_DATE,
+            STUDENT_PAID_DATE,
             CREATED_AT,
             UPDATED_AT
         );
@@ -498,15 +451,16 @@ class EventServiceTest {
             EventContent.MENTORIA,
             Instant.parse("2026-03-26T13:00:00Z"),
             Instant.parse("2026-03-26T14:00:00Z"),
+            1.0,
             BigDecimal.valueOf(130),
             BigDecimal.valueOf(90),
+            BigDecimal.valueOf(40),
             STUDENT_ID,
             "João Silva",
             EMPLOYEE_ID,
             "Ana Paula",
-            com.aprimorar.api.enums.EventStatus.SCHEDULED,
-            FinancialStatus.PENDING,
-            FinancialStatus.PENDING,
+            EMPLOYEE_PAID_DATE,
+            STUDENT_PAID_DATE,
             CREATED_AT,
             UPDATED_AT
         );
@@ -519,70 +473,61 @@ class EventServiceTest {
             EventContent.MENTORIA,
             UPDATED_EVENT_START,
             UPDATED_EVENT_END,
+            1.0,
             BigDecimal.valueOf(140),
             BigDecimal.valueOf(90),
+            BigDecimal.valueOf(50),
             STUDENT_ID,
             "João Silva",
             EMPLOYEE_ID,
             "Ana Paula",
-            com.aprimorar.api.enums.EventStatus.COMPLETED,
-            FinancialStatus.PENDING,
-            FinancialStatus.PENDING,
+            null,
+            null,
             CREATED_AT,
             UPDATED_AT
         );
     }
 
     private static Event event() {
-        Event input = new Event();
-        input.setId(EVENT_ID);
-        input.updateDetails(
-            "Descrição de teste",
-            EVENT_START,
-            EVENT_END,
-            BigDecimal.valueOf(80),
-            BigDecimal.valueOf(120),
-            EventContent.AULA,
-            student(),
-            employee()
-        );
-        return input;
+        Event event = eventWithRelations(student(), employee());
+        event.setId(EVENT_ID);
+        return event;
     }
 
     private static Event eventWithRelations(Student student, Employee employee) {
-        Event input = new Event();
-        input.setId(EVENT_ID);
-        input.updateDetails(
+        Event event = new Event(
             "Descrição de teste",
             EVENT_START,
-            EVENT_END,
+            1.0,
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.AULA,
             student,
-            employee
+            employee,
+            CURRENT_TIME
         );
-        return input;
+        event.setId(EVENT_ID);
+        return event;
     }
 
     private static Event secondEvent() {
-        Event input = new Event();
-        input.setId(UUID.fromString("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"));
-        input.updateDetails(
+        Event event = new Event(
             "Descrição de teste 2",
             Instant.parse("2026-03-26T13:00:00Z"),
-            Instant.parse("2026-03-26T14:00:00Z"),
+            1.0,
             BigDecimal.valueOf(90),
             BigDecimal.valueOf(130),
             EventContent.MENTORIA,
             student(),
-            employee()
+            employee(),
+            CURRENT_TIME
         );
-        return input;
+        event.setId(UUID.fromString("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"));
+        return event;
     }
 
     private static Student student() {
-        Student input = new Student(
+        Student student = new Student(
             "João Silva",
             "61999999999",
             "joao@email.com",
@@ -592,12 +537,12 @@ class EventServiceTest {
             parent(),
             address()
         );
-        input.setId(STUDENT_ID);
-        return input;
+        student.setId(STUDENT_ID);
+        return student;
     }
 
     private static Employee employee() {
-        Employee input = new Employee(
+        Employee employee = new Employee(
             "Ana Paula",
             LocalDate.of(1990, 8, 20),
             "ana@email.com",
@@ -606,24 +551,24 @@ class EventServiceTest {
             "ana@email.com",
             Duty.TEACHER
         );
-        input.setId(EMPLOYEE_ID);
-        return input;
+        employee.setId(EMPLOYEE_ID);
+        return employee;
     }
 
     private static Parent parent() {
-        Parent input = new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
-        input.setId(UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"));
-        return input;
+        Parent parent = new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
+        parent.setId(UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"));
+        return parent;
     }
 
     private static Address address() {
-        Address input = new Address();
-        input.setStreet("Rua A");
-        input.setDistrict("Centro");
-        input.setCity("Brasília");
-        input.setState(BrazilianStates.DF);
-        input.setZip("70000000");
-        input.setComplement("Casa");
-        return input;
+        Address address = new Address();
+        address.setStreet("Rua A");
+        address.setDistrict("Centro");
+        address.setCity("Brasília");
+        address.setState(BrazilianStates.DF);
+        address.setZip("70000000");
+        address.setComplement("Casa");
+        return address;
     }
 }
