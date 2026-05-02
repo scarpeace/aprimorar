@@ -92,7 +92,7 @@ export function StudentDetailsPage() {
             <SummaryItem label="CPF do Responsável" value={formatCpf(studentQuery.data.responsible?.cpf)} />
           </div>
 
-          <Collapse title={"Endereço"} className="mt-3 shadow-xl">
+          <Collapse title={"Endereço"} className="mt-3 shadow-xl hover:bg-base-200/70">
             <AddressDetails address={studentQuery.data.address} />
           </Collapse>
         </SectionCard>

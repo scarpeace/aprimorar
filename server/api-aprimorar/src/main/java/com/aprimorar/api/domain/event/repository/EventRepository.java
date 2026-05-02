@@ -37,40 +37,42 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
     @EntityGraph(attributePaths = { "student", "employee" })
     Page<Event> findAllByStudentId(UUID studentId, Pageable pageable);
 
-    long countByEmployeeIdAndStartDateBetween(UUID employeeId, Instant startDate, Instant endDate);
 
     @Modifying
     @Query("UPDATE Event e SET e.student.id = :ghostId WHERE e.student.id = :studentId")
-    void reassignEventsToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
+    void reassignStudentEventsToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
 
     @Modifying
     @Query("UPDATE Event e SET e.employee.id = :ghostId WHERE e.employee.id = :employeeId")
     void reassignEmployeeEventsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
 
-    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.startDate BETWEEN :startDate AND :endDate AND e.employeePaid IS TRUE")
+    long countByEmployeeIdAndStartDateBetween(UUID employeeId, Instant startDate, Instant endDate);
+
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employeePaymentDate IS NOT NULL")
+    BigDecimal sumTotalEmployeePayment();
+
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employeePaymentDate IS NULL")
+    BigDecimal sumTotalEmployeePaymentPending();
+
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.startDate BETWEEN :startDate AND :endDate AND e.employeePaymentDate IS NOT NULL")
     BigDecimal sumPaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
-    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.startDate BETWEEN :startDate AND :endDate AND e.employeePaid IS FALSE")
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.startDate BETWEEN :startDate AND :endDate AND e.employeePaymentDate IS NULL")
     BigDecimal sumUnpaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
-    @EntityGraph(attributePaths = { "student", "employee" })
-    @Query(
-        """
-        SELECT e
-        FROM Event e
-        WHERE e.startDate >= COALESCE(:start, e.startDate)
-          AND e.startDate <= COALESCE(:end, e.startDate)
-          AND e.student.id = COALESCE(:studentId, e.student.id)
-          AND e.employee.id = COALESCE(:employeeId, e.employee.id)
-        """
-    )
-    Page<Event> findAllWithFilter(
-        @Param("start") Instant start,
-        @Param("end") Instant end,
-        @Param("studentId") UUID studentId,
-        @Param("employeeId") UUID employeeId,
-        Pageable pageable
-    );
+    long countByStudentIdAndStartDateBetween(UUID studentId, Instant startDate, Instant endDate);
+
+    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.studentChargeDate IS NOT NULL")
+    BigDecimal sumTotalStudentIncome();
+
+    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.studentChargeDate IS NULL")
+    BigDecimal sumTotalStudentIncomePending();
+
+    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.student.id = :studentId AND e.startDate BETWEEN :startDate AND :endDate AND e.studentChargeDate IS NOT NULL")
+    BigDecimal sumChargedByStudentIdInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.student.id = :studentId AND e.startDate BETWEEN :startDate AND :endDate AND e.studentChargeDate IS NULL")
+    BigDecimal sumPendingByStudentIdInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     @Query(
         """
@@ -105,8 +107,6 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
         @Param("endDate") Instant endDate,
         @Param("ignoredEventId") UUID ignoredEventId
     );
-
-    long countByStartDateGreaterThanEqualAndStartDateLessThan(Instant startDate, Instant endDate);
 
     @Query(
         """
@@ -155,15 +155,5 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
     )
     List<EventContentCount> findContentDistributionInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
-    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.studentCharged = true")
-    BigDecimal sumTotalIncome();
-
-    @Query("SELECT COALESCE(SUM(e.price), 0) FROM Event e WHERE e.studentCharged = false")
-    BigDecimal sumTotalIncomePending();
-
-    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employeePaid = true")
-    BigDecimal sumTotalExpenseTeacher();
-
-    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employeePaid = false")
-    BigDecimal sumTotalExpenseTeacherPending();
+    long countByStartDateGreaterThanEqualAndStartDateLessThan(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 }

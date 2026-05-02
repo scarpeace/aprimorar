@@ -14,6 +14,7 @@ import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
 import com.aprimorar.api.shared.PageDTO;
+
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -60,13 +61,12 @@ public class EventService {
         Student student = findStudentOrThrow(dto.studentId());
         Employee employee = findEmployeeOrThrow(dto.employeeId());
 
-        Instant calculatedEndDate = dto.startDate().plus((long) (dto.duration() * 60), ChronoUnit.MINUTES);
-        validateParticipantAvailability(student, employee, dto.startDate(), calculatedEndDate, null);
+        validateParticipantAvailability(student, employee, dto.startDate(), dto.duration(), null);
 
         Event event = new Event(
             dto.description(),
             dto.startDate(),
-            calculatedEndDate,
+            dto.duration(),
             dto.payment(),
             dto.price(),
             dto.content(),
@@ -143,8 +143,21 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public PageDTO<EventResponseDTO> getEventsByStudentId(Pageable pageable, UUID studentId) {
-        Page<Event> eventPage = eventRepo.findAllByStudentId(studentId, pageable);
+    public PageDTO<EventResponseDTO> getEventsByStudentId(
+        Pageable pageable, 
+        UUID studentId, 
+        String search, 
+        Boolean hideCharged, 
+        Instant startDate, 
+        Instant endDate
+    ) {
+        Specification<Event> spec = Specification.where(EventSpecifications.withStudentId(studentId))
+            .and(EventSpecifications.withEmployeeNameIgnoreCase(search))
+            .and(EventSpecifications.withStudentCharged(hideCharged != null && hideCharged ? false : null))
+            .and(EventSpecifications.withStartDateAfter(startDate))
+            .and(EventSpecifications.withEndDateBefore(endDate));
+
+        Page<Event> eventPage = eventRepo.findAll(spec, pageable);
         Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);
 
         log.info("Consulta de eventos do aluno {} finalizada, {} registros encontrados.", studentId, eventPage.getTotalElements());
@@ -157,13 +170,12 @@ public class EventService {
         Student student = findStudentOrThrow(dto.studentId());
         Employee employee = findEmployeeOrThrow(dto.employeeId());
 
-        Instant calculatedEndDate = dto.startDate().plus((long) (dto.duration() * 60), ChronoUnit.MINUTES);
-        validateParticipantAvailability(student, employee, dto.startDate(), calculatedEndDate, id);
+        validateParticipantAvailability(student, employee, dto.startDate(), dto.duration(), event);
 
         event.update(
             dto.description(),
             dto.startDate(),
-            calculatedEndDate,
+            dto.duration(),
             dto.payment(),
             dto.price(),
             dto.content(),
@@ -187,7 +199,7 @@ public class EventService {
     public EventResponseDTO toggleStudentCharge(UUID id) {
         Event event = findEventOrThrow(id);
         event.toggleStudentCharge(Instant.now(clock));
-        log.info("Status da cobrança do aluno no evento {} atualizado para {}.", event.getTitle(), event.isStudentCharged());
+        log.info("Status da cobrança do aluno no evento {} atualizado.", event.getTitle());
         return eventMapper.convertToDto(event);
     }
 
@@ -195,7 +207,7 @@ public class EventService {
     public EventResponseDTO toggleEmployeePayment(UUID id) {
         Event event = findEventOrThrow(id);
         event.toggleEmployeePayment(Instant.now(clock));
-        log.info("Status do pagamento do colaborador no evento {} atualizado para {}.", event.getTitle(), event.isEmployeePaid());
+        log.info("Status do pagamento do colaborador no evento {} atualizado.", event.getTitle());
         return eventMapper.convertToDto(event);
     }
 
@@ -220,9 +232,11 @@ public class EventService {
         Student student,
         Employee employee,
         Instant startDate,
-        Instant endDate,
-        UUID ignoredEventId
+        Double duration,
+        Event event
     ) {
+        Instant endDate = Event.calculateEndDate(startDate, duration);
+
         if (studentRepo.existsByIdAndArchivedAtIsNotNull(student.getId())) {
             throw new InvalidEventException("Evento não pode ter estudantes arquivados");
         }
@@ -231,14 +245,13 @@ public class EventService {
             throw new InvalidEventException("Evento não pode ter colaboradores arquivados");
         }
 
-        boolean studentConflict = eventRepo.studentHasConflictingEvent(student.getId(), startDate, endDate, ignoredEventId);
+        UUID eventId = event != null ? event.getId() : null;
 
-        if (studentConflict) {
+        if (eventRepo.studentHasConflictingEvent(student.getId(), startDate, endDate, eventId)) {
             throw new EventScheduleConflictException("O estudante informado já possui um evento no intervalo");
         }
 
-        boolean employeeConflict = eventRepo.employeeHasConflictingEvent(employee.getId(), startDate, endDate, ignoredEventId);
-        if (employeeConflict) {
+        if (eventRepo.employeeHasConflictingEvent(employee.getId(), startDate, endDate, eventId)) {
             throw new EventScheduleConflictException("O colaborador informado já possui um evento no intervalo");
         }
     }

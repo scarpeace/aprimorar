@@ -299,9 +299,9 @@ class EmployeeServiceTest {
 
             EmployeeMonthlySummaryDTO actual = employeeService.getMonthlySummary(EMPLOYEE_ID, month, year);
 
-            assertThat(actual.totalEvents()).isEqualTo(totalEvents);
-            assertThat(actual.totalPaid()).isEqualTo(totalPaid);
-            assertThat(actual.totalUnpaid()).isEqualTo(totalUnpaid);
+            assertThat(actual.totalEventsInPeriod()).isEqualTo(totalEvents);
+            assertThat(actual.totalPaidInPeriod()).isEqualTo(totalPaid);
+            assertThat(actual.totalUnpaidInPeriod()).isEqualTo(totalUnpaid);
             verify(employeeRepo).existsById(EMPLOYEE_ID);
         }
 
@@ -325,9 +325,9 @@ class EmployeeServiceTest {
 
             EmployeeMonthlySummaryDTO actual = employeeService.getMonthlySummary(EMPLOYEE_ID, null, null);
 
-            assertThat(actual.totalEvents()).isEqualTo(5L);
-            assertThat(actual.totalPaid()).isEqualTo(totalPaid);
-            assertThat(actual.totalUnpaid()).isEqualTo(totalUnpaid);
+            assertThat(actual.totalEventsInPeriod()).isEqualTo(5L);
+            assertThat(actual.totalPaidInPeriod()).isEqualTo(totalPaid);
+            assertThat(actual.totalUnpaidInPeriod()).isEqualTo(totalUnpaid);
         }
 
         @Test

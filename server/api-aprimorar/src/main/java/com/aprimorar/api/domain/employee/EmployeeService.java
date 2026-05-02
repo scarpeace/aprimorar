@@ -128,12 +128,12 @@ public class EmployeeService {
         Instant startOfMonth = YearMonth.of(targetYear, targetMonth).atDay(1).atStartOfDay(zone).toInstant();
         Instant endOfMonth = YearMonth.of(targetYear, targetMonth).atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant();
 
-        long totalEvents = eventRepo.countByEmployeeIdAndStartDateBetween(employeeId, startOfMonth, endOfMonth);
-        BigDecimal totalPaid = eventRepo.sumPaidByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
-        BigDecimal totalUnpaid = eventRepo.sumUnpaidByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
+        long totalEventsInPeriod = eventRepo.countByEmployeeIdAndStartDateBetween(employeeId, startOfMonth, endOfMonth);
+        BigDecimal totalPaidInPeriod = eventRepo.sumPaidByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
+        BigDecimal totalUnpaidInPeriod = eventRepo.sumUnpaidByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
 
         log.info("Resumo mensal gerado para o colaborador {} no mês {}/{}", employeeId, targetMonth, targetYear);
-        return new EmployeeMonthlySummaryDTO(totalEvents, totalPaid, totalUnpaid);
+        return new EmployeeMonthlySummaryDTO(totalEventsInPeriod, totalPaidInPeriod, totalUnpaidInPeriod);
     }
 
     @Transactional
@@ -155,7 +155,7 @@ public class EmployeeService {
     public void deleteEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
         eventRepo.reassignEmployeeEventsToGhost(employeeId, PHANTOM_EMPLOYEE_ID);
-        
+
         userRepo.findByEmployeeId(employeeId).ifPresent(user -> {
             userRepo.delete(user);
             log.info("Usuário associado ao colaborador {} deletado com sucesso.", employee.getName().toUpperCase());

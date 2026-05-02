@@ -39,16 +39,10 @@ public class Event extends BaseEntity {
     @Column(nullable = false)
     private EventContent content;
 
-    @Column(name = "student_charged", nullable = false)
-    private boolean studentCharged;
-
-    @Column(name = "employee_paid", nullable = false)
-    private boolean employeePaid;
-
-    @Column(name = "employee_payment_date")
+    @Column(name = "employee_payment_date", nullable = true)
     private Instant employeePaymentDate;
 
-    @Column(name = "student_charge_date")
+    @Column(name = "student_charge_date", nullable = true)
     private Instant studentChargeDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,20 +55,10 @@ public class Event extends BaseEntity {
 
     protected Event() {}
 
-    @Transient
-    public Double getDuration() {
-        return (double) Duration.between(startDate, endDate).toMinutes() / 60.0;
-    }
-
-    @Transient
-    public BigDecimal getProfit(){
-        return price.subtract(payment);
-    }
-
     public Event(
         String description,
         Instant startDate,
-        Instant endDate,
+        Double duration,
         BigDecimal payment,
         BigDecimal price,
         EventContent content,
@@ -82,7 +66,9 @@ public class Event extends BaseEntity {
         Employee employee,
         Instant now
     ) {
-        validateDates(startDate, endDate, now);
+        this.endDate = calculateEndDate(startDate, duration);
+        validateDates(startDate);
+        validateNotPast(now);
         validateAmounts(payment, price);
         validateParticipants(student, employee);
         validateContent(content);
@@ -90,12 +76,21 @@ public class Event extends BaseEntity {
         this.title = buildTitle(content, student, employee);
         this.description = description;
         this.startDate = startDate;
-        this.endDate = endDate;
         this.payment = payment;
         this.price = price;
         this.content = content;
         this.student = student;
         this.employee = employee;
+    }
+
+    @Transient
+    public Double getDuration() {
+        return (double) Duration.between(startDate, endDate).toMinutes() / 60.0;
+    }
+
+    @Transient
+    public BigDecimal getProfit() {
+        return price.subtract(payment);
     }
 
     public String getTitle() {
@@ -126,14 +121,6 @@ public class Event extends BaseEntity {
         return content;
     }
 
-    public boolean isStudentCharged() {
-        return studentCharged;
-    }
-
-    public boolean isEmployeePaid() {
-        return employeePaid;
-    }
-
     public Instant getEmployeePaymentDate() {
         return employeePaymentDate;
     }
@@ -153,7 +140,7 @@ public class Event extends BaseEntity {
     public Event update(
         String description,
         Instant startDate,
-        Instant endDate,
+        Double duration,
         BigDecimal payment,
         BigDecimal price,
         EventContent content,
@@ -161,8 +148,9 @@ public class Event extends BaseEntity {
         Employee employee,
         Instant now
     ) {
+        this.endDate = calculateEndDate(startDate, duration);
         validateEditWindow(now);
-        validateDates(startDate, endDate);
+        validateDates(startDate);
         validateAmounts(payment, price);
         validateParticipants(student, employee);
         validateContent(content);
@@ -170,7 +158,6 @@ public class Event extends BaseEntity {
         this.title = buildTitle(content, student, employee);
         this.description = description;
         this.startDate = startDate;
-        this.endDate = endDate;
         this.payment = payment;
         this.price = price;
         this.content = content;
@@ -180,49 +167,57 @@ public class Event extends BaseEntity {
         return this;
     }
 
-
     public void toggleStudentCharge(Instant now) {
-        this.studentCharged = !this.studentCharged;
-        if (this.studentCharged) {
-            this.studentChargeDate = now;
-        } else {
+        if (this.studentChargeDate != null) {
             this.studentChargeDate = null;
+        } else {
+            this.studentChargeDate = now;
         }
     }
 
     public void toggleEmployeePayment(Instant now) {
-        this.employeePaid = !this.employeePaid;
-        if (this.employeePaid) {
-            this.employeePaymentDate = now;
-        } else {
+        if (this.employeePaymentDate != null) {
             this.employeePaymentDate = null;
+        } else {
+            this.employeePaymentDate = now;
         }
+    }
+
+    @Transient
+    public boolean isStudentCharged() {
+        return this.studentChargeDate != null;
+    }
+
+    @Transient
+    public boolean isEmployeePaid() {
+        return this.employeePaymentDate != null;
+    }
+
+    public static Instant calculateEndDate(Instant startDate, Double duration) {
+        if (startDate == null) {
+            throw new InvalidEventException("Data de início do evento é obrigatório");
+        }
+        if (duration == null) {
+            throw new InvalidEventException("Duração do evento é obrigatória");
+        }
+        return startDate.plus((long) (duration * 60), ChronoUnit.MINUTES);
     }
 
     public void validateEditWindow(Instant now) {
         if (this.endDate != null && now.isAfter(this.endDate.plus(20, ChronoUnit.DAYS))) {
-            throw new NotAllowedToUpdateEventException(
-                "A janela de 20 dias para editar as informações do evento encerrou"
-            );
+            throw new NotAllowedToUpdateEventException("A janela de 20 dias para editar as informações do evento encerrou");
         }
     }
 
-    private void validateDates(Instant startDate, Instant endDate, Instant now) {
-        validateDates(startDate, endDate);
-        if (endDate.isBefore(now)) {
-            throw new InvalidEventException("Data de fim do evento não pode estar no passado");
-        }
-    }
-
-    private void validateDates(Instant startDate, Instant endDate) {
-        if (startDate == null) {
-            throw new InvalidEventException("Data de início do evento é obrigatório");
-        }
-        if (endDate == null) {
-            throw new InvalidEventException("Data de término do evento é obrigatório");
-        }
-        if (endDate.isBefore(startDate)) {
+    private void validateDates(Instant startDate) {
+        if (this.endDate.isBefore(startDate)) {
             throw new InvalidEventException("Data de fim do evento não pode ser anterior a data de inicio");
+        }
+    }
+
+    private void validateNotPast(Instant now) {
+        if (this.endDate.isBefore(now)) {
+            throw new InvalidEventException("Data de fim do evento não pode estar no passado");
         }
     }
 

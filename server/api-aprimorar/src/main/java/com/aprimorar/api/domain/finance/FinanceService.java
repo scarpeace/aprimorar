@@ -30,10 +30,10 @@ public class FinanceService {
 
     @Transactional(readOnly = true)
     public FinanceSummaryDTO getFinanceSummary() {
-        BigDecimal totalIncome = eventRepository.sumTotalIncome();
-        BigDecimal totalIncomePending = eventRepository.sumTotalIncomePending();
-        BigDecimal totalExpenseTeacher = eventRepository.sumTotalExpenseTeacher();
-        BigDecimal totalExpenseTeacherPending = eventRepository.sumTotalExpenseTeacherPending();
+        BigDecimal totalIncome = eventRepository.sumTotalStudentIncome();
+        BigDecimal totalIncomePending = eventRepository.sumTotalStudentIncomePending();
+        BigDecimal totalExpenseTeacher = eventRepository.sumTotalEmployeePayment();
+        BigDecimal totalExpenseTeacherPending = eventRepository.sumTotalEmployeePaymentPending();
         BigDecimal totalGeneralExpenses = generalExpenseRepository.sumTotalGeneralExpenses();
 
         BigDecimal balance = totalIncome

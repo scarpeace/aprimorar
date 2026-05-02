@@ -7,14 +7,21 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
+import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,6 +44,7 @@ import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.parent.repository.ParentRepository;
+import com.aprimorar.api.domain.student.dto.StudentMonthlySummaryDTO;
 import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
 import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
 import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
@@ -79,8 +87,18 @@ class StudentServiceTest {
     @Mock
     private EventRepository eventRepo;
 
+    @Mock
+    private Clock clock;
+
     @InjectMocks
     private StudentService studentService;
+
+    @BeforeEach
+    void setUp() {
+        Clock fixedClock = Clock.fixed(Instant.parse("2026-03-15T10:00:00Z"), ZoneId.of("UTC"));
+        lenient().when(clock.getZone()).thenReturn(fixedClock.getZone());
+        lenient().when(clock.instant()).thenReturn(fixedClock.instant());
+    }
 
     @Nested
     @DisplayName("Command methods")
@@ -311,7 +329,7 @@ class StudentServiceTest {
 
             studentService.deleteStudent(STUDENT_ID);
 
-            verify(eventRepo).reassignEventsToGhost(STUDENT_ID, GHOST_STUDENT_ID);
+            verify(eventRepo).reassignStudentEventsToGhost(STUDENT_ID, GHOST_STUDENT_ID);
             verify(studentRepo).delete(existingStudent);
         }
     }
@@ -427,6 +445,58 @@ class StudentServiceTest {
                     new StudentOptionsDTO(STUDENT_ID, "João Silva"),
                     new StudentOptionsDTO(SECOND_STUDENT_ID, "Maria Eduarda")
                 );
+        }
+
+        @Test
+        @DisplayName("should return monthly summary correctly")
+        void shouldReturnMonthlySummaryCorrectly() {
+            Integer month = 3;
+            Integer year = 2026;
+            ZoneId zone = ZoneId.of("UTC");
+            Instant start = YearMonth.of(year, month).atDay(1).atStartOfDay(zone).toInstant();
+            Instant end = YearMonth.of(year, month).atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant();
+
+            when(studentRepo.existsById(STUDENT_ID)).thenReturn(true);
+            when(eventRepo.countByStudentIdAndStartDateBetween(STUDENT_ID, start, end)).thenReturn(5L);
+            when(eventRepo.sumChargedByStudentIdInPeriod(STUDENT_ID, start, end)).thenReturn(new BigDecimal("500.00"));
+            when(eventRepo.sumPendingByStudentIdInPeriod(STUDENT_ID, start, end)).thenReturn(new BigDecimal("150.00"));
+
+            StudentMonthlySummaryDTO actual = studentService.getMonthlySummary(STUDENT_ID, month, year);
+
+            assertThat(actual.totalEventsInPeriod()).isEqualTo(5L);
+            assertThat(actual.totalChargedInPeriod()).isEqualByComparingTo("500.00");
+            assertThat(actual.totalPendingInPeriod()).isEqualByComparingTo("150.00");
+        }
+
+        @Test
+        @DisplayName("should return monthly summary for current month when params are null")
+        void shouldReturnMonthlySummaryForCurrentMonthWhenParamsAreNull() {
+            // Mock clock is set to 2026-03-15
+            Integer currentMonth = 3;
+            Integer currentYear = 2026;
+            ZoneId zone = ZoneId.of("UTC");
+            Instant start = YearMonth.of(currentYear, currentMonth).atDay(1).atStartOfDay(zone).toInstant();
+            Instant end = YearMonth.of(currentYear, currentMonth).atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant();
+
+            when(studentRepo.existsById(STUDENT_ID)).thenReturn(true);
+            when(eventRepo.countByStudentIdAndStartDateBetween(STUDENT_ID, start, end)).thenReturn(2L);
+            when(eventRepo.sumChargedByStudentIdInPeriod(STUDENT_ID, start, end)).thenReturn(new BigDecimal("200.00"));
+            when(eventRepo.sumPendingByStudentIdInPeriod(STUDENT_ID, start, end)).thenReturn(new BigDecimal("0.00"));
+
+            StudentMonthlySummaryDTO actual = studentService.getMonthlySummary(STUDENT_ID, null, null);
+
+            assertThat(actual.totalEventsInPeriod()).isEqualTo(2L);
+            verify(eventRepo).countByStudentIdAndStartDateBetween(STUDENT_ID, start, end);
+        }
+
+        @Test
+        @DisplayName("should throw when student not found for monthly summary")
+        void shouldThrowWhenStudentNotFoundForMonthlySummary() {
+            when(studentRepo.existsById(MISSING_STUDENT_ID)).thenReturn(false);
+
+            assertThatThrownBy(() -> studentService.getMonthlySummary(MISSING_STUDENT_ID, 3, 2026))
+                .isInstanceOf(StudentNotFoundException.class)
+                .hasMessage("Aluno com o ID informado não encontrado");
         }
 
         @Test

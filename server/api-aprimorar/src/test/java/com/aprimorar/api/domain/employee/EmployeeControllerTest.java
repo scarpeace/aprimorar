@@ -35,7 +35,7 @@ class EmployeeControllerTest {
     @Test
     @DisplayName("should return monthly summary when request is valid")
     void shouldReturnMonthlySummaryWhenRequestIsValid() throws Exception {
-        EmployeeMonthlySummaryDTO summary = new EmployeeMonthlySummaryDTO(10L, new BigDecimal("1500.00"));
+        EmployeeMonthlySummaryDTO summary = new EmployeeMonthlySummaryDTO(10L, new BigDecimal("1500.00"), new BigDecimal("140.00"));
 
         when(employeeService.getMonthlySummary(EMPLOYEE_ID, 4, 2026)).thenReturn(summary);
 
@@ -44,6 +44,7 @@ class EmployeeControllerTest {
                 .param("year", "2026"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.totalEvents").value(10))
-            .andExpect(jsonPath("$.totalPayment").value(1500.00));
+            .andExpect(jsonPath("$.totalPaid").value(1500.00))
+            .andExpect(jsonPath("$.totalUnpaid").value(140.00));
     }
 }

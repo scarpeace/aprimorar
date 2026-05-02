@@ -63,14 +63,6 @@ public record EventResponseDTO(
     @Schema(nullable = false, description = "Nome do colaborador vinculado ao evento", example = "Jane Doe")
     String employeeName,
 
-    @NotNull
-    @Schema(nullable = false, description = "Indica se a cobrança do aluno já foi baixada", example = "false")
-    boolean studentCharged,
-
-    @NotNull
-    @Schema(nullable = false, description = "Indica se o pagamento do colaborador já foi baixado", example = "false")
-    boolean employeePaid,
-
     @Nullable
     @Schema(nullable = true, description = "Data de pagamento ao colaborador", example = "2024-03-10T15:33:42Z")
     Instant employeePaymentDate,

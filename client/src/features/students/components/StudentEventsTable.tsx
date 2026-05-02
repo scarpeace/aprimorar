@@ -1,6 +1,6 @@
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { SectionCard } from "@/components/ui/section-card";
-import { useGetEventsByStudentId } from "@/kubb";
+import { useGetEventsByStudentId, type EventResponseDTO } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { useState } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -173,7 +173,7 @@ export function StudentEventsTable({ studentId }: StudentEventsTableProps) {
                 </td>
               </tr>
             ) : (
-              eventsQuery.data?.content?.map((event) => (
+              eventsQuery.data?.content?.map((event: EventResponseDTO) => (
                 <tr
                   key={event.eventId}
                   className="transition-colors hover:bg-base-300/70"

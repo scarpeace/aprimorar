@@ -54,6 +54,26 @@ public final class EventSpecifications {
     }
 
     public static Specification<Event> withEmployeePaid(Boolean paid) {
-        return (root, query, cb) -> paid == null ? null : cb.equal(root.get("employeePaid"), paid);
+        return (root, query, cb) -> {
+            if (paid == null) return null;
+            return paid ? cb.isNotNull(root.get("employeePaymentDate")) : cb.isNull(root.get("employeePaymentDate"));
+        };
+    }
+
+    public static Specification<Event> withStudentCharged(Boolean charged) {
+        return (root, query, cb) -> {
+            if (charged == null) return null;
+            return charged ? cb.isNotNull(root.get("studentChargeDate")) : cb.isNull(root.get("studentChargeDate"));
+        };
+    }
+
+    public static Specification<Event> withEmployeeNameIgnoreCase(String term) {
+        return (root, query, cb) -> {
+            if (term == null || term.trim().isEmpty()) {
+                return null;
+            }
+            String pattern = "%" + term.toLowerCase() + "%";
+            return cb.like(cb.lower(root.join("employee").get("name")), pattern);
+        };
     }
 }

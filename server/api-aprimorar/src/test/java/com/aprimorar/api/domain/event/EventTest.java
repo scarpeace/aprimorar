@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 class EventTest {
 
     private static final Instant EVENT_START = Instant.parse("2026-03-25T13:00:00Z");
+    private static final Double EVENT_DURATION = 1.0;
     private static final Instant EVENT_END = Instant.parse("2026-03-25T14:00:00Z");
     private static final Instant CURRENT_TIME = Instant.parse("2026-03-24T10:00:00Z");
     private static final Instant AFTER_EVENT_END = Instant.parse("2026-03-26T10:00:00Z");
@@ -31,16 +32,16 @@ class EventTest {
     @Test
     @DisplayName("should initialize financial booleans as false")
     void shouldInitializeFinancialBooleansAsFalse() {
-        Event event = createEvent(EVENT_START, EVENT_END, CURRENT_TIME);
+        Event event = createEvent(EVENT_START, EVENT_DURATION, CURRENT_TIME);
 
-        assertThat(event.isStudentCharged()).isFalse();
+        assertThat(event.getStudentChargeDate()).isNull();
         assertThat(event.isEmployeePaid()).isFalse();
     }
 
     @Test
     @DisplayName("should toggle student charged and set date")
     void shouldToggleStudentChargedAndSetDate() {
-        Event event = createEvent(EVENT_START, EVENT_END, CURRENT_TIME);
+        Event event = createEvent(EVENT_START, EVENT_DURATION, CURRENT_TIME);
         Instant now = Instant.now();
 
         event.toggleStudentCharge(now);
@@ -55,7 +56,7 @@ class EventTest {
     @Test
     @DisplayName("should toggle employee paid and set date")
     void shouldToggleEmployeePaidAndSetDate() {
-        Event event = createEvent(EVENT_START, EVENT_END, CURRENT_TIME);
+        Event event = createEvent(EVENT_START, EVENT_DURATION, CURRENT_TIME);
         Instant now = Instant.now();
 
         event.toggleEmployeePayment(now);
@@ -70,14 +71,14 @@ class EventTest {
     @Test
     @DisplayName("should update details when values are valid")
     void shouldUpdateDetailsWhenValuesAreValid() {
-        Event event = createEvent(EVENT_START, EVENT_END, CURRENT_TIME);
+        Event event = createEvent(EVENT_START, EVENT_DURATION, CURRENT_TIME);
         Student student = student();
         Employee employee = employee();
 
         event.update(
             "Aula de matemática",
             EVENT_START,
-            EVENT_END,
+            EVENT_DURATION,
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.AULA,
@@ -100,12 +101,12 @@ class EventTest {
     @Test
     @DisplayName("should allow blank description")
     void shouldAllowBlankDescription() {
-        Event event = createEvent(EVENT_START, EVENT_END, CURRENT_TIME);
+        Event event = createEvent(EVENT_START, EVENT_DURATION, CURRENT_TIME);
 
         event.update(
             " ",
             EVENT_START,
-            EVENT_END,
+            EVENT_DURATION,
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.AULA,
@@ -123,8 +124,8 @@ class EventTest {
         assertThatThrownBy(() ->
             new Event(
                 "Descrição",
-                EVENT_END,
                 EVENT_START,
+                -1.0,
                 BigDecimal.valueOf(80),
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
@@ -144,7 +145,7 @@ class EventTest {
             new Event(
                 "Descrição",
                 EVENT_START,
-                EVENT_END,
+                EVENT_DURATION,
                 BigDecimal.valueOf(100),
                 BigDecimal.valueOf(80),
                 EventContent.AULA,
@@ -164,7 +165,7 @@ class EventTest {
             new Event(
                 "Descrição",
                 EVENT_START,
-                EVENT_END,
+                EVENT_DURATION,
                 BigDecimal.valueOf(40),
                 BigDecimal.valueOf(49),
                 EventContent.AULA,
@@ -184,7 +185,7 @@ class EventTest {
             new Event(
                 "Descrição",
                 EVENT_START,
-                EVENT_END,
+                EVENT_DURATION,
                 BigDecimal.valueOf(80),
                 BigDecimal.valueOf(120),
                 null,
@@ -204,7 +205,7 @@ class EventTest {
             new Event(
                 "Descrição válida",
                 EVENT_START,
-                EVENT_END,
+                EVENT_DURATION,
                 BigDecimal.valueOf(80),
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
@@ -220,13 +221,13 @@ class EventTest {
     @Test
     @DisplayName("should allow updating finished event inside edit window")
     void shouldAllowUpdatingFinishedEventInsideEditWindow() {
-        Event event = createEvent(EVENT_START, EVENT_END, CURRENT_TIME);
+        Event event = createEvent(EVENT_START, EVENT_DURATION, CURRENT_TIME);
         Instant editTime = EVENT_END.plusSeconds(5 * 24 * 60 * 60);
 
         event.update(
             "Revisão para prova",
             EVENT_START,
-            EVENT_END,
+            EVENT_DURATION,
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.MENTORIA,
@@ -242,14 +243,14 @@ class EventTest {
     @Test
     @DisplayName("should throw when edit window is closed")
     void shouldThrowWhenEditWindowIsClosed() {
-        Event event = createEvent(EVENT_START, EVENT_END, CURRENT_TIME);
+        Event event = createEvent(EVENT_START, EVENT_DURATION, CURRENT_TIME);
         Instant now = EVENT_END.plusSeconds(20L * 24 * 60 * 60 + 1);
 
         assertThatThrownBy(() ->
             event.update(
                 "Descrição válida",
                 EVENT_START,
-                EVENT_END,
+                EVENT_DURATION,
                 BigDecimal.valueOf(80),
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
@@ -262,11 +263,11 @@ class EventTest {
             .hasMessage("A janela de 20 dias para editar as informações do evento encerrou");
     }
 
-    private Event createEvent(Instant startDate, Instant endDate, Instant now) {
+    private Event createEvent(Instant startDate, Double duration, Instant now) {
         return new Event(
             "Descrição válida",
             startDate,
-            endDate,
+            duration,
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.AULA,

@@ -1,6 +1,6 @@
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { SectionCard } from "@/components/ui/section-card";
-import { useGetEventsByEmployeeId } from "@/kubb";
+import { useGetEventsByEmployeeId, type EventResponseDTO } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { useState } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -11,9 +11,10 @@ import { Pagination } from "@/components/ui/pagination";
 import { useSearchParams } from "react-router-dom";
 import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
 import { Button, ButtonLink } from "@/components/ui/button";
-import { CircleCheck, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
+import { BrushCleaning, CircleCheck, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
 import { MonthYearPicker } from "@/components/ui/month-year-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { DateRangeInput } from "@/components/ui/date-range-input";
 
 interface EmployeeEventsTableProps {
   employeeId: string;
@@ -26,29 +27,39 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
   const [hidePaid, setHidePaid] = useState(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const month = parseInt(searchParams.get("month") ?? String(new Date().getMonth() + 1));
-  const year = parseInt(searchParams.get("year") ?? String(new Date().getFullYear()));
+  const startDateStr = searchParams.get("startDate");
+  const endDateStr = searchParams.get("endDate");
+
+  const startDate = startDateStr ? new Date(startDateStr) : undefined;
+  const endDate = endDateStr ? new Date(endDateStr) : undefined;
 
   const eventsQuery = useGetEventsByEmployeeId(employeeId, {
     page: currentPage,
     studentName: debouncedSearchTerm,
     sort: ["startDate,desc", "id,asc"],
-    month,
-    year,
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
     hidePaid
   });
 
   const { toggleEmployeePayment } = useEventMutations();
-  const selectedDate = new Date(year, month - 1, 1);
 
   const handleToggleEmployeePayment = (eventId: string) => {
     toggleEmployeePayment.mutate({ id: eventId });
   };
 
-  const handleDateChange = (date: Date) => {
+   const handleStartDateChange = (date: Date) => {
     const newParams = new URLSearchParams(searchParams);
-    newParams.set("month", String(date.getMonth() + 1));
-    newParams.set("year", String(date.getFullYear()));
+    date.setHours(0, 0, 0, 0);
+    newParams.set("startDate", date.toISOString());
+    setSearchParams(newParams);
+    setCurrentPage(0);
+  };
+
+  const handleEndDateChange = (date: Date) => {
+    const newParams = new URLSearchParams(searchParams);
+    date.setHours(23, 59, 59, 999);
+    newParams.set("endDate", date.toISOString());
     setSearchParams(newParams);
     setCurrentPage(0);
   };
@@ -60,6 +71,13 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
     setCurrentPage(0);
     setHidePaid(!hidePaid)
   };
+
+  const handleClearFilters = () => {
+    setSearchParams(new URLSearchParams());
+    setSearchTerm("");
+    setHidePaid(false);
+    setCurrentPage(0);
+  }
 
   if (eventsQuery.error) {
     return (
@@ -80,11 +98,27 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
       title="Atendimentos"
       description="Atendimentos vinculados ao colaborador"
       headerActions={
-        <div className="flex gap-6 items-center justify-end">
-          <MonthYearPicker onChange={handleDateChange} selectedDate={selectedDate}/>
+        <div className="flex gap-6 mb-3 items-center justify-between w-full">
           <ToggleSwitch toggled={hidePaid} setToggle={handleHidePaid} label={"Ocultar Pagos"} />
+
+          <div className="flex items-center gap-2">
+            <DateRangeInput
+              startDate={startDate || new Date()}
+              endDate={endDate || new Date()}
+              onStartDateChange={handleStartDateChange}
+              onEndDateChange={handleEndDateChange}
+            />
+            {(startDate || endDate) && (
+              <div className="tooltip" data-tip="Limpar datas">
+                <Button size="sm" variant="outline" onClick={handleClearFilters}>
+                  <BrushCleaning size={16} />
+                </Button>
+              </div>
+            )}
+          </div>
+
           <ListSearchInput
-            placeholder="Buscar por aluno"
+            placeholder="Buscar por colaborador"
             value={searchTerm}
             onChange={(val) => {
               setSearchTerm(val);
@@ -136,7 +170,7 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
                 </td>
               </tr>
             ) : (
-              eventsQuery.data?.content?.map((event) => (
+              eventsQuery.data?.content?.map((event: EventResponseDTO) => (
                 <tr
                   key={event.eventId}
                   className="transition-colors hover:bg-base-300/70"

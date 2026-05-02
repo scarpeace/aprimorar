@@ -7,12 +7,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record EmployeeMonthlySummaryDTO(
 
   @Schema(description = "Total de eventos")
-  Long totalEvents,
+  Long totalEventsInPeriod,
 
   @Schema(description = "Total de pagamento")
-  BigDecimal totalPaid,
+  BigDecimal totalPaidInPeriod,
 
   @Schema(description = "Total de pagamento")
-  BigDecimal totalUnpaid
+  BigDecimal totalUnpaidInPeriod
 ) {
 }

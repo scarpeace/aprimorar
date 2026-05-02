@@ -79,7 +79,7 @@ export function StudentsTable({
           {students?.content.map((student) => (
             <tr
               key={student.id}
-              className="transition-colors hover:bg-base-200/70"
+              className="transition-colors hover:bg-base-200/70 hover:cursor-pointer"
               onClick={() => navigate(`/students/${student.id}`)}
 
             >

@@ -89,6 +89,7 @@ class EventServiceTest {
             Event event = event();
             EventResponseDTO expected = response();
 
+            when(clock.instant()).thenReturn(CURRENT_TIME);
             when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(event));
             when(eventMapper.convertToDto(event)).thenReturn(expected);
 
@@ -104,6 +105,7 @@ class EventServiceTest {
             Event event = event();
             EventResponseDTO expected = response();
 
+            when(clock.instant()).thenReturn(CURRENT_TIME);
             when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(event));
             when(eventMapper.convertToDto(event)).thenReturn(expected);
 
@@ -181,11 +183,11 @@ class EventServiceTest {
             EventResponseDTO expectedSecond = secondResponse();
             Page<Event> expectedPage = new PageImpl<>(List.of(firstEvent, secondEvent), input, 2);
 
-            when(eventRepo.findAllByStudentId(STUDENT_ID, input)).thenReturn(expectedPage);
+            when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expectedFirst);
             when(eventMapper.convertToDto(secondEvent)).thenReturn(expectedSecond);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEventsByStudentId(input, STUDENT_ID);
+            PageDTO<EventResponseDTO> actual = eventService.getEventsByStudentId(input, STUDENT_ID, null, null, null, null);
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
@@ -435,8 +437,6 @@ class EventServiceTest {
             "João Silva",
             EMPLOYEE_ID,
             "Ana Paula",
-            false,
-            false,
             EMPLOYEE_PAID_DATE,
             STUDENT_PAID_DATE,
             CREATED_AT,
@@ -459,8 +459,6 @@ class EventServiceTest {
             "João Silva",
             EMPLOYEE_ID,
             "Ana Paula",
-            false,
-            false,
             EMPLOYEE_PAID_DATE,
             STUDENT_PAID_DATE,
             CREATED_AT,
@@ -483,8 +481,6 @@ class EventServiceTest {
             "João Silva",
             EMPLOYEE_ID,
             "Ana Paula",
-            false,
-            false,
             null,
             null,
             CREATED_AT,
@@ -502,7 +498,7 @@ class EventServiceTest {
         Event event = new Event(
             "Descrição de teste",
             EVENT_START,
-            EVENT_END,
+            1.0,
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.AULA,
@@ -518,7 +514,7 @@ class EventServiceTest {
         Event event = new Event(
             "Descrição de teste 2",
             Instant.parse("2026-03-26T13:00:00Z"),
-            Instant.parse("2026-03-26T14:00:00Z"),
+            1.0,
             BigDecimal.valueOf(90),
             BigDecimal.valueOf(130),
             EventContent.MENTORIA,
