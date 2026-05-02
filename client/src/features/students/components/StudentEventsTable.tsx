@@ -114,8 +114,8 @@ export function StudentEventsTable({ studentId }: StudentEventsTableProps) {
 
           <div className="flex items-center gap-2">
             <DateRangeInput
-              startDate={startDate || new Date()}
-              endDate={endDate || new Date()}
+              startDate={startDate}
+              endDate={endDate}
               onStartDateChange={handleStartDateChange}
               onEndDateChange={handleEndDateChange}
             />
