@@ -11,7 +11,12 @@ import { Pagination } from "@/components/ui/pagination";
 import { useSearchParams } from "react-router-dom";
 import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
 import { Button, ButtonLink } from "@/components/ui/button";
-import { BrushCleaning, CircleCheck, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
+import {
+  BrushCleaning,
+  CircleCheck,
+  CircleDollarSign,
+  SquareArrowOutUpRight,
+} from "lucide-react";
 import { MonthYearPicker } from "@/components/ui/month-year-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { DateRangeInput } from "@/components/ui/date-range-input";
@@ -39,7 +44,7 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
     sort: ["startDate,desc", "id,asc"],
     startDate: startDate?.toISOString(),
     endDate: endDate?.toISOString(),
-    hidePaid
+    hidePaid,
   });
 
   const { toggleEmployeePayment } = useEventMutations();
@@ -48,7 +53,7 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
     toggleEmployeePayment.mutate({ id: eventId });
   };
 
-   const handleStartDateChange = (date: Date) => {
+  const handleStartDateChange = (date: Date) => {
     const newParams = new URLSearchParams(searchParams);
     date.setHours(0, 0, 0, 0);
     newParams.set("startDate", date.toISOString());
@@ -69,7 +74,7 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
     newParams.set("paid", "false");
     setSearchParams(newParams);
     setCurrentPage(0);
-    setHidePaid(!hidePaid)
+    setHidePaid(!hidePaid);
   };
 
   const handleClearFilters = () => {
@@ -77,7 +82,7 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
     setSearchTerm("");
     setHidePaid(false);
     setCurrentPage(0);
-  }
+  };
 
   if (eventsQuery.error) {
     return (
@@ -97,37 +102,39 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
     <SectionCard
       title="Atendimentos"
       description="Atendimentos vinculados ao colaborador"
-      headerActions={
-        <div className="flex gap-6 mb-3 items-center justify-between w-full">
-          <ToggleSwitch toggled={hidePaid} setToggle={handleHidePaid} label={"Ocultar Pagos"} />
-
-          <div className="flex items-center gap-2">
-            <DateRangeInput
-              startDate={startDate || new Date()}
-              endDate={endDate || new Date()}
-              onStartDateChange={handleStartDateChange}
-              onEndDateChange={handleEndDateChange}
-            />
-            {(startDate || endDate) && (
-              <div className="tooltip" data-tip="Limpar datas">
-                <Button size="sm" variant="outline" onClick={handleClearFilters}>
-                  <BrushCleaning size={16} />
-                </Button>
-              </div>
-            )}
-          </div>
-
-          <ListSearchInput
-            placeholder="Buscar por colaborador"
-            value={searchTerm}
-            onChange={(val) => {
-              setSearchTerm(val);
-              setCurrentPage(0);
-            }}
-          />
-        </div>
-      }
     >
+      <div className="flex gap-6 mb-3 items-center justify-between w-full">
+        <ToggleSwitch
+          toggled={hidePaid}
+          setToggle={handleHidePaid}
+          label={"Ocultar Pagos"}
+        />
+
+        <div className="flex items-center gap-2">
+          <DateRangeInput
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={handleStartDateChange}
+            onEndDateChange={handleEndDateChange}
+          />
+          {(startDate || endDate) && (
+            <div className="tooltip" data-tip="Limpar datas">
+              <Button size="sm" variant="outline" onClick={handleClearFilters}>
+                <BrushCleaning size={16} />
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <ListSearchInput
+          placeholder="Buscar por colaborador"
+          value={searchTerm}
+          onChange={(val) => {
+            setSearchTerm(val);
+            setCurrentPage(0);
+          }}
+        />
+      </div>
       <div className="min-h-30">
         {eventsQuery.isPending && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-base-100/50 backdrop-blur-[1px]">
@@ -180,34 +187,51 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
                   <td className="text-center text-sm">
                     {formatTime(event.startDate)} - {formatTime(event.endDate)}
                   </td>
+
                   <td className="text-center">
                     <span className="text-xs uppercase font-bold">
                       {EventContentLabels[event.content] || event.content}
                     </span>
                   </td>
+
                   <td className="text-right text-sm">
                     {brl.format(event.payment)}
                   </td>
+
                   <td className="text-center flex justify-center gap-1">
-                    <div className="tooltip" data-tip={event.employeePaymentDate != null ? "Cancelar Pagamento" : "Marcar como Pago"}>
-                    <Button
-                      disabled={toggleEmployeePayment.isPending}
-                      className="w-10 p-0"
-                      size="sm"
-                      variant={event.employeePaymentDate != null ? "success" : "warning"}
-                      onClick={() => handleToggleEmployeePayment(event.eventId)}
+                    <div
+                      className="tooltip"
+                      data-tip={
+                        event.employeePaymentDate != null
+                          ? "Cancelar Pagamento"
+                          : "Marcar como Pago"
+                      }
                     >
-                        <CircleDollarSign size={20}/>
+                      <Button
+                        disabled={toggleEmployeePayment.isPending}
+                        className="w-10 p-0"
+                        size="sm"
+                        variant={
+                          event.employeePaymentDate != null
+                            ? "success"
+                            : "warning"
+                        }
+                        onClick={() =>
+                          handleToggleEmployeePayment(event.eventId)
+                        }
+                      >
+                        <CircleDollarSign size={20} />
                       </Button>
                     </div>
                     <div className="tooltip" data-tip={"Detalhes do Evento"}>
-
-                    <ButtonLink
-                      to={`/events/${event.eventId}`}
-                      size="sm"
-                      className="w-10 p-0"
-                      variant="primary"
-                    ><SquareArrowOutUpRight size={20}/></ButtonLink>
+                      <ButtonLink
+                        to={`/events/${event.eventId}`}
+                        size="sm"
+                        className="w-10 p-0"
+                        variant="primary"
+                      >
+                        <SquareArrowOutUpRight size={20} />
+                      </ButtonLink>
                     </div>
                   </td>
                 </tr>

@@ -114,20 +114,16 @@ public class EventService {
         UUID employeeId,
         String studentName,
         Boolean hidePaid,
-        Integer month,
-        Integer year
+        Instant startDate,
+        Instant endDate
     ) {
         Specification<Event> spec = Specification.where(EventSpecifications.withEmployeeId(employeeId))
             .and(EventSpecifications.withStudentNameIgnoreCase(studentName))
             .and(EventSpecifications.withEmployeePaid(hidePaid != null && hidePaid ? false : null));
 
-        if (month != null && year != null) {
-            ZoneId zone = clock.getZone();
-            Instant startOfMonth = YearMonth.of(year, month).atDay(1).atStartOfDay(zone).toInstant();
-            Instant endOfMonth = YearMonth.of(year, month).atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant();
-
-            spec = spec.and(EventSpecifications.withStartDateAfter(startOfMonth))
-                       .and(EventSpecifications.withEndDateBefore(endOfMonth));
+        if (startDate != null && endDate != null) {
+            spec = spec.and(EventSpecifications.withStartDateAfter(startDate))
+                       .and(EventSpecifications.withEndDateBefore(endDate));
         }
 
         Page<Event> eventPage = eventRepo.findAll(spec, pageable);
@@ -144,11 +140,11 @@ public class EventService {
 
     @Transactional(readOnly = true)
     public PageDTO<EventResponseDTO> getEventsByStudentId(
-        Pageable pageable, 
-        UUID studentId, 
-        String search, 
-        Boolean hideCharged, 
-        Instant startDate, 
+        Pageable pageable,
+        UUID studentId,
+        String search,
+        Boolean hideCharged,
+        Instant startDate,
         Instant endDate
     ) {
         Specification<Event> spec = Specification.where(EventSpecifications.withStudentId(studentId))

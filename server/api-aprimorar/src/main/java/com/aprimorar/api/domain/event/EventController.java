@@ -64,10 +64,10 @@ public class EventController {
         @PathVariable UUID id,
         @RequestParam(required = false) String studentName,
         @RequestParam(required = false) Boolean hidePaid,
-        @RequestParam(required = false) Integer month,
-        @RequestParam(required = false) Integer year
+        @RequestParam(required = false) Instant startDate,
+        @RequestParam(required = false) Instant endDate
     ) {
-        return ResponseEntity.ok(eventService.getEventsByEmployeeId(pageable, id, studentName, hidePaid, month, year));
+        return ResponseEntity.ok(eventService.getEventsByEmployeeId(pageable, id, studentName, hidePaid, startDate, endDate));
     }
 
     @GetMapping("/{id}/student")
