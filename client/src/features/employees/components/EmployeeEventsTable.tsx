@@ -127,7 +127,7 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
         </div>
 
         <ListSearchInput
-          placeholder="Buscar por colaborador"
+          placeholder="Buscar por aluno"
           value={searchTerm}
           onChange={(val) => {
             setSearchTerm(val);

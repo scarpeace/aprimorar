@@ -20,6 +20,10 @@
 .idea
 .ruff_cache
 .gemini
+.agents
+.github
+.zed
+skills-lock.json
 
 node_modules
 dist

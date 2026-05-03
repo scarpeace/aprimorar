@@ -38,7 +38,7 @@ export type { ArchiveStudentMutationKey } from "./hooks/student/useArchiveStuden
 export type { CreateStudentMutationKey } from "./hooks/student/useCreateStudent.ts";
 export type { DeleteStudentMutationKey } from "./hooks/student/useDeleteStudent.ts";
 export type { GetStudentByIdQueryKey } from "./hooks/student/useGetStudentById.ts";
-export type { GetStudentMonthlySummaryQueryKey } from "./hooks/student/useGetStudentMonthlySummary.ts";
+export type { GetStudentSummaryQueryKey } from "./hooks/student/useGetStudentSummary.ts";
 export type { GetStudentsQueryKey } from "./hooks/student/useGetStudents.ts";
 export type { GetStudentsByParentQueryKey } from "./hooks/student/useGetStudentsByParent.ts";
 export type { GetStudentsOptionsQueryKey } from "./hooks/student/useGetStudentsOptions.ts";
@@ -99,11 +99,11 @@ export type { PagedModelGeneralExpenseResponseDTO } from "./types/PagedModelGene
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
-export type { StudentMonthlySummaryDTO } from "./types/StudentMonthlySummaryDTO.ts";
 export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
 export type { StudentResponsibleSummaryDTO } from "./types/StudentResponsibleSummaryDTO.ts";
+export type { StudentSummaryDTO } from "./types/StudentSummaryDTO.ts";
 export type {
   UserCreateRequestDTO,
   UserCreateRequestDTORoleEnumKey,
@@ -356,12 +356,12 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./types/student/GetStudentById.ts";
 export type {
-  GetStudentMonthlySummary200,
-  GetStudentMonthlySummaryPathParams,
-  GetStudentMonthlySummaryQuery,
-  GetStudentMonthlySummaryQueryParams,
-  GetStudentMonthlySummaryQueryResponse,
-} from "./types/student/GetStudentMonthlySummary.ts";
+  GetStudentSummary200,
+  GetStudentSummaryPathParams,
+  GetStudentSummaryQuery,
+  GetStudentSummaryQueryParams,
+  GetStudentSummaryQueryResponse,
+} from "./types/student/GetStudentSummary.ts";
 export type {
   GetStudents200,
   GetStudentsQuery,
@@ -570,10 +570,10 @@ export { getStudentById } from "./hooks/student/useGetStudentById.ts";
 export { getStudentByIdQueryKey } from "./hooks/student/useGetStudentById.ts";
 export { getStudentByIdQueryOptions } from "./hooks/student/useGetStudentById.ts";
 export { useGetStudentById } from "./hooks/student/useGetStudentById.ts";
-export { getStudentMonthlySummary } from "./hooks/student/useGetStudentMonthlySummary.ts";
-export { getStudentMonthlySummaryQueryKey } from "./hooks/student/useGetStudentMonthlySummary.ts";
-export { getStudentMonthlySummaryQueryOptions } from "./hooks/student/useGetStudentMonthlySummary.ts";
-export { useGetStudentMonthlySummary } from "./hooks/student/useGetStudentMonthlySummary.ts";
+export { getStudentSummary } from "./hooks/student/useGetStudentSummary.ts";
+export { getStudentSummaryQueryKey } from "./hooks/student/useGetStudentSummary.ts";
+export { getStudentSummaryQueryOptions } from "./hooks/student/useGetStudentSummary.ts";
+export { useGetStudentSummary } from "./hooks/student/useGetStudentSummary.ts";
 export { getStudents } from "./hooks/student/useGetStudents.ts";
 export { getStudentsQueryKey } from "./hooks/student/useGetStudents.ts";
 export { getStudentsQueryOptions } from "./hooks/student/useGetStudents.ts";
@@ -846,11 +846,11 @@ export {
   getStudentByIdQueryResponseSchema,
 } from "./zod/student/getStudentByIdSchema.ts";
 export {
-  getStudentMonthlySummary200Schema,
-  getStudentMonthlySummaryPathParamsSchema,
-  getStudentMonthlySummaryQueryParamsSchema,
-  getStudentMonthlySummaryQueryResponseSchema,
-} from "./zod/student/getStudentMonthlySummarySchema.ts";
+  getStudentSummary200Schema,
+  getStudentSummaryPathParamsSchema,
+  getStudentSummaryQueryParamsSchema,
+  getStudentSummaryQueryResponseSchema,
+} from "./zod/student/getStudentSummarySchema.ts";
 export {
   getStudentsByParent200Schema,
   getStudentsByParentPathParamsSchema,
@@ -877,11 +877,11 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./zod/student/updateStudentSchema.ts";
-export { studentMonthlySummaryDTOSchema } from "./zod/studentMonthlySummaryDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./zod/studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./zod/studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./zod/studentResponseDTOSchema.ts";
 export { studentResponsibleSummaryDTOSchema } from "./zod/studentResponsibleSummaryDTOSchema.ts";
+export { studentSummaryDTOSchema } from "./zod/studentSummaryDTOSchema.ts";
 export {
   createUser201Schema,
   createUserMutationRequestSchema,

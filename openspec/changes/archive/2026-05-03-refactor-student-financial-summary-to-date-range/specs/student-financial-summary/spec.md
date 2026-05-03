@@ -1,9 +1,4 @@
-# Capability: Student Financial Summary
-
-## Purpose
-TBD - This capability provides and displays a monthly financial summary (KPIs) for a specific student, including total events, charged amounts, and pending amounts.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Student Monthly Financial Summary Endpoint
 The backend SHALL expose an endpoint to retrieve the monthly financial summary for a specific student based on a date range.

@@ -12,19 +12,45 @@ import {
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
-import { Edit, GraduationCap } from "lucide-react";
+import { BrushCleaning, Edit, GraduationCap } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { ArchiveStudentButton } from "../components/ArchiveStudentButton";
 import { DeleteStudentButton } from "../components/DeleteStudentButton";
 import { StudentForm } from "../components/StudentForm";
 import { StudentKPIs } from "../components/StudentKPIs";
 import { StudentEventsTable } from "../components/StudentEventsTable";
+import { DateRangeInput } from "@/components/ui/date-range-input";
 
 export function StudentDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const studentId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const startDateStr = searchParams.get("startDate");
+  const endDateStr = searchParams.get("endDate");
+
+  const startDate = startDateStr ? new Date(startDateStr) : undefined;
+  const endDate = endDateStr ? new Date(endDateStr) : undefined;
+
+  const handleStartDateChange = (date: Date) => {
+    const newParams = new URLSearchParams(searchParams);
+    date.setHours(0, 0, 0, 0);
+    newParams.set("startDate", date.toISOString());
+    setSearchParams(newParams);
+  };
+
+  const handleEndDateChange = (date: Date) => {
+    const newParams = new URLSearchParams(searchParams);
+    date.setHours(23, 59, 59, 999);
+    newParams.set("endDate", date.toISOString());
+    setSearchParams(newParams);
+  };
+
+  const handleClearFilters = () => {
+    setSearchParams(new URLSearchParams());
+  };
 
   const studentQuery = useGetStudentById(studentId);
 
@@ -97,7 +123,24 @@ export function StudentDetailsPage() {
           </Collapse>
         </SectionCard>
 
+        <div className="flex justify-end gap-2 items-center mb-1">
+          <DateRangeInput
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={handleStartDateChange}
+            onEndDateChange={handleEndDateChange}
+          />
+          {(startDate || endDate) && (
+            <div className="tooltip" data-tip="Limpar datas">
+              <Button size="sm" variant="outline" onClick={handleClearFilters}>
+                <BrushCleaning size={16} />
+              </Button>
+            </div>
+          )}
+        </div>
+
         <StudentKPIs studentId={studentId} />
+
         <StudentEventsTable studentId={studentId} />
 
         {isFormOpen && (

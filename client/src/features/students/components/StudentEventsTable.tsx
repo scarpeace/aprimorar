@@ -11,8 +11,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { useSearchParams } from "react-router-dom";
 import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
 import { Button, ButtonLink } from "@/components/ui/button";
-import { BrushCleaning, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
-import { DateRangeInput } from "@/components/ui/date-range-input";
+import { CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 
 interface StudentEventsTableProps {
@@ -29,9 +28,6 @@ export function StudentEventsTable({ studentId }: StudentEventsTableProps) {
   const startDateStr = searchParams.get("startDate");
   const endDateStr = searchParams.get("endDate");
 
-  const startDate = startDateStr ? new Date(startDateStr) : undefined;
-  const endDate = endDateStr ? new Date(endDateStr) : undefined;
-
   const eventsQuery = useGetEventsByStudentId(studentId, {
     page: currentPage,
     search: debouncedSearchTerm,
@@ -47,22 +43,6 @@ export function StudentEventsTable({ studentId }: StudentEventsTableProps) {
     toggleStudentCharge.mutate({ id: eventId });
   };
 
-  const handleStartDateChange = (date: Date) => {
-    const newParams = new URLSearchParams(searchParams);
-    date.setHours(0, 0, 0, 0);
-    newParams.set("startDate", date.toISOString());
-    setSearchParams(newParams);
-    setCurrentPage(0);
-  };
-
-  const handleEndDateChange = (date: Date) => {
-    const newParams = new URLSearchParams(searchParams);
-    date.setHours(23, 59, 59, 999);
-    newParams.set("endDate", date.toISOString());
-    setSearchParams(newParams);
-    setCurrentPage(0);
-  };
-
   const handleHideCharged = () => {
     const newParams = new URLSearchParams(searchParams);
     const newValue = !hideCharged;
@@ -75,13 +55,6 @@ export function StudentEventsTable({ studentId }: StudentEventsTableProps) {
     setCurrentPage(0);
     setHideCharged(newValue);
   };
-
-  const handleClearFilters = () => {
-    setSearchParams(new URLSearchParams());
-    setSearchTerm("");
-    setHideCharged(false);
-    setCurrentPage(0);
-  }
 
   if (eventsQuery.error) {
     return (
@@ -111,22 +84,6 @@ export function StudentEventsTable({ studentId }: StudentEventsTableProps) {
 
         <div className="flex gap-6 mb-3 items-center justify-between w-full">
           <ToggleSwitch toggled={hideCharged} setToggle={handleHideCharged} label={"Ocultar Pagos"} />
-
-          <div className="flex items-center gap-2">
-            <DateRangeInput
-              startDate={startDate}
-              endDate={endDate}
-              onStartDateChange={handleStartDateChange}
-              onEndDateChange={handleEndDateChange}
-            />
-            {(startDate || endDate) && (
-              <div className="tooltip" data-tip="Limpar datas">
-                <Button size="sm" variant="outline" onClick={handleClearFilters}>
-                  <BrushCleaning size={16} />
-                </Button>
-              </div>
-            )}
-          </div>
 
           <ListSearchInput
             placeholder="Buscar por colaborador"

@@ -27,7 +27,7 @@ export function PageLayout({
             <h1 className="app-text text-3xl font-bold">{title}</h1>
             <p className="text-sm app-text-muted">{description}</p>
           </div>
-          <ButtonLink to={backLink} className="ml-auto" variant="outlinePrimary" >Voltar</ButtonLink>
+          <ButtonLink to={backLink} className="ml-auto" variant="primary-outline" >Voltar</ButtonLink>
         </div>
       </header>
       {children}
