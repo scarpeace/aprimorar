@@ -60,4 +60,17 @@ class EventControllerTest {
 
         verify(eventService).getEventsByEmployeeId(any(Pageable.class), eq(employeeId), any(), any(), any(), any());
     }
+
+    @Test
+    void getEvents_ShouldCallServiceWithCorrectParams() throws Exception {
+        when(eventService.getEvents(any(Pageable.class), any(), any(), any(), any(), any(), any(), any()))
+            .thenReturn(new PageDTO<>(new PageImpl<>(Collections.emptyList())));
+
+        mockMvc.perform(get("/v1/events")
+                .param("hideCharged", "true")
+                .param("hidePaid", "true"))
+            .andExpect(status().isOk());
+
+        verify(eventService).getEvents(any(Pageable.class), any(), any(), any(), any(), any(), eq(true), eq(true));
+    }
 }

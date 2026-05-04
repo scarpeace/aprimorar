@@ -9,8 +9,6 @@ import { brazilianStates } from "@/lib/utils/brazilianStates";
 import type { StudentResponseDTO } from "@/kubb";
 import { studentFormSchema, type StudentFormSchema } from "../forms/studentFormSchema";
 import { useStudentMutations } from "../hooks/student-mutations";
-import { toast } from "sonner";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 
 function formatBirthdateForForm(birthdate?: string) {
   if (!birthdate) return "";
@@ -53,25 +51,19 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
       },
     },
   });
-  
+
   const registerWithMask = useHookFormMask(register);
 
   const onSubmit = handleSubmit((data: StudentFormSchema) => {
     if (isEditMode && initialData.id) {
       updateStudent.mutate(
         { studentId: initialData.id, data },
-        {
-          onSuccess: () => onSuccess(),
-          onError: (error) => toast.error(getFriendlyErrorMessage(error)),
-        }
+        { onSuccess }
       );
     } else {
       createStudent.mutate(
         { data },
-        {
-          onSuccess: () => onSuccess(),
-          onError: (error) => toast.error(getFriendlyErrorMessage(error)),
-        }
+        { onSuccess }
       );
     }
   });
@@ -107,8 +99,8 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">CPF</legend>
-          <input 
-            type="text" 
+          <input
+            type="text"
             className="input w-full"
             disabled={isEditMode}
             placeholder="Ex: 123.456.789-00"
@@ -124,8 +116,8 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Contato</legend>
-          <input 
-            type="text" 
+          <input
+            type="text"
             className="input w-full"
             placeholder="Ex: (61) 99633-2332"
             {...registerWithMask("contact", ["(##) #####-####", "(##) ####-####"])}
@@ -225,11 +217,11 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">CEP</legend>
-          <input 
-            type="text" 
-            className="input w-full" 
-            {...registerWithMask("address.zip", ["#####-###"])} 
-            placeholder="Ex: 70254-010" 
+          <input
+            type="text"
+            className="input w-full"
+            {...registerWithMask("address.zip", ["#####-###"])}
+            placeholder="Ex: 70254-010"
           />
           {errors?.address?.zip && (
             <p className="label text-error">

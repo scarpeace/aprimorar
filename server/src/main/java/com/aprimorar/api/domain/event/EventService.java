@@ -82,13 +82,17 @@ public class EventService {
         Instant startDate,
         Instant endDate,
         UUID studentId,
-        UUID employeeId
+        UUID employeeId,
+        Boolean hideCharged,
+        Boolean hidePaid
     ) {
         Specification<Event> spec = Specification.where(EventSpecifications.searchContainsIgnoreCase(search))
             .and(EventSpecifications.withStartDateAfter(startDate))
             .and(EventSpecifications.withEndDateBefore(endDate))
             .and(EventSpecifications.withStudentId(studentId))
-            .and(EventSpecifications.withEmployeeId(employeeId));
+            .and(EventSpecifications.withEmployeeId(employeeId))
+            .and(EventSpecifications.withStudentCharged(hideCharged != null && hideCharged ? false : null))
+            .and(EventSpecifications.withEmployeePaid(hidePaid != null && hidePaid ? false : null));
 
         Page<Event> eventPage = eventRepo.findAll(spec, pageable);
         Page<EventResponseDTO> eventsDtoPage = eventPage.map(eventMapper::convertToDto);

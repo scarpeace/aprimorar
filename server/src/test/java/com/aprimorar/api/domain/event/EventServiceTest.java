@@ -207,7 +207,7 @@ class EventServiceTest {
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expectedFirst);
             when(eventMapper.convertToDto(secondEvent)).thenReturn(expectedSecond);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, null, null, null, null);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, null, null, null, null, null, null);
 
             assertThat(actual.content()).containsExactly(expectedFirst, expectedSecond);
             assertThat(actual.totalElements()).isEqualTo(2);
@@ -224,7 +224,7 @@ class EventServiceTest {
             when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expected);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, " mentoria ", null, null, null, null);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, " mentoria ", null, null, null, null, null, null);
 
             assertThat(actual.content()).containsExactly(expected);
             assertThat(actual.totalElements()).isEqualTo(1);
@@ -241,7 +241,41 @@ class EventServiceTest {
             when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
             when(eventMapper.convertToDto(firstEvent)).thenReturn(expected);
 
-            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, EVENT_START, EVENT_END, STUDENT_ID, EMPLOYEE_ID);
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, EVENT_START, EVENT_END, STUDENT_ID, EMPLOYEE_ID, null, null);
+
+            assertThat(actual.content()).containsExactly(expected);
+            assertThat(actual.totalElements()).isEqualTo(1);
+        }
+
+        @Test
+        @DisplayName("should return paged events when hideCharged is true")
+        void shouldReturnPagedEventsWhenHideChargedIsTrue() {
+            Pageable input = PageRequest.of(0, 2);
+            Event firstEvent = event();
+            EventResponseDTO expected = response();
+            Page<Event> expectedPage = new PageImpl<>(List.of(firstEvent), input, 1);
+
+            when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
+            when(eventMapper.convertToDto(firstEvent)).thenReturn(expected);
+
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, null, null, null, null, true, null);
+
+            assertThat(actual.content()).containsExactly(expected);
+            assertThat(actual.totalElements()).isEqualTo(1);
+        }
+
+        @Test
+        @DisplayName("should return paged events when hidePaid is true")
+        void shouldReturnPagedEventsWhenHidePaidIsTrue() {
+            Pageable input = PageRequest.of(0, 2);
+            Event firstEvent = event();
+            EventResponseDTO expected = response();
+            Page<Event> expectedPage = new PageImpl<>(List.of(firstEvent), input, 1);
+
+            when(eventRepo.findAll(any(Specification.class), eq(input))).thenReturn(expectedPage);
+            when(eventMapper.convertToDto(firstEvent)).thenReturn(expected);
+
+            PageDTO<EventResponseDTO> actual = eventService.getEvents(input, null, null, null, null, null, null, true);
 
             assertThat(actual.content()).containsExactly(expected);
             assertThat(actual.totalElements()).isEqualTo(1);

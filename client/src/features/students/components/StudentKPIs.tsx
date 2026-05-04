@@ -2,13 +2,15 @@ import { KpiCard } from "@/components/ui/kpi-card";
 import { SectionCard } from "@/components/ui/section-card";
 import { useGetStudentSummary } from "@/kubb";
 import { brl } from "@/lib/utils/formatter";
+import { CalendarCheck, CircleDollarSign, Wallet } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
+import { memo } from "react";
 
 interface StudentKPIsProps {
   studentId: string;
 }
 
-export function StudentKPIs({ studentId }: StudentKPIsProps) {
+export const StudentKPIs = memo(function StudentKPIs({ studentId }: StudentKPIsProps) {
   const [searchParams] = useSearchParams();
 
   const startDate = searchParams.get("startDate") || undefined;
@@ -20,40 +22,39 @@ export function StudentKPIs({ studentId }: StudentKPIsProps) {
   });
 
   return (
-    <SectionCard
-      title="Resumo"
-      description={
-        startDate && endDate
-          ? `Resumo financeiro e de atendimentos do aluno no período selecionado`
-          : `Resumo financeiro e de atendimentos do aluno (Todo o período)`
-      }
-    >
+    <>
       {summaryQuery.isPending ? (
-        <div className="flex flex-col gap-3">
-          <div className="h-24 w-full animate-pulse rounded-lg bg-base-200" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="h-24 sm:h-32 w-full animate-pulse rounded-xl bg-base-200" />
+          <div className="h-24 sm:h-32 w-full animate-pulse rounded-xl bg-base-200" />
+          <div className="h-24 sm:h-32 w-full animate-pulse rounded-xl bg-base-200" />
         </div>
       ) : summaryQuery.isError ? (
-        <div className="alert alert-error">
-          <span className="text-sm">Erro ao carregar o resumo do aluno.</span>
+        <div className="alert alert-error shadow-sm">
+          <span className="text-sm font-medium">Erro ao carregar o resumo do aluno.</span>
         </div>
       ) : (
-        <div className="flex justify-between gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <KpiCard
-            label="Total de atendimentos"
+            className="animate-[fade-up_400ms_ease-out_both]"
+            label="Total Atendimentos"
             value={summaryQuery.data?.totalEvents ?? 0}
+            Icon={CalendarCheck}
           />
           <KpiCard
-            className="grow"
+            className="animate-[fade-up_500ms_ease-out_both]"
             label="Total Cobrado"
             value={brl.format(summaryQuery.data?.totalCharged ?? 0)}
+            Icon={CircleDollarSign}
           />
           <KpiCard
-            className="grow"
+            className="animate-[fade-up_600ms_ease-out_both]"
             label="Total Pendente"
             value={brl.format(summaryQuery.data?.totalPending ?? 0)}
+            Icon={Wallet}
           />
         </div>
       )}
-    </SectionCard>
+    </>
   );
-}
+});

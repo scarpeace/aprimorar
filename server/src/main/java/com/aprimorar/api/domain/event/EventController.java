@@ -43,9 +43,11 @@ public class EventController {
         @RequestParam(required = false) Instant startDate,
         @RequestParam(required = false) Instant endDate,
         @RequestParam(required = false) UUID studentId,
-        @RequestParam(required = false) UUID employeeId
+        @RequestParam(required = false) UUID employeeId,
+        @RequestParam(required = false) Boolean hideCharged,
+        @RequestParam(required = false) Boolean hidePaid
     ) {
-        return ResponseEntity.ok(eventService.getEvents(pageable, search, startDate, endDate, studentId, employeeId));
+        return ResponseEntity.ok(eventService.getEvents(pageable, search, startDate, endDate, studentId, employeeId, hideCharged, hidePaid));
     }
 
     @GetMapping("/{id}")

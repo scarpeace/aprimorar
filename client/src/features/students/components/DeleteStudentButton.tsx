@@ -6,7 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { useGetEventsByStudentId } from "@/kubb";
 import { useStudentMutations } from "../hooks/student-mutations";
 
-export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
+type DeleteStudentButtonProps = {
+  studentId: string;
+  className?: string;
+};
+
+export const DeleteStudentButton = ({ studentId, className }: DeleteStudentButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -47,6 +52,7 @@ export const DeleteStudentButton = ({ studentId }: { studentId: string }) => {
         onClick={handleOpenClick}
         disabled={isDeleting}
         variant="danger"
+        className={className}
       >
         <Trash2 className="h-4 w-4" />
         {isDeleting ? "Excluindo..." : "Excluir"}

@@ -17,11 +17,11 @@ The backend SHALL expose an endpoint to retrieve the financial summary for a spe
 - **THEN** the system SHALL calculate and return the all-time summary (from the beginning of history).
 
 ### Requirement: Student KPIs UI Component
-The frontend SHALL display a `StudentKPIs` component on the `StudentDetailsPage` showing the financial summary, synchronized with the page-level date filter.
+The frontend SHALL display a `StudentKPIs` component on the `StudentDetailsPage` showing the financial summary, synchronized with the page-level date filter. This component SHALL render its KPIs without a surrounding card container.
 
 #### Scenario: Displaying the KPI cards with date range
 - **WHEN** the user views the `StudentDetailsPage` and selects a date range
-- **THEN** the `StudentKPIs` component SHALL display three KPI cards: "Total de atendimentos", "Total Cobrado", and "Total Pendente" reflecting the data within the selected date range.
+- **THEN** the `StudentKPIs` component SHALL display three KPI cards (stats) reflecting the data within the selected date range.
 
 #### Scenario: Displaying the general summary
 - **WHEN** the user views the `StudentDetailsPage` and no date range is selected (default state)

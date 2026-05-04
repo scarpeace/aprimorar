@@ -8,11 +8,13 @@ import { useStudentMutations } from "../hooks/student-mutations";
 type ArchiveStudentButtonProps = {
   studentId: string;
   isArchived: boolean;
+  className?: string;
 };
 
 export const ArchiveStudentButton = ({
   studentId,
   isArchived,
+  className,
 }: ArchiveStudentButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -47,6 +49,7 @@ export const ArchiveStudentButton = ({
         onClick={() => setShowConfirm(true)}
         variant={variant}
         disabled={isPending}
+        className={className}
       >
         <Icon className="h-4 w-4" />
         {isPending ? "Processando..." : actionLabel}
