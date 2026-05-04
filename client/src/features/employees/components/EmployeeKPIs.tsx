@@ -1,6 +1,6 @@
 import { KpiCard } from "@/components/ui/kpi-card";
 import { SectionCard } from "@/components/ui/section-card";
-import { useGetEmployeeMonthlySummary } from "@/kubb";
+import { useGetEmployeeSummary } from "@/kubb";
 import { brl } from "@/lib/utils/formatter";
 import { useSearchParams } from "react-router-dom";
 
@@ -10,22 +10,22 @@ interface EmployeeKPIsProps {
 
 export function EmployeeKPIs({ employeeId }: EmployeeKPIsProps) {
   const [searchParams] = useSearchParams();
-  const month = parseInt(
-    searchParams.get("month") ?? String(new Date().getMonth() + 1),
-  );
-  const year = parseInt(
-    searchParams.get("year") ?? String(new Date().getFullYear()),
-  );
+  const startDate = searchParams.get("startDate") || undefined;
+  const endDate = searchParams.get("endDate") || undefined;
 
-  const summaryQuery = useGetEmployeeMonthlySummary(employeeId, {
-    month,
-    year,
+  const summaryQuery = useGetEmployeeSummary(employeeId, {
+    startDate,
+    endDate,
   });
 
   return (
     <SectionCard
-      title="Resumo mensal"
-      description="Resumo dos atendimentos do colaborador no mês"
+      title="Resumo"
+      description={
+        startDate && endDate
+          ? "Resumo financeiro e de atendimentos do colaborador no período selecionado"
+          : "Resumo financeiro e de atendimentos do colaborador (Todo o período)"
+      }
     >
       {summaryQuery.isPending ? (
         <div className="flex flex-col gap-3">
@@ -33,23 +33,23 @@ export function EmployeeKPIs({ employeeId }: EmployeeKPIsProps) {
         </div>
       ) : summaryQuery.isError ? (
         <div className="alert alert-error">
-          <span className="text-sm">Erro ao carregar o resumo mensal.</span>
+          <span className="text-sm">Erro ao carregar o resumo do colaborador.</span>
         </div>
       ) : (
         <div className="flex justify-between gap-3">
           <KpiCard
             label="Total de atendimentos"
-            value={summaryQuery.data?.totalEventsInPeriod ?? 0}
+            value={summaryQuery.data?.totalEvents ?? 0}
           />
           <KpiCard
             className="grow"
             label="Total Pago"
-            value={brl.format(summaryQuery.data?.totalPaidInPeriod ?? 0)}
+            value={brl.format(summaryQuery.data?.totalPaid ?? 0)}
           />
           <KpiCard
             className="grow"
             label="Total Pendente"
-            value={brl.format(summaryQuery.data?.totalUnpaidInPeriod ?? 0)}
+            value={brl.format(summaryQuery.data?.totalUnpaid ?? 0)}
           />
         </div>
       )}

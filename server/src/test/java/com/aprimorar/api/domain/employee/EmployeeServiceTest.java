@@ -9,7 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.aprimorar.api.domain.auth.repository.UserRepository;
-import com.aprimorar.api.domain.employee.dto.EmployeeMonthlySummaryDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
@@ -277,19 +277,15 @@ class EmployeeServiceTest {
         }
 
         @Test
-        @DisplayName("should return monthly summary for employee")
-        void shouldReturnMonthlySummaryForEmployee() {
-            int month = 4;
-            int year = 2026;
-            ZoneId zoneId = ZoneId.of("UTC");
-            Instant fixedInstant = Instant.parse("2026-04-15T10:00:00Z");
+        @DisplayName("should return summary for employee")
+        void shouldReturnSummaryForEmployee() {
+            Instant start = Instant.parse("2026-04-01T00:00:00Z");
+            Instant end = Instant.parse("2026-04-30T23:59:59.999Z");
             long totalEvents = 10L;
             BigDecimal totalPaid = new BigDecimal("1000.00");
             BigDecimal totalUnpaid = new BigDecimal("500.00");
 
             when(employeeRepo.existsById(EMPLOYEE_ID)).thenReturn(true);
-            when(clock.instant()).thenReturn(fixedInstant);
-            when(clock.getZone()).thenReturn(zoneId);
             when(eventRepo.countByEmployeeIdAndStartDateBetween(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
                 .thenReturn(totalEvents);
             when(eventRepo.sumPaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
@@ -297,45 +293,41 @@ class EmployeeServiceTest {
             when(eventRepo.sumUnpaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
                 .thenReturn(totalUnpaid);
 
-            EmployeeMonthlySummaryDTO actual = employeeService.getMonthlySummary(EMPLOYEE_ID, month, year);
+            EmployeeSummaryDTO actual = employeeService.getSummary(EMPLOYEE_ID, start, end);
 
-            assertThat(actual.totalEventsInPeriod()).isEqualTo(totalEvents);
-            assertThat(actual.totalPaidInPeriod()).isEqualTo(totalPaid);
-            assertThat(actual.totalUnpaidInPeriod()).isEqualTo(totalUnpaid);
+            assertThat(actual.totalEvents()).isEqualTo(totalEvents);
+            assertThat(actual.totalPaid()).isEqualTo(totalPaid);
+            assertThat(actual.totalUnpaid()).isEqualTo(totalUnpaid);
             verify(employeeRepo).existsById(EMPLOYEE_ID);
         }
 
         @Test
-        @DisplayName("should return monthly summary using current date when month and year are null")
-        void shouldReturnMonthlySummaryUsingCurrentDateWhenMonthAndYearAreNull() {
-            ZoneId zoneId = ZoneId.of("UTC");
-            Instant fixedInstant = Instant.parse("2026-04-15T10:00:00Z");
+        @DisplayName("should return all-time summary when start and end dates are null")
+        void shouldReturnAllTimeSummaryWhenStartAndEndDatesAreNull() {
             BigDecimal totalPaid = new BigDecimal("500.00");
             BigDecimal totalUnpaid = new BigDecimal("250.00");
 
             when(employeeRepo.existsById(EMPLOYEE_ID)).thenReturn(true);
-            when(clock.instant()).thenReturn(fixedInstant);
-            when(clock.getZone()).thenReturn(zoneId);
-            when(eventRepo.countByEmployeeIdAndStartDateBetween(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
-                .thenReturn(5L);
-            when(eventRepo.sumPaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
-                .thenReturn(totalPaid);
-            when(eventRepo.sumUnpaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
-                .thenReturn(totalUnpaid);
+            when(eventRepo.countByEmployeeId(EMPLOYEE_ID)).thenReturn(5L);
+            when(eventRepo.sumPaidByEmployeeId(EMPLOYEE_ID)).thenReturn(totalPaid);
+            when(eventRepo.sumUnpaidByEmployeeId(EMPLOYEE_ID)).thenReturn(totalUnpaid);
 
-            EmployeeMonthlySummaryDTO actual = employeeService.getMonthlySummary(EMPLOYEE_ID, null, null);
+            EmployeeSummaryDTO actual = employeeService.getSummary(EMPLOYEE_ID, null, null);
 
-            assertThat(actual.totalEventsInPeriod()).isEqualTo(5L);
-            assertThat(actual.totalPaidInPeriod()).isEqualTo(totalPaid);
-            assertThat(actual.totalUnpaidInPeriod()).isEqualTo(totalUnpaid);
+            assertThat(actual.totalEvents()).isEqualTo(5L);
+            assertThat(actual.totalPaid()).isEqualTo(totalPaid);
+            assertThat(actual.totalUnpaid()).isEqualTo(totalUnpaid);
+            verify(eventRepo).countByEmployeeId(EMPLOYEE_ID);
+            verify(eventRepo).sumPaidByEmployeeId(EMPLOYEE_ID);
+            verify(eventRepo).sumUnpaidByEmployeeId(EMPLOYEE_ID);
         }
 
         @Test
-        @DisplayName("should throw when employee is not found for monthly summary")
-        void shouldThrowWhenEmployeeIsNotFoundForMonthlySummary() {
+        @DisplayName("should throw when employee is not found for summary")
+        void shouldThrowWhenEmployeeIsNotFoundForSummary() {
             when(employeeRepo.existsById(MISSING_EMPLOYEE_ID)).thenReturn(false);
 
-            assertThatThrownBy(() -> employeeService.getMonthlySummary(MISSING_EMPLOYEE_ID, 4, 2026))
+            assertThatThrownBy(() -> employeeService.getSummary(MISSING_EMPLOYEE_ID, null, null))
                 .isInstanceOf(EmployeeNotFoundException.class)
                 .hasMessage("Colaborador com o ID informado não encontrado");
         }

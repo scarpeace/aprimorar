@@ -1,7 +1,7 @@
 package com.aprimorar.api.domain.employee;
 
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeMonthlySummaryDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
 import com.aprimorar.api.shared.PageDTO;
@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -69,18 +70,18 @@ public class EmployeeController {
         return ResponseEntity.ok(options);
     }
 
-    @GetMapping("/{id}/monthly-summary")
+    @GetMapping("/{id}/summary")
     @Operation(
-        operationId = "getEmployeeMonthlySummary",
-        description = "Retorna o resumo de atendimentos e pagamentos do colaborador em um mês específico."
+        operationId = "getEmployeeSummary",
+        description = "Retorna o resumo de atendimentos e pagamentos do colaborador (Geral ou por período)."
     )
     @ApiResponse(responseCode = "200", description = "Resumo retornado com sucesso.")
-    public ResponseEntity<EmployeeMonthlySummaryDTO> getMonthlySummary(
+    public ResponseEntity<EmployeeSummaryDTO> getSummary(
         @PathVariable UUID id,
-        @RequestParam(required = false) Integer month,
-        @RequestParam(required = false) Integer year
+        @RequestParam(required = false) Instant startDate,
+        @RequestParam(required = false) Instant endDate
     ) {
-        return ResponseEntity.ok(employeeService.getMonthlySummary(id, month, year));
+        return ResponseEntity.ok(employeeService.getSummary(id, startDate, endDate));
     }
 
     @GetMapping("/{employeeId}")

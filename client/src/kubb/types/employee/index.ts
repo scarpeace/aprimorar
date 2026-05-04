@@ -23,17 +23,17 @@ export type {
   GetEmployeeByIdQueryResponse,
 } from "./GetEmployeeById.ts";
 export type {
-  GetEmployeeMonthlySummary200,
-  GetEmployeeMonthlySummaryPathParams,
-  GetEmployeeMonthlySummaryQuery,
-  GetEmployeeMonthlySummaryQueryParams,
-  GetEmployeeMonthlySummaryQueryResponse,
-} from "./GetEmployeeMonthlySummary.ts";
-export type {
   GetEmployeeOptions200,
   GetEmployeeOptionsQuery,
   GetEmployeeOptionsQueryResponse,
 } from "./GetEmployeeOptions.ts";
+export type {
+  GetEmployeeSummary200,
+  GetEmployeeSummaryPathParams,
+  GetEmployeeSummaryQuery,
+  GetEmployeeSummaryQueryParams,
+  GetEmployeeSummaryQueryResponse,
+} from "./GetEmployeeSummary.ts";
 export type {
   GetEmployees200,
   GetEmployeesQuery,

@@ -1,7 +1,7 @@
 package com.aprimorar.api.domain.employee;
 
 import com.aprimorar.api.domain.auth.repository.UserRepository;
-import com.aprimorar.api.domain.employee.dto.EmployeeMonthlySummaryDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
 import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
@@ -115,25 +115,26 @@ public class EmployeeService {
     }
 
     @Transactional(readOnly = true)
-    public EmployeeMonthlySummaryDTO getMonthlySummary(UUID employeeId, Integer month, Integer year) {
+    public EmployeeSummaryDTO getSummary(UUID employeeId, Instant startDate, Instant endDate) {
         if (!employeeRepo.existsById(employeeId)) {
             throw new EmployeeNotFoundException("Colaborador com o ID informado não encontrado");
         }
 
-        LocalDate now = LocalDate.now(clock);
-        int targetMonth = (month != null) ? month : now.getMonthValue();
-        int targetYear = (year != null) ? year : now.getYear();
+        if (startDate == null || endDate == null) {
+            long totalEvents = eventRepo.countByEmployeeId(employeeId);
+            BigDecimal totalPaid = eventRepo.sumPaidByEmployeeId(employeeId);
+            BigDecimal totalUnpaid = eventRepo.sumUnpaidByEmployeeId(employeeId);
 
-        ZoneId zone = clock.getZone();
-        Instant startOfMonth = YearMonth.of(targetYear, targetMonth).atDay(1).atStartOfDay(zone).toInstant();
-        Instant endOfMonth = YearMonth.of(targetYear, targetMonth).atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant();
+            log.info("Resumo geral gerado para o colaborador {}", employeeId);
+            return new EmployeeSummaryDTO(totalEvents, totalPaid, totalUnpaid);
+        }
 
-        long totalEventsInPeriod = eventRepo.countByEmployeeIdAndStartDateBetween(employeeId, startOfMonth, endOfMonth);
-        BigDecimal totalPaidInPeriod = eventRepo.sumPaidByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
-        BigDecimal totalUnpaidInPeriod = eventRepo.sumUnpaidByEmployeeIdInPeriod(employeeId, startOfMonth, endOfMonth);
+        long totalEventsInPeriod = eventRepo.countByEmployeeIdAndStartDateBetween(employeeId, startDate, endDate);
+        BigDecimal totalPaidInPeriod = eventRepo.sumPaidByEmployeeIdInPeriod(employeeId, startDate, endDate);
+        BigDecimal totalUnpaidInPeriod = eventRepo.sumUnpaidByEmployeeIdInPeriod(employeeId, startDate, endDate);
 
-        log.info("Resumo mensal gerado para o colaborador {} no mês {}/{}", employeeId, targetMonth, targetYear);
-        return new EmployeeMonthlySummaryDTO(totalEventsInPeriod, totalPaidInPeriod, totalUnpaidInPeriod);
+        log.info("Resumo gerado para o colaborador {} no período de {} a {}", employeeId, startDate, endDate);
+        return new EmployeeSummaryDTO(totalEventsInPeriod, totalPaidInPeriod, totalUnpaidInPeriod);
     }
 
     @Transactional

@@ -48,6 +48,8 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
 
     long countByEmployeeIdAndStartDateBetween(UUID employeeId, Instant startDate, Instant endDate);
 
+    long countByEmployeeId(UUID employeeId);
+
     @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employeePaymentDate IS NOT NULL")
     BigDecimal sumTotalEmployeePayment();
 
@@ -59,6 +61,12 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
 
     @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.startDate BETWEEN :startDate AND :endDate AND e.employeePaymentDate IS NULL")
     BigDecimal sumUnpaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.employeePaymentDate IS NOT NULL")
+    BigDecimal sumPaidByEmployeeId(@Param("employeeId") UUID employeeId);
+
+    @Query("SELECT COALESCE(SUM(e.payment), 0) FROM Event e WHERE e.employee.id = :employeeId AND e.employeePaymentDate IS NULL")
+    BigDecimal sumUnpaidByEmployeeId(@Param("employeeId") UUID employeeId);
 
     long countByStudentIdAndStartDateBetween(UUID studentId, Instant startDate, Instant endDate);
 

@@ -14,7 +14,6 @@ export type {
 export type { AuthLoginRequestDTO } from "./AuthLoginRequestDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
-export type { EmployeeMonthlySummaryDTO } from "./EmployeeMonthlySummaryDTO.ts";
 export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
 export type {
   EmployeeRequestDTO,
@@ -24,6 +23,7 @@ export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./EmployeeResponseDTO.ts";
+export type { EmployeeSummaryDTO } from "./EmployeeSummaryDTO.ts";
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
@@ -110,17 +110,17 @@ export type {
   GetEmployeeByIdQueryResponse,
 } from "./employee/GetEmployeeById.ts";
 export type {
-  GetEmployeeMonthlySummary200,
-  GetEmployeeMonthlySummaryPathParams,
-  GetEmployeeMonthlySummaryQuery,
-  GetEmployeeMonthlySummaryQueryParams,
-  GetEmployeeMonthlySummaryQueryResponse,
-} from "./employee/GetEmployeeMonthlySummary.ts";
-export type {
   GetEmployeeOptions200,
   GetEmployeeOptionsQuery,
   GetEmployeeOptionsQueryResponse,
 } from "./employee/GetEmployeeOptions.ts";
+export type {
+  GetEmployeeSummary200,
+  GetEmployeeSummaryPathParams,
+  GetEmployeeSummaryQuery,
+  GetEmployeeSummaryQueryParams,
+  GetEmployeeSummaryQueryResponse,
+} from "./employee/GetEmployeeSummary.ts";
 export type {
   GetEmployees200,
   GetEmployeesQuery,

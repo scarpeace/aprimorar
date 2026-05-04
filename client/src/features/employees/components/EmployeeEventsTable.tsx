@@ -12,14 +12,10 @@ import { useSearchParams } from "react-router-dom";
 import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
 import { Button, ButtonLink } from "@/components/ui/button";
 import {
-  BrushCleaning,
-  CircleCheck,
   CircleDollarSign,
   SquareArrowOutUpRight,
 } from "lucide-react";
-import { MonthYearPicker } from "@/components/ui/month-year-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { DateRangeInput } from "@/components/ui/date-range-input";
 
 interface EmployeeEventsTableProps {
   employeeId: string;
@@ -29,21 +25,18 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
-  const [hidePaid, setHidePaid] = useState(false);
+  const [hidePaid, setHidePaid] = useState(searchParams.get("hidePaid") === "true");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const startDateStr = searchParams.get("startDate");
   const endDateStr = searchParams.get("endDate");
 
-  const startDate = startDateStr ? new Date(startDateStr) : undefined;
-  const endDate = endDateStr ? new Date(endDateStr) : undefined;
-
   const eventsQuery = useGetEventsByEmployeeId(employeeId, {
     page: currentPage,
     studentName: debouncedSearchTerm,
     sort: ["startDate,desc", "id,asc"],
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
+    startDate: startDateStr || undefined,
+    endDate: endDateStr || undefined,
     hidePaid,
   });
 
@@ -53,35 +46,17 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
     toggleEmployeePayment.mutate({ id: eventId });
   };
 
-  const handleStartDateChange = (date: Date) => {
-    const newParams = new URLSearchParams(searchParams);
-    date.setHours(0, 0, 0, 0);
-    newParams.set("startDate", date.toISOString());
-    setSearchParams(newParams);
-    setCurrentPage(0);
-  };
-
-  const handleEndDateChange = (date: Date) => {
-    const newParams = new URLSearchParams(searchParams);
-    date.setHours(23, 59, 59, 999);
-    newParams.set("endDate", date.toISOString());
-    setSearchParams(newParams);
-    setCurrentPage(0);
-  };
-
   const handleHidePaid = () => {
     const newParams = new URLSearchParams(searchParams);
-    newParams.set("paid", "false");
+    const newValue = !hidePaid;
+    if (newValue) {
+      newParams.set("hidePaid", "true");
+    } else {
+      newParams.delete("hidePaid");
+    }
     setSearchParams(newParams);
     setCurrentPage(0);
-    setHidePaid(!hidePaid);
-  };
-
-  const handleClearFilters = () => {
-    setSearchParams(new URLSearchParams());
-    setSearchTerm("");
-    setHidePaid(false);
-    setCurrentPage(0);
+    setHidePaid(newValue);
   };
 
   if (eventsQuery.error) {
@@ -109,22 +84,6 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
           setToggle={handleHidePaid}
           label={"Ocultar Pagos"}
         />
-
-        <div className="flex items-center gap-2">
-          <DateRangeInput
-            startDate={startDate}
-            endDate={endDate}
-            onStartDateChange={handleStartDateChange}
-            onEndDateChange={handleEndDateChange}
-          />
-          {(startDate || endDate) && (
-            <div className="tooltip" data-tip="Limpar datas">
-              <Button size="sm" variant="outline" onClick={handleClearFilters}>
-                <BrushCleaning size={16} />
-              </Button>
-            </div>
-          )}
-        </div>
 
         <ListSearchInput
           placeholder="Buscar por aluno"

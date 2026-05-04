@@ -5,9 +5,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.aprimorar.api.domain.employee.dto.EmployeeMonthlySummaryDTO;
+import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
 import java.math.BigDecimal;
 import java.time.Clock;
+import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,15 +34,13 @@ class EmployeeControllerTest {
     private Clock clock;
 
     @Test
-    @DisplayName("should return monthly summary when request is valid")
-    void shouldReturnMonthlySummaryWhenRequestIsValid() throws Exception {
-        EmployeeMonthlySummaryDTO summary = new EmployeeMonthlySummaryDTO(10L, new BigDecimal("1500.00"), new BigDecimal("140.00"));
+    @DisplayName("should return summary when request is valid")
+    void shouldReturnSummaryWhenRequestIsValid() throws Exception {
+        EmployeeSummaryDTO summary = new EmployeeSummaryDTO(10L, new BigDecimal("1500.00"), new BigDecimal("140.00"));
 
-        when(employeeService.getMonthlySummary(EMPLOYEE_ID, 4, 2026)).thenReturn(summary);
+        when(employeeService.getSummary(EMPLOYEE_ID, null, null)).thenReturn(summary);
 
-        mockMvc.perform(get("/v1/employees/{id}/monthly-summary", EMPLOYEE_ID)
-                .param("month", "4")
-                .param("year", "2026"))
+        mockMvc.perform(get("/v1/employees/{id}/summary", EMPLOYEE_ID))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.totalEvents").value(10))
             .andExpect(jsonPath("$.totalPaid").value(1500.00))
