@@ -43,46 +43,43 @@ export function EventsPage() {
     <PageLayout description="Gerencie os atendimentos e operações financeiras." title="Atendimentos" Icon={CalendarCheck2} backLink="/">
       <div className="flex flex-col gap-4 w-full">
         {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-4 bg-base-200/50 p-4 rounded-xl border border-base-300 shadow-sm">
-          <ListSearchInput
-            className="flex-1 min-w-[280px]"
-            placeholder="Buscar por aluno, colaborador ou conteúdo..."
-            ariaLabel="Buscar atendimento"
-            value={search}
-            onChange={handleSearchChange}
-          />
+        <div className="flex flex-col items-center gap-4 bg-base-200/50 p-4 rounded-xl border border-base-300 shadow-sm">
+          <div className="flex justify-between items-center w-full">
+          <h3 className="text-lg font-bold text-base-content/80">Busca e Filtros</h3>
+            <ListSearchInput
+              className="flex-1 min-w-70 grow"
+              placeholder="Buscar por aluno, colaborador ou conteúdo..."
+              ariaLabel="Buscar atendimento"
+              value={search}
+              onChange={handleSearchChange}
+            />
 
-          <div className="flex items-center gap-1 bg-base-100 px-3 py-1 rounded-lg border border-base-300">
+            <Button className="w-full sm:w-auto" onClick={() => handleOpenForm()} variant="success">
+              <Plus className="h-4 w-4 mr-2" />
+              Novo atendimento
+            </Button>
+          </div>
+
+          <div className="flex items-center justify-between w-full gap-1 bg-base-100 px-3 py-1 rounded-lg border border-base-300">
             <ToggleSwitch
               label="Cobrança Pendente"
               toggled={hideCharged}
               setToggle={handleHideChargedToggle}
               tip="Mostrar apenas eventos onde o aluno ainda não foi cobrado"
             />
-            <div className="divider divider-horizontal mx-0"></div>
             <ToggleSwitch
               label="Pagamento Pendente"
               toggled={hidePaid}
               setToggle={handleHidePaidToggle}
               tip="Mostrar apenas eventos onde o colaborador ainda não foi pago"
             />
+            <DateRangeInput
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={handleStartDateChange}
+              onEndDateChange={handleEndDateChange}
+            />
           </div>
-
-          <DateRangeInput
-            startDate={startDate}
-            endDate={endDate}
-            onStartDateChange={handleStartDateChange}
-            onEndDateChange={handleEndDateChange}
-          />
-
-          <Button
-            className="w-full sm:w-auto"
-            onClick={() => handleOpenForm()}
-            variant="success"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Novo atendimento
-          </Button>
         </div>
 
         <EventsListSection

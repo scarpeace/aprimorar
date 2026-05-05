@@ -41,7 +41,7 @@ export function StudentDetailsPage() {
         <StudentInfoSection studentId={studentId} onEdit={() => setIsFormOpen(true)}/>
 
         {/* Section 2: Filters and KPIs */}
-        <div className="flex flex-col gap-4 animate-[fade-up_450ms_ease-out_both]">
+        <div className="flex flex-col z-30 gap-4 animate-[fade-up_450ms_ease-out_both]">
           <div className="flex flex-col sm:flex-row justify-between gap-4 items-center bg-base-100 p-4 rounded-xl border border-base-300 shadow-sm">
             <h3 className="text-lg font-bold text-base-content/80">
               Indicadores e Filtros
