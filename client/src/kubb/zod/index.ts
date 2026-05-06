@@ -43,15 +43,15 @@ export {
   getEmployeeByIdQueryResponseSchema,
 } from "./employee/getEmployeeByIdSchema.ts";
 export {
-  getEmployeeMonthlySummary200Schema,
-  getEmployeeMonthlySummaryPathParamsSchema,
-  getEmployeeMonthlySummaryQueryParamsSchema,
-  getEmployeeMonthlySummaryQueryResponseSchema,
-} from "./employee/getEmployeeMonthlySummarySchema.ts";
-export {
   getEmployeeOptions200Schema,
   getEmployeeOptionsQueryResponseSchema,
 } from "./employee/getEmployeeOptionsSchema.ts";
+export {
+  getEmployeeSummary200Schema,
+  getEmployeeSummaryPathParamsSchema,
+  getEmployeeSummaryQueryParamsSchema,
+  getEmployeeSummaryQueryResponseSchema,
+} from "./employee/getEmployeeSummarySchema.ts";
 export {
   getEmployees200Schema,
   getEmployeesQueryParamsSchema,
@@ -68,10 +68,10 @@ export {
   updateEmployeeMutationResponseSchema,
   updateEmployeePathParamsSchema,
 } from "./employee/updateEmployeeSchema.ts";
-export { employeeMonthlySummaryDTOSchema } from "./employeeMonthlySummaryDTOSchema.ts";
 export { employeeOptionsDTOSchema } from "./employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./employeeResponseDTOSchema.ts";
+export { employeeSummaryDTOSchema } from "./employeeSummaryDTOSchema.ts";
 export {
   createEvent201Schema,
   createEventMutationRequestSchema,
@@ -225,11 +225,11 @@ export {
   getStudentByIdQueryResponseSchema,
 } from "./student/getStudentByIdSchema.ts";
 export {
-  getStudentMonthlySummary200Schema,
-  getStudentMonthlySummaryPathParamsSchema,
-  getStudentMonthlySummaryQueryParamsSchema,
-  getStudentMonthlySummaryQueryResponseSchema,
-} from "./student/getStudentMonthlySummarySchema.ts";
+  getStudentSummary200Schema,
+  getStudentSummaryPathParamsSchema,
+  getStudentSummaryQueryParamsSchema,
+  getStudentSummaryQueryResponseSchema,
+} from "./student/getStudentSummarySchema.ts";
 export {
   getStudentsByParent200Schema,
   getStudentsByParentPathParamsSchema,
@@ -256,11 +256,11 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./student/updateStudentSchema.ts";
-export { studentMonthlySummaryDTOSchema } from "./studentMonthlySummaryDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
 export { studentResponsibleSummaryDTOSchema } from "./studentResponsibleSummaryDTOSchema.ts";
+export { studentSummaryDTOSchema } from "./studentSummaryDTOSchema.ts";
 export {
   createUser201Schema,
   createUserMutationRequestSchema,

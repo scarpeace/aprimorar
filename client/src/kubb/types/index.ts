@@ -14,7 +14,6 @@ export type {
 export type { AuthLoginRequestDTO } from "./AuthLoginRequestDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
-export type { EmployeeMonthlySummaryDTO } from "./EmployeeMonthlySummaryDTO.ts";
 export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
 export type {
   EmployeeRequestDTO,
@@ -24,6 +23,7 @@ export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./EmployeeResponseDTO.ts";
+export type { EmployeeSummaryDTO } from "./EmployeeSummaryDTO.ts";
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
@@ -50,11 +50,11 @@ export type { PagedModelGeneralExpenseResponseDTO } from "./PagedModelGeneralExp
 export type { ParentOptionsDTO } from "./ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
-export type { StudentMonthlySummaryDTO } from "./StudentMonthlySummaryDTO.ts";
 export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
 export type { StudentResponsibleSummaryDTO } from "./StudentResponsibleSummaryDTO.ts";
+export type { StudentSummaryDTO } from "./StudentSummaryDTO.ts";
 export type {
   UserCreateRequestDTO,
   UserCreateRequestDTORoleEnumKey,
@@ -110,17 +110,17 @@ export type {
   GetEmployeeByIdQueryResponse,
 } from "./employee/GetEmployeeById.ts";
 export type {
-  GetEmployeeMonthlySummary200,
-  GetEmployeeMonthlySummaryPathParams,
-  GetEmployeeMonthlySummaryQuery,
-  GetEmployeeMonthlySummaryQueryParams,
-  GetEmployeeMonthlySummaryQueryResponse,
-} from "./employee/GetEmployeeMonthlySummary.ts";
-export type {
   GetEmployeeOptions200,
   GetEmployeeOptionsQuery,
   GetEmployeeOptionsQueryResponse,
 } from "./employee/GetEmployeeOptions.ts";
+export type {
+  GetEmployeeSummary200,
+  GetEmployeeSummaryPathParams,
+  GetEmployeeSummaryQuery,
+  GetEmployeeSummaryQueryParams,
+  GetEmployeeSummaryQueryResponse,
+} from "./employee/GetEmployeeSummary.ts";
 export type {
   GetEmployees200,
   GetEmployeesQuery,
@@ -307,12 +307,12 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./student/GetStudentById.ts";
 export type {
-  GetStudentMonthlySummary200,
-  GetStudentMonthlySummaryPathParams,
-  GetStudentMonthlySummaryQuery,
-  GetStudentMonthlySummaryQueryParams,
-  GetStudentMonthlySummaryQueryResponse,
-} from "./student/GetStudentMonthlySummary.ts";
+  GetStudentSummary200,
+  GetStudentSummaryPathParams,
+  GetStudentSummaryQuery,
+  GetStudentSummaryQueryParams,
+  GetStudentSummaryQueryResponse,
+} from "./student/GetStudentSummary.ts";
 export type {
   GetStudents200,
   GetStudentsQuery,

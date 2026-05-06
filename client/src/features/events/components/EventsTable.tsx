@@ -14,7 +14,7 @@ type EventsTableProps = {
   error: unknown;
 };
 
-export function EventsTable({
+  export function EventsTable({
   eventsPage,
   currentPage,
   onPageChange,
@@ -102,10 +102,6 @@ export function EventsTable({
                   />
                   {brl.format(event.payment)}
                 </td>
-
-                {/*<td className="text-center flex justify-center gap-1">
-                  <EventStatusBadge event={event} />
-                </td>*/}
               </tr>
             ))
           )}

@@ -2,13 +2,12 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOStudentResponseDTO, StudentResponseDTO } from "@/kubb";
+import type { PageDTOStudentResponseDTO } from "@/kubb";
 import {
     formatCpf,
     formatDateShortYear,
     formatPhone,
 } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type StudentsTableProps = {
@@ -17,7 +16,6 @@ type StudentsTableProps = {
   currentPage: number;
   isPending: boolean;
   error: unknown;
-  onEdit: (student: StudentResponseDTO) => void;
 };
 
 export function StudentsTable({
@@ -26,17 +24,11 @@ export function StudentsTable({
   currentPage,
   isPending,
   error,
-  onEdit,
 }: Readonly<StudentsTableProps>) {
   const navigate = useNavigate();
 
   if (error) {
-    return (
-      <ErrorCard
-        title="Não foi possível carregar a listagem de Alunos"
-        error={error}
-      />
-    );
+    return <ErrorCard title="Não foi possível carregar a listagem de Alunos" error={error}/>;
   }
 
   if (isPending) {
@@ -69,9 +61,6 @@ export function StudentsTable({
             <th className="text-left font-semibold text-base-content/80">
               Matricula
             </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Status
-            </th>
           </tr>
         </thead>
 
@@ -79,9 +68,8 @@ export function StudentsTable({
           {students?.content.map((student) => (
             <tr
               key={student.id}
-              className="transition-colors hover:bg-base-200/70 hover:cursor-pointer"
+              className={`transition-colors hover:bg-base-200/70 hover:cursor-pointer ${student.archivedAt ? "text-gray-400" : ""}`}
               onClick={() => navigate(`/students/${student.id}`)}
-
             >
               <td>{student.name}</td>
               <td>{student.responsible?.name || "-"}</td>
@@ -93,13 +81,6 @@ export function StudentsTable({
               <td>{student.school}</td>
 
               <td>{formatDateShortYear(student.createdAt ?? "")}</td>
-              <td className="text-center">
-                {student.archivedAt ? (
-                  <div className="badge badge-soft badge-error">Arquivado</div>
-                ) : (
-                  <div className="badge badge-soft badge-info">Ativo</div>
-                )}
-              </td>
             </tr>
           ))}
         </tbody>

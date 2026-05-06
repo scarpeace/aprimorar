@@ -54,12 +54,6 @@ export function StudentsPage() {
             onChange={setSearchTerm}
           />
           <div className="flex justify-between sm:justify-end w-full sm:w-auto items-center gap-3">
-            {/*<ToggleSwitch
-              label="Arquivados"
-              tip="Mostrar alunos arquivados"
-              toggled={showArchived}
-              setToggle={setShowArchived}
-            />*/}
             <Button
               className="sm:ml-auto"
               onClick={() => handleOpenForm()}
@@ -77,7 +71,6 @@ export function StudentsPage() {
           currentPage={currentPage}
           isPending={studentsQuery.isPending}
           error={studentsQuery.error}
-          onEdit={(student) => handleOpenForm(student)}
         />
 
         {isFormOpen && (

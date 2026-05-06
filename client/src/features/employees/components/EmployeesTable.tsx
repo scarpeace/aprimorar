@@ -71,13 +71,7 @@ export function EmployeesTable({
               className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
               onClick={() => navigate(`/employees/${employee.id}`)}
             >
-              <td>
-                <div className="flex items-center gap-3">
-                <div aria-label="status" className={`status ${employee.archivedAt != null ? "status-secondary" : "status-success"}`}
-                  />
-                  {employee.name}
-                </div>
-              </td>
+              <td>{employee.name}</td>
               <td>{dutyLabels[employee.duty]}</td>
 
               <td>{formatCpf(employee.cpf)}</td>

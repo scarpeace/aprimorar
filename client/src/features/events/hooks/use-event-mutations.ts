@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
-  getEmployeeMonthlySummaryQueryKey,
+  getEmployeeSummaryQueryKey,
   getEventByIdQueryKey,
   getEventsByEmployeeIdQueryKey,
   getEventsByStudentIdQueryKey,
   getEventsQueryKey,
   getFinanceSummaryQueryKey,
+  getStudentSummaryQueryKey,
   useCreateEvent,
   useToggleEmployeeEventPayment,
   useToggleStudentEventCharge,
@@ -32,7 +33,7 @@ export function useEventMutations() {
           queryKey: getEventsByEmployeeIdQueryKey(createdEvent.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeMonthlySummaryQueryKey(createdEvent.employeeId),
+          queryKey: getEmployeeSummaryQueryKey(createdEvent.employeeId),
         });
         queryClient.invalidateQueries({
           queryKey: getEventsByStudentIdQueryKey(createdEvent.studentId),
@@ -56,7 +57,7 @@ export function useEventMutations() {
           queryKey: getEventsByEmployeeIdQueryKey(updatedEvent.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeMonthlySummaryQueryKey(updatedEvent.employeeId),
+          queryKey: getEmployeeSummaryQueryKey(updatedEvent.employeeId),
         });
         queryClient.invalidateQueries({
           queryKey: getEventsByStudentIdQueryKey(updatedEvent.studentId),
@@ -76,6 +77,7 @@ export function useEventMutations() {
         queryClient.invalidateQueries({
           queryKey: getEventsByStudentIdQueryKey(updatedEvent.studentId),
         });
+        queryClient.invalidateQueries({ queryKey: getStudentSummaryQueryKey(updatedEvent.studentId) });
         queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
       },
       onError: (error) => {
@@ -94,7 +96,7 @@ export function useEventMutations() {
           queryKey: getEventsByEmployeeIdQueryKey(updatedEvent.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeMonthlySummaryQueryKey(updatedEvent.employeeId),
+          queryKey: getEmployeeSummaryQueryKey(updatedEvent.employeeId),
         });
       },
       onError: (error) => {
