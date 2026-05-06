@@ -23,7 +23,7 @@ export const DateRangeInput = ({startDate,endDate,onStartDateChange,onEndDateCha
         locale="pt-BR"
         dateFormat="dd/MM/yyyy"
         className="w-24 text-center font-bold bg-transparent text-sm outline-none cursor-pointer"
-        placeholderText="##/##/###"
+        placeholderText="##/##/####"
       />
       <span className="text-base-content/50 text-sm font-medium">até</span>
       <DatePicker

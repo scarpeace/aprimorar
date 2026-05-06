@@ -15,7 +15,8 @@ export function useEmployeeDateFilters() {
     return endDateStr ? new Date(endDateStr) : undefined;
   }, [endDateStr]);
 
-  const handleStartDateChange = (date: Date) => {
+  const handleStartDateChange = (date: Date | null) => {
+    if (date === null) return;
     const newParams = new URLSearchParams(searchParams);
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
@@ -23,7 +24,8 @@ export function useEmployeeDateFilters() {
     setSearchParams(newParams);
   };
 
-  const handleEndDateChange = (date: Date) => {
+  const handleEndDateChange = (date: Date | null) => {
+    if (date === null) return;
     const newParams = new URLSearchParams(searchParams);
     const d = new Date(date);
     d.setHours(23, 59, 59, 999);

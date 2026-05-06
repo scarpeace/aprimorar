@@ -36,13 +36,13 @@ export function StudentDetailsPage() {
 
   return (
     <PageLayout {...headerProps}>
-      <div className="flex flex-col gap-6 max-w-7xl mx-auto">
+      <div className="mb-3">
+        <StudentInfoSection studentId={studentId} onEdit={() => setIsFormOpen(true)} />
+      </div>
 
-        <StudentInfoSection studentId={studentId} onEdit={() => setIsFormOpen(true)}/>
 
-        {/* Section 2: Filters and KPIs */}
-        <div className="flex flex-col z-30 gap-4 animate-[fade-up_450ms_ease-out_both]">
-          <div className="flex flex-col sm:flex-row justify-between gap-4 items-center bg-base-100 p-4 rounded-xl border border-base-300 shadow-sm">
+        {/* STUDENT EVENTS FILTERS */}
+        <div className="flex justify-between gap-2 items-center bg-base-100 p-4 rounded-xl border border-base-300 shadow-sm mb-3">
             <h3 className="text-lg font-bold text-base-content/80">
               Indicadores e Filtros
             </h3>
@@ -61,12 +61,14 @@ export function StudentDetailsPage() {
                 </div>
               )}
             </div>
-          </div>
-
-          <StudentKPIs studentId={studentId} />
         </div>
 
-        {/* Section 3: Events Table */}
+        {/* STUDENTS KPIS */}
+      <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
+          <StudentKPIs studentId={studentId} />
+      </div>
+
+        {/* STUDENT EVENTS */}
         <div className="animate-[fade-up_600ms_ease-out_both]">
           <StudentEventsTable studentId={studentId} />
         </div>
@@ -83,7 +85,6 @@ export function StudentDetailsPage() {
             </div>
           </div>
         )}
-      </div>
     </PageLayout>
   );
 }

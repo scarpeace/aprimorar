@@ -10,7 +10,7 @@ import { useGetEventsByStudentId, type EventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
+import { Calendar, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
 import { memo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { StudentEventMobileCard } from "./StudentEventMobileCard";
@@ -73,31 +73,23 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
 
   return (
     <div className="relative min-h-75">
-      {eventsQuery.isPending && (
-        <div className="flex items-center justify-center bg-base-100/60 backdrop-blur-[2px] rounded-xl">
-          <LoadingSpinner text="Carregando atendimentos..." />
-        </div>
-      )}
-
-      {/* Filter Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-3 items-center w-full bg-base-200/50 rounded-xl">
-        <div className="w-full sm:max-w-xs">
-          <ListSearchInput
-            placeholder="Buscar por colaborador..."
-            value={searchTerm}
-            onChange={(val) => {
-              setSearchTerm(val);
-              setCurrentPage(0);
-            }}
-          />
-        </div>
-         <div className="sm:w-auto">
-          <ToggleSwitch toggled={hideCharged} setToggle={handleHideCharged} label={"Ocultar Pagos"} />
-        </div>
-      </div>
 
       {/* Desktop View (Table) */}
-      <div className="hidden md:block overflow-x-auto rounded-xl border border-base-300 shadow-sm animate-[fade-up_300ms_ease-out_both]">
+      <div className="p-4 rounded-xl bg-base-100">
+      <div className="flex gap-3 mb-4">
+        <Calendar className="text-base-content/80" />
+        <h3 className="text-xl font-bold text-base-content/80">
+          Atendimentos vinculados ao aluno
+        </h3>
+      </div>
+
+      <div className="flex gap-6 mb-3 items-center w-full">
+        <ListSearchInput placeholder="Buscar por aluno" value={searchTerm} onChange={(val) => {
+          setSearchTerm(val);
+          setCurrentPage(0);
+        }} />
+        <ToggleSwitch toggled={hideCharged} setToggle={handleHideCharged} label={"Ocultar Pagos"} />
+      </div>
         <table className="table table-zebra w-full table-auto bg-base-100">
           <thead className="bg-base-300 sticky top-0 z-10">
             <tr>
@@ -110,15 +102,8 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
             </tr>
           </thead>
 
-          <tbody className="">
-            {eventsQuery.data?.content?.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="text-center py-12 text-base-content/40 italic">
-                  Nenhum atendimento encontrado.
-                </td>
-              </tr>
-            ) : (
-              eventsQuery.data?.content?.map((event: EventResponseDTO) => (
+          <tbody className="whitespace-nowrap">
+            {eventsQuery.data?.content?.map((event: EventResponseDTO) => (
                 <tr key={event.eventId} className="hover:bg-base-200/50 transition-colors group">
                   <td className="font-semibold">{event.employeeName}</td>
                   <td>{formatDateShortYear(event.startDate)}</td>
@@ -154,38 +139,29 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
                     </div>
                   </td>
                 </tr>
-              ))
-            )}
+            ))}
           </tbody>
         </table>
       </div>
 
       {/* Mobile View (Cards) */}
       <div className="md:hidden flex flex-col gap-4">
-        {eventsQuery.data?.content?.length === 0 ? (
-          <div className="text-center py-10 bg-base-200/30 rounded-xl border border-dashed border-base-300 text-base-content/50">
-            Nenhum atendimento encontrado.
-          </div>
-        ) : (
-          eventsQuery.data?.content?.map((event: EventResponseDTO, index: number) => (
-            <StudentEventMobileCard
-              key={event.eventId}
-              event={event}
-              index={index}
-              isPending={toggleStudentCharge.isPending}
-              onToggleCharge={handleToggleStudentCharge}
-            />
-          ))
-        )}
+        {eventsQuery.data?.content?.map((event: EventResponseDTO, index: number) => (
+          <StudentEventMobileCard
+            key={event.eventId}
+            event={event}
+            index={index}
+            isPending={toggleStudentCharge.isPending}
+            onToggleCharge={handleToggleStudentCharge}
+          />
+        ))}
       </div>
 
-      <div className="mt-6">
         <Pagination
           paginationData={eventsQuery.data}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
-      </div>
     </div>
   );
 });

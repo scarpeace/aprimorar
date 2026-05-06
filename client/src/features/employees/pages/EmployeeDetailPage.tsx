@@ -22,7 +22,7 @@ export function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const employeeId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
-  
+
   const {
     startDate,
     endDate,
@@ -36,13 +36,14 @@ export function EmployeeDetailPage() {
 
   return (
     <PageLayout {...headerProps}>
-      <div className="grid gap-3 animate-[fade-up_300ms_ease-out_both]">
-        <EmployeeInfoSection 
-          employeeId={employeeId} 
-          onEdit={() => setIsFormOpen(true)} 
-        />
+      <div className="mb-3">
+        <EmployeeInfoSection employeeId={employeeId} onEdit={() => setIsFormOpen(true)} />
+      </div>
 
-        <div className="flex justify-end gap-2 items-center mb-1">
+        <div className="flex justify-between gap-2 items-center bg-base-100 p-4 rounded-xl border border-base-300 shadow-sm mb-3">
+          <h3 className="text-lg font-bold text-base-content/80">
+              Indicadores e Filtros
+            </h3>
           <DateRangeInput
             startDate={startDate}
             endDate={endDate}
@@ -58,17 +59,16 @@ export function EmployeeDetailPage() {
           )}
         </div>
 
+      <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
         <EmployeeKPIs employeeId={employeeId} />
+      </div>
 
+      <div className="animate-[fade-up_600ms_ease-out_both]">
         <EmployeeEventsTable employeeId={employeeId} />
       </div>
 
       {isFormOpen && employeeQuery.data && (
-        <EmployeeEditModal
-          employee={employeeQuery.data}
-          isOpen={isFormOpen}
-          onClose={() => setIsFormOpen(false)}
-        />
+        <EmployeeEditModal employee={employeeQuery.data} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
       )}
     </PageLayout>
   );
