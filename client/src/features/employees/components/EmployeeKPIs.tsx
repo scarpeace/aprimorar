@@ -1,10 +1,10 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { SectionCard } from "@/components/ui/section-card";
-import { useGetEmployeeSummary } from "@/kubb";
 import { brl } from "@/lib/utils/formatter";
 import { CalendarCheck, CircleDollarSign, Wallet } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
+import { useFinanceEmployeeSummary } from "@/features/finance/hooks/use-finance-summary-queries";
 
 interface EmployeeKPIsProps {
   employeeId: string;
@@ -15,7 +15,7 @@ export function EmployeeKPIs({ employeeId }: EmployeeKPIsProps) {
   const startDate = searchParams.get("startDate") || undefined;
   const endDate = searchParams.get("endDate") || undefined;
 
-  const employeeSummaryQuery = useGetEmployeeSummary(employeeId, {
+  const employeeSummaryQuery = useFinanceEmployeeSummary(employeeId, {
     startDate,
     endDate,
   });

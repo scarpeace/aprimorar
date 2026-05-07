@@ -17,6 +17,7 @@ import com.aprimorar.api.domain.event.exception.EventNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
 import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.finance.TransactionService;
 import com.aprimorar.api.domain.parent.Parent;
 import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
@@ -74,6 +75,9 @@ class EventServiceTest {
     private EventMapper eventMapper;
 
     @Mock
+    private TransactionService transactionService;
+
+    @Mock
     private Clock clock;
 
     @InjectMocks
@@ -97,6 +101,7 @@ class EventServiceTest {
 
             assertThat(actual).isEqualTo(expected);
             assertThat(event.isStudentCharged()).isTrue();
+            verify(transactionService).syncStudentCharge(EVENT_ID, CURRENT_TIME);
         }
 
         @Test
@@ -113,6 +118,7 @@ class EventServiceTest {
 
             assertThat(actual).isEqualTo(expected);
             assertThat(event.isEmployeePaid()).isTrue();
+            verify(transactionService).syncEmployeePayment(EVENT_ID, CURRENT_TIME);
         }
 
         @Test
@@ -137,6 +143,7 @@ class EventServiceTest {
             EventResponseDTO actual = eventService.createEvent(input);
 
             assertThat(actual).isEqualTo(expected);
+            verify(transactionService).createEventTransactions(savedEvent);
         }
 
         @Test

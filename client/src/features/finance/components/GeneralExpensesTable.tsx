@@ -25,6 +25,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   MANUTENCAO: "Manutenção",
   SERVICOS: "Serviços",
   MATERIAIS: "Materiais",
+  ASSINATURAS: "Assinaturas",
 };
 
 export function GeneralExpensesTable({
@@ -48,7 +49,6 @@ export function GeneralExpensesTable({
         <thead>
           <tr>
             <th>Data</th>
-            <th>Descrição</th>
             <th>Categoria</th>
             <th>Valor</th>
             <th className="text-right">Ações</th>
@@ -58,7 +58,6 @@ export function GeneralExpensesTable({
           {expenses.content.map((expense) => (
             <tr key={expense.id} className="hover">
               <td>{expense.date ? format(new Date(expense.date), "dd/MM/yyyy", { locale: ptBR }) : "-"}</td>
-              <td className="font-medium">{expense.description}</td>
               <td>
                 <span className="badge badge-ghost">
                   {expense.category ? CATEGORY_LABELS[expense.category] || expense.category : "-"}

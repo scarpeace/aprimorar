@@ -12,18 +12,26 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.finance.dto.FinanceSummaryDTO;
-import com.aprimorar.api.domain.finance.repository.GeneralExpenseRepository;
+import com.aprimorar.api.domain.finance.repository.TransactionRepository;
+import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
+import com.aprimorar.api.enums.TransactionCategory;
+import com.aprimorar.api.enums.TransactionOrigin;
+import com.aprimorar.api.enums.TransactionStatus;
+import com.aprimorar.api.enums.TransactionType;
 
 @ExtendWith(MockitoExtension.class)
 class FinanceServiceTest {
 
     @Mock
-    private EventRepository eventRepository;
+    private TransactionRepository transactionRepository;
 
     @Mock
-    private GeneralExpenseRepository generalExpenseRepository;
+    private StudentRepository studentRepository;
+
+    @Mock
+    private EmployeeRepository employeeRepository;
 
     @InjectMocks
     private FinanceService financeService;
@@ -31,11 +39,30 @@ class FinanceServiceTest {
     @Test
     @DisplayName("should calculate finance summary correctly")
     void shouldCalculateFinanceSummaryCorrectly() {
-        when(eventRepository.sumTotalStudentIncome()).thenReturn(new BigDecimal("5000.00"));
-        when(eventRepository.sumTotalStudentIncomePending()).thenReturn(new BigDecimal("1200.00"));
-        when(eventRepository.sumTotalEmployeePayment()).thenReturn(new BigDecimal("3000.00"));
-        when(eventRepository.sumTotalEmployeePaymentPending()).thenReturn(new BigDecimal("800.00"));
-        when(generalExpenseRepository.sumTotalGeneralExpenses()).thenReturn(new BigDecimal("500.00"));
+        when(transactionRepository.sumByTypeStatusAndCategory(
+            TransactionType.IN,
+            TransactionStatus.SETTLED,
+            TransactionCategory.COBRANCA_ALUNO
+        )).thenReturn(new BigDecimal("5000.00"));
+        when(transactionRepository.sumByTypeStatusAndCategory(
+            TransactionType.IN,
+            TransactionStatus.PENDING,
+            TransactionCategory.COBRANCA_ALUNO
+        )).thenReturn(new BigDecimal("1200.00"));
+        when(transactionRepository.sumByTypeStatusAndCategory(
+            TransactionType.OUT,
+            TransactionStatus.SETTLED,
+            TransactionCategory.PAGAMENTO_COLABORADOR
+        )).thenReturn(new BigDecimal("3000.00"));
+        when(transactionRepository.sumByTypeStatusAndCategory(
+            TransactionType.OUT,
+            TransactionStatus.PENDING,
+            TransactionCategory.PAGAMENTO_COLABORADOR
+        )).thenReturn(new BigDecimal("800.00"));
+        when(transactionRepository.sumByOriginAndStatus(
+            TransactionOrigin.GENERAL_EXPENSE,
+            TransactionStatus.SETTLED
+        )).thenReturn(new BigDecimal("500.00"));
 
         FinanceSummaryDTO actual = financeService.getFinanceSummary();
 

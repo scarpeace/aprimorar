@@ -77,7 +77,6 @@ export function EmployeesPage() {
           currentPage={currentPage}
           isPending={employeesQuery.isPending}
           error={employeesQuery.error}
-          onEdit={(employee) => handleOpenForm(employee)}
         />
 
         {isFormOpen && (

@@ -1,11 +1,11 @@
 import { KpiCard } from "@/components/ui/kpi-card";
 import { SectionCard } from "@/components/ui/section-card";
-import { useGetStudentSummary } from "@/kubb";
 import { brl } from "@/lib/utils/formatter";
 import { CalendarCheck, CircleDollarSign, Wallet } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { memo } from "react";
 import { ErrorCard } from "@/components/ui/error-card";
+import { useFinanceStudentSummary } from "@/features/finance/hooks/use-finance-summary-queries";
 
 interface StudentKPIsProps {
   studentId: string;
@@ -17,7 +17,7 @@ export const StudentKPIs = memo(function StudentKPIs({ studentId }: StudentKPIsP
   const startDate = searchParams.get("startDate") || undefined;
   const endDate = searchParams.get("endDate") || undefined;
 
-  const studentSummaryQuery = useGetStudentSummary(studentId, {
+  const studentSummaryQuery = useFinanceStudentSummary(studentId, {
     startDate,
     endDate,
   });

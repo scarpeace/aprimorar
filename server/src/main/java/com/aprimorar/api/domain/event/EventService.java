@@ -22,6 +22,7 @@ import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
 import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.event.repository.EventRepository;
 import com.aprimorar.api.domain.event.repository.EventSpecifications;
+import com.aprimorar.api.domain.finance.TransactionService;
 import com.aprimorar.api.domain.student.Student;
 import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.repository.StudentRepository;
@@ -36,6 +37,7 @@ public class EventService {
     private final StudentRepository studentRepo;
     private final EmployeeRepository employeeRepo;
     private final EventMapper eventMapper;
+    private final TransactionService transactionService;
     private final Clock clock;
 
     public EventService(
@@ -43,12 +45,14 @@ public class EventService {
         StudentRepository studentRepo,
         EmployeeRepository employeeRepo,
         EventMapper eventMapper,
+        TransactionService transactionService,
         Clock clock
     ) {
         this.eventRepo = eventRepo;
         this.studentRepo = studentRepo;
         this.employeeRepo = employeeRepo;
         this.eventMapper = eventMapper;
+        this.transactionService = transactionService;
         this.clock = clock;
     }
 
@@ -71,6 +75,7 @@ public class EventService {
             Instant.now(clock)
         );
         Event savedEvent = eventRepo.save(event);
+        transactionService.createEventTransactions(savedEvent);
         log.info("Evento {} cadastrado com sucesso.", savedEvent.getTitle().toUpperCase());
         return eventMapper.convertToDto(savedEvent);
     }
@@ -179,6 +184,7 @@ public class EventService {
             employee,
             Instant.now(clock)
         );
+        transactionService.syncEventTransactions(event);
 
         log.info("Evento {} atualizado com sucesso.", event.getTitle().toUpperCase());
         return eventMapper.convertToDto(event);
@@ -187,6 +193,7 @@ public class EventService {
     @Transactional
     public void deleteEvent(UUID eventId) {
         Event foundEvent = findEventOrThrow(eventId);
+        transactionService.deleteEventTransactions(foundEvent.getId());
         eventRepo.delete(foundEvent);
         log.info("Evento {} deletado com sucesso.", foundEvent.getTitle().toUpperCase());
     }
@@ -195,6 +202,7 @@ public class EventService {
     public EventResponseDTO toggleStudentCharge(UUID id) {
         Event event = findEventOrThrow(id);
         event.toggleStudentCharge(Instant.now(clock));
+        transactionService.syncStudentCharge(event.getId(), event.getStudentChargeDate());
         log.info("Status da cobrança do aluno no evento {} atualizado.", event.getTitle());
         return eventMapper.convertToDto(event);
     }
@@ -203,6 +211,7 @@ public class EventService {
     public EventResponseDTO toggleEmployeePayment(UUID id) {
         Event event = findEventOrThrow(id);
         event.toggleEmployeePayment(Instant.now(clock));
+        transactionService.syncEmployeePayment(event.getId(), event.getEmployeePaymentDate());
         log.info("Status do pagamento do colaborador no evento {} atualizado.", event.getTitle());
         return eventMapper.convertToDto(event);
     }

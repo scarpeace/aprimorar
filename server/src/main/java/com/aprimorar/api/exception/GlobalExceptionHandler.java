@@ -9,6 +9,7 @@ import com.aprimorar.api.domain.event.exception.EventNotFoundException;
 import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
 import com.aprimorar.api.domain.event.exception.InvalidEventException;
 import com.aprimorar.api.domain.event.exception.NotAllowedToUpdateEventException;
+import com.aprimorar.api.domain.finance.exception.TransactionNotFoundException;
 import com.aprimorar.api.domain.parent.exception.InvalidParentException;
 import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
 import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
@@ -52,6 +53,7 @@ public class GlobalExceptionHandler {
             EventNotFoundException.class,
             ParentNotFoundException.class,
             StudentNotFoundException.class,
+            TransactionNotFoundException.class,
             UserNotFoundException.class
         }
     )

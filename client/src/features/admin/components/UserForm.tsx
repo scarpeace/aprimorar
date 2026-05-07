@@ -25,7 +25,7 @@ export function UserForm({ onSuccess, onCancel }: UserFormProps) {
       employeeId: "",
       username: "",
       password: "",
-      role: "EMPLOYEE",
+      role: "SECRETARY",
     },
     mode: "onBlur",
   });

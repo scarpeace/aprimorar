@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
-  getEmployeeSummaryQueryKey,
   getEventByIdQueryKey,
   getEventsByEmployeeIdQueryKey,
   getEventsByStudentIdQueryKey,
   getEventsQueryKey,
   getFinanceSummaryQueryKey,
-  getStudentSummaryQueryKey,
   useCreateEvent,
   useToggleEmployeeEventPayment,
   useToggleStudentEventCharge,
@@ -33,12 +31,11 @@ export function useEventMutations() {
           queryKey: getEventsByEmployeeIdQueryKey(createdEvent.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeSummaryQueryKey(createdEvent.employeeId),
-        });
-        queryClient.invalidateQueries({
           queryKey: getEventsByStudentIdQueryKey(createdEvent.studentId),
         });
         queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", createdEvent.employeeId] });
+        queryClient.invalidateQueries({ queryKey: ["finance", "student-summary", createdEvent.studentId] });
         navigate(`/events/${createdEvent.eventId}`);
       },
     },
@@ -57,12 +54,11 @@ export function useEventMutations() {
           queryKey: getEventsByEmployeeIdQueryKey(updatedEvent.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeSummaryQueryKey(updatedEvent.employeeId),
-        });
-        queryClient.invalidateQueries({
           queryKey: getEventsByStudentIdQueryKey(updatedEvent.studentId),
         });
         queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", updatedEvent.employeeId] });
+        queryClient.invalidateQueries({ queryKey: ["finance", "student-summary", updatedEvent.studentId] });
         navigate(`/events/${updatedEvent.eventId}`);
       },
     },
@@ -77,8 +73,8 @@ export function useEventMutations() {
         queryClient.invalidateQueries({
           queryKey: getEventsByStudentIdQueryKey(updatedEvent.studentId),
         });
-        queryClient.invalidateQueries({ queryKey: getStudentSummaryQueryKey(updatedEvent.studentId) });
         queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        queryClient.invalidateQueries({ queryKey: ["finance", "student-summary", updatedEvent.studentId] });
       },
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
@@ -95,9 +91,7 @@ export function useEventMutations() {
         queryClient.invalidateQueries({
           queryKey: getEventsByEmployeeIdQueryKey(updatedEvent.employeeId),
         });
-        queryClient.invalidateQueries({
-          queryKey: getEmployeeSummaryQueryKey(updatedEvent.employeeId),
-        });
+        queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", updatedEvent.employeeId] });
       },
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));

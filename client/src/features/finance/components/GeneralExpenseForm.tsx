@@ -23,6 +23,7 @@ const categoryLabels: Record<string, string> = {
   MANUTENCAO: "Manutenção",
   SERVICOS: "Serviços",
   MATERIAIS: "Materiais",
+  ASSINATURAS: "Assinaturas",
 };
 
 export function GeneralExpenseForm({ initialData, onSuccess, onCancel }: GeneralExpenseFormProps) {
@@ -38,7 +39,6 @@ export function GeneralExpenseForm({ initialData, onSuccess, onCancel }: General
   } = useForm<GeneralExpenseFormSchema>({
     resolver: zodResolver(generalExpenseFormSchema),
     defaultValues: {
-      description: initialData?.description ?? "",
       amount: initialData?.amount ?? undefined,
       date: initialData?.date ?? new Date().toISOString().split("T")[0],
       category: initialData?.category ?? "CONTAS",
@@ -58,22 +58,6 @@ export function GeneralExpenseForm({ initialData, onSuccess, onCancel }: General
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4" autoComplete="off">
-      <fieldset className="fieldset">
-        <legend className="fieldset-legend">Descrição</legend>
-        <input
-          type="text"
-          className="input w-full"
-          {...register("description")}
-          placeholder="Ex: Aluguel Abril"
-        />
-        {errors?.description && (
-          <p className="label text-error">
-            <TriangleAlert className="w-3 h-3" />
-            {errors.description.message}
-          </p>
-        )}
-      </fieldset>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Valor</legend>

@@ -12,14 +12,14 @@ interface SettlementTableProps {
 }
 
 export function SettlementTable({ events }: SettlementTableProps) {
-  const { settleStudentCharge, settleEmployeePayment } = useEventMutations({ onSuccessCallback: () => {} });
+  const { toggleStudentCharge, toggleEmployeePayment } = useEventMutations();
 
   const handleToggleIncome = (event: EventResponseDTO) => {
-    settleStudentCharge.mutate({ id: event.eventId, params: { charged: !event.studentCharged } });
+    toggleStudentCharge.mutate({ id: event.eventId });
   };
 
   const handleToggleExpense = (event: EventResponseDTO) => {
-    settleEmployeePayment.mutate({ id: event.eventId, params: { paid: !event.employeePaid } });
+    toggleEmployeePayment.mutate({ id: event.eventId });
   };
 
   return (
@@ -55,11 +55,11 @@ export function SettlementTable({ events }: SettlementTableProps) {
                   <div className="flex flex-col items-end gap-1">
                     <span className="font-bold">{brl.format(event.price)}</span>
                     <Button
-                      variant={event.studentCharged ? "success" : "outline"}
+                      variant={event.studentChargeDate ? "success" : "outline"}
                       onClick={() => handleToggleIncome(event)}
-                      disabled={settleStudentCharge.isPending}
+                      disabled={toggleStudentCharge.isPending}
                     >
-                      {event.studentCharged ? (
+                      {event.studentChargeDate ? (
                         <>
                           <Check className="h-3 w-3 mr-1" /> Pago
                         </>
@@ -75,11 +75,11 @@ export function SettlementTable({ events }: SettlementTableProps) {
                   <div className="flex flex-col items-end gap-1">
                     <span className="font-bold">{brl.format(event.payment)}</span>
                     <Button
-                      variant={event.employeePaid ? "success" : "outline"}
+                      variant={event.employeePaymentDate ? "success" : "outline"}
                       onClick={() => handleToggleExpense(event)}
-                      disabled={settleEmployeePayment.isPending}
+                      disabled={toggleEmployeePayment.isPending}
                     >
-                      {event.employeePaid ? (
+                      {event.employeePaymentDate ? (
                         <>
                           <Check className="h-3 w-3 mr-1" /> Pago
                         </>

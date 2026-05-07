@@ -1,11 +1,12 @@
-import { useGetFinanceSummary } from "@/kubb/hooks/finance/useGetFinanceSummary"
-import { KpiCard } from "@/components/ui/kpi-card"
-import { brl } from "@/lib/utils/formatter"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { ErrorCard } from "@/components/ui/error-card"
+import { useGetFinanceSummary } from "@/kubb/hooks/finance/useGetFinanceSummary";
+import { KpiCard } from "@/components/ui/kpi-card";
+import { brl } from "@/lib/utils/formatter";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { ErrorCard } from "@/components/ui/error-card";
+import { CircleDollarSign, TrendingDown, TrendingUp, Wallet, Landmark } from "lucide-react";
 
 export function FinancialSummaryCards() {
-  const { data: summary, isLoading, isError, refetch } = useGetFinanceSummary()
+  const { data: summary, isLoading, isError } = useGetFinanceSummary();
 
   if (isLoading) {
     return (
@@ -16,7 +17,7 @@ export function FinancialSummaryCards() {
   }
 
   if (isError) {
-    return <ErrorCard message="Erro ao carregar resumo financeiro" onRetry={refetch} />
+    return <ErrorCard title="Erro ao carregar resumo financeiro" />
   }
 
   return (
@@ -24,10 +25,12 @@ export function FinancialSummaryCards() {
       <KpiCard
         label="Total Recebido"
         value={<span className="text-success">{brl.format(summary?.totalIncome ?? 0)}</span>}
+        Icon={TrendingUp}
       />
       <KpiCard
         label="Total a Receber"
         value={<span className="text-warning">{brl.format(summary?.totalIncomePending ?? 0)}</span>}
+        Icon={Wallet}
       />
       <KpiCard
         label="Total Pago"
@@ -36,10 +39,12 @@ export function FinancialSummaryCards() {
             {brl.format((summary?.totalExpenseTeacher ?? 0) + (summary?.totalGeneralExpenses ?? 0))}
           </span>
         }
+        Icon={TrendingDown}
       />
       <KpiCard
         label="Total a Pagar"
         value={<span className="text-warning">{brl.format(summary?.totalExpenseTeacherPending ?? 0)}</span>}
+        Icon={CircleDollarSign}
       />
       <KpiCard
         label="Saldo"
@@ -48,7 +53,8 @@ export function FinancialSummaryCards() {
             {brl.format(summary?.balance ?? 0)}
           </span>
         }
+        Icon={Landmark}
       />
     </div>
-  )
+  );
 }
