@@ -1,9 +1,15 @@
 package com.aprimorar.api.domain.parent;
 
+import com.aprimorar.api.domain.parent.internal.Parent;
+import com.aprimorar.api.domain.parent.internal.ParentMapper;
+import com.aprimorar.api.domain.parent.internal.ParentServiceImpl;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,25 +19,27 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.aprimorar.api.domain.parent.dto.ParentRequestDTO;
-import com.aprimorar.api.domain.parent.dto.ParentResponseDTO;
-import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
-import com.aprimorar.api.domain.parent.exception.ParentHasLinkedStudentsException;
-import com.aprimorar.api.domain.parent.exception.ParentNotFoundException;
-import com.aprimorar.api.domain.parent.repository.ParentRepository;
+import com.aprimorar.api.domain.parent.api.dto.ParentRequestDTO;
+import com.aprimorar.api.domain.parent.api.dto.ParentResponseDTO;
+import com.aprimorar.api.domain.parent.api.exception.ParentAlreadyExistsException;
+import com.aprimorar.api.domain.parent.api.exception.ParentHasLinkedStudentsException;
+import com.aprimorar.api.domain.parent.api.exception.ParentNotFoundException;
+import com.aprimorar.api.domain.parent.internal.repository.ParentRepository;
+import com.aprimorar.api.domain.student.api.StudentService;
 import com.aprimorar.api.shared.PageDTO;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,10 +59,16 @@ class ParentServiceTest {
     private ParentMapper parentMapper;
 
     @Mock
-    private com.aprimorar.api.domain.student.repository.StudentRepository studentRepo;
+    private StudentService studentService;
 
-    @InjectMocks
-    private ParentService parentService;
+    private ParentServiceImpl parentService;
+
+    @BeforeEach
+    void setUp() {
+        ObjectProvider<StudentService> studentServiceProvider = mock(ObjectProvider.class);
+        lenient().when(studentServiceProvider.getObject()).thenReturn(studentService);
+        parentService = new ParentServiceImpl(parentRepo, parentMapper, studentServiceProvider);
+    }
 
     @Nested
     @DisplayName("Query methods")
@@ -265,14 +279,14 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
-            when(studentRepo.existsByParentIdAndArchivedAtIsNull(input)).thenReturn(false);
+            when(studentService.hasActiveLinkedStudents(input)).thenReturn(false);
             // Act
             parentService.archiveParent(input);
 
             // Assert
             assertThat(expected.getArchivedAt()).isNotNull();
             verify(parentRepo).findById(input);
-            verify(studentRepo).existsByParentIdAndArchivedAtIsNull(input);
+            verify(studentService).hasActiveLinkedStudents(input);
         }
 
         @Test
@@ -283,7 +297,7 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
-            when(studentRepo.existsByParentIdAndArchivedAtIsNull(input)).thenReturn(true);
+            when(studentService.hasActiveLinkedStudents(input)).thenReturn(true);
 
             // Act + Assert
             assertThatThrownBy(() -> parentService.archiveParent(input))
@@ -291,7 +305,7 @@ class ParentServiceTest {
                     .hasMessage("Não é possível arquivar um responsável com alunos ativos vinculados.");
 
             verify(parentRepo).findById(input);
-            verify(studentRepo).existsByParentIdAndArchivedAtIsNull(input);
+            verify(studentService).hasActiveLinkedStudents(input);
         }
 
         @Test
@@ -320,14 +334,14 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
-            when(studentRepo.existsByParentIdAndArchivedAtIsNull(input)).thenReturn(false);
+            when(studentService.hasActiveLinkedStudents(input)).thenReturn(false);
 
             // Act
             parentService.deleteParent(input);
 
             // Assert
             verify(parentRepo).findById(input);
-            verify(studentRepo).existsByParentIdAndArchivedAtIsNull(input);
+            verify(studentService).hasActiveLinkedStudents(input);
             verify((org.springframework.data.repository.CrudRepository<Parent, java.util.UUID>) parentRepo).delete((Parent) expected);
         }
 
@@ -339,7 +353,7 @@ class ParentServiceTest {
             Parent expected = parent(input, "Maria Souza", "maria@email.com", "61999998888", "12345678901");
 
             when(parentRepo.findById(input)).thenReturn(Optional.of(expected));
-            when(studentRepo.existsByParentIdAndArchivedAtIsNull(input)).thenReturn(true);
+            when(studentService.hasActiveLinkedStudents(input)).thenReturn(true);
 
             // Act + Assert
             assertThatThrownBy(() -> parentService.deleteParent(input))
@@ -347,7 +361,7 @@ class ParentServiceTest {
                     .hasMessage("Não é possível excluir um responsável com alunos ativos vinculados.");
 
             verify(parentRepo).findById(input);
-            verify(studentRepo).existsByParentIdAndArchivedAtIsNull(input);
+            verify(studentService).hasActiveLinkedStudents(input);
             verify((org.springframework.data.repository.CrudRepository<Parent, java.util.UUID>) parentRepo, never()).delete(any());
         }
 

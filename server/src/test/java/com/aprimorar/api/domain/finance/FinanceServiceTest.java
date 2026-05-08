@@ -1,5 +1,7 @@
 package com.aprimorar.api.domain.finance;
 
+import com.aprimorar.api.domain.finance.internal.FinanceServiceImpl;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -12,10 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.aprimorar.api.domain.finance.dto.FinanceSummaryDTO;
-import com.aprimorar.api.domain.finance.repository.TransactionRepository;
-import com.aprimorar.api.domain.student.repository.StudentRepository;
-import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
+import com.aprimorar.api.domain.finance.api.dto.FinanceSummaryDTO;
+import com.aprimorar.api.domain.finance.internal.repository.TransactionRepository;
+import com.aprimorar.api.domain.student.internal.repository.StudentRepository;
+import com.aprimorar.api.domain.employee.internal.repository.EmployeeRepository;
 import com.aprimorar.api.enums.TransactionCategory;
 import com.aprimorar.api.enums.TransactionOrigin;
 import com.aprimorar.api.enums.TransactionStatus;
@@ -34,7 +36,7 @@ class FinanceServiceTest {
     private EmployeeRepository employeeRepository;
 
     @InjectMocks
-    private FinanceService financeService;
+    private FinanceServiceImpl financeService;
 
     @Test
     @DisplayName("should calculate finance summary correctly")

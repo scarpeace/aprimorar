@@ -1,31 +1,42 @@
 package com.aprimorar.api.domain.event;
 
+import com.aprimorar.api.domain.event.internal.Event;
+import com.aprimorar.api.domain.event.internal.EventMapper;
+import com.aprimorar.api.domain.event.internal.EventServiceImpl;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.aprimorar.api.domain.address.Address;
-import com.aprimorar.api.domain.employee.Employee;
-import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
-import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
-import com.aprimorar.api.domain.event.dto.EventRequestDTO;
-import com.aprimorar.api.domain.event.dto.EventResponseDTO;
-import com.aprimorar.api.domain.event.exception.EventNotFoundException;
-import com.aprimorar.api.domain.event.exception.EventScheduleConflictException;
-import com.aprimorar.api.domain.event.exception.InvalidEventException;
-import com.aprimorar.api.domain.event.repository.EventRepository;
-import com.aprimorar.api.domain.finance.TransactionService;
-import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.student.Student;
-import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
-import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.domain.address.api.Address;
+import com.aprimorar.api.domain.address.api.dto.AddressResponseDTO;
+import com.aprimorar.api.domain.employee.api.EmployeeService;
+import com.aprimorar.api.domain.employee.api.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.employee.api.exception.EmployeeNotFoundException;
+import com.aprimorar.api.domain.employee.internal.Employee;
+import com.aprimorar.api.domain.event.api.dto.EventRequestDTO;
+import com.aprimorar.api.domain.event.api.dto.EventResponseDTO;
+import com.aprimorar.api.domain.event.api.exception.EventNotFoundException;
+import com.aprimorar.api.domain.event.api.exception.EventScheduleConflictException;
+import com.aprimorar.api.domain.event.api.exception.InvalidEventException;
+import com.aprimorar.api.domain.event.internal.repository.EventRepository;
+import com.aprimorar.api.domain.finance.api.TransactionService;
+import com.aprimorar.api.domain.parent.internal.Parent;
+import com.aprimorar.api.domain.student.api.StudentService;
+import com.aprimorar.api.domain.student.api.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.api.dto.StudentResponsibleSummaryDTO;
+import com.aprimorar.api.domain.student.api.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.student.internal.Student;
 import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.EventContent;
 import com.aprimorar.api.shared.PageDTO;
+import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
@@ -33,13 +44,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -66,10 +78,10 @@ class EventServiceTest {
     private EventRepository eventRepo;
 
     @Mock
-    private StudentRepository studentRepo;
+    private StudentService studentService;
 
     @Mock
-    private EmployeeRepository employeeRepo;
+    private EmployeeService employeeService;
 
     @Mock
     private EventMapper eventMapper;
@@ -78,10 +90,24 @@ class EventServiceTest {
     private TransactionService transactionService;
 
     @Mock
+    private EntityManager entityManager;
+
+    @Mock
     private Clock clock;
 
-    @InjectMocks
-    private EventService eventService;
+    private EventServiceImpl eventService;
+
+    @BeforeEach
+    void setUp() {
+        ObjectProvider<StudentService> studentServiceProvider = mock(ObjectProvider.class);
+        ObjectProvider<EmployeeService> employeeServiceProvider = mock(ObjectProvider.class);
+        lenient().when(studentServiceProvider.getObject()).thenReturn(studentService);
+        lenient().when(employeeServiceProvider.getObject()).thenReturn(employeeService);
+        eventService = new EventServiceImpl(
+            eventRepo, studentServiceProvider, employeeServiceProvider,
+            eventMapper, transactionService, entityManager, clock
+        );
+    }
 
     @Nested
     @DisplayName("Command methods")
@@ -131,10 +157,12 @@ class EventServiceTest {
             EventResponseDTO expected = response();
 
             when(clock.instant()).thenReturn(CURRENT_TIME);
-            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
-            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
-            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
-            when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
+            when(studentService.existsById(STUDENT_ID)).thenReturn(true);
+            when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
+            when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
+            when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(employeeResponseDTO());
+            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student);
+            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee);
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(eventRepo.save(any(Event.class))).thenReturn(savedEvent);
@@ -143,7 +171,7 @@ class EventServiceTest {
             EventResponseDTO actual = eventService.createEvent(input);
 
             assertThat(actual).isEqualTo(expected);
-            verify(transactionService).createEventTransactions(savedEvent);
+            verify(transactionService).createEventTransactions(savedEvent.getId(), savedEvent.getPrice(), savedEvent.getPayment());
         }
 
         @Test
@@ -299,10 +327,12 @@ class EventServiceTest {
 
             when(eventRepo.findById(EVENT_ID)).thenReturn(Optional.of(existingEvent));
             when(clock.instant()).thenReturn(CURRENT_TIME);
-            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student));
-            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee));
-            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
-            when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
+            when(studentService.existsById(STUDENT_ID)).thenReturn(true);
+            when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
+            when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
+            when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(employeeResponseDTO());
+            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student);
+            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee);
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, UPDATED_EVENT_START, UPDATED_EVENT_END, EVENT_ID)).thenReturn(false);
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, UPDATED_EVENT_START, UPDATED_EVENT_END, EVENT_ID)).thenReturn(false);
             when(eventMapper.convertToDto(existingEvent)).thenReturn(expected);
@@ -354,7 +384,7 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when student is not found during creation")
         void shouldThrowWhenStudentIsNotFoundDuringCreation() {
-            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.empty());
+            when(studentService.existsById(STUDENT_ID)).thenReturn(false);
 
             assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(StudentNotFoundException.class)
@@ -364,8 +394,9 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when employee is not found during creation")
         void shouldThrowWhenEmployeeIsNotFoundDuringCreation() {
-            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
-            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.empty());
+            when(studentService.existsById(STUDENT_ID)).thenReturn(true);
+            when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
+            when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(false);
 
             assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(EmployeeNotFoundException.class)
@@ -375,10 +406,12 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when student has conflicting events")
         void shouldThrowWhenStudentHasConflictingEvent() {
-            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
-            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee()));
-            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
-            when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
+            when(studentService.existsById(STUDENT_ID)).thenReturn(true);
+            when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
+            when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
+            when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(employeeResponseDTO());
+            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student());
+            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee());
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(true);
 
             assertThatThrownBy(() -> eventService.createEvent(request()))
@@ -389,10 +422,12 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when employee has conflicting events")
         void shouldThrowWhenEmployeeHasConflictingEvent() {
-            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
-            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee()));
-            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
-            when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(false);
+            when(studentService.existsById(STUDENT_ID)).thenReturn(true);
+            when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
+            when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
+            when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(employeeResponseDTO());
+            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student());
+            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee());
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(true);
 
@@ -404,9 +439,12 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when creating an event with an archived student")
         void shouldThrowWhenStudentIsArchived() {
-            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
-            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee()));
-            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(true);
+            when(studentService.existsById(STUDENT_ID)).thenReturn(true);
+            when(studentService.findById(STUDENT_ID)).thenReturn(archivedStudentResponseDTO());
+            when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
+            when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(employeeResponseDTO());
+            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student());
+            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee());
 
             assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(InvalidEventException.class)
@@ -416,10 +454,12 @@ class EventServiceTest {
         @Test
         @DisplayName("should throw when creating an event with an archived employee")
         void shouldThrowWhenEmployeeIsArchived() {
-            when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(student()));
-            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(employee()));
-            when(studentRepo.existsByIdAndArchivedAtIsNotNull(STUDENT_ID)).thenReturn(false);
-            when(employeeRepo.existsByIdAndArchivedAtIsNotNull(EMPLOYEE_ID)).thenReturn(true);
+            when(studentService.existsById(STUDENT_ID)).thenReturn(true);
+            when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
+            when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
+            when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(archivedEmployeeResponseDTO());
+            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student());
+            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee());
 
             assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(InvalidEventException.class)
@@ -526,6 +566,50 @@ class EventServiceTest {
             null,
             CREATED_AT,
             UPDATED_AT
+        );
+    }
+
+    private static StudentResponseDTO studentResponseDTO() {
+        return new StudentResponseDTO(
+            STUDENT_ID, "João Silva", "61999999999", "joao@email.com", "12345678901",
+            LocalDate.of(2010, 5, 10), "Escola Central", 15,
+            new AddressResponseDTO("Rua A", "Centro", "Brasília", BrazilianStates.DF, "70000000", "Casa"),
+            UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+            new StudentResponsibleSummaryDTO(
+                UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                "Maria Silva", "61977777777", "98765432100"
+            ),
+            null, UPDATED_AT, CREATED_AT
+        );
+    }
+
+    private static StudentResponseDTO archivedStudentResponseDTO() {
+        return new StudentResponseDTO(
+            STUDENT_ID, "João Silva", "61999999999", "joao@email.com", "12345678901",
+            LocalDate.of(2010, 5, 10), "Escola Central", 15,
+            new AddressResponseDTO("Rua A", "Centro", "Brasília", BrazilianStates.DF, "70000000", "Casa"),
+            UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+            new StudentResponsibleSummaryDTO(
+                UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                "Maria Silva", "61977777777", "98765432100"
+            ),
+            CURRENT_TIME, UPDATED_AT, CREATED_AT
+        );
+    }
+
+    private static EmployeeResponseDTO employeeResponseDTO() {
+        return new EmployeeResponseDTO(
+            EMPLOYEE_ID, "Ana Paula", LocalDate.of(1990, 8, 20),
+            "ana@email.com", "61988888888", "10987654321", "ana@email.com",
+            Duty.TEACHER, null, CREATED_AT, UPDATED_AT
+        );
+    }
+
+    private static EmployeeResponseDTO archivedEmployeeResponseDTO() {
+        return new EmployeeResponseDTO(
+            EMPLOYEE_ID, "Ana Paula", LocalDate.of(1990, 8, 20),
+            "ana@email.com", "61988888888", "10987654321", "ana@email.com",
+            Duty.TEACHER, CURRENT_TIME, CREATED_AT, UPDATED_AT
         );
     }
 

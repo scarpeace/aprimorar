@@ -1,11 +1,14 @@
 package com.aprimorar.api.domain.employee;
 
+import com.aprimorar.api.domain.employee.api.EmployeeService;
+import com.aprimorar.api.domain.employee.internal.EmployeeController;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
+import com.aprimorar.api.domain.employee.api.dto.EmployeeSummaryDTO;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;

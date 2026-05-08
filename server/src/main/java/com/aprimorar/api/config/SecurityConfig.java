@@ -40,11 +40,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final com.aprimorar.api.domain.auth.AuthService authService;
+    private final com.aprimorar.api.domain.auth.api.AuthService authService;
     private final ObjectMapper objectMapper;
 
     public SecurityConfig(
-        com.aprimorar.api.domain.auth.AuthService authService,
+        com.aprimorar.api.domain.auth.api.AuthService authService,
         ObjectMapper objectMapper
     ) {
         this.authService = authService;

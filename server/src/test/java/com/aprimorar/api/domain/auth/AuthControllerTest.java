@@ -1,5 +1,10 @@
 package com.aprimorar.api.domain.auth;
 
+import com.aprimorar.api.domain.auth.internal.AuthController;
+import com.aprimorar.api.domain.auth.internal.AuthServiceImpl;
+import com.aprimorar.api.domain.auth.internal.User;
+import com.aprimorar.api.domain.student.internal.StudentController;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -10,11 +15,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.aprimorar.api.config.SecurityConfig;
 import com.aprimorar.api.config.PasswordEncoderConfig;
 import com.aprimorar.api.config.WebCorsConfig;
-import com.aprimorar.api.domain.auth.repository.UserRepository;
-import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
-import com.aprimorar.api.domain.employee.Employee;
-import com.aprimorar.api.domain.student.StudentController;
-import com.aprimorar.api.domain.student.StudentService;
+import com.aprimorar.api.domain.auth.internal.repository.UserRepository;
+import com.aprimorar.api.domain.auth.api.dto.AuthCurrentUserResponseDTO;
+import com.aprimorar.api.domain.employee.internal.Employee;
+import com.aprimorar.api.domain.student.api.StudentService;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.Role;
 import com.aprimorar.api.exception.GlobalExceptionHandler;
@@ -40,7 +44,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = { AuthController.class, StudentController.class })
-@Import({ SecurityConfig.class, PasswordEncoderConfig.class, WebCorsConfig.class, GlobalExceptionHandler.class, AuthService.class })
+@Import({ SecurityConfig.class, PasswordEncoderConfig.class, WebCorsConfig.class, GlobalExceptionHandler.class, AuthServiceImpl.class })
 class AuthControllerTest {
 
     private static final UUID USER_ID = UUID.fromString("8ccdb801-d0af-4561-8d45-56d196350001");

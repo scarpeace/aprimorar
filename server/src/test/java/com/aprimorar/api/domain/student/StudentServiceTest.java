@@ -1,13 +1,18 @@
 package com.aprimorar.api.domain.student;
 
+import com.aprimorar.api.domain.student.internal.Student;
+import com.aprimorar.api.domain.student.internal.StudentMapper;
+import com.aprimorar.api.domain.student.internal.StudentServiceImpl;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.lenient;
 
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -21,15 +26,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -37,21 +43,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.aprimorar.api.domain.address.Address;
-import com.aprimorar.api.domain.address.AddressMapper;
-import com.aprimorar.api.domain.address.dto.AddressRequestDTO;
-import com.aprimorar.api.domain.address.dto.AddressResponseDTO;
-import com.aprimorar.api.domain.event.repository.EventRepository;
-import com.aprimorar.api.domain.parent.Parent;
-import com.aprimorar.api.domain.parent.repository.ParentRepository;
-import com.aprimorar.api.domain.student.dto.StudentSummaryDTO;
-import com.aprimorar.api.domain.student.dto.StudentOptionsDTO;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
-import com.aprimorar.api.domain.student.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.dto.StudentResponsibleSummaryDTO;
-import com.aprimorar.api.domain.student.exception.StudentAlreadyExistException;
-import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
-import com.aprimorar.api.domain.student.repository.StudentRepository;
+import com.aprimorar.api.domain.address.api.Address;
+import com.aprimorar.api.domain.address.api.AddressMapper;
+import com.aprimorar.api.domain.address.api.dto.AddressRequestDTO;
+import com.aprimorar.api.domain.address.api.dto.AddressResponseDTO;
+import com.aprimorar.api.domain.event.api.EventService;
+import com.aprimorar.api.domain.parent.api.ParentService;
+import com.aprimorar.api.domain.parent.api.dto.ParentResponseDTO;
+import com.aprimorar.api.domain.parent.internal.Parent;
+import com.aprimorar.api.domain.student.api.dto.StudentSummaryDTO;
+import com.aprimorar.api.domain.student.api.dto.StudentOptionsDTO;
+import com.aprimorar.api.domain.student.api.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.api.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.student.api.dto.StudentResponsibleSummaryDTO;
+import com.aprimorar.api.domain.student.api.exception.StudentAlreadyExistException;
+import com.aprimorar.api.domain.student.api.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.student.internal.repository.StudentRepository;
 import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.shared.PageDTO;
 
@@ -73,7 +80,7 @@ class StudentServiceTest {
     private static final Instant ARCHIVED_AT = Instant.parse("2026-01-10T10:15:30Z");
 
     @Mock
-    private ParentRepository parentRepo;
+    private ParentService parentService;
 
     @Mock
     private StudentRepository studentRepo;
@@ -85,19 +92,31 @@ class StudentServiceTest {
     private AddressMapper addressMapper;
 
     @Mock
-    private EventRepository eventRepo;
+    private EventService eventService;
+
+    @Mock
+    private EntityManager entityManager;
 
     @Mock
     private Clock clock;
 
-    @InjectMocks
-    private StudentService studentService;
+    private StudentServiceImpl studentService;
 
     @BeforeEach
     void setUp() {
         Clock fixedClock = Clock.fixed(Instant.parse("2026-03-15T10:00:00Z"), ZoneId.of("UTC"));
         lenient().when(clock.getZone()).thenReturn(fixedClock.getZone());
         lenient().when(clock.instant()).thenReturn(fixedClock.instant());
+
+        ObjectProvider<ParentService> parentServiceProvider = mock(ObjectProvider.class);
+        ObjectProvider<EventService> eventServiceProvider = mock(ObjectProvider.class);
+        lenient().when(parentServiceProvider.getObject()).thenReturn(parentService);
+        lenient().when(eventServiceProvider.getObject()).thenReturn(eventService);
+        studentService = new StudentServiceImpl(
+            studentRepo, studentMapper, addressMapper,
+            parentServiceProvider, eventServiceProvider,
+            entityManager, clock
+        );
     }
 
     @Nested
@@ -113,7 +132,8 @@ class StudentServiceTest {
             Student savedStudent = student();
             StudentResponseDTO expected = response();
 
-            when(parentRepo.findById(PARENT_ID)).thenReturn(Optional.of(parent));
+            when(parentService.findById(PARENT_ID)).thenReturn(parentResponseDTO());
+            when(entityManager.getReference(Parent.class, PARENT_ID)).thenReturn(parent);
             when(addressMapper.convertToEntity(input.address())).thenReturn(address);
             when(studentRepo.existsByCpf("12345678901")).thenReturn(false);
             when(studentRepo.existsByEmail("joao@email.com")).thenReturn(false);
@@ -133,7 +153,8 @@ class StudentServiceTest {
         void shouldThrowWhenCreatingStudentWithDuplicatedCpf() {
             StudentRequestDTO input = request();
 
-            when(parentRepo.findById(PARENT_ID)).thenReturn(Optional.of(parent()));
+            when(parentService.findById(PARENT_ID)).thenReturn(parentResponseDTO());
+            when(entityManager.getReference(Parent.class, PARENT_ID)).thenReturn(parent());
             when(addressMapper.convertToEntity(input.address())).thenReturn(address());
             when(studentRepo.existsByCpf("12345678901")).thenReturn(true);
 
@@ -151,7 +172,8 @@ class StudentServiceTest {
         void shouldThrowWhenCreatingStudentWithDuplicatedEmail() {
             StudentRequestDTO input = request();
 
-            when(parentRepo.findById(PARENT_ID)).thenReturn(Optional.of(parent()));
+            when(parentService.findById(PARENT_ID)).thenReturn(parentResponseDTO());
+            when(entityManager.getReference(Parent.class, PARENT_ID)).thenReturn(parent());
             when(addressMapper.convertToEntity(input.address())).thenReturn(address());
             when(studentRepo.existsByCpf("12345678901")).thenReturn(false);
             when(studentRepo.existsByEmail("joao@email.com")).thenReturn(true);
@@ -170,7 +192,7 @@ class StudentServiceTest {
         void shouldThrowWhenParentIsNotFoundDuringCreation() {
             StudentRequestDTO input = request();
 
-            when(parentRepo.findById(PARENT_ID)).thenReturn(Optional.empty());
+            when(parentService.findById(PARENT_ID)).thenThrow(new IllegalArgumentException("Responsável não encontrado."));
 
             assertThatThrownBy(() -> studentService.createStudent(input))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -212,7 +234,8 @@ class StudentServiceTest {
             StudentResponseDTO expected = updatedResponse();
 
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(existingStudent));
-            when(parentRepo.findById(PARENT_ID)).thenReturn(Optional.of(parent));
+            when(parentService.findById(PARENT_ID)).thenReturn(updatedParentResponseDTO());
+            when(entityManager.getReference(Parent.class, PARENT_ID)).thenReturn(parent);
             when(addressMapper.convertToEntity(input.address())).thenReturn(address);
             when(studentRepo.existsByEmailAndIdNot("joao.pedro@email.com", STUDENT_ID)).thenReturn(false);
             when(studentMapper.convertToDto(existingStudent)).thenReturn(expected);
@@ -238,7 +261,8 @@ class StudentServiceTest {
             Student existingStudent = student();
 
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(existingStudent));
-            when(parentRepo.findById(PARENT_ID)).thenReturn(Optional.of(secondParent()));
+            when(parentService.findById(PARENT_ID)).thenReturn(updatedParentResponseDTO());
+            when(entityManager.getReference(Parent.class, PARENT_ID)).thenReturn(secondParent());
             when(addressMapper.convertToEntity(input.address())).thenReturn(secondAddress());
             when(studentRepo.existsByEmailAndIdNot("joao.pedro@email.com", STUDENT_ID)).thenReturn(true);
 
@@ -258,7 +282,7 @@ class StudentServiceTest {
                 .isInstanceOf(StudentNotFoundException.class)
                 .hasMessage("Aluno não encontrado no banco de dados");
 
-            verify(parentRepo, never()).findById(any());
+            verify(parentService, never()).findById(any());
             verify(studentMapper, never()).convertToDto(any());
         }
 
@@ -329,7 +353,7 @@ class StudentServiceTest {
 
             studentService.deleteStudent(STUDENT_ID);
 
-            verify(eventRepo).reassignStudentEventsToGhost(STUDENT_ID, GHOST_STUDENT_ID);
+            verify(eventService).reassignStudentEventsToGhost(STUDENT_ID);
             verify(studentRepo).delete(existingStudent);
         }
     }
@@ -454,9 +478,9 @@ class StudentServiceTest {
             Instant end = Instant.parse("2026-04-30T23:59:59.999Z");
 
             when(studentRepo.existsById(STUDENT_ID)).thenReturn(true);
-            when(eventRepo.countByStudentIdAndStartDateBetween(STUDENT_ID, start, end)).thenReturn(5L);
-            when(eventRepo.sumChargedByStudentIdInPeriod(STUDENT_ID, start, end)).thenReturn(new BigDecimal("500.00"));
-            when(eventRepo.sumPendingByStudentIdInPeriod(STUDENT_ID, start, end)).thenReturn(new BigDecimal("150.00"));
+            when(eventService.countByStudentIdAndStartDateBetween(STUDENT_ID, start, end)).thenReturn(5L);
+            when(eventService.sumChargedByStudentIdInPeriod(STUDENT_ID, start, end)).thenReturn(new BigDecimal("500.00"));
+            when(eventService.sumPendingByStudentIdInPeriod(STUDENT_ID, start, end)).thenReturn(new BigDecimal("150.00"));
 
             StudentSummaryDTO actual = studentService.getSummary(STUDENT_ID, start, end);
 
@@ -469,16 +493,16 @@ class StudentServiceTest {
         @DisplayName("should return all-time summary when params are null")
         void shouldReturnAllTimeSummaryWhenParamsAreNull() {
             when(studentRepo.existsById(STUDENT_ID)).thenReturn(true);
-            when(eventRepo.countByStudentId(STUDENT_ID)).thenReturn(10L);
-            when(eventRepo.sumChargedByStudentId(STUDENT_ID)).thenReturn(new BigDecimal("1000.00"));
-            when(eventRepo.sumPendingByStudentId(STUDENT_ID)).thenReturn(new BigDecimal("300.00"));
+            when(eventService.countByStudentId(STUDENT_ID)).thenReturn(10L);
+            when(eventService.sumChargedByStudentId(STUDENT_ID)).thenReturn(new BigDecimal("1000.00"));
+            when(eventService.sumPendingByStudentId(STUDENT_ID)).thenReturn(new BigDecimal("300.00"));
 
             StudentSummaryDTO actual = studentService.getSummary(STUDENT_ID, null, null);
 
             assertThat(actual.totalEvents()).isEqualTo(10L);
             assertThat(actual.totalCharged()).isEqualByComparingTo("1000.00");
             assertThat(actual.totalPending()).isEqualByComparingTo("300.00");
-            verify(eventRepo).countByStudentId(STUDENT_ID);
+            verify(eventService).countByStudentId(STUDENT_ID);
         }
 
         @Test
@@ -683,6 +707,20 @@ class StudentServiceTest {
 
     private static StudentResponsibleSummaryDTO responsibleSummary() {
         return new StudentResponsibleSummaryDTO(PARENT_ID, "Maria Silva", "61977777777", "98765432100");
+    }
+
+    private static ParentResponseDTO parentResponseDTO() {
+        return new ParentResponseDTO(
+            PARENT_ID, "Maria Silva", "maria@email.com", "61977777777",
+            "98765432100", null, CREATED_AT, UPDATED_AT
+        );
+    }
+
+    private static ParentResponseDTO updatedParentResponseDTO() {
+        return new ParentResponseDTO(
+            PARENT_ID, "Carlos Silva", "carlos@email.com", "61988888888",
+            "98765432100", null, CREATED_AT, UPDATED_AT
+        );
     }
 
     @SuppressWarnings("unchecked")

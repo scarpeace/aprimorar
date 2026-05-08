@@ -1,5 +1,8 @@
 package com.aprimorar.api.domain.event;
 
+import com.aprimorar.api.domain.event.api.EventService;
+import com.aprimorar.api.domain.event.internal.EventController;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;

@@ -1,23 +1,32 @@
 package com.aprimorar.api.domain.employee;
 
+import com.aprimorar.api.domain.employee.internal.Employee;
+import com.aprimorar.api.domain.employee.internal.EmployeeMapper;
+import com.aprimorar.api.domain.employee.internal.EmployeeServiceImpl;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.aprimorar.api.domain.auth.repository.UserRepository;
-import com.aprimorar.api.domain.employee.dto.EmployeeSummaryDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeOptionsDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeRequestDTO;
-import com.aprimorar.api.domain.employee.dto.EmployeeResponseDTO;
-import com.aprimorar.api.domain.employee.exception.EmployeeAlreadyExistsException;
-import com.aprimorar.api.domain.employee.exception.EmployeeNotFoundException;
-import com.aprimorar.api.domain.employee.repository.EmployeeRepository;
-import com.aprimorar.api.domain.event.repository.EventRepository;
+import com.aprimorar.api.domain.auth.api.UserService;
+import com.aprimorar.api.domain.auth.api.dto.UserResponseDTO;
+import com.aprimorar.api.domain.auth.api.exception.UserNotFoundException;
+import com.aprimorar.api.domain.employee.api.dto.EmployeeSummaryDTO;
+import com.aprimorar.api.domain.employee.api.dto.EmployeeOptionsDTO;
+import com.aprimorar.api.domain.employee.api.dto.EmployeeRequestDTO;
+import com.aprimorar.api.domain.employee.api.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.employee.api.exception.EmployeeAlreadyExistsException;
+import com.aprimorar.api.domain.employee.api.exception.EmployeeNotFoundException;
+import com.aprimorar.api.domain.employee.internal.repository.EmployeeRepository;
+import com.aprimorar.api.domain.event.api.EventService;
 import com.aprimorar.api.enums.Duty;
+import com.aprimorar.api.enums.Role;
 import com.aprimorar.api.shared.PageDTO;
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -27,13 +36,14 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -59,16 +69,26 @@ class EmployeeServiceTest {
     private EmployeeMapper employeeMapper;
 
     @Mock
-    private EventRepository eventRepo;
+    private EventService eventService;
 
     @Mock
-    private UserRepository userRepo;
+    private UserService userService;
 
     @Mock
     private Clock clock;
 
-    @InjectMocks
-    private EmployeeService employeeService;
+    private EmployeeServiceImpl employeeService;
+
+    @BeforeEach
+    void setUp() {
+        ObjectProvider<EventService> eventServiceProvider = mock(ObjectProvider.class);
+        ObjectProvider<UserService> userServiceProvider = mock(ObjectProvider.class);
+        lenient().when(eventServiceProvider.getObject()).thenReturn(eventService);
+        lenient().when(userServiceProvider.getObject()).thenReturn(userService);
+        employeeService = new EmployeeServiceImpl(
+            employeeRepo, employeeMapper, eventServiceProvider, userServiceProvider, clock
+        );
+    }
 
     @Nested
     @DisplayName("Command methods")
@@ -203,12 +223,12 @@ class EmployeeServiceTest {
             Employee existingEmployee = employee();
 
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(existingEmployee));
-            when(userRepo.findByEmployeeId(EMPLOYEE_ID)).thenReturn(Optional.empty());
+            when(userService.findByEmployeeId(EMPLOYEE_ID)).thenThrow(UserNotFoundException.class);
 
             employeeService.deleteEmployee(EMPLOYEE_ID);
 
-            verify(eventRepo).reassignEmployeeEventsToGhost(EMPLOYEE_ID, GHOST_EMPLOYEE_ID);
-            verify(userRepo).findByEmployeeId(EMPLOYEE_ID);
+            verify(eventService).reassignEmployeeEventsToGhost(EMPLOYEE_ID);
+            verify(userService).findByEmployeeId(EMPLOYEE_ID);
             verify(employeeRepo).delete(existingEmployee);
         }
 
@@ -216,14 +236,15 @@ class EmployeeServiceTest {
         @DisplayName("should delete associated user when employee is deleted")
         void shouldDeleteAssociatedUserWhenEmployeeIsDeleted() {
             Employee existingEmployee = employee();
-            com.aprimorar.api.domain.auth.User associatedUser = org.mockito.Mockito.mock(com.aprimorar.api.domain.auth.User.class);
+            UserResponseDTO associatedUser = new UserResponseDTO(UUID.randomUUID(), "user", "name", Role.ADMIN, true);
 
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(existingEmployee));
-            when(userRepo.findByEmployeeId(EMPLOYEE_ID)).thenReturn(Optional.of(associatedUser));
+            when(userService.findByEmployeeId(EMPLOYEE_ID)).thenReturn(associatedUser);
 
             employeeService.deleteEmployee(EMPLOYEE_ID);
 
-            verify(userRepo).delete(associatedUser);
+            verify(userService).findByEmployeeId(EMPLOYEE_ID);
+            verify(userService).deleteByEmployeeId(EMPLOYEE_ID);
             verify(employeeRepo).delete(existingEmployee);
         }
     }
@@ -286,11 +307,11 @@ class EmployeeServiceTest {
             BigDecimal totalUnpaid = new BigDecimal("500.00");
 
             when(employeeRepo.existsById(EMPLOYEE_ID)).thenReturn(true);
-            when(eventRepo.countByEmployeeIdAndStartDateBetween(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+            when(eventService.countByEmployeeIdAndStartDateBetween(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
                 .thenReturn(totalEvents);
-            when(eventRepo.sumPaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+            when(eventService.sumPaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
                 .thenReturn(totalPaid);
-            when(eventRepo.sumUnpaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
+            when(eventService.sumUnpaidByEmployeeIdInPeriod(eq(EMPLOYEE_ID), any(Instant.class), any(Instant.class)))
                 .thenReturn(totalUnpaid);
 
             EmployeeSummaryDTO actual = employeeService.getSummary(EMPLOYEE_ID, start, end);
@@ -308,18 +329,18 @@ class EmployeeServiceTest {
             BigDecimal totalUnpaid = new BigDecimal("250.00");
 
             when(employeeRepo.existsById(EMPLOYEE_ID)).thenReturn(true);
-            when(eventRepo.countByEmployeeId(EMPLOYEE_ID)).thenReturn(5L);
-            when(eventRepo.sumPaidByEmployeeId(EMPLOYEE_ID)).thenReturn(totalPaid);
-            when(eventRepo.sumUnpaidByEmployeeId(EMPLOYEE_ID)).thenReturn(totalUnpaid);
+            when(eventService.countByEmployeeId(EMPLOYEE_ID)).thenReturn(5L);
+            when(eventService.sumPaidByEmployeeId(EMPLOYEE_ID)).thenReturn(totalPaid);
+            when(eventService.sumUnpaidByEmployeeId(EMPLOYEE_ID)).thenReturn(totalUnpaid);
 
             EmployeeSummaryDTO actual = employeeService.getSummary(EMPLOYEE_ID, null, null);
 
             assertThat(actual.totalEvents()).isEqualTo(5L);
             assertThat(actual.totalPaid()).isEqualTo(totalPaid);
             assertThat(actual.totalUnpaid()).isEqualTo(totalUnpaid);
-            verify(eventRepo).countByEmployeeId(EMPLOYEE_ID);
-            verify(eventRepo).sumPaidByEmployeeId(EMPLOYEE_ID);
-            verify(eventRepo).sumUnpaidByEmployeeId(EMPLOYEE_ID);
+            verify(eventService).countByEmployeeId(EMPLOYEE_ID);
+            verify(eventService).sumPaidByEmployeeId(EMPLOYEE_ID);
+            verify(eventService).sumUnpaidByEmployeeId(EMPLOYEE_ID);
         }
 
         @Test

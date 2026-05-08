@@ -2,19 +2,17 @@
 
 ## Purpose
 TBD - This capability provides and displays a financial summary (KPIs) for a specific student, including total events, charged amounts, and pending amounts.
-
 ## Requirements
-
 ### Requirement: Student Financial Summary Endpoint
-The backend SHALL expose an endpoint to retrieve the financial summary for a specific student based on a date range.
+The finance module SHALL expose an endpoint to retrieve the financial summary for a specific student based on a date range.
 
 #### Scenario: Requesting summary with explicit date range
-- **WHEN** a client requests `/v1/students/{id}/summary` with `startDate` and `endDate` parameters
-- **THEN** the system SHALL calculate and return the total events, total charged amount (sum of `price` where `studentChargeDate` is NOT NULL), and total pending amount (sum of `price` where `studentChargeDate` is NULL) for that specific student within the given period.
+- **WHEN** a client requests `/v1/finance/students/{id}/summary` with `startDate` and `endDate` parameters
+- **THEN** the system SHALL calculate and return the total events, total charged amount, and total pending amount for that specific student within the given period using transactions linked to event student charges
 
 #### Scenario: Requesting summary without explicit dates
-- **WHEN** a client requests `/v1/students/{id}/summary` without `startDate` or `endDate` parameters
-- **THEN** the system SHALL calculate and return the all-time summary (from the beginning of history).
+- **WHEN** a client requests `/v1/finance/students/{id}/summary` without `startDate` or `endDate` parameters
+- **THEN** the system SHALL calculate and return the all-time summary for that student using transactions linked to event student charges
 
 ### Requirement: Student KPIs UI Component
 The frontend SHALL display a `StudentKPIs` component on the `StudentDetailsPage` showing the financial summary, synchronized with the page-level date filter. This component SHALL render its KPIs without a surrounding card container and use a responsive grid layout (3-column grid on desktop and 1-column stack on mobile).
@@ -26,3 +24,4 @@ The frontend SHALL display a `StudentKPIs` component on the `StudentDetailsPage`
 #### Scenario: Displaying the general summary
 - **WHEN** the user views the `StudentDetailsPage` and no date range is selected (default state)
 - **THEN** the `StudentKPIs` component SHALL display the KPI cards with the label "Resumo Geral".
+

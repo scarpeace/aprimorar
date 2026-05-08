@@ -1,13 +1,16 @@
 package com.aprimorar.api.domain.auth;
 
+import com.aprimorar.api.domain.auth.internal.AuthServiceImpl;
+import com.aprimorar.api.domain.auth.internal.User;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.aprimorar.api.domain.auth.dto.AuthCurrentUserResponseDTO;
-import com.aprimorar.api.domain.auth.repository.UserRepository;
-import com.aprimorar.api.domain.employee.Employee;
+import com.aprimorar.api.domain.auth.api.dto.AuthCurrentUserResponseDTO;
+import com.aprimorar.api.domain.auth.internal.repository.UserRepository;
+import com.aprimorar.api.domain.employee.internal.Employee;
 import com.aprimorar.api.enums.Duty;
 import com.aprimorar.api.enums.Role;
 import java.time.Clock;
@@ -44,11 +47,11 @@ class AuthServiceTest {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final Clock applicationClock = Clock.fixed(FIXED_INSTANT, ZoneOffset.UTC);
 
-    private AuthService authService;
+    private AuthServiceImpl authService;
 
     @BeforeEach
     void setUp() {
-        authService = new AuthService(userRepository, passwordEncoder, applicationClock);
+        authService = new AuthServiceImpl(userRepository, passwordEncoder, applicationClock);
     }
 
     @Nested

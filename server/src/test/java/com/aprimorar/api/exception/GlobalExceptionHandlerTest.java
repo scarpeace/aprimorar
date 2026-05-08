@@ -9,9 +9,9 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
 
-import com.aprimorar.api.domain.parent.exception.ParentAlreadyExistsException;
-import com.aprimorar.api.domain.student.dto.StudentRequestDTO;
-import com.aprimorar.api.domain.student.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.parent.api.exception.ParentAlreadyExistsException;
+import com.aprimorar.api.domain.student.api.dto.StudentRequestDTO;
+import com.aprimorar.api.domain.student.api.exception.StudentNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
