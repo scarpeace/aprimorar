@@ -90,9 +90,6 @@ class EventServiceTest {
     private TransactionService transactionService;
 
     @Mock
-    private EntityManager entityManager;
-
-    @Mock
     private Clock clock;
 
     private EventServiceImpl eventService;
@@ -105,7 +102,7 @@ class EventServiceTest {
         lenient().when(employeeServiceProvider.getObject()).thenReturn(employeeService);
         eventService = new EventServiceImpl(
             eventRepo, studentServiceProvider, employeeServiceProvider,
-            eventMapper, transactionService, entityManager, clock
+            eventMapper, transactionService, clock
         );
     }
 
@@ -161,8 +158,6 @@ class EventServiceTest {
             when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
             when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
             when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(employeeResponseDTO());
-            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student);
-            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee);
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(eventRepo.save(any(Event.class))).thenReturn(savedEvent);
@@ -331,8 +326,6 @@ class EventServiceTest {
             when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
             when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
             when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(employeeResponseDTO());
-            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student);
-            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee);
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, UPDATED_EVENT_START, UPDATED_EVENT_END, EVENT_ID)).thenReturn(false);
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, UPDATED_EVENT_START, UPDATED_EVENT_END, EVENT_ID)).thenReturn(false);
             when(eventMapper.convertToDto(existingEvent)).thenReturn(expected);
@@ -410,8 +403,6 @@ class EventServiceTest {
             when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
             when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
             when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(employeeResponseDTO());
-            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student());
-            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee());
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(true);
 
             assertThatThrownBy(() -> eventService.createEvent(request()))
@@ -426,8 +417,6 @@ class EventServiceTest {
             when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
             when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
             when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(employeeResponseDTO());
-            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student());
-            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee());
             when(eventRepo.studentHasConflictingEvent(STUDENT_ID, EVENT_START, EVENT_END, null)).thenReturn(false);
             when(eventRepo.employeeHasConflictingEvent(EMPLOYEE_ID, EVENT_START, EVENT_END, null)).thenReturn(true);
 
@@ -443,8 +432,6 @@ class EventServiceTest {
             when(studentService.findById(STUDENT_ID)).thenReturn(archivedStudentResponseDTO());
             when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
             when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(employeeResponseDTO());
-            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student());
-            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee());
 
             assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(InvalidEventException.class)
@@ -458,8 +445,6 @@ class EventServiceTest {
             when(studentService.findById(STUDENT_ID)).thenReturn(studentResponseDTO());
             when(employeeService.existsById(EMPLOYEE_ID)).thenReturn(true);
             when(employeeService.getReferenceById(EMPLOYEE_ID)).thenReturn(archivedEmployeeResponseDTO());
-            when(entityManager.getReference(Student.class, STUDENT_ID)).thenReturn(student());
-            when(entityManager.getReference(Employee.class, EMPLOYEE_ID)).thenReturn(employee());
 
             assertThatThrownBy(() -> eventService.createEvent(request()))
                 .isInstanceOf(InvalidEventException.class)
@@ -627,8 +612,10 @@ class EventServiceTest {
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.AULA,
-            student,
-            employee,
+            student.getId(),
+            student.getName(),
+            employee.getId(),
+            employee.getName(),
             CURRENT_TIME
         );
         event.setId(EVENT_ID);
@@ -636,6 +623,8 @@ class EventServiceTest {
     }
 
     private static Event secondEvent() {
+        Student student = student();
+        Employee employee = employee();
         Event event = new Event(
             "Descrição de teste 2",
             Instant.parse("2026-03-26T13:00:00Z"),
@@ -643,8 +632,10 @@ class EventServiceTest {
             BigDecimal.valueOf(90),
             BigDecimal.valueOf(130),
             EventContent.MENTORIA,
-            student(),
-            employee(),
+            student.getId(),
+            student.getName(),
+            employee.getId(),
+            employee.getName(),
             CURRENT_TIME
         );
         event.setId(UUID.fromString("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"));
@@ -659,7 +650,7 @@ class EventServiceTest {
             LocalDate.of(2010, 5, 10),
             "12345678901",
             "Escola Central",
-            parent(),
+            parent().getId(),
             address()
         );
         student.setId(STUDENT_ID);

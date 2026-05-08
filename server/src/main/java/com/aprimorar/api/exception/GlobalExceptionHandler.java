@@ -1,8 +1,6 @@
 package com.aprimorar.api.exception;
 
 import com.aprimorar.api.domain.address.api.exception.InvalidAddressException;
-import com.aprimorar.api.domain.auth.api.exception.UserAlreadyExistsException;
-import com.aprimorar.api.domain.auth.api.exception.UserNotFoundException;
 import com.aprimorar.api.domain.employee.api.exception.EmployeeAlreadyExistsException;
 import com.aprimorar.api.domain.employee.api.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.event.api.exception.EventNotFoundException;
@@ -53,8 +51,7 @@ public class GlobalExceptionHandler {
             EventNotFoundException.class,
             ParentNotFoundException.class,
             StudentNotFoundException.class,
-            TransactionNotFoundException.class,
-            UserNotFoundException.class
+            TransactionNotFoundException.class
         }
     )
     @ApiResponse(
@@ -80,8 +77,7 @@ public class GlobalExceptionHandler {
             EventScheduleConflictException.class,
             ParentHasLinkedStudentsException.class,
             ParentAlreadyExistsException.class,
-            StudentAlreadyExistException.class,
-            UserAlreadyExistsException.class
+            StudentAlreadyExistException.class
         }
     )
     @ApiResponse(

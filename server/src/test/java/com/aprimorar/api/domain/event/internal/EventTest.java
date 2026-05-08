@@ -84,8 +84,10 @@ class EventTest {
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.AULA,
-            student,
-            employee,
+            student.getId(),
+            student.getName(),
+            employee.getId(),
+            employee.getName(),
             CURRENT_TIME
         );
 
@@ -96,14 +98,15 @@ class EventTest {
         assertThat(event.getPayment()).isEqualByComparingTo(BigDecimal.valueOf(80));
         assertThat(event.getPrice()).isEqualByComparingTo(BigDecimal.valueOf(120));
         assertThat(event.getContent()).isEqualTo(EventContent.AULA);
-        assertThat(event.getStudent()).isEqualTo(student);Brasília, DF
-        assertThat(event.getEmployee()).isEqualTo(employee);
+        assertThat(event.getStudentId()).isEqualTo(student.getId());
     }
 
     @Test
     @DisplayName("should allow blank description")
     void shouldAllowBlankDescription() {
         Event event = createEvent(EVENT_START, EVENT_DURATION, CURRENT_TIME);
+        Student student = student();
+        Employee employee = employee();
 
         event.update(
             " ",
@@ -112,8 +115,10 @@ class EventTest {
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.AULA,
-            student(),
-            employee(),
+            student.getId(),
+            student.getName(),
+            employee.getId(),
+            employee.getName(),
             CURRENT_TIME
         );
 
@@ -123,6 +128,8 @@ class EventTest {
     @Test
     @DisplayName("should throw when end date is before start date")
     void shouldThrowWhenEndDateIsBeforeStartDate() {
+        Student student = student();
+        Employee employee = employee();
         assertThatThrownBy(() ->
             new Event(
                 "Descrição",
@@ -131,8 +138,10 @@ class EventTest {
                 BigDecimal.valueOf(80),
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
-                student(),
-                employee(),
+                student.getId(),
+                student.getName(),
+                employee.getId(),
+                employee.getName(),
                 CURRENT_TIME
             )
         )
@@ -143,6 +152,8 @@ class EventTest {
     @Test
     @DisplayName("should throw when price is less than payment")
     void shouldThrowWhenPriceIsLessThanPayment() {
+        Student student = student();
+        Employee employee = employee();
         assertThatThrownBy(() ->
             new Event(
                 "Descrição",
@@ -151,8 +162,10 @@ class EventTest {
                 BigDecimal.valueOf(100),
                 BigDecimal.valueOf(80),
                 EventContent.AULA,
-                student(),
-                employee(),
+                student.getId(),
+                student.getName(),
+                employee.getId(),
+                employee.getName(),
                 CURRENT_TIME
             )
         )
@@ -163,6 +176,8 @@ class EventTest {
     @Test
     @DisplayName("should throw when price is less than fifty")
     void shouldThrowWhenPriceIsLessThanFifty() {
+        Student student = student();
+        Employee employee = employee();
         assertThatThrownBy(() ->
             new Event(
                 "Descrição",
@@ -171,8 +186,10 @@ class EventTest {
                 BigDecimal.valueOf(40),
                 BigDecimal.valueOf(49),
                 EventContent.AULA,
-                student(),
-                employee(),
+                student.getId(),
+                student.getName(),
+                employee.getId(),
+                employee.getName(),
                 CURRENT_TIME
             )
         )
@@ -183,6 +200,8 @@ class EventTest {
     @Test
     @DisplayName("should throw when content is null")
     void shouldThrowWhenContentIsNull() {
+        Student student = student();
+        Employee employee = employee();
         assertThatThrownBy(() ->
             new Event(
                 "Descrição",
@@ -191,8 +210,10 @@ class EventTest {
                 BigDecimal.valueOf(80),
                 BigDecimal.valueOf(120),
                 null,
-                student(),
-                employee(),
+                student.getId(),
+                student.getName(),
+                employee.getId(),
+                employee.getName(),
                 CURRENT_TIME
             )
         )
@@ -203,6 +224,8 @@ class EventTest {
     @Test
     @DisplayName("should throw when end date is in the past during creation")
     void shouldThrowWhenEndDateIsInThePastDuringCreation() {
+        Student student = student();
+        Employee employee = employee();
         assertThatThrownBy(() ->
             new Event(
                 "Descrição válida",
@@ -211,8 +234,10 @@ class EventTest {
                 BigDecimal.valueOf(80),
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
-                student(),
-                employee(),
+                student.getId(),
+                student.getName(),
+                employee.getId(),
+                employee.getName(),
                 AFTER_EVENT_END
             )
         )
@@ -225,6 +250,8 @@ class EventTest {
     void shouldAllowUpdatingFinishedEventInsideEditWindow() {
         Event event = createEvent(EVENT_START, EVENT_DURATION, CURRENT_TIME);
         Instant editTime = EVENT_END.plusSeconds(5 * 24 * 60 * 60);
+        Student student = student();
+        Employee employee = employee();
 
         event.update(
             "Revisão para prova",
@@ -233,8 +260,10 @@ class EventTest {
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.MENTORIA,
-            student(),
-            employee(),
+            student.getId(),
+            student.getName(),
+            employee.getId(),
+            employee.getName(),
             editTime
         );
 
@@ -247,6 +276,8 @@ class EventTest {
     void shouldThrowWhenEditWindowIsClosed() {
         Event event = createEvent(EVENT_START, EVENT_DURATION, CURRENT_TIME);
         Instant now = EVENT_END.plusSeconds(20L * 24 * 60 * 60 + 1);
+        Student student = student();
+        Employee employee = employee();
 
         assertThatThrownBy(() ->
             event.update(
@@ -256,8 +287,10 @@ class EventTest {
                 BigDecimal.valueOf(80),
                 BigDecimal.valueOf(120),
                 EventContent.AULA,
-                student(),
-                employee(),
+                student.getId(),
+                student.getName(),
+                employee.getId(),
+                employee.getName(),
                 now
             )
         )
@@ -266,6 +299,8 @@ class EventTest {
     }
 
     private Event createEvent(Instant startDate, Double duration, Instant now) {
+        Student student = student();
+        Employee employee = employee();
         return new Event(
             "Descrição válida",
             startDate,
@@ -273,14 +308,16 @@ class EventTest {
             BigDecimal.valueOf(80),
             BigDecimal.valueOf(120),
             EventContent.AULA,
-            student(),
-            employee(),
+            student.getId(),
+            student.getName(),
+            employee.getId(),
+            employee.getName(),
             now
         );
     }
 
     private Student student() {
-        Parent parent = new Parent("Maria Silva", "maria@email.com", "61977777777", "98765432100");
+        UUID parentId = UUID.fromString("dddddddd-dddd-dddd-dddd-dddddddddddd");
         Address address = new Address();
         address.setStreet("Rua A");
         address.setDistrict("Centro");
@@ -296,7 +333,7 @@ class EventTest {
             LocalDate.of(2010, 5, 10),
             "12345678901",
             "Escola Central",
-            parent,
+            parentId,
             address
         );
         student.setId(STUDENT_ID);

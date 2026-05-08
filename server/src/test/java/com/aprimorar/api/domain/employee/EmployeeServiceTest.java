@@ -14,9 +14,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.aprimorar.api.domain.auth.api.UserService;
-import com.aprimorar.api.domain.auth.api.dto.UserResponseDTO;
-import com.aprimorar.api.domain.auth.api.exception.UserNotFoundException;
 import com.aprimorar.api.domain.employee.api.dto.EmployeeSummaryDTO;
 import com.aprimorar.api.domain.employee.api.dto.EmployeeOptionsDTO;
 import com.aprimorar.api.domain.employee.api.dto.EmployeeRequestDTO;
@@ -26,13 +23,11 @@ import com.aprimorar.api.domain.employee.api.exception.EmployeeNotFoundException
 import com.aprimorar.api.domain.employee.internal.repository.EmployeeRepository;
 import com.aprimorar.api.domain.event.api.EventService;
 import com.aprimorar.api.enums.Duty;
-import com.aprimorar.api.enums.Role;
 import com.aprimorar.api.shared.PageDTO;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -57,7 +52,6 @@ class EmployeeServiceTest {
     private static final UUID EMPLOYEE_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
     private static final UUID SECOND_EMPLOYEE_ID = UUID.fromString("22222222-2222-2222-2222-222222222222");
     private static final UUID MISSING_EMPLOYEE_ID = UUID.fromString("33333333-3333-3333-3333-333333333333");
-    private static final UUID GHOST_EMPLOYEE_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
     private static final Instant CREATED_AT = Instant.parse("2026-01-05T08:00:00Z");
     private static final Instant UPDATED_AT = Instant.parse("2026-01-12T12:30:00Z");
     private static final Instant ARCHIVED_AT = Instant.parse("2026-01-10T10:15:30Z");
@@ -72,9 +66,6 @@ class EmployeeServiceTest {
     private EventService eventService;
 
     @Mock
-    private UserService userService;
-
-    @Mock
     private Clock clock;
 
     private EmployeeServiceImpl employeeService;
@@ -82,11 +73,9 @@ class EmployeeServiceTest {
     @BeforeEach
     void setUp() {
         ObjectProvider<EventService> eventServiceProvider = mock(ObjectProvider.class);
-        ObjectProvider<UserService> userServiceProvider = mock(ObjectProvider.class);
         lenient().when(eventServiceProvider.getObject()).thenReturn(eventService);
-        lenient().when(userServiceProvider.getObject()).thenReturn(userService);
         employeeService = new EmployeeServiceImpl(
-            employeeRepo, employeeMapper, eventServiceProvider, userServiceProvider, clock
+            employeeRepo, employeeMapper, eventServiceProvider, clock
         );
     }
 
@@ -218,33 +207,15 @@ class EmployeeServiceTest {
         }
 
         @Test
-        @DisplayName("should delete employee, user and reassign events to ghost")
-        void shouldDeleteEmployeeUserAndReassignEventsToGhost() {
+        @DisplayName("should delete employee and reassign events to ghost")
+        void shouldDeleteEmployeeAndReassignEventsToGhost() {
             Employee existingEmployee = employee();
 
             when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(existingEmployee));
-            when(userService.findByEmployeeId(EMPLOYEE_ID)).thenThrow(UserNotFoundException.class);
 
             employeeService.deleteEmployee(EMPLOYEE_ID);
 
             verify(eventService).reassignEmployeeEventsToGhost(EMPLOYEE_ID);
-            verify(userService).findByEmployeeId(EMPLOYEE_ID);
-            verify(employeeRepo).delete(existingEmployee);
-        }
-
-        @Test
-        @DisplayName("should delete associated user when employee is deleted")
-        void shouldDeleteAssociatedUserWhenEmployeeIsDeleted() {
-            Employee existingEmployee = employee();
-            UserResponseDTO associatedUser = new UserResponseDTO(UUID.randomUUID(), "user", "name", Role.ADMIN, true);
-
-            when(employeeRepo.findById(EMPLOYEE_ID)).thenReturn(Optional.of(existingEmployee));
-            when(userService.findByEmployeeId(EMPLOYEE_ID)).thenReturn(associatedUser);
-
-            employeeService.deleteEmployee(EMPLOYEE_ID);
-
-            verify(userService).findByEmployeeId(EMPLOYEE_ID);
-            verify(userService).deleteByEmployeeId(EMPLOYEE_ID);
             verify(employeeRepo).delete(existingEmployee);
         }
     }

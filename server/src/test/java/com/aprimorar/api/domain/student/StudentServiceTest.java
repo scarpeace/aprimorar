@@ -95,9 +95,6 @@ class StudentServiceTest {
     private EventService eventService;
 
     @Mock
-    private EntityManager entityManager;
-
-    @Mock
     private Clock clock;
 
     private StudentServiceImpl studentService;
@@ -115,7 +112,7 @@ class StudentServiceTest {
         studentService = new StudentServiceImpl(
             studentRepo, studentMapper, addressMapper,
             parentServiceProvider, eventServiceProvider,
-            entityManager, clock
+            clock
         );
     }
 
@@ -133,7 +130,6 @@ class StudentServiceTest {
             StudentResponseDTO expected = response();
 
             when(parentService.findById(PARENT_ID)).thenReturn(parentResponseDTO());
-            when(entityManager.getReference(Parent.class, PARENT_ID)).thenReturn(parent);
             when(addressMapper.convertToEntity(input.address())).thenReturn(address);
             when(studentRepo.existsByCpf("12345678901")).thenReturn(false);
             when(studentRepo.existsByEmail("joao@email.com")).thenReturn(false);
@@ -154,7 +150,6 @@ class StudentServiceTest {
             StudentRequestDTO input = request();
 
             when(parentService.findById(PARENT_ID)).thenReturn(parentResponseDTO());
-            when(entityManager.getReference(Parent.class, PARENT_ID)).thenReturn(parent());
             when(addressMapper.convertToEntity(input.address())).thenReturn(address());
             when(studentRepo.existsByCpf("12345678901")).thenReturn(true);
 
@@ -173,7 +168,6 @@ class StudentServiceTest {
             StudentRequestDTO input = request();
 
             when(parentService.findById(PARENT_ID)).thenReturn(parentResponseDTO());
-            when(entityManager.getReference(Parent.class, PARENT_ID)).thenReturn(parent());
             when(addressMapper.convertToEntity(input.address())).thenReturn(address());
             when(studentRepo.existsByCpf("12345678901")).thenReturn(false);
             when(studentRepo.existsByEmail("joao@email.com")).thenReturn(true);
@@ -235,7 +229,6 @@ class StudentServiceTest {
 
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(existingStudent));
             when(parentService.findById(PARENT_ID)).thenReturn(updatedParentResponseDTO());
-            when(entityManager.getReference(Parent.class, PARENT_ID)).thenReturn(parent);
             when(addressMapper.convertToEntity(input.address())).thenReturn(address);
             when(studentRepo.existsByEmailAndIdNot("joao.pedro@email.com", STUDENT_ID)).thenReturn(false);
             when(studentMapper.convertToDto(existingStudent)).thenReturn(expected);
@@ -248,7 +241,7 @@ class StudentServiceTest {
             assertThat(existingStudent.getEmail()).isEqualTo("joao.pedro@email.com");
             assertThat(existingStudent.getBirthdate()).isEqualTo(LocalDate.of(2011, 6, 15));
             assertThat(existingStudent.getSchool()).isEqualTo("Nova Escola");
-            assertThat(existingStudent.getParent()).isEqualTo(parent);
+            assertThat(existingStudent.getParentId()).isEqualTo(parent.getId());
             assertThat(existingStudent.getAddress()).isEqualTo(address);
             assertThat(existingStudent.getCpf()).isEqualTo("12345678901");
             verify(studentRepo).existsByEmailAndIdNot("joao.pedro@email.com", STUDENT_ID);
@@ -262,7 +255,6 @@ class StudentServiceTest {
 
             when(studentRepo.findById(STUDENT_ID)).thenReturn(Optional.of(existingStudent));
             when(parentService.findById(PARENT_ID)).thenReturn(updatedParentResponseDTO());
-            when(entityManager.getReference(Parent.class, PARENT_ID)).thenReturn(secondParent());
             when(addressMapper.convertToEntity(input.address())).thenReturn(secondAddress());
             when(studentRepo.existsByEmailAndIdNot("joao.pedro@email.com", STUDENT_ID)).thenReturn(true);
 
@@ -622,7 +614,7 @@ class StudentServiceTest {
             LocalDate.of(2010, 5, 10),
             "12345678901",
             "Escola Central",
-            parent(),
+            PARENT_ID,
             address()
         );
         input.setId(STUDENT_ID);
@@ -639,7 +631,7 @@ class StudentServiceTest {
             LocalDate.of(2012, 7, 20),
             "98765432100",
             "Colégio Brasil",
-            parent(),
+            PARENT_ID,
             secondAddress()
         );
         input.setId(SECOND_STUDENT_ID);

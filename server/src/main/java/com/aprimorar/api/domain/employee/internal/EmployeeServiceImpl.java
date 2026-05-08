@@ -1,7 +1,5 @@
 package com.aprimorar.api.domain.employee.internal;
 
-import com.aprimorar.api.domain.auth.api.UserService;
-import com.aprimorar.api.domain.auth.api.exception.UserNotFoundException;
 import com.aprimorar.api.domain.employee.api.EmployeeService;
 import com.aprimorar.api.domain.employee.api.dto.EmployeeSummaryDTO;
 import com.aprimorar.api.domain.employee.api.dto.EmployeeOptionsDTO;
@@ -18,10 +16,6 @@ import com.aprimorar.api.shared.PageDTO;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.YearMonth;
-import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -46,20 +40,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepo;
     private final EmployeeMapper employeeMapper;
     private final ObjectProvider<EventService> eventService;
-    private final ObjectProvider<UserService> userService;
     private final Clock clock;
 
     public EmployeeServiceImpl(
         EmployeeRepository employeeRepo,
         EmployeeMapper employeeMapper,
         ObjectProvider<EventService> eventService,
-        ObjectProvider<UserService> userService,
         Clock clock
     ) {
         this.employeeRepo = employeeRepo;
         this.employeeMapper = employeeMapper;
         this.eventService = eventService;
-        this.userService = userService;
         this.clock = clock;
     }
 
@@ -208,14 +199,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void deleteEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
         eventService.getObject().reassignEmployeeEventsToGhost(employeeId);
-
-        try {
-            userService.getObject().findByEmployeeId(employeeId);
-            userService.getObject().deleteByEmployeeId(employeeId);
-            log.info("Usuário associado ao colaborador {} deletado com sucesso.", employee.getName().toUpperCase());
-        } catch (UserNotFoundException ignored) {
-            // Employee records can exist without an associated login user.
-        }
 
         employeeRepo.delete(employee);
         log.info(

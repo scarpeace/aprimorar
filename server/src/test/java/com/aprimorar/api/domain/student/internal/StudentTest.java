@@ -20,22 +20,6 @@ import org.junit.jupiter.api.Test;
 
 class StudentTest {
 
-    @Test
-    @DisplayName("should mark student read queries to fetch responsável explicitly")
-    void shouldMarkStudentReadQueriesToFetchResponsavelExplicitly() throws NoSuchMethodException {
-        Method findById = StudentRepository.class.getMethod("findById", Object.class);
-        Method findAllByParentId = StudentRepository.class.getMethod(
-            "findAllByParentId",
-            UUID.class,
-            org.springframework.data.domain.Pageable.class
-        );
-
-        assertThat(entityGraph(findById)).isNotNull();
-        assertThat(entityGraph(findById).attributePaths()).containsExactly("parent");
-        assertThat(entityGraph(findAllByParentId)).isNotNull();
-        assertThat(entityGraph(findAllByParentId).attributePaths()).containsExactly("parent");
-    }
-
     @Nested
     @DisplayName("Validation methods")
     class ValidationMethods {
@@ -60,13 +44,7 @@ class StudentTest {
         @Test
         @DisplayName("should create when values are valid")
         void shouldCreateWhenValuesAreValid() {
-            Parent responsavel = parent(
-                UUID.fromString("00000000-0000-0000-0000-000000000101"),
-                "Maria Silva",
-                "maria@email.com",
-                "61977777777",
-                "98765432100"
-            );
+            UUID responsavelId = UUID.fromString("00000000-0000-0000-0000-000000000101");
 
             Student input = new Student(
                 "João Silva",
@@ -75,7 +53,7 @@ class StudentTest {
                 LocalDate.of(2010, 5, 10),
                 "12345678901",
                 "Escola Central",
-                responsavel,
+                responsavelId,
                 address()
             );
 
@@ -88,20 +66,14 @@ class StudentTest {
             assertThat(input.getCpf()).isEqualTo("12345678901");
             assertThat(input.getSchool()).isEqualTo("Escola Central");
             assertThat(input.getId()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000201"));
-            assertThat(input.getParent()).isSameAs(responsavel);
+            assertThat(input.getParentId()).isEqualTo(responsavelId);
             assertThat(input.getAddress().getCity()).isEqualTo("Brasília");
         }
 
         @Test
         @DisplayName("should update details without changing cpf")
         void shouldUpdateDetailsWithoutChangingCpf() {
-            Parent initialResponsavel = parent(
-                UUID.fromString("00000000-0000-0000-0000-000000000101"),
-                "Maria Silva",
-                "maria@email.com",
-                "61977777777",
-                "98765432100"
-            );
+            UUID initialResponsavelId = UUID.fromString("00000000-0000-0000-0000-000000000101");
 
             Student input = new Student(
                 "João Silva",
@@ -110,17 +82,11 @@ class StudentTest {
                 LocalDate.of(2010, 5, 10),
                 "12345678901",
                 "Escola Central",
-                initialResponsavel,
+                initialResponsavelId,
                 address()
             );
 
-            Parent updatedParent = parent(
-                UUID.fromString("00000000-0000-0000-0000-000000000102"),
-                "Carlos Silva",
-                "carlos@email.com",
-                "61988888888",
-                "98765432100"
-            );
+            UUID updatedParentId = UUID.fromString("00000000-0000-0000-0000-000000000102");
             Address updatedAddress = new Address();
             updatedAddress.setStreet("Rua B");
             updatedAddress.setDistrict("Asa Sul");
@@ -135,7 +101,7 @@ class StudentTest {
                 "joao.pedro@email.com",
                 LocalDate.of(2011, 6, 15),
                 "Escola Atualizada",
-                updatedParent,
+                updatedParentId,
                 updatedAddress
             );
 
@@ -144,7 +110,7 @@ class StudentTest {
             assertThat(input.getEmail()).isEqualTo("joao.pedro@email.com");
             assertThat(input.getBirthdate()).isEqualTo(LocalDate.of(2011, 6, 15));
             assertThat(input.getSchool()).isEqualTo("Escola Atualizada");
-            assertThat(input.getParent()).isSameAs(updatedParent);
+            assertThat(input.getParentId()).isEqualTo(updatedParentId);
             assertThat(input.getAddress().getStreet()).isEqualTo("Rua B");
             assertThat(input.getCpf()).isEqualTo("12345678901");
         }
@@ -159,13 +125,7 @@ class StudentTest {
                 LocalDate.of(2010, 5, 10),
                 " ",
                 "Escola Central",
-                parent(
-                    UUID.fromString("00000000-0000-0000-0000-000000000101"),
-                    "Maria Silva",
-                    "maria@email.com",
-                    "61977777777",
-                    "98765432100"
-                ),
+                UUID.fromString("00000000-0000-0000-0000-000000000101"),
                 address()
             ))
                 .isInstanceOf(InvalidStudentException.class)
@@ -201,13 +161,7 @@ class StudentTest {
                 "joao@email.com",
                 LocalDate.of(2010, 5, 10),
                 "Escola Central",
-                parent(
-                    UUID.fromString("00000000-0000-0000-0000-000000000101"),
-                    "Maria Silva",
-                    "maria@email.com",
-                    "61977777777",
-                    "98765432100"
-                ),
+                UUID.fromString("00000000-0000-0000-0000-000000000101"),
                 null
             ))
                 .isInstanceOf(InvalidStudentException.class)
@@ -223,13 +177,7 @@ class StudentTest {
             LocalDate.of(2010, 5, 10),
             "12345678901",
             "Escola Central",
-            parent(
-                UUID.fromString("00000000-0000-0000-0000-000000000101"),
-                "Maria Silva",
-                "maria@email.com",
-                "61977777777",
-                "98765432100"
-            ),
+            UUID.fromString("00000000-0000-0000-0000-000000000101"),
             address()
         );
         student.setId(UUID.fromString("00000000-0000-0000-0000-000000000201"));
