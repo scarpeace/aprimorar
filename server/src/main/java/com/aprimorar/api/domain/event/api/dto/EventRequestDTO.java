@@ -1,6 +1,6 @@
 package com.aprimorar.api.domain.event.api.dto;
 
-import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.domain.event.internal.EventContent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;

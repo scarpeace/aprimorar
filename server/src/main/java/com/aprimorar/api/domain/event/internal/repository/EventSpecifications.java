@@ -1,9 +1,11 @@
 package com.aprimorar.api.domain.event.internal.repository;
 
 import com.aprimorar.api.domain.event.internal.Event;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.data.jpa.domain.Specification;
 
 public final class EventSpecifications {

@@ -2,9 +2,9 @@ package com.aprimorar.api.domain.event.internal;
 
 import com.aprimorar.api.domain.event.api.exception.InvalidEventException;
 import com.aprimorar.api.domain.event.api.exception.NotAllowedToUpdateEventException;
-import com.aprimorar.api.enums.EventContent;
-import com.aprimorar.api.shared.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
@@ -13,8 +13,13 @@ import java.util.UUID;
 
 // TODO: Adicionar campos do google calendar para a implementação
 @Entity
+@Getter
 @Table(name = "tb_events")
-public class Event extends BaseEntity {
+public class Event {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private Long id;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -90,50 +95,6 @@ public class Event extends BaseEntity {
     @Transient
     public BigDecimal getProfit() {
         return price.subtract(payment);
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Instant getStartDate() {
-        return startDate;
-    }
-
-    public Instant getEndDateTime() {
-        return endDate;
-    }
-
-    public BigDecimal getPayment() {
-        return payment;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public EventContent getContent() {
-        return content;
-    }
-
-    public Instant getEmployeePaymentDate() {
-        return employeePaymentDate;
-    }
-
-    public Instant getStudentChargeDate() {
-        return studentChargeDate;
-    }
-
-    public UUID getStudentId() {
-        return studentId;
-    }
-
-    public UUID getEmployeeId() {
-        return employeeId;
     }
 
     public Event update(

@@ -1,4 +1,4 @@
-package com.aprimorar.api.enums;
+package com.aprimorar.api.domain.event.internal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

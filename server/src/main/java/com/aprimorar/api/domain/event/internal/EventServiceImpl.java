@@ -39,23 +39,17 @@ public class EventServiceImpl implements EventService {
     private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
 
     private final EventRepository eventRepo;
-    private final ObjectProvider<StudentService> studentService;
-    private final ObjectProvider<EmployeeService> employeeService;
     private final EventMapper eventMapper;
     private final TransactionService transactionService;
     private final Clock clock;
 
     public EventServiceImpl(
         EventRepository eventRepo,
-        ObjectProvider<StudentService> studentService,
-        ObjectProvider<EmployeeService> employeeService,
         EventMapper eventMapper,
         TransactionService transactionService,
         Clock clock
     ) {
         this.eventRepo = eventRepo;
-        this.studentService = studentService;
-        this.employeeService = employeeService;
         this.eventMapper = eventMapper;
         this.transactionService = transactionService;
         this.clock = clock;
@@ -205,7 +199,7 @@ public class EventServiceImpl implements EventService {
             employeeResponse.name(),
             Instant.now(clock)
         );
-        transactionService.syncEventTransactions(event.getId(), event.getPrice(), event.getPayment());
+        transactionService.syncEventTransactions(event., event.getPrice(), event.getPayment());
 
         log.info("Evento {} atualizado com sucesso.", event.getTitle().toUpperCase());
         return eventMapper.convertToDto(event);

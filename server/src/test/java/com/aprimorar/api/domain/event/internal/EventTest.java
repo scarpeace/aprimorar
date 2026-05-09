@@ -1,7 +1,5 @@
 package com.aprimorar.api.domain.event.internal;
 
-import com.aprimorar.api.domain.event.internal.Event;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -13,7 +11,7 @@ import com.aprimorar.api.domain.parent.internal.Parent;
 import com.aprimorar.api.domain.student.internal.Student;
 import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.enums.Duty;
-import com.aprimorar.api.enums.EventContent;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;

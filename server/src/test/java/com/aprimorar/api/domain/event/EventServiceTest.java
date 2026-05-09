@@ -34,9 +34,9 @@ import com.aprimorar.api.domain.student.api.exception.StudentNotFoundException;
 import com.aprimorar.api.domain.student.internal.Student;
 import com.aprimorar.api.enums.BrazilianStates;
 import com.aprimorar.api.enums.Duty;
-import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.domain.event.internal.EventContent;
 import com.aprimorar.api.shared.PageDTO;
-import jakarta.persistence.EntityManager;
+
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;

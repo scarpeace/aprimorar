@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.aprimorar.api.enums.EventContent;
+import com.aprimorar.api.domain.event.internal.EventContent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
