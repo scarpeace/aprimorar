@@ -1,7 +1,0 @@
-package com.aprimorar.api.domain.parent.api.exception;
-
-public class ParentNotFoundException extends RuntimeException {
-    public ParentNotFoundException(String message) {
-        super(message);
-    }
-}

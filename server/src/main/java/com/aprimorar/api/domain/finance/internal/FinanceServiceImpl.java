@@ -1,8 +1,8 @@
 package com.aprimorar.api.domain.finance.internal;
 
-import com.aprimorar.api.domain.employee.api.dto.EmployeeSummaryDTO;
-import com.aprimorar.api.domain.employee.api.exception.EmployeeNotFoundException;
-import com.aprimorar.api.domain.employee.api.EmployeeService;
+import com.aprimorar.api.domain.registration.employee.api.dto.EmployeeSummaryDTO;
+import com.aprimorar.api.domain.registration.employee.api.exception.EmployeeNotFoundException;
+import com.aprimorar.api.domain.registration.employee.api.EmployeeService;
 import com.aprimorar.api.domain.event.api.EventService;
 import com.aprimorar.api.domain.finance.api.FinanceService;
 import com.aprimorar.api.domain.finance.api.dto.FinanceSummaryDTO;
@@ -12,9 +12,9 @@ import com.aprimorar.api.domain.finance.internal.TransactionMapper;
 import com.aprimorar.api.domain.finance.api.exception.TransactionNotFoundException;
 import com.aprimorar.api.domain.finance.internal.repository.TransactionRepository;
 import com.aprimorar.api.domain.finance.internal.repository.TransactionSpecifications;
-import com.aprimorar.api.domain.student.api.StudentService;
-import com.aprimorar.api.domain.student.api.dto.StudentSummaryDTO;
-import com.aprimorar.api.domain.student.api.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.registration.student.api.StudentService;
+import com.aprimorar.api.domain.registration.student.api.dto.StudentSummaryDTO;
+import com.aprimorar.api.domain.registration.student.api.exception.StudentNotFoundException;
 import com.aprimorar.api.enums.TransactionCategory;
 import com.aprimorar.api.enums.TransactionOrigin;
 import com.aprimorar.api.enums.TransactionStatus;

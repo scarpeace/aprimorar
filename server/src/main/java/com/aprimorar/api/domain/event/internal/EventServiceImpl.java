@@ -16,9 +16,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aprimorar.api.domain.employee.api.EmployeeService;
-import com.aprimorar.api.domain.employee.api.dto.EmployeeResponseDTO;
-import com.aprimorar.api.domain.employee.api.exception.EmployeeNotFoundException;
+import com.aprimorar.api.domain.registration.employee.api.EmployeeService;
+import com.aprimorar.api.domain.registration.employee.api.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.registration.employee.api.exception.EmployeeNotFoundException;
 import com.aprimorar.api.domain.event.api.EventService;
 import com.aprimorar.api.domain.event.api.dto.EventRequestDTO;
 import com.aprimorar.api.domain.event.api.dto.EventResponseDTO;
@@ -28,9 +28,9 @@ import com.aprimorar.api.domain.event.api.exception.InvalidEventException;
 import com.aprimorar.api.domain.event.internal.repository.EventRepository;
 import com.aprimorar.api.domain.event.internal.repository.EventSpecifications;
 import com.aprimorar.api.domain.finance.api.TransactionService;
-import com.aprimorar.api.domain.student.api.StudentService;
-import com.aprimorar.api.domain.student.api.dto.StudentResponseDTO;
-import com.aprimorar.api.domain.student.api.exception.StudentNotFoundException;
+import com.aprimorar.api.domain.registration.student.api.StudentService;
+import com.aprimorar.api.domain.registration.student.api.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.registration.student.api.exception.StudentNotFoundException;
 import com.aprimorar.api.shared.PageDTO;
 
 @Service

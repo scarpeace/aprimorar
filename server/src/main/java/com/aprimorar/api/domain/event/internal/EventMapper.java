@@ -1,10 +1,10 @@
 package com.aprimorar.api.domain.event.internal;
 
-import com.aprimorar.api.domain.employee.api.EmployeeService;
-import com.aprimorar.api.domain.employee.api.dto.EmployeeResponseDTO;
+import com.aprimorar.api.domain.registration.employee.api.EmployeeService;
+import com.aprimorar.api.domain.registration.employee.api.dto.EmployeeResponseDTO;
 import com.aprimorar.api.domain.event.api.dto.EventResponseDTO;
-import com.aprimorar.api.domain.student.api.StudentService;
-import com.aprimorar.api.domain.student.api.dto.StudentResponseDTO;
+import com.aprimorar.api.domain.registration.student.api.StudentService;
+import com.aprimorar.api.domain.registration.student.api.dto.StudentResponseDTO;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 

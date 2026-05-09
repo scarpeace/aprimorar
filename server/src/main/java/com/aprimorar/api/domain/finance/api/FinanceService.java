@@ -1,10 +1,10 @@
 package com.aprimorar.api.domain.finance.api;
 
-import com.aprimorar.api.domain.employee.api.dto.EmployeeSummaryDTO;
+import com.aprimorar.api.domain.registration.employee.api.dto.EmployeeSummaryDTO;
 import com.aprimorar.api.domain.finance.api.dto.FinanceSummaryDTO;
 import com.aprimorar.api.domain.finance.api.dto.TransactionRequestDTO;
 import com.aprimorar.api.domain.finance.api.dto.TransactionResponseDTO;
-import com.aprimorar.api.domain.student.api.dto.StudentSummaryDTO;
+import com.aprimorar.api.domain.registration.student.api.dto.StudentSummaryDTO;
 import com.aprimorar.api.enums.TransactionCategory;
 import com.aprimorar.api.enums.TransactionStatus;
 import com.aprimorar.api.enums.TransactionType;
