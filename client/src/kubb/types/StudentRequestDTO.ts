@@ -21,6 +21,11 @@ export type StudentRequestDTO = {
    */
   birthdate: string;
   /**
+   * @description Pix do aluno
+   * @type string
+   */
+  pix?: string | null;
+  /**
    * @description CPF do aluno
    * @minLength 1
    * @type string

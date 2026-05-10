@@ -4,8 +4,6 @@ import { toast } from "sonner";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
   getEventByIdQueryKey,
-  getEventsByEmployeeIdQueryKey,
-  getEventsByStudentIdQueryKey,
   getEventsQueryKey,
   getFinanceSummaryQueryKey,
   useCreateEvent,
@@ -28,10 +26,10 @@ export function useEventMutations() {
         toast.success("Evento criado com sucesso");
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getEventsByEmployeeIdQueryKey(createdEvent.employeeId),
+          queryKey: getEventByIdQueryKey(createdEvent.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getEventsByStudentIdQueryKey(createdEvent.studentId),
+          queryKey: getEventByIdQueryKey(createdEvent.studentId),
         });
         queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
         queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", createdEvent.employeeId] });
@@ -51,10 +49,10 @@ export function useEventMutations() {
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
         queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
         queryClient.invalidateQueries({
-          queryKey: getEventsByEmployeeIdQueryKey(updatedEvent.employeeId),
+          queryKey: getEventByIdQueryKey(updatedEvent.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getEventsByStudentIdQueryKey(updatedEvent.studentId),
+          queryKey: getEventByIdQueryKey(updatedEvent.studentId),
         });
         queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
         queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", updatedEvent.employeeId] });
@@ -71,7 +69,7 @@ export function useEventMutations() {
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
         queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
         queryClient.invalidateQueries({
-          queryKey: getEventsByStudentIdQueryKey(updatedEvent.studentId),
+          queryKey: getEventByIdQueryKey(updatedEvent.studentId),
         });
         queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
         queryClient.invalidateQueries({ queryKey: ["finance", "student-summary", updatedEvent.studentId] });
@@ -89,7 +87,7 @@ export function useEventMutations() {
         queryClient.invalidateQueries({ queryKey: getEventsQueryKey() });
         queryClient.invalidateQueries({ queryKey: getEventByIdQueryKey(variables.id) });
         queryClient.invalidateQueries({
-          queryKey: getEventsByEmployeeIdQueryKey(updatedEvent.employeeId),
+          queryKey: getEventByIdQueryKey(updatedEvent.employeeId),
         });
         queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", updatedEvent.employeeId] });
       },

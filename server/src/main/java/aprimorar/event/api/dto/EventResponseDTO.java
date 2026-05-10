@@ -51,17 +51,17 @@ public record EventResponseDTO(
     @Schema(nullable = false, description = "ID do estudante vinculado ao evento", example = "123e4567-e89b-12d3-a456-426614174000")
     UUID studentId,
 
-    // @NotNull
-    // @Schema(nullable = false, description = "Nome do aluno vinculado ao evento", example = "John Doe")
-    // String studentName,
+    @NotNull
+    @Schema(nullable = false, description = "Nome do aluno vinculado ao evento", example = "John Doe")
+    String studentName,
 
     @NotNull
     @Schema(nullable = false, description = "ID do colaborador vinculado ao evento", example = "123e4567-e89b-12d3-a456-426614174001")
     UUID employeeId,
 
-    // @NotNull
-    // @Schema(nullable = false, description = "Nome do colaborador vinculado ao evento", example = "Jane Doe")
-    // String employeeName,
+    @NotNull
+    @Schema(nullable = false, description = "Nome do colaborador vinculado ao evento", example = "Jane Doe")
+    String employeeName,
 
     @Nullable
     @Schema(nullable = true, description = "Data de pagamento ao colaborador", example = "2024-03-10T15:33:42Z")

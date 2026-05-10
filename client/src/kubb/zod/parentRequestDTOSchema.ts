@@ -13,6 +13,11 @@ export const parentRequestDTOSchema = z
     name: z.string().min(1).describe("Nome do responsável"),
     email: z.string().min(1).describe("Email do responsável"),
     contact: z.string().min(1).describe("Contato do responsável"),
+    birthdate: z.iso
+      .date()
+      .describe("Data de nascimento do responsável")
+      .nullish(),
+    pix: z.string().describe("Pix do responsável").nullish(),
     cpf: z.string().min(1).describe("CPF do responsável"),
   })
   .describe("Formato de payload para criar um novo responsável");

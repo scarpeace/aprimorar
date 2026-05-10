@@ -159,4 +159,5 @@ public interface EventRepository extends JpaRepository<Event, UUID>, JpaSpecific
     List<EventContentCount> findContentDistributionInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     long countByStartDateGreaterThanEqualAndStartDateLessThan(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
 }

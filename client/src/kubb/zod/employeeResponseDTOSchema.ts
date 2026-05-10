@@ -16,7 +16,7 @@ export const employeeResponseDTOSchema = z.object({
   duty: z
     .enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"])
     .describe("Função/Papel do funcionário"),
-  archivedAt: z.iso.datetime().nullish(),
+  active: z.boolean().nullish(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime().nullish(),
 });

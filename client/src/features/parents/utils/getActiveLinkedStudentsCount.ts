@@ -1,5 +1,5 @@
 type LinkedStudentSummary = {
-  archivedAt?: string | null;
+  active?: boolean | null;
 } & Record<string, unknown>;
 
 type LinkedStudentsPage = {
@@ -8,6 +8,6 @@ type LinkedStudentsPage = {
 
 export function getActiveLinkedStudentsCount(linkedStudentsPage: LinkedStudentsPage) {
   return (linkedStudentsPage?.content ?? []).filter(
-    (student: LinkedStudentSummary) => student.archivedAt == null,
+    (student: LinkedStudentSummary) => student.active !== false,
   ).length;
 }

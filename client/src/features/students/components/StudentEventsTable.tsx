@@ -6,7 +6,7 @@ import { SectionCard } from "@/components/ui/section-card";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
-import { useGetEventsByStudentId, type EventResponseDTO } from "@/kubb";
+import { useGetEventById, useGetEventsByStudentId, type EventResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
@@ -31,12 +31,10 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
 
   const eventsQuery = useGetEventsByStudentId(studentId, {
     page: currentPage,
-    search: debouncedSearchTerm,
     sort: ["startDate,desc", "id,asc"],
-    startDate: startDateStr || undefined,
-    endDate: endDateStr || undefined,
-    hideCharged
   });
+
+  console.log(eventsQuery.data)
 
   const { toggleStudentCharge } = useEventMutations();
 

@@ -26,6 +26,16 @@ export type ParentRequestDTO = {
    */
   contact: string;
   /**
+   * @description Data de nascimento do responsável
+   * @type string, date
+   */
+  birthdate?: string | null;
+  /**
+   * @description Pix do responsável
+   * @type string
+   */
+  pix?: string | null;
+  /**
    * @description CPF do responsável
    * @minLength 1
    * @type string

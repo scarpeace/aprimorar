@@ -1,13 +1,9 @@
-export type { AuthMeQueryKey } from "./hooks/auth/useAuthMe.ts";
-export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
-export type { LogoutMutationKey } from "./hooks/auth/useLogout.ts";
 export type { GetDashboardSummaryQueryKey } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
 export type { ArchiveEmployeeMutationKey } from "./hooks/employee/useArchiveEmployee.ts";
 export type { CreateEmployeeMutationKey } from "./hooks/employee/useCreateEmployee.ts";
 export type { DeleteEmployeeMutationKey } from "./hooks/employee/useDeleteEmployee.ts";
 export type { GetEmployeeByIdQueryKey } from "./hooks/employee/useGetEmployeeById.ts";
 export type { GetEmployeeOptionsQueryKey } from "./hooks/employee/useGetEmployeeOptions.ts";
-export type { GetEmployeeSummaryQueryKey } from "./hooks/employee/useGetEmployeeSummary.ts";
 export type { GetEmployeesQueryKey } from "./hooks/employee/useGetEmployees.ts";
 export type { UnarchiveEmployeeMutationKey } from "./hooks/employee/useUnarchiveEmployee.ts";
 export type { UpdateEmployeeMutationKey } from "./hooks/employee/useUpdateEmployee.ts";
@@ -23,6 +19,7 @@ export type { UpdateEventMutationKey } from "./hooks/event/useUpdateEvent.ts";
 export type { CreateGeneralExpenseMutationKey } from "./hooks/finance/useCreateGeneralExpense.ts";
 export type { DeleteGeneralExpenseMutationKey } from "./hooks/finance/useDeleteGeneralExpense.ts";
 export type { GetFinanceSummaryQueryKey } from "./hooks/finance/useGetFinanceSummary.ts";
+export type { GetFinanceTransactionsQueryKey } from "./hooks/finance/useGetFinanceTransactions.ts";
 export type { GetGeneralExpenseByIdQueryKey } from "./hooks/finance/useGetGeneralExpenseById.ts";
 export type { GetGeneralExpensesQueryKey } from "./hooks/finance/useGetGeneralExpenses.ts";
 export type { UpdateGeneralExpenseMutationKey } from "./hooks/finance/useUpdateGeneralExpense.ts";
@@ -38,15 +35,11 @@ export type { ArchiveStudentMutationKey } from "./hooks/student/useArchiveStuden
 export type { CreateStudentMutationKey } from "./hooks/student/useCreateStudent.ts";
 export type { DeleteStudentMutationKey } from "./hooks/student/useDeleteStudent.ts";
 export type { GetStudentByIdQueryKey } from "./hooks/student/useGetStudentById.ts";
-export type { GetStudentSummaryQueryKey } from "./hooks/student/useGetStudentSummary.ts";
 export type { GetStudentsQueryKey } from "./hooks/student/useGetStudents.ts";
 export type { GetStudentsByParentQueryKey } from "./hooks/student/useGetStudentsByParent.ts";
 export type { GetStudentsOptionsQueryKey } from "./hooks/student/useGetStudentsOptions.ts";
 export type { UnarchiveStudentMutationKey } from "./hooks/student/useUnarchiveStudent.ts";
 export type { UpdateStudentMutationKey } from "./hooks/student/useUpdateStudent.ts";
-export type { CreateUserMutationKey } from "./hooks/user management/useCreateUser.ts";
-export type { DeleteUserMutationKey } from "./hooks/user management/useDeleteUser.ts";
-export type { ListUsersQueryKey } from "./hooks/user management/useListUsers.ts";
 export type {
   AddressRequestDTO,
   AddressRequestDTOStateEnumKey,
@@ -55,12 +48,6 @@ export type {
   AddressResponseDTO,
   AddressResponseDTOStateEnumKey,
 } from "./types/AddressResponseDTO.ts";
-export type {
-  AuthCurrentUserResponseDTO,
-  AuthCurrentUserResponseDTODutyEnumKey,
-  AuthCurrentUserResponseDTORoleEnumKey,
-} from "./types/AuthCurrentUserResponseDTO.ts";
-export type { AuthLoginRequestDTO } from "./types/AuthLoginRequestDTO.ts";
 export type { ClassesByContentDTO } from "./types/ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./types/DashboardSummaryResponseDTO.ts";
 export type { EmployeeOptionsDTO } from "./types/EmployeeOptionsDTO.ts";
@@ -72,7 +59,6 @@ export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./types/EmployeeResponseDTO.ts";
-export type { EmployeeSummaryDTO } from "./types/EmployeeSummaryDTO.ts";
 export type {
   EventRequestDTO,
   EventRequestDTOContentEnumKey,
@@ -82,52 +68,29 @@ export type {
   EventResponseDTOContentEnumKey,
 } from "./types/EventResponseDTO.ts";
 export type { FinanceSummaryDTO } from "./types/FinanceSummaryDTO.ts";
-export type {
-  GeneralExpenseRequestDTO,
-  GeneralExpenseRequestDTOCategoryEnumKey,
-} from "./types/GeneralExpenseRequestDTO.ts";
-export type {
-  GeneralExpenseResponseDTO,
-  GeneralExpenseResponseDTOCategoryEnumKey,
-} from "./types/GeneralExpenseResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./types/PageDTOEmployeeResponseDTO.ts";
 export type { PageDTOEventResponseDTO } from "./types/PageDTOEventResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./types/PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./types/PageDTOStudentResponseDTO.ts";
 export type { PageMetadata } from "./types/PageMetadata.ts";
-export type { PagedModelGeneralExpenseResponseDTO } from "./types/PagedModelGeneralExpenseResponseDTO.ts";
+export type { PagedModelTransactionResponseDTO } from "./types/PagedModelTransactionResponseDTO.ts";
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
 export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
-export type { StudentResponsibleSummaryDTO } from "./types/StudentResponsibleSummaryDTO.ts";
-export type { StudentSummaryDTO } from "./types/StudentSummaryDTO.ts";
 export type {
-  UserCreateRequestDTO,
-  UserCreateRequestDTORoleEnumKey,
-} from "./types/UserCreateRequestDTO.ts";
+  TransactionRequestDTO,
+  TransactionRequestDTOCategoryEnumKey,
+} from "./types/TransactionRequestDTO.ts";
 export type {
-  UserResponseDTO,
-  UserResponseDTORoleEnumKey,
-} from "./types/UserResponseDTO.ts";
-export type {
-  AuthMe200,
-  AuthMeQuery,
-  AuthMeQueryResponse,
-} from "./types/auth/AuthMe.ts";
-export type {
-  Login200,
-  LoginMutation,
-  LoginMutationRequest,
-  LoginMutationResponse,
-} from "./types/auth/Login.ts";
-export type {
-  Logout204,
-  LogoutMutation,
-  LogoutMutationResponse,
-} from "./types/auth/Logout.ts";
+  TransactionResponseDTO,
+  TransactionResponseDTOCategoryEnumKey,
+  TransactionResponseDTOOriginEnumKey,
+  TransactionResponseDTOStatusEnumKey,
+  TransactionResponseDTOTypeEnumKey,
+} from "./types/TransactionResponseDTO.ts";
 export type {
   GetDashboardSummary200,
   GetDashboardSummaryQuery,
@@ -163,13 +126,6 @@ export type {
   GetEmployeeOptionsQuery,
   GetEmployeeOptionsQueryResponse,
 } from "./types/employee/GetEmployeeOptions.ts";
-export type {
-  GetEmployeeSummary200,
-  GetEmployeeSummaryPathParams,
-  GetEmployeeSummaryQuery,
-  GetEmployeeSummaryQueryParams,
-  GetEmployeeSummaryQueryResponse,
-} from "./types/employee/GetEmployeeSummary.ts";
 export type {
   GetEmployees200,
   GetEmployeesQuery,
@@ -264,6 +220,15 @@ export type {
   GetFinanceSummaryQueryResponse,
 } from "./types/finance/GetFinanceSummary.ts";
 export type {
+  GetFinanceTransactions200,
+  GetFinanceTransactionsQuery,
+  GetFinanceTransactionsQueryParams,
+  GetFinanceTransactionsQueryParamsCategoryEnumKey,
+  GetFinanceTransactionsQueryParamsStatusEnumKey,
+  GetFinanceTransactionsQueryParamsTypeEnumKey,
+  GetFinanceTransactionsQueryResponse,
+} from "./types/finance/GetFinanceTransactions.ts";
+export type {
   GetGeneralExpenseById200,
   GetGeneralExpenseByIdPathParams,
   GetGeneralExpenseByIdQuery,
@@ -356,13 +321,6 @@ export type {
   GetStudentByIdQueryResponse,
 } from "./types/student/GetStudentById.ts";
 export type {
-  GetStudentSummary200,
-  GetStudentSummaryPathParams,
-  GetStudentSummaryQuery,
-  GetStudentSummaryQueryParams,
-  GetStudentSummaryQueryResponse,
-} from "./types/student/GetStudentSummary.ts";
-export type {
   GetStudents200,
   GetStudentsQuery,
   GetStudentsQueryParams,
@@ -393,35 +351,6 @@ export type {
   UpdateStudentMutationResponse,
   UpdateStudentPathParams,
 } from "./types/student/UpdateStudent.ts";
-export type {
-  CreateUser201,
-  CreateUserMutation,
-  CreateUserMutationRequest,
-  CreateUserMutationResponse,
-} from "./types/user management/CreateUser.ts";
-export type {
-  DeleteUser204,
-  DeleteUserMutation,
-  DeleteUserMutationResponse,
-  DeleteUserPathParams,
-} from "./types/user management/DeleteUser.ts";
-export type {
-  ListUsers200,
-  ListUsersQuery,
-  ListUsersQueryResponse,
-} from "./types/user management/ListUsers.ts";
-export { authMe } from "./hooks/auth/useAuthMe.ts";
-export { authMeQueryKey } from "./hooks/auth/useAuthMe.ts";
-export { authMeQueryOptions } from "./hooks/auth/useAuthMe.ts";
-export { useAuthMe } from "./hooks/auth/useAuthMe.ts";
-export { login } from "./hooks/auth/useLogin.ts";
-export { loginMutationKey } from "./hooks/auth/useLogin.ts";
-export { loginMutationOptions } from "./hooks/auth/useLogin.ts";
-export { useLogin } from "./hooks/auth/useLogin.ts";
-export { logout } from "./hooks/auth/useLogout.ts";
-export { logoutMutationKey } from "./hooks/auth/useLogout.ts";
-export { logoutMutationOptions } from "./hooks/auth/useLogout.ts";
-export { useLogout } from "./hooks/auth/useLogout.ts";
 export { getDashboardSummary } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
 export { getDashboardSummaryQueryKey } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
 export { getDashboardSummaryQueryOptions } from "./hooks/dashboard-controller/useGetDashboardSummary.ts";
@@ -446,10 +375,6 @@ export { getEmployeeOptions } from "./hooks/employee/useGetEmployeeOptions.ts";
 export { getEmployeeOptionsQueryKey } from "./hooks/employee/useGetEmployeeOptions.ts";
 export { getEmployeeOptionsQueryOptions } from "./hooks/employee/useGetEmployeeOptions.ts";
 export { useGetEmployeeOptions } from "./hooks/employee/useGetEmployeeOptions.ts";
-export { getEmployeeSummary } from "./hooks/employee/useGetEmployeeSummary.ts";
-export { getEmployeeSummaryQueryKey } from "./hooks/employee/useGetEmployeeSummary.ts";
-export { getEmployeeSummaryQueryOptions } from "./hooks/employee/useGetEmployeeSummary.ts";
-export { useGetEmployeeSummary } from "./hooks/employee/useGetEmployeeSummary.ts";
 export { getEmployees } from "./hooks/employee/useGetEmployees.ts";
 export { getEmployeesQueryKey } from "./hooks/employee/useGetEmployees.ts";
 export { getEmployeesQueryOptions } from "./hooks/employee/useGetEmployees.ts";
@@ -510,6 +435,10 @@ export { getFinanceSummary } from "./hooks/finance/useGetFinanceSummary.ts";
 export { getFinanceSummaryQueryKey } from "./hooks/finance/useGetFinanceSummary.ts";
 export { getFinanceSummaryQueryOptions } from "./hooks/finance/useGetFinanceSummary.ts";
 export { useGetFinanceSummary } from "./hooks/finance/useGetFinanceSummary.ts";
+export { getFinanceTransactions } from "./hooks/finance/useGetFinanceTransactions.ts";
+export { getFinanceTransactionsQueryKey } from "./hooks/finance/useGetFinanceTransactions.ts";
+export { getFinanceTransactionsQueryOptions } from "./hooks/finance/useGetFinanceTransactions.ts";
+export { useGetFinanceTransactions } from "./hooks/finance/useGetFinanceTransactions.ts";
 export { getGeneralExpenseById } from "./hooks/finance/useGetGeneralExpenseById.ts";
 export { getGeneralExpenseByIdQueryKey } from "./hooks/finance/useGetGeneralExpenseById.ts";
 export { getGeneralExpenseByIdQueryOptions } from "./hooks/finance/useGetGeneralExpenseById.ts";
@@ -570,10 +499,6 @@ export { getStudentById } from "./hooks/student/useGetStudentById.ts";
 export { getStudentByIdQueryKey } from "./hooks/student/useGetStudentById.ts";
 export { getStudentByIdQueryOptions } from "./hooks/student/useGetStudentById.ts";
 export { useGetStudentById } from "./hooks/student/useGetStudentById.ts";
-export { getStudentSummary } from "./hooks/student/useGetStudentSummary.ts";
-export { getStudentSummaryQueryKey } from "./hooks/student/useGetStudentSummary.ts";
-export { getStudentSummaryQueryOptions } from "./hooks/student/useGetStudentSummary.ts";
-export { useGetStudentSummary } from "./hooks/student/useGetStudentSummary.ts";
 export { getStudents } from "./hooks/student/useGetStudents.ts";
 export { getStudentsQueryKey } from "./hooks/student/useGetStudents.ts";
 export { getStudentsQueryOptions } from "./hooks/student/useGetStudents.ts";
@@ -594,48 +519,23 @@ export { updateStudent } from "./hooks/student/useUpdateStudent.ts";
 export { updateStudentMutationKey } from "./hooks/student/useUpdateStudent.ts";
 export { updateStudentMutationOptions } from "./hooks/student/useUpdateStudent.ts";
 export { useUpdateStudent } from "./hooks/student/useUpdateStudent.ts";
-export { createUser } from "./hooks/user management/useCreateUser.ts";
-export { createUserMutationKey } from "./hooks/user management/useCreateUser.ts";
-export { createUserMutationOptions } from "./hooks/user management/useCreateUser.ts";
-export { useCreateUser } from "./hooks/user management/useCreateUser.ts";
-export { deleteUser } from "./hooks/user management/useDeleteUser.ts";
-export { deleteUserMutationKey } from "./hooks/user management/useDeleteUser.ts";
-export { deleteUserMutationOptions } from "./hooks/user management/useDeleteUser.ts";
-export { useDeleteUser } from "./hooks/user management/useDeleteUser.ts";
-export { listUsers } from "./hooks/user management/useListUsers.ts";
-export { listUsersQueryKey } from "./hooks/user management/useListUsers.ts";
-export { listUsersQueryOptions } from "./hooks/user management/useListUsers.ts";
-export { useListUsers } from "./hooks/user management/useListUsers.ts";
 export { addressRequestDTOStateEnum } from "./types/AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./types/AddressResponseDTO.ts";
-export { authCurrentUserResponseDTODutyEnum } from "./types/AuthCurrentUserResponseDTO.ts";
-export { authCurrentUserResponseDTORoleEnum } from "./types/AuthCurrentUserResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./types/EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
 export { eventRequestDTOContentEnum } from "./types/EventRequestDTO.ts";
 export { eventResponseDTOContentEnum } from "./types/EventResponseDTO.ts";
-export { generalExpenseRequestDTOCategoryEnum } from "./types/GeneralExpenseRequestDTO.ts";
-export { generalExpenseResponseDTOCategoryEnum } from "./types/GeneralExpenseResponseDTO.ts";
-export { userCreateRequestDTORoleEnum } from "./types/UserCreateRequestDTO.ts";
-export { userResponseDTORoleEnum } from "./types/UserResponseDTO.ts";
+export { transactionRequestDTOCategoryEnum } from "./types/TransactionRequestDTO.ts";
+export { transactionResponseDTOCategoryEnum } from "./types/TransactionResponseDTO.ts";
+export { transactionResponseDTOOriginEnum } from "./types/TransactionResponseDTO.ts";
+export { transactionResponseDTOStatusEnum } from "./types/TransactionResponseDTO.ts";
+export { transactionResponseDTOTypeEnum } from "./types/TransactionResponseDTO.ts";
+export { getFinanceTransactionsQueryParamsCategoryEnum } from "./types/finance/GetFinanceTransactions.ts";
+export { getFinanceTransactionsQueryParamsStatusEnum } from "./types/finance/GetFinanceTransactions.ts";
+export { getFinanceTransactionsQueryParamsTypeEnum } from "./types/finance/GetFinanceTransactions.ts";
 export { getGeneralExpensesQueryParamsCategoryEnum } from "./types/finance/GetGeneralExpenses.ts";
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
-export {
-  authMe200Schema,
-  authMeQueryResponseSchema,
-} from "./zod/auth/authMeSchema.ts";
-export {
-  login200Schema,
-  loginMutationRequestSchema,
-  loginMutationResponseSchema,
-} from "./zod/auth/loginSchema.ts";
-export {
-  logout204Schema,
-  logoutMutationResponseSchema,
-} from "./zod/auth/logoutSchema.ts";
-export { authCurrentUserResponseDTOSchema } from "./zod/authCurrentUserResponseDTOSchema.ts";
-export { authLoginRequestDTOSchema } from "./zod/authLoginRequestDTOSchema.ts";
 export { classesByContentDTOSchema } from "./zod/classesByContentDTOSchema.ts";
 export {
   getDashboardSummary200Schema,
@@ -668,12 +568,6 @@ export {
   getEmployeeOptionsQueryResponseSchema,
 } from "./zod/employee/getEmployeeOptionsSchema.ts";
 export {
-  getEmployeeSummary200Schema,
-  getEmployeeSummaryPathParamsSchema,
-  getEmployeeSummaryQueryParamsSchema,
-  getEmployeeSummaryQueryResponseSchema,
-} from "./zod/employee/getEmployeeSummarySchema.ts";
-export {
   getEmployees200Schema,
   getEmployeesQueryParamsSchema,
   getEmployeesQueryResponseSchema,
@@ -692,7 +586,6 @@ export {
 export { employeeOptionsDTOSchema } from "./zod/employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./zod/employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./zod/employeeResponseDTOSchema.ts";
-export { employeeSummaryDTOSchema } from "./zod/employeeSummaryDTOSchema.ts";
 export {
   createEvent201Schema,
   createEventMutationRequestSchema,
@@ -758,6 +651,11 @@ export {
   getFinanceSummaryQueryResponseSchema,
 } from "./zod/finance/getFinanceSummarySchema.ts";
 export {
+  getFinanceTransactions200Schema,
+  getFinanceTransactionsQueryParamsSchema,
+  getFinanceTransactionsQueryResponseSchema,
+} from "./zod/finance/getFinanceTransactionsSchema.ts";
+export {
   getGeneralExpenseById200Schema,
   getGeneralExpenseByIdPathParamsSchema,
   getGeneralExpenseByIdQueryResponseSchema,
@@ -774,14 +672,12 @@ export {
   updateGeneralExpensePathParamsSchema,
 } from "./zod/finance/updateGeneralExpenseSchema.ts";
 export { financeSummaryDTOSchema } from "./zod/financeSummaryDTOSchema.ts";
-export { generalExpenseRequestDTOSchema } from "./zod/generalExpenseRequestDTOSchema.ts";
-export { generalExpenseResponseDTOSchema } from "./zod/generalExpenseResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./zod/pageDTOEmployeeResponseDTOSchema.ts";
 export { pageDTOEventResponseDTOSchema } from "./zod/pageDTOEventResponseDTOSchema.ts";
 export { pageDTOParentResponseDTOSchema } from "./zod/pageDTOParentResponseDTOSchema.ts";
 export { pageDTOStudentResponseDTOSchema } from "./zod/pageDTOStudentResponseDTOSchema.ts";
 export { pageMetadataSchema } from "./zod/pageMetadataSchema.ts";
-export { pagedModelGeneralExpenseResponseDTOSchema } from "./zod/pagedModelGeneralExpenseResponseDTOSchema.ts";
+export { pagedModelTransactionResponseDTOSchema } from "./zod/pagedModelTransactionResponseDTOSchema.ts";
 export {
   archiveParent204Schema,
   archiveParentMutationResponseSchema,
@@ -846,12 +742,6 @@ export {
   getStudentByIdQueryResponseSchema,
 } from "./zod/student/getStudentByIdSchema.ts";
 export {
-  getStudentSummary200Schema,
-  getStudentSummaryPathParamsSchema,
-  getStudentSummaryQueryParamsSchema,
-  getStudentSummaryQueryResponseSchema,
-} from "./zod/student/getStudentSummarySchema.ts";
-export {
   getStudentsByParent200Schema,
   getStudentsByParentPathParamsSchema,
   getStudentsByParentQueryParamsSchema,
@@ -880,21 +770,5 @@ export {
 export { studentOptionsDTOSchema } from "./zod/studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./zod/studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./zod/studentResponseDTOSchema.ts";
-export { studentResponsibleSummaryDTOSchema } from "./zod/studentResponsibleSummaryDTOSchema.ts";
-export { studentSummaryDTOSchema } from "./zod/studentSummaryDTOSchema.ts";
-export {
-  createUser201Schema,
-  createUserMutationRequestSchema,
-  createUserMutationResponseSchema,
-} from "./zod/user management/createUserSchema.ts";
-export {
-  deleteUser204Schema,
-  deleteUserMutationResponseSchema,
-  deleteUserPathParamsSchema,
-} from "./zod/user management/deleteUserSchema.ts";
-export {
-  listUsers200Schema,
-  listUsersQueryResponseSchema,
-} from "./zod/user management/listUsersSchema.ts";
-export { userCreateRequestDTOSchema } from "./zod/userCreateRequestDTOSchema.ts";
-export { userResponseDTOSchema } from "./zod/userResponseDTOSchema.ts";
+export { transactionRequestDTOSchema } from "./zod/transactionRequestDTOSchema.ts";
+export { transactionResponseDTOSchema } from "./zod/transactionResponseDTOSchema.ts";

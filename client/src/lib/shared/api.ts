@@ -7,10 +7,6 @@ const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 const sharedApiConfig = {
   baseURL: apiBaseUrl,
   headers: { "Content-Type": "application/json" },
-  withCredentials: true,
-  withXSRFToken: true,
-  xsrfCookieName: "XSRF-TOKEN",
-  xsrfHeaderName: "X-XSRF-TOKEN",
 } as const;
 
 export const api = axios.create(sharedApiConfig);
@@ -20,9 +16,6 @@ Object.assign(axiosInstance.defaults, sharedApiConfig);
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
-      window.location.href = "/login";
-    }
     console.error(getFriendlyErrorMessage(error));
     return Promise.reject(error);
   },

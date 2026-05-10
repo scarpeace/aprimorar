@@ -23,15 +23,6 @@ export function StudentDetailsPage() {
   const studentId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const {
-    startDate,
-    endDate,
-    handleStartDateChange,
-    handleEndDateChange,
-    handleClearFilters,
-    hasFilters,
-  } = useStudentDateFilters();
-
   const studentQuery = useGetStudentById(studentId);
 
   return (
@@ -46,7 +37,7 @@ export function StudentDetailsPage() {
             <h3 className="text-lg font-bold text-base-content/80">
               Indicadores e Filtros
             </h3>
-            <div className="flex gap-2 items-center w-full sm:w-auto">
+            {/*<div className="flex gap-2 items-center w-full sm:w-auto">
               <DateRangeInput
                 startDate={startDate}
                 endDate={endDate}
@@ -60,15 +51,14 @@ export function StudentDetailsPage() {
                   </Button>
                 </div>
               )}
-            </div>
+            </div>*/}
         </div>
 
         {/* STUDENTS KPIS */}
-      <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
+      {/*<div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
           <StudentKPIs studentId={studentId} />
-      </div>
+      </div>*/}
 
-        {/* STUDENT EVENTS */}
         <div className="animate-[fade-up_600ms_ease-out_both]">
           <StudentEventsTable studentId={studentId} />
         </div>

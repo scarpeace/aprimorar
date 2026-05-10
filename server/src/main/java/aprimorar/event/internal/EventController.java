@@ -58,33 +58,27 @@ public class EventController {
         return ResponseEntity.ok(foundEvent);
     }
 
-    // @GetMapping("/{id}/employee")
-    // @Operation(operationId = "getEventsByEmployeeId", description = "Retorna eventos por ID do colaborador.")
-    // @ApiResponse(responseCode = "200", description = "Página de eventos do colaborador retornada com sucesso.")
-    // public ResponseEntity<PageDTO<EventResponseDTO>> getEventByEmployeeId(
-    //     @ParameterObject Pageable pageable,
-    //     @PathVariable UUID id,
-    //     @RequestParam(required = false) String studentName,
-    //     @RequestParam(required = false) Boolean hidePaid,
-    //     @RequestParam(required = false) Instant startDate,
-    //     @RequestParam(required = false) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(eventService.getEventsByEmployeeId(pageable, id, studentName, hidePaid, startDate, endDate));
-    // }
+    @GetMapping("/{id}/employee")
+    @Operation(operationId = "getEventsByEmployeeId", description = "Retorna eventos por ID do colaborador.")
+    @ApiResponse(responseCode = "200", description = "Página de eventos do colaborador retornada com sucesso.")
+    public ResponseEntity<PageDTO<EventResponseDTO>> getEventByEmployeeId(
+        @ParameterObject Pageable pageable,
+        @PathVariable UUID id,
+        @RequestParam(required = false) Boolean hidePaid
+    ) {
+        return ResponseEntity.ok(eventService.getEventsByEmployeeId(pageable, id));
+    }
 
-    // @GetMapping("/{id}/student")
-    // @Operation(operationId = "getEventsByStudentId", description = "Retorna eventos por ID do aluno.")
-    // @ApiResponse(responseCode = "200", description = "Página de eventos do aluno retornada com sucesso.")
-    // public ResponseEntity<PageDTO<EventResponseDTO>> getEventByStudentId(
-    //     @ParameterObject Pageable pageable,
-    //     @PathVariable UUID id,
-    //     @RequestParam(required = false) String search,
-    //     @RequestParam(required = false) Boolean hideCharged,
-    //     @RequestParam(required = false) Instant startDate,
-    //     @RequestParam(required = false) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(eventService.getEventsByStudentId(pageable, id, search, hideCharged, startDate, endDate));
-    // }
+    @GetMapping("/{id}/student")
+    @Operation(operationId = "getEventsByStudentId", description = "Retorna eventos por ID do aluno.")
+    @ApiResponse(responseCode = "200", description = "Página de eventos do aluno retornada com sucesso.")
+    public ResponseEntity<PageDTO<EventResponseDTO>> getEventByStudentId(
+        @ParameterObject Pageable pageable,
+        @PathVariable UUID id,
+        @RequestParam(required = false) Boolean hidePaid
+    ) {
+        return ResponseEntity.ok(eventService.getEventsByStudentId(pageable, id));
+    }
 
     @PutMapping("/{id}")
     @Operation(operationId = "updateEvent", description = "Atualiza os dados de um evento.")

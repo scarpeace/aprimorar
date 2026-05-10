@@ -12,12 +12,17 @@ export const parentResponseDTOSchema = z
   .object({
     parentId: z.uuid().describe("ID do responsável"),
     name: z.string().describe("Nome do responsável"),
-    email: z.string().describe("Email do responsável"),
-    contact: z.string().describe("Contato do responsável"),
+    birthdate: z.iso
+      .date()
+      .describe("Data de nascimento do responsável")
+      .nullish(),
     cpf: z.string().describe("CPF do responsável"),
-    archivedAt: z.iso
-      .datetime()
-      .describe("Data e hora quando o aluno foi arquivado")
+    contact: z.string().describe("Contato do responsável"),
+    email: z.string().describe("Email do responsável"),
+    pix: z.string().describe("Pix do Responsável").nullish(),
+    active: z
+      .boolean()
+      .describe("Indica se o responsável está ativo")
       .nullish(),
     createdAt: z.iso
       .datetime()

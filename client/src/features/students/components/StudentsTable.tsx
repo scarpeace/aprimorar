@@ -8,6 +8,7 @@ import {
     formatDateShortYear,
     formatPhone,
 } from "@/lib/utils/formatter";
+import { Divide } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type StudentsTableProps = {
@@ -44,9 +45,6 @@ export function StudentsTable({
               Nome
             </th>
             <th className="text-left font-semibold text-base-content/80">
-              Responsável
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
               CPF
             </th>
             <th className="text-left font-semibold text-base-content/80">
@@ -68,11 +66,10 @@ export function StudentsTable({
           {students?.content.map((student) => (
             <tr
               key={student.id}
-              className={`transition-colors hover:bg-base-200/70 hover:cursor-pointer ${student.archivedAt ? "text-gray-400" : ""}`}
+              className={`transition-colors hover:bg-base-200/70 hover:cursor-pointer`}
               onClick={() => navigate(`/students/${student.id}`)}
             >
               <td>{student.name}</td>
-              <td>{student.responsible?.name || "-"}</td>
 
               <td>{formatCpf(student.cpf)}</td>
               <td className="text-center">{student.age}</td>
@@ -81,7 +78,7 @@ export function StudentsTable({
               <td>{student.school}</td>
 
               <td>{formatDateShortYear(student.createdAt ?? "")}</td>
-            </tr>
+              </tr>
           ))}
         </tbody>
       </table>

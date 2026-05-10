@@ -13,6 +13,7 @@ export const studentRequestDTOSchema = z
   .object({
     name: z.string().min(1).describe("Nome do aluno"),
     birthdate: z.iso.date().describe("Data de nascimento do aluno"),
+    pix: z.string().describe("Pix do aluno").nullish(),
     cpf: z.string().min(1).describe("CPF do aluno"),
     school: z.string().min(1).describe("Escola do aluno"),
     contact: z.string().min(1).describe("Contato do aluno"),

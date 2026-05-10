@@ -14,23 +14,9 @@ public interface EventService {
 
     EventResponseDTO findById(UUID eventId);
 
-//    PageDTO<EventResponseDTO> getEventsByEmployeeId(
-//        Pageable pageable,
-//        UUID employeeId,
-//        String studentName,
-//        Boolean hidePaid,
-//        Instant startDate,
-//        Instant endDate
-//    );
+   PageDTO<EventResponseDTO> getEventsByEmployeeId(Pageable pageable,UUID employeeId);
 
-//    PageDTO<EventResponseDTO> getEventsByStudentId(
-//        Pageable pageable,
-//        UUID studentId,
-//        String search,
-//        Boolean hideCharged,
-//        Instant startDate,
-//        Instant endDate
-//    );
+   PageDTO<EventResponseDTO> getEventsByStudentId(Pageable pageable,UUID studentId);
 
     EventResponseDTO updateEvent(UUID id, EventRequestDTO dto);
 

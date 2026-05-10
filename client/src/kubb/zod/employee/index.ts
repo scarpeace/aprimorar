@@ -23,12 +23,6 @@ export {
   getEmployeeOptionsQueryResponseSchema,
 } from "./getEmployeeOptionsSchema.ts";
 export {
-  getEmployeeSummary200Schema,
-  getEmployeeSummaryPathParamsSchema,
-  getEmployeeSummaryQueryParamsSchema,
-  getEmployeeSummaryQueryResponseSchema,
-} from "./getEmployeeSummarySchema.ts";
-export {
   getEmployees200Schema,
   getEmployeesQueryParamsSchema,
   getEmployeesQueryResponseSchema,
