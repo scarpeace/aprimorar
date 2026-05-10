@@ -1,7 +1,5 @@
 package aprimorar.shared;
 
-import aprimorar.registration.employee.api.exception.InvalidEmployeeException;
-import aprimorar.registration.shared.enums.Duty;
 import aprimorar.shared.enums.Role;
 import jakarta.persistence.*;
 import java.io.Serializable;

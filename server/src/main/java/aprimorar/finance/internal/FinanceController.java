@@ -1,11 +1,9 @@
 package aprimorar.finance.internal;
 
-import aprimorar.registration.employee.api.dto.EmployeeSummaryDTO;
 import aprimorar.finance.api.FinanceService;
 import aprimorar.finance.api.dto.FinanceSummaryDTO;
 import aprimorar.finance.api.dto.TransactionRequestDTO;
 import aprimorar.finance.api.dto.TransactionResponseDTO;
-import aprimorar.registration.student.api.dto.StudentSummaryDTO;
 import aprimorar.shared.enums.TransactionCategory;
 import aprimorar.shared.enums.TransactionStatus;
 import aprimorar.shared.enums.TransactionType;
@@ -13,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;

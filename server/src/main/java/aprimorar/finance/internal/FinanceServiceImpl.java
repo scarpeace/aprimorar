@@ -1,7 +1,5 @@
 package aprimorar.finance.internal;
 
-import aprimorar.registration.employee.api.dto.EmployeeSummaryDTO;
-import aprimorar.registration.employee.api.exception.EmployeeNotFoundException;
 import aprimorar.registration.employee.api.EmployeeService;
 import aprimorar.event.api.EventService;
 import aprimorar.finance.api.FinanceService;
@@ -12,8 +10,6 @@ import aprimorar.finance.api.exception.TransactionNotFoundException;
 import aprimorar.finance.internal.repository.TransactionRepository;
 import aprimorar.finance.internal.repository.TransactionSpecifications;
 import aprimorar.registration.student.api.StudentService;
-import aprimorar.registration.student.api.dto.StudentSummaryDTO;
-import aprimorar.registration.student.api.exception.StudentNotFoundException;
 import aprimorar.shared.enums.TransactionCategory;
 import aprimorar.shared.enums.TransactionOrigin;
 import aprimorar.shared.enums.TransactionStatus;
@@ -37,9 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class FinanceServiceImpl implements FinanceService {
 
     private final TransactionRepository transactionRepository;
-    private final StudentService studentService;
-    private final EmployeeService employeeService;
-    private final EventService eventService;
 
     @Transactional(readOnly = true)
     public FinanceSummaryDTO getFinanceSummary() {

@@ -1,8 +1,6 @@
 package aprimorar.registration.student.internal;
 
 import aprimorar.registration.shared.address.Address;
-import aprimorar.registration.parent.api.ParentService;
-import aprimorar.registration.parent.api.dto.ParentResponseDTO;
 import aprimorar.registration.parent.internal.Parent;
 import aprimorar.registration.parent.internal.repository.ParentRepository;
 import aprimorar.registration.student.api.StudentService;
@@ -13,12 +11,8 @@ import aprimorar.registration.student.api.exception.StudentNotFoundException;
 import aprimorar.registration.student.internal.repository.StudentRepository;
 import aprimorar.registration.student.internal.repository.StudentSpecifications;
 import aprimorar.shared.PageDTO;
-import aprimorar.registration.student.api.dto.StudentSummaryDTO;
 import aprimorar.registration.student.api.event.StudentDeletedEvent;
-import aprimorar.event.api.EventService;
-import java.math.BigDecimal;
 import java.time.Clock;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -110,9 +104,7 @@ public class StudentServiceImpl implements StudentService {
         Specification<Student> spec = StudentSpecifications.isNotGhost();
 
         if (Boolean.TRUE.equals(archived)) {
-            spec = spec.and(StudentSpecifications.archived());
-        } else {
-            spec = spec.and(StudentSpecifications.notArchived());
+            spec = spec.and(StudentSpecifications.isArchived());
         }
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(StudentSpecifications.searchContainsIgnoreCase(search.trim()));
@@ -129,7 +121,7 @@ public class StudentServiceImpl implements StudentService {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
         return studentRepo
-            .findAll(StudentSpecifications.notArchived(), sort)
+            .findAll(StudentSpecifications.isNotArchived(), sort)
             .stream()
             .map(e -> new StudentOptionsDTO(e.getId(), e.getName()))
             .toList();
@@ -169,8 +161,7 @@ public class StudentServiceImpl implements StudentService {
 
    // @Transactional(readOnly = true)
    // public boolean hasActiveLinkedStudents(UUID parentId) {
-   //     return studentRepo.existsByParentIdAndArchivedAtIsNull(parentId);
-   // }
+   //     return studentRepo.existsByParentIdAndActiveTrue(parentId);   // }
 
     @Transactional
     public StudentResponseDTO updateStudent(StudentRequestDTO dto, UUID id) {

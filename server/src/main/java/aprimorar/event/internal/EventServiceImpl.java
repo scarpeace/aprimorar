@@ -1,24 +1,18 @@
 package aprimorar.event.internal;
 
-import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.registration.employee.api.EmployeeService;
 import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
-import aprimorar.registration.employee.api.exception.EmployeeNotFoundException;
 import aprimorar.event.api.EventService;
 import aprimorar.event.api.dto.EventRequestDTO;
 import aprimorar.event.api.dto.EventResponseDTO;
@@ -26,11 +20,9 @@ import aprimorar.event.api.exception.EventNotFoundException;
 import aprimorar.event.api.exception.EventScheduleConflictException;
 import aprimorar.event.api.exception.InvalidEventException;
 import aprimorar.event.internal.repository.EventRepository;
-import aprimorar.event.internal.repository.EventSpecifications;
 import aprimorar.finance.api.TransactionService;
 import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
-import aprimorar.registration.student.api.exception.StudentNotFoundException;
 import aprimorar.shared.PageDTO;
 
 @Service

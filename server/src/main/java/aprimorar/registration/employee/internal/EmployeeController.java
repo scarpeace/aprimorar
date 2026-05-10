@@ -2,7 +2,6 @@ package aprimorar.registration.employee.internal;
 
 import aprimorar.registration.employee.api.EmployeeService;
 import aprimorar.registration.employee.api.dto.EmployeeRequestDTO;
-import aprimorar.registration.employee.api.dto.EmployeeSummaryDTO;
 import aprimorar.registration.employee.api.dto.EmployeeOptionsDTO;
 import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
 import aprimorar.shared.PageDTO;
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;

@@ -32,12 +32,12 @@ public final class StudentSpecifications {
         return (root, query, cb) -> cb.equal(root.get("parent").get("id"), parentId);
     }
 
-    public static Specification<Student> notArchived() {
-        return (root, query, cb) -> cb.isNull(root.get("archivedAt"));
+    public static Specification<Student> isNotArchived() {
+        return (root, query, cb) -> cb.isTrue(root.get("active"));
     }
 
-    public static Specification<Student> archived() {
-        return (root, query, cb) -> cb.isNotNull(root.get("archivedAt"));
+    public static Specification<Student> isArchived() {
+        return (root, query, cb) -> cb.isFalse(root.get("active"));
     }
 
     public static Specification<Student> isNotGhost() {

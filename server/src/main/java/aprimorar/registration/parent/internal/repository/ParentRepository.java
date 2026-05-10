@@ -15,7 +15,7 @@ public interface ParentRepository extends JpaRepository<Parent, UUID>, JpaSpecif
     Optional<Parent> findByCpf(String cpf);
     Optional<Parent> findByEmail(String email);
 
-    List<Parent> findByArchivedAtIsNullOrderByNameAsc();
+    List<Parent> findByActiveTrueOrderByNameAsc();
 
     Boolean existsByEmail(String cpf);
     Boolean existsByCpf(String cpf);

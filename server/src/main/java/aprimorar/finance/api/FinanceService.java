@@ -1,14 +1,11 @@
 package aprimorar.finance.api;
 
-import aprimorar.registration.employee.api.dto.EmployeeSummaryDTO;
 import aprimorar.finance.api.dto.FinanceSummaryDTO;
 import aprimorar.finance.api.dto.TransactionRequestDTO;
 import aprimorar.finance.api.dto.TransactionResponseDTO;
-import aprimorar.registration.student.api.dto.StudentSummaryDTO;
 import aprimorar.shared.enums.TransactionCategory;
 import aprimorar.shared.enums.TransactionStatus;
 import aprimorar.shared.enums.TransactionType;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.springframework.data.domain.Page;

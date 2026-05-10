@@ -3,8 +3,6 @@ package aprimorar.event.api;
 import aprimorar.event.api.dto.EventRequestDTO;
 import aprimorar.event.api.dto.EventResponseDTO;
 import aprimorar.shared.PageDTO;
-import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 

@@ -3,12 +3,8 @@ package aprimorar.registration.employee.api;
 import aprimorar.registration.employee.api.dto.EmployeeOptionsDTO;
 import aprimorar.registration.employee.api.dto.EmployeeRequestDTO;
 import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
-import aprimorar.registration.employee.api.dto.EmployeeSummaryDTO;
 import aprimorar.shared.PageDTO;
-import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 

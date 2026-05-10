@@ -9,11 +9,11 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
 
-import aprimorar.parent.api.exception.ParentAlreadyExistsException;
+import aprimorar.registration.parent.api.exception.ParentAlreadyExistsException;
+import aprimorar.registration.student.api.dto.StudentRequestDTO;
+import aprimorar.registration.student.api.exception.StudentNotFoundException;
 import aprimorar.shared.exception.ErrorCode;
 import aprimorar.shared.exception.GlobalExceptionHandler;
-import aprimorar.student.api.dto.StudentRequestDTO;
-import aprimorar.student.api.exception.StudentNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

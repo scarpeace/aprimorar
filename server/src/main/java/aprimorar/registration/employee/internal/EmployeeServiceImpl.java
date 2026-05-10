@@ -63,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Specification<Employee> spec = EmployeeSpecifications.isNotGhost();
 
         if (Boolean.TRUE.equals(archived)) {
-            spec = spec.and(EmployeeSpecifications.archived());
+            spec = spec.and(EmployeeSpecifications.isArchived());
         }
 
         if (search != null && !search.trim().isEmpty()) {

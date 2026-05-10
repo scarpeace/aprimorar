@@ -12,7 +12,7 @@ public class EventMapper {
             event.getDescription(),
             event.getContent(),
             event.getStartDate(),
-            event.getEndDateTime(),
+            event.getEndDate(),
             event.getDuration(),
             event.getPrice(),
             event.getPayment(),

@@ -24,11 +24,11 @@ public class Event extends Person {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "start_date_time", nullable = false)
+    @Column(name = "start_date", nullable = false)
     private Instant startDate;
 
-    @Column(name = "end_date_time", nullable = false)
-    private Instant endDateTime;
+    @Column(name = "end_date", nullable = false)
+    private Instant endDate;
 
     @Column(name = "payment", precision = 19, scale = 2, nullable = false)
     private BigDecimal payment;
@@ -73,7 +73,7 @@ public class Event extends Person {
         String employeeName,
         Instant now
     ) {
-        this.endDateTime = calculateEndDate(startDate, duration);
+        this.endDate = calculateEndDate(startDate, duration);
         validateDates(startDate);
         validateNotPast(now);
         validateAmounts(payment, price);
@@ -94,7 +94,7 @@ public class Event extends Person {
 
     @Transient
     public Double getDuration() {
-        return (double) Duration.between(startDate, endDateTime).toMinutes() / 60.0;
+        return (double) Duration.between(startDate, endDate).toMinutes() / 60.0;
     }
 
     @Transient
@@ -115,7 +115,7 @@ public class Event extends Person {
         String employeeName,
         Instant now
     ) {
-        this.endDateTime = calculateEndDate(startDate, duration);
+        this.endDate = calculateEndDate(startDate, duration);
         validateEditWindow(now);
         validateDates(startDate);
         validateAmounts(payment, price);
@@ -173,19 +173,19 @@ public class Event extends Person {
     }
 
     public void validateEditWindow(Instant now) {
-        if (this.endDateTime != null && now.isAfter(this.endDateTime.plus(20, ChronoUnit.DAYS))) {
+        if (this.endDate != null && now.isAfter(this.endDate.plus(20, ChronoUnit.DAYS))) {
             throw new NotAllowedToUpdateEventException("A janela de 20 dias para editar as informações do evento encerrou");
         }
     }
 
     private void validateDates(Instant startDate) {
-        if (this.endDateTime.isBefore(startDate)) {
+        if (this.endDate.isBefore(startDate)) {
             throw new InvalidEventException("Data de fim do evento não pode ser anterior a data de inicio");
         }
     }
 
     private void validateNotPast(Instant now) {
-        if (this.endDateTime.isBefore(now)) {
+        if (this.endDate.isBefore(now)) {
             throw new InvalidEventException("Data de fim do evento não pode estar no passado");
         }
     }

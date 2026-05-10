@@ -1,7 +1,6 @@
 package aprimorar.registration.employee.internal;
 
 import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
-import aprimorar.registration.employee.api.exception.InvalidEmployeeException;
 import aprimorar.registration.shared.enums.Duty;
 import aprimorar.shared.Person;
 import aprimorar.shared.enums.Role;
@@ -13,7 +12,6 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter

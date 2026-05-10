@@ -3,12 +3,8 @@ package aprimorar.registration.student.api;
 import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
-import aprimorar.registration.student.api.dto.StudentSummaryDTO;
 import aprimorar.shared.PageDTO;
-import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 

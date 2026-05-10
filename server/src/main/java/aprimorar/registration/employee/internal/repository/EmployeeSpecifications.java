@@ -14,12 +14,12 @@ public final class EmployeeSpecifications {
     private EmployeeSpecifications() {
     }
 
-    public static Specification<Employee> notArchived() {
-        return (root, query, cb) -> cb.isNull(root.get("archivedAt"));
+    public static Specification<Employee> isNotArchived() {
+        return (root, query, cb) -> cb.isTrue(root.get("active"));
     }
 
-    public static Specification<Employee> archived() {
-        return (root, query, cb) -> cb.isNotNull(root.get("archivedAt"));
+    public static Specification<Employee> isArchived() {
+        return (root, query, cb) -> cb.isFalse(root.get("active"));
     }
 
     public static Specification<Employee> isNotGhost() {

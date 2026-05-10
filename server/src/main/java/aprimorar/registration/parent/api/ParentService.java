@@ -4,9 +4,7 @@ import aprimorar.registration.parent.api.dto.ParentOptionsDTO;
 import aprimorar.registration.parent.api.dto.ParentRequestDTO;
 import aprimorar.registration.parent.api.dto.ParentResponseDTO;
 import aprimorar.shared.PageDTO;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 

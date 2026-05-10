@@ -5,20 +5,12 @@ import aprimorar.registration.parent.api.dto.ParentOptionsDTO;
 import aprimorar.registration.parent.api.dto.ParentRequestDTO;
 import aprimorar.registration.parent.api.dto.ParentResponseDTO;
 import aprimorar.registration.parent.api.exception.ParentAlreadyExistsException;
-import aprimorar.registration.parent.api.exception.ParentHasLinkedStudentsException;
 import aprimorar.registration.parent.api.exception.ParentNotFoundException;
 import aprimorar.registration.parent.internal.repository.ParentRepository;
 import aprimorar.registration.parent.internal.repository.ParentSpecifications;
-import aprimorar.registration.student.api.StudentService;
-import aprimorar.shared.MapperUtils;
 import aprimorar.shared.PageDTO;
-import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.ObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -33,14 +25,11 @@ public class ParentServiceImpl implements ParentService {
     private static final Logger log = LoggerFactory.getLogger(ParentServiceImpl.class);
 
     private final ParentRepository parentRepo;
-    private final StudentService studentService;
 
     public ParentServiceImpl(
-        ParentRepository parentRepo,
-        StudentService studentService
+        ParentRepository parentRepo
     ) {
         this.parentRepo = parentRepo;
-        this.studentService = studentService;
     }
 
     @Transactional
@@ -75,7 +64,7 @@ public class ParentServiceImpl implements ParentService {
 
     @Transactional(readOnly = true)
     public List<ParentOptionsDTO> getParentOptions() {
-        List<Parent> list = parentRepo.findByArchivedAtIsNullOrderByNameAsc();
+        List<Parent> list = parentRepo.findByActiveTrueOrderByNameAsc();
         log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
         return list
             .stream()

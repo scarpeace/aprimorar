@@ -2,11 +2,8 @@ package aprimorar.registration.student.internal;
 
 import aprimorar.registration.shared.address.Address;
 import aprimorar.registration.parent.internal.Parent;
-import aprimorar.registration.student.api.dto.StudentResponseDTO;
-import aprimorar.registration.student.api.exception.InvalidStudentException;
 import aprimorar.shared.Person;
 import aprimorar.shared.enums.Role;
-import aprimorar.shared.MapperUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -15,11 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import java.time.Clock;
 import java.time.LocalDate;
-import java.time.Period;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Entity
