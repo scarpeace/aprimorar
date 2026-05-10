@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.aprimorar</groupId>
+    <groupId>aprimorar</groupId>
     <artifactId>api-aprimorar</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>api-aprimorar</name>

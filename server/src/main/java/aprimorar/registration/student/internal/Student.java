@@ -1,0 +1,76 @@
+package aprimorar.registration.student.internal;
+
+import aprimorar.registration.shared.address.Address;
+import aprimorar.registration.parent.internal.Parent;
+import aprimorar.registration.student.api.dto.StudentResponseDTO;
+import aprimorar.registration.student.api.exception.InvalidStudentException;
+import aprimorar.shared.Person;
+import aprimorar.shared.enums.Role;
+import aprimorar.shared.MapperUtils;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.Period;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+@Entity
+@Table(name = "tb_students")
+@Getter
+public class Student extends Person {
+
+    @Column(name = "school", nullable = false)
+    private String school;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", nullable = false)
+    private Parent parent;
+
+    @Embedded
+    private Address address;
+
+    protected Student() {
+    }
+
+    public Student(
+            String name,
+            LocalDate birthdate,
+            String pix,
+            String contact,
+            String cpf,
+            String email,
+            String school,
+            Parent parent,
+            Address address
+    ) {
+        super(name, birthdate, pix, contact, cpf, email);
+        this.setRole(Role.STUDENT);
+        this.school = school;
+        this.parent = parent;
+        this.address = address;
+    }
+
+    public void updateDetails(
+        String name,
+        LocalDate birthdate,
+        String pix,
+        String contact,
+        String email,
+        String school,
+        Parent parent,
+        Address address
+    ) {
+        super.update(name, birthdate, pix, contact, email);
+        this.school = school;
+        this.address = address;
+        this.parent = parent;
+    }
+}
