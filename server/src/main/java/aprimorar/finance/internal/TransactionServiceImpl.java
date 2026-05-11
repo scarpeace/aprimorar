@@ -62,7 +62,7 @@ public class TransactionServiceImpl implements TransactionService {
     public void syncEmployeePayment(UUID eventId, Instant settledAt) {
         Transaction transaction = findByOriginAndEventId(TransactionOrigin.EVENT_EMPLOYEE_PAYMENT, eventId);
         applySettlement(transaction, settledAt);
-    }
+    }   
 
     @Transactional
     public void deleteEventTransactions(UUID eventId) {

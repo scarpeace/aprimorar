@@ -6,7 +6,7 @@ import org.springframework.modulith.Modulithic;
 
 @Modulithic(
 		additionalPackages = "aprimorar",
-		sharedModules = {"config", "shared", "enums", "exception"}
+		sharedModules = {"config", "shared"}
 )
 @SpringBootApplication
 public class ApiAprimorarApplication {

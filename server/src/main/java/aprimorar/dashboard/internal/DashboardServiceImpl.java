@@ -4,11 +4,10 @@ import aprimorar.dashboard.api.DashboardService;
 import aprimorar.dashboard.api.dto.ClassesByContentDTO;
 import aprimorar.dashboard.api.dto.DashboardSummaryResponseDTO;
 import aprimorar.dashboard.api.exception.InvalidDashboardRequestException;
-import aprimorar.event.internal.repository.EventRepository;
-import aprimorar.event.internal.repository.EventRepository.EventContentCount;
+import aprimorar.event.api.EventService;
+import aprimorar.event.api.dto.ContentDistributionDTO;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.YearMonth;
@@ -30,14 +29,14 @@ public class DashboardServiceImpl implements DashboardService {
             "00000000-0000-0000-0000-000000000000"
     );
 
-    private final EventRepository eventRepository;
+    private final EventService eventService;
     private final Clock applicationClock;
 
     public DashboardServiceImpl(
-            EventRepository eventRepository,
+            EventService eventService,
             Clock applicationClock
     ) {
-        this.eventRepository = eventRepository;
+        this.eventService = eventService;
         this.applicationClock = applicationClock;
     }
 
@@ -48,28 +47,28 @@ public class DashboardServiceImpl implements DashboardService {
         YearMonth selectedMonth = YearMonth.of(year, month);
         DateTimeRange monthRange = toMonthRange(selectedMonth);
 
-        long activeStudentsInMonth
-                = eventRepository.countDistinctStudentsInPeriodExcludingStudent(
-                        monthRange.startDateTime(),
-                        monthRange.endExclusiveDateTime(),
-                        GHOST_STUDENT_ID
-                );
+//        long activeStudentsInMonth
+//                = eventService.countDistinctStudentsInPeriodExcludingStudent(
+//                        monthRange.startDateTime(),
+//                        monthRange.endExclusiveDateTime(),
+//                        GHOST_STUDENT_ID
+//                );
         long classesInMonth
-                = eventRepository.countByStartDateGreaterThanEqualAndStartDateLessThan(
+                = eventService.countEventsInPeriod(
                         monthRange.startDateTime(),
                         monthRange.endExclusiveDateTime()
                 );
-        BigDecimal revenueInMonth = eventRepository.sumPriceInPeriod(
-                monthRange.startDateTime(),
-                monthRange.endExclusiveDateTime()
-        );
-        BigDecimal costInMonth = eventRepository.sumPaymentInPeriod(
-                monthRange.startDateTime(),
-                monthRange.endExclusiveDateTime()
-        );
+//        BigDecimal revenueInMonth = eventService.sumPriceInPeriod(
+//                monthRange.startDateTime(),
+//                monthRange.endExclusiveDateTime()
+//        );
+//        BigDecimal costInMonth = eventService.sumPaymentInPeriod(
+//                monthRange.startDateTime(),
+//                monthRange.endExclusiveDateTime()
+//        );
 
-        List<EventContentCount> groupedByContent
-                = eventRepository.findContentDistributionInPeriod(
+        List<ContentDistributionDTO> groupedByContent
+                = eventService.findContentDistributionInPeriod(
                         monthRange.startDateTime(),
                         monthRange.endExclusiveDateTime()
                 );
@@ -84,10 +83,10 @@ public class DashboardServiceImpl implements DashboardService {
                 prev.getMonthValue(),
                 next.getYear(),
                 next.getMonthValue(),
-                activeStudentsInMonth,
+//                activeStudentsInMonth,
                 classesInMonth,
-                revenueInMonth,
-                costInMonth,
+//                revenueInMonth,
+//                costInMonth,
                 buildCharts(groupedByContent, classesInMonth),
                 applicationClock.instant(),
                 REFRESH_SECONDS
@@ -95,7 +94,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     private List<ClassesByContentDTO> buildCharts(
-            List<EventContentCount> distribution,
+            List<ContentDistributionDTO> distribution,
             long total
     ) {
         if (total == 0) {
@@ -104,9 +103,9 @@ public class DashboardServiceImpl implements DashboardService {
         return distribution
                 .stream()
                 .map(p -> new ClassesByContentDTO(
-                        p.getContent().name(),
-                        p.getCount(),
-                        BigDecimal.valueOf((p.getCount() * 100.0) / total).setScale(2, RoundingMode.HALF_UP)
+                        p.content(),
+                        p.count(),
+                        p.percentage()
                 ))
                 .toList();
     }

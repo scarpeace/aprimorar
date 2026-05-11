@@ -1,8 +1,12 @@
 package aprimorar.event.api;
 
+import aprimorar.event.api.dto.ContentDistributionDTO;
 import aprimorar.event.api.dto.EventRequestDTO;
 import aprimorar.event.api.dto.EventResponseDTO;
 import aprimorar.shared.PageDTO;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 
@@ -53,4 +57,11 @@ public interface EventService {
     void reassignStudentEventsToGhost(UUID studentId);
 
     void reassignEmployeeEventsToGhost(UUID employeeId);
+
+    long countActiveStudentsInPeriod(Instant startDate, Instant endDate, UUID excludedStudentId);
+
+    long countEventsInPeriod(Instant startDate, Instant endDate);
+
+
+    List<ContentDistributionDTO> findContentDistributionInPeriod(Instant startDate, Instant endDate);
 }

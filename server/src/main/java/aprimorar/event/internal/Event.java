@@ -1,5 +1,6 @@
 package aprimorar.event.internal;
 
+import aprimorar.event.api.EventContent;
 import aprimorar.event.api.exception.InvalidEventException;
 import aprimorar.event.api.exception.NotAllowedToUpdateEventException;
 import aprimorar.shared.Person;

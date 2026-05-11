@@ -1,4 +1,4 @@
-package aprimorar.event.internal;
+package aprimorar.event.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -6,22 +6,22 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public enum EventContent {
     @Schema(description = "Aulas regulares")
     AULA,
-    
+
     @Schema(description = "Sessão de mentoria")
     MENTORIA,
-    
+
     @Schema(description = "Sessão de terapia")
     TERAPIA,
-    
+
     @Schema(description = "Sessão de Orientação Vocacional (O.V)")
     ORIENTACAO_VOCACIONAL,
-    
+
     @Schema(description = "Preparatório para o ENEM")
     ENEM,
-    
+
     @Schema(description = "Preparatório para o PAS")
     PAS,
-    
+
     @Schema(description = "Outros tipos de evento")
     OUTRO
 }

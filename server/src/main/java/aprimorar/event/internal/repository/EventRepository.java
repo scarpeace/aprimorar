@@ -1,7 +1,7 @@
 package aprimorar.event.internal.repository;
 
 import aprimorar.event.internal.Event;
-import aprimorar.event.internal.EventContent;
+import aprimorar.event.api.EventContent;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;

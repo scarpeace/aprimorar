@@ -11,10 +11,10 @@ public record DashboardSummaryResponseDTO(
         int prevMonth,
         int nextYear,
         int nextMonth,
-        long activeStudentsInMonth,
+//        long activeStudentsInMonth,
         long classesInMonth,
-        BigDecimal revenueInMonth,
-        BigDecimal costInMonth,
+//        BigDecimal revenueInMonth,
+//        BigDecimal costInMonth,
         List<ClassesByContentDTO> charts,
         Instant generatedAt,
         int refreshSeconds

@@ -1,7 +1,10 @@
 package aprimorar.event.internal;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -14,12 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 import aprimorar.registration.employee.api.EmployeeService;
 import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
 import aprimorar.event.api.EventService;
+import aprimorar.event.api.dto.ContentDistributionDTO;
 import aprimorar.event.api.dto.EventRequestDTO;
 import aprimorar.event.api.dto.EventResponseDTO;
 import aprimorar.event.api.exception.EventNotFoundException;
 import aprimorar.event.api.exception.EventScheduleConflictException;
 import aprimorar.event.api.exception.InvalidEventException;
 import aprimorar.event.internal.repository.EventRepository;
+import aprimorar.event.internal.repository.EventRepository.EventContentCount;
 import aprimorar.finance.api.TransactionService;
 import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
@@ -266,6 +271,31 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public void reassignEmployeeEventsToGhost(UUID employeeId) {
         eventRepo.reassignEmployeeEventsToGhost(employeeId, UUID.fromString("00000000-0000-4000-8000-000000000001"));
+    }
+
+    @Transactional(readOnly = true)
+    public long countActiveStudentsInPeriod(Instant startDate, Instant endDate, UUID excludedStudentId) {
+        return eventRepo.countDistinctStudentsInPeriodExcludingStudent(startDate, endDate, excludedStudentId);
+    }
+
+    @Transactional(readOnly = true)
+    public long countEventsInPeriod(Instant startDate, Instant endDate) {
+        return eventRepo.countByStartDateGreaterThanEqualAndStartDateLessThan(startDate, endDate);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ContentDistributionDTO> findContentDistributionInPeriod(Instant startDate, Instant endDate) {
+        List<EventContentCount> distribution = eventRepo.findContentDistributionInPeriod(startDate, endDate);
+        long total = distribution.stream().mapToLong(EventContentCount::getCount).sum();
+        return distribution.stream()
+            .map(p -> new ContentDistributionDTO(
+                p.getContent().name(),
+                p.getCount(),
+                total > 0
+                    ? BigDecimal.valueOf(p.getCount() * 100.0 / total).setScale(2, RoundingMode.HALF_UP)
+                    : BigDecimal.ZERO
+            ))
+            .toList();
     }
 
     /* ----- Helper Methods ----- */

@@ -1,6 +1,6 @@
 package aprimorar.event.api.dto;
 
-import aprimorar.event.internal.EventContent;
+import aprimorar.event.api.EventContent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;

@@ -26,7 +26,7 @@ public interface StudentService {
 
     PageDTO<StudentResponseDTO> getStudents(Pageable pageable, String search, Boolean archived);
 //
-//    PageDTO<StudentResponseDTO> getStudentsByParent(UUID parentId, Pageable pageable);
+     List<StudentResponseDTO> getStudentsByParent(UUID parentId);
 
     List<StudentOptionsDTO> getStudentOptions();
 

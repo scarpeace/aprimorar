@@ -1,19 +1,5 @@
 package aprimorar.shared.exception;
 
-import aprimorar.registration.shared.address.exception.InvalidAddressException;
-import aprimorar.registration.employee.api.exception.EmployeeAlreadyExistsException;
-import aprimorar.registration.employee.api.exception.EmployeeNotFoundException;
-import aprimorar.event.api.exception.EventNotFoundException;
-import aprimorar.event.api.exception.EventScheduleConflictException;
-import aprimorar.event.api.exception.InvalidEventException;
-import aprimorar.event.api.exception.NotAllowedToUpdateEventException;
-import aprimorar.finance.api.exception.TransactionNotFoundException;
-import aprimorar.registration.parent.api.exception.InvalidParentException;
-import aprimorar.registration.parent.api.exception.ParentAlreadyExistsException;
-import aprimorar.registration.parent.api.exception.ParentHasLinkedStudentsException;
-import aprimorar.registration.parent.api.exception.ParentNotFoundException;
-import aprimorar.registration.student.api.exception.StudentAlreadyExistException;
-import aprimorar.registration.student.api.exception.StudentNotFoundException;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,42 +30,8 @@ public class GlobalExceptionHandler {
         this.applicationClock = applicationClock;
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(
-        {
-            EmployeeNotFoundException.class,
-            EventNotFoundException.class,
-            ParentNotFoundException.class,
-            StudentNotFoundException.class,
-            TransactionNotFoundException.class
-        }
-    )
-    @ApiResponse(
-        responseCode = "404",
-        description = "Recurso não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    public ProblemResponseDTO handleNotFoundExceptions(RuntimeException ex, HttpServletRequest request) {
-        log.error("Erro de Recurso não encontrado: {}", ex.getMessage());
-        return new ProblemResponseDTO(
-            ErrorCode.RESOURCE_NOT_FOUND,
-            HttpStatus.NOT_FOUND,
-            ex.getMessage(),
-            request.getRequestURI()
-        );
-    }
-
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(
-        {
-            DataIntegrityViolationException.class,
-            EmployeeAlreadyExistsException.class,
-            EventScheduleConflictException.class,
-            ParentHasLinkedStudentsException.class,
-            ParentAlreadyExistsException.class,
-            StudentAlreadyExistException.class
-        }
-    )
+    @ExceptionHandler(DataIntegrityViolationException.class)
     @ApiResponse(
         responseCode = "400",
         description = "Requisição inválida",
@@ -90,30 +42,6 @@ public class GlobalExceptionHandler {
         return new ProblemResponseDTO(
             ErrorCode.CONFLICT,
             HttpStatus.CONFLICT,
-            ex.getMessage(),
-            request.getRequestURI()
-        );
-    }
-
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(
-        {
-            InvalidAddressException.class,
-            InvalidParentException.class,
-            InvalidEventException.class,
-            NotAllowedToUpdateEventException.class
-        }
-    )
-    @ApiResponse(
-        responseCode = "403",
-        description = "Operação não permitida",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    public ProblemResponseDTO handleBadRequestExceptions(Exception ex, HttpServletRequest request) {
-        log.error("Erro de validação de entidade: {}", ex.getMessage());
-        return new ProblemResponseDTO(
-            ErrorCode.BUSINESS_ERROR,
-            HttpStatus.FORBIDDEN,
             ex.getMessage(),
             request.getRequestURI()
         );

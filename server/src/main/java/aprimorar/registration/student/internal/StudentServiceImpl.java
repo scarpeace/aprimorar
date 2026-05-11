@@ -128,11 +128,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
    @Transactional(readOnly = true)
-   public PageDTO<StudentResponseDTO> getStudentsByParent(UUID parentId, Pageable pageable) {
-       Page<Student> studentPage = studentRepo.findAllByParentId(parentId, pageable);
+   public List<StudentResponseDTO> getStudentsByParent(UUID parentId) {
+       List<Student> students = studentRepo.findAllByParentId(parentId);
 
-       Page<StudentResponseDTO> studentsDtoPage = studentPage.map(student -> studentMapper.toResponseDto(student, clock));
-       return new PageDTO<>(studentsDtoPage);
+       return students.stream().map(student -> studentMapper.toResponseDto(student, clock)).toList();
    }
 
     @Transactional(readOnly = true)
