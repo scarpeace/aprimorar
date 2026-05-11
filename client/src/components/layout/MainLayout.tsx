@@ -14,7 +14,7 @@ const navigation = [
   { name: "Alunos", href: "/students", icon: GraduationCap },
   { name: "Pais e Responsáveis", href: "/parents", icon: Handshake },
   { name: "Colaboradores", href: "/employees", icon: UserCog },
-  { name: "Atendimentos", href: "/events", icon: Calendar },
+  { name: "Atendimentos", href: "/appointments", icon: Calendar },
   { name: "Financeiro", href: "/finance", icon: Banknote },
   { name: "Admin", href: "/admin", icon: ShieldCheck },
 ]

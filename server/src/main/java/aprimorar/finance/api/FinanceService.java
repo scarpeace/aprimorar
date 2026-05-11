@@ -3,9 +3,11 @@ package aprimorar.finance.api;
 import aprimorar.finance.api.dto.FinanceSummaryDTO;
 import aprimorar.finance.api.dto.TransactionRequestDTO;
 import aprimorar.finance.api.dto.TransactionResponseDTO;
-import aprimorar.shared.enums.TransactionCategory;
-import aprimorar.shared.enums.TransactionStatus;
-import aprimorar.shared.enums.TransactionType;
+import aprimorar.finance.api.enums.TransactionCategory;
+
+import aprimorar.finance.api.enums.TransactionStatus;
+
+import aprimorar.finance.api.enums.TransactionType;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.springframework.data.domain.Page;

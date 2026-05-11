@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { PageDTOStudentResponseDTO } from "../PageDTOStudentResponseDTO.ts";
+import type { StudentResponseDTO } from "../StudentResponseDTO.ts";
 
 export type GetStudentsByParentPathParams = {
   /**
@@ -37,7 +37,7 @@ export type GetStudentsByParentQueryParams = {
 /**
  * @description Lista de alunos retornada com sucesso.
  */
-export type GetStudentsByParent200 = PageDTOStudentResponseDTO;
+export type GetStudentsByParent200 = StudentResponseDTO[];
 
 export type GetStudentsByParentQueryResponse = GetStudentsByParent200;
 

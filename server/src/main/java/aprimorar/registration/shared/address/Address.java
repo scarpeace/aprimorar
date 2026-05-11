@@ -3,7 +3,7 @@ package aprimorar.registration.shared.address;
 import aprimorar.registration.shared.address.dto.AddressRequestDTO;
 import aprimorar.registration.shared.address.dto.AddressResponseDTO;
 import aprimorar.registration.shared.address.exception.InvalidAddressException;
-import aprimorar.shared.enums.BrazilianStates;
+import aprimorar.registration.shared.enums.BrazilianStates;
 import jakarta.persistence.*;
 
 @Embeddable

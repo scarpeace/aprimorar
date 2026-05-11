@@ -4,8 +4,8 @@ import aprimorar.dashboard.api.DashboardService;
 import aprimorar.dashboard.api.dto.ClassesByContentDTO;
 import aprimorar.dashboard.api.dto.DashboardSummaryResponseDTO;
 import aprimorar.dashboard.api.exception.InvalidDashboardRequestException;
-import aprimorar.event.api.EventService;
-import aprimorar.event.api.dto.ContentDistributionDTO;
+import aprimorar.appointment.api.AppointmentService;
+import aprimorar.appointment.api.dto.ContentDistributionDTO;
 
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -29,14 +29,14 @@ public class DashboardServiceImpl implements DashboardService {
             "00000000-0000-0000-0000-000000000000"
     );
 
-    private final EventService eventService;
+    private final AppointmentService appointmentService;
     private final Clock applicationClock;
 
     public DashboardServiceImpl(
-            EventService eventService,
+            AppointmentService appointmentService,
             Clock applicationClock
     ) {
-        this.eventService = eventService;
+        this.appointmentService = appointmentService;
         this.applicationClock = applicationClock;
     }
 
@@ -54,7 +54,7 @@ public class DashboardServiceImpl implements DashboardService {
 //                        GHOST_STUDENT_ID
 //                );
         long classesInMonth
-                = eventService.countEventsInPeriod(
+                = appointmentService.countAppointmentsInPeriod(
                         monthRange.startDateTime(),
                         monthRange.endExclusiveDateTime()
                 );
@@ -68,7 +68,7 @@ public class DashboardServiceImpl implements DashboardService {
 //        );
 
         List<ContentDistributionDTO> groupedByContent
-                = eventService.findContentDistributionInPeriod(
+                = appointmentService.findContentDistributionInPeriod(
                         monthRange.startDateTime(),
                         monthRange.endExclusiveDateTime()
                 );

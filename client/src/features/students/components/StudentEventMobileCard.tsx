@@ -1,12 +1,12 @@
 import { Button, ButtonLink } from "@/components/ui/button";
-import type { EventResponseDTO } from "@/kubb";
+import type { AppointmentResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, CircleDollarSign, Clock, SquareArrowOutUpRight, Tag, User as UserIcon } from "lucide-react";
 import { memo } from "react";
 
 interface StudentEventMobileCardProps {
-  event: EventResponseDTO;
+  event: AppointmentResponseDTO;
   index: number;
   isPending: boolean;
   onToggleCharge: (id: string) => void;
@@ -56,12 +56,12 @@ export const StudentEventMobileCard = memo(function StudentEventMobileCard({
             className="flex-1 gap-2"
             size="sm"
             variant={event.studentChargeDate != null ? "success" : "warning"}
-            onClick={() => onToggleCharge(event.eventId)}
+            onClick={() => onToggleCharge(event.id)}
           >
             <CircleDollarSign size={18}/>
             {event.studentChargeDate != null ? "Cobrado" : "Cobrar"}
           </Button>
-          <ButtonLink to={`/events/${event.eventId}`} size="sm" className="gap-2" variant="primary">
+          <ButtonLink to={`/appointments/${event.id}`} size="sm" className="gap-2" variant="primary">
             <SquareArrowOutUpRight size={18}/> Detalhes
           </ButtonLink>
         </div>

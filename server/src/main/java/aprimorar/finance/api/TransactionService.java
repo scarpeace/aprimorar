@@ -6,13 +6,13 @@ import java.util.UUID;
 
 public interface TransactionService {
 
-    void createEventTransactions(UUID eventId, BigDecimal price, BigDecimal payment);
+    void createAppointmentTransactions(UUID appointmentId, BigDecimal price, BigDecimal payment);
 
-    void syncEventTransactions(UUID eventId, BigDecimal price, BigDecimal payment);
+    void syncAppointmentTransactions(UUID appointmentId, BigDecimal price, BigDecimal payment);
 
-    void syncStudentCharge(UUID eventId, Instant settledAt);
+    void syncStudentCharge(UUID appointmentId, Instant settledAt);
 
-    void syncEmployeePayment(UUID eventId, Instant settledAt);
+    void syncEmployeePayment(UUID appointmentId, Instant settledAt);
 
-    void deleteEventTransactions(UUID eventId);
+    void deleteAppointmentTransactions(UUID appointmentId);
 }

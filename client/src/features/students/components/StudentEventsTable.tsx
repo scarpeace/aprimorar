@@ -5,8 +5,8 @@ import { Pagination } from "@/components/ui/pagination";
 import { SectionCard } from "@/components/ui/section-card";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
-import { useGetEventById, useGetEventsByStudentId, type EventResponseDTO } from "@/kubb";
+import { useAppointmentMutations } from "@/features/appointments/hooks/use-appointment-mutations";
+import { useGetAppointmentById, useGetAppointmentsByStudentId, type AppointmentResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
@@ -29,14 +29,14 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
   const startDateStr = searchParams.get("startDate");
   const endDateStr = searchParams.get("endDate");
 
-  const eventsQuery = useGetEventsByStudentId(studentId, {
+  const eventsQuery = useGetAppointmentsByStudentId(studentId, {
     page: currentPage,
     sort: ["startDate,desc", "id,asc"],
   });
 
   console.log(eventsQuery.data)
 
-  const { toggleStudentCharge } = useEventMutations();
+  const { toggleStudentCharge } = useAppointmentMutations();
 
   const handleToggleStudentCharge = (eventId: string) => {
     toggleStudentCharge.mutate({ id: eventId });
@@ -101,8 +101,8 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {eventsQuery.data?.content?.map((event: EventResponseDTO) => (
-                <tr key={event.eventId} className="hover:bg-base-200/50 transition-colors group">
+            {eventsQuery.data?.content?.map((event: AppointmentResponseDTO) => (
+                <tr key={event.id} className="hover:bg-base-200/50 transition-colors group">
                   <td className="font-semibold">{event.employeeName}</td>
                   <td>{formatDateShortYear(event.startDate)}</td>
                   <td className="text-center text-sm font-medium">
@@ -124,13 +124,13 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
                           className="w-9 h-9 p-0"
                           size="sm"
                           variant={event.studentChargeDate != null ? "success" : "warning"}
-                          onClick={() => handleToggleStudentCharge(event.eventId)}
+                          onClick={() => handleToggleStudentCharge(event.id)}
                         >
                           <CircleDollarSign size={18}/>
                         </Button>
                       </div>
                       <div className="tooltip" data-tip="Detalhes">
-                        <ButtonLink to={`/events/${event.eventId}`} size="sm" className="w-9 h-9 p-0" variant="primary">
+                        <ButtonLink to={`/appointments/${event.id}`} size="sm" className="w-9 h-9 p-0" variant="primary">
                           <SquareArrowOutUpRight size={18}/>
                         </ButtonLink>
                       </div>
@@ -144,9 +144,9 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
 
       {/* Mobile View (Cards) */}
       <div className="md:hidden flex flex-col gap-4">
-        {eventsQuery.data?.content?.map((event: EventResponseDTO, index: number) => (
+        {eventsQuery.data?.content?.map((event: AppointmentResponseDTO, index: number) => (
           <StudentEventMobileCard
-            key={event.eventId}
+            key={event.id}
             event={event}
             index={index}
             isPending={toggleStudentCharge.isPending}

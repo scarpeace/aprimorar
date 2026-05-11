@@ -6,6 +6,14 @@ export type {
   AddressResponseDTO,
   AddressResponseDTOStateEnumKey,
 } from "./AddressResponseDTO.ts";
+export type {
+  AppointmentRequestDTO,
+  AppointmentRequestDTOContentEnumKey,
+} from "./AppointmentRequestDTO.ts";
+export type {
+  AppointmentResponseDTO,
+  AppointmentResponseDTOContentEnumKey,
+} from "./AppointmentResponseDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
 export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
@@ -17,17 +25,9 @@ export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./EmployeeResponseDTO.ts";
-export type {
-  EventRequestDTO,
-  EventRequestDTOContentEnumKey,
-} from "./EventRequestDTO.ts";
-export type {
-  EventResponseDTO,
-  EventResponseDTOContentEnumKey,
-} from "./EventResponseDTO.ts";
 export type { FinanceSummaryDTO } from "./FinanceSummaryDTO.ts";
+export type { PageDTOAppointmentResponseDTO } from "./PageDTOAppointmentResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./PageDTOEmployeeResponseDTO.ts";
-export type { PageDTOEventResponseDTO } from "./PageDTOEventResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./PageDTOStudentResponseDTO.ts";
 export type { PageMetadata } from "./PageMetadata.ts";
@@ -49,6 +49,63 @@ export type {
   TransactionResponseDTOStatusEnumKey,
   TransactionResponseDTOTypeEnumKey,
 } from "./TransactionResponseDTO.ts";
+export type {
+  CreateAppointment201,
+  CreateAppointmentMutation,
+  CreateAppointmentMutationRequest,
+  CreateAppointmentMutationResponse,
+} from "./appointment/CreateAppointment.ts";
+export type {
+  DeleteAppointment204,
+  DeleteAppointmentMutation,
+  DeleteAppointmentMutationResponse,
+  DeleteAppointmentPathParams,
+} from "./appointment/DeleteAppointment.ts";
+export type {
+  GetAppointmentById200,
+  GetAppointmentByIdPathParams,
+  GetAppointmentByIdQuery,
+  GetAppointmentByIdQueryResponse,
+} from "./appointment/GetAppointmentById.ts";
+export type {
+  GetAppointments200,
+  GetAppointmentsQuery,
+  GetAppointmentsQueryParams,
+  GetAppointmentsQueryResponse,
+} from "./appointment/GetAppointments.ts";
+export type {
+  GetAppointmentsByEmployeeId200,
+  GetAppointmentsByEmployeeIdPathParams,
+  GetAppointmentsByEmployeeIdQuery,
+  GetAppointmentsByEmployeeIdQueryParams,
+  GetAppointmentsByEmployeeIdQueryResponse,
+} from "./appointment/GetAppointmentsByEmployeeId.ts";
+export type {
+  GetAppointmentsByStudentId200,
+  GetAppointmentsByStudentIdPathParams,
+  GetAppointmentsByStudentIdQuery,
+  GetAppointmentsByStudentIdQueryParams,
+  GetAppointmentsByStudentIdQueryResponse,
+} from "./appointment/GetAppointmentsByStudentId.ts";
+export type {
+  ToggleEmployeeAppointmentPayment200,
+  ToggleEmployeeAppointmentPaymentMutation,
+  ToggleEmployeeAppointmentPaymentMutationResponse,
+  ToggleEmployeeAppointmentPaymentPathParams,
+} from "./appointment/ToggleEmployeeAppointmentPayment.ts";
+export type {
+  ToggleStudentAppointmentCharge200,
+  ToggleStudentAppointmentChargeMutation,
+  ToggleStudentAppointmentChargeMutationResponse,
+  ToggleStudentAppointmentChargePathParams,
+} from "./appointment/ToggleStudentAppointmentCharge.ts";
+export type {
+  UpdateAppointment200,
+  UpdateAppointmentMutation,
+  UpdateAppointmentMutationRequest,
+  UpdateAppointmentMutationResponse,
+  UpdateAppointmentPathParams,
+} from "./appointment/UpdateAppointment.ts";
 export type {
   GetDashboardSummary200,
   GetDashboardSummaryQuery,
@@ -103,63 +160,6 @@ export type {
   UpdateEmployeeMutationResponse,
   UpdateEmployeePathParams,
 } from "./employee/UpdateEmployee.ts";
-export type {
-  CreateEvent201,
-  CreateEventMutation,
-  CreateEventMutationRequest,
-  CreateEventMutationResponse,
-} from "./event/CreateEvent.ts";
-export type {
-  DeleteEvent204,
-  DeleteEventMutation,
-  DeleteEventMutationResponse,
-  DeleteEventPathParams,
-} from "./event/DeleteEvent.ts";
-export type {
-  GetEventById200,
-  GetEventByIdPathParams,
-  GetEventByIdQuery,
-  GetEventByIdQueryResponse,
-} from "./event/GetEventById.ts";
-export type {
-  GetEvents200,
-  GetEventsQuery,
-  GetEventsQueryParams,
-  GetEventsQueryResponse,
-} from "./event/GetEvents.ts";
-export type {
-  GetEventsByEmployeeId200,
-  GetEventsByEmployeeIdPathParams,
-  GetEventsByEmployeeIdQuery,
-  GetEventsByEmployeeIdQueryParams,
-  GetEventsByEmployeeIdQueryResponse,
-} from "./event/GetEventsByEmployeeId.ts";
-export type {
-  GetEventsByStudentId200,
-  GetEventsByStudentIdPathParams,
-  GetEventsByStudentIdQuery,
-  GetEventsByStudentIdQueryParams,
-  GetEventsByStudentIdQueryResponse,
-} from "./event/GetEventsByStudentId.ts";
-export type {
-  ToggleEmployeeEventPayment200,
-  ToggleEmployeeEventPaymentMutation,
-  ToggleEmployeeEventPaymentMutationResponse,
-  ToggleEmployeeEventPaymentPathParams,
-} from "./event/ToggleEmployeeEventPayment.ts";
-export type {
-  ToggleStudentEventCharge200,
-  ToggleStudentEventChargeMutation,
-  ToggleStudentEventChargeMutationResponse,
-  ToggleStudentEventChargePathParams,
-} from "./event/ToggleStudentEventCharge.ts";
-export type {
-  UpdateEvent200,
-  UpdateEventMutation,
-  UpdateEventMutationRequest,
-  UpdateEventMutationResponse,
-  UpdateEventPathParams,
-} from "./event/UpdateEvent.ts";
 export type {
   CreateGeneralExpense201,
   CreateGeneralExpenseMutation,
@@ -311,10 +311,10 @@ export type {
 } from "./student/UpdateStudent.ts";
 export { addressRequestDTOStateEnum } from "./AddressRequestDTO.ts";
 export { addressResponseDTOStateEnum } from "./AddressResponseDTO.ts";
+export { appointmentRequestDTOContentEnum } from "./AppointmentRequestDTO.ts";
+export { appointmentResponseDTOContentEnum } from "./AppointmentResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./EmployeeResponseDTO.ts";
-export { eventRequestDTOContentEnum } from "./EventRequestDTO.ts";
-export { eventResponseDTOContentEnum } from "./EventResponseDTO.ts";
 export { transactionRequestDTOCategoryEnum } from "./TransactionRequestDTO.ts";
 export { transactionResponseDTOCategoryEnum } from "./TransactionResponseDTO.ts";
 export { transactionResponseDTOOriginEnum } from "./TransactionResponseDTO.ts";

@@ -1,5 +1,55 @@
 export { addressRequestDTOSchema } from "./addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./addressResponseDTOSchema.ts";
+export {
+  createAppointment201Schema,
+  createAppointmentMutationRequestSchema,
+  createAppointmentMutationResponseSchema,
+} from "./appointment/createAppointmentSchema.ts";
+export {
+  deleteAppointment204Schema,
+  deleteAppointmentMutationResponseSchema,
+  deleteAppointmentPathParamsSchema,
+} from "./appointment/deleteAppointmentSchema.ts";
+export {
+  getAppointmentById200Schema,
+  getAppointmentByIdPathParamsSchema,
+  getAppointmentByIdQueryResponseSchema,
+} from "./appointment/getAppointmentByIdSchema.ts";
+export {
+  getAppointmentsByEmployeeId200Schema,
+  getAppointmentsByEmployeeIdPathParamsSchema,
+  getAppointmentsByEmployeeIdQueryParamsSchema,
+  getAppointmentsByEmployeeIdQueryResponseSchema,
+} from "./appointment/getAppointmentsByEmployeeIdSchema.ts";
+export {
+  getAppointmentsByStudentId200Schema,
+  getAppointmentsByStudentIdPathParamsSchema,
+  getAppointmentsByStudentIdQueryParamsSchema,
+  getAppointmentsByStudentIdQueryResponseSchema,
+} from "./appointment/getAppointmentsByStudentIdSchema.ts";
+export {
+  getAppointments200Schema,
+  getAppointmentsQueryParamsSchema,
+  getAppointmentsQueryResponseSchema,
+} from "./appointment/getAppointmentsSchema.ts";
+export {
+  toggleEmployeeAppointmentPayment200Schema,
+  toggleEmployeeAppointmentPaymentMutationResponseSchema,
+  toggleEmployeeAppointmentPaymentPathParamsSchema,
+} from "./appointment/toggleEmployeeAppointmentPaymentSchema.ts";
+export {
+  toggleStudentAppointmentCharge200Schema,
+  toggleStudentAppointmentChargeMutationResponseSchema,
+  toggleStudentAppointmentChargePathParamsSchema,
+} from "./appointment/toggleStudentAppointmentChargeSchema.ts";
+export {
+  updateAppointment200Schema,
+  updateAppointmentMutationRequestSchema,
+  updateAppointmentMutationResponseSchema,
+  updateAppointmentPathParamsSchema,
+} from "./appointment/updateAppointmentSchema.ts";
+export { appointmentRequestDTOSchema } from "./appointmentRequestDTOSchema.ts";
+export { appointmentResponseDTOSchema } from "./appointmentResponseDTOSchema.ts";
 export { classesByContentDTOSchema } from "./classesByContentDTOSchema.ts";
 export {
   getDashboardSummary200Schema,
@@ -51,56 +101,6 @@ export { employeeOptionsDTOSchema } from "./employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./employeeResponseDTOSchema.ts";
 export {
-  createEvent201Schema,
-  createEventMutationRequestSchema,
-  createEventMutationResponseSchema,
-} from "./event/createEventSchema.ts";
-export {
-  deleteEvent204Schema,
-  deleteEventMutationResponseSchema,
-  deleteEventPathParamsSchema,
-} from "./event/deleteEventSchema.ts";
-export {
-  getEventById200Schema,
-  getEventByIdPathParamsSchema,
-  getEventByIdQueryResponseSchema,
-} from "./event/getEventByIdSchema.ts";
-export {
-  getEventsByEmployeeId200Schema,
-  getEventsByEmployeeIdPathParamsSchema,
-  getEventsByEmployeeIdQueryParamsSchema,
-  getEventsByEmployeeIdQueryResponseSchema,
-} from "./event/getEventsByEmployeeIdSchema.ts";
-export {
-  getEventsByStudentId200Schema,
-  getEventsByStudentIdPathParamsSchema,
-  getEventsByStudentIdQueryParamsSchema,
-  getEventsByStudentIdQueryResponseSchema,
-} from "./event/getEventsByStudentIdSchema.ts";
-export {
-  getEvents200Schema,
-  getEventsQueryParamsSchema,
-  getEventsQueryResponseSchema,
-} from "./event/getEventsSchema.ts";
-export {
-  toggleEmployeeEventPayment200Schema,
-  toggleEmployeeEventPaymentMutationResponseSchema,
-  toggleEmployeeEventPaymentPathParamsSchema,
-} from "./event/toggleEmployeeEventPaymentSchema.ts";
-export {
-  toggleStudentEventCharge200Schema,
-  toggleStudentEventChargeMutationResponseSchema,
-  toggleStudentEventChargePathParamsSchema,
-} from "./event/toggleStudentEventChargeSchema.ts";
-export {
-  updateEvent200Schema,
-  updateEventMutationRequestSchema,
-  updateEventMutationResponseSchema,
-  updateEventPathParamsSchema,
-} from "./event/updateEventSchema.ts";
-export { eventRequestDTOSchema } from "./eventRequestDTOSchema.ts";
-export { eventResponseDTOSchema } from "./eventResponseDTOSchema.ts";
-export {
   createGeneralExpense201Schema,
   createGeneralExpenseMutationRequestSchema,
   createGeneralExpenseMutationResponseSchema,
@@ -136,8 +136,8 @@ export {
   updateGeneralExpensePathParamsSchema,
 } from "./finance/updateGeneralExpenseSchema.ts";
 export { financeSummaryDTOSchema } from "./financeSummaryDTOSchema.ts";
+export { pageDTOAppointmentResponseDTOSchema } from "./pageDTOAppointmentResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./pageDTOEmployeeResponseDTOSchema.ts";
-export { pageDTOEventResponseDTOSchema } from "./pageDTOEventResponseDTOSchema.ts";
 export { pageDTOParentResponseDTOSchema } from "./pageDTOParentResponseDTOSchema.ts";
 export { pageDTOStudentResponseDTOSchema } from "./pageDTOStudentResponseDTOSchema.ts";
 export { pageMetadataSchema } from "./pageMetadataSchema.ts";

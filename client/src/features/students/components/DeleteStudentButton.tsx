@@ -3,7 +3,7 @@ import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-mod
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetEventsByStudentId } from "@/kubb";
+import { useGetAppointmentsByStudentId } from "@/kubb";
 import { useStudentMutations } from "../hooks/student-mutations";
 
 type DeleteStudentButtonProps = {
@@ -19,7 +19,7 @@ export const DeleteStudentButton = ({ studentId, className }: DeleteStudentButto
     deleteStudent: { mutate: deleteStudent, isPending: isDeleting },
   } = useStudentMutations();
   const { data: eventsData, isLoading: isEventsLoading } =
-    useGetEventsByStudentId(studentId);
+    useGetAppointmentsByStudentId(studentId);
 
   const handleOpenClick = () => {
     setIsOpen(true);

@@ -1,10 +1,13 @@
 package aprimorar.finance.internal.repository;
 
 import aprimorar.finance.internal.Transaction;
-import aprimorar.shared.enums.TransactionCategory;
-import aprimorar.shared.enums.TransactionOrigin;
-import aprimorar.shared.enums.TransactionStatus;
-import aprimorar.shared.enums.TransactionType;
+import aprimorar.finance.api.enums.TransactionCategory;
+
+import aprimorar.finance.api.enums.TransactionOrigin;
+
+import aprimorar.finance.api.enums.TransactionStatus;
+
+import aprimorar.finance.api.enums.TransactionType;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Optional;
@@ -49,11 +52,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
         """
         select coalesce(sum(t.amount), 0)
         from Transaction t
-        join Event e on e.id = t.originId
+        join Appointment a on a.id = t.originId
         where t.origin = :origin
-          and e.studentId = :studentId
-          and (:startDate is null or e.startDate >= :startDate)
-          and (:endDate is null or e.startDate <= :endDate)
+          and a.studentId = :studentId
+          and (:startDate is null or a.startDate >= :startDate)
+          and (:endDate is null or a.startDate <= :endDate)
           and (:status is null or t.status = :status)
         """
     )
@@ -69,11 +72,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
         """
         select coalesce(sum(t.amount), 0)
         from Transaction t
-        join Event e on e.id = t.originId
+        join Appointment a on a.id = t.originId
         where t.origin = :origin
-          and e.employeeId = :employeeId
-          and (:startDate is null or e.startDate >= :startDate)
-          and (:endDate is null or e.startDate <= :endDate)
+          and a.employeeId = :employeeId
+          and (:startDate is null or a.startDate >= :startDate)
+          and (:endDate is null or a.startDate <= :endDate)
           and (:status is null or t.status = :status)
         """
     )

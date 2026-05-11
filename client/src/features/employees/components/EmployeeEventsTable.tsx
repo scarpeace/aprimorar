@@ -1,6 +1,4 @@
-import { ListSearchInput } from "@/components/ui/list-search-input";
-import { useGetEventsByEmployeeId, type EventResponseDTO } from "@/kubb";
-import { useDebounce } from "@/lib/shared/use-debounce";
+import { useGetAppointmentsByEmployeeId, type AppointmentResponseDTO } from "@/kubb";
 import { useState } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { ErrorCard } from "@/components/ui/error-card";
@@ -8,7 +6,7 @@ import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { Pagination } from "@/components/ui/pagination";
 import { useSearchParams } from "react-router-dom";
-import { useEventMutations } from "@/features/events/hooks/use-event-mutations";
+import { useAppointmentMutations } from "@/features/appointments/hooks/use-appointment-mutations";
 import { Button, ButtonLink } from "@/components/ui/button";
 import {
   Calendar,
@@ -24,23 +22,15 @@ interface EmployeeEventsTableProps {
 export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
   const [hidePaid, setHidePaid] = useState(searchParams.get("hidePaid") === "true");
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const startDateStr = searchParams.get("startDate");
-  const endDateStr = searchParams.get("endDate");
-
-  const eventsQuery = useGetEventsByEmployeeId(employeeId, {
+  const eventsQuery = useGetAppointmentsByEmployeeId(employeeId, {
     page: currentPage,
-    studentName: debouncedSearchTerm,
     sort: ["startDate,desc", "id,asc"],
-    startDate: startDateStr || undefined,
-    endDate: endDateStr || undefined,
     hidePaid,
   });
 
-  const { toggleEmployeePayment } = useEventMutations();
+  const { toggleEmployeePayment } = useAppointmentMutations();
 
   const handleToggleEmployeePayment = (eventId: string) => {
     toggleEmployeePayment.mutate({ id: eventId });
@@ -77,10 +67,6 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
       </div>
 
       <div className="flex gap-6 mb-3 items-center w-full">
-        <ListSearchInput placeholder="Buscar por aluno" value={searchTerm} onChange={(val) => {
-          setSearchTerm(val);
-          setCurrentPage(0);
-        }} />
         <ToggleSwitch toggled={hidePaid} setToggle={handleHidePaid} label={"Ocultar Pagos"} />
       </div>
 
@@ -98,8 +84,8 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {eventsQuery.data?.content?.map((event: EventResponseDTO) => (
-                <tr key={event.eventId} className="transition-colors hover:bg-base-300/70">
+            {eventsQuery.data?.content?.map((event: AppointmentResponseDTO) => (
+                <tr key={event.id} className="transition-colors hover:bg-base-300/70">
                   <td className="font-medium">{event.studentName}</td>
                   <td>{formatDateShortYear(event.startDate)}</td>
                   <td className="text-center text-sm"> {formatTime(event.startDate)} - {formatTime(event.endDate)}</td>
@@ -119,13 +105,13 @@ export function EmployeeEventsTable({ employeeId }: EmployeeEventsTableProps) {
                         className="w-10 p-0"
                         size="sm"
                         variant={event.employeePaymentDate != null ? "success" : "warning"}
-                        onClick={() => handleToggleEmployeePayment(event.eventId)}
+                        onClick={() => handleToggleEmployeePayment(event.id)}
                       >
                         <CircleDollarSign size={20} />
                       </Button>
                     </div>
                     <div className="tooltip" data-tip={"Detalhes do Evento"}>
-                      <ButtonLink to={`/events/${event.eventId}`} size="sm" className="w-10 p-0" variant="primary">
+                      <ButtonLink to={`/appointments/${event.id}`} size="sm" className="w-10 p-0" variant="primary">
                         <SquareArrowOutUpRight size={20} />
                       </ButtonLink>
                     </div>

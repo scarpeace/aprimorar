@@ -13,10 +13,7 @@ export const dashboardSummaryResponseDTOSchema = z.object({
   prevMonth: z.optional(z.int()),
   nextYear: z.optional(z.int()),
   nextMonth: z.optional(z.int()),
-  activeStudentsInMonth: z.optional(z.int()),
   classesInMonth: z.optional(z.int()),
-  revenueInMonth: z.optional(z.number()),
-  costInMonth: z.optional(z.number()),
   get charts() {
     return z.array(classesByContentDTOSchema).optional();
   },

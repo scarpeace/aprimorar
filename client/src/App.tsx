@@ -16,8 +16,8 @@ const ParentDetailPage = lazy(() => import("@/features/parents/pages/ParentDetai
 const EmployeesPage = lazy(() => import("@/features/employees/pages/EmployeesPage").then((module) => ({ default: module.EmployeesPage })))
 const EmployeeDetailPage = lazy(() => import("@/features/employees/pages/EmployeeDetailPage").then((module) => ({ default: module.EmployeeDetailPage })))
 
-const EventsPage = lazy(() => import("@/features/events/pages/EventsPage").then((module) => ({ default: module.EventsPage })))
-const EventDetailPage = lazy(() => import("@/features/events/pages/EventDetailPage").then((module) => ({ default: module.EventDetailPage })))
+const AppointmentsPage = lazy(() => import("@/features/appointments/pages/AppointmentsPage").then((module) => ({ default: module.AppointmentsPage })))
+const AppointmentDetailPage = lazy(() => import("@/features/appointments/pages/AppointmentDetailPage").then((module) => ({ default: module.AppointmentDetailPage })))
 
 const FinancesPage = lazy(() => import("@/features/finance/pages/FinancesPage").then((module) => ({ default: module.FinancesPage })))
 
@@ -52,8 +52,8 @@ function App() {
               <Route path="/employees" element={<EmployeesPage />} />
               <Route path="/employees/:id" element={<EmployeeDetailPage />} />
 
-              <Route path="/events" element={<EventsPage />} />
-              <Route path="/events/:id" element={<EventDetailPage />} />
+              <Route path="/appointments" element={<AppointmentsPage />} />
+              <Route path="/appointments/:id" element={<AppointmentDetailPage />} />
 
               <Route path="/parents" element={<ParentsPage />} />
               <Route path="/parents/:id" element={<ParentDetailPage />} />

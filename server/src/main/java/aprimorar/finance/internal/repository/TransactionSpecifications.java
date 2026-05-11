@@ -1,10 +1,13 @@
 package aprimorar.finance.internal.repository;
 
 import aprimorar.finance.internal.Transaction;
-import aprimorar.shared.enums.TransactionCategory;
-import aprimorar.shared.enums.TransactionOrigin;
-import aprimorar.shared.enums.TransactionStatus;
-import aprimorar.shared.enums.TransactionType;
+import aprimorar.finance.api.enums.TransactionCategory;
+
+import aprimorar.finance.api.enums.TransactionOrigin;
+
+import aprimorar.finance.api.enums.TransactionStatus;
+
+import aprimorar.finance.api.enums.TransactionType;
 import java.time.Instant;
 import org.springframework.data.jpa.domain.Specification;
 

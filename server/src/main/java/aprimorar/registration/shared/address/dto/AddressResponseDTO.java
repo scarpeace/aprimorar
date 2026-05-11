@@ -1,6 +1,6 @@
 package aprimorar.registration.shared.address.dto;
 
-import aprimorar.shared.enums.BrazilianStates;
+import aprimorar.registration.shared.enums.BrazilianStates;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 

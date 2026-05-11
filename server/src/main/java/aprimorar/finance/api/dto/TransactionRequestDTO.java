@@ -1,6 +1,6 @@
 package aprimorar.finance.api.dto;
 
-import aprimorar.shared.enums.TransactionCategory;
+import aprimorar.finance.api.enums.TransactionCategory;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;

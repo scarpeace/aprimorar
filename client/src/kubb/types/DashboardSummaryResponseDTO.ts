@@ -33,19 +33,7 @@ export type DashboardSummaryResponseDTO = {
   /**
    * @type integer | undefined, int64
    */
-  activeStudentsInMonth?: number;
-  /**
-   * @type integer | undefined, int64
-   */
   classesInMonth?: number;
-  /**
-   * @type number | undefined
-   */
-  revenueInMonth?: number;
-  /**
-   * @type number | undefined
-   */
-  costInMonth?: number;
   /**
    * @type array | undefined
    */

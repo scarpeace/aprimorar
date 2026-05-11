@@ -15,8 +15,6 @@ class DashboardSummaryResponseDTOTest {
     @Test
     @DisplayName("Should create DashboardSummaryResponseDTO with correct values")
     void shouldCreateDtoWithCorrectMappingsAndCalculations() {
-        BigDecimal revenue = new BigDecimal("1000.00");
-        BigDecimal cost = new BigDecimal("400.00");
         Instant now = Instant.now();
 
         List<ClassesByContentDTO> charts = List.of(
@@ -26,7 +24,7 @@ class DashboardSummaryResponseDTOTest {
 
         DashboardSummaryResponseDTO dto = new DashboardSummaryResponseDTO(
             2024, 1, 2023, 12, 2024, 2,
-            10L, 4L, revenue, cost, charts, now, 60
+            4L, charts, now, 60
         );
 
         assertThat(dto.year()).isEqualTo(2024);
@@ -36,10 +34,7 @@ class DashboardSummaryResponseDTOTest {
         assertThat(dto.nextYear()).isEqualTo(2024);
         assertThat(dto.nextMonth()).isEqualTo(2);
 
-        assertThat(dto.activeStudentsInMonth()).isEqualTo(10L);
         assertThat(dto.classesInMonth()).isEqualTo(4L);
-        assertThat(dto.revenueInMonth()).isEqualTo(revenue);
-        assertThat(dto.costInMonth()).isEqualTo(cost);
         assertThat(dto.charts()).hasSize(2);
         assertThat(dto.charts())
                 .extracting(ClassesByContentDTO::percentage)
@@ -53,7 +48,7 @@ class DashboardSummaryResponseDTOTest {
     void shouldReturnEmptyChartsWhenTotalClassesIsZero() {
         DashboardSummaryResponseDTO dto = new DashboardSummaryResponseDTO(
             2024, 1, 2023, 12, 2024, 2,
-            0, 0L, BigDecimal.ZERO, BigDecimal.ZERO, List.of(), Instant.now(), 60
+            0L, List.of(), Instant.now(), 60
         );
 
         assertThat(dto.charts()).isEmpty();

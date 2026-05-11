@@ -1,7 +1,6 @@
 package aprimorar.finance.internal;
 
 import aprimorar.registration.employee.api.EmployeeService;
-import aprimorar.event.api.EventService;
 import aprimorar.finance.api.FinanceService;
 import aprimorar.finance.api.dto.FinanceSummaryDTO;
 import aprimorar.finance.api.dto.TransactionRequestDTO;
@@ -10,10 +9,13 @@ import aprimorar.finance.api.exception.TransactionNotFoundException;
 import aprimorar.finance.internal.repository.TransactionRepository;
 import aprimorar.finance.internal.repository.TransactionSpecifications;
 import aprimorar.registration.student.api.StudentService;
-import aprimorar.shared.enums.TransactionCategory;
-import aprimorar.shared.enums.TransactionOrigin;
-import aprimorar.shared.enums.TransactionStatus;
-import aprimorar.shared.enums.TransactionType;
+import aprimorar.finance.api.enums.TransactionCategory;
+
+import aprimorar.finance.api.enums.TransactionOrigin;
+
+import aprimorar.finance.api.enums.TransactionStatus;
+
+import aprimorar.finance.api.enums.TransactionType;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;

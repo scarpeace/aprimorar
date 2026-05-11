@@ -4,9 +4,11 @@ import aprimorar.finance.api.FinanceService;
 import aprimorar.finance.api.dto.FinanceSummaryDTO;
 import aprimorar.finance.api.dto.TransactionRequestDTO;
 import aprimorar.finance.api.dto.TransactionResponseDTO;
-import aprimorar.shared.enums.TransactionCategory;
-import aprimorar.shared.enums.TransactionStatus;
-import aprimorar.shared.enums.TransactionType;
+import aprimorar.finance.api.enums.TransactionCategory;
+
+import aprimorar.finance.api.enums.TransactionStatus;
+
+import aprimorar.finance.api.enums.TransactionType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,0 +1,107 @@
+import { useState } from "react";
+import { ListSearchInput } from "@/components/ui/list-search-input";
+import { Button } from "@/components/ui/button";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { CalendarCheck2, Plus } from "lucide-react";
+import type { AppointmentResponseDTO } from "@/kubb";
+import { AppointmentForm } from "../components/AppointmentForm";
+import { DateRangeInput } from "@/components/ui/date-range-input";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { useAppointmentsFilters } from "../hooks/use-appointments-filters";
+import { AppointmentsListSection } from "../components/AppointmentsListSection";
+
+export function AppointmentsPage() {
+  const {
+    search,
+    startDate,
+    endDate,
+    hideCharged,
+    hidePaid,
+    page,
+    handleSearchChange,
+    handleStartDateChange,
+    handleEndDateChange,
+    handleHideChargedToggle,
+    handleHidePaidToggle,
+    handlePageChange,
+  } = useAppointmentsFilters();
+
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<AppointmentResponseDTO | null>(null);
+
+  const handleOpenForm = (event?: AppointmentResponseDTO) => {
+    setSelectedEvent(event || null);
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setSelectedEvent(null);
+    setIsFormOpen(false);
+  };
+
+  return (
+    <PageLayout description="Gerencie os atendimentos e operações financeiras." title="Atendimentos" Icon={CalendarCheck2} backLink="/">
+      <div className="flex flex-col gap-4 w-full">
+        {/* Toolbar */}
+        <div className="flex flex-col items-center gap-4 bg-base-200/50 p-4 rounded-xl border border-base-300 shadow-sm">
+          <div className="flex justify-between items-center w-full">
+          <h3 className="text-lg font-bold text-base-content/80">Busca e Filtros</h3>
+            <ListSearchInput
+              className="flex-1 min-w-70 grow"
+              placeholder="Buscar por aluno, colaborador ou conteúdo..."
+              ariaLabel="Buscar atendimento"
+              value={search}
+              onChange={handleSearchChange}
+            />
+
+            <Button className="w-full sm:w-auto" onClick={() => handleOpenForm()} variant="success">
+              <Plus className="h-4 w-4 mr-2" />
+              Novo atendimento
+            </Button>
+          </div>
+
+          <div className="flex items-center justify-between w-full gap-1 bg-base-100 px-3 py-1 rounded-lg border border-base-300">
+            <ToggleSwitch
+              label="Cobrança Pendente"
+              toggled={hideCharged}
+              setToggle={handleHideChargedToggle}
+              tip="Mostrar apenas eventos onde o aluno ainda não foi cobrado"
+            />
+            <ToggleSwitch
+              label="Pagamento Pendente"
+              toggled={hidePaid}
+              setToggle={handleHidePaidToggle}
+              tip="Mostrar apenas eventos onde o colaborador ainda não foi pago"
+            />
+            <DateRangeInput
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={handleStartDateChange}
+              onEndDateChange={handleEndDateChange}
+            />
+          </div>
+        </div>
+
+        <AppointmentsListSection
+          page={page}
+          onPageChange={handlePageChange}
+        />
+
+        {isFormOpen && (
+          <div className="modal modal-open">
+            <div className="modal-box max-w-4xl">
+              <h3 className="font-bold text-lg mb-4">
+                {selectedEvent ? "Editar Atendimento" : "Cadastrar Novo Atendimento"}
+              </h3>
+              <AppointmentForm
+                initialData={selectedEvent}
+                onSuccess={handleCloseForm}
+                onCancel={handleCloseForm}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </PageLayout>
+  );
+}

@@ -3,10 +3,13 @@ package aprimorar.finance.internal;
 import aprimorar.finance.api.TransactionService;
 import aprimorar.finance.api.exception.TransactionNotFoundException;
 import aprimorar.finance.internal.repository.TransactionRepository;
-import aprimorar.shared.enums.TransactionCategory;
-import aprimorar.shared.enums.TransactionOrigin;
-import aprimorar.shared.enums.TransactionStatus;
-import aprimorar.shared.enums.TransactionType;
+import aprimorar.finance.api.enums.TransactionCategory;
+
+import aprimorar.finance.api.enums.TransactionOrigin;
+
+import aprimorar.finance.api.enums.TransactionStatus;
+
+import aprimorar.finance.api.enums.TransactionType;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
@@ -21,14 +24,14 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
 
     @Transactional
-    public void createEventTransactions(UUID eventId, BigDecimal price, BigDecimal payment) {
+    public void createAppointmentTransactions(UUID appointmentId, BigDecimal price, BigDecimal payment) {
         transactionRepository.save(
             new Transaction(
                 TransactionType.IN,
                 TransactionStatus.PENDING,
                 price,
-                TransactionOrigin.EVENT_STUDENT_CHARGE,
-                eventId,
+                TransactionOrigin.APPOINTMENT_STUDENT_CHARGE,
+                appointmentId,
                 null,
                 TransactionCategory.COBRANCA_ALUNO
             )
@@ -38,8 +41,8 @@ public class TransactionServiceImpl implements TransactionService {
                 TransactionType.OUT,
                 TransactionStatus.PENDING,
                 payment,
-                TransactionOrigin.EVENT_EMPLOYEE_PAYMENT,
-                eventId,
+                TransactionOrigin.APPOINTMENT_EMPLOYEE_PAYMENT,
+                appointmentId,
                 null,
                 TransactionCategory.PAGAMENTO_COLABORADOR
             )
@@ -47,31 +50,31 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Transactional
-    public void syncEventTransactions(UUID eventId, BigDecimal price, BigDecimal payment) {
-        findByOriginAndEventId(TransactionOrigin.EVENT_STUDENT_CHARGE, eventId).setAmount(price);
-        findByOriginAndEventId(TransactionOrigin.EVENT_EMPLOYEE_PAYMENT, eventId).setAmount(payment);
+    public void syncAppointmentTransactions(UUID appointmentId, BigDecimal price, BigDecimal payment) {
+        findByOriginAndAppointmentId(TransactionOrigin.APPOINTMENT_STUDENT_CHARGE, appointmentId).setAmount(price);
+        findByOriginAndAppointmentId(TransactionOrigin.APPOINTMENT_EMPLOYEE_PAYMENT, appointmentId).setAmount(payment);
     }
 
     @Transactional
-    public void syncStudentCharge(UUID eventId, Instant settledAt) {
-        Transaction transaction = findByOriginAndEventId(TransactionOrigin.EVENT_STUDENT_CHARGE, eventId);
+    public void syncStudentCharge(UUID appointmentId, Instant settledAt) {
+        Transaction transaction = findByOriginAndAppointmentId(TransactionOrigin.APPOINTMENT_STUDENT_CHARGE, appointmentId);
         applySettlement(transaction, settledAt);
     }
 
     @Transactional
-    public void syncEmployeePayment(UUID eventId, Instant settledAt) {
-        Transaction transaction = findByOriginAndEventId(TransactionOrigin.EVENT_EMPLOYEE_PAYMENT, eventId);
+    public void syncEmployeePayment(UUID appointmentId, Instant settledAt) {
+        Transaction transaction = findByOriginAndAppointmentId(TransactionOrigin.APPOINTMENT_EMPLOYEE_PAYMENT, appointmentId);
         applySettlement(transaction, settledAt);
     }   
 
     @Transactional
-    public void deleteEventTransactions(UUID eventId) {
-        transactionRepository.deleteByOriginAndOriginId(TransactionOrigin.EVENT_STUDENT_CHARGE, eventId);
-        transactionRepository.deleteByOriginAndOriginId(TransactionOrigin.EVENT_EMPLOYEE_PAYMENT, eventId);
+    public void deleteAppointmentTransactions(UUID appointmentId) {
+        transactionRepository.deleteByOriginAndOriginId(TransactionOrigin.APPOINTMENT_STUDENT_CHARGE, appointmentId);
+        transactionRepository.deleteByOriginAndOriginId(TransactionOrigin.APPOINTMENT_EMPLOYEE_PAYMENT, appointmentId);
     }
 
-    private Transaction findByOriginAndEventId(TransactionOrigin origin, java.util.UUID eventId) {
-        return transactionRepository.findByOriginAndOriginId(origin, eventId)
+    private Transaction findByOriginAndAppointmentId(TransactionOrigin origin, java.util.UUID appointmentId) {
+        return transactionRepository.findByOriginAndOriginId(origin, appointmentId)
             .orElseThrow(() -> new TransactionNotFoundException("Transação financeira não encontrada"));
     }
 
