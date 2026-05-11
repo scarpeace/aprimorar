@@ -8,11 +8,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.time.Instant;
 import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -68,9 +70,11 @@ public class AppointmentController {
     public ResponseEntity<PageDTO<AppointmentResponseDTO>> getAppointmentsByStudentId(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
         @RequestParam(required = false) Boolean hidePaid
     ) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByStudentId(pageable, id));
+        return ResponseEntity.ok(appointmentService.getAppointmentsByStudentId(pageable, id, startDate, endDate));
     }
 
     @PutMapping("/{id}")

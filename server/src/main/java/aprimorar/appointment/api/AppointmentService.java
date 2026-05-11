@@ -18,9 +18,9 @@ public interface AppointmentService {
 
     AppointmentResponseDTO findById(UUID appointmentId);
 
-   PageDTO<AppointmentResponseDTO> getAppointmentsByEmployeeId(Pageable pageable,UUID employeeId);
+    PageDTO<AppointmentResponseDTO> getAppointmentsByEmployeeId(Pageable pageable,UUID employeeId);
 
-   PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(Pageable pageable,UUID studentId);
+   PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(Pageable pageable,UUID studentId, Instant startDate, Instant endDate);
 
     AppointmentResponseDTO updateAppointment(UUID id, AppointmentRequestDTO dto);
 

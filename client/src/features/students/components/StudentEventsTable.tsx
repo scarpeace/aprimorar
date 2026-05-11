@@ -32,9 +32,9 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
   const eventsQuery = useGetAppointmentsByStudentId(studentId, {
     page: currentPage,
     sort: ["startDate,desc", "id,asc"],
+    startDate: startDateStr ?? undefined,
+    endDate: endDateStr ?? undefined,
   });
-
-  console.log(eventsQuery.data)
 
   const { toggleStudentCharge } = useAppointmentMutations();
 

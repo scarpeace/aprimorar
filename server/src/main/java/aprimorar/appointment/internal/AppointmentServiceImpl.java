@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import aprimorar.appointment.api.exception.AppointmentScheduleConflictException;
 import aprimorar.appointment.api.exception.InvalidAppointmentException;
 import aprimorar.appointment.internal.repository.AppointmentRepository;
 import aprimorar.appointment.internal.repository.AppointmentRepository.AppointmentContentCount;
+import aprimorar.appointment.internal.repository.AppointmentSpecifications;
 import aprimorar.finance.api.TransactionService;
 import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
@@ -114,13 +116,20 @@ public class AppointmentServiceImpl implements AppointmentService {
    }
 
    @Transactional(readOnly = true)
-   public PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(
-       Pageable pageable,
-       UUID studentId
-   ) {
-       Page<Appointment> appointmentPage = appointmentRepo.findAllByStudentId(studentId, pageable);
-       Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
-       log.info("Consulta de appointments do aluno finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
+    public PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(
+        Pageable pageable,
+        UUID studentId,
+        Instant startDate,
+        Instant endDate
+    ) {
+        Specification<Appointment> spec = Specification
+            .where(AppointmentSpecifications.withStudentId(studentId))
+            .and(AppointmentSpecifications.withStartDateAfter(startDate))
+            .and(AppointmentSpecifications.withEndDateBefore(endDate));
+
+        Page<Appointment> appointmentPage = appointmentRepo.findAll(spec, pageable);
+        Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
+        log.info("Consulta de appointments do aluno finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
 
        return new PageDTO<>(dtoPage);
    }

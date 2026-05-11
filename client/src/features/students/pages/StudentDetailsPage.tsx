@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetStudentById } from "@/kubb";
 import { BrushCleaning, GraduationCap } from "lucide-react";
-import { useState, Suspense } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { StudentKPIs } from "../components/StudentKPIs";
 import { StudentEventsTable } from "../components/StudentEventsTable";
@@ -25,6 +25,15 @@ export function StudentDetailsPage() {
 
   const studentQuery = useGetStudentById(studentId);
 
+  const {
+    startDate,
+    endDate,
+    hasFilters,
+    handleStartDateChange,
+    handleEndDateChange,
+    handleClearFilters,
+  } = useStudentDateFilters();
+
   return (
     <PageLayout {...headerProps}>
       <div className="mb-3">
@@ -37,10 +46,10 @@ export function StudentDetailsPage() {
             <h3 className="text-lg font-bold text-base-content/80">
               Indicadores e Filtros
             </h3>
-            {/*<div className="flex gap-2 items-center w-full sm:w-auto">
+            <div className="flex gap-2 items-center w-full sm:w-auto">
               <DateRangeInput
-                startDate={startDate}
-                endDate={endDate}
+                startDate={startDate ?? null}
+                endDate={endDate ?? null}
                 onStartDateChange={handleStartDateChange}
                 onEndDateChange={handleEndDateChange}
               />
@@ -51,13 +60,12 @@ export function StudentDetailsPage() {
                   </Button>
                 </div>
               )}
-            </div>*/}
+            </div>
         </div>
 
-        {/* STUDENTS KPIS */}
-      {/*<div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
+      <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
           <StudentKPIs studentId={studentId} />
-      </div>*/}
+      </div>
 
         <div className="animate-[fade-up_600ms_ease-out_both]">
           <StudentEventsTable studentId={studentId} />
