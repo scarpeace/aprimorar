@@ -73,7 +73,7 @@ export function StudentDetailsPage() {
 
         {isFormOpen && (
           <div className="modal modal-open">
-            <div className="modal-box max-w-4xl">
+            <div className="modal-box max-w-4xl overflow-hidden">
               <h3 className="font-bold text-lg mb-4">Editar Aluno</h3>
               <StudentForm
                 initialData={studentQuery.data}

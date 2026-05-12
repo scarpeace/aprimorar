@@ -37,25 +37,25 @@ export const StudentInfoSection = ({studentId,onEdit}: StudentInfoSectionProps) 
   return (
     <section className={`card rounded-xl border border-base-300 bg-base-100 shadow-sm`}>
       <div className={`card-body`}>
-        {/*<div className="card-actions justify-between">
-          <div className="card-title font-bold text-base-content">
+        <div className="card-actions justify-between">
+          <div className="card-title text-2xl font-bold text-base-content">
             {`${studentQuery.data.name}`}
-              <span className={`text-xs md:text-md badge ${studentQuery.data.archivedAt ? "badge-ghost" : "badge-success"} badge-md gap-1`}>
-                {studentQuery.data.archivedAt ? "Arquivado" : "Ativo"}
+              <span className={`text-xs md:text-md badge ${studentQuery.data.active ? "badge-success" : "badge-ghost"} badge-md gap-1`}>
+                {studentQuery.data.active ? "Ativo" : "Arquivado"}
               </span>
               <span className="text-xs md:text-md badge badge-outline badge-md">{studentQuery.data.age} anos</span>
               <span className="text-xs md:text-md badge badge-outline badge-md">{studentQuery.data.school}</span>
-          </div>*/}
+          </div>
 
-          {/*<div className="flex gap-2 items-center justify-start">
+          <div className="flex gap-2 items-center justify-start">
             <Button onClick={onEdit} variant="primary" size="sm" className="sm:btn-md">
               <Edit className="h-4 w-4 mr-1 sm:mr-2" />
               Editar
             </Button>
-            <ArchiveStudentButton className="btn-sm md:btn-md" studentId={studentQuery.data.id} isArchived={!!studentQuery.data.archivedAt} />
+            <ArchiveStudentButton className="btn-sm md:btn-md" studentId={studentQuery.data.id} active={studentQuery.data.active!} />
             <DeleteStudentButton className="btn-sm md:btn-md" studentId={studentQuery.data.id} />
-          </div>*/}
-        {/*</div>*/}
+          </div>
+        </div>
 
         <div className="flex flex-col gap-8">
           <div className="grid gap-8 md:grid-cols-2">

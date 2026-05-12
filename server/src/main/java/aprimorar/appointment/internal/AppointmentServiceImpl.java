@@ -120,12 +120,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         Pageable pageable,
         UUID studentId,
         Instant startDate,
-        Instant endDate
+        Instant endDate,
+        Boolean charged
     ) {
         Specification<Appointment> spec = Specification
             .where(AppointmentSpecifications.withStudentId(studentId))
             .and(AppointmentSpecifications.withStartDateAfter(startDate))
-            .and(AppointmentSpecifications.withEndDateBefore(endDate));
+            .and(AppointmentSpecifications.withEndDateBefore(endDate))
+            .and(AppointmentSpecifications.withStudentCharged(charged));
 
         Page<Appointment> appointmentPage = appointmentRepo.findAll(spec, pageable);
         Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);

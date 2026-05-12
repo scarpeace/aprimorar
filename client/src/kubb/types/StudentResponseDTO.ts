@@ -56,9 +56,9 @@ export type StudentResponseDTO = {
   parentId: string;
   /**
    * @description Data e hora quando o aluno foi arquivado
-   * @type boolean
+   * @type boolean | undefined
    */
-  active?: boolean | null;
+  active?: boolean;
   /**
    * @description Data e hora quando o aluno foi atualizado
    * @type string, date-time

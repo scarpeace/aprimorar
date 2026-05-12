@@ -20,7 +20,7 @@ public interface AppointmentService {
 
     PageDTO<AppointmentResponseDTO> getAppointmentsByEmployeeId(Pageable pageable,UUID employeeId);
 
-   PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(Pageable pageable,UUID studentId, Instant startDate, Instant endDate);
+   PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(Pageable pageable,UUID studentId, Instant startDate, Instant endDate, Boolean charged);
 
     AppointmentResponseDTO updateAppointment(UUID id, AppointmentRequestDTO dto);
 

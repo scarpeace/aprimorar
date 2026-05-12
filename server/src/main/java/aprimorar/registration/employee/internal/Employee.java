@@ -37,6 +37,7 @@ public class Employee extends Person {
     ) {
 
         super(name, birthdate, pix, contact, cpf, email);
+        this.validateRequiredFields(pix);
         this.duty = duty;
         this.setRole(Role.EMPLOYEE);
     }
@@ -47,6 +48,12 @@ public class Employee extends Person {
     ) {
         super.update(name, birthdate, pix, contact, email);
         this.duty = duty;
+    }
+
+    private void validateRequiredFields(String pix) {
+        if (pix == null || pix.isBlank()) {
+            throw new IllegalArgumentException("Pix é obrigatório");
+        }
     }
 
     public EmployeeResponseDTO toResponseDto() {

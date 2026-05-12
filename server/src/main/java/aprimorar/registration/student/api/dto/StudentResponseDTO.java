@@ -46,7 +46,7 @@ public record StudentResponseDTO(
         @Schema(example = "eb4be7ae-ebc6-423a-a380-da97f4a81511", description = "ID do responsável")
         UUID parentId,
 
-        @Schema(nullable = true, example = "2023-01-01T00:00:00Z", description = "Data e hora quando o aluno foi arquivado")
+        @Schema( example = "2023-01-01T00:00:00Z", description = "Data e hora quando o aluno foi arquivado")
         Boolean active,
 
         @Schema(nullable = true, example = "2023-01-01T00:00:00Z", description = "Data e hora quando o aluno foi atualizado")

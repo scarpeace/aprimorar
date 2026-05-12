@@ -72,9 +72,9 @@ public class AppointmentController {
         @PathVariable UUID id,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
-        @RequestParam(required = false) Boolean hidePaid
+        @RequestParam(required = false) Boolean charged
     ) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByStudentId(pageable, id, startDate, endDate));
+        return ResponseEntity.ok(appointmentService.getAppointmentsByStudentId(pageable, id, startDate, endDate, charged));
     }
 
     @PutMapping("/{id}")

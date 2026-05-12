@@ -20,10 +20,9 @@ export const studentResponseDTOSchema = z
     school: z.string().describe("Nome da escola do aluno"),
     age: z.int().describe("Idade do aluno"),
     parentId: z.uuid().describe("ID do responsável"),
-    active: z
-      .boolean()
-      .describe("Data e hora quando o aluno foi arquivado")
-      .nullish(),
+    active: z.optional(
+      z.boolean().describe("Data e hora quando o aluno foi arquivado"),
+    ),
     updatedAt: z.iso
       .datetime()
       .describe("Data e hora quando o aluno foi atualizado")

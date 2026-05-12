@@ -45,7 +45,9 @@ public class Student extends Person {
             Parent parent,
             Address address
     ) {
+
         super(name, birthdate, pix, contact, cpf, email);
+        validateRequiredFields(address, parent);
         this.setRole(Role.STUDENT);
         this.school = school;
         this.parent = parent;
@@ -66,5 +68,14 @@ public class Student extends Person {
         this.school = school;
         this.address = address;
         this.parent = parent;
+    }
+
+    private void validateRequiredFields(Address address, Parent parent) {
+        if (address == null) {
+            throw new IllegalArgumentException("Endereço do aluno é obrigatório");
+        }
+        if (parent == null) {
+            throw new IllegalArgumentException("Aluno não pode ser cadastrado sem um responsável");
+        }
     }
 }

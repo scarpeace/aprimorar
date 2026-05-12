@@ -25,6 +25,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
   const [searchTerm, setSearchTerm] = useState("");
   const [hideCharged, setHideCharged] = useState(searchParams.get("hideCharged") === "true");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const chargedFilter = hideCharged ? false : undefined;
 
   const startDateStr = searchParams.get("startDate");
   const endDateStr = searchParams.get("endDate");
@@ -34,6 +35,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
     sort: ["startDate,desc", "id,asc"],
     startDate: startDateStr ?? undefined,
     endDate: endDateStr ?? undefined,
+    charged: chargedFilter,
   });
 
   const { toggleStudentCharge } = useAppointmentMutations();

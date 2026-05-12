@@ -42,7 +42,7 @@ public abstract class Person implements Serializable {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "active", nullable = false)
     private Boolean active = true;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -113,11 +113,8 @@ public abstract class Person implements Serializable {
         }
         if (birthdate == null) {
             throw new IllegalArgumentException(
-                "A data de nascimento é obrigatório"
+                "A data de nascimento é obrigatória"
             );
-        }
-        if (pix == null || pix.isBlank()) {
-            throw new IllegalArgumentException("Pix é obrigatório");
         }
         if (contact == null || contact.isBlank()) {
             throw new IllegalArgumentException("Contato é obrigatório");

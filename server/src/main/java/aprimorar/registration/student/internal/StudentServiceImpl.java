@@ -193,7 +193,7 @@ public class StudentServiceImpl implements StudentService {
             throw new IllegalArgumentException("Não é possível arquivar o registro de sistema 'ALUNO ARQUIVADO'.");
         }
         Student student = findStudentOrThrow(studentId);
-        student.unarchive();
+        student.archive();
         log.info("Aluno {} arquivado com sucesso.", student.getName().toUpperCase());
     }
 
