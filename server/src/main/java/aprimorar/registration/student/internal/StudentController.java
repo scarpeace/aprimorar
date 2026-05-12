@@ -4,11 +4,14 @@ import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
+import aprimorar.registration.student.api.dto.StudentSummaryDTO;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -86,21 +89,6 @@ public class StudentController {
         StudentResponseDTO foundStudent = studentService.findById(studentId);
         return ResponseEntity.ok(foundStudent);
     }
-
-    // @GetMapping("/{id}/summary")
-    // @Operation(
-    //     operationId = "getStudentSummary",
-    //     description = "Retorna um resumo financeiro e de atendimentos de um aluno."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Resumo retornado com sucesso.")
-    // public ResponseEntity<StudentSummaryDTO> getSummary(
-    //     @PathVariable UUID id,
-    //     @RequestParam(required = false) Instant startDate,
-    //     @RequestParam(required = false) Instant endDate
-    // ) {
-    //     StudentSummaryDTO summary = studentService.getSummary(id, startDate, endDate);
-    //     return ResponseEntity.ok(summary);
-    // }
 
     @PutMapping("/{studentId}")
     @Operation(operationId = "updateStudent", description = "Atualiza um aluno por ID.")

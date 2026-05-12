@@ -3,6 +3,8 @@ package aprimorar.appointment.internal;
 import aprimorar.appointment.api.AppointmentService;
 import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
+import aprimorar.appointment.api.dto.EmployeeAppointmentsDTO;
+import aprimorar.appointment.api.dto.StudentAppointmentsDTO;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -56,18 +58,20 @@ public class AppointmentController {
     @GetMapping("/{id}/employee")
     @Operation(operationId = "getAppointmentsByEmployeeId", description = "Retorna appointments por ID do colaborador.")
     @ApiResponse(responseCode = "200", description = "Página de appointments do colaborador retornada com sucesso.")
-    public ResponseEntity<PageDTO<AppointmentResponseDTO>> getAppointmentsByEmployeeId(
+    public ResponseEntity<EmployeeAppointmentsDTO> getAppointmentsByEmployeeId(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
-        @RequestParam(required = false) Boolean hidePaid
+        @RequestParam(required = false) Boolean hidePaid,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByEmployeeId(pageable, id));
+        return ResponseEntity.ok(appointmentService.getAppointmentsByEmployeeId(pageable, id, hidePaid, startDate, endDate));
     }
 
     @GetMapping("/{id}/student")
     @Operation(operationId = "getAppointmentsByStudentId", description = "Retorna appointments por ID do aluno.")
     @ApiResponse(responseCode = "200", description = "Página de appointments do aluno retornada com sucesso.")
-    public ResponseEntity<PageDTO<AppointmentResponseDTO>> getAppointmentsByStudentId(
+    public ResponseEntity<StudentAppointmentsDTO> getAppointmentsByStudentId(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,

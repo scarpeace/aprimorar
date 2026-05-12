@@ -26,8 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private static final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
+    private static final UUID GHOST_EMPLOYEE_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
 
-//    private static final UUID PHANTOM_EMPLOYEE_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
     private final EmployeeRepository employeeRepo;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -170,6 +170,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
+        if (GHOST_EMPLOYEE_ID.equals(employeeId)) {
+            throw new IllegalArgumentException("Nao e possivel modificar o registro de sistema 'Colaborador Removido'.");
+        }
+
         Employee employee = findEmployeeOrThrow(employeeId);
 
         String normalizedContact = MapperUtils.normalizeContact(request.contact());
@@ -183,6 +187,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     public void deleteEmployee(UUID employeeId) {
+        if (GHOST_EMPLOYEE_ID.equals(employeeId)) {
+            throw new IllegalArgumentException("Nao e possivel deletar o registro de sistema 'Colaborador Removido'.");
+        }
+
         Employee employee = findEmployeeOrThrow(employeeId);
 
         log.info("Publicando evento de exclusão do colaborador {}.", employee.getName().toUpperCase());
@@ -197,6 +205,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     public void archiveEmployee(UUID employeeId) {
+        if (GHOST_EMPLOYEE_ID.equals(employeeId)) {
+            throw new IllegalArgumentException("Nao e possivel arquivar o registro de sistema 'Colaborador Removido'.");
+        }
+
         Employee employee = findEmployeeOrThrow(employeeId);
         employee.archive();
         log.info("Colaborador {} arquivado com sucesso.", employee.getName().toUpperCase());
@@ -204,6 +216,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     public void unarchiveEmployee(UUID employeeId) {
+        if (GHOST_EMPLOYEE_ID.equals(employeeId)) {
+            throw new IllegalArgumentException("O registro 'Colaborador Removido' nao pode ser desarquivado.");
+        }
+
         Employee employee = findEmployeeOrThrow(employeeId);
         employee.unarchive();
         log.info("Colaborador {} desarquivado com sucesso.", employee.getName().toUpperCase());

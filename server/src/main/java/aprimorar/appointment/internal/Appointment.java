@@ -3,21 +3,38 @@ package aprimorar.appointment.internal;
 import aprimorar.appointment.api.AppointmentContent;
 import aprimorar.appointment.api.exception.InvalidAppointmentException;
 import aprimorar.appointment.api.exception.NotAllowedToUpdateAppointmentException;
-import aprimorar.shared.Person;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.io.Serializable;
 import java.util.UUID;
 
 // TODO: Adicionar campos do google calendar para a implementação
 @Entity
 @Getter
 @Table(name = "tb_appointments")
-public class Appointment extends Person {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Appointment implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include
+    private UUID id;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private Instant createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private Instant updatedAt;
 
     @Column(name = "title", nullable = false)
     private String title;

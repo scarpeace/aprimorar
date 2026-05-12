@@ -10,6 +10,7 @@ interface StudentKPIsProps {
 export const StudentKPIs = memo(function StudentKPIs({ studentId }: StudentKPIsProps) {
   void studentId;
 
+  // const studentSummaryQuery = useGetApp(studentId);
   const mockKpis = {
     totalEvents: 47,
     totalPaid: 2520,

@@ -7,12 +7,14 @@ import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
+import aprimorar.registration.student.api.dto.StudentSummaryDTO;
 import aprimorar.registration.student.api.exception.StudentNotFoundException;
 import aprimorar.registration.student.internal.repository.StudentRepository;
 import aprimorar.registration.student.internal.repository.StudentSpecifications;
 import aprimorar.shared.PageDTO;
 import aprimorar.registration.student.api.event.StudentDeletedEvent;
 import java.time.Clock;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,28 +54,6 @@ public class StudentServiceImpl implements StudentService {
         this.eventPublisher = eventPublisher;
         this.clock = clock;
     }
-
-    // @Transactional(readOnly = true)
-    // public StudentSummaryDTO getSummary(UUID studentId, Instant startDate, Instant endDate) {
-    //     if (!studentRepo.existsById(studentId)) {
-    //         throw new StudentNotFoundException("Aluno com o ID informado não encontrado");
-    //     }
-
-    //     if (startDate == null || endDate == null) {
-    //         long totalEvents = eventService.countByStudentId(studentId);
-    //         BigDecimal totalCharged = eventService.sumChargedByStudentId(studentId);
-    //         BigDecimal totalPending = eventService.sumPendingByStudentId(studentId);
-    //         log.info("Resumo geral gerado para o aluno {}", studentId);
-    //         return new StudentSummaryDTO(totalEvents, totalCharged, totalPending);
-    //     }
-
-    //     long totalEventsInPeriod = eventService.countByStudentIdAndStartDateBetween(studentId, startDate, endDate);
-    //     BigDecimal totalChargedInPeriod = eventService.sumChargedByStudentIdInPeriod(studentId, startDate, endDate);
-    //     BigDecimal totalPendingInPeriod = eventService.sumPendingByStudentIdInPeriod(studentId, startDate, endDate);
-
-    //     log.info("Resumo gerado para o aluno {} no período de {} a {}", studentId, startDate, endDate);
-    //     return new StudentSummaryDTO(totalEventsInPeriod, totalChargedInPeriod, totalPendingInPeriod);
-    // }
 
     @Transactional
     public StudentResponseDTO createStudent(StudentRequestDTO dto) {
@@ -130,15 +110,12 @@ public class StudentServiceImpl implements StudentService {
    @Transactional(readOnly = true)
    public List<StudentResponseDTO> getStudentsByParent(UUID parentId) {
        List<Student> students = studentRepo.findAllByParentId(parentId);
-
        return students.stream().map(student -> studentMapper.toResponseDto(student, clock)).toList();
    }
 
     @Transactional(readOnly = true)
     public StudentResponseDTO findById(UUID studentId) {
         Student student = findStudentOrThrow(studentId);
-
-        log.info("Aluno {} consultado com sucesso.", student.getName().toUpperCase());
         return studentMapper.toResponseDto(student, clock);
     }
 

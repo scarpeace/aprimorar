@@ -21,6 +21,8 @@ import aprimorar.appointment.api.AppointmentService;
 import aprimorar.appointment.api.dto.ContentDistributionDTO;
 import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
+import aprimorar.appointment.api.dto.EmployeeAppointmentsDTO;
+import aprimorar.appointment.api.dto.StudentAppointmentsDTO;
 import aprimorar.appointment.api.exception.AppointmentNotFoundException;
 import aprimorar.appointment.api.exception.AppointmentScheduleConflictException;
 import aprimorar.appointment.api.exception.InvalidAppointmentException;
@@ -104,19 +106,40 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
    @Transactional(readOnly = true)
-   public PageDTO<AppointmentResponseDTO> getAppointmentsByEmployeeId(
+   public EmployeeAppointmentsDTO getAppointmentsByEmployeeId(
        Pageable pageable,
-       UUID employeeId
+       UUID employeeId,
+       Boolean hidePaid,
+       Instant startDate,
+       Instant endDate
    ) {
-       Page<Appointment> appointmentPage = appointmentRepo.findAllByEmployeeId(employeeId, pageable);
-       Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
-       log.info("Consulta de appointments do colaborador finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
+       employeeService.findById(employeeId);
 
-       return new PageDTO<>(dtoPage);
+       Boolean paidFilter = Boolean.TRUE.equals(hidePaid) ? Boolean.FALSE : null;
+
+       Specification<Appointment> spec = Specification
+           .where(AppointmentSpecifications.withEmployeeId(employeeId))
+           .and(AppointmentSpecifications.withStartDateAfter(startDate))
+           .and(AppointmentSpecifications.withEndDateBefore(endDate))
+           .and(AppointmentSpecifications.withEmployeePaid(paidFilter));
+
+       Page<Appointment> appointmentPage = appointmentRepo.findAll(spec, pageable);
+       Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
+
+       long totalEvents = appointmentRepo.countFilteredByEmployeeId(employeeId, startDate, endDate);
+       BigDecimal totalPaid = appointmentRepo.sumPaidFilteredByEmployeeId(employeeId, startDate, endDate);
+       BigDecimal totalUnpaid = appointmentRepo.sumUnpaidFilteredByEmployeeId(employeeId, startDate, endDate);
+
+       log.info(
+           "Consulta de appointments do colaborador finalizada, {} registros encontrados.",
+           appointmentPage.getTotalElements()
+       );
+
+       return new EmployeeAppointmentsDTO(new PageDTO<>(dtoPage), totalEvents, totalPaid, totalUnpaid);
    }
 
    @Transactional(readOnly = true)
-    public PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(
+    public StudentAppointmentsDTO getAppointmentsByStudentId(
         Pageable pageable,
         UUID studentId,
         Instant startDate,
@@ -131,9 +154,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Page<Appointment> appointmentPage = appointmentRepo.findAll(spec, pageable);
         Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
+
+        long totalEvents = appointmentRepo.countFilteredByStudentId(studentId, startDate, endDate);
+        BigDecimal totalCharged = appointmentRepo.sumChargedFilteredByStudentId(studentId, startDate, endDate);
+        BigDecimal totalPending = appointmentRepo.sumPendingFilteredByStudentId(studentId, startDate, endDate);
         log.info("Consulta de appointments do aluno finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
 
-       return new PageDTO<>(dtoPage);
+       return new StudentAppointmentsDTO(new PageDTO<>(dtoPage), totalEvents, totalCharged, totalPending);
    }
 
     @Transactional

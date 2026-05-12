@@ -103,7 +103,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {eventsQuery.data?.content?.map((event: AppointmentResponseDTO) => (
+            {eventsQuery.data?.appointments?.content?.map((event: AppointmentResponseDTO) => (
                 <tr key={event.id} className="hover:bg-base-200/50 transition-colors group">
                   <td className="font-semibold">{event.employeeName}</td>
                   <td>{formatDateShortYear(event.startDate)}</td>
@@ -146,7 +146,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
 
       {/* Mobile View (Cards) */}
       <div className="md:hidden flex flex-col gap-4">
-        {eventsQuery.data?.content?.map((event: AppointmentResponseDTO, index: number) => (
+        {eventsQuery.data?.appointments?.content?.map((event: AppointmentResponseDTO, index: number) => (
           <StudentEventMobileCard
             key={event.id}
             event={event}
@@ -158,7 +158,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
       </div>
 
         <Pagination
-          paginationData={eventsQuery.data}
+          paginationData={eventsQuery.data?.appointments}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />

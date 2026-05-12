@@ -4,13 +4,15 @@ import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
 import aprimorar.shared.PageDTO;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 
 public interface StudentService {
 
-    // StudentSummaryDTO getSummary(UUID studentId, Instant startDate, Instant endDate);
+    // StudentSummaryDTO getStudentSummary(UUID studentId, Instant startDate, Instant endDate);
 
     StudentResponseDTO findById(UUID studentId);
 

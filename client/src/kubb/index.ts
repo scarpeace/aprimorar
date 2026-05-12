@@ -58,6 +58,7 @@ export type {
 } from "./types/AppointmentResponseDTO.ts";
 export type { ClassesByContentDTO } from "./types/ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./types/DashboardSummaryResponseDTO.ts";
+export type { EmployeeAppointmentsDTO } from "./types/EmployeeAppointmentsDTO.ts";
 export type { EmployeeOptionsDTO } from "./types/EmployeeOptionsDTO.ts";
 export type {
   EmployeeRequestDTO,
@@ -77,6 +78,7 @@ export type { PagedModelTransactionResponseDTO } from "./types/PagedModelTransac
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
+export type { StudentAppointmentsDTO } from "./types/StudentAppointmentsDTO.ts";
 export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
@@ -633,6 +635,7 @@ export {
   updateEmployeeMutationResponseSchema,
   updateEmployeePathParamsSchema,
 } from "./zod/employee/updateEmployeeSchema.ts";
+export { employeeAppointmentsDTOSchema } from "./zod/employeeAppointmentsDTOSchema.ts";
 export { employeeOptionsDTOSchema } from "./zod/employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./zod/employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./zod/employeeResponseDTOSchema.ts";
@@ -767,6 +770,7 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./zod/student/updateStudentSchema.ts";
+export { studentAppointmentsDTOSchema } from "./zod/studentAppointmentsDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./zod/studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./zod/studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./zod/studentResponseDTOSchema.ts";

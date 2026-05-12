@@ -24,6 +24,7 @@ export function StudentDetailsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const studentQuery = useGetStudentById(studentId);
+  // const sudentAppointmentsQuery = useGetAppointmentsByEmployeeId(studentId);
 
   const {
     startDate,
