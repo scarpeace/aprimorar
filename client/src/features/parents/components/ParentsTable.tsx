@@ -27,6 +27,8 @@ export function ParentsTable({
 }: Readonly<ParentsTableProps>) {
   const navigate = useNavigate();
 
+  console.log(parents)
+
   if (error) {
     return (
       <ErrorCard

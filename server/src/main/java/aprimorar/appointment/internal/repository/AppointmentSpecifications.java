@@ -23,6 +23,23 @@ public final class AppointmentSpecifications {
         };
     }
 
+    public static Specification<Appointment> searchContains(String term) {
+        return (root, query, cb) -> {
+            if (term == null || term.trim().isEmpty()) {
+                return null;
+            }
+
+            String pattern = "%" + term.trim().toLowerCase() + "%";
+
+            return cb.or(
+                cb.like(cb.lower(root.get("studentName")), pattern),
+                cb.like(cb.lower(root.get("employeeName")), pattern),
+                cb.like(cb.lower(root.get("description")), pattern),
+                cb.like(cb.lower(root.get("content").as(String.class)), pattern)
+            );
+        };
+    }
+
     public static Specification<Appointment> withStartDateAfter(Instant startDate) {
         return (root, query, cb) -> startDate == null ? null : cb.greaterThanOrEqualTo(root.get("startDate"), startDate);
     }

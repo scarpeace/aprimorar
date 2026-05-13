@@ -94,7 +94,7 @@ public class ParentServiceImpl implements ParentService {
         Parent parent = findParentOrThrow(parentId);
 
         ensureParentUniquenessForUpdate(dto.email(), parentId);
-        parent.update(dto.name(), dto.birthdate(), dto.pix(),dto.email(), dto.contact());
+        parent.update(dto.name(), dto.birthdate(), dto.pix(), dto.contact(), dto.email());
 
         log.info("Responsável {} atualizado com sucesso.", parent.getName().toUpperCase());
         return parent.toResponseDto();

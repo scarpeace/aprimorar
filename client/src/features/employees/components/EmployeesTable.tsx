@@ -1,13 +1,16 @@
+import { Button } from "@/components/ui/button";
+import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOEmployeeResponseDTO } from "@/kubb";
+import type { EmployeeResponseDTO, PageDTOEmployeeResponseDTO } from "@/kubb";
 import { dutyLabels } from "../utils/dutyLabels";
 import {
   formatCpf,
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
+import { Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type EmployeesTableProps = {
@@ -16,6 +19,7 @@ type EmployeesTableProps = {
   currentPage: number;
   isPending: boolean;
   error: unknown;
+  onEdit: (employee: EmployeeResponseDTO) => void;
 };
 
 export function EmployeesTable({
@@ -24,6 +28,7 @@ export function EmployeesTable({
   currentPage,
   isPending,
   error,
+  onEdit,
 }: Readonly<EmployeesTableProps>) {
 
   const navigate = useNavigate();
@@ -41,10 +46,20 @@ export function EmployeesTable({
     );
   }
 
+  if (!employees || employees.content.length === 0) {
+    return (
+      <EmptyCard
+        title="Nenhum colaborador encontrado"
+        description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
+      />
+    );
+  }
+
   return (
     <>
-      <table className="table table-zebra shadow-2xl bg-base-100 animate-[fade-up_280ms_ease-out_both]">
-        <thead className="bg-base-300">
+      <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
+      <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
+        <thead className="bg-base-200/80">
           <tr>
             <th className="text-left font-semibold text-base-content/80">
               Nome
@@ -60,6 +75,12 @@ export function EmployeesTable({
             </th>
             <th className="text-left font-semibold text-base-content/80">
               Cadastro
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
+              Status
+            </th>
+            <th className="text-right font-semibold text-base-content/80">
+              Acoes
             </th>
           </tr>
         </thead>
@@ -78,10 +99,30 @@ export function EmployeesTable({
               <td>{formatPhone(employee.contact)}</td>
 
               <td>{formatDateShortYear(employee.createdAt)}</td>
+              <td>
+                <span className={`badge ${(employee.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
+                  {(employee.active ?? true) ? "Ativo" : "Arquivado"}
+                </span>
+              </td>
+              <td className="text-right">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onEdit(employee);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                  Editar
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
       <Pagination
         paginationData={employees}
         currentPage={currentPage}

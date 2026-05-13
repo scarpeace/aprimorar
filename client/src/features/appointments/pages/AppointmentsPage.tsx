@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { CalendarCheck2, Plus } from "lucide-react";
+import { CalendarCheck2, Plus, RotateCcw } from "lucide-react";
 import type { AppointmentResponseDTO } from "@/kubb";
 import { AppointmentForm } from "../components/AppointmentForm";
 import { DateRangeInput } from "@/components/ui/date-range-input";
@@ -18,6 +18,8 @@ export function AppointmentsPage() {
     hideCharged,
     hidePaid,
     page,
+    hasFilters,
+    handleClearFilters,
     handleSearchChange,
     handleStartDateChange,
     handleEndDateChange,
@@ -41,58 +43,88 @@ export function AppointmentsPage() {
 
   return (
     <PageLayout description="Gerencie os atendimentos e operações financeiras." title="Atendimentos" Icon={CalendarCheck2} backLink="/">
-      <div className="flex flex-col gap-4 w-full">
-        {/* Toolbar */}
-        <div className="flex flex-col items-center gap-4 bg-base-200/50 p-4 rounded-xl border border-base-300 shadow-sm">
-          <div className="flex justify-between items-center w-full">
-          <h3 className="text-lg font-bold text-base-content/80">Busca e Filtros</h3>
+      <div className="flex w-full flex-col gap-4">
+        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_220ms_ease-out_both]">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="space-y-1">
+              <h2 className="text-lg font-bold text-base-content">Busca e filtros</h2>
+              <p className="text-sm text-base-content/60">
+                Filtre por participante, periodo e pendencias financeiras para localizar atendimentos com rapidez.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-success/15 bg-linear-to-r from-success/8 via-base-100 to-base-100 px-3 py-2 shadow-sm">
+              <Button className="sm:ml-auto" onClick={() => handleOpenForm()} variant="success">
+                <Plus className="mr-2 h-4 w-4" />
+                Novo atendimento
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-col gap-3">
             <ListSearchInput
-              className="flex-1 min-w-70 grow"
-              placeholder="Buscar por aluno, colaborador ou conteúdo..."
+              className="grow"
+              placeholder="Buscar por aluno, colaborador, conteúdo ou descrição"
               ariaLabel="Buscar atendimento"
               value={search}
               onChange={handleSearchChange}
             />
 
-            <Button className="w-full sm:w-auto" onClick={() => handleOpenForm()} variant="success">
-              <Plus className="h-4 w-4 mr-2" />
-              Novo atendimento
-            </Button>
-          </div>
+            <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+              <div className="flex flex-wrap items-center gap-3">
+                <ToggleSwitch
+                  label="Cobrança Pendente"
+                  toggled={hideCharged}
+                  setToggle={handleHideChargedToggle}
+                  tip="Mostrar apenas eventos onde o aluno ainda não foi cobrado"
+                  className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
+                />
+                <ToggleSwitch
+                  label="Pagamento Pendente"
+                  toggled={hidePaid}
+                  setToggle={handleHidePaidToggle}
+                  tip="Mostrar apenas eventos onde o colaborador ainda não foi pago"
+                  className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
+                />
+              </div>
 
-          <div className="flex items-center justify-between w-full gap-1 bg-base-100 px-3 py-1 rounded-lg border border-base-300">
-            <ToggleSwitch
-              label="Cobrança Pendente"
-              toggled={hideCharged}
-              setToggle={handleHideChargedToggle}
-              tip="Mostrar apenas eventos onde o aluno ainda não foi cobrado"
-            />
-            <ToggleSwitch
-              label="Pagamento Pendente"
-              toggled={hidePaid}
-              setToggle={handleHidePaidToggle}
-              tip="Mostrar apenas eventos onde o colaborador ainda não foi pago"
-            />
-            <DateRangeInput
-              startDate={startDate}
-              endDate={endDate}
-              onStartDateChange={handleStartDateChange}
-              onEndDateChange={handleEndDateChange}
-            />
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center xl:justify-end">
+                <DateRangeInput
+                  startDate={startDate}
+                  endDate={endDate}
+                  onStartDateChange={handleStartDateChange}
+                  onEndDateChange={handleEndDateChange}
+                />
+                {hasFilters ? (
+                  <Button variant="ghost" onClick={handleClearFilters} className="gap-2">
+                    <RotateCcw className="h-4 w-4" />
+                    Limpar filtros
+                  </Button>
+                ) : null}
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
 
         <AppointmentsListSection
           page={page}
+          search={search}
+          startDate={startDate}
+          endDate={endDate}
+          hideCharged={hideCharged}
+          hidePaid={hidePaid}
           onPageChange={handlePageChange}
         />
 
         {isFormOpen && (
           <div className="modal modal-open">
-            <div className="modal-box max-w-4xl">
-              <h3 className="font-bold text-lg mb-4">
+            <div className="modal-box max-w-4xl border border-base-300 bg-base-100 shadow-2xl">
+              <h3 className="mb-1 text-lg font-bold">
                 {selectedEvent ? "Editar Atendimento" : "Cadastrar Novo Atendimento"}
               </h3>
+              <p className="mb-4 text-sm text-base-content/60">
+                Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados.
+              </p>
               <AppointmentForm
                 initialData={selectedEvent}
                 onSuccess={handleCloseForm}

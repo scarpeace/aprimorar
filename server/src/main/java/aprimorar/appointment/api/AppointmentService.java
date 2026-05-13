@@ -16,7 +16,14 @@ public interface AppointmentService {
 
     AppointmentResponseDTO createAppointment(AppointmentRequestDTO dto);
 
-   PageDTO<AppointmentResponseDTO> getAppointments(Pageable pageable);
+    PageDTO<AppointmentResponseDTO> getAppointments(
+        Pageable pageable,
+        String search,
+        Instant startDate,
+        Instant endDate,
+        Boolean hideCharged,
+        Boolean hidePaid
+    );
 
     AppointmentResponseDTO findById(UUID appointmentId);
 

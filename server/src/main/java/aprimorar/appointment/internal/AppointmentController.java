@@ -42,9 +42,16 @@ public class AppointmentController {
     @Operation(operationId = "getAppointments", description = "Retorna uma lista paginada de appointments.")
     @ApiResponse(responseCode = "200", description = "Lista de appointments retornada com sucesso.")
     public ResponseEntity<PageDTO<AppointmentResponseDTO>> getAppointments(
-        @ParameterObject Pageable pageable
+        @ParameterObject Pageable pageable,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
+        @RequestParam(required = false) Boolean hideCharged,
+        @RequestParam(required = false) Boolean hidePaid
     ) {
-        return ResponseEntity.ok(appointmentService.getAppointments(pageable));
+        return ResponseEntity.ok(
+            appointmentService.getAppointments(pageable, search, startDate, endDate, hideCharged, hidePaid)
+        );
     }
 
     @GetMapping("/{id}")

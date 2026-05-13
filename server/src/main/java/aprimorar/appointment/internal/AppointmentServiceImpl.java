@@ -94,15 +94,31 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentMapper.convertToDto(saved);
     }
 
-   @Transactional(readOnly = true)
-   public PageDTO<AppointmentResponseDTO> getAppointments(Pageable pageable){
+    @Transactional(readOnly = true)
+    public PageDTO<AppointmentResponseDTO> getAppointments(
+        Pageable pageable,
+        String search,
+        Instant startDate,
+        Instant endDate,
+        Boolean hideCharged,
+        Boolean hidePaid
+    ) {
+        Boolean chargedFilter = Boolean.TRUE.equals(hideCharged) ? Boolean.FALSE : null;
+        Boolean paidFilter = Boolean.TRUE.equals(hidePaid) ? Boolean.FALSE : null;
 
-       Page<Appointment> appointmentPage = appointmentRepo.findAll(pageable);
-       Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
+        Specification<Appointment> spec = Specification
+            .where(AppointmentSpecifications.searchContains(search))
+            .and(AppointmentSpecifications.withStartDateAfter(startDate))
+            .and(AppointmentSpecifications.withEndDateBefore(endDate))
+            .and(AppointmentSpecifications.withStudentCharged(chargedFilter))
+            .and(AppointmentSpecifications.withEmployeePaid(paidFilter));
 
-       log.info("Consulta de appointments finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
-       return new PageDTO<>(dtoPage);
-   }
+        Page<Appointment> appointmentPage = appointmentRepo.findAll(spec, pageable);
+        Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
+
+        log.info("Consulta de appointments finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
+        return new PageDTO<>(dtoPage);
+    }
 
     @Transactional(readOnly = true)
     public AppointmentResponseDTO findById(UUID id) {
