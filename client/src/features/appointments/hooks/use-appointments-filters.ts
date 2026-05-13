@@ -1,12 +1,17 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
+import {
+  clearDateRangeParams,
+  getDateRangeValues,
+  setEndDateParam,
+  setStartDateParam,
+} from "@/hooks/use-date-range-filters";
 
 export function useAppointmentsFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const search = searchParams.get("search") ?? "";
-  const startDateStr = searchParams.get("startDate");
-  const endDateStr = searchParams.get("endDate");
+  const { startDateStr, endDateStr } = getDateRangeValues(searchParams);
   const hideCharged = searchParams.get("hideCharged") === "true";
   const hidePaid = searchParams.get("hidePaid") === "true";
   const page = parseInt(searchParams.get("page") ?? "0", 10);
@@ -36,23 +41,17 @@ export function useAppointmentsFilters() {
   };
 
   const handleStartDateChange = (date: Date | null) => {
-    if (!date) {
-      updateParams({ startDate: null, page: "0" });
-      return;
-    }
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    updateParams({ startDate: d.toISOString(), page: "0" });
+    const newParams = new URLSearchParams(searchParams);
+    setStartDateParam(newParams, date);
+    newParams.set("page", "0");
+    setSearchParams(newParams);
   };
 
   const handleEndDateChange = (date: Date | null) => {
-    if (!date) {
-      updateParams({ endDate: null, page: "0" });
-      return;
-    }
-    const d = new Date(date);
-    d.setHours(23, 59, 59, 999);
-    updateParams({ endDate: d.toISOString(), page: "0" });
+    const newParams = new URLSearchParams(searchParams);
+    setEndDateParam(newParams, date);
+    newParams.set("page", "0");
+    setSearchParams(newParams);
   };
 
   const handleHideChargedToggle = () => {
@@ -68,7 +67,13 @@ export function useAppointmentsFilters() {
   };
 
   const handleClearFilters = () => {
-    setSearchParams(new URLSearchParams());
+    const newParams = new URLSearchParams(searchParams);
+    clearDateRangeParams(newParams);
+    newParams.delete("search");
+    newParams.delete("hideCharged");
+    newParams.delete("hidePaid");
+    newParams.delete("page");
+    setSearchParams(newParams);
   };
 
   return {

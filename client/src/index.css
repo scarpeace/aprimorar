@@ -157,6 +157,92 @@
 }
 
 @layer components {
+  .app-date-range-popper {
+    z-index: 40;
+  }
+
+  .app-date-range .react-datepicker__input-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .app-date-range .react-datepicker__close-icon {
+    right: 0.15rem;
+    padding-right: 0;
+  }
+
+  .app-date-range .react-datepicker__close-icon::after {
+    width: 1.2rem;
+    height: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--app-text) 8%, transparent);
+    color: var(--app-text-muted);
+    font-size: 0.7rem;
+    line-height: 1;
+    transition: background 160ms ease, color 160ms ease;
+  }
+
+  .app-date-range .react-datepicker__close-icon:hover::after {
+    background: color-mix(in srgb, var(--app-primary) 14%, transparent);
+    color: var(--app-text);
+  }
+
+  .app-date-range-popper .react-datepicker {
+    border: 1px solid var(--app-border);
+    border-radius: 1rem;
+    box-shadow: var(--app-elevation-strong);
+    overflow: hidden;
+    font-family: "Sora", "Segoe UI", "Helvetica Neue", sans-serif;
+  }
+
+  .app-date-range-popper .react-datepicker__header {
+    border-bottom: 1px solid var(--app-border);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--app-primary) 8%, var(--app-surface)),
+      var(--app-surface)
+    );
+  }
+
+  .app-date-range-popper .react-datepicker__current-month,
+  .app-date-range-popper .react-datepicker-time__header,
+  .app-date-range-popper .react-datepicker-year-header {
+    color: var(--app-text);
+    font-weight: 700;
+  }
+
+  .app-date-range-popper .react-datepicker__day-name {
+    color: var(--app-text-subtle);
+    font-weight: 600;
+  }
+
+  .app-date-range-popper .react-datepicker__day,
+  .app-date-range-popper .react-datepicker__time-name {
+    border-radius: 0.65rem;
+    transition: background 160ms ease, color 160ms ease;
+  }
+
+  .app-date-range-popper .react-datepicker__day:hover,
+  .app-date-range-popper .react-datepicker__month-text:hover,
+  .app-date-range-popper .react-datepicker__quarter-text:hover,
+  .app-date-range-popper .react-datepicker__year-text:hover {
+    background: color-mix(in srgb, var(--app-primary) 12%, transparent);
+    color: var(--app-text);
+  }
+
+  .app-date-range-popper .react-datepicker__day--selected,
+  .app-date-range-popper .react-datepicker__day--keyboard-selected {
+    background: var(--app-primary);
+    color: white;
+  }
+
+  .app-date-range-popper .react-datepicker__triangle {
+    display: none;
+  }
+
   .app-main-layout {
     @apply min-h-screen flex flex-col md:h-screen md:flex-row;
   }

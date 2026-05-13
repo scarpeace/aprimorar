@@ -5,19 +5,19 @@ import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, CircleDollarSign, Clock, SquareArrowOutUpRight, Tag, User as UserIcon } from "lucide-react";
 import { memo } from "react";
 
-interface StudentEventMobileCardProps {
+interface StudentAppointmentMobileCardProps {
   event: AppointmentResponseDTO;
   index: number;
   isPending: boolean;
   onToggleCharge: (id: string) => void;
 }
 
-export const StudentEventMobileCard = memo(function StudentEventMobileCard({ 
-  event, 
-  index, 
-  isPending, 
-  onToggleCharge 
-}: StudentEventMobileCardProps) {
+export const StudentAppointmentMobileCard = memo(function StudentAppointmentMobileCard({
+  event,
+  index,
+  isPending,
+  onToggleCharge
+}: StudentAppointmentMobileCardProps) {
   const animationDelay = `${(index % 5) * 100}ms`;
 
   return (

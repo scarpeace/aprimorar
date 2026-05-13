@@ -7,7 +7,7 @@ import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
 import { memo } from "react";
-import { StudentEventMobileCard } from "./StudentEventMobileCard";
+import { StudentAppointmentMobileCard } from "./StudentAppointmentMobileCard";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useAppointmentMutations } from "@/features/appointments/hooks/use-appointment-mutations";
 
@@ -16,16 +16,14 @@ interface StudentEventsTableProps {
   currentPage: number;
   error?: unknown;
   isLoading: boolean;
-  isTogglingCharge: boolean;
   onPageChange: (page: number) => void;
 }
 
 export const StudentEventsTable = memo(function StudentEventsTable({
   appointments,
-  currentPage,
   error,
   isLoading,
-  isTogglingCharge,
+  currentPage,
   onPageChange,
 }: StudentEventsTableProps) {
 
@@ -44,7 +42,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({
   }
 
   return (
-    <div className="relative min-h-75">
+    <div className="relative min-h-150">
 
       {/* Desktop View (Table) */}
       <div className="p-4 rounded-xl bg-base-100">
@@ -87,7 +85,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({
                     <div className="flex justify-center gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
                       <div className="tooltip" data-tip={event.studentChargeDate != null ? "Cancelar Cobrança" : "Marcar como Cobrado"}>
                         <Button
-                          disabled={isTogglingCharge}
+                          disabled={toggleStudentCharge.isPending}
                           className="w-9 h-9 p-0"
                           size="sm"
                           variant={event.studentChargeDate != null ? "success" : "warning"}
@@ -112,11 +110,11 @@ export const StudentEventsTable = memo(function StudentEventsTable({
       {/* Mobile View (Cards) */}
       <div className="md:hidden flex flex-col gap-4">
         {appointments?.content?.map((event: AppointmentResponseDTO, index: number) => (
-          <StudentEventMobileCard
+          <StudentAppointmentMobileCard
             key={event.id}
             event={event}
             index={index}
-            isPending={isTogglingCharge}
+            isPending={toggleStudentCharge.isPending}
             onToggleCharge={() => handleToggleStudentCharge(event.id)}
           />
         ))}

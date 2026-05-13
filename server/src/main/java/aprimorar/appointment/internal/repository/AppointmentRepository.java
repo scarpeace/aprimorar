@@ -26,11 +26,25 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
 
 
     @Modifying
-    @Query("UPDATE Appointment a SET a.studentId = :ghostId WHERE a.studentId = :studentId")
+    @Query(
+        """
+        UPDATE Appointment a
+        SET a.studentId = :ghostId,
+            a.studentName = 'Aluno Removido'
+        WHERE a.studentId = :studentId
+        """
+    )
     void reassignStudentAppointmentsToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
 
     @Modifying
-    @Query("UPDATE Appointment a SET a.employeeId = :ghostId WHERE a.employeeId = :employeeId")
+    @Query(
+        """
+        UPDATE Appointment a
+        SET a.employeeId = :ghostId,
+            a.employeeName = 'Colaborador Removido'
+        WHERE a.employeeId = :employeeId
+        """
+    )
     void reassignEmployeeAppointmentsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
 
     long countByEmployeeIdAndStartDateBetween(UUID employeeId, Instant startDate, Instant endDate);

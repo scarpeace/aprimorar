@@ -1,15 +1,14 @@
-import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetEmployeeById } from "@/kubb";
-import { BrushCleaning, FileUser } from "lucide-react";
+import { FileUser } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { EmployeeKPIs } from "../components/EmployeeKPIs";
 import { EmployeeEventsTable } from "../components/EmployeeEventsTable";
 import { DateRangeInput } from "@/components/ui/date-range-input";
-import { useEmployeeDateFilters } from "../hooks/use-employee-date-filters";
 import { EmployeeInfoSection } from "../components/EmployeeInfoSection";
 import { EmployeeEditModal } from "../components/EmployeeEditModal";
+import { useDateRangeFilters } from "@/hooks/use-date-range-filters";
 
 const headerProps = {
   description: "Veja e gerencie as informações do colaborador",
@@ -28,9 +27,7 @@ export function EmployeeDetailPage() {
     endDate,
     handleStartDateChange,
     handleEndDateChange,
-    handleClearFilters,
-    hasFilters,
-  } = useEmployeeDateFilters();
+  } = useDateRangeFilters();
 
   const employeeQuery = useGetEmployeeById(employeeId);
 
@@ -50,13 +47,6 @@ export function EmployeeDetailPage() {
             onStartDateChange={handleStartDateChange}
             onEndDateChange={handleEndDateChange}
           />
-          {hasFilters && (
-            <div className="tooltip" data-tip="Limpar datas">
-              <Button size="sm" variant="outline" onClick={handleClearFilters}>
-                <BrushCleaning size={16} />
-              </Button>
-            </div>
-          )}
         </div>
 
       <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">

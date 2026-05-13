@@ -1,21 +1,25 @@
-import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { useAppointmentMutations } from "@/features/appointments/hooks/use-appointment-mutations";
 import {
   useGetAppointmentsByStudentId,
   useGetStudentById,
   useGetStudentSummary,
 } from "@/kubb";
-import { BrushCleaning, GraduationCap } from "lucide-react";
+import {
+  Calendar,
+  CircleDollarSign,
+  Clock3,
+  GraduationCap,
+} from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { StudentKPIs } from "../components/StudentKPIs";
 import { StudentEventsTable } from "../components/StudentEventsTable";
 import { DateRangeInput } from "@/components/ui/date-range-input";
-import { useStudentDateFilters } from "../hooks/use-student-date-filters";
 import { StudentInfoSection } from "../components/StudentInfoSection";
 import { StudentForm } from "../components/StudentForm";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { KpiCard } from "@/components/ui/kpi-card";
+import { brl } from "@/lib/utils/formatter";
+import { useDateRangeFilters } from "@/hooks/use-date-range-filters";
 
 const headerProps = {
   description: "Veja e gerencie as informações do aluno",
@@ -36,13 +40,9 @@ export function StudentDetailsPage() {
   const {
     startDate,
     endDate,
-    hasFilters,
     handleStartDateChange,
     handleEndDateChange,
-    handleClearFilters,
-  } = useStudentDateFilters();
-
-  const { toggleStudentCharge } = useAppointmentMutations();
+  } = useDateRangeFilters();
 
   const studentAppointments = useGetAppointmentsByStudentId(studentId, {
     page: currentPage,
@@ -68,17 +68,9 @@ export function StudentDetailsPage() {
   };
 
   const handleEndDateFilterChange = (date: Date | null) => {
-    console.log(date);
     setCurrentPage(0);
     handleEndDateChange(date);
   };
-
-  const handleClearDateFilters = () => {
-    setCurrentPage(0);
-    handleClearFilters();
-  };
-
-
 
   return (
     <PageLayout {...headerProps}>
@@ -94,48 +86,59 @@ export function StudentDetailsPage() {
         <h3 className="text-lg font-bold text-base-content/80">
           Indicadores e Filtros
         </h3>
-        <ToggleSwitch
-          toggled={hideCharged}
-          setToggle={handleToggleHideCharged}
-          label={"Ocultar Cobrados"}
-        />
-        <div className="flex gap-2 items-center w-full sm:w-auto">
+        <div className="shrink-0 rounded-2xl border border-warning/20 bg-linear-to-r from-warning/8 via-base-100 to-base-100 px-3 py-2 shadow-sm transition-all duration-200 hover:border-warning/30 hover:shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-warning/12 text-warning">
+              <CircleDollarSign className="w-4" />
+            </div>
+              <ToggleSwitch
+                toggled={hideCharged}
+                setToggle={handleToggleHideCharged}
+                label={"Ocultar Cobrados"}
+                className="border-warning/30 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
+              />
+          </div>
+        </div>
+        <div className="w-full sm:w-auto">
           <DateRangeInput
             startDate={startDate ?? null}
             endDate={endDate ?? null}
             onStartDateChange={handleStartDateFilterChange}
             onEndDateChange={handleEndDateFilterChange}
           />
-          {hasFilters && (
-            <div className="tooltip" data-tip="Limpar datas">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={handleClearDateFilters}
-                className="h-10"
-              >
-                <BrushCleaning size={16} />
-              </Button>
-            </div>
-          )}
         </div>
       </div>
 
       <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
-        <StudentKPIs
-          totalEvents={studentSummary.data?.totalEvents}
-          totalCharged={studentSummary.data?.totalCharged}
-          totalPending={studentSummary.data?.totalPending}
-        />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <KpiCard
+            label="Total de eventos"
+            value={studentSummary.data?.totalEvents}
+            Icon={Calendar}
+          />
+
+          <KpiCard
+            label="Total pago"
+            value={<span className="text-success">{brl.format(studentSummary.data?.totalCharged ?? 0)}</span>}
+            Icon={CircleDollarSign}
+            className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
+          />
+
+          <KpiCard
+            label="Total pendente"
+            value={<span className="text-warning">{brl.format(studentSummary.data?.totalPending ?? 0)}</span>}
+            Icon={Clock3}
+            className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
+          />
+        </div>
       </div>
 
       <div className="animate-[fade-up_600ms_ease-out_both]">
         <StudentEventsTable
           appointments={studentAppointments.data}
-          currentPage={currentPage}
           error={studentAppointments.error}
           isLoading={studentAppointments.isLoading}
-          isTogglingCharge={toggleStudentCharge.isPending}
+          currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
       </div>
