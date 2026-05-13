@@ -1,7 +1,6 @@
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Pagination } from "@/components/ui/pagination";
 import { useGetStudentsByParent } from "@/kubb";
 import {
   formatCpf,
@@ -12,20 +11,13 @@ import { useNavigate } from "react-router-dom";
 
 interface ParentStudentsTableProps {
   parentId: string;
-  currentPage: number;
-  onPageChange: (page: number) => void;
 }
 
 export function ParentStudentsTable({
   parentId,
-  currentPage,
-  onPageChange,
 }: Readonly<ParentStudentsTableProps>) {
   const navigate = useNavigate();
-  const studentsQuery = useGetStudentsByParent(parentId, {
-    page: currentPage,
-    size: 10,
-  });
+  const studentsQuery = useGetStudentsByParent(parentId);
 
   if (studentsQuery.error) {
     return (
@@ -44,22 +36,22 @@ export function ParentStudentsTable({
     );
   }
 
-  const students = studentsQuery.data;
-
-  if (!students || students.content.length === 0) {
+  if (!studentsQuery.data || studentsQuery.data.length === 0) {
     return (
       <EmptyCard
         title="Nenhum aluno vinculado"
-        description="Este responsável ainda não possui alunos associados."
+        description="Este responsavel ainda nao possui alunos associados."
       />
     );
   }
 
+  const students = studentsQuery.data;
+
   return (
     <>
-      <div className="overflow-x-auto">
-        <table className="table table-zebra bg-base-100 shadow-2xl animate-[fade-up_280ms_ease-out_both]">
-          <thead className="bg-base-300">
+      <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
+        <table className="table table-zebra animate-[fade-up_280ms_ease-out_both]">
+          <thead className="bg-base-200/80">
             <tr>
               <th className="text-left font-semibold text-base-content/80">Nome</th>
               <th className="text-left font-semibold text-base-content/80">CPF</th>
@@ -70,8 +62,8 @@ export function ParentStudentsTable({
               <th className="text-left font-semibold text-base-content/80">Status</th>
             </tr>
           </thead>
-          <tbody className="whitespace-nowrap">
-            {students.content.map((student) => {
+        <tbody className="whitespace-nowrap">
+            {students.map((student) => {
               const isArchived = student.active === false;
 
               return (
@@ -97,12 +89,6 @@ export function ParentStudentsTable({
           </tbody>
         </table>
       </div>
-
-      <Pagination
-        paginationData={students}
-        currentPage={currentPage}
-        onPageChange={onPageChange}
-      />
     </>
   );
 }

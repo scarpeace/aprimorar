@@ -2,12 +2,10 @@ type LinkedStudentSummary = {
   active?: boolean | null;
 } & Record<string, unknown>;
 
-type LinkedStudentsPage = {
-  content: LinkedStudentSummary[];
-} | null | undefined;
+type LinkedStudents = LinkedStudentSummary[] | null | undefined;
 
-export function getActiveLinkedStudentsCount(linkedStudentsPage: LinkedStudentsPage) {
-  return (linkedStudentsPage?.content ?? []).filter(
+export function getActiveLinkedStudentsCount(linkedStudents: LinkedStudents) {
+  return (linkedStudents ?? []).filter(
     (student: LinkedStudentSummary) => student.active !== false,
   ).length;
 }
