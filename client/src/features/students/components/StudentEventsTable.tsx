@@ -2,73 +2,45 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { SectionCard } from "@/components/ui/section-card";
-import { ListSearchInput } from "@/components/ui/list-search-input";
-import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { useAppointmentMutations } from "@/features/appointments/hooks/use-appointment-mutations";
-import { useGetAppointmentById, useGetAppointmentsByStudentId, type AppointmentResponseDTO } from "@/kubb";
+import type { AppointmentResponseDTO, PageDTOAppointmentResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
-import { useDebounce } from "@/lib/shared/use-debounce";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
-import { memo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { memo } from "react";
 import { StudentEventMobileCard } from "./StudentEventMobileCard";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { useAppointmentMutations } from "@/features/appointments/hooks/use-appointment-mutations";
 
 interface StudentEventsTableProps {
-  studentId: string;
+  appointments?: PageDTOAppointmentResponseDTO;
+  currentPage: number;
+  error?: unknown;
+  isLoading: boolean;
+  isTogglingCharge: boolean;
+  onPageChange: (page: number) => void;
 }
 
-export const StudentEventsTable = memo(function StudentEventsTable({ studentId }: StudentEventsTableProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [hideCharged, setHideCharged] = useState(searchParams.get("hideCharged") === "true");
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const chargedFilter = hideCharged ? false : undefined;
-
-  const startDateStr = searchParams.get("startDate");
-  const endDateStr = searchParams.get("endDate");
-
-  const eventsQuery = useGetAppointmentsByStudentId(studentId, {
-    page: currentPage,
-    sort: ["startDate,desc", "id,asc"],
-    startDate: startDateStr ?? undefined,
-    endDate: endDateStr ?? undefined,
-    charged: chargedFilter,
-  });
+export const StudentEventsTable = memo(function StudentEventsTable({
+  appointments,
+  currentPage,
+  error,
+  isLoading,
+  isTogglingCharge,
+  onPageChange,
+}: StudentEventsTableProps) {
 
   const { toggleStudentCharge } = useAppointmentMutations();
 
-  const handleToggleStudentCharge = (eventId: string) => {
-    toggleStudentCharge.mutate({ id: eventId });
+  const handleToggleStudentCharge = (appointmentId: string) => {
+    toggleStudentCharge.mutate({ id: appointmentId });
   };
 
-  const handleHideCharged = () => {
-    const newParams = new URLSearchParams(searchParams);
-    const newValue = !hideCharged;
-    if (newValue) {
-      newParams.set("hideCharged", "true");
-    } else {
-      newParams.delete("hideCharged");
-    }
-    setSearchParams(newParams);
-    setCurrentPage(0);
-    setHideCharged(newValue);
-  };
+  if (error) {
+    return <ErrorCard title="Não foi possível carregar a listagem de Eventos" error={error} />;
+  }
 
-  if (eventsQuery.error) {
-    return (
-      <SectionCard
-        title="Atendimentos"
-        description="Erro ao carregar atendimentos do aluno"
-      >
-        <ErrorCard
-          title="Não foi possível carregar a listagem de Eventos"
-          error={eventsQuery.error}
-        />
-      </SectionCard>
-    );
+  if (isLoading) {
+    return <LoadingSpinner text="Carregando atendimentos..." />;
   }
 
   return (
@@ -83,13 +55,6 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
         </h3>
       </div>
 
-      <div className="flex gap-6 mb-3 items-center w-full">
-        <ListSearchInput placeholder="Buscar por aluno" value={searchTerm} onChange={(val) => {
-          setSearchTerm(val);
-          setCurrentPage(0);
-        }} />
-        <ToggleSwitch toggled={hideCharged} setToggle={handleHideCharged} label={"Ocultar Pagos"} />
-      </div>
         <table className="table table-zebra w-full table-auto bg-base-100">
           <thead className="bg-base-300 sticky top-0 z-10">
             <tr>
@@ -103,7 +68,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {eventsQuery.data?.appointments?.content?.map((event: AppointmentResponseDTO) => (
+            {appointments?.content.map((event: AppointmentResponseDTO) => (
                 <tr key={event.id} className="hover:bg-base-200/50 transition-colors group">
                   <td className="font-semibold">{event.employeeName}</td>
                   <td>{formatDateShortYear(event.startDate)}</td>
@@ -122,7 +87,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
                     <div className="flex justify-center gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
                       <div className="tooltip" data-tip={event.studentChargeDate != null ? "Cancelar Cobrança" : "Marcar como Cobrado"}>
                         <Button
-                          disabled={toggleStudentCharge.isPending}
+                          disabled={isTogglingCharge}
                           className="w-9 h-9 p-0"
                           size="sm"
                           variant={event.studentChargeDate != null ? "success" : "warning"}
@@ -146,22 +111,22 @@ export const StudentEventsTable = memo(function StudentEventsTable({ studentId }
 
       {/* Mobile View (Cards) */}
       <div className="md:hidden flex flex-col gap-4">
-        {eventsQuery.data?.appointments?.content?.map((event: AppointmentResponseDTO, index: number) => (
+        {appointments?.content?.map((event: AppointmentResponseDTO, index: number) => (
           <StudentEventMobileCard
             key={event.id}
             event={event}
             index={index}
-            isPending={toggleStudentCharge.isPending}
-            onToggleCharge={handleToggleStudentCharge}
+            isPending={isTogglingCharge}
+            onToggleCharge={() => handleToggleStudentCharge(event.id)}
           />
         ))}
       </div>
 
-        <Pagination
-          paginationData={eventsQuery.data?.appointments}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-        />
+      <Pagination
+        paginationData={appointments}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
+      />
     </div>
   );
 });

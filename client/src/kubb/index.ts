@@ -4,6 +4,8 @@ export type { GetAppointmentByIdQueryKey } from "./hooks/appointment/useGetAppoi
 export type { GetAppointmentsQueryKey } from "./hooks/appointment/useGetAppointments.ts";
 export type { GetAppointmentsByEmployeeIdQueryKey } from "./hooks/appointment/useGetAppointmentsByEmployeeId.ts";
 export type { GetAppointmentsByStudentIdQueryKey } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
+export type { GetEmployeeSummaryQueryKey } from "./hooks/appointment/useGetEmployeeSummary.ts";
+export type { GetStudentSummaryQueryKey } from "./hooks/appointment/useGetStudentSummary.ts";
 export type { ToggleEmployeeAppointmentPaymentMutationKey } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
 export type { ToggleStudentAppointmentChargeMutationKey } from "./hooks/appointment/useToggleStudentAppointmentCharge.ts";
 export type { UpdateAppointmentMutationKey } from "./hooks/appointment/useUpdateAppointment.ts";
@@ -58,7 +60,6 @@ export type {
 } from "./types/AppointmentResponseDTO.ts";
 export type { ClassesByContentDTO } from "./types/ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./types/DashboardSummaryResponseDTO.ts";
-export type { EmployeeAppointmentsDTO } from "./types/EmployeeAppointmentsDTO.ts";
 export type { EmployeeOptionsDTO } from "./types/EmployeeOptionsDTO.ts";
 export type {
   EmployeeRequestDTO,
@@ -68,6 +69,7 @@ export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./types/EmployeeResponseDTO.ts";
+export type { EmployeeSummaryDTO } from "./types/EmployeeSummaryDTO.ts";
 export type { FinanceSummaryDTO } from "./types/FinanceSummaryDTO.ts";
 export type { PageDTOAppointmentResponseDTO } from "./types/PageDTOAppointmentResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./types/PageDTOEmployeeResponseDTO.ts";
@@ -78,10 +80,10 @@ export type { PagedModelTransactionResponseDTO } from "./types/PagedModelTransac
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
-export type { StudentAppointmentsDTO } from "./types/StudentAppointmentsDTO.ts";
 export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
+export type { StudentSummaryDTO } from "./types/StudentSummaryDTO.ts";
 export type {
   TransactionRequestDTO,
   TransactionRequestDTOCategoryEnumKey,
@@ -131,6 +133,20 @@ export type {
   GetAppointmentsByStudentIdQueryParams,
   GetAppointmentsByStudentIdQueryResponse,
 } from "./types/appointment/GetAppointmentsByStudentId.ts";
+export type {
+  GetEmployeeSummary200,
+  GetEmployeeSummaryPathParams,
+  GetEmployeeSummaryQuery,
+  GetEmployeeSummaryQueryParams,
+  GetEmployeeSummaryQueryResponse,
+} from "./types/appointment/GetEmployeeSummary.ts";
+export type {
+  GetStudentSummary200,
+  GetStudentSummaryPathParams,
+  GetStudentSummaryQuery,
+  GetStudentSummaryQueryParams,
+  GetStudentSummaryQueryResponse,
+} from "./types/appointment/GetStudentSummary.ts";
 export type {
   ToggleEmployeeAppointmentPayment200,
   ToggleEmployeeAppointmentPaymentMutation,
@@ -377,6 +393,14 @@ export { getAppointmentsByStudentId } from "./hooks/appointment/useGetAppointmen
 export { getAppointmentsByStudentIdQueryKey } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
 export { getAppointmentsByStudentIdQueryOptions } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
 export { useGetAppointmentsByStudentId } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
+export { getEmployeeSummary } from "./hooks/appointment/useGetEmployeeSummary.ts";
+export { getEmployeeSummaryQueryKey } from "./hooks/appointment/useGetEmployeeSummary.ts";
+export { getEmployeeSummaryQueryOptions } from "./hooks/appointment/useGetEmployeeSummary.ts";
+export { useGetEmployeeSummary } from "./hooks/appointment/useGetEmployeeSummary.ts";
+export { getStudentSummary } from "./hooks/appointment/useGetStudentSummary.ts";
+export { getStudentSummaryQueryKey } from "./hooks/appointment/useGetStudentSummary.ts";
+export { getStudentSummaryQueryOptions } from "./hooks/appointment/useGetStudentSummary.ts";
+export { useGetStudentSummary } from "./hooks/appointment/useGetStudentSummary.ts";
 export { toggleEmployeeAppointmentPayment } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
 export { toggleEmployeeAppointmentPaymentMutationKey } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
 export { toggleEmployeeAppointmentPaymentMutationOptions } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
@@ -571,6 +595,18 @@ export {
   getAppointmentsQueryResponseSchema,
 } from "./zod/appointment/getAppointmentsSchema.ts";
 export {
+  getEmployeeSummary200Schema,
+  getEmployeeSummaryPathParamsSchema,
+  getEmployeeSummaryQueryParamsSchema,
+  getEmployeeSummaryQueryResponseSchema,
+} from "./zod/appointment/getEmployeeSummarySchema.ts";
+export {
+  getStudentSummary200Schema,
+  getStudentSummaryPathParamsSchema,
+  getStudentSummaryQueryParamsSchema,
+  getStudentSummaryQueryResponseSchema,
+} from "./zod/appointment/getStudentSummarySchema.ts";
+export {
   toggleEmployeeAppointmentPayment200Schema,
   toggleEmployeeAppointmentPaymentMutationResponseSchema,
   toggleEmployeeAppointmentPaymentPathParamsSchema,
@@ -635,10 +671,10 @@ export {
   updateEmployeeMutationResponseSchema,
   updateEmployeePathParamsSchema,
 } from "./zod/employee/updateEmployeeSchema.ts";
-export { employeeAppointmentsDTOSchema } from "./zod/employeeAppointmentsDTOSchema.ts";
 export { employeeOptionsDTOSchema } from "./zod/employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./zod/employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./zod/employeeResponseDTOSchema.ts";
+export { employeeSummaryDTOSchema } from "./zod/employeeSummaryDTOSchema.ts";
 export {
   createGeneralExpense201Schema,
   createGeneralExpenseMutationRequestSchema,
@@ -770,9 +806,9 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./zod/student/updateStudentSchema.ts";
-export { studentAppointmentsDTOSchema } from "./zod/studentAppointmentsDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./zod/studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./zod/studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./zod/studentResponseDTOSchema.ts";
+export { studentSummaryDTOSchema } from "./zod/studentSummaryDTOSchema.ts";
 export { transactionRequestDTOSchema } from "./zod/transactionRequestDTOSchema.ts";
 export { transactionResponseDTOSchema } from "./zod/transactionResponseDTOSchema.ts";

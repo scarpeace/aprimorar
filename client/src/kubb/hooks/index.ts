@@ -4,6 +4,8 @@ export type { GetAppointmentByIdQueryKey } from "./appointment/useGetAppointment
 export type { GetAppointmentsQueryKey } from "./appointment/useGetAppointments.ts";
 export type { GetAppointmentsByEmployeeIdQueryKey } from "./appointment/useGetAppointmentsByEmployeeId.ts";
 export type { GetAppointmentsByStudentIdQueryKey } from "./appointment/useGetAppointmentsByStudentId.ts";
+export type { GetEmployeeSummaryQueryKey } from "./appointment/useGetEmployeeSummary.ts";
+export type { GetStudentSummaryQueryKey } from "./appointment/useGetStudentSummary.ts";
 export type { ToggleEmployeeAppointmentPaymentMutationKey } from "./appointment/useToggleEmployeeAppointmentPayment.ts";
 export type { ToggleStudentAppointmentChargeMutationKey } from "./appointment/useToggleStudentAppointmentCharge.ts";
 export type { UpdateAppointmentMutationKey } from "./appointment/useUpdateAppointment.ts";
@@ -64,6 +66,14 @@ export { getAppointmentsByStudentId } from "./appointment/useGetAppointmentsBySt
 export { getAppointmentsByStudentIdQueryKey } from "./appointment/useGetAppointmentsByStudentId.ts";
 export { getAppointmentsByStudentIdQueryOptions } from "./appointment/useGetAppointmentsByStudentId.ts";
 export { useGetAppointmentsByStudentId } from "./appointment/useGetAppointmentsByStudentId.ts";
+export { getEmployeeSummary } from "./appointment/useGetEmployeeSummary.ts";
+export { getEmployeeSummaryQueryKey } from "./appointment/useGetEmployeeSummary.ts";
+export { getEmployeeSummaryQueryOptions } from "./appointment/useGetEmployeeSummary.ts";
+export { useGetEmployeeSummary } from "./appointment/useGetEmployeeSummary.ts";
+export { getStudentSummary } from "./appointment/useGetStudentSummary.ts";
+export { getStudentSummaryQueryKey } from "./appointment/useGetStudentSummary.ts";
+export { getStudentSummaryQueryOptions } from "./appointment/useGetStudentSummary.ts";
+export { useGetStudentSummary } from "./appointment/useGetStudentSummary.ts";
 export { toggleEmployeeAppointmentPayment } from "./appointment/useToggleEmployeeAppointmentPayment.ts";
 export { toggleEmployeeAppointmentPaymentMutationKey } from "./appointment/useToggleEmployeeAppointmentPayment.ts";
 export { toggleEmployeeAppointmentPaymentMutationOptions } from "./appointment/useToggleEmployeeAppointmentPayment.ts";

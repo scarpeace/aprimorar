@@ -60,8 +60,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         select count(a)
         from Appointment a
         where a.employeeId = :employeeId
-          and (:startDate is null or a.startDate >= :startDate)
-          and (:endDate is null or a.endDate <= :endDate)
+          and a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
     long countFilteredByEmployeeId(
@@ -76,8 +76,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         from Appointment a
         where a.employeeId = :employeeId
           and a.employeePaymentDate is not null
-          and (:startDate is null or a.startDate >= :startDate)
-          and (:endDate is null or a.endDate <= :endDate)
+          and a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
     BigDecimal sumPaidFilteredByEmployeeId(
@@ -92,8 +92,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         from Appointment a
         where a.employeeId = :employeeId
           and a.employeePaymentDate is null
-          and (:startDate is null or a.startDate >= :startDate)
-          and (:endDate is null or a.endDate <= :endDate)
+          and a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
     BigDecimal sumUnpaidFilteredByEmployeeId(
@@ -129,8 +129,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         select count(a)
         from Appointment a
         where a.studentId = :studentId
-          and (:startDate is null or a.startDate >= :startDate)
-          and (:endDate is null or a.endDate <= :endDate)
+          and a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
     long countFilteredByStudentId(
@@ -145,8 +145,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         from Appointment a
         where a.studentId = :studentId
           and a.studentChargeDate is not null
-          and (:startDate is null or a.startDate >= :startDate)
-          and (:endDate is null or a.endDate <= :endDate)
+          and a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
     BigDecimal sumChargedFilteredByStudentId(
@@ -161,8 +161,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         from Appointment a
         where a.studentId = :studentId
           and a.studentChargeDate is null
-          and (:startDate is null or a.startDate >= :startDate)
-          and (:endDate is null or a.endDate <= :endDate)
+          and a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
     BigDecimal sumPendingFilteredByStudentId(

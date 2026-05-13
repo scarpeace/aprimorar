@@ -3,8 +3,8 @@ package aprimorar.appointment.api;
 import aprimorar.appointment.api.dto.ContentDistributionDTO;
 import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
-import aprimorar.appointment.api.dto.EmployeeAppointmentsDTO;
-import aprimorar.appointment.api.dto.StudentAppointmentsDTO;
+import aprimorar.appointment.api.dto.EmployeeSummaryDTO;
+import aprimorar.appointment.api.dto.StudentSummaryDTO;
 import aprimorar.shared.PageDTO;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -20,7 +20,7 @@ public interface AppointmentService {
 
     AppointmentResponseDTO findById(UUID appointmentId);
 
-    EmployeeAppointmentsDTO getAppointmentsByEmployeeId(
+    PageDTO<AppointmentResponseDTO> getAppointmentsByEmployeeId(
         Pageable pageable,
         UUID employeeId,
         Boolean hidePaid,
@@ -28,7 +28,17 @@ public interface AppointmentService {
         Instant endDate
     );
 
-   StudentAppointmentsDTO getAppointmentsByStudentId(Pageable pageable,UUID studentId, Instant startDate, Instant endDate, Boolean charged);
+    EmployeeSummaryDTO getEmployeeSummary(UUID employeeId, Instant startDate, Instant endDate);
+
+    PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(
+        Pageable pageable,
+        UUID studentId,
+        Instant startDate,
+        Instant endDate,
+        Boolean charged
+    );
+
+    StudentSummaryDTO getStudentSummary(UUID studentId, Instant startDate, Instant endDate);
 
     AppointmentResponseDTO updateAppointment(UUID id, AppointmentRequestDTO dto);
 

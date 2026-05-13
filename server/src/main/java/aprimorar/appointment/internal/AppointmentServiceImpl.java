@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,11 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import aprimorar.registration.employee.api.EmployeeService;
 import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
 import aprimorar.appointment.api.AppointmentService;
+import aprimorar.appointment.api.event.EmployeePaymentToggledEvent;
+import aprimorar.appointment.api.event.StudentChargeToggledEvent;
 import aprimorar.appointment.api.dto.ContentDistributionDTO;
 import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
-import aprimorar.appointment.api.dto.EmployeeAppointmentsDTO;
-import aprimorar.appointment.api.dto.StudentAppointmentsDTO;
+import aprimorar.appointment.api.dto.EmployeeSummaryDTO;
+import aprimorar.appointment.api.dto.StudentSummaryDTO;
 import aprimorar.appointment.api.exception.AppointmentNotFoundException;
 import aprimorar.appointment.api.exception.AppointmentScheduleConflictException;
 import aprimorar.appointment.api.exception.InvalidAppointmentException;
@@ -44,6 +47,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final TransactionService transactionService;
     private final StudentService studentService;
     private final EmployeeService employeeService;
+    private final ApplicationEventPublisher eventPublisher;
     private final Clock clock;
 
     public AppointmentServiceImpl(
@@ -52,6 +56,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         TransactionService transactionService,
         StudentService studentService,
         EmployeeService employeeService,
+        ApplicationEventPublisher eventPublisher,
         Clock clock
     ) {
         this.appointmentRepo = appointmentRepo;
@@ -59,6 +64,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         this.transactionService = transactionService;
         this.studentService = studentService;
         this.employeeService = employeeService;
+        this.eventPublisher = eventPublisher;
         this.clock = clock;
     }
 
@@ -106,7 +112,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
    @Transactional(readOnly = true)
-   public EmployeeAppointmentsDTO getAppointmentsByEmployeeId(
+   public PageDTO<AppointmentResponseDTO> getAppointmentsByEmployeeId(
        Pageable pageable,
        UUID employeeId,
        Boolean hidePaid,
@@ -126,23 +132,30 @@ public class AppointmentServiceImpl implements AppointmentService {
        Page<Appointment> appointmentPage = appointmentRepo.findAll(spec, pageable);
        Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
 
-       long totalEvents = appointmentRepo.countFilteredByEmployeeId(employeeId, startDate, endDate);
-       BigDecimal totalPaid = appointmentRepo.sumPaidFilteredByEmployeeId(employeeId, startDate, endDate);
-       BigDecimal totalUnpaid = appointmentRepo.sumUnpaidFilteredByEmployeeId(employeeId, startDate, endDate);
-
        log.info(
-           "Consulta de appointments do colaborador finalizada, {} registros encontrados.",
-           appointmentPage.getTotalElements()
+            "Consulta de appointments do colaborador finalizada, {} registros encontrados.",
+            appointmentPage.getTotalElements()
        );
 
-       return new EmployeeAppointmentsDTO(new PageDTO<>(dtoPage), totalEvents, totalPaid, totalUnpaid);
-   }
+       return new PageDTO<>(dtoPage);
+    }
 
-   @Transactional(readOnly = true)
-    public StudentAppointmentsDTO getAppointmentsByStudentId(
-        Pageable pageable,
-        UUID studentId,
-        Instant startDate,
+    @Transactional(readOnly = true)
+    public EmployeeSummaryDTO getEmployeeSummary(UUID employeeId, Instant startDate, Instant endDate) {
+        employeeService.findById(employeeId);
+
+        long totalEvents = appointmentRepo.countFilteredByEmployeeId(employeeId, startDate, endDate);
+        BigDecimal totalPaid = appointmentRepo.sumPaidFilteredByEmployeeId(employeeId, startDate, endDate);
+        BigDecimal totalUnpaid = appointmentRepo.sumUnpaidFilteredByEmployeeId(employeeId, startDate, endDate);
+
+        return new EmployeeSummaryDTO(totalEvents, totalPaid, totalUnpaid);
+    }
+
+    @Transactional(readOnly = true)
+     public PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(
+         Pageable pageable,
+         UUID studentId,
+         Instant startDate,
         Instant endDate,
         Boolean charged
     ) {
@@ -155,13 +168,21 @@ public class AppointmentServiceImpl implements AppointmentService {
         Page<Appointment> appointmentPage = appointmentRepo.findAll(spec, pageable);
         Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
 
+        log.info("Consulta de appointments do aluno finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
+
+       return new PageDTO<>(dtoPage);
+    }
+
+    @Transactional(readOnly = true)
+    public StudentSummaryDTO getStudentSummary(UUID studentId, Instant startDate, Instant endDate) {
+        studentService.findById(studentId);
+
         long totalEvents = appointmentRepo.countFilteredByStudentId(studentId, startDate, endDate);
         BigDecimal totalCharged = appointmentRepo.sumChargedFilteredByStudentId(studentId, startDate, endDate);
         BigDecimal totalPending = appointmentRepo.sumPendingFilteredByStudentId(studentId, startDate, endDate);
-        log.info("Consulta de appointments do aluno finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
 
-       return new StudentAppointmentsDTO(new PageDTO<>(dtoPage), totalEvents, totalCharged, totalPending);
-   }
+        return new StudentSummaryDTO(totalEvents, totalCharged, totalPending);
+    }
 
     @Transactional
     public AppointmentResponseDTO updateAppointment(UUID id, AppointmentRequestDTO dto) {
@@ -201,7 +222,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponseDTO toggleStudentCharge(UUID id) {
         Appointment appointment = findAppointmentOrThrow(id);
         appointment.toggleStudentCharge(Instant.now(clock));
-        transactionService.syncStudentCharge(appointment.getId(), appointment.getStudentChargeDate());
+        eventPublisher.publishEvent(new StudentChargeToggledEvent(appointment.getId(), appointment.getStudentChargeDate()));
         log.info("Status da cobrança do aluno no appointment {} atualizado.", appointment.getTitle());
         return appointmentMapper.convertToDto(appointment);
     }
@@ -210,7 +231,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponseDTO toggleEmployeePayment(UUID id) {
         Appointment appointment = findAppointmentOrThrow(id);
         appointment.toggleEmployeePayment(Instant.now(clock));
-        transactionService.syncEmployeePayment(appointment.getId(), appointment.getEmployeePaymentDate());
+        eventPublisher.publishEvent(new EmployeePaymentToggledEvent(
+            appointment.getId(),
+            appointment.getEmployeePaymentDate()
+        ));
         log.info("Status do pagamento do colaborador no appointment {} atualizado.", appointment.getTitle());
         return appointmentMapper.convertToDto(appointment);
     }

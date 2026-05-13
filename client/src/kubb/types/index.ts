@@ -16,7 +16,6 @@ export type {
 } from "./AppointmentResponseDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
-export type { EmployeeAppointmentsDTO } from "./EmployeeAppointmentsDTO.ts";
 export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
 export type {
   EmployeeRequestDTO,
@@ -26,6 +25,7 @@ export type {
   EmployeeResponseDTO,
   EmployeeResponseDTODutyEnumKey,
 } from "./EmployeeResponseDTO.ts";
+export type { EmployeeSummaryDTO } from "./EmployeeSummaryDTO.ts";
 export type { FinanceSummaryDTO } from "./FinanceSummaryDTO.ts";
 export type { PageDTOAppointmentResponseDTO } from "./PageDTOAppointmentResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./PageDTOEmployeeResponseDTO.ts";
@@ -36,10 +36,10 @@ export type { PagedModelTransactionResponseDTO } from "./PagedModelTransactionRe
 export type { ParentOptionsDTO } from "./ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
-export type { StudentAppointmentsDTO } from "./StudentAppointmentsDTO.ts";
 export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
+export type { StudentSummaryDTO } from "./StudentSummaryDTO.ts";
 export type {
   TransactionRequestDTO,
   TransactionRequestDTOCategoryEnumKey,
@@ -89,6 +89,20 @@ export type {
   GetAppointmentsByStudentIdQueryParams,
   GetAppointmentsByStudentIdQueryResponse,
 } from "./appointment/GetAppointmentsByStudentId.ts";
+export type {
+  GetEmployeeSummary200,
+  GetEmployeeSummaryPathParams,
+  GetEmployeeSummaryQuery,
+  GetEmployeeSummaryQueryParams,
+  GetEmployeeSummaryQueryResponse,
+} from "./appointment/GetEmployeeSummary.ts";
+export type {
+  GetStudentSummary200,
+  GetStudentSummaryPathParams,
+  GetStudentSummaryQuery,
+  GetStudentSummaryQueryParams,
+  GetStudentSummaryQueryResponse,
+} from "./appointment/GetStudentSummary.ts";
 export type {
   ToggleEmployeeAppointmentPayment200,
   ToggleEmployeeAppointmentPaymentMutation,

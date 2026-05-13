@@ -65,7 +65,7 @@ public class TransactionServiceImpl implements TransactionService {
     public void syncEmployeePayment(UUID appointmentId, Instant settledAt) {
         Transaction transaction = findByOriginAndAppointmentId(TransactionOrigin.APPOINTMENT_EMPLOYEE_PAYMENT, appointmentId);
         applySettlement(transaction, settledAt);
-    }   
+    }
 
     @Transactional
     public void deleteAppointmentTransactions(UUID appointmentId) {
@@ -73,7 +73,7 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.deleteByOriginAndOriginId(TransactionOrigin.APPOINTMENT_EMPLOYEE_PAYMENT, appointmentId);
     }
 
-    private Transaction findByOriginAndAppointmentId(TransactionOrigin origin, java.util.UUID appointmentId) {
+    private Transaction findByOriginAndAppointmentId(TransactionOrigin origin, UUID appointmentId) {
         return transactionRepository.findByOriginAndOriginId(origin, appointmentId)
             .orElseThrow(() -> new TransactionNotFoundException("Transação financeira não encontrada"));
     }

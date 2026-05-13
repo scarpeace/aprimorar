@@ -1,14 +1,10 @@
 package aprimorar.appointment.api.dto;
 
-import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 
-@Schema(description = "Appointments paginados do aluno com resumo do periodo")
-public record StudentAppointmentsDTO(
-    @Schema(description = "Lista paginada de appointments do aluno")
-    PageDTO<AppointmentResponseDTO> appointments,
-
+@Schema(description = "Resumo financeiro e quantitativo do aluno no periodo")
+public record StudentSummaryDTO(
     @Schema(description = "Total de eventos no periodo selecionado")
     Long totalEvents,
 

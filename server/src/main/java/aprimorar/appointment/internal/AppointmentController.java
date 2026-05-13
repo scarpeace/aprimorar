@@ -3,8 +3,8 @@ package aprimorar.appointment.internal;
 import aprimorar.appointment.api.AppointmentService;
 import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
-import aprimorar.appointment.api.dto.EmployeeAppointmentsDTO;
-import aprimorar.appointment.api.dto.StudentAppointmentsDTO;
+import aprimorar.appointment.api.dto.EmployeeSummaryDTO;
+import aprimorar.appointment.api.dto.StudentSummaryDTO;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -58,7 +58,7 @@ public class AppointmentController {
     @GetMapping("/{id}/employee")
     @Operation(operationId = "getAppointmentsByEmployeeId", description = "Retorna appointments por ID do colaborador.")
     @ApiResponse(responseCode = "200", description = "Página de appointments do colaborador retornada com sucesso.")
-    public ResponseEntity<EmployeeAppointmentsDTO> getAppointmentsByEmployeeId(
+    public ResponseEntity<PageDTO<AppointmentResponseDTO>> getAppointmentsByEmployeeId(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) Boolean hidePaid,
@@ -68,10 +68,21 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAppointmentsByEmployeeId(pageable, id, hidePaid, startDate, endDate));
     }
 
+    @GetMapping("/{id}/employee/summary")
+    @Operation(operationId = "getEmployeeSummary", description = "Retorna o resumo de appointments por ID do colaborador.")
+    @ApiResponse(responseCode = "200", description = "Resumo de appointments do colaborador retornado com sucesso.")
+    public ResponseEntity<EmployeeSummaryDTO> getEmployeeSummary(
+        @PathVariable UUID id,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(appointmentService.getEmployeeSummary(id, startDate, endDate));
+    }
+
     @GetMapping("/{id}/student")
     @Operation(operationId = "getAppointmentsByStudentId", description = "Retorna appointments por ID do aluno.")
     @ApiResponse(responseCode = "200", description = "Página de appointments do aluno retornada com sucesso.")
-    public ResponseEntity<StudentAppointmentsDTO> getAppointmentsByStudentId(
+    public ResponseEntity<PageDTO<AppointmentResponseDTO>> getAppointmentsByStudentId(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
@@ -79,6 +90,17 @@ public class AppointmentController {
         @RequestParam(required = false) Boolean charged
     ) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByStudentId(pageable, id, startDate, endDate, charged));
+    }
+
+    @GetMapping("/{id}/student/summary")
+    @Operation(operationId = "getStudentSummary", description = "Retorna o resumo de appointments por ID do aluno.")
+    @ApiResponse(responseCode = "200", description = "Resumo de appointments do aluno retornado com sucesso.")
+    public ResponseEntity<StudentSummaryDTO> getStudentSummary(
+        @PathVariable UUID id,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(appointmentService.getStudentSummary(id, startDate, endDate));
     }
 
     @PutMapping("/{id}")

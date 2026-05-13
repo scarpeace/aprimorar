@@ -5,7 +5,11 @@ import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
   getAppointmentByIdQueryKey,
   getAppointmentsQueryKey,
+  getAppointmentsByEmployeeIdQueryKey,
+  getAppointmentsByStudentIdQueryKey,
+  getEmployeeSummaryQueryKey,
   getFinanceSummaryQueryKey,
+  getStudentSummaryQueryKey,
   useCreateAppointment,
   useToggleEmployeeAppointmentPayment,
   useToggleStudentAppointmentCharge,
@@ -68,10 +72,12 @@ export function useAppointmentMutations() {
         toast.success("Status da cobrança atualizado");
         queryClient.invalidateQueries({ queryKey: getAppointmentsQueryKey() });
         queryClient.invalidateQueries({ queryKey: getAppointmentByIdQueryKey(variables.id) });
+        queryClient.invalidateQueries({ queryKey: getAppointmentsByStudentIdQueryKey(updatedAppointment.studentId) });
         queryClient.invalidateQueries({
           queryKey: getAppointmentByIdQueryKey(updatedAppointment.studentId),
         });
         queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getStudentSummaryQueryKey(updatedAppointment.studentId) });
         queryClient.invalidateQueries({ queryKey: ["finance", "student-summary", updatedAppointment.studentId] });
       },
       onError: (error) => {
@@ -86,9 +92,11 @@ export function useAppointmentMutations() {
         toast.success("Status do pagamento atualizado");
         queryClient.invalidateQueries({ queryKey: getAppointmentsQueryKey() });
         queryClient.invalidateQueries({ queryKey: getAppointmentByIdQueryKey(variables.id) });
+        queryClient.invalidateQueries({ queryKey: getAppointmentsByEmployeeIdQueryKey(updatedAppointment.employeeId) });
         queryClient.invalidateQueries({
           queryKey: getAppointmentByIdQueryKey(updatedAppointment.employeeId),
         });
+        queryClient.invalidateQueries({ queryKey: getEmployeeSummaryQueryKey(updatedAppointment.employeeId) });
         queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", updatedAppointment.employeeId] });
       },
       onError: (error) => {
