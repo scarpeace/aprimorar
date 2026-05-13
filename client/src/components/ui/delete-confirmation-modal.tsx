@@ -15,6 +15,7 @@ interface DeleteConfirmationModalProps {
   linkedItemsLabel?: string
   isBlocker?: boolean
   phantomWarning?: ReactNode
+  errorMessage?: ReactNode
   confirmText?: string
   cancelText?: string
 }
@@ -31,6 +32,7 @@ export const DeleteConfirmationModal = ({
   linkedItemsLabel = "evento(s)",
   isBlocker = false,
   phantomWarning,
+  errorMessage,
   confirmText = "Sim, Excluir",
   cancelText = "Cancelar",
 }: DeleteConfirmationModalProps) => {
@@ -71,6 +73,12 @@ export const DeleteConfirmationModal = ({
             Tem certeza que deseja excluir este {itemName}? <strong>Esta ação não pode ser desfeita.</strong>
           </p>
         )}
+
+        {errorMessage ? (
+          <div className="rounded-md border border-error/20 bg-error/10 px-4 py-3 text-sm text-error">
+            {errorMessage}
+          </div>
+        ) : null}
 
         <div className="modal-action">
           <form method="dialog">

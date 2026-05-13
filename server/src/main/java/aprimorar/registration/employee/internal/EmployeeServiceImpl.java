@@ -1,5 +1,6 @@
 package aprimorar.registration.employee.internal;
 
+import aprimorar.registration.api.exception.PersonHasPendingFinancialsException;
 import aprimorar.registration.employee.api.EmployeeService;
 import aprimorar.registration.employee.api.dto.EmployeeOptionsDTO;
 import aprimorar.registration.employee.api.dto.EmployeeRequestDTO;
@@ -8,6 +9,7 @@ import aprimorar.registration.employee.api.event.EmployeeDeletedEvent;
 import aprimorar.registration.employee.api.exception.EmployeeNotFoundException;
 import aprimorar.registration.employee.internal.repository.EmployeeRepository;
 import aprimorar.registration.employee.internal.repository.EmployeeSpecifications;
+import aprimorar.registration.shared.PendingFinancialBalanceChecker;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.PageDTO;
 
@@ -30,13 +32,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepo;
     private final ApplicationEventPublisher eventPublisher;
+    private final PendingFinancialBalanceChecker pendingFinancialBalanceChecker;
 
     public EmployeeServiceImpl(
         EmployeeRepository employeeRepo,
-        ApplicationEventPublisher eventPublisher
+        ApplicationEventPublisher eventPublisher,
+        PendingFinancialBalanceChecker pendingFinancialBalanceChecker
     ) {
         this.employeeRepo = employeeRepo;
         this.eventPublisher = eventPublisher;
+        this.pendingFinancialBalanceChecker = pendingFinancialBalanceChecker;
     }
 
     @Transactional
@@ -192,6 +197,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         Employee employee = findEmployeeOrThrow(employeeId);
+
+        if (pendingFinancialBalanceChecker.hasPendingEmployeePayments(employeeId)) {
+            throw new PersonHasPendingFinancialsException(
+                "O colaborador possui pagamentos pendentes. Quite os valores antes de excluí-lo."
+            );
+        }
 
         log.info("Publicando evento de exclusão do colaborador {}.", employee.getName().toUpperCase());
         eventPublisher.publishEvent(new EmployeeDeletedEvent(employeeId));

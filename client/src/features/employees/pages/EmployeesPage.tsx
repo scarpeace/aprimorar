@@ -54,12 +54,12 @@ export function EmployeesPage() {
             onChange={setSearchTerm}
           />
           <div className="flex justify-between sm:justify-end w-full sm:w-auto items-center gap-3">
-            {/*<ToggleSwitch
+            <ToggleSwitch
               label="Arquivados"
               tip="Mostrar colaboradores arquivados"
               toggled={showArchived}
               setToggle={setShowArchived}
-            />*/}
+            />
             <Button
               className="sm:ml-auto"
               onClick={() => handleOpenForm()}

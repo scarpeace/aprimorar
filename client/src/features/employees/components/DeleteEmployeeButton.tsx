@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
@@ -9,6 +10,7 @@ import { useGetAppointmentsByEmployeeId } from "@/kubb";
 
 export const DeleteEmployeeButton = ({employeeId}: {employeeId: string}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
     deleteEmployee: { mutate: deleteEmployee, isPending: isDeleting },
@@ -18,21 +20,27 @@ export const DeleteEmployeeButton = ({employeeId}: {employeeId: string}) => {
     useGetAppointmentsByEmployeeId(employeeId);
 
   const handleOpenClick = () => {
+    setErrorMessage(null);
     setIsOpen(true);
   };
 
   const handleClose = () => {
     if (!isDeleting) {
+      setErrorMessage(null);
       setIsOpen(false);
     }
   };
 
   const handleConfirmDelete = () => {
+    setErrorMessage(null);
     deleteEmployee(
       { employeeId },
       {
-        onSettled: () => {
+        onSuccess: () => {
           setIsOpen(false);
+        },
+        onError: (error) => {
+          setErrorMessage(getFriendlyErrorMessage(error));
         },
       },
     );
@@ -61,6 +69,7 @@ export const DeleteEmployeeButton = ({employeeId}: {employeeId: string}) => {
         isItemLoading={isEventsLoading}
         itemDeleteCount={eventsCount}
         itemName="colaborador"
+        errorMessage={errorMessage}
         phantomWarning={
           <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
             Ao excluí-lo, seu histórico pessoal será apagado, mas{" "}

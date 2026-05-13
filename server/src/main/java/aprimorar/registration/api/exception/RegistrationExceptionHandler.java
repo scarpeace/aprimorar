@@ -51,6 +51,7 @@ public class RegistrationExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler({
         EmployeeAlreadyExistsException.class,
+        PersonHasPendingFinancialsException.class,
         ParentAlreadyExistsException.class,
         ParentHasLinkedStudentsException.class,
         StudentAlreadyExistException.class

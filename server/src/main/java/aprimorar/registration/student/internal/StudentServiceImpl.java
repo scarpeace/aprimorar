@@ -1,8 +1,10 @@
 package aprimorar.registration.student.internal;
 
+import aprimorar.registration.api.exception.PersonHasPendingFinancialsException;
 import aprimorar.registration.shared.address.Address;
 import aprimorar.registration.parent.internal.Parent;
 import aprimorar.registration.parent.internal.repository.ParentRepository;
+import aprimorar.registration.shared.PendingFinancialBalanceChecker;
 import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
@@ -39,6 +41,7 @@ public class StudentServiceImpl implements StudentService {
     private final ParentRepository parentRepo;
     private final StudentMapper studentMapper;
     private final ApplicationEventPublisher eventPublisher;
+    private final PendingFinancialBalanceChecker pendingFinancialBalanceChecker;
     private final Clock clock;
 
     public StudentServiceImpl(
@@ -46,12 +49,14 @@ public class StudentServiceImpl implements StudentService {
         ParentRepository parentRepo,
         StudentMapper studentMapper,
         ApplicationEventPublisher eventPublisher,
+        PendingFinancialBalanceChecker pendingFinancialBalanceChecker,
         Clock clock
     ) {
         this.studentRepo = studentRepo;
         this.parentRepo = parentRepo;
         this.studentMapper = studentMapper;
         this.eventPublisher = eventPublisher;
+        this.pendingFinancialBalanceChecker = pendingFinancialBalanceChecker;
         this.clock = clock;
     }
 
@@ -191,6 +196,12 @@ public class StudentServiceImpl implements StudentService {
         }
 
         Student student = findStudentOrThrow(studentId);
+
+        if (pendingFinancialBalanceChecker.hasPendingStudentCharges(studentId)) {
+            throw new PersonHasPendingFinancialsException(
+                "O aluno possui cobranças pendentes. Quite os valores antes de excluí-lo."
+            );
+        }
 
         log.info("Publicando evento de exclusão do aluno {}.", student.getName().toUpperCase());
         eventPublisher.publishEvent(new StudentDeletedEvent(studentId));

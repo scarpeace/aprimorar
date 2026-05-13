@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
+import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useGetAppointmentsByStudentId } from "@/kubb";
 import { useStudentMutations } from "../hooks/student-mutations";
 
@@ -13,7 +13,7 @@ type DeleteStudentButtonProps = {
 
 export const DeleteStudentButton = ({ studentId, className }: DeleteStudentButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
     deleteStudent: { mutate: deleteStudent, isPending: isDeleting },
@@ -22,22 +22,27 @@ export const DeleteStudentButton = ({ studentId, className }: DeleteStudentButto
     useGetAppointmentsByStudentId(studentId);
 
   const handleOpenClick = () => {
+    setErrorMessage(null);
     setIsOpen(true);
   };
 
   const handleClose = () => {
     if (!isDeleting) {
+      setErrorMessage(null);
       setIsOpen(false);
     }
   };
 
   const handleConfirmDelete = () => {
+    setErrorMessage(null);
     deleteStudent(
       { studentId },
       {
-        onSettled: () => {
+        onSuccess: () => {
           setIsOpen(false);
-          navigate("/students");
+        },
+        onError: (error) => {
+          setErrorMessage(getFriendlyErrorMessage(error));
         },
       },
     );
@@ -67,6 +72,7 @@ export const DeleteStudentButton = ({ studentId, className }: DeleteStudentButto
         isItemLoading={isEventsLoading}
         itemDeleteCount={eventsCount}
         itemName="aluno"
+        errorMessage={errorMessage}
         phantomWarning={
           <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
             Ao excluí-lo, seu histórico pessoal será apagado, mas{" "}

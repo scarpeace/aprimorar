@@ -29,13 +29,15 @@ export function EmployeeInfoSection({ employeeId, onEdit }: EmployeeInfoSectionP
     );
   }
 
+  const isArchived = employeeQuery.data.active === false;
+
   return (
     <section className={`p-4 rounded-xl border border-base-300 bg-base-100 shadow-sm`}>
       <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
              <span className="font-bold text-2xl text-base-content">{`${employeeQuery.data.name}`}</span>
-              <span className={`text-xs md:text-md badge ${employeeQuery.data.archivedAt ? "badge-ghost" : "badge-success"} badge-md gap-1`}>
-                {employeeQuery.data.archivedAt ? "Arquivado" : "Ativo"}
+              <span className={`text-xs md:text-md badge ${isArchived ? "badge-ghost" : "badge-success"} badge-md gap-1`}>
+                {isArchived ? "Arquivado" : "Ativo"}
               </span>
           </div>
 
@@ -46,7 +48,7 @@ export function EmployeeInfoSection({ employeeId, onEdit }: EmployeeInfoSectionP
 
             <ArchiveEmployeeButton
               employeeId={employeeQuery.data.id}
-              isArchived={!!employeeQuery.data.archivedAt}
+              isArchived={isArchived}
             />
             <DeleteEmployeeButton employeeId={employeeQuery.data.id} />
           </div>

@@ -49,9 +49,6 @@ export function useStudentMutations() {
 
   const deleteStudent = useDeleteStudent({
     mutation: {
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
-      },
       onSuccess: () => {
         toast.success("Aluno excluído com sucesso");
         queryClient.invalidateQueries({ queryKey: getStudentsQueryKey() });
