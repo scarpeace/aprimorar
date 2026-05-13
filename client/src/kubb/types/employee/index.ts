@@ -28,13 +28,6 @@ export type {
   GetEmployeeOptionsQueryResponse,
 } from "./GetEmployeeOptions.ts";
 export type {
-  GetEmployeeSummary200,
-  GetEmployeeSummaryPathParams,
-  GetEmployeeSummaryQuery,
-  GetEmployeeSummaryQueryParams,
-  GetEmployeeSummaryQueryResponse,
-} from "./GetEmployeeSummary.ts";
-export type {
   GetEmployees200,
   GetEmployeesQuery,
   GetEmployeesQueryParams,

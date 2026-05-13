@@ -7,13 +7,13 @@ import { useStudentMutations } from "../hooks/student-mutations";
 
 type ArchiveStudentButtonProps = {
   studentId: string;
-  isArchived: boolean;
+  active: boolean;
   className?: string;
 };
 
 export const ArchiveStudentButton = ({
   studentId,
-  isArchived,
+  active,
   className,
 }: ArchiveStudentButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -27,13 +27,13 @@ export const ArchiveStudentButton = ({
   } = useStudentMutations();
 
   const isPending = isArchivingStudent || isUnarchivingStudent;
-  const actionLabel = isArchived ? "Desarquivar" : "Arquivar";
-  const Icon = isArchived ? ArchiveRestoreIcon : ArchiveIcon;
-  const variant = isArchived ? "outline" : "warning";
-  const modalVariant = isArchived ? "info" : "warning";
+  const actionLabel = active ? "Arquivar" : "Desarquivar";
+  const Icon = active ? ArchiveRestoreIcon : ArchiveIcon;
+  const variant = active ? "warning" : "outline";
+  const modalVariant = active ? "warning" : "info";
 
   function handleConfirm() {
-    const action = isArchived ? unarchiveStudent : archiveStudent;
+    const action = active ? archiveStudent : unarchiveStudent;
     action(
       { studentId },
       {

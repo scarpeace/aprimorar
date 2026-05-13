@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { pageDTOStudentResponseDTOSchema } from "../pageDTOStudentResponseDTOSchema.ts";
+import { studentResponseDTOSchema } from "../studentResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 export const getStudentsByParentPathParamsSchema = z.object({
@@ -35,8 +35,10 @@ export const getStudentsByParentQueryParamsSchema = z.object({
 /**
  * @description Lista de alunos retornada com sucesso.
  */
-export const getStudentsByParent200Schema = z.lazy(
-  () => pageDTOStudentResponseDTOSchema,
+export const getStudentsByParent200Schema = z.array(
+  z
+    .lazy(() => studentResponseDTOSchema)
+    .describe("Dados do aluno retornados pela API"),
 );
 
 export const getStudentsByParentQueryResponseSchema = z.lazy(

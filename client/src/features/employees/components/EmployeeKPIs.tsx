@@ -1,51 +1,35 @@
-import { ErrorCard } from "@/components/ui/error-card";
 import { KpiCard } from "@/components/ui/kpi-card";
-import { SectionCard } from "@/components/ui/section-card";
-import { useGetEmployeeSummary } from "@/kubb";
 import { brl } from "@/lib/utils/formatter";
-import { CalendarCheck, CircleDollarSign, Wallet } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { Calendar, CircleDollarSign, Clock3 } from "lucide-react";
 
 interface EmployeeKPIsProps {
-  employeeId: string;
+  totalEvents?: number;
+  totalPaid?: number;
+  totalUnpaid?: number;
 }
 
-export function EmployeeKPIs({ employeeId }: EmployeeKPIsProps) {
-  const [searchParams] = useSearchParams();
-  const startDate = searchParams.get("startDate") || undefined;
-  const endDate = searchParams.get("endDate") || undefined;
-
-  const employeeSummaryQuery = useGetEmployeeSummary(employeeId, {
-    startDate,
-    endDate,
-  });
-
-  if (employeeSummaryQuery.error) {
-    return <ErrorCard title="Erro ao carregar detalhes do colaborador" error={employeeSummaryQuery.error} />;
-  }
-
-  if (employeeSummaryQuery.isPending || !employeeSummaryQuery.data) {
-    return (
-      <SectionCard title="Colaborador" description="Dados do Colaborador">
-        <div className="h-48 w-full animate-pulse rounded-lg bg-base-300/50" />
-      </SectionCard>
-    );
-  }
-
+export function EmployeeKPIs({ totalEvents, totalPaid, totalUnpaid }: EmployeeKPIsProps) {
   return (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <KpiCard
+        label="Total de eventos"
+        value={totalEvents}
+        Icon={Calendar}
+      />
 
-      <div className="flex justify-between gap-3">
-        <KpiCard
-          label="Total de atendimentos"
-          value={employeeSummaryQuery.data?.totalEvents ?? 0} Icon={CalendarCheck}        />
-        <KpiCard
-          className="grow"
-          label="Total Pago"
-          value={brl.format(employeeSummaryQuery.data?.totalPaid ?? 0)} Icon={CircleDollarSign}        />
-        <KpiCard
-          className="grow"
-          label="Total Pendente"
-          value={brl.format(employeeSummaryQuery.data?.totalUnpaid ?? 0)} Icon={Wallet}        />
-      </div>
+      <KpiCard
+        label="Total pago"
+        value={<span className="text-success">{brl.format(totalPaid ?? 0)}</span>}
+        Icon={CircleDollarSign}
+        className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
+      />
+
+      <KpiCard
+        label="Total pendente"
+        value={<span className="text-warning">{brl.format(totalUnpaid ?? 0)}</span>}
+        Icon={Clock3}
+        className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
+      />
+    </div>
   );
 }

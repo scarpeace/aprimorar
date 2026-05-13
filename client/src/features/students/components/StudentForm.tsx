@@ -71,11 +71,11 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
   const isPending = createStudent.isPending || updateStudent.isPending;
 
   return (
-    <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+    <form className="flex flex-col" onSubmit={onSubmit} autoComplete="off">
+      <div className="grid grid-cols-1 md:grid-cols-3">
         <ParentSelectDropdown className="col-span-3" label="Responsável" control={control} error={errors.parentId?.message} />
 
-        <fieldset className="fieldset md:col-span-2">
+        <fieldset className="fieldset md:col-span-2 mr-3">
           <legend className="fieldset-legend">Nome</legend>
           <input type="text" className="input w-full" {...register("name")} placeholder="Nome Completo" />
           {errors?.name && (
@@ -97,7 +97,7 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
           )}
         </fieldset>
 
-        <fieldset className="fieldset">
+        <fieldset className="fieldset mr-2">
           <legend className="fieldset-legend">CPF</legend>
           <input
             type="text"
@@ -114,7 +114,7 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
           )}
         </fieldset>
 
-        <fieldset className="fieldset">
+        <fieldset className="fieldset mr-3">
           <legend className="fieldset-legend">Contato</legend>
           <input
             type="text"
@@ -154,7 +154,7 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
 
         <div className="divider col-span-3 m-0" />
 
-        <fieldset className="fieldset md:col-span-2">
+        <fieldset className="fieldset md:col-span-2 mr-3">
           <legend className="fieldset-legend">Rua</legend>
           <input type="text" className="input w-full" {...register("address.street")} placeholder="Ex: SQS 406, Bloco C" />
           {errors?.address?.street && (
@@ -176,7 +176,7 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
           )}
         </fieldset>
 
-        <fieldset className="fieldset">
+        <fieldset className="fieldset mr-3">
           <legend className="fieldset-legend">Complemento</legend>
           <input type="text" className="input w-full" {...register("address.complement")} placeholder="Ex: Apto 101" />
           {errors?.address?.complement && (
@@ -187,7 +187,7 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
           )}
         </fieldset>
 
-        <fieldset className="fieldset">
+        <fieldset className="fieldset mr-3">
           <legend className="fieldset-legend">Cidade</legend>
           <input type="text" className="input w-full" {...register("address.city")} placeholder="Ex: Brasília" />
           {errors?.address?.city && (
@@ -232,7 +232,7 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
         </fieldset>
       </div>
 
-      <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
         <Button type="button" variant="ghost" onClick={onCancel}>
           Cancelar
         </Button>

@@ -9,6 +9,16 @@ import { useParentMutations } from "../hooks/parent-mutations";
 import { toast } from "sonner";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 
+function formatBirthdateForForm(birthdate?: string | null) {
+  if (!birthdate) return "";
+
+  const [year, month, day] = birthdate.split("-");
+
+  if (!year || !month || !day) return birthdate;
+
+  return `${day}/${month}/${year}`;
+}
+
 interface ParentFormProps {
   initialData?: ParentResponseDTO | null;
   onSuccess: () => void;
@@ -29,6 +39,8 @@ export function ParentForm({ initialData, onSuccess, onCancel }: ParentFormProps
       name: initialData?.name ?? "",
       email: initialData?.email ?? "",
       contact: initialData?.contact ?? "",
+      birthdate: formatBirthdateForForm(initialData?.birthdate),
+      pix: initialData?.pix ?? "",
       cpf: initialData?.cpf ?? "",
     },
     mode: "onBlur",
@@ -94,6 +106,22 @@ export function ParentForm({ initialData, onSuccess, onCancel }: ParentFormProps
         </fieldset>
 
         <fieldset className="fieldset">
+          <legend className="fieldset-legend">Data de Nascimento</legend>
+          <input
+            type="text"
+            className="input w-full"
+            {...registerWithMask("birthdate", ["##/##/####"])}
+            placeholder="Ex: 01/01/1990"
+          />
+          {errors?.birthdate && (
+            <p className="label text-error">
+              <TriangleAlert className="w-3 h-3" />
+              {errors.birthdate.message}
+            </p>
+          )}
+        </fieldset>
+
+        <fieldset className="fieldset">
           <legend className="fieldset-legend">Contato</legend>
           <input
             type="text"
@@ -105,6 +133,22 @@ export function ParentForm({ initialData, onSuccess, onCancel }: ParentFormProps
             <p className="label text-error">
               <TriangleAlert className="w-3 h-3" />
               {errors.contact.message}
+            </p>
+          )}
+        </fieldset>
+
+        <fieldset className="fieldset md:col-span-2">
+          <legend className="fieldset-legend">Pix</legend>
+          <input
+            type="text"
+            className="input w-full"
+            {...register("pix")}
+            placeholder="Chave Pix do responsável"
+          />
+          {errors?.pix && (
+            <p className="label text-error">
+              <TriangleAlert className="w-3 h-3" />
+              {errors.pix.message}
             </p>
           )}
         </fieldset>

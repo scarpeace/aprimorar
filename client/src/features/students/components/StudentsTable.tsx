@@ -1,13 +1,15 @@
-import { Button, ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOStudentResponseDTO } from "@/kubb";
+import type { PageDTOStudentResponseDTO, StudentResponseDTO } from "@/kubb";
 import {
-    formatCpf,
-    formatDateShortYear,
-    formatPhone,
+  formatCpf,
+  formatDateShortYear,
+  formatPhone,
 } from "@/lib/utils/formatter";
+import { Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type StudentsTableProps = {
@@ -16,6 +18,7 @@ type StudentsTableProps = {
   currentPage: number;
   isPending: boolean;
   error: unknown;
+  onEdit: (student: StudentResponseDTO) => void;
 };
 
 export function StudentsTable({
@@ -24,6 +27,7 @@ export function StudentsTable({
   currentPage,
   isPending,
   error,
+  onEdit,
 }: Readonly<StudentsTableProps>) {
   const navigate = useNavigate();
 
@@ -35,16 +39,23 @@ export function StudentsTable({
     return <LoadingSpinner text="Carregando Alunos..." />;
   }
 
+  if (!students || students.content.length === 0) {
+    return (
+      <EmptyCard
+        title="Nenhum aluno encontrado"
+        description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
+      />
+    );
+  }
+
   return (
     <>
-      <table className="table table-zebra shadow-2xl bg-base-100 animate-[fade-up_280ms_ease-out_both]">
-        <thead className="bg-base-300 ">
+      <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
+      <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
+        <thead className="bg-base-200/80">
           <tr>
             <th className="text-left font-semibold text-base-content/80">
               Nome
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Responsável
             </th>
             <th className="text-left font-semibold text-base-content/80">
               CPF
@@ -61,6 +72,12 @@ export function StudentsTable({
             <th className="text-left font-semibold text-base-content/80">
               Matricula
             </th>
+            <th className="text-left font-semibold text-base-content/80">
+              Status
+            </th>
+            <th className="text-right font-semibold text-base-content/80">
+              Acoes
+            </th>
           </tr>
         </thead>
 
@@ -68,23 +85,42 @@ export function StudentsTable({
           {students?.content.map((student) => (
             <tr
               key={student.id}
-              className={`transition-colors hover:bg-base-200/70 hover:cursor-pointer ${student.archivedAt ? "text-gray-400" : ""}`}
+              className={`transition-colors hover:bg-base-200/70 hover:cursor-pointer`}
               onClick={() => navigate(`/students/${student.id}`)}
             >
               <td>{student.name}</td>
-              <td>{student.responsible?.name || "-"}</td>
 
               <td>{formatCpf(student.cpf)}</td>
               <td className="text-center">{student.age}</td>
               <td>{formatPhone(student.contact)}</td>
 
-              <td>{student.school}</td>
+               <td>{student.school}</td>
 
-              <td>{formatDateShortYear(student.createdAt ?? "")}</td>
-            </tr>
+               <td>{formatDateShortYear(student.createdAt ?? "")}</td>
+               <td>
+                 <span className={`badge ${(student.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
+                   {(student.active ?? true) ? "Ativo" : "Arquivado"}
+                 </span>
+               </td>
+               <td className="text-right">
+                 <Button
+                   type="button"
+                   size="sm"
+                   variant="outline"
+                   onClick={(event) => {
+                     event.stopPropagation();
+                     onEdit(student);
+                   }}
+                 >
+                   <Pencil className="h-4 w-4" />
+                   Editar
+                 </Button>
+               </td>
+             </tr>
           ))}
         </tbody>
       </table>
+      </div>
       <Pagination
         paginationData={students}
         currentPage={currentPage}

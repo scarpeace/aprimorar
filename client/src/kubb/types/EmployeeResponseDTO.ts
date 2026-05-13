@@ -49,9 +49,9 @@ export type EmployeeResponseDTO = {
    */
   duty: EmployeeResponseDTODutyEnumKey;
   /**
-   * @type string, date-time
+   * @type boolean
    */
-  archivedAt?: string | null;
+  active?: boolean | null;
   /**
    * @type string, date-time
    */

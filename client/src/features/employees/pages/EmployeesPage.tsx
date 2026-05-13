@@ -44,48 +44,77 @@ export function EmployeesPage() {
 
   return (
     <PageLayout {...headerProps}>
-      <div className="flex flex-col gap-3 w-full">
-        <div className="flex flex-col justify-between sm:flex-row gap-3">
-          <ListSearchInput
-            className="grow"
-            placeholder="Buscar colaborador por nome, email ou CPF"
-            ariaLabel="Buscar colaborador"
-            value={searchTerm}
-            onChange={setSearchTerm}
-          />
-          <div className="flex justify-between sm:justify-end w-full sm:w-auto items-center gap-3">
-            {/*<ToggleSwitch
-              label="Arquivados"
-              tip="Mostrar colaboradores arquivados"
-              toggled={showArchived}
-              setToggle={setShowArchived}
-            />*/}
-            <Button
-              className="sm:ml-auto"
-              onClick={() => handleOpenForm()}
-              variant="success"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Novo Colaborador
-            </Button>
-          </div>
-        </div>
+      <div className="flex w-full flex-col gap-4">
+        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_220ms_ease-out_both]">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="space-y-1">
+              <h2 className="text-lg font-bold text-base-content">Busca e filtros</h2>
+              <p className="text-sm text-base-content/60">
+                Localize colaboradores por cadastro e alterne entre registros ativos e arquivados sem sair da listagem.
+              </p>
+            </div>
 
-        <EmployeesTable
-          employees={employeesQuery.data}
-          onPageChange={setCurrentPage}
-          currentPage={currentPage}
-          isPending={employeesQuery.isPending}
-          error={employeesQuery.error}
-          onEdit={(employee) => handleOpenForm(employee)}
-        />
+            <div className="rounded-2xl border border-success/15 bg-linear-to-r from-success/8 via-base-100 to-base-100 px-3 py-2 shadow-sm">
+              <Button
+                className="sm:ml-auto"
+                onClick={() => handleOpenForm()}
+                variant="success"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Novo Colaborador
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-col gap-3 xl:flex-row xl:items-center">
+            <ListSearchInput
+              className="grow"
+              placeholder="Buscar colaborador por nome, email ou CPF"
+              ariaLabel="Buscar colaborador"
+              value={searchTerm}
+              onChange={setSearchTerm}
+            />
+            <div className="flex w-full flex-wrap items-center justify-between gap-3 xl:w-auto xl:justify-end">
+              <ToggleSwitch
+                label="Arquivados"
+                tip="Mostrar colaboradores arquivados"
+                toggled={showArchived}
+                setToggle={setShowArchived}
+                className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
+          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h3 className="text-lg font-bold text-base-content">Colaboradores cadastrados</h3>
+              <p className="text-sm text-base-content/60">
+                Clique na linha para abrir os detalhes ou use a acao rapida para editar o cadastro.
+              </p>
+            </div>
+          </div>
+
+          <EmployeesTable
+            employees={employeesQuery.data}
+            onPageChange={setCurrentPage}
+            currentPage={currentPage}
+            isPending={employeesQuery.isPending}
+            error={employeesQuery.error}
+            onEdit={(employee) => handleOpenForm(employee)}
+          />
+        </section>
 
         {isFormOpen && (
           <div className="modal modal-open">
-            <div className="modal-box max-w-2xl">
-              <h3 className="font-bold text-lg mb-4">
+            <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
+              <h3 className="mb-1 text-lg font-bold">
                 {selectedEmployee ? "Editar Colaborador" : "Cadastrar Novo Colaborador"}
               </h3>
+              <p className="mb-4 text-sm text-base-content/60">
+                Atualize dados pessoais, contato e funcao do colaborador para manter a operacao organizada.
+              </p>
               <EmployeeForm
                 initialData={selectedEmployee}
                 onSuccess={handleCloseForm}

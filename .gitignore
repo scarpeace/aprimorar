@@ -24,6 +24,8 @@
 .github
 .zed
 skills-lock.json
+.codex
+openspec
 
 node_modules
 dist

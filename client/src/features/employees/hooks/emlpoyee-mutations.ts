@@ -98,9 +98,6 @@ export function useEmployeeMutations() {
         });
         navigate("/employees");
       },
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
-      },
     },
   });
 

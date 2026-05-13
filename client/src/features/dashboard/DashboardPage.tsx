@@ -2,7 +2,6 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { PageLoading } from "@/components/ui/page-loading";
 import { useGetDashboardSummary } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { brl } from "@/lib/utils/formatter";
 import { PizzaChart } from "./components/PizzaChart";
 import { DashboardKpiCard } from "./components/DashboardKpiCard";
 
@@ -42,10 +41,7 @@ export function DashboardPage() {
     <div className="app-dashboard-page">
       <h1 className="app-text text-3xl font-bold">Painel</h1>
       <div className="app-dashboard-kpi-grid">
-        <DashboardKpiCard label="Alunos ativos" value={dashboardQuery.data.activeStudentsInMonth ?? 0} />
         <DashboardKpiCard label="Aulas no mês" value={dashboardQuery.data.classesInMonth ?? 0} />
-        <DashboardKpiCard label="Receita no mês" value={brl.format(dashboardQuery.data.revenueInMonth ?? 0)} />
-        <DashboardKpiCard label="Custo no mês" value={brl.format(dashboardQuery.data.costInMonth ?? 0)} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

@@ -1,8 +1,5 @@
 import { MainLayout } from "@/components/layout/MainLayout"
 import { PageLoading } from "@/components/ui/page-loading"
-import { AuthGate } from "@/features/auth/components/AuthGate"
-import { AdminGuard } from "@/features/admin/components/AdminGuard"
-import { useAuthSession } from "@/features/auth/hooks/useAuthSession"
 import { Suspense, lazy } from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { Toaster } from "sonner"
@@ -19,23 +16,19 @@ const ParentDetailPage = lazy(() => import("@/features/parents/pages/ParentDetai
 const EmployeesPage = lazy(() => import("@/features/employees/pages/EmployeesPage").then((module) => ({ default: module.EmployeesPage })))
 const EmployeeDetailPage = lazy(() => import("@/features/employees/pages/EmployeeDetailPage").then((module) => ({ default: module.EmployeeDetailPage })))
 
-const EventsPage = lazy(() => import("@/features/events/pages/EventsPage").then((module) => ({ default: module.EventsPage })))
-const EventDetailPage = lazy(() => import("@/features/events/pages/EventDetailPage").then((module) => ({ default: module.EventDetailPage })))
+const AppointmentsPage = lazy(() => import("@/features/appointments/pages/AppointmentsPage").then((module) => ({ default: module.AppointmentsPage })))
+const AppointmentDetailPage = lazy(() => import("@/features/appointments/pages/AppointmentDetailPage").then((module) => ({ default: module.AppointmentDetailPage })))
 
-const GeneralExpensesPage = lazy(() => import("@/features/finance/pages/GeneralExpensesPage").then((module) => ({ default: module.GeneralExpensesPage })))
-const FinanceDashboardPage = lazy(() => import("@/features/finance/pages/FinanceDashboardPage").then((module) => ({ default: module.FinanceDashboardPage })))
-const EventSettlementPage = lazy(() => import("@/features/finance/pages/EventSettlementPage").then((module) => ({ default: module.EventSettlementPage })))
+const FinancesPage = lazy(() => import("@/features/finance/pages/FinancesPage").then((module) => ({ default: module.FinancesPage })))
 
 const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage").then((module) => ({ default: module.LoginPage })))
 
-const UsersPage = lazy(() => import("@/features/admin/pages/UsersPage").then((module) => ({ default: module.UsersPage })))
+const AdminPage = lazy(() => import("@/features/admin/pages/AdminPage").then((module) => ({ default: module.AdminPage })))
 
 import { pt } from "zod/locales"
 import z from "zod/v4"
 
 function App() {
-  const { isAuthenticated, isCheckingSession } = useAuthSession()
-
   z.config(pt())
 
   return (
@@ -48,14 +41,7 @@ function App() {
 
             <Route
               element={(
-                <AuthGate
-                  isPending={isCheckingSession}
-                  isAuthenticated={isAuthenticated}
-                  fallback={<Navigate to="/login" replace />}
-                  loadingMessage="Verificando sua sessão..."
-                >
-                  <MainLayout />
-                </AuthGate>
+                <MainLayout />
               )}
             >
               <Route path="/" element={<DashboardPage />} />
@@ -66,27 +52,24 @@ function App() {
               <Route path="/employees" element={<EmployeesPage />} />
               <Route path="/employees/:id" element={<EmployeeDetailPage />} />
 
-              <Route path="/events" element={<EventsPage />} />
-              <Route path="/events/:id" element={<EventDetailPage />} />
+              <Route path="/appointments" element={<AppointmentsPage />} />
+              <Route path="/appointments/:id" element={<AppointmentDetailPage />} />
 
               <Route path="/parents" element={<ParentsPage />} />
               <Route path="/parents/:id" element={<ParentDetailPage />} />
 
-              <Route path="/finance" element={<FinanceDashboardPage />} />
-              <Route path="/finance/expenses" element={<GeneralExpensesPage />} />
-              <Route path="/finance/settlement" element={<EventSettlementPage />} />
+              <Route path="/finance" element={<FinancesPage />} />
+              <Route path="/finance/expenses" element={<FinancesPage />} />
+              <Route path="/finance/settlement" element={<FinancesPage />} />
 
+              <Route path="/admin" element={<AdminPage />} />
               <Route
                 path="/admin/users"
-                element={
-                  <AdminGuard>
-                    <UsersPage />
-                  </AdminGuard>
-                }
+                element={<AdminPage />}
               />
             </Route>
 
-            <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </ErrorBoundary>

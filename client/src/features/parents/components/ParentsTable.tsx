@@ -1,10 +1,11 @@
-import { Button, ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import type { PageDTOParentResponseDTO, ParentResponseDTO } from "@/kubb";
 import { formatCpf, formatPhone } from "@/lib/utils/formatter";
-import { SquareArrowOutUpRightIcon, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type ParentsTableProps = {
@@ -26,6 +27,8 @@ export function ParentsTable({
 }: Readonly<ParentsTableProps>) {
   const navigate = useNavigate();
 
+  console.log(parents)
+
   if (error) {
     return (
       <ErrorCard
@@ -39,10 +42,20 @@ export function ParentsTable({
     return <LoadingSpinner text="Carregando Responsáveis..." />;
   }
 
+  if (!parents || parents.content.length === 0) {
+    return (
+      <EmptyCard
+        title="Nenhum responsavel encontrado"
+        description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
+      />
+    );
+  }
+
   return (
     <>
-      <table className="table table-zebra shadow-2xl bg-base-100 animate-[fade-up_280ms_ease-out_both]">
-        <thead className="bg-base-300">
+      <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
+      <table className="table table-zebra animate-[fade-up_280ms_ease-out_both]">
+        <thead className="bg-base-200/80">
           <tr>
             <th className="text-left font-semibold text-base-content/80">
               Nome
@@ -55,6 +68,12 @@ export function ParentsTable({
             </th>
             <th className="text-left font-semibold text-base-content/80">
               CPF
+            </th>
+            <th className="text-left font-semibold text-base-content/80">
+              Status
+            </th>
+            <th className="text-right font-semibold text-base-content/80">
+              Acoes
             </th>
           </tr>
         </thead>
@@ -71,10 +90,30 @@ export function ParentsTable({
               <td>{formatPhone(parent.contact)}</td>
               <td>{parent.email}</td>
               <td>{formatCpf(parent.cpf)}</td>
+              <td>
+                <span className={`badge ${(parent.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
+                  {(parent.active ?? true) ? "Ativo" : "Arquivado"}
+                </span>
+              </td>
+              <td className="text-right">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onEdit(parent);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                  Editar
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
 
       <Pagination
         paginationData={parents}

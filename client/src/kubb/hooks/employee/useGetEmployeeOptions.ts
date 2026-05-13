@@ -26,7 +26,7 @@ export type GetEmployeeOptionsQueryKey = ReturnType<
 >;
 
 /**
- * @description Retorna uma lista de opções de colaboradores.
+ * @description Retorna uma lista de opções de colaboradores para dropdown.
  * {@link /v1/employees/options}
  */
 export async function getEmployeeOptions(
@@ -65,7 +65,7 @@ export function getEmployeeOptionsQueryOptions(
 }
 
 /**
- * @description Retorna uma lista de opções de colaboradores.
+ * @description Retorna uma lista de opções de colaboradores para dropdown.
  * {@link /v1/employees/options}
  */
 export function useGetEmployeeOptions<

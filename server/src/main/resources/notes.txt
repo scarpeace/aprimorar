@@ -1,0 +1,24 @@
+1 - "Quero ver o aluno e também o seu resumo financeiro"
+ ├─ id
+  ├─ type             -> IN / OUT
+  ├─ status           -> PENDING / SETTLED
+  ├─ amount
+  ├─ occurredAt
+  ├─ settledAt
+  ├─ originType
+  ├─ originId
+  ├─ studentId?       -> quando fizer sentido
+  ├─ employeeId?      -> quando fizer sentido
+  ├─ description
+  └─ category
+  
+  Acho que você complicou demais a entidade de transaction. Os campos necessários são só TYPE, STATUS, AMOUNT, ORIGIN, ORIGINID, SETTLED_AT (pode ser nulo ou nós temos que criar uma ID para general expenses?) e CATEGORY.
+  Eu sinto que nós estamos fugindo do objetivo aqui e aumentando muito a complexidade de uma operação que deveria ser simples.
+
+  1 - GeneralExpense deixa de existir como entidade separada.
+
+  2 - Sim.
+  3 - Sim.
+  4 - Qual o caminho menos complexo?
+
+  Eu estou começando a pensar que Transaction não deveria ser sua própria entidade e o finance deveria ser só um agregado de queries.

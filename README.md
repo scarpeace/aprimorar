@@ -69,3 +69,13 @@ Para iniciar o projeto, você precisará ter o **Docker** e o **Docker Compose**
    ```
 
 Após a inicialização, o backend estará acessível em `http://localhost:8080` e o frontend em `http://localhost:5173`.
+
+## 5. Documentação de Módulos
+
+O backend gera documentação arquitetural do Spring Modulith em `server/src/main/resources/docs`, incluindo diagramas `.puml` e arquivos `.adoc` por módulo.
+
+Para regenerar esses arquivos, execute em `server/`:
+
+```bash
+./mvnw test -Dtest=ModuleVerificationTest
+```

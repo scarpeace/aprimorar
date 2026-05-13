@@ -17,39 +17,18 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
   } = useParentMutations();
 
   const {
-    data: linkedStudentsMeta,
-    isLoading: isLinkedStudentsMetaLoading,
-  } = useGetStudentsByParent(parentId, {
-    page: 0,
-    size: 1,
-  });
+    data: linkedStudents,
+    isLoading: isLinkedStudentsLoading,
+  } = useGetStudentsByParent(parentId);
 
-  const linkedStudentsCount = linkedStudentsMeta?.totalElements ?? 0;
-
-  const {
-    data: linkedStudentsSummary,
-    isLoading: isLinkedStudentsSummaryLoading,
-  } = useGetStudentsByParent(
-    parentId,
-    {
-      page: 0,
-      size: linkedStudentsCount,
-    },
-    {
-      query: {
-        enabled: !!parentId && linkedStudentsCount > 0,
-      },
-    },
-  );
-
-  const activeLinkedStudentsCount = getActiveLinkedStudentsCount(linkedStudentsSummary);
+  const linkedStudentsCount = linkedStudents?.length ?? 0;
+  const activeLinkedStudentsCount = getActiveLinkedStudentsCount(linkedStudents);
   const archivedLinkedStudentsCount = Math.max(
     linkedStudentsCount - activeLinkedStudentsCount,
     0,
   );
   const hasActiveLinkedStudents = activeLinkedStudentsCount > 0;
-  const isParentStudentsLoading =
-    isLinkedStudentsMetaLoading || isLinkedStudentsSummaryLoading;
+  const isParentStudentsLoading = isLinkedStudentsLoading;
 
   const linkedStudentsWarning = hasActiveLinkedStudents ? (
     <div className="rounded-md bg-warning/10 p-4 text-sm text-warning-content">
