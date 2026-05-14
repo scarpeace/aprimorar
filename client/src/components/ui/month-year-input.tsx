@@ -14,22 +14,22 @@ export const MonthYearPicker = ({
   onChange,
 }: MonthYearPickerProps) => {
   return (
-      <div
-        className="tooltip tooltip-left"
-        data-tip="Selecione o mês e ano para filtrar os atendimentos"
-      >
-        <DatePicker
-          showIcon
-          icon={<CalendarArrowDown className="w-6 h-6" />}
-          selected={selectedDate}
-          onChange={(date: any) => date && onChange(date)}
-          dateFormat="MM/yyyy"
-          locale="pt-BR"
-          showMonthYearPicker
-          showFullMonthYearPicker
-          showTwoColumnMonthYearPicker
-          className="w-full border-3 border-base-200 rounded-xl h-10 text-md text-center font-bold hover:cursor-pointer hover:border-base-300"
-        />
-      </div>
+    <div
+      className="tooltip tooltip-left"
+      data-tip="Selecione o mês e ano para filtrar os atendimentos"
+    >
+      <DatePicker
+        showIcon
+        icon={<CalendarArrowDown className="h-5 w-5" />}
+        selected={selectedDate}
+        onChange={(date: Date | null) => date && onChange(date)}
+        dateFormat="MM/yyyy"
+        locale="pt-BR"
+        showMonthYearPicker
+        showFullMonthYearPicker
+        showTwoColumnMonthYearPicker
+        className="h-10 w-full cursor-pointer rounded-xl border border-base-300 bg-base-100 px-3 text-center text-sm font-semibold text-base-content shadow-sm outline-none transition-colors hover:border-base-300 focus:border-primary/30"
+      />
+    </div>
   );
 };

@@ -30,7 +30,7 @@ interface AppointmentFormProps {
   onCancel: () => void;
 }
 
-export function AppointmentForm({ initialData, onCancel }: AppointmentFormProps) {
+export function AppointmentForm({ initialData, onCancel, onSuccess }: AppointmentFormProps) {
   const { createAppointment, updateAppointment } = useAppointmentMutations();
   const isEditMode = !!initialData;
 
@@ -75,6 +75,7 @@ export function AppointmentForm({ initialData, onCancel }: AppointmentFormProps)
     } else {
       createAppointment.mutate({ data: formattedData });
     }
+    onSuccess()
   });
 
   const isPending = createAppointment.isPending || updateAppointment.isPending;

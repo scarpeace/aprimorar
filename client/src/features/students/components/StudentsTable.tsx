@@ -1,15 +1,13 @@
-import { Button } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOStudentResponseDTO, StudentResponseDTO } from "@/kubb";
+import type { PageDTOStudentResponseDTO } from "@/kubb";
 import {
   formatCpf,
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
-import { Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type StudentsTableProps = {

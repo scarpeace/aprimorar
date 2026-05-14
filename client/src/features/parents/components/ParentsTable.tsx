@@ -1,11 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOParentResponseDTO, ParentResponseDTO } from "@/kubb";
+import type { PageDTOParentResponseDTO } from "@/kubb";
 import { formatCpf, formatPhone } from "@/lib/utils/formatter";
-import { Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type ParentsTableProps = {
@@ -14,7 +12,6 @@ type ParentsTableProps = {
   currentPage: number;
   isPending: boolean;
   error: unknown;
-  onEdit: (parent: ParentResponseDTO) => void;
 };
 
 export function ParentsTable({
@@ -23,11 +20,8 @@ export function ParentsTable({
   currentPage,
   isPending,
   error,
-  onEdit,
 }: Readonly<ParentsTableProps>) {
   const navigate = useNavigate();
-
-  console.log(parents)
 
   if (error) {
     return (
@@ -72,9 +66,6 @@ export function ParentsTable({
             <th className="text-left font-semibold text-base-content/80">
               Status
             </th>
-            <th className="text-right font-semibold text-base-content/80">
-              Acoes
-            </th>
           </tr>
         </thead>
 
@@ -85,7 +76,7 @@ export function ParentsTable({
               className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
               onClick={() => navigate(`/parents/${parent.parentId}`)}
             >
-              <td>{parent.name}</td>
+              <td className="font-bold">{parent.name}</td>
 
               <td>{formatPhone(parent.contact)}</td>
               <td>{parent.email}</td>
@@ -94,20 +85,6 @@ export function ParentsTable({
                 <span className={`badge ${(parent.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
                   {(parent.active ?? true) ? "Ativo" : "Arquivado"}
                 </span>
-              </td>
-              <td className="text-right">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onEdit(parent);
-                  }}
-                >
-                  <Pencil className="h-4 w-4" />
-                  Editar
-                </Button>
               </td>
             </tr>
           ))}

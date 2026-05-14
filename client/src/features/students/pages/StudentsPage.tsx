@@ -91,7 +91,7 @@ export function StudentsPage() {
             <div>
               <h3 className="text-lg font-bold text-base-content">Alunos cadastrados</h3>
               <p className="text-sm text-base-content/60">
-                Clique na linha para abrir os detalhes ou use a acao rapida para editar o cadastro.
+                Clique na linha para abrir os detalhes do cadastro.
               </p>
             </div>
           </div>
@@ -102,7 +102,6 @@ export function StudentsPage() {
             currentPage={currentPage}
             isPending={studentsQuery.isPending}
             error={studentsQuery.error}
-            onEdit={(student) => handleOpenForm(student)}
           />
         </section>
 
