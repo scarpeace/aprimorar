@@ -4,11 +4,11 @@ import { toast } from "sonner";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
   getAppointmentByIdQueryKey,
+  getAppointmentFinanceSummaryQueryKey,
   getAppointmentsQueryKey,
   getAppointmentsByEmployeeIdQueryKey,
   getAppointmentsByStudentIdQueryKey,
   getEmployeeSummaryQueryKey,
-  getFinanceSummaryQueryKey,
   getStudentSummaryQueryKey,
   useCreateAppointment,
   useToggleEmployeeAppointmentPayment,
@@ -35,7 +35,9 @@ export function useAppointmentMutations() {
         queryClient.invalidateQueries({
           queryKey: getAppointmentByIdQueryKey(createdAppointment.studentId),
         });
-        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        queryClient.invalidateQueries({
+          queryKey: getAppointmentFinanceSummaryQueryKey(),
+        });
         queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", createdAppointment.employeeId] });
         queryClient.invalidateQueries({ queryKey: ["finance", "student-summary", createdAppointment.studentId] });
         navigate(`/appointments/${createdAppointment.id}`);
@@ -58,7 +60,9 @@ export function useAppointmentMutations() {
         queryClient.invalidateQueries({
           queryKey: getAppointmentByIdQueryKey(updatedAppointment.studentId),
         });
-        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        queryClient.invalidateQueries({
+          queryKey: getAppointmentFinanceSummaryQueryKey(),
+        });
         queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", updatedAppointment.employeeId] });
         queryClient.invalidateQueries({ queryKey: ["finance", "student-summary", updatedAppointment.studentId] });
         navigate(`/appointments/${updatedAppointment.id}`);
@@ -76,7 +80,9 @@ export function useAppointmentMutations() {
         queryClient.invalidateQueries({
           queryKey: getAppointmentByIdQueryKey(updatedAppointment.studentId),
         });
-        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        queryClient.invalidateQueries({
+          queryKey: getAppointmentFinanceSummaryQueryKey(),
+        });
         queryClient.invalidateQueries({ queryKey: getStudentSummaryQueryKey(updatedAppointment.studentId) });
         queryClient.invalidateQueries({ queryKey: ["finance", "student-summary", updatedAppointment.studentId] });
       },
@@ -96,9 +102,11 @@ export function useAppointmentMutations() {
         queryClient.invalidateQueries({
           queryKey: getAppointmentByIdQueryKey(updatedAppointment.employeeId),
         });
-        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
+        queryClient.invalidateQueries({
+          queryKey: getAppointmentFinanceSummaryQueryKey(),
+        });
         queryClient.invalidateQueries({ queryKey: getEmployeeSummaryQueryKey(updatedAppointment.employeeId) });
-        queryClient.invalidateQueries({ queryKey: ["finance", "student-summary", updatedAppointment.studentId] });
+        queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", updatedAppointment.employeeId] });
       },
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));

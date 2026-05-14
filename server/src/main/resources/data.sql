@@ -1,6 +1,6 @@
 -- Development seed for Aprimorar.
 -- Add seed data below as the dataset is defined.
-DELETE FROM tb_transactions;
+DELETE FROM tb_expenses;
 DELETE FROM tb_appointments;
 DELETE FROM tb_students WHERE id <> '00000000-0000-0000-0000-000000000000';
 DELETE FROM tb_parent WHERE id <> 'ffffffff-ffff-ffff-ffff-ffffffffffff';
@@ -185,27 +185,3 @@ INSERT INTO tb_appointments (id, created_at, updated_at, title, description, sta
 ('3fd5923b-68ec-440c-bb38-fc9cbc3e640b', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'MENTORIA - Col: Mariana Costa - Clara Duarte', 'Atendimento seed 117 para Clara Duarte', TIMESTAMP '2026-12-29 17:00:00', TIMESTAMP '2026-12-29 18:30:00', 81.00, 183.00, 'MENTORIA', NULL, NULL, 'cc04c9b9-32b8-5573-8435-5793f8644481', 'Clara Duarte', '9e79c84d-d10a-59ca-8196-3963139e8096', 'Mariana Costa'),
 ('4653b1ec-2bc7-4776-8b86-9b7ade555751', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ORIENTACAO_VOCACIONAL - Col: Pedro Henrique Silva - Enzo Moreira', 'Atendimento seed 118 para Enzo Moreira', TIMESTAMP '2026-12-30 14:00:00', TIMESTAMP '2026-12-30 15:30:00', 86.00, 192.00, 'ORIENTACAO_VOCACIONAL', NULL, NULL, 'd7dfcfa0-9018-5251-b775-b9af09b4c3a3', 'Enzo Moreira', '35a26f86-91cb-58d6-bd36-20bd9a467eec', 'Pedro Henrique Silva'),
 ('502b83c3-6e95-405c-9124-72f94f3a2d8b', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'AULA - Col: Larissa Ferreira - Yasmin Castro', 'Atendimento seed 119 para Yasmin Castro', TIMESTAMP '2026-12-31 15:00:00', TIMESTAMP '2026-12-31 16:30:00', 91.00, 120.00, 'AULA', NULL, NULL, '4e816456-e58c-5c2c-b45d-15cfecf86787', 'Yasmin Castro', 'cb6eac0d-dfb5-5ccc-9a0c-8770a1557476', 'Larissa Ferreira');
-
-INSERT INTO tb_transactions (id, type, status, amount, origin, origin_id, settled_at, category)
-SELECT
-    gen_random_uuid(),
-    'IN',
-    'PENDING',
-    a.price,
-    'APPOINTMENT_STUDENT_CHARGE',
-    a.id,
-    NULL,
-    'COBRANCA_ALUNO'
-FROM tb_appointments a;
-
-INSERT INTO tb_transactions (id, type, status, amount, origin, origin_id, settled_at, category)
-SELECT
-    gen_random_uuid(),
-    'OUT',
-    'PENDING',
-    a.payment,
-    'APPOINTMENT_EMPLOYEE_PAYMENT',
-    a.id,
-    NULL,
-    'PAGAMENTO_COLABORADOR'
-FROM tb_appointments a;

@@ -1,12 +1,12 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { useGetFinanceSummary } from "@/kubb";
+import { useGetAppointmentFinanceSummary } from "@/kubb";
 import { Landmark } from "lucide-react";
 import { FinanceSummarySection } from "../components/FinanceSummarySection";
 
 export function FinancesPage() {
-  const summaryQuery = useGetFinanceSummary();
+  const summaryQuery = useGetAppointmentFinanceSummary();
 
   const totalStudentCharged = summaryQuery.data?.totalStudentCharged ?? 0;
   const totalStudentPending = summaryQuery.data?.totalStudentPending ?? 0;

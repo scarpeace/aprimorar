@@ -1,8 +1,11 @@
 package aprimorar.appointment.api;
 
 import aprimorar.appointment.api.dto.ContentDistributionDTO;
+import aprimorar.appointment.api.dto.AppointmentFinanceSummaryDTO;
 import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
+import aprimorar.appointment.api.dto.EmployeesFinanceSummaryResponseDTO;
+import aprimorar.appointment.api.dto.StudentsFinanceSummaryResponseDTO;
 import aprimorar.appointment.api.dto.EmployeeSummaryDTO;
 import aprimorar.appointment.api.dto.StudentSummaryDTO;
 import aprimorar.shared.PageDTO;
@@ -36,6 +39,12 @@ public interface AppointmentService {
     );
 
     EmployeeSummaryDTO getEmployeeSummary(UUID employeeId, Instant startDate, Instant endDate);
+
+    AppointmentFinanceSummaryDTO getFinanceSummary(Instant startDate, Instant endDate);
+
+    StudentsFinanceSummaryResponseDTO getStudentsFinanceSummary(Instant startDate, Instant endDate);
+
+    EmployeesFinanceSummaryResponseDTO getEmployeesFinanceSummary(Instant startDate, Instant endDate);
 
     PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(
         Pageable pageable,

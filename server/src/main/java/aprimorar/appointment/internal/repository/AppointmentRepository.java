@@ -20,6 +20,20 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         long getCount();
     }
 
+    interface StudentFinanceSummaryProjection {
+        UUID getStudentId();
+        String getStudentName();
+        BigDecimal getTotalCharged();
+        BigDecimal getTotalPending();
+    }
+
+    interface EmployeeFinanceSummaryProjection {
+        UUID getEmployeeId();
+        String getEmployeeName();
+        BigDecimal getTotalPaid();
+        BigDecimal getTotalPending();
+    }
+
     Page<Appointment> findAllByEmployeeId(UUID employeeId, Pageable pageable);
 
     Page<Appointment> findAllByStudentId(UUID studentId, Pageable pageable);
@@ -56,6 +70,28 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
 
     @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Appointment a WHERE a.employeePaymentDate IS NULL")
     BigDecimal sumTotalEmployeePaymentPending();
+
+    @Query(
+        """
+        select coalesce(sum(a.payment), 0)
+        from Appointment a
+        where a.employeePaymentDate is not null
+          and a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
+        """
+    )
+    BigDecimal sumPaidFiltered(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query(
+        """
+        select coalesce(sum(a.payment), 0)
+        from Appointment a
+        where a.employeePaymentDate is null
+          and a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
+        """
+    )
+    BigDecimal sumUnpaidFiltered(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Appointment a WHERE a.employeeId = :employeeId AND a.startDate BETWEEN :startDate AND :endDate AND a.employeePaymentDate IS NOT NULL")
     BigDecimal sumPaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
@@ -125,6 +161,28 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
 
     @Query("SELECT COALESCE(SUM(a.price), 0) FROM Appointment a WHERE a.studentChargeDate IS NULL")
     BigDecimal sumTotalStudentIncomePending();
+
+    @Query(
+        """
+        select coalesce(sum(a.price), 0)
+        from Appointment a
+        where a.studentChargeDate is not null
+          and a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
+        """
+    )
+    BigDecimal sumChargedFiltered(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query(
+        """
+        select coalesce(sum(a.price), 0)
+        from Appointment a
+        where a.studentChargeDate is null
+          and a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
+        """
+    )
+    BigDecimal sumPendingFiltered(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     @Query("SELECT COALESCE(SUM(a.price), 0) FROM Appointment a WHERE a.studentId = :studentId AND a.startDate BETWEEN :startDate AND :endDate AND a.studentChargeDate IS NOT NULL")
     BigDecimal sumChargedByStudentIdInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
@@ -265,6 +323,44 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         """
     )
     List<AppointmentContentCount> findContentDistributionInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query(
+        """
+        select
+          a.studentId as studentId,
+          a.studentName as studentName,
+          coalesce(sum(case when a.studentChargeDate is not null then a.price else 0 end), 0) as totalCharged,
+          coalesce(sum(case when a.studentChargeDate is null then a.price else 0 end), 0) as totalPending
+        from Appointment a
+        where a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
+        group by a.studentId, a.studentName
+        order by a.studentName asc
+        """
+    )
+    List<StudentFinanceSummaryProjection> findStudentFinanceSummaries(
+        @Param("startDate") Instant startDate,
+        @Param("endDate") Instant endDate
+    );
+
+    @Query(
+        """
+        select
+          a.employeeId as employeeId,
+          a.employeeName as employeeName,
+          coalesce(sum(case when a.employeePaymentDate is not null then a.payment else 0 end), 0) as totalPaid,
+          coalesce(sum(case when a.employeePaymentDate is null then a.payment else 0 end), 0) as totalPending
+        from Appointment a
+        where a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
+        group by a.employeeId, a.employeeName
+        order by a.employeeName asc
+        """
+    )
+    List<EmployeeFinanceSummaryProjection> findEmployeeFinanceSummaries(
+        @Param("startDate") Instant startDate,
+        @Param("endDate") Instant endDate
+    );
 
     long countByStartDateGreaterThanEqualAndStartDateLessThan(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 

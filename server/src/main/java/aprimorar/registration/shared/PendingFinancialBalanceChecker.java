@@ -17,11 +17,9 @@ public class PendingFinancialBalanceChecker {
         Number pendingCount = (Number) entityManager.createNativeQuery(
             """
             select count(*)
-            from tb_transactions t
-            join tb_appointments a on a.id = t.origin_id
-            where t.origin = 'APPOINTMENT_STUDENT_CHARGE'
-              and t.status = 'PENDING'
-              and a.student_id = :studentId
+            from tb_appointments a
+            where a.student_id = :studentId
+              and a.student_charge_date is null
             """
         )
             .setParameter("studentId", studentId)
@@ -35,11 +33,9 @@ public class PendingFinancialBalanceChecker {
         Number pendingCount = (Number) entityManager.createNativeQuery(
             """
             select count(*)
-            from tb_transactions t
-            join tb_appointments a on a.id = t.origin_id
-            where t.origin = 'APPOINTMENT_EMPLOYEE_PAYMENT'
-              and t.status = 'PENDING'
-              and a.employee_id = :employeeId
+            from tb_appointments a
+            where a.employee_id = :employeeId
+              and a.employee_payment_date is null
             """
         )
             .setParameter("employeeId", employeeId)

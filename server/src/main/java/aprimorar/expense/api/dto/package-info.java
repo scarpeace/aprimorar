@@ -1,4 +1,4 @@
 @NamedInterface("api")
-package aprimorar.finance.api.exception;
+package aprimorar.expense.api.dto;
 
 import org.springframework.modulith.NamedInterface;

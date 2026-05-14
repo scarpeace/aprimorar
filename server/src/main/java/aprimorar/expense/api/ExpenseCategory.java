@@ -1,11 +1,9 @@
-package aprimorar.finance.api.enums;
+package aprimorar.expense.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Categoria da movimentação financeira")
-public enum TransactionCategory {
-    COBRANCA_ALUNO("Cobrança do aluno"),
-    PAGAMENTO_COLABORADOR("Pagamento do colaborador"),
+@Schema(description = "Categoria da despesa geral")
+public enum ExpenseCategory {
     CONTAS("Contas"),
     ADMINISTRATIVO("Administrativo"),
     DESPENSA("Despensa"),
@@ -16,7 +14,7 @@ public enum TransactionCategory {
 
     private final String description;
 
-    TransactionCategory(String description) {
+    ExpenseCategory(String description) {
         this.description = description;
     }
 

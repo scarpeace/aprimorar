@@ -1,9 +1,12 @@
 package aprimorar.appointment.internal;
 
 import aprimorar.appointment.api.AppointmentService;
+import aprimorar.appointment.api.dto.AppointmentFinanceSummaryDTO;
 import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
+import aprimorar.appointment.api.dto.EmployeesFinanceSummaryResponseDTO;
 import aprimorar.appointment.api.dto.EmployeeSummaryDTO;
+import aprimorar.appointment.api.dto.StudentsFinanceSummaryResponseDTO;
 import aprimorar.appointment.api.dto.StudentSummaryDTO;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -84,6 +87,36 @@ public class AppointmentController {
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
         return ResponseEntity.ok(appointmentService.getEmployeeSummary(id, startDate, endDate));
+    }
+
+    @GetMapping("/finance/summary")
+    @Operation(operationId = "getAppointmentFinanceSummary", description = "Retorna o resumo financeiro consolidado baseado em appointments e despesas gerais.")
+    @ApiResponse(responseCode = "200", description = "Resumo financeiro retornado com sucesso.")
+    public ResponseEntity<AppointmentFinanceSummaryDTO> getFinanceSummary(
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(appointmentService.getFinanceSummary(startDate, endDate));
+    }
+
+    @GetMapping("/finance/summary/students")
+    @Operation(operationId = "getAppointmentStudentsFinanceSummary", description = "Retorna o resumo financeiro agregado por aluno.")
+    @ApiResponse(responseCode = "200", description = "Resumo financeiro dos alunos retornado com sucesso.")
+    public ResponseEntity<StudentsFinanceSummaryResponseDTO> getStudentsFinanceSummary(
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(appointmentService.getStudentsFinanceSummary(startDate, endDate));
+    }
+
+    @GetMapping("/finance/summary/employees")
+    @Operation(operationId = "getAppointmentEmployeesFinanceSummary", description = "Retorna o resumo financeiro agregado por colaborador.")
+    @ApiResponse(responseCode = "200", description = "Resumo financeiro dos colaboradores retornado com sucesso.")
+    public ResponseEntity<EmployeesFinanceSummaryResponseDTO> getEmployeesFinanceSummary(
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(appointmentService.getEmployeesFinanceSummary(startDate, endDate));
     }
 
     @GetMapping("/{id}/student")
