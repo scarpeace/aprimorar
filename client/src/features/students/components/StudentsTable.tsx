@@ -83,7 +83,7 @@ export function StudentsTable({
               className={`transition-colors hover:bg-base-200/70 hover:cursor-pointer`}
               onClick={() => navigate(`/students/${student.id}`)}
             >
-              <td>{student.name}</td>
+              <td className="font-bold">{student.name}</td>
 
               <td>{formatCpf(student.cpf)}</td>
               <td className="text-center">{student.age}</td>
