@@ -1,6 +1,7 @@
 package aprimorar.finance.api;
 
 import aprimorar.finance.api.dto.FinanceSummaryDTO;
+import aprimorar.finance.api.dto.StudentsFinanceSummaryDTO;
 import aprimorar.finance.api.dto.TransactionRequestDTO;
 import aprimorar.finance.api.dto.TransactionResponseDTO;
 import aprimorar.finance.api.enums.TransactionCategory;
@@ -8,6 +9,8 @@ import aprimorar.finance.api.enums.TransactionCategory;
 import aprimorar.finance.api.enums.TransactionStatus;
 
 import aprimorar.finance.api.enums.TransactionType;
+
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -40,4 +43,6 @@ public interface FinanceService {
         LocalDate endDate,
         Pageable pageable
     );
+
+    Page<StudentsFinanceSummaryDTO> getStudentsFinanceSummary(Instant startDate, Instant endDate);
 }

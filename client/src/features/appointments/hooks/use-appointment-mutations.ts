@@ -96,8 +96,9 @@ export function useAppointmentMutations() {
         queryClient.invalidateQueries({
           queryKey: getAppointmentByIdQueryKey(updatedAppointment.employeeId),
         });
+        queryClient.invalidateQueries({ queryKey: getFinanceSummaryQueryKey() });
         queryClient.invalidateQueries({ queryKey: getEmployeeSummaryQueryKey(updatedAppointment.employeeId) });
-        queryClient.invalidateQueries({ queryKey: ["finance", "employee-summary", updatedAppointment.employeeId] });
+        queryClient.invalidateQueries({ queryKey: ["finance", "student-summary", updatedAppointment.studentId] });
       },
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));

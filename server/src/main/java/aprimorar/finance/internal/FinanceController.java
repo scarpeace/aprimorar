@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
@@ -48,6 +50,24 @@ public class FinanceController {
     @ApiResponse(responseCode = "200", description = "Resumo financeiro retornado com sucesso.")
     public ResponseEntity<FinanceSummaryDTO> getFinanceSummary() {
         return ResponseEntity.ok(financeService.getFinanceSummary());
+    }
+
+    @GetMapping("/summary/students")
+    @Operation(operationId = "getStudentsFinanceSummary", summary = "Resumo financeiro dos estudantes por periodo", description = "Retorna o resumo financeiro de todos os alunos consolidado.")
+    @ApiResponse(responseCode = "200", description = "Resumo financeiro dos alunos retornado com sucesso.")
+    public ResponseEntity<FinanceSummaryDTO> getStudentsFinanceSummary(
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate) {
+        return ResponseEntity.ok(financeService.getStudentsFinanceSummary(startDate, endDate));
+    }
+
+    @GetMapping("/summary/employees")
+    @Operation(operationId = "getEmployeesFinanceSummary", summary = "Resumo financeiro dos funcionários por periodo", description = "Retorna o resumo financeiro de todos os funcionários consolidado.")
+    @ApiResponse(responseCode = "200", description = "Resumo financeiro dos funcionários retornado com sucesso.")
+    public ResponseEntity<FinanceSummaryDTO> getEmployeesFinanceSummary(
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate) {
+        return ResponseEntity.ok(financeService.getEmployeesFinanceSummary(startDate, endDate));
     }
 
     @PostMapping("/general-expenses")
@@ -91,16 +111,16 @@ public class FinanceController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/transactions")
-    @Operation(operationId = "getFinanceTransactions", summary = "Lista transações financeiras")
-    public ResponseEntity<Page<TransactionResponseDTO>> getTransactions(
-        @RequestParam(required = false) TransactionCategory category,
-        @RequestParam(required = false) TransactionType type,
-        @RequestParam(required = false) TransactionStatus status,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-        @ParameterObject @PageableDefault(size = 20) Pageable pageable
-    ) {
-        return ResponseEntity.ok(financeService.findTransactions(category, type, status, startDate, endDate, pageable));
-    }
+    // @GetMapping("/transactions")
+    // @Operation(operationId = "getFinanceTransactions", summary = "Lista transações financeiras")
+    // public ResponseEntity<Page<TransactionResponseDTO>> getTransactions(
+    //     @RequestParam(required = false) TransactionCategory category,
+    //     @RequestParam(required = false) TransactionType type,
+    //     @RequestParam(required = false) TransactionStatus status,
+    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+    //     @ParameterObject @PageableDefault(size = 20) Pageable pageable
+    // ) {
+    //     return ResponseEntity.ok(financeService.findTransactions(category, type, status, startDate, endDate, pageable));
+    // }
 }
