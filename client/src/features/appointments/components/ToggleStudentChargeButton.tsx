@@ -25,7 +25,7 @@ export function ToggleStudentChargeButton({
       ) : (
         <Check className="mr-1 h-4 w-4" />
       )}
-      {studentChargePaid ? "Aluno pendente" : "Marcar aluno pago"}
+      {studentChargePaid ? "Remover cobrança do aluno" : "Registrar cobrança do aluno"}
     </Button>
   );
 }

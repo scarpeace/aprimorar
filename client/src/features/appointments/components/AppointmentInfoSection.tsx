@@ -8,6 +8,7 @@ import {
   GraduationCap,
   UserRoundCog,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type AppointmentInfoSectionProps = {
   appointment: AppointmentResponseDTO;
@@ -15,23 +16,29 @@ type AppointmentInfoSectionProps = {
 
 export function AppointmentInfoSection({
   appointment,
-}: AppointmentInfoSectionProps): JSX.Element {
+}: AppointmentInfoSectionProps) {
+
+  const navigate = useNavigate();
   const studentChargePaid = appointment.studentChargeDate != null;
   const employeePaymentPaid = appointment.employeePaymentDate != null;
 
   return (
     <>
       <div className="grid gap-3 sm:grid-cols-2">
-        <MiniCard label="Aluno" icon={GraduationCap}>
-          <div className="text-2xl font-semibold text-base-content">
-            {appointment.studentName}
-          </div>
-        </MiniCard>
-        <MiniCard label="Colaborador" icon={UserRoundCog}>
-          <div className="text-2xl font-semibold text-base-content">
-            {appointment.employeeName}
-          </div>
-        </MiniCard>
+        <div className="tooltip" data-tip={"Acessar Detalhes do Aluno"}>
+          <MiniCard className="hover:bg-base-200 hover:cursor-pointer" label="Aluno" icon={GraduationCap} onClick={()=> {navigate(`/students/${appointment.studentId}`);}}>
+            <div className="text-2xl font-semibold text-base-content " >
+              {appointment.studentName}
+            </div>
+          </MiniCard>
+        </div>
+        <div className="tooltip" data-tip={"Acessar Detalhes do Colaborador"}>
+          <MiniCard className="hover:bg-base-200 hover:cursor-pointer" label="Colaborador" icon={UserRoundCog} onClick={()=> {navigate(`/employees/${appointment.employeeId}`);}}>
+            <div className="text-2xl font-semibold text-base-content">
+              {appointment.employeeName}
+            </div>
+          </MiniCard>
+        </div>
 
         <div className="flex items-center gap-6">
           <MiniCard label="Data" icon={Calendar}>
