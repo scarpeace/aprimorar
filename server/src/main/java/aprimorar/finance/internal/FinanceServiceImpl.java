@@ -1,6 +1,5 @@
 package aprimorar.finance.internal;
 
-import aprimorar.registration.employee.api.EmployeeService;
 import aprimorar.finance.api.FinanceService;
 import aprimorar.finance.api.dto.FinanceSummaryDTO;
 import aprimorar.finance.api.dto.TransactionRequestDTO;
@@ -8,7 +7,6 @@ import aprimorar.finance.api.dto.TransactionResponseDTO;
 import aprimorar.finance.api.exception.TransactionNotFoundException;
 import aprimorar.finance.internal.repository.TransactionRepository;
 import aprimorar.finance.internal.repository.TransactionSpecifications;
-import aprimorar.registration.student.api.StudentService;
 import aprimorar.finance.api.enums.TransactionCategory;
 
 import aprimorar.finance.api.enums.TransactionOrigin;
@@ -38,22 +36,22 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Transactional(readOnly = true)
     public FinanceSummaryDTO getFinanceSummary() {
-        BigDecimal totalIncome = transactionRepository.sumByTypeStatusAndCategory(
+        BigDecimal totalStudentCharged = transactionRepository.sumByTypeStatusAndCategory(
             TransactionType.IN,
             TransactionStatus.SETTLED,
             TransactionCategory.COBRANCA_ALUNO
         );
-        BigDecimal totalIncomePending = transactionRepository.sumByTypeStatusAndCategory(
+        BigDecimal totalStudentPending = transactionRepository.sumByTypeStatusAndCategory(
             TransactionType.IN,
             TransactionStatus.PENDING,
             TransactionCategory.COBRANCA_ALUNO
         );
-        BigDecimal totalExpenseTeacher = transactionRepository.sumByTypeStatusAndCategory(
+        BigDecimal totalEmployeePaid = transactionRepository.sumByTypeStatusAndCategory(
             TransactionType.OUT,
             TransactionStatus.SETTLED,
             TransactionCategory.PAGAMENTO_COLABORADOR
         );
-        BigDecimal totalExpenseTeacherPending = transactionRepository.sumByTypeStatusAndCategory(
+        BigDecimal totalEmployeePending = transactionRepository.sumByTypeStatusAndCategory(
             TransactionType.OUT,
             TransactionStatus.PENDING,
             TransactionCategory.PAGAMENTO_COLABORADOR
@@ -63,75 +61,19 @@ public class FinanceServiceImpl implements FinanceService {
             TransactionStatus.SETTLED
         );
 
-        BigDecimal balance = totalIncome
-            .subtract(totalExpenseTeacher)
+        BigDecimal balance = totalStudentCharged
+            .subtract(totalEmployeePaid)
             .subtract(totalGeneralExpenses);
 
         return new FinanceSummaryDTO(
-            totalIncome,
-            totalIncomePending,
-            totalExpenseTeacher,
-            totalExpenseTeacherPending,
+            totalStudentCharged,
+            totalStudentPending,
+            totalEmployeePaid,
+            totalEmployeePending,
             totalGeneralExpenses,
             balance
         );
     }
-
-    // @Transactional(readOnly = true)
-    // public StudentSummaryDTO getStudentSummary(UUID studentId, Instant startDate, Instant endDate) {
-    //     if (!studentService.existsById(studentId)) {
-    //         throw new StudentNotFoundException("Aluno com o ID informado não encontrado");
-    //     }
-
-    //     long totalEvents = startDate == null || endDate == null
-    //         ? eventService.countByStudentId(studentId)
-    //         : eventService.countByStudentIdAndStartDateBetween(studentId, startDate, endDate);
-
-    //     BigDecimal totalCharged = transactionRepository.sumStudentTransactions(
-    //         TransactionOrigin.EVENT_STUDENT_CHARGE,
-    //         studentId,
-    //         startDate,
-    //         endDate,
-    //         TransactionStatus.SETTLED
-    //     );
-    //     BigDecimal totalPending = transactionRepository.sumStudentTransactions(
-    //         TransactionOrigin.EVENT_STUDENT_CHARGE,
-    //         studentId,
-    //         startDate,
-    //         endDate,
-    //         TransactionStatus.PENDING
-    //     );
-
-    //     return new StudentSummaryDTO(totalEvents, totalCharged, totalPending);
-    // }
-
-    // @Transactional(readOnly = true)
-    // public EmployeeSummaryDTO getEmployeeSummary(UUID employeeId, Instant startDate, Instant endDate) {
-    //     if (!employeeService.existsById(employeeId)) {
-    //         throw new EmployeeNotFoundException("Colaborador com o ID informado não encontrado");
-    //     }
-
-    //     long totalEvents = startDate == null || endDate == null
-    //         ? eventService.countByEmployeeId(employeeId)
-    //         : eventService.countByEmployeeIdAndStartDateBetween(employeeId, startDate, endDate);
-
-    //     BigDecimal totalPaid = transactionRepository.sumEmployeeTransactions(
-    //         TransactionOrigin.EVENT_EMPLOYEE_PAYMENT,
-    //         employeeId,
-    //         startDate,
-    //         endDate,
-    //         TransactionStatus.SETTLED
-    //     );
-    //     BigDecimal totalUnpaid = transactionRepository.sumEmployeeTransactions(
-    //         TransactionOrigin.EVENT_EMPLOYEE_PAYMENT,
-    //         employeeId,
-    //         startDate,
-    //         endDate,
-    //         TransactionStatus.PENDING
-    //     );
-
-    //     return new EmployeeSummaryDTO(totalEvents, totalPaid, totalUnpaid);
-    // }
 
     @Transactional
     public TransactionResponseDTO createGeneralExpense(TransactionRequestDTO dto) {

@@ -17,10 +17,6 @@ public interface FinanceService {
 
     FinanceSummaryDTO getFinanceSummary();
 
-    // StudentSummaryDTO getStudentSummary(UUID studentId, Instant startDate, Instant endDate);
-
-    // EmployeeSummaryDTO getEmployeeSummary(UUID employeeId, Instant startDate, Instant endDate);
-
     TransactionResponseDTO createGeneralExpense(TransactionRequestDTO dto);
 
     Page<TransactionResponseDTO> findAllGeneralExpenses(

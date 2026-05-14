@@ -3,18 +3,8 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { MiniCard } from "@/components/ui/mini-card";
 import { useGetAppointmentById } from "@/kubb";
-import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import {
-  Calendar,
-  Check,
-  CircleDollarSign,
-  Clock3,
-  Edit,
-  GraduationCap,
-  UserRoundCog,
-} from "lucide-react";
+import { Calendar, Edit } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useAppointmentMutations } from "../hooks/use-appointment-mutations";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";

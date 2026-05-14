@@ -50,26 +50,6 @@ public class FinanceController {
         return ResponseEntity.ok(financeService.getFinanceSummary());
     }
 
-    // @GetMapping("/students/{id}/summary")
-    // @Operation(operationId = "getFinanceStudentSummary", summary = "Resumo financeiro do aluno")
-    // public ResponseEntity<StudentSummaryDTO> getStudentSummary(
-    //     @PathVariable UUID id,
-    //     @RequestParam(required = false) Instant startDate,
-    //     @RequestParam(required = false) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(financeService.getStudentSummary(id, startDate, endDate));
-    // }
-
-    // @GetMapping("/employees/{id}/summary")
-    // @Operation(operationId = "getFinanceEmployeeSummary", summary = "Resumo financeiro do colaborador")
-    // public ResponseEntity<EmployeeSummaryDTO> getEmployeeSummary(
-    //     @PathVariable UUID id,
-    //     @RequestParam(required = false) Instant startDate,
-    //     @RequestParam(required = false) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(financeService.getEmployeeSummary(id, startDate, endDate));
-    // }
-
     @PostMapping("/general-expenses")
     @Operation(operationId = "createGeneralExpense", summary = "Cria uma nova despesa geral", description = "Cadastra uma nova despesa administrativa no sistema.")
     @ApiResponse(responseCode = "201", description = "Despesa criada com sucesso.")

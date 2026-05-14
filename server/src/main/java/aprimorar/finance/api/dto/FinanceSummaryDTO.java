@@ -6,17 +6,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Resumo financeiro consolidado")
 public record FinanceSummaryDTO(
-    @Schema(description = "Total de receita recebida", example = "5000.00")
-    BigDecimal totalIncome,
+    @Schema(description = "Total pago pelos alunos", example = "5000.00")
+    BigDecimal totalStudentCharged,
 
-    @Schema(description = "Total de receita pendente", example = "1200.00")
-    BigDecimal totalIncomePending,
+    @Schema(description = "Total pendente dos alunos", example = "1200.00")
+    BigDecimal totalStudentPending,
 
-    @Schema(description = "Total de despesa operacional paga (colaboradores)", example = "3000.00")
-    BigDecimal totalExpenseTeacher,
+    @Schema(description = "Total pago aos colaboradores", example = "3000.00")
+    BigDecimal totalEmployeePaid,
 
-    @Schema(description = "Total de despesa operacional pendente (colaboradores)", example = "800.00")
-    BigDecimal totalExpenseTeacherPending,
+    @Schema(description = "Total pendente aos colaboradores", example = "800.00")
+    BigDecimal totalEmployeePending,
 
     @Schema(description = "Total de despesas gerais", example = "500.00")
     BigDecimal totalGeneralExpenses,
