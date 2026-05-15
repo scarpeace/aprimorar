@@ -58,7 +58,7 @@ export function ExpenseForm({
 
   return (
     <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
         <fieldset className="fieldset md:col-span-2">
           <legend className="fieldset-legend">Descricao</legend>
           <input

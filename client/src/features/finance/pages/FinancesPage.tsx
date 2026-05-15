@@ -15,7 +15,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EmployeesFinanceTable } from "../components/EmployeesFinanceTable";
 import { ExpenseForm } from "../components/ExpenseForm";
-import { ExpensesPieChart } from "../components/ExpensesPieChart";
 import { ExpensesTable } from "../components/ExpensesTable";
 import { FinanceKpiCard } from "../components/FinanceKpiCard";
 import { FinanceSummarySection } from "../components/FinanceSummarySection";
@@ -26,12 +25,8 @@ export function FinancesPage() {
   const navigate = useNavigate();
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
 
-  const {
-    startDate,
-    endDate,
-    handleStartDateChange,
-    handleEndDateChange,
-  } = useDateRangeFilters();
+  const { startDate, endDate, handleStartDateChange, handleEndDateChange } =
+    useDateRangeFilters();
 
   const summaryQuery = useGetAppointmentFinanceReport({
     startDate: startDate?.toISOString(),
@@ -161,7 +156,8 @@ export function FinancesPage() {
                 Financeiro por colaborador
               </h2>
               <p className="mt-1 max-w-3xl text-sm leading-6 text-base-content/60">
-                Valores pagos e pendentes por colaborador no periodo selecionado.
+                Valores pagos e pendentes por colaborador no periodo
+                selecionado.
               </p>
             </div>
 
@@ -174,22 +170,21 @@ export function FinancesPage() {
         </div>
 
         <section className="rounded-2xl border border-base-300 bg-base-100 p-5 shadow-sm animate-[fade-up_200ms_ease-out_both]">
-          <div className="mb-4">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="flex justify-between mb-4">
+            <div className="flex flex-col">
               <span className="badge badge-primary badge-outline px-3 py-3">
                 Despesas Gerais
               </span>
-            </div>
-            <h2 className="mt-3 text-2xl font-bold text-base-content">
-              Despesas gerais
-            </h2>
-            <p className="mt-1 max-w-3xl text-sm leading-6 text-base-content/60">
-              Despesas operacionais registradas no periodo selecionado.
-            </p>
-          </div>
+              <h2 className="mt-3 text-2xl font-bold text-base-content">
+                Despesas gerais
+              </h2>
 
-          <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="max-w-xs">
+              <p className="mt-1 max-w-3xl text-sm leading-6 text-base-content/60">
+                Despesas operacionais registradas no periodo selecionado.
+              </p>
+            </div>
+
+            <div className="flex items-start gap-6">
               <FinanceKpiCard
                 title="Total de despesas"
                 subtitle="Despesas operacionais"
@@ -197,55 +192,43 @@ export function FinancesPage() {
                 tone="secondary"
                 icon={<ArrowUpRight className="h-5 w-5" />}
               />
+              <Button
+                type="button"
+                variant="success"
+                onClick={() => handleOpenExpenseForm()}
+                className="sm:mb-1"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Nova Despesa
+              </Button>
             </div>
-
-            <Button
-              type="button"
-              variant="success"
-              onClick={() => handleOpenExpenseForm()}
-              className="sm:mb-1"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Despesa
-            </Button>
           </div>
 
-          <div className="grid gap-4 xl:grid-cols-3">
-            <div className="xl:col-span-2">
-              <ExpensesTable
-                expenses={expensesQuery.data}
-                isPending={expensesQuery.isPending}
-                error={expensesQuery.error}
-                onNavigate={(expense) => {
-                  if (expense.id) {
-                    navigate(`/finance/expenses/${expense.id}`);
-                  }
-                }}
+          <ExpensesTable
+            expenses={expensesQuery.data}
+            isPending={expensesQuery.isPending}
+            error={expensesQuery.error}
+            onNavigate={(expense) => {
+              if (expense.id) {
+                navigate(`/finance/expenses/${expense.id}`);
+              }
+            }}
+          />
+        </section>
+        {isExpenseFormOpen ? (
+          <div className="modal modal-open">
+            <div className="modal-box max-w-lg border border-base-300 bg-base-100 shadow-2xl">
+              <h3 className="mb-1 text-lg font-bold">Nova Despesa</h3>
+              <p className="mb-4 text-sm text-base-content/60">
+                Registre uma nova despesa operacional.
+              </p>
+              <ExpenseForm
+                onSuccess={handleCloseExpenseForm}
+                onCancel={handleCloseExpenseForm}
               />
             </div>
-
-            <ExpensesPieChart
-              expenses={expensesQuery.data?.content}
-              isPending={expensesQuery.isPending}
-              error={expensesQuery.error}
-            />
           </div>
-
-          {isExpenseFormOpen ? (
-            <div className="modal modal-open">
-              <div className="modal-box max-w-lg border border-base-300 bg-base-100 shadow-2xl">
-                <h3 className="mb-1 text-lg font-bold">Nova Despesa</h3>
-                <p className="mb-4 text-sm text-base-content/60">
-                  Registre uma nova despesa operacional.
-                </p>
-                <ExpenseForm
-                  onSuccess={handleCloseExpenseForm}
-                  onCancel={handleCloseExpenseForm}
-                />
-              </div>
-            </div>
-          ) : null}
-        </section>
+        ) : null}
       </div>
     </PageLayout>
   );
