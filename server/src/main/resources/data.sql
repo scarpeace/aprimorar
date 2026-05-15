@@ -1,6 +1,6 @@
 -- Development seed for Aprimorar.
 -- Add seed data below as the dataset is defined.
-DELETE FROM tb_transactions;
+DELETE FROM tb_expenses;
 DELETE FROM tb_appointments;
 DELETE FROM tb_students WHERE id <> '00000000-0000-0000-0000-000000000000';
 DELETE FROM tb_parent WHERE id <> 'ffffffff-ffff-ffff-ffff-ffffffffffff';
@@ -186,26 +186,35 @@ INSERT INTO tb_appointments (id, created_at, updated_at, title, description, sta
 ('4653b1ec-2bc7-4776-8b86-9b7ade555751', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ORIENTACAO_VOCACIONAL - Col: Pedro Henrique Silva - Enzo Moreira', 'Atendimento seed 118 para Enzo Moreira', TIMESTAMP '2026-12-30 14:00:00', TIMESTAMP '2026-12-30 15:30:00', 86.00, 192.00, 'ORIENTACAO_VOCACIONAL', NULL, NULL, 'd7dfcfa0-9018-5251-b775-b9af09b4c3a3', 'Enzo Moreira', '35a26f86-91cb-58d6-bd36-20bd9a467eec', 'Pedro Henrique Silva'),
 ('502b83c3-6e95-405c-9124-72f94f3a2d8b', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'AULA - Col: Larissa Ferreira - Yasmin Castro', 'Atendimento seed 119 para Yasmin Castro', TIMESTAMP '2026-12-31 15:00:00', TIMESTAMP '2026-12-31 16:30:00', 91.00, 120.00, 'AULA', NULL, NULL, '4e816456-e58c-5c2c-b45d-15cfecf86787', 'Yasmin Castro', 'cb6eac0d-dfb5-5ccc-9a0c-8770a1557476', 'Larissa Ferreira');
 
-INSERT INTO tb_transactions (id, type, status, amount, origin, origin_id, settled_at, category)
-SELECT
-    gen_random_uuid(),
-    'IN',
-    'PENDING',
-    a.price,
-    'APPOINTMENT_STUDENT_CHARGE',
-    a.id,
-    NULL,
-    'COBRANCA_ALUNO'
-FROM tb_appointments a;
-
-INSERT INTO tb_transactions (id, type, status, amount, origin, origin_id, settled_at, category)
-SELECT
-    gen_random_uuid(),
-    'OUT',
-    'PENDING',
-    a.payment,
-    'APPOINTMENT_EMPLOYEE_PAYMENT',
-    a.id,
-    NULL,
-    'PAGAMENTO_COLABORADOR'
-FROM tb_appointments a;
+-- Expenses (general operating expenses)
+INSERT INTO tb_expenses (id, amount, date, category, description, created_at, updated_at) VALUES
+('c8d1dc8f-4d35-49f0-81c0-9e9fcb1e6001', 3500.00, DATE '2026-06-05', 'CONTAS', 'Aluguel do espaco - junho', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('d0c3ff34-b3b8-4d04-b942-f390cc5a6002', 486.72, DATE '2026-06-10', 'CONTAS', 'Conta de energia eletrica - junho', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('0b2ac739-2486-45d4-b22a-1a103f5f6003', 137.90, DATE '2026-06-12', 'CONTAS', 'Plano de internet fibra da unidade', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('8afeb9f5-9625-44fb-bad2-2d88bb5a6004', 214.35, DATE '2026-06-15', 'DESPENSA', 'Reposicao de cafe, cha e acucar da copa', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('e061ef35-96f4-4cd8-8202-3a59e0c56005', 328.40, DATE '2026-06-21', 'MATERIAIS', 'Impressao de simulados diagnosticos', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('0d7f97de-7693-4428-8821-d344db356006', 680.00, DATE '2026-07-03', 'SERVICOS', 'Servico de limpeza quinzenal das salas', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('5832e612-78b9-4767-ad13-8ce8b6176007', 3500.00, DATE '2026-07-05', 'CONTAS', 'Aluguel do espaco - julho', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('c2d90a75-0af6-4fcf-8ae4-e1cf49816008', 189.90, DATE '2026-07-08', 'ASSINATURAS', 'Assinatura de plataforma de questoes ENEM', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('9b2d588f-6d7b-4010-8424-4a7285fe6009', 154.80, DATE '2026-07-14', 'MATERIAIS', 'Compra de marcadores para quadro branco', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('6f0aa96b-99c6-4b40-b1a9-d1b97eaf6010', 420.00, DATE '2026-07-19', 'MANUTENCAO', 'Manutencao preventiva do ar condicionado', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('7b55de87-4246-4648-8f4e-217ecf806011', 260.00, DATE '2026-08-02', 'ADMINISTRATIVO', 'Divulgacao local de turma intensiva', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('48f2d314-5dcb-45f2-917d-f6d7c5976012', 3500.00, DATE '2026-08-05', 'CONTAS', 'Aluguel do espaco - agosto', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('18af9aa2-c968-4c6f-835c-67ef20fe6013', 92.40, DATE '2026-08-09', 'DESPENSA', 'Agua mineral para recepcao e salas', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('eca98f51-8561-4120-af94-85200bf76014', 790.00, DATE '2026-08-13', 'SERVICOS', 'Honorarios contabeis mensais', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('2e79d384-a67d-4d6f-97d2-bd70d51b6015', 118.50, DATE '2026-08-22', 'ASSINATURAS', 'Google Workspace da equipe pedagogica', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('5c26c375-44e4-407c-9bba-e5c9eb236016', 374.90, DATE '2026-09-04', 'MATERIAIS', 'Papel sulfite e toner para impressora', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('92ef377f-8c69-489d-b0b5-347b55986017', 3500.00, DATE '2026-09-05', 'CONTAS', 'Aluguel do espaco - setembro', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('ddcb21d7-010c-49f7-8fd6-8df8da746018', 570.00, DATE '2026-09-11', 'MANUTENCAO', 'Reparo em impressora laser da secretaria', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('87ff6d7b-ec86-4442-ad12-f5d38d286019', 235.00, DATE '2026-09-16', 'ADMINISTRATIVO', 'Taxas de reconhecimento e autenticacao de documentos', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('c60156b2-7541-45c3-94a4-553734376020', 312.60, DATE '2026-09-24', 'DESPENSA', 'Material de limpeza para salas e banheiros', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('efa2aa50-4dd4-44e4-9118-940acac06021', 150.00, DATE '2026-10-01', 'ASSINATURAS', 'Sistema de envio de mensagens aos responsaveis', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('b4d11688-d29f-43da-9957-37e0bc776022', 3500.00, DATE '2026-10-05', 'CONTAS', 'Aluguel do espaco - outubro', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('3241e4d3-0bdd-4742-bd37-6debf3bb6023', 610.00, DATE '2026-10-09', 'SERVICOS', 'Dedetizacao preventiva da unidade', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('129de203-8d70-420f-9a83-840205b16024', 415.20, DATE '2026-10-17', 'MATERIAIS', 'Encadernacao de apostilas de revisao', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('5ccfd5e4-1c12-47d4-a536-4335f0cc6025', 280.00, DATE '2026-10-28', 'MANUTENCAO', 'Troca de lampadas e revisao eletrica', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('19a81da4-edc2-421c-915b-52377c276026', 3500.00, DATE '2026-11-05', 'CONTAS', 'Aluguel do espaco - novembro', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('f5807f78-50f0-4145-9188-24655a906027', 186.90, DATE '2026-11-07', 'ADMINISTRATIVO', 'Transporte para visita em escola parceira', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('90b637a1-e90f-4c5c-b122-0bb8741c6028', 745.00, DATE '2026-11-12', 'SERVICOS', 'Servicos fotograficos para campanha de aprovados', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('067ba28a-1442-41f8-a410-27ba5e2a6029', 690.00, DATE '2026-11-20', 'MANUTENCAO', 'Ajuste de portas, fechaduras e mobiliario', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('0978809b-0143-426e-b545-e9ea0d8f6030', 248.70, DATE '2026-11-26', 'DESPENSA', 'Lanches para auloes de revisao ENEM', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

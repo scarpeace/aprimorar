@@ -2,7 +2,6 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import {
   useGetAppointmentsByEmployeeId,
   useGetEmployeeById,
-  useGetEmployeeSummary,
 } from "@/kubb";
 import { CircleDollarSign, FileUser } from "lucide-react";
 import { useState } from "react";
@@ -44,11 +43,6 @@ export function EmployeeDetailPage() {
     startDate: startDate?.toISOString(),
     endDate: endDate?.toISOString(),
     hidePaid,
-  });
-
-  const employeeSummary = useGetEmployeeSummary(employeeId, {
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
   });
 
   const handleToggleHidePaid = () => {
@@ -99,15 +93,15 @@ export function EmployeeDetailPage() {
 
       <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
         <EmployeeKPIs
-          totalEvents={employeeSummary.data?.totalEvents}
-          totalPaid={employeeSummary.data?.totalPaid}
-          totalUnpaid={employeeSummary.data?.totalUnpaid}
+          totalEvents={employeeAppointments.data?.summary?.totalEvents}
+          totalPaid={employeeAppointments.data?.summary?.totalPaid}
+          totalUnpaid={employeeAppointments.data?.summary?.totalUnpaid}
         />
       </div>
 
       <div className="animate-[fade-up_600ms_ease-out_both]">
         <EmployeeEventsTable
-          appointments={employeeAppointments.data}
+          appointments={employeeAppointments.data?.appointments}
           error={employeeAppointments.error}
           isLoading={employeeAppointments.isLoading}
           currentPage={currentPage}

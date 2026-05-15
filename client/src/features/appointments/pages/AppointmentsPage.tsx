@@ -61,14 +61,21 @@ export function AppointmentsPage() {
             </div>
           </div>
 
-          <div className="mt-4 flex flex-col gap-3">
+          <div className="mt-4 flex items-center flex-row mb-3 gap-3">
             <ListSearchInput
-              className="grow"
               placeholder="Buscar por aluno, colaborador, conteúdo ou descrição"
               ariaLabel="Buscar atendimento"
               value={search}
               onChange={handleSearchChange}
             />
+
+                <DateRangeInput
+                  startDate={startDate}
+                  endDate={endDate}
+                  onStartDateChange={handleStartDateChange}
+                  onEndDateChange={handleEndDateChange}
+                />
+            </div>
 
             <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
               <div className="flex flex-wrap items-center gap-3">
@@ -88,22 +95,13 @@ export function AppointmentsPage() {
                 />
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center xl:justify-end">
-                <DateRangeInput
-                  startDate={startDate}
-                  endDate={endDate}
-                  onStartDateChange={handleStartDateChange}
-                  onEndDateChange={handleEndDateChange}
-                />
-                {hasFilters ? (
-                  <Button variant="ghost" onClick={handleClearFilters} className="gap-2">
-                    <RotateCcw className="h-4 w-4" />
-                    Limpar filtros
-                  </Button>
-                ) : null}
-              </div>
+              {hasFilters ? (
+                <Button variant="ghost" onClick={handleClearFilters} className="gap-2 self-start xl:self-auto">
+                  <RotateCcw className="h-4 w-4" />
+                  Limpar filtros
+                </Button>
+              ) : null}
             </div>
-          </div>
         </section>
 
         <AppointmentsListSection

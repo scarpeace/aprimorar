@@ -72,18 +72,6 @@ CREATE TABLE IF NOT EXISTS tb_students (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS tb_transactions (
-  amount numeric(19,2) NOT NULL,
-  settled_at timestamp(6) with time zone,
-  id uuid NOT NULL,
-  origin_id uuid NOT NULL,
-  status varchar(20) NOT NULL CHECK (status in ('PENDING','SETTLED')),
-  type varchar(20) NOT NULL CHECK (type in ('IN','OUT')),
-  category varchar(50) NOT NULL CHECK (category in ('COBRANCA_ALUNO','PAGAMENTO_COLABORADOR','CONTAS','ADMINISTRATIVO','DESPENSA','MANUTENCAO','SERVICOS','MATERIAIS','ASSINATURAS')),
-  origin varchar(50) NOT NULL CHECK (origin in ('APPOINTMENT_STUDENT_CHARGE','APPOINTMENT_EMPLOYEE_PAYMENT','GENERAL_EXPENSE')),
-  PRIMARY KEY (id)
-);
-
 ALTER TABLE IF EXISTS tb_students
   DROP CONSTRAINT IF EXISTS FKcssx8ttx5ktpha07yqsjstbnd;
 

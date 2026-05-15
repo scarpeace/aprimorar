@@ -16,6 +16,11 @@ export {
   getAppointmentByIdQueryResponseSchema,
 } from "./appointment/getAppointmentByIdSchema.ts";
 export {
+  getAppointmentFinanceReport200Schema,
+  getAppointmentFinanceReportQueryParamsSchema,
+  getAppointmentFinanceReportQueryResponseSchema,
+} from "./appointment/getAppointmentFinanceReportSchema.ts";
+export {
   getAppointmentsByEmployeeId200Schema,
   getAppointmentsByEmployeeIdPathParamsSchema,
   getAppointmentsByEmployeeIdQueryParamsSchema,
@@ -33,17 +38,15 @@ export {
   getAppointmentsQueryResponseSchema,
 } from "./appointment/getAppointmentsSchema.ts";
 export {
-  getEmployeeSummary200Schema,
-  getEmployeeSummaryPathParamsSchema,
-  getEmployeeSummaryQueryParamsSchema,
-  getEmployeeSummaryQueryResponseSchema,
-} from "./appointment/getEmployeeSummarySchema.ts";
+  getEmployeesAppointmentsFinanceReport200Schema,
+  getEmployeesAppointmentsFinanceReportQueryParamsSchema,
+  getEmployeesAppointmentsFinanceReportQueryResponseSchema,
+} from "./appointment/getEmployeesAppointmentsFinanceReportSchema.ts";
 export {
-  getStudentSummary200Schema,
-  getStudentSummaryPathParamsSchema,
-  getStudentSummaryQueryParamsSchema,
-  getStudentSummaryQueryResponseSchema,
-} from "./appointment/getStudentSummarySchema.ts";
+  getStudentsAppointmentsFinanceReport200Schema,
+  getStudentsAppointmentsFinanceReportQueryParamsSchema,
+  getStudentsAppointmentsFinanceReportQueryResponseSchema,
+} from "./appointment/getStudentsAppointmentsFinanceReportSchema.ts";
 export {
   toggleEmployeeAppointmentPayment200Schema,
   toggleEmployeeAppointmentPaymentMutationResponseSchema,
@@ -60,6 +63,7 @@ export {
   updateAppointmentMutationResponseSchema,
   updateAppointmentPathParamsSchema,
 } from "./appointment/updateAppointmentSchema.ts";
+export { appointmentFinanceSummaryDTOSchema } from "./appointmentFinanceSummaryDTOSchema.ts";
 export { appointmentRequestDTOSchema } from "./appointmentRequestDTOSchema.ts";
 export { appointmentResponseDTOSchema } from "./appointmentResponseDTOSchema.ts";
 export { classesByContentDTOSchema } from "./classesByContentDTOSchema.ts";
@@ -109,52 +113,52 @@ export {
   updateEmployeeMutationResponseSchema,
   updateEmployeePathParamsSchema,
 } from "./employee/updateEmployeeSchema.ts";
+export { employeeAppointmentsResponseDTOSchema } from "./employeeAppointmentsResponseDTOSchema.ts";
+export { employeeFinanceSummaryDTOSchema } from "./employeeFinanceSummaryDTOSchema.ts";
 export { employeeOptionsDTOSchema } from "./employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./employeeResponseDTOSchema.ts";
 export { employeeSummaryDTOSchema } from "./employeeSummaryDTOSchema.ts";
+export { employeesFinanceSummaryResponseDTOSchema } from "./employeesFinanceSummaryResponseDTOSchema.ts";
 export {
-  createGeneralExpense201Schema,
-  createGeneralExpenseMutationRequestSchema,
-  createGeneralExpenseMutationResponseSchema,
-} from "./finance/createGeneralExpenseSchema.ts";
+  createExpense201Schema,
+  createExpenseMutationRequestSchema,
+  createExpenseMutationResponseSchema,
+} from "./expense/createExpenseSchema.ts";
 export {
-  deleteGeneralExpense204Schema,
-  deleteGeneralExpenseMutationResponseSchema,
-  deleteGeneralExpensePathParamsSchema,
-} from "./finance/deleteGeneralExpenseSchema.ts";
+  deleteExpense204Schema,
+  deleteExpenseMutationResponseSchema,
+  deleteExpensePathParamsSchema,
+} from "./expense/deleteExpenseSchema.ts";
 export {
-  getFinanceSummary200Schema,
-  getFinanceSummaryQueryResponseSchema,
-} from "./finance/getFinanceSummarySchema.ts";
+  getExpenseById200Schema,
+  getExpenseByIdPathParamsSchema,
+  getExpenseByIdQueryResponseSchema,
+} from "./expense/getExpenseByIdSchema.ts";
 export {
-  getFinanceTransactions200Schema,
-  getFinanceTransactionsQueryParamsSchema,
-  getFinanceTransactionsQueryResponseSchema,
-} from "./finance/getFinanceTransactionsSchema.ts";
+  getExpenses200Schema,
+  getExpensesQueryParamsSchema,
+  getExpensesQueryResponseSchema,
+} from "./expense/getExpensesSchema.ts";
 export {
-  getGeneralExpenseById200Schema,
-  getGeneralExpenseByIdPathParamsSchema,
-  getGeneralExpenseByIdQueryResponseSchema,
-} from "./finance/getGeneralExpenseByIdSchema.ts";
+  toggleExpensePayment200Schema,
+  toggleExpensePaymentMutationResponseSchema,
+  toggleExpensePaymentPathParamsSchema,
+} from "./expense/toggleExpensePaymentSchema.ts";
 export {
-  getGeneralExpenses200Schema,
-  getGeneralExpensesQueryParamsSchema,
-  getGeneralExpensesQueryResponseSchema,
-} from "./finance/getGeneralExpensesSchema.ts";
-export {
-  updateGeneralExpense200Schema,
-  updateGeneralExpenseMutationRequestSchema,
-  updateGeneralExpenseMutationResponseSchema,
-  updateGeneralExpensePathParamsSchema,
-} from "./finance/updateGeneralExpenseSchema.ts";
-export { financeSummaryDTOSchema } from "./financeSummaryDTOSchema.ts";
+  updateExpense200Schema,
+  updateExpenseMutationRequestSchema,
+  updateExpenseMutationResponseSchema,
+  updateExpensePathParamsSchema,
+} from "./expense/updateExpenseSchema.ts";
+export { expenseRequestDTOSchema } from "./expenseRequestDTOSchema.ts";
+export { expenseResponseDTOSchema } from "./expenseResponseDTOSchema.ts";
+export { expensesSummaryDTOSchema } from "./expensesSummaryDTOSchema.ts";
 export { pageDTOAppointmentResponseDTOSchema } from "./pageDTOAppointmentResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./pageDTOEmployeeResponseDTOSchema.ts";
+export { pageDTOExpenseResponseDTOSchema } from "./pageDTOExpenseResponseDTOSchema.ts";
 export { pageDTOParentResponseDTOSchema } from "./pageDTOParentResponseDTOSchema.ts";
 export { pageDTOStudentResponseDTOSchema } from "./pageDTOStudentResponseDTOSchema.ts";
-export { pageMetadataSchema } from "./pageMetadataSchema.ts";
-export { pagedModelTransactionResponseDTOSchema } from "./pagedModelTransactionResponseDTOSchema.ts";
 export {
   archiveParent204Schema,
   archiveParentMutationResponseSchema,
@@ -244,9 +248,10 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./student/updateStudentSchema.ts";
+export { studentAppointmentsResponseDTOSchema } from "./studentAppointmentsResponseDTOSchema.ts";
+export { studentFinanceSummaryDTOSchema } from "./studentFinanceSummaryDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
 export { studentSummaryDTOSchema } from "./studentSummaryDTOSchema.ts";
-export { transactionRequestDTOSchema } from "./transactionRequestDTOSchema.ts";
-export { transactionResponseDTOSchema } from "./transactionResponseDTOSchema.ts";
+export { studentsFinanceSummaryResponseDTOSchema } from "./studentsFinanceSummaryResponseDTOSchema.ts";

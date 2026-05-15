@@ -1,11 +1,12 @@
 export type { CreateAppointmentMutationKey } from "./hooks/appointment/useCreateAppointment.ts";
 export type { DeleteAppointmentMutationKey } from "./hooks/appointment/useDeleteAppointment.ts";
 export type { GetAppointmentByIdQueryKey } from "./hooks/appointment/useGetAppointmentById.ts";
+export type { GetAppointmentFinanceReportQueryKey } from "./hooks/appointment/useGetAppointmentFinanceReport.ts";
 export type { GetAppointmentsQueryKey } from "./hooks/appointment/useGetAppointments.ts";
 export type { GetAppointmentsByEmployeeIdQueryKey } from "./hooks/appointment/useGetAppointmentsByEmployeeId.ts";
 export type { GetAppointmentsByStudentIdQueryKey } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
-export type { GetEmployeeSummaryQueryKey } from "./hooks/appointment/useGetEmployeeSummary.ts";
-export type { GetStudentSummaryQueryKey } from "./hooks/appointment/useGetStudentSummary.ts";
+export type { GetEmployeesAppointmentsFinanceReportQueryKey } from "./hooks/appointment/useGetEmployeesAppointmentsFinanceReport.ts";
+export type { GetStudentsAppointmentsFinanceReportQueryKey } from "./hooks/appointment/useGetStudentsAppointmentsFinanceReport.ts";
 export type { ToggleEmployeeAppointmentPaymentMutationKey } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
 export type { ToggleStudentAppointmentChargeMutationKey } from "./hooks/appointment/useToggleStudentAppointmentCharge.ts";
 export type { UpdateAppointmentMutationKey } from "./hooks/appointment/useUpdateAppointment.ts";
@@ -18,13 +19,12 @@ export type { GetEmployeeOptionsQueryKey } from "./hooks/employee/useGetEmployee
 export type { GetEmployeesQueryKey } from "./hooks/employee/useGetEmployees.ts";
 export type { UnarchiveEmployeeMutationKey } from "./hooks/employee/useUnarchiveEmployee.ts";
 export type { UpdateEmployeeMutationKey } from "./hooks/employee/useUpdateEmployee.ts";
-export type { CreateGeneralExpenseMutationKey } from "./hooks/finance/useCreateGeneralExpense.ts";
-export type { DeleteGeneralExpenseMutationKey } from "./hooks/finance/useDeleteGeneralExpense.ts";
-export type { GetFinanceSummaryQueryKey } from "./hooks/finance/useGetFinanceSummary.ts";
-export type { GetFinanceTransactionsQueryKey } from "./hooks/finance/useGetFinanceTransactions.ts";
-export type { GetGeneralExpenseByIdQueryKey } from "./hooks/finance/useGetGeneralExpenseById.ts";
-export type { GetGeneralExpensesQueryKey } from "./hooks/finance/useGetGeneralExpenses.ts";
-export type { UpdateGeneralExpenseMutationKey } from "./hooks/finance/useUpdateGeneralExpense.ts";
+export type { CreateExpenseMutationKey } from "./hooks/expense/useCreateExpense.ts";
+export type { DeleteExpenseMutationKey } from "./hooks/expense/useDeleteExpense.ts";
+export type { GetExpenseByIdQueryKey } from "./hooks/expense/useGetExpenseById.ts";
+export type { GetExpensesQueryKey } from "./hooks/expense/useGetExpenses.ts";
+export type { ToggleExpensePaymentMutationKey } from "./hooks/expense/useToggleExpensePayment.ts";
+export type { UpdateExpenseMutationKey } from "./hooks/expense/useUpdateExpense.ts";
 export type { ArchiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export type { CreateParentMutationKey } from "./hooks/parent/useCreateParent.ts";
 export type { DeleteParentMutationKey } from "./hooks/parent/useDeleteParent.ts";
@@ -50,6 +50,7 @@ export type {
   AddressResponseDTO,
   AddressResponseDTOStateEnumKey,
 } from "./types/AddressResponseDTO.ts";
+export type { AppointmentFinanceSummaryDTO } from "./types/AppointmentFinanceSummaryDTO.ts";
 export type {
   AppointmentRequestDTO,
   AppointmentRequestDTOContentEnumKey,
@@ -60,6 +61,8 @@ export type {
 } from "./types/AppointmentResponseDTO.ts";
 export type { ClassesByContentDTO } from "./types/ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./types/DashboardSummaryResponseDTO.ts";
+export type { EmployeeAppointmentsResponseDTO } from "./types/EmployeeAppointmentsResponseDTO.ts";
+export type { EmployeeFinanceSummaryDTO } from "./types/EmployeeFinanceSummaryDTO.ts";
 export type { EmployeeOptionsDTO } from "./types/EmployeeOptionsDTO.ts";
 export type {
   EmployeeRequestDTO,
@@ -70,31 +73,31 @@ export type {
   EmployeeResponseDTODutyEnumKey,
 } from "./types/EmployeeResponseDTO.ts";
 export type { EmployeeSummaryDTO } from "./types/EmployeeSummaryDTO.ts";
-export type { FinanceSummaryDTO } from "./types/FinanceSummaryDTO.ts";
+export type { EmployeesFinanceSummaryResponseDTO } from "./types/EmployeesFinanceSummaryResponseDTO.ts";
+export type {
+  ExpenseRequestDTO,
+  ExpenseRequestDTOCategoryEnumKey,
+} from "./types/ExpenseRequestDTO.ts";
+export type {
+  ExpenseResponseDTO,
+  ExpenseResponseDTOCategoryEnumKey,
+} from "./types/ExpenseResponseDTO.ts";
+export type { ExpensesSummaryDTO } from "./types/ExpensesSummaryDTO.ts";
 export type { PageDTOAppointmentResponseDTO } from "./types/PageDTOAppointmentResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./types/PageDTOEmployeeResponseDTO.ts";
+export type { PageDTOExpenseResponseDTO } from "./types/PageDTOExpenseResponseDTO.ts";
 export type { PageDTOParentResponseDTO } from "./types/PageDTOParentResponseDTO.ts";
 export type { PageDTOStudentResponseDTO } from "./types/PageDTOStudentResponseDTO.ts";
-export type { PageMetadata } from "./types/PageMetadata.ts";
-export type { PagedModelTransactionResponseDTO } from "./types/PagedModelTransactionResponseDTO.ts";
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
+export type { StudentAppointmentsResponseDTO } from "./types/StudentAppointmentsResponseDTO.ts";
+export type { StudentFinanceSummaryDTO } from "./types/StudentFinanceSummaryDTO.ts";
 export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./types/StudentResponseDTO.ts";
 export type { StudentSummaryDTO } from "./types/StudentSummaryDTO.ts";
-export type {
-  TransactionRequestDTO,
-  TransactionRequestDTOCategoryEnumKey,
-} from "./types/TransactionRequestDTO.ts";
-export type {
-  TransactionResponseDTO,
-  TransactionResponseDTOCategoryEnumKey,
-  TransactionResponseDTOOriginEnumKey,
-  TransactionResponseDTOStatusEnumKey,
-  TransactionResponseDTOTypeEnumKey,
-} from "./types/TransactionResponseDTO.ts";
+export type { StudentsFinanceSummaryResponseDTO } from "./types/StudentsFinanceSummaryResponseDTO.ts";
 export type {
   CreateAppointment201,
   CreateAppointmentMutation,
@@ -113,6 +116,12 @@ export type {
   GetAppointmentByIdQuery,
   GetAppointmentByIdQueryResponse,
 } from "./types/appointment/GetAppointmentById.ts";
+export type {
+  GetAppointmentFinanceReport200,
+  GetAppointmentFinanceReportQuery,
+  GetAppointmentFinanceReportQueryParams,
+  GetAppointmentFinanceReportQueryResponse,
+} from "./types/appointment/GetAppointmentFinanceReport.ts";
 export type {
   GetAppointments200,
   GetAppointmentsQuery,
@@ -134,19 +143,17 @@ export type {
   GetAppointmentsByStudentIdQueryResponse,
 } from "./types/appointment/GetAppointmentsByStudentId.ts";
 export type {
-  GetEmployeeSummary200,
-  GetEmployeeSummaryPathParams,
-  GetEmployeeSummaryQuery,
-  GetEmployeeSummaryQueryParams,
-  GetEmployeeSummaryQueryResponse,
-} from "./types/appointment/GetEmployeeSummary.ts";
+  GetEmployeesAppointmentsFinanceReport200,
+  GetEmployeesAppointmentsFinanceReportQuery,
+  GetEmployeesAppointmentsFinanceReportQueryParams,
+  GetEmployeesAppointmentsFinanceReportQueryResponse,
+} from "./types/appointment/GetEmployeesAppointmentsFinanceReport.ts";
 export type {
-  GetStudentSummary200,
-  GetStudentSummaryPathParams,
-  GetStudentSummaryQuery,
-  GetStudentSummaryQueryParams,
-  GetStudentSummaryQueryResponse,
-} from "./types/appointment/GetStudentSummary.ts";
+  GetStudentsAppointmentsFinanceReport200,
+  GetStudentsAppointmentsFinanceReportQuery,
+  GetStudentsAppointmentsFinanceReportQueryParams,
+  GetStudentsAppointmentsFinanceReportQueryResponse,
+} from "./types/appointment/GetStudentsAppointmentsFinanceReport.ts";
 export type {
   ToggleEmployeeAppointmentPayment200,
   ToggleEmployeeAppointmentPaymentMutation,
@@ -221,51 +228,43 @@ export type {
   UpdateEmployeePathParams,
 } from "./types/employee/UpdateEmployee.ts";
 export type {
-  CreateGeneralExpense201,
-  CreateGeneralExpenseMutation,
-  CreateGeneralExpenseMutationRequest,
-  CreateGeneralExpenseMutationResponse,
-} from "./types/finance/CreateGeneralExpense.ts";
+  CreateExpense201,
+  CreateExpenseMutation,
+  CreateExpenseMutationRequest,
+  CreateExpenseMutationResponse,
+} from "./types/expense/CreateExpense.ts";
 export type {
-  DeleteGeneralExpense204,
-  DeleteGeneralExpenseMutation,
-  DeleteGeneralExpenseMutationResponse,
-  DeleteGeneralExpensePathParams,
-} from "./types/finance/DeleteGeneralExpense.ts";
+  DeleteExpense204,
+  DeleteExpenseMutation,
+  DeleteExpenseMutationResponse,
+  DeleteExpensePathParams,
+} from "./types/expense/DeleteExpense.ts";
 export type {
-  GetFinanceSummary200,
-  GetFinanceSummaryQuery,
-  GetFinanceSummaryQueryResponse,
-} from "./types/finance/GetFinanceSummary.ts";
+  GetExpenseById200,
+  GetExpenseByIdPathParams,
+  GetExpenseByIdQuery,
+  GetExpenseByIdQueryResponse,
+} from "./types/expense/GetExpenseById.ts";
 export type {
-  GetFinanceTransactions200,
-  GetFinanceTransactionsQuery,
-  GetFinanceTransactionsQueryParams,
-  GetFinanceTransactionsQueryParamsCategoryEnumKey,
-  GetFinanceTransactionsQueryParamsStatusEnumKey,
-  GetFinanceTransactionsQueryParamsTypeEnumKey,
-  GetFinanceTransactionsQueryResponse,
-} from "./types/finance/GetFinanceTransactions.ts";
+  GetExpenses200,
+  GetExpensesQuery,
+  GetExpensesQueryParams,
+  GetExpensesQueryParamsCategoryEnumKey,
+  GetExpensesQueryResponse,
+} from "./types/expense/GetExpenses.ts";
 export type {
-  GetGeneralExpenseById200,
-  GetGeneralExpenseByIdPathParams,
-  GetGeneralExpenseByIdQuery,
-  GetGeneralExpenseByIdQueryResponse,
-} from "./types/finance/GetGeneralExpenseById.ts";
+  ToggleExpensePayment200,
+  ToggleExpensePaymentMutation,
+  ToggleExpensePaymentMutationResponse,
+  ToggleExpensePaymentPathParams,
+} from "./types/expense/ToggleExpensePayment.ts";
 export type {
-  GetGeneralExpenses200,
-  GetGeneralExpensesQuery,
-  GetGeneralExpensesQueryParams,
-  GetGeneralExpensesQueryParamsCategoryEnumKey,
-  GetGeneralExpensesQueryResponse,
-} from "./types/finance/GetGeneralExpenses.ts";
-export type {
-  UpdateGeneralExpense200,
-  UpdateGeneralExpenseMutation,
-  UpdateGeneralExpenseMutationRequest,
-  UpdateGeneralExpenseMutationResponse,
-  UpdateGeneralExpensePathParams,
-} from "./types/finance/UpdateGeneralExpense.ts";
+  UpdateExpense200,
+  UpdateExpenseMutation,
+  UpdateExpenseMutationRequest,
+  UpdateExpenseMutationResponse,
+  UpdateExpensePathParams,
+} from "./types/expense/UpdateExpense.ts";
 export type {
   ArchiveParent204,
   ArchiveParentMutation,
@@ -381,6 +380,10 @@ export { getAppointmentById } from "./hooks/appointment/useGetAppointmentById.ts
 export { getAppointmentByIdQueryKey } from "./hooks/appointment/useGetAppointmentById.ts";
 export { getAppointmentByIdQueryOptions } from "./hooks/appointment/useGetAppointmentById.ts";
 export { useGetAppointmentById } from "./hooks/appointment/useGetAppointmentById.ts";
+export { getAppointmentFinanceReport } from "./hooks/appointment/useGetAppointmentFinanceReport.ts";
+export { getAppointmentFinanceReportQueryKey } from "./hooks/appointment/useGetAppointmentFinanceReport.ts";
+export { getAppointmentFinanceReportQueryOptions } from "./hooks/appointment/useGetAppointmentFinanceReport.ts";
+export { useGetAppointmentFinanceReport } from "./hooks/appointment/useGetAppointmentFinanceReport.ts";
 export { getAppointments } from "./hooks/appointment/useGetAppointments.ts";
 export { getAppointmentsQueryKey } from "./hooks/appointment/useGetAppointments.ts";
 export { getAppointmentsQueryOptions } from "./hooks/appointment/useGetAppointments.ts";
@@ -393,14 +396,14 @@ export { getAppointmentsByStudentId } from "./hooks/appointment/useGetAppointmen
 export { getAppointmentsByStudentIdQueryKey } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
 export { getAppointmentsByStudentIdQueryOptions } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
 export { useGetAppointmentsByStudentId } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
-export { getEmployeeSummary } from "./hooks/appointment/useGetEmployeeSummary.ts";
-export { getEmployeeSummaryQueryKey } from "./hooks/appointment/useGetEmployeeSummary.ts";
-export { getEmployeeSummaryQueryOptions } from "./hooks/appointment/useGetEmployeeSummary.ts";
-export { useGetEmployeeSummary } from "./hooks/appointment/useGetEmployeeSummary.ts";
-export { getStudentSummary } from "./hooks/appointment/useGetStudentSummary.ts";
-export { getStudentSummaryQueryKey } from "./hooks/appointment/useGetStudentSummary.ts";
-export { getStudentSummaryQueryOptions } from "./hooks/appointment/useGetStudentSummary.ts";
-export { useGetStudentSummary } from "./hooks/appointment/useGetStudentSummary.ts";
+export { getEmployeesAppointmentsFinanceReport } from "./hooks/appointment/useGetEmployeesAppointmentsFinanceReport.ts";
+export { getEmployeesAppointmentsFinanceReportQueryKey } from "./hooks/appointment/useGetEmployeesAppointmentsFinanceReport.ts";
+export { getEmployeesAppointmentsFinanceReportQueryOptions } from "./hooks/appointment/useGetEmployeesAppointmentsFinanceReport.ts";
+export { useGetEmployeesAppointmentsFinanceReport } from "./hooks/appointment/useGetEmployeesAppointmentsFinanceReport.ts";
+export { getStudentsAppointmentsFinanceReport } from "./hooks/appointment/useGetStudentsAppointmentsFinanceReport.ts";
+export { getStudentsAppointmentsFinanceReportQueryKey } from "./hooks/appointment/useGetStudentsAppointmentsFinanceReport.ts";
+export { getStudentsAppointmentsFinanceReportQueryOptions } from "./hooks/appointment/useGetStudentsAppointmentsFinanceReport.ts";
+export { useGetStudentsAppointmentsFinanceReport } from "./hooks/appointment/useGetStudentsAppointmentsFinanceReport.ts";
 export { toggleEmployeeAppointmentPayment } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
 export { toggleEmployeeAppointmentPaymentMutationKey } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
 export { toggleEmployeeAppointmentPaymentMutationOptions } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
@@ -449,34 +452,30 @@ export { updateEmployee } from "./hooks/employee/useUpdateEmployee.ts";
 export { updateEmployeeMutationKey } from "./hooks/employee/useUpdateEmployee.ts";
 export { updateEmployeeMutationOptions } from "./hooks/employee/useUpdateEmployee.ts";
 export { useUpdateEmployee } from "./hooks/employee/useUpdateEmployee.ts";
-export { createGeneralExpense } from "./hooks/finance/useCreateGeneralExpense.ts";
-export { createGeneralExpenseMutationKey } from "./hooks/finance/useCreateGeneralExpense.ts";
-export { createGeneralExpenseMutationOptions } from "./hooks/finance/useCreateGeneralExpense.ts";
-export { useCreateGeneralExpense } from "./hooks/finance/useCreateGeneralExpense.ts";
-export { deleteGeneralExpense } from "./hooks/finance/useDeleteGeneralExpense.ts";
-export { deleteGeneralExpenseMutationKey } from "./hooks/finance/useDeleteGeneralExpense.ts";
-export { deleteGeneralExpenseMutationOptions } from "./hooks/finance/useDeleteGeneralExpense.ts";
-export { useDeleteGeneralExpense } from "./hooks/finance/useDeleteGeneralExpense.ts";
-export { getFinanceSummary } from "./hooks/finance/useGetFinanceSummary.ts";
-export { getFinanceSummaryQueryKey } from "./hooks/finance/useGetFinanceSummary.ts";
-export { getFinanceSummaryQueryOptions } from "./hooks/finance/useGetFinanceSummary.ts";
-export { useGetFinanceSummary } from "./hooks/finance/useGetFinanceSummary.ts";
-export { getFinanceTransactions } from "./hooks/finance/useGetFinanceTransactions.ts";
-export { getFinanceTransactionsQueryKey } from "./hooks/finance/useGetFinanceTransactions.ts";
-export { getFinanceTransactionsQueryOptions } from "./hooks/finance/useGetFinanceTransactions.ts";
-export { useGetFinanceTransactions } from "./hooks/finance/useGetFinanceTransactions.ts";
-export { getGeneralExpenseById } from "./hooks/finance/useGetGeneralExpenseById.ts";
-export { getGeneralExpenseByIdQueryKey } from "./hooks/finance/useGetGeneralExpenseById.ts";
-export { getGeneralExpenseByIdQueryOptions } from "./hooks/finance/useGetGeneralExpenseById.ts";
-export { useGetGeneralExpenseById } from "./hooks/finance/useGetGeneralExpenseById.ts";
-export { getGeneralExpenses } from "./hooks/finance/useGetGeneralExpenses.ts";
-export { getGeneralExpensesQueryKey } from "./hooks/finance/useGetGeneralExpenses.ts";
-export { getGeneralExpensesQueryOptions } from "./hooks/finance/useGetGeneralExpenses.ts";
-export { useGetGeneralExpenses } from "./hooks/finance/useGetGeneralExpenses.ts";
-export { updateGeneralExpense } from "./hooks/finance/useUpdateGeneralExpense.ts";
-export { updateGeneralExpenseMutationKey } from "./hooks/finance/useUpdateGeneralExpense.ts";
-export { updateGeneralExpenseMutationOptions } from "./hooks/finance/useUpdateGeneralExpense.ts";
-export { useUpdateGeneralExpense } from "./hooks/finance/useUpdateGeneralExpense.ts";
+export { createExpense } from "./hooks/expense/useCreateExpense.ts";
+export { createExpenseMutationKey } from "./hooks/expense/useCreateExpense.ts";
+export { createExpenseMutationOptions } from "./hooks/expense/useCreateExpense.ts";
+export { useCreateExpense } from "./hooks/expense/useCreateExpense.ts";
+export { deleteExpense } from "./hooks/expense/useDeleteExpense.ts";
+export { deleteExpenseMutationKey } from "./hooks/expense/useDeleteExpense.ts";
+export { deleteExpenseMutationOptions } from "./hooks/expense/useDeleteExpense.ts";
+export { useDeleteExpense } from "./hooks/expense/useDeleteExpense.ts";
+export { getExpenseById } from "./hooks/expense/useGetExpenseById.ts";
+export { getExpenseByIdQueryKey } from "./hooks/expense/useGetExpenseById.ts";
+export { getExpenseByIdQueryOptions } from "./hooks/expense/useGetExpenseById.ts";
+export { useGetExpenseById } from "./hooks/expense/useGetExpenseById.ts";
+export { getExpenses } from "./hooks/expense/useGetExpenses.ts";
+export { getExpensesQueryKey } from "./hooks/expense/useGetExpenses.ts";
+export { getExpensesQueryOptions } from "./hooks/expense/useGetExpenses.ts";
+export { useGetExpenses } from "./hooks/expense/useGetExpenses.ts";
+export { toggleExpensePayment } from "./hooks/expense/useToggleExpensePayment.ts";
+export { toggleExpensePaymentMutationKey } from "./hooks/expense/useToggleExpensePayment.ts";
+export { toggleExpensePaymentMutationOptions } from "./hooks/expense/useToggleExpensePayment.ts";
+export { useToggleExpensePayment } from "./hooks/expense/useToggleExpensePayment.ts";
+export { updateExpense } from "./hooks/expense/useUpdateExpense.ts";
+export { updateExpenseMutationKey } from "./hooks/expense/useUpdateExpense.ts";
+export { updateExpenseMutationOptions } from "./hooks/expense/useUpdateExpense.ts";
+export { useUpdateExpense } from "./hooks/expense/useUpdateExpense.ts";
 export { archiveParent } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export { archiveParentMutationOptions } from "./hooks/parent/useArchiveParent.ts";
@@ -551,15 +550,9 @@ export { appointmentRequestDTOContentEnum } from "./types/AppointmentRequestDTO.
 export { appointmentResponseDTOContentEnum } from "./types/AppointmentResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./types/EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./types/EmployeeResponseDTO.ts";
-export { transactionRequestDTOCategoryEnum } from "./types/TransactionRequestDTO.ts";
-export { transactionResponseDTOCategoryEnum } from "./types/TransactionResponseDTO.ts";
-export { transactionResponseDTOOriginEnum } from "./types/TransactionResponseDTO.ts";
-export { transactionResponseDTOStatusEnum } from "./types/TransactionResponseDTO.ts";
-export { transactionResponseDTOTypeEnum } from "./types/TransactionResponseDTO.ts";
-export { getFinanceTransactionsQueryParamsCategoryEnum } from "./types/finance/GetFinanceTransactions.ts";
-export { getFinanceTransactionsQueryParamsStatusEnum } from "./types/finance/GetFinanceTransactions.ts";
-export { getFinanceTransactionsQueryParamsTypeEnum } from "./types/finance/GetFinanceTransactions.ts";
-export { getGeneralExpensesQueryParamsCategoryEnum } from "./types/finance/GetGeneralExpenses.ts";
+export { expenseRequestDTOCategoryEnum } from "./types/ExpenseRequestDTO.ts";
+export { expenseResponseDTOCategoryEnum } from "./types/ExpenseResponseDTO.ts";
+export { getExpensesQueryParamsCategoryEnum } from "./types/expense/GetExpenses.ts";
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
 export {
@@ -578,6 +571,11 @@ export {
   getAppointmentByIdQueryResponseSchema,
 } from "./zod/appointment/getAppointmentByIdSchema.ts";
 export {
+  getAppointmentFinanceReport200Schema,
+  getAppointmentFinanceReportQueryParamsSchema,
+  getAppointmentFinanceReportQueryResponseSchema,
+} from "./zod/appointment/getAppointmentFinanceReportSchema.ts";
+export {
   getAppointmentsByEmployeeId200Schema,
   getAppointmentsByEmployeeIdPathParamsSchema,
   getAppointmentsByEmployeeIdQueryParamsSchema,
@@ -595,17 +593,15 @@ export {
   getAppointmentsQueryResponseSchema,
 } from "./zod/appointment/getAppointmentsSchema.ts";
 export {
-  getEmployeeSummary200Schema,
-  getEmployeeSummaryPathParamsSchema,
-  getEmployeeSummaryQueryParamsSchema,
-  getEmployeeSummaryQueryResponseSchema,
-} from "./zod/appointment/getEmployeeSummarySchema.ts";
+  getEmployeesAppointmentsFinanceReport200Schema,
+  getEmployeesAppointmentsFinanceReportQueryParamsSchema,
+  getEmployeesAppointmentsFinanceReportQueryResponseSchema,
+} from "./zod/appointment/getEmployeesAppointmentsFinanceReportSchema.ts";
 export {
-  getStudentSummary200Schema,
-  getStudentSummaryPathParamsSchema,
-  getStudentSummaryQueryParamsSchema,
-  getStudentSummaryQueryResponseSchema,
-} from "./zod/appointment/getStudentSummarySchema.ts";
+  getStudentsAppointmentsFinanceReport200Schema,
+  getStudentsAppointmentsFinanceReportQueryParamsSchema,
+  getStudentsAppointmentsFinanceReportQueryResponseSchema,
+} from "./zod/appointment/getStudentsAppointmentsFinanceReportSchema.ts";
 export {
   toggleEmployeeAppointmentPayment200Schema,
   toggleEmployeeAppointmentPaymentMutationResponseSchema,
@@ -622,6 +618,7 @@ export {
   updateAppointmentMutationResponseSchema,
   updateAppointmentPathParamsSchema,
 } from "./zod/appointment/updateAppointmentSchema.ts";
+export { appointmentFinanceSummaryDTOSchema } from "./zod/appointmentFinanceSummaryDTOSchema.ts";
 export { appointmentRequestDTOSchema } from "./zod/appointmentRequestDTOSchema.ts";
 export { appointmentResponseDTOSchema } from "./zod/appointmentResponseDTOSchema.ts";
 export { classesByContentDTOSchema } from "./zod/classesByContentDTOSchema.ts";
@@ -671,52 +668,52 @@ export {
   updateEmployeeMutationResponseSchema,
   updateEmployeePathParamsSchema,
 } from "./zod/employee/updateEmployeeSchema.ts";
+export { employeeAppointmentsResponseDTOSchema } from "./zod/employeeAppointmentsResponseDTOSchema.ts";
+export { employeeFinanceSummaryDTOSchema } from "./zod/employeeFinanceSummaryDTOSchema.ts";
 export { employeeOptionsDTOSchema } from "./zod/employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./zod/employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./zod/employeeResponseDTOSchema.ts";
 export { employeeSummaryDTOSchema } from "./zod/employeeSummaryDTOSchema.ts";
+export { employeesFinanceSummaryResponseDTOSchema } from "./zod/employeesFinanceSummaryResponseDTOSchema.ts";
 export {
-  createGeneralExpense201Schema,
-  createGeneralExpenseMutationRequestSchema,
-  createGeneralExpenseMutationResponseSchema,
-} from "./zod/finance/createGeneralExpenseSchema.ts";
+  createExpense201Schema,
+  createExpenseMutationRequestSchema,
+  createExpenseMutationResponseSchema,
+} from "./zod/expense/createExpenseSchema.ts";
 export {
-  deleteGeneralExpense204Schema,
-  deleteGeneralExpenseMutationResponseSchema,
-  deleteGeneralExpensePathParamsSchema,
-} from "./zod/finance/deleteGeneralExpenseSchema.ts";
+  deleteExpense204Schema,
+  deleteExpenseMutationResponseSchema,
+  deleteExpensePathParamsSchema,
+} from "./zod/expense/deleteExpenseSchema.ts";
 export {
-  getFinanceSummary200Schema,
-  getFinanceSummaryQueryResponseSchema,
-} from "./zod/finance/getFinanceSummarySchema.ts";
+  getExpenseById200Schema,
+  getExpenseByIdPathParamsSchema,
+  getExpenseByIdQueryResponseSchema,
+} from "./zod/expense/getExpenseByIdSchema.ts";
 export {
-  getFinanceTransactions200Schema,
-  getFinanceTransactionsQueryParamsSchema,
-  getFinanceTransactionsQueryResponseSchema,
-} from "./zod/finance/getFinanceTransactionsSchema.ts";
+  getExpenses200Schema,
+  getExpensesQueryParamsSchema,
+  getExpensesQueryResponseSchema,
+} from "./zod/expense/getExpensesSchema.ts";
 export {
-  getGeneralExpenseById200Schema,
-  getGeneralExpenseByIdPathParamsSchema,
-  getGeneralExpenseByIdQueryResponseSchema,
-} from "./zod/finance/getGeneralExpenseByIdSchema.ts";
+  toggleExpensePayment200Schema,
+  toggleExpensePaymentMutationResponseSchema,
+  toggleExpensePaymentPathParamsSchema,
+} from "./zod/expense/toggleExpensePaymentSchema.ts";
 export {
-  getGeneralExpenses200Schema,
-  getGeneralExpensesQueryParamsSchema,
-  getGeneralExpensesQueryResponseSchema,
-} from "./zod/finance/getGeneralExpensesSchema.ts";
-export {
-  updateGeneralExpense200Schema,
-  updateGeneralExpenseMutationRequestSchema,
-  updateGeneralExpenseMutationResponseSchema,
-  updateGeneralExpensePathParamsSchema,
-} from "./zod/finance/updateGeneralExpenseSchema.ts";
-export { financeSummaryDTOSchema } from "./zod/financeSummaryDTOSchema.ts";
+  updateExpense200Schema,
+  updateExpenseMutationRequestSchema,
+  updateExpenseMutationResponseSchema,
+  updateExpensePathParamsSchema,
+} from "./zod/expense/updateExpenseSchema.ts";
+export { expenseRequestDTOSchema } from "./zod/expenseRequestDTOSchema.ts";
+export { expenseResponseDTOSchema } from "./zod/expenseResponseDTOSchema.ts";
+export { expensesSummaryDTOSchema } from "./zod/expensesSummaryDTOSchema.ts";
 export { pageDTOAppointmentResponseDTOSchema } from "./zod/pageDTOAppointmentResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./zod/pageDTOEmployeeResponseDTOSchema.ts";
+export { pageDTOExpenseResponseDTOSchema } from "./zod/pageDTOExpenseResponseDTOSchema.ts";
 export { pageDTOParentResponseDTOSchema } from "./zod/pageDTOParentResponseDTOSchema.ts";
 export { pageDTOStudentResponseDTOSchema } from "./zod/pageDTOStudentResponseDTOSchema.ts";
-export { pageMetadataSchema } from "./zod/pageMetadataSchema.ts";
-export { pagedModelTransactionResponseDTOSchema } from "./zod/pagedModelTransactionResponseDTOSchema.ts";
 export {
   archiveParent204Schema,
   archiveParentMutationResponseSchema,
@@ -806,9 +803,10 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./zod/student/updateStudentSchema.ts";
+export { studentAppointmentsResponseDTOSchema } from "./zod/studentAppointmentsResponseDTOSchema.ts";
+export { studentFinanceSummaryDTOSchema } from "./zod/studentFinanceSummaryDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./zod/studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./zod/studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./zod/studentResponseDTOSchema.ts";
 export { studentSummaryDTOSchema } from "./zod/studentSummaryDTOSchema.ts";
-export { transactionRequestDTOSchema } from "./zod/transactionRequestDTOSchema.ts";
-export { transactionResponseDTOSchema } from "./zod/transactionResponseDTOSchema.ts";
+export { studentsFinanceSummaryResponseDTOSchema } from "./zod/studentsFinanceSummaryResponseDTOSchema.ts";

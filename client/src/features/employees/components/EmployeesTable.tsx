@@ -1,16 +1,14 @@
-import { Button } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { EmployeeResponseDTO, PageDTOEmployeeResponseDTO } from "@/kubb";
+import type { PageDTOEmployeeResponseDTO } from "@/kubb";
 import { dutyLabels } from "../utils/dutyLabels";
 import {
   formatCpf,
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
-import { Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type EmployeesTableProps = {
@@ -19,7 +17,6 @@ type EmployeesTableProps = {
   currentPage: number;
   isPending: boolean;
   error: unknown;
-  onEdit: (employee: EmployeeResponseDTO) => void;
 };
 
 export function EmployeesTable({
@@ -28,7 +25,6 @@ export function EmployeesTable({
   currentPage,
   isPending,
   error,
-  onEdit,
 }: Readonly<EmployeesTableProps>) {
 
   const navigate = useNavigate();
@@ -79,9 +75,6 @@ export function EmployeesTable({
             <th className="text-left font-semibold text-base-content/80">
               Status
             </th>
-            <th className="text-right font-semibold text-base-content/80">
-              Acoes
-            </th>
           </tr>
         </thead>
 
@@ -92,7 +85,7 @@ export function EmployeesTable({
               className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
               onClick={() => navigate(`/employees/${employee.id}`)}
             >
-              <td>{employee.name}</td>
+              <td className="font-bold">{employee.name}</td>
               <td>{dutyLabels[employee.duty]}</td>
 
               <td>{formatCpf(employee.cpf)}</td>
@@ -103,20 +96,6 @@ export function EmployeesTable({
                 <span className={`badge ${(employee.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
                   {(employee.active ?? true) ? "Ativo" : "Arquivado"}
                 </span>
-              </td>
-              <td className="text-right">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onEdit(employee);
-                  }}
-                >
-                  <Pencil className="h-4 w-4" />
-                  Editar
-                </Button>
               </td>
             </tr>
           ))}
