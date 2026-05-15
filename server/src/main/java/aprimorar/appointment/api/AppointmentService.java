@@ -4,10 +4,10 @@ import aprimorar.appointment.api.dto.ContentDistributionDTO;
 import aprimorar.appointment.api.dto.AppointmentFinanceSummaryDTO;
 import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
+import aprimorar.appointment.api.dto.EmployeeAppointmentsResponseDTO;
 import aprimorar.appointment.api.dto.EmployeesFinanceSummaryResponseDTO;
 import aprimorar.appointment.api.dto.StudentsFinanceSummaryResponseDTO;
-import aprimorar.appointment.api.dto.EmployeeSummaryDTO;
-import aprimorar.appointment.api.dto.StudentSummaryDTO;
+import aprimorar.appointment.api.dto.StudentAppointmentsResponseDTO;
 import aprimorar.shared.PageDTO;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -30,7 +30,7 @@ public interface AppointmentService {
 
     AppointmentResponseDTO findById(UUID appointmentId);
 
-    PageDTO<AppointmentResponseDTO> getAppointmentsByEmployeeId(
+    EmployeeAppointmentsResponseDTO getAppointmentsByEmployeeId(
         Pageable pageable,
         UUID employeeId,
         Boolean hidePaid,
@@ -38,15 +38,7 @@ public interface AppointmentService {
         Instant endDate
     );
 
-    EmployeeSummaryDTO getEmployeeSummary(UUID employeeId, Instant startDate, Instant endDate);
-
-    AppointmentFinanceSummaryDTO getFinanceSummary(Instant startDate, Instant endDate);
-
-    StudentsFinanceSummaryResponseDTO getStudentsFinanceSummary(Instant startDate, Instant endDate);
-
-    EmployeesFinanceSummaryResponseDTO getEmployeesFinanceSummary(Instant startDate, Instant endDate);
-
-    PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(
+    StudentAppointmentsResponseDTO getAppointmentsByStudentId(
         Pageable pageable,
         UUID studentId,
         Instant startDate,
@@ -54,7 +46,11 @@ public interface AppointmentService {
         Boolean charged
     );
 
-    StudentSummaryDTO getStudentSummary(UUID studentId, Instant startDate, Instant endDate);
+    AppointmentFinanceSummaryDTO getFinanceReport(Instant startDate, Instant endDate);
+
+    StudentsFinanceSummaryResponseDTO getStudentsFinanceReport(Instant startDate, Instant endDate);
+
+    EmployeesFinanceSummaryResponseDTO getEmployeesFinanceReport(Instant startDate, Instant endDate);
 
     AppointmentResponseDTO updateAppointment(UUID id, AppointmentRequestDTO dto);
 
@@ -64,30 +60,6 @@ public interface AppointmentService {
 
     AppointmentResponseDTO toggleEmployeePayment(UUID id);
 
-    long countByStudentId(UUID studentId);
-
-//    long countByStudentIdAndStartDateBetween(UUID studentId, Instant startDate, Instant endDate);
-//
-//    BigDecimal sumChargedByStudentId(UUID studentId);
-//
-//    BigDecimal sumPendingByStudentId(UUID studentId);
-//
-//    BigDecimal sumChargedByStudentIdInPeriod(UUID studentId, Instant startDate, Instant endDate);
-//
-//    BigDecimal sumPendingByStudentIdInPeriod(UUID studentId, Instant startDate, Instant endDate);
-
-    long countByEmployeeId(UUID employeeId);
-
-//    long countByEmployeeIdAndStartDateBetween(UUID employeeId, Instant startDate, Instant endDate);
-//
-//    BigDecimal sumPaidByEmployeeId(UUID employeeId);
-//
-//    BigDecimal sumUnpaidByEmployeeId(UUID employeeId);
-//
-//    BigDecimal sumPaidByEmployeeIdInPeriod(UUID employeeId, Instant startDate, Instant endDate);
-//
-//    BigDecimal sumUnpaidByEmployeeIdInPeriod(UUID employeeId, Instant startDate, Instant endDate);
-
     void reassignStudentAppointmentsToGhost(UUID studentId);
 
     void reassignEmployeeAppointmentsToGhost(UUID employeeId);
@@ -95,7 +67,6 @@ public interface AppointmentService {
     long countActiveStudentsInPeriod(Instant startDate, Instant endDate, UUID excludedStudentId);
 
     long countAppointmentsInPeriod(Instant startDate, Instant endDate);
-
 
     List<ContentDistributionDTO> findContentDistributionInPeriod(Instant startDate, Instant endDate);
 }

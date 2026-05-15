@@ -1,4 +1,3 @@
-
 export const toInstant = (v: string) => new Date(v).toISOString();
 
 export const toDatetimeLocalInput = (iso?: string | null) => {
@@ -21,4 +20,31 @@ export const getStartOfMonthISO = (date: Date = new Date()) => {
 export const getEndOfMonthISO = (date: Date = new Date()) => {
   const d = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
   return d.toISOString();
+};
+
+export const getMonthDateRange = (selectedDate: Date) => {
+  const startDate = new Date(
+    selectedDate.getFullYear(),
+    selectedDate.getMonth(),
+    1,
+    0,
+    0,
+    0,
+    0,
+  );
+
+  const endDate = new Date(
+    selectedDate.getFullYear(),
+    selectedDate.getMonth() + 1,
+    0,
+    23,
+    59,
+    59,
+    999,
+  );
+
+  return {
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString(),
+  };
 };

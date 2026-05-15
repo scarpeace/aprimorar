@@ -1,14 +1,12 @@
 export type { CreateAppointmentMutationKey } from "./hooks/appointment/useCreateAppointment.ts";
 export type { DeleteAppointmentMutationKey } from "./hooks/appointment/useDeleteAppointment.ts";
 export type { GetAppointmentByIdQueryKey } from "./hooks/appointment/useGetAppointmentById.ts";
-export type { GetAppointmentEmployeesFinanceSummaryQueryKey } from "./hooks/appointment/useGetAppointmentEmployeesFinanceSummary.ts";
-export type { GetAppointmentFinanceSummaryQueryKey } from "./hooks/appointment/useGetAppointmentFinanceSummary.ts";
-export type { GetAppointmentStudentsFinanceSummaryQueryKey } from "./hooks/appointment/useGetAppointmentStudentsFinanceSummary.ts";
+export type { GetAppointmentFinanceReportQueryKey } from "./hooks/appointment/useGetAppointmentFinanceReport.ts";
 export type { GetAppointmentsQueryKey } from "./hooks/appointment/useGetAppointments.ts";
 export type { GetAppointmentsByEmployeeIdQueryKey } from "./hooks/appointment/useGetAppointmentsByEmployeeId.ts";
 export type { GetAppointmentsByStudentIdQueryKey } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
-export type { GetEmployeeSummaryQueryKey } from "./hooks/appointment/useGetEmployeeSummary.ts";
-export type { GetStudentSummaryQueryKey } from "./hooks/appointment/useGetStudentSummary.ts";
+export type { GetEmployeesAppointmentsFinanceReportQueryKey } from "./hooks/appointment/useGetEmployeesAppointmentsFinanceReport.ts";
+export type { GetStudentsAppointmentsFinanceReportQueryKey } from "./hooks/appointment/useGetStudentsAppointmentsFinanceReport.ts";
 export type { ToggleEmployeeAppointmentPaymentMutationKey } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
 export type { ToggleStudentAppointmentChargeMutationKey } from "./hooks/appointment/useToggleStudentAppointmentCharge.ts";
 export type { UpdateAppointmentMutationKey } from "./hooks/appointment/useUpdateAppointment.ts";
@@ -62,6 +60,7 @@ export type {
 } from "./types/AppointmentResponseDTO.ts";
 export type { ClassesByContentDTO } from "./types/ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./types/DashboardSummaryResponseDTO.ts";
+export type { EmployeeAppointmentsResponseDTO } from "./types/EmployeeAppointmentsResponseDTO.ts";
 export type { EmployeeFinanceSummaryDTO } from "./types/EmployeeFinanceSummaryDTO.ts";
 export type { EmployeeOptionsDTO } from "./types/EmployeeOptionsDTO.ts";
 export type {
@@ -90,6 +89,7 @@ export type { PageDTOStudentResponseDTO } from "./types/PageDTOStudentResponseDT
 export type { ParentOptionsDTO } from "./types/ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./types/ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./types/ParentResponseDTO.ts";
+export type { StudentAppointmentsResponseDTO } from "./types/StudentAppointmentsResponseDTO.ts";
 export type { StudentFinanceSummaryDTO } from "./types/StudentFinanceSummaryDTO.ts";
 export type { StudentOptionsDTO } from "./types/StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./types/StudentRequestDTO.ts";
@@ -115,23 +115,11 @@ export type {
   GetAppointmentByIdQueryResponse,
 } from "./types/appointment/GetAppointmentById.ts";
 export type {
-  GetAppointmentEmployeesFinanceSummary200,
-  GetAppointmentEmployeesFinanceSummaryQuery,
-  GetAppointmentEmployeesFinanceSummaryQueryParams,
-  GetAppointmentEmployeesFinanceSummaryQueryResponse,
-} from "./types/appointment/GetAppointmentEmployeesFinanceSummary.ts";
-export type {
-  GetAppointmentFinanceSummary200,
-  GetAppointmentFinanceSummaryQuery,
-  GetAppointmentFinanceSummaryQueryParams,
-  GetAppointmentFinanceSummaryQueryResponse,
-} from "./types/appointment/GetAppointmentFinanceSummary.ts";
-export type {
-  GetAppointmentStudentsFinanceSummary200,
-  GetAppointmentStudentsFinanceSummaryQuery,
-  GetAppointmentStudentsFinanceSummaryQueryParams,
-  GetAppointmentStudentsFinanceSummaryQueryResponse,
-} from "./types/appointment/GetAppointmentStudentsFinanceSummary.ts";
+  GetAppointmentFinanceReport200,
+  GetAppointmentFinanceReportQuery,
+  GetAppointmentFinanceReportQueryParams,
+  GetAppointmentFinanceReportQueryResponse,
+} from "./types/appointment/GetAppointmentFinanceReport.ts";
 export type {
   GetAppointments200,
   GetAppointmentsQuery,
@@ -153,19 +141,17 @@ export type {
   GetAppointmentsByStudentIdQueryResponse,
 } from "./types/appointment/GetAppointmentsByStudentId.ts";
 export type {
-  GetEmployeeSummary200,
-  GetEmployeeSummaryPathParams,
-  GetEmployeeSummaryQuery,
-  GetEmployeeSummaryQueryParams,
-  GetEmployeeSummaryQueryResponse,
-} from "./types/appointment/GetEmployeeSummary.ts";
+  GetEmployeesAppointmentsFinanceReport200,
+  GetEmployeesAppointmentsFinanceReportQuery,
+  GetEmployeesAppointmentsFinanceReportQueryParams,
+  GetEmployeesAppointmentsFinanceReportQueryResponse,
+} from "./types/appointment/GetEmployeesAppointmentsFinanceReport.ts";
 export type {
-  GetStudentSummary200,
-  GetStudentSummaryPathParams,
-  GetStudentSummaryQuery,
-  GetStudentSummaryQueryParams,
-  GetStudentSummaryQueryResponse,
-} from "./types/appointment/GetStudentSummary.ts";
+  GetStudentsAppointmentsFinanceReport200,
+  GetStudentsAppointmentsFinanceReportQuery,
+  GetStudentsAppointmentsFinanceReportQueryParams,
+  GetStudentsAppointmentsFinanceReportQueryResponse,
+} from "./types/appointment/GetStudentsAppointmentsFinanceReport.ts";
 export type {
   ToggleEmployeeAppointmentPayment200,
   ToggleEmployeeAppointmentPaymentMutation,
@@ -386,18 +372,10 @@ export { getAppointmentById } from "./hooks/appointment/useGetAppointmentById.ts
 export { getAppointmentByIdQueryKey } from "./hooks/appointment/useGetAppointmentById.ts";
 export { getAppointmentByIdQueryOptions } from "./hooks/appointment/useGetAppointmentById.ts";
 export { useGetAppointmentById } from "./hooks/appointment/useGetAppointmentById.ts";
-export { getAppointmentEmployeesFinanceSummary } from "./hooks/appointment/useGetAppointmentEmployeesFinanceSummary.ts";
-export { getAppointmentEmployeesFinanceSummaryQueryKey } from "./hooks/appointment/useGetAppointmentEmployeesFinanceSummary.ts";
-export { getAppointmentEmployeesFinanceSummaryQueryOptions } from "./hooks/appointment/useGetAppointmentEmployeesFinanceSummary.ts";
-export { useGetAppointmentEmployeesFinanceSummary } from "./hooks/appointment/useGetAppointmentEmployeesFinanceSummary.ts";
-export { getAppointmentFinanceSummary } from "./hooks/appointment/useGetAppointmentFinanceSummary.ts";
-export { getAppointmentFinanceSummaryQueryKey } from "./hooks/appointment/useGetAppointmentFinanceSummary.ts";
-export { getAppointmentFinanceSummaryQueryOptions } from "./hooks/appointment/useGetAppointmentFinanceSummary.ts";
-export { useGetAppointmentFinanceSummary } from "./hooks/appointment/useGetAppointmentFinanceSummary.ts";
-export { getAppointmentStudentsFinanceSummary } from "./hooks/appointment/useGetAppointmentStudentsFinanceSummary.ts";
-export { getAppointmentStudentsFinanceSummaryQueryKey } from "./hooks/appointment/useGetAppointmentStudentsFinanceSummary.ts";
-export { getAppointmentStudentsFinanceSummaryQueryOptions } from "./hooks/appointment/useGetAppointmentStudentsFinanceSummary.ts";
-export { useGetAppointmentStudentsFinanceSummary } from "./hooks/appointment/useGetAppointmentStudentsFinanceSummary.ts";
+export { getAppointmentFinanceReport } from "./hooks/appointment/useGetAppointmentFinanceReport.ts";
+export { getAppointmentFinanceReportQueryKey } from "./hooks/appointment/useGetAppointmentFinanceReport.ts";
+export { getAppointmentFinanceReportQueryOptions } from "./hooks/appointment/useGetAppointmentFinanceReport.ts";
+export { useGetAppointmentFinanceReport } from "./hooks/appointment/useGetAppointmentFinanceReport.ts";
 export { getAppointments } from "./hooks/appointment/useGetAppointments.ts";
 export { getAppointmentsQueryKey } from "./hooks/appointment/useGetAppointments.ts";
 export { getAppointmentsQueryOptions } from "./hooks/appointment/useGetAppointments.ts";
@@ -410,14 +388,14 @@ export { getAppointmentsByStudentId } from "./hooks/appointment/useGetAppointmen
 export { getAppointmentsByStudentIdQueryKey } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
 export { getAppointmentsByStudentIdQueryOptions } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
 export { useGetAppointmentsByStudentId } from "./hooks/appointment/useGetAppointmentsByStudentId.ts";
-export { getEmployeeSummary } from "./hooks/appointment/useGetEmployeeSummary.ts";
-export { getEmployeeSummaryQueryKey } from "./hooks/appointment/useGetEmployeeSummary.ts";
-export { getEmployeeSummaryQueryOptions } from "./hooks/appointment/useGetEmployeeSummary.ts";
-export { useGetEmployeeSummary } from "./hooks/appointment/useGetEmployeeSummary.ts";
-export { getStudentSummary } from "./hooks/appointment/useGetStudentSummary.ts";
-export { getStudentSummaryQueryKey } from "./hooks/appointment/useGetStudentSummary.ts";
-export { getStudentSummaryQueryOptions } from "./hooks/appointment/useGetStudentSummary.ts";
-export { useGetStudentSummary } from "./hooks/appointment/useGetStudentSummary.ts";
+export { getEmployeesAppointmentsFinanceReport } from "./hooks/appointment/useGetEmployeesAppointmentsFinanceReport.ts";
+export { getEmployeesAppointmentsFinanceReportQueryKey } from "./hooks/appointment/useGetEmployeesAppointmentsFinanceReport.ts";
+export { getEmployeesAppointmentsFinanceReportQueryOptions } from "./hooks/appointment/useGetEmployeesAppointmentsFinanceReport.ts";
+export { useGetEmployeesAppointmentsFinanceReport } from "./hooks/appointment/useGetEmployeesAppointmentsFinanceReport.ts";
+export { getStudentsAppointmentsFinanceReport } from "./hooks/appointment/useGetStudentsAppointmentsFinanceReport.ts";
+export { getStudentsAppointmentsFinanceReportQueryKey } from "./hooks/appointment/useGetStudentsAppointmentsFinanceReport.ts";
+export { getStudentsAppointmentsFinanceReportQueryOptions } from "./hooks/appointment/useGetStudentsAppointmentsFinanceReport.ts";
+export { useGetStudentsAppointmentsFinanceReport } from "./hooks/appointment/useGetStudentsAppointmentsFinanceReport.ts";
 export { toggleEmployeeAppointmentPayment } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
 export { toggleEmployeeAppointmentPaymentMutationKey } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
 export { toggleEmployeeAppointmentPaymentMutationOptions } from "./hooks/appointment/useToggleEmployeeAppointmentPayment.ts";
@@ -581,20 +559,10 @@ export {
   getAppointmentByIdQueryResponseSchema,
 } from "./zod/appointment/getAppointmentByIdSchema.ts";
 export {
-  getAppointmentEmployeesFinanceSummary200Schema,
-  getAppointmentEmployeesFinanceSummaryQueryParamsSchema,
-  getAppointmentEmployeesFinanceSummaryQueryResponseSchema,
-} from "./zod/appointment/getAppointmentEmployeesFinanceSummarySchema.ts";
-export {
-  getAppointmentFinanceSummary200Schema,
-  getAppointmentFinanceSummaryQueryParamsSchema,
-  getAppointmentFinanceSummaryQueryResponseSchema,
-} from "./zod/appointment/getAppointmentFinanceSummarySchema.ts";
-export {
-  getAppointmentStudentsFinanceSummary200Schema,
-  getAppointmentStudentsFinanceSummaryQueryParamsSchema,
-  getAppointmentStudentsFinanceSummaryQueryResponseSchema,
-} from "./zod/appointment/getAppointmentStudentsFinanceSummarySchema.ts";
+  getAppointmentFinanceReport200Schema,
+  getAppointmentFinanceReportQueryParamsSchema,
+  getAppointmentFinanceReportQueryResponseSchema,
+} from "./zod/appointment/getAppointmentFinanceReportSchema.ts";
 export {
   getAppointmentsByEmployeeId200Schema,
   getAppointmentsByEmployeeIdPathParamsSchema,
@@ -613,17 +581,15 @@ export {
   getAppointmentsQueryResponseSchema,
 } from "./zod/appointment/getAppointmentsSchema.ts";
 export {
-  getEmployeeSummary200Schema,
-  getEmployeeSummaryPathParamsSchema,
-  getEmployeeSummaryQueryParamsSchema,
-  getEmployeeSummaryQueryResponseSchema,
-} from "./zod/appointment/getEmployeeSummarySchema.ts";
+  getEmployeesAppointmentsFinanceReport200Schema,
+  getEmployeesAppointmentsFinanceReportQueryParamsSchema,
+  getEmployeesAppointmentsFinanceReportQueryResponseSchema,
+} from "./zod/appointment/getEmployeesAppointmentsFinanceReportSchema.ts";
 export {
-  getStudentSummary200Schema,
-  getStudentSummaryPathParamsSchema,
-  getStudentSummaryQueryParamsSchema,
-  getStudentSummaryQueryResponseSchema,
-} from "./zod/appointment/getStudentSummarySchema.ts";
+  getStudentsAppointmentsFinanceReport200Schema,
+  getStudentsAppointmentsFinanceReportQueryParamsSchema,
+  getStudentsAppointmentsFinanceReportQueryResponseSchema,
+} from "./zod/appointment/getStudentsAppointmentsFinanceReportSchema.ts";
 export {
   toggleEmployeeAppointmentPayment200Schema,
   toggleEmployeeAppointmentPaymentMutationResponseSchema,
@@ -690,6 +656,7 @@ export {
   updateEmployeeMutationResponseSchema,
   updateEmployeePathParamsSchema,
 } from "./zod/employee/updateEmployeeSchema.ts";
+export { employeeAppointmentsResponseDTOSchema } from "./zod/employeeAppointmentsResponseDTOSchema.ts";
 export { employeeFinanceSummaryDTOSchema } from "./zod/employeeFinanceSummaryDTOSchema.ts";
 export { employeeOptionsDTOSchema } from "./zod/employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./zod/employeeRequestDTOSchema.ts";
@@ -818,6 +785,7 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./zod/student/updateStudentSchema.ts";
+export { studentAppointmentsResponseDTOSchema } from "./zod/studentAppointmentsResponseDTOSchema.ts";
 export { studentFinanceSummaryDTOSchema } from "./zod/studentFinanceSummaryDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./zod/studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./zod/studentRequestDTOSchema.ts";

@@ -22,9 +22,11 @@ import aprimorar.appointment.api.dto.ContentDistributionDTO;
 import aprimorar.appointment.api.dto.AppointmentFinanceSummaryDTO;
 import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
+import aprimorar.appointment.api.dto.EmployeeAppointmentsResponseDTO;
 import aprimorar.appointment.api.dto.EmployeeFinanceSummaryDTO;
 import aprimorar.appointment.api.dto.EmployeesFinanceSummaryResponseDTO;
 import aprimorar.appointment.api.dto.EmployeeSummaryDTO;
+import aprimorar.appointment.api.dto.StudentAppointmentsResponseDTO;
 import aprimorar.appointment.api.dto.StudentFinanceSummaryDTO;
 import aprimorar.appointment.api.dto.StudentsFinanceSummaryResponseDTO;
 import aprimorar.appointment.api.dto.StudentSummaryDTO;
@@ -127,48 +129,44 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentMapper.convertToDto(appointment);
     }
 
-   @Transactional(readOnly = true)
-   public PageDTO<AppointmentResponseDTO> getAppointmentsByEmployeeId(
-       Pageable pageable,
-       UUID employeeId,
-       Boolean hidePaid,
-       Instant startDate,
-       Instant endDate
-   ) {
-       employeeService.findById(employeeId);
-
-       Boolean paidFilter = Boolean.TRUE.equals(hidePaid) ? Boolean.FALSE : null;
-
-       Specification<Appointment> spec = Specification
-           .where(AppointmentSpecifications.withEmployeeId(employeeId))
-           .and(AppointmentSpecifications.withStartDateAfter(startDate))
-           .and(AppointmentSpecifications.withEndDateBefore(endDate))
-           .and(AppointmentSpecifications.withEmployeePaid(paidFilter));
-
-       Page<Appointment> appointmentPage = appointmentRepo.findAll(spec, pageable);
-       Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
-
-       log.info(
-            "Consulta de appointments do colaborador finalizada, {} registros encontrados.",
-            appointmentPage.getTotalElements()
-       );
-
-       return new PageDTO<>(dtoPage);
-    }
-
     @Transactional(readOnly = true)
-    public EmployeeSummaryDTO getEmployeeSummary(UUID employeeId, Instant startDate, Instant endDate) {
+    public EmployeeAppointmentsResponseDTO getAppointmentsByEmployeeId(
+        Pageable pageable,
+        UUID employeeId,
+        Boolean hidePaid,
+        Instant startDate,
+        Instant endDate
+    ) {
         employeeService.findById(employeeId);
+
+        Boolean paidFilter = Boolean.TRUE.equals(hidePaid) ? Boolean.FALSE : null;
+
+        Specification<Appointment> spec = Specification
+            .where(AppointmentSpecifications.withEmployeeId(employeeId))
+            .and(AppointmentSpecifications.withStartDateAfter(startDate))
+            .and(AppointmentSpecifications.withEndDateBefore(endDate))
+            .and(AppointmentSpecifications.withEmployeePaid(paidFilter));
+
+        Page<Appointment> appointmentPage = appointmentRepo.findAll(spec, pageable);
+        Page<AppointmentResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
 
         long totalEvents = appointmentRepo.countFilteredByEmployeeId(employeeId, startDate, endDate);
         BigDecimal totalPaid = appointmentRepo.sumPaidFilteredByEmployeeId(employeeId, startDate, endDate);
         BigDecimal totalUnpaid = appointmentRepo.sumUnpaidFilteredByEmployeeId(employeeId, startDate, endDate);
 
-        return new EmployeeSummaryDTO(totalEvents, totalPaid, totalUnpaid);
+        log.info(
+            "Consulta de appointments do colaborador finalizada, {} registros encontrados.",
+            appointmentPage.getTotalElements()
+        );
+
+        return new EmployeeAppointmentsResponseDTO(
+            new PageDTO<>(dtoPage),
+            new EmployeeSummaryDTO(totalEvents, totalPaid, totalUnpaid)
+        );
     }
 
     @Transactional(readOnly = true)
-    public AppointmentFinanceSummaryDTO getFinanceSummary(Instant startDate, Instant endDate) {
+    public AppointmentFinanceSummaryDTO getFinanceReport(Instant startDate, Instant endDate) {
         BigDecimal totalStudentCharged = appointmentRepo.sumChargedFiltered(startDate, endDate);
         BigDecimal totalStudentPending = appointmentRepo.sumPendingFiltered(startDate, endDate);
         BigDecimal totalEmployeePaid = appointmentRepo.sumPaidFiltered(startDate, endDate);
@@ -187,7 +185,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Transactional(readOnly = true)
-    public StudentsFinanceSummaryResponseDTO getStudentsFinanceSummary(Instant startDate, Instant endDate) {
+    public StudentsFinanceSummaryResponseDTO getStudentsFinanceReport(Instant startDate, Instant endDate) {
         List<StudentFinanceSummaryDTO> students = appointmentRepo.findStudentFinanceSummaries(startDate, endDate).stream()
             .map(this::toStudentFinanceSummary)
             .toList();
@@ -196,7 +194,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Transactional(readOnly = true)
-    public EmployeesFinanceSummaryResponseDTO getEmployeesFinanceSummary(Instant startDate, Instant endDate) {
+    public EmployeesFinanceSummaryResponseDTO getEmployeesFinanceReport(Instant startDate, Instant endDate) {
         List<EmployeeFinanceSummaryDTO> employees = appointmentRepo.findEmployeeFinanceSummaries(startDate, endDate).stream()
             .map(this::toEmployeeFinanceSummary)
             .toList();
@@ -205,13 +203,15 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Transactional(readOnly = true)
-     public PageDTO<AppointmentResponseDTO> getAppointmentsByStudentId(
-         Pageable pageable,
-         UUID studentId,
-         Instant startDate,
+    public StudentAppointmentsResponseDTO getAppointmentsByStudentId(
+        Pageable pageable,
+        UUID studentId,
+        Instant startDate,
         Instant endDate,
         Boolean charged
     ) {
+        studentService.findById(studentId);
+
         Specification<Appointment> spec = Specification
             .where(AppointmentSpecifications.withStudentId(studentId))
             .and(AppointmentSpecifications.withStartDateAfter(startDate))
@@ -223,18 +223,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         log.info("Consulta de appointments do aluno finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
 
-       return new PageDTO<>(dtoPage);
-    }
-
-    @Transactional(readOnly = true)
-    public StudentSummaryDTO getStudentSummary(UUID studentId, Instant startDate, Instant endDate) {
-        studentService.findById(studentId);
-
         long totalEvents = appointmentRepo.countFilteredByStudentId(studentId, startDate, endDate);
         BigDecimal totalCharged = appointmentRepo.sumChargedFilteredByStudentId(studentId, startDate, endDate);
         BigDecimal totalPending = appointmentRepo.sumPendingFilteredByStudentId(studentId, startDate, endDate);
 
-        return new StudentSummaryDTO(totalEvents, totalCharged, totalPending);
+        return new StudentAppointmentsResponseDTO(
+            new PageDTO<>(dtoPage),
+            new StudentSummaryDTO(totalEvents, totalCharged, totalPending)
+        );
     }
 
     @Transactional
@@ -283,16 +279,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.toggleEmployeePayment(Instant.now(clock));
         log.info("Status do pagamento do colaborador no appointment {} atualizado.", appointment.getTitle());
         return appointmentMapper.convertToDto(appointment);
-    }
-
-    @Transactional(readOnly = true)
-    public long countByStudentId(UUID studentId) {
-        return appointmentRepo.countByStudentId(studentId);
-    }
-
-    @Transactional(readOnly = true)
-    public long countByEmployeeId(UUID employeeId) {
-        return appointmentRepo.countByEmployeeId(employeeId);
     }
 
     @Transactional

@@ -46,7 +46,7 @@ export const DeleteEmployeeButton = ({employeeId}: {employeeId: string}) => {
     );
   };
 
-  const eventsCount = eventsData?.totalElements ?? 0;
+  const eventsCount = eventsData?.appointments?.totalElements ?? 0;
 
   return (
     <>

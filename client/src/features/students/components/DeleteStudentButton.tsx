@@ -48,7 +48,7 @@ export const DeleteStudentButton = ({ studentId, className }: DeleteStudentButto
     );
   };
 
-  const eventsCount = eventsData?.totalElements ?? 0;
+  const eventsCount = eventsData?.appointments?.totalElements ?? 0;
 
   return (
     <>

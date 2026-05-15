@@ -17,6 +17,7 @@ export type {
 } from "./AppointmentResponseDTO.ts";
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
+export type { EmployeeAppointmentsResponseDTO } from "./EmployeeAppointmentsResponseDTO.ts";
 export type { EmployeeFinanceSummaryDTO } from "./EmployeeFinanceSummaryDTO.ts";
 export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
 export type {
@@ -45,6 +46,7 @@ export type { PageDTOStudentResponseDTO } from "./PageDTOStudentResponseDTO.ts";
 export type { ParentOptionsDTO } from "./ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
+export type { StudentAppointmentsResponseDTO } from "./StudentAppointmentsResponseDTO.ts";
 export type { StudentFinanceSummaryDTO } from "./StudentFinanceSummaryDTO.ts";
 export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
@@ -70,23 +72,11 @@ export type {
   GetAppointmentByIdQueryResponse,
 } from "./appointment/GetAppointmentById.ts";
 export type {
-  GetAppointmentEmployeesFinanceSummary200,
-  GetAppointmentEmployeesFinanceSummaryQuery,
-  GetAppointmentEmployeesFinanceSummaryQueryParams,
-  GetAppointmentEmployeesFinanceSummaryQueryResponse,
-} from "./appointment/GetAppointmentEmployeesFinanceSummary.ts";
-export type {
-  GetAppointmentFinanceSummary200,
-  GetAppointmentFinanceSummaryQuery,
-  GetAppointmentFinanceSummaryQueryParams,
-  GetAppointmentFinanceSummaryQueryResponse,
-} from "./appointment/GetAppointmentFinanceSummary.ts";
-export type {
-  GetAppointmentStudentsFinanceSummary200,
-  GetAppointmentStudentsFinanceSummaryQuery,
-  GetAppointmentStudentsFinanceSummaryQueryParams,
-  GetAppointmentStudentsFinanceSummaryQueryResponse,
-} from "./appointment/GetAppointmentStudentsFinanceSummary.ts";
+  GetAppointmentFinanceReport200,
+  GetAppointmentFinanceReportQuery,
+  GetAppointmentFinanceReportQueryParams,
+  GetAppointmentFinanceReportQueryResponse,
+} from "./appointment/GetAppointmentFinanceReport.ts";
 export type {
   GetAppointments200,
   GetAppointmentsQuery,
@@ -108,19 +98,17 @@ export type {
   GetAppointmentsByStudentIdQueryResponse,
 } from "./appointment/GetAppointmentsByStudentId.ts";
 export type {
-  GetEmployeeSummary200,
-  GetEmployeeSummaryPathParams,
-  GetEmployeeSummaryQuery,
-  GetEmployeeSummaryQueryParams,
-  GetEmployeeSummaryQueryResponse,
-} from "./appointment/GetEmployeeSummary.ts";
+  GetEmployeesAppointmentsFinanceReport200,
+  GetEmployeesAppointmentsFinanceReportQuery,
+  GetEmployeesAppointmentsFinanceReportQueryParams,
+  GetEmployeesAppointmentsFinanceReportQueryResponse,
+} from "./appointment/GetEmployeesAppointmentsFinanceReport.ts";
 export type {
-  GetStudentSummary200,
-  GetStudentSummaryPathParams,
-  GetStudentSummaryQuery,
-  GetStudentSummaryQueryParams,
-  GetStudentSummaryQueryResponse,
-} from "./appointment/GetStudentSummary.ts";
+  GetStudentsAppointmentsFinanceReport200,
+  GetStudentsAppointmentsFinanceReportQuery,
+  GetStudentsAppointmentsFinanceReportQueryParams,
+  GetStudentsAppointmentsFinanceReportQueryResponse,
+} from "./appointment/GetStudentsAppointmentsFinanceReport.ts";
 export type {
   ToggleEmployeeAppointmentPayment200,
   ToggleEmployeeAppointmentPaymentMutation,

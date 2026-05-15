@@ -2,7 +2,6 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import {
   useGetAppointmentsByStudentId,
   useGetStudentById,
-  useGetStudentSummary,
 } from "@/kubb";
 import {
   Calendar,
@@ -50,11 +49,6 @@ export function StudentDetailsPage() {
     startDate: startDate?.toISOString(),
     endDate: endDate?.toISOString(),
     charged: hideCharged ? false : undefined,
-  });
-
-  const studentSummary = useGetStudentSummary(studentId, {
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
   });
 
   const handleToggleHideCharged = () => {
@@ -113,20 +107,20 @@ export function StudentDetailsPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <KpiCard
             label="Total de eventos"
-            value={studentSummary.data?.totalEvents}
+            value={studentAppointments.data?.summary?.totalEvents}
             Icon={Calendar}
           />
 
           <KpiCard
             label="Total pago"
-            value={<span className="text-success">{brl.format(studentSummary.data?.totalCharged ?? 0)}</span>}
+            value={<span className="text-success">{brl.format(studentAppointments.data?.summary?.totalCharged ?? 0)}</span>}
             Icon={CircleDollarSign}
             className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
           />
 
           <KpiCard
             label="Total pendente"
-            value={<span className="text-warning">{brl.format(studentSummary.data?.totalPending ?? 0)}</span>}
+            value={<span className="text-warning">{brl.format(studentAppointments.data?.summary?.totalPending ?? 0)}</span>}
             Icon={Clock3}
             className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
           />
@@ -135,7 +129,7 @@ export function StudentDetailsPage() {
 
       <div className="animate-[fade-up_600ms_ease-out_both]">
         <StudentEventsTable
-          appointments={studentAppointments.data}
+          appointments={studentAppointments.data?.appointments}
           error={studentAppointments.error}
           isLoading={studentAppointments.isLoading}
           currentPage={currentPage}

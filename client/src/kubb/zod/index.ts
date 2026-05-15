@@ -16,20 +16,10 @@ export {
   getAppointmentByIdQueryResponseSchema,
 } from "./appointment/getAppointmentByIdSchema.ts";
 export {
-  getAppointmentEmployeesFinanceSummary200Schema,
-  getAppointmentEmployeesFinanceSummaryQueryParamsSchema,
-  getAppointmentEmployeesFinanceSummaryQueryResponseSchema,
-} from "./appointment/getAppointmentEmployeesFinanceSummarySchema.ts";
-export {
-  getAppointmentFinanceSummary200Schema,
-  getAppointmentFinanceSummaryQueryParamsSchema,
-  getAppointmentFinanceSummaryQueryResponseSchema,
-} from "./appointment/getAppointmentFinanceSummarySchema.ts";
-export {
-  getAppointmentStudentsFinanceSummary200Schema,
-  getAppointmentStudentsFinanceSummaryQueryParamsSchema,
-  getAppointmentStudentsFinanceSummaryQueryResponseSchema,
-} from "./appointment/getAppointmentStudentsFinanceSummarySchema.ts";
+  getAppointmentFinanceReport200Schema,
+  getAppointmentFinanceReportQueryParamsSchema,
+  getAppointmentFinanceReportQueryResponseSchema,
+} from "./appointment/getAppointmentFinanceReportSchema.ts";
 export {
   getAppointmentsByEmployeeId200Schema,
   getAppointmentsByEmployeeIdPathParamsSchema,
@@ -48,17 +38,15 @@ export {
   getAppointmentsQueryResponseSchema,
 } from "./appointment/getAppointmentsSchema.ts";
 export {
-  getEmployeeSummary200Schema,
-  getEmployeeSummaryPathParamsSchema,
-  getEmployeeSummaryQueryParamsSchema,
-  getEmployeeSummaryQueryResponseSchema,
-} from "./appointment/getEmployeeSummarySchema.ts";
+  getEmployeesAppointmentsFinanceReport200Schema,
+  getEmployeesAppointmentsFinanceReportQueryParamsSchema,
+  getEmployeesAppointmentsFinanceReportQueryResponseSchema,
+} from "./appointment/getEmployeesAppointmentsFinanceReportSchema.ts";
 export {
-  getStudentSummary200Schema,
-  getStudentSummaryPathParamsSchema,
-  getStudentSummaryQueryParamsSchema,
-  getStudentSummaryQueryResponseSchema,
-} from "./appointment/getStudentSummarySchema.ts";
+  getStudentsAppointmentsFinanceReport200Schema,
+  getStudentsAppointmentsFinanceReportQueryParamsSchema,
+  getStudentsAppointmentsFinanceReportQueryResponseSchema,
+} from "./appointment/getStudentsAppointmentsFinanceReportSchema.ts";
 export {
   toggleEmployeeAppointmentPayment200Schema,
   toggleEmployeeAppointmentPaymentMutationResponseSchema,
@@ -125,6 +113,7 @@ export {
   updateEmployeeMutationResponseSchema,
   updateEmployeePathParamsSchema,
 } from "./employee/updateEmployeeSchema.ts";
+export { employeeAppointmentsResponseDTOSchema } from "./employeeAppointmentsResponseDTOSchema.ts";
 export { employeeFinanceSummaryDTOSchema } from "./employeeFinanceSummaryDTOSchema.ts";
 export { employeeOptionsDTOSchema } from "./employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
@@ -253,6 +242,7 @@ export {
   updateStudentMutationResponseSchema,
   updateStudentPathParamsSchema,
 } from "./student/updateStudentSchema.ts";
+export { studentAppointmentsResponseDTOSchema } from "./studentAppointmentsResponseDTOSchema.ts";
 export { studentFinanceSummaryDTOSchema } from "./studentFinanceSummaryDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";

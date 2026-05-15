@@ -9,7 +9,7 @@ import { DateTimeInput } from "@/components/ui/date-time-input";
 import { EmployeeSelectDropdown } from "@/features/employees/components/EmployeeSelectDropdown";
 import { StudentSelectDropdown } from "@/features/students/components/StudentSelectDropdown";
 import type { AppointmentRequestDTO, AppointmentResponseDTO } from "@/kubb";
-import { toInstant } from "@/lib/utils/dateFormater";
+import { toInstant } from "@/lib/utils/dateFormatter";
 import { ContentSelectDropdown } from "./ContentSelectDropdown";
 import { appointmentFormSchema, type AppointmentFormSchema } from "../forms/appointmentFormSchema";
 import { useAppointmentMutations } from "../hooks/use-appointment-mutations";
