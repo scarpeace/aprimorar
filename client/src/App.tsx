@@ -20,6 +20,7 @@ const AppointmentsPage = lazy(() => import("@/features/appointments/pages/Appoin
 const AppointmentDetailPage = lazy(() => import("@/features/appointments/pages/AppointmentDetailPage").then((module) => ({ default: module.AppointmentDetailPage })))
 
 const FinancesPage = lazy(() => import("@/features/finance/pages/FinancesPage").then((module) => ({ default: module.FinancesPage })))
+const ExpenseDetailPage = lazy(() => import("@/features/finance/pages/ExpenseDetailPage").then((module) => ({ default: module.ExpenseDetailPage })))
 
 const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage").then((module) => ({ default: module.LoginPage })))
 
@@ -60,6 +61,7 @@ function App() {
 
               <Route path="/finance" element={<FinancesPage />} />
               <Route path="/finance/expenses" element={<FinancesPage />} />
+              <Route path="/finance/expenses/:id" element={<ExpenseDetailPage />} />
               <Route path="/finance/settlement" element={<FinancesPage />} />
 
               <Route path="/admin" element={<AdminPage />} />

@@ -9,7 +9,6 @@ import aprimorar.appointment.api.dto.EmployeesFinanceSummaryResponseDTO;
 import aprimorar.appointment.api.dto.StudentsFinanceSummaryResponseDTO;
 import aprimorar.appointment.api.dto.StudentAppointmentsResponseDTO;
 import aprimorar.shared.PageDTO;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
