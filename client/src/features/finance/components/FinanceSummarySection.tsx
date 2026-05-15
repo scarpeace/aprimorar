@@ -75,28 +75,24 @@ export function FinanceSummarySection({
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <FinanceKpiCard
               title="Recebido alunos"
-              subtitle="Cobrancas recebidas"
               value={brl.format(totalStudentCharged)}
               tone="success"
               icon={<ArrowDownRight className="h-5 w-5" />}
             />
             <FinanceKpiCard
               title="Pendente alunos"
-              subtitle="Cobrancas em aberto"
               value={brl.format(totalStudentPending)}
               tone="warning"
               icon={<Wallet className="h-5 w-5" />}
             />
             <FinanceKpiCard
               title="Pago colab."
-              subtitle="Repasses liquidados"
               value={brl.format(totalEmployeePaid)}
               tone="primary"
               icon={<ArrowUpRight className="h-5 w-5" />}
             />
             <FinanceKpiCard
               title="Pendente colab."
-              subtitle="Repasses em aberto"
               value={brl.format(totalEmployeePending)}
               tone="warning"
               icon={<CircleDollarSign className="h-5 w-5" />}

@@ -3,7 +3,7 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import type { ExpenseResponseDTO, PageDTOExpenseResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear } from "@/lib/utils/formatter";
-import { EXPENSE_CATEGORY_LABEL } from "../lib/expense-category-labels";
+import { ExpenseCategoryBadge } from "./ExpenseCategoryBadge";
 
 type ExpensesTableProps = {
   expenses?: PageDTOExpenseResponseDTO;
@@ -63,43 +63,40 @@ export function ExpensesTable({
         </thead>
 
         <tbody className="whitespace-nowrap">
-          {rows.map((expense) => {
-            const category = expense.category
-              ? EXPENSE_CATEGORY_LABEL[expense.category] ?? expense.category
-              : "Sem categoria";
-
-            return (
-              <tr
-                key={expense.id ?? `${expense.date}-${expense.description}`}
-                className={onNavigate ? "cursor-pointer" : undefined}
-                role={onNavigate ? "button" : undefined}
-                tabIndex={onNavigate ? 0 : undefined}
-                onClick={() => onNavigate?.(expense)}
-                onKeyDown={(event) => {
-                  if (!onNavigate) return;
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    onNavigate(expense);
-                  }
-                }}
+          {rows.map((expense) => (
+            <tr
+              key={expense.id ?? `${expense.date}-${expense.description}`}
+              className={onNavigate ? "cursor-pointer" : undefined}
+              role={onNavigate ? "button" : undefined}
+              tabIndex={onNavigate ? 0 : undefined}
+              onClick={() => onNavigate?.(expense)}
+              onKeyDown={(event) => {
+                if (!onNavigate) return;
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onNavigate(expense);
+                }
+              }}
+            >
+              <td className="font-medium text-base-content/70">
+                {expense.date ? formatDateShortYear(expense.date) : "-"}
+              </td>
+              <td className="font-bold text-base-content">
+                {expense.description ?? "Despesa sem descricao"}
+              </td>
+              <td>
+                <ExpenseCategoryBadge category={expense.category} />
+              </td>
+              <td
+                className={`text-right font-mono font-semibold ${
+                  expense.paymentDate ? "text-success" : "text-base-400"
+                }`}
+                title={expense.paymentDate ? "Paga" : "Pendente"}
               >
-                <td className="font-medium text-base-content/70">
-                  {expense.date ? formatDateShortYear(expense.date) : "-"}
-                </td>
-                <td className="font-bold text-base-content">
-                  {expense.description ?? "Despesa sem descricao"}
-                </td>
-                <td>
-                  <span className="badge badge-ghost badge-sm border-base-300 px-3 py-3">
-                    {category}
-                  </span>
-                </td>
-                <td className="text-right font-mono font-semibold text-error">
-                  {brl.format(expense.amount ?? 0)}
-                </td>
-              </tr>
-            );
-          })}
+                {brl.format(expense.amount ?? 0)}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

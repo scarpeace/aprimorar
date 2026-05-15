@@ -10,7 +10,7 @@ import {
   useGetStudentsAppointmentsFinanceReport,
 } from "@/kubb";
 import { useDateRangeFilters } from "@/hooks/use-date-range-filters";
-import { ArrowUpRight, Landmark, Plus } from "lucide-react";
+import { ArrowUpRight, Clock3, Landmark, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EmployeesFinanceTable } from "../components/EmployeesFinanceTable";
@@ -51,7 +51,8 @@ export function FinancesPage() {
   const totalStudentPending = summaryQuery.data?.totalStudentPending ?? 0;
   const totalEmployeePaid = summaryQuery.data?.totalEmployeePaid ?? 0;
   const totalEmployeePending = summaryQuery.data?.totalEmployeePending ?? 0;
-  const totalGeneralExpenses = summaryQuery.data?.totalGeneralExpenses ?? 0;
+  const totalGeneralExpenses = expensesQuery.data?.totalExpenses ?? 0;
+  const pendingGeneralExpenses = expensesQuery.data?.pendingExpenses ?? 0;
   const currentBalance = summaryQuery.data?.balance ?? 0;
 
   const handleOpenExpenseForm = () => {
@@ -186,11 +187,16 @@ export function FinancesPage() {
 
             <div className="flex items-start gap-6">
               <FinanceKpiCard
-                title="Total de despesas"
-                subtitle="Despesas operacionais"
+                title="Pagas"
                 value={brl.format(totalGeneralExpenses)}
                 tone="secondary"
                 icon={<ArrowUpRight className="h-5 w-5" />}
+              />
+              <FinanceKpiCard
+                title="Pendentes"
+                value={brl.format(pendingGeneralExpenses)}
+                tone="warning"
+                icon={<Clock3 className="h-5 w-5" />}
               />
               <Button
                 type="button"
@@ -205,7 +211,7 @@ export function FinancesPage() {
           </div>
 
           <ExpensesTable
-            expenses={expensesQuery.data}
+            expenses={expensesQuery.data?.expenses}
             isPending={expensesQuery.isPending}
             error={expensesQuery.error}
             onNavigate={(expense) => {

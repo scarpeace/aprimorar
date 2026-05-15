@@ -4,9 +4,11 @@ import aprimorar.expense.api.ExpenseCategory;
 import aprimorar.expense.api.ExpenseService;
 import aprimorar.expense.api.dto.ExpenseRequestDTO;
 import aprimorar.expense.api.dto.ExpenseResponseDTO;
+import aprimorar.expense.api.dto.ExpensesSummaryDTO;
 import aprimorar.expense.api.exception.ExpenseNotFoundException;
 import aprimorar.shared.PageDTO;
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -20,9 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ExpenseServiceImpl implements ExpenseService {
 
     private final ExpenseRepository expenseRepository;
+    private final Clock clock;
 
-    public ExpenseServiceImpl(ExpenseRepository expenseRepository) {
+    public ExpenseServiceImpl(ExpenseRepository expenseRepository, Clock clock) {
         this.expenseRepository = expenseRepository;
+        this.clock = clock;
     }
 
     @Override
@@ -34,9 +38,13 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional(readOnly = true)
-    public PageDTO<ExpenseResponseDTO> getExpenses(ExpenseCategory category, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+    public ExpensesSummaryDTO getExpenses(ExpenseCategory category, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         Page<ExpenseResponseDTO> page = expenseRepository.findFiltered(category, startDate, endDate, pageable).map(this::toDto);
-        return new PageDTO<>(page);
+        return new ExpensesSummaryDTO(
+            new PageDTO<>(page),
+            expenseRepository.sumFiltered(startDate, endDate),
+            expenseRepository.sumPendingFiltered(startDate, endDate)
+        );
     }
 
     @Override
@@ -55,6 +63,14 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
+    public ExpenseResponseDTO togglePayment(UUID id) {
+        Expense expense = findExpenseOrThrow(id);
+        expense.togglePayment(Instant.now(clock));
+        return toDto(expense);
+    }
+
+    @Override
+    @Transactional
     public void deleteExpense(UUID id) {
         expenseRepository.delete(findExpenseOrThrow(id));
     }
@@ -63,6 +79,12 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Transactional(readOnly = true)
     public BigDecimal sumExpenses(Instant startDate, Instant endDate) {
         return expenseRepository.sumFiltered(toUtcLocalDate(startDate), toUtcLocalDate(endDate));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BigDecimal sumPendingExpenses(Instant startDate, Instant endDate) {
+        return expenseRepository.sumPendingFiltered(toUtcLocalDate(startDate), toUtcLocalDate(endDate));
     }
 
     private Expense findExpenseOrThrow(UUID id) {
@@ -75,7 +97,8 @@ public class ExpenseServiceImpl implements ExpenseService {
             expense.getAmount(),
             expense.getDate(),
             expense.getCategory(),
-            expense.getDescription()
+            expense.getDescription(),
+            expense.getPaymentDate()
         );
     }
 

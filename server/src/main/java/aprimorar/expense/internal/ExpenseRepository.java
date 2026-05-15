@@ -37,4 +37,15 @@ public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
         """
     )
     BigDecimal sumFiltered(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    @Query(
+        """
+        select coalesce(sum(e.amount), 0)
+        from Expense e
+        where e.date >= coalesce(:startDate, e.date)
+          and e.date <= coalesce(:endDate, e.date)
+          and e.paymentDate is null
+        """
+    )
+    BigDecimal sumPendingFiltered(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

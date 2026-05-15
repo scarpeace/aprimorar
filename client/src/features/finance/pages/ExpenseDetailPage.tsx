@@ -9,6 +9,7 @@ import { useGetExpenseById } from "@/kubb";
 import { brl, formatDateShortYear } from "@/lib/utils/formatter";
 import { Edit, ReceiptText, Trash2 } from "lucide-react";
 import { ExpenseForm } from "../components/ExpenseForm";
+import { ToggleExpensePaymentButton } from "../components/ToggleExpensePaymentButton";
 import { useExpenseMutations } from "../hooks/useExpenseMutations";
 import { EXPENSE_CATEGORY_LABEL } from "../lib/expense-category-labels";
 
@@ -36,7 +37,7 @@ export function ExpenseDetailPage() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const expenseQuery = useGetExpenseById(expenseId);
-  const { deleteExpense } = useExpenseMutations();
+  const { deleteExpense, toggleExpensePayment } = useExpenseMutations();
 
   const headerProps = {
     description: "Veja e gerencie os dados da despesa selecionada.",
@@ -65,6 +66,7 @@ export function ExpenseDetailPage() {
   }
 
   const expense = expenseQuery.data;
+  const isPaid = !!expense.paymentDate;
   const categoryLabel = expense.category
     ? EXPENSE_CATEGORY_LABEL[expense.category] ?? expense.category
     : "Sem categoria";
@@ -99,6 +101,13 @@ export function ExpenseDetailPage() {
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-row">
+            {expense.id ? (
+              <ToggleExpensePaymentButton
+                isPaid={isPaid}
+                toggleExpensePayment={toggleExpensePayment}
+                onTogglePayment={() => toggleExpensePayment.mutate({ id: expense.id! })}
+              />
+            ) : null}
             <Button type="button" size="sm" onClick={() => setIsEditOpen(true)}>
               <Edit className="mr-1 h-4 w-4" />
               Editar
@@ -124,6 +133,15 @@ export function ExpenseDetailPage() {
           <DetailItem
             label="Data"
             value={expense.date ? formatDateShortYear(expense.date) : "-"}
+          />
+          <DetailItem
+            label="Pagamento"
+            value={
+              expense.paymentDate
+                ? formatDateShortYear(expense.paymentDate)
+                : "Pendente"
+            }
+            className={isPaid ? "text-success" : "text-warning"}
           />
           <DetailItem label="Categoria" value={categoryLabel} />
           <DetailItem label="Identificador" value={expense.id ?? "-"} />

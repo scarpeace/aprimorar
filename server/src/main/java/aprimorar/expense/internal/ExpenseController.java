@@ -4,7 +4,7 @@ import aprimorar.expense.api.ExpenseCategory;
 import aprimorar.expense.api.ExpenseService;
 import aprimorar.expense.api.dto.ExpenseRequestDTO;
 import aprimorar.expense.api.dto.ExpenseResponseDTO;
-import aprimorar.shared.PageDTO;
+import aprimorar.expense.api.dto.ExpensesSummaryDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,8 +49,8 @@ public class ExpenseController {
 
     @GetMapping
     @Operation(operationId = "getExpenses", summary = "Lista despesas gerais com filtros")
-    @ApiResponse(responseCode = "200", description = "Lista de despesas retornada com sucesso.")
-    public ResponseEntity<PageDTO<ExpenseResponseDTO>> getExpenses(
+    @ApiResponse(responseCode = "200", description = "Despesas e resumo financeiro retornados com sucesso.")
+    public ResponseEntity<ExpensesSummaryDTO> getExpenses(
         @RequestParam(required = false) ExpenseCategory category,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
@@ -70,6 +71,13 @@ public class ExpenseController {
     @ApiResponse(responseCode = "200", description = "Despesa atualizada com sucesso.")
     public ResponseEntity<ExpenseResponseDTO> updateExpense(@PathVariable UUID id, @RequestBody @Valid ExpenseRequestDTO dto) {
         return ResponseEntity.ok(expenseService.updateExpense(id, dto));
+    }
+
+    @PatchMapping("/{id}/toggle-payment")
+    @Operation(operationId = "toggleExpensePayment", summary = "Alterna o pagamento de uma despesa geral")
+    @ApiResponse(responseCode = "200", description = "Status de pagamento da despesa atualizado com sucesso.")
+    public ResponseEntity<ExpenseResponseDTO> togglePayment(@PathVariable UUID id) {
+        return ResponseEntity.ok(expenseService.togglePayment(id));
     }
 
     @DeleteMapping("/{id}")

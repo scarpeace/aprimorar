@@ -7,6 +7,7 @@ import {
   getExpensesQueryKey,
   useCreateExpense,
   useDeleteExpense,
+  useToggleExpensePayment,
   useUpdateExpense,
 } from "@/kubb";
 
@@ -59,9 +60,25 @@ export function useExpenseMutations() {
     },
   });
 
+  const toggleExpensePayment = useToggleExpensePayment({
+    mutation: {
+      onSuccess: (_updatedExpense, variables) => {
+        toast.success("Status de pagamento da despesa atualizado");
+        invalidateFinanceQueries();
+        queryClient.invalidateQueries({
+          queryKey: getExpenseByIdQueryKey(variables.id),
+        });
+      },
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error));
+      },
+    },
+  });
+
   return {
     createExpense,
     updateExpense,
     deleteExpense,
+    toggleExpensePayment,
   };
 }

@@ -141,6 +141,11 @@ export {
   getExpensesQueryResponseSchema,
 } from "./expense/getExpensesSchema.ts";
 export {
+  toggleExpensePayment200Schema,
+  toggleExpensePaymentMutationResponseSchema,
+  toggleExpensePaymentPathParamsSchema,
+} from "./expense/toggleExpensePaymentSchema.ts";
+export {
   updateExpense200Schema,
   updateExpenseMutationRequestSchema,
   updateExpenseMutationResponseSchema,
@@ -148,6 +153,7 @@ export {
 } from "./expense/updateExpenseSchema.ts";
 export { expenseRequestDTOSchema } from "./expenseRequestDTOSchema.ts";
 export { expenseResponseDTOSchema } from "./expenseResponseDTOSchema.ts";
+export { expensesSummaryDTOSchema } from "./expensesSummaryDTOSchema.ts";
 export { pageDTOAppointmentResponseDTOSchema } from "./pageDTOAppointmentResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./pageDTOEmployeeResponseDTOSchema.ts";
 export { pageDTOExpenseResponseDTOSchema } from "./pageDTOExpenseResponseDTOSchema.ts";

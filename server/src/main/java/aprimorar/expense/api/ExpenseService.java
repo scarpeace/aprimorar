@@ -2,6 +2,7 @@ package aprimorar.expense.api;
 
 import aprimorar.expense.api.dto.ExpenseRequestDTO;
 import aprimorar.expense.api.dto.ExpenseResponseDTO;
+import aprimorar.expense.api.dto.ExpensesSummaryDTO;
 import aprimorar.shared.PageDTO;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -13,13 +14,17 @@ public interface ExpenseService {
 
     ExpenseResponseDTO createExpense(ExpenseRequestDTO dto);
 
-    PageDTO<ExpenseResponseDTO> getExpenses(ExpenseCategory category, LocalDate startDate, LocalDate endDate, Pageable pageable);
+    ExpensesSummaryDTO getExpenses(ExpenseCategory category, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
     ExpenseResponseDTO findExpenseById(UUID id);
 
     ExpenseResponseDTO updateExpense(UUID id, ExpenseRequestDTO dto);
 
+    ExpenseResponseDTO togglePayment(UUID id);
+
     void deleteExpense(UUID id);
 
     BigDecimal sumExpenses(Instant startDate, Instant endDate);
+
+    BigDecimal sumPendingExpenses(Instant startDate, Instant endDate);
 }

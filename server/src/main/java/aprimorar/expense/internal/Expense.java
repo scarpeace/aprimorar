@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -36,6 +37,9 @@ public class Expense {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "payment_date")
+    private Instant paymentDate;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -74,10 +78,27 @@ public class Expense {
         return description;
     }
 
+    public Instant getPaymentDate() {
+        return paymentDate;
+    }
+
     public void update(BigDecimal amount, LocalDate date, ExpenseCategory category, String description) {
         this.amount = amount;
         this.date = date;
         this.category = category;
         this.description = description;
+    }
+
+    public void togglePayment(Instant now) {
+        if (this.paymentDate != null) {
+            this.paymentDate = null;
+        } else {
+            this.paymentDate = now;
+        }
+    }
+
+    @Transient
+    public boolean isPaid() {
+        return this.paymentDate != null;
     }
 }

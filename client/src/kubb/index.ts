@@ -23,6 +23,7 @@ export type { CreateExpenseMutationKey } from "./hooks/expense/useCreateExpense.
 export type { DeleteExpenseMutationKey } from "./hooks/expense/useDeleteExpense.ts";
 export type { GetExpenseByIdQueryKey } from "./hooks/expense/useGetExpenseById.ts";
 export type { GetExpensesQueryKey } from "./hooks/expense/useGetExpenses.ts";
+export type { ToggleExpensePaymentMutationKey } from "./hooks/expense/useToggleExpensePayment.ts";
 export type { UpdateExpenseMutationKey } from "./hooks/expense/useUpdateExpense.ts";
 export type { ArchiveParentMutationKey } from "./hooks/parent/useArchiveParent.ts";
 export type { CreateParentMutationKey } from "./hooks/parent/useCreateParent.ts";
@@ -81,6 +82,7 @@ export type {
   ExpenseResponseDTO,
   ExpenseResponseDTOCategoryEnumKey,
 } from "./types/ExpenseResponseDTO.ts";
+export type { ExpensesSummaryDTO } from "./types/ExpensesSummaryDTO.ts";
 export type { PageDTOAppointmentResponseDTO } from "./types/PageDTOAppointmentResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./types/PageDTOEmployeeResponseDTO.ts";
 export type { PageDTOExpenseResponseDTO } from "./types/PageDTOExpenseResponseDTO.ts";
@@ -250,6 +252,12 @@ export type {
   GetExpensesQueryParamsCategoryEnumKey,
   GetExpensesQueryResponse,
 } from "./types/expense/GetExpenses.ts";
+export type {
+  ToggleExpensePayment200,
+  ToggleExpensePaymentMutation,
+  ToggleExpensePaymentMutationResponse,
+  ToggleExpensePaymentPathParams,
+} from "./types/expense/ToggleExpensePayment.ts";
 export type {
   UpdateExpense200,
   UpdateExpenseMutation,
@@ -460,6 +468,10 @@ export { getExpenses } from "./hooks/expense/useGetExpenses.ts";
 export { getExpensesQueryKey } from "./hooks/expense/useGetExpenses.ts";
 export { getExpensesQueryOptions } from "./hooks/expense/useGetExpenses.ts";
 export { useGetExpenses } from "./hooks/expense/useGetExpenses.ts";
+export { toggleExpensePayment } from "./hooks/expense/useToggleExpensePayment.ts";
+export { toggleExpensePaymentMutationKey } from "./hooks/expense/useToggleExpensePayment.ts";
+export { toggleExpensePaymentMutationOptions } from "./hooks/expense/useToggleExpensePayment.ts";
+export { useToggleExpensePayment } from "./hooks/expense/useToggleExpensePayment.ts";
 export { updateExpense } from "./hooks/expense/useUpdateExpense.ts";
 export { updateExpenseMutationKey } from "./hooks/expense/useUpdateExpense.ts";
 export { updateExpenseMutationOptions } from "./hooks/expense/useUpdateExpense.ts";
@@ -684,6 +696,11 @@ export {
   getExpensesQueryResponseSchema,
 } from "./zod/expense/getExpensesSchema.ts";
 export {
+  toggleExpensePayment200Schema,
+  toggleExpensePaymentMutationResponseSchema,
+  toggleExpensePaymentPathParamsSchema,
+} from "./zod/expense/toggleExpensePaymentSchema.ts";
+export {
   updateExpense200Schema,
   updateExpenseMutationRequestSchema,
   updateExpenseMutationResponseSchema,
@@ -691,6 +708,7 @@ export {
 } from "./zod/expense/updateExpenseSchema.ts";
 export { expenseRequestDTOSchema } from "./zod/expenseRequestDTOSchema.ts";
 export { expenseResponseDTOSchema } from "./zod/expenseResponseDTOSchema.ts";
+export { expensesSummaryDTOSchema } from "./zod/expensesSummaryDTOSchema.ts";
 export { pageDTOAppointmentResponseDTOSchema } from "./zod/pageDTOAppointmentResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./zod/pageDTOEmployeeResponseDTOSchema.ts";
 export { pageDTOExpenseResponseDTOSchema } from "./zod/pageDTOExpenseResponseDTOSchema.ts";

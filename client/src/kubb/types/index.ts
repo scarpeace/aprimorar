@@ -38,6 +38,7 @@ export type {
   ExpenseResponseDTO,
   ExpenseResponseDTOCategoryEnumKey,
 } from "./ExpenseResponseDTO.ts";
+export type { ExpensesSummaryDTO } from "./ExpensesSummaryDTO.ts";
 export type { PageDTOAppointmentResponseDTO } from "./PageDTOAppointmentResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./PageDTOEmployeeResponseDTO.ts";
 export type { PageDTOExpenseResponseDTO } from "./PageDTOExpenseResponseDTO.ts";
@@ -207,6 +208,12 @@ export type {
   GetExpensesQueryParamsCategoryEnumKey,
   GetExpensesQueryResponse,
 } from "./expense/GetExpenses.ts";
+export type {
+  ToggleExpensePayment200,
+  ToggleExpensePaymentMutation,
+  ToggleExpensePaymentMutationResponse,
+  ToggleExpensePaymentPathParams,
+} from "./expense/ToggleExpensePayment.ts";
 export type {
   UpdateExpense200,
   UpdateExpenseMutation,

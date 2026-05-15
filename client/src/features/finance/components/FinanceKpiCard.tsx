@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 
 type FinanceKpiCardProps = {
   title: string;
-  subtitle: string;
   value: string;
   tone: "success" | "warning" | "primary" | "secondary";
   icon: ReactNode;
@@ -10,7 +9,6 @@ type FinanceKpiCardProps = {
 
 export function FinanceKpiCard({
   title,
-  subtitle,
   value,
   tone,
   icon,
@@ -28,14 +26,13 @@ export function FinanceKpiCard({
 
   return (
     <article className={`rounded-2xl border p-4 shadow-sm ${toneClasses[tone]}`}>
-      <div className="mb-4 flex items-start justify-between gap-3">
+      <div className=" flex items-start justify-between gap-3">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-base-content/45">
             {title}
           </p>
-          <p className="mt-1 text-sm text-base-content/60">{subtitle}</p>
         </div>
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-base-100/85 shadow-sm">
+        <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-base-100/85 shadow-sm">
           {icon}
         </div>
       </div>
