@@ -9,16 +9,14 @@ import {
   useGetStudentsAppointmentsFinanceReport,
 } from "@/kubb";
 import { useDateFilter } from "@/hooks/use-date-filter";
-import { ArrowUpRight, Clock3, Landmark, Plus } from "lucide-react";
+import { Landmark, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { EmployeesFinanceTable } from "../components/EmployeesFinanceTable";
 import { ExpenseForm } from "../components/ExpenseForm";
 import { ExpensesTable } from "../components/ExpensesTable";
-import { FinanceKpiCard } from "../components/FinanceKpiCard";
 import { FinanceSummarySection } from "../components/FinanceSummarySection";
 import { StudentsFinanceTable } from "../components/StudentsFinanceTable";
-import { brl } from "@/lib/utils/formatter";
 
 export function FinancesPage() {
   const navigate = useNavigate();
@@ -98,12 +96,14 @@ export function FinancesPage() {
           totalStudentPending={totalStudentPending}
           totalEmployeePaid={totalEmployeePaid}
           totalEmployeePending={totalEmployeePending}
+          totalGeneralExpenses={totalGeneralExpenses}
+          pendingGeneralExpenses={pendingGeneralExpenses}
           isError={summaryQuery.isError}
           error={summaryQuery.error}
         />
 
         <section className="rounded-2xl border border-base-300 bg-base-100 p-5 shadow-sm animate-[fade-up_200ms_ease-out_both]">
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-between items-start mb-4">
             <div className="flex flex-col">
               <span className="badge badge-primary badge-outline px-3 py-3">
                 Despesas Gerais
@@ -117,29 +117,14 @@ export function FinancesPage() {
               </p>
             </div>
 
-            <div className="flex items-start gap-6">
-              <FinanceKpiCard
-                title="Pagas"
-                value={brl.format(totalGeneralExpenses)}
-                tone="secondary"
-                icon={<ArrowUpRight className="h-5 w-5" />}
-              />
-              <FinanceKpiCard
-                title="Pendentes"
-                value={brl.format(pendingGeneralExpenses)}
-                tone="warning"
-                icon={<Clock3 className="h-5 w-5" />}
-              />
-              <Button
-                type="button"
-                variant="success"
-                onClick={() => handleOpenExpenseForm()}
-                className="sm:mb-1"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Nova Despesa
-              </Button>
-            </div>
+            <Button
+              type="button"
+              variant="success"
+              onClick={() => handleOpenExpenseForm()}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Nova Despesa
+            </Button>
           </div>
 
           <ExpensesTable
