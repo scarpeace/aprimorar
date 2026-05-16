@@ -19,7 +19,7 @@ export const studentRequestDTOSchema = z
     contact: z.string().min(1).describe("Contato do aluno"),
     email: z.string().min(1).describe("Email do aluno"),
     get address() {
-      return addressRequestDTOSchema.describe("Endereço do aluno");
+      return addressRequestDTOSchema.describe("Endereço");
     },
     parentId: z.uuid().describe("ID do responsável atual do aluno"),
   })

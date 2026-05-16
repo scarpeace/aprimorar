@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
+import { Collapse } from "@/components/ui/collapse";
 import { ErrorCard } from "@/components/ui/error-card";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
+import { AddressDetails } from "@/features/address/components/AddressDetails";
 import { useGetEmployeeById } from "@/kubb";
 import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
 import { Edit, User } from "lucide-react";
@@ -68,6 +70,13 @@ export function EmployeeInfoSection({ employeeId, onEdit }: EmployeeInfoSectionP
           <SummaryItem label="Chave PIX" value={employeeQuery.data.pix} />
           <SummaryItem className="grow" label="Criado em" value={formatDateShortYear(employeeQuery.data.createdAt ?? "")} />
         </div>
+
+        <Collapse
+          title="Endereço"
+          className="mt-4 shadow-sm border border-base-300 hover:bg-base-200/50 transition-colors animate-[fade-up_700ms_ease-out_both]"
+        >
+          <AddressDetails address={employeeQuery.data.address} />
+        </Collapse>
       </section>
   );
 }

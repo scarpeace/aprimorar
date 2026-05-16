@@ -3,6 +3,8 @@
  * Do not edit manually.
  */
 
+import type { AddressRequestDTO } from "./AddressRequestDTO.ts";
+
 export const employeeRequestDTODutyEnum = {
   TEACHER: "TEACHER",
   ADM: "ADM",
@@ -52,4 +54,9 @@ export type EmployeeRequestDTO = {
    * @type string
    */
   duty: EmployeeRequestDTODutyEnumKey;
+  /**
+   * @description Endereço
+   * @type object
+   */
+  address: AddressRequestDTO;
 };

@@ -1,5 +1,6 @@
 package aprimorar.registration.employee.api.dto;
 
+import aprimorar.registration.shared.address.dto.AddressResponseDTO;
 import aprimorar.registration.shared.enums.Duty;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -17,6 +18,8 @@ public record EmployeeResponseDTO(
         @NotNull String cpf,
         @NotNull String email,
         @NotNull Duty duty,
+        @Schema(implementation = AddressResponseDTO.class, description = "Endereço do funcionário")
+        @NotNull AddressResponseDTO address,
         @Schema(nullable = true)
         @Nullable
         boolean active,

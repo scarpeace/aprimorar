@@ -6,7 +6,7 @@
 import { z } from "zod/v4";
 
 /**
- * @description Endereço do aluno
+ * @description Endereço
  */
 export const addressResponseDTOSchema = z
   .object({
@@ -47,4 +47,4 @@ export const addressResponseDTOSchema = z
     zip: z.string(),
     complement: z.string().nullish(),
   })
-  .describe("Endereço do aluno");
+  .describe("Endereço");

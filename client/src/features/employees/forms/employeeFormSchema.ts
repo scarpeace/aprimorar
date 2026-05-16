@@ -1,11 +1,12 @@
+import { addressFormSchema } from "@/features/address/forms/addressSchema";
 import { employeeRequestDTOSchema } from "@/kubb";
 import { z } from "zod/v4";
 
 export const employeeFormSchema = employeeRequestDTOSchema.extend({
-  name: z.string().min(1, { message: "Nome do aluno é obrigatório" }),
+  name: z.string().min(1, { message: "Nome do colaborador é obrigatório" }),
   cpf: z.string().min(1, { message: "CPF é obrigatório" }),
-    birthdate: z.string().min(1, { message: "Data de nascimento é obrigatória" })
-      .refine((value) => /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value), {
+  birthdate: z.string().min(1, { message: "Data de nascimento é obrigatória" })
+    .refine((value) => /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value), {
     message: "Data de nascimento inválida",
   })
   .transform((value) => {
@@ -14,6 +15,7 @@ export const employeeFormSchema = employeeRequestDTOSchema.extend({
   }),
   contact: z.string().min(1, { message: "Contato é obrigatório" }),
   email: z.string().min(1, { message: "Email é obrigatório" }),
+  address: addressFormSchema,
 });
 
 export type EmployeeFormSchema = z.input<typeof employeeFormSchema>;

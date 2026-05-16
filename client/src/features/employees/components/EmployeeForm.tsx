@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { TriangleAlert } from "lucide-react";
 import { employeeRequestDTODutyEnum } from "@/kubb";
 import type { EmployeeResponseDTO } from "@/kubb";
+import { brazilianStates } from "@/lib/utils/brazilianStates";
 import { employeeFormSchema, type EmployeeFormSchema } from "../forms/employeeFormSchema";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
 import { formatDateInputValue } from "@/lib/utils/formatter";
@@ -37,6 +38,14 @@ export function EmployeeForm({ initialData, onSuccess, onCancel }: EmployeeFormP
         ? formatDateInputValue(initialData.birthdate)
         : "",
       duty: initialData?.duty ?? "TEACHER",
+      address: {
+        street: initialData?.address?.street ?? "",
+        complement: initialData?.address?.complement ?? "N/A",
+        district: initialData?.address?.district ?? "",
+        city: initialData?.address?.city ?? "",
+        state: initialData?.address?.state ?? "DF",
+        zip: initialData?.address?.zip ?? "",
+      },
     },
     mode: "onBlur",
   });
@@ -157,6 +166,85 @@ export function EmployeeForm({ initialData, onSuccess, onCancel }: EmployeeFormP
             <p className="label text-error">
               <TriangleAlert className="w-3 h-3" />
               {errors.duty.message}
+            </p>
+          )}
+        </fieldset>
+
+        <div className="divider md:col-span-2 m-0" />
+
+        <fieldset className="fieldset md:col-span-2">
+          <legend className="fieldset-legend">Rua</legend>
+          <input type="text" className="input w-full" {...register("address.street")} placeholder="Ex: SQS 406, Bloco C" />
+          {errors?.address?.street && (
+            <p className="label text-error">
+              <TriangleAlert className="w-3 h-3" />
+              {errors.address.street.message}
+            </p>
+          )}
+        </fieldset>
+
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">Bairro</legend>
+          <input type="text" className="input w-full" {...register("address.district")} placeholder="Ex: Asa Sul" />
+          {errors?.address?.district && (
+            <p className="label text-error">
+              <TriangleAlert className="w-3 h-3" />
+              {errors.address.district.message}
+            </p>
+          )}
+        </fieldset>
+
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">Complemento</legend>
+          <input type="text" className="input w-full" {...register("address.complement")} placeholder="Ex: Apto 101" />
+          {errors?.address?.complement && (
+            <p className="label text-error">
+              <TriangleAlert className="w-3 h-3" />
+              {errors.address.complement.message}
+            </p>
+          )}
+        </fieldset>
+
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">Cidade</legend>
+          <input type="text" className="input w-full" {...register("address.city")} placeholder="Ex: Brasília" />
+          {errors?.address?.city && (
+            <p className="label text-error">
+              <TriangleAlert className="w-3 h-3" />
+              {errors.address.city.message}
+            </p>
+          )}
+        </fieldset>
+
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">Estado</legend>
+          <select className="select select-bordered w-full" {...register("address.state")}>
+            {Object.values(brazilianStates).map((content) => (
+              <option key={content} value={content}>
+                {content}
+              </option>
+            ))}
+          </select>
+          {errors?.address?.state && (
+            <p className="label text-error">
+              <TriangleAlert className="w-3 h-3" />
+              {errors.address.state.message}
+            </p>
+          )}
+        </fieldset>
+
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">CEP</legend>
+          <input
+            type="text"
+            className="input w-full"
+            {...registerWithMask("address.zip", ["#####-###"])}
+            placeholder="Ex: 70254-010"
+          />
+          {errors?.address?.zip && (
+            <p className="label text-error">
+              <TriangleAlert className="w-3 h-3" />
+              {errors.address.zip.message}
             </p>
           )}
         </fieldset>

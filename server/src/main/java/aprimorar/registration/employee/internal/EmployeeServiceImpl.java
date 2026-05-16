@@ -9,6 +9,7 @@ import aprimorar.registration.employee.api.event.EmployeeDeletedEvent;
 import aprimorar.registration.employee.api.exception.EmployeeNotFoundException;
 import aprimorar.registration.employee.internal.repository.EmployeeRepository;
 import aprimorar.registration.employee.internal.repository.EmployeeSpecifications;
+import aprimorar.registration.shared.address.Address;
 import aprimorar.registration.shared.PendingFinancialBalanceChecker;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.PageDTO;
@@ -46,6 +47,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO dto) {
+        Address address = Address.fromRequest(dto.address());
 
         Employee employee = new Employee(
             dto.name(),
@@ -54,7 +56,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             dto.contact(),
             dto.cpf(),
             dto.email(),
-            dto.duty()
+            dto.duty(),
+            address
         );
 
         Employee savedEmployee = employeeRepo.save(employee);
@@ -183,8 +186,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         String normalizedContact = MapperUtils.normalizeContact(request.contact());
         String normalizedEmail = MapperUtils.normalizeEmail(request.email());
+        Address address = Address.fromRequest(request.address());
 
-        employee.updateDetails(request.name(), request.birthdate(), request.pix(), normalizedContact, normalizedEmail, request.duty());
+        employee.updateDetails(request.name(), request.birthdate(), request.pix(), normalizedContact, normalizedEmail, request.duty(), address);
 
         log.info("Colaborador {} atualizado com sucesso.", employee.getName().toUpperCase());
         return employee.toResponseDto();

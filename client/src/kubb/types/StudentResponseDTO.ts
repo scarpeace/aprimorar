@@ -70,7 +70,7 @@ export type StudentResponseDTO = {
    */
   createdAt: string;
   /**
-   * @description Endereço do aluno
+   * @description Endereço
    * @type object
    */
   address: AddressResponseDTO;

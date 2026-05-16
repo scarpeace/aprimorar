@@ -50,7 +50,7 @@ export type StudentRequestDTO = {
    */
   email: string;
   /**
-   * @description Endereço do aluno
+   * @description Endereço
    * @type object
    */
   address: AddressRequestDTO;
