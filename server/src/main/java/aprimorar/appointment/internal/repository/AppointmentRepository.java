@@ -23,6 +23,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
     interface StudentFinanceSummaryProjection {
         UUID getStudentId();
         String getStudentName();
+        long getTotalEvents();
         BigDecimal getTotalCharged();
         BigDecimal getTotalPending();
     }
@@ -30,6 +31,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
     interface EmployeeFinanceSummaryProjection {
         UUID getEmployeeId();
         String getEmployeeName();
+        long getTotalEvents();
         BigDecimal getTotalPaid();
         BigDecimal getTotalPending();
     }
@@ -329,6 +331,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         select
           a.studentId as studentId,
           a.studentName as studentName,
+          count(a) as totalEvents,
           coalesce(sum(case when a.studentChargeDate is not null then a.price else 0 end), 0) as totalCharged,
           coalesce(sum(case when a.studentChargeDate is null then a.price else 0 end), 0) as totalPending
         from Appointment a
@@ -348,6 +351,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         select
           a.employeeId as employeeId,
           a.employeeName as employeeName,
+          count(a) as totalEvents,
           coalesce(sum(case when a.employeePaymentDate is not null then a.payment else 0 end), 0) as totalPaid,
           coalesce(sum(case when a.employeePaymentDate is null then a.payment else 0 end), 0) as totalPending
         from Appointment a

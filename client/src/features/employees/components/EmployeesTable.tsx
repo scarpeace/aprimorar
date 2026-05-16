@@ -5,6 +5,7 @@ import { Pagination } from "@/components/ui/pagination";
 import type { PageDTOEmployeeResponseDTO } from "@/kubb";
 import { dutyLabels } from "../utils/dutyLabels";
 import {
+  brl,
   formatCpf,
   formatDateShortYear,
   formatPhone,
@@ -13,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 
 type EmployeesTableProps = {
   employees?: PageDTOEmployeeResponseDTO;
+  paidByEmployeeId?: Map<string, number>;
+  pendingByEmployeeId?: Map<string, number>;
   onPageChange: (page: number) => void;
   currentPage: number;
   isPending: boolean;
@@ -21,6 +24,8 @@ type EmployeesTableProps = {
 
 export function EmployeesTable({
   employees,
+  paidByEmployeeId,
+  pendingByEmployeeId,
   onPageChange,
   currentPage,
   isPending,
@@ -72,6 +77,12 @@ export function EmployeesTable({
             <th className="text-left font-semibold text-base-content/80">
               Cadastro
             </th>
+            <th className="text-right font-semibold text-base-content/80">
+              Pago
+            </th>
+            <th className="text-right font-semibold text-base-content/80">
+              Pendente
+            </th>
             <th className="text-left font-semibold text-base-content/80">
               Status
             </th>
@@ -79,26 +90,41 @@ export function EmployeesTable({
         </thead>
 
         <tbody className="whitespace-nowrap">
-          {employees?.content.map((employee) => (
-            <tr
-              key={employee.id}
-              className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
-              onClick={() => navigate(`/employees/${employee.id}`)}
-            >
-              <td className="font-bold">{employee.name}</td>
-              <td>{dutyLabels[employee.duty]}</td>
+          {employees?.content.map((employee) => {
+            const totalPaid = paidByEmployeeId?.get(employee.id) ?? 0;
+            const totalPending = pendingByEmployeeId?.get(employee.id) ?? 0;
 
-              <td>{formatCpf(employee.cpf)}</td>
-              <td>{formatPhone(employee.contact)}</td>
+            return (
+              <tr
+                key={employee.id}
+                className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
+                onClick={() => navigate(`/employees/${employee.id}`)}
+              >
+                <td className="font-bold">{employee.name}</td>
+                <td>{dutyLabels[employee.duty]}</td>
 
-              <td>{formatDateShortYear(employee.createdAt)}</td>
-              <td>
-                <span className={`badge ${(employee.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
-                  {(employee.active ?? true) ? "Ativo" : "Arquivado"}
-                </span>
-              </td>
-            </tr>
-          ))}
+                <td>{formatCpf(employee.cpf)}</td>
+                <td>{formatPhone(employee.contact)}</td>
+
+                <td>{formatDateShortYear(employee.createdAt)}</td>
+                <td className="text-right font-mono font-semibold text-success">
+                  {brl.format(totalPaid)}
+                </td>
+                <td
+                  className={`text-right font-mono font-semibold ${
+                    totalPending > 0 ? "text-warning" : "text-base-content/45"
+                  }`}
+                >
+                  {brl.format(totalPending)}
+                </td>
+                <td>
+                  <span className={`badge ${(employee.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
+                    {(employee.active ?? true) ? "Ativo" : "Arquivado"}
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       </div>

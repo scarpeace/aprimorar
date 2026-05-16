@@ -4,10 +4,11 @@ import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetEmployees } from "@/kubb";
 import type { EmployeeResponseDTO } from "@/kubb";
+import { useDateFilter } from "@/hooks/use-date-filter";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { FileUser, Plus } from "lucide-react";
 import { useState } from "react";
-import { EmployeesTable } from "../components/EmployeesTable";
+import { EmployeeFinanceSection } from "../components/EmployeeFinanceSection";
 import { EmployeeForm } from "../components/EmployeeForm";
 
 export function EmployeesPage() {
@@ -18,6 +19,7 @@ export function EmployeesPage() {
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeResponseDTO | null>(null);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const { startDate, endDate } = useDateFilter();
 
   const employeesQuery = useGetEmployees({
     page: currentPage,
@@ -86,24 +88,15 @@ export function EmployeesPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
-          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h3 className="text-lg font-bold text-base-content">Colaboradores cadastrados</h3>
-              <p className="text-sm text-base-content/60">
-                Clique na linha para abrir os detalhes do cadastro.
-              </p>
-            </div>
-          </div>
-
-          <EmployeesTable
-            employees={employeesQuery.data}
-            onPageChange={setCurrentPage}
-            currentPage={currentPage}
-            isPending={employeesQuery.isPending}
-            error={employeesQuery.error}
-          />
-        </section>
+        <EmployeeFinanceSection
+          employees={employeesQuery.data}
+          employeesIsPending={employeesQuery.isPending}
+          employeesError={employeesQuery.error}
+          startDate={startDate}
+          endDate={endDate}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
 
         {isFormOpen && (
           <div className="modal modal-open">

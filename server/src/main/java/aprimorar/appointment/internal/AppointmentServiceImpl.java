@@ -353,6 +353,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         return new StudentFinanceSummaryDTO(
             projection.getStudentId(),
             projection.getStudentName(),
+            projection.getTotalEvents(),
             projection.getTotalCharged(),
             projection.getTotalPending()
         );
@@ -362,6 +363,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         return new EmployeeFinanceSummaryDTO(
             projection.getEmployeeId(),
             projection.getEmployeeName(),
+            projection.getTotalEvents(),
             projection.getTotalPaid(),
             projection.getTotalPending()
         );

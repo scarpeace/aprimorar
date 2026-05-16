@@ -5,7 +5,6 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { CalendarCheck2, Plus, RotateCcw } from "lucide-react";
 import type { AppointmentResponseDTO } from "@/kubb";
 import { AppointmentForm } from "../components/AppointmentForm";
-import { DateRangeInput } from "@/components/ui/date-range-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useAppointmentsFilters } from "../hooks/use-appointments-filters";
 import { AppointmentsListSection } from "../components/AppointmentsListSection";
@@ -21,8 +20,6 @@ export function AppointmentsPage() {
     hasFilters,
     handleClearFilters,
     handleSearchChange,
-    handleStartDateChange,
-    handleEndDateChange,
     handleHideChargedToggle,
     handleHidePaidToggle,
     handlePageChange,
@@ -68,13 +65,6 @@ export function AppointmentsPage() {
               value={search}
               onChange={handleSearchChange}
             />
-
-                <DateRangeInput
-                  startDate={startDate}
-                  endDate={endDate}
-                  onStartDateChange={handleStartDateChange}
-                  onEndDateChange={handleEndDateChange}
-                />
             </div>
 
             <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">

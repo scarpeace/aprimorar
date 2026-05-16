@@ -1,4 +1,3 @@
-import { DateRangeInput } from "@/components/ui/date-range-input";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
@@ -9,7 +8,7 @@ import {
   useGetExpenses,
   useGetStudentsAppointmentsFinanceReport,
 } from "@/kubb";
-import { useDateRangeFilters } from "@/hooks/use-date-range-filters";
+import { useDateFilter } from "@/hooks/use-date-filter";
 import { ArrowUpRight, Clock3, Landmark, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,8 +24,7 @@ export function FinancesPage() {
   const navigate = useNavigate();
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
 
-  const { startDate, endDate, handleStartDateChange, handleEndDateChange } =
-    useDateRangeFilters();
+  const { startDate, endDate } = useDateFilter();
 
   const summaryQuery = useGetAppointmentFinanceReport({
     startDate: startDate?.toISOString(),
@@ -101,15 +99,6 @@ export function FinancesPage() {
             <p className="mt-1 text-sm text-base-content/60">
               Visualize o consolidado financeiro filtrado por periodo.
             </p>
-          </div>
-
-          <div className="w-full sm:w-auto">
-            <DateRangeInput
-              startDate={startDate}
-              endDate={endDate}
-              onStartDateChange={handleStartDateChange}
-              onEndDateChange={handleEndDateChange}
-            />
           </div>
         </div>
 

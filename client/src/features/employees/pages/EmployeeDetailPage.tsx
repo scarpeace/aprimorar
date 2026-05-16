@@ -8,10 +8,9 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { EmployeeKPIs } from "../components/EmployeeKPIs";
 import { EmployeeEventsTable } from "../components/EmployeeEventsTable";
-import { DateRangeInput } from "@/components/ui/date-range-input";
 import { EmployeeInfoSection } from "../components/EmployeeInfoSection";
 import { EmployeeEditModal } from "../components/EmployeeEditModal";
-import { useDateRangeFilters } from "@/hooks/use-date-range-filters";
+import { useDateFilter } from "@/hooks/use-date-filter";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 
 const headerProps = {
@@ -28,12 +27,7 @@ export function EmployeeDetailPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [hidePaid, setHidePaid] = useState(false);
 
-  const {
-    startDate,
-    endDate,
-    handleStartDateChange,
-    handleEndDateChange,
-  } = useDateRangeFilters();
+  const { startDate, endDate } = useDateFilter();
 
   const employeeQuery = useGetEmployeeById(employeeId);
 
@@ -48,16 +42,6 @@ export function EmployeeDetailPage() {
   const handleToggleHidePaid = () => {
     setHidePaid((current) => !current);
     setCurrentPage(0);
-  };
-
-  const handleStartDateFilterChange = (date: Date | null) => {
-    setCurrentPage(0);
-    handleStartDateChange(date);
-  };
-
-  const handleEndDateFilterChange = (date: Date | null) => {
-    setCurrentPage(0);
-    handleEndDateChange(date);
   };
 
   return (
@@ -83,12 +67,6 @@ export function EmployeeDetailPage() {
               />
             </div>
           </div>
-          <DateRangeInput
-            startDate={startDate ?? null}
-            endDate={endDate ?? null}
-            onStartDateChange={handleStartDateFilterChange}
-            onEndDateChange={handleEndDateFilterChange}
-          />
         </div>
 
       <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">

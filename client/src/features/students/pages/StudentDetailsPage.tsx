@@ -12,13 +12,12 @@ import {
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { StudentEventsTable } from "../components/StudentEventsTable";
-import { DateRangeInput } from "@/components/ui/date-range-input";
 import { StudentInfoSection } from "../components/StudentInfoSection";
 import { StudentForm } from "../components/StudentForm";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { brl } from "@/lib/utils/formatter";
-import { useDateRangeFilters } from "@/hooks/use-date-range-filters";
+import { useDateFilter } from "@/hooks/use-date-filter";
 
 const headerProps = {
   description: "Veja e gerencie as informações do aluno",
@@ -36,12 +35,7 @@ export function StudentDetailsPage() {
 
   const studentQuery = useGetStudentById(studentId);
 
-  const {
-    startDate,
-    endDate,
-    handleStartDateChange,
-    handleEndDateChange,
-  } = useDateRangeFilters();
+  const { startDate, endDate } = useDateFilter();
 
   const studentAppointments = useGetAppointmentsByStudentId(studentId, {
     page: currentPage,
@@ -54,16 +48,6 @@ export function StudentDetailsPage() {
   const handleToggleHideCharged = () => {
     setHideCharged((current) => !current);
     setCurrentPage(0);
-  };
-
-  const handleStartDateFilterChange = (date: Date | null) => {
-    setCurrentPage(0);
-    handleStartDateChange(date);
-  };
-
-  const handleEndDateFilterChange = (date: Date | null) => {
-    setCurrentPage(0);
-    handleEndDateChange(date);
   };
 
   return (
@@ -92,14 +76,6 @@ export function StudentDetailsPage() {
                 className="border-warning/30 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
               />
           </div>
-        </div>
-        <div className="w-full sm:w-auto">
-          <DateRangeInput
-            startDate={startDate ?? null}
-            endDate={endDate ?? null}
-            onStartDateChange={handleStartDateFilterChange}
-            onEndDateChange={handleEndDateFilterChange}
-          />
         </div>
       </div>
 

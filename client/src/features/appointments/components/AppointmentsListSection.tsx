@@ -4,8 +4,8 @@ import { AppointmentsTable } from "./AppointmentsTable";
 type AppointmentsListSectionProps = {
   page: number;
   search: string;
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate?: Date | null;
+  endDate?: Date | null;
   hideCharged: boolean;
   hidePaid: boolean;
   onPageChange: (page: number) => void;

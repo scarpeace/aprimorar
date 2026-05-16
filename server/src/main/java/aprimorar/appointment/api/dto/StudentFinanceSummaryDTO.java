@@ -6,6 +6,7 @@ import java.util.UUID;
 public record StudentFinanceSummaryDTO(
     UUID studentId,
     String studentName,
+    long totalEvents,
     BigDecimal totalCharged,
     BigDecimal totalPending
 ) {}
