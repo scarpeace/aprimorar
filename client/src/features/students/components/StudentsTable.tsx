@@ -2,7 +2,7 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOStudentResponseDTO } from "@/kubb";
+import type { StudentsWithFinanceResponseDTO } from "@/kubb";
 import {
   brl,
   formatCpf,
@@ -12,9 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 type StudentsTableProps = {
-  students?: PageDTOStudentResponseDTO;
-  chargedByStudentId?: Map<string, number>;
-  pendingByStudentId?: Map<string, number>;
+  students?: StudentsWithFinanceResponseDTO;
   onPageChange: (page: number) => void;
   currentPage: number;
   isPending: boolean;
@@ -23,8 +21,6 @@ type StudentsTableProps = {
 
 export function StudentsTable({
   students,
-  chargedByStudentId,
-  pendingByStudentId,
   onPageChange,
   currentPage,
   isPending,
@@ -40,7 +36,7 @@ export function StudentsTable({
     return <LoadingSpinner text="Carregando Alunos..." />;
   }
 
-  if (!students || students.content.length === 0) {
+  if (!students || !students.content || students.content.length === 0) {
     return (
       <EmptyCard
         title="Nenhum aluno encontrado"
@@ -48,6 +44,13 @@ export function StudentsTable({
       />
     );
   }
+
+  const paginationData = {
+    size: students.size ?? students.content.length,
+    totalElements: students.totalElements ?? students.content.length,
+    totalPages: students.totalPages ?? 1,
+    content: students.content,
+  };
 
   return (
     <>
@@ -86,23 +89,23 @@ export function StudentsTable({
         </thead>
 
         <tbody className="whitespace-nowrap">
-          {students?.content.map((student) => {
-            const totalCharged = chargedByStudentId?.get(student.id) ?? 0;
-            const totalPending = pendingByStudentId?.get(student.id) ?? 0;
+          {students.content.map((student) => {
+            const totalCharged = student.totalCharged ?? 0;
+            const totalPending = student.totalPending ?? 0;
 
             return (
               <tr
                 key={student.id}
                 className={`transition-colors hover:bg-base-200/70 hover:cursor-pointer`}
-                onClick={() => navigate(`/students/${student.id}`)}
+                onClick={() => student.id && navigate(`/students/${student.id}`)}
               >
                 <td className="font-bold">{student.name}</td>
 
-                <td>{formatCpf(student.cpf)}</td>
+                <td>{formatCpf(student.cpf ?? "")}</td>
                 <td className="text-center">{student.age}</td>
-                <td>{formatPhone(student.contact)}</td>
+                <td>{formatPhone(student.contact ?? "")}</td>
 
-                 <td>{student.school}</td>
+                 <td>{student.school ?? "-"}</td>
 
                  <td>{formatDateShortYear(student.createdAt ?? "")}</td>
                  <td className="text-right font-mono font-semibold text-success">
@@ -127,7 +130,7 @@ export function StudentsTable({
       </table>
       </div>
       <Pagination
-        paginationData={students}
+        paginationData={paginationData}
         currentPage={currentPage}
         onPageChange={onPageChange}
       />

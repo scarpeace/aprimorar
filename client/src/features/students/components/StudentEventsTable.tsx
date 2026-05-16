@@ -3,6 +3,7 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import type { AppointmentResponseDTO, PageDTOAppointmentResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/lib/shared/eventContentLables";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
@@ -15,15 +16,19 @@ interface StudentEventsTableProps {
   appointments?: PageDTOAppointmentResponseDTO;
   currentPage: number;
   error?: unknown;
+  hideCharged: boolean;
   isLoading: boolean;
+  onHideChargedChange: (value: boolean) => void;
   onPageChange: (page: number) => void;
 }
 
 export const StudentEventsTable = memo(function StudentEventsTable({
   appointments,
   error,
+  hideCharged,
   isLoading,
   currentPage,
+  onHideChargedChange,
   onPageChange,
 }: StudentEventsTableProps) {
   const { toggleStudentCharge } = useAppointmentMutations();
@@ -42,22 +47,49 @@ export const StudentEventsTable = memo(function StudentEventsTable({
     return <LoadingSpinner text="Carregando atendimentos..." />;
   }
 
+  const header = (
+    <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+      <div className="flex items-start gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-sm">
+          <Calendar className="h-5 w-5" />
+        </div>
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-xl font-bold text-base-content">
+              Atendimentos vinculados ao aluno
+            </h3>
+            {events.length > 0 && (
+              <span className="badge badge-outline badge-primary badge-sm font-semibold">
+                {totalEvents} {totalEvents === 1 ? "evento" : "eventos"}
+              </span>
+            )}
+          </div>
+          <p className="mt-1 text-sm text-base-content/60">
+            Acompanhe horarios, conteudos aplicados e o status das cobrancas registradas para este aluno.
+          </p>
+        </div>
+      </div>
+
+      <div className="shrink-0 rounded-2xl border border-warning/20 bg-linear-to-r from-warning/8 via-base-100 to-base-100 px-3 py-2 shadow-sm transition-all duration-200 hover:border-warning/30 hover:shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-warning/12 text-warning">
+            <CircleDollarSign className="w-4" />
+          </div>
+          <ToggleSwitch
+            toggled={hideCharged}
+            setToggle={onHideChargedChange}
+            label="Ocultar Cobrados"
+            className="border-warning/30 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
   if (events.length === 0) {
     return (
       <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_280ms_ease-out_both]">
-        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-              <Calendar className="h-5 w-5" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-base-content">Atendimentos vinculados ao aluno</h3>
-              <p className="text-sm text-base-content/60">
-                Historico de aulas, horarios e cobrancas relacionadas ao aluno.
-              </p>
-            </div>
-          </div>
-        </div>
+        {header}
 
         <EmptyCard
           title="Nenhum atendimento encontrado"
@@ -69,24 +101,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({
 
   return (
     <section className="relative rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_280ms_ease-out_both]">
-      <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-        <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-sm">
-            <Calendar className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-xl font-bold text-base-content">Atendimentos vinculados ao aluno</h3>
-              <span className="badge badge-outline badge-primary badge-sm font-semibold">
-                {totalEvents} {totalEvents === 1 ? "evento" : "eventos"}
-              </span>
-            </div>
-            <p className="mt-1 text-sm text-base-content/60">
-              Acompanhe horarios, conteudos aplicados e o status das cobrancas registradas para este aluno.
-            </p>
-          </div>
-        </div>
-      </div>
+      {header}
 
       <div className="hidden md:block">
         <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">

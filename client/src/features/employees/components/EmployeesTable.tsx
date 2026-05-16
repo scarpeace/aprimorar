@@ -2,7 +2,7 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOEmployeeResponseDTO } from "@/kubb";
+import type { EmployeesWithFinanceResponseDTO } from "@/kubb";
 import { dutyLabels } from "../utils/dutyLabels";
 import {
   brl,
@@ -13,9 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 type EmployeesTableProps = {
-  employees?: PageDTOEmployeeResponseDTO;
-  paidByEmployeeId?: Map<string, number>;
-  pendingByEmployeeId?: Map<string, number>;
+  employees?: EmployeesWithFinanceResponseDTO;
   onPageChange: (page: number) => void;
   currentPage: number;
   isPending: boolean;
@@ -24,8 +22,6 @@ type EmployeesTableProps = {
 
 export function EmployeesTable({
   employees,
-  paidByEmployeeId,
-  pendingByEmployeeId,
   onPageChange,
   currentPage,
   isPending,
@@ -47,7 +43,7 @@ export function EmployeesTable({
     );
   }
 
-  if (!employees || employees.content.length === 0) {
+  if (!employees || !employees.content || employees.content.length === 0) {
     return (
       <EmptyCard
         title="Nenhum colaborador encontrado"
@@ -55,6 +51,13 @@ export function EmployeesTable({
       />
     );
   }
+
+  const paginationData = {
+    size: employees.size ?? employees.content.length,
+    totalElements: employees.totalElements ?? employees.content.length,
+    totalPages: employees.totalPages ?? 1,
+    content: employees.content,
+  };
 
   return (
     <>
@@ -90,23 +93,27 @@ export function EmployeesTable({
         </thead>
 
         <tbody className="whitespace-nowrap">
-          {employees?.content.map((employee) => {
-            const totalPaid = paidByEmployeeId?.get(employee.id) ?? 0;
-            const totalPending = pendingByEmployeeId?.get(employee.id) ?? 0;
+          {employees.content.map((employee) => {
+            const totalPaid = employee.totalPaid ?? 0;
+            const totalPending = employee.totalPending ?? 0;
 
             return (
               <tr
                 key={employee.id}
                 className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
-                onClick={() => navigate(`/employees/${employee.id}`)}
+                onClick={() => employee.id && navigate(`/employees/${employee.id}`)}
               >
                 <td className="font-bold">{employee.name}</td>
-                <td>{dutyLabels[employee.duty]}</td>
+                <td>
+                  {employee.duty
+                    ? dutyLabels[employee.duty as keyof typeof dutyLabels]
+                    : "-"}
+                </td>
 
-                <td>{formatCpf(employee.cpf)}</td>
-                <td>{formatPhone(employee.contact)}</td>
+                <td>{formatCpf(employee.cpf ?? "")}</td>
+                <td>{formatPhone(employee.contact ?? "")}</td>
 
-                <td>{formatDateShortYear(employee.createdAt)}</td>
+                <td>{formatDateShortYear(employee.createdAt ?? "")}</td>
                 <td className="text-right font-mono font-semibold text-success">
                   {brl.format(totalPaid)}
                 </td>
@@ -129,7 +136,7 @@ export function EmployeesTable({
       </table>
       </div>
       <Pagination
-        paginationData={employees}
+        paginationData={paginationData}
         currentPage={currentPage}
         onPageChange={onPageChange}
       />

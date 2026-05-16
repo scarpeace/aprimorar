@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { useGetStudents, useGetStudentsAppointmentsFinanceReport } from "@/kubb";
+import { useGetStudentsWithFinance } from "@/kubb";
 import type { StudentResponseDTO } from "@/kubb";
 import { useDateFilter } from "@/hooks/use-date-filter";
 import { useDebounce } from "@/lib/shared/use-debounce";
@@ -23,72 +23,26 @@ export function StudentsPage() {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const { startDate, endDate } = useDateFilter();
 
-  const studentsQuery = useGetStudents({
+  const studentsWithFinanceQuery = useGetStudentsWithFinance({
     page: currentPage,
     search: debouncedSearchTerm,
     archived: showArchived,
-  });
-  const studentsFinanceQuery = useGetStudentsAppointmentsFinanceReport({
     startDate: startDate?.toISOString(),
     endDate: endDate?.toISOString(),
   });
 
-  const financeRows = useMemo(
-    () => studentsFinanceQuery.data?.students ?? [],
-    [studentsFinanceQuery.data?.students],
-  );
-
-  const chargedByStudentId = useMemo(
-    () =>
-      new Map<string, number>(
-        financeRows.flatMap((student) =>
-          student.studentId
-            ? [[student.studentId, student.totalCharged ?? 0] as const]
-            : [],
-        ),
-      ),
-    [financeRows],
-  );
-
-  const pendingByStudentId = useMemo(
-    () =>
-      new Map<string, number>(
-        financeRows.flatMap((student) =>
-          student.studentId
-            ? [[student.studentId, student.totalPending ?? 0] as const]
-            : [],
-        ),
-      ),
-    [financeRows],
-  );
-
-  const studentFinanceSummary = useMemo(() => {
-    return financeRows.reduce(
-      (summary, student) => ({
-        totalEvents: summary.totalEvents + (student.totalEvents ?? 0),
-        totalCharged: summary.totalCharged + (student.totalCharged ?? 0),
-        totalPending: summary.totalPending + (student.totalPending ?? 0),
-      }),
-      { totalEvents: 0, totalCharged: 0, totalPending: 0 } as {
-        totalEvents: number;
-        totalCharged: number;
-        totalPending: number;
-      },
-    );
-  }, [financeRows]);
-
   const displayedStudents = useMemo(() => {
-    if (!studentsQuery.data || !hideCharged) {
-      return studentsQuery.data;
+    if (!studentsWithFinanceQuery.data || !hideCharged) {
+      return studentsWithFinanceQuery.data;
     }
 
     return {
-      ...studentsQuery.data,
-      content: studentsQuery.data.content.filter(
-        (student) => (pendingByStudentId.get(student.id) ?? 0) > 0,
+      ...studentsWithFinanceQuery.data,
+      content: (studentsWithFinanceQuery.data.content ?? []).filter(
+        (student) => (student.totalPending ?? 0) > 0,
       ),
     };
-  }, [hideCharged, pendingByStudentId, studentsQuery.data]);
+  }, [hideCharged, studentsWithFinanceQuery.data]);
 
   const handleHideChargedChange = (value: boolean) => {
     setHideCharged(value);
@@ -112,9 +66,31 @@ export function StudentsPage() {
     setIsFormOpen(false);
   };
 
+  const handleShowArchivedChange = (value: boolean) => {
+    setShowArchived(value);
+    setCurrentPage(0);
+  };
+
+  const financeSummary = studentsWithFinanceQuery.data?.financeSummary;
+
   return (
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-4">
+        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
+          <div className="mb-4">
+            <h3 className="text-lg font-bold text-base-content">Resumo financeiro dos alunos</h3>
+            <p className="text-sm text-base-content/60">
+              Indicadores consolidados respeitando o periodo selecionado nos filtros.
+            </p>
+          </div>
+
+          <StudentKPIs
+            totalEvents={financeSummary?.totalEvents ?? 0}
+            totalCharged={financeSummary?.totalCharged ?? 0}
+            totalPending={financeSummary?.totalPending ?? 0}
+          />
+        </section>
+
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_220ms_ease-out_both]">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-1">
@@ -149,7 +125,7 @@ export function StudentsPage() {
                 label="Arquivados"
                 tip="Mostrar alunos arquivados"
                 toggled={showArchived}
-                setToggle={setShowArchived}
+                setToggle={handleShowArchivedChange}
                 className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
               />
               <ToggleSwitch
@@ -161,21 +137,6 @@ export function StudentsPage() {
               />
             </div>
           </div>
-        </section>
-
-        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_260ms_ease-out_both]">
-          <div className="mb-4">
-            <h3 className="text-lg font-bold text-base-content">Resumo financeiro dos alunos</h3>
-            <p className="text-sm text-base-content/60">
-              Indicadores consolidados respeitando o periodo selecionado nos filtros.
-            </p>
-          </div>
-
-          <StudentKPIs
-            totalEvents={studentFinanceSummary.totalEvents}
-            totalCharged={studentFinanceSummary.totalCharged}
-            totalPending={studentFinanceSummary.totalPending}
-          />
         </section>
 
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
@@ -190,12 +151,10 @@ export function StudentsPage() {
 
           <StudentsTable
             students={displayedStudents}
-            chargedByStudentId={chargedByStudentId}
-            pendingByStudentId={pendingByStudentId}
             onPageChange={setCurrentPage}
             currentPage={currentPage}
-            isPending={studentsQuery.isPending || studentsFinanceQuery.isPending}
-            error={studentsQuery.error ?? studentsFinanceQuery.error}
+            isPending={studentsWithFinanceQuery.isPending}
+            error={studentsWithFinanceQuery.error}
           />
         </section>
 
