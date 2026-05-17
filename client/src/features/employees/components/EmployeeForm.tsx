@@ -22,6 +22,8 @@ export function EmployeeForm({ initialData, onSuccess, onCancel }: EmployeeFormP
   const { createEmployee, updateEmployee } = useEmployeeMutations();
   const isEditMode = !!initialData;
 
+  console.log(initialData?.birthdate);
+
   const {
     register,
     handleSubmit,
@@ -49,7 +51,7 @@ export function EmployeeForm({ initialData, onSuccess, onCancel }: EmployeeFormP
     },
     mode: "onBlur",
   });
-  
+
   const registerWithMask = useHookFormMask(register);
 
   const onSubmit = handleSubmit((data: EmployeeFormSchema) => {
@@ -101,12 +103,12 @@ export function EmployeeForm({ initialData, onSuccess, onCancel }: EmployeeFormP
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">CPF</legend>
-          <input 
-            type="text" 
-            className="input w-full" 
-            disabled={isEditMode} 
-            placeholder="Ex: 123.456.789-00" 
-            {...registerWithMask("cpf", ["###.###.###-##"])} 
+          <input
+            type="text"
+            className="input w-full"
+            disabled={isEditMode}
+            placeholder="Ex: 123.456.789-00"
+            {...registerWithMask("cpf", ["###.###.###-##"])}
           />
           {errors?.cpf && (
             <p className="label text-error">
@@ -129,11 +131,11 @@ export function EmployeeForm({ initialData, onSuccess, onCancel }: EmployeeFormP
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Contato</legend>
-          <input 
-            type="text" 
-            className="input w-full" 
-            placeholder="Ex: (61) 99633-2332" 
-            {...registerWithMask("contact", ["(##) #####-####", "(##) ####-####"])} 
+          <input
+            type="text"
+            className="input w-full"
+            placeholder="Ex: (61) 99633-2332"
+            {...registerWithMask("contact", ["(##) #####-####", "(##) ####-####"])}
           />
           {errors?.contact && (
             <p className="label text-error">
