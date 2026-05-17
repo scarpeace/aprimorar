@@ -1,6 +1,5 @@
 import { Component, type ReactNode } from "react";
 import { ErrorCard } from "./error-card";
-import { ButtonLink } from "./button";
 
 export class ErrorBoundary extends Component<
   { children?: ReactNode },

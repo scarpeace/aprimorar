@@ -8,16 +8,7 @@ import { parentFormSchema, type ParentFormSchema } from "../forms/parentFormSche
 import { useParentMutations } from "../hooks/parent-mutations";
 import { toast } from "sonner";
 import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-
-function formatBirthdateForForm(birthdate?: string | null) {
-  if (!birthdate) return "";
-
-  const [year, month, day] = birthdate.split("-");
-
-  if (!year || !month || !day) return birthdate;
-
-  return `${day}/${month}/${year}`;
-}
+import { formatDateForInput } from "@/lib/utils/formatter";
 
 interface ParentFormProps {
   initialData?: ParentResponseDTO | null;
@@ -39,7 +30,7 @@ export function ParentForm({ initialData, onSuccess, onCancel }: ParentFormProps
       name: initialData?.name ?? "",
       email: initialData?.email ?? "",
       contact: initialData?.contact ?? "",
-      birthdate: formatBirthdateForForm(initialData?.birthdate),
+      birthdate: formatDateForInput(initialData?.birthdate),
       pix: initialData?.pix ?? "",
       cpf: initialData?.cpf ?? "",
     },

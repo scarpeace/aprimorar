@@ -12,22 +12,13 @@ import { useParams } from "react-router-dom";
 import { SectionCard } from "@/components/ui/section-card";
 import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
 import { brazilianStates } from "@/lib/utils/brazilianStates";
+import { formatDateForInput } from "@/lib/utils/formatter";
 import { useHookFormMask } from "use-mask-input";
 import {
   type StudentFormSchema,
   studentFormSchema,
 } from "../forms/studentFormSchema";
 import { useStudentMutations } from "../hooks/student-mutations";
-
-function formatBirthdateForForm(birthdate?: string) {
-  if (!birthdate) return "";
-
-  const [year, month, day] = birthdate.split("-");
-
-  if (!year || !month || !day) return birthdate;
-
-  return `${day}/${month}/${year}`;
-}
 
 export function StudentEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -42,7 +33,7 @@ export function StudentEditPage() {
     values: {
       name: studentQuery.data?.name ?? "",
       cpf: studentQuery.data?.cpf ?? "",
-      birthdate: formatBirthdateForForm(studentQuery.data?.birthdate),
+      birthdate: formatDateForInput(studentQuery.data?.birthdate),
       contact: studentQuery.data?.contact ?? "",
       email: studentQuery.data?.email ?? "",
       school: studentQuery.data?.school ?? "",

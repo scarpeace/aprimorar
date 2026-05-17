@@ -1,14 +1,31 @@
+import { Button } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type { ExpenseResponseDTO, PageDTOExpenseResponseDTO } from "@/kubb";
+import type {
+  ExpenseResponseDTO,
+  PageDTOExpenseResponseDTO,
+  ToggleExpensePaymentMutationResponse,
+} from "@/kubb";
 import { brl, formatDateShortYear } from "@/lib/utils/formatter";
+import type { ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
+import type { UseMutationResult } from "@tanstack/react-query";
+import { SquareArrowOutUpRight } from "lucide-react";
 import { ExpenseCategoryBadge } from "./ExpenseCategoryBadge";
+import { ToggleExpensePaymentButton } from "./ToggleExpensePaymentButton";
+
+type ToggleExpensePaymentMutation = UseMutationResult<
+  ToggleExpensePaymentMutationResponse,
+  ResponseErrorConfig<Error>,
+  { id: string },
+  unknown
+>;
 
 type ExpensesTableProps = {
   expenses?: PageDTOExpenseResponseDTO;
   isPending: boolean;
   error: unknown;
+  toggleExpensePayment: ToggleExpensePaymentMutation;
   onNavigate?: (expense: ExpenseResponseDTO) => void;
 };
 
@@ -16,6 +33,7 @@ export function ExpensesTable({
   expenses,
   isPending,
   error,
+  toggleExpensePayment,
   onNavigate,
 }: Readonly<ExpensesTableProps>) {
   if (error) {
@@ -59,6 +77,9 @@ export function ExpensesTable({
             <th className="text-right font-semibold text-base-content/80">
               Valor
             </th>
+            <th className="text-right font-semibold text-base-content/80">
+              Ações
+            </th>
           </tr>
         </thead>
 
@@ -66,17 +87,6 @@ export function ExpensesTable({
           {rows.map((expense) => (
             <tr
               key={expense.id ?? `${expense.date}-${expense.description}`}
-              className={onNavigate ? "cursor-pointer" : undefined}
-              role={onNavigate ? "button" : undefined}
-              tabIndex={onNavigate ? 0 : undefined}
-              onClick={() => onNavigate?.(expense)}
-              onKeyDown={(event) => {
-                if (!onNavigate) return;
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  onNavigate(expense);
-                }
-              }}
             >
               <td className="font-medium text-base-content/70">
                 {expense.date ? formatDateShortYear(expense.date) : "-"}
@@ -94,6 +104,31 @@ export function ExpensesTable({
                 title={expense.paymentDate ? "Paga" : "Pendente"}
               >
                 {brl.format(expense.amount ?? 0)}
+              </td>
+              <td>
+                <div className="flex justify-end gap-2">
+                  {expense.id ? (
+                    <ToggleExpensePaymentButton
+                      iconOnly
+                      isPaid={!!expense.paymentDate}
+                      toggleExpensePayment={toggleExpensePayment}
+                      onTogglePayment={() => toggleExpensePayment.mutate({ id: expense.id! })}
+                    />
+                  ) : null}
+                  {onNavigate ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      className="btn-square"
+                      title="Ver detalhes"
+                      aria-label="Ver detalhes"
+                      onClick={() => onNavigate(expense)}
+                    >
+                      <SquareArrowOutUpRight className="h-4 w-4" />
+                    </Button>
+                  ) : null}
+                </div>
               </td>
             </tr>
           ))}

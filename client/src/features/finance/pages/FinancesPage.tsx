@@ -4,35 +4,25 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import {
   useGetAppointmentFinanceReport,
-  useGetEmployeesAppointmentsFinanceReport,
   useGetExpenses,
-  useGetStudentsAppointmentsFinanceReport,
 } from "@/kubb";
 import { useDateFilter } from "@/hooks/use-date-filter";
 import { Landmark, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { EmployeesFinanceTable } from "../components/EmployeesFinanceTable";
 import { ExpenseForm } from "../components/ExpenseForm";
 import { ExpensesTable } from "../components/ExpensesTable";
 import { FinanceSummarySection } from "../components/FinanceSummarySection";
-import { StudentsFinanceTable } from "../components/StudentsFinanceTable";
+import { useExpenseMutations } from "../hooks/useExpenseMutations";
 
 export function FinancesPage() {
   const navigate = useNavigate();
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
+  const { toggleExpensePayment } = useExpenseMutations();
 
   const { startDate, endDate } = useDateFilter();
 
   const summaryQuery = useGetAppointmentFinanceReport({
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
-  });
-  const studentsFinanceQuery = useGetStudentsAppointmentsFinanceReport({
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
-  });
-  const employeesFinanceQuery = useGetEmployeesAppointmentsFinanceReport({
     startDate: startDate?.toISOString(),
     endDate: endDate?.toISOString(),
   });
@@ -131,6 +121,7 @@ export function FinancesPage() {
             expenses={expensesQuery.data?.expenses}
             isPending={expensesQuery.isPending}
             error={expensesQuery.error}
+            toggleExpensePayment={toggleExpensePayment}
             onNavigate={(expense) => {
               if (expense.id) {
                 navigate(`/finance/expenses/${expense.id}`);

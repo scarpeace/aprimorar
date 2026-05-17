@@ -34,9 +34,14 @@ export function formatDateTimeLocal(date: string | Date): string {
   return d.toISOString().slice(0, 16);
 }
 
-export function formatDateInputValue(date: string | Date): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toISOString().slice(0, 10);
+export function formatDateForInput(date?: string | null): string {
+  if (!date) return "";
+
+  const [year, month, day] = date.split("-");
+
+  if (!year || !month || !day) return date;
+
+  return `${day}/${month}/${year}`;
 }
 
 export function formatZip(value: string): string {

@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
 import { AlertTriangle, CircleArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 type ErrorCardProps = {
   description?: string;
