@@ -112,7 +112,7 @@ public class Appointment implements Serializable {
 
     @Transient
     public Double getDuration() {
-        return (double) Duration.between(startDate, endDate).toMinutes() / 60.0;
+        return Duration.between(startDate, endDate).toMinutes() / 60.0;
     }
 
     @Transient
@@ -168,16 +168,6 @@ public class Appointment implements Serializable {
         } else {
             this.employeePaymentDate = now;
         }
-    }
-
-    @Transient
-    public boolean isStudentCharged() {
-        return this.studentChargeDate != null;
-    }
-
-    @Transient
-    public boolean isEmployeePaid() {
-        return this.employeePaymentDate != null;
     }
 
     public static Instant calculateEndDate(Instant startDate, Double duration) {

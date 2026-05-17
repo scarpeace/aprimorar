@@ -69,20 +69,6 @@ public class EmployeeController {
         return ResponseEntity.ok(options);
     }
 
-    // @GetMapping("/{id}/summary")
-    // @Operation(
-    //     operationId = "getEmployeeSummary",
-    //     description = "Retorna o resumo de atendimentos e pagamentos do colaborador (Geral ou por período)."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Resumo retornado com sucesso.")
-    // public ResponseEntity<EmployeeSummaryDTO> getSummary(
-    //     @PathVariable UUID id,
-    //     @RequestParam(required = false) Instant startDate,
-    //     @RequestParam(required = false) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(employeeService.getSummary(id, startDate, endDate));
-    // }
-
     @GetMapping("/{employeeId}")
     @Operation(operationId = "getEmployeeById", description = "Retorna um colaborador por ID.")
     @ApiResponse(responseCode = "200", description = "Colaborador retornado com sucesso.")

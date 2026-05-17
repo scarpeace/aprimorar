@@ -1,7 +1,7 @@
 package aprimorar.registration.employee.api.dto;
 
 import aprimorar.registration.shared.address.dto.AddressResponseDTO;
-import aprimorar.registration.shared.enums.Duty;
+import aprimorar.shared.enums.Duty;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;

@@ -36,11 +36,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         BigDecimal getTotalPending();
     }
 
-    Page<Appointment> findAllByEmployeeId(UUID employeeId, Pageable pageable);
-
-    Page<Appointment> findAllByStudentId(UUID studentId, Pageable pageable);
-
-
     @Modifying
     @Query(
         """
@@ -62,16 +57,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         """
     )
     void reassignEmployeeAppointmentsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
-
-    long countByEmployeeIdAndStartDateBetween(UUID employeeId, Instant startDate, Instant endDate);
-
-    long countByEmployeeId(UUID employeeId);
-
-    @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Appointment a WHERE a.employeePaymentDate IS NOT NULL")
-    BigDecimal sumTotalEmployeePayment();
-
-    @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Appointment a WHERE a.employeePaymentDate IS NULL")
-    BigDecimal sumTotalEmployeePaymentPending();
 
     @Query(
         """
@@ -153,16 +138,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate
     );
-
-    long countByStudentIdAndStartDateBetween(UUID studentId, Instant startDate, Instant endDate);
-
-    long countByStudentId(UUID studentId);
-
-    @Query("SELECT COALESCE(SUM(a.price), 0) FROM Appointment a WHERE a.studentChargeDate IS NOT NULL")
-    BigDecimal sumTotalStudentIncome();
-
-    @Query("SELECT COALESCE(SUM(a.price), 0) FROM Appointment a WHERE a.studentChargeDate IS NULL")
-    BigDecimal sumTotalStudentIncomePending();
 
     @Query(
         """
@@ -293,27 +268,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         @Param("endDate") Instant endDate,
         @Param("excludedStudentId") UUID excludedStudentId
     );
-
-    @Query(
-        """
-        select coalesce(sum(a.price), 0)
-        from Appointment a
-        where a.startDate >= :startDate
-          and a.startDate < :endDate
-        """
-    )
-    BigDecimal sumPriceInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
-    @Query(
-        """
-        select coalesce(sum(a.payment), 0)
-        from Appointment a
-        where a.startDate >= :startDate
-          and a.startDate < :endDate
-        """
-    )
-    BigDecimal sumPaymentInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
+    
     @Query(
         """
         select a.content as content, count(a) as count

@@ -16,20 +16,7 @@ public interface EmployeeService {
 
     List<EmployeeOptionsDTO> getEmployeeOptions();
 
-//    List<UUID> findIdsByNameContaining(String name);
-
-//    java.util.Optional<UUID> findIdByEmail(String email);
-
     EmployeeResponseDTO findById(UUID employeeId);
-
-
-//    Map<UUID, EmployeeResponseDTO> findByIds(Collection<UUID> employeeIds);
-
-//    boolean existsById(UUID id);e
-
-//    EmployeeResponseDTO getReferenceById(UUID id);
-
-//    EmployeeSummaryDTO getSummary(UUID employeeId, Instant startDate, Instant endDate);
 
     EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request);
 

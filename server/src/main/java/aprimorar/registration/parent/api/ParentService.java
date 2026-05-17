@@ -18,8 +18,6 @@ public interface ParentService {
 
     ParentResponseDTO findById(UUID parentId);
 
-    // Map<UUID, ParentResponseDTO> findByIds(Collection<UUID> parentIds);
-
     ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO request);
 
     void archiveParent(UUID id);

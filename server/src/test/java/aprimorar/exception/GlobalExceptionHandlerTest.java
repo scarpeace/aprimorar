@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 
 import aprimorar.registration.parent.api.exception.ParentAlreadyExistsException;
+import aprimorar.registration.api.exception.RegistrationExceptionHandler;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.exception.StudentNotFoundException;
 import aprimorar.shared.exception.ErrorCode;
@@ -43,7 +44,10 @@ class GlobalExceptionHandlerTest {
         validator.afterPropertiesSet();
 
         mockMvc = MockMvcBuilders.standaloneSetup(new TestErrorController())
-                .setControllerAdvice(new GlobalExceptionHandler(Clock.fixed(FIXED_INSTANT, ZoneOffset.UTC)))
+                .setControllerAdvice(
+                        new RegistrationExceptionHandler(),
+                        new GlobalExceptionHandler(Clock.fixed(FIXED_INSTANT, ZoneOffset.UTC))
+                )
                 .setValidator(validator)
                 .setMessageConverters(
                         new MappingJackson2HttpMessageConverter(Jackson2ObjectMapperBuilder.json().build())

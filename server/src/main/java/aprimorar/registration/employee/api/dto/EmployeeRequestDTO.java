@@ -3,7 +3,7 @@ package aprimorar.registration.employee.api.dto;
 import java.time.LocalDate;
 
 import aprimorar.registration.shared.address.dto.AddressRequestDTO;
-import aprimorar.registration.shared.enums.Duty;
+import aprimorar.shared.enums.Duty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;

@@ -48,10 +48,6 @@ public class ParentServiceImpl implements ParentService {
     public PageDTO<ParentResponseDTO> getParents(Pageable pageable, String search, boolean archived) {
         Specification<Parent> spec = ParentSpecifications.isNotGhost();
 
-        // if (Boolean.TRUE.equals(archived)) {
-        //     spec = spec.and(ParentSpecifications.archived());
-        // }
-
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(ParentSpecifications.searchContainsIgnoreCase(search.trim()));
         }
@@ -79,16 +75,6 @@ public class ParentServiceImpl implements ParentService {
         return parent.toResponseDto();
     }
 
-    // @Transactional(readOnly = true)
-    // public Map<UUID, ParentResponseDTO> findByIds(Collection<UUID> parentIds) {
-    //     if (parentIds == null || parentIds.isEmpty()) {
-    //         return Map.of();
-    //     }
-    //     return parentRepo.findAllById(parentIds)
-    //         .stream()
-    //         .collect(Collectors.toMap(Parent::getId, Parent::toResponseDto));
-    // }
-
     @Transactional
     public ParentResponseDTO updateParent(UUID parentId, ParentRequestDTO dto) {
         Parent parent = findParentOrThrow(parentId);
@@ -103,7 +89,6 @@ public class ParentServiceImpl implements ParentService {
     @Transactional
     public void archiveParent(UUID id) {
         Parent parent = findParentOrThrow(id);
-        // ensureParentHasNoActiveStudents(id, "arquivar");
         parent.archive();
         log.info("Responsável {} arquivado com sucesso.", parent.getName().toUpperCase());
     }
@@ -118,7 +103,6 @@ public class ParentServiceImpl implements ParentService {
     @Transactional
     public void deleteParent(UUID id) {
         Parent parent = findParentOrThrow(id);
-        // ensureParentHasNoActiveStudents(id, "excluir");
         parentRepo.delete(parent);
         log.info("Responsável {} deletado com sucesso.", parent.getName().toUpperCase());
     }
@@ -129,16 +113,6 @@ public class ParentServiceImpl implements ParentService {
             .findById(parentId)
             .orElseThrow(() -> new ParentNotFoundException("Responsável não encontrado no banco de dados"));
     }
-
-
-    //TODO: Esse método tem que existir pra não arquivar um responsável com alunos ativos vinculados
-    // private void ensureParentHasNoActiveStudents(UUID parentId, String action) {
-    //     if (studentService.f) {
-    //         throw new ParentHasLinkedStudentsException(
-    //             "Não é possível %s um responsável com alunos ativos vinculados.".formatted(action)
-    //         );
-    //     }
-    // }
 
     private void ensureParentUniqueness(String cpf, String email) {
         if (parentRepo.existsByCpf(cpf)) {
