@@ -55,7 +55,7 @@ public class EmployeeController {
     public ResponseEntity<PageDTO<EmployeeResponseDTO>> getEmployees(
         @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
         @RequestParam(required = false) String search,
-        @RequestParam(required = false) boolean archived
+        @RequestParam(required = false) Boolean archived
     ) {
         PageDTO<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search, archived);
         return ResponseEntity.ok(employees);

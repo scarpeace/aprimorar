@@ -65,9 +65,6 @@ export function StudentsTable({
               CPF
             </th>
             <th className="text-left font-semibold text-base-content/80">
-              Idade
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
               Contato
             </th>
             <th className="text-left font-semibold text-base-content/80">
@@ -102,7 +99,6 @@ export function StudentsTable({
                 <td className="font-bold">{student.name}</td>
 
                 <td>{formatCpf(student.cpf ?? "")}</td>
-                <td className="text-center">{student.age}</td>
                 <td>{formatPhone(student.contact ?? "")}</td>
 
                  <td>{student.school ?? "-"}</td>

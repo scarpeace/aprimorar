@@ -41,6 +41,12 @@ Para iniciar o projeto, você precisará ter o **Docker** e o **Docker Compose**
    # ... outras variáveis conforme necessário
    ```
 
+3. **Crie o arquivo `.env.local` para integrações locais opcionais:**
+   Use esse arquivo para variáveis que nao devem ir para o repositório, como o token do SonarQube:
+   ```env
+   SONAR_TOKEN=seu_token_do_sonar
+   ```
+
 ### 4.2. Inicialização
 
 1. **Inicie os Containers:**
@@ -57,7 +63,7 @@ Para iniciar o projeto, você precisará ter o **Docker** e o **Docker Compose**
    *Nota: O comando `npm run sync` é obrigatório para gerar os tipos e hooks da API a partir da especificação OpenAPI.*
 
 3. **Execute o Backend:**
-   No diretório `server/api-aprimorar/`:
+   No diretório `server/`:
    ```bash
    ./mvnw spring-boot:run
    ```
@@ -79,3 +85,39 @@ Para regenerar esses arquivos, execute em `server/`:
 ```bash
 ./mvnw test -Dtest=ModuleVerificationTest
 ```
+
+## 6. Qualidade de Código e Scripts
+
+O projeto possui scripts utilitários na raiz para análise com SonarQube e consulta de issues abertas.
+
+Antes de usar os scripts do SonarQube, suba os containers necessários em `server/`:
+
+```bash
+docker compose up -d db sonar_db sonarqube
+```
+
+O token de autenticação deve estar em `.env.local`:
+
+```env
+SONAR_TOKEN=seu_token_do_sonar
+```
+
+Você pode gerar esse token em `http://localhost:9000/account/security`.
+
+### 6.1. Scripts disponíveis
+
+| Script | Descrição |
+| :--- | :--- |
+| `npm run sonar:backend` | Executa testes, gera cobertura JaCoCo e envia a análise do backend para o SonarQube. |
+| `npm run sonar:frontend` | Executa a análise do frontend no SonarQube. |
+| `npm run sonar:all` | Executa a análise de backend e frontend em sequência. |
+| `npm run sonar:issues` | Consulta e lista no terminal as issues abertas do projeto `aprimorar-server`. |
+| `npm run sonar:issues:frontend` | Consulta e lista no terminal as issues abertas do projeto `aprimorar-client`. |
+
+### 6.2. Observações
+
+* Os scripts `sonar:issues` usam a API do SonarQube e dependem de `jq` instalado no ambiente.
+* O backend gera o relatório de cobertura JaCoCo em `server/target/site/jacoco/jacoco.xml`.
+* O dashboard do SonarQube fica disponível em `http://localhost:9000`.
+* O arquivo `server/src/main/resources/data.sql` nao roda no profile `dev` enquanto `spring.sql.init.mode` estiver como `never` em `server/src/main/resources/application-dev.yml`.
+* Para reexecutar o seed localmente, troque temporariamente para `spring.sql.init.mode: always` e reinicie o backend.

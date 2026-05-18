@@ -7,13 +7,11 @@ import aprimorar.dashboard.api.exception.InvalidDashboardRequestException;
 import aprimorar.appointment.api.AppointmentService;
 import aprimorar.appointment.api.dto.ContentDistributionDTO;
 
-import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +23,6 @@ public class DashboardServiceImpl implements DashboardService {
     private static final int MAX_YEAR = 2100;
     private static final int MIN_MONTH = 1;
     private static final int MAX_MONTH = 12;
-    private static final UUID GHOST_STUDENT_ID = UUID.fromString(
-            "00000000-0000-0000-0000-000000000000"
-    );
-
     private final AppointmentService appointmentService;
     private final Clock applicationClock;
 
@@ -47,25 +41,11 @@ public class DashboardServiceImpl implements DashboardService {
         YearMonth selectedMonth = YearMonth.of(year, month);
         DateTimeRange monthRange = toMonthRange(selectedMonth);
 
-//        long activeStudentsInMonth
-//                = eventService.countDistinctStudentsInPeriodExcludingStudent(
-//                        monthRange.startDateTime(),
-//                        monthRange.endExclusiveDateTime(),
-//                        GHOST_STUDENT_ID
-//                );
         long classesInMonth
                 = appointmentService.countAppointmentsInPeriod(
                         monthRange.startDateTime(),
                         monthRange.endExclusiveDateTime()
                 );
-//        BigDecimal revenueInMonth = eventService.sumPriceInPeriod(
-//                monthRange.startDateTime(),
-//                monthRange.endExclusiveDateTime()
-//        );
-//        BigDecimal costInMonth = eventService.sumPaymentInPeriod(
-//                monthRange.startDateTime(),
-//                monthRange.endExclusiveDateTime()
-//        );
 
         List<ContentDistributionDTO> groupedByContent
                 = appointmentService.findContentDistributionInPeriod(
@@ -83,10 +63,7 @@ public class DashboardServiceImpl implements DashboardService {
                 prev.getMonthValue(),
                 next.getYear(),
                 next.getMonthValue(),
-//                activeStudentsInMonth,
                 classesInMonth,
-//                revenueInMonth,
-//                costInMonth,
                 buildCharts(groupedByContent, classesInMonth),
                 applicationClock.instant(),
                 REFRESH_SECONDS

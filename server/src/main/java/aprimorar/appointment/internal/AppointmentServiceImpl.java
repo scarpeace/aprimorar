@@ -116,8 +116,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Boolean chargedFilter = Boolean.TRUE.equals(hideCharged) ? Boolean.FALSE : null;
         Boolean paidFilter = Boolean.TRUE.equals(hidePaid) ? Boolean.FALSE : null;
 
-        Specification<Appointment> spec = Specification
-            .where(AppointmentSpecifications.searchContains(search))
+        Specification<Appointment> spec = AppointmentSpecifications.searchContains(search)
             .and(AppointmentSpecifications.withStartDateAfter(startDate))
             .and(AppointmentSpecifications.withEndDateBefore(endDate))
             .and(AppointmentSpecifications.withStudentCharged(chargedFilter))
@@ -149,8 +148,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Boolean paidFilter = Boolean.TRUE.equals(hidePaid) ? Boolean.FALSE : null;
 
-        Specification<Appointment> spec = Specification
-            .where(AppointmentSpecifications.withEmployeeId(employeeId))
+        Specification<Appointment> spec = AppointmentSpecifications.withEmployeeId(employeeId)
             .and(AppointmentSpecifications.withStartDateAfter(startDate))
             .and(AppointmentSpecifications.withEndDateBefore(endDate))
             .and(AppointmentSpecifications.withEmployeePaid(paidFilter));
@@ -288,8 +286,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     ) {
         studentService.findById(studentId);
 
-        Specification<Appointment> spec = Specification
-            .where(AppointmentSpecifications.withStudentId(studentId))
+        Specification<Appointment> spec = AppointmentSpecifications.withStudentId(studentId)
             .and(AppointmentSpecifications.withStartDateAfter(startDate))
             .and(AppointmentSpecifications.withEndDateBefore(endDate))
             .and(AppointmentSpecifications.withStudentCharged(charged));

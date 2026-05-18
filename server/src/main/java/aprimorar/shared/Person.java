@@ -63,7 +63,7 @@ public abstract class Person implements Serializable {
         String cpf,
         String email
     ) {
-        validateRequiredFields(name, birthdate, pix, contact, email);
+        validateRequiredFields(name, birthdate, contact, email);
         validateCpf(cpf);
         this.name = name;
         this.birthdate = birthdate;
@@ -84,7 +84,7 @@ public abstract class Person implements Serializable {
         String contact,
         String email
     ) {
-        validateRequiredFields(name, birthdate, pix, contact, email);
+        validateRequiredFields(name, birthdate, contact, email);
 
         this.name = name;
         this.birthdate = birthdate;
@@ -104,7 +104,6 @@ public abstract class Person implements Serializable {
     private void validateRequiredFields(
         String name,
         LocalDate birthdate,
-        String pix,
         String contact,
         String email
     ) {
