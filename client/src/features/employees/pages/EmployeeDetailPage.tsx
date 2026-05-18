@@ -1,4 +1,5 @@
 import { PageLayout } from "@/components/layout/PageLayout";
+import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import {
   useGetAppointmentsByEmployeeId,
   useGetEmployeeById,
@@ -10,7 +11,7 @@ import { EmployeeKPIs } from "../components/EmployeeKPIs";
 import { EmployeeEventsTable } from "../components/EmployeeEventsTable";
 import { EmployeeInfoSection } from "../components/EmployeeInfoSection";
 import { EmployeeEditModal } from "../components/EmployeeEditModal";
-import { useDateFilter } from "@/hooks/use-date-filter";
+import { usePageDateFilter } from "@/hooks/use-page-date-filter";
 
 const headerProps = {
   description: "Veja e gerencie as informações do colaborador",
@@ -26,7 +27,8 @@ export function EmployeeDetailPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [hidePaid, setHidePaid] = useState(false);
 
-  const { startDate, endDate } = useDateFilter();
+  const dateFilter = usePageDateFilter("employee-detail");
+  const { startDate, endDate } = dateFilter;
 
   const employeeQuery = useGetEmployeeById(employeeId);
 
@@ -72,6 +74,8 @@ export function EmployeeDetailPage() {
       {isFormOpen && employeeQuery.data && (
         <EmployeeEditModal employee={employeeQuery.data} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
       )}
+
+      <PageDateFilterWidget {...dateFilter} />
     </PageLayout>
   );
 }

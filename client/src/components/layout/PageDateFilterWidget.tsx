@@ -3,8 +3,8 @@ import { Calendar, SlidersHorizontal, X } from "lucide-react";
 
 import { Button } from "../ui/button";
 import { DateRangeInput } from "../ui/date-range-input";
-import { useDateFilter } from "@/hooks/use-date-filter";
 import { formatDateShortYear } from "@/lib/utils/formatter";
+import type { PageDateFilter } from "@/hooks/use-page-date-filter";
 
 function getPeriodLabel(startDate?: Date, endDate?: Date) {
   if (startDate && endDate) {
@@ -22,17 +22,17 @@ function getPeriodLabel(startDate?: Date, endDate?: Date) {
   return "Todo periodo";
 }
 
-export function GlobalDateFilterWidget() {
-  const [isOpen, setIsOpen] = useState(false);
-  const {
-    startDate,
-    endDate,
-    handleStartDateChange,
-    handleEndDateChange,
-    clearDateFilters,
-    hasFilters,
-  } = useDateFilter();
+type PageDateFilterWidgetProps = PageDateFilter;
 
+export function PageDateFilterWidget({
+  startDate,
+  endDate,
+  handleStartDateChange,
+  handleEndDateChange,
+  clearDateFilters,
+  hasFilters,
+}: Readonly<PageDateFilterWidgetProps>) {
+  const [isOpen, setIsOpen] = useState(false);
   const periodLabel = getPeriodLabel(startDate, endDate);
 
   return (
@@ -90,7 +90,7 @@ export function GlobalDateFilterWidget() {
         type="button"
         className={`group flex max-w-full items-center gap-3 rounded-2xl border border-base-300 bg-base-100/95 px-4 py-3 text-left shadow-2xl backdrop-blur transition hover:-translate-y-0.5 hover:border-primary/35 ${hasFilters ? "ring-2 ring-primary/15" : ""}`}
         aria-expanded={isOpen}
-        aria-label="Abrir filtro de periodo global"
+        aria-label="Abrir filtro de periodo"
         onClick={() => setIsOpen((current) => !current)}
       >
         <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">

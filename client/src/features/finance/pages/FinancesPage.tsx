@@ -1,12 +1,15 @@
 import { PageLayout } from "@/components/layout/PageLayout";
+import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import {
   useGetAppointmentFinanceReport,
+  useGetEmployeesWithFinance,
   useGetExpenses,
+  useGetStudentsWithFinance,
 } from "@/kubb";
-import { useDateFilter } from "@/hooks/use-date-filter";
+import { usePageDateFilter } from "@/hooks/use-page-date-filter";
 import { Landmark, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,13 +17,16 @@ import { ExpenseForm } from "../components/ExpenseForm";
 import { ExpensesTable } from "../components/ExpensesTable";
 import { FinanceSummarySection } from "../components/FinanceSummarySection";
 import { useExpenseMutations } from "../hooks/useExpenseMutations";
+import { EmployeeKPIs } from "@/features/employees/components/EmployeeKPIs";
+import { StudentKPIs } from "@/features/students/components/StudentKPIs";
 
 export function FinancesPage() {
   const navigate = useNavigate();
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
   const { toggleExpensePayment } = useExpenseMutations();
 
-  const { startDate, endDate } = useDateFilter();
+  const dateFilter = usePageDateFilter("finance");
+  const { startDate, endDate } = dateFilter;
 
   const summaryQuery = useGetAppointmentFinanceReport({
     startDate: startDate?.toISOString(),
@@ -32,14 +38,23 @@ export function FinancesPage() {
     size: 9999,
     sort: ["date,desc"],
   });
+  const studentsWithFinanceQuery = useGetStudentsWithFinance({
+    size: 1,
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
+  });
+  const employeesWithFinanceQuery = useGetEmployeesWithFinance({
+    size: 1,
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
+  });
 
-  const totalStudentCharged = summaryQuery.data?.totalStudentCharged ?? 0;
-  const totalStudentPending = summaryQuery.data?.totalStudentPending ?? 0;
-  const totalEmployeePaid = summaryQuery.data?.totalEmployeePaid ?? 0;
-  const totalEmployeePending = summaryQuery.data?.totalEmployeePending ?? 0;
   const totalGeneralExpenses = expensesQuery.data?.totalExpenses ?? 0;
   const pendingGeneralExpenses = expensesQuery.data?.pendingExpenses ?? 0;
   const currentBalance = summaryQuery.data?.balance ?? 0;
+  const studentFinanceSummary = studentsWithFinanceQuery.data?.financeSummary;
+  const employeeFinanceSummary = employeesWithFinanceQuery.data?.financeSummary;
+  const totalEvents = studentFinanceSummary?.totalEvents ?? employeeFinanceSummary?.totalEvents ?? 0;
 
   const handleOpenExpenseForm = () => {
     setIsExpenseFormOpen(true);
@@ -82,15 +97,44 @@ export function FinancesPage() {
 
         <FinanceSummarySection
           currentBalance={currentBalance}
-          totalStudentCharged={totalStudentCharged}
-          totalStudentPending={totalStudentPending}
-          totalEmployeePaid={totalEmployeePaid}
-          totalEmployeePending={totalEmployeePending}
+          totalEvents={totalEvents}
           totalGeneralExpenses={totalGeneralExpenses}
           pendingGeneralExpenses={pendingGeneralExpenses}
           isError={summaryQuery.isError}
           error={summaryQuery.error}
         />
+
+        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
+          <div className="mb-4">
+            <h3 className="text-lg font-bold text-base-content">Resumo financeiro dos alunos</h3>
+            <p className="text-sm text-base-content/60">
+              Indicadores consolidados respeitando o periodo selecionado nos filtros.
+            </p>
+          </div>
+
+          <StudentKPIs
+            totalEvents={studentFinanceSummary?.totalEvents ?? 0}
+            totalCharged={studentFinanceSummary?.totalCharged ?? 0}
+            totalPending={studentFinanceSummary?.totalPending ?? 0}
+            showTotalEvents={false}
+          />
+        </section>
+
+        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
+          <div className="mb-4">
+            <h3 className="text-lg font-bold text-base-content">Resumo financeiro dos colaboradores</h3>
+            <p className="text-sm text-base-content/60">
+              Indicadores consolidados respeitando o periodo selecionado nos filtros.
+            </p>
+          </div>
+
+          <EmployeeKPIs
+            totalEvents={employeeFinanceSummary?.totalEvents ?? 0}
+            totalPaid={employeeFinanceSummary?.totalPaid ?? 0}
+            totalUnpaid={employeeFinanceSummary?.totalPending ?? 0}
+            showTotalEvents={false}
+          />
+        </section>
 
         <section className="rounded-2xl border border-base-300 bg-base-100 p-5 shadow-sm animate-[fade-up_200ms_ease-out_both]">
           <div className="flex justify-between items-start mb-4">
@@ -143,6 +187,7 @@ export function FinancesPage() {
             </div>
           </div>
         ) : null}
+        <PageDateFilterWidget {...dateFilter} />
         </div>
 
 

@@ -1,20 +1,11 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { brl } from "@/lib/utils/formatter";
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  CircleDollarSign,
-  Clock3,
-  Wallet,
-} from "lucide-react";
+import { ArrowUpRight, Calendar, Clock3 } from "lucide-react";
 import { FinanceKpiCard } from "./FinanceKpiCard";
 
 type FinanceSummarySectionProps = {
   currentBalance: number;
-  totalStudentCharged: number;
-  totalStudentPending: number;
-  totalEmployeePaid: number;
-  totalEmployeePending: number;
+  totalEvents: number;
   totalGeneralExpenses: number;
   pendingGeneralExpenses: number;
   isError: boolean;
@@ -23,10 +14,7 @@ type FinanceSummarySectionProps = {
 
 export function FinanceSummarySection({
   currentBalance,
-  totalStudentCharged,
-  totalStudentPending,
-  totalEmployeePaid,
-  totalEmployeePending,
+  totalEvents,
   totalGeneralExpenses,
   pendingGeneralExpenses,
   isError,
@@ -74,46 +62,17 @@ export function FinanceSummarySection({
             error={error}
           />
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {/* Alunos */}
+          <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-base-200 bg-base-100 p-4">
-              <span className="badge badge-sm badge-outline mb-3">Alunos</span>
-              <div className="space-y-3">
-                <FinanceKpiCard
-                  title="Recebido"
-                  value={brl.format(totalStudentCharged)}
-                  tone="success"
-                  icon={<ArrowDownRight className="h-5 w-5" />}
-                />
-                <FinanceKpiCard
-                  title="Pendente"
-                  value={brl.format(totalStudentPending)}
-                  tone="warning"
-                  icon={<Wallet className="h-5 w-5" />}
-                />
-              </div>
+              <span className="badge badge-sm badge-outline mb-3">Eventos</span>
+              <FinanceKpiCard
+                title="Total de eventos"
+                value={totalEvents.toString()}
+                tone="primary"
+                icon={<Calendar className="h-5 w-5" />}
+              />
             </div>
 
-            {/* Colaboradores */}
-            <div className="rounded-xl border border-base-200 bg-base-100 p-4">
-              <span className="badge badge-sm badge-outline mb-3">Colaboradores</span>
-              <div className="space-y-3">
-                <FinanceKpiCard
-                  title="Pago"
-                  value={brl.format(totalEmployeePaid)}
-                  tone="success"
-                  icon={<ArrowUpRight className="h-5 w-5" />}
-                />
-                <FinanceKpiCard
-                  title="Pendente"
-                  value={brl.format(totalEmployeePending)}
-                  tone="warning"
-                  icon={<CircleDollarSign className="h-5 w-5" />}
-                />
-              </div>
-            </div>
-
-            {/* Despesas */}
             <div className="rounded-xl border border-base-200 bg-base-100 p-4">
               <span className="badge badge-sm badge-outline mb-3">Despesas</span>
               <div className="space-y-3">

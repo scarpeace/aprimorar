@@ -6,20 +6,24 @@ type StudentKPIsProps = {
   totalEvents?: number;
   totalCharged?: number;
   totalPending?: number;
+  showTotalEvents?: boolean;
 };
 
 export function StudentKPIs({
   totalEvents,
   totalCharged,
   totalPending,
+  showTotalEvents = true,
 }: Readonly<StudentKPIsProps>) {
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <KpiCard
-        label="Total de eventos"
-        value={totalEvents}
-        Icon={Calendar}
-      />
+    <div className={`grid grid-cols-1 gap-4 ${showTotalEvents ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
+      {showTotalEvents ? (
+        <KpiCard
+          label="Total de eventos"
+          value={totalEvents}
+          Icon={Calendar}
+        />
+      ) : null}
 
       <KpiCard
         label="Total pago"

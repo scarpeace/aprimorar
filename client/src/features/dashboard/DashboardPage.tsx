@@ -1,72 +1,39 @@
-import { ErrorCard } from "@/components/ui/error-card";
-import { PageLoading } from "@/components/ui/page-loading";
-import { useGetDashboardSummary } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { PizzaChart } from "./components/PizzaChart";
-import { DashboardKpiCard } from "./components/DashboardKpiCard";
+import { AppointmentsCalendar } from "./components/AppointmentsCalendar";
+import { lazy, Suspense, useState } from "react";
 
-//FIX: Remover esse + 1 do ano quando for fazer o deploy
-function getCurrentYearMonth() {
-  const now = new Date();
-
-  return {
-    year: now.getFullYear() + 1,
-    month: now.getMonth() + 1,
-  };
-}
+const AppointmentForm = lazy(() => import("@/features/appointments/components/AppointmentForm").then((module) => ({ default: module.AppointmentForm })));
 
 export function DashboardPage() {
-  const { year, month } = getCurrentYearMonth();
-  const dashboardQuery = useGetDashboardSummary({
-    year,
-    month,
-  });
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  if (dashboardQuery.isPending) {
-    return <PageLoading message="Carregando painel..." />;
-  }
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+  };
 
-  if (dashboardQuery.isError || !dashboardQuery.data) {
-    return (
-      <div className="app-dashboard-error">
-        <h1 className="app-text text-3xl font-bold">Painel</h1>
-        <ErrorCard
-          title="Ops, não foi possível carregar"
-          description={getFriendlyErrorMessage(dashboardQuery.error)}
-        />
-      </div>
-    );
-  }
   return (
-    <div className="app-dashboard-page">
-      <h1 className="app-text text-3xl font-bold">Painel</h1>
-      <div className="app-dashboard-kpi-grid">
-        <DashboardKpiCard label="Aulas no mês" value={dashboardQuery.data.classesInMonth ?? 0} />
-      </div>
+    <>
+      <section className="flex flex-col gap-7">
+        <h1 className="text-3xl font-bold text-base-content">Painel</h1>
+        <AppointmentsCalendar onCreateAppointment={() => setIsFormOpen(true)} />
+      </section>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="card border border-base-300 bg-base-100 shadow-sm">
-          <div className="card-body">
-            <h2 className="card-title text-lg font-semibold">
-              Distribuição de Conteúdo
-            </h2>
-            <p className="text-sm text-base-content/60 mb-4">
-              Visualização das aulas por categoria de atendimento.
+      {isFormOpen ? (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-4xl border border-base-300 bg-base-100 shadow-2xl">
+            <h3 className="mb-1 text-lg font-bold">Cadastrar Novo Atendimento</h3>
+            <p className="mb-4 text-sm text-base-content/60">
+              Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados.
             </p>
-            <PizzaChart data={dashboardQuery.data.charts ?? []} />
+            <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
+              <AppointmentForm
+                initialData={null}
+                onSuccess={handleCloseForm}
+                onCancel={handleCloseForm}
+              />
+            </Suspense>
           </div>
         </div>
-        <div className="card border border-base-300 bg-base-100 shadow-sm flex items-center justify-center min-h-[75]">
-          <div className="text-center p-8">
-            <h3 className="text-base-content/40 font-medium italic">
-              Gráfico de Evolução
-            </h3>
-            <p className="text-xs text-base-content/30 mt-1">
-              Em desenvolvimento
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+      ) : null}
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TriangleAlert } from "lucide-react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { useMemo } from "react";
 
@@ -34,7 +34,7 @@ export function AppointmentForm({ initialData, onCancel, onSuccess }: Appointmen
   const { createAppointment, updateAppointment } = useAppointmentMutations();
   const isEditMode = !!initialData;
 
-  const { register, handleSubmit, control, watch, formState: { errors } } = useForm<AppointmentFormSchema>({
+  const { register, handleSubmit, control, formState: { errors } } = useForm<AppointmentFormSchema>({
     resolver: zodResolver(appointmentFormSchema),
     mode: "onBlur",
     defaultValues: {
@@ -49,8 +49,8 @@ export function AppointmentForm({ initialData, onCancel, onSuccess }: Appointmen
     }
   });
 
-  const startDateValue = watch("startDate");
-  const durationValue = watch("duration");
+  const startDateValue = useWatch({ control, name: "startDate" });
+  const durationValue = useWatch({ control, name: "duration" });
 
   const displayEndTime = useMemo(() => {
     if (!startDateValue || !durationValue) return "";
@@ -66,9 +66,15 @@ export function AppointmentForm({ initialData, onCancel, onSuccess }: Appointmen
 
   const onSubmit = handleSubmit((data: AppointmentFormSchema) => {
     const formattedData: AppointmentRequestDTO = {
-      ...data,
+      description: data.description,
+      content: data.content,
       startDate: toInstant(data.startDate),
-    } as any;
+      duration: data.duration,
+      price: data.price,
+      payment: data.payment,
+      studentId: data.studentId,
+      employeeId: data.employeeId,
+    };
 
     if (isEditMode && initialData.id) {
       updateAppointment.mutate({ id: initialData.id, data: formattedData });

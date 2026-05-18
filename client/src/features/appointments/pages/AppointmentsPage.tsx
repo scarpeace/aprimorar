@@ -12,8 +12,6 @@ import { AppointmentsListSection } from "../components/AppointmentsListSection";
 export function AppointmentsPage() {
   const {
     search,
-    startDate,
-    endDate,
     hideCharged,
     hidePaid,
     page,
@@ -97,8 +95,6 @@ export function AppointmentsPage() {
         <AppointmentsListSection
           page={page}
           search={search}
-          startDate={startDate}
-          endDate={endDate}
           hideCharged={hideCharged}
           hidePaid={hidePaid}
           onPageChange={handlePageChange}

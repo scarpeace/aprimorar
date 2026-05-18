@@ -2,15 +2,14 @@ import { Button } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { useGetStudentsWithFinance } from "@/kubb";
+import { useGetStudentSummary, useGetStudentsWithFinance } from "@/kubb";
 import type { StudentResponseDTO } from "@/kubb";
-import { useDateFilter } from "@/hooks/use-date-filter";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { GraduationCap, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { StudentsTable } from "../components/StudentsTable";
 import { StudentForm } from "../components/StudentForm";
-import { StudentKPIs } from "../components/StudentKPIs";
+import { StudentCountKPIs } from "../components/StudentCountKPIs";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,15 +20,14 @@ export function StudentsPage() {
   const [selectedStudent, setSelectedStudent] = useState<StudentResponseDTO | null>(null);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const { startDate, endDate } = useDateFilter();
 
   const studentsWithFinanceQuery = useGetStudentsWithFinance({
     page: currentPage,
     search: debouncedSearchTerm,
     archived: showArchived,
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
   });
+
+  const studentSummaryQuery = useGetStudentSummary();
 
   const displayedStudents = useMemo(() => {
     if (!studentsWithFinanceQuery.data || !hideCharged) {
@@ -71,23 +69,20 @@ export function StudentsPage() {
     setCurrentPage(0);
   };
 
-  const financeSummary = studentsWithFinanceQuery.data?.financeSummary;
-
   return (
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-4">
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
           <div className="mb-4">
-            <h3 className="text-lg font-bold text-base-content">Resumo financeiro dos alunos</h3>
+            <h3 className="text-lg font-bold text-base-content">Indicadores de alunos</h3>
             <p className="text-sm text-base-content/60">
-              Indicadores consolidados respeitando o periodo selecionado nos filtros.
+              Visão geral dos alunos ativos e do total cadastrado desde o inicio.
             </p>
           </div>
 
-          <StudentKPIs
-            totalEvents={financeSummary?.totalEvents ?? 0}
-            totalCharged={financeSummary?.totalCharged ?? 0}
-            totalPending={financeSummary?.totalPending ?? 0}
+          <StudentCountKPIs
+            activeStudents={studentSummaryQuery.data?.activeStudents}
+            totalStudents={studentSummaryQuery.data?.totalStudents}
           />
         </section>
 

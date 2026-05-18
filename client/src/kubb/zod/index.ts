@@ -108,6 +108,10 @@ export {
   getEmployeeOptionsQueryResponseSchema,
 } from "./employee/getEmployeeOptionsSchema.ts";
 export {
+  getEmployeeSummary200Schema,
+  getEmployeeSummaryQueryResponseSchema,
+} from "./employee/getEmployeeSummarySchema.ts";
+export {
   getEmployees200Schema,
   getEmployeesQueryParamsSchema,
   getEmployeesQueryResponseSchema,
@@ -124,6 +128,7 @@ export {
   updateEmployeePathParamsSchema,
 } from "./employee/updateEmployeeSchema.ts";
 export { employeeAppointmentsResponseDTOSchema } from "./employeeAppointmentsResponseDTOSchema.ts";
+export { employeeCountSummaryDTOSchema } from "./employeeCountSummaryDTOSchema.ts";
 export { employeeFinanceSummaryDTOSchema } from "./employeeFinanceSummaryDTOSchema.ts";
 export { employeeOptionsDTOSchema } from "./employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
@@ -236,6 +241,10 @@ export {
   getStudentByIdQueryResponseSchema,
 } from "./student/getStudentByIdSchema.ts";
 export {
+  getStudentSummary200Schema,
+  getStudentSummaryQueryResponseSchema,
+} from "./student/getStudentSummarySchema.ts";
+export {
   getStudentsByParent200Schema,
   getStudentsByParentPathParamsSchema,
   getStudentsByParentQueryParamsSchema,
@@ -262,6 +271,7 @@ export {
   updateStudentPathParamsSchema,
 } from "./student/updateStudentSchema.ts";
 export { studentAppointmentsResponseDTOSchema } from "./studentAppointmentsResponseDTOSchema.ts";
+export { studentCountSummaryDTOSchema } from "./studentCountSummaryDTOSchema.ts";
 export { studentFinanceSummaryDTOSchema } from "./studentFinanceSummaryDTOSchema.ts";
 export { studentOptionsDTOSchema } from "./studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";
