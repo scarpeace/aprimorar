@@ -6,7 +6,7 @@
 import { z } from "zod/v4";
 
 /**
- * @description Endereço do aluno
+ * @description Endereço
  */
 export const addressRequestDTOSchema = z
   .object({
@@ -49,4 +49,4 @@ export const addressRequestDTOSchema = z
       z.string().max(255).describe("Complemento do endereço"),
     ),
   })
-  .describe("Endereço do aluno");
+  .describe("Endereço");

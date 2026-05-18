@@ -8,6 +8,7 @@ import {
   ShieldCheck
 } from "lucide-react"
 import { Link, Outlet, useLocation } from "react-router-dom"
+import { GlobalDateFilterWidget } from "./GlobalDateFilterWidget"
 
 const navigation = [
   { name: "Painel", href: "/", icon: LayoutDashboard },
@@ -54,6 +55,7 @@ export function MainLayout() {
       <main className="app-main-content">
         <div className="app-main-content-inner">
           <Outlet/>
+          <GlobalDateFilterWidget />
         </div>
       </main>
     </div>

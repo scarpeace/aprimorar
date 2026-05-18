@@ -124,26 +124,6 @@ public class StudentServiceImpl implements StudentService {
         return studentMapper.toResponseDto(student, clock);
     }
 
-//    @Transactional(readOnly = true)
-//    public Map<UUID, StudentResponseDTO> findByIds(Collection<UUID> studentIds) {
-//        if (studentIds == null || studentIds.isEmpty()) {
-//            return Map.of();
-//        }
-//        List<Student> students = studentRepo.findAllById(studentIds);
-//        Map<UUID, ParentResponseDTO> parentsById = loadParentsById(students);
-//        return students.stream()
-//            .collect(Collectors.toMap(Student::getId, student -> student.toResponseDto(clock, parentsById.get(student.getParent().getId()))));
-//    }
-
-//    @Transactional(readOnly = true)
-//    public boolean existsById(UUID id) {
-//        return studentRepo.existsById(id);
-//    }
-
-   // @Transactional(readOnly = true)
-   // public boolean hasActiveLinkedStudents(UUID parentId) {
-   //     return studentRepo.existsByParentIdAndActiveTrue(parentId);   // }
-
     @Transactional
     public StudentResponseDTO updateStudent(StudentRequestDTO dto, UUID id) {
         if (GHOST_STUDENT_ID.equals(id)) {
@@ -216,36 +196,4 @@ public class StudentServiceImpl implements StudentService {
             .findById(studentId)
             .orElseThrow(() -> new StudentNotFoundException("Aluno não encontrado no banco de dados"));
     }
-
-//    private Map<UUID, ParentResponseDTO> loadParentsById(List<Student> students) {
-//        List<UUID> parentIds = students.stream()
-//            .map(s -> s.getParent().getId())
-//            .distinct()
-//            .toList();
-//        return parentService.findByIds(parentIds);
-//    }
-
-//    private ParentResponseDTO findParentOrThrow(UUID parentId) {
-//        if (parentId == null) {
-//            throw new IllegalArgumentException("Responsável do aluno é obrigatório.");
-//        }
-//
-//        return parentService.findById(parentId);
-//    }
-
-//    private void ensureStudentUniqueness(String cpf, String email) {
-//        if (studentRepo.existsByCpf(cpf)) {
-//            throw new StudentAlreadyExistException("Aluno com o CPF informado já existe no banco de dados");
-//        }
-//
-//        if (studentRepo.existsByEmail(email)) {
-//            throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
-//        }
-//    }
-//
-//    private void ensureStudentUniquenessForUpdate(String email, UUID studentId) {
-//        if (studentRepo.existsByEmailAndIdNot(email, studentId)) {
-//            throw new StudentAlreadyExistException("Aluno com o Email informado já existe no banco de dados");
-//        }
-//    }
 }

@@ -6,7 +6,9 @@ import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
 import aprimorar.appointment.api.dto.EmployeeAppointmentsResponseDTO;
 import aprimorar.appointment.api.dto.EmployeesFinanceSummaryResponseDTO;
+import aprimorar.appointment.api.dto.EmployeesWithFinanceResponseDTO;
 import aprimorar.appointment.api.dto.StudentsFinanceSummaryResponseDTO;
+import aprimorar.appointment.api.dto.StudentsWithFinanceResponseDTO;
 import aprimorar.appointment.api.dto.StudentAppointmentsResponseDTO;
 import aprimorar.shared.PageDTO;
 import java.time.Instant;
@@ -50,6 +52,22 @@ public interface AppointmentService {
     StudentsFinanceSummaryResponseDTO getStudentsFinanceReport(Instant startDate, Instant endDate);
 
     EmployeesFinanceSummaryResponseDTO getEmployeesFinanceReport(Instant startDate, Instant endDate);
+
+    EmployeesWithFinanceResponseDTO getEmployeesWithFinance(
+        Pageable pageable,
+        String search,
+        Boolean archived,
+        Instant startDate,
+        Instant endDate
+    );
+
+    StudentsWithFinanceResponseDTO getStudentsWithFinance(
+        Pageable pageable,
+        String search,
+        Boolean archived,
+        Instant startDate,
+        Instant endDate
+    );
 
     AppointmentResponseDTO updateAppointment(UUID id, AppointmentRequestDTO dto);
 

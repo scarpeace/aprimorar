@@ -97,7 +97,6 @@ export function AppointmentsTable({
                 <th className="text-center font-bold text-base-content/70">Conteudo</th>
                 <th className="text-right font-bold text-base-content/70">Cobranca</th>
                 <th className="text-right font-bold text-base-content/70">Repasse</th>
-                {/* <th className="pr-6 text-center font-bold text-base-content/70">Acoes</th> */}
               </tr>
             </thead>
 
@@ -139,43 +138,6 @@ export function AppointmentsTable({
                       <span>{brl.format(event.payment)}</span>
                     </div>
                   </td>
-                  {/* <td className="relative z-20 text-center">
-                    <div className="flex justify-center gap-1.5 opacity-80 transition-opacity group-hover:opacity-100">
-                      <div
-                        className="tooltip tooltip-left z-30 before:z-30 after:z-30"
-                        data-tip={event.studentChargeDate ? "Cancelar Cobrança" : "Marcar como Cobrado"}
-                      >
-                        <Button
-                          disabled={toggleStudentCharge.isPending || toggleEmployeePayment.isPending}
-                          className="h-9 w-9 p-0"
-                          size="sm"
-                          variant={event.studentChargeDate ? "success" : "warning"}
-                          onClick={() => handleToggleStudentCharge(event.id)}
-                        >
-                          <CircleDollarSign className="h-4.5 w-4.5" />
-                        </Button>
-                      </div>
-                      <div
-                        className="tooltip tooltip-left z-30 before:z-30 after:z-30"
-                        data-tip={event.employeePaymentDate ? "Cancelar Pagamento" : "Marcar como Pago"}
-                      >
-                        <Button
-                          disabled={toggleStudentCharge.isPending || toggleEmployeePayment.isPending}
-                          className="h-9 w-9 p-0"
-                          size="sm"
-                          variant={event.employeePaymentDate ? "success" : "warning"}
-                          onClick={() => handleToggleEmployeePayment(event.id)}
-                        >
-                          <CircleDollarSign className="h-4.5 w-4.5" />
-                        </Button>
-                      </div>
-                      <div className="tooltip tooltip-left z-30 before:z-30 after:z-30" data-tip="Detalhes">
-                        <ButtonLink to={`/appointments/${event.id}`} size="sm" className="h-9 w-9 p-0" variant="primary">
-                          <SquareArrowOutUpRight className="h-4.5 w-4.5" />
-                        </ButtonLink>
-                      </div>
-                    </div>
-                  </td> */}
                 </tr>
               ))}
             </tbody>

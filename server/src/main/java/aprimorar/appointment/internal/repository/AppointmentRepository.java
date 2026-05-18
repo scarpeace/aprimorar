@@ -23,6 +23,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
     interface StudentFinanceSummaryProjection {
         UUID getStudentId();
         String getStudentName();
+        long getTotalEvents();
         BigDecimal getTotalCharged();
         BigDecimal getTotalPending();
     }
@@ -30,14 +31,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
     interface EmployeeFinanceSummaryProjection {
         UUID getEmployeeId();
         String getEmployeeName();
+        long getTotalEvents();
         BigDecimal getTotalPaid();
         BigDecimal getTotalPending();
     }
-
-    Page<Appointment> findAllByEmployeeId(UUID employeeId, Pageable pageable);
-
-    Page<Appointment> findAllByStudentId(UUID studentId, Pageable pageable);
-
 
     @Modifying
     @Query(
@@ -60,16 +57,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         """
     )
     void reassignEmployeeAppointmentsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
-
-    long countByEmployeeIdAndStartDateBetween(UUID employeeId, Instant startDate, Instant endDate);
-
-    long countByEmployeeId(UUID employeeId);
-
-    @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Appointment a WHERE a.employeePaymentDate IS NOT NULL")
-    BigDecimal sumTotalEmployeePayment();
-
-    @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Appointment a WHERE a.employeePaymentDate IS NULL")
-    BigDecimal sumTotalEmployeePaymentPending();
 
     @Query(
         """
@@ -151,16 +138,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate
     );
-
-    long countByStudentIdAndStartDateBetween(UUID studentId, Instant startDate, Instant endDate);
-
-    long countByStudentId(UUID studentId);
-
-    @Query("SELECT COALESCE(SUM(a.price), 0) FROM Appointment a WHERE a.studentChargeDate IS NOT NULL")
-    BigDecimal sumTotalStudentIncome();
-
-    @Query("SELECT COALESCE(SUM(a.price), 0) FROM Appointment a WHERE a.studentChargeDate IS NULL")
-    BigDecimal sumTotalStudentIncomePending();
 
     @Query(
         """
@@ -291,27 +268,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         @Param("endDate") Instant endDate,
         @Param("excludedStudentId") UUID excludedStudentId
     );
-
-    @Query(
-        """
-        select coalesce(sum(a.price), 0)
-        from Appointment a
-        where a.startDate >= :startDate
-          and a.startDate < :endDate
-        """
-    )
-    BigDecimal sumPriceInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
-    @Query(
-        """
-        select coalesce(sum(a.payment), 0)
-        from Appointment a
-        where a.startDate >= :startDate
-          and a.startDate < :endDate
-        """
-    )
-    BigDecimal sumPaymentInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
+    
     @Query(
         """
         select a.content as content, count(a) as count
@@ -329,6 +286,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         select
           a.studentId as studentId,
           a.studentName as studentName,
+          count(a) as totalEvents,
           coalesce(sum(case when a.studentChargeDate is not null then a.price else 0 end), 0) as totalCharged,
           coalesce(sum(case when a.studentChargeDate is null then a.price else 0 end), 0) as totalPending
         from Appointment a
@@ -348,6 +306,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
         select
           a.employeeId as employeeId,
           a.employeeName as employeeName,
+          count(a) as totalEvents,
           coalesce(sum(case when a.employeePaymentDate is not null then a.payment else 0 end), 0) as totalPaid,
           coalesce(sum(case when a.employeePaymentDate is null then a.payment else 0 end), 0) as totalPending
         from Appointment a

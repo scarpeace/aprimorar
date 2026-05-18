@@ -37,7 +37,7 @@ export type AddressResponseDTOStateEnumKey =
   (typeof addressResponseDTOStateEnum)[keyof typeof addressResponseDTOStateEnum];
 
 /**
- * @description Endereço do aluno
+ * @description Endereço
  * @example Street Name
  */
 export type AddressResponseDTO = {

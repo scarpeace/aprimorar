@@ -29,7 +29,12 @@ export type {
   EmployeeResponseDTODutyEnumKey,
 } from "./EmployeeResponseDTO.ts";
 export type { EmployeeSummaryDTO } from "./EmployeeSummaryDTO.ts";
+export type {
+  EmployeeWithFinanceDTO,
+  EmployeeWithFinanceDTODutyEnumKey,
+} from "./EmployeeWithFinanceDTO.ts";
 export type { EmployeesFinanceSummaryResponseDTO } from "./EmployeesFinanceSummaryResponseDTO.ts";
+export type { EmployeesWithFinanceResponseDTO } from "./EmployeesWithFinanceResponseDTO.ts";
 export type {
   ExpenseRequestDTO,
   ExpenseRequestDTOCategoryEnumKey,
@@ -39,6 +44,7 @@ export type {
   ExpenseResponseDTOCategoryEnumKey,
 } from "./ExpenseResponseDTO.ts";
 export type { ExpensesSummaryDTO } from "./ExpensesSummaryDTO.ts";
+export type { FinanceSummaryDTO } from "./FinanceSummaryDTO.ts";
 export type { PageDTOAppointmentResponseDTO } from "./PageDTOAppointmentResponseDTO.ts";
 export type { PageDTOEmployeeResponseDTO } from "./PageDTOEmployeeResponseDTO.ts";
 export type { PageDTOExpenseResponseDTO } from "./PageDTOExpenseResponseDTO.ts";
@@ -53,7 +59,9 @@ export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
 export type { StudentResponseDTO } from "./StudentResponseDTO.ts";
 export type { StudentSummaryDTO } from "./StudentSummaryDTO.ts";
+export type { StudentWithFinanceDTO } from "./StudentWithFinanceDTO.ts";
 export type { StudentsFinanceSummaryResponseDTO } from "./StudentsFinanceSummaryResponseDTO.ts";
+export type { StudentsWithFinanceResponseDTO } from "./StudentsWithFinanceResponseDTO.ts";
 export type {
   CreateAppointment201,
   CreateAppointmentMutation,
@@ -105,11 +113,23 @@ export type {
   GetEmployeesAppointmentsFinanceReportQueryResponse,
 } from "./appointment/GetEmployeesAppointmentsFinanceReport.ts";
 export type {
+  GetEmployeesWithFinance200,
+  GetEmployeesWithFinanceQuery,
+  GetEmployeesWithFinanceQueryParams,
+  GetEmployeesWithFinanceQueryResponse,
+} from "./appointment/GetEmployeesWithFinance.ts";
+export type {
   GetStudentsAppointmentsFinanceReport200,
   GetStudentsAppointmentsFinanceReportQuery,
   GetStudentsAppointmentsFinanceReportQueryParams,
   GetStudentsAppointmentsFinanceReportQueryResponse,
 } from "./appointment/GetStudentsAppointmentsFinanceReport.ts";
+export type {
+  GetStudentsWithFinance200,
+  GetStudentsWithFinanceQuery,
+  GetStudentsWithFinanceQueryParams,
+  GetStudentsWithFinanceQueryResponse,
+} from "./appointment/GetStudentsWithFinance.ts";
 export type {
   ToggleEmployeeAppointmentPayment200,
   ToggleEmployeeAppointmentPaymentMutation,
@@ -330,6 +350,7 @@ export { appointmentRequestDTOContentEnum } from "./AppointmentRequestDTO.ts";
 export { appointmentResponseDTOContentEnum } from "./AppointmentResponseDTO.ts";
 export { employeeRequestDTODutyEnum } from "./EmployeeRequestDTO.ts";
 export { employeeResponseDTODutyEnum } from "./EmployeeResponseDTO.ts";
+export { employeeWithFinanceDTODutyEnum } from "./EmployeeWithFinanceDTO.ts";
 export { expenseRequestDTOCategoryEnum } from "./ExpenseRequestDTO.ts";
 export { expenseResponseDTOCategoryEnum } from "./ExpenseResponseDTO.ts";
 export { getExpensesQueryParamsCategoryEnum } from "./expense/GetExpenses.ts";

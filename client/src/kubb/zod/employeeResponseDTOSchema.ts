@@ -3,6 +3,7 @@
  * Do not edit manually.
  */
 
+import { addressResponseDTOSchema } from "./addressResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 export const employeeResponseDTOSchema = z.object({
@@ -16,6 +17,9 @@ export const employeeResponseDTOSchema = z.object({
   duty: z
     .enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"])
     .describe("Função/Papel do funcionário"),
+  get address() {
+    return addressResponseDTOSchema.describe("Endereço");
+  },
   active: z.boolean().nullish(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime().nullish(),

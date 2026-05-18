@@ -5,9 +5,11 @@ import aprimorar.registration.shared.address.dto.AddressResponseDTO;
 import aprimorar.registration.shared.address.exception.InvalidAddressException;
 import aprimorar.registration.shared.enums.BrazilianStates;
 import jakarta.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
-public class Address {
+public class Address implements Serializable {
 
     @Column(name = "street", nullable = false)
     private String street;
@@ -50,9 +52,10 @@ public class Address {
     }
 
     public AddressResponseDTO toResponseDto() {
-        String formattedZip = (zip != null && zip.length() == 8)
-            ? zip.substring(0, 5) + "-" + zip.substring(5)
-            : zip;
+        String normalizedZip = Objects.requireNonNull(zip, "Zip should not be null");
+        String formattedZip = normalizedZip.length() == 8
+            ? normalizedZip.substring(0, 5) + "-" + normalizedZip.substring(5)
+            : normalizedZip;
 
         return new AddressResponseDTO(
             street,

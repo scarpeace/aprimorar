@@ -3,6 +3,7 @@
  * Do not edit manually.
  */
 
+import { addressRequestDTOSchema } from "./addressRequestDTOSchema.ts";
 import { z } from "zod/v4";
 
 /**
@@ -19,5 +20,8 @@ export const employeeRequestDTOSchema = z
     duty: z
       .enum(["TEACHER", "ADM", "THERAPIST", "MENTOR", "SYSTEM"])
       .describe("Função/Papel do funcionário"),
+    get address() {
+      return addressRequestDTOSchema.describe("Endereço");
+    },
   })
   .describe("Formato de payload para criar um novo colaborador");

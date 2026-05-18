@@ -2,8 +2,9 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOStudentResponseDTO } from "@/kubb";
+import type { StudentsWithFinanceResponseDTO } from "@/kubb";
 import {
+  brl,
   formatCpf,
   formatDateShortYear,
   formatPhone,
@@ -11,7 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 type StudentsTableProps = {
-  students?: PageDTOStudentResponseDTO;
+  students?: StudentsWithFinanceResponseDTO;
   onPageChange: (page: number) => void;
   currentPage: number;
   isPending: boolean;
@@ -35,7 +36,7 @@ export function StudentsTable({
     return <LoadingSpinner text="Carregando Alunos..." />;
   }
 
-  if (!students || students.content.length === 0) {
+  if (!students || !students.content || students.content.length === 0) {
     return (
       <EmptyCard
         title="Nenhum aluno encontrado"
@@ -43,6 +44,13 @@ export function StudentsTable({
       />
     );
   }
+
+  const paginationData = {
+    size: students.size ?? students.content.length,
+    totalElements: students.totalElements ?? students.content.length,
+    totalPages: students.totalPages ?? 1,
+    content: students.content,
+  };
 
   return (
     <>
@@ -57,9 +65,6 @@ export function StudentsTable({
               CPF
             </th>
             <th className="text-left font-semibold text-base-content/80">
-              Idade
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
               Contato
             </th>
             <th className="text-left font-semibold text-base-content/80">
@@ -68,6 +73,12 @@ export function StudentsTable({
             <th className="text-left font-semibold text-base-content/80">
               Matricula
             </th>
+            <th className="text-right font-semibold text-base-content/80">
+              Pago
+            </th>
+            <th className="text-right font-semibold text-base-content/80">
+              Pendente
+            </th>
             <th className="text-left font-semibold text-base-content/80">
               Status
             </th>
@@ -75,33 +86,47 @@ export function StudentsTable({
         </thead>
 
         <tbody className="whitespace-nowrap">
-          {students?.content.map((student) => (
-            <tr
-              key={student.id}
-              className={`transition-colors hover:bg-base-200/70 hover:cursor-pointer`}
-              onClick={() => navigate(`/students/${student.id}`)}
-            >
-              <td className="font-bold">{student.name}</td>
+          {students.content.map((student) => {
+            const totalCharged = student.totalCharged ?? 0;
+            const totalPending = student.totalPending ?? 0;
 
-              <td>{formatCpf(student.cpf)}</td>
-              <td className="text-center">{student.age}</td>
-              <td>{formatPhone(student.contact)}</td>
+            return (
+              <tr
+                key={student.id}
+                className={`transition-colors hover:bg-base-200/70 hover:cursor-pointer`}
+                onClick={() => student.id && navigate(`/students/${student.id}`)}
+              >
+                <td className="font-bold">{student.name}</td>
 
-               <td>{student.school}</td>
+                <td>{formatCpf(student.cpf ?? "")}</td>
+                <td>{formatPhone(student.contact ?? "")}</td>
 
-               <td>{formatDateShortYear(student.createdAt ?? "")}</td>
-               <td>
-                 <span className={`badge ${(student.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
-                   {(student.active ?? true) ? "Ativo" : "Arquivado"}
-                 </span>
-               </td>
-             </tr>
-          ))}
+                 <td>{student.school ?? "-"}</td>
+
+                 <td>{formatDateShortYear(student.createdAt ?? "")}</td>
+                 <td className="text-right font-mono font-semibold text-success">
+                   {brl.format(totalCharged)}
+                 </td>
+                 <td
+                   className={`text-right font-mono font-semibold ${
+                     totalPending > 0 ? "text-warning" : "text-base-content/45"
+                   }`}
+                 >
+                   {brl.format(totalPending)}
+                 </td>
+                 <td>
+                   <span className={`badge ${(student.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
+                     {(student.active ?? true) ? "Ativo" : "Arquivado"}
+                   </span>
+                 </td>
+               </tr>
+            );
+          })}
         </tbody>
       </table>
       </div>
       <Pagination
-        paginationData={students}
+        paginationData={paginationData}
         currentPage={currentPage}
         onPageChange={onPageChange}
       />

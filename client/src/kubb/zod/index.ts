@@ -43,10 +43,20 @@ export {
   getEmployeesAppointmentsFinanceReportQueryResponseSchema,
 } from "./appointment/getEmployeesAppointmentsFinanceReportSchema.ts";
 export {
+  getEmployeesWithFinance200Schema,
+  getEmployeesWithFinanceQueryParamsSchema,
+  getEmployeesWithFinanceQueryResponseSchema,
+} from "./appointment/getEmployeesWithFinanceSchema.ts";
+export {
   getStudentsAppointmentsFinanceReport200Schema,
   getStudentsAppointmentsFinanceReportQueryParamsSchema,
   getStudentsAppointmentsFinanceReportQueryResponseSchema,
 } from "./appointment/getStudentsAppointmentsFinanceReportSchema.ts";
+export {
+  getStudentsWithFinance200Schema,
+  getStudentsWithFinanceQueryParamsSchema,
+  getStudentsWithFinanceQueryResponseSchema,
+} from "./appointment/getStudentsWithFinanceSchema.ts";
 export {
   toggleEmployeeAppointmentPayment200Schema,
   toggleEmployeeAppointmentPaymentMutationResponseSchema,
@@ -119,7 +129,9 @@ export { employeeOptionsDTOSchema } from "./employeeOptionsDTOSchema.ts";
 export { employeeRequestDTOSchema } from "./employeeRequestDTOSchema.ts";
 export { employeeResponseDTOSchema } from "./employeeResponseDTOSchema.ts";
 export { employeeSummaryDTOSchema } from "./employeeSummaryDTOSchema.ts";
+export { employeeWithFinanceDTOSchema } from "./employeeWithFinanceDTOSchema.ts";
 export { employeesFinanceSummaryResponseDTOSchema } from "./employeesFinanceSummaryResponseDTOSchema.ts";
+export { employeesWithFinanceResponseDTOSchema } from "./employeesWithFinanceResponseDTOSchema.ts";
 export {
   createExpense201Schema,
   createExpenseMutationRequestSchema,
@@ -154,6 +166,7 @@ export {
 export { expenseRequestDTOSchema } from "./expenseRequestDTOSchema.ts";
 export { expenseResponseDTOSchema } from "./expenseResponseDTOSchema.ts";
 export { expensesSummaryDTOSchema } from "./expensesSummaryDTOSchema.ts";
+export { financeSummaryDTOSchema } from "./financeSummaryDTOSchema.ts";
 export { pageDTOAppointmentResponseDTOSchema } from "./pageDTOAppointmentResponseDTOSchema.ts";
 export { pageDTOEmployeeResponseDTOSchema } from "./pageDTOEmployeeResponseDTOSchema.ts";
 export { pageDTOExpenseResponseDTOSchema } from "./pageDTOExpenseResponseDTOSchema.ts";
@@ -254,4 +267,6 @@ export { studentOptionsDTOSchema } from "./studentOptionsDTOSchema.ts";
 export { studentRequestDTOSchema } from "./studentRequestDTOSchema.ts";
 export { studentResponseDTOSchema } from "./studentResponseDTOSchema.ts";
 export { studentSummaryDTOSchema } from "./studentSummaryDTOSchema.ts";
+export { studentWithFinanceDTOSchema } from "./studentWithFinanceDTOSchema.ts";
 export { studentsFinanceSummaryResponseDTOSchema } from "./studentsFinanceSummaryResponseDTOSchema.ts";
+export { studentsWithFinanceResponseDTOSchema } from "./studentsWithFinanceResponseDTOSchema.ts";

@@ -55,7 +55,7 @@ public class EmployeeController {
     public ResponseEntity<PageDTO<EmployeeResponseDTO>> getEmployees(
         @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
         @RequestParam(required = false) String search,
-        @RequestParam(required = false) boolean archived
+        @RequestParam(required = false) Boolean archived
     ) {
         PageDTO<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search, archived);
         return ResponseEntity.ok(employees);
@@ -68,20 +68,6 @@ public class EmployeeController {
         List<EmployeeOptionsDTO> options = employeeService.getEmployeeOptions();
         return ResponseEntity.ok(options);
     }
-
-    // @GetMapping("/{id}/summary")
-    // @Operation(
-    //     operationId = "getEmployeeSummary",
-    //     description = "Retorna o resumo de atendimentos e pagamentos do colaborador (Geral ou por período)."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Resumo retornado com sucesso.")
-    // public ResponseEntity<EmployeeSummaryDTO> getSummary(
-    //     @PathVariable UUID id,
-    //     @RequestParam(required = false) Instant startDate,
-    //     @RequestParam(required = false) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(employeeService.getSummary(id, startDate, endDate));
-    // }
 
     @GetMapping("/{employeeId}")
     @Operation(operationId = "getEmployeeById", description = "Retorna um colaborador por ID.")

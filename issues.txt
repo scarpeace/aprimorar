@@ -1,0 +1,41 @@
+
+> aprimorar-root@1.0.0 sonar:issues
+> bash scripts/sonar-issues.sh aprimorar-server
+
+Fetching issues for project: aprimorar-server
+============================================
+Total issues: 33
+
+[CRITICAL] CODE_SMELL - Convert this optional parameter to an Object type. (aprimorar-server:src/main/java/aprimorar/registration/employee/internal/EmployeeController.java:58)
+[CRITICAL] CODE_SMELL - Make non-static "address" transient or serializable. (aprimorar-server:src/main/java/aprimorar/registration/employee/internal/Employee.java:29)
+[CRITICAL] CODE_SMELL - Make non-static "address" transient or serializable. (aprimorar-server:src/main/java/aprimorar/registration/student/internal/Student.java:32)
+[INFO] CODE_SMELL - Complete the task associated to this TODO comment. (aprimorar-server:src/main/java/aprimorar/appointment/internal/Appointment.java:19)
+[INFO] CODE_SMELL - Complete the task associated to this TODO comment. (aprimorar-server:src/main/java/aprimorar/registration/student/internal/StudentMapper.java:32)
+[MAJOR] CODE_SMELL - Constructor has 11 parameters, which is greater than 7 authorized. (aprimorar-server:src/main/java/aprimorar/appointment/internal/Appointment.java:81)
+[MAJOR] CODE_SMELL - Constructor has 8 parameters, which is greater than 7 authorized. (aprimorar-server:src/main/java/aprimorar/registration/employee/internal/Employee.java:34)
+[MAJOR] CODE_SMELL - Constructor has 9 parameters, which is greater than 7 authorized. (aprimorar-server:src/main/java/aprimorar/registration/student/internal/Student.java:37)
+[MAJOR] CODE_SMELL - Method has 11 parameters, which is greater than 7 authorized. (aprimorar-server:src/main/java/aprimorar/appointment/internal/Appointment.java:123)
+[MAJOR] CODE_SMELL - Method has 8 parameters, which is greater than 7 authorized. (aprimorar-server:src/main/java/aprimorar/registration/student/internal/Student.java:57)
+[MAJOR] CODE_SMELL - Remove this call to a deprecated method, it has been marked for removal. (aprimorar-server:src/main/java/aprimorar/appointment/internal/AppointmentServiceImpl.java:120)
+[MAJOR] CODE_SMELL - Remove this call to a deprecated method, it has been marked for removal. (aprimorar-server:src/main/java/aprimorar/appointment/internal/AppointmentServiceImpl.java:153)
+[MAJOR] CODE_SMELL - Remove this call to a deprecated method, it has been marked for removal. (aprimorar-server:src/main/java/aprimorar/appointment/internal/AppointmentServiceImpl.java:292)
+[MAJOR] CODE_SMELL - Remove this redundant constructor which is the same as a default one. (aprimorar-server:src/main/java/aprimorar/shared/exception/ProblemResponseDTO.java:14)
+[MAJOR] CODE_SMELL - Remove this unused "GHOST_STUDENT_ID" private field. (aprimorar-server:src/main/java/aprimorar/dashboard/internal/DashboardServiceImpl.java:28)
+[MAJOR] CODE_SMELL - Remove this unused method parameter "pix". (aprimorar-server:src/main/java/aprimorar/shared/Person.java:107)
+[MAJOR] CODE_SMELL - This block of commented-out lines of code should be removed. (aprimorar-server:src/main/java/aprimorar/dashboard/internal/DashboardServiceImpl.java:55)
+[MAJOR] CODE_SMELL - This block of commented-out lines of code should be removed. (aprimorar-server:src/main/java/aprimorar/dashboard/internal/DashboardServiceImpl.java:64)
+[MAJOR] VULNERABILITY - Make sure that enabling CORS is safe here. (aprimorar-server:src/main/java/aprimorar/config/SecurityConfig.java:35)
+[MINOR] BUG - Parameter 5 to this constructor is marked "@NotNull" but null could be passed. (aprimorar-server:src/main/java/aprimorar/registration/shared/address/Address.java:57)
+[MINOR] CODE_SMELL - Remove this package. (aprimorar-server:src/main/java/aprimorar/appointment/api/event/package-info.java:?)
+[MINOR] CODE_SMELL - Remove this unused import 'aprimorar.registration.student.api.dto.StudentSummaryDTO'. (aprimorar-server:src/main/java/aprimorar/registration/student/internal/StudentController.java:7)
+[MINOR] CODE_SMELL - Remove this unused import 'aprimorar.shared.PageDTO'. (aprimorar-server:src/main/java/aprimorar/expense/api/ExpenseService.java:6)
+[MINOR] CODE_SMELL - Remove this unused import 'java.math.BigDecimal'. (aprimorar-server:src/main/java/aprimorar/dashboard/api/dto/DashboardSummaryResponseDTO.java:3)
+[MINOR] CODE_SMELL - Remove this unused import 'java.math.BigDecimal'. (aprimorar-server:src/main/java/aprimorar/dashboard/internal/DashboardServiceImpl.java:10)
+[MINOR] CODE_SMELL - Remove this unused import 'java.time.Instant'. (aprimorar-server:src/main/java/aprimorar/registration/student/internal/StudentController.java:14)
+[MINOR] CODE_SMELL - Remove this unused import 'org.springframework.data.domain.Pageable'. (aprimorar-server:src/main/java/aprimorar/appointment/internal/repository/AppointmentRepository.java:10)
+[MINOR] CODE_SMELL - Remove this unused import 'org.springframework.data.domain.Pageable'. (aprimorar-server:src/main/java/aprimorar/registration/student/internal/repository/StudentRepository.java:8)
+[MINOR] CODE_SMELL - Remove this unused import 'org.springframework.data.domain.Page'. (aprimorar-server:src/main/java/aprimorar/appointment/internal/repository/AppointmentRepository.java:9)
+[MINOR] CODE_SMELL - Remove this unused import 'org.springframework.data.domain.Page'. (aprimorar-server:src/main/java/aprimorar/registration/student/internal/repository/StudentRepository.java:7)
+[MINOR] CODE_SMELL - Use a primitive boolean expression here. (aprimorar-server:src/main/java/aprimorar/appointment/internal/AppointmentServiceImpl.java:409)
+[MINOR] CODE_SMELL - Use a primitive boolean expression here. (aprimorar-server:src/main/java/aprimorar/registration/parent/internal/ParentServiceImpl.java:118)
+[MINOR] CODE_SMELL - Use a primitive boolean expression here. (aprimorar-server:src/main/java/aprimorar/registration/parent/internal/ParentServiceImpl.java:122)

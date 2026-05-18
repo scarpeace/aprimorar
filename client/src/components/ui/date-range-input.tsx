@@ -9,6 +9,7 @@ interface DateRangeInputProps {
   endDate?: Date | null;
   onStartDateChange: (date: Date | null) => void;
   onEndDateChange: (date: Date | null) => void;
+  popperPlacement?: "top-start" | "top-end" | "bottom-start" | "bottom-end";
 }
 
 export const DateRangeInput = ({
@@ -16,6 +17,7 @@ export const DateRangeInput = ({
   endDate,
   onStartDateChange,
   onEndDateChange,
+  popperPlacement = "bottom-start",
 }: DateRangeInputProps) => {
   return (
     <div className="app-date-range flex w-full flex-wrap items-center gap-2 rounded-xl border border-base-300 bg-base-100 px-3 py-2 shadow-sm focus-within:border-primary/30 lg:w-auto">
@@ -36,6 +38,7 @@ export const DateRangeInput = ({
           placeholderText="Data inicial"
           wrapperClassName="w-full"
           popperClassName="app-date-range-popper"
+          popperPlacement={popperPlacement}
         />
       </div>
 
@@ -57,6 +60,7 @@ export const DateRangeInput = ({
           placeholderText="Data final"
           wrapperClassName="w-full"
           popperClassName="app-date-range-popper"
+          popperPlacement={popperPlacement}
         />
       </div>
     </div>

@@ -6,8 +6,10 @@ import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
 import aprimorar.appointment.api.dto.EmployeeAppointmentsResponseDTO;
 import aprimorar.appointment.api.dto.EmployeesFinanceSummaryResponseDTO;
+import aprimorar.appointment.api.dto.EmployeesWithFinanceResponseDTO;
 import aprimorar.appointment.api.dto.StudentAppointmentsResponseDTO;
 import aprimorar.appointment.api.dto.StudentsFinanceSummaryResponseDTO;
+import aprimorar.appointment.api.dto.StudentsWithFinanceResponseDTO;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +19,7 @@ import java.time.Instant;
 import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -143,6 +146,42 @@ public class AppointmentController {
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
         return ResponseEntity.ok(appointmentService.getEmployeesFinanceReport(startDate, endDate));
+    }
+
+    @GetMapping("/finance/employees")
+    @Operation(
+        operationId = "getEmployeesWithFinance",
+        description = "Lista colaboradores paginados com indicadores financeiros do periodo informado."
+    )
+    @ApiResponse(responseCode = "200", description = "Colaboradores retornados com financeiro por linha e resumo consolidado.")
+    public ResponseEntity<EmployeesWithFinanceResponseDTO> getEmployeesWithFinance(
+        @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false, defaultValue = "false") Boolean archived,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(
+            appointmentService.getEmployeesWithFinance(pageable, search, archived, startDate, endDate)
+        );
+    }
+
+    @GetMapping("/finance/students")
+    @Operation(
+        operationId = "getStudentsWithFinance",
+        description = "Lista alunos paginados com indicadores financeiros do periodo informado."
+    )
+    @ApiResponse(responseCode = "200", description = "Alunos retornados com financeiro por linha e resumo consolidado.")
+    public ResponseEntity<StudentsWithFinanceResponseDTO> getStudentsWithFinance(
+        @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false, defaultValue = "false") Boolean archived,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(
+            appointmentService.getStudentsWithFinance(pageable, search, archived, startDate, endDate)
+        );
     }
 
     @PutMapping("/{id}")

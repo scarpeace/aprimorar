@@ -4,6 +4,7 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   CircleDollarSign,
+  Clock3,
   Wallet,
 } from "lucide-react";
 import { FinanceKpiCard } from "./FinanceKpiCard";
@@ -14,6 +15,8 @@ type FinanceSummarySectionProps = {
   totalStudentPending: number;
   totalEmployeePaid: number;
   totalEmployeePending: number;
+  totalGeneralExpenses: number;
+  pendingGeneralExpenses: number;
   isError: boolean;
   error?: unknown;
 };
@@ -24,6 +27,8 @@ export function FinanceSummarySection({
   totalStudentPending,
   totalEmployeePaid,
   totalEmployeePending,
+  totalGeneralExpenses,
+  pendingGeneralExpenses,
   isError,
   error,
 }: Readonly<FinanceSummarySectionProps>) {
@@ -36,9 +41,6 @@ export function FinanceSummarySection({
               <span className="badge badge-primary badge-outline px-3 py-3">
                 Resumo institucional
               </span>
-              {/*<span className="badge badge-ghost px-3 py-3">
-                Baseado nas transacoes registradas
-              </span>*/}
             </div>
             <div>
               <h2 className="text-2xl font-bold text-base-content">
@@ -72,31 +74,63 @@ export function FinanceSummarySection({
             error={error}
           />
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <FinanceKpiCard
-              title="Recebido alunos"
-              value={brl.format(totalStudentCharged)}
-              tone="success"
-              icon={<ArrowDownRight className="h-5 w-5" />}
-            />
-            <FinanceKpiCard
-              title="Pendente alunos"
-              value={brl.format(totalStudentPending)}
-              tone="warning"
-              icon={<Wallet className="h-5 w-5" />}
-            />
-            <FinanceKpiCard
-              title="Pago colab."
-              value={brl.format(totalEmployeePaid)}
-              tone="primary"
-              icon={<ArrowUpRight className="h-5 w-5" />}
-            />
-            <FinanceKpiCard
-              title="Pendente colab."
-              value={brl.format(totalEmployeePending)}
-              tone="warning"
-              icon={<CircleDollarSign className="h-5 w-5" />}
-            />
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {/* Alunos */}
+            <div className="rounded-xl border border-base-200 bg-base-100 p-4">
+              <span className="badge badge-sm badge-outline mb-3">Alunos</span>
+              <div className="space-y-3">
+                <FinanceKpiCard
+                  title="Recebido"
+                  value={brl.format(totalStudentCharged)}
+                  tone="success"
+                  icon={<ArrowDownRight className="h-5 w-5" />}
+                />
+                <FinanceKpiCard
+                  title="Pendente"
+                  value={brl.format(totalStudentPending)}
+                  tone="warning"
+                  icon={<Wallet className="h-5 w-5" />}
+                />
+              </div>
+            </div>
+
+            {/* Colaboradores */}
+            <div className="rounded-xl border border-base-200 bg-base-100 p-4">
+              <span className="badge badge-sm badge-outline mb-3">Colaboradores</span>
+              <div className="space-y-3">
+                <FinanceKpiCard
+                  title="Pago"
+                  value={brl.format(totalEmployeePaid)}
+                  tone="success"
+                  icon={<ArrowUpRight className="h-5 w-5" />}
+                />
+                <FinanceKpiCard
+                  title="Pendente"
+                  value={brl.format(totalEmployeePending)}
+                  tone="warning"
+                  icon={<CircleDollarSign className="h-5 w-5" />}
+                />
+              </div>
+            </div>
+
+            {/* Despesas */}
+            <div className="rounded-xl border border-base-200 bg-base-100 p-4">
+              <span className="badge badge-sm badge-outline mb-3">Despesas</span>
+              <div className="space-y-3">
+                <FinanceKpiCard
+                  title="Pagas"
+                  value={brl.format(totalGeneralExpenses)}
+                  tone="success"
+                  icon={<ArrowUpRight className="h-5 w-5" />}
+                />
+                <FinanceKpiCard
+                  title="Pendentes"
+                  value={brl.format(pendingGeneralExpenses)}
+                  tone="warning"
+                  icon={<Clock3 className="h-5 w-5" />}
+                />
+              </div>
+            </div>
           </div>
         )}
       </div>

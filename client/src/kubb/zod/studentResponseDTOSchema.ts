@@ -31,7 +31,7 @@ export const studentResponseDTOSchema = z
       .datetime()
       .describe("Data e hora quando o aluno foi criado"),
     get address() {
-      return addressResponseDTOSchema.describe("Endereço do aluno");
+      return addressResponseDTOSchema.describe("Endereço");
     },
   })
   .describe("Dados do aluno retornados pela API");

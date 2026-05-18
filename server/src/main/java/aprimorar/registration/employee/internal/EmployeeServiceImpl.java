@@ -9,6 +9,7 @@ import aprimorar.registration.employee.api.event.EmployeeDeletedEvent;
 import aprimorar.registration.employee.api.exception.EmployeeNotFoundException;
 import aprimorar.registration.employee.internal.repository.EmployeeRepository;
 import aprimorar.registration.employee.internal.repository.EmployeeSpecifications;
+import aprimorar.registration.shared.address.Address;
 import aprimorar.registration.shared.PendingFinancialBalanceChecker;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.PageDTO;
@@ -46,6 +47,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO dto) {
+        Address address = Address.fromRequest(dto.address());
 
         Employee employee = new Employee(
             dto.name(),
@@ -54,7 +56,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             dto.contact(),
             dto.cpf(),
             dto.email(),
-            dto.duty()
+            dto.duty(),
+            address
         );
 
         Employee savedEmployee = employeeRepo.save(employee);
@@ -95,26 +98,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             .toList();
     }
 
-//    @Transactional(readOnly = true)
-//    public List<UUID> findIdsByNameContaining(String name) {
-//        if (name == null || name.trim().isEmpty()) {
-//            return List.of();
-//        }
-//        return employeeRepo.findByNameContainingIgnoreCase(name.trim())
-//            .stream()
-//            .map(Employee::getId)
-//            .toList();
-//    }
-
-//    @Transactional(readOnly = true)
-//    public Optional<UUID> findIdByEmail(String email) {
-//        if (email == null || email.trim().isEmpty()) {
-//            return java.util.Optional.empty();
-//        }
-//        return employeeRepo.findByEmail(MapperUtils.normalizeEmail(email))
-//            .map(Employee::getId);
-//    }
-
     @Transactional(readOnly = true)
     public EmployeeResponseDTO findById(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
@@ -130,48 +113,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         return true;
     }
 
-//    @Transactional(readOnly = true)
-//    public Map<UUID, EmployeeResponseDTO> findByIds(Collection<UUID> employeeIds) {
-//        if (employeeIds == null || employeeIds.isEmpty()) {
-//            return Map.of();
-//        }
-//        return employeeRepo.findAllById(employeeIds)
-//            .stream()
-//            .collect(Collectors.toMap(Employee::getId, Employee::toResponseDto));
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public boolean existsById(UUID id) {
-//        return employeeRepo.existsById(id);
-//    }
-//
     @Transactional(readOnly = true)
     public EmployeeResponseDTO getReferenceById(UUID id) {
         return findEmployeeOrThrow(id).toResponseDto();
     }
-
-//    @Transactional(readOnly = true)
-//    public EmployeeSummaryDTO getSummary(UUID employeeId, Instant startDate, Instant endDate) {
-//        if (!employeeRepo.existsById(employeeId)) {
-//            throw new EmployeeNotFoundException("Colaborador com o ID informado não encontrado");
-//        }
-//
-//        if (startDate == null || endDate == null) {
-//            long totalEvents = eventService.countByEmployeeId(employeeId);
-//            BigDecimal totalPaid = eventService.sumPaidByEmployeeId(employeeId);
-//            BigDecimal totalUnpaid = eventService.sumUnpaidByEmployeeId(employeeId);
-//
-//            log.info("Resumo geral gerado para o colaborador {}", employeeId);
-//            return new EmployeeSummaryDTO(totalEvents, totalPaid, totalUnpaid);
-//        }
-//
-//        long totalEventsInPeriod = eventService.countByEmployeeIdAndStartDateBetween(employeeId, startDate, endDate);
-//        BigDecimal totalPaidInPeriod = eventService.sumPaidByEmployeeIdInPeriod(employeeId, startDate, endDate);
-//        BigDecimal totalUnpaidInPeriod = eventService.sumUnpaidByEmployeeIdInPeriod(employeeId, startDate, endDate);
-//
-//        log.info("Resumo gerado para o colaborador {} no período de {} a {}", employeeId, startDate, endDate);
-//        return new EmployeeSummaryDTO(totalEventsInPeriod, totalPaidInPeriod, totalUnpaidInPeriod);
-//    }
 
     @Transactional
     public EmployeeResponseDTO updateEmployee(UUID employeeId, EmployeeRequestDTO request) {
@@ -183,8 +128,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         String normalizedContact = MapperUtils.normalizeContact(request.contact());
         String normalizedEmail = MapperUtils.normalizeEmail(request.email());
+        Address address = Address.fromRequest(request.address());
 
-        employee.updateDetails(request.name(), request.birthdate(), request.pix(), normalizedContact, normalizedEmail, request.duty());
+        employee.updateDetails(request.name(), request.birthdate(), request.pix(), normalizedContact, normalizedEmail, request.duty(), address);
 
         log.info("Colaborador {} atualizado com sucesso.", employee.getName().toUpperCase());
         return employee.toResponseDto();
@@ -242,20 +188,4 @@ public class EmployeeServiceImpl implements EmployeeService {
             .findById(employeeId)
             .orElseThrow(() -> new EmployeeNotFoundException("Colaborador não encontrado no Banco de Dados"));
     }
-
-//    private void ensureEmployeeUniqueness(String cpf, String email) {
-//        if (employeeRepo.existsByCpf(cpf)) {
-//            throw new EmployeeAlreadyExistsException("Colaborador com o CPF informado já cadastrado no banco de dados");
-//        }
-//
-//        if (employeeRepo.existsByEmail(email)) {
-//            throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
-//        }
-//    }
-//
-//    private void ensureEmployeeUniquenessForUpdate(String email, UUID employeeId) {
-//        if (employeeRepo.existsByEmailAndIdNot(email, employeeId)) {
-//            throw new EmployeeAlreadyExistsException("Colaborador com o Email informado já cadastrado no banco de dados");
-//        }
-//    }
 }

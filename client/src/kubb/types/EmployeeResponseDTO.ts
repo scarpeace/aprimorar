@@ -3,6 +3,8 @@
  * Do not edit manually.
  */
 
+import type { AddressResponseDTO } from "./AddressResponseDTO.ts";
+
 export const employeeResponseDTODutyEnum = {
   TEACHER: "TEACHER",
   ADM: "ADM",
@@ -48,6 +50,11 @@ export type EmployeeResponseDTO = {
    * @type string
    */
   duty: EmployeeResponseDTODutyEnumKey;
+  /**
+   * @description Endereço
+   * @type object
+   */
+  address: AddressResponseDTO;
   /**
    * @type boolean
    */

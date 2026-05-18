@@ -4,6 +4,7 @@ import aprimorar.registration.shared.enums.BrazilianStates;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
+@Schema(description = "Endereço")
 public record AddressResponseDTO(
         @NotNull String street,
         @NotNull String district,

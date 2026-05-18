@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+@Schema(description = "Endereço")
 public record AddressRequestDTO(
         @NotBlank(message = "A rua do endereço é obrigatória")
         @Schema(description = "Rua ou Condomínio", nullable = false, minLength = 3, maxLength = 255)

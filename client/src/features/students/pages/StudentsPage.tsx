@@ -2,28 +2,52 @@ import { Button } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { useGetStudents } from "@/kubb";
+import { useGetStudentsWithFinance } from "@/kubb";
 import type { StudentResponseDTO } from "@/kubb";
+import { useDateFilter } from "@/hooks/use-date-filter";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { GraduationCap, Plus } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StudentsTable } from "../components/StudentsTable";
 import { StudentForm } from "../components/StudentForm";
+import { StudentKPIs } from "../components/StudentKPIs";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [showArchived, setShowArchived] = useState(false);
+  const [hideCharged, setHideCharged] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentResponseDTO | null>(null);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const { startDate, endDate } = useDateFilter();
 
-  const studentsQuery = useGetStudents({
+  const studentsWithFinanceQuery = useGetStudentsWithFinance({
     page: currentPage,
     search: debouncedSearchTerm,
     archived: showArchived,
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
   });
+
+  const displayedStudents = useMemo(() => {
+    if (!studentsWithFinanceQuery.data || !hideCharged) {
+      return studentsWithFinanceQuery.data;
+    }
+
+    return {
+      ...studentsWithFinanceQuery.data,
+      content: (studentsWithFinanceQuery.data.content ?? []).filter(
+        (student) => (student.totalPending ?? 0) > 0,
+      ),
+    };
+  }, [hideCharged, studentsWithFinanceQuery.data]);
+
+  const handleHideChargedChange = (value: boolean) => {
+    setHideCharged(value);
+    setCurrentPage(0);
+  };
 
   const headerProps = {
     description: "Gerencie cadastros e matrículas.",
@@ -42,9 +66,31 @@ export function StudentsPage() {
     setIsFormOpen(false);
   };
 
+  const handleShowArchivedChange = (value: boolean) => {
+    setShowArchived(value);
+    setCurrentPage(0);
+  };
+
+  const financeSummary = studentsWithFinanceQuery.data?.financeSummary;
+
   return (
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-4">
+        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
+          <div className="mb-4">
+            <h3 className="text-lg font-bold text-base-content">Resumo financeiro dos alunos</h3>
+            <p className="text-sm text-base-content/60">
+              Indicadores consolidados respeitando o periodo selecionado nos filtros.
+            </p>
+          </div>
+
+          <StudentKPIs
+            totalEvents={financeSummary?.totalEvents ?? 0}
+            totalCharged={financeSummary?.totalCharged ?? 0}
+            totalPending={financeSummary?.totalPending ?? 0}
+          />
+        </section>
+
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_220ms_ease-out_both]">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-1">
@@ -79,8 +125,15 @@ export function StudentsPage() {
                 label="Arquivados"
                 tip="Mostrar alunos arquivados"
                 toggled={showArchived}
-                setToggle={setShowArchived}
+                setToggle={handleShowArchivedChange}
                 className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
+              />
+              <ToggleSwitch
+                label="Ocultar cobrados"
+                tip="Mostrar apenas alunos com pendencias no periodo"
+                toggled={hideCharged}
+                setToggle={handleHideChargedChange}
+                className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
               />
             </div>
           </div>
@@ -97,11 +150,11 @@ export function StudentsPage() {
           </div>
 
           <StudentsTable
-            students={studentsQuery.data}
+            students={displayedStudents}
             onPageChange={setCurrentPage}
             currentPage={currentPage}
-            isPending={studentsQuery.isPending}
-            error={studentsQuery.error}
+            isPending={studentsWithFinanceQuery.isPending}
+            error={studentsWithFinanceQuery.error}
           />
         </section>
 

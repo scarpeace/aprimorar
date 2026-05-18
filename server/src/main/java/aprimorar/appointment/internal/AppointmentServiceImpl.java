@@ -5,7 +5,10 @@ import java.math.RoundingMode;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +28,16 @@ import aprimorar.appointment.api.dto.AppointmentResponseDTO;
 import aprimorar.appointment.api.dto.EmployeeAppointmentsResponseDTO;
 import aprimorar.appointment.api.dto.EmployeeFinanceSummaryDTO;
 import aprimorar.appointment.api.dto.EmployeesFinanceSummaryResponseDTO;
+import aprimorar.appointment.api.dto.EmployeesWithFinanceResponseDTO;
+import aprimorar.appointment.api.dto.EmployeeWithFinanceDTO;
 import aprimorar.appointment.api.dto.EmployeeSummaryDTO;
+import aprimorar.appointment.api.dto.FinanceSummaryDTO;
 import aprimorar.appointment.api.dto.StudentAppointmentsResponseDTO;
 import aprimorar.appointment.api.dto.StudentFinanceSummaryDTO;
 import aprimorar.appointment.api.dto.StudentsFinanceSummaryResponseDTO;
+import aprimorar.appointment.api.dto.StudentsWithFinanceResponseDTO;
 import aprimorar.appointment.api.dto.StudentSummaryDTO;
+import aprimorar.appointment.api.dto.StudentWithFinanceDTO;
 import aprimorar.appointment.api.exception.AppointmentNotFoundException;
 import aprimorar.appointment.api.exception.AppointmentScheduleConflictException;
 import aprimorar.appointment.api.exception.InvalidAppointmentException;
@@ -108,8 +116,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Boolean chargedFilter = Boolean.TRUE.equals(hideCharged) ? Boolean.FALSE : null;
         Boolean paidFilter = Boolean.TRUE.equals(hidePaid) ? Boolean.FALSE : null;
 
-        Specification<Appointment> spec = Specification
-            .where(AppointmentSpecifications.searchContains(search))
+        Specification<Appointment> spec = AppointmentSpecifications.searchContains(search)
             .and(AppointmentSpecifications.withStartDateAfter(startDate))
             .and(AppointmentSpecifications.withEndDateBefore(endDate))
             .and(AppointmentSpecifications.withStudentCharged(chargedFilter))
@@ -141,8 +148,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Boolean paidFilter = Boolean.TRUE.equals(hidePaid) ? Boolean.FALSE : null;
 
-        Specification<Appointment> spec = Specification
-            .where(AppointmentSpecifications.withEmployeeId(employeeId))
+        Specification<Appointment> spec = AppointmentSpecifications.withEmployeeId(employeeId)
             .and(AppointmentSpecifications.withStartDateAfter(startDate))
             .and(AppointmentSpecifications.withEndDateBefore(endDate))
             .and(AppointmentSpecifications.withEmployeePaid(paidFilter));
@@ -203,6 +209,74 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Transactional(readOnly = true)
+    public EmployeesWithFinanceResponseDTO getEmployeesWithFinance(
+        Pageable pageable,
+        String search,
+        Boolean archived,
+        Instant startDate,
+        Instant endDate
+    ) {
+        PageDTO<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search, archived);
+        List<EmployeeFinanceSummaryDTO> financeRows = appointmentRepo.findEmployeeFinanceSummaries(startDate, endDate)
+            .stream()
+            .map(this::toEmployeeFinanceSummary)
+            .toList();
+
+        Map<UUID, EmployeeFinanceSummaryDTO> financeByEmployeeId = financeRows.stream()
+            .filter(employee -> employee.employeeId() != null)
+            .collect(Collectors.toMap(EmployeeFinanceSummaryDTO::employeeId, Function.identity()));
+
+        List<EmployeeWithFinanceDTO> content = employees.content().stream()
+            .map(employee -> toEmployeeWithFinance(employee, financeByEmployeeId.get(employee.id())))
+            .toList();
+
+        FinanceSummaryDTO summary = summarizeEmployeeFinance(financeRows);
+
+        return new EmployeesWithFinanceResponseDTO(
+            employees.page(),
+            employees.size(),
+            employees.totalElements(),
+            employees.totalPages(),
+            content,
+            summary
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public StudentsWithFinanceResponseDTO getStudentsWithFinance(
+        Pageable pageable,
+        String search,
+        Boolean archived,
+        Instant startDate,
+        Instant endDate
+    ) {
+        PageDTO<StudentResponseDTO> students = studentService.getStudents(pageable, search, archived);
+        List<StudentFinanceSummaryDTO> financeRows = appointmentRepo.findStudentFinanceSummaries(startDate, endDate)
+            .stream()
+            .map(this::toStudentFinanceSummary)
+            .toList();
+
+        Map<UUID, StudentFinanceSummaryDTO> financeByStudentId = financeRows.stream()
+            .filter(student -> student.studentId() != null)
+            .collect(Collectors.toMap(StudentFinanceSummaryDTO::studentId, Function.identity()));
+
+        List<StudentWithFinanceDTO> content = students.content().stream()
+            .map(student -> toStudentWithFinance(student, financeByStudentId.get(student.id())))
+            .toList();
+
+        StudentSummaryDTO summary = summarizeStudentFinance(financeRows);
+
+        return new StudentsWithFinanceResponseDTO(
+            students.page(),
+            students.size(),
+            students.totalElements(),
+            students.totalPages(),
+            content,
+            summary
+        );
+    }
+
+    @Transactional(readOnly = true)
     public StudentAppointmentsResponseDTO getAppointmentsByStudentId(
         Pageable pageable,
         UUID studentId,
@@ -212,8 +286,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     ) {
         studentService.findById(studentId);
 
-        Specification<Appointment> spec = Specification
-            .where(AppointmentSpecifications.withStudentId(studentId))
+        Specification<Appointment> spec = AppointmentSpecifications.withStudentId(studentId)
             .and(AppointmentSpecifications.withStartDateAfter(startDate))
             .and(AppointmentSpecifications.withEndDateBefore(endDate))
             .and(AppointmentSpecifications.withStudentCharged(charged));
@@ -353,6 +426,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         return new StudentFinanceSummaryDTO(
             projection.getStudentId(),
             projection.getStudentName(),
+            projection.getTotalEvents(),
             projection.getTotalCharged(),
             projection.getTotalPending()
         );
@@ -362,8 +436,72 @@ public class AppointmentServiceImpl implements AppointmentService {
         return new EmployeeFinanceSummaryDTO(
             projection.getEmployeeId(),
             projection.getEmployeeName(),
+            projection.getTotalEvents(),
             projection.getTotalPaid(),
             projection.getTotalPending()
         );
+    }
+
+    private EmployeeWithFinanceDTO toEmployeeWithFinance(
+        EmployeeResponseDTO employee,
+        EmployeeFinanceSummaryDTO finance
+    ) {
+        return new EmployeeWithFinanceDTO(
+            employee.id(),
+            employee.name(),
+            employee.cpf(),
+            employee.contact(),
+            employee.duty(),
+            employee.createdAt(),
+            employee.active(),
+            finance != null ? finance.totalPaid() : BigDecimal.ZERO,
+            finance != null ? finance.totalPending() : BigDecimal.ZERO
+        );
+    }
+
+    private FinanceSummaryDTO summarizeEmployeeFinance(List<EmployeeFinanceSummaryDTO> financeRows) {
+        long totalEvents = 0;
+        BigDecimal totalPaid = BigDecimal.ZERO;
+        BigDecimal totalPending = BigDecimal.ZERO;
+
+        for (EmployeeFinanceSummaryDTO employee : financeRows) {
+            totalEvents += employee.totalEvents();
+            totalPaid = totalPaid.add(employee.totalPaid());
+            totalPending = totalPending.add(employee.totalPending());
+        }
+
+        return new FinanceSummaryDTO(totalEvents, totalPaid, totalPending);
+    }
+
+    private StudentWithFinanceDTO toStudentWithFinance(
+        StudentResponseDTO student,
+        StudentFinanceSummaryDTO finance
+    ) {
+        return new StudentWithFinanceDTO(
+            student.id(),
+            student.name(),
+            student.cpf(),
+            student.contact(),
+            student.age(),
+            student.school(),
+            student.createdAt(),
+            student.active(),
+            finance != null ? finance.totalCharged() : BigDecimal.ZERO,
+            finance != null ? finance.totalPending() : BigDecimal.ZERO
+        );
+    }
+
+    private StudentSummaryDTO summarizeStudentFinance(List<StudentFinanceSummaryDTO> financeRows) {
+        long totalEvents = 0;
+        BigDecimal totalCharged = BigDecimal.ZERO;
+        BigDecimal totalPending = BigDecimal.ZERO;
+
+        for (StudentFinanceSummaryDTO student : financeRows) {
+            totalEvents += student.totalEvents();
+            totalCharged = totalCharged.add(student.totalCharged());
+            totalPending = totalPending.add(student.totalPending());
+        }
+
+        return new StudentSummaryDTO(totalEvents, totalCharged, totalPending);
     }
 }

@@ -7,18 +7,9 @@ import { Button } from "@/components/ui/button";
 import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
 import { brazilianStates } from "@/lib/utils/brazilianStates";
 import type { StudentResponseDTO } from "@/kubb";
+import { formatDateForInput } from "@/lib/utils/formatter";
 import { studentFormSchema, type StudentFormSchema } from "../forms/studentFormSchema";
 import { useStudentMutations } from "../hooks/student-mutations";
-
-function formatBirthdateForForm(birthdate?: string) {
-  if (!birthdate) return "";
-
-  const [year, month, day] = birthdate.split("-");
-
-  if (!year || !month || !day) return birthdate;
-
-  return `${day}/${month}/${year}`;
-}
 
 interface StudentFormProps {
   initialData?: StudentResponseDTO | null;
@@ -36,7 +27,7 @@ export function StudentForm({ initialData, onSuccess, onCancel }: StudentFormPro
     defaultValues: {
       name: initialData?.name ?? "",
       cpf: initialData?.cpf ?? "",
-      birthdate: formatBirthdateForForm(initialData?.birthdate),
+      birthdate: formatDateForInput(initialData?.birthdate),
       contact: initialData?.contact ?? "",
       email: initialData?.email ?? "",
       school: initialData?.school ?? "",

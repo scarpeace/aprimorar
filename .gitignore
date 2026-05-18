@@ -36,3 +36,4 @@ kubb
 docs
 
 codebook.toml
+.env.local
