@@ -1,6 +1,7 @@
 package aprimorar.registration.employee.internal;
 
 import aprimorar.registration.employee.api.EmployeeService;
+import aprimorar.registration.employee.api.dto.EmployeeCountSummaryDTO;
 import aprimorar.registration.employee.api.dto.EmployeeRequestDTO;
 import aprimorar.registration.employee.api.dto.EmployeeOptionsDTO;
 import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
@@ -59,6 +60,14 @@ public class EmployeeController {
     ) {
         PageDTO<EmployeeResponseDTO> employees = employeeService.getEmployees(pageable, search, archived);
         return ResponseEntity.ok(employees);
+    }
+
+    @GetMapping("/summary")
+    @Operation(operationId = "getEmployeeSummary", description = "Retorna indicadores quantitativos dos colaboradores cadastrados.")
+    @ApiResponse(responseCode = "200", description = "Resumo de colaboradores retornado com sucesso.")
+    public ResponseEntity<EmployeeCountSummaryDTO> getSummary() {
+        EmployeeCountSummaryDTO summary = employeeService.getSummary();
+        return ResponseEntity.ok(summary);
     }
 
     @GetMapping("/options")

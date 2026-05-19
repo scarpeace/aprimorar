@@ -4,11 +4,11 @@ import { useHookFormMask } from "use-mask-input";
 import { Button } from "@/components/ui/button";
 import { TriangleAlert } from "lucide-react";
 import type { ParentResponseDTO } from "@/kubb";
-import { parentFormSchema, type ParentFormSchema } from "../forms/parentFormSchema";
+import { parentFormSchema, type ParentFormSchema } from "../lib/parentFormSchema.ts";
 import { useParentMutations } from "../hooks/parent-mutations";
 import { toast } from "sonner";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { formatDateForInput } from "@/lib/utils/formatter";
+import { getFriendlyErrorMessage } from "@/lib/shared/api.ts";
 
 interface ParentFormProps {
   initialData?: ParentResponseDTO | null;
@@ -66,11 +66,11 @@ export function ParentForm({ initialData, onSuccess, onCancel }: ParentFormProps
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
         <fieldset className="fieldset md:col-span-2">
           <legend className="fieldset-legend">Nome</legend>
-          <input 
-            type="text" 
-            className="input w-full" 
-            {...register("name")} 
-            placeholder="Nome completo" 
+          <input
+            type="text"
+            className="input w-full"
+            {...register("name")}
+            placeholder="Nome completo"
           />
           {errors?.name && (
             <p className="label text-error">
@@ -82,11 +82,11 @@ export function ParentForm({ initialData, onSuccess, onCancel }: ParentFormProps
 
         <fieldset className="fieldset md:col-span-2">
           <legend className="fieldset-legend">Email</legend>
-          <input 
-            type="text" 
-            className="input w-full" 
-            {...register("email")} 
-            placeholder="email@email.com" 
+          <input
+            type="text"
+            className="input w-full"
+            {...register("email")}
+            placeholder="email@email.com"
           />
           {errors?.email && (
             <p className="label text-error">

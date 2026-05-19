@@ -4,9 +4,8 @@ import { Suspense, lazy } from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { Toaster } from "sonner"
 import { ErrorBoundary } from "./components/ui/error-boundary"
-import { DateFilterProvider } from "./contexts/DateFilterProvider"
 
-const DashboardPage = lazy(() => import("@/features/dashboard/DashboardPage").then((module) => ({ default: module.DashboardPage })))
+const DashboardPage = lazy(() => import("@/features/dashboard/pages/DashboardPage").then((module) => ({ default: module.DashboardPage })))
 
 const StudentsPage = lazy(() => import("@/features/students/pages/StudentsPage").then((module) => ({ default: module.StudentsPage })))
 const StudentDetailsPage = lazy(() => import("@/features/students/pages/StudentDetailsPage").then((module) => ({ default: module.StudentDetailsPage })))
@@ -34,51 +33,49 @@ function App() {
   z.config(pt())
 
   return (
-    <DateFilterProvider>
-      <BrowserRouter>
-        <Toaster position="top-right" richColors />
-        <ErrorBoundary>
-          <Suspense fallback={<PageLoading message="Carregando tela..." />}>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
+    <BrowserRouter>
+      <Toaster position="top-right" richColors />
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoading message="Carregando tela..." />}>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
 
+            <Route
+              element={(
+                <MainLayout />
+              )}
+            >
+              <Route path="/" element={<DashboardPage />} />
+
+              <Route path="/students" element={<StudentsPage />} />
+              <Route path="/students/:id" element={<StudentDetailsPage />} />
+
+              <Route path="/employees" element={<EmployeesPage />} />
+              <Route path="/employees/:id" element={<EmployeeDetailPage />} />
+
+              <Route path="/appointments" element={<AppointmentsPage />} />
+              <Route path="/appointments/:id" element={<AppointmentDetailPage />} />
+
+              <Route path="/parents" element={<ParentsPage />} />
+              <Route path="/parents/:id" element={<ParentDetailPage />} />
+
+              <Route path="/finance" element={<FinancesPage />} />
+              <Route path="/finance/expenses" element={<FinancesPage />} />
+              <Route path="/finance/expenses/:id" element={<ExpenseDetailPage />} />
+              <Route path="/finance/settlement" element={<FinancesPage />} />
+
+              <Route path="/admin" element={<AdminPage />} />
               <Route
-                element={(
-                  <MainLayout />
-                )}
-              >
-                <Route path="/" element={<DashboardPage />} />
+                path="/admin/users"
+                element={<AdminPage />}
+              />
+            </Route>
 
-                <Route path="/students" element={<StudentsPage />} />
-                <Route path="/students/:id" element={<StudentDetailsPage />} />
-
-                <Route path="/employees" element={<EmployeesPage />} />
-                <Route path="/employees/:id" element={<EmployeeDetailPage />} />
-
-                <Route path="/appointments" element={<AppointmentsPage />} />
-                <Route path="/appointments/:id" element={<AppointmentDetailPage />} />
-
-                <Route path="/parents" element={<ParentsPage />} />
-                <Route path="/parents/:id" element={<ParentDetailPage />} />
-
-                <Route path="/finance" element={<FinancesPage />} />
-                <Route path="/finance/expenses" element={<FinancesPage />} />
-                <Route path="/finance/expenses/:id" element={<ExpenseDetailPage />} />
-                <Route path="/finance/settlement" element={<FinancesPage />} />
-
-                <Route path="/admin" element={<AdminPage />} />
-                <Route
-                  path="/admin/users"
-                  element={<AdminPage />}
-                />
-              </Route>
-
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Suspense>
-        </ErrorBoundary>
-      </BrowserRouter>
-    </DateFilterProvider>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
+    </BrowserRouter>
   )
 }
 

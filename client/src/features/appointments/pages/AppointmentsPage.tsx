@@ -12,8 +12,6 @@ import { AppointmentsListSection } from "../components/AppointmentsListSection";
 export function AppointmentsPage() {
   const {
     search,
-    startDate,
-    endDate,
     hideCharged,
     hidePaid,
     page,
@@ -58,17 +56,15 @@ export function AppointmentsPage() {
             </div>
           </div>
 
-          <div className="mt-4 flex items-center flex-row mb-3 gap-3">
+          <div className="mt-3 flex items-center flex-row justify-between">
             <ListSearchInput
               placeholder="Buscar por aluno, colaborador, conteúdo ou descrição"
               ariaLabel="Buscar atendimento"
               value={search}
               onChange={handleSearchChange}
             />
-            </div>
 
-            <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-row items-center gap-3">
                 <ToggleSwitch
                   label="Cobrança Pendente"
                   toggled={hideCharged}
@@ -90,15 +86,14 @@ export function AppointmentsPage() {
                   <RotateCcw className="h-4 w-4" />
                   Limpar filtros
                 </Button>
-              ) : null}
+            ) : null}
             </div>
+
         </section>
 
         <AppointmentsListSection
           page={page}
           search={search}
-          startDate={startDate}
-          endDate={endDate}
           hideCharged={hideCharged}
           hidePaid={hidePaid}
           onPageChange={handlePageChange}

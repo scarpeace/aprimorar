@@ -4,8 +4,6 @@ import { AppointmentsTable } from "./AppointmentsTable";
 type AppointmentsListSectionProps = {
   page: number;
   search: string;
-  startDate?: Date | null;
-  endDate?: Date | null;
   hideCharged: boolean;
   hidePaid: boolean;
   onPageChange: (page: number) => void;
@@ -14,8 +12,6 @@ type AppointmentsListSectionProps = {
 export function AppointmentsListSection({
   page,
   search,
-  startDate,
-  endDate,
   hideCharged,
   hidePaid,
   onPageChange,
@@ -25,8 +21,6 @@ export function AppointmentsListSection({
     size: 20,
     sort: ["startDate,desc", "id,asc"],
     search: search || undefined,
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
     hideCharged: hideCharged || undefined,
     hidePaid: hidePaid || undefined,
   });

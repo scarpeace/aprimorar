@@ -8,7 +8,7 @@ import {
 } from "recharts";
 
 import { type DashboardSummaryResponseDTO } from "@/kubb";
-import { EventContentLabels } from "@/lib/shared/eventContentLables";
+import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 
 type ClassesByContentDTO = NonNullable<DashboardSummaryResponseDTO["charts"]>[number];
 type ChartDatum = {

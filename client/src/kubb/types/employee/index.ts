@@ -28,6 +28,11 @@ export type {
   GetEmployeeOptionsQueryResponse,
 } from "./GetEmployeeOptions.ts";
 export type {
+  GetEmployeeSummary200,
+  GetEmployeeSummaryQuery,
+  GetEmployeeSummaryQueryResponse,
+} from "./GetEmployeeSummary.ts";
+export type {
   GetEmployees200,
   GetEmployeesQuery,
   GetEmployeesQueryParams,

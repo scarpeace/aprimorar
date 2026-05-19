@@ -1,7 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import {
   getAppointmentByIdQueryKey,
   getAppointmentFinanceReportQueryKey,
@@ -13,6 +12,7 @@ import {
   useToggleStudentAppointmentCharge,
   useUpdateAppointment,
 } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 export function useAppointmentMutations() {
   const queryClient = useQueryClient();

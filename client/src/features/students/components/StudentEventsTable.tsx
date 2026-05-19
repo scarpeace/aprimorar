@@ -5,7 +5,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import type { AppointmentResponseDTO, PageDTOAppointmentResponseDTO } from "@/kubb";
-import { EventContentLabels } from "@/lib/shared/eventContentLables";
+import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
 import { memo } from "react";

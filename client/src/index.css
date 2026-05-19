@@ -331,4 +331,24 @@
   .app-dashboard-kpi-grid {
     @apply grid grid-cols-1 gap-[1.15rem] md:grid-cols-2 lg:grid-cols-4;
   }
+
+  .fc .fc-daygrid-day {
+    cursor: pointer;
+    transition: background 160ms ease;
+  }
+
+  .fc .fc-daygrid-day:hover {
+    background: color-mix(in srgb, var(--app-primary) 9%, transparent);
+  }
+
+  .fc .fc-event {
+    cursor: pointer;
+    transition: filter 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .fc .fc-event:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px -10px color-mix(in srgb, var(--app-text) 45%, transparent);
+  }
 }

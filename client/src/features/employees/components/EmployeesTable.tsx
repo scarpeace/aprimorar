@@ -3,7 +3,7 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import type { EmployeesWithFinanceResponseDTO } from "@/kubb";
-import { dutyLabels } from "../utils/dutyLabels";
+import { dutyLabels } from "../lib/dutyLabels";
 import {
   brl,
   formatCpf,

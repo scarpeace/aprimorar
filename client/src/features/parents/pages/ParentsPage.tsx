@@ -4,7 +4,7 @@ import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetParents } from "@/kubb";
 import type { ParentResponseDTO } from "@/kubb";
-import { useDebounce } from "@/lib/shared/use-debounce";
+import { useDebounce } from "@/lib/hooks/use-debounce.ts";
 import { Handshake, Plus } from "lucide-react";
 import { useState } from "react";
 import { ParentsTable } from "../components/ParentsTable";

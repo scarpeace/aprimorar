@@ -68,6 +68,15 @@ Para iniciar o projeto, você precisará ter o **Docker** e o **Docker Compose**
    ./mvnw spring-boot:run
    ```
 
+   Se você quiser que o seed de `server/src/main/resources/data.sql` rode durante a inicialização em desenvolvimento, ajuste temporariamente `server/src/main/resources/application-dev.yml` para:
+   ```yaml
+   spring:
+     sql:
+       init:
+         mode: always
+   ```
+   Depois, reinicie o backend.
+
 4. **Execute o Frontend:**
    No diretório `client/`:
    ```bash

@@ -1,4 +1,4 @@
-import { fromDateToDatetimeLocalInput } from "@/lib/utils/dateFormatter";
+import { fromDateToDatetimeLocalInput } from "@/lib/utils/date-utils";
 import { Calendar } from "lucide-react";
 import DatePicker from "react-datepicker";
 import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";

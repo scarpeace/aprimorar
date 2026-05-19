@@ -8,7 +8,7 @@ import {
   useUnarchiveEmployee,
   useUpdateEmployee,
 } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";

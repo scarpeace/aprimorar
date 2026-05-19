@@ -8,7 +8,7 @@ import { ParentSelectDropdown } from "@/features/parents/components/ParentSelect
 import { brazilianStates } from "@/lib/utils/brazilianStates";
 import type { StudentResponseDTO } from "@/kubb";
 import { formatDateForInput } from "@/lib/utils/formatter";
-import { studentFormSchema, type StudentFormSchema } from "../forms/studentFormSchema";
+import { studentFormSchema, type StudentFormSchema } from "../lib/studentFormSchema.ts";
 import { useStudentMutations } from "../hooks/student-mutations";
 
 interface StudentFormProps {

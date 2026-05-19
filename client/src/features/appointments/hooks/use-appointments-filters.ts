@@ -1,9 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import { useDateFilter } from "@/hooks/use-date-filter";
 
 export function useAppointmentsFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { startDate, endDate, clearDateFilters } = useDateFilter();
 
   const search = searchParams.get("search") ?? "";
   const hideCharged = searchParams.get("hideCharged") === "true";
@@ -45,13 +43,10 @@ export function useAppointmentsFilters() {
     newParams.delete("hidePaid");
     newParams.delete("page");
     setSearchParams(newParams);
-    clearDateFilters();
   };
 
   return {
     search,
-    startDate,
-    endDate,
     hideCharged,
     hidePaid,
     page,
@@ -60,6 +55,6 @@ export function useAppointmentsFilters() {
     handleHidePaidToggle,
     handlePageChange,
     handleClearFilters,
-    hasFilters: !!(search || startDate || endDate || hideCharged || hidePaid || page > 0),
+    hasFilters: !!(search || hideCharged || hidePaid || page > 0),
   };
 }

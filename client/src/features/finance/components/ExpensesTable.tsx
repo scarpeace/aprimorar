@@ -2,40 +2,27 @@ import { Button } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type {
-  ExpenseResponseDTO,
-  PageDTOExpenseResponseDTO,
-  ToggleExpensePaymentMutationResponse,
-} from "@/kubb";
+import type { PageDTOExpenseResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear } from "@/lib/utils/formatter";
-import type { ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
-import type { UseMutationResult } from "@tanstack/react-query";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { ExpenseCategoryBadge } from "./ExpenseCategoryBadge";
 import { ToggleExpensePaymentButton } from "./ToggleExpensePaymentButton";
+import { useNavigate } from "react-router-dom";
 
-type ToggleExpensePaymentMutation = UseMutationResult<
-  ToggleExpensePaymentMutationResponse,
-  ResponseErrorConfig<Error>,
-  { id: string },
-  unknown
->;
 
 type ExpensesTableProps = {
   expenses?: PageDTOExpenseResponseDTO;
   isPending: boolean;
   error: unknown;
-  toggleExpensePayment: ToggleExpensePaymentMutation;
-  onNavigate?: (expense: ExpenseResponseDTO) => void;
 };
 
 export function ExpensesTable({
   expenses,
   isPending,
   error,
-  toggleExpensePayment,
-  onNavigate,
 }: Readonly<ExpensesTableProps>) {
+  const navigate = useNavigate();
+
   if (error) {
     return (
       <ErrorCard
@@ -49,9 +36,8 @@ export function ExpensesTable({
     return <LoadingSpinner text="Carregando despesas gerais..." />;
   }
 
-  const rows = expenses?.content ?? [];
 
-  if (rows.length === 0) {
+  if (expenses?.content.length === 0) {
     return (
       <EmptyCard
         title="Nenhuma despesa encontrada"
@@ -84,7 +70,7 @@ export function ExpensesTable({
         </thead>
 
         <tbody className="whitespace-nowrap">
-          {rows.map((expense) => (
+          {expenses?.content.map((expense) => (
             <tr
               key={expense.id ?? `${expense.date}-${expense.description}`}
             >
@@ -107,15 +93,12 @@ export function ExpensesTable({
               </td>
               <td>
                 <div className="flex justify-end gap-2">
-                  {expense.id ? (
+
                     <ToggleExpensePaymentButton
                       iconOnly
                       isPaid={!!expense.paymentDate}
-                      toggleExpensePayment={toggleExpensePayment}
-                      onTogglePayment={() => toggleExpensePayment.mutate({ id: expense.id! })}
+                      expenseId={expense.id!}
                     />
-                  ) : null}
-                  {onNavigate ? (
                     <Button
                       type="button"
                       size="sm"
@@ -123,11 +106,10 @@ export function ExpensesTable({
                       className="btn-square"
                       title="Ver detalhes"
                       aria-label="Ver detalhes"
-                      onClick={() => onNavigate(expense)}
+                      onClick={() => navigate(`/finance/expenses/${expense.id}`)}
                     >
                       <SquareArrowOutUpRight className="h-4 w-4" />
                     </Button>
-                  ) : null}
                 </div>
               </td>
             </tr>

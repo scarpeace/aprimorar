@@ -1,16 +1,18 @@
 import { PageLayout } from "@/components/layout/PageLayout";
+import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import {
   useGetAppointmentsByEmployeeId,
   useGetEmployeeById,
 } from "@/kubb";
-import { FileUser } from "lucide-react";
+import { CircleDollarSign, Clock3, FileUser } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { EmployeeKPIs } from "../components/EmployeeKPIs";
+import { KpiCard } from "@/components/ui/kpi-card";
+import { brl } from "@/lib/utils/formatter";
 import { EmployeeEventsTable } from "../components/EmployeeEventsTable";
 import { EmployeeInfoSection } from "../components/EmployeeInfoSection";
-import { EmployeeEditModal } from "../components/EmployeeEditModal";
-import { useDateFilter } from "@/hooks/use-date-filter";
+import { EmployeeForm } from "../components/EmployeeForm";
+import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 
 const headerProps = {
   description: "Veja e gerencie as informações do colaborador",
@@ -26,7 +28,8 @@ export function EmployeeDetailPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [hidePaid, setHidePaid] = useState(false);
 
-  const { startDate, endDate } = useDateFilter();
+  const dateFilter = usePageDateFilter();
+  const { startDate, endDate } = dateFilter;
 
   const employeeQuery = useGetEmployeeById(employeeId);
 
@@ -50,11 +53,21 @@ export function EmployeeDetailPage() {
       </div>
 
       <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
-        <EmployeeKPIs
-          totalEvents={employeeAppointments.data?.summary?.totalEvents}
-          totalPaid={employeeAppointments.data?.summary?.totalPaid}
-          totalUnpaid={employeeAppointments.data?.summary?.totalUnpaid}
-        />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <KpiCard
+            label="Total pago"
+            value={<span className="text-success">{brl.format(employeeAppointments.data?.summary?.totalPaid ?? 0)}</span>}
+            Icon={CircleDollarSign}
+            className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
+          />
+
+          <KpiCard
+            label="Total pendente"
+            value={<span className="text-warning">{brl.format(employeeAppointments.data?.summary?.totalUnpaid ?? 0)}</span>}
+            Icon={Clock3}
+            className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
+          />
+        </div>
       </div>
 
       <div className="animate-[fade-up_600ms_ease-out_both]">
@@ -69,9 +82,23 @@ export function EmployeeDetailPage() {
         />
       </div>
 
-      {isFormOpen && employeeQuery.data && (
-        <EmployeeEditModal employee={employeeQuery.data} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+      {isFormOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
+            <h3 className="mb-1 text-lg font-bold">Editar Colaborador</h3>
+            <p className="mb-4 text-sm text-base-content/60">
+              Atualize dados pessoais, contato e funcao do colaborador para manter a operacao organizada.
+            </p>
+            <EmployeeForm
+              initialData={employeeQuery.data}
+              onSuccess={() => setIsFormOpen(false)}
+              onCancel={() => setIsFormOpen(false)}
+            />
+          </div>
+        </div>
       )}
+
+      <PageDateFilterWidget {...dateFilter} />
     </PageLayout>
   );
 }

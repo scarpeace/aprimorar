@@ -3,6 +3,7 @@ package aprimorar.registration.student.api;
 import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
+import aprimorar.registration.student.api.dto.StudentCountSummaryDTO;
 import aprimorar.shared.PageDTO;
 
 import java.util.List;
@@ -16,6 +17,8 @@ public interface StudentService {
     StudentResponseDTO createStudent(StudentRequestDTO dto);
 
     PageDTO<StudentResponseDTO> getStudents(Pageable pageable, String search, Boolean archived);
+
+    StudentCountSummaryDTO getSummary();
 
      List<StudentResponseDTO> getStudentsByParent(UUID parentId);
 

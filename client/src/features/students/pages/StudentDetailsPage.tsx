@@ -1,4 +1,5 @@
 import { PageLayout } from "@/components/layout/PageLayout";
+import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import {
   useGetAppointmentsByStudentId,
   useGetStudentById,
@@ -16,7 +17,7 @@ import { StudentInfoSection } from "../components/StudentInfoSection";
 import { StudentForm } from "../components/StudentForm";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { brl } from "@/lib/utils/formatter";
-import { useDateFilter } from "@/hooks/use-date-filter";
+import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 
 const headerProps = {
   description: "Veja e gerencie as informações do aluno",
@@ -34,7 +35,8 @@ export function StudentDetailsPage() {
 
   const studentQuery = useGetStudentById(studentId);
 
-  const { startDate, endDate } = useDateFilter();
+  const dateFilter = usePageDateFilter();
+  const { startDate, endDate } = dateFilter;
 
   const studentAppointments = useGetAppointmentsByStudentId(studentId, {
     page: currentPage,
@@ -106,6 +108,8 @@ export function StudentDetailsPage() {
           </div>
         </div>
       )}
+
+      <PageDateFilterWidget {...dateFilter} />
     </PageLayout>
   );
 }

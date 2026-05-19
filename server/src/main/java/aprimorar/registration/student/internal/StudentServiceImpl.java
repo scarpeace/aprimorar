@@ -9,6 +9,7 @@ import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
+import aprimorar.registration.student.api.dto.StudentCountSummaryDTO;
 import aprimorar.registration.student.api.dto.StudentSummaryDTO;
 import aprimorar.registration.student.api.exception.StudentNotFoundException;
 import aprimorar.registration.student.internal.repository.StudentRepository;
@@ -99,6 +100,15 @@ public class StudentServiceImpl implements StudentService {
         Page<StudentResponseDTO> studentsDtoPage = studentPage.map(student -> studentMapper.toResponseDto(student, clock));
 
         return new PageDTO<>(studentsDtoPage);
+    }
+
+    @Transactional(readOnly = true)
+    public StudentCountSummaryDTO getSummary() {
+        Specification<Student> notGhost = StudentSpecifications.isNotGhost();
+        long activeStudents = studentRepo.count(notGhost.and(StudentSpecifications.isNotArchived()));
+        long totalStudents = studentRepo.count(notGhost);
+
+        return new StudentCountSummaryDTO(activeStudents, totalStudents);
     }
 
     @Transactional(readOnly = true)

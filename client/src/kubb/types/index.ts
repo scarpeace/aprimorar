@@ -18,6 +18,7 @@ export type {
 export type { ClassesByContentDTO } from "./ClassesByContentDTO.ts";
 export type { DashboardSummaryResponseDTO } from "./DashboardSummaryResponseDTO.ts";
 export type { EmployeeAppointmentsResponseDTO } from "./EmployeeAppointmentsResponseDTO.ts";
+export type { EmployeeCountSummaryDTO } from "./EmployeeCountSummaryDTO.ts";
 export type { EmployeeFinanceSummaryDTO } from "./EmployeeFinanceSummaryDTO.ts";
 export type { EmployeeOptionsDTO } from "./EmployeeOptionsDTO.ts";
 export type {
@@ -54,6 +55,7 @@ export type { ParentOptionsDTO } from "./ParentOptionsDTO.ts";
 export type { ParentRequestDTO } from "./ParentRequestDTO.ts";
 export type { ParentResponseDTO } from "./ParentResponseDTO.ts";
 export type { StudentAppointmentsResponseDTO } from "./StudentAppointmentsResponseDTO.ts";
+export type { StudentCountSummaryDTO } from "./StudentCountSummaryDTO.ts";
 export type { StudentFinanceSummaryDTO } from "./StudentFinanceSummaryDTO.ts";
 export type { StudentOptionsDTO } from "./StudentOptionsDTO.ts";
 export type { StudentRequestDTO } from "./StudentRequestDTO.ts";
@@ -185,6 +187,11 @@ export type {
   GetEmployeeOptionsQueryResponse,
 } from "./employee/GetEmployeeOptions.ts";
 export type {
+  GetEmployeeSummary200,
+  GetEmployeeSummaryQuery,
+  GetEmployeeSummaryQueryResponse,
+} from "./employee/GetEmployeeSummary.ts";
+export type {
   GetEmployees200,
   GetEmployeesQuery,
   GetEmployeesQueryParams,
@@ -313,6 +320,11 @@ export type {
   GetStudentByIdQuery,
   GetStudentByIdQueryResponse,
 } from "./student/GetStudentById.ts";
+export type {
+  GetStudentSummary200,
+  GetStudentSummaryQuery,
+  GetStudentSummaryQueryResponse,
+} from "./student/GetStudentSummary.ts";
 export type {
   GetStudents200,
   GetStudentsQuery,

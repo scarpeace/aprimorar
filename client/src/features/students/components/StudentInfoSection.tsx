@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Collapse } from "@/components/ui/collapse";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { AddressDetails } from "@/features/address/components/AddressDetails";
+import { AddressDetails } from "@/lib/shared/address/components/AddressDetails";
 import {
   useGetParentById,
   useGetStudentById,

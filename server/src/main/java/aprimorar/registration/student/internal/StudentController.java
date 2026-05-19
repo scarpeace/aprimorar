@@ -4,6 +4,7 @@ import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
+import aprimorar.registration.student.api.dto.StudentCountSummaryDTO;
 import aprimorar.registration.student.api.dto.StudentSummaryDTO;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,6 +62,13 @@ public class StudentController {
     ) {
         PageDTO<StudentResponseDTO> students = studentService.getStudents(pageable, search, archived);
         return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/summary")
+    @Operation(operationId = "getStudentSummary", description = "Retorna indicadores quantitativos dos alunos cadastrados.")
+    @ApiResponse(responseCode = "200", description = "Resumo quantitativo de alunos retornado com sucesso.")
+    public ResponseEntity<StudentCountSummaryDTO> getStudentSummary() {
+        return ResponseEntity.ok(studentService.getSummary());
     }
 
    @GetMapping("/parent/{parentId}")
