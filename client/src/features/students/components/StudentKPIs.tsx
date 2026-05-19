@@ -1,29 +1,19 @@
 import { KpiCard } from "@/components/ui/kpi-card";
 import { brl } from "@/lib/utils/formatter";
-import { Calendar, CircleDollarSign, Clock3 } from "lucide-react";
+import { CircleDollarSign, Clock3 } from "lucide-react";
 
 type StudentKPIsProps = {
-  totalEvents?: number;
   totalCharged?: number;
   totalPending?: number;
-  showTotalEvents?: boolean;
 };
 
 export function StudentKPIs({
-  totalEvents,
   totalCharged,
   totalPending,
-  showTotalEvents = true,
 }: Readonly<StudentKPIsProps>) {
   return (
-    <div className={`grid grid-cols-1 gap-4 ${showTotalEvents ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
-      {showTotalEvents ? (
-        <KpiCard
-          label="Total de eventos"
-          value={totalEvents}
-          Icon={Calendar}
-        />
-      ) : null}
+    <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
+      <h1 className="text-2xl font-bold text-base-content">Alunos</h1>
 
       <KpiCard
         label="Total pago"
@@ -37,7 +27,7 @@ export function StudentKPIs({
         value={<span className="text-warning">{brl.format(totalPending ?? 0)}</span>}
         Icon={Clock3}
         className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
-      />
+        />
     </div>
   );
 }

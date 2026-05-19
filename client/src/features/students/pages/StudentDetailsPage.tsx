@@ -35,7 +35,7 @@ export function StudentDetailsPage() {
 
   const studentQuery = useGetStudentById(studentId);
 
-  const dateFilter = usePageDateFilter("student-detail");
+  const dateFilter = usePageDateFilter();
   const { startDate, endDate } = dateFilter;
 
   const studentAppointments = useGetAppointmentsByStudentId(studentId, {

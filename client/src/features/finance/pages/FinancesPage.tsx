@@ -10,22 +10,18 @@ import {
   useGetStudentsWithFinance,
 } from "@/kubb";
 import { usePageDateFilter } from "@/hooks/use-page-date-filter";
-import { Landmark, Plus } from "lucide-react";
+import { BanknoteArrowDown, BanknoteArrowUp, GraduationCap, HandCoins, Landmark, Plus, UserCog } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ExpenseForm } from "../components/ExpenseForm";
 import { ExpensesTable } from "../components/ExpensesTable";
 import { FinanceSummarySection } from "../components/FinanceSummarySection";
-import { useExpenseMutations } from "../hooks/useExpenseMutations";
-import { EmployeeKPIs } from "@/features/employees/components/EmployeeKPIs";
-import { StudentKPIs } from "@/features/students/components/StudentKPIs";
+import { KpiCard } from "@/components/ui/kpi-card";
+import { brl } from "@/lib/utils/formatter";
 
 export function FinancesPage() {
-  const navigate = useNavigate();
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
-  const { toggleExpensePayment } = useExpenseMutations();
 
-  const dateFilter = usePageDateFilter("finance");
+  const dateFilter = usePageDateFilter();
   const { startDate, endDate } = dateFilter;
 
   const summaryQuery = useGetAppointmentFinanceReport({
@@ -54,7 +50,6 @@ export function FinancesPage() {
   const currentBalance = summaryQuery.data?.balance ?? 0;
   const studentFinanceSummary = studentsWithFinanceQuery.data?.financeSummary;
   const employeeFinanceSummary = employeesWithFinanceQuery.data?.financeSummary;
-  const totalEvents = studentFinanceSummary?.totalEvents ?? employeeFinanceSummary?.totalEvents ?? 0;
 
   const handleOpenExpenseForm = () => {
     setIsExpenseFormOpen(true);
@@ -97,86 +92,93 @@ export function FinancesPage() {
 
         <FinanceSummarySection
           currentBalance={currentBalance}
-          totalEvents={totalEvents}
-          totalGeneralExpenses={totalGeneralExpenses}
-          pendingGeneralExpenses={pendingGeneralExpenses}
-          isError={summaryQuery.isError}
-          error={summaryQuery.error}
         />
 
-        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          <div className="mb-4">
-            <h3 className="text-lg font-bold text-base-content">Resumo financeiro dos alunos</h3>
-            <p className="text-sm text-base-content/60">
-              Indicadores consolidados respeitando o periodo selecionado nos filtros.
+        <section className="flex flex-row justify-between rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
+          <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
+            <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><GraduationCap size={30}/> Alunos</h1>
+
+            <KpiCard
+              label="Total pago"
+              value={<span className="text-success">{brl.format(studentFinanceSummary?.totalCharged ?? 0)}</span>}
+              Icon={BanknoteArrowUp}
+              className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
+            />
+
+            <KpiCard
+              label="Total pendente"
+              value={<span className="text-warning">{brl.format(studentFinanceSummary?.totalPending ?? 0)}</span>}
+              Icon={BanknoteArrowDown}
+              className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
+              />
+        </div>
+
+          <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
+            <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><UserCog size={30}/>Colaboradores</h1>
+
+            <KpiCard
+              label="Total pago"
+              value={<span className="text-success">{brl.format(employeeFinanceSummary?.totalPaid ?? 0)}</span>}
+              Icon={BanknoteArrowUp}
+              className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
+            />
+
+            <KpiCard
+              label="Total pendente"
+              value={<span className="text-warning">{brl.format(employeeFinanceSummary?.totalPending ?? 0)}</span>}
+              Icon={BanknoteArrowDown}
+              className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
+            />
+          </div>
+
+          <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
+            <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><HandCoins size={30}/>Despesas Gerais</h1>
+
+            <KpiCard
+              label="Despesas Gerais Pagas"
+              value={<span className="text-success">{brl.format(totalGeneralExpenses)}</span>}
+              Icon={BanknoteArrowUp}
+              className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
+            />
+            <KpiCard
+              label="Despesas Gerais Pendentes"
+              value={<span className="text-warning">{brl.format(pendingGeneralExpenses)}</span>}
+              Icon={BanknoteArrowDown}
+              className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
+            />
+          </div>
+      </section>
+
+      <section className="rounded-2xl border border-base-300 bg-base-100 p-5 shadow-sm animate-[fade-up_200ms_ease-out_both]">
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex flex-col">
+            <h2 className="mt-3 text-2xl font-bold text-base-content">Despesas gerais</h2>
+
+            <p className="mt-1 max-w-3xl text-sm leading-6 text-base-content/60">
+              Despesas operacionais registradas no periodo selecionado.
             </p>
           </div>
 
-          <StudentKPIs
-            totalEvents={studentFinanceSummary?.totalEvents ?? 0}
-            totalCharged={studentFinanceSummary?.totalCharged ?? 0}
-            totalPending={studentFinanceSummary?.totalPending ?? 0}
-            showTotalEvents={false}
-          />
-        </section>
+          <Button
+            type="button"
+            variant="success"
+            onClick={() => handleOpenExpenseForm()}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Nova Despesa
+          </Button>
+        </div>
 
-        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          <div className="mb-4">
-            <h3 className="text-lg font-bold text-base-content">Resumo financeiro dos colaboradores</h3>
-            <p className="text-sm text-base-content/60">
-              Indicadores consolidados respeitando o periodo selecionado nos filtros.
-            </p>
-          </div>
-
-          <EmployeeKPIs
-            totalEvents={employeeFinanceSummary?.totalEvents ?? 0}
-            totalPaid={employeeFinanceSummary?.totalPaid ?? 0}
-            totalUnpaid={employeeFinanceSummary?.totalPending ?? 0}
-            showTotalEvents={false}
-          />
-        </section>
-
-        <section className="rounded-2xl border border-base-300 bg-base-100 p-5 shadow-sm animate-[fade-up_200ms_ease-out_both]">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex flex-col">
-              <span className="badge badge-primary badge-outline px-3 py-3">
-                Despesas Gerais
-              </span>
-              <h2 className="mt-3 text-2xl font-bold text-base-content">
-                Despesas gerais
-              </h2>
-
-              <p className="mt-1 max-w-3xl text-sm leading-6 text-base-content/60">
-                Despesas operacionais registradas no periodo selecionado.
-              </p>
-            </div>
-
-            <Button
-              type="button"
-              variant="success"
-              onClick={() => handleOpenExpenseForm()}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Despesa
-            </Button>
-          </div>
-
-          <ExpensesTable
-            expenses={expensesQuery.data?.expenses}
-            isPending={expensesQuery.isPending}
-            error={expensesQuery.error}
-            toggleExpensePayment={toggleExpensePayment}
-            onNavigate={(expense) => {
-              if (expense.id) {
-                navigate(`/finance/expenses/${expense.id}`);
-              }
-            }}
-          />
-        </section>
-        {isExpenseFormOpen ? (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-lg border border-base-300 bg-base-100 shadow-2xl">
-              <h3 className="mb-1 text-lg font-bold">Nova Despesa</h3>
+        <ExpensesTable
+          expenses={expensesQuery.data?.expenses}
+          isPending={expensesQuery.isPending}
+          error={expensesQuery.error}
+        />
+      </section>
+    {isExpenseFormOpen ? (
+      <div className="modal modal-open">
+        <div className="modal-box max-w-lg border border-base-300 bg-base-100 shadow-2xl">
+          <h3 className="mb-1 text-lg font-bold">Nova Despesa</h3>
               <p className="mb-4 text-sm text-base-content/60">
                 Registre uma nova despesa operacional.
               </p>
@@ -186,11 +188,9 @@ export function FinancesPage() {
               />
             </div>
           </div>
-        ) : null}
-        <PageDateFilterWidget {...dateFilter} />
-        </div>
-
-
+      ) : null}
+    <PageDateFilterWidget {...dateFilter} />
+      </div>
     </PageLayout>
   );
 }

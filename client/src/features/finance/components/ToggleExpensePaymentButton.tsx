@@ -1,27 +1,19 @@
 import { Button } from "@/components/ui/button";
-import type { ToggleExpensePaymentMutationResponse } from "@/kubb";
-import type { ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
-import type { UseMutationResult } from "@tanstack/react-query";
 import { Check, Clock3 } from "lucide-react";
+import { useExpenseMutations } from "../hooks/useExpenseMutations";
 
 type ToggleExpensePaymentButtonProps = {
+  expenseId: string;
   isPaid: boolean;
   iconOnly?: boolean;
-  toggleExpensePayment: UseMutationResult<
-    ToggleExpensePaymentMutationResponse,
-    ResponseErrorConfig<Error>,
-    { id: string },
-    unknown
-  >;
-  onTogglePayment: () => void;
 };
 
 export function ToggleExpensePaymentButton({
+  expenseId,
   isPaid,
   iconOnly = false,
-  toggleExpensePayment,
-  onTogglePayment,
 }: Readonly<ToggleExpensePaymentButtonProps>) {
+  const { toggleExpensePayment } = useExpenseMutations();
   const label = isPaid ? "Remover pagamento" : "Marcar como paga";
 
   return (
@@ -29,7 +21,7 @@ export function ToggleExpensePaymentButton({
       type="button"
       size="sm"
       variant={isPaid ? "outline" : "success"}
-      onClick={onTogglePayment}
+      onClick={() => toggleExpensePayment.mutate({ id: expenseId })}
       disabled={toggleExpensePayment.isPending}
       title={label}
       aria-label={label}

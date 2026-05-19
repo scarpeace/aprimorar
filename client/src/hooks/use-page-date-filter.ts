@@ -1,10 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
-
-type StoredDateFilter = {
-  version: 1;
-  startDate?: string;
-  endDate?: string;
-};
+import { useCallback, useState } from "react";
 
 export type PageDateFilter = {
   startDate?: Date;
@@ -27,87 +21,22 @@ function normalizeEndDate(date: Date) {
   return normalizedDate;
 }
 
-function getStorageKey(pageKey: string) {
-  return `aprimorar:date-filter:${pageKey}:v1`;
-}
+export function usePageDateFilter(): PageDateFilter {
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
 
-function parseStoredDate(value?: string) {
-  if (!value) {
-    return undefined;
-  }
+  const handleStartDateChange = useCallback((date: Date | null) => {
+    setStartDate(date ? normalizeStartDate(date) : undefined);
+  }, []);
 
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? undefined : date;
-}
-
-function readStoredFilter(pageKey: string) {
-  try {
-    const rawValue = window.localStorage.getItem(getStorageKey(pageKey));
-    if (!rawValue) {
-      return {};
-    }
-
-    const parsedValue = JSON.parse(rawValue) as StoredDateFilter;
-    if (parsedValue.version !== 1) {
-      return {};
-    }
-
-    return {
-      startDate: parseStoredDate(parsedValue.startDate),
-      endDate: parseStoredDate(parsedValue.endDate),
-    };
-  } catch {
-    return {};
-  }
-}
-
-function writeStoredFilter(pageKey: string, startDate?: Date, endDate?: Date) {
-  try {
-    if (!startDate && !endDate) {
-      window.localStorage.removeItem(getStorageKey(pageKey));
-      return;
-    }
-
-    const value: StoredDateFilter = {
-      version: 1,
-      startDate: startDate?.toISOString(),
-      endDate: endDate?.toISOString(),
-    };
-
-    window.localStorage.setItem(getStorageKey(pageKey), JSON.stringify(value));
-  } catch {
-    // Ignore storage errors so the filter still works in memory.
-  }
-}
-
-export function usePageDateFilter(pageKey: string): PageDateFilter {
-  const initialFilter = useMemo(() => readStoredFilter(pageKey), [pageKey]);
-  const [startDate, setStartDate] = useState<Date | undefined>(initialFilter.startDate);
-  const [endDate, setEndDate] = useState<Date | undefined>(initialFilter.endDate);
-
-  const handleStartDateChange = useCallback(
-    (date: Date | null) => {
-      const nextStartDate = date ? normalizeStartDate(date) : undefined;
-      setStartDate(nextStartDate);
-      writeStoredFilter(pageKey, nextStartDate, endDate);
-    },
-    [endDate, pageKey],
-  );
-
-  const handleEndDateChange = useCallback(
-    (date: Date | null) => {
-      const nextEndDate = date ? normalizeEndDate(date) : undefined;
-      setEndDate(nextEndDate);
-      writeStoredFilter(pageKey, startDate, nextEndDate);
-    },
-    [pageKey, startDate],
-  );
+  const handleEndDateChange = useCallback((date: Date | null) => {
+    setEndDate(date ? normalizeEndDate(date) : undefined);
+  }, []);
 
   const clearDateFilters = useCallback(() => {
     setStartDate(undefined);
     setEndDate(undefined);
-    writeStoredFilter(pageKey);
-  }, [pageKey]);
+  }, []);
 
   return {
     startDate,

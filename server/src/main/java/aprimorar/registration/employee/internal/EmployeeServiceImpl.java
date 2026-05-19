@@ -2,6 +2,7 @@ package aprimorar.registration.employee.internal;
 
 import aprimorar.registration.api.exception.PersonHasPendingFinancialsException;
 import aprimorar.registration.employee.api.EmployeeService;
+import aprimorar.registration.employee.api.dto.EmployeeCountSummaryDTO;
 import aprimorar.registration.employee.api.dto.EmployeeOptionsDTO;
 import aprimorar.registration.employee.api.dto.EmployeeRequestDTO;
 import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
@@ -83,6 +84,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         log.info("Consulta de colaboradores finalizada, {} registros encontrados.", employeePage.getTotalElements());
         return new PageDTO<>(parentsDtoPage);
+    }
+
+    @Transactional(readOnly = true)
+    public EmployeeCountSummaryDTO getSummary() {
+        Specification<Employee> notGhost = EmployeeSpecifications.isNotGhost();
+        long activeEmployees = employeeRepo.count(notGhost.and(EmployeeSpecifications.isNotArchived()));
+        long totalEmployees = employeeRepo.count(notGhost);
+
+        return new EmployeeCountSummaryDTO(activeEmployees, totalEmployees);
     }
 
     @Transactional(readOnly = true)

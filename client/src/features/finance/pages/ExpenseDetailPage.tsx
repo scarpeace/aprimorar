@@ -37,7 +37,7 @@ export function ExpenseDetailPage() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const expenseQuery = useGetExpenseById(expenseId);
-  const { deleteExpense, toggleExpensePayment } = useExpenseMutations();
+  const { deleteExpense } = useExpenseMutations();
 
   const headerProps = {
     description: "Veja e gerencie os dados da despesa selecionada.",
@@ -104,8 +104,7 @@ export function ExpenseDetailPage() {
             {expense.id ? (
               <ToggleExpensePaymentButton
                 isPaid={isPaid}
-                toggleExpensePayment={toggleExpensePayment}
-                onTogglePayment={() => toggleExpensePayment.mutate({ id: expense.id! })}
+                expenseId={expense.id}
               />
             ) : null}
             <Button type="button" size="sm" onClick={() => setIsEditOpen(true)}>

@@ -1,29 +1,19 @@
 import { KpiCard } from "@/components/ui/kpi-card";
 import { brl } from "@/lib/utils/formatter";
-import { Calendar, CircleDollarSign, Clock3 } from "lucide-react";
+import { CircleDollarSign, Clock3 } from "lucide-react";
 
 interface EmployeeKPIsProps {
-  totalEvents?: number;
   totalPaid?: number;
   totalUnpaid?: number;
-  showTotalEvents?: boolean;
 }
 
 export function EmployeeKPIs({
-  totalEvents,
   totalPaid,
   totalUnpaid,
-  showTotalEvents = true,
 }: EmployeeKPIsProps) {
   return (
-    <div className={`grid grid-cols-1 gap-4 ${showTotalEvents ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
-      {showTotalEvents ? (
-        <KpiCard
-          label="Total de eventos"
-          value={totalEvents}
-          Icon={Calendar}
-        />
-      ) : null}
+    <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
+      <h1 className="text-2xl font-bold text-base-content">Colaboradores</h1>
 
       <KpiCard
         label="Total pago"

@@ -27,7 +27,7 @@ export function EmployeeDetailPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [hidePaid, setHidePaid] = useState(false);
 
-  const dateFilter = usePageDateFilter("employee-detail");
+  const dateFilter = usePageDateFilter();
   const { startDate, endDate } = dateFilter;
 
   const employeeQuery = useGetEmployeeById(employeeId);
@@ -53,7 +53,6 @@ export function EmployeeDetailPage() {
 
       <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
         <EmployeeKPIs
-          totalEvents={employeeAppointments.data?.summary?.totalEvents}
           totalPaid={employeeAppointments.data?.summary?.totalPaid}
           totalUnpaid={employeeAppointments.data?.summary?.totalUnpaid}
         />

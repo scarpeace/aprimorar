@@ -1,6 +1,7 @@
 package aprimorar.registration.employee.api;
 
 import aprimorar.registration.employee.api.dto.EmployeeOptionsDTO;
+import aprimorar.registration.employee.api.dto.EmployeeCountSummaryDTO;
 import aprimorar.registration.employee.api.dto.EmployeeRequestDTO;
 import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
 import aprimorar.shared.PageDTO;
@@ -13,6 +14,8 @@ public interface EmployeeService {
     EmployeeResponseDTO createEmployee(EmployeeRequestDTO employeeRequestDto);
 
     PageDTO<EmployeeResponseDTO> getEmployees(Pageable pageable, String search, Boolean archived);
+
+    EmployeeCountSummaryDTO getSummary();
 
     List<EmployeeOptionsDTO> getEmployeeOptions();
 
