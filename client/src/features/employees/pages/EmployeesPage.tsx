@@ -72,49 +72,34 @@ export function EmployeesPage() {
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-4">
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          <div className="mb-4">
-            <h3 className="text-lg font-bold text-base-content">Indicadores de colaboradores</h3>
-            <p className="text-sm text-base-content/60">
-              Visão geral dos colaboradores ativos e do total cadastrado desde o inicio.
-            </p>
+          <div className="flex flex-row items-center justify-between">
+            <div>
+              <h3 className="text-2xl font-bold text-base-content">Indicadores de colaboradores</h3>
+              <p className="text-sm text-base-content/60">
+                Visão geral dos colaboradores ativos e do total cadastrado desde o inicio.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <KpiCard
+                label="Colaboradores ativos"
+                value={employeeSummaryQuery.data?.activeEmployees ?? 0}
+                Icon={UserCheck}
+                className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
+              />
+            </div>
           </div>
-
-          <KpiCard
-            label={"Colaboradores Ativos"}
-            value={employeeSummaryQuery.data?.activeEmployees ?? 0}
-            Icon={UserCheck}
-          />
-
-          <KpiCard
-            label={"Total de colaboradores"}
-            value={employeeSummaryQuery.data?.totalEmployees ?? 0}
-            Icon={Users}
-          />
-
         </section>
 
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_220ms_ease-out_both]">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="space-y-1">
-              <h2 className="text-lg font-bold text-base-content">Busca e filtros</h2>
+            <div>
+              <h2 className="text-2xl font-bold text-base-content">Busca e filtros</h2>
               <p className="text-sm text-base-content/60">
-                Localize colaboradores por cadastro e alterne entre registros ativos e arquivados sem sair da listagem.
+                Localize colaboradores por cadastro.
               </p>
             </div>
 
-            <div className="rounded-2xl border border-success/15 bg-linear-to-r from-success/8 via-base-100 to-base-100 px-3 py-2 shadow-sm">
-              <Button
-                className="sm:ml-auto"
-                onClick={() => handleOpenForm()}
-                variant="success"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Novo Colaborador
-              </Button>
-            </div>
-          </div>
-
-          <div className="mt-4 flex flex-col gap-3 xl:flex-row xl:items-center">
             <ListSearchInput
               className="grow"
               placeholder="Buscar colaborador por nome, email ou CPF"
@@ -122,9 +107,9 @@ export function EmployeesPage() {
               value={searchTerm}
               onChange={setSearchTerm}
             />
-            <div className="flex w-full flex-wrap items-center justify-between gap-3 xl:w-auto xl:justify-end">
+            <div className="flex w-full flex-col items-s gap-3 xl:w-auto xl:justify-end">
               <ToggleSwitch
-                label="Arquivados"
+                label="Mostrar Arquivados"
                 tip="Mostrar colaboradores arquivados"
                 toggled={showArchived}
                 setToggle={handleShowArchivedChange}
@@ -142,13 +127,22 @@ export function EmployeesPage() {
         </section>
 
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
-          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h3 className="text-lg font-bold text-base-content">Colaboradores cadastrados</h3>
+              <h3 className="text-2xl font-bold text-base-content">Colaboradores cadastrados</h3>
               <p className="text-sm text-base-content/60">
                 Clique na linha para abrir os detalhes do cadastro.
               </p>
             </div>
+
+            <Button
+              className="sm:ml-auto"
+              onClick={() => handleOpenForm()}
+              variant="success"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Colaborador
+            </Button>
           </div>
 
           <EmployeesTable
