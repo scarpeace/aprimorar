@@ -28,7 +28,7 @@ export function FinanceSummarySection({
         <KpiCard
           label="Lucro"
           value={
-            <p className={`mt-2 font-mono text-3xl font-bold ${currentBalance >= 0 ? "text-success" : "text-error"}`}>
+            <p className={`mt-2 text-3xl font-bold ${currentBalance >= 0 ? "text-success" : "text-error"}`}>
               {brl.format(currentBalance)}
             </p>
           }
