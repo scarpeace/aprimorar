@@ -4,12 +4,12 @@ import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetStudentSummary, useGetStudentsWithFinance } from "@/kubb";
 import type { StudentResponseDTO } from "@/kubb";
-import { useDebounce } from "@/lib/shared/use-debounce";
-import { GraduationCap, Plus } from "lucide-react";
+import { useDebounce } from "@/lib/hooks/use-debounce.ts";
+import { GraduationCap, Plus, UserCheck, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { StudentsTable } from "../components/StudentsTable";
 import { StudentForm } from "../components/StudentForm";
-import { StudentCountKPIs } from "../components/StudentCountKPIs";
+import { KpiCard } from "@/components/ui/kpi-card";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -80,10 +80,20 @@ export function StudentsPage() {
             </p>
           </div>
 
-          <StudentCountKPIs
-            activeStudents={studentSummaryQuery.data?.activeStudents}
-            totalStudents={studentSummaryQuery.data?.totalStudents}
-          />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <KpiCard
+              label="Alunos ativos"
+              value={studentSummaryQuery.data?.activeStudents ?? 0}
+              Icon={UserCheck}
+              className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
+            />
+
+            <KpiCard
+              label="Total de alunos"
+              value={studentSummaryQuery.data?.totalStudents ?? 0}
+              Icon={Users}
+            />
+          </div>
         </section>
 
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_220ms_ease-out_both]">

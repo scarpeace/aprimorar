@@ -1,6 +1,6 @@
 import { Button, ButtonLink } from "@/components/ui/button";
 import type { AppointmentResponseDTO } from "@/kubb";
-import { EventContentLabels } from "@/lib/shared/eventContentLables";
+import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import {
   BriefcaseBusiness,

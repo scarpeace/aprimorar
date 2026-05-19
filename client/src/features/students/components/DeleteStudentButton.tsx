@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useGetAppointmentsByStudentId } from "@/kubb";
 import { useStudentMutations } from "../hooks/student-mutations";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 type DeleteStudentButtonProps = {
   studentId: string;

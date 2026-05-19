@@ -17,7 +17,7 @@ import { StudentInfoSection } from "../components/StudentInfoSection";
 import { StudentForm } from "../components/StudentForm";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { brl } from "@/lib/utils/formatter";
-import { usePageDateFilter } from "@/hooks/use-page-date-filter";
+import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 
 const headerProps = {
   description: "Veja e gerencie as informações do aluno",

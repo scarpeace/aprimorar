@@ -3,7 +3,7 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { ErrorCard } from "@/components/ui/error-card";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { EventContentLabels } from "@/lib/shared/eventContentLables";
+import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useAppointmentMutations } from "@/features/appointments/hooks/use-appointment-mutations";

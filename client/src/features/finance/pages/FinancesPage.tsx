@@ -9,7 +9,7 @@ import {
   useGetExpenses,
   useGetStudentsWithFinance,
 } from "@/kubb";
-import { usePageDateFilter } from "@/hooks/use-page-date-filter";
+import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 import { BanknoteArrowDown, BanknoteArrowUp, GraduationCap, HandCoins, Landmark, Plus, UserCog } from "lucide-react";
 import { useState } from "react";
 import { ExpenseForm } from "../components/ExpenseForm";

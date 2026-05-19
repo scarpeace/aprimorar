@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Check, Clock3 } from "lucide-react";
-import { useExpenseMutations } from "../hooks/useExpenseMutations";
+import { useExpenseMutations } from "../hooks/use-expense-mutation";
 
 type ToggleExpensePaymentButtonProps = {
   expenseId: string;

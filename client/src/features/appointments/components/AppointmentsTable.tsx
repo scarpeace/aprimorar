@@ -3,7 +3,7 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { type AppointmentResponseDTO, type PageDTOAppointmentResponseDTO } from "@/kubb";
-import { EventContentLabels } from "@/lib/shared/eventContentLables";
+import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { CalendarCheck2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";

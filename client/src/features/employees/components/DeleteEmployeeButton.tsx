@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
 import { useGetAppointmentsByEmployeeId } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 
 

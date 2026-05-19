@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
-import { getActiveLinkedStudentsCount } from "@/features/parents/utils/getActiveLinkedStudentsCount";
+import { getActiveLinkedStudentsCount } from "@/features/parents/lib/getActiveLinkedStudentsCount";
 import { useGetStudentsByParent } from "@/kubb";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";

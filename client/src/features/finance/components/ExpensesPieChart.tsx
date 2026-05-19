@@ -117,7 +117,7 @@ export function ExpensesPieChart({
     .filter((item) => item.value > 0);
 
   return (
-    <section className="flex h-full min-h-[30rem] flex-col rounded-2xl border border-base-300 bg-base-100 p-5 shadow-lg animate-[fade-up_240ms_ease-out_both]">
+    <section className="flex h-full min-h-120 flex-col rounded-2xl border border-base-300 bg-base-100 p-5 shadow-lg animate-[fade-up_240ms_ease-out_both]">
       <div className="mb-4">
         <div className="flex flex-wrap items-center gap-2">
           <span className="badge badge-secondary badge-outline px-3 py-3">

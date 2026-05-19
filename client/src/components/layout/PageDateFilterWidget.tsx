@@ -4,7 +4,7 @@ import { Calendar, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { DateRangeInput } from "../ui/date-range-input";
 import { formatDateShortYear } from "@/lib/utils/formatter";
-import type { PageDateFilter } from "@/hooks/use-page-date-filter";
+import type { PageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 
 function getPeriodLabel(startDate?: Date, endDate?: Date) {
   if (startDate && endDate) {

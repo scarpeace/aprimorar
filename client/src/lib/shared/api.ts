@@ -1,6 +1,7 @@
 import { axiosInstance } from "@kubb/plugin-client/clients/axios";
 import axios from "axios";
 import { ZodError } from "zod";
+import {keepPreviousData, QueryClient} from "@tanstack/react-query";
 
 const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
@@ -37,3 +38,15 @@ export function getFriendlyErrorMessage(error: unknown): string {
 
   return "Erro não reconhecido! Contate o suporte imediatamente";
 }
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
+      placeholderData: keepPreviousData,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+

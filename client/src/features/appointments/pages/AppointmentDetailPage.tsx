@@ -7,7 +7,7 @@ import { useGetAppointmentById } from "@/kubb";
 import { Calendar, Edit } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useAppointmentMutations } from "../hooks/use-appointment-mutations";
-import { EventContentLabels } from "@/lib/shared/eventContentLables";
+import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 import { useState } from "react";
 import { AppointmentForm } from "../components/AppointmentForm";
 import { AppointmentInfoSection } from "../components/AppointmentInfoSection";

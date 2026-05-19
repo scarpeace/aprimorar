@@ -1,5 +1,5 @@
 import { ButtonLink } from "@/components/ui/button";
-import type { StudentFormSchema } from "@/features/students/forms/studentFormSchema";
+import type { StudentFormSchema } from "@/features/students/lib/studentFormSchema.ts";
 import { useGetParentsOptions } from "@/kubb";
 import { TriangleAlert, UserPlus } from "lucide-react";
 import {

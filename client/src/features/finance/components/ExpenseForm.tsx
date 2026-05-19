@@ -9,7 +9,7 @@ import {
   type ExpenseResponseDTO,
 } from "@/kubb";
 import { EXPENSE_CATEGORY_LABEL } from "../lib/expense-category-labels";
-import { useExpenseMutations } from "../hooks/useExpenseMutations";
+import { useExpenseMutations } from "../hooks/use-expense-mutation";
 
 type ExpenseFormProps = {
   initialData?: ExpenseResponseDTO | null;

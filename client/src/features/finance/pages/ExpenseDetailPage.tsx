@@ -10,7 +10,7 @@ import { brl, formatDateShortYear } from "@/lib/utils/formatter";
 import { Edit, ReceiptText, Trash2 } from "lucide-react";
 import { ExpenseForm } from "../components/ExpenseForm";
 import { ToggleExpensePaymentButton } from "../components/ToggleExpensePaymentButton";
-import { useExpenseMutations } from "../hooks/useExpenseMutations";
+import { useExpenseMutations } from "../hooks/use-expense-mutation";
 import { EXPENSE_CATEGORY_LABEL } from "../lib/expense-category-labels";
 
 function DetailItem({

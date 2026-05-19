@@ -4,12 +4,12 @@ import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetEmployeeSummary, useGetEmployeesWithFinance } from "@/kubb";
 import type { EmployeeResponseDTO } from "@/kubb";
-import { useDebounce } from "@/lib/shared/use-debounce";
-import { FileUser, Plus } from "lucide-react";
+import { useDebounce } from "@/lib/hooks/use-debounce.ts";
+import { FileUser, Plus, UserCheck, Users } from "lucide-react";
 import { useMemo, useState } from "react";
-import { EmployeeCountKPIs } from "../components/EmployeeCountKPIs";
 import { EmployeesTable } from "../components/EmployeesTable";
 import { EmployeeForm } from "../components/EmployeeForm";
+import { KpiCard } from "@/components/ui/kpi-card";
 
 export function EmployeesPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -79,10 +79,18 @@ export function EmployeesPage() {
             </p>
           </div>
 
-          <EmployeeCountKPIs
-            activeEmployees={employeeSummaryQuery.data?.activeEmployees}
-            totalEmployees={employeeSummaryQuery.data?.totalEmployees}
+          <KpiCard
+            label={"Colaboradores Ativos"}
+            value={employeeSummaryQuery.data?.activeEmployees ?? 0}
+            Icon={UserCheck}
           />
+
+          <KpiCard
+            label={"Total de colaboradores"}
+            value={employeeSummaryQuery.data?.totalEmployees ?? 0}
+            Icon={Users}
+          />
+
         </section>
 
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_220ms_ease-out_both]">

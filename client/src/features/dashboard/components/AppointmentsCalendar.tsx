@@ -2,8 +2,8 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { Button } from "@/components/ui/button";
 import { useGetAppointments } from "@/kubb";
 import type { AppointmentResponseDTO } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
-import { EventContentLabels } from "@/lib/shared/eventContentLables";
+import { getAppointmentColor } from "@/features/appointments/lib/appointment-content-colors";
+import { getMonthRange } from "@/lib/utils/date-utils";
 import type { EventClickArg, EventInput } from "@fullcalendar/core";
 import ptBrLocale from "@fullcalendar/core/locales/pt-br";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -14,45 +14,18 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { useRef, useState } from "react";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const CONTENT_COLORS: Record<string, { backgroundColor: string; borderColor: string }> = {
-  AULA: { backgroundColor: "#3b82f6", borderColor: "#2563eb" },
-  MENTORIA: { backgroundColor: "#10b981", borderColor: "#059669" },
-  TERAPIA: { backgroundColor: "#f59e0b", borderColor: "#d97706" },
-  ORIENTACAO_VOCACIONAL: { backgroundColor: "#8b5cf6", borderColor: "#7c3aed" },
-  ENEM: { backgroundColor: "#ec4899", borderColor: "#db2777" },
-  PAS: { backgroundColor: "#06b6d4", borderColor: "#0891b2" },
-  OUTRO: { backgroundColor: "#6b7280", borderColor: "#4b5563" },
-};
-
-function getMonthRange(date: Date) {
-  return {
-    startDate: new Date(date.getFullYear(), date.getMonth(), 1),
-    endDate: new Date(date.getFullYear(), date.getMonth() + 1, 1),
-  };
-}
-
-function getAppointmentColor(appointment: AppointmentResponseDTO) {
-  return CONTENT_COLORS[appointment.content] ?? CONTENT_COLORS.OUTRO;
-}
+import { AppointmentContentLegend } from "./AppointmentContentLegend";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 function toCalendarEvent(appointment: AppointmentResponseDTO): EventInput {
   const color = getAppointmentColor(appointment);
-  const contentLabel = EventContentLabels[appointment.content] ?? appointment.content;
 
   return {
     id: appointment.id,
-    title: `${appointment.studentName} • ${contentLabel}`,
+    title: appointment.studentName,
     start: appointment.startDate,
     end: appointment.endDate,
-    backgroundColor: color.backgroundColor,
-    borderColor: color.borderColor,
-    textColor: "#fff",
-    extendedProps: {
-      content: appointment.content,
-      employeeName: appointment.employeeName,
-      studentName: appointment.studentName,
-    },
+    color: color.backgroundColor,
   };
 }
 
@@ -123,6 +96,8 @@ export function AppointmentsCalendar({ onCreateAppointment }: Readonly<Appointme
           />
         ) : (
           <>
+            <AppointmentContentLegend />
+
             <FullCalendar
               ref={calendarRef}
               locale={ptBrLocale}
@@ -140,6 +115,7 @@ export function AppointmentsCalendar({ onCreateAppointment }: Readonly<Appointme
                 day: "dia",
               }}
               events={calendarEvents}
+              eventDisplay="list-item"
               eventClick={handleEventClick}
               dateClick={handleDateClick}
               datesSet={(info) => setCalendarDate(info.view.currentStart)}
@@ -154,6 +130,7 @@ export function AppointmentsCalendar({ onCreateAppointment }: Readonly<Appointme
             {eventsQuery.isPending ? (
               <p className="mt-3 text-sm text-base-content/60">Carregando atendimentos...</p>
             ) : null}
+
           </>
         )}
       </div>

@@ -6,11 +6,11 @@ import { TriangleAlert } from "lucide-react";
 import { employeeRequestDTODutyEnum } from "@/kubb";
 import type { EmployeeResponseDTO } from "@/kubb";
 import { brazilianStates } from "@/lib/utils/brazilianStates";
-import { employeeFormSchema, type EmployeeFormSchema } from "../forms/employeeFormSchema";
+import { employeeFormSchema, type EmployeeFormSchema } from "../lib/employeeFormSchema.ts";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
 import { formatDateForInput } from "@/lib/utils/formatter";
 import { toast } from "sonner";
-import { getFriendlyErrorMessage } from "@/lib/shared/api-errors";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 interface EmployeeFormProps {
   initialData?: EmployeeResponseDTO | null;
