@@ -1,6 +1,6 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { Button } from "@/components/ui/button";
-import { useGetAppointments } from "@/kubb";
+import { useGetAppointments, useGetDashboardSummary } from "@/kubb";
 import type { AppointmentResponseDTO } from "@/kubb";
 import { getAppointmentColor } from "@/features/appointments/lib/appointment-content-colors";
 import { getMonthRange } from "@/lib/utils/date-utils";
@@ -45,9 +45,13 @@ export function AppointmentsCalendar({ onCreateAppointment }: Readonly<Appointme
     size: 500,
     sort: ["startDate,asc"],
   });
+  const dashboardSummaryQuery = useGetDashboardSummary({
+    year: calendarDate.getFullYear(),
+    month: calendarDate.getMonth() + 1,
+  });
 
   const calendarEvents = (eventsQuery.data?.content ?? []).map(toCalendarEvent);
-  const totalAppointments = eventsQuery.data?.totalElements ?? 0;
+  const totalAppointments = dashboardSummaryQuery.data?.classesInMonth ?? 0;
 
   const handleDateClick = (info: DateClickArg) => {
     setCalendarDate(info.date);
@@ -59,6 +63,27 @@ export function AppointmentsCalendar({ onCreateAppointment }: Readonly<Appointme
     navigate(`/appointments/${info.event.id}`);
   };
 
+  if (eventsQuery.isError) {
+    return (
+      <ErrorCard
+        title="Não foi possível carregar os atendimentos"
+        description={getFriendlyErrorMessage(eventsQuery.error)}
+      />
+    );
+  }
+
+  if (eventsQuery.isLoading) {
+    return (
+      <div className="card border border-base-300 bg-base-100 shadow-sm">
+        <div className="card-body">
+          <p className="text-sm text-base-content/60">
+            Carregando atendimentos...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="card border border-base-300 bg-base-100 shadow-sm">
       <div className="card-body">
@@ -68,36 +93,19 @@ export function AppointmentsCalendar({ onCreateAppointment }: Readonly<Appointme
               Calendário de Atendimentos
             </h2>
             <p className="text-sm text-base-content/60">
-              Visualização mensal e diária dos atendimentos.
+              Visualize os atendimentos agendados e clique em um para ver mais detalhes.
             </p>
           </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="rounded-2xl border border-primary/15 bg-primary/5 px-4 py-3 shadow-sm">
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-base-content/45">
-                Atendimentos no período
-              </p>
-              <p className="mt-1 text-2xl font-extrabold text-base-content">
-                {eventsQuery.isPending ? "..." : totalAppointments}
-              </p>
-            </div>
-
             <Button onClick={onCreateAppointment} variant="success">
               <Plus className="mr-2 h-4 w-4" />
               Novo atendimento
             </Button>
           </div>
-        </div>
-
-        {eventsQuery.isError ? (
-          <ErrorCard
-            title="Não foi possível carregar os atendimentos"
-            description={getFriendlyErrorMessage(eventsQuery.error)}
-          />
-        ) : (
-          <>
-            <AppointmentContentLegend />
-
+        <AppointmentContentLegend
+          distribution={dashboardSummaryQuery.data?.charts}
+          totalAppointments={totalAppointments}
+        />
+        <div className="border rounded-2xl border-base-300 bg-base-100 p-3">
             <FullCalendar
               ref={calendarRef}
               locale={ptBrLocale}
@@ -125,14 +133,8 @@ export function AppointmentsCalendar({ onCreateAppointment }: Readonly<Appointme
               moreLinkText="mais"
               slotMinTime="07:00:00"
               slotMaxTime="21:00:00"
-            />
-
-            {eventsQuery.isPending ? (
-              <p className="mt-3 text-sm text-base-content/60">Carregando atendimentos...</p>
-            ) : null}
-
-          </>
-        )}
+          />
+          </div>
       </div>
     </div>
   );
