@@ -20,6 +20,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+      # defer: true
+      # show-sql: true
       format_sql: true
       jdbc:
         time_zone: UTC

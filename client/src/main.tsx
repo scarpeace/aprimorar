@@ -8,11 +8,14 @@ import { queryClient } from "@/lib/shared/queryClient.ts";
 import "./index.css";
 import App from "./App.tsx";
 import "react-datepicker/dist/react-datepicker.css";
+import { AuthProvider } from "@/features/auth/lib/auth-provider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </QueryClientProvider>
   </StrictMode>,
 );
