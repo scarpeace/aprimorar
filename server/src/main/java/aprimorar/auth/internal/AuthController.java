@@ -4,6 +4,7 @@ import aprimorar.auth.api.dto.AuthRequestDTO;
 import aprimorar.auth.api.dto.AuthResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(operationId = "login", description = "Autentica um usuario e retorna um access token JWT.")
+    @SecurityRequirements({})
     @ApiResponse(responseCode = "200", description = "Usuario autenticado com sucesso.")
     @ApiResponse(responseCode = "401", description = "Credenciais invalidas.")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthRequestDTO request) {

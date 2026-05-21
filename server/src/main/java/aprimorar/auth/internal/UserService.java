@@ -1,9 +1,12 @@
 package aprimorar.auth.internal;
 
-import aprimorar.auth.api.dto.CreateUserDto;
+import aprimorar.auth.api.dto.UserRequestDto;
+import aprimorar.auth.api.dto.UserResponseDto;
 import aprimorar.shared.MapperUtils;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,15 +26,38 @@ public class UserService {
     }
 
     @Transactional
-    public void createUser(CreateUserDto dto) {
-
+    public UserResponseDto createUser(UserRequestDto dto) {
         var userFromDb = findByUsername(dto.username());
         if (userFromDb.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username ja existe");
         }
 
         var user = new User(dto.username(), passwordEncoder.encode(dto.password()), dto.role(), true);
         userRepository.save(user);
+        return toResponse(user);
+    }
+
+    @Transactional
+    public void deleteUser(UUID id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        userRepository.delete(user);
+    }
+
+    @Transactional
+    public UserResponseDto toggleActive(UUID id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        user.toggleActive();
+        userRepository.save(user);
+        return toResponse(user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserResponseDto> findAll() {
+        return userRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -54,9 +80,14 @@ public class UserService {
         return userRepository.findByUsernameAndActiveTrue(normalizedUsername);
     }
 
-    @Transactional
-    public void toggleActive(String username) {
-        var user = findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        user.toggleActive();
+    private UserResponseDto toResponse(User user) {
+        return new UserResponseDto(
+                user.getId(),
+                user.getUsername(),
+                user.getRole(),
+                user.isActive(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
     }
 }
