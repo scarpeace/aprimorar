@@ -15,7 +15,7 @@ spring:
 
   sql:
     init:
-      mode: never
+      mode: always
 
   jpa:
     hibernate:
@@ -39,9 +39,9 @@ spring:
 
 jwt:
   public:
-    key: file:.jwt/app.pub
+    key: classpath:jwt/app.pub
   private:
-    key: file:.jwt/app.key
+    key: classpath:jwt/app.key
 
 logging:
   level:

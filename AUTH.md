@@ -61,7 +61,7 @@ Notas:
 - [X] Criar migration da tabela `tb_users`.
 - [X] Criar seed de admin para desenvolvimento.
 - [X] Criar entidade, repositorio e servicos de autenticacao no backend.
-- [ ] Implementar `POST /v1/auth/login`.
+- [X] Implementar `POST /v1/auth/login`.
 - [ ] Configurar `SecurityConfig` para JWT stateless.
 - [ ] Restringir `/admin/**` a `ADMIN`.
 - [ ] Exigir autenticacao nos endpoints protegidos da API.
