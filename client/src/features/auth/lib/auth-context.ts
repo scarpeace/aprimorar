@@ -1,16 +1,10 @@
 import { createContext } from "react";
 
-export type AuthRole = "EMPLOYEE" | "ADMIN";
+export type AuthRole = "ADMIN" | "EMPLOYEE";
 
 export type AuthUser = {
-  email: string;
-  name: string;
+  username: string;
   role: AuthRole;
-};
-
-export type LoginCredentials = {
-  email: string;
-  password: string;
 };
 
 export type StoredAuth = {
@@ -22,8 +16,10 @@ export type AuthContextValue = {
   isAuthenticated: boolean;
   token: string | null;
   user: AuthUser | null;
-  login: (credentials: LoginCredentials) => Promise<void>;
+  login: (credentials: { email: string; password: string }) => Promise<void>;
   logout: () => void;
+  isPending: boolean;
+  error: string | null;
 };
 
 export const AUTH_STORAGE_KEY = "aprimorar.auth";
@@ -43,19 +39,4 @@ export function readStoredAuth(): StoredAuth | null {
     localStorage.removeItem(AUTH_STORAGE_KEY);
     return null;
   }
-}
-
-export function createMockAuth(credentials: LoginCredentials): StoredAuth {
-  const normalizedEmail = credentials.email.trim().toLowerCase();
-  const role: AuthRole = normalizedEmail.startsWith("admin") ? "ADMIN" : "EMPLOYEE";
-  const name = normalizedEmail.split("@")[0] || "Usuario";
-
-  return {
-    token: `mock-jwt-${role.toLowerCase()}-${Date.now()}`,
-    user: {
-      email: normalizedEmail,
-      name,
-      role,
-    },
-  };
 }
