@@ -35,6 +35,12 @@ spring:
     enabled: true
     locations: classpath:db/migration
 
-  logging:
-    level:
-      com.aprimorar: DEBUG
+jwt:
+  public:
+    key: file:.jwt/app.pub
+  private:
+    key: file:.jwt/app.key
+
+logging:
+  level:
+    com.aprimorar: DEBUG

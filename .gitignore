@@ -48,6 +48,10 @@ dist/
 target/
 kubb/
 
+# JWT keys locais do backend
+server/.jwt/
+!server/.jwt/.gitignore
+
 
 docs
 
