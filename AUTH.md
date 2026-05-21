@@ -30,8 +30,8 @@ Este arquivo e a fonte de verdade para a implementacao de autenticacao no projet
 - Os endpoints administrativos serao restritos a `ADMIN`.
 - Os demais endpoints protegidos ficarao acessiveis para usuarios autenticados dentro do escopo inicial.
 - As contas de autenticacao nao dependerao de `Employee` nesta primeira versao.
-- No ambiente local, as chaves JWT ficarao em `server/.jwt/app.key` e `server/.jwt/app.pub`.
-- O `application-dev.yml` lera essas chaves via `file:.jwt/app.key` e `file:.jwt/app.pub`.
+- No ambiente local, as chaves JWT ficarao em `server/src/main/resources/jwt/app.key` e `server/src/main/resources/jwt/app.pub` (dentro do classpath).
+- O `application-dev.yml` le essas chaves via `classpath:jwt/app.key` e `classpath:jwt/app.pub`.
 
 ## Proposta Atual de Dados
 
@@ -62,9 +62,9 @@ Notas:
 - [X] Criar seed de admin para desenvolvimento.
 - [X] Criar entidade, repositorio e servicos de autenticacao no backend.
 - [X] Implementar `POST /v1/auth/login`.
-- [ ] Configurar `SecurityConfig` para JWT stateless.
-- [ ] Restringir `/admin/**` a `ADMIN`.
-- [ ] Exigir autenticacao nos endpoints protegidos da API.
+- [X] Configurar `SecurityConfig` para JWT stateless.
+- [X] Restringir `/admin/**` a `ADMIN`.
+- [X] Exigir autenticacao nos endpoints protegidos da API.
 - [ ] Documentar autenticacao no OpenAPI/Swagger.
 - [ ] Regenerar cliente Kubb no frontend.
 - [ ] Trocar auth mockada por login real no frontend.
@@ -103,14 +103,17 @@ Notas:
 ## Estrategia JWT
 
 - Desenvolvimento local:
-  - chave privada em `server/.jwt/app.key`
-  - chave publica em `server/.jwt/app.pub`
-  - ambos os arquivos ficam fora do git
+  - chave privada em `server/src/main/resources/jwt/app.key`
+  - chave publica em `server/src/main/resources/jwt/app.pub`
+  - ambos os arquivos ficam fora do git (`.gitignore` tem `/jwt/`)
 - Configuracao Spring no perfil `dev`:
-  - `jwt.private.key=file:.jwt/app.key`
-  - `jwt.public.key=file:.jwt/app.pub`
+  - `jwt.private.key=classpath:jwt/app.key`
+  - `jwt.public.key=classpath:jwt/app.pub`
 - Producao:
   - manter o mesmo contrato de propriedades (`jwt.private.key` e `jwt.public.key`)
   - trocar apenas a origem do recurso conforme o ambiente de deploy
 - Observacao:
-  - nesta etapa, apenas definimos o contrato e o local das chaves; a geracao e o consumo pelas beans de seguranca virao nas proximas etapas.
+  - `file:…` foi rejeitado pelo Spring Boot com `FileNotFoundException`; `classpath:…` resolveu o problema.
+  - O `SecurityConfig` agora expoe beans de `JwtDecoder`, `JwtEncoder`, `JwtAuthenticationConverter` e `PasswordEncoder`.
+  - A `SecurityFilterChain` define `SessionCreationPolicy.STATELESS`, ativa `oauth2ResourceServer().jwt()`, e exige autenticacao para todas as rotas exceto `/v1/auth/login` e Swagger.
+  - A rota `/admin/**` e restrita a `ROLE_ADMIN` via `JwtGrantedAuthoritiesConverter` com prefixo `ROLE_`.

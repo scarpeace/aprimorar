@@ -49,8 +49,6 @@ target/
 kubb/
 
 # JWT keys locais do backend
-server/.jwt/
-!server/.jwt/.gitignore
 app.key
 app.pub
 
