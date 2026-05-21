@@ -33,7 +33,9 @@ spring:
 
   flyway:
     enabled: true
-    locations: classpath:db/migration
+    locations:
+      - classpath:db/migration
+      - classpath:db/dev/migration
 
 jwt:
   public:

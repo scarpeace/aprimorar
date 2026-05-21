@@ -19,6 +19,7 @@ Este arquivo e a fonte de verdade para a implementacao de autenticacao no projet
 - Cada conta tera um unico `role`.
 - As chaves JWT no ambiente local ficarao em arquivo no backend ignorado pelo git.
 - Ao receber `401`, o frontend deve limpar a sessao local e redirecionar para `/login`.
+- O seed dev criara a conta `admin@aprimorar.local` com senha inicial `admin123`.
 
 ## Direcao Atual do Modelo
 
@@ -55,11 +56,11 @@ Notas:
 ## Etapas de Implementacao
 
 - [ ] Fechar todas as decisoes funcionais e tecnicas restantes neste documento.
-- [ ] Definir o modelo final de `tb_users` e suas constraints.
+- [X] Definir o modelo final de `tb_users` e suas constraints.
 - [X] Definir a estrategia de chave JWT para desenvolvimento e producao.
-- [ ] Criar migration da tabela `tb_users`.
-- [ ] Criar seed de admin para desenvolvimento.
-- [ ] Criar entidade, repositorio e servicos de autenticacao no backend.
+- [X] Criar migration da tabela `tb_users`.
+- [X] Criar seed de admin para desenvolvimento.
+- [X] Criar entidade, repositorio e servicos de autenticacao no backend.
 - [ ] Implementar `POST /v1/auth/login`.
 - [ ] Configurar `SecurityConfig` para JWT stateless.
 - [ ] Restringir `/admin/**` a `ADMIN`.
@@ -91,6 +92,13 @@ Notas:
 - O planejamento funcional inicial do backend esta pronto para implementacao incremental.
 - A implementacao deve priorizar backend primeiro, com validacao a cada etapa.
 - O frontend sera adaptado depois da base de autenticacao do backend estar funcional.
+
+## Seed Dev
+
+- Usuario inicial: `admin@aprimorar.local`
+- Senha inicial: `admin123`
+- O seed dev roda por Flyway apenas no perfil `dev`, via `classpath:db/dev/migration`.
+- O seed e idempotente por `username`.
 
 ## Estrategia JWT
 
