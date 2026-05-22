@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { api } from "@/lib/shared/api";
+import { publicApi } from "@/lib/shared/api";
 import {
   AUTH_STORAGE_KEY,
   AuthContext,
@@ -18,7 +18,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     setIsPending(true);
     setError(null);
     try {
-      const { data } = await api.post<AuthResponseDTO>("/v1/auth/login", { email, password });
+      const { data } = await publicApi.post<AuthResponseDTO>("/v1/auth/login", { email, password });
 
       const user: AuthUser = {
         username: data.username!,

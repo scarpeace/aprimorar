@@ -19,7 +19,7 @@ Este arquivo rastreia ajustes de autenticacao/autorizacao identificados no code 
   - Caminho: `client/src/lib/shared/api.ts`.
   - Acao: nao injetar Bearer quando `config.url` for `/v1/auth/login`, ou criar um axios client sem auth para login.
 
-- [ ] Ignorar tratamento global de `401` na rota de login.
+- [X] Ignorar tratamento global de `401` na rota de login.
   - Problema: credenciais invalidas disparam mensagem de "Sessao expirada" e redirect global.
   - Efeito: UX confusa e possivel toast duplicado.
   - Caminho: `client/src/lib/shared/api.ts`.
@@ -65,7 +65,7 @@ Este arquivo rastreia ajustes de autenticacao/autorizacao identificados no code 
   - Caminhos: `client/kubb.config.ts`, `client/src/kubb/hooks/**` apos regeneracao.
   - Acao: configurar Kubb para nao embutir `baseURL` fixo ou usar valor compatibilidade com ambiente.
 
-- [ ] Corrigir typo de formatacao no import do `api.ts`.
+- [X] Corrigir typo de formatacao no import do `api.ts`.
   - Problema: ha espacos antes de `import { keepPreviousData, QueryClient }...` no working tree atual.
   - Caminho: `client/src/lib/shared/api.ts`.
   - Acao: remover indentacao indevida.

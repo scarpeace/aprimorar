@@ -1,7 +1,7 @@
 import { axiosInstance } from "@kubb/plugin-client/clients/axios";
 import axios from "axios";
 import { ZodError } from "zod";
-  import { keepPreviousData, QueryClient } from "@tanstack/react-query";
+import { keepPreviousData, QueryClient } from "@tanstack/react-query";
 import { AUTH_STORAGE_KEY, readStoredAuth } from "@/features/auth/lib/auth-context";
 import { toast } from "sonner";
 
@@ -13,6 +13,7 @@ const sharedApiConfig = {
 } as const;
 
 export const api = axios.create(sharedApiConfig);
+export const publicApi = axios.create(sharedApiConfig);
 
 Object.assign(axiosInstance.defaults, sharedApiConfig);
 
@@ -34,11 +35,21 @@ function authRequestInterceptor(config: Parameters<NonNullable<Parameters<typeof
 }
 
 function authResponseInterceptor(error: unknown) {
-  if (axios.isAxiosError(error) && error.response?.status === 401) {
+  if (!axios.isAxiosError(error)) {
+    console.error(getFriendlyErrorMessage(error));
+    return Promise.reject(error);
+  }
+
+  if (isLoginUrl(error.config?.url)) {
+    return Promise.reject(error);
+  }
+
+  if (error.response?.status === 401) {
     localStorage.removeItem(AUTH_STORAGE_KEY);
     toast.error("Sessão expirada. Faça login novamente.");
     window.location.href = "/login";
   }
+
   console.error(getFriendlyErrorMessage(error));
   return Promise.reject(error);
 }
@@ -65,6 +76,7 @@ export function getFriendlyErrorMessage(error: unknown): string {
   return "Erro não reconhecido! Contate o suporte imediatamente";
 }
 
+// TODO: Esse query client é necessário ou pode ser removido? como mudar a configuração do kubb?
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
