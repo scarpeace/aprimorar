@@ -1,4 +1,4 @@
-package aprimorar.shared.enums;
+package aprimorar.registration.employee.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

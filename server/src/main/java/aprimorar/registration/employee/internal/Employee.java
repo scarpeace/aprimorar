@@ -1,9 +1,9 @@
 package aprimorar.registration.employee.internal;
 
 import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
+import aprimorar.registration.employee.api.Duty;
+import aprimorar.registration.shared.Person;
 import aprimorar.registration.shared.address.Address;
-import aprimorar.shared.enums.Duty;
-import aprimorar.shared.Person;
 import aprimorar.shared.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

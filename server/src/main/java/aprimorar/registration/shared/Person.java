@@ -1,5 +1,6 @@
-package aprimorar.shared;
+package aprimorar.registration.shared;
 
+import aprimorar.shared.MapperUtils;
 import aprimorar.shared.enums.Role;
 import jakarta.persistence.*;
 import java.io.Serializable;

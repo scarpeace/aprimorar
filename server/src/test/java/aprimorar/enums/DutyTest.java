@@ -2,7 +2,7 @@ package aprimorar.enums;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import aprimorar.shared.enums.Duty;
+import aprimorar.registration.employee.api.Duty;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
 package aprimorar.registration.parent.internal;
 
 import aprimorar.registration.parent.api.dto.ParentResponseDTO;
-import aprimorar.shared.Person;
+import aprimorar.registration.shared.Person;
 import aprimorar.shared.enums.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

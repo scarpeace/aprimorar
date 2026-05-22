@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import aprimorar.registration.employee.api.Duty;
 import aprimorar.registration.employee.internal.Employee;
-import aprimorar.shared.enums.Duty;
 
 public final class EmployeeSpecifications {
     private static final UUID GHOST_EMPLOYEE_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");

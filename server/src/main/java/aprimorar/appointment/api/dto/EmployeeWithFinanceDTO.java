@@ -1,6 +1,6 @@
 package aprimorar.appointment.api.dto;
 
-import aprimorar.shared.enums.Duty;
+import aprimorar.registration.employee.api.Duty;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;

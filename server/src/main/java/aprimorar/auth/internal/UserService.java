@@ -74,7 +74,6 @@ public class UserService {
         }
 
         user.toggleActive();
-        userRepository.save(user);
         return userMapper.toDTO(user);
     }
 

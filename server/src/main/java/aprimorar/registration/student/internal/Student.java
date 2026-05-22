@@ -2,7 +2,7 @@ package aprimorar.registration.student.internal;
 
 import aprimorar.registration.shared.address.Address;
 import aprimorar.registration.parent.internal.Parent;
-import aprimorar.shared.Person;
+import aprimorar.registration.shared.Person;
 import aprimorar.shared.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
