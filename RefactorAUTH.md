@@ -13,7 +13,7 @@ Este arquivo rastreia ajustes de autenticacao/autorizacao identificados no code 
 
 ### Alto Impacto / Baixa Complexidade
 
-- [ ] Corrigir login com token antigo no frontend.
+- [X] Corrigir login com token antigo no frontend.
   - Problema: `client/src/lib/shared/api.ts` injeta `Authorization` tambem em `POST /v1/auth/login`.
   - Efeito: login pode retornar `401` se houver token expirado/invalido salvo em `localStorage`.
   - Caminho: `client/src/lib/shared/api.ts`.

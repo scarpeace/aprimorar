@@ -16,9 +16,18 @@ export const api = axios.create(sharedApiConfig);
 
 Object.assign(axiosInstance.defaults, sharedApiConfig);
 
+// Rota de login não precisa de token de autenticação
+function isLoginUrl(url?: string): boolean {
+  if (!url) {
+    return false;
+  }
+
+  return url === "/v1/auth/login" || url.endsWith("/v1/auth/login");
+}
+
 function authRequestInterceptor(config: Parameters<NonNullable<Parameters<typeof api.interceptors.request.use>[0]>>[0]) {
   const stored = readStoredAuth();
-  if (stored?.token) {
+  if (!isLoginUrl(config.url) && stored?.token) {
     config.headers.Authorization = `Bearer ${stored.token}`;
   }
   return config;
