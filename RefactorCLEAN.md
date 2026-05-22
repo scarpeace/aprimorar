@@ -34,7 +34,7 @@ Este arquivo rastreia oportunidades de limpeza/refatoracao no backend. O foco e 
   - Acao: extrair `UserMapper` em `server/src/main/java/aprimorar/auth/internal/UserMapper.java`.
   - Beneficio: segue padrao usado por outros modulos e reduz responsabilidade do service.
 
-- [ ] Revisar CORS permissivo.
+- [X] Revisar CORS permissivo.
   - Problema: `SecurityConfig` usa `setAllowedOriginPatterns(List.of("*"))`, metodos e headers `*`.
   - Caminho: `server/src/main/java/aprimorar/config/SecurityConfig.java`.
   - Acao: manter permissivo apenas em dev ou mover origins para config por ambiente.
@@ -60,7 +60,7 @@ Este arquivo rastreia oportunidades de limpeza/refatoracao no backend. O foco e 
 
 ### Medio Impacto / Media Complexidade
 
-- [ ] Separar configuracao de OAuth/JWT de configuracao HTTP em `SecurityConfig`.
+- [X] Separar configuracao de OAuth/JWT de configuracao HTTP em `SecurityConfig`.
   - Problema: `SecurityConfig` concentra CORS, filter chain, encoder/decoder, password encoder e converter JWT.
   - Caminho: `server/src/main/java/aprimorar/config/SecurityConfig.java`.
   - Acao: avaliar extrair beans JWT para `JwtConfig` ou similar.

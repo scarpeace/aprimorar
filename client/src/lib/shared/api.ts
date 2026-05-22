@@ -48,7 +48,6 @@ function authResponseInterceptor(error: unknown) {
     window.location.href = "/login";
   }
 
-  console.error(getFriendlyErrorMessage(error));
   return Promise.reject(error);
 }
 

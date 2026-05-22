@@ -46,3 +46,9 @@ jwt:
 logging:
   level:
     com.aprimorar: DEBUG
+
+app:
+  security:
+    cors:
+      allowed-origins:
+        - "http://localhost:5173"
