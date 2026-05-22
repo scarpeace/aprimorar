@@ -2,6 +2,7 @@ package aprimorar.auth.internal;
 
 import aprimorar.auth.api.dto.UserRequestDto;
 import aprimorar.auth.api.dto.UserResponseDto;
+import aprimorar.auth.api.exception.AdminUserCannotBeChangedException;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.enums.Role;
 
@@ -51,6 +52,11 @@ public class UserService {
     public void deleteUser(UUID id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (user.getRole() == Role.ADMIN) {
+            throw new AdminUserCannotBeChangedException();
+        }
+
         userRepository.delete(user);
     }
 
@@ -58,6 +64,11 @@ public class UserService {
     public UserResponseDto toggleActive(UUID id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (user.getRole() == Role.ADMIN) {
+            throw new AdminUserCannotBeChangedException();
+        }
+
         user.toggleActive();
         userRepository.save(user);
         return toResponse(user);

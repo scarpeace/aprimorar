@@ -39,7 +39,7 @@ Este arquivo rastreia ajustes de autenticacao/autorizacao identificados no code 
 
 ### Alto Impacto / Media Complexidade
 
-- [ ] Impedir modificacao do admin unico.
+- [X] Impedir modificacao do admin unico.
   - Decisao: o unico `ADMIN` nao pode ser deletado, arquivado ou modificado.
   - Problema atual: `deleteUser` e `toggleActive` nao protegem o admin.
   - Caminho: `server/src/main/java/aprimorar/auth/internal/UserService.java`.
@@ -53,7 +53,7 @@ Este arquivo rastreia ajustes de autenticacao/autorizacao identificados no code 
   - Acao minima: bloquear criacao de `ADMIN` se ja existir algum usuario admin.
   - Acao robusta: adicionar constraint/indice parcial no banco para impedir mais de um admin.
 
-- [ ] Definir erro de negocio para operacoes proibidas em admin.
+- [X] Definir erro de negocio para operacoes proibidas em admin.
   - Problema: `ResponseStatusException` direto dificulta padronizacao de respostas.
   - Caminho: `server/src/main/java/aprimorar/auth/api/exception/` e handler compartilhado ou de auth.
   - Acao: criar excecoes como `AdminUserCannotBeChangedException` e mapear status adequado (`409` ou `422`).
