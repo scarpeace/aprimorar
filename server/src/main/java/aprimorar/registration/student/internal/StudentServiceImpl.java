@@ -10,14 +10,12 @@ import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
 import aprimorar.registration.student.api.dto.StudentCountSummaryDTO;
-import aprimorar.registration.student.api.dto.StudentSummaryDTO;
 import aprimorar.registration.student.api.exception.StudentNotFoundException;
 import aprimorar.registration.student.internal.repository.StudentRepository;
 import aprimorar.registration.student.internal.repository.StudentSpecifications;
 import aprimorar.shared.PageDTO;
 import aprimorar.registration.student.api.event.StudentDeletedEvent;
 import java.time.Clock;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 

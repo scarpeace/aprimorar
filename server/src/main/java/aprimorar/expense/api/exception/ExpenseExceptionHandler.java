@@ -1,6 +1,5 @@
 package aprimorar.expense.api.exception;
 
-import aprimorar.shared.exception.ErrorCode;
 import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,7 +27,6 @@ public class ExpenseExceptionHandler {
     public ProblemResponseDTO handleNotFound(ExpenseNotFoundException ex, HttpServletRequest request) {
         log.error("Erro de Recurso não encontrado: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.RESOURCE_NOT_FOUND,
             HttpStatus.NOT_FOUND,
             ex.getMessage(),
             request.getRequestURI()

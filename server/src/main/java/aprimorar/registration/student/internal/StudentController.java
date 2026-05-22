@@ -5,14 +5,12 @@ import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
 import aprimorar.registration.student.api.dto.StudentCountSummaryDTO;
-import aprimorar.registration.student.api.dto.StudentSummaryDTO;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;

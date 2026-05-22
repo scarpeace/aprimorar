@@ -9,7 +9,6 @@ import aprimorar.registration.parent.api.exception.ParentNotFoundException;
 import aprimorar.registration.shared.address.exception.InvalidAddressException;
 import aprimorar.registration.student.api.exception.StudentAlreadyExistException;
 import aprimorar.registration.student.api.exception.StudentNotFoundException;
-import aprimorar.shared.exception.ErrorCode;
 import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,7 +40,6 @@ public class RegistrationExceptionHandler {
     public ProblemResponseDTO handleNotFound(RuntimeException ex, HttpServletRequest request) {
         log.error("Erro de Recurso não encontrado: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.RESOURCE_NOT_FOUND,
             HttpStatus.NOT_FOUND,
             ex.getMessage(),
             request.getRequestURI()
@@ -64,7 +62,6 @@ public class RegistrationExceptionHandler {
     public ProblemResponseDTO handleConflict(RuntimeException ex, HttpServletRequest request) {
         log.error("Erro de conflito de dados: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.CONFLICT,
             HttpStatus.CONFLICT,
             ex.getMessage(),
             request.getRequestURI()
@@ -84,7 +81,6 @@ public class RegistrationExceptionHandler {
     public ProblemResponseDTO handleBadRequest(Exception ex, HttpServletRequest request) {
         log.error("Erro de validação de entidade: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.BUSINESS_ERROR,
             HttpStatus.FORBIDDEN,
             ex.getMessage(),
             request.getRequestURI()

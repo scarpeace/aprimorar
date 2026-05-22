@@ -40,7 +40,6 @@ public class GlobalExceptionHandler {
     public ProblemResponseDTO handleConflictExceptions(RuntimeException ex, HttpServletRequest request) {
         log.error("Erro de conflito de dados: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.CONFLICT,
             HttpStatus.CONFLICT,
             ex.getMessage(),
             request.getRequestURI()
@@ -62,7 +61,6 @@ public class GlobalExceptionHandler {
                 
         log.error("Erro de validação de DTO: {}", errorMessage);
         return new ProblemResponseDTO(
-            ErrorCode.VALIDATION_ERROR,
             HttpStatus.BAD_REQUEST,
             errorMessage,
             request.getRequestURI()
@@ -79,7 +77,6 @@ public class GlobalExceptionHandler {
     public ProblemResponseDTO handleUnauthorizedExceptions(RuntimeException ex, HttpServletRequest request) {
         log.error("Erro de autenticação: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.UNAUTHORIZED,
             HttpStatus.UNAUTHORIZED,
             ex.getMessage(),
             request.getRequestURI()
@@ -96,7 +93,6 @@ public class GlobalExceptionHandler {
     public ProblemResponseDTO handleMalformedRequest(HttpMessageNotReadableException ex, HttpServletRequest request) {
         log.error("Erro de payload inválido: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.BAD_REQUEST,
             HttpStatus.BAD_REQUEST,
             "Corpo da requisição inválido",
             request.getRequestURI()
@@ -113,7 +109,6 @@ public class GlobalExceptionHandler {
     public ProblemResponseDTO handle(Exception ex, HttpServletRequest request) {
         log.error("Ocorreu um erro interno: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.VALIDATION_ERROR,
             HttpStatus.INTERNAL_SERVER_ERROR,
             "Um erro interno ocorreu, contate o suporte ou tente novamente mais tarde",
             request.getRequestURI()

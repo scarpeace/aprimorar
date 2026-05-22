@@ -23,7 +23,7 @@ Este arquivo rastreia oportunidades de limpeza/refatoracao no backend. O foco e 
 
 ### Alto Impacto / Media Complexidade
 
-- [ ] Padronizar erros de dominio do modulo auth.
+- [X] Padronizar erros de dominio do modulo auth.
   - Problema: `UserService` usa `ResponseStatusException` direto, enquanto outros modulos usam excecoes de dominio.
   - Caminho: `server/src/main/java/aprimorar/auth/internal/UserService.java`, novo pacote `server/src/main/java/aprimorar/auth/api/exception/`.
   - Acao: criar excecoes como `UserAlreadyExistsException`, `UserNotFoundException`, `InvalidUserRoleException` e handler especifico.
@@ -66,7 +66,7 @@ Este arquivo rastreia oportunidades de limpeza/refatoracao no backend. O foco e 
   - Acao: avaliar extrair beans JWT para `JwtConfig` ou similar.
   - Beneficio: reduz tamanho e responsabilidade de `SecurityConfig`.
 
-- [ ] Rever uso de `ResponseStatusException` em services novos.
+- [X] Rever uso de `ResponseStatusException` em services novos.
   - Problema: novo auth usa exceptions HTTP no service, acoplando camada de negocio ao transporte.
   - Caminho: `server/src/main/java/aprimorar/auth/internal/UserService.java`.
   - Acao: substituir por excecoes de dominio mapeadas em handler.

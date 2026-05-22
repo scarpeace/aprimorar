@@ -3,7 +3,6 @@ package aprimorar.expense.api;
 import aprimorar.expense.api.dto.ExpenseRequestDTO;
 import aprimorar.expense.api.dto.ExpenseResponseDTO;
 import aprimorar.expense.api.dto.ExpensesSummaryDTO;
-import aprimorar.shared.PageDTO;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;

@@ -2,9 +2,8 @@ package aprimorar.auth.internal;
 
 import aprimorar.auth.api.dto.UserRequestDTO;
 import aprimorar.auth.api.dto.UserResponseDTO;
-import aprimorar.auth.api.exception.AdminUserAlreadyExistsException;
-import aprimorar.auth.api.exception.AdminUserCannotBeChangedException;
 import aprimorar.shared.MapperUtils;
+import aprimorar.shared.exception.DomainBusinessException;
 import aprimorar.shared.enums.Role;
 
 import java.util.List;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserService {
@@ -32,19 +30,17 @@ public class UserService {
     public UserResponseDTO createUser(UserRequestDTO dto) {
         var userFromDb = findByUsername(dto.username());
         if (userFromDb.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username já utilizado");
+            throw new DomainBusinessException(HttpStatus.CONFLICT, "USERNAME_TAKEN");
         }
 
-        if(dto.role() == Role.STUDENT) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possíve criar um usuário com role STUDENT");
-        }
-
-        if(dto.role() == Role.PARENT) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possíve criar um usuário com role PARENT");
+        if (!isRoleAllowedForAuthUser(dto.role())) {
+            throw new DomainBusinessException(
+                    HttpStatus.BAD_REQUEST,
+                    "INVALID_ROLE");
         }
 
         if (dto.role() == Role.ADMIN && userRepository.existsByRole(Role.ADMIN)) {
-            throw new AdminUserAlreadyExistsException();
+            throw new DomainBusinessException(HttpStatus.CONFLICT, "ADMIN_ALREADY_EXISTS");
         }
 
 
@@ -56,10 +52,10 @@ public class UserService {
     @Transactional
     public void deleteUser(UUID id) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new DomainBusinessException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND"));
 
         if (user.getRole() == Role.ADMIN) {
-            throw new AdminUserCannotBeChangedException();
+            throw new DomainBusinessException(HttpStatus.CONFLICT, "ADMIN_CANNOT_BE_CHANGED");
         }
 
         userRepository.delete(user);
@@ -68,10 +64,10 @@ public class UserService {
     @Transactional
     public UserResponseDTO toggleActive(UUID id) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new DomainBusinessException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND"));
 
         if (user.getRole() == Role.ADMIN) {
-            throw new AdminUserCannotBeChangedException();
+            throw new DomainBusinessException(HttpStatus.CONFLICT, "ADMIN_CANNOT_BE_CHANGED");
         }
 
         user.toggleActive();
@@ -115,5 +111,9 @@ public class UserService {
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );
+    }
+
+    private boolean isRoleAllowedForAuthUser(Role role) {
+        return role == Role.EMPLOYEE || role == Role.ADMIN;
     }
 }

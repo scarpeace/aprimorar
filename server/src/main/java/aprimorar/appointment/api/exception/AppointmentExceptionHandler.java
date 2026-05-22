@@ -1,6 +1,5 @@
 package aprimorar.appointment.api.exception;
 
-import aprimorar.shared.exception.ErrorCode;
 import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,7 +27,6 @@ public class AppointmentExceptionHandler {
     public ProblemResponseDTO handleNotFound(AppointmentNotFoundException ex, HttpServletRequest request) {
         log.error("Erro de Recurso não encontrado: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.RESOURCE_NOT_FOUND,
             HttpStatus.NOT_FOUND,
             ex.getMessage(),
             request.getRequestURI()
@@ -45,7 +43,6 @@ public class AppointmentExceptionHandler {
     public ProblemResponseDTO handleConflict(AppointmentScheduleConflictException ex, HttpServletRequest request) {
         log.error("Erro de conflito de dados: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.CONFLICT,
             HttpStatus.CONFLICT,
             ex.getMessage(),
             request.getRequestURI()
@@ -62,7 +59,6 @@ public class AppointmentExceptionHandler {
     public ProblemResponseDTO handleBadRequest(Exception ex, HttpServletRequest request) {
         log.error("Erro de validação de entidade: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.BUSINESS_ERROR,
             HttpStatus.FORBIDDEN,
             ex.getMessage(),
             request.getRequestURI()

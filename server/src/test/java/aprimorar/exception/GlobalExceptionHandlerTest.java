@@ -13,7 +13,6 @@ import aprimorar.registration.parent.api.exception.ParentAlreadyExistsException;
 import aprimorar.registration.api.exception.RegistrationExceptionHandler;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.exception.StudentNotFoundException;
-import aprimorar.shared.exception.ErrorCode;
 import aprimorar.shared.exception.GlobalExceptionHandler;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -62,8 +61,8 @@ class GlobalExceptionHandlerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value("NOT_FOUND"))
                 .andExpect(jsonPath("$.message").value("Aluno não encontrado no banco de dados"))
-                .andExpect(jsonPath("$.uri").value("/test-errors/not-found"))
-                .andExpect(jsonPath("$.errorCode").value(ErrorCode.RESOURCE_NOT_FOUND.name()));
+                .andExpect(jsonPath("$.uri").value("/test-errors/not-found"));
+                // .andExpect(jsonPath("$.errorCode").value(ErrorCode.RESOURCE_NOT_FOUND.name()));
     }
 
     @Test
@@ -73,8 +72,8 @@ class GlobalExceptionHandlerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.status").value("CONFLICT"))
                 .andExpect(jsonPath("$.message").value("Responsável já existe no banco de dados"))
-                .andExpect(jsonPath("$.uri").value("/test-errors/conflict"))
-                .andExpect(jsonPath("$.errorCode").value(ErrorCode.CONFLICT.name()));
+                .andExpect(jsonPath("$.uri").value("/test-errors/conflict"));
+                // .andExpect(jsonPath("$.errorCode").value(ErrorCode.CONFLICT.name()));
     }
 
     @Test
@@ -105,8 +104,8 @@ class GlobalExceptionHandlerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.message").value("Nome do aluno é obrigatório"))
-                .andExpect(jsonPath("$.uri").value("/test-errors/validation"))
-                .andExpect(jsonPath("$.errorCode").value(ErrorCode.VALIDATION_ERROR.name()));
+                .andExpect(jsonPath("$.uri").value("/test-errors/validation"));
+                // .andExpect(jsonPath("$.errorCode").value(ErrorCode.VALIDATION_ERROR.name()));
     }
 
     @RestController
