@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 import java.util.UUID;
 
-public record UserResponseDto(
+public record UserResponseDTO(
         @Schema(description = "ID do usuario")
         UUID id,
         @Schema(description = "Username (email)", example = "john@empresa.com")

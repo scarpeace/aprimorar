@@ -1,7 +1,7 @@
 package aprimorar.auth.internal;
 
-import aprimorar.auth.api.dto.UserRequestDto;
-import aprimorar.auth.api.dto.UserResponseDto;
+import aprimorar.auth.api.dto.UserRequestDTO;
+import aprimorar.auth.api.dto.UserResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +35,7 @@ public class UserController {
     @PostMapping
     @Operation(operationId = "createUser", summary = "Create a new user")
     @ApiResponse(responseCode = "201", description = "Usuario criado com sucesso")
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserRequestDto dto) {
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO dto) {
         var response = userService.createUser(dto);
         return ResponseEntity.created(URI.create("/v1/users/" + response.id())).body(response);
     }
@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping
     @Operation(operationId = "listUsers", summary = "List all users")
     @ApiResponse(responseCode = "200", description = "Lista de usuarios retornada com sucesso")
-    public ResponseEntity<List<UserResponseDto>> listUsers() {
+    public ResponseEntity<List<UserResponseDTO>> listUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
 
@@ -60,7 +60,7 @@ public class UserController {
     @Operation(operationId = "archiveUser", summary = "Toggle active status of a user")
     @ApiResponse(responseCode = "200", description = "Status ativo alternado com sucesso")
     @ApiResponse(responseCode = "404", description = "Usuario nao encontrado")
-    public ResponseEntity<UserResponseDto> archiveUser(@PathVariable UUID id) {
+    public ResponseEntity<UserResponseDTO> archiveUser(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.toggleActive(id));
     }
 }

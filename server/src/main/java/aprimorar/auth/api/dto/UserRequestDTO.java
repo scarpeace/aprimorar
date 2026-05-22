@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record UserRequestDto(
+public record UserRequestDTO(
         @NotBlank(message = "Username e obrigatorio")
         @Email(message = "Username deve ser um endereco de email valido")
         @Schema(description = "Username, obrigatoriamente email", example = "john@empresa.com")

@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ApiResponse(
-        responseCode = "400",
+        responseCode = "409",
         description = "Requisição inválida",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
@@ -86,8 +86,25 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ApiResponse(
+        responseCode = "400",
+        description = "Corpo da requisição inválido",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ProblemResponseDTO handleMalformedRequest(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        log.error("Erro de payload inválido: {}", ex.getMessage());
+        return new ProblemResponseDTO(
+            ErrorCode.BAD_REQUEST,
+            HttpStatus.BAD_REQUEST,
+            "Corpo da requisição inválido",
+            request.getRequestURI()
+        );
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({ HttpMessageNotReadableException.class, Exception.class })
+    @ExceptionHandler(Exception.class)
     @ApiResponse(
         responseCode = "500",
         description = "Erro interno do sistema",

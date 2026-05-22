@@ -1,7 +1,7 @@
 package aprimorar.auth.internal;
 
-import aprimorar.auth.api.dto.UserRequestDto;
-import aprimorar.auth.api.dto.UserResponseDto;
+import aprimorar.auth.api.dto.UserRequestDTO;
+import aprimorar.auth.api.dto.UserResponseDTO;
 import aprimorar.auth.api.exception.AdminUserAlreadyExistsException;
 import aprimorar.auth.api.exception.AdminUserCannotBeChangedException;
 import aprimorar.shared.MapperUtils;
@@ -29,7 +29,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto createUser(UserRequestDto dto) {
+    public UserResponseDTO createUser(UserRequestDTO dto) {
         var userFromDb = findByUsername(dto.username());
         if (userFromDb.isPresent()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username já utilizado");
@@ -66,7 +66,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto toggleActive(UUID id) {
+    public UserResponseDTO toggleActive(UUID id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -80,7 +80,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponseDto> findAll() {
+    public List<UserResponseDTO> findAll() {
         return userRepository.findAll().stream()
                 .map(this::toResponse)
                 .toList();
@@ -106,8 +106,8 @@ public class UserService {
         return userRepository.findByUsernameAndActiveTrue(normalizedUsername);
     }
 
-    private UserResponseDto toResponse(User user) {
-        return new UserResponseDto(
+    private UserResponseDTO toResponse(User user) {
+        return new UserResponseDTO(
                 user.getId(),
                 user.getUsername(),
                 user.getRole(),

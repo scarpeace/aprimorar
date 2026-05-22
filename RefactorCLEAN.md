@@ -6,17 +6,17 @@ Este arquivo rastreia oportunidades de limpeza/refatoracao no backend. O foco e 
 
 ### Alto Impacto / Baixa Complexidade
 
-- [ ] Remover imports nao usados em `OpenAPIConfig`.
+- [X] Remover imports nao usados em `OpenAPIConfig`.
   - Problema: `SecuritySchemes` esta importado e nao usado.
   - Caminho: `server/src/main/java/aprimorar/config/OpenAPIConfig.java`.
   - Acao: remover import morto.
 
-- [ ] Corrigir metadado inconsistente no `GlobalExceptionHandler`.
+- [X] Corrigir metadado inconsistente no `GlobalExceptionHandler`.
   - Problema: handler de `DataIntegrityViolationException` retorna `409`, mas `@ApiResponse` diz `400`.
   - Caminho: `server/src/main/java/aprimorar/shared/exception/GlobalExceptionHandler.java`.
   - Acao: ajustar `@ApiResponse(responseCode = "409")`.
 
-- [ ] Corrigir tratamento de `HttpMessageNotReadableException`.
+- [X] Corrigir tratamento de `HttpMessageNotReadableException`.
   - Problema: `HttpMessageNotReadableException` esta agrupada com `Exception.class` e retorna `500`.
   - Caminho: `server/src/main/java/aprimorar/shared/exception/GlobalExceptionHandler.java`.
   - Acao: criar handler especifico retornando `400 BAD_REQUEST`.
@@ -41,18 +41,18 @@ Este arquivo rastreia oportunidades de limpeza/refatoracao no backend. O foco e 
 
 ### Medio Impacto / Baixa Complexidade
 
-- [ ] Remover setters desnecessarios da entity `User`.
+- [X] Remover setters desnecessarios da entity `User`.
   - Problema: `User` possui `@Setter` em `username`, `password`, `role`, mas update de usuario foi removido.
   - Caminho: `server/src/main/java/aprimorar/auth/internal/User.java`.
   - Acao: remover setters se nenhum fluxo atual usa mutacao direta desses campos.
 
-- [ ] Adicionar `api/package-info.java` no modulo auth, se DTOs forem expostos como API publica do modulo.
+- [X] Adicionar `api/package-info.java` no modulo auth, se DTOs forem expostos como API publica do modulo.
   - Problema: `auth/api/` existe, mas nao possui `@NamedInterface("api")`; outros modulos seguem esse padrao.
   - Caminho: `server/src/main/java/aprimorar/auth/api/package-info.java`.
   - Acao: criar package-info se quisermos consistencia com Spring Modulith.
   - Observacao: nao e obrigatorio enquanto nenhum outro modulo depender de `auth::api`.
 
-- [ ] Padronizar sufixo dos DTOs do auth.
+- [X] Padronizar sufixo dos DTOs do auth.
   - Problema: projeto mistura `DTO` e `Dto`; auth tem `UserRequestDto`, `UserResponseDto`, enquanto outros usam `DTO`.
   - Caminhos: `server/src/main/java/aprimorar/auth/api/dto/UserRequestDto.java`, `server/src/main/java/aprimorar/auth/api/dto/UserResponseDto.java`.
   - Acao: decidir entre manter novo padrao ou renomear para `UserRequestDTO` / `UserResponseDTO`.
