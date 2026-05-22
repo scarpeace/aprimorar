@@ -19,13 +19,13 @@ public class AuthExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(AuthExceptionHandler.class);
 
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(AdminUserCannotBeChangedException.class)
+    @ExceptionHandler({ AdminUserCannotBeChangedException.class, AdminUserAlreadyExistsException.class })
     @ApiResponse(
         responseCode = "409",
-        description = "Operacao nao permitida para o usuario ADMIN",
+        description = "Conflito de regra de negocio para usuario ADMIN",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ProblemResponseDTO handleConflict(AdminUserCannotBeChangedException ex, HttpServletRequest request) {
+    public ProblemResponseDTO handleConflict(RuntimeException ex, HttpServletRequest request) {
         log.error("Erro de conflito de dados: {}", ex.getMessage());
         return new ProblemResponseDTO(
             ErrorCode.CONFLICT,

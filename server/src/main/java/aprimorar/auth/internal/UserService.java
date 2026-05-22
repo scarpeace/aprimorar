@@ -2,6 +2,7 @@ package aprimorar.auth.internal;
 
 import aprimorar.auth.api.dto.UserRequestDto;
 import aprimorar.auth.api.dto.UserResponseDto;
+import aprimorar.auth.api.exception.AdminUserAlreadyExistsException;
 import aprimorar.auth.api.exception.AdminUserCannotBeChangedException;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.enums.Role;
@@ -40,6 +41,10 @@ public class UserService {
 
         if(dto.role() == Role.PARENT) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possíve criar um usuário com role PARENT");
+        }
+
+        if (dto.role() == Role.ADMIN && userRepository.existsByRole(Role.ADMIN)) {
+            throw new AdminUserAlreadyExistsException();
         }
 
 

@@ -46,7 +46,7 @@ Este arquivo rastreia ajustes de autenticacao/autorizacao identificados no code 
   - Acao: bloquear operacoes em usuario com `role == ADMIN`; se update voltar no futuro, tambem bloquear update.
   - Criterio: `DELETE /v1/users/{adminId}` e `PATCH /v1/users/{adminId}/archive` retornam erro controlado.
 
-- [ ] Garantir que exista somente um admin.
+- [X] Garantir que exista somente um admin.
   - Decisao: deve existir um unico `ADMIN`.
   - Problema atual: `createUser` permite criar outro `ADMIN`.
   - Caminhos: `server/src/main/java/aprimorar/auth/internal/UserService.java`, possivel migration/constraint em `server/src/main/resources/db/migration/`.

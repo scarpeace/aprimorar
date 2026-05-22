@@ -1,5 +1,6 @@
 package aprimorar.auth.internal;
 
+import aprimorar.shared.enums.Role;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByUsernameAndActiveTrue(String username);
 
     boolean existsByUsername(String username);
+
+    boolean existsByRole(Role role);
 }
