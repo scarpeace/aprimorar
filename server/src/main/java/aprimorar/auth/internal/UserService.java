@@ -2,15 +2,15 @@ package aprimorar.auth.internal;
 
 import aprimorar.auth.api.dto.UserRequestDTO;
 import aprimorar.auth.api.dto.UserResponseDTO;
-import aprimorar.auth.api.exception.AuthErrorCode;
+import aprimorar.auth.api.exception.UserBusinessException;
 import aprimorar.shared.MapperUtils;
-import aprimorar.shared.exception.DomainBusinessException;
 import aprimorar.shared.enums.Role;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,36 +32,33 @@ public class UserService {
     public UserResponseDTO createUser(UserRequestDTO dto) {
         String normalizedUsername = MapperUtils.normalizeEmail(dto.username());
         if (normalizedUsername == null) {
-            throw new DomainBusinessException(AuthErrorCode.INVALID_USERNAME.getStatus(), AuthErrorCode.INVALID_USERNAME.getMessage());
+            throw new UserBusinessException(HttpStatus.BAD_REQUEST, "E-mail em formato inválido");
         }
 
         var userFromDb = userRepository.findByUsername(normalizedUsername);
 
         if (userFromDb.isPresent()) {
-            throw new DomainBusinessException(AuthErrorCode.USERNAME_TAKEN.getStatus(), AuthErrorCode.USERNAME_TAKEN.getMessage());
+            throw new UserBusinessException(HttpStatus.CONFLICT, "E-mail já cadastrado");
         }
 
-        if (!isRoleAllowedForAuthUser(dto.role())) {
-            throw new DomainBusinessException(AuthErrorCode.INVALID_ROLE.getStatus(), AuthErrorCode.INVALID_ROLE.getMessage());
-        }
-
-        if (dto.role() == Role.ADMIN && userRepository.existsByRole(Role.ADMIN)) {
-            throw new DomainBusinessException(AuthErrorCode.ADMIN_ALREADY_EXISTS.getStatus(), AuthErrorCode.ADMIN_ALREADY_EXISTS.getMessage());
+        if (dto.role() == Role.PARENT || dto.role() == Role.STUDENT || dto.role() == Role.ADMIN) {
+            throw new UserBusinessException(HttpStatus.BAD_REQUEST, "Não é possível criar um usuário com este perfil");
         }
 
         String encodedPassword = passwordEncoder.encode(dto.password());
         var user = userMapper.toEntity(dto, normalizedUsername, encodedPassword);
         userRepository.save(user);
+
         return userMapper.toDTO(user);
     }
 
     @Transactional
     public void deleteUser(UUID id) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new DomainBusinessException(AuthErrorCode.USER_NOT_FOUND.getStatus(), AuthErrorCode.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new UserBusinessException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         if (user.getRole() == Role.ADMIN) {
-            throw new DomainBusinessException(AuthErrorCode.ADMIN_CANNOT_BE_CHANGED.getStatus(), AuthErrorCode.ADMIN_CANNOT_BE_CHANGED.getMessage());
+            throw new UserBusinessException(HttpStatus.CONFLICT, "Não é permitido alterar o usuário ADMIN");
         }
 
         userRepository.delete(user);
@@ -70,10 +67,10 @@ public class UserService {
     @Transactional
     public UserResponseDTO toggleActive(UUID id) {
         var user = userRepository.findById(id)
-                .orElseThrow(() -> new DomainBusinessException(AuthErrorCode.USER_NOT_FOUND.getStatus(), AuthErrorCode.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new UserBusinessException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
         if (user.getRole() == Role.ADMIN) {
-            throw new DomainBusinessException(AuthErrorCode.ADMIN_CANNOT_BE_CHANGED.getStatus(), AuthErrorCode.ADMIN_CANNOT_BE_CHANGED.getMessage());
+            throw new UserBusinessException(HttpStatus.CONFLICT, "Não é permitido alterar o usuário ADMIN");
         }
 
         user.toggleActive();
@@ -106,9 +103,5 @@ public class UserService {
         }
 
         return userRepository.findByUsernameAndActiveTrue(normalizedUsername);
-    }
-
-    private boolean isRoleAllowedForAuthUser(Role role) {
-        return role == Role.EMPLOYEE || role == Role.ADMIN;
     }
 }

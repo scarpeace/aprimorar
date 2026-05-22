@@ -58,14 +58,6 @@ public class User {
         this.active = active;
     }
 
-    @PrePersist
-    @PreUpdate
-    void normalize() {
-        this.username = normalizeUsername(this.username);
-        this.password = validatePassword(this.password);
-        this.role = validateRole(this.role);
-    }
-
     private String normalizeUsername(String username) {
         String normalized = MapperUtils.normalizeEmail(username);
         if (normalized == null) {
@@ -83,7 +75,7 @@ public class User {
 
     private Role validateRole(Role role) {
         if (role == null) {
-            throw new IllegalArgumentException("Perfil é obrigatório");
+            throw new IllegalArgumentException("Função é obrigatório");
         }
         return role;
     }
