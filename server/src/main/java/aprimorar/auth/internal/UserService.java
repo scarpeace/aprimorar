@@ -3,6 +3,7 @@ package aprimorar.auth.internal;
 import aprimorar.auth.api.dto.UserRequestDto;
 import aprimorar.auth.api.dto.UserResponseDto;
 import aprimorar.shared.MapperUtils;
+import aprimorar.shared.enums.Role;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +30,17 @@ public class UserService {
     public UserResponseDto createUser(UserRequestDto dto) {
         var userFromDb = findByUsername(dto.username());
         if (userFromDb.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username ja existe");
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username já utilizado");
         }
+
+        if(dto.role() == Role.STUDENT) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possíve criar um usuário com role STUDENT");
+        }
+
+        if(dto.role() == Role.PARENT) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é possíve criar um usuário com role PARENT");
+        }
+
 
         var user = new User(dto.username(), passwordEncoder.encode(dto.password()), dto.role(), true);
         userRepository.save(user);

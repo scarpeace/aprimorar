@@ -13,8 +13,6 @@ const sharedApiConfig = {
 } as const;
 
 export const api = axios.create(sharedApiConfig);
-export const publicApi = axios.create(sharedApiConfig);
-
 Object.assign(axiosInstance.defaults, sharedApiConfig);
 
 // Rota de login não precisa de token de autenticação

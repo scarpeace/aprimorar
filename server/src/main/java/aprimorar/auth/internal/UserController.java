@@ -5,6 +5,7 @@ import aprimorar.auth.api.dto.UserResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 import java.net.URI;
 import java.util.List;
@@ -34,7 +35,7 @@ public class UserController {
     @PostMapping
     @Operation(operationId = "createUser", summary = "Create a new user")
     @ApiResponse(responseCode = "201", description = "Usuario criado com sucesso")
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto dto) {
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserRequestDto dto) {
         var response = userService.createUser(dto);
         return ResponseEntity.created(URI.create("/v1/users/" + response.id())).body(response);
     }

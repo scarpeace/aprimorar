@@ -25,13 +25,13 @@ Este arquivo rastreia ajustes de autenticacao/autorizacao identificados no code 
   - Caminho: `client/src/lib/shared/api.ts`.
   - Acao: se `error.config.url` for `/v1/auth/login`, deixar o erro subir para o `AuthProvider` tratar como credenciais invalidas.
 
-- [ ] Limitar criacao de usuario a roles `EMPLOYEE` e `ADMIN`.
+- [X] Limitar criacao de usuario a roles `EMPLOYEE` e `ADMIN`.
   - Problema: `UserRequestDto.role` usa `Role`, que tambem aceita `STUDENT` e `PARENT`.
   - Efeito: roles fora do escopo inicial podem autenticar e acessar endpoints autenticados.
   - Caminhos: `server/src/main/java/aprimorar/auth/api/dto/UserRequestDto.java`, `server/src/main/java/aprimorar/auth/internal/UserService.java`.
   - Acao: validar role no service ou criar uma enum/request especifica para auth.
 
-- [ ] Adicionar validacao de request em criacao de usuario.
+- [X] Adicionar validacao de request em criacao de usuario.
   - Problema: `UserRequestDto` nao tem `@NotBlank`, `@Email`, `@NotNull`; controller nao usa `@Valid`.
   - Efeito: input invalido pode virar `IllegalArgumentException` e resposta `500`.
   - Caminhos: `server/src/main/java/aprimorar/auth/api/dto/UserRequestDto.java`, `server/src/main/java/aprimorar/auth/internal/UserController.java`.
@@ -77,7 +77,7 @@ Este arquivo rastreia ajustes de autenticacao/autorizacao identificados no code 
   - Caminho: `AUTH.md`.
   - Acao: adicionar nota em `Estrategia JWT` ou `Decisoes Fechadas`.
 
-- [ ] Ajustar mensagens de exemplo de email em DTOs.
+- [X] Ajustar mensagens de exemplo de email em DTOs.
   - Problema: `UserRequestDto.username` usa exemplo `john_doe`, mas username e email.
   - Caminho: `server/src/main/java/aprimorar/auth/api/dto/UserRequestDto.java`.
   - Acao: trocar exemplo para `john@empresa.com`.
