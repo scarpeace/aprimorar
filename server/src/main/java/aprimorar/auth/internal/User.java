@@ -69,21 +69,21 @@ public class User {
     private String normalizeUsername(String username) {
         String normalized = MapperUtils.normalizeEmail(username);
         if (normalized == null) {
-            throw new IllegalArgumentException("Username e obrigatorio");
+            throw new IllegalArgumentException("E-mail é obrigatório");
         }
         return normalized;
     }
 
     private String validatePassword(String password) {
         if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("Password e obrigatorio");
+            throw new IllegalArgumentException("Senha é obrigatória");
         }
         return password;
     }
 
     private Role validateRole(Role role) {
         if (role == null) {
-            throw new IllegalArgumentException("Role e obrigatorio");
+            throw new IllegalArgumentException("Perfil é obrigatório");
         }
         return role;
     }

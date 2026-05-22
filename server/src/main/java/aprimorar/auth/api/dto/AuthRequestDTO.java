@@ -6,13 +6,13 @@ import jakarta.validation.constraints.NotBlank;
 
 @Schema(description = "Payload de autenticacao")
 public record AuthRequestDTO(
-    @NotBlank(message = "Email e obrigatorio")
-    @Email(message = "Email deve ser um endereco de email valido")
-    @Schema(description = "Email usado no login", example = "admin@aprimorar.local")
+    @NotBlank(message = "E-mail é obrigatório")
+    @Email(message = "E-mail deve ser um endereço de e-mail válido")
+    @Schema(description = "E-mail usado no login", example = "admin@aprimorar.local")
     String email,
 
-    @NotBlank(message = "Senha e obrigatoria")
-    @Schema(description = "Senha do usuario", example = "admin123")
+    @NotBlank(message = "Senha é obrigatória")
+    @Schema(description = "Senha do usuário", example = "admin123")
     String password
 ) {
 }

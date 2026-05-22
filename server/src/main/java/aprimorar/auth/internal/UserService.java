@@ -20,15 +20,22 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     @Transactional
     public UserResponseDTO createUser(UserRequestDTO dto) {
-        var userFromDb = findByUsername(dto.username());
+        String normalizedUsername = MapperUtils.normalizeEmail(dto.username());
+        if (normalizedUsername == null) {
+            throw new DomainBusinessException(HttpStatus.BAD_REQUEST, "INVALID_USERNAME");
+        }
+
+        var userFromDb = userRepository.findByUsername(normalizedUsername);
         if (userFromDb.isPresent()) {
             throw new DomainBusinessException(HttpStatus.CONFLICT, "USERNAME_TAKEN");
         }
@@ -43,10 +50,10 @@ public class UserService {
             throw new DomainBusinessException(HttpStatus.CONFLICT, "ADMIN_ALREADY_EXISTS");
         }
 
-
-        var user = new User(dto.username(), passwordEncoder.encode(dto.password()), dto.role(), true);
+        String encodedPassword = passwordEncoder.encode(dto.password());
+        var user = userMapper.toEntity(dto, normalizedUsername, encodedPassword);
         userRepository.save(user);
-        return toResponse(user);
+        return userMapper.toDTO(user);
     }
 
     @Transactional
@@ -72,13 +79,13 @@ public class UserService {
 
         user.toggleActive();
         userRepository.save(user);
-        return toResponse(user);
+        return userMapper.toDTO(user);
     }
 
     @Transactional(readOnly = true)
     public List<UserResponseDTO> findAll() {
         return userRepository.findAll().stream()
-                .map(this::toResponse)
+                .map(userMapper::toDTO)
                 .toList();
     }
 
@@ -100,17 +107,6 @@ public class UserService {
         }
 
         return userRepository.findByUsernameAndActiveTrue(normalizedUsername);
-    }
-
-    private UserResponseDTO toResponse(User user) {
-        return new UserResponseDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getRole(),
-                user.isActive(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-        );
     }
 
     private boolean isRoleAllowedForAuthUser(Role role) {

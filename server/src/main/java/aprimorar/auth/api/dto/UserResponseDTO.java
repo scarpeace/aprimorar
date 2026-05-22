@@ -6,16 +6,16 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record UserResponseDTO(
-        @Schema(description = "ID do usuario")
+        @Schema(description = "ID do usuário")
         UUID id,
-        @Schema(description = "Username (email)", example = "john@empresa.com")
+        @Schema(description = "E-mail usado no login", example = "john@empresa.com")
         String username,
-        @Schema(description = "Role do usuario", example = "EMPLOYEE")
+        @Schema(description = "Perfil de acesso", example = "EMPLOYEE")
         Role role,
-        @Schema(description = "Se a conta esta ativa")
+        @Schema(description = "Indica se a conta está ativa")
         boolean active,
-        @Schema(description = "Data de criacao")
+        @Schema(description = "Data de criação")
         Instant createdAt,
-        @Schema(description = "Data de atualizacao")
+        @Schema(description = "Data de atualização")
         Instant updatedAt) {
 }

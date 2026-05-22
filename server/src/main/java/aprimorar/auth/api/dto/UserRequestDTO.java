@@ -7,14 +7,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record UserRequestDTO(
-        @NotBlank(message = "Username e obrigatorio")
-        @Email(message = "Username deve ser um endereco de email valido")
-        @Schema(description = "Username, obrigatoriamente email", example = "john@empresa.com")
+        @NotBlank(message = "E-mail é obrigatório")
+        @Email(message = "E-mail deve ser um endereço de e-mail válido")
+        @Schema(description = "E-mail usado no login", example = "john@empresa.com")
         String username,
-        @NotBlank(message = "Senha e obrigatoria")
+        @NotBlank(message = "Senha é obrigatória")
         @Schema(description = "Senha", example = "password123")
         String password,
-        @NotNull(message = "Role e obrigatoria")
-        @Schema(description = "Role", example = "EMPLOYEE")
+        @NotNull(message = "Perfil é obrigatório")
+        @Schema(description = "Perfil de acesso", example = "EMPLOYEE")
         Role role) {
 }

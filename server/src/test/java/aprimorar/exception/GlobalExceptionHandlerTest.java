@@ -45,7 +45,7 @@ class GlobalExceptionHandlerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(new TestErrorController())
                 .setControllerAdvice(
                         new RegistrationExceptionHandler(),
-                        new GlobalExceptionHandler(Clock.fixed(FIXED_INSTANT, ZoneOffset.UTC))
+                        new GlobalExceptionHandler()
                 )
                 .setValidator(validator)
                 .setMessageConverters(

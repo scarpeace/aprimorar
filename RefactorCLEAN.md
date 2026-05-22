@@ -28,7 +28,7 @@ Este arquivo rastreia oportunidades de limpeza/refatoracao no backend. O foco e 
   - Caminho: `server/src/main/java/aprimorar/auth/internal/UserService.java`, novo pacote `server/src/main/java/aprimorar/auth/api/exception/`.
   - Acao: criar excecoes como `UserAlreadyExistsException`, `UserNotFoundException`, `InvalidUserRoleException` e handler especifico.
 
-- [ ] Criar mapper interno para usuario de autenticacao.
+- [X] Criar mapper interno para usuario de autenticacao.
   - Problema: `UserService` monta `UserResponseDto` manualmente.
   - Caminho: `server/src/main/java/aprimorar/auth/internal/UserService.java`.
   - Acao: extrair `UserMapper` em `server/src/main/java/aprimorar/auth/internal/UserMapper.java`.
@@ -74,17 +74,17 @@ Este arquivo rastreia oportunidades de limpeza/refatoracao no backend. O foco e 
 
 ### Baixo Impacto / Baixa Complexidade
 
-- [ ] Corrigir mensagens ASCII/acentuacao inconsistentes no auth.
+- [X] Corrigir mensagens ASCII/acentuacao inconsistentes no auth.
   - Problema: mensagens misturam portugues sem acento (`Usuario`, `ja existe`) com o restante do projeto.
   - Caminhos: `server/src/main/java/aprimorar/auth/**/*.java`.
   - Acao: padronizar texto das mensagens depois de decidir convencao.
 
-- [ ] Atualizar exemplos Swagger do auth.
+- [X] Atualizar exemplos Swagger do auth.
   - Problema: exemplos e descriptions ainda usam termos como `Username` com email obrigatorio.
   - Caminhos: `server/src/main/java/aprimorar/auth/api/dto/*.java`.
   - Acao: padronizar descricoes para "email usado no login".
 
-- [ ] Remover comentario suprimido desnecessario em `GlobalExceptionHandler`.
+- [X] Remover comentario suprimido desnecessario em `GlobalExceptionHandler`.
   - Problema: `@SuppressWarnings("unused")` em `applicationClock`, mas o campo so e injetado e nunca usado.
   - Caminho: `server/src/main/java/aprimorar/shared/exception/GlobalExceptionHandler.java`.
   - Acao: remover campo/construtor se clock nao for necessario, ou usar o clock no `ProblemResponseDTO` se aplicavel.
