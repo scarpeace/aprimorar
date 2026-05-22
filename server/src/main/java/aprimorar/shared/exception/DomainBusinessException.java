@@ -6,6 +6,11 @@ public class DomainBusinessException extends RuntimeException {
 
     private final HttpStatus status;
 
+    public DomainBusinessException(String message) {
+        super(message);
+        this.status = HttpStatus.BAD_REQUEST;
+    }
+
     public DomainBusinessException(HttpStatus status, String message) {
         super(message);
         this.status = status;
