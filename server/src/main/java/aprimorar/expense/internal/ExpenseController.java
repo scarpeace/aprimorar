@@ -33,9 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Expense", description = "Gerenciamento de despesas gerais")
 public class ExpenseController {
 
-    private final ExpenseServiceImpl expenseService;
+    private final ExpenseManagementService expenseService;
 
-    public ExpenseController(ExpenseServiceImpl expenseService) {
+    public ExpenseController(ExpenseManagementService expenseService) {
         this.expenseService = expenseService;
     }
 

@@ -5,4 +5,3 @@ public class EmployeeAlreadyExistsException extends RuntimeException {
         super(message);
     }
 }
-

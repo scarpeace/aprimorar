@@ -1,6 +1,6 @@
 package aprimorar.registration.employee.internal;
 
-import aprimorar.registration.employee.api.Duty;
+import aprimorar.registration.employee.api.contract.DutyEnum;
 import aprimorar.registration.shared.Person;
 import aprimorar.registration.shared.address.Address;
 import aprimorar.shared.enums.Role;
@@ -22,7 +22,7 @@ public class Employee extends Person {
 
     @Column(name = "duty", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Duty duty;
+    private DutyEnum duty;
 
     @Embedded
     private Address address;
@@ -37,7 +37,7 @@ public class Employee extends Person {
             String contact,
             String cpf,
             String email,
-            Duty duty,
+            DutyEnum duty,
             Address address
     ) {
 
@@ -53,7 +53,7 @@ public class Employee extends Person {
             String pix,
             String contact,
             String email,
-            Duty duty,
+            DutyEnum duty,
             Address address
     ) {
         super.update(name, birthdate, validatePix(pix), contact, email);

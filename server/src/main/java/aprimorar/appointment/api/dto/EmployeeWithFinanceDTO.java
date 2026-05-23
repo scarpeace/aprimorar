@@ -1,6 +1,6 @@
 package aprimorar.appointment.api.dto;
 
-import aprimorar.registration.employee.api.Duty;
+import aprimorar.registration.employee.api.contract.DutyEnum;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
@@ -10,7 +10,7 @@ public record EmployeeWithFinanceDTO(
     String name,
     String cpf,
     String contact,
-    Duty duty,
+    DutyEnum duty,
     Instant createdAt,
     boolean active,
     BigDecimal totalPaid,

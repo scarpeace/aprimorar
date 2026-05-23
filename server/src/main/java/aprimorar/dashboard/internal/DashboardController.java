@@ -20,9 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "Dashboard")
 public class DashboardController {
 
-    private final DashboardServiceImpl dashboardService;
+    private final DashboardQueryService dashboardService;
 
-    public DashboardController(DashboardServiceImpl dashboardService) {
+    public DashboardController(DashboardQueryService dashboardService) {
         this.dashboardService = dashboardService;
     }
 

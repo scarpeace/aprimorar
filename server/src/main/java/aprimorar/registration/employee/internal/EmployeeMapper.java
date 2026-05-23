@@ -1,8 +1,9 @@
 package aprimorar.registration.employee.internal;
 
 import org.springframework.stereotype.Component;
-import aprimorar.registration.employee.api.dto.EmployeeRequestDTO;
-import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
+
+import aprimorar.registration.employee.api.contract.dto.EmployeeRequestDTO;
+import aprimorar.registration.employee.api.contract.dto.EmployeeResponseDTO;
 import aprimorar.registration.shared.address.AddressMapper;
 
 

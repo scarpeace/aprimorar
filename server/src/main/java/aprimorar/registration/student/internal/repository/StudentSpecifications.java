@@ -29,7 +29,7 @@ public final class StudentSpecifications {
     }
 
     public static Specification<Student> belongsToParent(UUID parentId) {
-        return (root, query, cb) -> cb.equal(root.get("parent").get("id"), parentId);
+        return (root, query, cb) -> cb.equal(root.get("parentId"), parentId);
     }
 
     public static Specification<Student> isNotArchived() {

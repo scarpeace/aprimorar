@@ -1,10 +1,9 @@
 package aprimorar.registration.student.internal;
 
 import aprimorar.registration.api.exception.PersonHasPendingFinancialsException;
+import aprimorar.registration.parent.api.ParentQueryApi;
 import aprimorar.registration.shared.address.Address;
-import aprimorar.registration.parent.internal.Parent;
-import aprimorar.registration.parent.internal.repository.ParentRepository;
-import aprimorar.registration.shared.PendingFinancialBalanceChecker;
+import aprimorar.registration.student.api.StudentChargeStatusPort;
 import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
@@ -31,37 +30,37 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-public class StudentServiceImpl implements StudentService {
+public class StudentServiceImpl implements StudentService, StudentManagementService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentServiceImpl.class);
     private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     private final StudentRepository studentRepo;
-    private final ParentRepository parentRepo;
+    private final ParentQueryApi parentQueryApi;
     private final StudentMapper studentMapper;
     private final ApplicationEventPublisher eventPublisher;
-    private final PendingFinancialBalanceChecker pendingFinancialBalanceChecker;
+    private final StudentChargeStatusPort studentChargeStatusPort;
     private final Clock clock;
 
     public StudentServiceImpl(
         StudentRepository studentRepo,
-        ParentRepository parentRepo,
+        ParentQueryApi parentQueryApi,
         StudentMapper studentMapper,
         ApplicationEventPublisher eventPublisher,
-        PendingFinancialBalanceChecker pendingFinancialBalanceChecker,
+        StudentChargeStatusPort studentChargeStatusPort,
         Clock clock
     ) {
         this.studentRepo = studentRepo;
-        this.parentRepo = parentRepo;
+        this.parentQueryApi = parentQueryApi;
         this.studentMapper = studentMapper;
         this.eventPublisher = eventPublisher;
-        this.pendingFinancialBalanceChecker = pendingFinancialBalanceChecker;
+        this.studentChargeStatusPort = studentChargeStatusPort;
         this.clock = clock;
     }
 
     @Transactional
     public StudentResponseDTO createStudent(StudentRequestDTO dto) {
-        Parent parent = parentRepo.getReferenceById(dto.parentId());
+        parentQueryApi.findById(dto.parentId());
         Address address = Address.fromRequest(dto.address());
 
         Student student = new Student(
@@ -72,7 +71,7 @@ public class StudentServiceImpl implements StudentService {
             dto.email(),
             dto.cpf(),
             dto.school(),
-            parent,
+            dto.parentId(),
             address
         );
 
@@ -139,7 +138,7 @@ public class StudentServiceImpl implements StudentService {
         }
 
         Student student = findStudentOrThrow(id);
-        Parent parent = parentRepo.getReferenceById(dto.parentId());
+        parentQueryApi.findById(dto.parentId());
         Address address = Address.fromRequest(dto.address());
 
         student.updateDetails(
@@ -149,7 +148,7 @@ public class StudentServiceImpl implements StudentService {
             dto.contact(),
             dto.email(),
             dto.school(),
-            parent,
+            dto.parentId(),
             address
         );
 
@@ -185,7 +184,7 @@ public class StudentServiceImpl implements StudentService {
 
         Student student = findStudentOrThrow(studentId);
 
-        if (pendingFinancialBalanceChecker.hasPendingStudentCharges(studentId)) {
+        if (studentChargeStatusPort.hasPendingStudentCharges(studentId)) {
             throw new PersonHasPendingFinancialsException(
                 "O aluno possui cobranças pendentes. Quite os valores antes de excluí-lo."
             );

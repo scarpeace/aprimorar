@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class DashboardServiceImpl {
+public class DashboardServiceImpl implements DashboardQueryService {
 
     private static final int REFRESH_SECONDS = 60;
     private static final int MIN_YEAR = 2000;

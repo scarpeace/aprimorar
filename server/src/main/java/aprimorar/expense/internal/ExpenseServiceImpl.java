@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ExpenseServiceImpl implements ExpenseService {
+public class ExpenseServiceImpl implements ExpenseService, ExpenseManagementService {
 
     private final ExpenseRepository expenseRepository;
     private final Clock clock;

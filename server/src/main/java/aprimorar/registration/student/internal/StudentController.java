@@ -35,9 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Student", description = "Student management APIs")
 public class StudentController {
 
-    private final StudentServiceImpl studentService;
+    private final StudentManagementService studentService;
 
-    public StudentController(StudentServiceImpl studentService) {
+    public StudentController(StudentManagementService studentService) {
         this.studentService = studentService;
     }
 

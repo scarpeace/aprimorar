@@ -29,9 +29,9 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Appointment")
 public class AppointmentController {
 
-    private final AppointmentServiceImpl appointmentService;
+    private final AppointmentManagementService appointmentService;
 
-    public AppointmentController(AppointmentServiceImpl appointmentService) {
+    public AppointmentController(AppointmentManagementService appointmentService) {
         this.appointmentService = appointmentService;
     }
 

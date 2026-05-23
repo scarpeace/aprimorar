@@ -1,16 +1,15 @@
 package aprimorar.registration.employee.internal;
 
-import aprimorar.appointment.api.AppointmentService;
-import aprimorar.registration.api.exception.PersonHasPendingFinancialsException;
-import aprimorar.registration.employee.api.Duty;
-import aprimorar.registration.employee.api.EmployeeService;
-import aprimorar.registration.employee.api.dto.EmployeeCountSummaryDTO;
-import aprimorar.registration.employee.api.dto.EmployeeOptionsDTO;
-import aprimorar.registration.employee.api.dto.EmployeeRequestDTO;
-import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
-import aprimorar.registration.employee.api.event.EmployeeDeletedEvent;
+import aprimorar.registration.employee.api.contract.EmployeeQueryApi;
+import aprimorar.registration.employee.api.contract.DutyEnum;
+import aprimorar.registration.employee.api.contract.EmployeePaymentStatusPort;
+import aprimorar.registration.employee.api.contract.dto.EmployeeCountSummaryDTO;
+import aprimorar.registration.employee.api.contract.dto.EmployeeOptionsDTO;
+import aprimorar.registration.employee.api.contract.dto.EmployeeRequestDTO;
+import aprimorar.registration.employee.api.contract.dto.EmployeeResponseDTO;
 import aprimorar.registration.employee.api.exception.EmployeeBusinessException;
 import aprimorar.registration.employee.api.exception.EmployeeNotFoundException;
+import aprimorar.registration.employee.api.event.EmployeeDeletedEvent;
 import aprimorar.registration.employee.internal.repository.EmployeeRepository;
 import aprimorar.registration.employee.internal.repository.EmployeeSpecifications;
 import aprimorar.registration.shared.address.AddressMapper;
@@ -29,21 +28,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService, EmployeeQueryApi {
 
     private static final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
     private final EmployeeRepository employeeRepo;
     private final ApplicationEventPublisher eventPublisher;
-    private final AppointmentService appointmentService;
+    private final EmployeePaymentStatusPort employeePaymentStatusPort;
 
     public EmployeeServiceImpl(
         EmployeeRepository employeeRepo,
         ApplicationEventPublisher eventPublisher,
-        AppointmentService appointmentService
+        EmployeePaymentStatusPort employeePaymentStatusPort
     ) {
         this.employeeRepo = employeeRepo;
         this.eventPublisher = eventPublisher;
-        this.appointmentService = appointmentService;
+        this.employeePaymentStatusPort = employeePaymentStatusPort;
     }
 
     @Transactional
@@ -89,11 +88,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeMapper.toDto(employee);
     }
 
-    //TODO: talvez dê para remover esse método e colocar essa countByDutyNotAndActiveTrue em algum outro lugar já que o total de employees não interessa.
     @Transactional(readOnly = true)
     public EmployeeCountSummaryDTO getSummary() {
-        long activeEmployees = employeeRepo.countByDutyNotAndActiveTrue(Duty.SYSTEM);
-        long totalEmployees = employeeRepo.countByDutyNot(Duty.SYSTEM);
+        long activeEmployees = employeeRepo.countByDutyNotAndActiveTrue(DutyEnum.SYSTEM);
+        long totalEmployees = employeeRepo.countByDutyNot(DutyEnum.SYSTEM);
 
         return new EmployeeCountSummaryDTO(activeEmployees, totalEmployees);
     }
@@ -101,7 +99,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(readOnly = true)
     public List<EmployeeOptionsDTO> getEmployeeOptions() {
         return employeeRepo
-            .findAllByDutyNotAndActiveTrueOrderByNameAsc(Duty.SYSTEM)
+            .findAllByDutyNotAndActiveTrueOrderByNameAsc(DutyEnum.SYSTEM)
             .stream()
             .map(e -> new EmployeeOptionsDTO(e.getId(), e.getName()))
             .toList();
@@ -138,7 +136,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = findEmployeeOrThrow(employeeId);
         ensureNotSystem(employee, "Não é possível deletar o registro de sistema 'Colaborador Removido'.");
 
-        if (appointmentService.hasPendingEmployeePayments(employeeId)) {
+        if (employeePaymentStatusPort.hasPendingEmployeePayments(employeeId)) {
             throw new EmployeeBusinessException(HttpStatus.BAD_REQUEST,"O colaborador possui pagamentos pendentes. Quite os valores antes de excluí-lo.");
         }
 
@@ -155,7 +153,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void archiveEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
 
-        if (appointmentService.hasPendingEmployeePayments(employeeId)) {
+        if (employeePaymentStatusPort.hasPendingEmployeePayments(employeeId)) {
             throw new EmployeeBusinessException(HttpStatus.BAD_REQUEST,"O colaborador possui pagamentos pendentes. Quite os valores antes de arquivar.");
         }
 
@@ -181,7 +179,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private void ensureNotSystem(Employee employee, String message) {
-        if (Duty.SYSTEM.equals(employee.getDuty())) {
+        if (DutyEnum.SYSTEM.equals(employee.getDuty())) {
             throw new EmployeeBusinessException(HttpStatus.CONFLICT, message);
         }
     }

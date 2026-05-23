@@ -13,8 +13,6 @@ public interface AppointmentService {
 
     long countActiveStudentsInPeriod(Instant startDate, Instant endDate, UUID excludedStudentId);
 
-    boolean hasPendingEmployeePayments(UUID employeeId);
-
     long countAppointmentsInPeriod(Instant startDate, Instant endDate);
 
     List<ContentDistributionDTO> findContentDistributionInPeriod(Instant startDate, Instant endDate);

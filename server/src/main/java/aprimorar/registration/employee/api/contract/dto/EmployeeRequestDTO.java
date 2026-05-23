@@ -1,8 +1,8 @@
-package aprimorar.registration.employee.api.dto;
+package aprimorar.registration.employee.api.contract.dto;
 
 import java.time.LocalDate;
 
-import aprimorar.registration.employee.api.Duty;
+import aprimorar.registration.employee.api.contract.DutyEnum;
 import aprimorar.registration.shared.address.dto.AddressRequestDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,7 +29,7 @@ public record EmployeeRequestDTO(
         @Email(message = "Email deve ser um endereço de email válido")
         String email,
         @NotNull(message = "Papel do funcionário é obrigatório")
-        Duty duty,
+        DutyEnum duty,
         @Valid
         @NotNull(message = "Endereço do funcionário é obrigatório")
         @Schema(nullable = false, description = "Endereço do funcionário", implementation = AddressRequestDTO.class)

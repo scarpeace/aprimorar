@@ -1,5 +1,6 @@
 package aprimorar.registration.parent.internal;
 
+import aprimorar.registration.parent.api.ParentQueryApi;
 import aprimorar.registration.parent.api.dto.ParentOptionsDTO;
 import aprimorar.registration.parent.api.dto.ParentRequestDTO;
 import aprimorar.registration.parent.api.dto.ParentResponseDTO;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ParentServiceImpl {
+public class ParentServiceImpl implements ParentManagementService, ParentQueryApi {
 
     private static final Logger log = LoggerFactory.getLogger(ParentServiceImpl.class);
 

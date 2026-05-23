@@ -18,8 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import aprimorar.registration.employee.api.EmployeeService;
-import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
+import aprimorar.registration.employee.api.contract.EmployeeQueryApi;
+import aprimorar.registration.employee.api.contract.dto.EmployeeResponseDTO;
 import aprimorar.appointment.api.AppointmentService;
 import aprimorar.appointment.api.dto.ContentDistributionDTO;
 import aprimorar.appointment.api.dto.AppointmentFinanceSummaryDTO;
@@ -53,7 +53,7 @@ import aprimorar.registration.student.api.dto.StudentResponseDTO;
 import aprimorar.shared.PageDTO;
 
 @Service
-public class AppointmentServiceImpl implements AppointmentService {
+public class AppointmentServiceImpl implements AppointmentService, AppointmentManagementService {
 
     private static final Logger log = LoggerFactory.getLogger(AppointmentServiceImpl.class);
 
@@ -61,7 +61,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentMapper appointmentMapper;
     private final ExpenseService expenseService;
     private final StudentService studentService;
-    private final EmployeeService employeeService;
+    private final EmployeeQueryApi employeeService;
     private final Clock clock;
 
     public AppointmentServiceImpl(
@@ -69,7 +69,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         AppointmentMapper appointmentMapper,
         ExpenseService expenseService,
         StudentService studentService,
-        EmployeeService employeeService,
+        EmployeeQueryApi employeeService,
         Clock clock
     ) {
         this.appointmentRepo = appointmentRepo;
@@ -363,11 +363,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Transactional
     public void reassignEmployeeAppointmentsToGhost(UUID employeeId) {
         appointmentRepo.reassignEmployeeAppointmentsToGhost(employeeId, UUID.fromString("00000000-0000-4000-8000-000000000001"));
-    }
-
-    @Transactional(readOnly = true)
-    public boolean hasPendingEmployeePayments(UUID employeeId) {
-        return appointmentRepo.existsByEmployeeIdAndEmployeePaymentDateIsNull(employeeId);
     }
 
     @Transactional(readOnly = true)

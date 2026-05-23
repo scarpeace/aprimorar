@@ -30,9 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Parent", description = "Parent management APIs")
 public class ParentController {
 
-    private final ParentServiceImpl parentService;
+    private final ParentManagementService parentService;
 
-    public ParentController(ParentServiceImpl parentService) {
+    public ParentController(ParentManagementService parentService) {
         this.parentService = parentService;
     }
 

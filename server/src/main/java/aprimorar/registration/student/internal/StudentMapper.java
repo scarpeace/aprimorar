@@ -21,7 +21,7 @@ public class StudentMapper {
                 student.getBirthdate(),
                 student.getSchool(),
                 calculateAge(student, clock),
-                student.getParent().getId(),
+                student.getParentId(),
                 student.getActive(),
                 student.getUpdatedAt(),
                 student.getCreatedAt(),

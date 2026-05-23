@@ -1,4 +1,4 @@
 @NamedInterface("api")
-package aprimorar.registration.employee.api.dto;
+package aprimorar.registration.employee.api.contract.dto;
 
 import org.springframework.modulith.NamedInterface;

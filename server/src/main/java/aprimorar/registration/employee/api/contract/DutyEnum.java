@@ -1,9 +1,9 @@
-package aprimorar.registration.employee.api;
+package aprimorar.registration.employee.api.contract;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Função/Papel do funcionário")
-public enum Duty {
+public enum DutyEnum {
     TEACHER("Professor"),
     ADM("Administrativo"),
     THERAPIST("Terapeuta"),
@@ -12,7 +12,7 @@ public enum Duty {
 
     private final String description;
 
-    Duty(String description) {
+    DutyEnum(String description) {
         this.description = description;
     }
 
