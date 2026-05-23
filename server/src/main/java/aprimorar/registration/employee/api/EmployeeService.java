@@ -7,7 +7,7 @@ import aprimorar.shared.PageDTO;
 
 public interface EmployeeService {
 
+    //TODO: Talvez dê pra tirar esse método daqui, não tenho certeza.
     PageDTO<EmployeeResponseDTO> getEmployees(Pageable pageable, String search, Boolean archived);
-
     EmployeeResponseDTO findById(UUID employeeId);
 }

@@ -47,13 +47,13 @@ import aprimorar.appointment.internal.repository.AppointmentRepository.EmployeeF
 import aprimorar.appointment.internal.repository.AppointmentRepository.StudentFinanceSummaryProjection;
 import aprimorar.appointment.internal.repository.AppointmentSpecifications;
 import aprimorar.expense.api.ExpenseService;
-import aprimorar.registration.employee.api.EmployeePaymentStatusService;
+
 import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
 import aprimorar.shared.PageDTO;
 
 @Service
-public class AppointmentServiceImpl implements AppointmentService, EmployeePaymentStatusService {
+public class AppointmentServiceImpl implements AppointmentService {
 
     private static final Logger log = LoggerFactory.getLogger(AppointmentServiceImpl.class);
 

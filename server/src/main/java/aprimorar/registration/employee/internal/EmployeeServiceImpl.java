@@ -89,7 +89,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeMapper.toDto(employee);
     }
 
-//TODO: talvez dê para remover esse método e colocar essa countByDutyNotAndActiveTrue em algum outro lugar já que o total de employees não interessa.
+    //TODO: talvez dê para remover esse método e colocar essa countByDutyNotAndActiveTrue em algum outro lugar já que o total de employees não interessa.
     @Transactional(readOnly = true)
     public EmployeeCountSummaryDTO getSummary() {
         long activeEmployees = employeeRepo.countByDutyNotAndActiveTrue(Duty.SYSTEM);
@@ -113,12 +113,21 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmployeeBusinessException(HttpStatus.CONFLICT, "Já existe um colaborador utilizando este e-mail.");
         }
 
-        var employee = employeeRepo.findById(employeeId)
+        var employee = employeeRepo
+            .findById(employeeId)
             .orElseThrow(() -> new EmployeeBusinessException(HttpStatus.NOT_FOUND, "Colaborador não encontrado."));
 
         ensureNotSystem(employee, "Não é possível modificar o registro de sistema 'Colaborador Removido'.");
 
-        employee.update(dto.name(), dto.birthdate(), dto.pix(), dto.contact(), dto.email(), dto.duty(), AddressMapper.toEntity(dto.address()));
+        employee.update(
+            dto.name(),
+            dto.birthdate(),
+            dto.pix(),
+            dto.contact(),
+            dto.email(),
+            dto.duty(),
+            AddressMapper.toEntity(dto.address())
+        );
 
         log.info("Colaborador {} atualizado com sucesso.", employee.getName().toUpperCase());
         return EmployeeMapper.toDto(employee);
@@ -130,14 +139,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         ensureNotSystem(employee, "Não é possível deletar o registro de sistema 'Colaborador Removido'.");
 
         if (appointmentService.hasPendingEmployeePayments(employeeId)) {
-            throw new PersonHasPendingFinancialsException(
-                "O colaborador possui pagamentos pendentes. Quite os valores antes de excluí-lo."
-            );
+            throw new EmployeeBusinessException(HttpStatus.BAD_REQUEST,"O colaborador possui pagamentos pendentes. Quite os valores antes de excluí-lo.");
         }
 
         eventPublisher.publishEvent(new EmployeeDeletedEvent(employeeId));
-
         employeeRepo.delete(employee);
+
         log.info(
             "Colaborador {} deletado com sucesso. Eventos transferidos para 'Colaborador Removido'.",
             employee.getName().toUpperCase()
@@ -147,8 +154,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public void archiveEmployee(UUID employeeId) {
         Employee employee = findEmployeeOrThrow(employeeId);
+
+        if (appointmentService.hasPendingEmployeePayments(employeeId)) {
+            throw new EmployeeBusinessException(HttpStatus.BAD_REQUEST,"O colaborador possui pagamentos pendentes. Quite os valores antes de arquivar.");
+        }
+
         ensureNotSystem(employee, "Não é possível arquivar o registro de sistema 'Colaborador Removido'.");
         employee.archive();
+
         log.info("Colaborador {} arquivado com sucesso.", employee.getName().toUpperCase());
     }
 
