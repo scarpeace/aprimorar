@@ -35,9 +35,7 @@ public class UserService {
             throw new UserBusinessException(HttpStatus.BAD_REQUEST, "E-mail em formato inválido");
         }
 
-        var userFromDb = userRepository.findByUsername(normalizedUsername);
-
-        if (userFromDb.isPresent()) {
+        if (userRepository.existsByUsername(normalizedUsername)) {
             throw new UserBusinessException(HttpStatus.CONFLICT, "E-mail já cadastrado");
         }
 

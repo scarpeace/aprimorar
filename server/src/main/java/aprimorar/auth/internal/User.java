@@ -50,15 +50,16 @@ public class User {
     }
 
     public User(String username, String password, Role role, boolean active) {
-        this.username = normalizeUsername(username);
+        this.username = validateUsername(username);
         this.password = validatePassword(password);
         this.role = validateRole(role);
         this.active = active;
     }
 
-    private String normalizeUsername(String username) {
-        String normalized = MapperUtils.normalizeEmail(username);
-        if (normalized == null) {
+    private String validateUsername(String username) {
+        var normalized = MapperUtils.normalizeEmail(username);
+
+        if (normalized == null || normalized.isBlank()) {
             throw new IllegalArgumentException("E-mail é obrigatório");
         }
         return normalized;
@@ -73,7 +74,7 @@ public class User {
 
     private Role validateRole(Role role) {
         if (role == null) {
-            throw new IllegalArgumentException("Função é obrigatório");
+            throw new IllegalArgumentException("Função é obrigatória");
         }
         return role;
     }

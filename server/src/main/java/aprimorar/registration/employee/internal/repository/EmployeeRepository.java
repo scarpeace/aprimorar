@@ -4,10 +4,12 @@ import java.util.Optional;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import aprimorar.registration.employee.internal.Employee;
+import aprimorar.registration.employee.api.Duty;
 
 public interface EmployeeRepository extends JpaRepository<Employee, UUID>, JpaSpecificationExecutor<Employee> {
 
@@ -26,4 +28,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID>, JpaSp
     boolean existsByEmailAndIdNot(String email, UUID id);
 
     boolean existsByIdAndActiveFalse(UUID id);
+
+    long countByDutyNotAndActiveTrue(Duty duty);
+
+    long countByDutyNot(Duty duty);
+
+    List<Employee> findAllByDutyNotAndActiveTrue(Duty duty, Sort sort);
+
+    List<Employee> findAllByDutyNotAndActiveTrueOrderByNameAsc(Duty duty);
 }

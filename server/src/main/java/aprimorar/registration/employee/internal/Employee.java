@@ -41,29 +41,38 @@ public class Employee extends Person {
             Address address
     ) {
 
-        super(name, birthdate, pix, contact, cpf, email);
-        this.validateRequiredFields(pix, address);
+        super(name, birthdate, validatePix(pix), contact, cpf, email);
+        this.address = validateAddress(address);
         this.duty = duty;
-        this.address = address;
         this.setRole(Role.EMPLOYEE);
     }
 
-    public void updateDetails(
-            String name, LocalDate birthdate, String pix,
-            String contact, String email, Duty duty, Address address
+    public void update(
+            String name,
+            LocalDate birthdate,
+            String pix,
+            String contact,
+            String email,
+            Duty duty,
+            Address address
     ) {
-        super.update(name, birthdate, pix, contact, email);
+        super.update(name, birthdate, validatePix(pix), contact, email);
         this.duty = duty;
-        this.address = address;
+        this.address = validateAddress(address);
     }
 
-    private void validateRequiredFields(String pix, Address address) {
+    private static String validatePix(String pix) {
         if (pix == null || pix.isBlank()) {
             throw new IllegalArgumentException("Pix é obrigatório");
         }
+        return pix;
+    }
+
+    private Address validateAddress(Address address) {
         if (address == null) {
             throw new IllegalArgumentException("Endereço do colaborador é obrigatório");
         }
+        return address;
     }
 
 }

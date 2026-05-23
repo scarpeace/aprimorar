@@ -56,42 +56,25 @@ public abstract class Person implements Serializable {
 
     protected Person() {}
 
-    protected Person(
-        String name,
-        LocalDate birthdate,
-        String pix,
-        String contact,
-        String cpf,
-        String email
-    ) {
-        validateRequiredFields(name, birthdate, contact, email);
-        validateCpf(cpf);
-        this.name = name;
-        this.birthdate = birthdate;
-        this.contact = MapperUtils.normalizeContact(contact);
+    public Person(String name, LocalDate birthdate, String pix, String contact, String cpf, String email) {
+        this.name = validateName(name);
+        this.birthdate = validateBirthdate(birthdate);
         this.pix = pix;
-        this.cpf = MapperUtils.normalizeCpf(cpf);
-        this.email = MapperUtils.normalizeEmail(email);
+        this.contact = validateContact(contact);
+        this.cpf = validateCpf(cpf);
+        this.email = validateEmail(email);
     }
 
     public void setRole(Role role) {
         this.role = role;
     }
 
-    public void update(
-        String name,
-        LocalDate birthdate,
-        String pix,
-        String contact,
-        String email
-    ) {
-        validateRequiredFields(name, birthdate, contact, email);
-
-        this.name = name;
-        this.birthdate = birthdate;
+    public void update(String name, LocalDate birthdate, String pix, String contact, String email) {
+        this.name = validateName(name);
+        this.birthdate = validateBirthdate(birthdate);
         this.pix = pix;
-        this.contact = contact;
-        this.email = email;
+        this.contact = validateContact(contact);
+        this.email = validateEmail(email);
     }
 
     public void archive() {
@@ -102,31 +85,41 @@ public abstract class Person implements Serializable {
         this.active = true;
     }
 
-    private void validateRequiredFields(
-        String name,
-        LocalDate birthdate,
-        String contact,
-        String email
-    ) {
+    private String validateName(String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Nome é obrigatório");
         }
-        if (birthdate == null) {
-            throw new IllegalArgumentException(
-                "A data de nascimento é obrigatória"
-            );
-        }
-        if (contact == null || contact.isBlank()) {
-            throw new IllegalArgumentException("Contato é obrigatório");
-        }
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email é obrigatório");
-        }
+        return name;
     }
 
-    private void validateCpf(String cpf) {
-        if (cpf == null || cpf.isBlank()) {
+    private LocalDate validateBirthdate(LocalDate birthdate) {
+        if (birthdate == null) {
+            throw new IllegalArgumentException("A data de nascimento é obrigatória");
+        }
+        return birthdate;
+    }
+
+    private String validateContact(String contact) {
+        var normalized = MapperUtils.normalizeContact(contact);
+        if (normalized == null || normalized.isBlank()) {
+            throw new IllegalArgumentException("Contato é obrigatório");
+        }
+        return normalized;
+    }
+
+    private String validateCpf(String cpf) {
+        var normalized = MapperUtils.normalizeCpf(cpf);
+        if (normalized == null || normalized.isBlank()) {
             throw new IllegalArgumentException("CPF é obrigatório");
         }
+        return normalized;
+    }
+
+    private String validateEmail(String email) {
+        var normalized = MapperUtils.normalizeEmail(email);
+        if (normalized == null || normalized.isBlank()) {
+            throw new IllegalArgumentException("Email é obrigatório");
+        }
+        return normalized;
     }
 }

@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+// TODO: Tem que deletar essa porra
+
 @Component
 public class PendingFinancialBalanceChecker {
 
