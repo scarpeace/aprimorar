@@ -861,8 +861,131 @@ Mesmo com decisoes fechadas, estes pontos ainda precisam ser revisitados durante
 - `student` deixou de referenciar `parent.internal.Parent` diretamente no modelo
 - vinculo de `student` com responsavel passou para `parentId` (UUID) no agregado
 - `student` passou a validar responsavel via contrato `ParentQueryApi`, removendo dependencia de `ParentRepository`
+- contrato `StudentParentLinkQueryApi` criado para consultas de vinculo entre alunos e responsavel
+- `parent` passou a usar contrato publico de `student` para validar restricoes de arquivamento/exclusao
+- regra de bloqueio de arquivamento/exclusao de responsavel com alunos vinculados ficou explicita no service
+- `parent` deixou de converter entidade para DTO diretamente no agregado, com mapeamento movido para `ParentMapper`
+- fronteira API x dominio no modulo `parent` ficou mais limpa (entidade sem dependencia de DTO de API)
+- `address` deixou de converter para DTO diretamente no value object, com mapeamento consolidado no `AddressMapper`
+- `parent/api` passou a declarar interface nomeada (`@NamedInterface("api")`) para fronteira publica explicita
+- naming dos contratos de integracao foi padronizado para sufixo `*Api` (eliminando mistura com `*Port` e `*QueryApi`)
+- contratos renomeados: `EmployeeReadApi`, `EmployeePaymentStatusApi`, `ParentReadApi`, `StudentParentLinkApi`, `StudentChargeStatusApi`
+- split fisico iniciado: pacote `registration.parent` migrado para `registration.pessoas.responsavel` (api + internal + repository)
+- contratos e imports de `student` e `exception handler` ajustados para o novo caminho `pessoas.responsavel`
+- split fisico de `registration.student` concluido para `registration.pessoas.aluno` (api + internal + repository)
+- contratos de aluno renomeados para novo padrao: `AlunoService`, `AlunoChargeStatusApi`, `AlunoResponsavelLinkApi`
+- `appointment`, `responsavel` e handlers globais ajustados para os novos contratos/pacotes de aluno
+- split fisico de `registration.employee` concluido para `registration.pessoas.colaborador` (api + internal + repository)
+- contratos e dependencias de `appointment`, `registration` e testes ajustados para `pessoas.colaborador`
+- `package-info.java` de `pessoas.responsavel.api.dto` e `pessoas.responsavel.api.exception` adicionados com `@NamedInterface("api")`
+- renomeacao de artefatos do modulo de colaborador iniciada e aplicada no backend:
+  - `EmployeeReadApi` -> `ColaboradorReadApi`
+  - `EmployeePaymentStatusApi` -> `ColaboradorPaymentStatusApi`
+  - `Employee*DTO` (contratos de `pessoas.colaborador`) -> `Colaborador*DTO`
+  - `Employee*Exception` -> `Colaborador*Exception`
+  - `EmployeeDeletedEvent` -> `ColaboradorDeletedEvent`
+  - `Employee*` internos (`entity/service/controller/mapper/repository/specifications`) -> `Colaborador*`
+  - adapter `appointment/internal/EmployeePaymentStatusAdapter` -> `ColaboradorPaymentStatusAdapter`
 - `./mvnw clean compile -DskipTests` validado
 - `./mvnw test -Dtest=ModuleVerificationTest` validado
+- `./mvnw compile -DskipTests` e nova execucao de `./mvnw test -Dtest=ModuleVerificationTest` validadas apos consolidacao de `NamedInterface`
+- nova rodada de validacao apos renomeacao de colaborador:
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK
+- traducao da superficie de API de `pessoas.colaborador` aplicada:
+  - `ColaboradorReadApi`: `getColaboradores(...)` e `buscarPorId(...)`
+  - `ColaboradorPaymentStatusApi`: `possuiPagamentosPendentes(...)`
+  - `ColaboradorDeletedEvent`: payload `colaboradorId`
+  - `ColaboradorController`: endpoint base `/v1/colaboradores`, `@Tag`/`operationId` em portugues e `colaboradorId` em path params
+  - `ColaboradorService` e `ColaboradorServiceImpl`: assinaturas alinhadas (`listarOpcoes`, `buscarColaboradorOuFalhar`, etc.)
+  - consumidores em `appointment` ajustados para os novos contratos
+- validacao apos traducao de superficie de API de colaborador:
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK
+- Fase 3 iniciada em `pessoas.aluno` com foco em tipos/arquivos (sem traducao ampla de metodos de negocio):
+  - renomeados `Student*` para `Aluno*` em `api/dto`, `api/exception`, `api/event`, `internal` e `internal/repository`
+  - contratos e imports cruzados ajustados para `AlunoResponseDTO`, `AlunoDeletedEvent`, `AlunoRepository` e `AlunoSpecifications`
+  - ajuste de estabilidade aplicado para manter `appointment` consistente no bloco atual (`StudentSummaryDTO` preservado no modulo de atendimento)
+- validacao apos bloco de renome de tipos em `pessoas.aluno`:
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK
+- Fase 3 avancou em `pessoas.responsavel` no mesmo padrao (tipos/arquivos primeiro):
+  - renomeados `Parent*` para `Responsavel*` em `api/dto`, `api/exception`, `internal` e `internal/repository`
+  - `ResponsavelReadApi`, handler global e consumidores ajustados para novos tipos de `responsavel`
+  - ajustes de consistencia aplicados em construtores/classes apos renome de arquivos (ex.: `ResponsavelController`, `ResponsavelRepository`, `Responsavel`)
+- validacao apos bloco de renome de tipos em `pessoas.responsavel`:
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK
+- Fase 4 iniciada com migracao estrutural de `expense` para `financeiro` (sem rodada ampla de renome de metodos):
+  - pacote movido: `aprimorar.expense` -> `aprimorar.financeiro`
+  - tipos renomeados: `Expense*` -> `Despesa*` / `Financeiro*` / `CategoriaDespesa*`
+  - dependencias cruzadas atualizadas (`appointment` passou a consumir `financeiro.api`)
+  - metadata de modulo ajustada (`financeiro` + `financeiro::api` em dependencias modulith)
+- validacao apos inicio da Fase 4 (`financeiro`):
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK
+- Fase 5 iniciada com migracao estrutural de `appointment` para `atendimento` (sem rodada ampla de renome de metodos):
+  - pacote movido: `aprimorar.appointment` -> `aprimorar.atendimento`
+  - tipos nucleares renomeados: `Appointment*` -> `Atendimento*`, `AppointmentContent*` -> `TipoAtendimento*`
+  - dependencias cruzadas e imports atualizados para `atendimento`
+  - metadata de modulo ajustada (`atendimento`) e dependencia do `dashboard` corrigida para `atendimento::api`
+- validacao apos inicio da Fase 5 (`atendimento`):
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK
+- limpeza de nomenclatura residual concluida no modulo `atendimento` (tipos/arquivos, sem rodada ampla de metodos):
+  - `Student*` -> `Aluno*` em DTOs de consultas e relatorios de atendimento
+  - `Employee*` -> `Colaborador*` em DTOs de consultas e relatorios de atendimento
+  - adapter interno `StudentChargeStatusAdapter` -> `AlunoChargeStatusAdapter`
+  - projections e consultas de repositorio alinhadas para `Aluno*`/`Colaborador*`
+- validacao apos limpeza de nomenclatura em `atendimento`:
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK (com warnings nao bloqueantes de JaCoCo/JDK)
+- remocao do modulo `dashboard` concluida:
+  - removidos controller/service/dtos/exceptions e metadata de modulo em `aprimorar.dashboard`
+  - removido teste dedicado de DTO de dashboard
+  - removidas referencias residuais ao modulo `dashboard` no backend
+- validacao apos remocao de `dashboard`:
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK (com warnings nao bloqueantes de JaCoCo/JDK)
+- fase de schema/Flyway iniciada com migracao de nomenclatura para portugues:
+  - criada migration `V8__rename_tables_and_columns_to_portuguese.sql`
+  - renome de tabelas: `tb_appointments` -> `tb_atendimentos`, `tb_expenses` -> `tb_despesas`, `tb_students` -> `tb_alunos`, `tb_employees` -> `tb_colaboradores`, `tb_parent` -> `tb_responsaveis`
+  - renome de colunas principais de `atendimento`, `financeiro` e `registration` alinhadas ao dicionario oficial
+  - renome de endereco embutido aplicado em schema (`rua`, `bairro`, `cidade`, `estado`, `cep`, `complemento`)
+- alinhamento JPA concluido para novo schema:
+  - `@Table` e `@Column` atualizados em `Atendimento`, `Despesa`, `Aluno`, `Colaborador`, `Responsavel`, `Person` e `Address`
+- validacao apos inicio da fase de schema:
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK (com warnings nao bloqueantes de JaCoCo/JDK)
+- padronizacao da superficie HTTP/OpenAPI avancada para nomenclatura em portugues:
+  - endpoints ajustados: `/v1/expenses` -> `/v1/despesas`, `/v1/students` -> `/v1/alunos`, `/v1/parents` -> `/v1/responsaveis`
+  - ajustes de rotas internas de atendimento: `/student` -> `/aluno`, `/employee` -> `/colaborador`, rotas de relatorio/finance em `alunos`/`colaboradores`
+  - `operationId` de `atendimento`, `financeiro`, `aluno` e `responsavel` traduzidos para portugues
+- validacao apos padronizacao de superficie HTTP/OpenAPI:
+  - `./mvnw clean compile` OK
+  - `./mvnw test` OK (com warnings nao bloqueantes de JaCoCo/JDK em instrumentacao no ambiente atual)
+- higienizacao de diretorios legados vazios concluida:
+  - removidos `aprimorar/dashboard/` (casca sem codigo)
+  - removidos `registration/employee/`, `registration/parent/` e `registration/student/` (cascas sem codigo)
+  - mantida estrutura ativa em `registration/pessoas/*` e `registration/shared`
+- validacao apos higienizacao de diretorios:
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK (com warnings nao bloqueantes de JaCoCo/JDK)
+- promocao estrutural de `registration` para modulo raiz `pessoas` concluida:
+  - codigo movido de `aprimorar.registration.pessoas.*` para `aprimorar.pessoas.*`
+  - pacotes de apoio movidos: `aprimorar.registration.shared.*` -> `aprimorar.pessoas.shared.*` e `aprimorar.registration.api.*` -> `aprimorar.pessoas.api.*`
+  - `package-info` do modulo atualizado para `id = "pessoas"` e `displayName = "Pessoas"`
+  - dependencia modulith de `atendimento` ajustada de `registration::api` para `pessoas::api`
+- validacao apos promocao para `pessoas`:
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK (com warnings nao bloqueantes de JaCoCo/JDK)
+- ajuste de naming estrutural do modulo de atendimento para plural concluido:
+  - pacote/raiz movidos de `aprimorar.atendimento` para `aprimorar.atendimentos`
+  - imports e declaracoes de pacote atualizados em `main` e `test`
+  - metadata modulith mantida e publicada no novo pacote (`aprimorar.atendimentos`)
+- validacao apos rename para `atendimentos`:
+  - `./mvnw compile -DskipTests` OK
+  - `./mvnw test -Dtest=ModuleVerificationTest` OK (com warnings nao bloqueantes de JaCoCo/JDK)
 
 ### Falta Fazer
 
@@ -871,6 +994,13 @@ Mesmo com decisoes fechadas, estes pontos ainda precisam ser revisitados durante
 - reduzir o acoplamento interno `student -> parent.internal` na Fase 2 com a quebra estrutural de `registration`
 - quebrar `registration` em ownership real sob `pessoas/`
 - seguir a Fase 2 movendo contratos de `parent` para API publica consistente e reduzindo acoplamentos internos residuais
+- remover acoplamentos internos restantes em `parent` e `student` que ainda nao representem contratos de modulo
+- revisar e simplificar naming de contratos `api/contract/event` antes do split fisico para `pessoas/*`
+- preparar o split fisico de `registration` para `pessoas/*` com baixo risco de quebra de fronteira
+- consolidar `package-info.java` e `@NamedInterface` dos novos subdominios `pessoas/*`
+- remover residuos de nomenclatura antiga (`Parent*`, `Student*`, `Employee*`) que ainda devem virar `Responsavel*`, `Aluno*`, `Colaborador*`
+- revisar nomenclatura de metodos/parametros restantes em ingles no modulo `pessoas.colaborador` (ex.: `getEmployees`, `employeeId`) e decidir janela de traducao
+- revisar padrao de traducao de endpoints legados em outros modulos (`appointment`, `aluno`, `responsavel`) antes da fase de renomeacao HTTP ampla
 - traduzir modulos por ordem definida
 - migrar schema do banco via Flyway
 - revisar OpenAPI e testes finais

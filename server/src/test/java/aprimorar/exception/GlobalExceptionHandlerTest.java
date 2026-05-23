@@ -9,10 +9,10 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
 
-import aprimorar.registration.parent.api.exception.ParentAlreadyExistsException;
-import aprimorar.registration.api.exception.RegistrationExceptionHandler;
-import aprimorar.registration.student.api.dto.StudentRequestDTO;
-import aprimorar.registration.student.api.exception.StudentNotFoundException;
+import aprimorar.pessoas.responsavel.api.exception.ResponsavelAlreadyExistsException;
+import aprimorar.pessoas.api.exception.RegistrationExceptionHandler;
+import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
+import aprimorar.pessoas.aluno.api.exception.AlunoNotFoundException;
 import aprimorar.shared.exception.GlobalExceptionHandler;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -114,16 +114,16 @@ class GlobalExceptionHandlerTest {
 
         @GetMapping("/not-found")
         void notFound() {
-            throw new StudentNotFoundException("Aluno não encontrado no banco de dados");
+            throw new AlunoNotFoundException("Aluno não encontrado no banco de dados");
         }
 
         @PostMapping("/conflict")
         void conflict() {
-            throw new ParentAlreadyExistsException("Responsável já existe no banco de dados");
+            throw new ResponsavelAlreadyExistsException("Responsável já existe no banco de dados");
         }
 
         @PostMapping("/validation")
-        void validation(@Valid @RequestBody StudentRequestDTO request) {
+        void validation(@Valid @RequestBody AlunoRequestDTO request) {
             // Validation is handled before this method is reached.
         }
     }
