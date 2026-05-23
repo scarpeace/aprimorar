@@ -1,5 +1,6 @@
 package aprimorar.registration.employee.internal;
 
+import aprimorar.appointment.api.AppointmentService;
 import aprimorar.registration.api.exception.PersonHasPendingFinancialsException;
 import aprimorar.registration.employee.api.Duty;
 import aprimorar.registration.employee.api.EmployeeService;
@@ -12,7 +13,6 @@ import aprimorar.registration.employee.api.exception.EmployeeBusinessException;
 import aprimorar.registration.employee.api.exception.EmployeeNotFoundException;
 import aprimorar.registration.employee.internal.repository.EmployeeRepository;
 import aprimorar.registration.employee.internal.repository.EmployeeSpecifications;
-import aprimorar.registration.shared.PendingFinancialBalanceChecker;
 import aprimorar.registration.shared.address.AddressMapper;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.PageDTO;
@@ -34,19 +34,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     private static final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
     private final EmployeeRepository employeeRepo;
     private final ApplicationEventPublisher eventPublisher;
-    private final PendingFinancialBalanceChecker pendingFinancialBalanceChecker;
-    private final EmployeeMapper employeeMapper;
+    private final AppointmentService appointmentService;
 
     public EmployeeServiceImpl(
         EmployeeRepository employeeRepo,
         ApplicationEventPublisher eventPublisher,
-        PendingFinancialBalanceChecker pendingFinancialBalanceChecker,
-        EmployeeMapper employeeMapper
+        AppointmentService appointmentService
     ) {
         this.employeeRepo = employeeRepo;
         this.eventPublisher = eventPublisher;
-        this.pendingFinancialBalanceChecker = pendingFinancialBalanceChecker;
-        this.employeeMapper = employeeMapper;
+        this.appointmentService = appointmentService;
     }
 
     @Transactional
@@ -132,15 +129,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = findEmployeeOrThrow(employeeId);
         ensureNotSystem(employee, "Não é possível deletar o registro de sistema 'Colaborador Removido'.");
 
-        if(appointmentServi)
-
-        if (pendingFinancialBalanceChecker.hasPendingEmployeePayments(employeeId)) {
+        if (appointmentService.hasPendingEmployeePayments(employeeId)) {
             throw new PersonHasPendingFinancialsException(
                 "O colaborador possui pagamentos pendentes. Quite os valores antes de excluí-lo."
             );
         }
 
-        log.info("Publicando evento de exclusão do colaborador {}.", employee.getName().toUpperCase());
         eventPublisher.publishEvent(new EmployeeDeletedEvent(employeeId));
 
         employeeRepo.delete(employee);

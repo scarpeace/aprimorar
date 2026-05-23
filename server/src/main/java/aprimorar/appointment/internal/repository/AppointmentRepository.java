@@ -56,6 +56,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
     )
     void reassignEmployeeAppointmentsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
 
+    boolean existsByEmployeeIdAndEmployeePaymentDateIsNull(UUID employeeId);
+
     @Query(
         """
         select coalesce(sum(a.payment), 0)

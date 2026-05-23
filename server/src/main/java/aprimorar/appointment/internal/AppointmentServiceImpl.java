@@ -47,12 +47,13 @@ import aprimorar.appointment.internal.repository.AppointmentRepository.EmployeeF
 import aprimorar.appointment.internal.repository.AppointmentRepository.StudentFinanceSummaryProjection;
 import aprimorar.appointment.internal.repository.AppointmentSpecifications;
 import aprimorar.expense.api.ExpenseService;
+import aprimorar.registration.employee.api.EmployeePaymentStatusService;
 import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
 import aprimorar.shared.PageDTO;
 
 @Service
-public class AppointmentServiceImpl implements AppointmentService {
+public class AppointmentServiceImpl implements AppointmentService, EmployeePaymentStatusService {
 
     private static final Logger log = LoggerFactory.getLogger(AppointmentServiceImpl.class);
 
@@ -362,6 +363,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Transactional
     public void reassignEmployeeAppointmentsToGhost(UUID employeeId) {
         appointmentRepo.reassignEmployeeAppointmentsToGhost(employeeId, UUID.fromString("00000000-0000-4000-8000-000000000001"));
+    }
+
+    @Transactional(readOnly = true)
+    public boolean hasPendingEmployeePayments(UUID employeeId) {
+        return appointmentRepo.existsByEmployeeIdAndEmployeePaymentDateIsNull(employeeId);
     }
 
     @Transactional(readOnly = true)
