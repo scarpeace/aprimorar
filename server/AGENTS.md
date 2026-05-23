@@ -1,54 +1,78 @@
-# AGENTS - Server
+# AGENTS - Server (tecnico-first)
 
 ## Objetivo
-- Este arquivo orienta agentes a manter os padroes de arquitetura e codigo do backend.
-- Priorize consistencia com Spring Modulith e com os contratos publicos de cada modulo.
+- Guiar implementacao de codigo backend com foco em consistencia, previsibilidade e baixo acoplamento.
+- Priorizar regras de negocio claras, contratos estaveis e fronteiras de modulo respeitadas.
 
-## Stack e baseline tecnico
-- Java 21 com Spring Boot 3.5.x.
-- Spring Modulith para fronteiras de modulo.
-- PostgreSQL + Flyway para persistencia e migracoes.
-- Spring Security com Resource Server JWT.
+## Arquitetura em uma frase
+- Backend modular (Spring Modulith): entrada HTTP no modulo, orquestracao em service, persistencia via repository, integracao externa apenas por contratos `...api`.
 
-## Principios de arquitetura
-- Pense o backend por modulos de negocio, nao por camadas globais.
-- Dependencias entre modulos devem passar por contratos publicos em `...api`.
-- Evite acesso direto a classes internas de outro modulo.
-- Tudo que for compartilhado entre modulos deve ficar em `shared` ou em APIs explicitas.
+## Fluxo de implementacao obrigatorio
+- Controller: recebe request, valida DTO (`@Valid`), delega para service e retorna DTO de resposta; sem regra de negocio.
+- Service: concentra regra de negocio e casos de uso; coordena repositories e chamadas a outros modulos via `...api`.
+- Repository: somente acesso a dados; nao coloca regra de negocio aqui.
+- Mapper/construcao de DTO: manter conversao explicita na borda (controller/service), sem vazar entidade JPA para API.
 
-## Regras obrigatorias de modulo (Spring Modulith)
-- Antes de criar acoplamento entre modulos, leia o `package-info.java` do modulo de origem e destino.
-- Respeite `allowedDependencies` definido nos `package-info.java` de topo.
-- Se alterar fronteiras de modulo ou dependencias cruzadas, rode `./mvnw test -Dtest=ModuleVerificationTest`.
-- Considere que o teste de verificacao de modulo tambem atualiza artefatos em `server/src/main/resources/docs/`.
+## Padroes de escrita de codigo
+- Nomeie classes/metodos por intencao de dominio (`archiveStudent`, `toggleExpensePayment`) e nao por detalhe tecnico.
+- Prefira metodos curtos por caso de uso; extraia metodos privados quando houver mais de uma regra no mesmo fluxo.
+- Nao criar "utils" generico sem dono; helper deve viver no modulo que usa.
+- Evite logica duplicada entre modulos; quando for contrato de negocio, promova para `...api` do modulo dono.
 
-## Padrões de código
-- Prefira regras de negocio em servicos do modulo e controladores enxutos.
-- Valide entrada com Bean Validation.
-- Trate erros com Problem Details do Spring MVC; mantenha respostas de erro consistentes.
-- Mantenha nomes de metodos e classes orientados ao dominio, evitando termos tecnicos genericos.
-- Nao crie utilitarios globais sem dono de dominio claro.
+## DTO, validacao e mapeamento
+- Entrada/saida HTTP sempre por DTO (request/response), nunca entidade JPA direta.
+- Validar entrada no DTO com Bean Validation; mensagens de erro devem ser consistentes com Problem Details.
+- Mapeamento DTO <-> dominio deve ser explicito e previsivel; nao esconder regra em conversao automatica opaca.
 
-## Banco e migracoes
-- Toda mudanca de schema deve entrar via Flyway migration, sem atalhos.
-- Nao dependa de criacao automatica de schema por JPA em desenvolvimento.
-- Use UTC para datas/horarios e preserve esse padrao em novas consultas e entidades.
+## Erros e excecoes
+- Use excecoes de dominio especificas para regra de negocio invalida e deixe handler global transformar em resposta padrao.
+- Preserve semantica HTTP (400 validacao, 404 nao encontrado, 409 conflito, 401/403 seguranca).
+- Nao retornar `null` para fluxo de erro de negocio; falhe com excecao clara.
 
-## API e contratos
-- Mantenha compatibilidade dos endpoints existentes sempre que possivel.
-- Mudou contrato de API: alinhe DTOs, validacoes e documentacao OpenAPI.
-- Para integracao com frontend, lembre que o cliente gerado depende de `/v3/api-docs`.
+## Transacao e consistencia
+- Anote fronteira transacional no service (caso de uso), nao no controller.
+- Uma transacao deve cobrir a consistencia do agregado local; integracao com outro modulo deve ser via contrato e sem acoplamento interno.
+- Nao misture operacao de leitura pesada com escrita no mesmo metodo transacional sem necessidade.
+- Sempre manter datas/horarios em UTC (app e JDBC ja usam UTC).
 
-## Fluxo de validacao antes de concluir
-- Compile: `./mvnw clean compile`.
-- Teste: `./mvnw test`.
-- Se mexeu em fronteiras de modulo: `./mvnw test -Dtest=ModuleVerificationTest`.
+## Consultas e performance
+- Em listagens, prefira projecoes e filtros no banco em vez de carregar tudo em memoria.
+- Evite N+1: ajustar estrategia de consulta quando houver relacionamento frequente.
+- Para buscas sensiveis (dashboard/resumo), documente no service qual regra de filtro foi aplicada.
+- Alteracao de schema: sempre via Flyway migration (`db/migration` ou `db/dev/migration`), sem atalho.
 
-## Comandos usuais (executar em `server/`)
-- Subir banco local: `docker compose up -d db`.
-- Rodar aplicacao: `./mvnw spring-boot:run`.
-- Rodar um teste especifico: `./mvnw test -Dtest=NomeDaClasse`.
+## Contratos e integracao entre modulos
+- Dependencia cruzada so por `...api`; nunca importar classes internas de outro modulo.
+- Antes de nova dependencia, leia `package-info.java` do modulo e confirme `allowedDependencies`.
+- Modulos atuais e limites principais:
+  - `appointment` pode depender de `expense::api`, `registration::api`, `shared`.
+  - `dashboard` pode depender de `appointment::api`, `shared::*`.
+  - `expense` e `registration` dependem de `shared::*`.
+- Mudou contrato de endpoint: alinhar OpenAPI e comunicar impacto no frontend (Kubb depende de `/v3/api-docs`).
 
-## Alertas importantes deste projeto
-- O profile ativo padrao e `dev`.
-- O root `package.json` tem scripts antigos para backend; prefira comandos direto em `server/`.
+## Matriz de testes por tipo de mudanca
+- Regra de negocio em service: teste unitario do service + teste de integracao do caso principal.
+- Endpoint/controller: teste de contrato HTTP (status, payload, validacao).
+- Consulta custom/repository: teste de integracao com banco para filtro/ordenacao/paginacao.
+- Fronteira de modulo/dependencia cruzada: `./mvnw test -Dtest=ModuleVerificationTest`.
+- Mudanca ampla backend: `./mvnw clean compile` e `./mvnw test`.
+
+## Anti-padroes
+- Controller com regra de negocio ou acesso direto ao repository.
+- Chamar modulo vizinho por classe interna ignorando `...api`.
+- Entidade JPA exposta na resposta HTTP.
+- Transacao gigante com varias responsabilidades sem limite claro.
+- Query sem filtro minimo em endpoint de listagem.
+
+## Regras de negocio do projeto (resumo)
+- Contagens de resumo de aluno/colaborador excluem ghost.
+- Contagens "ativas" excluem arquivados; contagens totais ainda incluem arquivados nao-ghost.
+- Seguranca por JWT (resource server); fluxo de autenticacao deve manter esse contrato.
+- `dev` e o profile padrao; execute comandos dentro de `server/`.
+
+## Comandos de verificacao (executar em `server/`)
+- `docker compose up -d db`
+- `./mvnw spring-boot:run`
+- `./mvnw clean compile`
+- `./mvnw test`
+- `./mvnw test -Dtest=ModuleVerificationTest`

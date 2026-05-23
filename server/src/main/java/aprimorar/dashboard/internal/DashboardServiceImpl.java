@@ -1,6 +1,5 @@
 package aprimorar.dashboard.internal;
 
-import aprimorar.dashboard.api.DashboardService;
 import aprimorar.dashboard.api.dto.ClassesByContentDTO;
 import aprimorar.dashboard.api.dto.DashboardSummaryResponseDTO;
 import aprimorar.dashboard.api.exception.InvalidDashboardRequestException;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class DashboardServiceImpl implements DashboardService {
+public class DashboardServiceImpl {
 
     private static final int REFRESH_SECONDS = 60;
     private static final int MIN_YEAR = 2000;

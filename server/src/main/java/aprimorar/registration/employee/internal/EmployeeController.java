@@ -1,6 +1,5 @@
 package aprimorar.registration.employee.internal;
 
-import aprimorar.registration.employee.api.EmployeeService;
 import aprimorar.registration.employee.api.dto.EmployeeCountSummaryDTO;
 import aprimorar.registration.employee.api.dto.EmployeeRequestDTO;
 import aprimorar.registration.employee.api.dto.EmployeeOptionsDTO;
@@ -34,9 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Employee", description = "Employee management APIs")
 public class EmployeeController {
 
-    private final EmployeeService employeeService;
+    private final EmployeeServiceImpl employeeService;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeServiceImpl employeeService) {
         this.employeeService = employeeService;
     }
 

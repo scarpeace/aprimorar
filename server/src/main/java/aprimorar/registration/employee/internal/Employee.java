@@ -1,6 +1,5 @@
 package aprimorar.registration.employee.internal;
 
-import aprimorar.registration.employee.api.dto.EmployeeResponseDTO;
 import aprimorar.registration.employee.api.Duty;
 import aprimorar.registration.shared.Person;
 import aprimorar.registration.shared.address.Address;
@@ -67,20 +66,4 @@ public class Employee extends Person {
         }
     }
 
-    public EmployeeResponseDTO toResponseDto() {
-        return new EmployeeResponseDTO(
-                getId(),
-                getName(),
-                getBirthdate(),
-                getPix(),
-                getContact(),
-                getCpf(),
-                getEmail(),
-                getDuty(),
-                getAddress().toResponseDto(),
-                getActive(),
-                getCreatedAt(),
-                getUpdatedAt()
-        );
-    }
 }

@@ -1,6 +1,7 @@
 package aprimorar.registration.api.exception;
 
 import aprimorar.registration.employee.api.exception.EmployeeAlreadyExistsException;
+import aprimorar.registration.employee.api.exception.EmployeeBusinessException;
 import aprimorar.registration.employee.api.exception.EmployeeNotFoundException;
 import aprimorar.registration.parent.api.exception.InvalidParentException;
 import aprimorar.registration.parent.api.exception.ParentAlreadyExistsException;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -55,8 +57,8 @@ public class RegistrationExceptionHandler {
         StudentAlreadyExistException.class
     })
     @ApiResponse(
-        responseCode = "400",
-        description = "Requisição inválida",
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ProblemResponseDTO handleConflict(RuntimeException ex, HttpServletRequest request) {
@@ -85,5 +87,23 @@ public class RegistrationExceptionHandler {
             ex.getMessage(),
             request.getRequestURI()
         );
+    }
+
+    @ExceptionHandler(EmployeeBusinessException.class)
+    @ApiResponse(
+        responseCode = "409",
+        description = "Erro de regra de negocio do modulo registration.employee",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ResponseEntity<ProblemResponseDTO> handleEmployeeBusiness(
+        EmployeeBusinessException ex,
+        HttpServletRequest request
+    ) {
+        log.error("Erro de regra de negocio em employee: {}", ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(new ProblemResponseDTO(
+            ex.getStatus(),
+            ex.getMessage(),
+            request.getRequestURI()
+        ));
     }
 }

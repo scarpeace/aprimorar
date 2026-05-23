@@ -42,7 +42,7 @@ public class UserService {
         }
 
         if (dto.role() == Role.PARENT || dto.role() == Role.STUDENT || dto.role() == Role.ADMIN) {
-            throw new UserBusinessException(HttpStatus.BAD_REQUEST, "Não é possível criar um usuário com este perfil");
+            throw new UserBusinessException(HttpStatus.CONFLICT, "Não é possível criar um usuário com este perfil");
         }
 
         String encodedPassword = passwordEncoder.encode(dto.password());

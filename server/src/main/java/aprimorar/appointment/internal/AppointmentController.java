@@ -1,6 +1,5 @@
  package aprimorar.appointment.internal;
 
-import aprimorar.appointment.api.AppointmentService;
 import aprimorar.appointment.api.dto.AppointmentFinanceSummaryDTO;
 import aprimorar.appointment.api.dto.AppointmentRequestDTO;
 import aprimorar.appointment.api.dto.AppointmentResponseDTO;
@@ -30,9 +29,9 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Appointment")
 public class AppointmentController {
 
-    private final AppointmentService appointmentService;
+    private final AppointmentServiceImpl appointmentService;
 
-    public AppointmentController(AppointmentService appointmentService) {
+    public AppointmentController(AppointmentServiceImpl appointmentService) {
         this.appointmentService = appointmentService;
     }
 

@@ -1,7 +1,6 @@
 package aprimorar.expense.internal;
 
 import aprimorar.expense.api.ExpenseCategory;
-import aprimorar.expense.api.ExpenseService;
 import aprimorar.expense.api.dto.ExpenseRequestDTO;
 import aprimorar.expense.api.dto.ExpenseResponseDTO;
 import aprimorar.expense.api.dto.ExpensesSummaryDTO;
@@ -34,9 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Expense", description = "Gerenciamento de despesas gerais")
 public class ExpenseController {
 
-    private final ExpenseService expenseService;
+    private final ExpenseServiceImpl expenseService;
 
-    public ExpenseController(ExpenseService expenseService) {
+    public ExpenseController(ExpenseServiceImpl expenseService) {
         this.expenseService = expenseService;
     }
 

@@ -1,6 +1,5 @@
 package aprimorar.registration.student.internal;
 
-import aprimorar.registration.student.api.StudentService;
 import aprimorar.registration.student.api.dto.StudentOptionsDTO;
 import aprimorar.registration.student.api.dto.StudentRequestDTO;
 import aprimorar.registration.student.api.dto.StudentResponseDTO;
@@ -36,9 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Student", description = "Student management APIs")
 public class StudentController {
 
-    private final StudentService studentService;
+    private final StudentServiceImpl studentService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentServiceImpl studentService) {
         this.studentService = studentService;
     }
 

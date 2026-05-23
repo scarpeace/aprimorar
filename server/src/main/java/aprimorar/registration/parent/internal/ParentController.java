@@ -1,6 +1,5 @@
 package aprimorar.registration.parent.internal;
 
-import aprimorar.registration.parent.api.ParentService;
 import aprimorar.registration.parent.api.dto.ParentOptionsDTO;
 import aprimorar.registration.parent.api.dto.ParentRequestDTO;
 import aprimorar.registration.parent.api.dto.ParentResponseDTO;
@@ -31,9 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Parent", description = "Parent management APIs")
 public class ParentController {
 
-    private final ParentService parentService;
+    private final ParentServiceImpl parentService;
 
-    public ParentController(ParentService parentService) {
+    public ParentController(ParentServiceImpl parentService) {
         this.parentService = parentService;
     }
 

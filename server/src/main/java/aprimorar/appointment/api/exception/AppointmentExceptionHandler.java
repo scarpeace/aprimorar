@@ -36,8 +36,8 @@ public class AppointmentExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(AppointmentScheduleConflictException.class)
     @ApiResponse(
-        responseCode = "400",
-        description = "Requisição inválida",
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ProblemResponseDTO handleConflict(AppointmentScheduleConflictException ex, HttpServletRequest request) {

@@ -29,14 +29,12 @@ public class ExpenseServiceImpl implements ExpenseService {
         this.clock = clock;
     }
 
-    @Override
     @Transactional
     public ExpenseResponseDTO createExpense(ExpenseRequestDTO dto) {
         Expense expense = new Expense(dto.amount(), dto.date(), dto.category(), dto.description());
         return toDto(expenseRepository.save(expense));
     }
 
-    @Override
     @Transactional(readOnly = true)
     public ExpensesSummaryDTO getExpenses(ExpenseCategory category, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         Page<ExpenseResponseDTO> page = expenseRepository.findFiltered(category, startDate, endDate, pageable).map(this::toDto);
@@ -47,13 +45,11 @@ public class ExpenseServiceImpl implements ExpenseService {
         );
     }
 
-    @Override
     @Transactional(readOnly = true)
     public ExpenseResponseDTO findExpenseById(UUID id) {
         return toDto(findExpenseOrThrow(id));
     }
 
-    @Override
     @Transactional
     public ExpenseResponseDTO updateExpense(UUID id, ExpenseRequestDTO dto) {
         Expense expense = findExpenseOrThrow(id);
@@ -61,7 +57,6 @@ public class ExpenseServiceImpl implements ExpenseService {
         return toDto(expenseRepository.save(expense));
     }
 
-    @Override
     @Transactional
     public ExpenseResponseDTO togglePayment(UUID id) {
         Expense expense = findExpenseOrThrow(id);
@@ -69,7 +64,6 @@ public class ExpenseServiceImpl implements ExpenseService {
         return toDto(expense);
     }
 
-    @Override
     @Transactional
     public void deleteExpense(UUID id) {
         expenseRepository.delete(findExpenseOrThrow(id));
@@ -81,7 +75,6 @@ public class ExpenseServiceImpl implements ExpenseService {
         return expenseRepository.sumFiltered(toUtcLocalDate(startDate), toUtcLocalDate(endDate));
     }
 
-    @Override
     @Transactional(readOnly = true)
     public BigDecimal sumPendingExpenses(Instant startDate, Instant endDate) {
         return expenseRepository.sumPendingFiltered(toUtcLocalDate(startDate), toUtcLocalDate(endDate));

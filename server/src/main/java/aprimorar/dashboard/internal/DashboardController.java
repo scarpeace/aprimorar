@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import aprimorar.dashboard.api.DashboardService;
 import aprimorar.dashboard.api.dto.DashboardSummaryResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,9 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "Dashboard")
 public class DashboardController {
 
-    private final DashboardService dashboardService;
+    private final DashboardServiceImpl dashboardService;
 
-    public DashboardController(DashboardService dashboardService) {
+    public DashboardController(DashboardServiceImpl dashboardService) {
         this.dashboardService = dashboardService;
     }
 
