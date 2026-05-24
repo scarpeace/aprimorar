@@ -1,11 +1,12 @@
 package aprimorar.atendimentos.api.dto;
 
-import aprimorar.atendimentos.api.TipoAtendimento;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
+
+import aprimorar.atendimentos.internal.TipoAtendimentoEnum;
 
 @Schema(description = "Formato de payload para o cadastro e/ou update de um appointment")
 public record AtendimentoRequestDTO(
@@ -15,7 +16,7 @@ public record AtendimentoRequestDTO(
 
     @NotNull(message = "Conteúdo do appointment é obrigatório")
     @Schema(nullable = false, description = "Conteúdo do appointment (Atendimento, Mentoria, etc...)", example = "Mentoria")
-    TipoAtendimento content,
+    TipoAtendimentoEnum content,
 
     @NotNull(message = "Data/hora de início do appointment é obrigatória")
     @Schema(nullable = false, description = "Data/Horário de início do appointment", example = "2023-11-20T14:00:00Z")

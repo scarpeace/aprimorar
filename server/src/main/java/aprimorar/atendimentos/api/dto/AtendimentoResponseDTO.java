@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import aprimorar.atendimentos.api.TipoAtendimento;
+import aprimorar.atendimentos.internal.TipoAtendimentoEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +21,7 @@ public record AtendimentoResponseDTO(
 
     @NotNull
     @Schema(nullable = false, description = "Conteúdo do appointment (Atendimento, Mentoria, etc...)", example = "Mentoria")
-    TipoAtendimento content,
+    TipoAtendimentoEnum content,
 
     @NotNull
     @Schema(nullable = false, description = "Data/Horário de início do appointment", example = "2023-11-20T14:00:00Z")

@@ -1,13 +1,13 @@
 package aprimorar.pessoas.responsavel.internal;
 
-import aprimorar.pessoas.responsavel.api.ResponsavelReadApi;
+import aprimorar.pessoas.aluno.api.AlunoService;
+import aprimorar.pessoas.responsavel.api.ResponsavelService;
 import aprimorar.pessoas.responsavel.api.dto.ResponsavelOptionsDTO;
 import aprimorar.pessoas.responsavel.api.dto.ResponsavelRequestDTO;
 import aprimorar.pessoas.responsavel.api.dto.ResponsavelResponseDTO;
-import aprimorar.pessoas.responsavel.api.exception.ResponsavelAlreadyExistsException;
-import aprimorar.pessoas.responsavel.api.exception.ResponsavelHasLinkedStudentsException;
-import aprimorar.pessoas.responsavel.api.exception.ResponsavelNotFoundException;
-import aprimorar.pessoas.aluno.api.AlunoResponsavelLinkApi;
+import aprimorar.pessoas.responsavel.internal.exception.ResponsavelAlreadyExistsException;
+import aprimorar.pessoas.responsavel.internal.exception.ResponsavelHasLinkedStudentsException;
+import aprimorar.pessoas.responsavel.internal.exception.ResponsavelNotFoundException;
 import aprimorar.pessoas.responsavel.internal.repository.ResponsavelRepository;
 import aprimorar.pessoas.responsavel.internal.repository.ResponsavelSpecifications;
 import aprimorar.shared.PageDTO;
@@ -22,26 +22,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ResponsavelServiceImpl implements ResponsavelManagementService, ResponsavelReadApi {
+public class ResponsavelServiceImpl implements ResponsavelService {
 
     private static final Logger log = LoggerFactory.getLogger(ResponsavelServiceImpl.class);
 
     private final ResponsavelRepository responsavelRepo;
-    private final AlunoResponsavelLinkApi alunoResponsavelLinkApi;
     private final ResponsavelMapper responsavelMapper;
+    private final AlunoService alunoService;
 
     public ResponsavelServiceImpl(
         ResponsavelRepository responsavelRepo,
-        AlunoResponsavelLinkApi alunoResponsavelLinkApi,
-        ResponsavelMapper responsavelMapper
+        ResponsavelMapper responsavelMapper,
+        AlunoService alunoService
     ) {
         this.responsavelRepo = responsavelRepo;
-        this.alunoResponsavelLinkApi = alunoResponsavelLinkApi;
         this.responsavelMapper = responsavelMapper;
+        this.alunoService = alunoService;
     }
 
     @Transactional
-    public ResponsavelResponseDTO createParent(ResponsavelRequestDTO dto) {
+    @Override
+    public ResponsavelResponseDTO createResponsavel(ResponsavelRequestDTO dto) {
 
         Responsavel parent = new Responsavel(dto.name(), dto.birthdate(), dto.pix(), dto.contact(), dto.cpf(), dto.email());
 
@@ -53,8 +54,15 @@ public class ResponsavelServiceImpl implements ResponsavelManagementService, Res
     }
 
     @Transactional(readOnly = true)
-    public PageDTO<ResponsavelResponseDTO> getParents(Pageable pageable, String search, boolean archived) {
+    @Override
+    public PageDTO<ResponsavelResponseDTO> getResponsaveis(Pageable pageable, String search, Boolean archived) {
         Specification<Responsavel> spec = ResponsavelSpecifications.isNotGhost();
+
+        if (Boolean.TRUE.equals(archived)) {
+            spec = spec.and(ResponsavelSpecifications.isArchived());
+        } else if (Boolean.FALSE.equals(archived)) {
+            spec = spec.and(ResponsavelSpecifications.isNotArchived());
+        }
 
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(ResponsavelSpecifications.searchContainsIgnoreCase(search.trim()));
@@ -67,7 +75,8 @@ public class ResponsavelServiceImpl implements ResponsavelManagementService, Res
     }
 
     @Transactional(readOnly = true)
-    public List<ResponsavelOptionsDTO> getParentOptions() {
+    @Override
+    public List<ResponsavelOptionsDTO> listResponsaveis() {
         List<Responsavel> list = responsavelRepo.findByActiveTrueOrderByNameAsc();
         log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
         return list
@@ -77,14 +86,16 @@ public class ResponsavelServiceImpl implements ResponsavelManagementService, Res
     }
 
     @Transactional(readOnly = true)
-    public ResponsavelResponseDTO findById(UUID parentId) {
+    @Override
+    public ResponsavelResponseDTO findResponsavelById(UUID parentId) {
         Responsavel parent = findResponsavelOrThrow(parentId);
         log.info("Responsável {} consultado com sucesso.", parent.getName().toUpperCase());
         return responsavelMapper.toResponseDto(parent);
     }
 
     @Transactional
-    public ResponsavelResponseDTO updateParent(UUID parentId, ResponsavelRequestDTO dto) {
+    @Override
+    public ResponsavelResponseDTO updateResponsavel(UUID parentId, ResponsavelRequestDTO dto) {
         Responsavel parent = findResponsavelOrThrow(parentId);
 
         ensureParentUniquenessForUpdate(dto.email(), parentId);
@@ -95,8 +106,9 @@ public class ResponsavelServiceImpl implements ResponsavelManagementService, Res
     }
 
     @Transactional
-    public void archiveParent(UUID id) {
-        if (alunoResponsavelLinkApi.hasActiveStudentsLinkedToParent(id)) {
+    @Override
+    public void archiveResponsavel(UUID id) {
+        if (alunoService.hasActiveStudentsLinkedToParent(id)) {
             throw new ResponsavelHasLinkedStudentsException(
                 "O responsável possui alunos ativos vinculados. Arquive os alunos antes de arquivar o responsável."
             );
@@ -108,15 +120,17 @@ public class ResponsavelServiceImpl implements ResponsavelManagementService, Res
     }
 
     @Transactional
-    public void unarchiveParent(UUID id) {
+    @Override
+    public void unarchiveResponsavel(UUID id) {
         Responsavel parent = findResponsavelOrThrow(id);
         parent.unarchive();
         log.info("Responsável {} desarquivado com sucesso.", parent.getName().toUpperCase());
     }
 
     @Transactional
-    public void deleteParent(UUID id) {
-        if (alunoResponsavelLinkApi.hasStudentsLinkedToParent(id)) {
+    @Override
+    public void deleteResponsavel(UUID id) {
+        if (alunoService.hasStudentsLinkedToParent(id)) {
             throw new ResponsavelHasLinkedStudentsException(
                 "O responsável possui alunos vinculados. Reassocie ou remova os alunos antes de excluí-lo."
             );

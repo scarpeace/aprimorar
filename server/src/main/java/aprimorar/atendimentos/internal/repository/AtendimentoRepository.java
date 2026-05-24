@@ -1,7 +1,8 @@
 package aprimorar.atendimentos.internal.repository;
 
 import aprimorar.atendimentos.internal.Atendimento;
-import aprimorar.atendimentos.api.TipoAtendimento;
+import aprimorar.atendimentos.internal.TipoAtendimentoEnum;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
@@ -14,7 +15,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>, JpaSpecificationExecutor<Atendimento> {
     interface TipoAtendimentoCount {
-        TipoAtendimento getContent();
+        TipoAtendimentoEnum getContent();
         long getCount();
     }
 
@@ -324,5 +325,10 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
     );
 
     long countByStartDateGreaterThanEqualAndStartDateLessThan(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    boolean existsByColaboradorAndPaymentDateIsNull(UUID colaboradorId);
+    boolean existsByStudentIdAndEmployeeChargeDateIsNull(UUID studentId);
+
+    boolean existsByStudentIdAndStudentPaymentDateIsNull(UUID alunoId);
 
 }

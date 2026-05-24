@@ -2,7 +2,6 @@ package aprimorar.pessoas.shared.address;
 
 import aprimorar.pessoas.shared.address.dto.AddressRequestDTO;
 import aprimorar.pessoas.shared.address.exception.InvalidAddressException;
-import aprimorar.pessoas.shared.enums.BrazilianStates;
 import jakarta.persistence.*;
 import java.io.Serializable;
 
@@ -20,7 +19,7 @@ public class Address implements Serializable {
 
     @Column(name = "estado", nullable = false)
     @Enumerated(EnumType.STRING)
-    private BrazilianStates state;
+    private BrazilianStatesEnum state;
 
     @Column(name = "cep", nullable = false)
     private String zip;
@@ -30,7 +29,7 @@ public class Address implements Serializable {
 
     public Address() {}
 
-    public Address(String street, String district, String city, BrazilianStates state, String zip, String complement) {
+    public Address(String street, String district, String city, BrazilianStatesEnum state, String zip, String complement) {
         setStreet(street);
         setDistrict(district);
         setCity(city);
@@ -83,11 +82,11 @@ public class Address implements Serializable {
         this.city = city;
     }
 
-    public BrazilianStates getState() {
+    public BrazilianStatesEnum getState() {
         return state;
     }
 
-    public void setState(BrazilianStates state) {
+    public void setState(BrazilianStatesEnum state) {
         if (state == null) {
             throw new InvalidAddressException("O estado é obrigatório no Endereço");
         }

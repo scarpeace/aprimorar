@@ -1,6 +1,5 @@
 package aprimorar.pessoas.colaborador.internal;
 
-import aprimorar.pessoas.colaborador.api.contract.DutyEnum;
 import aprimorar.pessoas.shared.Person;
 import aprimorar.pessoas.shared.address.Address;
 import aprimorar.shared.enums.Role;
@@ -22,7 +21,7 @@ public class Colaborador extends Person {
 
     @Column(name = "funcao", nullable = false)
     @Enumerated(EnumType.STRING)
-    private DutyEnum duty;
+    private ColaboradorDutyEnum duty;
 
     @Embedded
     private Address address;
@@ -37,7 +36,7 @@ public class Colaborador extends Person {
             String contact,
             String cpf,
             String email,
-            DutyEnum duty,
+            ColaboradorDutyEnum duty,
             Address address
     ) {
 
@@ -53,7 +52,7 @@ public class Colaborador extends Person {
             String pix,
             String contact,
             String email,
-            DutyEnum duty,
+            ColaboradorDutyEnum duty,
             Address address
     ) {
         super.update(name, birthdate, validatePix(pix), contact, email);
@@ -66,6 +65,14 @@ public class Colaborador extends Person {
             throw new IllegalArgumentException("Pix é obrigatório");
         }
         return pix;
+    }
+
+    @Override
+    public void unarchive() {
+        if (ColaboradorDutyEnum.SYSTEM.equals(this.duty)) {
+            throw new IllegalArgumentException("Não é possível desarquivar este registro " + ColaboradorDutyEnum.SYSTEM.getDescription());
+        }
+        super.unarchive();
     }
 
     private Address validateAddress(Address address) {

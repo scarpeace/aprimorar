@@ -1,7 +1,7 @@
 package aprimorar.pessoas.shared.address.dto;
 
-import aprimorar.pessoas.shared.enums.BrazilianStates;
 
+import aprimorar.pessoas.shared.address.BrazilianStatesEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +22,7 @@ public record AddressRequestDTO(
 
         @NotNull(message = "Estado do endereço é obrigatório")
         @Schema(description = "Estado do endereço")
-        BrazilianStates state,
+        BrazilianStatesEnum state,
 
         @NotBlank(message = "O CEP do endereço é obrigatório")
         @Schema(description = "CEP do endereço", nullable = false, minLength = 8, maxLength = 8)

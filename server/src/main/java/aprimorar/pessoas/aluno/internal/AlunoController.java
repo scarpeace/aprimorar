@@ -3,7 +3,7 @@ package aprimorar.pessoas.aluno.internal;
 import aprimorar.pessoas.aluno.api.dto.AlunoOptionsDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunoCountSummaryDTO;
+import aprimorar.pessoas.aluno.api.AlunoService;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,17 +35,17 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Aluno", description = "APIs de gestao de alunos")
 public class AlunoController {
 
-    private final AlunoManagementService studentService;
+    private final AlunoService alunoService;
 
-    public AlunoController(AlunoManagementService studentService) {
-        this.studentService = studentService;
+    public AlunoController(AlunoService alunoService) {
+        this.alunoService = alunoService;
     }
 
     @PostMapping
     @Operation(operationId = "criarAluno", description = "Cria um novo aluno com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso.")
     public ResponseEntity<AlunoResponseDTO> createStudent(@RequestBody @Valid AlunoRequestDTO createStudentDto) {
-        AlunoResponseDTO response = studentService.createStudent(createStudentDto);
+        AlunoResponseDTO response = alunoService.createAluno(createStudentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -57,33 +57,25 @@ public class AlunoController {
         @RequestParam(required = false) String search,
         @RequestParam(required = false) Boolean archived
     ) {
-        PageDTO<AlunoResponseDTO> students = studentService.getStudents(pageable, search, archived);
+        PageDTO<AlunoResponseDTO> students = alunoService.getAlunos(pageable, search, archived);
         return ResponseEntity.ok(students);
-    }
-
-    @GetMapping("/summary")
-    @Operation(operationId = "obterResumoAlunos", description = "Retorna indicadores quantitativos dos alunos cadastrados.")
-    @ApiResponse(responseCode = "200", description = "Resumo quantitativo de alunos retornado com sucesso.")
-    public ResponseEntity<AlunoCountSummaryDTO> getStudentSummary() {
-        return ResponseEntity.ok(studentService.getSummary());
     }
 
     @GetMapping("/responsavel/{parentId}")
     @Operation(operationId = "listarAlunosPorResponsavel", description = "Retorna uma lista de alunos pelo ID do responsavel.")
    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
-   public ResponseEntity<List<AlunoResponseDTO>> getStudentsByParent(
-       @PathVariable UUID parentId,
-       @ParameterObject Pageable pageable
+   public ResponseEntity<List<AlunoResponseDTO>> getAlunosPorResponsavel(
+       @PathVariable UUID parentId
    ) {
-       List<AlunoResponseDTO> options = studentService.getStudentsByParent(parentId);
+       List<AlunoResponseDTO> options = alunoService.getAlunosPorResponsavel(parentId);
        return ResponseEntity.ok(options);
    }
 
     @GetMapping("/options")
     @Operation(operationId = "listarOpcoesAlunos", description = "Retorna uma lista de opcoes de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
-    public ResponseEntity<List<AlunoOptionsDTO>> getStudentOptions() {
-        List<AlunoOptionsDTO> options = studentService.getStudentOptions();
+    public ResponseEntity<List<AlunoOptionsDTO>> listAlunos() {
+        List<AlunoOptionsDTO> options = alunoService.listAlunos();
         return ResponseEntity.ok(options);
     }
 
@@ -91,7 +83,7 @@ public class AlunoController {
     @Operation(operationId = "buscarAlunoPorId", description = "Retorna um aluno por ID.")
     @ApiResponse(responseCode = "200", description = "Aluno retornado com sucesso.")
     public ResponseEntity<AlunoResponseDTO> getStudentById(@PathVariable UUID studentId) {
-        AlunoResponseDTO foundAluno = studentService.findById(studentId);
+        AlunoResponseDTO foundAluno = alunoService.findByAlunoId(studentId);
         return ResponseEntity.ok(foundAluno);
     }
 
@@ -102,7 +94,7 @@ public class AlunoController {
         @PathVariable UUID studentId,
         @RequestBody @Valid AlunoRequestDTO dto
     ) {
-        studentService.updateStudent(dto, studentId);
+        alunoService.updateAluno(studentId, dto );
         return ResponseEntity.noContent().build();
     }
 
@@ -110,7 +102,7 @@ public class AlunoController {
     @Operation(operationId = "deletarAluno", description = "Deleta um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno deletado com sucesso.")
     public ResponseEntity<Void> deleteStudent(@PathVariable UUID studentId) {
-        studentService.deleteStudent(studentId);
+        alunoService.deleteAluno(studentId);
         return ResponseEntity.noContent().build();
     }
 
@@ -118,7 +110,7 @@ public class AlunoController {
     @Operation(operationId = "arquivarAluno", description = "Arquiva um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno arquivado com sucesso.")
     public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
-        studentService.archiveStudent(studentId);
+        alunoService.archiveAluno(studentId);
         return ResponseEntity.noContent().build();
     }
 
@@ -126,7 +118,7 @@ public class AlunoController {
     @Operation(operationId = "desarquivarAluno", description = "Desarquiva um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno desarquivado com sucesso.")
     public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {
-        studentService.unarchiveStudent(studentId);
+        alunoService.unarchiveAluno(studentId);
         return ResponseEntity.noContent().build();
     }
 }

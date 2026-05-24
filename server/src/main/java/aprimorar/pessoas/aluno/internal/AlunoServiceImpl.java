@@ -1,14 +1,11 @@
 package aprimorar.pessoas.aluno.internal;
 
-import aprimorar.pessoas.api.exception.PersonHasPendingFinancialsException;
-import aprimorar.pessoas.responsavel.api.ResponsavelReadApi;
+import aprimorar.pessoas.responsavel.api.ResponsavelService;
 import aprimorar.pessoas.shared.address.Address;
-import aprimorar.pessoas.aluno.api.AlunoChargeStatusApi;
 import aprimorar.pessoas.aluno.api.AlunoService;
 import aprimorar.pessoas.aluno.api.dto.AlunoOptionsDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunoCountSummaryDTO;
 import aprimorar.pessoas.aluno.api.exception.AlunoNotFoundException;
 import aprimorar.pessoas.aluno.internal.repository.AlunoRepository;
 import aprimorar.pessoas.aluno.internal.repository.AlunoSpecifications;
@@ -30,37 +27,35 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-public class AlunoServiceImpl implements AlunoService, AlunoManagementService {
+public class AlunoServiceImpl implements AlunoService {
 
     private static final Logger log = LoggerFactory.getLogger(AlunoServiceImpl.class);
     private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     private final AlunoRepository studentRepo;
-    private final ResponsavelReadApi parentQueryApi;
     private final AlunoMapper studentMapper;
+
+    private final ResponsavelService parentQueryApi;
     private final ApplicationEventPublisher eventPublisher;
-    private final AlunoChargeStatusApi studentChargeStatusPort;
     private final Clock clock;
 
     public AlunoServiceImpl(
         AlunoRepository studentRepo,
-        ResponsavelReadApi parentQueryApi,
+        ResponsavelService parentQueryApi,
         AlunoMapper studentMapper,
         ApplicationEventPublisher eventPublisher,
-        AlunoChargeStatusApi studentChargeStatusPort,
         Clock clock
     ) {
         this.studentRepo = studentRepo;
         this.parentQueryApi = parentQueryApi;
         this.studentMapper = studentMapper;
         this.eventPublisher = eventPublisher;
-        this.studentChargeStatusPort = studentChargeStatusPort;
         this.clock = clock;
     }
 
     @Transactional
-    public AlunoResponseDTO createStudent(AlunoRequestDTO dto) {
-        parentQueryApi.findById(dto.parentId());
+    public AlunoResponseDTO createAluno(AlunoRequestDTO dto) {
+        parentQueryApi.findResponsavelById(dto.parentId());
         Address address = Address.fromRequest(dto.address());
 
         Aluno student = new Aluno(
@@ -83,7 +78,7 @@ public class AlunoServiceImpl implements AlunoService, AlunoManagementService {
 
     /* ----- Query Methods ----- */
     @Transactional(readOnly = true)
-    public PageDTO<AlunoResponseDTO> getStudents(Pageable pageable, String search, Boolean archived) {
+    public PageDTO<AlunoResponseDTO> getAlunos(Pageable pageable, String search, Boolean archived) {
         Specification<Aluno> spec = AlunoSpecifications.isNotGhost();
 
         if (Boolean.TRUE.equals(archived)) {
@@ -100,16 +95,7 @@ public class AlunoServiceImpl implements AlunoService, AlunoManagementService {
     }
 
     @Transactional(readOnly = true)
-    public AlunoCountSummaryDTO getSummary() {
-        Specification<Aluno> notGhost = AlunoSpecifications.isNotGhost();
-        long activeStudents = studentRepo.count(notGhost.and(AlunoSpecifications.isNotArchived()));
-        long totalStudents = studentRepo.count(notGhost);
-
-        return new AlunoCountSummaryDTO(activeStudents, totalStudents);
-    }
-
-    @Transactional(readOnly = true)
-    public List<AlunoOptionsDTO> getStudentOptions() {
+    public List<AlunoOptionsDTO> listAlunos() {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
         return studentRepo
@@ -120,7 +106,7 @@ public class AlunoServiceImpl implements AlunoService, AlunoManagementService {
     }
 
    @Transactional(readOnly = true)
-    public List<AlunoResponseDTO> getStudentsByParent(UUID parentId) {
+    public List<AlunoResponseDTO> getAlunosPorResponsavel(UUID parentId) {
         List<Aluno> students = studentRepo.findAllByParentId(parentId);
         return students.stream().map(student -> studentMapper.toResponseDto(student, clock)).toList();
     }
@@ -136,19 +122,19 @@ public class AlunoServiceImpl implements AlunoService, AlunoManagementService {
     }
 
     @Transactional(readOnly = true)
-    public AlunoResponseDTO findById(UUID studentId) {
+    public AlunoResponseDTO findByAlunoId(UUID studentId) {
         Aluno student = findStudentOrThrow(studentId);
         return studentMapper.toResponseDto(student, clock);
     }
 
     @Transactional
-    public AlunoResponseDTO updateStudent(AlunoRequestDTO dto, UUID id) {
+    public AlunoResponseDTO updateAluno(UUID id, AlunoRequestDTO dto ) {
         if (GHOST_STUDENT_ID.equals(id)) {
             throw new IllegalArgumentException("Não é possível modificar o registro de sistema 'Aluno Removido'.");
         }
 
         Aluno student = findStudentOrThrow(id);
-        parentQueryApi.findById(dto.parentId());
+        parentQueryApi.findResponsavelById(dto.parentId());
         Address address = Address.fromRequest(dto.address());
 
         student.updateDetails(
@@ -167,7 +153,7 @@ public class AlunoServiceImpl implements AlunoService, AlunoManagementService {
     }
 
     @Transactional
-    public void archiveStudent(UUID studentId) {
+    public void archiveAluno(UUID studentId) {
         if (GHOST_STUDENT_ID.equals(studentId)) {
             throw new IllegalArgumentException("Não é possível arquivar o registro de sistema 'ALUNO ARQUIVADO'.");
         }
@@ -177,7 +163,7 @@ public class AlunoServiceImpl implements AlunoService, AlunoManagementService {
     }
 
     @Transactional
-    public void unarchiveStudent(UUID studentId) {
+    public void unarchiveAluno(UUID studentId) {
         if (GHOST_STUDENT_ID.equals(studentId)) {
             throw new IllegalArgumentException("O registro 'Aluno Removido' não pode ser desarquivado.");
         }
@@ -187,17 +173,11 @@ public class AlunoServiceImpl implements AlunoService, AlunoManagementService {
     }
 
     @Transactional
-    public void deleteStudent(UUID studentId) {
-        if (GHOST_STUDENT_ID.equals(studentId)) {
-            throw new IllegalArgumentException("Não é possível deletar o registro de sistema 'Aluno Removido'.");
-        }
-
+    public void deleteAluno(UUID studentId) {
         Aluno student = findStudentOrThrow(studentId);
 
-        if (studentChargeStatusPort.hasPendingStudentCharges(studentId)) {
-            throw new PersonHasPendingFinancialsException(
-                "O aluno possui cobranças pendentes. Quite os valores antes de excluí-lo."
-            );
+        if (GHOST_STUDENT_ID.equals(studentId)) {
+            throw new IllegalArgumentException("Não é possível deletar o registro de sistema 'Aluno Removido'.");
         }
 
         log.info("Publicando evento de exclusão do aluno {}.", student.getName().toUpperCase());

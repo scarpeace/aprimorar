@@ -82,6 +82,9 @@ public abstract class Person implements Serializable {
     }
 
     public void unarchive() {
+        if (Role.ADMIN.equals(this.role)) {
+            throw new IllegalStateException("O Administrador não pode ser desarquivado.");
+        }
         this.active = true;
     }
 

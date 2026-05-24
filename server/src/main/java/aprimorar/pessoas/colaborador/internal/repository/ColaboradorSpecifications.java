@@ -2,8 +2,8 @@ package aprimorar.pessoas.colaborador.internal.repository;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import aprimorar.pessoas.colaborador.api.contract.DutyEnum;
 import aprimorar.pessoas.colaborador.internal.Colaborador;
+import aprimorar.pessoas.colaborador.internal.ColaboradorDutyEnum;
 
 public final class ColaboradorSpecifications {
     private ColaboradorSpecifications() {
@@ -18,14 +18,14 @@ public final class ColaboradorSpecifications {
     }
 
     public static Specification<Colaborador> isNotGhost() {
-        return (root, query, cb) -> cb.notEqual(root.get("duty"), DutyEnum.SYSTEM);
+        return (root, query, cb) -> cb.notEqual(root.get("duty"), ColaboradorDutyEnum.SYSTEM);
     }
 
     public static Specification<Colaborador> searchContainsIgnoreCase(String term) {
         return (root, query, cb) -> {
             String pattern = "%" + term.toLowerCase() + "%";
             return cb.and(
-                    cb.notEqual(root.get("duty"), DutyEnum.SYSTEM),
+                    cb.notEqual(root.get("duty"), ColaboradorDutyEnum.SYSTEM),
                     cb.or(
                             cb.like(cb.lower(root.get("name")), pattern),
                             cb.like(cb.lower(root.get("email")), pattern),

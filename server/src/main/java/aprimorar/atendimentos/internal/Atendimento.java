@@ -1,13 +1,12 @@
 package aprimorar.atendimentos.internal;
 
-import aprimorar.atendimentos.api.TipoAtendimento;
-import aprimorar.atendimentos.api.exception.InvalidAtendimentoException;
-import aprimorar.atendimentos.api.exception.NotAllowedToUpdateAtendimentoException;
+import aprimorar.shared.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -56,7 +55,7 @@ public class Atendimento implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_atendimento", nullable = false)
-    private TipoAtendimento content;
+    private TipoAtendimentoEnum content;
 
     @Column(name = "data_pagamento_colaborador", nullable = true)
     private Instant employeePaymentDate;
@@ -84,7 +83,7 @@ public class Atendimento implements Serializable {
         Double duration,
         BigDecimal payment,
         BigDecimal price,
-        TipoAtendimento content,
+        TipoAtendimentoEnum content,
         UUID studentId,
         String studentName,
         UUID employeeId,
@@ -126,7 +125,7 @@ public class Atendimento implements Serializable {
         Double duration,
         BigDecimal payment,
         BigDecimal price,
-        TipoAtendimento content,
+        TipoAtendimentoEnum content,
         UUID studentId,
         String studentName,
         UUID employeeId,
@@ -172,63 +171,63 @@ public class Atendimento implements Serializable {
 
     public static Instant calculateEndDate(Instant startDate, Double duration) {
         if (startDate == null) {
-            throw new InvalidAtendimentoException("Data de início do evento é obrigatório");
+            throw new IllegalStateException("Data de início do evento é obrigatório");
         }
         if (duration == null) {
-            throw new InvalidAtendimentoException("Duração do evento é obrigatória");
+            throw new IllegalStateException("Duração do evento é obrigatória");
         }
         return startDate.plus((long) (duration * 60), ChronoUnit.MINUTES);
     }
 
     public void validateEditWindow(Instant now) {
         if (this.endDate != null && now.isAfter(this.endDate.plus(20, ChronoUnit.DAYS))) {
-            throw new NotAllowedToUpdateAtendimentoException("A janela de 20 dias para editar as informações do evento encerrou");
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "A janela de 20 dias para editar as informações do evento encerrou");
         }
     }
 
     private void validateDates(Instant startDate) {
         if (this.endDate.isBefore(startDate)) {
-            throw new InvalidAtendimentoException("Data de fim do evento não pode ser anterior a data de inicio");
+            throw new IllegalStateException("Data de fim do evento não pode ser anterior a data de inicio");
         }
     }
 
     private void validateNotPast(Instant now) {
         if (this.endDate.isBefore(now)) {
-            throw new InvalidAtendimentoException("Data de fim do evento não pode estar no passado");
+            throw new IllegalStateException("Data de fim do evento não pode estar no passado");
         }
     }
 
     private void validateAmounts(BigDecimal payment, BigDecimal price) {
         if (payment == null) {
-            throw new InvalidAtendimentoException("Pagamento do evento é obrigatório");
+            throw new IllegalStateException("Pagamento do evento é obrigatório");
         }
         if (price == null) {
-            throw new InvalidAtendimentoException("Valor do evento é obrigatório");
+            throw new IllegalStateException("Valor do evento é obrigatório");
         }
         if (price.compareTo(payment) < 0) {
-            throw new InvalidAtendimentoException("O valor do evento não pode ser menor que o pagamento");
+            throw new IllegalStateException("O valor do evento não pode ser menor que o pagamento");
         }
         if (price.compareTo(BigDecimal.valueOf(50)) < 0) {
-            throw new InvalidAtendimentoException("O valor do evento não pode ser menor que R$50,00");
+            throw new IllegalStateException("O valor do evento não pode ser menor que R$50,00");
         }
     }
 
     private void validateParticipants(UUID studentId, UUID employeeId) {
         if (studentId == null) {
-            throw new InvalidAtendimentoException("Um evento não pode existir sem um estudante");
+            throw new IllegalStateException("Um evento não pode existir sem um estudante");
         }
         if (employeeId == null) {
-            throw new InvalidAtendimentoException("Um evento não pode existir sem um colaborador");
+            throw new IllegalStateException("Um evento não pode existir sem um colaborador");
         }
     }
 
-    private void validateContent(TipoAtendimento content) {
-        if (content == null) {
-            throw new InvalidAtendimentoException("O conteúdo do evento é obrigatório");
+    private void validateContent(TipoAtendimentoEnum conteudo) {
+        if (conteudo == null) {
+            throw new IllegalStateException("O conteúdo do evento é obrigatório");
         }
     }
 
-    private String buildTitle(TipoAtendimento content, String studentName, String employeeName) {
-        return content + " - Col: " + employeeName + " - " + studentName;
+    private String buildTitle(TipoAtendimentoEnum conteudo, String studentName, String employeeName) {
+        return conteudo + " - Col: " + employeeName + " - " + studentName;
     }
 }
