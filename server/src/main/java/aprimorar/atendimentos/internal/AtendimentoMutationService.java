@@ -3,7 +3,7 @@ package aprimorar.atendimentos.internal;
 import aprimorar.atendimentos.api.dto.AtendimentoRequestDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
 import aprimorar.atendimentos.internal.repository.AtendimentoRepository;
-import aprimorar.pessoas.aluno.api.AlunoService;
+import aprimorar.pessoas.aluno.api.AlunoQueryApi;
 import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
 import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
@@ -26,59 +26,54 @@ class AtendimentoMutationService {
     private static final UUID GHOST_COLABORADOR_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
 
     private final AtendimentoRepository atendimentoRepo;
-    private final AtendimentoMapper appointmentMapper;
-    private final AlunoService studentService;
+    private final AtendimentoMapper atendimentoMapper;
+    private final AlunoQueryApi alunoQueryApi;
     private final ColaboradorQueryApi colaboradorService;
     private final Clock clock;
 
     AtendimentoMutationService(
         AtendimentoRepository atendimentoRepo,
-        AtendimentoMapper appointmentMapper,
-        AlunoService studentService,
+        AtendimentoMapper atendimentoMapper,
+        AlunoQueryApi alunoQueryApi,
         ColaboradorQueryApi colaboradorService,
         Clock clock
     ) {
         this.atendimentoRepo = atendimentoRepo;
-        this.appointmentMapper = appointmentMapper;
-        this.studentService = studentService;
+        this.atendimentoMapper = atendimentoMapper;
+        this.alunoQueryApi = alunoQueryApi;
         this.colaboradorService = colaboradorService;
         this.clock = clock;
     }
 
     @Transactional
     public AtendimentoResponseDTO createAtendimento(AtendimentoRequestDTO dto) {
-        AlunoResponseDTO student = studentService.findByAlunoId(dto.studentId());
+        AlunoResponseDTO student = alunoQueryApi.findAlunoById(dto.studentId());
         ColaboradorResponseDTO employee = colaboradorService.findColaboradorById(dto.employeeId());
 
         validateParticipantAvailability(student, employee, dto.startDate(), dto.duration(), null);
 
-        Atendimento appointment = new Atendimento(
-            dto.description(),
-            dto.startDate(),
-            dto.duration(),
-            dto.payment(),
-            dto.price(),
-            dto.content(),
+        Atendimento atendimento = atendimentoMapper.toEntity(
+            dto,
             student.id(),
             student.name(),
             employee.id(),
             employee.name(),
             Instant.now(clock)
         );
-        Atendimento saved = atendimentoRepo.save(appointment);
+        Atendimento saved = atendimentoRepo.save(atendimento);
         log.info("Atendimento {} cadastrado com sucesso.", saved.getTitle().toUpperCase());
-        return appointmentMapper.convertToDto(saved);
+        return atendimentoMapper.convertToDto(saved);
     }
 
     @Transactional
-    public AtendimentoResponseDTO updateAppointment(UUID id, AtendimentoRequestDTO dto) {
-        Atendimento appointment = findAppointmentOrThrow(id);
-        AlunoResponseDTO student = studentService.findByAlunoId(dto.studentId());
+    public AtendimentoResponseDTO updateAtendimento(UUID id, AtendimentoRequestDTO dto) {
+        Atendimento atendimento = findAtendimentoOrThrow(id);
+        AlunoResponseDTO student = alunoQueryApi.findAlunoById(dto.studentId());
         ColaboradorResponseDTO employee = colaboradorService.findColaboradorById(dto.employeeId());
 
-        validateParticipantAvailability(student, employee, dto.startDate(), dto.duration(), appointment);
+        validateParticipantAvailability(student, employee, dto.startDate(), dto.duration(), atendimento);
 
-        appointment.update(
+        atendimento.update(
             dto.description(),
             dto.startDate(),
             dto.duration(),
@@ -91,34 +86,34 @@ class AtendimentoMutationService {
             employee.name(),
             Instant.now(clock)
         );
-        log.info("Atendimento {} atualizado com sucesso.", appointment.getTitle().toUpperCase());
-        return appointmentMapper.convertToDto(appointment);
+        log.info("Atendimento {} atualizado com sucesso.", atendimento.getTitle().toUpperCase());
+        return atendimentoMapper.convertToDto(atendimento);
     }
 
     @Transactional
-    public void deleteAppointment(UUID id) {
-        Atendimento found = findAppointmentOrThrow(id);
+    public void deleteAtendimento(UUID id) {
+        Atendimento found = findAtendimentoOrThrow(id);
         atendimentoRepo.delete(found);
         log.info("Atendimento {} deletado com sucesso.", found.getTitle().toUpperCase());
     }
 
     @Transactional
     public AtendimentoResponseDTO toggleStudentCharge(UUID id) {
-        Atendimento appointment = findAppointmentOrThrow(id);
-        appointment.toggleStudentCharge(Instant.now(clock));
-        log.info("Status da cobranca do aluno no appointment {} atualizado.", appointment.getTitle());
-        return appointmentMapper.convertToDto(appointment);
+        Atendimento atendimento = findAtendimentoOrThrow(id);
+        atendimento.toggleStudentCharge(Instant.now(clock));
+        log.info("Status da cobranca do aluno no atendimento {} atualizado.", atendimento.getTitle());
+        return atendimentoMapper.convertToDto(atendimento);
     }
 
     @Transactional
     public AtendimentoResponseDTO toggleEmployeePayment(UUID id) {
-        Atendimento appointment = findAppointmentOrThrow(id);
-        appointment.toggleEmployeePayment(Instant.now(clock));
-        log.info("Status do pagamento do colaborador no appointment {} atualizado.", appointment.getTitle());
-        return appointmentMapper.convertToDto(appointment);
+        Atendimento atendimento = findAtendimentoOrThrow(id);
+        atendimento.toggleEmployeePayment(Instant.now(clock));
+        log.info("Status do pagamento do colaborador no atendimento {} atualizado.", atendimento.getTitle());
+        return atendimentoMapper.convertToDto(atendimento);
     }
 
-    private Atendimento findAppointmentOrThrow(UUID id) {
+    private Atendimento findAtendimentoOrThrow(UUID id) {
         return atendimentoRepo.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Atendimento nao encontrado"));
     }
 
@@ -127,7 +122,7 @@ class AtendimentoMutationService {
         ColaboradorResponseDTO employee,
         Instant startDate,
         Double duration,
-        Atendimento appointment
+        Atendimento atendimento
     ) {
         Instant endDate = Atendimento.calculateEndDate(startDate, duration);
 
@@ -139,23 +134,23 @@ class AtendimentoMutationService {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "Atendimento nao pode ter colaboradores arquivados");
         }
 
-        UUID appointmentId = appointment != null ? appointment.getId() : null;
+        UUID atendimentoId = atendimento != null ? atendimento.getId() : null;
 
-        if (atendimentoRepo.studentHasConflictingAppointment(student.id(), startDate, endDate, appointmentId)) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "O estudante informado ja possui um appointment no intervalo");
+        if (atendimentoRepo.studentHasConflictingAtendimento(student.id(), startDate, endDate, atendimentoId)) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "O estudante informado ja possui um atendimento no intervalo");
         }
 
-        if (atendimentoRepo.employeeHasConflictingAppointment(employee.id(), startDate, endDate, appointmentId)) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "O colaborador informado ja possui um appointment no intervalo");
+        if (atendimentoRepo.employeeHasConflictingAtendimento(employee.id(), startDate, endDate, atendimentoId)) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "O colaborador informado ja possui um atendimento no intervalo");
         }
     }
 
     @Transactional
-    public void reassignStudentAppointmentsToGhost(UUID studentId) {
-        if (atendimentoRepo.existsByStudentIdAndEmployeeChargeDateIsNull(studentId)) {
+    public void reassignStudentAtendimentosToGhost(UUID studentId) {
+        if (atendimentoRepo.existsByStudentIdAndStudentChargeDateIsNull(studentId)) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "O aluno possui pagamentos pendentes e nao pode ser excluido.");
         }
-        atendimentoRepo.reassignStudentAppointmentsToGhost(studentId, GHOST_STUDENT_ID);
+        atendimentoRepo.reassignStudentAtendimentosToGhost(studentId, GHOST_STUDENT_ID);
     }
 
     @Transactional
@@ -166,6 +161,6 @@ class AtendimentoMutationService {
                 "O colaborador possui pagamentos pendentes e nao pode ser excluido."
             );
         }
-        atendimentoRepo.reassignEmployeeAppointmentsToGhost(colaboradorId, GHOST_COLABORADOR_ID);
+        atendimentoRepo.reassignEmployeeAtendimentosToGhost(colaboradorId, GHOST_COLABORADOR_ID);
     }
 }

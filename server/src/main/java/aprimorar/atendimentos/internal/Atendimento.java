@@ -2,20 +2,19 @@ package aprimorar.atendimentos.internal;
 
 import aprimorar.shared.exception.BusinessException;
 import jakarta.persistence.*;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.http.HttpStatus;
 
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.io.Serializable;
-import java.util.UUID;
-
-// TODO: Adicionar campos do google calendar para a implementação
+// TODO: Adicionar campos do Google Calendar para a implementacao
 @Entity
 @Getter
 @Table(name = "tb_atendimentos")
@@ -91,8 +90,7 @@ public class Atendimento implements Serializable {
         Instant now
     ) {
         this.endDate = calculateEndDate(startDate, duration);
-        validateDates(startDate);
-        validateNotPast(now);
+        validateDates(startDate, now);
         validateAmounts(payment, price);
         validateParticipants(studentId, employeeId);
         validateContent(content);
@@ -107,16 +105,6 @@ public class Atendimento implements Serializable {
         this.employeeId = employeeId;
         this.studentName = studentName;
         this.employeeName = employeeName;
-    }
-
-    @Transient
-    public Double getDuration() {
-        return Duration.between(startDate, endDate).toMinutes() / 60.0;
-    }
-
-    @Transient
-    public BigDecimal getProfit() {
-        return price.subtract(payment);
     }
 
     public Atendimento update(
@@ -134,7 +122,7 @@ public class Atendimento implements Serializable {
     ) {
         this.endDate = calculateEndDate(startDate, duration);
         validateEditWindow(now);
-        validateDates(startDate);
+        validateDates(startDate, now);
         validateAmounts(payment, price);
         validateParticipants(studentId, employeeId);
         validateContent(content);
@@ -152,6 +140,18 @@ public class Atendimento implements Serializable {
 
         return this;
     }
+
+    @Transient
+    public Double getDuration() {
+        return Duration.between(startDate, endDate).toMinutes() / 60.0;
+    }
+
+    @Transient
+    public BigDecimal getProfit() {
+        return price.subtract(payment);
+    }
+
+
 
     public void toggleStudentCharge(Instant now) {
         if (this.studentChargeDate != null) {
@@ -171,63 +171,60 @@ public class Atendimento implements Serializable {
 
     public static Instant calculateEndDate(Instant startDate, Double duration) {
         if (startDate == null) {
-            throw new IllegalStateException("Data de início do evento é obrigatório");
+            throw new IllegalStateException("Data de inicio do atendimento e obrigatoria");
         }
         if (duration == null) {
-            throw new IllegalStateException("Duração do evento é obrigatória");
+            throw new IllegalStateException("Duracao do atendimento e obrigatoria");
         }
         return startDate.plus((long) (duration * 60), ChronoUnit.MINUTES);
     }
 
     public void validateEditWindow(Instant now) {
         if (this.endDate != null && now.isAfter(this.endDate.plus(20, ChronoUnit.DAYS))) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "A janela de 20 dias para editar as informações do evento encerrou");
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "A janela de 20 dias para editar as informacoes do atendimento encerrou");
         }
     }
 
-    private void validateDates(Instant startDate) {
+    private void validateDates(Instant startDate, Instant now) {
         if (this.endDate.isBefore(startDate)) {
-            throw new IllegalStateException("Data de fim do evento não pode ser anterior a data de inicio");
+            throw new IllegalStateException("Data de fim do atendimento nao pode ser anterior a data de inicio");
         }
-    }
-
-    private void validateNotPast(Instant now) {
         if (this.endDate.isBefore(now)) {
-            throw new IllegalStateException("Data de fim do evento não pode estar no passado");
+            throw new IllegalStateException("Data de fim do atendimento nao pode estar no passado");
         }
     }
 
     private void validateAmounts(BigDecimal payment, BigDecimal price) {
         if (payment == null) {
-            throw new IllegalStateException("Pagamento do evento é obrigatório");
+            throw new IllegalStateException("Pagamento do atendimento e obrigatorio");
         }
         if (price == null) {
-            throw new IllegalStateException("Valor do evento é obrigatório");
+            throw new IllegalStateException("Valor do atendimento e obrigatorio");
         }
         if (price.compareTo(payment) < 0) {
-            throw new IllegalStateException("O valor do evento não pode ser menor que o pagamento");
+            throw new IllegalStateException("O valor do atendimento nao pode ser menor que o pagamento");
         }
         if (price.compareTo(BigDecimal.valueOf(50)) < 0) {
-            throw new IllegalStateException("O valor do evento não pode ser menor que R$50,00");
+            throw new IllegalStateException("O valor do atendimento nao pode ser menor que R$50,00");
         }
     }
 
     private void validateParticipants(UUID studentId, UUID employeeId) {
         if (studentId == null) {
-            throw new IllegalStateException("Um evento não pode existir sem um estudante");
+            throw new IllegalStateException("Um atendimento nao pode existir sem um estudante");
         }
         if (employeeId == null) {
-            throw new IllegalStateException("Um evento não pode existir sem um colaborador");
+            throw new IllegalStateException("Um atendimento nao pode existir sem um colaborador");
         }
     }
 
-    private void validateContent(TipoAtendimentoEnum conteudo) {
-        if (conteudo == null) {
-            throw new IllegalStateException("O conteúdo do evento é obrigatório");
+    private void validateContent(TipoAtendimentoEnum content) {
+        if (content == null) {
+            throw new IllegalStateException("O conteudo do atendimento e obrigatorio");
         }
     }
 
-    private String buildTitle(TipoAtendimentoEnum conteudo, String studentName, String employeeName) {
-        return conteudo + " - Col: " + employeeName + " - " + studentName;
+    private String buildTitle(TipoAtendimentoEnum content, String studentName, String employeeName) {
+        return content + " - Col: " + employeeName + " - " + studentName;
     }
 }

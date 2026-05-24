@@ -8,5 +8,5 @@ public interface AtendimentosQueryApi {
     boolean alunoHasPendingCharges(UUID alunoId);
     boolean colaboradorHasPendingPayment(UUID colaboradorId);
     long countActiveStudentsInPeriod(Instant startDate, Instant endDate, UUID excludedStudentId);
-    long countAppointmentsInPeriod(Instant startDate, Instant endDate);
+    long countAtendimentosInPeriod(Instant startDate, Instant endDate);
 }

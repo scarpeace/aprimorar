@@ -1,17 +1,8 @@
 package aprimorar.atendimentos.internal;
 
-import aprimorar.atendimentos.api.dto.AlunoAppointmentsResponseDTO;
-import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
-import aprimorar.atendimentos.api.dto.AtendimentoRequestDTO;
-import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.api.dto.ColaboradorAppointmentsResponseDTO;
-import aprimorar.shared.PageDTO;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import java.time.Instant;
 import java.util.UUID;
+
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import aprimorar.atendimentos.api.dto.AlunoAtendimentosResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
+import aprimorar.atendimentos.api.dto.AtendimentoRequestDTO;
+import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
+import aprimorar.atendimentos.api.dto.ColaboradorAtendimentosResponseDTO;
+import aprimorar.shared.PageDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/v1/atendimentos")
 @Tag(name = "Atendimento")
@@ -43,20 +45,20 @@ public class AtendimentoController {
     }
 
     @PostMapping
-    @Operation(operationId = "criarAtendimento", description = "Cria um atendimento vinculando aluno e colaborador.")
+    @Operation(operationId = "createAtendimento", description = "Cria um atendimento vinculando aluno e colaborador.")
     @ApiResponse(responseCode = "201", description = "Atendimento criado e retornado com os dados consolidados de aluno e colaborador.")
-    public ResponseEntity<AtendimentoResponseDTO> createAppointment(@RequestBody @Valid AtendimentoRequestDTO request) {
+    public ResponseEntity<AtendimentoResponseDTO> createAtendimento(@RequestBody @Valid AtendimentoRequestDTO request) {
         AtendimentoResponseDTO created = atendimentoMutationService.createAtendimento(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping
     @Operation(
-        operationId = "listarAtendimentos",
+        operationId = "getAtendimentos",
         description = "Lista atendimentos com paginacao, ordenacao e filtros opcionais por texto, periodo, cobranca do aluno e pagamento do colaborador."
     )
     @ApiResponse(responseCode = "200", description = "Pagina de atendimentos retornada conforme os filtros informados.")
-    public ResponseEntity<PageDTO<AtendimentoResponseDTO>> getAppointments(
+    public ResponseEntity<PageDTO<AtendimentoResponseDTO>> getAtendimentos(
         @ParameterObject Pageable pageable,
         @RequestParam(required = false) String search,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
@@ -68,54 +70,54 @@ public class AtendimentoController {
     }
 
     @GetMapping("/{id}")
-    @Operation(operationId = "buscarAtendimentoPorId", description = "Consulta um atendimento especifico pelo ID.")
+    @Operation(operationId = "getAtendimentoById", description = "Consulta um atendimento especifico pelo ID.")
     @ApiResponse(responseCode = "200", description = "Atendimento encontrado e retornado.")
-    public ResponseEntity<AtendimentoResponseDTO> getAppointmentById(@PathVariable UUID id) {
+    public ResponseEntity<AtendimentoResponseDTO> getAtendimentoById(@PathVariable UUID id) {
         AtendimentoResponseDTO found = atendimentoQueryService.findAtendimentoById(id);
         return ResponseEntity.ok(found);
     }
 
     @GetMapping("/{id}/aluno")
     @Operation(
-        operationId = "listarAtendimentosPorAluno",
+        operationId = "getAtendimentosByStudentId",
         description = "Retorna a agenda paginada de um aluno junto com os indicadores do mesmo periodo."
     )
     @ApiResponse(
         responseCode = "200",
         description = "Agenda e resumo financeiro do aluno retornados conforme periodo e filtros informados."
     )
-    public ResponseEntity<AlunoAppointmentsResponseDTO> getAppointmentsByStudentId(
+    public ResponseEntity<AlunoAtendimentosResponseDTO> getAtendimentosByStudentId(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
         @RequestParam(required = false) Boolean charged
     ) {
-        return ResponseEntity.ok(atendimentoQueryService.getAppointmentsByStudentId(pageable, id, startDate, endDate, charged));
+        return ResponseEntity.ok(atendimentoQueryService.getAtendimentosByStudentId(pageable, id, startDate, endDate, charged));
     }
 
     @GetMapping("/{id}/colaborador")
     @Operation(
-        operationId = "listarAtendimentosPorColaborador",
+        operationId = "getAtendimentosByEmployeeId",
         description = "Retorna a agenda paginada de um colaborador junto com os indicadores do mesmo periodo."
     )
     @ApiResponse(
         responseCode = "200",
         description = "Agenda e resumo financeiro do colaborador retornados conforme periodo e filtros informados."
     )
-    public ResponseEntity<ColaboradorAppointmentsResponseDTO> getAppointmentsByEmployeeId(
+    public ResponseEntity<ColaboradorAtendimentosResponseDTO> getAtendimentosByEmployeeId(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) Boolean hidePaid,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
-        return ResponseEntity.ok(atendimentoQueryService.getAppointmentsByEmployeeId(pageable, id, hidePaid, startDate, endDate));
+        return ResponseEntity.ok(atendimentoQueryService.getAtendimentosByEmployeeId(pageable, id, hidePaid, startDate, endDate));
     }
 
     @GetMapping("/finance/report")
     @Operation(
-        operationId = "obterRelatorioFinanceiroAtendimentos",
+        operationId = "getFinanceReport",
         description = "Consolida o financeiro institucional no periodo informado"
     )
     @ApiResponse(responseCode = "200", description = "Relatorio financeiro institucional retornado com totais consolidados.")
@@ -127,37 +129,37 @@ public class AtendimentoController {
     }
 
     @PutMapping("/{id}")
-    @Operation(operationId = "atualizarAtendimento", description = "Atualiza dados cadastrais do atendimento.")
+    @Operation(operationId = "updateAtendimento", description = "Atualiza dados cadastrais do atendimento.")
     @ApiResponse(responseCode = "200", description = "Atendimento atualizado e retornado com os dados atuais.")
-    public ResponseEntity<AtendimentoResponseDTO> updateAppointment(
+    public ResponseEntity<AtendimentoResponseDTO> updateAtendimento(
         @PathVariable UUID id,
         @RequestBody @Valid AtendimentoRequestDTO request
     ) {
-        return ResponseEntity.ok(atendimentoMutationService.updateAppointment(id, request));
+        return ResponseEntity.ok(atendimentoMutationService.updateAtendimento(id, request));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(operationId = "deletarAtendimento", description = "Remove definitivamente um atendimento.")
+    @Operation(operationId = "deleteAtendimento", description = "Remove definitivamente um atendimento.")
     @ApiResponse(responseCode = "204", description = "Atendimento removido sem corpo de resposta.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAppointment(@PathVariable UUID id) {
-        atendimentoMutationService.deleteAppointment(id);
+    public void deleteAtendimento(@PathVariable UUID id) {
+        atendimentoMutationService.deleteAtendimento(id);
     }
 
     @PatchMapping("/{id}/toggle-student-charge")
-    @Operation(operationId = "alternarCobrancaAlunoAtendimento", description = "Alterna a baixa financeira do aluno para o atendimento.")
+    @Operation(operationId = "toggleStudentAtendimentoCharge", description = "Alterna a baixa financeira do aluno para o atendimento.")
     @ApiResponse(responseCode = "200", description = "Status de cobranca do aluno atualizado e atendimento retornado.")
-    public ResponseEntity<AtendimentoResponseDTO> toggleStudentAppointmentCharge(@PathVariable UUID id) {
+    public ResponseEntity<AtendimentoResponseDTO> toggleStudentAtendimentoCharge(@PathVariable UUID id) {
         return ResponseEntity.ok(atendimentoMutationService.toggleStudentCharge(id));
     }
 
     @PatchMapping("/{id}/toggle-employee-payment")
     @Operation(
-        operationId = "alternarPagamentoColaboradorAtendimento",
+        operationId = "toggleEmployeeAtendimentoPayment",
         description = "Alterna a baixa financeira do colaborador para o atendimento."
     )
     @ApiResponse(responseCode = "200", description = "Status de pagamento do colaborador atualizado e atendimento retornado.")
-    public ResponseEntity<AtendimentoResponseDTO> toggleEmployeeAppointmentPayment(@PathVariable UUID id) {
+    public ResponseEntity<AtendimentoResponseDTO> toggleEmployeeAtendimentoPayment(@PathVariable UUID id) {
         return ResponseEntity.ok(atendimentoMutationService.toggleEmployeePayment(id));
     }
 

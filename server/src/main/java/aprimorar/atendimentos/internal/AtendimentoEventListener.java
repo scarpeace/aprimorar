@@ -1,6 +1,6 @@
 package aprimorar.atendimentos.internal;
 
-import aprimorar.pessoas.aluno.api.event.AlunoDeletedEvent;
+import aprimorar.pessoas.aluno.api.AlunoDeletedEvent;
 import aprimorar.pessoas.colaborador.api.ColaboradorDeletedEvent;
 
 import org.springframework.context.event.EventListener;
@@ -17,7 +17,7 @@ public class AtendimentoEventListener {
 
     @EventListener
     public void onStudentDeleted(AlunoDeletedEvent event) {
-        atendimentoMutationService.reassignStudentAppointmentsToGhost(event.studentId());
+        atendimentoMutationService.reassignStudentAtendimentosToGhost(event.studentId());
     }
 
     @EventListener

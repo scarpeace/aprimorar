@@ -2,7 +2,7 @@ package aprimorar.atendimentos.internal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Tipo de conteúdo ou categoria do atendimento/evento")
+@Schema(description = "Tipo de conteudo ou categoria do atendimento")
 public enum TipoAtendimentoEnum {
     @Schema(description = "Aulas regulares")
     AULA,
@@ -22,6 +22,6 @@ public enum TipoAtendimentoEnum {
     @Schema(description = "Preparatório para o PAS")
     PAS,
 
-    @Schema(description = "Outros tipos de evento")
+    @Schema(description = "Outros tipos de atendimento")
     OUTRO
 }

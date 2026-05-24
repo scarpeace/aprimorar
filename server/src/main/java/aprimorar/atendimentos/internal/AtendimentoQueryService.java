@@ -14,16 +14,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.atendimentos.api.AtendimentosQueryApi;
-import aprimorar.atendimentos.api.dto.AlunoAppointmentsResponseDTO;
+import aprimorar.atendimentos.api.dto.AlunoAtendimentosResponseDTO;
 import aprimorar.atendimentos.api.dto.AlunoSummaryDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.api.dto.ColaboradorAppointmentsResponseDTO;
+import aprimorar.atendimentos.api.dto.ColaboradorAtendimentosResponseDTO;
 import aprimorar.atendimentos.api.dto.ColaboradorSummaryDTO;
 import aprimorar.atendimentos.internal.repository.AtendimentoRepository;
 import aprimorar.atendimentos.internal.repository.AtendimentoSpecifications;
 import aprimorar.financeiro.api.FinanceiroService;
-import aprimorar.pessoas.aluno.api.AlunoService;
+import aprimorar.pessoas.aluno.api.AlunoQueryApi;
 import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
 import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
@@ -34,20 +34,20 @@ class AtendimentoQueryService implements AtendimentosQueryApi {
     private static final Logger log = LoggerFactory.getLogger(AtendimentoQueryService.class);
 
     private final AtendimentoRepository atendimentoRepo;
-    private final AtendimentoMapper appointmentMapper;
+    private final AtendimentoMapper atendimentoMapper;
     private final FinanceiroService expenseService;
-    private final AlunoService studentService;
+    private final AlunoQueryApi studentService;
     private final ColaboradorQueryApi colaboradorService;
 
     AtendimentoQueryService(
         AtendimentoRepository atendimentoRepo,
-        AtendimentoMapper appointmentMapper,
+        AtendimentoMapper atendimentoMapper,
         FinanceiroService expenseService,
-        AlunoService studentService,
+        AlunoQueryApi studentService,
         ColaboradorQueryApi colaboradorService
     ) {
         this.atendimentoRepo = atendimentoRepo;
-        this.appointmentMapper = appointmentMapper;
+        this.atendimentoMapper = atendimentoMapper;
         this.expenseService = expenseService;
         this.studentService = studentService;
         this.colaboradorService = colaboradorService;
@@ -71,22 +71,22 @@ class AtendimentoQueryService implements AtendimentosQueryApi {
             .and(AtendimentoSpecifications.withStudentCharged(chargedFilter))
             .and(AtendimentoSpecifications.withEmployeePaid(paidFilter));
 
-        Page<Atendimento> appointmentPage = atendimentoRepo.findAll(spec, pageable);
-        Page<AtendimentoResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
+        Page<Atendimento> atendimentoPage = atendimentoRepo.findAll(spec, pageable);
+        Page<AtendimentoResponseDTO> dtoPage = atendimentoPage.map(atendimentoMapper::convertToDto);
 
-        log.info("Consulta de appointments finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
+        log.info("Consulta de atendimentos finalizada, {} registros encontrados.", atendimentoPage.getTotalElements());
         return new PageDTO<>(dtoPage);
     }
 
     @Transactional(readOnly = true)
     public AtendimentoResponseDTO findAtendimentoById(UUID id) {
-        Atendimento appointment = atendimentoRepo.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Atendimento nao encontrado"));
-        log.info("Atendimento {} consultado com sucesso.", appointment.getTitle().toUpperCase());
-        return appointmentMapper.convertToDto(appointment);
+        Atendimento atendimento = atendimentoRepo.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Atendimento nao encontrado"));
+        log.info("Atendimento {} consultado com sucesso.", atendimento.getTitle().toUpperCase());
+        return atendimentoMapper.convertToDto(atendimento);
     }
 
     @Transactional(readOnly = true)
-    public ColaboradorAppointmentsResponseDTO getAppointmentsByEmployeeId(
+    public ColaboradorAtendimentosResponseDTO getAtendimentosByEmployeeId(
         Pageable pageable,
         UUID employeeId,
         Boolean hidePaid,
@@ -101,46 +101,46 @@ class AtendimentoQueryService implements AtendimentosQueryApi {
             .and(AtendimentoSpecifications.withEndDateBefore(endDate))
             .and(AtendimentoSpecifications.withEmployeePaid(paidFilter));
 
-        Page<Atendimento> appointmentPage = atendimentoRepo.findAll(spec, pageable);
-        Page<AtendimentoResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
+        Page<Atendimento> atendimentoPage = atendimentoRepo.findAll(spec, pageable);
+        Page<AtendimentoResponseDTO> dtoPage = atendimentoPage.map(atendimentoMapper::convertToDto);
 
-        long totalEvents = atendimentoRepo.countFilteredByEmployeeId(employeeId, startDate, endDate);
+        long totalAtendimentos = atendimentoRepo.countFilteredByEmployeeId(employeeId, startDate, endDate);
         BigDecimal totalPaid = atendimentoRepo.sumPaidFilteredByEmployeeId(employeeId, startDate, endDate);
         BigDecimal totalUnpaid = atendimentoRepo.sumUnpaidFilteredByEmployeeId(employeeId, startDate, endDate);
 
-        log.info("Consulta de appointments do colaborador finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
+        log.info("Consulta de atendimentos do colaborador finalizada, {} registros encontrados.", atendimentoPage.getTotalElements());
 
-        return new ColaboradorAppointmentsResponseDTO(
+        return new ColaboradorAtendimentosResponseDTO(
             new PageDTO<>(dtoPage),
-            new ColaboradorSummaryDTO(totalEvents, totalPaid, totalUnpaid)
+            new ColaboradorSummaryDTO(totalAtendimentos, totalPaid, totalUnpaid)
         );
     }
 
     @Transactional(readOnly = true)
-    public AlunoAppointmentsResponseDTO getAppointmentsByStudentId(
+    public AlunoAtendimentosResponseDTO getAtendimentosByStudentId(
         Pageable pageable,
         UUID studentId,
         Instant startDate,
         Instant endDate,
         Boolean charged
     ) {
-        studentService.findByAlunoId(studentId);
+        studentService.findAlunoById(studentId);
 
         Specification<Atendimento> spec = AtendimentoSpecifications.withStudentId(studentId)
             .and(AtendimentoSpecifications.withStartDateAfter(startDate))
             .and(AtendimentoSpecifications.withEndDateBefore(endDate))
             .and(AtendimentoSpecifications.withStudentCharged(charged));
 
-        Page<Atendimento> appointmentPage = atendimentoRepo.findAll(spec, pageable);
-        Page<AtendimentoResponseDTO> dtoPage = appointmentPage.map(appointmentMapper::convertToDto);
+        Page<Atendimento> atendimentoPage = atendimentoRepo.findAll(spec, pageable);
+        Page<AtendimentoResponseDTO> dtoPage = atendimentoPage.map(atendimentoMapper::convertToDto);
 
-        log.info("Consulta de appointments do aluno finalizada, {} registros encontrados.", appointmentPage.getTotalElements());
+        log.info("Consulta de atendimentos do aluno finalizada, {} registros encontrados.", atendimentoPage.getTotalElements());
 
-        long totalEvents = atendimentoRepo.countFilteredByStudentId(studentId, startDate, endDate);
+        long totalAtendimentos = atendimentoRepo.countFilteredByStudentId(studentId, startDate, endDate);
         BigDecimal totalCharged = atendimentoRepo.sumChargedFilteredByStudentId(studentId, startDate, endDate);
         BigDecimal totalPending = atendimentoRepo.sumPendingFilteredByStudentId(studentId, startDate, endDate);
 
-        return new AlunoAppointmentsResponseDTO(new PageDTO<>(dtoPage), new AlunoSummaryDTO(totalEvents, totalCharged, totalPending));
+        return new AlunoAtendimentosResponseDTO(new PageDTO<>(dtoPage), new AlunoSummaryDTO(totalAtendimentos, totalCharged, totalPending));
     }
 
     @Transactional(readOnly = true)
@@ -170,7 +170,7 @@ class AtendimentoQueryService implements AtendimentosQueryApi {
 
     @Override
     @Transactional(readOnly = true)
-    public long countAppointmentsInPeriod(Instant startDate, Instant endDate) {
+    public long countAtendimentosInPeriod(Instant startDate, Instant endDate) {
         return atendimentoRepo.countByStartDateGreaterThanEqualAndStartDateLessThan(startDate, endDate);
     }
 
@@ -181,6 +181,6 @@ class AtendimentoQueryService implements AtendimentosQueryApi {
 
     @Override
     public boolean alunoHasPendingCharges(UUID alunoId) {
-        return atendimentoRepo.existsByStudentIdAndStudentPaymentDateIsNull(alunoId);
+        return atendimentoRepo.existsByStudentIdAndStudentChargeDateIsNull(alunoId);
     }
 }

@@ -22,7 +22,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
     interface AlunoFinanceSummaryProjection {
         UUID getStudentId();
         String getStudentName();
-        long getTotalEvents();
+        long getTotalAtendimentos();
         BigDecimal getTotalCharged();
         BigDecimal getTotalPending();
     }
@@ -30,7 +30,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
     interface ColaboradorFinanceSummaryProjection {
         UUID getEmployeeId();
         String getEmployeeName();
-        long getTotalEvents();
+        long getTotalAtendimentos();
         BigDecimal getTotalPaid();
         BigDecimal getTotalPending();
     }
@@ -44,7 +44,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         WHERE a.studentId = :studentId
         """
     )
-    void reassignStudentAppointmentsToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
+    void reassignStudentAtendimentosToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
 
     @Modifying
     @Query(
@@ -55,7 +55,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         WHERE a.employeeId = :employeeId
         """
     )
-    void reassignEmployeeAppointmentsToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
+    void reassignEmployeeAtendimentosToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
 
     boolean existsByStudentIdAndStudentChargeDateIsNull(UUID studentId);
 
@@ -230,14 +230,14 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
             where a.studentId = :studentId
               and a.startDate < :endDate
               and a.endDate > :startDate
-              and (:ignoredAppointmentId is null or a.id <> :ignoredAppointmentId)
+              and (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
         """
     )
-    boolean studentHasConflictingAppointment(
+    boolean studentHasConflictingAtendimento(
         @Param("studentId") UUID studentId,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate,
-        @Param("ignoredAppointmentId") UUID ignoredAppointmentId
+        @Param("ignoredAtendimentoId") UUID ignoredAtendimentoId
     );
 
     @Query(
@@ -247,14 +247,14 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
             where a.employeeId = :employeeId
               and a.startDate < :endDate
               and a.endDate > :startDate
-              and (:ignoredAppointmentId is null or a.id <> :ignoredAppointmentId)
+              and (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
         """
     )
-    boolean employeeHasConflictingAppointment(
+    boolean employeeHasConflictingAtendimento(
         @Param("employeeId") UUID employeeId,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate,
-        @Param("ignoredAppointmentId") UUID ignoredAppointmentId
+        @Param("ignoredAtendimentoId") UUID ignoredAtendimentoId
     );
 
     @Query(
@@ -289,7 +289,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         select
           a.studentId as studentId,
           a.studentName as studentName,
-          count(a) as totalEvents,
+          count(a) as totalAtendimentos,
           coalesce(sum(case when a.studentChargeDate is not null then a.price else 0 end), 0) as totalCharged,
           coalesce(sum(case when a.studentChargeDate is null then a.price else 0 end), 0) as totalPending
         from Atendimento a
@@ -309,7 +309,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         select
           a.employeeId as employeeId,
           a.employeeName as employeeName,
-          count(a) as totalEvents,
+          count(a) as totalAtendimentos,
           coalesce(sum(case when a.employeePaymentDate is not null then a.payment else 0 end), 0) as totalPaid,
           coalesce(sum(case when a.employeePaymentDate is null then a.payment else 0 end), 0) as totalPending
         from Atendimento a
@@ -325,10 +325,5 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
     );
 
     long countByStartDateGreaterThanEqualAndStartDateLessThan(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
-    boolean existsByColaboradorAndPaymentDateIsNull(UUID colaboradorId);
-    boolean existsByStudentIdAndEmployeeChargeDateIsNull(UUID studentId);
-
-    boolean existsByStudentIdAndStudentPaymentDateIsNull(UUID alunoId);
 
 }

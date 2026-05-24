@@ -1,6 +1,6 @@
 package aprimorar.pessoas.responsavel.internal;
 
-import aprimorar.pessoas.aluno.api.AlunoService;
+import aprimorar.pessoas.aluno.api.AlunoQueryApi;
 import aprimorar.pessoas.responsavel.api.ResponsavelService;
 import aprimorar.pessoas.responsavel.api.dto.ResponsavelOptionsDTO;
 import aprimorar.pessoas.responsavel.api.dto.ResponsavelRequestDTO;
@@ -28,16 +28,16 @@ public class ResponsavelServiceImpl implements ResponsavelService {
 
     private final ResponsavelRepository responsavelRepo;
     private final ResponsavelMapper responsavelMapper;
-    private final AlunoService alunoService;
+    private final AlunoQueryApi alunoQueryApi;
 
     public ResponsavelServiceImpl(
         ResponsavelRepository responsavelRepo,
         ResponsavelMapper responsavelMapper,
-        AlunoService alunoService
+        AlunoQueryApi alunoQueryApi
     ) {
         this.responsavelRepo = responsavelRepo;
         this.responsavelMapper = responsavelMapper;
-        this.alunoService = alunoService;
+        this.alunoQueryApi = alunoQueryApi;
     }
 
     @Transactional
@@ -108,7 +108,7 @@ public class ResponsavelServiceImpl implements ResponsavelService {
     @Transactional
     @Override
     public void archiveResponsavel(UUID id) {
-        if (alunoService.hasActiveStudentsLinkedToParent(id)) {
+        if (alunoQueryApi.hasActiveStudentsLinkedToParent(id)) {
             throw new ResponsavelHasLinkedStudentsException(
                 "O responsável possui alunos ativos vinculados. Arquive os alunos antes de arquivar o responsável."
             );
@@ -130,7 +130,7 @@ public class ResponsavelServiceImpl implements ResponsavelService {
     @Transactional
     @Override
     public void deleteResponsavel(UUID id) {
-        if (alunoService.hasStudentsLinkedToParent(id)) {
+        if (alunoQueryApi.hasStudentsLinkedToParent(id)) {
             throw new ResponsavelHasLinkedStudentsException(
                 "O responsável possui alunos vinculados. Reassocie ou remova os alunos antes de excluí-lo."
             );

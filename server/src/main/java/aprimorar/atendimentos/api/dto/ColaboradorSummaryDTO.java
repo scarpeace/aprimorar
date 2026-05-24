@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 
 @Schema(description = "Resumo financeiro e quantitativo do colaborador no periodo")
 public record ColaboradorSummaryDTO(
-    @Schema(description = "Total de eventos no periodo selecionado")
-    Long totalEvents,
+    @Schema(description = "Total de atendimentos no periodo selecionado")
+    Long totalAtendimentos,
 
     @Schema(description = "Total pago no periodo selecionado")
     BigDecimal totalPaid,
