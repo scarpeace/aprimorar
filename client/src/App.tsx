@@ -1,4 +1,6 @@
 import { MainLayout } from "@/components/layout/MainLayout"
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
+import { AdminOnly } from "@/components/auth/AdminOnly"
 import { PageLoading } from "@/components/ui/page-loading"
 import { Suspense, lazy } from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
@@ -40,35 +42,30 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
 
-            <Route
-              element={(
-                <MainLayout />
-              )}
-            >
-              <Route path="/" element={<DashboardPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={(<MainLayout />)}>
+                <Route path="/" element={<DashboardPage />} />
 
-              <Route path="/students" element={<StudentsPage />} />
-              <Route path="/students/:id" element={<StudentDetailsPage />} />
+                <Route path="/students" element={<StudentsPage />} />
+                <Route path="/students/:id" element={<StudentDetailsPage />} />
 
-              <Route path="/employees" element={<EmployeesPage />} />
-              <Route path="/employees/:id" element={<EmployeeDetailPage />} />
+                <Route path="/employees" element={<EmployeesPage />} />
+                <Route path="/employees/:id" element={<EmployeeDetailPage />} />
 
-              <Route path="/appointments" element={<AppointmentsPage />} />
-              <Route path="/appointments/:id" element={<AppointmentDetailPage />} />
+                <Route path="/appointments" element={<AppointmentsPage />} />
+                <Route path="/appointments/:id" element={<AppointmentDetailPage />} />
 
-              <Route path="/parents" element={<ParentsPage />} />
-              <Route path="/parents/:id" element={<ParentDetailPage />} />
+                <Route path="/parents" element={<ParentsPage />} />
+                <Route path="/parents/:id" element={<ParentDetailPage />} />
 
-              <Route path="/finance" element={<FinancesPage />} />
-              <Route path="/finance/expenses" element={<FinancesPage />} />
-              <Route path="/finance/expenses/:id" element={<ExpenseDetailPage />} />
-              <Route path="/finance/settlement" element={<FinancesPage />} />
+                <Route path="/finance" element={<FinancesPage />} />
+                <Route path="/finance/expenses" element={<FinancesPage />} />
+                <Route path="/finance/expenses/:id" element={<ExpenseDetailPage />} />
+                <Route path="/finance/settlement" element={<FinancesPage />} />
 
-              <Route path="/admin" element={<AdminPage />} />
-              <Route
-                path="/admin/users"
-                element={<AdminPage />}
-              />
+                <Route path="/admin" element={<AdminOnly><AdminPage /></AdminOnly>} />
+                <Route path="/admin/users" element={<AdminOnly><AdminPage /></AdminOnly>} />
+              </Route>
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

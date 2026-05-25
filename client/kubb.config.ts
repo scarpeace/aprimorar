@@ -33,7 +33,6 @@ export default defineConfig({
     }),
 
     pluginReactQuery({
-      client: { baseURL: 'http://localhost:8080' },
       output: { path: './hooks', barrelType: 'named' },
       paramsType: 'inline',
       pathParamsType: 'inline',

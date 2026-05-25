@@ -26,3 +26,9 @@ springdoc:
     path: /swagger-ui.html
     operationsSorter: method
   override-with-generic-response: false
+
+app:
+  security:
+    cors:
+      allowed-origins: []
+      allowed-origin-patterns: []

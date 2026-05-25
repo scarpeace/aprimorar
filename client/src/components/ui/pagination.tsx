@@ -1,6 +1,6 @@
 import { Button } from "./button";
 
-export type PaginationProps<T = any> = {
+export type PaginationProps<T = unknown> = {
   paginationData?: {
     size: number;
     totalElements: number;

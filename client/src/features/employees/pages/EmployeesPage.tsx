@@ -5,7 +5,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetEmployeeSummary, useGetEmployeesWithFinance } from "@/kubb";
 import type { EmployeeResponseDTO } from "@/kubb";
 import { useDebounce } from "@/lib/hooks/use-debounce.ts";
-import { FileUser, Plus, UserCheck, Users } from "lucide-react";
+import { FileUser, Plus, UserCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import { EmployeesTable } from "../components/EmployeesTable";
 import { EmployeeForm } from "../components/EmployeeForm";

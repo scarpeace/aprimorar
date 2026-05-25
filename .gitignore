@@ -15,25 +15,44 @@
 # .opencode/bun.lock
 # .opencode/package.json
 
-# IDE / caches locais
-.vscode
-.idea
-.ruff_cache
-.gemini
-.agents
-.github
-.zed
-skills-lock.json
-.codex
-openspec
+# Environment
+.env*
+!.env.example
 
-node_modules
-dist
-target
-kubb
+# IDE / caches locais
+.vscode/
+.idea/
+.ruff_cache/
+.gemini/
+.agents/
+.github/
+.zed/
+.codex/
+.classpath
+.factorypath
+.project
+.settings/
+openspec/
+
+# Arquivos locais/temporarios
+issues.txt
+skills-lock.json
+package-lock.json
+prettier.json
+sonar-project.properties
+generate_seed.py
+*.log
+
+node_modules/
+dist/
+target/
+kubb/
+
+# JWT keys locais do backend
+app.key
+app.pub
 
 
 docs
 
 codebook.toml
-.env.local

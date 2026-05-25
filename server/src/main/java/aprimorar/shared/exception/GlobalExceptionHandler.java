@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.Clock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,24 +22,16 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @SuppressWarnings("unused")
-    private Clock applicationClock;
-
-    public GlobalExceptionHandler(Clock applicationClock) {
-        this.applicationClock = applicationClock;
-    }
-
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ApiResponse(
-        responseCode = "400",
+        responseCode = "409",
         description = "Requisição inválida",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ProblemResponseDTO handleConflictExceptions(RuntimeException ex, HttpServletRequest request) {
         log.error("Erro de conflito de dados: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.CONFLICT,
             HttpStatus.CONFLICT,
             ex.getMessage(),
             request.getRequestURI()
@@ -62,7 +53,6 @@ public class GlobalExceptionHandler {
                 
         log.error("Erro de validação de DTO: {}", errorMessage);
         return new ProblemResponseDTO(
-            ErrorCode.VALIDATION_ERROR,
             HttpStatus.BAD_REQUEST,
             errorMessage,
             request.getRequestURI()
@@ -79,15 +69,30 @@ public class GlobalExceptionHandler {
     public ProblemResponseDTO handleUnauthorizedExceptions(RuntimeException ex, HttpServletRequest request) {
         log.error("Erro de autenticação: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.UNAUTHORIZED,
             HttpStatus.UNAUTHORIZED,
             ex.getMessage(),
             request.getRequestURI()
         );
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ApiResponse(
+        responseCode = "400",
+        description = "Corpo da requisição inválido",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ProblemResponseDTO handleMalformedRequest(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        log.error("Erro de payload inválido: {}", ex.getMessage());
+        return new ProblemResponseDTO(
+            HttpStatus.BAD_REQUEST,
+            "Corpo da requisição inválido",
+            request.getRequestURI()
+        );
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({ HttpMessageNotReadableException.class, Exception.class })
+    @ExceptionHandler(Exception.class)
     @ApiResponse(
         responseCode = "500",
         description = "Erro interno do sistema",
@@ -96,7 +101,6 @@ public class GlobalExceptionHandler {
     public ProblemResponseDTO handle(Exception ex, HttpServletRequest request) {
         log.error("Ocorreu um erro interno: {}", ex.getMessage());
         return new ProblemResponseDTO(
-            ErrorCode.VALIDATION_ERROR,
             HttpStatus.INTERNAL_SERVER_ERROR,
             "Um erro interno ocorreu, contate o suporte ou tente novamente mais tarde",
             request.getRequestURI()

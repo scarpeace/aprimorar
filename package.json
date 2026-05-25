@@ -11,7 +11,7 @@
     "sonar:backend": "bash scripts/sonar-backend.sh",
     "sonar:frontend": "bash scripts/sonar-frontend.sh",
     "sonar:all": "npm run sonar:backend && npm run sonar:frontend",
-    "sonar:issues": "bash scripts/sonar-issues.sh aprimorar-server",
+    "sonar:issues:backend": "bash scripts/sonar-issues.sh aprimorar-server",
     "sonar:issues:frontend": "bash scripts/sonar-issues.sh aprimorar-client"
   },
   "devDependencies": {
