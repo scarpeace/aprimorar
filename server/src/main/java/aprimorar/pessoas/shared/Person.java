@@ -21,17 +21,17 @@ public abstract class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "nome", nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "data_nascimento", nullable = true)
+    @Column(name = "birthdate", nullable = true)
     private LocalDate birthdate;
 
     @Column(name = "cpf", nullable = false, unique = true)
     @EqualsAndHashCode.Include
     private String cpf;
 
-    @Column(name = "contato", nullable = false)
+    @Column(name = "contact", nullable = false)
     private String contact;
 
     @Column(name = "email", nullable = false)
@@ -43,14 +43,14 @@ public abstract class Person implements Serializable {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @Column(name = "ativo", nullable = false)
+    @Column(name = "active", nullable = false)
     private Boolean active = true;
 
-    @Column(name = "criado_em", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private Instant createdAt;
 
-    @Column(name = "atualizado_em")
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
 

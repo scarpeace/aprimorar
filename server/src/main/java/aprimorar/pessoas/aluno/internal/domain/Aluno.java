@@ -13,14 +13,14 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 
 @Entity
-@Table(name = "tb_alunos")
+@Table(name = "tb_students")
 @Getter
 public class Aluno extends Person {
 
-    @Column(name = "escola", nullable = false)
+    @Column(name = "school", nullable = false)
     private String school;
 
-    @Column(name = "responsavel_id", nullable = false)
+    @Column(name = "parent_id", nullable = false)
     private UUID parentId;
 
     @Embedded

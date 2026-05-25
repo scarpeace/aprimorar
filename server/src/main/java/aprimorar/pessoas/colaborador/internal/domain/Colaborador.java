@@ -17,10 +17,10 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "tb_colaboradores")
+@Table(name = "tb_employees")
 public class Colaborador extends Person {
 
-    @Column(name = "funcao", nullable = false)
+    @Column(name = "duty", nullable = false)
     @Enumerated(EnumType.STRING)
     private ColaboradorDutyEnum duty;
 

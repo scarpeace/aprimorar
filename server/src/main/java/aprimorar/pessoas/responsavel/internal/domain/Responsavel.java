@@ -10,7 +10,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "tb_responsaveis")
+@Table(name = "tb_parents")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Responsavel extends Person {
 

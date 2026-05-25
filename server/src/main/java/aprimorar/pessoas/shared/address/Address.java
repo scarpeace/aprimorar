@@ -8,23 +8,23 @@ import java.io.Serializable;
 @Embeddable
 public class Address implements Serializable {
 
-    @Column(name = "rua", nullable = false)
+    @Column(name = "street", nullable = false)
     private String street;
 
-    @Column(name = "bairro", nullable = false)
+    @Column(name = "district", nullable = false)
     private String district;
 
-    @Column(name = "cidade", nullable = false)
+    @Column(name = "city", nullable = false)
     private String city;
 
-    @Column(name = "estado", nullable = false)
+    @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
     private BrazilianStatesEnum state;
 
-    @Column(name = "cep", nullable = false)
+    @Column(name = "zip", nullable = false)
     private String zip;
 
-    @Column(name = "complemento")
+    @Column(name = "complement")
     private String complement;
 
     public Address() {}

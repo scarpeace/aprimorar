@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus;
 // TODO: Adicionar campos do Google Calendar para a implementacao
 @Entity
 @Getter
-@Table(name = "tb_atendimentos")
+@Table(name = "tb_appointments")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Atendimento implements Serializable {
 
@@ -27,52 +27,52 @@ public class Atendimento implements Serializable {
     @EqualsAndHashCode.Include
     private UUID id;
 
-    @Column(name = "criado_em", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private Instant createdAt;
 
-    @Column(name = "atualizado_em")
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
 
-    @Column(name = "titulo", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "descricao", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "inicio_em", nullable = false)
+    @Column(name = "start_date", nullable = false)
     private Instant startDate;
 
-    @Column(name = "fim_em", nullable = false)
+    @Column(name = "end_date", nullable = false)
     private Instant endDate;
 
-    @Column(name = "pagamento_professor", precision = 19, scale = 2, nullable = false)
+    @Column(name = "payment", precision = 19, scale = 2, nullable = false)
     private BigDecimal payment;
 
-    @Column(name = "cobranca_aluno", precision = 19, scale = 2, nullable = false)
+    @Column(name = "price", precision = 19, scale = 2, nullable = false)
     private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_atendimento", nullable = false)
+    @Column(name = "content", nullable = false)
     private TipoAtendimentoEnum content;
 
-    @Column(name = "data_pagamento_colaborador", nullable = true)
+    @Column(name = "employee_payment_date", nullable = true)
     private Instant employeePaymentDate;
 
-    @Column(name = "data_cobranca_aluno", nullable = true)
+    @Column(name = "student_charge_date", nullable = true)
     private Instant studentChargeDate;
 
-    @Column(name = "aluno_id", nullable = false)
+    @Column(name = "student_id", nullable = false)
     private UUID studentId;
 
-    @Column(name = "aluno_nome", nullable = false)
+    @Column(name = "student_name", nullable = false)
     private String studentName;
 
-    @Column(name = "colaborador_id", nullable = false)
+    @Column(name = "employee_id", nullable = false)
     private UUID employeeId;
 
-    @Column(name = "colaborador_nome", nullable = false)
+    @Column(name = "employee_name", nullable = false)
     private String employeeName;
 
     protected Atendimento() {}

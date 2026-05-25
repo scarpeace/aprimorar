@@ -22,35 +22,35 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Entity
-@Table(name = "tb_despesas")
+@Table(name = "tb_expenses")
 public class Despesa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "valor", nullable = false, precision = 19, scale = 2)
+    @Column(name = "amount", nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
-    @Column(name = "data", nullable = false)
+    @Column(name = "date", nullable = false)
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "categoria", nullable = false, length = 50)
+    @Column(name = "category", nullable = false, length = 50)
     private CategoriaDespesaEnum category;
 
-    @Column(name = "descricao", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "data_pagamento")
+    @Column(name = "payment_date")
     private Instant paymentDate;
 
     @CreationTimestamp
-    @Column(name = "criado_em", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
     @UpdateTimestamp
-    @Column(name = "atualizado_em")
+    @Column(name = "updated_at")
     private Instant updatedAt;
 
     protected Despesa() {}
