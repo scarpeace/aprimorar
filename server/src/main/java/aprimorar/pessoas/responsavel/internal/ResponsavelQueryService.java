@@ -1,11 +1,13 @@
 package aprimorar.pessoas.responsavel.internal;
 
-import aprimorar.pessoas.responsavel.api.dto.ResponsavelOptionsDTO;
+import aprimorar.pessoas.responsavel.api.ResponsavelQueryApi;
+import aprimorar.pessoas.responsavel.api.dto.ResponsaveisListDTO;
 import aprimorar.pessoas.responsavel.api.dto.ResponsavelResponseDTO;
-import aprimorar.pessoas.responsavel.internal.exception.ResponsavelNotFoundException;
 import aprimorar.pessoas.responsavel.internal.repository.ResponsavelRepository;
 import aprimorar.pessoas.responsavel.internal.repository.ResponsavelSpecifications;
 import aprimorar.shared.PageDTO;
+import aprimorar.shared.exception.BusinessException;
+
 import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -13,11 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-class ResponsavelQueryService {
+class ResponsavelQueryService implements ResponsavelQueryApi{
 
     private static final Logger log = LoggerFactory.getLogger(ResponsavelQueryService.class);
 
@@ -50,12 +53,12 @@ class ResponsavelQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<ResponsavelOptionsDTO> listResponsaveis() {
+    public List<ResponsaveisListDTO> listResponsaveis() {
         List<Responsavel> list = responsavelRepo.findByActiveTrueOrderByNameAsc();
         log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
         return list
             .stream()
-            .map(parent -> new ResponsavelOptionsDTO(parent.getId(), parent.getName()))
+            .map(parent -> new ResponsaveisListDTO(parent.getId(), parent.getName()))
             .toList();
     }
 
@@ -69,6 +72,6 @@ class ResponsavelQueryService {
     private Responsavel findResponsavelOrThrow(UUID parentId) {
         return responsavelRepo
             .findById(parentId)
-            .orElseThrow(() -> new ResponsavelNotFoundException("Responsável não encontrado no banco de dados"));
+            .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Responsável não encontrado no banco de dados"));
     }
 }

@@ -49,17 +49,11 @@ class AtendimentoMutationService {
     public AtendimentoResponseDTO createAtendimento(AtendimentoRequestDTO dto) {
         AlunoResponseDTO student = alunoQueryApi.findAlunoById(dto.studentId());
         ColaboradorResponseDTO employee = colaboradorService.findColaboradorById(dto.employeeId());
+        Atendimento atendimento = atendimentoMapper.toEntity(dto, student.name(), employee.name(), clock.instant());
 
         validateParticipantAvailability(student, employee, dto.startDate(), dto.duration(), null);
 
-        Atendimento atendimento = atendimentoMapper.toEntity(
-            dto,
-            student.id(),
-            student.name(),
-            employee.id(),
-            employee.name(),
-            Instant.now(clock)
-        );
+
         Atendimento saved = atendimentoRepo.save(atendimento);
         log.info("Atendimento {} cadastrado com sucesso.", saved.getTitle().toUpperCase());
         return atendimentoMapper.convertToDto(saved);

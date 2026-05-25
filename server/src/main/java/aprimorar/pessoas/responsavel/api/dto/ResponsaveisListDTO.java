@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Schema(description = "Lista de responsáveis para dropdown retornados da API")
-public record ResponsavelOptionsDTO(
+public record ResponsaveisListDTO(
     @NotNull @Schema(description = "Identificador único do responsável") UUID id,
     @NotNull @Schema(description = "Nome do responsável") String name
 ) {}

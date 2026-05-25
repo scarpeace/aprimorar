@@ -35,10 +35,10 @@ public record ColaboradorRequestDTO(
         @Schema(description = "Email do colaborador", example = "joao@empresa.com")
         String email,
         @NotNull(message = "Papel do funcionário é obrigatório")
-        @Schema(description = "Funcao do colaborador", example = "TEACHER")
+        @Schema(description = "Função do colaborador", example = "TEACHER")
         ColaboradorDutyEnum duty,
         @Valid
         @NotNull(message = "Endereço do funcionário é obrigatório")
-        @Schema(nullable = false, description = "Endereco do colaborador", implementation = AddressRequestDTO.class)
+        @Schema(nullable = false, description = "Endereço do colaborador", implementation = AddressRequestDTO.class)
         AddressRequestDTO address) {
 }

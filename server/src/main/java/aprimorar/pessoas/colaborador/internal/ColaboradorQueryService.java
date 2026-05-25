@@ -1,7 +1,7 @@
 package aprimorar.pessoas.colaborador.internal;
 
 import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorOptionsDTO;
+import aprimorar.pessoas.colaborador.api.dto.ColaboradoresListDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresResponseDTO;
 import aprimorar.pessoas.colaborador.internal.repository.ColaboradorRepository;
@@ -63,10 +63,10 @@ class ColaboradorQueryService implements ColaboradorQueryApi {
     }
 
     @Transactional(readOnly = true)
-    public List<ColaboradorOptionsDTO> listColaboradores() {
+    public List<ColaboradoresListDTO> listColaboradores() {
         return colaboradorRepo.findAllByDutyNotAndActiveTrueOrderByNameAsc(ColaboradorDutyEnum.SYSTEM)
             .stream()
-            .map(e -> new ColaboradorOptionsDTO(e.getId(), e.getName()))
+            .map(e -> new ColaboradoresListDTO(e.getId(), e.getName()))
             .toList();
     }
 

@@ -13,9 +13,7 @@ public class AtendimentoMapper {
 
     public Atendimento toEntity(
         AtendimentoRequestDTO dto,
-        UUID studentId,
         String studentName,
-        UUID employeeId,
         String employeeName,
         Instant now
     ) {
@@ -26,9 +24,9 @@ public class AtendimentoMapper {
             dto.payment(),
             dto.price(),
             dto.content(),
-            studentId,
+            dto.studentId(),
             studentName,
-            employeeId,
+            dto.employeeId(),
             employeeName,
             now
         );

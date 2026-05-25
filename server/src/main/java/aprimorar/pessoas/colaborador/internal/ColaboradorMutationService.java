@@ -36,15 +36,16 @@ class ColaboradorMutationService {
 
     @Transactional
     public ColaboradorResponseDTO createColaborador(ColaboradorRequestDTO dto) {
-        if (colaboradorRepo.existsByCpf(MapperUtils.normalizeCpf(dto.cpf()))) {
+        Colaborador colaborador = colaboradorMapper.toEntity(dto);
+
+        if (colaboradorRepo.existsByCpf(MapperUtils.normalizeCpf(colaborador.getCpf()))) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um colaborador cadastrado com este CPF.");
         }
 
-        if (colaboradorRepo.existsByEmail(MapperUtils.normalizeEmail(dto.email()))) {
+        if (colaboradorRepo.existsByEmail(MapperUtils.normalizeEmail(colaborador.getEmail()))) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um colaborador cadastrado com este e-mail.");
         }
 
-        Colaborador colaborador = colaboradorMapper.toEntity(dto);
         Colaborador savedColaborador = colaboradorRepo.save(colaborador);
 
         log.info("Colaborador {} cadastrado com sucesso.", savedColaborador.getName().toUpperCase());

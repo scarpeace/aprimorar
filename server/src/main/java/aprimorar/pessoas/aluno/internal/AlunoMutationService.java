@@ -1,24 +1,21 @@
 package aprimorar.pessoas.aluno.internal;
 
+import aprimorar.pessoas.aluno.api.AlunoDeletedEvent;
+import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.aluno.internal.repository.AlunoRepository;
+import aprimorar.pessoas.responsavel.api.ResponsavelQueryApi;
+import aprimorar.pessoas.shared.address.Address;
+import aprimorar.shared.MapperUtils;
+import aprimorar.shared.exception.BusinessException;
 import java.time.Clock;
 import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import aprimorar.pessoas.aluno.api.AlunoDeletedEvent;
-import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
-import aprimorar.pessoas.aluno.internal.repository.AlunoRepository;
-import aprimorar.pessoas.responsavel.api.ResponsavelService;
-import aprimorar.pessoas.shared.address.Address;
-import aprimorar.shared.MapperUtils;
-import aprimorar.shared.exception.BusinessException;
-
 
 @Service
 public class AlunoMutationService {
@@ -29,14 +26,14 @@ public class AlunoMutationService {
     private final AlunoRepository alunoRepo;
     private final AlunoMapper studentMapper;
 
-    private final ResponsavelService parentQueryApi;
+    private final ResponsavelQueryApi parentQueryApi;
     private final ApplicationEventPublisher eventPublisher;
     private final Clock clock;
 
     public AlunoMutationService(
         AlunoRepository alunoRepo,
-        ResponsavelService parentQueryApi,
         AlunoMapper studentMapper,
+        ResponsavelQueryApi parentQueryApi,
         ApplicationEventPublisher eventPublisher,
         Clock clock
     ) {
@@ -49,18 +46,18 @@ public class AlunoMutationService {
 
     @Transactional
     public AlunoResponseDTO createAluno(AlunoRequestDTO dto) {
+        Aluno student = studentMapper.toEntity(dto);
 
-        if (alunoRepo.existsByCpf(MapperUtils.normalizeCpf(dto.cpf()))) {
+        if (alunoRepo.existsByCpf(MapperUtils.normalizeCpf(student.getCpf()))) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um aluno cadastrado com este CPF.");
         }
 
-        if (alunoRepo.existsByEmail(MapperUtils.normalizeEmail(dto.email()))) {
+        if (alunoRepo.existsByEmail(MapperUtils.normalizeEmail(student.getEmail()))) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um aluno cadastrado com este e-mail.");
         }
 
         parentQueryApi.findResponsavelById(dto.parentId());
 
-        Aluno student = studentMapper.toEntity(dto);
         Aluno savedAluno = alunoRepo.save(student);
 
         log.info("Aluno {} cadastrado com sucesso.", savedAluno.getName().toUpperCase());
@@ -68,7 +65,7 @@ public class AlunoMutationService {
     }
 
     @Transactional
-    public AlunoResponseDTO updateAluno(UUID id, AlunoRequestDTO dto ) {
+    public AlunoResponseDTO updateAluno(UUID id, AlunoRequestDTO dto) {
         Aluno student = findStudentOrThrow(id);
 
         if (GHOST_STUDENT_ID.equals(id)) {
@@ -79,16 +76,7 @@ public class AlunoMutationService {
         parentQueryApi.findResponsavelById(dto.parentId());
         Address address = Address.fromRequest(dto.address());
 
-        student.update(
-            dto.name(),
-            dto.birthdate(),
-            dto.pix(),
-            dto.contact(),
-            dto.email(),
-            dto.school(),
-            dto.parentId(),
-            address
-        );
+        student.update(dto.name(), dto.birthdate(), dto.pix(), dto.contact(), dto.email(), dto.school(), dto.parentId(), address);
 
         log.info("Aluno {} atualizado com sucesso.", student.getName().toUpperCase());
         return studentMapper.toResponseDto(student, clock);

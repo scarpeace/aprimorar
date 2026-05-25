@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 @Schema(description = "Dados do colaborador retornados pela API")
 public record ColaboradorResponseDTO(
         @NotNull
-        @Schema(description = "Identificador unico do colaborador", example = "550e8400-e29b-41d4-a716-446655440000")
+        @Schema(description = "Identificador único do colaborador", example = "550e8400-e29b-41d4-a716-446655440000")
         UUID id,
         @NotNull
         @Schema(description = "Nome completo do colaborador", example = "Joao Pereira")
@@ -33,16 +33,16 @@ public record ColaboradorResponseDTO(
         @Schema(description = "Email do colaborador", example = "joao@empresa.com")
         String email,
         @NotNull
-        @Schema(description = "Funcao do colaborador", example = "TEACHER")
+        @Schema(description = "Função do colaborador", example = "TEACHER")
         ColaboradorDutyEnum duty,
-        @Schema(implementation = AddressResponseDTO.class, description = "Endereco do colaborador")
+        @Schema(implementation = AddressResponseDTO.class, description = "Endereço do colaborador")
         @NotNull AddressResponseDTO address,
-        @Schema(nullable = false, description = "Indica se o colaborador esta ativo", example = "true")
+        @Schema(nullable = false, description = "Indica se o colaborador está ativo", example = "true")
         boolean active,
         @NotNull
-        @Schema(description = "Data de criacao do colaborador", example = "2024-03-10T15:33:42Z")
+        @Schema(description = "Data de criação do colaborador", example = "2024-03-10T15:33:42Z")
         Instant createdAt,
-        @Schema(nullable = true, description = "Data da ultima atualizacao do colaborador", example = "2024-03-11T11:10:00Z")
+        @Schema(nullable = true, description = "Data da última atualização do colaborador", example = "2024-03-11T11:10:00Z")
         @Nullable
         Instant updatedAt
 ) {}

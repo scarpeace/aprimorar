@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorOptionsDTO;
+import aprimorar.pessoas.colaborador.api.dto.ColaboradoresListDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradorRequestDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresResponseDTO;
@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/v1/colaboradores")
-@Tag(name = "Colaborador", description = "APIs de gestao de colaboradores")
+@Tag(name = "Colaborador", description = "APIs de gestão de colaboradores")
 public class ColaboradorController {
 
     private final ColaboradorQueryService colaboradorQueryService;
@@ -70,8 +70,8 @@ public class ColaboradorController {
     @GetMapping("/options")
     @Operation(operationId = "listColaboradores", description = "Retorna uma lista de opções de colaboradores para dropdown.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
-    public ResponseEntity<List<ColaboradorOptionsDTO>> listarOpcoes() {
-        List<ColaboradorOptionsDTO> options = colaboradorQueryService.listColaboradores();
+    public ResponseEntity<List<ColaboradoresListDTO>> listarOpcoes() {
+        List<ColaboradoresListDTO> options = colaboradorQueryService.listColaboradores();
         return ResponseEntity.ok(options);
     }
 

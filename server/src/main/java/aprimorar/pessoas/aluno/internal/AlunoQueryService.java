@@ -1,9 +1,15 @@
 package aprimorar.pessoas.aluno.internal;
 
+import aprimorar.pessoas.aluno.api.AlunoQueryApi;
+import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunosListDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
+import aprimorar.pessoas.aluno.internal.repository.AlunoRepository;
+import aprimorar.pessoas.aluno.internal.repository.AlunoSpecifications;
+import aprimorar.shared.exception.BusinessException;
 import java.time.Clock;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,14 +17,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import aprimorar.pessoas.aluno.api.AlunoQueryApi;
-import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunosListResponseDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
-import aprimorar.pessoas.aluno.internal.repository.AlunoRepository;
-import aprimorar.pessoas.aluno.internal.repository.AlunoSpecifications;
-import aprimorar.shared.exception.BusinessException;
 
 @Service
 public class AlunoQueryService implements AlunoQueryApi {
@@ -58,13 +56,13 @@ public class AlunoQueryService implements AlunoQueryApi {
     }
 
     @Transactional(readOnly = true)
-    public List<AlunosListResponseDTO> listAlunos() {
+    public List<AlunosListDTO> listAlunos() {
         Sort sort = Sort.by(Sort.Direction.ASC, "name");
 
         return studentRepo
             .findAll(AlunoSpecifications.isNotArchived(), sort)
             .stream()
-            .map(e -> new AlunosListResponseDTO(e.getId(), e.getName()))
+            .map(e -> new AlunosListDTO(e.getId(), e.getName()))
             .toList();
     }
 
@@ -84,12 +82,12 @@ public class AlunoQueryService implements AlunoQueryApi {
     }
 
     @Transactional(readOnly = true)
-    public boolean hasStudentsLinkedToParent(UUID parentId) {
+    public boolean hasAlunosLinkedToResponsavel(UUID parentId) {
         return studentRepo.existsByParentId(parentId);
     }
 
     @Transactional(readOnly = true)
-    public boolean hasActiveStudentsLinkedToParent(UUID parentId) {
+    public boolean hasActiveAlunosLinkedToResponsavel(UUID parentId) {
         return studentRepo.existsByParentIdAndActiveTrue(parentId);
     }
 

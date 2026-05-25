@@ -5,14 +5,12 @@ import org.springframework.data.domain.Page;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Resumo financeiro e de atendimentos de um aluno")
+@Schema(description = "Resumo e listagem paginada de alunos")
 public record AlunosResponseDTO(
-
-//TODO: Adicionar informações do OPENAPI aqui.
-  @Schema(description = "Total de alunos ativos")
+  @Schema(description = "Total de alunos ativos", example = "42")
   Long totalActiveStudents,
 
-  @Schema(description = "Lista de alunos")
+  @Schema(description = "Página de alunos conforme filtros aplicados")
   Page<AlunoResponseDTO> alunos
 ) {
 }

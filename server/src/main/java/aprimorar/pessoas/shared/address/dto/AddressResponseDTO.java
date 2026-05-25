@@ -13,7 +13,7 @@ public record AddressResponseDTO(
         @Schema(description = "Bairro", example = "Asa Sul")
         String district,
         @NotNull
-        @Schema(description = "Cidade", example = "Brasilia")
+        @Schema(description = "Cidade", example = "Brasília")
         String city,
         @NotNull
         @Schema(description = "Estado", example = "DF")
@@ -21,7 +21,7 @@ public record AddressResponseDTO(
         @NotNull
         @Schema(description = "CEP", example = "70254-010")
         String zip,
-        @Schema(nullable = true, description = "Complemento do endereco", example = "Apto 101")
+        @Schema(nullable = true, description = "Complemento do endereço", example = "Apto 101")
         String complement
 ) {
 }

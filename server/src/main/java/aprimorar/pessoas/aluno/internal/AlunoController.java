@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunosListResponseDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunosListDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/v1/alunos")
-@Tag(name = "Aluno", description = "APIs de gestao de alunos")
+@Tag(name = "Aluno", description = "APIs de gestão de alunos")
 public class AlunoController {
 
     private final AlunoMutationService alunoMutationService;
@@ -64,7 +64,7 @@ public class AlunoController {
     }
 
     @GetMapping("/responsavel/{parentId}")
-    @Operation(operationId = "listarAlunosPorResponsavel", description = "Retorna uma lista de alunos pelo ID do responsavel.")
+    @Operation(operationId = "listarAlunosPorResponsavel", description = "Retorna uma lista de alunos pelo ID do responsável.")
    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
    public ResponseEntity<List<AlunoResponseDTO>> getAlunosPorResponsavel(
        @PathVariable UUID parentId
@@ -74,10 +74,10 @@ public class AlunoController {
    }
 
     @GetMapping("/options")
-    @Operation(operationId = "listarOpcoesAlunos", description = "Retorna uma lista de opcoes de alunos.")
+    @Operation(operationId = "listarOpcoesAlunos", description = "Retorna uma lista de opções de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
-    public ResponseEntity<List<AlunosListResponseDTO>> listAlunos() {
-        List<AlunosListResponseDTO> options = alunoQueryService.listAlunos();
+    public ResponseEntity<List<AlunosListDTO>> listAlunos() {
+        List<AlunosListDTO> options = alunoQueryService.listAlunos();
         return ResponseEntity.ok(options);
     }
 
