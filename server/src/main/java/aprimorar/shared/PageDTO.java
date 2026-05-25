@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
+@Schema(description = "Estrutura padrao de paginacao da API")
 public record PageDTO<T>(
 
     @NotNull
@@ -27,7 +28,7 @@ public record PageDTO<T>(
     int totalPages,
 
     @NotNull
-    @Schema(description = "Lista de elementos", nullable = false)
+    @Schema(description = "Lista de elementos da pagina", example = "[]", nullable = false)
     List<T> content
 ) {
     public PageDTO(Page<T> page) {

@@ -6,12 +6,22 @@ import jakarta.validation.constraints.NotNull;
 
 @Schema(description = "Endereço")
 public record AddressResponseDTO(
-        @NotNull String street,
-        @NotNull String district,
-        @NotNull String city,
-        @NotNull BrazilianStatesEnum state,
-        @NotNull String zip,
-        @Schema(nullable = true)
+        @NotNull
+        @Schema(description = "Logradouro", example = "SQS 406 Bloco C")
+        String street,
+        @NotNull
+        @Schema(description = "Bairro", example = "Asa Sul")
+        String district,
+        @NotNull
+        @Schema(description = "Cidade", example = "Brasilia")
+        String city,
+        @NotNull
+        @Schema(description = "Estado", example = "DF")
+        BrazilianStatesEnum state,
+        @NotNull
+        @Schema(description = "CEP", example = "70254-010")
+        String zip,
+        @Schema(nullable = true, description = "Complemento do endereco", example = "Apto 101")
         String complement
 ) {
 }

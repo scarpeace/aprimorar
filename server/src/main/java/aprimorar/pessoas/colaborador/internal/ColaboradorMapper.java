@@ -10,7 +10,7 @@ import aprimorar.pessoas.shared.address.AddressMapper;
 @Component
 public class ColaboradorMapper {
 
-    public static Colaborador toEntity(ColaboradorRequestDTO dto) {
+    public Colaborador toEntity(ColaboradorRequestDTO dto) {
         return new Colaborador(
             dto.name(),
             dto.birthdate(),
@@ -23,7 +23,7 @@ public class ColaboradorMapper {
         );
     }
 
-    public static ColaboradorResponseDTO toDto(Colaborador employee) {
+    public ColaboradorResponseDTO toDto(Colaborador employee) {
         return new ColaboradorResponseDTO(
             employee.getId(),
             employee.getName(),

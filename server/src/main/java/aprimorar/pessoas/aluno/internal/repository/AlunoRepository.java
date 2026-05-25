@@ -24,4 +24,6 @@ public interface AlunoRepository extends JpaRepository<Aluno, UUID>, JpaSpecific
     boolean existsByEmailAndIdNot(String email, UUID id);
 
     boolean existsByIdAndActiveFalse(UUID id);
+
+    long countByActiveTrue();
 }

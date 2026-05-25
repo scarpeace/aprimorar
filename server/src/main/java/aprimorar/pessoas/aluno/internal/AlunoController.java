@@ -1,9 +1,9 @@
 package aprimorar.pessoas.aluno.internal;
 
-import aprimorar.pessoas.aluno.api.dto.AlunoOptionsDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunosListResponseDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
-import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,12 +53,12 @@ public class AlunoController {
     @GetMapping
     @Operation(operationId = "listarAlunos", description = "Retorna uma lista paginada de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
-    public ResponseEntity<PageDTO<AlunoResponseDTO>> getStudents(
+    public ResponseEntity<AlunosResponseDTO> getStudents(
         @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
         @RequestParam(required = false) String search,
         @RequestParam(required = false) Boolean archived
     ) {
-        PageDTO<AlunoResponseDTO> students = alunoQueryService.getAlunos(pageable, search, archived);
+        AlunosResponseDTO students = alunoQueryService.getAlunos(pageable, search, archived);
         return ResponseEntity.ok(students);
     }
 
@@ -68,15 +68,15 @@ public class AlunoController {
    public ResponseEntity<List<AlunoResponseDTO>> getAlunosPorResponsavel(
        @PathVariable UUID parentId
    ) {
-       List<AlunoResponseDTO> options = alunoQueryService.getAlunosPorResponsavel(parentId);
+       List<AlunoResponseDTO> options = alunoQueryService.getAlunosByResponsavelId(parentId);
        return ResponseEntity.ok(options);
    }
 
     @GetMapping("/options")
     @Operation(operationId = "listarOpcoesAlunos", description = "Retorna uma lista de opcoes de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
-    public ResponseEntity<List<AlunoOptionsDTO>> listAlunos() {
-        List<AlunoOptionsDTO> options = alunoQueryService.listAlunos();
+    public ResponseEntity<List<AlunosListResponseDTO>> listAlunos() {
+        List<AlunosListResponseDTO> options = alunoQueryService.listAlunos();
         return ResponseEntity.ok(options);
     }
 

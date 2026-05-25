@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+@Schema(description = "Payload para criacao de usuario")
 public record UserRequestDTO(
         @NotBlank(message = "E-mail é obrigatório")
         @Email(message = "E-mail deve ser um endereço de e-mail válido")

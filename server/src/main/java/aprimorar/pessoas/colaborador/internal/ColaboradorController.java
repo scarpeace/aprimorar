@@ -34,10 +34,15 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "Colaborador", description = "APIs de gestao de colaboradores")
 public class ColaboradorController {
 
-    private final ColaboradorService colaboradorService;
+    private final ColaboradorQueryService colaboradorQueryService;
+    private final ColaboradorMutationService colaboradorMutationService;
 
-    public ColaboradorController(ColaboradorService colaboradorService) {
-        this.colaboradorService = colaboradorService;
+    public ColaboradorController(
+        ColaboradorQueryService colaboradorQueryService,
+        ColaboradorMutationService colaboradorMutationService
+    ) {
+        this.colaboradorQueryService = colaboradorQueryService;
+        this.colaboradorMutationService = colaboradorMutationService;
     }
 
     @PostMapping
@@ -46,7 +51,7 @@ public class ColaboradorController {
     public ResponseEntity<ColaboradorResponseDTO> createColaborador(
         @RequestBody @Valid ColaboradorRequestDTO colaboradorRequestDto
     ) {
-        ColaboradorResponseDTO response = colaboradorService.createColaborador(colaboradorRequestDto);
+        ColaboradorResponseDTO response = colaboradorMutationService.createColaborador(colaboradorRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -58,7 +63,7 @@ public class ColaboradorController {
         @RequestParam(required = false) String busca,
         @RequestParam(required = false) Boolean arquivado
     ) {
-        ColaboradoresResponseDTO colaboradores = colaboradorService.getColaboradores(pageable, busca, arquivado);
+        ColaboradoresResponseDTO colaboradores = colaboradorQueryService.getColaboradores(pageable, busca, arquivado);
         return ResponseEntity.ok(colaboradores);
     }
 
@@ -66,7 +71,7 @@ public class ColaboradorController {
     @Operation(operationId = "listColaboradores", description = "Retorna uma lista de opções de colaboradores para dropdown.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
     public ResponseEntity<List<ColaboradorOptionsDTO>> listarOpcoes() {
-        List<ColaboradorOptionsDTO> options = colaboradorService.listColaboradores();
+        List<ColaboradorOptionsDTO> options = colaboradorQueryService.listColaboradores();
         return ResponseEntity.ok(options);
     }
 
@@ -74,7 +79,7 @@ public class ColaboradorController {
     @Operation(operationId = "findColaboradorById", description = "Retorna um colaborador por ID.")
     @ApiResponse(responseCode = "200", description = "Colaborador retornado com sucesso.")
     public ResponseEntity<ColaboradorResponseDTO> buscarPorId(@PathVariable UUID colaboradorId) {
-        ColaboradorResponseDTO colaborador = colaboradorService.findColaboradorById(colaboradorId);
+        ColaboradorResponseDTO colaborador = colaboradorQueryService.findColaboradorById(colaboradorId);
         return ResponseEntity.ok(colaborador);
     }
 
@@ -85,7 +90,7 @@ public class ColaboradorController {
         @PathVariable UUID colaboradorId,
         @RequestBody @Valid ColaboradorRequestDTO colaboradorRequestDTO
     ) {
-        ColaboradorResponseDTO colaboradorAtualizado = colaboradorService.updateColaborador(colaboradorId, colaboradorRequestDTO);
+        ColaboradorResponseDTO colaboradorAtualizado = colaboradorMutationService.updateColaborador(colaboradorId, colaboradorRequestDTO);
         return ResponseEntity.ok(colaboradorAtualizado);
     }
 
@@ -93,7 +98,7 @@ public class ColaboradorController {
     @Operation(operationId = "deleteColaborador", description = "Deleta um colaborador por ID.")
     @ApiResponse(responseCode = "204", description = "Colaborador deletado com sucesso.")
     public ResponseEntity<Void> deleteColaborador(@PathVariable UUID colaboradorId) {
-        colaboradorService.deleteColaborador(colaboradorId);
+        colaboradorMutationService.deleteColaborador(colaboradorId);
         return ResponseEntity.noContent().build();
     }
 
@@ -101,7 +106,7 @@ public class ColaboradorController {
     @Operation(operationId = "arquivarColaborador", description = "Arquiva um colaborador por ID.")
     @ApiResponse(responseCode = "204", description = "Colaborador arquivado com sucesso.")
     public ResponseEntity<Void> archiveColaborador(@PathVariable UUID colaboradorId) {
-        colaboradorService.archiveColaborador(colaboradorId);
+        colaboradorMutationService.archiveColaborador(colaboradorId);
         return ResponseEntity.noContent().build();
     }
 
@@ -109,7 +114,7 @@ public class ColaboradorController {
     @Operation(operationId = "desarquivarColaborador", description = "Desarquiva um colaborador por ID.")
     @ApiResponse(responseCode = "204", description = "Colaborador desarquivado com sucesso.")
     public ResponseEntity<Void> unarchiveColaborador(@PathVariable UUID colaboradorId) {
-        colaboradorService.unarchiveColaborador(colaboradorId);
+        colaboradorMutationService.unarchiveColaborador(colaboradorId);
         return ResponseEntity.noContent().build();
     }
 }
