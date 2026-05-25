@@ -1,32 +1,16 @@
-package aprimorar.financeiro.internal;
+package aprimorar.financeiro.internal.repository;
 
-import aprimorar.financeiro.api.CategoriaDespesa;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface DespesaRepository extends JpaRepository<Despesa, UUID> {
+import aprimorar.financeiro.internal.Despesa;
 
-    @Query(
-        """
-        select e
-        from Despesa e
-        where (:category is null or e.category = :category)
-          and e.date >= coalesce(:startDate, e.date)
-          and e.date <= coalesce(:endDate, e.date)
-        """
-    )
-    Page<Despesa> findFiltered(
-        @Param("category") CategoriaDespesa category,
-        @Param("startDate") LocalDate startDate,
-        @Param("endDate") LocalDate endDate,
-        Pageable pageable
-    );
+public interface DespesaRepository extends JpaRepository<Despesa, UUID>, JpaSpecificationExecutor<Despesa>, DespesaRepositoryCustom {
 
     @Query(
         """

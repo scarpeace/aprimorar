@@ -12,9 +12,5 @@ public record AtendimentoFinanceSummaryDTO(
     @Schema(description = "Total pago aos colaboradores no periodo", example = "2800.00")
     BigDecimal totalEmployeePaid,
     @Schema(description = "Total pendente de pagamento aos colaboradores no periodo", example = "600.00")
-    BigDecimal totalEmployeePending,
-    @Schema(description = "Total de despesas gerais no periodo", example = "500.00")
-    BigDecimal totalGeneralExpenses,
-    @Schema(description = "Saldo final do periodo", example = "900.00")
-    BigDecimal balance
+    BigDecimal totalEmployeePending
 ) {}

@@ -22,7 +22,6 @@ import aprimorar.atendimentos.api.dto.ColaboradorAtendimentosResponseDTO;
 import aprimorar.atendimentos.api.dto.ColaboradorSummaryDTO;
 import aprimorar.atendimentos.internal.repository.AtendimentoRepository;
 import aprimorar.atendimentos.internal.repository.AtendimentoSpecifications;
-import aprimorar.financeiro.api.FinanceiroService;
 import aprimorar.pessoas.aluno.api.AlunoQueryApi;
 import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
 import aprimorar.shared.PageDTO;
@@ -35,20 +34,17 @@ class AtendimentoQueryService implements AtendimentosQueryApi {
 
     private final AtendimentoRepository atendimentoRepo;
     private final AtendimentoMapper atendimentoMapper;
-    private final FinanceiroService expenseService;
     private final AlunoQueryApi studentService;
     private final ColaboradorQueryApi colaboradorService;
 
     AtendimentoQueryService(
         AtendimentoRepository atendimentoRepo,
         AtendimentoMapper atendimentoMapper,
-        FinanceiroService expenseService,
         AlunoQueryApi studentService,
         ColaboradorQueryApi colaboradorService
     ) {
         this.atendimentoRepo = atendimentoRepo;
         this.atendimentoMapper = atendimentoMapper;
-        this.expenseService = expenseService;
         this.studentService = studentService;
         this.colaboradorService = colaboradorService;
     }
@@ -143,22 +139,19 @@ class AtendimentoQueryService implements AtendimentosQueryApi {
         return new AlunoAtendimentosResponseDTO(new PageDTO<>(dtoPage), new AlunoSummaryDTO(totalAtendimentos, totalCharged, totalPending));
     }
 
+    //TODO: To querendo mover isso para getAtendimentos
     @Transactional(readOnly = true)
     public AtendimentoFinanceSummaryDTO getFinanceReport(Instant startDate, Instant endDate) {
         BigDecimal totalStudentCharged = atendimentoRepo.sumChargedFiltered(startDate, endDate);
         BigDecimal totalStudentPending = atendimentoRepo.sumPendingFiltered(startDate, endDate);
         BigDecimal totalEmployeePaid = atendimentoRepo.sumPaidFiltered(startDate, endDate);
         BigDecimal totalEmployeePending = atendimentoRepo.sumUnpaidFiltered(startDate, endDate);
-        BigDecimal totalGeneralExpenses = expenseService.sumExpenses(startDate, endDate);
-        BigDecimal balance = totalStudentCharged.subtract(totalEmployeePaid).subtract(totalGeneralExpenses);
 
         return new AtendimentoFinanceSummaryDTO(
             totalStudentCharged,
             totalStudentPending,
             totalEmployeePaid,
-            totalEmployeePending,
-            totalGeneralExpenses,
-            balance
+            totalEmployeePending
         );
     }
 

@@ -1,6 +1,5 @@
 package aprimorar.financeiro.internal;
 
-import aprimorar.financeiro.api.CategoriaDespesa;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +9,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+@Getter
 @Entity
 @Table(name = "tb_despesas")
 public class Despesa {
@@ -33,7 +35,7 @@ public class Despesa {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "categoria", nullable = false, length = 50)
-    private CategoriaDespesa category;
+    private CategoriaDespesaEnum category;
 
     @Column(name = "descricao", nullable = false, columnDefinition = "TEXT")
     private String description;
@@ -51,38 +53,14 @@ public class Despesa {
 
     protected Despesa() {}
 
-    public Despesa(BigDecimal amount, LocalDate date, CategoriaDespesa category, String description) {
+    public Despesa(BigDecimal amount, LocalDate date, CategoriaDespesaEnum category, String description) {
         this.amount = amount;
         this.date = date;
         this.category = category;
         this.description = description;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public CategoriaDespesa getCategory() {
-        return category;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Instant getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void update(BigDecimal amount, LocalDate date, CategoriaDespesa category, String description) {
+    public void update(BigDecimal amount, LocalDate date, CategoriaDespesaEnum category, String description) {
         this.amount = amount;
         this.date = date;
         this.category = category;
@@ -101,4 +79,6 @@ public class Despesa {
     public boolean isPaid() {
         return this.paymentDate != null;
     }
+
+//TODO: Adicionar validações de despesa
 }

@@ -1,9 +1,9 @@
-package aprimorar.financeiro.api;
+package aprimorar.financeiro.internal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Categoria da despesa geral")
-public enum CategoriaDespesa {
+public enum CategoriaDespesaEnum {
     CONTAS("Contas"),
     ADMINISTRATIVO("Administrativo"),
     DESPENSA("Despensa"),
@@ -14,7 +14,7 @@ public enum CategoriaDespesa {
 
     private final String description;
 
-    CategoriaDespesa(String description) {
+    CategoriaDespesaEnum(String description) {
         this.description = description;
     }
 

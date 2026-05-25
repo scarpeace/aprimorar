@@ -1,6 +1,6 @@
 package aprimorar.financeiro.api.dto;
 
-import aprimorar.financeiro.api.CategoriaDespesa;
+import aprimorar.financeiro.internal.CategoriaDespesaEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +21,7 @@ public record DespesaRequestDTO(
 
     @NotNull
     @Schema(description = "Categoria da despesa", example = "OPERACIONAL")
-    CategoriaDespesa category,
+    CategoriaDespesaEnum category,
 
     @NotBlank
     @Schema(description = "Descricao da despesa", example = "Pagamento de internet")
