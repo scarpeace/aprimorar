@@ -8,7 +8,6 @@ import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
 import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
 import aprimorar.shared.exception.BusinessException;
-
 import java.time.Clock;
 import java.time.Instant;
 import java.util.UUID;
@@ -53,7 +52,6 @@ class AtendimentoMutationService {
 
         validateParticipantAvailability(student, employee, dto.startDate(), dto.duration(), null);
 
-
         Atendimento saved = atendimentoRepo.save(atendimento);
         log.info("Atendimento {} cadastrado com sucesso.", saved.getTitle().toUpperCase());
         return atendimentoMapper.convertToDto(saved);
@@ -86,9 +84,14 @@ class AtendimentoMutationService {
 
     @Transactional
     public void deleteAtendimento(UUID id) {
-        Atendimento found = findAtendimentoOrThrow(id);
-        atendimentoRepo.delete(found);
-        log.info("Atendimento {} deletado com sucesso.", found.getTitle().toUpperCase());
+        Atendimento atendimento = findAtendimentoOrThrow(id);
+
+        if (atendimento.getEmployeePaymentDate() == null && atendimento.getStudentChargeDate() == null) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "Atendimento não pode ser e com pagamentos pendentes");
+        }
+
+        atendimentoRepo.delete(atendimento);
+        log.info("Atendimento {} deletado com sucesso.", atendimento.getTitle().toUpperCase());
     }
 
     @Transactional
@@ -105,6 +108,22 @@ class AtendimentoMutationService {
         atendimento.toggleEmployeePayment(Instant.now(clock));
         log.info("Status do pagamento do colaborador no atendimento {} atualizado.", atendimento.getTitle());
         return atendimentoMapper.convertToDto(atendimento);
+    }
+
+    @Transactional
+    public void reassignStudentAtendimentosToGhost(UUID studentId) {
+        if (atendimentoRepo.existsByStudentIdAndStudentChargeDateIsNull(studentId)) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "O aluno possui pagamentos pendentes e nao pode ser excluido.");
+        }
+        atendimentoRepo.reassignStudentAtendimentosToGhost(studentId, GHOST_STUDENT_ID);
+    }
+
+    @Transactional
+    public void onEmployeeDeleted(UUID colaboradorId) {
+        if (atendimentoRepo.existsByEmployeeIdAndEmployeePaymentDateIsNull(colaboradorId)) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "O colaborador possui pagamentos pendentes e nao pode ser excluido.");
+        }
+        atendimentoRepo.reassignEmployeeAtendimentosToGhost(colaboradorId, GHOST_COLABORADOR_ID);
     }
 
     private Atendimento findAtendimentoOrThrow(UUID id) {
@@ -137,24 +156,5 @@ class AtendimentoMutationService {
         if (atendimentoRepo.employeeHasConflictingAtendimento(employee.id(), startDate, endDate, atendimentoId)) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "O colaborador informado ja possui um atendimento no intervalo");
         }
-    }
-
-    @Transactional
-    public void reassignStudentAtendimentosToGhost(UUID studentId) {
-        if (atendimentoRepo.existsByStudentIdAndStudentChargeDateIsNull(studentId)) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "O aluno possui pagamentos pendentes e nao pode ser excluido.");
-        }
-        atendimentoRepo.reassignStudentAtendimentosToGhost(studentId, GHOST_STUDENT_ID);
-    }
-
-    @Transactional
-    public void onEmployeeDeleted(UUID colaboradorId) {
-        if (atendimentoRepo.existsByEmployeeIdAndEmployeePaymentDateIsNull(colaboradorId)) {
-            throw new BusinessException(
-                HttpStatus.BAD_REQUEST,
-                "O colaborador possui pagamentos pendentes e nao pode ser excluido."
-            );
-        }
-        atendimentoRepo.reassignEmployeeAtendimentosToGhost(colaboradorId, GHOST_COLABORADOR_ID);
     }
 }

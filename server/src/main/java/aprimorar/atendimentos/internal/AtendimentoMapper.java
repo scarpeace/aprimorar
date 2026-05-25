@@ -3,7 +3,6 @@ package aprimorar.atendimentos.internal;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.UUID;
 
 import aprimorar.atendimentos.api.dto.AtendimentoRequestDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
