@@ -1,16 +1,15 @@
 package aprimorar.pessoas.aluno.internal;
 
-import aprimorar.pessoas.shared.address.Address;
+import java.time.LocalDate;
+import java.util.UUID;
+
 import aprimorar.pessoas.shared.Person;
+import aprimorar.pessoas.shared.address.Address;
 import aprimorar.shared.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-
-import java.time.LocalDate;
-import java.util.UUID;
-
 import lombok.Getter;
 
 @Entity
@@ -50,7 +49,7 @@ public class Aluno extends Person {
         this.address = address;
     }
 
-    public void updateDetails(
+    public void update(
         String name,
         LocalDate birthdate,
         String pix,

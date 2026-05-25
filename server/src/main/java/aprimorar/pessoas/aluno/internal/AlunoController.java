@@ -1,17 +1,8 @@
 package aprimorar.pessoas.aluno.internal;
 
-import aprimorar.pessoas.aluno.api.dto.AlunosListResponseDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-
 import java.util.List;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,6 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunosListResponseDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController

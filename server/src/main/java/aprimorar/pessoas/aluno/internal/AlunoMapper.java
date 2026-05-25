@@ -6,11 +6,26 @@ import java.time.Period;
 
 import org.springframework.stereotype.Component;
 
-import aprimorar.pessoas.shared.address.AddressMapper;
+import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.shared.address.AddressMapper;
 
 @Component
 public class AlunoMapper {
+
+    public Aluno toEntity(AlunoRequestDTO dto) {
+        return new Aluno(
+                dto.name(),
+                dto.birthdate(),
+                dto.pix(),
+                dto.contact(),
+                dto.email(),
+                dto.cpf(),
+                dto.school(),
+                dto.parentId(),
+                AddressMapper.toEntity(dto.address())
+        );
+    }
 
     public AlunoResponseDTO toResponseDto(Aluno student, Clock clock) {
         return new AlunoResponseDTO(

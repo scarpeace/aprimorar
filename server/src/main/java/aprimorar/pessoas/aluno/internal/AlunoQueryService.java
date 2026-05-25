@@ -1,15 +1,9 @@
 package aprimorar.pessoas.aluno.internal;
 
-import aprimorar.pessoas.aluno.api.AlunoQueryApi;
-import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunosListResponseDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
-import aprimorar.pessoas.aluno.internal.repository.AlunoRepository;
-import aprimorar.pessoas.aluno.internal.repository.AlunoSpecifications;
-import aprimorar.shared.exception.BusinessException;
 import java.time.Clock;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,6 +11,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import aprimorar.pessoas.aluno.api.AlunoQueryApi;
+import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunosListResponseDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
+import aprimorar.pessoas.aluno.internal.repository.AlunoRepository;
+import aprimorar.pessoas.aluno.internal.repository.AlunoSpecifications;
+import aprimorar.shared.exception.BusinessException;
 
 @Service
 public class AlunoQueryService implements AlunoQueryApi {
