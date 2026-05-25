@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import aprimorar.atendimentos.internal.TipoAtendimentoEnum;
+import aprimorar.atendimentos.api.TipoAtendimentoEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;

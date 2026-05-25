@@ -1,6 +1,6 @@
 package aprimorar.financeiro.api.dto;
 
-import aprimorar.financeiro.internal.CategoriaDespesaEnum;
+import aprimorar.financeiro.api.CategoriaDespesaEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

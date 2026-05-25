@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import aprimorar.atendimentos.internal.TipoAtendimentoEnum;
+import aprimorar.atendimentos.api.TipoAtendimentoEnum;
 
 @Schema(description = "Formato de payload para o cadastro e/ou atualizacao de um atendimento")
 public record AtendimentoRequestDTO(
