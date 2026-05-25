@@ -1,4 +1,4 @@
 @NamedInterface("api")
-package aprimorar.pessoas.colaborador.api.dto;
+package aprimorar.pessoas.colaborador;
 
 import org.springframework.modulith.NamedInterface;

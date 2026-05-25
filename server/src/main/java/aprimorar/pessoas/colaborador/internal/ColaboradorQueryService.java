@@ -1,14 +1,8 @@
 package aprimorar.pessoas.colaborador.internal;
 
-import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradoresListDTO;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradoresResponseDTO;
-import aprimorar.pessoas.colaborador.internal.repository.ColaboradorRepository;
-import aprimorar.pessoas.colaborador.internal.repository.ColaboradorSpecifications;
-import aprimorar.shared.exception.BusinessException;
 import java.util.List;
 import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,8 +12,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import aprimorar.pessoas.colaborador.internal.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.colaborador.internal.dto.ColaboradoresListDTO;
+import aprimorar.pessoas.colaborador.internal.dto.ColaboradoresResponseDTO;
+import aprimorar.pessoas.colaborador.internal.repository.ColaboradorRepository;
+import aprimorar.pessoas.colaborador.internal.repository.ColaboradorSpecifications;
+import aprimorar.shared.exception.BusinessException;
+
+
 @Service
-class ColaboradorQueryService implements ColaboradorQueryApi {
+class ColaboradorQueryService {
 
     private static final Logger log = LoggerFactory.getLogger(ColaboradorQueryService.class);
 
@@ -54,7 +56,6 @@ class ColaboradorQueryService implements ColaboradorQueryApi {
         return colaboradoresDtoPage;
     }
 
-    @Override
     @Transactional(readOnly = true)
     public ColaboradorResponseDTO findColaboradorById(UUID colaboradorId) {
         Colaborador colaborador = findByIdOrThrow(colaboradorId);

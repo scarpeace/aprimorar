@@ -1,4 +1,4 @@
-package aprimorar.pessoas.colaborador.api.dto;
+package aprimorar.pessoas.colaborador.internal.dto;
 
 import aprimorar.pessoas.colaborador.internal.ColaboradorDutyEnum;
 import aprimorar.pessoas.shared.address.dto.AddressResponseDTO;

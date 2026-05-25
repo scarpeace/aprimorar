@@ -1,4 +1,4 @@
-package aprimorar.pessoas.colaborador.api.dto;
+package aprimorar.pessoas.colaborador.internal.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.domain.Page;

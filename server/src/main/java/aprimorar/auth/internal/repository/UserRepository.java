@@ -1,5 +1,6 @@
-package aprimorar.auth.internal;
+package aprimorar.auth.internal.repository;
 
+import aprimorar.auth.internal.User;
 import aprimorar.shared.enums.Role;
 import java.util.Optional;
 import java.util.UUID;

@@ -1,8 +1,8 @@
 package aprimorar.pessoas.colaborador.internal;
 
 import aprimorar.pessoas.colaborador.api.ColaboradorDeletedEvent;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorRequestDTO;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.colaborador.internal.dto.ColaboradorRequestDTO;
+import aprimorar.pessoas.colaborador.internal.dto.ColaboradorResponseDTO;
 import aprimorar.pessoas.colaborador.internal.repository.ColaboradorRepository;
 import aprimorar.pessoas.shared.address.AddressMapper;
 import aprimorar.shared.MapperUtils;
@@ -79,6 +79,20 @@ class ColaboradorMutationService {
     }
 
     @Transactional
+    public void archiveColaborador(UUID colaboradorId) {
+        Colaborador colaborador = findByIdOrThrow(colaboradorId);
+        colaborador.archive();
+        log.info("Colaborador {} arquivado com sucesso.", colaborador.getName().toUpperCase());
+    }
+
+    @Transactional
+    public void unarchiveColaborador(UUID colaboradorId) {
+        Colaborador colaborador = findByIdOrThrow(colaboradorId);
+        colaborador.unarchive();
+        log.info("Colaborador {} desarquivado com sucesso.", colaborador.getName().toUpperCase());
+    }
+
+    @Transactional
     public void deleteColaborador(UUID colaboradorId) {
         Colaborador colaborador = findByIdOrThrow(colaboradorId);
 
@@ -93,20 +107,6 @@ class ColaboradorMutationService {
             "Colaborador {} deletado com sucesso. Eventos transferidos para 'Colaborador Removido'.",
             colaborador.getName().toUpperCase()
         );
-    }
-
-    @Transactional
-    public void archiveColaborador(UUID colaboradorId) {
-        Colaborador colaborador = findByIdOrThrow(colaboradorId);
-        colaborador.archive();
-        log.info("Colaborador {} arquivado com sucesso.", colaborador.getName().toUpperCase());
-    }
-
-    @Transactional
-    public void unarchiveColaborador(UUID colaboradorId) {
-        Colaborador colaborador = findByIdOrThrow(colaboradorId);
-        colaborador.unarchive();
-        log.info("Colaborador {} desarquivado com sucesso.", colaborador.getName().toUpperCase());
     }
 
     private Colaborador findByIdOrThrow(UUID colaboradorId) {

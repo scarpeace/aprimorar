@@ -1,8 +1,5 @@
 package aprimorar.financeiro.internal;
 
-import aprimorar.financeiro.api.dto.DespesaRequestDTO;
-import aprimorar.financeiro.api.dto.DespesaResponseDTO;
-import aprimorar.financeiro.api.dto.DespesasResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import aprimorar.financeiro.api.dto.DespesaRequestDTO;
+import aprimorar.financeiro.api.dto.DespesaResponseDTO;
+import aprimorar.financeiro.api.dto.DespesasResponseDTO;
+
 
 @RestController
 @RequestMapping("/v1/despesas")

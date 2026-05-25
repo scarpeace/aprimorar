@@ -1,11 +1,25 @@
 package aprimorar.pessoas.colaborador.api;
 
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradoresResponseDTO;
-import java.util.UUID;
+import aprimorar.pessoas.colaborador.internal.Colaborador;
+import aprimorar.pessoas.colaborador.internal.repository.ColaboradorRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface ColaboradorQueryApi {
-    ColaboradoresResponseDTO getColaboradores(Pageable pageable, String busca, Boolean arquivado);
-    ColaboradorResponseDTO findColaboradorById(UUID colaboradorId);
+import java.util.UUID;
+
+public class ColaboradorQueryApi {
+
+    private final ColaboradorRepository colaboradorRepo;
+
+    public ColaboradorQueryApi(ColaboradorRepository colaboradorRepo) {
+        this.colaboradorRepo = colaboradorRepo;
+    }
+
+    public Page<Colaborador> getColaboradores(Pageable pageable, String busca, Boolean arquivado) {
+        return colaboradorRepo.findAll(pageable);
+    }
+
+    public Colaborador findColaboradorById(UUID colaboradorId) {
+        return colaboradorRepo.findById(colaboradorId).orElse(null);
+    }
 }

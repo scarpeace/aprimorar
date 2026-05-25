@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import aprimorar.pessoas.colaborador.api.dto.ColaboradoresListDTO;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorRequestDTO;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradoresResponseDTO;
+import aprimorar.pessoas.colaborador.internal.dto.ColaboradoresListDTO;
+import aprimorar.pessoas.colaborador.internal.dto.ColaboradorRequestDTO;
+import aprimorar.pessoas.colaborador.internal.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.colaborador.internal.dto.ColaboradoresResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

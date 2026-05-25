@@ -3,6 +3,7 @@ package aprimorar.auth.internal;
 import aprimorar.auth.api.dto.UserRequestDTO;
 import aprimorar.auth.api.dto.UserResponseDTO;
 import aprimorar.auth.api.exception.UserBusinessException;
+import aprimorar.auth.internal.repository.UserRepository;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.enums.Role;
 

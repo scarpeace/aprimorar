@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface AlunoQueryApi {
 
+
     AlunosResponseDTO getAlunos(Pageable pageable, String search, Boolean archived);
     List<AlunosListDTO> listAlunos();
     AlunoResponseDTO findAlunoById(UUID studentId);

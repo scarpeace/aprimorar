@@ -6,6 +6,7 @@ import java.util.UUID;
 import aprimorar.financeiro.api.dto.DespesaResponseDTO;
 import aprimorar.financeiro.api.dto.DespesasResponseDTO;
 import aprimorar.financeiro.internal.CategoriaDespesaEnum;
+
 import org.springframework.data.domain.Pageable;
 
 public interface FinanceiroQueryApi {

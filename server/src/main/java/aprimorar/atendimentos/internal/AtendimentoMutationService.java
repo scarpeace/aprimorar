@@ -7,6 +7,7 @@ import aprimorar.pessoas.aluno.api.AlunoQueryApi;
 import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
 import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.colaborador.internal.Colaborador;
 import aprimorar.shared.exception.BusinessException;
 import java.time.Clock;
 import java.time.Instant;
@@ -27,30 +28,31 @@ class AtendimentoMutationService {
     private final AtendimentoRepository atendimentoRepo;
     private final AtendimentoMapper atendimentoMapper;
     private final AlunoQueryApi alunoQueryApi;
-    private final ColaboradorQueryApi colaboradorService;
+    private final ColaboradorQueryApi colaboradorQueryApi;
     private final Clock clock;
 
     AtendimentoMutationService(
         AtendimentoRepository atendimentoRepo,
         AtendimentoMapper atendimentoMapper,
         AlunoQueryApi alunoQueryApi,
-        ColaboradorQueryApi colaboradorService,
+        ColaboradorQueryApi colaboradorQueryApi,
         Clock clock
     ) {
         this.atendimentoRepo = atendimentoRepo;
         this.atendimentoMapper = atendimentoMapper;
         this.alunoQueryApi = alunoQueryApi;
-        this.colaboradorService = colaboradorService;
+        this.colaboradorQueryApi = colaboradorQueryApi;
         this.clock = clock;
     }
 
     @Transactional
     public AtendimentoResponseDTO createAtendimento(AtendimentoRequestDTO dto) {
-        AlunoResponseDTO student = alunoQueryApi.findAlunoById(dto.studentId());
-        ColaboradorResponseDTO employee = colaboradorService.findColaboradorById(dto.employeeId());
-        Atendimento atendimento = atendimentoMapper.toEntity(dto, student.name(), employee.name(), clock.instant());
 
-        validateParticipantAvailability(student, employee, dto.startDate(), dto.duration(), null);
+        Colaborador colaborador = colaboradorQueryApi.findColaboradorById(dto.employeeId());
+        Aluno aluno = alunoQueryApi.findAlunoById(dto.studentId());
+        Atendimento atendimento = atendimentoMapper.toEntity(dto, student.name(), colaborador.getName(), clock.instant());
+
+        validateParticipantAvailability(student, colaborador, dto.startDate(), dto.duration(), null);
 
         Atendimento saved = atendimentoRepo.save(atendimento);
         log.info("Atendimento {} cadastrado com sucesso.", saved.getTitle().toUpperCase());
@@ -132,7 +134,7 @@ class AtendimentoMutationService {
 
     private void validateParticipantAvailability(
         AlunoResponseDTO student,
-        ColaboradorResponseDTO employee,
+        Colaborador colaborador,
         Instant startDate,
         Double duration,
         Atendimento atendimento
@@ -143,7 +145,7 @@ class AtendimentoMutationService {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "Atendimento nao pode ter estudantes arquivados");
         }
 
-        if (!employee.active()) {
+        if (!colaborador.getActive()) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "Atendimento nao pode ter colaboradores arquivados");
         }
 
@@ -153,7 +155,7 @@ class AtendimentoMutationService {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "O estudante informado ja possui um atendimento no intervalo");
         }
 
-        if (atendimentoRepo.employeeHasConflictingAtendimento(employee.id(), startDate, endDate, atendimentoId)) {
+        if (atendimentoRepo.employeeHasConflictingAtendimento(colaborador.getId(), startDate, endDate, atendimentoId)) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "O colaborador informado ja possui um atendimento no intervalo");
         }
     }
