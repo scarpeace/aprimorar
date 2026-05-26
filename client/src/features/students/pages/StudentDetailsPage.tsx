@@ -64,7 +64,7 @@ export function StudentDetailsPage() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <KpiCard
             label="Total de eventos"
-            value={studentAppointments.data?.summary?.totalEvents}
+            value={studentAppointments.data?.summary?.totalAtendimentos}
             Icon={Calendar}
           />
 
@@ -86,7 +86,7 @@ export function StudentDetailsPage() {
 
       <div className="animate-[fade-up_600ms_ease-out_both]">
         <StudentEventsTable
-          appointments={studentAppointments.data?.appointments}
+          appointments={studentAppointments.data?.atendimentos}
           error={studentAppointments.error}
           hideCharged={hideCharged}
           isLoading={studentAppointments.isLoading}

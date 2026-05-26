@@ -1,23 +1,28 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { Button } from "@/components/ui/button";
-import { ErrorCard } from "@/components/ui/error-card";
-import { LoadingCard } from "@/components/ui/loading-card";
-import {useGetDespesas, useGetIndicadoresAtendimentos, useGetOverviewFinanceiroColaboradores,} from "@/kubb";
+import {useGetDespesas, useGetIndicadoresAtendimentos, useGetOverviewFinanceiroAlunos, useGetOverviewFinanceiroColaboradores,} from "@/kubb";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 import { BanknoteArrowDown, BanknoteArrowUp, GraduationCap, HandCoins, Landmark, Plus, UserCog } from "lucide-react";
 import { useState } from "react";
 import { ExpenseForm } from "../components/ExpenseForm";
 import { ExpensesTable } from "../components/ExpensesTable";
-import { FinanceSummarySection } from "../components/FinanceSummarySection";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { brl } from "@/lib/utils/formatter";
 
+function getCurrentMonthDateRange() {
+  const now = new Date();
+  const startDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+  return { initialStartDate: startDate, initialEndDate: endDate };
+}
+
 export function FinancesPage() {
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
+  const currentMonthDateRange = getCurrentMonthDateRange();
 
-  const dateFilter = usePageDateFilter();
-  const { startDate, endDate } = dateFilter;
+  const { startDate, endDate, ...dateFilter } = usePageDateFilter(currentMonthDateRange);
 
   const indicadoresAtendimentosQuery = useGetIndicadoresAtendimentos({
     startDate: startDate?.toISOString(),
@@ -28,7 +33,11 @@ export function FinancesPage() {
     startDate: startDate?.toISOString(),
     endDate: endDate?.toISOString(),
   });
-  console.log(atendimentosColaboradoresQuery.data)
+
+  const atendimentosAlunosQuery = useGetOverviewFinanceiroAlunos({
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
+  });
 
   const expensesQuery = useGetDespesas({
     startDate: startDate?.toISOString(),
@@ -189,7 +198,7 @@ export function FinancesPage() {
             </div>
           </div>
       ) : null}
-    <PageDateFilterWidget {...dateFilter} />
+    <PageDateFilterWidget startDate={startDate} endDate={endDate} {...dateFilter} />
       </div>
     </PageLayout>
   );

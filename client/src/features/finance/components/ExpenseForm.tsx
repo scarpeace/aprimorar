@@ -17,7 +17,16 @@ type ExpenseFormProps = {
   onCancel: () => void;
 };
 
+type ExpenseFormValues = {
+  amount: number;
+  category: DespesaRequestDTO["category"];
+  date: string;
+  description: string;
+};
+
 const today = () => new Date().toISOString().slice(0, 10);
+const formatDateForInput = (value?: string) => value?.slice(0, 10) ?? today();
+const toExpenseInstant = (value: string) => new Date(`${value}T00:00:00.000Z`).toISOString();
 
 export function ExpenseForm({
   initialData,
@@ -31,27 +40,32 @@ export function ExpenseForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<DespesaRequestDTO>({
-    resolver: zodResolver(despesaRequestDTOSchema),
+  } = useForm<ExpenseFormValues>({
+    resolver: zodResolver(despesaRequestDTOSchema as never),
     defaultValues: {
       amount: initialData?.amount ?? 0,
       category: initialData?.category ?? despesaRequestDTOCategoryEnum.CONTAS,
-      date: initialData?.date ?? today(),
+      date: formatDateForInput(initialData?.date),
       description: initialData?.description ?? "",
     },
     mode: "onBlur",
   });
 
   const onSubmit = handleSubmit((data) => {
+    const payload: DespesaRequestDTO = {
+      ...data,
+      date: toExpenseInstant(data.date),
+    };
+
     if (isEditMode && initialData?.id) {
       updateExpense.mutate(
-        { id: initialData.id, data },
+        { id: initialData.id, data: payload },
         { onSuccess: () => onSuccess() },
       );
       return;
     }
 
-    createExpense.mutate({ data }, { onSuccess: () => onSuccess() });
+    createExpense.mutate({ data: payload }, { onSuccess: () => onSuccess() });
   });
 
   const isPending = createExpense.isPending || updateExpense.isPending;

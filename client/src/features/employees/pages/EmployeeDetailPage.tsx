@@ -72,7 +72,7 @@ export function EmployeeDetailPage() {
 
       <div className="animate-[fade-up_600ms_ease-out_both]">
         <EmployeeEventsTable
-          appointments={employeeAppointments.data?.appointments}
+          appointments={employeeAppointments.data?.atendimentos}
           error={employeeAppointments.error}
           hidePaid={hidePaid}
           isLoading={employeeAppointments.isLoading}

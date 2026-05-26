@@ -10,7 +10,7 @@ import {
   formatPhone,
 } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
-import { useGetColaboradores, type ColaboradorResponseDTO, type PageObject } from "@/kubb";
+import { useGetColaboradores, type ColaboradorResponseDTO } from "@/kubb";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useState } from "react";
@@ -68,7 +68,7 @@ export function EmployeesTable() {
     );
   }
 
-  if (colaboradoresQuery.data.colaboradores?.empty) {
+  if ((colaboradoresQuery.data.colaboradores?.totalElements ?? 0) === 0) {
     return (
       <EmptyCard
         title="Nenhum colaborador encontrado"
