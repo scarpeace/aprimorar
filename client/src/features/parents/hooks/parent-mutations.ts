@@ -1,13 +1,13 @@
 import {
   deletarResponsavelMutationKey,
   buscarResponsavelPorIdQueryKey,
-  listarResponsaveisQueryKey,
   listarAlunosPorResponsavelQueryKey,
   useArquivarResponsavel,
   useCriarResponsavel,
   useDeletarResponsavel,
   useDesarquivarResponsavel,
   useAtualizarResponsavel,
+  getResponsaveisQueryKey,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -28,7 +28,7 @@ export function useParentMutations() {
       },
       onSuccess: (createdParent) => {
         toast.success("Responsável criado com sucesso");
-        queryClient.invalidateQueries({ queryKey: listarResponsaveisQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         navigate(`/parents/${createdParent.parentId}`);
       },
     },
@@ -39,7 +39,7 @@ export function useParentMutations() {
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: listarResponsaveisQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         queryClient.invalidateQueries({
           queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
         });
@@ -59,7 +59,7 @@ export function useParentMutations() {
     mutation: {
       onSuccess: () => {
         toast.success("Responsável excluído com sucesso");
-        queryClient.invalidateQueries({ queryKey: listarResponsaveisQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         queryClient.invalidateQueries({ queryKey: deletarResponsavelMutationKey() });
         navigate("/parents");
       },
@@ -76,7 +76,7 @@ export function useParentMutations() {
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável arquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: listarResponsaveisQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         queryClient.invalidateQueries({
           queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
         });
@@ -97,7 +97,7 @@ export function useParentMutations() {
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável desarquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: listarResponsaveisQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         queryClient.invalidateQueries({
           queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
         });

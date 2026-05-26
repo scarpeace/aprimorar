@@ -51,7 +51,7 @@ public class ResponsavelController {
     }
 
     @GetMapping
-    @Operation(operationId = "listarResponsaveis", description = "Retorna uma lista de responsáveis paginada")
+    @Operation(operationId = "getResponsaveis", description = "Retorna uma lista de responsáveis paginada")
     @ApiResponse(responseCode = "200", description = "Lista de responsáveis retornada com sucesso.")
     public ResponseEntity<PageDTO<ResponsavelResponseDTO>> getResponsaveis(
         @PageableDefault(sort = "name") @ParameterObject Pageable pageable,

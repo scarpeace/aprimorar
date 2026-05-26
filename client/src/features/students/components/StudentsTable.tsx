@@ -1,42 +1,79 @@
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
+import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { StudentsWithFinanceResponseDTO } from "@/kubb";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { useGetAlunos, type AlunoResponseDTO } from "@/kubb";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 import {
   brl,
   formatCpf,
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
+import { GraduationCap } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-type StudentsTableProps = {
-  students?: StudentsWithFinanceResponseDTO;
-  onPageChange: (page: number) => void;
-  currentPage: number;
-  isPending: boolean;
-  error: unknown;
-};
-
-export function StudentsTable({
-  students,
-  onPageChange,
-  currentPage,
-  isPending,
-  error,
-}: Readonly<StudentsTableProps>) {
+export function StudentsTable() {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [showArchived, setShowArchived] = useState(false);
+  const [hideCharged, setHideCharged] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<AlunoResponseDTO | null>(null);
 
-  if (error) {
-    return <ErrorCard title="Não foi possível carregar a listagem de Alunos" error={error}/>;
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  const alunosQuery = useGetAlunos({
+    page: currentPage,
+    search: debouncedSearchTerm,
+    archived: showArchived,
+  });
+
+  const handleHideChargedChange = (value: boolean) => {
+    setHideCharged(value);
+    setCurrentPage(0);
+  };
+
+  const headerProps = {
+    description: "Gerencie cadastros e matrículas.",
+    title: "Alunos",
+    Icon: GraduationCap,
+    backLink: "/",
+  };
+
+  const onPageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleOpenForm = (student?: AlunoResponseDTO) => {
+    setSelectedStudent(student || null);
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setSelectedStudent(null);
+    setIsFormOpen(false);
+  };
+
+  const handleShowArchivedChange = (value: boolean) => {
+    setShowArchived(value);
+    setCurrentPage(0);
+  };
+
+
+  if (alunosQuery.isError) {
+    return <ErrorCard title="Não foi possível carregar a listagem de Alunos" error={alunosQuery.error}/>;
   }
 
-  if (isPending) {
+  if (alunosQuery.isLoading) {
     return <LoadingSpinner text="Carregando Alunos..." />;
   }
 
-  if (!students || !students.content || students.content.length === 0) {
+  if (!alunosQuery.data || !alunosQuery.data.alunos || alunosQuery.data.alunos.totalElements === 0) {
     return (
       <EmptyCard
         title="Nenhum aluno encontrado"
@@ -45,51 +82,53 @@ export function StudentsTable({
     );
   }
 
-  const paginationData = {
-    size: students.size ?? students.content.length,
-    totalElements: students.totalElements ?? students.content.length,
-    totalPages: students.totalPages ?? 1,
-    content: students.content,
-  };
-
   return (
     <>
+      <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+
+          <ListSearchInput
+            className="grow"
+            placeholder="Buscar aluno por nome, email ou CPF"
+            ariaLabel="Buscar aluno"
+            value={searchTerm}
+            onChange={setSearchTerm}
+          />
+          <div className="flex w-full flex-row items-start justify-between gap-3 xl:w-auto xl:justify-end">
+            <ToggleSwitch
+              label="Arquivados"
+              tip="Mostrar alunos arquivados"
+              toggled={showArchived}
+              setToggle={handleShowArchivedChange}
+              className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
+            />
+            <ToggleSwitch
+              label="Ocultar cobrados"
+              tip="Mostrar apenas alunos com pendencias no periodo"
+              toggled={hideCharged}
+              setToggle={handleHideChargedChange}
+              className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
+              />
+          </div>
+        </div>
+      </section>
+
+      {/*TABELA*/}
       <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
       <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
         <thead className="bg-base-200/80">
           <tr>
-            <th className="text-left font-semibold text-base-content/80">
-              Nome
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              CPF
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Contato
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Escola
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Matricula
-            </th>
-            <th className="text-right font-semibold text-base-content/80">
-              Pago
-            </th>
-            <th className="text-right font-semibold text-base-content/80">
-              Pendente
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Status
-            </th>
+            <th className="text-left font-semibold text-base-content/80">Nome</th>
+            <th className="text-left font-semibold text-base-content/80">CPF</th>
+            <th className="text-left font-semibold text-base-content/80">Contato</th>
+            <th className="text-left font-semibold text-base-content/80">Escola</th>
+            <th className="text-left font-semibold text-base-content/80">Matricula</th>
+            <th className="text-left font-semibold text-base-content/80">Status</th>
           </tr>
         </thead>
 
         <tbody className="whitespace-nowrap">
-          {students.content.map((student) => {
-            const totalCharged = student.totalCharged ?? 0;
-            const totalPending = student.totalPending ?? 0;
-
+          {alunosQuery.data.alunos?.content?.map((student) => {
             return (
               <tr
                 key={student.id}
@@ -97,23 +136,10 @@ export function StudentsTable({
                 onClick={() => student.id && navigate(`/students/${student.id}`)}
               >
                 <td className="font-bold">{student.name}</td>
-
                 <td>{formatCpf(student.cpf ?? "")}</td>
                 <td>{formatPhone(student.contact ?? "")}</td>
-
-                 <td>{student.school ?? "-"}</td>
-
-                 <td>{formatDateShortYear(student.createdAt ?? "")}</td>
-                 <td className="text-right font-mono font-semibold text-success">
-                   {brl.format(totalCharged)}
-                 </td>
-                 <td
-                   className={`text-right font-mono font-semibold ${
-                     totalPending > 0 ? "text-warning" : "text-base-content/45"
-                   }`}
-                 >
-                   {brl.format(totalPending)}
-                 </td>
+                <td>{student.school ?? "-"}</td>
+                <td>{formatDateShortYear(student.createdAt ?? "")}</td>
                  <td>
                    <span className={`badge ${(student.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
                      {(student.active ?? true) ? "Ativo" : "Arquivado"}
@@ -126,7 +152,8 @@ export function StudentsTable({
       </table>
       </div>
       <Pagination
-        paginationData={paginationData}
+        totalElements={alunosQuery.data.alunos?.totalElements ?? 0}
+        totalPages={alunosQuery.data.alunos?.totalPages ?? 0}
         currentPage={currentPage}
         onPageChange={onPageChange}
       />

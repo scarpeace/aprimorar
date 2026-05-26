@@ -77,16 +77,9 @@ export function EmployeesTable() {
     );
   }
 
-  const paginationData = {
-    size: colaboradoresQuery.data.colaboradores?.size,
-    totalElements: colaboradoresQuery.data.colaboradores?.totalElements,
-    totalPages: colaboradoresQuery.data.colaboradores?.totalPages,
-    // content: colaboradoresQuery.data.colaboradores?.content ?? colaboradoresQuery.data.content,
-  };
-
   return (
     <>
-      <section className="rounded-2xl bg-base-100 my-3 shadow-sm animate-[fade-up_220ms_ease-out_both]">
+      <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
           <ListSearchInput
@@ -96,7 +89,7 @@ export function EmployeesTable() {
             value={searchTerm}
             onChange={setSearchTerm}
           />
-          <div className="flex w-full flex-row items-s gap-3 xl:w-auto xl:justify-end">
+          <div className="flex w-full flex-row gap-3 xl:w-auto xl:justify-end">
             <ToggleSwitch
               label="Mostrar Arquivados"
               tip="Mostrar colaboradores arquivados"
