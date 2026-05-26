@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DateTimeInput } from "@/components/ui/date-time-input";
 import { EmployeeSelectDropdown } from "@/features/employees/components/EmployeeSelectDropdown";
 import { StudentSelectDropdown } from "@/features/students/components/StudentSelectDropdown";
-import type { AppointmentRequestDTO, AppointmentResponseDTO } from "@/kubb";
+import type { AtendimentoRequestDTO, AtendimentoResponseDTO } from "@/kubb";
 import { toInstant } from "@/lib/utils/date-utils";
 import { ContentSelectDropdown } from "./ContentSelectDropdown";
 import { appointmentFormSchema, type AppointmentFormSchema } from "../lib/appointmentFormSchema.tsx";
@@ -25,7 +25,7 @@ function formatDateTimeForInput(dateTimeStr?: string) {
 }
 
 interface AppointmentFormProps {
-  initialData?: AppointmentResponseDTO | null;
+  initialData?: AtendimentoResponseDTO | null;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -65,7 +65,7 @@ export function AppointmentForm({ initialData, onCancel, onSuccess }: Appointmen
   }, [startDateValue, durationValue]);
 
   const onSubmit = handleSubmit((data: AppointmentFormSchema) => {
-    const formattedData: AppointmentRequestDTO = {
+    const formattedData: AtendimentoRequestDTO = {
       description: data.description,
       content: data.content,
       startDate: toInstant(data.startDate),

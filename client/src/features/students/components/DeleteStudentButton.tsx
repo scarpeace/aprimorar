@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useGetAppointmentsByStudentId } from "@/kubb";
+import { useGetAtendimentosByStudentId } from "@/kubb";
 import { useStudentMutations } from "../hooks/student-mutations";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
@@ -19,7 +19,7 @@ export const DeleteStudentButton = ({ studentId, className }: DeleteStudentButto
     deleteStudent: { mutate: deleteStudent, isPending: isDeleting },
   } = useStudentMutations();
   const { data: eventsData, isLoading: isEventsLoading } =
-    useGetAppointmentsByStudentId(studentId);
+    useGetAtendimentosByStudentId(studentId);
 
   const handleOpenClick = () => {
     setErrorMessage(null);

@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -313,13 +315,14 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
           coalesce(sum(case when a.employeePaymentDate is not null then a.payment else 0 end), 0) as totalPaid,
           coalesce(sum(case when a.employeePaymentDate is null then a.payment else 0 end), 0) as totalPending
         from Atendimento a
-        where a.startDate >= coalesce(:startDate, a.startDate)
+        where a.employeeId in :employeeIds
+          and a.startDate >= coalesce(:startDate, a.startDate)
           and a.endDate <= coalesce(:endDate, a.endDate)
         group by a.employeeId, a.employeeName
-        order by a.employeeName asc
         """
     )
-    List<ColaboradorFinanceSummaryProjection> findColaboradorFinanceSummaries(
+    List<ColaboradorFinanceSummaryProjection> findColaboradoresFinanceiroByPeriodAndIds(
+        @Param("employeeIds") List<UUID> employeeIds,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate
     );

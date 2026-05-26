@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { SectionCard } from "@/components/ui/section-card";
-import { useGetParentById } from "@/kubb";
+import { useBuscarResponsavelPorId } from "@/kubb";
 import { ParentForm } from "../components/ParentForm";
 import { ParentInfoSection } from "../components/ParentInfoSection";
 import { ParentStudentsTable } from "../components/ParentStudentsTable";
@@ -14,7 +14,7 @@ export function ParentDetailPage() {
   const parentId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const parentQuery = useGetParentById(parentId);
+  const parentQuery = useBuscarResponsavelPorId(parentId);
 
   const headerProps = {
     description: "Veja os dados do responsável, os vínculos ativos e o histórico arquivado com alunos.",

@@ -1,5 +1,5 @@
 import { Button, ButtonLink } from "@/components/ui/button";
-import type { AppointmentResponseDTO } from "@/kubb";
+import type { AtendimentoResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import {
@@ -14,7 +14,7 @@ import {
 import { memo } from "react";
 
 type AppointmentMobileCardProps = {
-  event: AppointmentResponseDTO;
+  event: AtendimentoResponseDTO;
   index: number;
   isPending: boolean;
   onToggleCharge: (id: string) => void;

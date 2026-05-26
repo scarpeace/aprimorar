@@ -1,4 +1,4 @@
-import { useGetAppointments } from "@/kubb";
+import { useGetAtendimentos } from "@/kubb";
 import { AppointmentsTable } from "./AppointmentsTable";
 
 type AppointmentsListSectionProps = {
@@ -16,7 +16,7 @@ export function AppointmentsListSection({
   hidePaid,
   onPageChange,
 }: AppointmentsListSectionProps) {
-  const eventsQuery = useGetAppointments({
+  const eventsQuery = useGetAtendimentos({
     page,
     size: 20,
     sort: ["startDate,desc", "id,asc"],

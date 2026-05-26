@@ -3,8 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormMask } from "use-mask-input";
 import { Button } from "@/components/ui/button";
 import { TriangleAlert } from "lucide-react";
-import { employeeRequestDTODutyEnum } from "@/kubb";
-import type { EmployeeResponseDTO } from "@/kubb";
+import { colaboradorRequestDTODutyEnum } from "@/kubb";
+import type { ColaboradorResponseDTO } from "@/kubb";
 import { brazilianStates } from "@/lib/utils/brazilianStates";
 import { employeeFormSchema, type EmployeeFormSchema } from "../lib/employeeFormSchema.ts";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 interface EmployeeFormProps {
-  initialData?: EmployeeResponseDTO | null;
+  initialData?: ColaboradorResponseDTO | null;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -53,7 +53,7 @@ export function EmployeeForm({ initialData, onSuccess, onCancel }: EmployeeFormP
   const onSubmit = handleSubmit((data: EmployeeFormSchema) => {
     if (isEditMode && initialData.id) {
       updateEmployee.mutate(
-        { employeeId: initialData.id, data },
+        { colaboradorId: initialData.id, data },
         {
           onSuccess: () => onSuccess(),
           onError: (error) => toast.error(getFriendlyErrorMessage(error)),
@@ -155,10 +155,10 @@ export function EmployeeForm({ initialData, onSuccess, onCancel }: EmployeeFormP
         <fieldset className="fieldset md:col-span-2">
           <legend className="fieldset-legend">Função</legend>
           <select className="select select-bordered w-full" {...register("duty")}>
-            <option value={employeeRequestDTODutyEnum.TEACHER}>PROFESSOR</option>
-            <option value={employeeRequestDTODutyEnum.ADM}>ADM</option>
-            <option value={employeeRequestDTODutyEnum.THERAPIST}>TERAPEUTA</option>
-            <option value={employeeRequestDTODutyEnum.MENTOR}>MENTOR</option>
+            <option value={colaboradorRequestDTODutyEnum.TEACHER}>PROFESSOR</option>
+            <option value={colaboradorRequestDTODutyEnum.ADM}>ADM</option>
+            <option value={colaboradorRequestDTODutyEnum.THERAPIST}>TERAPEUTA</option>
+            <option value={colaboradorRequestDTODutyEnum.MENTOR}>MENTOR</option>
           </select>
           {errors?.duty && (
             <p className="label text-error">

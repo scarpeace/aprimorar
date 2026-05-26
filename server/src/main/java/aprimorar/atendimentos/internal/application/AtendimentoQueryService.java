@@ -14,19 +14,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.atendimentos.api.AtendimentosQueryApi;
-import aprimorar.atendimentos.api.dto.AlunoAtendimentosResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
 import aprimorar.atendimentos.api.dto.AlunoSummaryDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.api.dto.ColaboradorAtendimentosResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
+import aprimorar.atendimentos.api.dto.ColaboradorFinanceiroResumoDTO;
 import aprimorar.atendimentos.api.dto.ColaboradorSummaryDTO;
 import aprimorar.atendimentos.internal.domain.Atendimento;
 import aprimorar.atendimentos.internal.infrastructure.persistence.AtendimentoRepository;
 import aprimorar.atendimentos.internal.infrastructure.persistence.AtendimentoSpecifications;
 import aprimorar.pessoas.aluno.api.AlunoQueryApi;
-import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
 import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
+import java.util.List;
 
 @Service
 public class AtendimentoQueryService implements AtendimentosQueryApi {
@@ -36,18 +37,15 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
     private final AtendimentoRepository atendimentoRepo;
     private final AtendimentoMapper atendimentoMapper;
     private final AlunoQueryApi alunoQueryApi;
-    private final ColaboradorQueryApi colaboradorService;
 
     public AtendimentoQueryService(
         AtendimentoRepository atendimentoRepo,
         AtendimentoMapper atendimentoMapper,
-        AlunoQueryApi alunoQueryApi,
-        ColaboradorQueryApi colaboradorService
+        AlunoQueryApi alunoQueryApi
     ) {
         this.atendimentoRepo = atendimentoRepo;
         this.atendimentoMapper = atendimentoMapper;
         this.alunoQueryApi = alunoQueryApi;
-        this.colaboradorService = colaboradorService;
     }
 
     @Transactional(readOnly = true)
@@ -86,20 +84,18 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
 
     @Transactional(readOnly = true)
     @Override
-    public ColaboradorAtendimentosResponseDTO getAtendimentosByEmployeeId(
+    public AtendimentosColaboradorResponseDTO getAtendimentosByEmployeeId(
         Pageable pageable,
         UUID employeeId,
         Boolean hidePaid,
         Instant startDate,
         Instant endDate
     ) {
-        colaboradorService.findColaboradorById(employeeId);
-        Boolean paidFilter = Boolean.TRUE.equals(hidePaid) ? Boolean.FALSE : null;
 
         Specification<Atendimento> spec = AtendimentoSpecifications.withEmployeeId(employeeId)
             .and(AtendimentoSpecifications.withStartDateAfter(startDate))
             .and(AtendimentoSpecifications.withEndDateBefore(endDate))
-            .and(AtendimentoSpecifications.withEmployeePaid(paidFilter));
+            .and(AtendimentoSpecifications.withEmployeePaid(hidePaid));
 
         Page<Atendimento> atendimentoPage = atendimentoRepo.findAll(spec, pageable);
         Page<AtendimentoResponseDTO> dtoPage = atendimentoPage.map(atendimentoMapper::convertToDto);
@@ -110,7 +106,7 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
 
         log.info("Consulta de atendimentos do colaborador finalizada, {} registros encontrados.", atendimentoPage.getTotalElements());
 
-        return new ColaboradorAtendimentosResponseDTO(
+        return new AtendimentosColaboradorResponseDTO(
             new PageDTO<>(dtoPage),
             new ColaboradorSummaryDTO(totalAtendimentos, totalPaid, totalUnpaid)
         );
@@ -118,7 +114,7 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
 
     @Transactional(readOnly = true)
     @Override
-    public AlunoAtendimentosResponseDTO getAtendimentosByStudentId(
+    public AtendimentosAlunoResponseDTO getAtendimentosByStudentId(
         Pageable pageable,
         UUID studentId,
         Instant startDate,
@@ -132,16 +128,14 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
             .and(AtendimentoSpecifications.withEndDateBefore(endDate))
             .and(AtendimentoSpecifications.withStudentCharged(charged));
 
-        Page<Atendimento> atendimentoPage = atendimentoRepo.findAll(spec, pageable);
-        Page<AtendimentoResponseDTO> dtoPage = atendimentoPage.map(atendimentoMapper::convertToDto);
-
-        log.info("Consulta de atendimentos do aluno finalizada, {} registros encontrados.", atendimentoPage.getTotalElements());
+        Page<Atendimento> atendimentos = atendimentoRepo.findAll(spec, pageable);
+        Page<AtendimentoResponseDTO> dtoPage = atendimentos.map(atendimentoMapper::convertToDto);
 
         long totalAtendimentos = atendimentoRepo.countFilteredByStudentId(studentId, startDate, endDate);
         BigDecimal totalCharged = atendimentoRepo.sumChargedFilteredByStudentId(studentId, startDate, endDate);
         BigDecimal totalPending = atendimentoRepo.sumPendingFilteredByStudentId(studentId, startDate, endDate);
 
-        return new AlunoAtendimentosResponseDTO(new PageDTO<>(dtoPage), new AlunoSummaryDTO(totalAtendimentos, totalCharged, totalPending));
+        return new AtendimentosAlunoResponseDTO(new PageDTO<>(dtoPage), new AlunoSummaryDTO(totalAtendimentos, totalCharged, totalPending));
     }
 
     //TODO: To querendo mover isso para getAtendimentos
@@ -159,6 +153,28 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
             totalEmployeePaid,
             totalEmployeePending
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ColaboradorFinanceiroResumoDTO> getColaboradoresFinanceiroByPeriod(
+        List<UUID> employeeIds,
+        Instant startDate,
+        Instant endDate
+    ) {
+        if (employeeIds == null || employeeIds.isEmpty()) {
+            return List.of();
+        }
+
+        return atendimentoRepo.findColaboradoresFinanceiroByPeriodAndIds(employeeIds, startDate, endDate)
+            .stream()
+            .map(projection -> new ColaboradorFinanceiroResumoDTO(
+                projection.getEmployeeId(),
+                projection.getTotalAtendimentos(),
+                projection.getTotalPaid(),
+                projection.getTotalPending()
+            ))
+            .toList();
     }
 
     @Override

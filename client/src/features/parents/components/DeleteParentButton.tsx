@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 import { getActiveLinkedStudentsCount } from "@/features/parents/lib/getActiveLinkedStudentsCount";
-import { useGetStudentsByParent } from "@/kubb";
+import { useListarAlunosPorResponsavel } from "@/kubb";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useParentMutations } from "../hooks/parent-mutations";
@@ -19,7 +19,7 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
   const {
     data: linkedStudents,
     isLoading: isLinkedStudentsLoading,
-  } = useGetStudentsByParent(parentId);
+  } = useListarAlunosPorResponsavel(parentId);
 
   const linkedStudentsCount = linkedStudents?.length ?? 0;
   const activeLinkedStudentsCount = getActiveLinkedStudentsCount(linkedStudents);
@@ -52,7 +52,7 @@ export const DeleteParentButton = ({ parentId }: { parentId: string }) => {
 
   const handleConfirmDelete = () => {
     deleteParent(
-      { parentId },
+      { responsavelId: parentId },
       {
         onSuccess: () => {
           setIsOpen(false);

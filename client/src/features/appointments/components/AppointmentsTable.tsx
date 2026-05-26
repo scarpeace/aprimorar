@@ -2,7 +2,7 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { type AppointmentResponseDTO, type PageDTOAppointmentResponseDTO } from "@/kubb";
+import { type AtendimentoResponseDTO, type PageDTOAtendimentoResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { CalendarCheck2 } from "lucide-react";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { AppointmentMobileCard } from "./AppointmentMobileCard";
 
 type AppointmentsTableProps = {
-  appointments?: PageDTOAppointmentResponseDTO;
+  appointments?: PageDTOAtendimentoResponseDTO;
   currentPage: number;
   onPageChange: (page: number) => void;
   isLoading: boolean;
@@ -101,7 +101,7 @@ export function AppointmentsTable({
             </thead>
 
             <tbody className="whitespace-nowrap">
-              {events.map((event: AppointmentResponseDTO) => (
+              {events.map((event: AtendimentoResponseDTO) => (
                 <tr
                   key={event.id}
                   className="group cursor-pointer transition-colors hover:bg-base-200/50"
@@ -146,7 +146,7 @@ export function AppointmentsTable({
       </div>
 
       <div className="flex flex-col gap-4 md:hidden">
-        {events.map((event: AppointmentResponseDTO, index: number) => (
+        {events.map((event: AtendimentoResponseDTO, index: number) => (
           <AppointmentMobileCard
             key={event.id}
             event={event}

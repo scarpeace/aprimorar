@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type { PageDTOExpenseResponseDTO } from "@/kubb";
+import type { PageDTODespesaResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear } from "@/lib/utils/formatter";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { ExpenseCategoryBadge } from "./ExpenseCategoryBadge";
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 
 type ExpensesTableProps = {
-  expenses?: PageDTOExpenseResponseDTO;
+  expenses?: PageDTODespesaResponseDTO;
   isPending: boolean;
   error: unknown;
 };

@@ -3,8 +3,8 @@ import { Collapse } from "@/components/ui/collapse";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { AddressDetails } from "@/lib/shared/address/components/AddressDetails";
 import {
-  useGetParentById,
-  useGetStudentById,
+  useBuscarResponsavelPorId,
+  useBuscarAlunoPorId,
 } from "@/kubb";
 import {
   formatCpf,
@@ -23,8 +23,8 @@ interface StudentInfoSectionProps {
 }
 
 export const StudentInfoSection = ({studentId,onEdit}: StudentInfoSectionProps) => {
-  const studentQuery = useGetStudentById(studentId);
-  const parentQuery = useGetParentById(studentQuery.data?.parentId || "");
+  const studentQuery = useBuscarAlunoPorId(studentId);
+  const parentQuery = useBuscarResponsavelPorId(studentQuery.data?.parentId || "");
 
   if (studentQuery.error || parentQuery.error) {
     return <ErrorCard title="Erro ao carregar detalhes do aluno" error={studentQuery.error || parentQuery.error} />;

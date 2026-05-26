@@ -1,4 +1,4 @@
-import { useGetEmployeeOptions } from "@/kubb";
+import { useListColaboradores } from "@/kubb";
 import { TriangleAlert } from "lucide-react";
 import type { UseFormRegisterReturn } from "react-hook-form";
 
@@ -17,7 +17,7 @@ export function EmployeeSelectDropdown({
   label,
   defaultValue,
 }: EmployeeSelectDropdownProps) {
-  const { data: employees, isPending } = useGetEmployeeOptions();
+  const { data: employees, isPending } = useListColaboradores();
 
   const hasDefaultValue = defaultValue?.id && defaultValue?.name;
   const isDefaultInOptions = employees?.some((e) => e.id === defaultValue?.id);

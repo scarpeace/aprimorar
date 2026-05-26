@@ -4,7 +4,7 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import type { AppointmentResponseDTO, PageDTOAppointmentResponseDTO } from "@/kubb";
+import type { AtendimentoResponseDTO, PageDTOAtendimentoResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
@@ -13,7 +13,7 @@ import { StudentAppointmentMobileCard } from "./StudentAppointmentMobileCard";
 import { useAppointmentMutations } from "@/features/appointments/hooks/use-appointment-mutations";
 
 interface StudentEventsTableProps {
-  appointments?: PageDTOAppointmentResponseDTO;
+  appointments?: PageDTOAtendimentoResponseDTO;
   currentPage: number;
   error?: unknown;
   hideCharged: boolean;
@@ -118,7 +118,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({
             </thead>
 
             <tbody className="whitespace-nowrap">
-              {events.map((event: AppointmentResponseDTO) => (
+              {events.map((event: AtendimentoResponseDTO) => (
                 <tr key={event.id} className="group transition-colors hover:bg-base-200/50">
                   <td>
                     <div className="font-semibold text-base-content">{event.employeeName}</div>
@@ -177,7 +177,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({
       </div>
 
       <div className="flex flex-col gap-4 md:hidden">
-        {events.map((event: AppointmentResponseDTO, index: number) => (
+        {events.map((event: AtendimentoResponseDTO, index: number) => (
           <StudentAppointmentMobileCard
             key={event.id}
             event={event}

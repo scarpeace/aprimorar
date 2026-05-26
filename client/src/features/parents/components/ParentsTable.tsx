@@ -2,12 +2,12 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { PageDTOParentResponseDTO } from "@/kubb";
+import type { PageDTOResponsavelResponseDTO } from "@/kubb";
 import { formatCpf, formatPhone } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
 
 type ParentsTableProps = {
-  parents?: PageDTOParentResponseDTO;
+  parents?: PageDTOResponsavelResponseDTO;
   onPageChange: (page: number) => void;
   currentPage: number;
   isPending: boolean;

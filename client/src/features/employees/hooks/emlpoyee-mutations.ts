@@ -1,12 +1,12 @@
 import {
-  getEmployeeByIdQueryKey,
-  getEmployeeOptionsQueryKey,
-  getEmployeesQueryKey,
-  useArchiveEmployee,
-  useCreateEmployee,
-  useDeleteEmployee,
-  useUnarchiveEmployee,
-  useUpdateEmployee,
+  findColaboradorByIdQueryKey,
+  listColaboradoresQueryKey,
+  getColaboradoresQueryKey,
+  useArquivarColaborador,
+  useCreateColaborador,
+  useDeleteColaborador,
+  useDesarquivarColaborador,
+  useUpdateColaborador,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -17,13 +17,13 @@ export function useEmployeeMutations() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const createEmployee = useCreateEmployee({
+  const createEmployee = useCreateColaborador({
     mutation: {
       onSuccess: (createdEmployee) => {
         toast.success("Colaborador criado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getEmployeesQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeOptionsQueryKey(),
+          queryKey: listColaboradoresQueryKey(),
         });
         navigate(`/employees/${createdEmployee.id}`);
       },
@@ -33,18 +33,18 @@ export function useEmployeeMutations() {
     },
   });
 
-  const updateEmployee = useUpdateEmployee({
+  const updateEmployee = useUpdateColaborador({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Colaborador atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getEmployeesQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeByIdQueryKey(variables.employeeId),
+          queryKey: findColaboradorByIdQueryKey(variables.colaboradorId),
         });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeOptionsQueryKey(),
+          queryKey: listColaboradoresQueryKey(),
         });
-        navigate(`/employees/${variables.employeeId}`);
+        navigate(`/employees/${variables.colaboradorId}`);
       },
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
@@ -52,16 +52,16 @@ export function useEmployeeMutations() {
     },
   });
 
-  const archiveEmployee = useArchiveEmployee({
+  const archiveEmployee = useArquivarColaborador({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Colaborador arquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getEmployeesQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeByIdQueryKey(variables.employeeId),
+          queryKey: findColaboradorByIdQueryKey(variables.colaboradorId),
         });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeOptionsQueryKey(),
+          queryKey: listColaboradoresQueryKey(),
         });
       },
       onError: (error) => {
@@ -70,16 +70,16 @@ export function useEmployeeMutations() {
     },
   });
 
-  const unarchiveEmployee = useUnarchiveEmployee({
+  const unarchiveEmployee = useDesarquivarColaborador({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Colaborador desarquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getEmployeesQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeByIdQueryKey(variables.employeeId),
+          queryKey: findColaboradorByIdQueryKey(variables.colaboradorId),
         });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeOptionsQueryKey(),
+          queryKey: listColaboradoresQueryKey(),
         });
       },
       onError: (error) => {
@@ -88,13 +88,13 @@ export function useEmployeeMutations() {
     },
   });
 
-  const deleteEmployee = useDeleteEmployee({
+  const deleteEmployee = useDeleteColaborador({
     mutation: {
       onSuccess: () => {
         toast.success("Colaborador excluído com sucesso");
-        queryClient.invalidateQueries({ queryKey: getEmployeesQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getEmployeeOptionsQueryKey(),
+          queryKey: listColaboradoresQueryKey(),
         });
         navigate("/employees");
       },

@@ -51,6 +51,7 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
         }
 
         Page<Colaborador> colaboradoresPage = colaboradorRepo.findAll(spec, pageable);
+
         ColaboradoresResponseDTO colaboradoresDtoPage = new ColaboradoresResponseDTO(
             colaboradoresAtivos,
             colaboradoresPage.map(colaborador -> colaboradorMapper.toDto(colaborador))

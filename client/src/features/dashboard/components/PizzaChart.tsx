@@ -10,7 +10,7 @@ import {
 import { type DashboardSummaryResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 
-type ClassesByContentDTO = NonNullable<DashboardSummaryResponseDTO["charts"]>[number];
+type DashboardSummaryResponseDTO = NonNullable<DashboardSummaryResponseDTO["charts"]>[number];
 type ChartDatum = {
   name: string;
   value: number;
@@ -59,7 +59,7 @@ const renderCustomizedLabel = ({
 };
 
 interface PizzaChartProps {
-  data: ClassesByContentDTO[];
+  data: DashboardSummaryResponseDTO[];
   isAnimationActive?: boolean;
 }
 

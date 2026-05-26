@@ -3,7 +3,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { useGetAppointmentById } from "@/kubb";
+import { useGetAtendimentoById } from "@/kubb";
 import { Calendar, Edit } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useAppointmentMutations } from "../hooks/use-appointment-mutations";
@@ -19,7 +19,7 @@ export function AppointmentDetailPage() {
   const appointmentId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const appointmentQuery = useGetAppointmentById(appointmentId);
+  const appointmentQuery = useGetAtendimentoById(appointmentId);
   const { toggleStudentCharge, toggleEmployeePayment } =
     useAppointmentMutations();
 

@@ -1,7 +1,7 @@
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useGetStudentsByParent } from "@/kubb";
+import { useListarAlunosPorResponsavel } from "@/kubb";
 import {
   formatCpf,
   formatDateShortYear,
@@ -17,7 +17,7 @@ export function ParentStudentsTable({
   parentId,
 }: Readonly<ParentStudentsTableProps>) {
   const navigate = useNavigate();
-  const studentsQuery = useGetStudentsByParent(parentId);
+  const studentsQuery = useListarAlunosPorResponsavel(parentId);
 
   if (studentsQuery.error) {
     return (

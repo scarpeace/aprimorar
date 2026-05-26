@@ -1,11 +1,13 @@
 package aprimorar.atendimentos.api;
 
-import aprimorar.atendimentos.api.dto.AlunoAtendimentosResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.api.dto.ColaboradorAtendimentosResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
+import aprimorar.atendimentos.api.dto.ColaboradorFinanceiroResumoDTO;
 import aprimorar.shared.PageDTO;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 
@@ -22,7 +24,7 @@ public interface AtendimentosQueryApi {
 
     AtendimentoResponseDTO findAtendimentoById(UUID id);
 
-    ColaboradorAtendimentosResponseDTO getAtendimentosByEmployeeId(
+    AtendimentosColaboradorResponseDTO getAtendimentosByEmployeeId(
         Pageable pageable,
         UUID employeeId,
         Boolean hidePaid,
@@ -30,7 +32,7 @@ public interface AtendimentosQueryApi {
         Instant endDate
     );
 
-    AlunoAtendimentosResponseDTO getAtendimentosByStudentId(
+    AtendimentosAlunoResponseDTO getAtendimentosByStudentId(
         Pageable pageable,
         UUID studentId,
         Instant startDate,
@@ -39,6 +41,12 @@ public interface AtendimentosQueryApi {
     );
 
     AtendimentoFinanceSummaryDTO getFinanceReport(Instant startDate, Instant endDate);
+
+    List<ColaboradorFinanceiroResumoDTO> getColaboradoresFinanceiroByPeriod(
+        List<UUID> employeeIds,
+        Instant startDate,
+        Instant endDate
+    );
 
     boolean alunoHasPendingCharges(UUID alunoId);
     boolean colaboradorHasPendingPayment(UUID colaboradorId);

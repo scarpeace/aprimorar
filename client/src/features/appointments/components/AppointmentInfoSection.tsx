@@ -1,5 +1,5 @@
 import { MiniCard } from "@/components/ui/mini-card";
-import type { AppointmentResponseDTO } from "@/kubb";
+import type { AtendimentoResponseDTO } from "@/kubb";
 import { formatDateShortYear, formatTime, brl } from "@/lib/utils/formatter";
 import {
   Calendar,
@@ -11,7 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 type AppointmentInfoSectionProps = {
-  appointment: AppointmentResponseDTO;
+  appointment: AtendimentoResponseDTO;
 };
 
 export function AppointmentInfoSection({

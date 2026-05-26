@@ -1,6 +1,6 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import type { ExpenseResponseDTO } from "@/kubb";
+import type { DespesaResponseDTO } from "@/kubb";
 import { brl } from "@/lib/utils/formatter";
 import {
   Legend,
@@ -44,7 +44,7 @@ type ChartDatum = {
 };
 
 type ExpensesPieChartProps = {
-  expenses?: ExpenseResponseDTO[];
+  expenses?: DespesaResponseDTO[];
   isPending: boolean;
   error: unknown;
 };

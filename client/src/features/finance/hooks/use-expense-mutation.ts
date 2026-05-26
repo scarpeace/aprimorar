@@ -1,13 +1,13 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
-  getAppointmentFinanceReportQueryKey,
-  getExpenseByIdQueryKey,
-  getExpensesQueryKey,
-  useCreateExpense,
-  useDeleteExpense,
-  useToggleExpensePayment,
-  useUpdateExpense,
+  getFinanceReportQueryKey,
+  getDespesaByIdQueryKey,
+  useCreateDespesa,
+  useDeleteDespesa,
+  useToggleDespesaPayment,
+  useUpdateDespesa,
+  getDespesasQueryKey,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
@@ -15,13 +15,13 @@ export function useExpenseMutations() {
   const queryClient = useQueryClient();
 
   const invalidateFinanceQueries = () => {
-    queryClient.invalidateQueries({ queryKey: getExpensesQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getDespesasQueryKey() });
     queryClient.invalidateQueries({
-      queryKey: getAppointmentFinanceReportQueryKey(),
+      queryKey: getFinanceReportQueryKey(),
     });
   };
 
-  const createExpense = useCreateExpense({
+  const createExpense = useCreateDespesa({
     mutation: {
       onSuccess: () => {
         toast.success("Despesa cadastrada com sucesso");
@@ -33,13 +33,13 @@ export function useExpenseMutations() {
     },
   });
 
-  const updateExpense = useUpdateExpense({
+  const updateExpense = useUpdateDespesa({
     mutation: {
       onSuccess: (_updatedExpense, variables) => {
         toast.success("Despesa atualizada com sucesso");
         invalidateFinanceQueries();
         queryClient.invalidateQueries({
-          queryKey: getExpenseByIdQueryKey(variables.id),
+          queryKey: getDespesaByIdQueryKey(variables.id),
         });
       },
       onError: (error) => {
@@ -48,7 +48,7 @@ export function useExpenseMutations() {
     },
   });
 
-  const deleteExpense = useDeleteExpense({
+  const deleteExpense = useDeleteDespesa({
     mutation: {
       onSuccess: () => {
         toast.success("Despesa removida com sucesso");
@@ -60,13 +60,13 @@ export function useExpenseMutations() {
     },
   });
 
-  const toggleExpensePayment = useToggleExpensePayment({
+  const toggleExpensePayment = useToggleDespesaPayment({
     mutation: {
       onSuccess: (_updatedExpense, variables) => {
         toast.success("Status de pagamento da despesa atualizado");
         invalidateFinanceQueries();
         queryClient.invalidateQueries({
-          queryKey: getExpenseByIdQueryKey(variables.id),
+          queryKey: getDespesaByIdQueryKey(variables.id),
         });
       },
       onError: (error) => {

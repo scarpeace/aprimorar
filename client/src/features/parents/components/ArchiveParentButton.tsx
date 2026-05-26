@@ -35,7 +35,7 @@ export const ArchiveParentButton = ({
   function handleConfirm() {
     const action = isArchived ? unarchiveParent : archiveParent;
     action(
-      { parentId },
+      { responsavelId: parentId },
       {
         onSettled: () => setShowConfirm(false),
       }

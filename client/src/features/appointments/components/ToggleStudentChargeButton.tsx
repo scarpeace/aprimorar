@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import type { ToggleStudentAppointmentChargeMutationResponse } from "@/kubb";
+import type { ToggleStudentAtendimentoChargeMutationResponse } from "@/kubb";
 import type { ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { Check, Clock3 } from "lucide-react";
@@ -7,7 +7,7 @@ import { Check, Clock3 } from "lucide-react";
 interface ToggleStudentChargeButtonProps {
   studentChargePaid: boolean;
   toggleStudentCharge: UseMutationResult<
-    ToggleStudentAppointmentChargeMutationResponse,
+    ToggleStudentAtendimentoChargeMutationResponse,
     ResponseErrorConfig<Error>,
     { id: string },
     unknown

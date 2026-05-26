@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aprimorar.atendimentos.api.AtendimentosQueryApi;
-import aprimorar.atendimentos.api.dto.AlunoAtendimentosResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoRequestDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.api.dto.ColaboradorAtendimentosResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
 import aprimorar.atendimentos.internal.application.AtendimentoMutationService;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -90,7 +90,7 @@ public class AtendimentoController {
         responseCode = "200",
         description = "Agenda e resumo financeiro do aluno retornados conforme periodo e filtros informados."
     )
-    public ResponseEntity<AlunoAtendimentosResponseDTO> getAtendimentosByStudentId(
+    public ResponseEntity<AtendimentosAlunoResponseDTO> getAtendimentosByStudentId(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
@@ -109,7 +109,7 @@ public class AtendimentoController {
         responseCode = "200",
         description = "Agenda e resumo financeiro do colaborador retornados conforme periodo e filtros informados."
     )
-    public ResponseEntity<ColaboradorAtendimentosResponseDTO> getAtendimentosByEmployeeId(
+    public ResponseEntity<AtendimentosColaboradorResponseDTO> getAtendimentosByEmployeeId(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) Boolean hidePaid,

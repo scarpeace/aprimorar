@@ -1,4 +1,4 @@
-import type { AppointmentResponseDTO, PageDTOAppointmentResponseDTO } from "@/kubb";
+import type { AtendimentoResponseDTO, PageDTOAtendimentoResponseDTO } from "@/kubb";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { ErrorCard } from "@/components/ui/error-card";
@@ -16,7 +16,7 @@ import {
 import { memo } from "react";
 
 interface EmployeeEventsTableProps {
-  appointments?: PageDTOAppointmentResponseDTO;
+  appointments?: PageDTOAtendimentoResponseDTO;
   currentPage: number;
   error?: unknown;
   hidePaid: boolean;
@@ -120,7 +120,7 @@ export const EmployeeEventsTable = memo(function EmployeeEventsTable({
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {events.map((event: AppointmentResponseDTO) => (
+            {events.map((event: AtendimentoResponseDTO) => (
               <tr key={event.id} className="group transition-colors hover:bg-base-200/50">
                 <td>
                   <div className="font-semibold text-base-content">{event.studentName}</div>

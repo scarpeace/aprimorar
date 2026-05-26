@@ -6,13 +6,13 @@ import { useHookFormMask } from "use-mask-input";
 import { Button } from "@/components/ui/button";
 import { ParentSelectDropdown } from "@/features/parents/components/ParentSelectDropdown";
 import { brazilianStates } from "@/lib/utils/brazilianStates";
-import type { StudentResponseDTO } from "@/kubb";
+import type { AlunoResponseDTO } from "@/kubb";
 import { formatDateForInput } from "@/lib/utils/formatter";
 import { studentFormSchema, type StudentFormSchema } from "../lib/studentFormSchema.ts";
 import { useStudentMutations } from "../hooks/student-mutations";
 
 interface StudentFormProps {
-  initialData?: StudentResponseDTO | null;
+  initialData?: AlunoResponseDTO | null;
   onSuccess: () => void;
   onCancel: () => void;
 }

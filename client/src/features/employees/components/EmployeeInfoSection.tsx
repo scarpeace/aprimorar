@@ -4,7 +4,7 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { AddressDetails } from "@/lib/shared/address/components/AddressDetails";
-import { useGetEmployeeById } from "@/kubb";
+import { useFindColaboradorById } from "@/kubb";
 import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
 import { Edit, User } from "lucide-react";
 import { ArchiveEmployeeButton } from "./ArchiveEmployeeButton";
@@ -17,7 +17,7 @@ interface EmployeeInfoSectionProps {
 }
 
 export function EmployeeInfoSection({ employeeId, onEdit }: EmployeeInfoSectionProps) {
-  const employeeQuery = useGetEmployeeById(employeeId);
+  const employeeQuery = useFindColaboradorById(employeeId);
 
   if (employeeQuery.error) {
     return <ErrorCard title="Erro ao carregar detalhes do colaborador" error={employeeQuery.error} />;

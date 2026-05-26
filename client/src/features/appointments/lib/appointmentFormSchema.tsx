@@ -1,12 +1,12 @@
 import {
-  appointmentRequestDTOContentEnum,
-  type AppointmentRequestDTOContentEnumKey,
+  atendimentoRequestDTOContentEnum,
+  type AtendimentoRequestDTOContentEnumKey,
 } from "@/kubb";
 import { z } from "zod/v4";
 
 const appointmentContentOptions = Object.values(
-  appointmentRequestDTOContentEnum,
-) as [AppointmentRequestDTOContentEnumKey, ...AppointmentRequestDTOContentEnumKey[]];
+  atendimentoRequestDTOContentEnum,
+) as [AtendimentoRequestDTOContentEnumKey, ...AtendimentoRequestDTOContentEnumKey[]];
 
 export const appointmentFormSchema = z.object({
   description: z.string().optional(),

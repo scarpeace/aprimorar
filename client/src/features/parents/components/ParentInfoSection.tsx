@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { useGetParentById } from "@/kubb";
+import { useBuscarResponsavelPorId } from "@/kubb";
 import {
   formatCpf,
   formatDateShortYear,
@@ -18,7 +18,7 @@ interface ParentInfoSectionProps {
 }
 
 export function ParentInfoSection({ parentId, onEdit }: Readonly<ParentInfoSectionProps>) {
-  const parentQuery = useGetParentById(parentId);
+  const parentQuery = useBuscarResponsavelPorId(parentId);
 
   if (parentQuery.error) {
     return (

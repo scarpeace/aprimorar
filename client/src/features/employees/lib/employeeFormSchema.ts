@@ -1,8 +1,8 @@
 import { addressFormSchema } from "@/lib/shared/address/forms/addressSchema.ts";
-import { employeeRequestDTOSchema } from "@/kubb";
+import { colaboradorRequestDTOSchema } from "@/kubb";
 import { z } from "zod/v4";
 
-export const employeeFormSchema = employeeRequestDTOSchema.extend({
+export const employeeFormSchema = colaboradorRequestDTOSchema.extend({
   name: z.string().min(1, { message: "Nome do colaborador é obrigatório" }),
   cpf: z.string().min(1, { message: "CPF é obrigatório" }),
   birthdate: z.string().min(1, { message: "Data de nascimento é obrigatória" })

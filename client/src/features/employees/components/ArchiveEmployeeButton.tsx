@@ -30,7 +30,7 @@ export const ArchiveEmployeeButton = ({
   function handleConfirm() {
     const action = archived ? unarchiveEmployee : archiveEmployee;
     action(
-      { employeeId },
+      { colaboradorId: employeeId },
       {
         onSettled: () => setShowConfirm(false),
       }

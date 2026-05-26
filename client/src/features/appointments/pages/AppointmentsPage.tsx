@@ -3,7 +3,7 @@ import { ListSearchInput } from "@/components/ui/list-search-input";
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { CalendarCheck2, Plus, RotateCcw } from "lucide-react";
-import type { AppointmentResponseDTO } from "@/kubb";
+import type { AtendimentoResponseDTO } from "@/kubb";
 import { AppointmentForm } from "../components/AppointmentForm";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useAppointmentsFilters } from "../hooks/use-appointments-filters";
@@ -24,9 +24,9 @@ export function AppointmentsPage() {
   } = useAppointmentsFilters();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<AppointmentResponseDTO | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<AtendimentoResponseDTO | null>(null);
 
-  const handleOpenForm = (event?: AppointmentResponseDTO) => {
+  const handleOpenForm = (event?: AtendimentoResponseDTO) => {
     setSelectedEvent(event || null);
     setIsFormOpen(true);
   };

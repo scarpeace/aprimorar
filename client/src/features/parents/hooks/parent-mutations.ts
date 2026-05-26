@@ -1,13 +1,13 @@
 import {
-  deleteParentMutationKey,
-  getParentByIdQueryKey,
-  getParentsQueryKey,
-  getStudentsByParentQueryKey,
-  useArchiveParent,
-  useCreateParent,
-  useDeleteParent,
-  useUnarchiveParent,
-  useUpdateParent,
+  deletarResponsavelMutationKey,
+  buscarResponsavelPorIdQueryKey,
+  listarResponsaveisQueryKey,
+  listarAlunosPorResponsavelQueryKey,
+  useArquivarResponsavel,
+  useCriarResponsavel,
+  useDeletarResponsavel,
+  useDesarquivarResponsavel,
+  useAtualizarResponsavel,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -18,7 +18,7 @@ export function useParentMutations() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const createParent = useCreateParent({
+  const createParent = useCriarResponsavel({
     mutation: {
       onError: (error) => {
         toast.error(
@@ -28,22 +28,22 @@ export function useParentMutations() {
       },
       onSuccess: (createdParent) => {
         toast.success("Responsável criado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: listarResponsaveisQueryKey() });
         navigate(`/parents/${createdParent.parentId}`);
       },
     },
   });
 
 
-  const updateParent = useUpdateParent({
+  const updateParent = useAtualizarResponsavel({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: listarResponsaveisQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getParentByIdQueryKey(variables.parentId),
+          queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
         });
-        navigate(`/parents/${variables.parentId}`);
+        navigate(`/parents/${variables.responsavelId}`);
       },
       onError: (error) => {
         toast.error(
@@ -55,12 +55,12 @@ export function useParentMutations() {
   });
 
 
-  const deleteParent = useDeleteParent({
+  const deleteParent = useDeletarResponsavel({
     mutation: {
       onSuccess: () => {
         toast.success("Responsável excluído com sucesso");
-        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
-        queryClient.invalidateQueries({ queryKey: deleteParentMutationKey() });
+        queryClient.invalidateQueries({ queryKey: listarResponsaveisQueryKey() });
+        queryClient.invalidateQueries({ queryKey: deletarResponsavelMutationKey() });
         navigate("/parents");
       },
       onError: (error) => {
@@ -72,16 +72,16 @@ export function useParentMutations() {
     },
   });
 
-  const archiveParent = useArchiveParent({
+  const archiveParent = useArquivarResponsavel({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável arquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: listarResponsaveisQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getParentByIdQueryKey(variables.parentId),
+          queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
         });
         queryClient.invalidateQueries({
-          queryKey: getStudentsByParentQueryKey(variables.parentId),
+          queryKey: listarAlunosPorResponsavelQueryKey(variables.responsavelId),
         });
       },
       onError: (error) => {
@@ -93,16 +93,16 @@ export function useParentMutations() {
     },
   });
 
-  const unarchiveParent = useUnarchiveParent({
+  const unarchiveParent = useDesarquivarResponsavel({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável desarquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getParentsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: listarResponsaveisQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getParentByIdQueryKey(variables.parentId),
+          queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
         });
         queryClient.invalidateQueries({
-          queryKey: getStudentsByParentQueryKey(variables.parentId),
+          queryKey: listarAlunosPorResponsavelQueryKey(variables.responsavelId),
         });
       },
       onError: (error) => {

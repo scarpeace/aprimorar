@@ -2,10 +2,9 @@ import { Button } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { useGetEmployeeSummary, useGetEmployeesWithFinance } from "@/kubb";
-import type { EmployeeResponseDTO } from "@/kubb";
+import { useGetColaboradores, type ColaboradorResponseDTO } from "@/kubb";
 import { useDebounce } from "@/lib/hooks/use-debounce.ts";
-import { FileUser, Plus, UserCheck } from "lucide-react";
+import { CheckCircle, FileUser, Plus, UserCheck, UserCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { EmployeesTable } from "../components/EmployeesTable";
 import { EmployeeForm } from "../components/EmployeeForm";
@@ -17,29 +16,28 @@ export function EmployeesPage() {
   const [showArchived, setShowArchived] = useState(false);
   const [hidePaid, setHidePaid] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<EmployeeResponseDTO | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<ColaboradorResponseDTO | null>(null);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const employeesWithFinanceQuery = useGetEmployeesWithFinance({
+  const colaboradoresQuery = useGetColaboradores({
     page: currentPage,
-    search: debouncedSearchTerm,
-    archived: showArchived,
+    busca: debouncedSearchTerm,
+    arquivado: showArchived,
   });
-  const employeeSummaryQuery = useGetEmployeeSummary();
 
-  const displayedEmployees = useMemo(() => {
-    if (!employeesWithFinanceQuery.data || !hidePaid) {
-      return employeesWithFinanceQuery.data;
-    }
+  // const displayedEmployees = useMemo(() => {
+  //   if (!employeesWithFinanceQuery.data || !hidePaid) {
+  //     return employeesWithFinanceQuery.data;
+  //   }
 
-    return {
-      ...employeesWithFinanceQuery.data,
-      content: (employeesWithFinanceQuery.data.content ?? []).filter(
-        (employee) => (employee.totalPending ?? 0) > 0,
-      ),
-    };
-  }, [employeesWithFinanceQuery.data, hidePaid]);
+  //   return {
+  //     ...employeesWithFinanceQuery.data,
+  //     content: (employeesWithFinanceQuery.data.content ?? []).filter(
+  //       (employee) => (employee.totalPending ?? 0) > 0,
+  //     ),
+  //   };
+  // }, [employeesWithFinanceQuery.data, hidePaid]);
 
   const headerProps = {
     description: "Gerencie cadastros e matrículas.",
@@ -48,7 +46,7 @@ export function EmployeesPage() {
     backLink: "/",
   };
 
-  const handleOpenForm = (employee?: EmployeeResponseDTO) => {
+  const handleOpenForm = (employee?: ColaboradorResponseDTO) => {
     setSelectedEmployee(employee || null);
     setIsFormOpen(true);
   };
@@ -72,62 +70,36 @@ export function EmployeesPage() {
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-4">
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          <div className="flex flex-row items-center justify-between">
-            <div>
-              <h3 className="text-2xl font-bold text-base-content">Indicadores de colaboradores</h3>
-              <p className="text-sm text-base-content/60">
-                Visão geral dos colaboradores ativos e do total cadastrado desde o inicio.
-              </p>
+          <div className="flex flex-col items-start">
+            <div className="mb-3">
+              <h3 className="text-2xl font-bold text-base-content">Indicadores dos colaboradores</h3>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex w-full justify-between">
               <KpiCard
-                label="Colaboradores ativos"
-                value={employeeSummaryQuery.data?.activeEmployees ?? 0}
+                label="Ativos atualmente"
+                value={colaboradoresQuery.data?.totalColaboradoresAtivos ?? 0}
                 Icon={UserCheck}
+                className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
+              />
+              <KpiCard
+                label="Total Desde o início"
+                value={colaboradoresQuery.data?.totalColaboradoresAtivos ?? 0}
+                Icon={UserCircle}
+                className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
+              />
+              <KpiCard
+                label="Pago desde o Início"
+                value={colaboradoresQuery.data?.totalColaboradoresAtivos ?? 0}
+                Icon={CheckCircle}
                 className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
               />
             </div>
           </div>
         </section>
 
-        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_220ms_ease-out_both]">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-base-content">Busca e filtros</h2>
-              <p className="text-sm text-base-content/60">
-                Localize colaboradores por cadastro.
-              </p>
-            </div>
-
-            <ListSearchInput
-              className="grow"
-              placeholder="Buscar colaborador por nome, email ou CPF"
-              ariaLabel="Buscar colaborador"
-              value={searchTerm}
-              onChange={setSearchTerm}
-            />
-            <div className="flex w-full flex-col items-s gap-3 xl:w-auto xl:justify-end">
-              <ToggleSwitch
-                label="Mostrar Arquivados"
-                tip="Mostrar colaboradores arquivados"
-                toggled={showArchived}
-                setToggle={handleShowArchivedChange}
-                className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
-              />
-              <ToggleSwitch
-                label="Ocultar pagos"
-                tip="Mostrar apenas colaboradores com pendencias no periodo"
-                toggled={hidePaid}
-                setToggle={handleHidePaidChange}
-                className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
-              />
-            </div>
-          </div>
-        </section>
-
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
-          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h3 className="text-2xl font-bold text-base-content">Colaboradores cadastrados</h3>
               <p className="text-sm text-base-content/60">
@@ -135,23 +107,13 @@ export function EmployeesPage() {
               </p>
             </div>
 
-            <Button
-              className="sm:ml-auto"
-              onClick={() => handleOpenForm()}
-              variant="success"
-            >
+            <Button className="sm:ml-auto" onClick={() => handleOpenForm()} variant="success">
               <Plus className="mr-2 h-4 w-4" />
               Novo Colaborador
             </Button>
           </div>
 
-          <EmployeesTable
-            employees={displayedEmployees}
-            onPageChange={setCurrentPage}
-            currentPage={currentPage}
-            isPending={employeesWithFinanceQuery.isPending}
-            error={employeesWithFinanceQuery.error}
-          />
+          <EmployeesTable/>
         </section>
 
         {isFormOpen && (

@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { useGetStudentSummary, useGetStudentsWithFinance } from "@/kubb";
-import type { StudentResponseDTO } from "@/kubb";
+// import { useGetStudentSummary, useGetStudentsWithFinance } from "@/kubb";
+import { useGetAlunos, type AlunoResponseDTO } from "@/kubb";
 import { useDebounce } from "@/lib/hooks/use-debounce.ts";
 import { GraduationCap, Plus, UserCheck, Users } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -17,30 +17,30 @@ export function StudentsPage() {
   const [showArchived, setShowArchived] = useState(false);
   const [hideCharged, setHideCharged] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<StudentResponseDTO | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<AlunoResponseDTO | null>(null);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const studentsWithFinanceQuery = useGetStudentsWithFinance({
+  const studentsQuery = useGetAlunos({
     page: currentPage,
     search: debouncedSearchTerm,
     archived: showArchived,
   });
 
-  const studentSummaryQuery = useGetStudentSummary();
+  // const studentSummaryQuery = useGetStudentSummary();
 
-  const displayedStudents = useMemo(() => {
-    if (!studentsWithFinanceQuery.data || !hideCharged) {
-      return studentsWithFinanceQuery.data;
-    }
+  // const displayedStudents = useMemo(() => {
+  //   if (!studentsWithFinanceQuery.data || !hideCharged) {
+  //     return studentsWithFinanceQuery.data;
+  //   }
 
-    return {
-      ...studentsWithFinanceQuery.data,
-      content: (studentsWithFinanceQuery.data.content ?? []).filter(
-        (student) => (student.totalPending ?? 0) > 0,
-      ),
-    };
-  }, [hideCharged, studentsWithFinanceQuery.data]);
+  //   return {
+  //     ...studentsWithFinanceQuery.data,
+  //     content: (studentsWithFinanceQuery.data.content ?? []).filter(
+  //       (student) => (student.totalPending ?? 0) > 0,
+  //     ),
+  //   };
+  // }, [hideCharged, studentsWithFinanceQuery.data]);
 
   const handleHideChargedChange = (value: boolean) => {
     setHideCharged(value);
@@ -54,7 +54,7 @@ export function StudentsPage() {
     backLink: "/",
   };
 
-  const handleOpenForm = (student?: StudentResponseDTO) => {
+  const handleOpenForm = (student?: AlunoResponseDTO) => {
     setSelectedStudent(student || null);
     setIsFormOpen(true);
   };
@@ -81,7 +81,7 @@ export function StudentsPage() {
               </p>
             </div>
 
-            <div className="flex gap-3">
+            {/*<div className="flex gap-3">
             <KpiCard
               label="Alunos ativos"
               value={studentSummaryQuery.data?.activeStudents ?? 0}
@@ -95,7 +95,7 @@ export function StudentsPage() {
                 Icon={Users}
               className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
               />
-            </div>
+            </div>*/}
 
           </div>
         </section>
@@ -156,11 +156,11 @@ export function StudentsPage() {
           </div>
 
           <StudentsTable
-            students={displayedStudents}
+            students={studentsQuery.data?.alunos}
             onPageChange={setCurrentPage}
             currentPage={currentPage}
-            isPending={studentsWithFinanceQuery.isPending}
-            error={studentsWithFinanceQuery.error}
+            isPending={studentsQuery.isPending}
+            error={studentsQuery.error}
           />
         </section>
 

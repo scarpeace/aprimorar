@@ -52,7 +52,7 @@ public class FinanceiroController {
     }
 
     @GetMapping
-    @Operation(operationId = "listDespesas", summary = "Lista despesas gerais com filtros")
+    @Operation(operationId = "getDespesas", summary = "Lista despesas gerais com filtros")
     @ApiResponse(responseCode = "200", description = "Despesas e resumo financeiro retornados com sucesso.")
     public ResponseEntity<DespesasResponseDTO> getDespesas(
         @RequestParam(required = false) CategoriaDespesaEnum categoria,

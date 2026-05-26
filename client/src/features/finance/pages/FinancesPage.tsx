@@ -3,12 +3,7 @@ import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import {
-  useGetAppointmentFinanceReport,
-  useGetEmployeesWithFinance,
-  useGetExpenses,
-  useGetStudentsWithFinance,
-} from "@/kubb";
+import {useGetDespesas,} from "@/kubb";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 import { BanknoteArrowDown, BanknoteArrowUp, GraduationCap, HandCoins, Landmark, Plus, UserCog } from "lucide-react";
 import { useState } from "react";
@@ -24,32 +19,32 @@ export function FinancesPage() {
   const dateFilter = usePageDateFilter();
   const { startDate, endDate } = dateFilter;
 
-  const summaryQuery = useGetAppointmentFinanceReport({
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
-  });
-  const expensesQuery = useGetExpenses({
+  // const summaryQuery = useGetDashboardSummary({
+  //   startDate: startDate?.toISOString(),
+  //   endDate: endDate?.toISOString(),
+  // });
+  const expensesQuery = useGetDespesas({
     startDate: startDate?.toISOString().slice(0, 10),
     endDate: endDate?.toISOString().slice(0, 10),
     size: 9999,
     sort: ["date,desc"],
   });
-  const studentsWithFinanceQuery = useGetStudentsWithFinance({
-    size: 1,
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
-  });
-  const employeesWithFinanceQuery = useGetEmployeesWithFinance({
-    size: 1,
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
-  });
+  // const studentsWithFinanceQuery = useGetStudentsWithFinance({
+  //   size: 1,
+  //   startDate: startDate?.toISOString(),
+  //   endDate: endDate?.toISOString(),
+  // });
+  // const employeesWithFinanceQuery = useGetEmployeesWithFinance({
+  //   size: 1,
+  //   startDate: startDate?.toISOString(),
+  //   endDate: endDate?.toISOString(),
+  // });
 
   const totalGeneralExpenses = expensesQuery.data?.totalExpenses ?? 0;
   const pendingGeneralExpenses = expensesQuery.data?.pendingExpenses ?? 0;
-  const currentBalance = summaryQuery.data?.balance ?? 0;
-  const studentFinanceSummary = studentsWithFinanceQuery.data?.financeSummary;
-  const employeeFinanceSummary = employeesWithFinanceQuery.data?.financeSummary;
+  // const currentBalance = summaryQuery.data?.balance ?? 0;
+  // const studentFinanceSummary = studentsWithFinanceQuery.data?.financeSummary;
+  // const employeeFinanceSummary = employeesWithFinanceQuery.data?.financeSummary;
 
   const handleOpenExpenseForm = () => {
     setIsExpenseFormOpen(true);
@@ -67,35 +62,35 @@ export function FinancesPage() {
     backLink: "/",
   };
 
-  if (summaryQuery.isPending) {
-    return (
-      <PageLayout {...headerProps}>
-        <LoadingCard title="Carregando panorama financeiro" />
-      </PageLayout>
-    );
-  }
+  // if (summaryQuery.isPending) {
+  //   return (
+  //     <PageLayout {...headerProps}>
+  //       <LoadingCard title="Carregando panorama financeiro" />
+  //     </PageLayout>
+  //   );
+  // }
 
-  if (summaryQuery.isError) {
-    return (
-      <PageLayout {...headerProps}>
-        <ErrorCard
-          title="Nao foi possivel carregar o financeiro"
-          error={summaryQuery.error}
-        />
-      </PageLayout>
-    );
-  }
+  // if (summaryQuery.isError) {
+  //   return (
+  //     <PageLayout {...headerProps}>
+  //       <ErrorCard
+  //         title="Nao foi possivel carregar o financeiro"
+  //         error={summaryQuery.error}
+  //       />
+  //     </PageLayout>
+  //   );
+  // }
 
   return (
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-4">
 
-        <FinanceSummarySection
+        {/*<FinanceSummarySection
           currentBalance={currentBalance}
-        />
+        />*/}
 
         <section className="flex flex-row justify-between rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
+          {/*<div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
             <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><GraduationCap size={30}/> Alunos</h1>
 
             <KpiCard
@@ -111,9 +106,9 @@ export function FinancesPage() {
               Icon={BanknoteArrowDown}
               className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
               />
-        </div>
+        </div>*/}
 
-          <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
+          {/*<div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
             <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><UserCog size={30}/>Colaboradores</h1>
 
             <KpiCard
@@ -129,7 +124,7 @@ export function FinancesPage() {
               Icon={BanknoteArrowDown}
               className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
             />
-          </div>
+          </div>*/}
 
           <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
             <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><HandCoins size={30}/>Despesas Gerais</h1>

@@ -4,7 +4,7 @@ import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Agenda paginada e resumo financeiro do colaborador no periodo consultado")
-public record ColaboradorAtendimentosResponseDTO(
+public record AtendimentosColaboradorResponseDTO(
     @Schema(description = "Atendimentos do colaborador, paginados e filtrados conforme os parametros informados")
     PageDTO<AtendimentoResponseDTO> atendimentos,
 

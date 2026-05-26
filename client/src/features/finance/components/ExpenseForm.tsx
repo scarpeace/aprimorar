@@ -3,16 +3,16 @@ import { TriangleAlert } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
-  expenseRequestDTOCategoryEnum,
-  expenseRequestDTOSchema,
-  type ExpenseRequestDTO,
-  type ExpenseResponseDTO,
+  despesaRequestDTOCategoryEnum,
+  despesaRequestDTOSchema,
+  type DespesaRequestDTO,
+  type DespesaResponseDTO,
 } from "@/kubb";
 import { EXPENSE_CATEGORY_LABEL } from "../lib/expense-category-labels";
 import { useExpenseMutations } from "../hooks/use-expense-mutation";
 
 type ExpenseFormProps = {
-  initialData?: ExpenseResponseDTO | null;
+  initialData?: DespesaResponseDTO | null;
   onSuccess: () => void;
   onCancel: () => void;
 };
@@ -31,11 +31,11 @@ export function ExpenseForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ExpenseRequestDTO>({
-    resolver: zodResolver(expenseRequestDTOSchema),
+  } = useForm<DespesaRequestDTO>({
+    resolver: zodResolver(despesaRequestDTOSchema),
     defaultValues: {
       amount: initialData?.amount ?? 0,
-      category: initialData?.category ?? expenseRequestDTOCategoryEnum.CONTAS,
+      category: initialData?.category ?? despesaRequestDTOCategoryEnum.CONTAS,
       date: initialData?.date ?? today(),
       description: initialData?.description ?? "",
     },
@@ -78,7 +78,7 @@ export function ExpenseForm({
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Categoria</legend>
           <select className="select select-bordered w-full" {...register("category")}>
-            {Object.values(expenseRequestDTOCategoryEnum).map((category) => (
+            {Object.values(despesaRequestDTOCategoryEnum).map((category) => (
               <option key={category} value={category}>
                 {EXPENSE_CATEGORY_LABEL[category] ?? category}
               </option>

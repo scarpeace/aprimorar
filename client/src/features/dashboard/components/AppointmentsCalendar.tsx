@@ -1,7 +1,7 @@
 import { ErrorCard } from "@/components/ui/error-card";
 import { Button } from "@/components/ui/button";
-import { useGetAppointments, useGetDashboardSummary } from "@/kubb";
-import type { AppointmentResponseDTO } from "@/kubb";
+import { useGetAtendimentos } from "@/kubb";
+import type { AtendimentoResponseDTO } from "@/kubb";
 import { getAppointmentColor } from "@/features/appointments/lib/appointment-content-colors";
 import { getMonthRange } from "@/lib/utils/date-utils";
 import type { EventClickArg, EventInput } from "@fullcalendar/core";
@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { AppointmentContentLegend } from "./AppointmentContentLegend";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
-function toCalendarEvent(appointment: AppointmentResponseDTO): EventInput {
+function toCalendarEvent(appointment: AtendimentoResponseDTO): EventInput {
   const color = getAppointmentColor(appointment);
 
   return {
@@ -39,19 +39,20 @@ export function AppointmentsCalendar({ onCreateAppointment }: Readonly<Appointme
   const navigate = useNavigate();
 
   const calendarRange = getMonthRange(calendarDate);
-  const eventsQuery = useGetAppointments({
+  const eventsQuery = useGetAtendimentos({
     startDate: calendarRange.startDate.toISOString(),
     endDate: calendarRange.endDate.toISOString(),
     size: 500,
     sort: ["startDate,asc"],
   });
-  const dashboardSummaryQuery = useGetDashboardSummary({
-    year: calendarDate.getFullYear(),
-    month: calendarDate.getMonth() + 1,
-  });
+
+  // const dashboardSummaryQuery = useGetDashboardSummary({
+  //   year: calendarDate.getFullYear(),
+  //   month: calendarDate.getMonth() + 1,
+  // });
 
   const calendarEvents = (eventsQuery.data?.content ?? []).map(toCalendarEvent);
-  const totalAppointments = dashboardSummaryQuery.data?.classesInMonth ?? 0;
+  // const totalAppointments = dashboardSummaryQuery.data?.classesInMonth ?? 0;
 
   const handleDateClick = (info: DateClickArg) => {
     setCalendarDate(info.date);
@@ -101,10 +102,10 @@ export function AppointmentsCalendar({ onCreateAppointment }: Readonly<Appointme
               Novo atendimento
             </Button>
           </div>
-        <AppointmentContentLegend
+        {/*<AppointmentContentLegend
           distribution={dashboardSummaryQuery.data?.charts}
           totalAppointments={totalAppointments}
-        />
+        />*/}
         <div className="border rounded-2xl border-base-300 bg-base-100 p-3">
             <FullCalendar
               ref={calendarRef}

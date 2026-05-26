@@ -5,7 +5,7 @@ import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-mod
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import { useGetExpenseById } from "@/kubb";
+import { useGetDespesaById } from "@/kubb";
 import { brl, formatDateShortYear } from "@/lib/utils/formatter";
 import { Edit, ReceiptText, Trash2 } from "lucide-react";
 import { ExpenseForm } from "../components/ExpenseForm";
@@ -36,7 +36,7 @@ export function ExpenseDetailPage() {
   const navigate = useNavigate();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const expenseQuery = useGetExpenseById(expenseId);
+  const expenseQuery = useGetDespesaById(expenseId);
   const { deleteExpense } = useExpenseMutations();
 
   const headerProps = {

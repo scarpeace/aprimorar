@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import type { ToggleEmployeeAppointmentPaymentMutationResponse } from "@/kubb";
+import type { ToggleEmployeeAtendimentoPaymentMutationResponse } from "@/kubb";
 import type { ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { Clock3, Check } from "lucide-react";
@@ -7,7 +7,7 @@ import { Clock3, Check } from "lucide-react";
 interface ToggleEmployeePaymentButtonProps {
   employeePaymentPaid: boolean;
   toggleEmployeePayment: UseMutationResult<
-    ToggleEmployeeAppointmentPaymentMutationResponse,
+    ToggleEmployeeAtendimentoPaymentMutationResponse,
     ResponseErrorConfig<Error>,
     { id: string },
     unknown

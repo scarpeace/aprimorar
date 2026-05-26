@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { useGetParents } from "@/kubb";
-import type { ParentResponseDTO } from "@/kubb";
+import { useListarResponsaveis } from "@/kubb";
+import type { ResponsavelResponseDTO } from "@/kubb";
 import { useDebounce } from "@/lib/hooks/use-debounce.ts";
 import { Handshake, Plus } from "lucide-react";
 import { useState } from "react";
@@ -15,11 +15,11 @@ export function ParentsPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showArchived, setShowArchived] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedParent, setSelectedParent] = useState<ParentResponseDTO | null>(null);
+  const [selectedParent, setSelectedParent] = useState<ResponsavelResponseDTO | null>(null);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const parentsQuery = useGetParents({
+  const parentsQuery = useListarResponsaveis({
     page: currentPage, search: debouncedSearchTerm, archived: showArchived
   });
 
@@ -30,7 +30,7 @@ export function ParentsPage() {
     backLink: "/",
   };
 
-  const handleOpenForm = (parent?: ParentResponseDTO) => {
+  const handleOpenForm = (parent?: ResponsavelResponseDTO) => {
     setSelectedParent(parent || null);
     setIsFormOpen(true);
   };

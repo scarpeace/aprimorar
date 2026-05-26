@@ -2,15 +2,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import {
-  getAppointmentByIdQueryKey,
-  getAppointmentFinanceReportQueryKey,
-  getAppointmentsQueryKey,
-  getAppointmentsByEmployeeIdQueryKey,
-  getAppointmentsByStudentIdQueryKey,
-  useCreateAppointment,
-  useToggleEmployeeAppointmentPayment,
-  useToggleStudentAppointmentCharge,
-  useUpdateAppointment,
+  getAtendimentoByIdQueryKey,
+  getFinanceReportQueryKey,
+  getAtendimentosQueryKey,
+  getAtendimentosByEmployeeIdQueryKey,
+  getAtendimentosByStudentIdQueryKey,
+  useCreateAtendimento,
+  useToggleEmployeeAtendimentoPayment,
+  useToggleStudentAtendimentoCharge,
+  useUpdateAtendimento,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
@@ -18,7 +18,7 @@ export function useAppointmentMutations() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const createAppointment = useCreateAppointment({
+  const createAppointment = useCreateAtendimento({
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
@@ -26,53 +26,53 @@ export function useAppointmentMutations() {
       },
       onSuccess: (createdAppointment) => {
         toast.success("Evento criado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getAppointmentsQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getAppointmentsByEmployeeIdQueryKey(createdAppointment.employeeId),
+          queryKey: getAtendimentosByEmployeeIdQueryKey(createdAppointment.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getAppointmentsByStudentIdQueryKey(createdAppointment.studentId),
+          queryKey: getAtendimentosByStudentIdQueryKey(createdAppointment.studentId),
         });
         queryClient.invalidateQueries({
-          queryKey: getAppointmentFinanceReportQueryKey(),
+          queryKey: getFinanceReportQueryKey(),
         });
         navigate(`/appointments/${createdAppointment.id}`);
       },
     },
   });
 
-  const updateAppointment = useUpdateAppointment({
+  const updateAppointment = useUpdateAtendimento({
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
       },
       onSuccess: (updatedAppointment, variables) => {
         toast.success("Evento atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getAppointmentsQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getAppointmentByIdQueryKey(variables.id) });
+        queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
         queryClient.invalidateQueries({
-          queryKey: getAppointmentsByEmployeeIdQueryKey(updatedAppointment.employeeId),
+          queryKey: getAtendimentosByEmployeeIdQueryKey(updatedAppointment.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getAppointmentsByStudentIdQueryKey(updatedAppointment.studentId),
+          queryKey: getAtendimentosByStudentIdQueryKey(updatedAppointment.studentId),
         });
         queryClient.invalidateQueries({
-          queryKey: getAppointmentFinanceReportQueryKey(),
+          queryKey: getFinanceReportQueryKey(),
         });
         navigate(`/appointments/${updatedAppointment.id}`);
       },
     },
   });
 
-  const toggleStudentCharge = useToggleStudentAppointmentCharge({
+  const toggleStudentCharge = useToggleStudentAtendimentoCharge({
     mutation: {
       onSuccess: (updatedAppointment, variables) => {
         toast.success("Status da cobrança atualizado");
-        queryClient.invalidateQueries({ queryKey: getAppointmentsQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getAppointmentByIdQueryKey(variables.id) });
-        queryClient.invalidateQueries({ queryKey: getAppointmentsByStudentIdQueryKey(updatedAppointment.studentId) });
+        queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
+        queryClient.invalidateQueries({ queryKey: getAtendimentosByStudentIdQueryKey(updatedAppointment.studentId) });
         queryClient.invalidateQueries({
-          queryKey: getAppointmentFinanceReportQueryKey(),
+          queryKey: getFinanceReportQueryKey(),
         });
       },
       onError: (error) => {
@@ -81,15 +81,15 @@ export function useAppointmentMutations() {
     },
   });
 
-  const toggleEmployeePayment = useToggleEmployeeAppointmentPayment({
+  const toggleEmployeePayment = useToggleEmployeeAtendimentoPayment({
     mutation: {
       onSuccess: (updatedAppointment, variables) => {
         toast.success("Status do pagamento atualizado");
-        queryClient.invalidateQueries({ queryKey: getAppointmentsQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getAppointmentByIdQueryKey(variables.id) });
-        queryClient.invalidateQueries({ queryKey: getAppointmentsByEmployeeIdQueryKey(updatedAppointment.employeeId) });
+        queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
+        queryClient.invalidateQueries({ queryKey: getAtendimentosByEmployeeIdQueryKey(updatedAppointment.employeeId) });
         queryClient.invalidateQueries({
-          queryKey: getAppointmentFinanceReportQueryKey(),
+          queryKey: getFinanceReportQueryKey(),
         });
       },
       onError: (error) => {

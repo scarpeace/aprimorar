@@ -1,9 +1,9 @@
 import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 import { APPOINTMENT_CONTENT_COLORS } from "@/features/appointments/lib/appointment-content-colors";
-import type { ClassesByContentDTO } from "@/kubb";
+import type { DashboardSummaryResponseDTO } from "@/kubb";
 
 type AppointmentContentLegendProps = {
-  distribution?: ClassesByContentDTO[];
+  distribution?: DashboardSummaryResponseDTO[];
   totalAppointments?: number;
 };
 

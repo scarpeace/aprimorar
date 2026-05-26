@@ -1,6 +1,6 @@
 import { ButtonLink } from "@/components/ui/button";
 import type { StudentFormSchema } from "@/features/students/lib/studentFormSchema.ts";
-import { useGetParentsOptions } from "@/kubb";
+import { useListarOpcoesResponsaveis } from "@/kubb";
 import { TriangleAlert, UserPlus } from "lucide-react";
 import {
   Controller,
@@ -20,7 +20,7 @@ export function ParentSelectDropdown({
   className,
   label,
 }: ParentSelectDropdownProps) {
-  const { data: parents, isPending } = useGetParentsOptions();
+  const { data: parents, isPending } = useListarOpcoesResponsaveis();
   return (
     <fieldset className={`fieldset ${className}`}>
       <legend className="fieldset-legend w-full flex flex-row justify-between items-center">

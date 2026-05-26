@@ -1,4 +1,4 @@
-import { appointmentRequestDTOContentEnum } from "@/kubb";
+import { atendimentoRequestDTOContentEnum } from "@/kubb";
 import { TriangleAlert } from "lucide-react";
 import { type UseFormRegisterReturn } from "react-hook-form";
 
@@ -24,7 +24,7 @@ export function ContentSelectDropdown({
         className="select select-bordered w-full"
         {...registration}
       >
-       {Object.values(appointmentRequestDTOContentEnum).map((content) => (
+       {Object.values(atendimentoRequestDTOContentEnum).map((content) => (
               <option key={content} value={content}>
                 {content}
               </option>

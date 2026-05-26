@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormMask } from "use-mask-input";
 import { Button } from "@/components/ui/button";
 import { TriangleAlert } from "lucide-react";
-import type { ParentResponseDTO } from "@/kubb";
+import type { ResponsavelResponseDTO } from "@/kubb";
 import { parentFormSchema, type ParentFormSchema } from "../lib/parentFormSchema.ts";
 import { useParentMutations } from "../hooks/parent-mutations";
 import { toast } from "sonner";
@@ -11,7 +11,7 @@ import { formatDateForInput } from "@/lib/utils/formatter";
 import { getFriendlyErrorMessage } from "@/lib/shared/api.ts";
 
 interface ParentFormProps {
-  initialData?: ParentResponseDTO | null;
+  initialData?: ResponsavelResponseDTO | null;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -42,7 +42,7 @@ export function ParentForm({ initialData, onSuccess, onCancel }: ParentFormProps
   const onSubmit = handleSubmit((data: ParentFormSchema) => {
     if (isEditMode && initialData.parentId) {
       updateParent.mutate(
-        { parentId: initialData.parentId, data },
+        { responsavelId: initialData.parentId, data },
         {
           onSuccess: () => onSuccess(),
           onError: (error) => toast.error(getFriendlyErrorMessage(error)),

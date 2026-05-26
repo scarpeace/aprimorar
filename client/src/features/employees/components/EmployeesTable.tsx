@@ -2,7 +2,6 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import type { EmployeesWithFinanceResponseDTO } from "@/kubb";
 import { dutyLabels } from "../lib/dutyLabels";
 import {
   brl,
@@ -11,39 +10,65 @@ import {
   formatPhone,
 } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
+import { useGetColaboradores, type ColaboradorResponseDTO, type PageObject } from "@/kubb";
+import { ListSearchInput } from "@/components/ui/list-search-input";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { useState } from "react";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 
-type EmployeesTableProps = {
-  employees?: EmployeesWithFinanceResponseDTO;
-  onPageChange: (page: number) => void;
-  currentPage: number;
-  isPending: boolean;
-  error: unknown;
-};
+// type EmployeesTableProps = {};
 
-export function EmployeesTable({
-  employees,
-  onPageChange,
-  currentPage,
-  isPending,
-  error,
-}: Readonly<EmployeesTableProps>) {
+export function EmployeesTable() {
 
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [showArchived, setShowArchived] = useState(false);
+  const [hidePaid, setHidePaid] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<ColaboradorResponseDTO | null>(null);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  if (isPending) {
+  const colaboradoresQuery = useGetColaboradores({
+    page: currentPage,
+    busca: debouncedSearchTerm,
+    arquivado: showArchived,
+  });
+
+  const onPageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleCloseForm = () => {
+    setSelectedEmployee(null);
+    setIsFormOpen(false);
+  };
+
+  const handleShowArchivedChange = (value: boolean) => {
+    setShowArchived(value);
+    setCurrentPage(0);
+  };
+
+  const handleHidePaidChange = (value: boolean) => {
+    setHidePaid(value);
+    setCurrentPage(0);
+  };
+
+
+  if (colaboradoresQuery.isPending) {
     return <LoadingSpinner text="Carregando Colaboradores..." />;
   }
 
-  if (error) {
+  if (colaboradoresQuery.error || !colaboradoresQuery.data) {
     return (
       <ErrorCard
         title="Não foi possível carregar a listagem de Colaboradores"
-        error={error}
+        error={colaboradoresQuery.error}
       />
     );
   }
 
-  if (!employees || !employees.content || employees.content.length === 0) {
+  if (colaboradoresQuery.data.colaboradores?.empty) {
     return (
       <EmptyCard
         title="Nenhum colaborador encontrado"
@@ -53,14 +78,45 @@ export function EmployeesTable({
   }
 
   const paginationData = {
-    size: employees.size ?? employees.content.length,
-    totalElements: employees.totalElements ?? employees.content.length,
-    totalPages: employees.totalPages ?? 1,
-    content: employees.content,
+    size: colaboradoresQuery.data.colaboradores?.size,
+    totalElements: colaboradoresQuery.data.colaboradores?.totalElements,
+    totalPages: colaboradoresQuery.data.colaboradores?.totalPages,
+    // content: colaboradoresQuery.data.colaboradores?.content ?? colaboradoresQuery.data.content,
   };
 
   return (
     <>
+      <section className="rounded-2xl bg-base-100 my-3 shadow-sm animate-[fade-up_220ms_ease-out_both]">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+          <ListSearchInput
+            className="grow"
+            placeholder="Buscar colaborador por nome, email ou CPF"
+            ariaLabel="Buscar colaborador"
+            value={searchTerm}
+            onChange={setSearchTerm}
+          />
+          <div className="flex w-full flex-row items-s gap-3 xl:w-auto xl:justify-end">
+            <ToggleSwitch
+              label="Mostrar Arquivados"
+              tip="Mostrar colaboradores arquivados"
+              toggled={showArchived}
+              setToggle={handleShowArchivedChange}
+              className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
+            />
+            <ToggleSwitch
+              label="Ocultar pagos"
+              tip="Mostrar apenas colaboradores com pendencias no periodo"
+              toggled={hidePaid}
+              setToggle={handleHidePaidChange}
+              className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
+            />
+          </div>
+        </div>
+      </section>
+
+
+      {/*TABELA*/}
       <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
       <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
         <thead className="bg-base-200/80">
@@ -80,12 +136,6 @@ export function EmployeesTable({
             <th className="text-left font-semibold text-base-content/80">
               Cadastro
             </th>
-            <th className="text-right font-semibold text-base-content/80">
-              Pago
-            </th>
-            <th className="text-right font-semibold text-base-content/80">
-              Pendente
-            </th>
             <th className="text-left font-semibold text-base-content/80">
               Status
             </th>
@@ -93,9 +143,7 @@ export function EmployeesTable({
         </thead>
 
         <tbody className="whitespace-nowrap">
-          {employees.content.map((employee) => {
-            const totalPaid = employee.totalPaid ?? 0;
-            const totalPending = employee.totalPending ?? 0;
+          {colaboradoresQuery.data.colaboradores?.content?.map((employee) => {
 
             return (
               <tr
@@ -114,16 +162,7 @@ export function EmployeesTable({
                 <td>{formatPhone(employee.contact ?? "")}</td>
 
                 <td>{formatDateShortYear(employee.createdAt ?? "")}</td>
-                <td className="text-right font-mono font-semibold text-success">
-                  {brl.format(totalPaid)}
-                </td>
-                <td
-                  className={`text-right font-mono font-semibold ${
-                    totalPending > 0 ? "text-warning" : "text-base-content/45"
-                  }`}
-                >
-                  {brl.format(totalPending)}
-                </td>
+
                 <td>
                   <span className={`badge ${(employee.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
                     {(employee.active ?? true) ? "Ativo" : "Arquivado"}
@@ -136,7 +175,9 @@ export function EmployeesTable({
       </table>
       </div>
       <Pagination
-        paginationData={paginationData}
+        size={colaboradoresQuery.data.colaboradores?.size ?? 10}
+        totalElements={colaboradoresQuery.data.colaboradores?.totalElements ?? 0}
+        totalPages={colaboradoresQuery.data.colaboradores?.totalPages ?? 1}
         currentPage={currentPage}
         onPageChange={onPageChange}
       />
