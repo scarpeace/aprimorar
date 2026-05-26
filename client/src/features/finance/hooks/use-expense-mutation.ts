@@ -1,7 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
-  getFinanceReportQueryKey,
   getDespesaByIdQueryKey,
   useCreateDespesa,
   useDeleteDespesa,
@@ -17,7 +16,7 @@ export function useExpenseMutations() {
   const invalidateFinanceQueries = () => {
     queryClient.invalidateQueries({ queryKey: getDespesasQueryKey() });
     queryClient.invalidateQueries({
-      queryKey: getFinanceReportQueryKey(),
+      queryKey: getDespesasQueryKey(),
     });
   };
 

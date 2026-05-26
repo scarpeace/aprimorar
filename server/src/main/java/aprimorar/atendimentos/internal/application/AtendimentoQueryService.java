@@ -27,7 +27,6 @@ import aprimorar.atendimentos.internal.infrastructure.persistence.AtendimentoSpe
 import aprimorar.pessoas.aluno.api.AlunoQueryApi;
 import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
-import java.util.List;
 
 @Service
 public class AtendimentoQueryService implements AtendimentosQueryApi {
@@ -84,6 +83,22 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
 
     @Transactional(readOnly = true)
     @Override
+    public AtendimentoFinanceSummaryDTO getIndicadoresAtendimentos(Instant startDate, Instant endDate) {
+        BigDecimal totalStudentCharged = atendimentoRepo.sumTotalChargedInPeriod(startDate, endDate);
+        BigDecimal totalStudentPending = atendimentoRepo.sumTotalUnchargedInPeriod(startDate, endDate);
+        BigDecimal totalEmployeePaid = atendimentoRepo.sumTotalPaidInPeriod(startDate, endDate);
+        BigDecimal totalEmployeePending = atendimentoRepo.sumTotalUnpaidInPeriod(startDate, endDate);
+
+        return new AtendimentoFinanceSummaryDTO(
+            totalStudentCharged,
+            totalStudentPending,
+            totalEmployeePaid,
+            totalEmployeePending
+        );
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public AtendimentosColaboradorResponseDTO getAtendimentosByEmployeeId(
         Pageable pageable,
         UUID employeeId,
@@ -100,9 +115,9 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
         Page<Atendimento> atendimentoPage = atendimentoRepo.findAll(spec, pageable);
         Page<AtendimentoResponseDTO> dtoPage = atendimentoPage.map(atendimentoMapper::convertToDto);
 
-        long totalAtendimentos = atendimentoRepo.countFilteredByEmployeeId(employeeId, startDate, endDate);
-        BigDecimal totalPaid = atendimentoRepo.sumPaidFilteredByEmployeeId(employeeId, startDate, endDate);
-        BigDecimal totalUnpaid = atendimentoRepo.sumUnpaidFilteredByEmployeeId(employeeId, startDate, endDate);
+        long totalAtendimentos = atendimentoRepo.countByEmployeeIdInPeriod(employeeId, startDate, endDate);
+        BigDecimal totalPaid = atendimentoRepo.sumPaidByEmployeeIdInPeriod(employeeId, startDate, endDate);
+        BigDecimal totalUnpaid = atendimentoRepo.sumUnpaidByEmployeeIdInPeriod(employeeId, startDate, endDate);
 
         log.info("Consulta de atendimentos do colaborador finalizada, {} registros encontrados.", atendimentoPage.getTotalElements());
 
@@ -131,62 +146,45 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
         Page<Atendimento> atendimentos = atendimentoRepo.findAll(spec, pageable);
         Page<AtendimentoResponseDTO> dtoPage = atendimentos.map(atendimentoMapper::convertToDto);
 
-        long totalAtendimentos = atendimentoRepo.countFilteredByStudentId(studentId, startDate, endDate);
-        BigDecimal totalCharged = atendimentoRepo.sumChargedFilteredByStudentId(studentId, startDate, endDate);
-        BigDecimal totalPending = atendimentoRepo.sumPendingFilteredByStudentId(studentId, startDate, endDate);
+        long totalAtendimentos = atendimentoRepo.countByStudentIdInPeriod(studentId, startDate, endDate);
+        BigDecimal totalCharged = atendimentoRepo.sumChargedByStudentInPeriod(studentId, startDate, endDate);
+        BigDecimal totalPending = atendimentoRepo.sumPendingByStudentInPeriod(studentId, startDate, endDate);
 
         return new AtendimentosAlunoResponseDTO(new PageDTO<>(dtoPage), new AlunoSummaryDTO(totalAtendimentos, totalCharged, totalPending));
     }
 
-    //TODO: To querendo mover isso para getAtendimentos
-    @Transactional(readOnly = true)
-    @Override
-    public AtendimentoFinanceSummaryDTO getFinanceReport(Instant startDate, Instant endDate) {
-        BigDecimal totalStudentCharged = atendimentoRepo.sumChargedFiltered(startDate, endDate);
-        BigDecimal totalStudentPending = atendimentoRepo.sumPendingFiltered(startDate, endDate);
-        BigDecimal totalEmployeePaid = atendimentoRepo.sumPaidFiltered(startDate, endDate);
-        BigDecimal totalEmployeePending = atendimentoRepo.sumUnpaidFiltered(startDate, endDate);
-
-        return new AtendimentoFinanceSummaryDTO(
-            totalStudentCharged,
-            totalStudentPending,
-            totalEmployeePaid,
-            totalEmployeePending
-        );
-    }
-
     @Override
     @Transactional(readOnly = true)
-    public List<ColaboradorFinanceiroResumoDTO> getColaboradoresFinanceiroByPeriod(
-        List<UUID> employeeIds,
+    public PageDTO<ColaboradorFinanceiroResumoDTO> getOverviewFinanceiroColaboradores(
+        Pageable pageable,
         Instant startDate,
         Instant endDate
     ) {
-        if (employeeIds == null || employeeIds.isEmpty()) {
-            return List.of();
-        }
+        Page<ColaboradorFinanceiroResumoDTO> resultado = atendimentoRepo
+            .getOverviewFinanceiroColaboradores(pageable, startDate, endDate)
+            .map(item -> new ColaboradorFinanceiroResumoDTO(
+                item.getEmployeeId(),
+                item.getTotalAtendimentos(),
+                item.getTotalPaid(),
+                item.getTotalPending()
+            ));
 
-        return atendimentoRepo.findColaboradoresFinanceiroByPeriodAndIds(employeeIds, startDate, endDate)
-            .stream()
-            .map(projection -> new ColaboradorFinanceiroResumoDTO(
-                projection.getEmployeeId(),
-                projection.getTotalAtendimentos(),
-                projection.getTotalPaid(),
-                projection.getTotalPending()
-            ))
-            .toList();
+        return new PageDTO<>(resultado);
     }
 
-    @Override
     @Transactional(readOnly = true)
-    public long countActiveStudentsInPeriod(Instant startDate, Instant endDate, UUID excludedStudentId) {
-        return atendimentoRepo.countDistinctStudentsInPeriodExcludingAluno(startDate, endDate, excludedStudentId);
+    public long countAllStudentsInPeriod(Instant startDate, Instant endDate) {
+        return atendimentoRepo.countStudentsInPeriod(startDate, endDate);
     }
 
-    @Override
+    @Transactional(readOnly = true)
+    public long countAllActiveStudentsInPeriod(Instant startDate, Instant endDate) {
+        return atendimentoRepo.countActiveStudentsInPeriod(startDate, endDate);
+    }
+
     @Transactional(readOnly = true)
     public long countAtendimentosInPeriod(Instant startDate, Instant endDate) {
-        return atendimentoRepo.countByStartDateGreaterThanEqualAndStartDateLessThan(startDate, endDate);
+        return atendimentoRepo.countAtendimentosInPeriod(startDate, endDate);
     }
 
     @Override

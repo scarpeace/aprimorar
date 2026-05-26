@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import {
   getAtendimentoByIdQueryKey,
-  getFinanceReportQueryKey,
   getAtendimentosQueryKey,
   getAtendimentosByEmployeeIdQueryKey,
   getAtendimentosByStudentIdQueryKey,
@@ -11,6 +10,7 @@ import {
   useToggleEmployeeAtendimentoPayment,
   useToggleStudentAtendimentoCharge,
   useUpdateAtendimento,
+  getIndicadoresAtendimentosQueryKey,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
@@ -34,7 +34,7 @@ export function useAppointmentMutations() {
           queryKey: getAtendimentosByStudentIdQueryKey(createdAppointment.studentId),
         });
         queryClient.invalidateQueries({
-          queryKey: getFinanceReportQueryKey(),
+          queryKey: getIndicadoresAtendimentosQueryKey(),
         });
         navigate(`/appointments/${createdAppointment.id}`);
       },
@@ -57,7 +57,7 @@ export function useAppointmentMutations() {
           queryKey: getAtendimentosByStudentIdQueryKey(updatedAppointment.studentId),
         });
         queryClient.invalidateQueries({
-          queryKey: getFinanceReportQueryKey(),
+          queryKey: getIndicadoresAtendimentosQueryKey(),
         });
         navigate(`/appointments/${updatedAppointment.id}`);
       },
@@ -72,7 +72,7 @@ export function useAppointmentMutations() {
         queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
         queryClient.invalidateQueries({ queryKey: getAtendimentosByStudentIdQueryKey(updatedAppointment.studentId) });
         queryClient.invalidateQueries({
-          queryKey: getFinanceReportQueryKey(),
+          queryKey: getIndicadoresAtendimentosQueryKey(),
         });
       },
       onError: (error) => {
@@ -89,7 +89,7 @@ export function useAppointmentMutations() {
         queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
         queryClient.invalidateQueries({ queryKey: getAtendimentosByEmployeeIdQueryKey(updatedAppointment.employeeId) });
         queryClient.invalidateQueries({
-          queryKey: getFinanceReportQueryKey(),
+          queryKey: getIndicadoresAtendimentosQueryKey(),
         });
       },
       onError: (error) => {

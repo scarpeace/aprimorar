@@ -1,10 +1,12 @@
 package aprimorar.atendimentos.internal.web;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoRequestDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
 import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
+import aprimorar.atendimentos.api.dto.ColaboradorFinanceiroResumoDTO;
 import aprimorar.atendimentos.internal.application.AtendimentoMutationService;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -121,7 +124,7 @@ public class AtendimentoController {
 
     @GetMapping("/finance/report")
     @Operation(
-        operationId = "getFinanceReport",
+        operationId = "getIndicadoresAtendimentos",
         description = "Consolida o financeiro institucional no periodo informado"
     )
     @ApiResponse(responseCode = "200", description = "Relatorio financeiro institucional retornado com totais consolidados.")
@@ -129,7 +132,23 @@ public class AtendimentoController {
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
-        return ResponseEntity.ok(atendimentoQueryApi.getFinanceReport(startDate, endDate));
+        return ResponseEntity.ok(atendimentoQueryApi.getIndicadoresAtendimentos(startDate, endDate));
+    }
+
+    @GetMapping("/finance/colaboradores")
+    @Operation(
+        operationId = "getOverviewFinanceiroColaboradores",
+        description = "Lista colaboradores paginados com indicadores de pago e pendente por colaborador."
+    )
+    @ApiResponse(responseCode = "200", description = "Colaboradores retornados com indicadores de financeiro por linha e resumo consolidado.")
+    public ResponseEntity<PageDTO<ColaboradorFinanceiroResumoDTO>> getOverviewFinanceiroColaboradores(
+        @ParameterObject @PageableDefault(sort = "employeeName") Pageable pageable,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(
+            atendimentoQueryApi.getOverviewFinanceiroColaboradores(pageable, startDate, endDate)
+        );
     }
 
     @PutMapping("/{id}")
@@ -141,6 +160,8 @@ public class AtendimentoController {
     ) {
         return ResponseEntity.ok(atendimentoMutationService.updateAtendimento(id, request));
     }
+
+
 
     @DeleteMapping("/{id}")
     @Operation(operationId = "deleteAtendimento", description = "Remove definitivamente um atendimento.")
@@ -167,65 +188,4 @@ public class AtendimentoController {
         return ResponseEntity.ok(atendimentoMutationService.toggleEmployeePayment(id));
     }
 
-    // @GetMapping("/finance/report/alunos")
-    // @Operation(
-    //     operationId = "obterRelatorioFinanceiroAtendimentosPorAluno",
-    //     description = "Agrupa indicadores financeiros por aluno no periodo informado."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Relatorio financeiro por aluno retornado.")
-    // public ResponseEntity<AlunosFinanceSummaryResponseDTO> getStudentsFinanceReport(
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(atendimentoQueryService.getStudentsFinanceReport(startDate, endDate));
-    // }
-
-    // @GetMapping("/finance/report/colaboradores")
-    // @Operation(
-    //     operationId = "obterRelatorioFinanceiroAtendimentosPorColaborador",
-    //     description = "Agrupa indicadores financeiros por colaborador no periodo informado."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Relatorio financeiro por colaborador retornado.")
-    // public ResponseEntity<ColaboradoresFinanceSummaryResponseDTO> getEmployeesFinanceReport(
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(atendimentoService.getEmployeesFinanceReport(startDate, endDate));
-    // }
-
-    // @GetMapping("/finance/colaboradores")
-    // @Operation(
-    //     operationId = "listarColaboradoresComFinanceiro",
-    //     description = "Lista colaboradores paginados com indicadores financeiros do periodo informado."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Colaboradores retornados com financeiro por linha e resumo consolidado.")
-    // public ResponseEntity<ColaboradoresWithFinanceResponseDTO> getEmployeesWithFinance(
-    //     @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
-    //     @RequestParam(required = false) String search,
-    //     @RequestParam(required = false, defaultValue = "false") Boolean archived,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(
-    //         atendimentoService.getEmployeesWithFinance(pageable, search, archived, startDate, endDate)
-    //     );
-    // }
-
-    // @GetMapping("/finance/alunos")
-    // @Operation(
-    //     operationId = "listarAlunosComFinanceiro",
-    //     description = "Lista alunos paginados com indicadores financeiros do periodo informado."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Alunos retornados com financeiro por linha e resumo consolidado.")
-    // public ResponseEntity<AlunosWithFinanceResponseDTO> getStudentsWithFinance(
-    //     @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
-    //     @RequestParam(required = false) String search,
-    //     @RequestParam(required = false, defaultValue = "false") Boolean archived,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(
-    //         atendimentoService.getStudentsWithFinance(pageable, search, archived, startDate, endDate)
-    //     );
-    // }
 }

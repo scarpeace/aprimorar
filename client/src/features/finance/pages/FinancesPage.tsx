@@ -3,7 +3,7 @@ import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
-import {useGetDespesas,} from "@/kubb";
+import {useGetDespesas, useGetIndicadoresAtendimentos, useGetOverviewFinanceiroColaboradores,} from "@/kubb";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 import { BanknoteArrowDown, BanknoteArrowUp, GraduationCap, HandCoins, Landmark, Plus, UserCog } from "lucide-react";
 import { useState } from "react";
@@ -19,13 +19,20 @@ export function FinancesPage() {
   const dateFilter = usePageDateFilter();
   const { startDate, endDate } = dateFilter;
 
-  // const summaryQuery = useGetDashboardSummary({
-  //   startDate: startDate?.toISOString(),
-  //   endDate: endDate?.toISOString(),
-  // });
+  const indicadoresAtendimentosQuery = useGetIndicadoresAtendimentos({
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
+  });
+
+  const atendimentosColaboradoresQuery = useGetOverviewFinanceiroColaboradores({
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
+  });
+  console.log(atendimentosColaboradoresQuery.data)
+
   const expensesQuery = useGetDespesas({
-    startDate: startDate?.toISOString().slice(0, 10),
-    endDate: endDate?.toISOString().slice(0, 10),
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
     size: 9999,
     sort: ["date,desc"],
   });
@@ -43,8 +50,6 @@ export function FinancesPage() {
   const totalGeneralExpenses = expensesQuery.data?.totalExpenses ?? 0;
   const pendingGeneralExpenses = expensesQuery.data?.pendingExpenses ?? 0;
   // const currentBalance = summaryQuery.data?.balance ?? 0;
-  // const studentFinanceSummary = studentsWithFinanceQuery.data?.financeSummary;
-  // const employeeFinanceSummary = employeesWithFinanceQuery.data?.financeSummary;
 
   const handleOpenExpenseForm = () => {
     setIsExpenseFormOpen(true);
@@ -90,41 +95,41 @@ export function FinancesPage() {
         />*/}
 
         <section className="flex flex-row justify-between rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          {/*<div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
+          <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
             <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><GraduationCap size={30}/> Alunos</h1>
 
             <KpiCard
               label="Total pago"
-              value={<span className="text-success">{brl.format(studentFinanceSummary?.totalCharged ?? 0)}</span>}
+              value={<span className="text-success">{brl.format(indicadoresAtendimentosQuery.data?.totalStudentCharged ?? 0)}</span>}
               Icon={BanknoteArrowUp}
               className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
             />
 
             <KpiCard
               label="Total pendente"
-              value={<span className="text-warning">{brl.format(studentFinanceSummary?.totalPending ?? 0)}</span>}
+              value={<span className="text-warning">{brl.format(indicadoresAtendimentosQuery.data?.totalStudentPending ?? 0)}</span>}
               Icon={BanknoteArrowDown}
               className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
               />
-        </div>*/}
+        </div>
 
-          {/*<div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
+          <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
             <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><UserCog size={30}/>Colaboradores</h1>
 
             <KpiCard
               label="Total pago"
-              value={<span className="text-success">{brl.format(employeeFinanceSummary?.totalPaid ?? 0)}</span>}
+              value={<span className="text-success">{brl.format(indicadoresAtendimentosQuery.data?.totalEmployeePaid ?? 0)}</span>}
               Icon={BanknoteArrowUp}
               className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
             />
 
             <KpiCard
               label="Total pendente"
-              value={<span className="text-warning">{brl.format(employeeFinanceSummary?.totalPending ?? 0)}</span>}
+              value={<span className="text-warning">{brl.format(indicadoresAtendimentosQuery.data?.totalEmployeePending ?? 0)}</span>}
               Icon={BanknoteArrowDown}
               className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
             />
-          </div>*/}
+          </div>
 
           <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
             <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><HandCoins size={30}/>Despesas Gerais</h1>

@@ -7,7 +7,6 @@ import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
 import aprimorar.atendimentos.api.dto.ColaboradorFinanceiroResumoDTO;
 import aprimorar.shared.PageDTO;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 
@@ -39,17 +38,13 @@ public interface AtendimentosQueryApi {
         Instant endDate,
         Boolean charged
     );
-
-    AtendimentoFinanceSummaryDTO getFinanceReport(Instant startDate, Instant endDate);
-
-    List<ColaboradorFinanceiroResumoDTO> getColaboradoresFinanceiroByPeriod(
-        List<UUID> employeeIds,
+    AtendimentoFinanceSummaryDTO getIndicadoresAtendimentos(Instant startDate, Instant endDate);
+    PageDTO<ColaboradorFinanceiroResumoDTO> getOverviewFinanceiroColaboradores(
+        Pageable pageable,
         Instant startDate,
         Instant endDate
     );
 
     boolean alunoHasPendingCharges(UUID alunoId);
     boolean colaboradorHasPendingPayment(UUID colaboradorId);
-    long countActiveStudentsInPeriod(Instant startDate, Instant endDate, UUID excludedStudentId);
-    long countAtendimentosInPeriod(Instant startDate, Instant endDate);
 }

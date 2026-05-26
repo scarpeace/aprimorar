@@ -1,89 +1,86 @@
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
+import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { type AtendimentoResponseDTO, type PageDTOAtendimentoResponseDTO } from "@/kubb";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
+import { useGetAtendimentos, type AtendimentoResponseDTO } from "@/kubb";
 import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { CalendarCheck2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AppointmentMobileCard } from "./AppointmentMobileCard";
+import { useAppointmentsFilters } from "../hooks/use-appointments-filters";
 
-type AppointmentsTableProps = {
-  appointments?: PageDTOAtendimentoResponseDTO;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-  isLoading: boolean;
-  error: unknown;
-};
 
-export function AppointmentsTable({
-  appointments,
-  currentPage,
-  onPageChange,
-  isLoading,
-  error,
-}: Readonly<AppointmentsTableProps>) {
+export function AppointmentsTable() {
   const navigate = useNavigate();
-  const events = appointments?.content ?? [];
-  const totalEvents = appointments?.totalElements ?? events.length;
 
-  if (isLoading) {
-    return <LoadingSpinner text="Carregando atendimentos..." />;
+  const {
+    search,
+    hideCharged,
+    hidePaid,
+    page,
+    handleSearchChange,
+    handleHideChargedToggle,
+    handleHidePaidToggle,
+    handlePageChange,
+  } = useAppointmentsFilters();
+
+  const eventsQuery = useGetAtendimentos({
+    page,
+    size: 20,
+    sort: ["startDate,desc", "id,asc"],
+    search: search || undefined,
+    hideCharged: hideCharged || undefined,
+    hidePaid: hidePaid || undefined,
+  });
+
+  if (eventsQuery.isError) {
+    return <ErrorCard title="Não foi possível carregar a listagem de Atendimentos" error={eventsQuery.error}/>;
   }
 
-  if (error) {
+  if (eventsQuery.isLoading) {
+    return <LoadingSpinner text="Carregando Atendimentos..." />;
+  }
+
+  if (!eventsQuery.data || !eventsQuery.data.content || eventsQuery.data.totalElements === 0) {
     return (
-      <ErrorCard
-        title="Não foi possível carregar a listagem de atendimentos"
-        error={error}
+      <EmptyCard
+        title="Nenhum atendimento encontrado"
+        description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
       />
     );
   }
 
-  if (events.length === 0) {
-    return (
-      <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
-        <div className="mb-4 flex items-start gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-            <CalendarCheck2 className="h-5 w-5" />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-base-content">Agenda de atendimentos</h3>
-            <p className="text-sm text-base-content/60">
-              Consulte os agendamentos registrados e acompanhe os status de cobrança e repasse.
-            </p>
-          </div>
-        </div>
-
-        <EmptyCard
-          title="Nenhum atendimento encontrado"
-          description="A lista sera exibida aqui assim que houver agendamentos cadastrados ou quando os filtros retornarem resultados."
-        />
-      </section>
-    );
-  }
-
   return (
-    <section className="relative rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
-      <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-        <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-sm">
-            <CalendarCheck2 className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-xl font-bold text-base-content">Agenda de atendimentos</h3>
-              <span className="badge badge-outline badge-primary badge-sm font-semibold">
-                {totalEvents} {totalEvents === 1 ? "evento" : "eventos"}
-              </span>
-            </div>
-            <p className="mt-1 text-sm text-base-content/60">
-              Visualize aluno, colaborador, horario e pendencias financeiras em uma unica listagem.
-            </p>
+    <>
+      <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <ListSearchInput
+            className="grow"
+            placeholder="Buscar por aluno, colaborador, conteudo ou descricao"
+            ariaLabel="Buscar atendimento"
+            value={search}
+            onChange={handleSearchChange}
+          />
+          <div className="flex w-full flex-row items-start justify-between gap-3 xl:w-auto xl:justify-end">
+            <ToggleSwitch
+              label="Cobranca pendente"
+              toggled={hideCharged}
+              setToggle={handleHideChargedToggle}
+              tip="Mostrar apenas eventos onde o aluno ainda nao foi cobrado"
+              className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
+            />
+            <ToggleSwitch
+              label="Pagamento pendente"
+              toggled={hidePaid}
+              setToggle={handleHidePaidToggle}
+              tip="Mostrar apenas eventos onde o colaborador ainda nao foi pago"
+              className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
+            />
           </div>
         </div>
-      </div>
+      </section>
 
       <div className="hidden md:block">
         <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
@@ -101,7 +98,7 @@ export function AppointmentsTable({
             </thead>
 
             <tbody className="whitespace-nowrap">
-              {events.map((event: AtendimentoResponseDTO) => (
+              {eventsQuery.data.content.map((event: AtendimentoResponseDTO) => (
                 <tr
                   key={event.id}
                   className="group cursor-pointer transition-colors hover:bg-base-200/50"
@@ -146,7 +143,7 @@ export function AppointmentsTable({
       </div>
 
       <div className="flex flex-col gap-4 md:hidden">
-        {events.map((event: AtendimentoResponseDTO, index: number) => (
+        {eventsQuery.data.content.map((event: AtendimentoResponseDTO, index: number) => (
           <AppointmentMobileCard
             key={event.id}
             event={event}
@@ -159,10 +156,11 @@ export function AppointmentsTable({
       </div>
 
       <Pagination
-        paginationData={appointments}
-        currentPage={currentPage}
-        onPageChange={onPageChange}
+        totalElements={eventsQuery.data.totalElements}
+        totalPages={eventsQuery.data.totalPages}
+        currentPage={page}
+        onPageChange={handlePageChange}
       />
-    </section>
+    </>
   );
 }
