@@ -1,7 +1,7 @@
 package aprimorar.financeiro.internal.infrastructure.persistence;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -20,7 +20,7 @@ public interface DespesaRepository extends JpaRepository<Despesa, UUID>, JpaSpec
           and e.date <= coalesce(:endDate, e.date)
         """
     )
-    BigDecimal sumFiltered(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    BigDecimal sumFiltered(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     @Query(
         """
@@ -31,5 +31,5 @@ public interface DespesaRepository extends JpaRepository<Despesa, UUID>, JpaSpec
           and e.paymentDate is null
         """
     )
-    BigDecimal sumPendingFiltered(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    BigDecimal sumPendingFiltered(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 }

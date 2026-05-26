@@ -1,5 +1,6 @@
 package aprimorar.atendimentos.internal.application;
 
+import aprimorar.atendimentos.api.dto.AlunoFinanceiroResumoDTO;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
@@ -166,6 +167,25 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
                 item.getEmployeeId(),
                 item.getTotalAtendimentos(),
                 item.getTotalPaid(),
+                item.getTotalPending()
+            ));
+
+        return new PageDTO<>(resultado);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageDTO<AlunoFinanceiroResumoDTO> getOverviewFinanceiroAlunos(
+        Pageable pageable,
+        Instant startDate,
+        Instant endDate
+    ) {
+        Page<AlunoFinanceiroResumoDTO> resultado = atendimentoRepo
+            .getOverviewFinanceiroAlunos(pageable, startDate, endDate)
+            .map(item -> new AlunoFinanceiroResumoDTO(
+                item.getStudentId(),
+                item.getTotalAtendimentos(),
+                item.getTotalCharged(),
                 item.getTotalPending()
             ));
 

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 import aprimorar.financeiro.api.CategoriaDespesaEnum;
 import aprimorar.financeiro.api.FinanceiroQueryApi;
@@ -56,8 +56,8 @@ public class FinanceiroController {
     @ApiResponse(responseCode = "200", description = "Despesas e resumo financeiro retornados com sucesso.")
     public ResponseEntity<DespesasResponseDTO> getDespesas(
         @RequestParam(required = false) CategoriaDespesaEnum categoria,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
         @ParameterObject @PageableDefault(size = 20) Pageable pageable
     ) {
         return ResponseEntity.ok(financeiroQueryApi.getDespesas(pageable, categoria, startDate, endDate));

@@ -11,7 +11,7 @@ import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class FinanceiroQueryService implements FinanceiroQueryApi {
 
     @Override
     @Transactional(readOnly = true)
-    public DespesasResponseDTO getDespesas(Pageable pageable, CategoriaDespesaEnum categoria, LocalDate startDate, LocalDate endDate) {
+    public DespesasResponseDTO getDespesas(Pageable pageable, CategoriaDespesaEnum categoria, Instant startDate, Instant endDate) {
         Specification<Despesa> spec = Specification.allOf(
             DespesaSpecifications.withCategory(categoria),
             DespesaSpecifications.withDateFrom(startDate),

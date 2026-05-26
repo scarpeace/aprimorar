@@ -1,5 +1,6 @@
 package aprimorar.atendimentos.internal.web;
 
+import aprimorar.atendimentos.api.dto.AlunoFinanceiroResumoDTO;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -148,6 +149,22 @@ public class AtendimentoController {
     ) {
         return ResponseEntity.ok(
             atendimentoQueryApi.getOverviewFinanceiroColaboradores(pageable, startDate, endDate)
+        );
+    }
+
+    @GetMapping("/finance/alunos")
+    @Operation(
+        operationId = "getOverviewFinanceiroAlunos",
+        description = "Lista alunos paginados com indicadores de cobrado e pendente por aluno."
+    )
+    @ApiResponse(responseCode = "200", description = "Alunos retornados com indicadores de financeiro por linha e resumo consolidado.")
+    public ResponseEntity<PageDTO<AlunoFinanceiroResumoDTO>> getOverviewFinanceiroAlunos(
+        @ParameterObject @PageableDefault(sort = "studentName") Pageable pageable,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(
+            atendimentoQueryApi.getOverviewFinanceiroAlunos(pageable, startDate, endDate)
         );
     }
 

@@ -1,5 +1,6 @@
 package aprimorar.atendimentos.api;
 
+import aprimorar.atendimentos.api.dto.AlunoFinanceiroResumoDTO;
 import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
@@ -40,6 +41,11 @@ public interface AtendimentosQueryApi {
     );
     AtendimentoFinanceSummaryDTO getIndicadoresAtendimentos(Instant startDate, Instant endDate);
     PageDTO<ColaboradorFinanceiroResumoDTO> getOverviewFinanceiroColaboradores(
+        Pageable pageable,
+        Instant startDate,
+        Instant endDate
+    );
+    PageDTO<AlunoFinanceiroResumoDTO> getOverviewFinanceiroAlunos(
         Pageable pageable,
         Instant startDate,
         Instant endDate

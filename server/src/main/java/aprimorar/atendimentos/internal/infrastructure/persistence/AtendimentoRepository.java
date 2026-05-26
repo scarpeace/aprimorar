@@ -200,7 +200,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
     );
 
     @Query(
-        """
+        value = """
         select
           a.studentId as studentId,
           max(a.studentName) as studentName,
@@ -211,9 +211,16 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         where a.startDate >= coalesce(:startDate, a.startDate)
           and a.endDate <= coalesce(:endDate, a.endDate)
         group by a.studentId
+        """,
+        countQuery = """
+        select count(distinct a.studentId)
+        from Atendimento a
+        where a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
-    List<IndicadoresAulunoProjection> getOverviewFinanceiroAlunos(
+    Page<IndicadoresAulunoProjection> getOverviewFinanceiroAlunos(
+        Pageable pageable,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate
     );
