@@ -4,15 +4,13 @@ import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { useGetAlunos, type AlunoResponseDTO } from "@/kubb";
+import { useGetAlunos } from "@/kubb";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import {
-  brl,
   formatCpf,
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
-import { GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -22,8 +20,6 @@ export function StudentsTable() {
   const [currentPage, setCurrentPage] = useState(0);
   const [showArchived, setShowArchived] = useState(false);
   const [hideCharged, setHideCharged] = useState(false);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<AlunoResponseDTO | null>(null);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
@@ -38,25 +34,8 @@ export function StudentsTable() {
     setCurrentPage(0);
   };
 
-  const headerProps = {
-    description: "Gerencie cadastros e matrículas.",
-    title: "Alunos",
-    Icon: GraduationCap,
-    backLink: "/",
-  };
-
   const onPageChange = (page: number) => {
     setCurrentPage(page);
-  };
-
-  const handleOpenForm = (student?: AlunoResponseDTO) => {
-    setSelectedStudent(student || null);
-    setIsFormOpen(true);
-  };
-
-  const handleCloseForm = () => {
-    setSelectedStudent(null);
-    setIsFormOpen(false);
   };
 
   const handleShowArchivedChange = (value: boolean) => {
@@ -136,10 +115,10 @@ export function StudentsTable() {
                 onClick={() => student.id && navigate(`/students/${student.id}`)}
               >
                 <td className="font-bold">{student.name}</td>
-                <td>{formatCpf(student.cpf ?? "")}</td>
-                <td>{formatPhone(student.contact ?? "")}</td>
-                <td>{student.school ?? "-"}</td>
-                <td>{formatDateShortYear(student.createdAt ?? "")}</td>
+                <td>{formatCpf(student.cpf)}</td>
+                <td>{formatPhone(student.contact)}</td>
+                <td>{student.school}</td>
+                <td>{formatDateShortYear(student.createdAt)}</td>
                  <td>
                    <span className={`badge ${(student.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
                      {(student.active ?? true) ? "Ativo" : "Arquivado"}

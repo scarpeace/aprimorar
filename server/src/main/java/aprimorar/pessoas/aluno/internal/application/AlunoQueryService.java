@@ -7,6 +7,7 @@ import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
 import aprimorar.pessoas.aluno.internal.domain.Aluno;
 import aprimorar.pessoas.aluno.internal.infrastructure.persistence.AlunoRepository;
 import aprimorar.pessoas.aluno.internal.infrastructure.persistence.AlunoSpecifications;
+import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
 import java.time.Clock;
 import java.util.List;
@@ -53,7 +54,7 @@ public class AlunoQueryService implements AlunoQueryApi {
         Page<Aluno> studentPage = studentRepo.findAll(spec, pageable);
         AlunosResponseDTO alunosResponseDTO = new AlunosResponseDTO(
             totalActiveStudents,
-            studentPage.map(student -> studentMapper.toResponseDto(student, clock))
+            new PageDTO<>(studentPage.map(student -> studentMapper.toResponseDto(student, clock)))
         );
 
         log.info("Consulta de alunos finalizada, {} registros encontrados.", studentPage.getTotalElements());

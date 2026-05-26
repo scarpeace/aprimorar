@@ -10,6 +10,7 @@ import { useMemo, useState } from "react";
 import { StudentsTable } from "../components/StudentsTable";
 import { StudentForm } from "../components/StudentForm";
 import { KpiCard } from "@/components/ui/kpi-card";
+import { ParentsTable } from "@/features/parents/components/ParentsTable";
 
 export function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -120,8 +121,24 @@ export function StudentsPage() {
               </Button>
           </div>
 
-          <StudentsTable/>
+          <StudentsTable />
         </section>
+
+        {/*<section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
+          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h3 className="text-2xl font-bold text-base-content">Alunos cadastrados</h3>
+                <p className="text-sm text-base-content/60">Clique na linha para abrir os detalhes do cadastro.</p>
+              </div>
+
+              <Button className="sm:ml-auto" onClick={() => handleOpenForm()} variant="success">
+                <Plus className="mr-2 h-4 w-4" />
+                Novo Aluno
+              </Button>
+          </div>
+
+          <ParentsTable />
+          </section>*/}
 
         {isFormOpen && (
           <div className="modal modal-open">

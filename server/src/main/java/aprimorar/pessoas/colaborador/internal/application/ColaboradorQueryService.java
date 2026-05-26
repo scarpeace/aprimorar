@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.pessoas.colaborador.internal.infrastructure.persistence.ColaboradorRepository;
 import aprimorar.pessoas.colaborador.internal.infrastructure.persistence.ColaboradorSpecifications;
+import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
 
 
@@ -54,7 +55,7 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
 
         ColaboradoresResponseDTO colaboradoresDtoPage = new ColaboradoresResponseDTO(
             colaboradoresAtivos,
-            colaboradoresPage.map(colaborador -> colaboradorMapper.toDto(colaborador))
+            new PageDTO<>(colaboradoresPage.map(colaborador -> colaboradorMapper.toDto(colaborador)))
         );
 
         log.info("Consulta de colaboradores finalizada, {} registros encontrados.", colaboradoresPage.getTotalElements());

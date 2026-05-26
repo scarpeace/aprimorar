@@ -56,7 +56,7 @@ public class AlunoController {
     @GetMapping
     @Operation(operationId = "getAlunos", description = "Retorna uma lista paginada de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
-    public ResponseEntity<AlunosResponseDTO> getStudents(
+    public ResponseEntity<AlunosResponseDTO> getAlunos(
         @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
         @RequestParam(required = false) String search,
         @RequestParam(required = false) Boolean archived

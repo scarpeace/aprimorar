@@ -1,7 +1,6 @@
 package aprimorar.pessoas.aluno.api.dto;
 
-
-import org.springframework.data.domain.Page;
+import aprimorar.shared.PageDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -11,6 +10,6 @@ public record AlunosResponseDTO(
   Long totalActiveStudents,
 
   @Schema(description = "Página de alunos conforme filtros aplicados")
-  Page<AlunoResponseDTO> alunos
+  PageDTO<AlunoResponseDTO> alunos
 ) {
 }
