@@ -189,7 +189,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({
       </div>
 
       <Pagination
-        size={appointments?.size}
+        size={appointments?.size ?? 0}
         totalElements={appointments?.totalElements ?? 0}
         totalPages={appointments?.totalPages ?? 0}
         currentPage={currentPage}

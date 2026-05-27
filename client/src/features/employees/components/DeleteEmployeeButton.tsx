@@ -3,10 +3,8 @@ import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-mod
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useEmployeeMutations } from "../hooks/emlpoyee-mutations";
-import { useGetAtendimentosByEmployeeId } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-
-
+import { useGetAtendimentosByColaborador } from "@/kubb";
 
 export const DeleteEmployeeButton = ({ employeeId }: { employeeId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +15,7 @@ export const DeleteEmployeeButton = ({ employeeId }: { employeeId: string }) => 
   } = useEmployeeMutations();
 
   const { data: eventsData, isLoading: isEventsLoading } =
-    useGetAtendimentosByEmployeeId(employeeId);
+    useGetAtendimentosByColaborador(employeeId);
 
   const handleOpenClick = () => {
     setErrorMessage(null);

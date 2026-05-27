@@ -25,7 +25,10 @@ import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosListDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
 import aprimorar.pessoas.aluno.internal.application.AlunoMutationService;
+import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -48,6 +51,21 @@ public class AlunoController {
     @PostMapping
     @Operation(operationId = "criarAluno", description = "Cria um novo aluno com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de validação",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<AlunoResponseDTO> createStudent(@RequestBody @Valid AlunoRequestDTO createStudentDto) {
         AlunoResponseDTO response = alunoMutationService.createAluno(createStudentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -56,6 +74,16 @@ public class AlunoController {
     @GetMapping
     @Operation(operationId = "getAlunos", description = "Retorna uma lista paginada de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Parâmetros inválidos",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<AlunosResponseDTO> getAlunos(
         @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
         @RequestParam(required = false) String search,
@@ -67,17 +95,27 @@ public class AlunoController {
 
     @GetMapping("/responsavel/{parentId}")
     @Operation(operationId = "listarAlunosPorResponsavel", description = "Retorna uma lista de alunos pelo ID do responsável.")
-   @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
-   public ResponseEntity<List<AlunoResponseDTO>> getAlunosPorResponsavel(
-       @PathVariable UUID parentId
-   ) {
-       List<AlunoResponseDTO> options = alunoQueryApi.getAlunosByResponsavelId(parentId);
-       return ResponseEntity.ok(options);
-   }
+    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ResponseEntity<List<AlunoResponseDTO>> getAlunosPorResponsavel(
+        @PathVariable UUID parentId
+    ) {
+        List<AlunoResponseDTO> options = alunoQueryApi.getAlunosByResponsavelId(parentId);
+        return ResponseEntity.ok(options);
+    }
 
     @GetMapping("/options")
     @Operation(operationId = "listarOpcoesAlunos", description = "Retorna uma lista de opções de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<List<AlunosListDTO>> listAlunos() {
         List<AlunosListDTO> options = alunoQueryApi.listAlunos();
         return ResponseEntity.ok(options);
@@ -86,6 +124,16 @@ public class AlunoController {
     @GetMapping("/{studentId}")
     @Operation(operationId = "buscarAlunoPorId", description = "Retorna um aluno por ID.")
     @ApiResponse(responseCode = "200", description = "Aluno retornado com sucesso.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Aluno não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<AlunoResponseDTO> getStudentById(@PathVariable UUID studentId) {
         AlunoResponseDTO foundAluno = alunoQueryApi.findAlunoById(studentId);
         return ResponseEntity.ok(foundAluno);
@@ -94,6 +142,26 @@ public class AlunoController {
     @PutMapping("/{studentId}")
     @Operation(operationId = "atualizarAluno", description = "Atualiza um aluno por ID.")
     @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de validação",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Aluno não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<AlunoResponseDTO> updateStudent(
         @PathVariable UUID studentId,
         @RequestBody @Valid AlunoRequestDTO dto
@@ -105,6 +173,21 @@ public class AlunoController {
     @DeleteMapping("/{studentId}")
     @Operation(operationId = "deletarAluno", description = "Deleta um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno deletado com sucesso.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Aluno não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<Void> deleteStudent(@PathVariable UUID studentId) {
         alunoMutationService.deleteAluno(studentId);
         return ResponseEntity.noContent().build();
@@ -113,6 +196,21 @@ public class AlunoController {
     @PatchMapping("/{studentId}/archive")
     @Operation(operationId = "arquivarAluno", description = "Arquiva um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno arquivado com sucesso.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Aluno não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
         alunoMutationService.archiveAluno(studentId);
         return ResponseEntity.noContent().build();
@@ -121,6 +219,21 @@ public class AlunoController {
     @PatchMapping("/{studentId}/unarchive")
     @Operation(operationId = "desarquivarAluno", description = "Desarquiva um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno desarquivado com sucesso.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Aluno não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {
         alunoMutationService.unarchiveAluno(studentId);
         return ResponseEntity.noContent().build();

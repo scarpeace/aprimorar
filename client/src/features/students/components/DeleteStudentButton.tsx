@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useStudentMutations } from "../hooks/student-mutations";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { getAtendimentosByAluno } from "@/kubb";
+import { useGetAtendimentosByAluno } from "@/kubb";
 
 type DeleteStudentButtonProps = {
   studentId: string;
@@ -18,8 +18,7 @@ export const DeleteStudentButton = ({ studentId, className }: DeleteStudentButto
   const {
     deleteStudent: { mutate: deleteStudent, isPending: isDeleting },
   } = useStudentMutations();
-  const { data: eventsData, isLoading: isEventsLoading } =
-    getAtendimentosByAluno(studentId);
+  const { data: eventsData, isLoading: isEventsLoading } = useGetAtendimentosByAluno(studentId);
 
   const handleOpenClick = () => {
     setErrorMessage(null);

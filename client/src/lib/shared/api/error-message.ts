@@ -1,14 +1,14 @@
 import axios from "axios";
 import { ZodError } from "zod";
 
-import type { ProblemResponse } from "./problem-response";
+import type { ProblemResponseDTO } from "@/kubb";
 
 function extractProblemMessage(data: unknown): string | undefined {
   if (!data || typeof data !== "object") {
     return undefined;
   }
 
-  const problem = data as ProblemResponse;
+  const problem = data as ProblemResponseDTO & { detail?: string; title?: string };
   return problem.message ?? problem.detail ?? problem.title;
 }
 

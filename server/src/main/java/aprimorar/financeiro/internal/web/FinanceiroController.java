@@ -29,6 +29,9 @@ import aprimorar.financeiro.api.dto.DespesaRequestDTO;
 import aprimorar.financeiro.api.dto.DespesaResponseDTO;
 import aprimorar.financeiro.api.dto.DespesasResponseDTO;
 import aprimorar.financeiro.internal.application.FinanceiroMutationService;
+import aprimorar.shared.exception.ProblemResponseDTO;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 
 @RestController
@@ -47,6 +50,21 @@ public class FinanceiroController {
     @PostMapping
     @Operation(operationId = "createDespesa", summary = "Cria uma nova despesa geral")
     @ApiResponse(responseCode = "201", description = "Despesa criada com sucesso.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de validação",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<DespesaResponseDTO> createDespesa(@RequestBody @Valid DespesaRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(financeiroMutationService.createDespesa(dto));
     }
@@ -54,6 +72,16 @@ public class FinanceiroController {
     @GetMapping
     @Operation(operationId = "getDespesas", summary = "Lista despesas gerais com filtros")
     @ApiResponse(responseCode = "200", description = "Despesas e resumo financeiro retornados com sucesso.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Parâmetros inválidos",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<DespesasResponseDTO> getDespesas(
         @RequestParam(required = false) CategoriaDespesaEnum categoria,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
@@ -66,6 +94,16 @@ public class FinanceiroController {
     @GetMapping("/{id}")
     @Operation(operationId = "getDespesaById", summary = "Busca uma despesa geral pelo ID")
     @ApiResponse(responseCode = "200", description = "Despesa retornada com sucesso.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Despesa não encontrada",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<DespesaResponseDTO> getDespesaById(@PathVariable UUID id) {
         return ResponseEntity.ok(financeiroQueryApi.findDespesaById(id));
     }
@@ -73,6 +111,26 @@ public class FinanceiroController {
     @PutMapping("/{id}")
     @Operation(operationId = "updateDespesa", summary = "Atualiza uma despesa geral")
     @ApiResponse(responseCode = "200", description = "Despesa atualizada com sucesso.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de validação",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Despesa não encontrada",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<DespesaResponseDTO> updateDespesa(@PathVariable UUID id, @RequestBody @Valid DespesaRequestDTO dto) {
         return ResponseEntity.ok(financeiroMutationService.updateDespesa(id, dto));
     }
@@ -80,6 +138,16 @@ public class FinanceiroController {
     @PatchMapping("/{id}/toggle-pagamento")
     @Operation(operationId = "toggleDespesaPayment", summary = "Alterna o pagamento de uma despesa geral")
     @ApiResponse(responseCode = "200", description = "Status de pagamento da despesa atualizado com sucesso.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Despesa não encontrada",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<DespesaResponseDTO> toggleDespesaPagamento(@PathVariable UUID id) {
         return ResponseEntity.ok(financeiroMutationService.togglePagamento(id));
     }
@@ -87,6 +155,21 @@ public class FinanceiroController {
     @DeleteMapping("/{id}")
     @Operation(operationId = "deleteDespesa", summary = "Remove uma despesa geral")
     @ApiResponse(responseCode = "204", description = "Despesa excluída com sucesso.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Despesa não encontrada",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<Void> deleteDespesa(@PathVariable UUID id) {
         financeiroMutationService.deleteDespesa(id);
         return ResponseEntity.noContent().build();

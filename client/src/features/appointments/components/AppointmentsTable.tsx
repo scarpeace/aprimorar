@@ -156,6 +156,7 @@ export function AppointmentsTable() {
       </div>
 
       <Pagination
+        size={eventsQuery.data.size ?? 0}
         totalElements={eventsQuery.data.totalElements}
         totalPages={eventsQuery.data.totalPages}
         currentPage={page}
