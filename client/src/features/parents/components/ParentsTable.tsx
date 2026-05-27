@@ -51,7 +51,7 @@ export function ParentsTable() {
   }
 
   return (
-    <>
+    <main className="">
       <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
         <div className="flex justify-between lg:flex-row lg:items-center lg:justify-between">
 
@@ -81,21 +81,11 @@ export function ParentsTable() {
       <table className="table table-zebra animate-[fade-up_280ms_ease-out_both]">
         <thead className="bg-base-200/80">
           <tr>
-            <th className="text-left font-semibold text-base-content/80">
-              Nome
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Contato
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Email
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              CPF
-            </th>
-            <th className="text-left font-semibold text-base-content/80">
-              Status
-            </th>
+            <th className="text-left font-semibold text-base-content/80">Nome</th>
+            <th className="text-left font-semibold text-base-content/80">Contato</th>
+            {/*<th className="text-left font-semibold text-base-content/80">Email</th>*/}
+            {/*<th className="text-left font-semibold text-base-content/80">CPF</th>*/}
+            <th className="text-left font-semibold text-base-content/80">Status</th>
           </tr>
         </thead>
 
@@ -109,8 +99,8 @@ export function ParentsTable() {
               <td className="font-bold">{parent.name}</td>
 
               <td>{formatPhone(parent.contact)}</td>
-              <td>{parent.email}</td>
-              <td>{formatCpf(parent.cpf)}</td>
+              {/*<td>{parent.email}</td>*/}
+              {/*<td>{formatCpf(parent.cpf)}</td>*/}
               <td>
                 <span className={`badge ${(parent.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
                   {(parent.active ?? true) ? "Ativo" : "Arquivado"}
@@ -128,6 +118,6 @@ export function ParentsTable() {
         currentPage={currentPage}
         onPageChange={onPageChange}
       />
-    </>
+    </main>
   );
 }

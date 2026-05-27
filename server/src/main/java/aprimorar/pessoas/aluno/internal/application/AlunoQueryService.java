@@ -52,6 +52,7 @@ public class AlunoQueryService implements AlunoQueryApi {
         }
 
         Page<Aluno> studentPage = studentRepo.findAll(spec, pageable);
+
         AlunosResponseDTO alunosResponseDTO = new AlunosResponseDTO(
             totalActiveStudents,
             new PageDTO<>(studentPage.map(student -> studentMapper.toResponseDto(student, clock)))

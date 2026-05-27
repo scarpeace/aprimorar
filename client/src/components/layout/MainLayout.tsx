@@ -12,9 +12,8 @@ import { Link, Outlet, useLocation } from "react-router-dom"
 import { useAuth } from "@/features/auth/lib/use-auth"
 
 const baseNavigation = [
-  { name: "Painel", href: "/", icon: LayoutDashboard },
-  { name: "Alunos", href: "/students", icon: GraduationCap },
-  { name: "Pais e Responsáveis", href: "/parents", icon: Handshake },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Alunos e Responsáveis", href: "/students", icon: GraduationCap },
   { name: "Colaboradores", href: "/employees", icon: UserCog },
   { name: "Atendimentos", href: "/appointments", icon: Calendar },
   { name: "Financeiro", href: "/finance", icon: Banknote },
