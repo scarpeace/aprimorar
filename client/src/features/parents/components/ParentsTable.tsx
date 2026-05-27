@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { ListSearchInput } from "@/components/ui/list-search-input";
@@ -7,7 +8,7 @@ import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetResponsaveis, type PageDTOResponsavelResponseDTO, type ResponsavelResponseDTO } from "@/kubb";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { formatCpf, formatPhone } from "@/lib/utils/formatter";
-import { Handshake } from "lucide-react";
+import { BrushCleaning, Handshake } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -33,6 +34,12 @@ export function ParentsTable() {
     setCurrentPage(0);
   };
 
+  const handleCleanFilter = () => {
+    setSearchTerm("");
+    setShowArchived(false);
+    setCurrentPage(0);
+  };
+
   if (responsaveisQuery.isError) {
     return <ErrorCard title="Não foi possível carregar a listagem de Responsáveis" error={responsaveisQuery.error}/>;
   }
@@ -46,6 +53,7 @@ export function ParentsTable() {
       <EmptyCard
         title="Nenhum responsável encontrado"
         description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
+        action={<Button variant="outline" onClick={handleCleanFilter}>Limpar filtros<BrushCleaning size={18} /></Button>}
       />
     );
   }
@@ -53,8 +61,7 @@ export function ParentsTable() {
   return (
     <main className="">
       <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
-        <div className="flex justify-between lg:flex-row lg:items-center lg:justify-between">
-
+        <div className="flex gap-3 lg:flex-row lg:items-center lg:justify-between">
           <ListSearchInput
             className="grow"
             placeholder="Buscar aluno por nome, email ou CPF"
@@ -63,7 +70,6 @@ export function ParentsTable() {
             onChange={setSearchTerm}
           />
 
-          <div className="flex flex-row items-start justify-between gap-3 xl:w-auto xl:justify-end">
             <ToggleSwitch
               label="Arquivados"
               tip="Mostrar alunos arquivados"
@@ -72,7 +78,6 @@ export function ParentsTable() {
               className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
             />
 
-          </div>
         </div>
       </section>
 
@@ -117,6 +122,7 @@ export function ParentsTable() {
         totalPages={responsaveisQuery.data?.totalPages ?? 0}
         currentPage={currentPage}
         onPageChange={onPageChange}
+        size={responsaveisQuery.data.size}
       />
     </main>
   );

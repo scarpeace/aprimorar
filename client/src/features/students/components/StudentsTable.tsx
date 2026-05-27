@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { ListSearchInput } from "@/components/ui/list-search-input";
@@ -7,6 +8,7 @@ import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetAlunos } from "@/kubb";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import {formatCpf} from "@/lib/utils/formatter";
+import { BrushCleaning, GraduationCap, Icon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -33,6 +35,12 @@ export function StudentsTable() {
     setCurrentPage(0);
   };
 
+  const handleCleanFilter = () => {
+    setSearchTerm("");
+    setShowArchived(false);
+    setCurrentPage(0);
+  };
+
 
   if (alunosQuery.isError) {
     return <ErrorCard title="Não foi possível carregar a listagem de Alunos" error={alunosQuery.error}/>;
@@ -44,10 +52,13 @@ export function StudentsTable() {
 
   if (!alunosQuery.data || !alunosQuery.data.alunos || alunosQuery.data.alunos.totalElements === 0) {
     return (
+      <>
       <EmptyCard
         title="Nenhum aluno encontrado"
         description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
-      />
+        action={<Button variant="outline" onClick={handleCleanFilter}>Limpar Filtros<BrushCleaning size={18}/></Button>}
+        />
+      </>
     );
   }
 
@@ -63,7 +74,6 @@ export function StudentsTable() {
             value={searchTerm}
             onChange={setSearchTerm}
           />
-          <div className="flex w-full flex-row items-start justify-between gap-3 xl:w-auto xl:justify-end">
             <ToggleSwitch
               label="Arquivados"
               tip="Mostrar alunos arquivados"
@@ -71,7 +81,6 @@ export function StudentsTable() {
               setToggle={handleShowArchivedChange}
               className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
             />
-          </div>
         </div>
       </section>
 
@@ -120,6 +129,7 @@ export function StudentsTable() {
         totalPages={alunosQuery.data.alunos?.totalPages ?? 0}
         currentPage={currentPage}
         onPageChange={onPageChange}
+        size={alunosQuery.data.alunos.size}
       />
     </main>
   );

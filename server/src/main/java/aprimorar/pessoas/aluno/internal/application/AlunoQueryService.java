@@ -40,18 +40,19 @@ public class AlunoQueryService implements AlunoQueryApi {
 
     @Transactional(readOnly = true)
     @Override
-    public AlunosResponseDTO getAlunos(Pageable pageable, String search, Boolean archived) {
-        var totalActiveStudents = studentRepo.countByActiveTrue();
-        Specification<Aluno> spec = AlunoSpecifications.isNotGhost();
+    public AlunosResponseDTO getAlunos(Pageable pageable, String search, Boolean includeArquived) {
+        Specification<Aluno> spec = AlunoSpecifications.isNotAdmin();
 
-        if (Boolean.TRUE.equals(archived)) {
-            spec = spec.and(AlunoSpecifications.isArchived());
+        if (Boolean.FALSE.equals(includeArquived)) {
+            spec = spec.and(AlunoSpecifications.isNotArchived());
         }
+
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and(AlunoSpecifications.searchContainsIgnoreCase(search.trim()));
         }
 
         Page<Aluno> studentPage = studentRepo.findAll(spec, pageable);
+        var totalActiveStudents = studentRepo.countByActiveTrue();
 
         AlunosResponseDTO alunosResponseDTO = new AlunosResponseDTO(
             totalActiveStudents,

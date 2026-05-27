@@ -11,7 +11,7 @@ export type ToggleSwitchProps = {
 export function ToggleSwitch({
   toggled,
   setToggle,
-  className = "",
+  className,
   label,
   tip,
 }: ToggleSwitchProps) {

@@ -1,7 +1,7 @@
 import { Button } from "./button";
 
 export type PaginationProps<T = unknown> = {
-  size?: number;
+  size: number;
   totalElements: number;
   totalPages: number;
   currentPage: number;
@@ -17,6 +17,7 @@ export function Pagination<T>({
 }: Readonly<PaginationProps<T>>) {
 
   if (totalPages <= 1) return null;
+  console.log(size)
 
   return (
     <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
