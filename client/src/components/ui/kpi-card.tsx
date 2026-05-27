@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 
 interface KpiCardProps {
   label: string
-  value: number
+  value: number | ReactNode
   className?: string
   Icon: LucideIcon
 }

@@ -4,13 +4,13 @@ import { toast } from "sonner";
 import {
   getAtendimentoByIdQueryKey,
   getAtendimentosQueryKey,
-  getAtendimentosByEmployeeIdQueryKey,
-  getAtendimentosByStudentIdQueryKey,
   useCreateAtendimento,
   useToggleEmployeeAtendimentoPayment,
   useToggleStudentAtendimentoCharge,
   useUpdateAtendimento,
   getIndicadoresAtendimentosQueryKey,
+  getAtendimentosByColaboradorQueryKey,
+  getAtendimentosByAlunoQueryKey,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
@@ -28,10 +28,10 @@ export function useAppointmentMutations() {
         toast.success("Evento criado com sucesso");
         queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: getAtendimentosByEmployeeIdQueryKey(createdAppointment.employeeId),
+          queryKey: getAtendimentosByColaboradorQueryKey(createdAppointment.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getAtendimentosByStudentIdQueryKey(createdAppointment.studentId),
+          queryKey: getAtendimentosByAlunoQueryKey(createdAppointment.studentId),
         });
         queryClient.invalidateQueries({
           queryKey: getIndicadoresAtendimentosQueryKey(),
@@ -51,10 +51,10 @@ export function useAppointmentMutations() {
         queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
         queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
         queryClient.invalidateQueries({
-          queryKey: getAtendimentosByEmployeeIdQueryKey(updatedAppointment.employeeId),
+          queryKey: getAtendimentosByColaboradorQueryKey(updatedAppointment.employeeId),
         });
         queryClient.invalidateQueries({
-          queryKey: getAtendimentosByStudentIdQueryKey(updatedAppointment.studentId),
+          queryKey: getAtendimentosByAlunoQueryKey(updatedAppointment.studentId),
         });
         queryClient.invalidateQueries({
           queryKey: getIndicadoresAtendimentosQueryKey(),
@@ -70,7 +70,7 @@ export function useAppointmentMutations() {
         toast.success("Status da cobrança atualizado");
         queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
         queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
-        queryClient.invalidateQueries({ queryKey: getAtendimentosByStudentIdQueryKey(updatedAppointment.studentId) });
+        queryClient.invalidateQueries({ queryKey: getAtendimentosByAlunoQueryKey(updatedAppointment.studentId) });
         queryClient.invalidateQueries({
           queryKey: getIndicadoresAtendimentosQueryKey(),
         });
@@ -87,7 +87,7 @@ export function useAppointmentMutations() {
         toast.success("Status do pagamento atualizado");
         queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
         queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
-        queryClient.invalidateQueries({ queryKey: getAtendimentosByEmployeeIdQueryKey(updatedAppointment.employeeId) });
+        queryClient.invalidateQueries({ queryKey: getAtendimentosByColaboradorQueryKey(updatedAppointment.employeeId) });
         queryClient.invalidateQueries({
           queryKey: getIndicadoresAtendimentosQueryKey(),
         });

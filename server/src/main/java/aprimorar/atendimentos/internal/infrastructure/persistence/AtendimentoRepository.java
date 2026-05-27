@@ -45,8 +45,8 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         """
         SELECT COUNT(a)
         FROM Atendimento a
-        WHERE coalesce(a.startDate, :startDate) >= :startDate
-        AND coalesce(a.startDate, :endDate) <= :endDate
+        WHERE a.startDate >= coalesce(:startDate, a.startDate)
+        AND a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
     long countByPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
@@ -56,8 +56,8 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         SELECT COUNT(a)
         FROM Atendimento a
         WHERE a.studentId = :studentId
-        AND coalesce(a.startDate, :startDate) >= :startDate
-        AND coalesce(a.startDate, :endDate) <= :endDate
+        AND a.startDate >= coalesce(:startDate, a.startDate)
+        AND a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
     long countByStudentIdInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
@@ -67,8 +67,8 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         SELECT COUNT(a)
         FROM Atendimento a
         WHERE a.employeeId = :employeeId
-        AND coalesce(a.startDate, :startDate) >= :startDate
-        AND coalesce(a.startDate, :endDate) <= :endDate
+        AND a.startDate >= coalesce(:startDate, a.startDate)
+        AND a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
     long countByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
@@ -79,8 +79,8 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         SELECT SUM(a.price)
         FROM Atendimento a
         WHERE a.studentId = :studentId
-        AND coalesce(a.startDate, :startDate) >= :startDate
-        AND coalesce(a.startDate, :endDate) <= :endDate
+        AND a.startDate >= coalesce(:startDate, a.startDate)
+        AND a.endDate <= coalesce(:endDate, a.endDate)
         AND a.studentChargeDate IS NOT NULL
         """
     )
@@ -91,17 +91,31 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         SELECT SUM(a.price)
         FROM Atendimento a
         WHERE a.studentId = :studentId
-        AND coalesce(a.startDate, :startDate) >= :startDate
-        AND coalesce(a.startDate, :endDate) <= :endDate
+        AND a.startDate >= coalesce(:startDate, a.startDate)
+        AND a.endDate <= coalesce(:endDate, a.endDate)
         AND a.studentChargeDate IS NULL
         """
     )
     BigDecimal sumPendingByStudentInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
-    @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Atendimento a WHERE a.employeeId = :employeeId AND a.startDate BETWEEN :startDate AND :endDate AND a.employeePaymentDate IS NOT NULL")
+    @Query("""
+        SELECT COALESCE(SUM(a.payment), 0)
+        FROM Atendimento a
+        WHERE a.employeeId = :employeeId
+          AND a.startDate >= coalesce(:startDate, a.startDate)
+          AND a.endDate <= coalesce(:endDate, a.endDate)
+          AND a.employeePaymentDate IS NOT NULL
+        """)
     BigDecimal sumPaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
-    @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Atendimento a WHERE a.employeeId = :employeeId AND a.startDate BETWEEN :startDate AND :endDate AND a.employeePaymentDate IS NULL")
+    @Query("""
+        SELECT COALESCE(SUM(a.payment), 0)
+        FROM Atendimento a
+        WHERE a.employeeId = :employeeId
+          AND a.startDate >= coalesce(:startDate, a.startDate)
+          AND a.endDate <= coalesce(:endDate, a.endDate)
+          AND a.employeePaymentDate IS NULL
+        """)
     BigDecimal sumUnpaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     @Modifying

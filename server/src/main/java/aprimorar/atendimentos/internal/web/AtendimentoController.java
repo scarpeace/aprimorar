@@ -87,40 +87,40 @@ public class AtendimentoController {
 
     @GetMapping("/{id}/aluno")
     @Operation(
-        operationId = "getAtendimentosByStudentId",
+        operationId = "getAtendimentosByAluno",
         description = "Retorna a agenda paginada de um aluno junto com os indicadores do mesmo periodo."
     )
     @ApiResponse(
         responseCode = "200",
         description = "Agenda e resumo financeiro do aluno retornados conforme periodo e filtros informados."
     )
-    public ResponseEntity<AtendimentosAlunoResponseDTO> getAtendimentosByStudentId(
+    public ResponseEntity<AtendimentosAlunoResponseDTO> getAtendimentosByAluno(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
         @RequestParam(required = false) Boolean charged
     ) {
-        return ResponseEntity.ok(atendimentoQueryApi.getAtendimentosByStudentId(pageable, id, startDate, endDate, charged));
+        return ResponseEntity.ok(atendimentoQueryApi.getAtendimentosByAluno(pageable, id, startDate, endDate, charged));
     }
 
     @GetMapping("/{id}/colaborador")
     @Operation(
-        operationId = "getAtendimentosByEmployeeId",
+        operationId = "getAtendimentosByColaborador",
         description = "Retorna a agenda paginada de um colaborador junto com os indicadores do mesmo periodo."
     )
     @ApiResponse(
         responseCode = "200",
         description = "Agenda e resumo financeiro do colaborador retornados conforme periodo e filtros informados."
     )
-    public ResponseEntity<AtendimentosColaboradorResponseDTO> getAtendimentosByEmployeeId(
+    public ResponseEntity<AtendimentosColaboradorResponseDTO> getAtendimentosByColaborador(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) Boolean hidePaid,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
-        return ResponseEntity.ok(atendimentoQueryApi.getAtendimentosByEmployeeId(pageable, id, hidePaid, startDate, endDate));
+        return ResponseEntity.ok(atendimentoQueryApi.getAtendimentosByColaborador(pageable, id, hidePaid, startDate, endDate));
     }
 
     @GetMapping("/finance/report")

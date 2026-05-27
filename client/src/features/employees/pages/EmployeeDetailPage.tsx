@@ -1,8 +1,8 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import {
-  useGetAtendimentosByEmployeeId,
   useFindColaboradorById,
+  useGetAtendimentosByColaborador,
 } from "@/kubb";
 import { CircleDollarSign, Clock3, FileUser } from "lucide-react";
 import { useState } from "react";
@@ -33,7 +33,7 @@ export function EmployeeDetailPage() {
 
   const employeeQuery = useFindColaboradorById(employeeId);
 
-  const employeeAppointments = useGetAtendimentosByEmployeeId(employeeId, {
+  const employeeAppointments = useGetAtendimentosByColaborador(employeeId, {
     page: currentPage,
     sort: ["endDate,desc", "id,asc"],
     startDate: startDate?.toISOString(),

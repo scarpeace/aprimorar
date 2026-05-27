@@ -5,10 +5,10 @@ import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { useGetResponsaveis, type PageDTOResponsavelResponseDTO, type ResponsavelResponseDTO } from "@/kubb";
+import { useGetResponsaveis } from "@/kubb";
 import { useDebounce } from "@/lib/hooks/use-debounce";
-import { formatCpf, formatPhone } from "@/lib/utils/formatter";
-import { BrushCleaning, Handshake } from "lucide-react";
+import { formatPhone } from "@/lib/utils/formatter";
+import { BrushCleaning } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -61,18 +61,18 @@ export function ParentsTable() {
   return (
     <main className="">
       <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
-        <div className="flex gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <ListSearchInput
             className="grow"
-            placeholder="Buscar aluno por nome, email ou CPF"
-            ariaLabel="Buscar aluno"
+            placeholder="Buscar responsável por nome, email ou CPF"
+            ariaLabel="Buscar responsável"
             value={searchTerm}
             onChange={setSearchTerm}
           />
 
             <ToggleSwitch
               label="Arquivados"
-              tip="Mostrar alunos arquivados"
+              tip="Mostrar responsáveis arquivados"
               toggled={showArchived}
               setToggle={handleShowArchivedChange}
               className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"

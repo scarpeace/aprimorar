@@ -10,19 +10,9 @@ import { ExpensesTable } from "../components/ExpensesTable";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { brl } from "@/lib/utils/formatter";
 
-function getCurrentMonthDateRange() {
-  const now = new Date();
-  const startDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-
-  return { initialStartDate: startDate, initialEndDate: endDate };
-}
-
 export function FinancesPage() {
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
-  const currentMonthDateRange = getCurrentMonthDateRange();
-
-  const { startDate, endDate, ...dateFilter } = usePageDateFilter(currentMonthDateRange);
+  const { startDate, endDate, ...dateFilter } = usePageDateFilter();
 
   const indicadoresAtendimentosQuery = useGetIndicadoresAtendimentos({
     startDate: startDate?.toISOString(),

@@ -28,10 +28,15 @@ function normalizeEndDate(date: Date) {
 
 export function usePageDateFilter(options: UsePageDateFilterOptions = {}): PageDateFilter {
   const [startDate, setStartDate] = useState<Date | undefined>(() =>
-    options.initialStartDate ? normalizeStartDate(options.initialStartDate) : undefined,
+    options.initialStartDate
+      ? normalizeStartDate(options.initialStartDate)
+      : undefined
   );
+
   const [endDate, setEndDate] = useState<Date | undefined>(() =>
-    options.initialEndDate ? normalizeEndDate(options.initialEndDate) : undefined,
+    options.initialEndDate
+      ? normalizeEndDate(options.initialEndDate)
+      : undefined
   );
 
   const handleStartDateChange = useCallback((date: Date | null) => {

@@ -100,7 +100,7 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
 
     @Transactional(readOnly = true)
     @Override
-    public AtendimentosColaboradorResponseDTO getAtendimentosByEmployeeId(
+    public AtendimentosColaboradorResponseDTO getAtendimentosByColaborador(
         Pageable pageable,
         UUID employeeId,
         Boolean hidePaid,
@@ -130,7 +130,7 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
 
     @Transactional(readOnly = true)
     @Override
-    public AtendimentosAlunoResponseDTO getAtendimentosByStudentId(
+    public AtendimentosAlunoResponseDTO getAtendimentosByAluno(
         Pageable pageable,
         UUID studentId,
         Instant startDate,

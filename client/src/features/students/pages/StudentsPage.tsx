@@ -1,16 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { type AlunoResponseDTO } from "@/kubb";
-import { Check, GraduationCap, Plus } from "lucide-react";
+import { ParentForm } from "@/features/parents/components/ParentForm";
+import { ParentsTable } from "@/features/parents/components/ParentsTable";
+import { type AlunoResponseDTO, type ResponsavelResponseDTO } from "@/kubb";
+import { GraduationCap, Plus } from "lucide-react";
 import { useState } from "react";
 import { StudentsTable } from "../components/StudentsTable";
 import { StudentForm } from "../components/StudentForm";
-import { ParentsTable } from "@/features/parents/components/ParentsTable";
-import { StudentsAndParentsKpis } from "../components/StudentsAndParentsKpis";
 
 export function StudentsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isParentFormOpen, setIsParentFormOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<AlunoResponseDTO | null>(null);
+  const [selectedParent, setSelectedParent] = useState<ResponsavelResponseDTO | null>(null);
 
   const headerProps = {
     description: "Resumo de alunos e responsáveis.",
@@ -27,6 +29,16 @@ export function StudentsPage() {
   const handleCloseForm = () => {
     setSelectedStudent(null);
     setIsFormOpen(false);
+  };
+
+  const handleOpenParentForm = (parent?: ResponsavelResponseDTO) => {
+    setSelectedParent(parent || null);
+    setIsParentFormOpen(true);
+  };
+
+  const handleCloseParentForm = () => {
+    setSelectedParent(null);
+    setIsParentFormOpen(false);
   };
 
   return (
@@ -51,7 +63,7 @@ export function StudentsPage() {
                   <h3 className="text-2xl font-bold text-base-content">Responsáveis</h3>
                   <p className="text-sm text-base-content/60">Selecione um responsável para ver os detalhes.</p>
                 </div>
-                <Button onClick={() => handleOpenForm()} variant="success"><Plus size={16} />Novo Responsável</Button>
+                <Button onClick={() => handleOpenParentForm()} variant="success"><Plus size={16} />Novo Responsável</Button>
               </div>
 
               <ParentsTable />
@@ -73,6 +85,24 @@ export function StudentsPage() {
                 initialData={selectedStudent}
                 onSuccess={handleCloseForm}
                 onCancel={handleCloseForm}
+              />
+            </div>
+          </div>
+        )}
+
+        {isParentFormOpen && (
+          <div className="modal modal-open">
+            <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
+              <h3 className="mb-1 text-lg font-bold">
+                {selectedParent ? "Editar Responsável" : "Cadastrar Novo Responsável"}
+              </h3>
+              <p className="mb-4 text-sm text-base-content/60">
+                Atualize os dados principais do responsável e mantenha os vínculos organizados.
+              </p>
+              <ParentForm
+                initialData={selectedParent}
+                onSuccess={handleCloseParentForm}
+                onCancel={handleCloseParentForm}
               />
             </div>
           </div>

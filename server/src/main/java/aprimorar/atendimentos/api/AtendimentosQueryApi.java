@@ -24,7 +24,7 @@ public interface AtendimentosQueryApi {
 
     AtendimentoResponseDTO findAtendimentoById(UUID id);
 
-    AtendimentosColaboradorResponseDTO getAtendimentosByEmployeeId(
+    AtendimentosColaboradorResponseDTO getAtendimentosByColaborador(
         Pageable pageable,
         UUID employeeId,
         Boolean hidePaid,
@@ -32,7 +32,7 @@ public interface AtendimentosQueryApi {
         Instant endDate
     );
 
-    AtendimentosAlunoResponseDTO getAtendimentosByStudentId(
+    AtendimentosAlunoResponseDTO getAtendimentosByAluno(
         Pageable pageable,
         UUID studentId,
         Instant startDate,

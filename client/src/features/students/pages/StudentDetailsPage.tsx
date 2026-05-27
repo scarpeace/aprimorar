@@ -1,8 +1,8 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import {
-  useGetAtendimentosByStudentId,
   useBuscarAlunoPorId,
+  useGetAtendimentosByAluno,
 } from "@/kubb";
 import {
   Calendar,
@@ -38,13 +38,15 @@ export function StudentDetailsPage() {
   const dateFilter = usePageDateFilter();
   const { startDate, endDate } = dateFilter;
 
-  const studentAppointments = useGetAtendimentosByStudentId(studentId, {
+  const studentAppointments = useGetAtendimentosByAluno(studentId, {
     page: currentPage,
     sort: ["endDate,desc", "id,asc"],
     startDate: startDate?.toISOString(),
     endDate: endDate?.toISOString(),
     charged: hideCharged ? false : undefined,
   });
+
+  console.log(studentAppointments.data)
 
   const handleToggleHideCharged = (value: boolean) => {
     setHideCharged(value);
