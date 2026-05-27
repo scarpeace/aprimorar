@@ -25,18 +25,3 @@ export type AuthContextValue = {
 export const AUTH_STORAGE_KEY = "aprimorar.auth";
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
-
-export function readStoredAuth(): StoredAuth | null {
-  const storedValue = localStorage.getItem(AUTH_STORAGE_KEY);
-
-  if (!storedValue) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(storedValue) as StoredAuth;
-  } catch {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
-    return null;
-  }
-}
