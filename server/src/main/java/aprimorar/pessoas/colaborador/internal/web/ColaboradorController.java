@@ -22,7 +22,9 @@ import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresListDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresResponseDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.colaborador.api.dto.ColaboradoresKpisDTO;
 import aprimorar.pessoas.colaborador.internal.application.ColaboradorMutationService;
+import aprimorar.pessoas.colaborador.internal.application.ColaboradorQueryService;
 import aprimorar.pessoas.colaborador.internal.web.dto.ColaboradorRequestDTO;
 import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,11 +41,11 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "Colaborador", description = "APIs de gestão de colaboradores")
 public class ColaboradorController {
 
-    private final ColaboradorQueryApi colaboradorQueryService;
+    private final ColaboradorQueryService colaboradorQueryService;
     private final ColaboradorMutationService colaboradorMutationService;
 
     public ColaboradorController(
-        ColaboradorQueryApi colaboradorQueryService,
+        ColaboradorQueryService colaboradorQueryService,
         ColaboradorMutationService colaboradorMutationService
     ) {
         this.colaboradorQueryService = colaboradorQueryService;
@@ -95,6 +97,24 @@ public class ColaboradorController {
     ) {
         ColaboradoresResponseDTO colaboradores = colaboradorQueryService.getColaboradores(pageable, busca, arquivado);
         return ResponseEntity.ok(colaboradores);
+    }
+
+    @GetMapping("/kpis")
+    @Operation(operationId = "getColaboradoresKpis", description = "Retorna os KPIs de colaboradores.")
+    @ApiResponse(responseCode = "200", description = "KPIs de colaboradores retornados com sucesso.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Parâmetros inválidos",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ResponseEntity<ColaboradoresKpisDTO> getColaboradoresKpis() {
+        ColaboradoresKpisDTO kpis = colaboradorQueryService.getColaboradoresKpis();
+        return ResponseEntity.ok(kpis);
     }
 
     @GetMapping("/options")

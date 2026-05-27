@@ -46,8 +46,6 @@ export function StudentDetailsPage() {
     charged: hideCharged ? false : undefined,
   });
 
-  console.log(studentAppointments.data)
-
   const handleToggleHideCharged = (value: boolean) => {
     setHideCharged(value);
     setCurrentPage(0);
@@ -65,7 +63,7 @@ export function StudentDetailsPage() {
       <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <KpiCard
-            label="Total de eventos"
+            label="Total de Atendimentos"
             value={studentAppointments.data?.summary?.totalAtendimentos}
             Icon={Calendar}
           />

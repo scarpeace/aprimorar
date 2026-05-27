@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Resumo financeiro e de atendimentos de um aluno")
-public record AlunoSummaryDTO(
+public record AlunoFinancialSummaryDTO(
 
   @Schema(description = "Total de eventos")
   Long totalEvents,

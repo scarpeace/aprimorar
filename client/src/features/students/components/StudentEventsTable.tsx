@@ -33,7 +33,6 @@ export const StudentEventsTable = memo(function StudentEventsTable({
 }: StudentEventsTableProps) {
   const { toggleStudentCharge } = useAppointmentMutations();
   const events = appointments?.content ?? [];
-  const totalEvents = appointments?.totalElements ?? events.length;
 
   const handleToggleStudentCharge = (appointmentId: string) => {
     toggleStudentCharge.mutate({ id: appointmentId });
@@ -60,7 +59,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({
             </h3>
             {events.length > 0 && (
               <span className="badge badge-outline badge-primary badge-sm font-semibold">
-                {totalEvents} {totalEvents === 1 ? "evento" : "eventos"}
+                {events.length} {events.length === 1 ? "evento" : "eventos"}
               </span>
             )}
           </div>
@@ -78,7 +77,7 @@ export const StudentEventsTable = memo(function StudentEventsTable({
           <ToggleSwitch
             toggled={hideCharged}
             setToggle={onHideChargedChange}
-            label="Ocultar Cobrados"
+            label="Ocultar Pagos"
             className="border-warning/30 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
           />
         </div>

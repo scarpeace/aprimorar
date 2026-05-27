@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 import aprimorar.pessoas.aluno.api.AlunoQueryApi;
 import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.aluno.api.dto.AlunosKpisDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosListDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
 import aprimorar.pessoas.aluno.internal.application.AlunoMutationService;
+import aprimorar.pessoas.aluno.internal.application.AlunoQueryService;
 import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,11 +43,11 @@ import lombok.extern.slf4j.Slf4j;
 public class AlunoController {
 
     private final AlunoMutationService alunoMutationService;
-    private final AlunoQueryApi alunoQueryApi;
+    private final AlunoQueryService alunoQueryService;
 
-    public AlunoController(AlunoMutationService alunoMutationService, AlunoQueryApi alunoQueryApi) {
+    public AlunoController(AlunoMutationService alunoMutationService, AlunoQueryService alunoQueryService) {
         this.alunoMutationService = alunoMutationService;
-        this.alunoQueryApi = alunoQueryApi;
+        this.alunoQueryService = alunoQueryService;
     }
 
     @PostMapping
@@ -89,8 +91,26 @@ public class AlunoController {
         @RequestParam(required = false) String search,
         @RequestParam(required = false) Boolean archived
     ) {
-        AlunosResponseDTO students = alunoQueryApi.getAlunos(pageable, search, archived);
+        AlunosResponseDTO students = alunoQueryService.getAlunos(pageable, search, archived);
         return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/kpis")
+    @Operation(operationId = "getAlunosKpis", description = "Retorna os KPIs de alunos.")
+    @ApiResponse(responseCode = "200", description = "KPIs de alunos retornados com sucesso.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Parâmetros inválidos",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ResponseEntity<AlunosKpisDTO> getAlunosKpis() {
+        AlunosKpisDTO kpis = alunoQueryService.getAlunosKpis();
+        return ResponseEntity.ok(kpis);
     }
 
     @GetMapping("/responsavel/{parentId}")
@@ -104,7 +124,7 @@ public class AlunoController {
     public ResponseEntity<List<AlunoResponseDTO>> getAlunosPorResponsavel(
         @PathVariable UUID parentId
     ) {
-        List<AlunoResponseDTO> options = alunoQueryApi.getAlunosByResponsavelId(parentId);
+        List<AlunoResponseDTO> options = alunoQueryService.getAlunosByResponsavelId(parentId);
         return ResponseEntity.ok(options);
     }
 
@@ -117,7 +137,7 @@ public class AlunoController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<List<AlunosListDTO>> listAlunos() {
-        List<AlunosListDTO> options = alunoQueryApi.listAlunos();
+        List<AlunosListDTO> options = alunoQueryService.listAlunos();
         return ResponseEntity.ok(options);
     }
 
@@ -135,7 +155,7 @@ public class AlunoController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<AlunoResponseDTO> getStudentById(@PathVariable UUID studentId) {
-        AlunoResponseDTO foundAluno = alunoQueryApi.findAlunoById(studentId);
+        AlunoResponseDTO foundAluno = alunoQueryService.findAlunoById(studentId);
         return ResponseEntity.ok(foundAluno);
     }
 

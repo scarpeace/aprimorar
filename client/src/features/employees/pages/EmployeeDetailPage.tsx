@@ -4,7 +4,7 @@ import {
   useFindColaboradorById,
   useGetAtendimentosByColaborador,
 } from "@/kubb";
-import { CircleDollarSign, Clock3, FileUser } from "lucide-react";
+import { Calendar, CircleDollarSign, Clock3, FileUser } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { KpiCard } from "@/components/ui/kpi-card";
@@ -53,7 +53,13 @@ export function EmployeeDetailPage() {
       </div>
 
       <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <KpiCard
+            label="Total de Atendimentos"
+            value={employeeAppointments.data?.summary?.totalAtendimentos}
+            Icon={Calendar}
+          />
+
           <KpiCard
             label="Total pago"
             value={<span className="text-success">{brl.format(employeeAppointments.data?.summary?.totalPaid ?? 0)}</span>}

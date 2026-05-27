@@ -5,7 +5,7 @@
 - Priorizar regras de negocio claras, contratos estaveis e fronteiras de modulo respeitadas.
 
 ## Arquitetura em uma frase
-- Backend modular (Spring Modulith): entrada HTTP no modulo, orquestracao em service, persistencia via repository, integracao externa apenas por contratos `...api`.
+- Backend modular (Spring Modulith): entrada HTTP no pacote `internal/web` do modulo, orquestracao em service, persistencia via repository, integracao entre modulos apenas por contratos `...api`.
 
 ## Fluxo de implementacao obrigatorio
 - Controller: recebe request, valida DTO (`@Valid`), delega para service e retorna DTO de resposta; sem regra de negocio.
@@ -14,7 +14,7 @@
 - Mapper/construcao de DTO: manter conversao explicita na borda (controller/service), sem vazar entidade JPA para API.
 
 ## Padroes de escrita de codigo
-- Nomeie classes/metodos por intencao de dominio (`archiveStudent`, `toggleExpensePayment`) e nao por detalhe tecnico.
+- Nomeie classes/metodos por intencao de dominio (`archiveAluno`, `togglePagamentoDespesa`) e nao por detalhe tecnico.
 - Prefira metodos curtos por caso de uso; extraia metodos privados quando houver mais de uma regra no mesmo fluxo.
 - Nao criar "utils" generico sem dono; helper deve viver no modulo que usa.
 - Evite logica duplicada entre modulos; quando for contrato de negocio, promova para `...api` do modulo dono.
@@ -45,9 +45,11 @@
 - Dependencia cruzada so por `...api`; nunca importar classes internas de outro modulo.
 - Antes de nova dependencia, leia `package-info.java` do modulo e confirme `allowedDependencies`.
 - Modulos atuais e limites principais:
-  - `appointment` pode depender de `expense::api`, `registration::api`, `shared`.
-  - `dashboard` pode depender de `appointment::api`, `shared::*`.
-  - `expense` e `registration` dependem de `shared::*`.
+  - `atendimentos` pode depender de `financeiro::api`, `pessoas::api`, `shared::*`, `shared`.
+  - `financeiro` pode depender de `shared::*`.
+  - `pessoas` pode depender de `shared::*`, `shared`.
+  - `auth` pode depender de `shared::*`, `shared`.
+  - `shared` nao deve depender de outros modulos de dominio.
 - Mudou contrato de endpoint: alinhar OpenAPI e comunicar impacto no frontend (Kubb depende de `/v3/api-docs`).
 
 ## Matriz de testes por tipo de mudanca

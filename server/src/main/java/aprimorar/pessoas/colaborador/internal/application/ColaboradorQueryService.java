@@ -3,6 +3,7 @@ package aprimorar.pessoas.colaborador.internal.application;
 import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
 import aprimorar.pessoas.colaborador.api.ColaboradorDutyEnum;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.colaborador.api.dto.ColaboradoresKpisDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresListDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresResponseDTO;
 import aprimorar.pessoas.colaborador.internal.domain.Colaborador;
@@ -40,7 +41,7 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
     @Transactional(readOnly = true)
     @Override
     public ColaboradoresResponseDTO getColaboradores(Pageable pageable, String busca, Boolean arquivado) {
-        long colaboradoresAtivos = colaboradorRepo.countByActiveTrue();
+        long colaboradoresAtivos = colaboradorRepo.countByActiveTrueAndDutyNot(ColaboradorDutyEnum.SYSTEM);
         Specification<Colaborador> spec = ColaboradorSpecifications.isNotGhost();
 
         if (Boolean.TRUE.equals(arquivado)) {
@@ -60,6 +61,12 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
 
         log.info("Consulta de colaboradores finalizada, {} registros encontrados.", colaboradoresPage.getTotalElements());
         return colaboradoresDtoPage;
+    }
+
+    public ColaboradoresKpisDTO getColaboradoresKpis() {
+        long totalColaboradores = colaboradorRepo.count();
+        long totalColaboradoresAtivos = colaboradorRepo.countByActiveTrueAndDutyNot(ColaboradorDutyEnum.SYSTEM);
+        return new ColaboradoresKpisDTO(totalColaboradores, totalColaboradoresAtivos);
     }
 
     @Transactional(readOnly = true)

@@ -1,5 +1,6 @@
 package aprimorar.pessoas.colaborador.internal.application;
 
+import aprimorar.atendimentos.api.AtendimentosQueryApi;
 import aprimorar.pessoas.colaborador.api.ColaboradorDeletedEvent;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
 import aprimorar.pessoas.colaborador.internal.domain.Colaborador;
@@ -24,15 +25,18 @@ public class ColaboradorMutationService {
     private final ColaboradorRepository colaboradorRepo;
     private final ColaboradorMapper colaboradorMapper;
     private final ApplicationEventPublisher eventPublisher;
+    private final AtendimentosQueryApi atendimentosQueryApi;
 
     public ColaboradorMutationService(
         ColaboradorRepository colaboradorRepo,
         ColaboradorMapper colaboradorMapper,
-        ApplicationEventPublisher eventPublisher
+        ApplicationEventPublisher eventPublisher,
+        AtendimentosQueryApi atendimentosQueryApi
     ) {
         this.colaboradorRepo = colaboradorRepo;
         this.colaboradorMapper = colaboradorMapper;
         this.eventPublisher = eventPublisher;
+        this.atendimentosQueryApi = atendimentosQueryApi;
     }
 
     @Transactional
@@ -80,6 +84,9 @@ public class ColaboradorMutationService {
     @Transactional
     public void archiveColaborador(UUID colaboradorId) {
         Colaborador colaborador = findByIdOrThrow(colaboradorId);
+        if (atendimentosQueryApi.colaboradorHasPendingPayment(colaboradorId)) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "É possivel arquivar um colaborador com pendências financeiras.");
+        }
         colaborador.archive();
         log.info("Colaborador {} arquivado com sucesso.", colaborador.getName().toUpperCase());
     }
@@ -96,6 +103,9 @@ public class ColaboradorMutationService {
         Colaborador colaborador = findByIdOrThrow(colaboradorId);
 
         validateNotSystemRecord(colaborador, "deletado");
+        if (atendimentosQueryApi.colaboradorHasPendingPayment(colaboradorId)) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "É possivel excluir um colaborador com pendências financeiras.");
+        }
 
         colaboradorRepo.delete(colaborador);
         eventPublisher.publishEvent(new ColaboradorDeletedEvent(colaboradorId));

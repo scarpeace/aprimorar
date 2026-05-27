@@ -107,11 +107,12 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
         Instant startDate,
         Instant endDate
     ) {
+        Boolean paidFilter = Boolean.TRUE.equals(hidePaid) ? Boolean.FALSE : null;
 
         Specification<Atendimento> spec = AtendimentoSpecifications.withEmployeeId(employeeId)
             .and(AtendimentoSpecifications.withStartDateAfter(startDate))
             .and(AtendimentoSpecifications.withEndDateBefore(endDate))
-            .and(AtendimentoSpecifications.withEmployeePaid(hidePaid));
+            .and(AtendimentoSpecifications.withEmployeePaid(paidFilter));
 
         Page<Atendimento> atendimentoPage = atendimentoRepo.findAll(spec, pageable);
         Page<AtendimentoResponseDTO> dtoPage = atendimentoPage.map(atendimentoMapper::convertToDto);

@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { ListSearchInput } from "@/components/ui/list-search-input";
-import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { useGetColaboradores, type ColaboradorResponseDTO } from "@/kubb";
+import { useGetColaboradoresKpis, type ColaboradorResponseDTO } from "@/kubb";
 import { CheckCircle, FileUser, Plus, UserCheck, UserCircle } from "lucide-react";
 import { useState } from "react";
 import { EmployeesTable } from "../components/EmployeesTable";
@@ -20,6 +18,7 @@ export function EmployeesPage() {
     backLink: "/",
   };
 
+  const { data: kpisColaboradores } = useGetColaboradoresKpis();
   const handleOpenForm = (employee?: ColaboradorResponseDTO) => {
     setSelectedEmployee(employee || null);
     setIsFormOpen(true);
@@ -33,32 +32,26 @@ export function EmployeesPage() {
   return (
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-3">
-        <section className=" bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          <div className="flex flex-col gap-3">
+        <section className="rounded-2xl bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
+          <div className="flex flex-row justify-between items-center gap-3">
             <div>
-              <h3 className="text-2xl font-bold text-base-content">Indicadores de colaboradores</h3>
+              <h3 className="text-2xl font-bold text-base-content">Resumo dos Colaboradores</h3>
               <p className="text-sm text-base-content/60">
                 Visão geral dos colaboradores ativos e do total cadastrado desde o inicio.
               </p>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex gap-3">
               <KpiCard
-                label="Ativos atualmente (Mockado)"
-                value={29}
+                label="Ativos atualmente"
+                value={kpisColaboradores?.totalColaboradoresAtivos}
                 Icon={UserCheck}
                 className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
               />
               <KpiCard
-                label="Total Desde o início (Mockado)"
-                value={200}
+                label="Total Desde o início"
+                value={kpisColaboradores?.totalColaboradores}
                 Icon={UserCircle}
-                className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-              />
-              <KpiCard
-                label="Pago desde o Início (Mockado)"
-                value={2000}
-                Icon={CheckCircle}
                 className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
               />
             </div>
