@@ -10,6 +10,7 @@ import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
 import { AppointmentMobileCard } from "./AppointmentMobileCard";
 import { useAppointmentsFilters } from "../hooks/use-appointments-filters";
+import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter";
 
 
 export function AppointmentsTable() {
@@ -25,6 +26,8 @@ export function AppointmentsTable() {
     handleHidePaidToggle,
     handlePageChange,
   } = useAppointmentsFilters();
+
+  const { startDate, endDate } = usePageDateFilter()
 
   const eventsQuery = useGetAtendimentos({
     page,

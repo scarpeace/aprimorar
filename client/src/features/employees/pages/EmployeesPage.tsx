@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetColaboradoresKpis, type ColaboradorResponseDTO } from "@/kubb";
-import { CheckCircle, FileUser, Plus, UserCheck, UserCircle } from "lucide-react";
+import { FileUser, Plus, UserCheck, UserCircle } from "lucide-react";
 import { useState } from "react";
 import { EmployeesTable } from "../components/EmployeesTable";
 import { EmployeeForm } from "../components/EmployeeForm";

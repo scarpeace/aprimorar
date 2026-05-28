@@ -50,9 +50,9 @@ export function StudentsPage() {
       <section className="mb-3 rounded-2xl bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
         <div className="flex flex-row justify-between items-center gap-3">
           <div>
-            <h3 className="text-2xl font-bold text-base-content">Resumo dos Colaboradores</h3>
+            <h3 className="text-2xl font-bold text-base-content">Resumo dos Alunos</h3>
             <p className="text-sm text-base-content/60">
-              Visão geral dos colaboradores ativos e do total cadastrado desde o inicio.
+              Visão geral dos alunos ativos e do total cadastrado desde o inicio.
             </p>
           </div>
 

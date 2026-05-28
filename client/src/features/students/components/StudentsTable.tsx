@@ -8,7 +8,7 @@ import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetAlunos } from "@/kubb";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import {formatCpf} from "@/lib/utils/formatter";
-import { BrushCleaning, GraduationCap, Icon } from "lucide-react";
+import { BrushCleaning} from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

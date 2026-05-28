@@ -1,33 +1,19 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { Button } from "@/components/ui/button";
-import {useGetDespesas, useGetIndicadoresAtendimentos, useGetOverviewFinanceiroAlunos, useGetOverviewFinanceiroColaboradores,} from "@/kubb";
+import {useGetDespesas,} from "@/kubb";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
-import { BanknoteArrowDown, BanknoteArrowUp, GraduationCap, HandCoins, Landmark, Plus, UserCog } from "lucide-react";
+import { Landmark, Plus } from "lucide-react";
 import { useState } from "react";
 import { ExpenseForm } from "../components/ExpenseForm";
 import { ExpensesTable } from "../components/ExpensesTable";
-import { KpiCard } from "@/components/ui/kpi-card";
-import { brl } from "@/lib/utils/formatter";
+import { ErrorCard } from "@/components/ui/error-card";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { FinancialKpis } from "../components/FinancialKpis";
 
 export function FinancesPage() {
   const [isExpenseFormOpen, setIsExpenseFormOpen] = useState(false);
   const { startDate, endDate, ...dateFilter } = usePageDateFilter();
-
-  const indicadoresAtendimentosQuery = useGetIndicadoresAtendimentos({
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
-  });
-
-  const atendimentosColaboradoresQuery = useGetOverviewFinanceiroColaboradores({
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
-  });
-
-  const atendimentosAlunosQuery = useGetOverviewFinanceiroAlunos({
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
-  });
 
   const expensesQuery = useGetDespesas({
     startDate: startDate?.toISOString(),
@@ -35,20 +21,9 @@ export function FinancesPage() {
     size: 9999,
     sort: ["date,desc"],
   });
-  // const studentsWithFinanceQuery = useGetStudentsWithFinance({
-  //   size: 1,
-  //   startDate: startDate?.toISOString(),
-  //   endDate: endDate?.toISOString(),
-  // });
-  // const employeesWithFinanceQuery = useGetEmployeesWithFinance({
-  //   size: 1,
-  //   startDate: startDate?.toISOString(),
-  //   endDate: endDate?.toISOString(),
-  // });
 
   const totalGeneralExpenses = expensesQuery.data?.totalExpenses ?? 0;
   const pendingGeneralExpenses = expensesQuery.data?.pendingExpenses ?? 0;
-  // const currentBalance = summaryQuery.data?.balance ?? 0;
 
   const handleOpenExpenseForm = () => {
     setIsExpenseFormOpen(true);
@@ -66,87 +41,31 @@ export function FinancesPage() {
     backLink: "/",
   };
 
-  // if (summaryQuery.isPending) {
-  //   return (
-  //     <PageLayout {...headerProps}>
-  //       <LoadingCard title="Carregando panorama financeiro" />
-  //     </PageLayout>
-  //   );
-  // }
+  if (expensesQuery.isError) {
+    return <ErrorCard title="Não foi possível carregar a listagem de Responsáveis" error={expensesQuery.error}/>;
+  }
 
-  // if (summaryQuery.isError) {
+  if (expensesQuery.isLoading) {
+    return <LoadingSpinner text="Carregando Responsáveis..." />;
+  }
+
+  // if (!expensesQuery.data || !expensesQuery.data.content || expensesQuery.data.totalElements === 0) {
   //   return (
-  //     <PageLayout {...headerProps}>
-  //       <ErrorCard
-  //         title="Nao foi possivel carregar o financeiro"
-  //         error={summaryQuery.error}
-  //       />
-  //     </PageLayout>
+  //     <EmptyCard
+  //       title="Nenhum responsável encontrado"
+  //       description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
+  //       action={<Button variant="outline" onClick={handleCleanFilter}>Limpar filtros<BrushCleaning size={18} /></Button>}
+  //     />
   //   );
   // }
 
   return (
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-4">
-
-        {/*<FinanceSummarySection
-          currentBalance={currentBalance}
-        />*/}
-
-        <section className="flex flex-row justify-between rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
-            <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><GraduationCap size={30}/> Alunos</h1>
-
-            <KpiCard
-              label="Total pago"
-              value={<span className="text-success">{brl.format(indicadoresAtendimentosQuery.data?.totalStudentCharged ?? 0)}</span>}
-              Icon={BanknoteArrowUp}
-              className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-            />
-
-            <KpiCard
-              label="Total pendente"
-              value={<span className="text-warning">{brl.format(indicadoresAtendimentosQuery.data?.totalStudentPending ?? 0)}</span>}
-              Icon={BanknoteArrowDown}
-              className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
-              />
-        </div>
-
-          <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
-            <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><UserCog size={30}/>Colaboradores</h1>
-
-            <KpiCard
-              label="Total pago"
-              value={<span className="text-success">{brl.format(indicadoresAtendimentosQuery.data?.totalEmployeePaid ?? 0)}</span>}
-              Icon={BanknoteArrowUp}
-              className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-            />
-
-            <KpiCard
-              label="Total pendente"
-              value={<span className="text-warning">{brl.format(indicadoresAtendimentosQuery.data?.totalEmployeePending ?? 0)}</span>}
-              Icon={BanknoteArrowDown}
-              className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
-            />
-          </div>
-
-          <div className={`flex flex-col rounded-xl p-3 gap-4 border-2 border-base-300`}>
-            <h1 className="text-2xl flex gap-3 items-center font-bold text-base-content"><HandCoins size={30}/>Despesas Gerais</h1>
-
-            <KpiCard
-              label="Despesas Gerais Pagas"
-              value={<span className="text-success">{brl.format(totalGeneralExpenses)}</span>}
-              Icon={BanknoteArrowUp}
-              className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-            />
-            <KpiCard
-              label="Despesas Gerais Pendentes"
-              value={<span className="text-warning">{brl.format(pendingGeneralExpenses)}</span>}
-              Icon={BanknoteArrowDown}
-              className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
-            />
-          </div>
-      </section>
+        <FinancialKpis
+          totalDespesas={totalGeneralExpenses}
+          totalDespesasPendentes={pendingGeneralExpenses}
+        />
 
       <section className="rounded-2xl border border-base-300 bg-base-100 p-5 shadow-sm animate-[fade-up_200ms_ease-out_both]">
         <div className="flex justify-between items-start mb-4">
@@ -173,7 +92,8 @@ export function FinancesPage() {
           isPending={expensesQuery.isPending}
           error={expensesQuery.error}
         />
-      </section>
+        </section>
+
     {isExpenseFormOpen ? (
       <div className="modal modal-open">
         <div className="modal-box max-w-lg border border-base-300 bg-base-100 shadow-2xl">
