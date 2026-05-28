@@ -49,7 +49,7 @@ export function ColaboradorDetailPage() {
   return (
     <PageLayout {...headerProps}>
       <div className="mb-3">
-        <ColaboradorInfoSection employeeId={employeeId} onEdit={() => setIsFormOpen(true)} />
+        <ColaboradorInfoSection colaboradorId={employeeId} onEdit={() => setIsFormOpen(true)} />
       </div>
 
       <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">

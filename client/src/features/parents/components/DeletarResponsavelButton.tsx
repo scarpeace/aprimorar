@@ -6,7 +6,7 @@ import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useResponsavelMutations } from "../hooks/use-responsavel-mutations";
 
-export const DeletarResponsavelButton = ({ parentId }: { parentId: string }) => {
+export const DeletarResponsavelButton = ({ responsavelId }: { responsavelId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -19,7 +19,7 @@ export const DeletarResponsavelButton = ({ parentId }: { parentId: string }) => 
   const {
     data: linkedStudents,
     isLoading: isLinkedStudentsLoading,
-  } = useListarAlunosPorResponsavel(parentId);
+  } = useListarAlunosPorResponsavel(responsavelId);
 
   const linkedStudentsCount = linkedStudents?.length ?? 0;
   const activeLinkedStudentsCount = getActiveLinkedStudentsCount(linkedStudents);
@@ -52,7 +52,7 @@ export const DeletarResponsavelButton = ({ parentId }: { parentId: string }) => 
 
   const handleConfirmDelete = () => {
     deleteParent(
-      { parentId: parentId },
+      { responsavelId: responsavelId },
       {
         onSuccess: () => {
           setIsOpen(false);

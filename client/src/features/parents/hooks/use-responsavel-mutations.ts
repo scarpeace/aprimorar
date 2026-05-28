@@ -41,9 +41,9 @@ export function useResponsavelMutations() {
         toast.success("Responsável atualizado com sucesso");
         queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: buscarResponsavelPorIdQueryKey(variables.parentId),
+          queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
         });
-        navigate(`/parents/${variables.parentId}`);
+        navigate(`/parents/${variables.responsavelId}`);
       },
       onError: (error) => {
         toast.error(
@@ -61,7 +61,7 @@ export function useResponsavelMutations() {
         toast.success("Responsável excluído com sucesso");
         queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         queryClient.invalidateQueries({ queryKey: deletarResponsavelMutationKey() });
-        navigate("/responsavels");
+        navigate("/parents");
       },
       onError: (error) => {
         toast.error(
@@ -78,10 +78,10 @@ export function useResponsavelMutations() {
         toast.success("Responsável arquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: buscarResponsavelPorIdQueryKey(variables.parentId),
+          queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
         });
         queryClient.invalidateQueries({
-          queryKey: listarAlunosPorResponsavelQueryKey(variables.parentId),
+          queryKey: listarAlunosPorResponsavelQueryKey(variables.responsavelId),
         });
       },
       onError: (error) => {
@@ -99,10 +99,10 @@ export function useResponsavelMutations() {
         toast.success("Responsável desarquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: buscarResponsavelPorIdQueryKey(variables.parentId),
+          queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
         });
         queryClient.invalidateQueries({
-          queryKey: listarAlunosPorResponsavelQueryKey(variables.parentId),
+          queryKey: listarAlunosPorResponsavelQueryKey(variables.responsavelId),
         });
       },
       onError: (error) => {

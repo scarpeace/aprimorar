@@ -5,12 +5,12 @@ import { useState } from "react";
 import { useColaboradorMutations } from "../hooks/use-colaborador-mutations";
 
 type ArquivarColaboradorButtonProps = {
-  employeeId: string;
+  colaboradorId: string;
   isArchived: boolean | null;
 };
 
 export const ArquivarColaboradorButton = ({
-  employeeId,
+  colaboradorId,
   isArchived,
 }: ArquivarColaboradorButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -30,7 +30,7 @@ export const ArquivarColaboradorButton = ({
   function handleConfirm() {
     const action = archived ? unarchiveEmployee : archiveEmployee;
     action(
-      { employeeId: employeeId },
+      { colaboradorId: colaboradorId },
       {
         onSettled: () => setShowConfirm(false),
       }

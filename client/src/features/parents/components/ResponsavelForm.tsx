@@ -42,7 +42,7 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
   const onSubmit = handleSubmit((data: ResponsavelFormSchema) => {
     if (isEditMode && initialData.parentId) {
       updateParent.mutate(
-        { parentId: initialData.parentId, data },
+        { responsavelId: initialData.parentId, data },
         {
           onSuccess: () => onSuccess(),
           onError: (error) => toast.error(getFriendlyErrorMessage(error)),

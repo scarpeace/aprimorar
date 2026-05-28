@@ -5,12 +5,12 @@ import { useState } from "react";
 import { useResponsavelMutations } from "../hooks/use-responsavel-mutations";
 
 type ArquivarResponsavelButtonProps = {
-  parentId: string;
+  responsavelId: string;
   isArchived: boolean;
 };
 
 export const ArquivarResponsavelButton = ({
-  parentId,
+  responsavelId,
   isArchived,
 }: ArquivarResponsavelButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -35,7 +35,7 @@ export const ArquivarResponsavelButton = ({
   function handleConfirm() {
     const action = isArchived ? unarchiveParent : archiveParent;
     action(
-      { parentId: parentId },
+      { responsavelId: responsavelId },
       {
         onSettled: () => setShowConfirm(false),
       }

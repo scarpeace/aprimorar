@@ -39,12 +39,12 @@ export function useColaboradorMutations() {
         toast.success("Colaborador atualizado com sucesso");
         queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: findColaboradorByIdQueryKey(variables.employeeId),
+          queryKey: findColaboradorByIdQueryKey(variables.colaboradorId),
         });
         queryClient.invalidateQueries({
           queryKey: listColaboradoresQueryKey(),
         });
-        navigate(`/employees/${variables.employeeId}`);
+        navigate(`/employees/${variables.colaboradorId}`);
       },
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
@@ -58,7 +58,7 @@ export function useColaboradorMutations() {
         toast.success("Colaborador arquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: findColaboradorByIdQueryKey(variables.employeeId),
+          queryKey: findColaboradorByIdQueryKey(variables.colaboradorId),
         });
         queryClient.invalidateQueries({
           queryKey: listColaboradoresQueryKey(),
@@ -76,7 +76,7 @@ export function useColaboradorMutations() {
         toast.success("Colaborador desarquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: findColaboradorByIdQueryKey(variables.employeeId),
+          queryKey: findColaboradorByIdQueryKey(variables.colaboradorId),
         });
         queryClient.invalidateQueries({
           queryKey: listColaboradoresQueryKey(),

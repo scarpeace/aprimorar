@@ -6,7 +6,7 @@ import { useColaboradorMutations } from "../hooks/use-colaborador-mutations";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useGetAtendimentosByColaborador } from "@/kubb";
 
-export const DeletarColaboradorButton = ({ employeeId }: { employeeId: string }) => {
+export const DeletarColaboradorButton = ({ colaboradorId }: { colaboradorId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -15,7 +15,7 @@ export const DeletarColaboradorButton = ({ employeeId }: { employeeId: string })
   } = useColaboradorMutations();
 
   const { data: eventsData, isLoading: isEventsLoading } =
-    useGetAtendimentosByColaborador(employeeId);
+    useGetAtendimentosByColaborador(colaboradorId);
 
   const handleOpenClick = () => {
     setErrorMessage(null);
@@ -32,7 +32,7 @@ export const DeletarColaboradorButton = ({ employeeId }: { employeeId: string })
   const handleConfirmDelete = () => {
     setErrorMessage(null);
     deleteEmployee(
-      { employeeId: employeeId },
+      { colaboradorId: colaboradorId },
       {
         onSuccess: () => {
           setIsOpen(false);

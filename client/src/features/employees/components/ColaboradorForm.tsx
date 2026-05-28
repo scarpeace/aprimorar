@@ -53,7 +53,7 @@ export function ColaboradorForm({ initialData, onSuccess, onCancel }: Colaborado
   const onSubmit = handleSubmit((data: ColaboradorFormSchema) => {
     if (isEditMode && initialData.id) {
       updateEmployee.mutate(
-        { employeeId: initialData.id, data },
+        { colaboradorId: initialData.id, data },
         {
           onSuccess: () => onSuccess(),
           onError: (error) => toast.error(getFriendlyErrorMessage(error)),

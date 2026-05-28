@@ -59,8 +59,8 @@ export function ResponsavelInfoSection({ parentId, onEdit }: Readonly<Responsave
               <Edit className="h-4 w-4" />
               Editar
             </Button>
-            <ArquivarResponsavelButton parentId={responsavel.parentId} isArchived={isArchived} />
-            <DeletarResponsavelButton parentId={responsavel.parentId} />
+            <ArquivarResponsavelButton responsavelId={responsavel.parentId} isArchived={isArchived} />
+            <DeletarResponsavelButton responsavelId={responsavel.parentId} />
           </div>
         </div>
 

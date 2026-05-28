@@ -12,12 +12,12 @@ import { DeletarColaboradorButton } from "./DeletarColaboradorButton";
 import { dutyLabels } from "../lib/dutyLabels";
 
 interface ColaboradorInfoSectionProps {
-  employeeId: string;
+  colaboradorId: string;
   onEdit: () => void;
 }
 
-export function ColaboradorInfoSection({ employeeId, onEdit }: ColaboradorInfoSectionProps) {
-  const colaboradorQuery = useFindColaboradorById(employeeId);
+export function ColaboradorInfoSection({ colaboradorId, onEdit }: ColaboradorInfoSectionProps) {
+  const colaboradorQuery = useFindColaboradorById(colaboradorId);
 
   if (colaboradorQuery.error) {
     return <ErrorCard title="Erro ao carregar detalhes do colaborador" error={colaboradorQuery.error} />;
@@ -49,10 +49,10 @@ export function ColaboradorInfoSection({ employeeId, onEdit }: ColaboradorInfoSe
             </Button>
 
             <ArquivarColaboradorButton
-              employeeId={colaboradorQuery.data.id}
+              colaboradorId={colaboradorQuery.data.id}
               isArchived={isArchived}
             />
-            <DeletarColaboradorButton employeeId={colaboradorQuery.data.id} />
+            <DeletarColaboradorButton colaboradorId={colaboradorQuery.data.id} />
           </div>
         </div>
 
