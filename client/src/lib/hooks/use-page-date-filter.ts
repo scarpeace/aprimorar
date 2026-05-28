@@ -9,6 +9,11 @@ export type PageDateFilter = {
   hasFilters: boolean;
 };
 
+type UsePageDateFilterOptions = {
+  initialStartDate?: Date;
+  initialEndDate?: Date;
+};
+
 function normalizeStartDate(date: Date) {
   const normalizedDate = new Date(date);
   normalizedDate.setHours(0, 0, 0, 0);
@@ -21,9 +26,18 @@ function normalizeEndDate(date: Date) {
   return normalizedDate;
 }
 
-export function usePageDateFilter(): PageDateFilter {
-  const [startDate, setStartDate] = useState<Date | undefined>();
-  const [endDate, setEndDate] = useState<Date | undefined>();
+export function usePageDateFilter(options: UsePageDateFilterOptions = {}): PageDateFilter {
+  const [startDate, setStartDate] = useState<Date | undefined>(() =>
+    options.initialStartDate
+      ? normalizeStartDate(options.initialStartDate)
+      : undefined
+  );
+
+  const [endDate, setEndDate] = useState<Date | undefined>(() =>
+    options.initialEndDate
+      ? normalizeEndDate(options.initialEndDate)
+      : undefined
+  );
 
   const handleStartDateChange = useCallback((date: Date | null) => {
     setStartDate(date ? normalizeStartDate(date) : undefined);

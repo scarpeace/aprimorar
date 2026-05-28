@@ -20,5 +20,5 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, UUID>,
 
     List<Colaborador> findAllByDutyNotAndActiveTrueOrderByNameAsc(ColaboradorDutyEnum duty);
 
-    long countByActiveTrue();
+    long countByActiveTrueAndDutyNot(ColaboradorDutyEnum role);
 }

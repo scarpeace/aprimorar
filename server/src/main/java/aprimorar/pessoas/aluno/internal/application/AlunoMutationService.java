@@ -1,5 +1,6 @@
 package aprimorar.pessoas.aluno.internal.application;
 
+import aprimorar.atendimentos.api.AtendimentosQueryApi;
 import aprimorar.pessoas.aluno.api.AlunoDeletedEvent;
 import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
@@ -28,6 +29,7 @@ public class AlunoMutationService {
     private final AlunoMapper alunoMapper;
 
     private final ResponsavelQueryApi responsavelQueryApi;
+    private final AtendimentosQueryApi atendimentosQueryApi;
     private final ApplicationEventPublisher eventPublisher;
     private final Clock clock;
 
@@ -35,11 +37,13 @@ public class AlunoMutationService {
         AlunoRepository alunoRepo,
         AlunoMapper alunoMapper,
         ResponsavelQueryApi responsavelQueryApi,
+        AtendimentosQueryApi atendimentosQueryApi,
         ApplicationEventPublisher eventPublisher,
         Clock clock
     ) {
         this.alunoRepo = alunoRepo;
         this.responsavelQueryApi = responsavelQueryApi;
+        this.atendimentosQueryApi = atendimentosQueryApi;
         this.alunoMapper = alunoMapper;
         this.eventPublisher = eventPublisher;
         this.clock = clock;
@@ -94,16 +98,21 @@ public class AlunoMutationService {
     @Transactional
     public void archiveAluno(UUID alunoId) {
         Aluno aluno = findAlunoOrThrow(alunoId);
+
+        if (atendimentosQueryApi.alunoHasPendingCharges(alunoId)) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "É possivel arquivar um aluno com pendências financeiras.");
+        }
+
         aluno.archive();
         log.info("Aluno {} arquivado com sucesso.", aluno.getName().toUpperCase());
     }
 
     @Transactional
     public void unarchiveAluno(UUID alunoId) {
-        if (GHOST_STUDENT_ID.equals(alunoId)) {
-            throw new BusinessException(HttpStatus.CONFLICT, "O registro 'Aluno Removido' não pode ser desarquivado.");
-        }
         Aluno aluno = findAlunoOrThrow(alunoId);
+
+        ensureNotGhost(alunoId);
+
         aluno.unarchive();
         log.info("Aluno {} desarquivado com sucesso.", aluno.getName().toUpperCase());
     }
@@ -112,9 +121,7 @@ public class AlunoMutationService {
     public void deleteAluno(UUID alunoId) {
         Aluno aluno = findAlunoOrThrow(alunoId);
 
-        if (GHOST_STUDENT_ID.equals(alunoId)) {
-            throw new BusinessException(HttpStatus.CONFLICT, "Não é possível deletar o registro de sistema 'Aluno Removido'.");
-        }
+        ensureNotGhost(alunoId);
 
         log.info("Publicando evento de exclusão do aluno {}.", aluno.getName().toUpperCase());
         eventPublisher.publishEvent(new AlunoDeletedEvent(alunoId));
@@ -128,5 +135,11 @@ public class AlunoMutationService {
         return alunoRepo
             .findById(alunoId)
             .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Aluno não encontrado no banco de dados"));
+    }
+
+    private void ensureNotGhost(UUID id) {
+        if (GHOST_STUDENT_ID.equals(id)) {
+            throw new BusinessException(HttpStatus.CONFLICT, "O registro não pode ser modificado.");
+        }
     }
 }

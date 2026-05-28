@@ -7,10 +7,13 @@ import {
   type PieLabelRenderProps,
 } from "recharts";
 
-import { type DashboardSummaryResponseDTO } from "@/kubb";
-import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
+import { EventContentLabels } from "@/features/appointments/lib/eventContentLabels.ts";
 
-type ClassesByContentDTO = NonNullable<DashboardSummaryResponseDTO["charts"]>[number];
+type DashboardChartDatum = {
+  content?: string;
+  count?: number;
+};
+
 type ChartDatum = {
   name: string;
   value: number;
@@ -59,7 +62,7 @@ const renderCustomizedLabel = ({
 };
 
 interface PizzaChartProps {
-  data: ClassesByContentDTO[];
+  data: DashboardChartDatum[];
   isAnimationActive?: boolean;
 }
 

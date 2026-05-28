@@ -27,10 +27,6 @@ public final class ResponsavelSpecifications {
         return (root, query, cb) -> cb.isTrue(root.get("active"));
     }
 
-    public static Specification<Responsavel> isArchived() {
-        return (root, query, cb) -> cb.isFalse(root.get("active"));
-    }
-
     public static Specification<Responsavel> isNotGhost() {
         return (root, query, cb) -> cb.notEqual(root.get("id"), GHOST_PARENT_ID);
     }

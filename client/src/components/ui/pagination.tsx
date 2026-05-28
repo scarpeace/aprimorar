@@ -1,30 +1,29 @@
 import { Button } from "./button";
 
-export type PaginationProps<T = unknown> = {
-  paginationData?: {
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    content: T[];
-  };
+export type PaginationProps = {
+  size: number;
+  totalElements: number;
+  totalPages: number;
   currentPage: number;
   onPageChange: (page: number) => void;
 };
 
-export function Pagination<T>({
+export function Pagination({
   currentPage,
   onPageChange,
-  paginationData,
-}: Readonly<PaginationProps<T>>) {
+  size,
+  totalElements,
+  totalPages,
+}: Readonly<PaginationProps>) {
 
-  if (!paginationData || paginationData.totalPages <= 1) return null;
+  if (totalPages <= 1) return null;
 
   return (
     <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
       <p className="text-sm text-base-content/60">
-        Mostrando <span className="font-semibold text-base-content">{paginationData.content.length}</span> de <span className="font-semibold text-base-content">{paginationData.totalElements}</span> registros
+        Mostrando <span className="font-semibold text-base-content">{size}</span> de <span className="font-semibold text-base-content">{totalElements}</span> registros
       </p>
-      
+
       <div className="join shadow-sm border border-base-300">
         <Button
           variant="ghost"
@@ -34,15 +33,15 @@ export function Pagination<T>({
         >
           Anterior
         </Button>
-        
+
         <div className="join-item btn btn-sm btn-ghost no-animation cursor-default border-x border-base-300 bg-base-200/30">
-          Página {currentPage + 1} de {paginationData.totalPages}
+          Página {currentPage + 1} de {totalPages}
         </div>
-        
+
         <Button
           variant="ghost"
           className="join-item btn-sm"
-          disabled={currentPage >= paginationData.totalPages - 1}
+          disabled={currentPage >= totalPages - 1}
           onClick={() => onPageChange(currentPage + 1)}
         >
           Próxima

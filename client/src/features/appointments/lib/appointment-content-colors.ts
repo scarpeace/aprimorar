@@ -1,4 +1,4 @@
-import type { AppointmentResponseDTO } from "@/kubb";
+import type { AtendimentoResponseDTO } from "@/kubb";
 
 export const APPOINTMENT_CONTENT_COLORS: Record<string, { backgroundColor: string; borderColor: string }> = {
   AULA: { backgroundColor: "#3b82f6", borderColor: "#2563eb" },
@@ -10,6 +10,6 @@ export const APPOINTMENT_CONTENT_COLORS: Record<string, { backgroundColor: strin
   OUTRO: { backgroundColor: "#6b7280", borderColor: "#4b5563" },
 };
 
-export function getAppointmentColor(appointment: Pick<AppointmentResponseDTO, "content">) {
-  return APPOINTMENT_CONTENT_COLORS[appointment.content] ?? APPOINTMENT_CONTENT_COLORS.OUTRO;
+export function getAppointmentColor(atendimento: Pick<AtendimentoResponseDTO, "content">) {
+  return APPOINTMENT_CONTENT_COLORS[atendimento.content] ?? APPOINTMENT_CONTENT_COLORS.OUTRO;
 }

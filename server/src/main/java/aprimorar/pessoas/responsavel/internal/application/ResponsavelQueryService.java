@@ -35,12 +35,10 @@ public class ResponsavelQueryService implements ResponsavelQueryApi {
 
     @Transactional(readOnly = true)
     @Override
-    public PageDTO<ResponsavelResponseDTO> getResponsaveis(Pageable pageable, String search, Boolean archived) {
+    public PageDTO<ResponsavelResponseDTO> getResponsaveis(Pageable pageable, String search, Boolean includeArchived) {
         Specification<Responsavel> spec = ResponsavelSpecifications.isNotGhost();
 
-        if (Boolean.TRUE.equals(archived)) {
-            spec = spec.and(ResponsavelSpecifications.isArchived());
-        } else if (Boolean.FALSE.equals(archived)) {
+        if (Boolean.FALSE.equals(includeArchived)) {
             spec = spec.and(ResponsavelSpecifications.isNotArchived());
         }
 

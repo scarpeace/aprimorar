@@ -116,7 +116,7 @@ public class AtendimentoMutationService {
         if (atendimentoRepo.existsByStudentIdAndStudentChargeDateIsNull(studentId)) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "O aluno possui pagamentos pendentes e nao pode ser excluido.");
         }
-        atendimentoRepo.reassignStudentAtendimentosToGhost(studentId, GHOST_STUDENT_ID);
+        atendimentoRepo.reassingAtendimentoAlunosToGhost(studentId, GHOST_STUDENT_ID);
     }
 
     @Transactional
@@ -124,7 +124,7 @@ public class AtendimentoMutationService {
         if (atendimentoRepo.existsByEmployeeIdAndEmployeePaymentDateIsNull(colaboradorId)) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "O colaborador possui pagamentos pendentes e nao pode ser excluido.");
         }
-        atendimentoRepo.reassignEmployeeAtendimentosToGhost(colaboradorId, GHOST_COLABORADOR_ID);
+        atendimentoRepo.reassignAtendimentosColaboradorToGhost(colaboradorId, GHOST_COLABORADOR_ID);
     }
 
     private Atendimento findAtendimentoOrThrow(UUID id) {

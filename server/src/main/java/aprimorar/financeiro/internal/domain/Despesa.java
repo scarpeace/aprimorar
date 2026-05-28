@@ -15,7 +15,6 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -33,7 +32,7 @@ public class Despesa {
     private BigDecimal amount;
 
     @Column(name = "date", nullable = false)
-    private LocalDate date;
+    private Instant date;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 50)
@@ -55,14 +54,14 @@ public class Despesa {
 
     protected Despesa() {}
 
-    public Despesa(BigDecimal amount, LocalDate date, CategoriaDespesaEnum category, String description) {
+    public Despesa(BigDecimal amount, Instant date, CategoriaDespesaEnum category, String description) {
         this.amount = amount;
         this.date = date;
         this.category = category;
         this.description = description;
     }
 
-    public void update(BigDecimal amount, LocalDate date, CategoriaDespesaEnum category, String description) {
+    public void update(BigDecimal amount, Instant date, CategoriaDespesaEnum category, String description) {
         this.amount = amount;
         this.date = date;
         this.category = category;

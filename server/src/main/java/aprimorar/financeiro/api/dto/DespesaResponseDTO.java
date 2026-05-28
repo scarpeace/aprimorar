@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Schema(description = "Dados de despesa retornados pela API")
@@ -14,8 +13,8 @@ public record DespesaResponseDTO(
     UUID id,
     @Schema(description = "Valor da despesa", example = "150.00")
     BigDecimal amount,
-    @Schema(description = "Data de competencia da despesa", example = "2026-05-24")
-    LocalDate date,
+    @Schema(description = "Data de competencia da despesa", example = "2026-05-24T00:00:00Z")
+    Instant date,
     @Schema(description = "Categoria da despesa", example = "OPERACIONAL")
     CategoriaDespesaEnum category,
     @Schema(description = "Descricao da despesa", example = "Pagamento de internet")

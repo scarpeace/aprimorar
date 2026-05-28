@@ -5,8 +5,10 @@ import aprimorar.atendimentos.api.TipoAtendimentoEnum;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,7 +21,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         long getCount();
     }
 
-    interface AlunoFinanceSummaryProjection {
+    interface IndicadoresAulunoProjection {
         UUID getStudentId();
         String getStudentName();
         long getTotalAtendimentos();
@@ -27,13 +29,93 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         BigDecimal getTotalPending();
     }
 
-    interface ColaboradorFinanceSummaryProjection {
+    interface IndicadoresColaboradorProjection {
         UUID getEmployeeId();
         String getEmployeeName();
         long getTotalAtendimentos();
         BigDecimal getTotalPaid();
         BigDecimal getTotalPending();
     }
+
+    boolean existsByStudentIdAndStudentChargeDateIsNull(UUID studentId);
+    boolean existsByEmployeeIdAndEmployeePaymentDateIsNull(UUID employeeId);
+
+    @Query(
+        """
+        SELECT COUNT(a)
+        FROM Atendimento a
+        WHERE a.startDate >= coalesce(:startDate, a.startDate)
+        AND a.endDate <= coalesce(:endDate, a.endDate)
+        """
+    )
+    long countByPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query(
+        """
+        SELECT COUNT(a)
+        FROM Atendimento a
+        WHERE a.studentId = :studentId
+        AND a.startDate >= coalesce(:startDate, a.startDate)
+        AND a.endDate <= coalesce(:endDate, a.endDate)
+        """
+    )
+    long countByStudentIdInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query(
+        """
+        SELECT COUNT(a)
+        FROM Atendimento a
+        WHERE a.employeeId = :employeeId
+        AND a.startDate >= coalesce(:startDate, a.startDate)
+        AND a.endDate <= coalesce(:endDate, a.endDate)
+        """
+    )
+    long countByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+
+    @Query(
+        """
+        SELECT SUM(a.price)
+        FROM Atendimento a
+        WHERE a.studentId = :studentId
+        AND a.startDate >= coalesce(:startDate, a.startDate)
+        AND a.endDate <= coalesce(:endDate, a.endDate)
+        AND a.studentChargeDate IS NOT NULL
+        """
+    )
+    BigDecimal sumChargedByStudentInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query(
+        """
+        SELECT SUM(a.price)
+        FROM Atendimento a
+        WHERE a.studentId = :studentId
+        AND a.startDate >= coalesce(:startDate, a.startDate)
+        AND a.endDate <= coalesce(:endDate, a.endDate)
+        AND a.studentChargeDate IS NULL
+        """
+    )
+    BigDecimal sumPendingByStudentInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query("""
+        SELECT COALESCE(SUM(a.payment), 0)
+        FROM Atendimento a
+        WHERE a.employeeId = :employeeId
+          AND a.startDate >= coalesce(:startDate, a.startDate)
+          AND a.endDate <= coalesce(:endDate, a.endDate)
+          AND a.employeePaymentDate IS NOT NULL
+        """)
+    BigDecimal sumPaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query("""
+        SELECT COALESCE(SUM(a.payment), 0)
+        FROM Atendimento a
+        WHERE a.employeeId = :employeeId
+          AND a.startDate >= coalesce(:startDate, a.startDate)
+          AND a.endDate <= coalesce(:endDate, a.endDate)
+          AND a.employeePaymentDate IS NULL
+        """)
+    BigDecimal sumUnpaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     @Modifying
     @Query(
@@ -44,7 +126,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         WHERE a.studentId = :studentId
         """
     )
-    void reassignStudentAtendimentosToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
+    void reassingAtendimentoAlunosToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
 
     @Modifying
     @Query(
@@ -55,11 +137,8 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         WHERE a.employeeId = :employeeId
         """
     )
-    void reassignEmployeeAtendimentosToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
+    void reassignAtendimentosColaboradorToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
 
-    boolean existsByStudentIdAndStudentChargeDateIsNull(UUID studentId);
-
-    boolean existsByEmployeeIdAndEmployeePaymentDateIsNull(UUID employeeId);
 
     @Query(
         """
@@ -70,7 +149,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
           and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
-    BigDecimal sumPaidFiltered(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumTotalPaidInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     @Query(
         """
@@ -81,66 +160,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
           and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
-    BigDecimal sumUnpaidFiltered(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
-    @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Atendimento a WHERE a.employeeId = :employeeId AND a.startDate BETWEEN :startDate AND :endDate AND a.employeePaymentDate IS NOT NULL")
-    BigDecimal sumPaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
-    @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Atendimento a WHERE a.employeeId = :employeeId AND a.startDate BETWEEN :startDate AND :endDate AND a.employeePaymentDate IS NULL")
-    BigDecimal sumUnpaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
-    @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Atendimento a WHERE a.employeeId = :employeeId AND a.employeePaymentDate IS NOT NULL")
-    BigDecimal sumPaidByEmployeeId(@Param("employeeId") UUID employeeId);
-
-    @Query("SELECT COALESCE(SUM(a.payment), 0) FROM Atendimento a WHERE a.employeeId = :employeeId AND a.employeePaymentDate IS NULL")
-    BigDecimal sumUnpaidByEmployeeId(@Param("employeeId") UUID employeeId);
-
-    @Query(
-        """
-        select count(a)
-        from Atendimento a
-        where a.employeeId = :employeeId
-          and a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
-        """
-    )
-    long countFilteredByEmployeeId(
-        @Param("employeeId") UUID employeeId,
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
-    );
-
-    @Query(
-        """
-        select coalesce(sum(a.payment), 0)
-        from Atendimento a
-        where a.employeeId = :employeeId
-          and a.employeePaymentDate is not null
-          and a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
-        """
-    )
-    BigDecimal sumPaidFilteredByEmployeeId(
-        @Param("employeeId") UUID employeeId,
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
-    );
-
-    @Query(
-        """
-        select coalesce(sum(a.payment), 0)
-        from Atendimento a
-        where a.employeeId = :employeeId
-          and a.employeePaymentDate is null
-          and a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
-        """
-    )
-    BigDecimal sumUnpaidFilteredByEmployeeId(
-        @Param("employeeId") UUID employeeId,
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
-    );
+    BigDecimal sumTotalUnpaidInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     @Query(
         """
@@ -151,7 +171,8 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
           and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
-    BigDecimal sumChargedFiltered(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumTotalChargedInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
 
     @Query(
         """
@@ -162,66 +183,61 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
           and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
-    BigDecimal sumPendingFiltered(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumTotalUnchargedInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
-    @Query("SELECT COALESCE(SUM(a.price), 0) FROM Atendimento a WHERE a.studentId = :studentId AND a.startDate BETWEEN :startDate AND :endDate AND a.studentChargeDate IS NOT NULL")
-    BigDecimal sumChargedByStudentIdInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
-    @Query("SELECT COALESCE(SUM(a.price), 0) FROM Atendimento a WHERE a.studentId = :studentId AND a.startDate BETWEEN :startDate AND :endDate AND a.studentChargeDate IS NULL")
-    BigDecimal sumPendingByStudentIdInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
-    @Query("SELECT COALESCE(SUM(a.price), 0) FROM Atendimento a WHERE a.studentId = :studentId AND a.studentChargeDate IS NOT NULL")
-    BigDecimal sumChargedByStudentId(@Param("studentId") UUID studentId);
-
-    @Query("SELECT COALESCE(SUM(a.price), 0) FROM Atendimento a WHERE a.studentId = :studentId AND a.studentChargeDate IS NULL")
-    BigDecimal sumPendingByStudentId(@Param("studentId") UUID studentId);
 
     @Query(
-        """
-        select count(a)
+        value = """
+        select
+          a.employeeId as employeeId,
+          max(a.employeeName) as employeeName,
+          count(a.id) as totalAtendimentos,
+          coalesce(sum(case when a.employeePaymentDate is not null then a.payment else 0 end), 0) as totalPaid,
+          coalesce(sum(case when a.employeePaymentDate is null then a.payment else 0 end), 0) as totalPending
         from Atendimento a
-        where a.studentId = :studentId
-          and a.startDate >= coalesce(:startDate, a.startDate)
+        where a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
+        group by a.employeeId
+        """,
+        countQuery = """
+        select count(distinct a.employeeId)
+        from Atendimento a
+        where a.startDate >= coalesce(:startDate, a.startDate)
           and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
-    long countFilteredByStudentId(
-        @Param("studentId") UUID studentId,
+    Page<IndicadoresColaboradorProjection> getOverviewFinanceiroColaboradores(
+        Pageable pageable,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate
     );
 
     @Query(
-        """
-        select coalesce(sum(a.price), 0)
+        value = """
+        select
+          a.studentId as studentId,
+          max(a.studentName) as studentName,
+          count(a.id) as totalAtendimentos,
+          coalesce(sum(case when a.studentChargeDate is not null then a.price else 0 end), 0) as totalCharged,
+          coalesce(sum(case when a.studentChargeDate is null then a.price else 0 end), 0) as totalPending
         from Atendimento a
-        where a.studentId = :studentId
-          and a.studentChargeDate is not null
-          and a.startDate >= coalesce(:startDate, a.startDate)
+        where a.startDate >= coalesce(:startDate, a.startDate)
+          and a.endDate <= coalesce(:endDate, a.endDate)
+        group by a.studentId
+        """,
+        countQuery = """
+        select count(distinct a.studentId)
+        from Atendimento a
+        where a.startDate >= coalesce(:startDate, a.startDate)
           and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
-    BigDecimal sumChargedFilteredByStudentId(
-        @Param("studentId") UUID studentId,
+    Page<IndicadoresAulunoProjection> getOverviewFinanceiroAlunos(
+        Pageable pageable,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate
     );
 
-    @Query(
-        """
-        select coalesce(sum(a.price), 0)
-        from Atendimento a
-        where a.studentId = :studentId
-          and a.studentChargeDate is null
-          and a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
-        """
-    )
-    BigDecimal sumPendingFilteredByStudentId(
-        @Param("studentId") UUID studentId,
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
-    );
 
     @Query(
         """
@@ -263,67 +279,40 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         from Atendimento a
         where a.startDate >= :startDate
           and a.startDate < :endDate
-          and a.studentId <> :excludedStudentId
         """
     )
-    long countDistinctStudentsInPeriodExcludingAluno(
+    long countStudentsInPeriod(
         @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate,
-        @Param("excludedStudentId") UUID excludedStudentId
+        @Param("endDate") Instant endDate
     );
 
     @Query(
+        value = """
+        select count(distinct a.student_id)
+        from tb_appointments a
+        join tb_students s on s.id = a.student_id
+        where a.start_date >= :startDate
+          and a.start_date < :endDate
+          and s.active = true
+        """,
+        nativeQuery = true
+    )
+    long countActiveStudentsInPeriod(
+        @Param("startDate") Instant startDate,
+        @Param("endDate") Instant endDate
+    );
+
+
+    @Query(
         """
-        select a.content as content, count(a) as count
+        select count(a)
         from Atendimento a
         where a.startDate >= :startDate
           and a.startDate < :endDate
-        group by a.content
-        order by count(a) desc
         """
     )
-    List<TipoAtendimentoCount> findContentDistributionInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
-    @Query(
-        """
-        select
-          a.studentId as studentId,
-          a.studentName as studentName,
-          count(a) as totalAtendimentos,
-          coalesce(sum(case when a.studentChargeDate is not null then a.price else 0 end), 0) as totalCharged,
-          coalesce(sum(case when a.studentChargeDate is null then a.price else 0 end), 0) as totalPending
-        from Atendimento a
-        where a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
-        group by a.studentId, a.studentName
-        order by a.studentName asc
-        """
-    )
-    List<AlunoFinanceSummaryProjection> findAlunoFinanceSummaries(
+    long countAtendimentosInPeriod(
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate
     );
-
-    @Query(
-        """
-        select
-          a.employeeId as employeeId,
-          a.employeeName as employeeName,
-          count(a) as totalAtendimentos,
-          coalesce(sum(case when a.employeePaymentDate is not null then a.payment else 0 end), 0) as totalPaid,
-          coalesce(sum(case when a.employeePaymentDate is null then a.payment else 0 end), 0) as totalPending
-        from Atendimento a
-        where a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
-        group by a.employeeId, a.employeeName
-        order by a.employeeName asc
-        """
-    )
-    List<ColaboradorFinanceSummaryProjection> findColaboradorFinanceSummaries(
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
-    );
-
-    long countByStartDateGreaterThanEqualAndStartDateLessThan(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
-
 }

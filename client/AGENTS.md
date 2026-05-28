@@ -6,6 +6,7 @@
 
 ## Arquitetura em uma frase
 - UI por feature com fluxo `Page -> hooks da feature -> components`, usando React Query para estado remoto e estado local apenas para interacao da tela.
+- Features atuais estao em ingles (`students`, `parents`, `employees`, `appointments`, `finance`, `auth`, `dashboard`, `admin`), enquanto contratos de API podem vir em portugues via Kubb; manter consistencia no contexto de cada camada.
 
 ## Fluxo de implementacao obrigatorio
 - Page: compoe layout, roteamento, filtros locais e conexao entre blocos; sem regra de API inline.
@@ -52,6 +53,7 @@
 - Mudou contrato backend: subir backend e rodar `npm run sync` para regenerar cliente.
 - `npm run sync` depende de `http://localhost:8080/v3/api-docs` disponivel.
 - Autenticacao e header Bearer sao centralizados no setup compartilhado de API.
+- Se o contrato gerado mudar nomes/DTOs, ajuste somente codigo de feature fora de `client/src/kubb/`.
 
 ## Matriz de verificacao por tipo de mudanca
 - Componente visual: validar estados `loading`, `erro` e `empty` na tela afetada.

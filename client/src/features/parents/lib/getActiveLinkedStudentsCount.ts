@@ -6,6 +6,6 @@ type LinkedStudents = LinkedStudentSummary[] | null | undefined;
 
 export function getActiveLinkedStudentsCount(linkedStudents: LinkedStudents) {
   return (linkedStudents ?? []).filter(
-    (student: LinkedStudentSummary) => student.active !== false,
+    (aluno: LinkedStudentSummary) => aluno.active !== false,
   ).length;
 }

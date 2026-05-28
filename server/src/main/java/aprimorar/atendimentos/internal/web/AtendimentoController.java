@@ -1,10 +1,12 @@
 package aprimorar.atendimentos.internal.web;
 
+import aprimorar.atendimentos.api.dto.AtendimentosAlunosKpisDTO;
 import java.time.Instant;
 import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +22,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aprimorar.atendimentos.api.AtendimentosQueryApi;
-import aprimorar.atendimentos.api.dto.AlunoAtendimentosResponseDTO;
-import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoRequestDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.api.dto.ColaboradorAtendimentosResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosKpisDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosColaboradorKpisDTO;
 import aprimorar.atendimentos.internal.application.AtendimentoMutationService;
 import aprimorar.shared.PageDTO;
+import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -51,6 +57,21 @@ public class AtendimentoController {
     @PostMapping
     @Operation(operationId = "createAtendimento", description = "Cria um atendimento vinculando aluno e colaborador.")
     @ApiResponse(responseCode = "201", description = "Atendimento criado e retornado com os dados consolidados de aluno e colaborador.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de validação",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<AtendimentoResponseDTO> createAtendimento(@RequestBody @Valid AtendimentoRequestDTO request) {
         AtendimentoResponseDTO created = atendimentoMutationService.createAtendimento(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -62,6 +83,16 @@ public class AtendimentoController {
         description = "Lista atendimentos com paginacao, ordenacao e filtros opcionais por texto, periodo, cobranca do aluno e pagamento do colaborador."
     )
     @ApiResponse(responseCode = "200", description = "Pagina de atendimentos retornada conforme os filtros informados.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Parâmetros inválidos",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<PageDTO<AtendimentoResponseDTO>> getAtendimentos(
         @ParameterObject Pageable pageable,
         @RequestParam(required = false) String search,
@@ -76,65 +107,186 @@ public class AtendimentoController {
     @GetMapping("/{id}")
     @Operation(operationId = "getAtendimentoById", description = "Consulta um atendimento especifico pelo ID.")
     @ApiResponse(responseCode = "200", description = "Atendimento encontrado e retornado.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Atendimento não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<AtendimentoResponseDTO> getAtendimentoById(@PathVariable UUID id) {
-        AtendimentoResponseDTO found = atendimentoQueryApi.findAtendimentoById(id);
-        return ResponseEntity.ok(found);
+        return ResponseEntity.ok(atendimentoQueryApi.findAtendimentoById(id));
     }
 
     @GetMapping("/{id}/aluno")
     @Operation(
-        operationId = "getAtendimentosByStudentId",
+        operationId = "getAtendimentosByAluno",
         description = "Retorna a agenda paginada de um aluno junto com os indicadores do mesmo periodo."
     )
     @ApiResponse(
         responseCode = "200",
         description = "Agenda e resumo financeiro do aluno retornados conforme periodo e filtros informados."
     )
-    public ResponseEntity<AlunoAtendimentosResponseDTO> getAtendimentosByStudentId(
+    @ApiResponse(
+        responseCode = "400",
+        description = "Parâmetros inválidos",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Aluno não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ResponseEntity<AtendimentosAlunoResponseDTO> getAtendimentosByAluno(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
         @RequestParam(required = false) Boolean charged
     ) {
-        return ResponseEntity.ok(atendimentoQueryApi.getAtendimentosByStudentId(pageable, id, startDate, endDate, charged));
+        return ResponseEntity.ok(atendimentoQueryApi.getAtendimentosByAluno(pageable, id, startDate, endDate, charged));
     }
 
     @GetMapping("/{id}/colaborador")
     @Operation(
-        operationId = "getAtendimentosByEmployeeId",
+        operationId = "getAtendimentosByColaborador",
         description = "Retorna a agenda paginada de um colaborador junto com os indicadores do mesmo periodo."
     )
     @ApiResponse(
         responseCode = "200",
         description = "Agenda e resumo financeiro do colaborador retornados conforme periodo e filtros informados."
     )
-    public ResponseEntity<ColaboradorAtendimentosResponseDTO> getAtendimentosByEmployeeId(
+    @ApiResponse(
+        responseCode = "400",
+        description = "Parâmetros inválidos",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Colaborador não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ResponseEntity<AtendimentosColaboradorResponseDTO> getAtendimentosByColaborador(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
         @RequestParam(required = false) Boolean hidePaid,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
-        return ResponseEntity.ok(atendimentoQueryApi.getAtendimentosByEmployeeId(pageable, id, hidePaid, startDate, endDate));
+        return ResponseEntity.ok(atendimentoQueryApi.getAtendimentosByColaborador(pageable, id, hidePaid, startDate, endDate));
     }
 
     @GetMapping("/finance/report")
     @Operation(
-        operationId = "getFinanceReport",
+        operationId = "getIndicadoresAtendimentos",
         description = "Consolida o financeiro institucional no periodo informado"
     )
     @ApiResponse(responseCode = "200", description = "Relatorio financeiro institucional retornado com totais consolidados.")
-    public ResponseEntity<AtendimentoFinanceSummaryDTO> getFinanceReport(
+    @ApiResponse(
+        responseCode = "400",
+        description = "Parâmetros inválidos",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ResponseEntity<AtendimentosKpisDTO> getKpisAtendimentos(
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
-        return ResponseEntity.ok(atendimentoQueryApi.getFinanceReport(startDate, endDate));
+        return ResponseEntity.ok(atendimentoQueryApi.getKpisAtendimentos(startDate, endDate));
+    }
+
+    @GetMapping("/finance/colaboradores")
+    @Operation(
+        operationId = "getOverviewFinanceiroColaboradores",
+        description = "Lista colaboradores paginados com indicadores de pago e pendente por colaborador."
+    )
+    @ApiResponse(responseCode = "200", description = "Colaboradores retornados com indicadores de financeiro por linha e resumo consolidado.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Parâmetros inválidos",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ResponseEntity<PageDTO<AtendimentosColaboradorKpisDTO>> getKpisAtendimentosColaboradores(
+        @ParameterObject @PageableDefault(sort = "employeeName") Pageable pageable,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(
+            atendimentoQueryApi.getKpisAtendimentosColaboradores(pageable, startDate, endDate)
+        );
+    }
+
+    @GetMapping("/finance/alunos")
+    @Operation(
+        operationId = "getOverviewFinanceiroAlunos",
+        description = "Lista alunos paginados com indicadores de cobrado e pendente por aluno."
+    )
+    @ApiResponse(responseCode = "200", description = "Alunos retornados com indicadores de financeiro por linha e resumo consolidado.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Parâmetros inválidos",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    public ResponseEntity<PageDTO<AtendimentosAlunosKpisDTO>> getKpisAtendimentosAlunos(
+        @ParameterObject @PageableDefault(sort = "studentName") Pageable pageable,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+    ) {
+        return ResponseEntity.ok(
+            atendimentoQueryApi.getKpisAtendimentosAlunos(pageable, startDate, endDate)
+        );
     }
 
     @PutMapping("/{id}")
     @Operation(operationId = "updateAtendimento", description = "Atualiza dados cadastrais do atendimento.")
     @ApiResponse(responseCode = "200", description = "Atendimento atualizado e retornado com os dados atuais.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de validação",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "Atendimento não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<AtendimentoResponseDTO> updateAtendimento(
         @PathVariable UUID id,
         @RequestBody @Valid AtendimentoRequestDTO request
@@ -142,9 +294,26 @@ public class AtendimentoController {
         return ResponseEntity.ok(atendimentoMutationService.updateAtendimento(id, request));
     }
 
+
+
     @DeleteMapping("/{id}")
     @Operation(operationId = "deleteAtendimento", description = "Remove definitivamente um atendimento.")
     @ApiResponse(responseCode = "204", description = "Atendimento removido sem corpo de resposta.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Atendimento não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "409",
+        description = "Conflito de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<Void> deleteAtendimento(@PathVariable UUID id) {
         atendimentoMutationService.deleteAtendimento(id);
         return ResponseEntity.noContent().build();
@@ -153,6 +322,16 @@ public class AtendimentoController {
     @PatchMapping("/{id}/toggle-student-charge")
     @Operation(operationId = "toggleStudentAtendimentoCharge", description = "Alterna a baixa financeira do aluno para o atendimento.")
     @ApiResponse(responseCode = "200", description = "Status de cobranca do aluno atualizado e atendimento retornado.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Atendimento não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<AtendimentoResponseDTO> toggleStudentAtendimentoCharge(@PathVariable UUID id) {
         return ResponseEntity.ok(atendimentoMutationService.toggleStudentCharge(id));
     }
@@ -163,69 +342,18 @@ public class AtendimentoController {
         description = "Alterna a baixa financeira do colaborador para o atendimento."
     )
     @ApiResponse(responseCode = "200", description = "Status de pagamento do colaborador atualizado e atendimento retornado.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "Atendimento não encontrado",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
+    @ApiResponse(
+        responseCode = "500",
+        description = "Erro interno do sistema",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
+    )
     public ResponseEntity<AtendimentoResponseDTO> toggleEmployeeAtendimentoPayment(@PathVariable UUID id) {
         return ResponseEntity.ok(atendimentoMutationService.toggleEmployeePayment(id));
     }
 
-    // @GetMapping("/finance/report/alunos")
-    // @Operation(
-    //     operationId = "obterRelatorioFinanceiroAtendimentosPorAluno",
-    //     description = "Agrupa indicadores financeiros por aluno no periodo informado."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Relatorio financeiro por aluno retornado.")
-    // public ResponseEntity<AlunosFinanceSummaryResponseDTO> getStudentsFinanceReport(
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(atendimentoQueryService.getStudentsFinanceReport(startDate, endDate));
-    // }
-
-    // @GetMapping("/finance/report/colaboradores")
-    // @Operation(
-    //     operationId = "obterRelatorioFinanceiroAtendimentosPorColaborador",
-    //     description = "Agrupa indicadores financeiros por colaborador no periodo informado."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Relatorio financeiro por colaborador retornado.")
-    // public ResponseEntity<ColaboradoresFinanceSummaryResponseDTO> getEmployeesFinanceReport(
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(atendimentoService.getEmployeesFinanceReport(startDate, endDate));
-    // }
-
-    // @GetMapping("/finance/colaboradores")
-    // @Operation(
-    //     operationId = "listarColaboradoresComFinanceiro",
-    //     description = "Lista colaboradores paginados com indicadores financeiros do periodo informado."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Colaboradores retornados com financeiro por linha e resumo consolidado.")
-    // public ResponseEntity<ColaboradoresWithFinanceResponseDTO> getEmployeesWithFinance(
-    //     @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
-    //     @RequestParam(required = false) String search,
-    //     @RequestParam(required = false, defaultValue = "false") Boolean archived,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(
-    //         atendimentoService.getEmployeesWithFinance(pageable, search, archived, startDate, endDate)
-    //     );
-    // }
-
-    // @GetMapping("/finance/alunos")
-    // @Operation(
-    //     operationId = "listarAlunosComFinanceiro",
-    //     description = "Lista alunos paginados com indicadores financeiros do periodo informado."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Alunos retornados com financeiro por linha e resumo consolidado.")
-    // public ResponseEntity<AlunosWithFinanceResponseDTO> getStudentsWithFinance(
-    //     @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
-    //     @RequestParam(required = false) String search,
-    //     @RequestParam(required = false, defaultValue = "false") Boolean archived,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-    //     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
-    // ) {
-    //     return ResponseEntity.ok(
-    //         atendimentoService.getStudentsWithFinance(pageable, search, archived, startDate, endDate)
-    //     );
-    // }
 }

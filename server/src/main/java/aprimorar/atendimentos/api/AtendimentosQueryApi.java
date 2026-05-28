@@ -1,9 +1,11 @@
 package aprimorar.atendimentos.api;
 
-import aprimorar.atendimentos.api.dto.AlunoAtendimentosResponseDTO;
-import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosAlunosKpisDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosKpisDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.api.dto.ColaboradorAtendimentosResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosColaboradorKpisDTO;
 import aprimorar.shared.PageDTO;
 import java.time.Instant;
 import java.util.UUID;
@@ -22,7 +24,7 @@ public interface AtendimentosQueryApi {
 
     AtendimentoResponseDTO findAtendimentoById(UUID id);
 
-    ColaboradorAtendimentosResponseDTO getAtendimentosByEmployeeId(
+    AtendimentosColaboradorResponseDTO getAtendimentosByColaborador(
         Pageable pageable,
         UUID employeeId,
         Boolean hidePaid,
@@ -30,18 +32,25 @@ public interface AtendimentosQueryApi {
         Instant endDate
     );
 
-    AlunoAtendimentosResponseDTO getAtendimentosByStudentId(
+    AtendimentosAlunoResponseDTO getAtendimentosByAluno(
         Pageable pageable,
         UUID studentId,
         Instant startDate,
         Instant endDate,
         Boolean charged
     );
-
-    AtendimentoFinanceSummaryDTO getFinanceReport(Instant startDate, Instant endDate);
+    AtendimentosKpisDTO getKpisAtendimentos(Instant startDate, Instant endDate);
+    PageDTO<AtendimentosColaboradorKpisDTO> getKpisAtendimentosColaboradores(
+        Pageable pageable,
+        Instant startDate,
+        Instant endDate
+    );
+    PageDTO<AtendimentosAlunosKpisDTO> getKpisAtendimentosAlunos(
+        Pageable pageable,
+        Instant startDate,
+        Instant endDate
+    );
 
     boolean alunoHasPendingCharges(UUID alunoId);
     boolean colaboradorHasPendingPayment(UUID colaboradorId);
-    long countActiveStudentsInPeriod(Instant startDate, Instant endDate, UUID excludedStudentId);
-    long countAtendimentosInPeriod(Instant startDate, Instant endDate);
 }

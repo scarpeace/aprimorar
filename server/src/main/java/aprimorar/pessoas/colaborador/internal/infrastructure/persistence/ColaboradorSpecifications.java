@@ -9,10 +9,6 @@ public final class ColaboradorSpecifications {
     private ColaboradorSpecifications() {
     }
 
-    public static Specification<Colaborador> isNotArchived() {
-        return (root, query, cb) -> cb.isTrue(root.get("active"));
-    }
-
     public static Specification<Colaborador> isArchived() {
         return (root, query, cb) -> cb.isFalse(root.get("active"));
     }

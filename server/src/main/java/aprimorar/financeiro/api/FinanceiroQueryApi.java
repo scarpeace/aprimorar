@@ -1,6 +1,6 @@
 package aprimorar.financeiro.api;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 
 import aprimorar.financeiro.api.dto.DespesaResponseDTO;
@@ -10,6 +10,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface FinanceiroQueryApi {
 
-    DespesasResponseDTO getDespesas(Pageable pageable, CategoriaDespesaEnum categoria, LocalDate startDate, LocalDate endDate);
+    DespesasResponseDTO getDespesas(Pageable pageable, CategoriaDespesaEnum categoria, Instant startDate, Instant endDate);
     DespesaResponseDTO findDespesaById(UUID id);
 }
