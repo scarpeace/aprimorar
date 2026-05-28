@@ -4,7 +4,6 @@ import {
   LogOut,
   UserCog,
   GraduationCap,
-  Handshake,
   Banknote,
   ShieldCheck
 } from "lucide-react"

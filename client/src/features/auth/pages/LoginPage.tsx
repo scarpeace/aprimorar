@@ -24,8 +24,8 @@ export function LoginPage() {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async (atendimento: FormEvent<HTMLFormElement>) => {
+    atendimento.preventDefault();
     try {
       await login({ email, password });
     } catch {
@@ -53,7 +53,7 @@ export function LoginPage() {
                   <input
                     aria-label="Email"
                     className="grow"
-                    onChange={(event) => setEmail(event.target.value)}
+                    onChange={(atendimento) => setEmail(atendimento.target.value)}
                     placeholder="voce@aprimorar.com"
                     type="email"
                     value={email}
@@ -68,7 +68,7 @@ export function LoginPage() {
                   <input
                     aria-label="Senha"
                     className="grow"
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={(atendimento) => setPassword(atendimento.target.value)}
                     placeholder="Digite sua senha"
                     type="password"
                     value={password}

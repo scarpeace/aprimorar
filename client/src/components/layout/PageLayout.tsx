@@ -1,13 +1,10 @@
 import type { LucideIcon } from "lucide-react";
 import type { PropsWithChildren, ReactNode } from "react";
 
-import { ButtonLink } from "../ui/button";
-
 type PageLayoutProps = {
   title: string;
   description: string;
   Icon: LucideIcon;
-  backLink: string;
   headersKpis?: ReactNode;
   children: ReactNode;
 };
@@ -16,7 +13,6 @@ export function PageLayout({
   title,
   description,
   Icon,
-  backLink,
   headersKpis,
   children,
 }: Readonly<PropsWithChildren<PageLayoutProps>>) {

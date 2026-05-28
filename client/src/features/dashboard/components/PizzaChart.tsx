@@ -7,7 +7,7 @@ import {
   type PieLabelRenderProps,
 } from "recharts";
 
-import { EventContentLabels } from "@/features/appointments/lib/eventContentLables.ts";
+import { EventContentLabels } from "@/features/appointments/lib/eventContentLabels.ts";
 
 type DashboardChartDatum = {
   content?: string;

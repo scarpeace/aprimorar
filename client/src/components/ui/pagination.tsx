@@ -1,6 +1,6 @@
 import { Button } from "./button";
 
-export type PaginationProps<T = unknown> = {
+export type PaginationProps = {
   size: number;
   totalElements: number;
   totalPages: number;
@@ -8,16 +8,15 @@ export type PaginationProps<T = unknown> = {
   onPageChange: (page: number) => void;
 };
 
-export function Pagination<T>({
+export function Pagination({
   currentPage,
   onPageChange,
   size,
   totalElements,
   totalPages,
-}: Readonly<PaginationProps<T>>) {
+}: Readonly<PaginationProps>) {
 
   if (totalPages <= 1) return null;
-  console.log(size)
 
   return (
     <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-2">

@@ -1,7 +1,7 @@
-import { AppointmentsCalendar } from "../components/AppointmentsCalendar";
+import { AtendimentosCalendar } from "../components/AtendimentosCalendar";
 import { lazy, Suspense, useState } from "react";
 
-const AppointmentForm = lazy(() => import("@/features/appointments/components/AppointmentForm").then((module) => ({ default: module.AppointmentForm })));
+const AtendimentoForm = lazy(() => import("@/features/appointments/components/AtendimentoForm").then((module) => ({ default: module.AtendimentoForm })));
 
 export function DashboardPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -14,7 +14,7 @@ export function DashboardPage() {
     <>
       <section className="flex flex-col gap-7">
         <h1 className="text-3xl font-bold text-base-content">Painel</h1>
-        <AppointmentsCalendar onCreateAppointment={() => setIsFormOpen(true)} />
+        <AtendimentosCalendar onCreateAppointment={() => setIsFormOpen(true)} />
       </section>
 
       {isFormOpen ? (
@@ -25,7 +25,7 @@ export function DashboardPage() {
               Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados.
             </p>
             <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
-              <AppointmentForm
+              <AtendimentoForm
                 initialData={null}
                 onSuccess={handleCloseForm}
                 onCancel={handleCloseForm}
