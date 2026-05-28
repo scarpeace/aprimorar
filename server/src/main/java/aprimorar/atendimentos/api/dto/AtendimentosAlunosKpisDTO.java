@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Schema(description = "Resumo financeiro de aluno no periodo")
-public record AlunoFinanceiroResumoDTO(
+public record AtendimentosAlunosKpisDTO(
     @Schema(description = "ID do aluno", example = "550e8400-e29b-41d4-a716-446655440000")
     UUID studentId,
     @Schema(description = "Total de atendimentos no periodo", example = "12")

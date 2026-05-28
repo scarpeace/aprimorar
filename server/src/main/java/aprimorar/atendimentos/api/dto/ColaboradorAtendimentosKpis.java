@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 
 @Schema(description = "Resumo financeiro e quantitativo do colaborador no periodo")
-public record ColaboradorSummaryDTO(
+public record ColaboradorAtendimentosKpis(
     @Schema(description = "Total de atendimentos no periodo selecionado")
     Long totalAtendimentos,
 

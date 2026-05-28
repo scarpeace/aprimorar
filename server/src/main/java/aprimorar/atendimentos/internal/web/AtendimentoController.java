@@ -1,8 +1,7 @@
 package aprimorar.atendimentos.internal.web;
 
-import aprimorar.atendimentos.api.dto.AlunoFinanceiroResumoDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosAlunosKpisDTO;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -24,11 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aprimorar.atendimentos.api.AtendimentosQueryApi;
 import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
-import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoRequestDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
 import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
-import aprimorar.atendimentos.api.dto.ColaboradorFinanceiroResumoDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosKpisDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosColaboradorKpisDTO;
 import aprimorar.atendimentos.internal.application.AtendimentoMutationService;
 import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.ProblemResponseDTO;
@@ -119,8 +118,7 @@ public class AtendimentoController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<AtendimentoResponseDTO> getAtendimentoById(@PathVariable UUID id) {
-        AtendimentoResponseDTO found = atendimentoQueryApi.findAtendimentoById(id);
-        return ResponseEntity.ok(found);
+        return ResponseEntity.ok(atendimentoQueryApi.findAtendimentoById(id));
     }
 
     @GetMapping("/{id}/aluno")
@@ -207,11 +205,11 @@ public class AtendimentoController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<AtendimentoFinanceSummaryDTO> getFinanceReport(
+    public ResponseEntity<AtendimentosKpisDTO> getKpisAtendimentos(
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
-        return ResponseEntity.ok(atendimentoQueryApi.getIndicadoresAtendimentos(startDate, endDate));
+        return ResponseEntity.ok(atendimentoQueryApi.getKpisAtendimentos(startDate, endDate));
     }
 
     @GetMapping("/finance/colaboradores")
@@ -230,13 +228,13 @@ public class AtendimentoController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<PageDTO<ColaboradorFinanceiroResumoDTO>> getOverviewFinanceiroColaboradores(
+    public ResponseEntity<PageDTO<AtendimentosColaboradorKpisDTO>> getKpisAtendimentosColaboradores(
         @ParameterObject @PageableDefault(sort = "employeeName") Pageable pageable,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
         return ResponseEntity.ok(
-            atendimentoQueryApi.getOverviewFinanceiroColaboradores(pageable, startDate, endDate)
+            atendimentoQueryApi.getKpisAtendimentosColaboradores(pageable, startDate, endDate)
         );
     }
 
@@ -256,13 +254,13 @@ public class AtendimentoController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<PageDTO<AlunoFinanceiroResumoDTO>> getOverviewFinanceiroAlunos(
+    public ResponseEntity<PageDTO<AtendimentosAlunosKpisDTO>> getKpisAtendimentosAlunos(
         @ParameterObject @PageableDefault(sort = "studentName") Pageable pageable,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
         return ResponseEntity.ok(
-            atendimentoQueryApi.getOverviewFinanceiroAlunos(pageable, startDate, endDate)
+            atendimentoQueryApi.getKpisAtendimentosAlunos(pageable, startDate, endDate)
         );
     }
 

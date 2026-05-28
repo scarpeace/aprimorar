@@ -1,11 +1,11 @@
 package aprimorar.atendimentos.api;
 
-import aprimorar.atendimentos.api.dto.AlunoFinanceiroResumoDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosAlunosKpisDTO;
 import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
-import aprimorar.atendimentos.api.dto.AtendimentoFinanceSummaryDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosKpisDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
 import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
-import aprimorar.atendimentos.api.dto.ColaboradorFinanceiroResumoDTO;
+import aprimorar.atendimentos.api.dto.AtendimentosColaboradorKpisDTO;
 import aprimorar.shared.PageDTO;
 import java.time.Instant;
 import java.util.UUID;
@@ -39,13 +39,13 @@ public interface AtendimentosQueryApi {
         Instant endDate,
         Boolean charged
     );
-    AtendimentoFinanceSummaryDTO getIndicadoresAtendimentos(Instant startDate, Instant endDate);
-    PageDTO<ColaboradorFinanceiroResumoDTO> getOverviewFinanceiroColaboradores(
+    AtendimentosKpisDTO getKpisAtendimentos(Instant startDate, Instant endDate);
+    PageDTO<AtendimentosColaboradorKpisDTO> getKpisAtendimentosColaboradores(
         Pageable pageable,
         Instant startDate,
         Instant endDate
     );
-    PageDTO<AlunoFinanceiroResumoDTO> getOverviewFinanceiroAlunos(
+    PageDTO<AtendimentosAlunosKpisDTO> getKpisAtendimentosAlunos(
         Pageable pageable,
         Instant startDate,
         Instant endDate
