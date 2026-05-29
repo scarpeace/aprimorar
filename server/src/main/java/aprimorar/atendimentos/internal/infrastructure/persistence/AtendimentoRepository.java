@@ -21,7 +21,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         long getCount();
     }
 
-    interface IndicadoresAulunoProjection {
+    interface KpisAlunoProjection {
         UUID getStudentId();
         String getStudentName();
         long getTotalAtendimentos();
@@ -29,12 +29,22 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         BigDecimal getTotalPending();
     }
 
-    interface IndicadoresColaboradorProjection {
+    interface KpisColaboradorProjection {
         UUID getEmployeeId();
         String getEmployeeName();
         long getTotalAtendimentos();
         BigDecimal getTotalPaid();
         BigDecimal getTotalPending();
+    }
+
+    interface ReportAtendimentosProjection{
+        long getTotalAulas();
+        long getTotalMentoria();
+        long getTotalTerapia();
+        long getTotalOV();
+        long getTotalENEM();
+        long getTotalPAS();
+        long getTotalOutros();
     }
 
     boolean existsByStudentIdAndStudentChargeDateIsNull(UUID studentId);
@@ -206,7 +216,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
           and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
-    Page<IndicadoresColaboradorProjection> getOverviewFinanceiroColaboradores(
+    Page<KpisColaboradorProjection> getOverviewFinanceiroColaboradores(
         Pageable pageable,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate
@@ -232,12 +242,31 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
           and a.endDate <= coalesce(:endDate, a.endDate)
         """
     )
-    Page<IndicadoresAulunoProjection> getOverviewFinanceiroAlunos(
+    Page<KpisAlunoProjection> getOverviewFinanceiroAlunos(
         Pageable pageable,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate
     );
 
+    @Query(
+        """
+            select
+                count(case when a.content = 'AULA' then 1 end) as totalAulas,
+                count(case when a.content = 'MENTORIA' then 1 end) as totalMentoria,
+                count(case when a.content = 'TERAPIA' then 1 end) as totalTerapia,
+                count(case when a.content = 'OV' then 1 end) as totalOV,
+                count(case when a.content = 'ENEM' then 1 end) as totalENEM,
+                count(case when a.content = 'PAS' then 1 end) as totalPAS,
+                count(case when a.content = 'OUTROS' then 1 end) as totalOutros
+            from Atendimento a
+            where a.startDate >= coalesce(:startDate, a.startDate)
+              and a.endDate <= coalesce(:endDate, a.endDate)
+        """
+    )
+    ReportAtendimentosProjection getAtendimentosContentReport(
+        @Param("startDate") Instant startDate,
+        @Param("endDate") Instant endDate
+    );
 
     @Query(
         """
@@ -315,4 +344,6 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         @Param("startDate") Instant startDate,
         @Param("endDate") Instant endDate
     );
+
+
 }

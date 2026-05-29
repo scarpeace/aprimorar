@@ -1,6 +1,5 @@
 package aprimorar.atendimentos.internal.application;
 
-import aprimorar.atendimentos.api.dto.AtendimentosAlunosKpisDTO;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
@@ -17,10 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import aprimorar.atendimentos.api.AtendimentosQueryApi;
 import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
 import aprimorar.atendimentos.api.dto.AlunoAtendimentosKpis;
-import aprimorar.atendimentos.api.dto.AtendimentosKpisDTO;
 import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
 import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
-import aprimorar.atendimentos.api.dto.AtendimentosColaboradorKpisDTO;
 import aprimorar.atendimentos.api.dto.ColaboradorAtendimentosKpis;
 import aprimorar.atendimentos.internal.domain.Atendimento;
 import aprimorar.atendimentos.internal.infrastructure.persistence.AtendimentoRepository;
@@ -84,22 +81,6 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
 
     @Transactional(readOnly = true)
     @Override
-    public AtendimentosKpisDTO getKpisAtendimentos(Instant startDate, Instant endDate) {
-        BigDecimal totalStudentCharged = atendimentoRepo.sumTotalChargedInPeriod(startDate, endDate);
-        BigDecimal totalStudentPending = atendimentoRepo.sumTotalUnchargedInPeriod(startDate, endDate);
-        BigDecimal totalEmployeePaid = atendimentoRepo.sumTotalPaidInPeriod(startDate, endDate);
-        BigDecimal totalEmployeePending = atendimentoRepo.sumTotalUnpaidInPeriod(startDate, endDate);
-
-        return new AtendimentosKpisDTO(
-            totalStudentCharged,
-            totalStudentPending,
-            totalEmployeePaid,
-            totalEmployeePending
-        );
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public AtendimentosColaboradorResponseDTO getAtendimentosByColaborador(
         Pageable pageable,
         UUID employeeId,
@@ -129,8 +110,8 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
         );
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public AtendimentosAlunoResponseDTO getAtendimentosByAluno(
         Pageable pageable,
         UUID studentId,
@@ -153,44 +134,6 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
         BigDecimal totalPending = atendimentoRepo.sumPendingByStudentInPeriod(studentId, startDate, endDate);
 
         return new AtendimentosAlunoResponseDTO(new PageDTO<>(dtoPage), new AlunoAtendimentosKpis(totalAtendimentos, totalCharged, totalPending));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public PageDTO<AtendimentosColaboradorKpisDTO> getKpisAtendimentosColaboradores(
-        Pageable pageable,
-        Instant startDate,
-        Instant endDate
-    ) {
-        Page<AtendimentosColaboradorKpisDTO> resultado = atendimentoRepo
-            .getOverviewFinanceiroColaboradores(pageable, startDate, endDate)
-            .map(item -> new AtendimentosColaboradorKpisDTO(
-                item.getEmployeeId(),
-                item.getTotalAtendimentos(),
-                item.getTotalPaid(),
-                item.getTotalPending()
-            ));
-
-        return new PageDTO<>(resultado);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public PageDTO<AtendimentosAlunosKpisDTO> getKpisAtendimentosAlunos(
-        Pageable pageable,
-        Instant startDate,
-        Instant endDate
-    ) {
-        Page<AtendimentosAlunosKpisDTO> resultado = atendimentoRepo
-            .getOverviewFinanceiroAlunos(pageable, startDate, endDate)
-            .map(item -> new AtendimentosAlunosKpisDTO(
-                item.getStudentId(),
-                item.getTotalAtendimentos(),
-                item.getTotalCharged(),
-                item.getTotalPending()
-            ));
-
-        return new PageDTO<>(resultado);
     }
 
     @Transactional(readOnly = true)

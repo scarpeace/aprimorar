@@ -1,10 +1,10 @@
 package aprimorar.pessoas.responsavel.internal.web;
 
-import aprimorar.pessoas.responsavel.api.ResponsavelQueryApi;
 import aprimorar.pessoas.responsavel.api.dto.ResponsaveisListDTO;
 import aprimorar.pessoas.responsavel.api.dto.ResponsavelRequestDTO;
 import aprimorar.pessoas.responsavel.api.dto.ResponsavelResponseDTO;
 import aprimorar.pessoas.responsavel.internal.application.ResponsavelMutationService;
+import aprimorar.pessoas.responsavel.internal.application.ResponsavelQueryService;
 import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,11 +37,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Responsavel", description = "APIs de gestão de responsáveis")
 public class ResponsavelController {
 
-    private final ResponsavelQueryApi responsavelQueryApi;
+    private final ResponsavelQueryService responsavelQueryService;
     private final ResponsavelMutationService responsavelMutationService;
 
-    public ResponsavelController(ResponsavelQueryApi responsavelQueryApi, ResponsavelMutationService responsavelMutationService) {
-        this.responsavelQueryApi = responsavelQueryApi;
+    public ResponsavelController(ResponsavelQueryService responsavelQueryService, ResponsavelMutationService responsavelMutationService) {
+        this.responsavelQueryService = responsavelQueryService;
         this.responsavelMutationService = responsavelMutationService;
     }
 
@@ -86,7 +86,7 @@ public class ResponsavelController {
         @RequestParam(required = false) String search,
         @RequestParam(required = false) Boolean archived
     ) {
-        return ResponseEntity.ok(responsavelQueryApi.getResponsaveis(pageable, search, archived));
+        return ResponseEntity.ok(responsavelQueryService.getResponsaveis(pageable, search, archived));
     }
 
     @GetMapping("/options")
@@ -98,7 +98,7 @@ public class ResponsavelController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<List<ResponsaveisListDTO>> listResponsaveis() {
-        return ResponseEntity.ok(responsavelQueryApi.listResponsaveis());
+        return ResponseEntity.ok(responsavelQueryService.listResponsaveis());
     }
 
     @GetMapping("/{responsavelId}")
@@ -115,7 +115,7 @@ public class ResponsavelController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<ResponsavelResponseDTO> getResponsavelById(@PathVariable UUID responsavelId) {
-        ResponsavelResponseDTO responsavel = responsavelQueryApi.findResponsavelById(responsavelId);
+        ResponsavelResponseDTO responsavel = responsavelQueryService.findResponsavelById(responsavelId);
         return ResponseEntity.ok(responsavel);
     }
 

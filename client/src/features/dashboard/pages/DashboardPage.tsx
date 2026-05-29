@@ -1,10 +1,20 @@
+import { PageLayout } from "@/components/layout/PageLayout";
 import { AtendimentosCalendar } from "../components/AtendimentosCalendar";
 import { lazy, Suspense, useState } from "react";
+import { CalendarDays } from "lucide-react";
 
 const AtendimentoForm = lazy(() => import("@/features/appointments/components/AtendimentoForm").then((module) => ({ default: module.AtendimentoForm })));
 
 export function DashboardPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const headerProps = {
+    description: "Visão geral da operação do Aprimorar",
+    title: "Dashboard",
+    Icon: CalendarDays,
+    backLink: "/",
+    iconBg: "success",
+  };
 
   const handleCloseForm = () => {
     setIsFormOpen(false);
@@ -12,10 +22,10 @@ export function DashboardPage() {
 
   return (
     <>
-      <section className="flex flex-col gap-7">
-        <h1 className="text-3xl font-bold text-base-content">Painel</h1>
-        <AtendimentosCalendar onCreateAppointment={() => setIsFormOpen(true)} />
-      </section>
+      <PageLayout {...headerProps}>
+        <section className="flex flex-col">
+          <AtendimentosCalendar onCreateAppointment={() => setIsFormOpen(true)} />
+        </section>
 
       {isFormOpen ? (
         <div className="modal modal-open">
@@ -33,7 +43,9 @@ export function DashboardPage() {
             </Suspense>
           </div>
         </div>
-      ) : null}
-    </>
+        ) : null}
+
+      </PageLayout>
+      </>
   );
 }

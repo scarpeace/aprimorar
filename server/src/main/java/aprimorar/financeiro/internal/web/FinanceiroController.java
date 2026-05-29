@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import java.time.Instant;
 import java.util.UUID;
 import aprimorar.financeiro.api.CategoriaDespesaEnum;
-import aprimorar.financeiro.api.FinanceiroQueryApi;
+import aprimorar.financeiro.internal.application.FinanceiroQueryService;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -39,11 +39,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Tag(name = "Financeiro", description = "Gerenciamento de despesas gerais")
 public class FinanceiroController {
 
-    private final FinanceiroQueryApi financeiroQueryApi;
+    private final FinanceiroQueryService financeiroQueryService;
     private final FinanceiroMutationService financeiroMutationService;
 
-    public FinanceiroController(FinanceiroQueryApi financeiroQueryApi, FinanceiroMutationService financeiroMutationService) {
-        this.financeiroQueryApi = financeiroQueryApi;
+    public FinanceiroController(FinanceiroQueryService financeiroQueryService, FinanceiroMutationService financeiroMutationService) {
+        this.financeiroQueryService = financeiroQueryService;
         this.financeiroMutationService = financeiroMutationService;
     }
 
@@ -88,7 +88,7 @@ public class FinanceiroController {
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
         @ParameterObject @PageableDefault(size = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(financeiroQueryApi.getDespesas(pageable, categoria, startDate, endDate));
+        return ResponseEntity.ok(financeiroQueryService.getDespesas(pageable, categoria, startDate, endDate));
     }
 
     @GetMapping("/{id}")
@@ -105,7 +105,7 @@ public class FinanceiroController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<DespesaResponseDTO> getDespesaById(@PathVariable UUID id) {
-        return ResponseEntity.ok(financeiroQueryApi.findDespesaById(id));
+        return ResponseEntity.ok(financeiroQueryService.findDespesaById(id));
     }
 
     @PutMapping("/{id}")

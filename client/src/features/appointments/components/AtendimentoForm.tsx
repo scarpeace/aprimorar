@@ -17,7 +17,6 @@ import { formatDateTimeLocal } from "@/lib/utils/formatter";
 
 function formatDateTimeForInput(dateTimeStr?: string) {
   if (!dateTimeStr) return "";
-  // We just remove the "Z" or milliseconds for datetime-local input
   const date = new Date(dateTimeStr);
   const offset = date.getTimezoneOffset() * 60000;
   const localISOTime = new Date(date.getTime() - offset).toISOString().slice(0, 16);

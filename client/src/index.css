@@ -354,4 +354,38 @@
     transform: translateY(-1px);
     box-shadow: 0 6px 16px -10px color-mix(in srgb, var(--app-text) 45%, transparent);
   }
+
+  .appointments-calendar .fc .fc-toolbar-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+
+  .appointments-calendar .fc .fc-button-primary {
+    border-radius: 0.75rem;
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-primary-content);
+    box-shadow: none;
+    padding: 0.35rem 0.7rem;
+    transition: filter 160ms ease, box-shadow 160ms ease;
+  }
+
+  .appointments-calendar .fc .fc-button-primary:hover {
+    filter: brightness(0.95);
+  }
+
+  .appointments-calendar .fc .fc-button-primary:focus {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 28%, transparent);
+  }
+
+  .appointments-calendar .fc .fc-button-primary:disabled {
+    opacity: 0.45;
+  }
+
+  .appointments-calendar .fc .fc-button-primary.fc-button-active {
+    border-color: var(--color-secondary);
+    background: var(--color-secondary);
+    color: var(--color-secondary-content);
+  }
 }
