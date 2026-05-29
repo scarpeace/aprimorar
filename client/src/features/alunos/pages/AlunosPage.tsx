@@ -1,27 +1,27 @@
 import { Button } from "@/components/ui/button";
+import { KpiCard } from "@/components/ui/kpi-card";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ResponsavelForm } from "@/features/responsaveis/components/ResponsavelForm";
 import { ResponsaveisTable } from "@/features/responsaveis/components/ResponsaveisTable";
 import { useGetAlunosKpis, type AlunoResponseDTO, type ResponsavelResponseDTO } from "@/kubb";
 import { GraduationCap, Plus, UserCheck, UserCircle } from "lucide-react";
 import { useState } from "react";
-import { AlunosTable } from "../components/AlunosTable";
 import { AlunoForm } from "../components/AlunoForm";
-import { KpiCard } from "@/components/ui/kpi-card";
+import { AlunosTable } from "../components/AlunosTable";
+
+const HEADER_PROPS = {
+  description: "Resumo de alunos e responsáveis.",
+  title: "Alunos e Responsáveis",
+  Icon: GraduationCap,
+  backLink: "/",
+  iconBg: "success",
+} as const;
 
 export function AlunosPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isResponsavelFormOpen, setIsResponsavelFormOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<AlunoResponseDTO | null>(null);
   const [selectedParent, setSelectedParent] = useState<ResponsavelResponseDTO | null>(null);
-
-  const headerProps = {
-    description: "Resumo de alunos e responsáveis.",
-    title: "Alunos e Responsáveis",
-    Icon: GraduationCap,
-    backLink: "/",
-    iconBg: "success",
-  } as const;
 
   const { data: kpisAlunos } = useGetAlunosKpis();
 
@@ -46,7 +46,7 @@ export function AlunosPage() {
   };
 
   return (
-    <PageLayout {...headerProps}>
+    <PageLayout {...HEADER_PROPS}>
 
       <section className="mb-3 rounded-2xl bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
         <div className="flex flex-row justify-between items-center gap-3">

@@ -50,16 +50,6 @@ export function FinanceiroPage() {
     return <LoadingSpinner text="Carregando Responsáveis..." />;
   }
 
-  // if (!despesasQuery.data || !despesasQuery.data.content || despesasQuery.data.totalElements === 0) {
-  //   return (
-  //     <EmptyCard
-  //       title="Nenhum responsável encontrado"
-  //       description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
-  //       action={<Button variant="outline" onClick={handleCleanFilter}>Limpar filtros<BrushCleaning size={18} /></Button>}
-  //     />
-  //   );
-  // }
-
   return (
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-4">
@@ -109,8 +99,9 @@ export function FinanceiroPage() {
             </div>
           </div>
       ) : null}
-    <PageDateFilterWidget startDate={startDate} endDate={endDate} {...dateFilter} />
       </div>
+
+    <PageDateFilterWidget startDate={startDate} endDate={endDate} {...dateFilter} />
     </PageLayout>
   );
 }

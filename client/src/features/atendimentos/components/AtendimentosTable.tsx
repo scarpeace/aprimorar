@@ -11,8 +11,12 @@ import { useNavigate } from "react-router-dom";
 import { AtendimentoMobileCard } from "./AtendimentoMobileCard";
 import { useAtendimentosFilters } from "../hooks/use-atendimentos-filters";
 
+type AtendimentosTableProps = {
+  startDate?: Date;
+  endDate?: Date;
+};
 
-export function AtendimentosTable() {
+export function AtendimentosTable({ startDate, endDate }: AtendimentosTableProps) {
   const navigate = useNavigate();
 
   const {
@@ -29,6 +33,8 @@ export function AtendimentosTable() {
   const eventsQuery = useGetAtendimentos({
     page,
     size: 20,
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
     sort: ["startDate,desc", "id,asc"],
     search: search || undefined,
     hideCharged: hideCharged || undefined,

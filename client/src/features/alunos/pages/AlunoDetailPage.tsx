@@ -1,5 +1,8 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
+import { KpiCard } from "@/components/ui/kpi-card";
+import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
+import { brl } from "@/lib/utils/formatter";
 import {
   useBuscarAlunoPorId,
   useGetAtendimentosByAluno,
@@ -13,13 +16,10 @@ import {
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { AlunoEventsTable } from "../components/AlunoEventsTable";
-import { AlunoInfoSection } from "../components/AlunoInfoSection";
 import { AlunoForm } from "../components/AlunoForm";
-import { KpiCard } from "@/components/ui/kpi-card";
-import { brl } from "@/lib/utils/formatter";
-import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
+import { AlunoInfoSection } from "../components/AlunoInfoSection";
 
-const headerProps = {
+const HEADER_PROPS = {
   description: "Veja e gerencie as informações do aluno",
   title: "Detalhes do aluno",
   Icon: GraduationCap,
@@ -52,12 +52,20 @@ export function AlunoDetailPage() {
     setCurrentPage(0);
   };
 
+  const handleOpenForm = () => {
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+  };
+
   return (
-    <PageLayout {...headerProps}>
+    <PageLayout {...HEADER_PROPS}>
       <div className="mb-3">
         <AlunoInfoSection
           studentId={studentId}
-          onEdit={() => setIsFormOpen(true)}
+          onEdit={handleOpenForm}
         />
       </div>
 
@@ -103,8 +111,8 @@ export function AlunoDetailPage() {
             <h3 className="font-bold text-lg mb-4">Editar Aluno</h3>
             <AlunoForm
               initialData={alunoQuery.data}
-              onSuccess={() => setIsFormOpen(false)}
-              onCancel={() => setIsFormOpen(false)}
+              onSuccess={handleCloseForm}
+              onCancel={handleCloseForm}
             />
           </div>
         </div>

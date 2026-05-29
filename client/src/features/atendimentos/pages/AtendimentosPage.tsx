@@ -6,10 +6,14 @@ import type { AtendimentoResponseDTO } from "@/kubb";
 import { AtendimentoForm } from "../components/AtendimentoForm";
 import { AtendimentosTable } from "../components/AtendimentosTable";
 import { KpiCard } from "@/components/ui/kpi-card";
+import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
+import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter";
 
 export function AtendimentosPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<AtendimentoResponseDTO | null>(null);
+  const { startDate, endDate, ...dateFilter } = usePageDateFilter();
+
 
   const headerProps = {
     description: "Gerencie aulas e atendimentos.",
@@ -80,7 +84,7 @@ export function AtendimentosPage() {
               </Button>
             </div>
 
-            <AtendimentosTable/>
+            <AtendimentosTable startDate={startDate} endDate={endDate}/>
           </section>
 
 
@@ -102,6 +106,8 @@ export function AtendimentosPage() {
           </div>
         )}
       </div>
+
+      <PageDateFilterWidget startDate={startDate} endDate={endDate} {...dateFilter} />
     </PageLayout>
   );
 }
