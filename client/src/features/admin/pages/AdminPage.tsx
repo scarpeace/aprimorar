@@ -10,7 +10,8 @@ const headerProps = {
   description: "Gerencie usuarios da plataforma com criacao e exclusao de acesso.",
   title: "Admin",
   Icon: ShieldCheck,
-};
+  iconBg: "primary",
+} as const;
 
 export function AdminPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);

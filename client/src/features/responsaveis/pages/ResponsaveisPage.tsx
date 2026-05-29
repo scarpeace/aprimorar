@@ -15,7 +15,8 @@ export function ResponsaveisPage() {
     title: "Responsáveis",
     Icon: Handshake,
     backLink: "/",
-  };
+    iconBg: "info",
+  } as const;
 
   const handleOpenForm = (responsavel?: ResponsavelResponseDTO) => {
     setSelectedParent(responsavel || null);

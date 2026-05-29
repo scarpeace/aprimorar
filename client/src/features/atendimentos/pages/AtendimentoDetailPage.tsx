@@ -28,7 +28,8 @@ export function AtendimentoDetailPage() {
     Icon: Calendar,
     title: "Detalhes do atendimentoo",
     backLink: "/atendimentos",
-  };
+    iconBg: "secondary",
+  } as const;
 
   if (atendimentoQuery.isError) {
     return (

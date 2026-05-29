@@ -21,7 +21,8 @@ export function ResponsavelDetailPage() {
     title: "Detalhes do Responsável",
     Icon: Handshake,
     backLink: "/responsavels",
-  };
+    iconBg: "info",
+  } as const;
 
   return (
     <PageLayout {...headerProps}>

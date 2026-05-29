@@ -13,8 +13,8 @@ export function DashboardPage() {
     title: "Dashboard",
     Icon: CalendarDays,
     backLink: "/",
-    iconBg: "success",
-  };
+    iconBg: "primary",
+  } as const;
 
   const handleCloseForm = () => {
     setIsFormOpen(false);

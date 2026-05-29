@@ -5,7 +5,8 @@ import {
   UserCog,
   GraduationCap,
   Banknote,
-  ShieldCheck
+  ShieldCheck,
+  BellElectric
 } from "lucide-react"
 import { Link, Outlet, useLocation } from "react-router-dom"
 import { useAuth } from "@/features/auth/lib/use-auth"
@@ -14,7 +15,7 @@ const baseNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Alunos e Responsáveis", href: "/students", icon: GraduationCap },
   { name: "Colaboradores", href: "/employees", icon: UserCog },
-  { name: "Atendimentos", href: "/appointments", icon: Calendar },
+  { name: "Atendimentos", href: "/appointments", icon: BellElectric },
   { name: "Financeiro", href: "/finance", icon: Banknote },
 ] as const
 

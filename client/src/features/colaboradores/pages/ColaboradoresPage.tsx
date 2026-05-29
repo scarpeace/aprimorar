@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetColaboradoresKpis, type ColaboradorResponseDTO } from "@/kubb";
-import { FileUser, Plus, UserCheck, UserCircle } from "lucide-react";
+import { Plus, UserCheck, UserCircle, UserCog } from "lucide-react";
 import { useState } from "react";
 import { ColaboradoresTable } from "../components/ColaboradoresTable";
 import { ColaboradorForm } from "../components/ColaboradorForm";
@@ -14,9 +14,10 @@ export function ColaboradoresPage() {
   const headerProps = {
     description: "Gerencie cadastros e matrículas.",
     title: "Colaboradores",
-    Icon: FileUser,
+    Icon: UserCog,
     backLink: "/",
-  };
+    iconBg: "warning",
+  } as const;
 
   const { data: kpisColaboradores } = useGetColaboradoresKpis();
   const handleOpenForm = (colaborador?: ColaboradorResponseDTO) => {

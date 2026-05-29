@@ -20,7 +20,8 @@ export function AlunosPage() {
     title: "Alunos e Responsáveis",
     Icon: GraduationCap,
     backLink: "/",
-  };
+    iconBg: "success",
+  } as const;
 
   const { data: kpisAlunos } = useGetAlunosKpis();
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { FileUser, Plus, UserCheck, UserCircle } from "lucide-react";
+import { BellElectric, FileUser, Plus, UserCheck, UserCircle } from "lucide-react";
 import type { AtendimentoResponseDTO } from "@/kubb";
 import { AtendimentoForm } from "../components/AtendimentoForm";
 import { AtendimentosTable } from "../components/AtendimentosTable";
@@ -12,11 +12,12 @@ export function AtendimentosPage() {
   const [selectedEvent, setSelectedEvent] = useState<AtendimentoResponseDTO | null>(null);
 
   const headerProps = {
-    description: "Gerencie cadastros e matrículas.",
-    title: "Colaboradores",
-    Icon: FileUser,
+    description: "Gerencie aulas e atendimentos.",
+    title: "Atendimentos",
+    Icon: BellElectric,
     backLink: "/",
-  };
+    iconBg: "accent",
+  } as const;
 
   const handleOpenForm = (atendimento?: AtendimentoResponseDTO) => {
     setSelectedEvent(atendimento || null);

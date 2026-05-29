@@ -44,7 +44,8 @@ export function DespesaDetailPage() {
     title: "Detalhes da despesa",
     Icon: ReceiptText,
     backLink: "/finance",
-  };
+    iconBg: "warning",
+  } as const;
 
   if (despesaQuery.isError) {
     return (

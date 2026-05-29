@@ -19,7 +19,8 @@ const headerProps = {
   title: "Detalhes do colaborador",
   Icon: FileUser,
   backLink: "/colaboradores",
-};
+  iconBg: "accent",
+} as const;
 
 export function ColaboradorDetailPage() {
   const { id } = useParams<{ id: string }>();

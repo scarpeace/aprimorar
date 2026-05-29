@@ -39,7 +39,8 @@ export function FinanceiroPage() {
     title: "Financeiro",
     Icon: Landmark,
     backLink: "/",
-  };
+    iconBg: "warning",
+  } as const;
 
   if (despesasQuery.isError) {
     return <ErrorCard title="Não foi possível carregar a listagem de Responsáveis" error={despesasQuery.error}/>;

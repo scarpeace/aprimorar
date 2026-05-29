@@ -24,7 +24,8 @@ const headerProps = {
   title: "Detalhes do aluno",
   Icon: GraduationCap,
   backLink: "/alunos",
-};
+  iconBg: "success",
+} as const;
 
 export function AlunoDetailPage() {
   const { id } = useParams<{ id: string }>();
