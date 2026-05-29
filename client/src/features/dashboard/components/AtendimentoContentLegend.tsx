@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { EventContentLabels } from "@/features/appointments/lib/eventContentLabels.ts";
-import { APPOINTMENT_CONTENT_COLORS } from "@/features/appointments/lib/appointment-content-colors";
+import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
+import { APPOINTMENT_CONTENT_COLORS } from "@/features/atendimentos/lib/appointment-content-colors";
 import { useGetAtendimentosContentReport } from "@/kubb";
 
 

@@ -6,8 +6,8 @@ import { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { DateTimeInput } from "@/components/ui/date-time-input";
-import { ColaboradorSelectDropdown } from "@/features/employees/components/ColaboradorSelectDropdown";
-import { AlunoSelectDropdown } from "@/features/students/components/AlunoSelectDropdown";
+import { ColaboradorSelectDropdown } from "@/features/colaboradores/components/ColaboradorSelectDropdown";
+import { AlunoSelectDropdown } from "@/features/alunos/components/AlunoSelectDropdown";
 import type { AtendimentoRequestDTO, AtendimentoResponseDTO } from "@/kubb";
 import { toInstant } from "@/lib/utils/date-utils";
 import { ContentSelectDropdown } from "./ContentSelectDropdown";

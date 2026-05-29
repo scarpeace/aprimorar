@@ -3,7 +3,7 @@ import { AtendimentosCalendar } from "../components/AtendimentosCalendar";
 import { lazy, Suspense, useState } from "react";
 import { CalendarDays } from "lucide-react";
 
-const AtendimentoForm = lazy(() => import("@/features/appointments/components/AtendimentoForm").then((module) => ({ default: module.AtendimentoForm })));
+const AtendimentoForm = lazy(() => import("@/features/atendimentos/components/AtendimentoForm").then((module) => ({ default: module.AtendimentoForm })));
 
 export function DashboardPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);

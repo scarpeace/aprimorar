@@ -9,20 +9,20 @@ import { ErrorBoundary } from "./components/ui/error-boundary"
 
 const DashboardPage = lazy(() => import("@/features/dashboard/pages/DashboardPage").then((module) => ({ default: module.DashboardPage })))
 
-const AlunosPage = lazy(() => import("@/features/students/pages/AlunosPage").then((module) => ({ default: module.AlunosPage })))
-const AlunoDetailPage = lazy(() => import("@/features/students/pages/AlunoDetailPage").then((module) => ({ default: module.AlunoDetailPage })))
+const AlunosPage = lazy(() => import("@/features/alunos/pages/AlunosPage").then((module) => ({ default: module.AlunosPage })))
+const AlunoDetailPage = lazy(() => import("@/features/alunos/pages/AlunoDetailPage").then((module) => ({ default: module.AlunoDetailPage })))
 
-const ResponsaveisPage = lazy(() => import("@/features/parents/pages/ResponsaveisPage").then((module) => ({ default: module.ResponsaveisPage })))
-const ResponsavelDetailPage = lazy(() => import("@/features/parents/pages/ResponsavelDetailPage").then((module) => ({ default: module.ResponsavelDetailPage })))
+const ResponsaveisPage = lazy(() => import("@/features/responsaveis/pages/ResponsaveisPage").then((module) => ({ default: module.ResponsaveisPage })))
+const ResponsavelDetailPage = lazy(() => import("@/features/responsaveis/pages/ResponsavelDetailPage").then((module) => ({ default: module.ResponsavelDetailPage })))
 
-const ColaboradoresPage = lazy(() => import("@/features/employees/pages/ColaboradoresPage").then((module) => ({ default: module.ColaboradoresPage })))
-const ColaboradorDetailPage = lazy(() => import("@/features/employees/pages/ColaboradorDetailPage").then((module) => ({ default: module.ColaboradorDetailPage })))
+const ColaboradoresPage = lazy(() => import("@/features/colaboradores/pages/ColaboradoresPage").then((module) => ({ default: module.ColaboradoresPage })))
+const ColaboradorDetailPage = lazy(() => import("@/features/colaboradores/pages/ColaboradorDetailPage").then((module) => ({ default: module.ColaboradorDetailPage })))
 
-const AtendimentosPage = lazy(() => import("@/features/appointments/pages/AtendimentosPage").then((module) => ({ default: module.AtendimentosPage })))
-const AtendimentoDetailPage = lazy(() => import("@/features/appointments/pages/AtendimentoDetailPage").then((module) => ({ default: module.AtendimentoDetailPage })))
+const AtendimentosPage = lazy(() => import("@/features/atendimentos/pages/AtendimentosPage").then((module) => ({ default: module.AtendimentosPage })))
+const AtendimentoDetailPage = lazy(() => import("@/features/atendimentos/pages/AtendimentoDetailPage").then((module) => ({ default: module.AtendimentoDetailPage })))
 
-const FinanceiroPage = lazy(() => import("@/features/finance/pages/FinanceiroPage").then((module) => ({ default: module.FinanceiroPage })))
-const DespesaDetailPage = lazy(() => import("@/features/finance/pages/DespesaDetailPage").then((module) => ({ default: module.DespesaDetailPage })))
+const FinanceiroPage = lazy(() => import("@/features/financeiro/pages/FinanceiroPage").then((module) => ({ default: module.FinanceiroPage })))
+const DespesaDetailPage = lazy(() => import("@/features/financeiro/pages/DespesaDetailPage").then((module) => ({ default: module.DespesaDetailPage })))
 
 const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage").then((module) => ({ default: module.LoginPage })))
 

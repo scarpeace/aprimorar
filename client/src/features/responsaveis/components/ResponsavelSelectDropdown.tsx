@@ -1,5 +1,5 @@
 import { ButtonLink } from "@/components/ui/button";
-import type { AlunoFormSchema } from "@/features/students/lib/studentFormSchema.ts";
+import type { AlunoFormSchema } from "@/features/alunos/lib/studentFormSchema.ts";
 import { useListarOpcoesResponsaveis } from "@/kubb";
 import { TriangleAlert, UserPlus } from "lucide-react";
 import {

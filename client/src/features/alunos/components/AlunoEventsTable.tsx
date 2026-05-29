@@ -5,12 +5,12 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import type { AtendimentoResponseDTO, PageDTOAtendimentoResponseDTO } from "@/kubb";
-import { EventContentLabels } from "@/features/appointments/lib/eventContentLabels.ts";
+import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
 import { memo } from "react";
 import { AlunoAtendimentoMobileCard } from "./AlunoAtendimentoMobileCard";
-import { useAtendimentoMutations } from "@/features/appointments/hooks/use-atendimento-mutations";
+import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 
 interface AlunoEventsTableProps {
   atendimentos?: PageDTOAtendimentoResponseDTO;

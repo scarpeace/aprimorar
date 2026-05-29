@@ -11,7 +11,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 
 import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
-import { getAppointmentColor } from "@/features/appointments/lib/appointment-content-colors";
+import { getAppointmentColor } from "@/features/atendimentos/lib/appointment-content-colors";
 import { useGetAtendimentos } from "@/kubb";
 import type { AtendimentoResponseDTO } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";

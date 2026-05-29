@@ -7,7 +7,7 @@ import { useGetAtendimentoById } from "@/kubb";
 import { Calendar, Edit } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
-import { EventContentLabels } from "@/features/appointments/lib/eventContentLabels.ts";
+import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
 import { useState } from "react";
 import { AtendimentoForm } from "../components/AtendimentoForm";
 import { AtendimentoInfoSection } from "../components/AtendimentoInfoSection";

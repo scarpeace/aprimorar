@@ -3,10 +3,10 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { ErrorCard } from "@/components/ui/error-card";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { EventContentLabels } from "@/features/appointments/lib/eventContentLabels.ts";
+import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { useAtendimentoMutations } from "@/features/appointments/hooks/use-atendimento-mutations";
+import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 import { Button, ButtonLink } from "@/components/ui/button";
 import {
   Calendar,

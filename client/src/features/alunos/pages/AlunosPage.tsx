@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { ResponsavelForm } from "@/features/parents/components/ResponsavelForm";
-import { ResponsaveisTable } from "@/features/parents/components/ResponsaveisTable";
+import { ResponsavelForm } from "@/features/responsaveis/components/ResponsavelForm";
+import { ResponsaveisTable } from "@/features/responsaveis/components/ResponsaveisTable";
 import { useGetAlunosKpis, type AlunoResponseDTO, type ResponsavelResponseDTO } from "@/kubb";
 import { GraduationCap, Plus, UserCheck, UserCircle } from "lucide-react";
 import { useState } from "react";

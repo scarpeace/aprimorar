@@ -5,7 +5,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetAtendimentos, type AtendimentoResponseDTO } from "@/kubb";
-import { EventContentLabels } from "@/features/appointments/lib/eventContentLabels.ts";
+import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
 import { AtendimentoMobileCard } from "./AtendimentoMobileCard";

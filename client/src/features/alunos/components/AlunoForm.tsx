@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useHookFormMask } from "use-mask-input";
 
 import { Button } from "@/components/ui/button";
-import { ResponsavelSelectDropdown } from "@/features/parents/components/ResponsavelSelectDropdown";
+import { ResponsavelSelectDropdown } from "@/features/responsaveis/components/ResponsavelSelectDropdown";
 import { brazilianStates } from "@/lib/utils/brazilianStates";
 import type { AlunoResponseDTO } from "@/kubb";
 import { formatDateForInput } from "@/lib/utils/formatter";
