@@ -1,0 +1,41 @@
+image: docker:27
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_TLS_CERTDIR: ""
+
+stages:
+  - test
+  - build
+
+backend-test:
+  stage: test
+  image: eclipse-temurin:21-jdk-alpine
+  script:
+    - cd server && ./mvnw test
+  only:
+    - main
+
+backend-build:
+  stage: build
+  image: eclipse-temurin:21-jdk-alpine
+  script:
+    - cd server && ./mvnw package -DskipTests
+  artifacts:
+    paths:
+      - server/target/*.jar
+  only:
+    - main
+
+frontend-build:
+  stage: build
+  image: node:22-alpine
+  script:
+    - cd client && npm ci && npm run build
+  artifacts:
+    paths:
+      - client/dist/
+  only:
+    - main
