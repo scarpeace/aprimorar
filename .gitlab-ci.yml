@@ -1,18 +1,23 @@
-image: docker:27
-
-services:
-  - docker:dind
-
-variables:
-  DOCKER_TLS_CERTDIR: ""
-
 stages:
   - test
   - build
 
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository
+    - client/node_modules
+
 backend-test:
   stage: test
   image: eclipse-temurin:21-jdk-alpine
+  before_script:
+    - mkdir -p server/src/main/resources/jwt
+    - openssl genrsa -out server/src/main/resources/jwt/app.key 2048
+    - openssl rsa -in server/src/main/resources/jwt/app.key -pubout -out server/src/main/resources/jwt/app.pub
+    - chmod +x server/mvnw
   script:
     - cd server && ./mvnw test
   only:
@@ -21,6 +26,11 @@ backend-test:
 backend-build:
   stage: build
   image: eclipse-temurin:21-jdk-alpine
+  before_script:
+    - mkdir -p server/src/main/resources/jwt
+    - openssl genrsa -out server/src/main/resources/jwt/app.key 2048
+    - openssl rsa -in server/src/main/resources/jwt/app.key -pubout -out server/src/main/resources/jwt/app.pub
+    - chmod +x server/mvnw
   script:
     - cd server && ./mvnw package -DskipTests
   artifacts:
@@ -32,6 +42,9 @@ backend-build:
 frontend-build:
   stage: build
   image: node:22-alpine
+  cache:
+    paths:
+      - client/node_modules
   script:
     - cd client && npm ci && npm run build
   artifacts:
