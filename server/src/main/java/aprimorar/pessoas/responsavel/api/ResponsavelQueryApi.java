@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 
-import aprimorar.pessoas.responsavel.api.dto.ResponsaveisListDTO;
-import aprimorar.pessoas.responsavel.api.dto.ResponsavelResponseDTO;
+import aprimorar.pessoas.responsavel.internal.web.dto.ResponsaveisListDTO;
+import aprimorar.pessoas.responsavel.internal.web.dto.ResponsavelResponseDTO;
 import aprimorar.shared.PageDTO;
 
 public interface ResponsavelQueryApi {

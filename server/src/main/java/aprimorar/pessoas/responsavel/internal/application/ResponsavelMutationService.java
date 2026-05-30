@@ -1,8 +1,8 @@
 package aprimorar.pessoas.responsavel.internal.application;
 
-import aprimorar.pessoas.aluno.api.AlunoQueryApi;
-import aprimorar.pessoas.responsavel.api.dto.ResponsavelRequestDTO;
-import aprimorar.pessoas.responsavel.api.dto.ResponsavelResponseDTO;
+import aprimorar.pessoas.aluno.AlunoQueryApi;
+import aprimorar.pessoas.responsavel.internal.web.dto.ResponsavelRequestDTO;
+import aprimorar.pessoas.responsavel.internal.web.dto.ResponsavelResponseDTO;
 import aprimorar.pessoas.responsavel.internal.domain.Responsavel;
 import aprimorar.pessoas.responsavel.internal.infrastructure.persistence.ResponsavelRepository;
 import aprimorar.shared.MapperUtils;
@@ -38,11 +38,11 @@ public class ResponsavelMutationService {
     public ResponsavelResponseDTO createResponsavel(ResponsavelRequestDTO dto) {
         Responsavel responsavel = responsavelMapper.toEntity(dto);
 
-        if (responsavelRepo.existsByCpf(MapperUtils.normalizeCpf(responsavel.getCpf()))) {
+        if (Boolean.TRUE.equals(responsavelRepo.existsByCpf(MapperUtils.normalizeCpf(responsavel.getCpf())))) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um responsável cadastrado com este CPF.");
         }
 
-        if (responsavelRepo.existsByEmail(MapperUtils.normalizeEmail(responsavel.getEmail()))) {
+        if (Boolean.TRUE.equals(responsavelRepo.existsByEmail(MapperUtils.normalizeEmail(responsavel.getEmail())))) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um responsável cadastrado com este e-mail.");
         }
 
@@ -94,9 +94,9 @@ public class ResponsavelMutationService {
     public void deleteResponsavel(UUID responsavelId) {
         Responsavel responsavel = findResponsavelOrThrow(responsavelId);
 
-        if (alunoQueryApi.hasAlunosLinkedToResponsavel(responsavel.getId())) {
+        if (alunoQueryApi.hasActiveAlunosLinkedToResponsavel(responsavel.getId())) {
             throw new BusinessException(HttpStatus.BAD_REQUEST,
-                "O responsável possui alunos vinculados. Reassocie ou remova os alunos antes de excluí-lo."
+                "O responsável possui ativos alunos vinculados. Arquive-os ou remova os alunos antes de excluí-lo."
             );
         }
 

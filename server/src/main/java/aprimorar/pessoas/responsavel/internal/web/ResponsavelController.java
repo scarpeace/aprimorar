@@ -1,8 +1,8 @@
 package aprimorar.pessoas.responsavel.internal.web;
 
-import aprimorar.pessoas.responsavel.api.dto.ResponsaveisListDTO;
-import aprimorar.pessoas.responsavel.api.dto.ResponsavelRequestDTO;
-import aprimorar.pessoas.responsavel.api.dto.ResponsavelResponseDTO;
+import aprimorar.pessoas.responsavel.internal.web.dto.ResponsaveisListDTO;
+import aprimorar.pessoas.responsavel.internal.web.dto.ResponsavelRequestDTO;
+import aprimorar.pessoas.responsavel.internal.web.dto.ResponsavelResponseDTO;
 import aprimorar.pessoas.responsavel.internal.application.ResponsavelMutationService;
 import aprimorar.pessoas.responsavel.internal.application.ResponsavelQueryService;
 import aprimorar.shared.PageDTO;

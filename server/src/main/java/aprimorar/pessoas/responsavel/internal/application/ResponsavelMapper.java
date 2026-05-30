@@ -1,7 +1,7 @@
 package aprimorar.pessoas.responsavel.internal.application;
 
-import aprimorar.pessoas.responsavel.api.dto.ResponsavelRequestDTO;
-import aprimorar.pessoas.responsavel.api.dto.ResponsavelResponseDTO;
+import aprimorar.pessoas.responsavel.internal.web.dto.ResponsavelRequestDTO;
+import aprimorar.pessoas.responsavel.internal.web.dto.ResponsavelResponseDTO;
 import aprimorar.pessoas.responsavel.internal.domain.Responsavel;
 import org.springframework.stereotype.Component;
 
