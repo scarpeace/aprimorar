@@ -1,0 +1,1 @@
+const o=t=>new Date(t).toISOString(),r=t=>{if(!t)return"";const e=n=>String(n).padStart(2,"0");return`${t.getFullYear()}-${e(t.getMonth()+1)}-${e(t.getDate())}T${e(t.getHours())}:${e(t.getMinutes())}`},a=t=>{const e=new Date(t.getFullYear(),t.getMonth(),1);return{startDate:e,endDate:new Date(e.getFullYear(),e.getMonth()+1,1)}};export{r as f,a as g,o as t};
