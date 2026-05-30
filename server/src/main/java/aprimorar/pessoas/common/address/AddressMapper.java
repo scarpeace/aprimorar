@@ -1,8 +1,8 @@
-package aprimorar.pessoas.shared.address;
+package aprimorar.pessoas.common.address;
 
 import org.springframework.stereotype.Component;
-import aprimorar.pessoas.shared.address.dto.AddressRequestDTO;
-import aprimorar.pessoas.shared.address.dto.AddressResponseDTO;
+import aprimorar.pessoas.common.address.dto.AddressRequestDTO;
+import aprimorar.pessoas.common.address.dto.AddressResponseDTO;
 
 @Component
 public class AddressMapper {

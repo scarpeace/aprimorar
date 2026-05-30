@@ -1,4 +1,4 @@
-package aprimorar.atendimentos.api.dto;
+package aprimorar.atendimentos.internal.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;

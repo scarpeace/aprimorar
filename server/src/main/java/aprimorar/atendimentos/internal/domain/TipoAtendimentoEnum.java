@@ -1,4 +1,4 @@
-package aprimorar.atendimentos.api;
+package aprimorar.atendimentos.internal.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

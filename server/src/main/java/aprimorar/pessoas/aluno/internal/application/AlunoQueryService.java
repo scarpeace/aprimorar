@@ -1,7 +1,7 @@
 package aprimorar.pessoas.aluno.internal.application;
 
 import aprimorar.pessoas.aluno.api.AlunoQueryApi;
-import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.AlunoResponseDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosKpisDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosListDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;

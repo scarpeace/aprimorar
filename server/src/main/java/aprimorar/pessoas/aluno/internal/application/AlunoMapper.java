@@ -1,9 +1,9 @@
 package aprimorar.pessoas.aluno.internal.application;
 
 import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.AlunoResponseDTO;
 import aprimorar.pessoas.aluno.internal.domain.Aluno;
-import aprimorar.pessoas.shared.address.AddressMapper;
+import aprimorar.pessoas.common.address.AddressMapper;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.Period;

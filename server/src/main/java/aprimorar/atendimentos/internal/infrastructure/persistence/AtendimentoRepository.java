@@ -1,7 +1,7 @@
 package aprimorar.atendimentos.internal.infrastructure.persistence;
 
 import aprimorar.atendimentos.internal.domain.Atendimento;
-import aprimorar.atendimentos.api.TipoAtendimentoEnum;
+import aprimorar.atendimentos.internal.domain.TipoAtendimentoEnum;
 
 import java.math.BigDecimal;
 import java.time.Instant;

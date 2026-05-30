@@ -1,4 +1,4 @@
-package aprimorar.pessoas.shared;
+package aprimorar.pessoas.common;
 
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.enums.Role;

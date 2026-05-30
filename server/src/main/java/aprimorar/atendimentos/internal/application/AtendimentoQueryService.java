@@ -13,12 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import aprimorar.atendimentos.api.AtendimentosQueryApi;
-import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
-import aprimorar.atendimentos.api.dto.AlunoAtendimentosKpis;
-import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
-import aprimorar.atendimentos.api.dto.ColaboradorAtendimentosKpis;
+import aprimorar.atendimentos.internal.dto.AtendimentosAlunoResponseDTO;
+import aprimorar.atendimentos.internal.dto.AlunoAtendimentosKpis;
+import aprimorar.atendimentos.internal.dto.AtendimentoResponseDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentosColaboradorResponseDTO;
+import aprimorar.atendimentos.internal.dto.ColaboradorAtendimentosKpis;
 import aprimorar.atendimentos.internal.domain.Atendimento;
 import aprimorar.atendimentos.internal.infrastructure.persistence.AtendimentoRepository;
 import aprimorar.atendimentos.internal.infrastructure.persistence.AtendimentoSpecifications;
@@ -27,7 +26,7 @@ import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
 
 @Service
-public class AtendimentoQueryService implements AtendimentosQueryApi {
+public class AtendimentoQueryService {
 
     private static final Logger log = LoggerFactory.getLogger(AtendimentoQueryService.class);
 
@@ -46,7 +45,6 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
     public PageDTO<AtendimentoResponseDTO> getAtendimentos(
         Pageable pageable,
         String search,
@@ -72,7 +70,6 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
     public AtendimentoResponseDTO findAtendimentoById(UUID id) {
         Atendimento atendimento = atendimentoRepo.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Atendimento nao encontrado"));
         log.info("Atendimento {} consultado com sucesso.", atendimento.getTitle().toUpperCase());
@@ -80,7 +77,6 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
     public AtendimentosColaboradorResponseDTO getAtendimentosByColaborador(
         Pageable pageable,
         UUID employeeId,
@@ -110,7 +106,6 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
         );
     }
 
-    @Override
     @Transactional(readOnly = true)
     public AtendimentosAlunoResponseDTO getAtendimentosByAluno(
         Pageable pageable,
@@ -136,28 +131,4 @@ public class AtendimentoQueryService implements AtendimentosQueryApi {
         return new AtendimentosAlunoResponseDTO(new PageDTO<>(dtoPage), new AlunoAtendimentosKpis(totalAtendimentos, totalCharged, totalPending));
     }
 
-    @Transactional(readOnly = true)
-    public long countAllStudentsInPeriod(Instant startDate, Instant endDate) {
-        return atendimentoRepo.countStudentsInPeriod(startDate, endDate);
-    }
-
-    @Transactional(readOnly = true)
-    public long countAllActiveStudentsInPeriod(Instant startDate, Instant endDate) {
-        return atendimentoRepo.countActiveStudentsInPeriod(startDate, endDate);
-    }
-
-    @Transactional(readOnly = true)
-    public long countAtendimentosInPeriod(Instant startDate, Instant endDate) {
-        return atendimentoRepo.countAtendimentosInPeriod(startDate, endDate);
-    }
-
-    @Override
-    public boolean colaboradorHasPendingPayment(UUID colaboradorId) {
-        return atendimentoRepo.existsByEmployeeIdAndEmployeePaymentDateIsNull(colaboradorId);
-    }
-
-    @Override
-    public boolean alunoHasPendingCharges(UUID alunoId) {
-        return atendimentoRepo.existsByStudentIdAndStudentChargeDateIsNull(alunoId);
-    }
 }

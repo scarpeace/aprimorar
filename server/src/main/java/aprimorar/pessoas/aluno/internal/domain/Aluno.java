@@ -3,8 +3,8 @@ package aprimorar.pessoas.aluno.internal.domain;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import aprimorar.pessoas.shared.Person;
-import aprimorar.pessoas.shared.address.Address;
+import aprimorar.pessoas.common.Person;
+import aprimorar.pessoas.common.address.Address;
 import aprimorar.shared.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

@@ -1,13 +1,14 @@
 package aprimorar.pessoas.aluno.internal.application;
 
-import aprimorar.atendimentos.api.AtendimentosQueryApi;
 import aprimorar.pessoas.aluno.api.AlunoDeletedEvent;
+import aprimorar.pessoas.aluno.api.ArchiveAlunoVerificationEvent;
+import aprimorar.pessoas.aluno.api.DeleteAlunoVerificationEvent;
 import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.AlunoResponseDTO;
 import aprimorar.pessoas.aluno.internal.domain.Aluno;
 import aprimorar.pessoas.aluno.internal.infrastructure.persistence.AlunoRepository;
 import aprimorar.pessoas.responsavel.api.ResponsavelQueryApi;
-import aprimorar.pessoas.shared.address.Address;
+import aprimorar.pessoas.common.address.Address;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.exception.BusinessException;
 import java.time.Clock;
@@ -29,7 +30,6 @@ public class AlunoMutationService {
     private final AlunoMapper alunoMapper;
 
     private final ResponsavelQueryApi responsavelQueryApi;
-    private final AtendimentosQueryApi atendimentosQueryApi;
     private final ApplicationEventPublisher eventPublisher;
     private final Clock clock;
 
@@ -37,13 +37,11 @@ public class AlunoMutationService {
         AlunoRepository alunoRepo,
         AlunoMapper alunoMapper,
         ResponsavelQueryApi responsavelQueryApi,
-        AtendimentosQueryApi atendimentosQueryApi,
         ApplicationEventPublisher eventPublisher,
         Clock clock
     ) {
         this.alunoRepo = alunoRepo;
         this.responsavelQueryApi = responsavelQueryApi;
-        this.atendimentosQueryApi = atendimentosQueryApi;
         this.alunoMapper = alunoMapper;
         this.eventPublisher = eventPublisher;
         this.clock = clock;
@@ -99,9 +97,8 @@ public class AlunoMutationService {
     public void archiveAluno(UUID alunoId) {
         Aluno aluno = findAlunoOrThrow(alunoId);
 
-        if (atendimentosQueryApi.alunoHasPendingCharges(alunoId)) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "É possivel arquivar um aluno com pendências financeiras.");
-        }
+        log.info("Verificando se aluno não tem cobranças pendentes {}.", aluno.getName().toUpperCase());
+        eventPublisher.publishEvent(new ArchiveAlunoVerificationEvent(alunoId));
 
         aluno.archive();
         log.info("Aluno {} arquivado com sucesso.", aluno.getName().toUpperCase());
@@ -110,7 +107,6 @@ public class AlunoMutationService {
     @Transactional
     public void unarchiveAluno(UUID alunoId) {
         Aluno aluno = findAlunoOrThrow(alunoId);
-
         ensureNotGhost(alunoId);
 
         aluno.unarchive();
@@ -123,7 +119,10 @@ public class AlunoMutationService {
 
         ensureNotGhost(alunoId);
 
-        log.info("Publicando evento de exclusão do aluno {}.", aluno.getName().toUpperCase());
+        log.info("Verificando se aluno não tem cobranças pendentes {}.", aluno.getName().toUpperCase());
+        eventPublisher.publishEvent(new DeleteAlunoVerificationEvent(alunoId));
+
+        log.info("Realocando atendimentos do aluno ao Aluno Fantasma.", aluno.getName().toUpperCase());
         eventPublisher.publishEvent(new AlunoDeletedEvent(alunoId));
 
         alunoRepo.delete(aluno);

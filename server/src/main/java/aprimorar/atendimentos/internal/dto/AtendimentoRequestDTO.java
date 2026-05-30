@@ -1,4 +1,4 @@
-package aprimorar.atendimentos.api.dto;
+package aprimorar.atendimentos.internal.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import aprimorar.atendimentos.api.TipoAtendimentoEnum;
+import aprimorar.atendimentos.internal.domain.TipoAtendimentoEnum;
 
 @Schema(description = "Formato de payload para o cadastro e/ou atualizacao de um atendimento")
 public record AtendimentoRequestDTO(

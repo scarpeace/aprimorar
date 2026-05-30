@@ -1,13 +1,13 @@
 package aprimorar.atendimentos.internal.application;
 
-import aprimorar.atendimentos.api.dto.AtendimentoRequestDTO;
-import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentoRequestDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentoResponseDTO;
 import aprimorar.atendimentos.internal.domain.Atendimento;
 import aprimorar.atendimentos.internal.infrastructure.persistence.AtendimentoRepository;
 import aprimorar.pessoas.aluno.api.AlunoQueryApi;
-import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.AlunoResponseDTO;
 import aprimorar.pessoas.colaborador.api.ColaboradorQueryApi;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.ColaboradorResponseDTO;
 import aprimorar.shared.exception.BusinessException;
 import java.time.Clock;
 import java.time.Instant;
@@ -22,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AtendimentoMutationService {
 
     private static final Logger log = LoggerFactory.getLogger(AtendimentoMutationService.class);
-    private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
-    private static final UUID GHOST_COLABORADOR_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
 
     private final AtendimentoRepository atendimentoRepo;
     private final AtendimentoMapper atendimentoMapper;
@@ -109,22 +107,6 @@ public class AtendimentoMutationService {
         atendimento.toggleEmployeePayment(Instant.now(clock));
         log.info("Status do pagamento do colaborador no atendimento {} atualizado.", atendimento.getTitle());
         return atendimentoMapper.convertToDto(atendimento);
-    }
-
-    @Transactional
-    public void reassignStudentAtendimentosToGhost(UUID studentId) {
-        if (atendimentoRepo.existsByStudentIdAndStudentChargeDateIsNull(studentId)) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "O aluno possui pagamentos pendentes e nao pode ser excluido.");
-        }
-        atendimentoRepo.reassingAtendimentoAlunosToGhost(studentId, GHOST_STUDENT_ID);
-    }
-
-    @Transactional
-    public void onEmployeeDeleted(UUID colaboradorId) {
-        if (atendimentoRepo.existsByEmployeeIdAndEmployeePaymentDateIsNull(colaboradorId)) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "O colaborador possui pagamentos pendentes e nao pode ser excluido.");
-        }
-        atendimentoRepo.reassignAtendimentosColaboradorToGhost(colaboradorId, GHOST_COLABORADOR_ID);
     }
 
     private Atendimento findAtendimentoOrThrow(UUID id) {

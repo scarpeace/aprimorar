@@ -1,4 +1,4 @@
-package aprimorar.atendimentos.api.dto;
+package aprimorar.atendimentos.internal.dto;
 
 
 public record AtendimentosContentReportDTO (

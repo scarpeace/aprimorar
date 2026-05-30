@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresListDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresResponseDTO;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.ColaboradorResponseDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresKpisDTO;
 import aprimorar.pessoas.colaborador.internal.application.ColaboradorMutationService;
 import aprimorar.pessoas.colaborador.internal.application.ColaboradorQueryService;

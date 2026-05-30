@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aprimorar.pessoas.aluno.api.dto.AlunoRequestDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.AlunoResponseDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosKpisDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosListDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;

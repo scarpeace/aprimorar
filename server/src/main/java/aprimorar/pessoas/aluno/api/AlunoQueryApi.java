@@ -2,7 +2,7 @@ package aprimorar.pessoas.aluno.api;
 
 import aprimorar.pessoas.aluno.api.dto.AlunosListDTO;
 import aprimorar.pessoas.aluno.api.dto.AlunosResponseDTO;
-import aprimorar.pessoas.aluno.api.dto.AlunoResponseDTO;
+import aprimorar.pessoas.AlunoResponseDTO;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;

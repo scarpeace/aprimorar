@@ -1,7 +1,7 @@
-package aprimorar.pessoas.shared.address;
+package aprimorar.pessoas.common.address;
 
-import aprimorar.pessoas.shared.address.dto.AddressRequestDTO;
-import aprimorar.pessoas.shared.address.exception.InvalidAddressException;
+import aprimorar.pessoas.common.address.dto.AddressRequestDTO;
+import aprimorar.pessoas.common.address.exception.InvalidAddressException;
 import jakarta.persistence.*;
 import java.io.Serializable;
 

@@ -1,7 +1,7 @@
 package aprimorar.atendimentos.internal.web;
 
-import aprimorar.atendimentos.api.dto.AtendimentoRequestDTO;
-import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentoRequestDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentoResponseDTO;
 import aprimorar.atendimentos.internal.application.AtendimentoMutationService;
 import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;

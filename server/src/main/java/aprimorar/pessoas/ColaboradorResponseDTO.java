@@ -1,7 +1,7 @@
-package aprimorar.pessoas.colaborador.api.dto;
+package aprimorar.pessoas;
 
 import aprimorar.pessoas.colaborador.api.ColaboradorDutyEnum;
-import aprimorar.pessoas.shared.address.dto.AddressResponseDTO;
+import aprimorar.pessoas.common.address.dto.AddressResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;

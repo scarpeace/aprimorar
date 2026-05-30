@@ -1,9 +1,9 @@
 package aprimorar.atendimentos.internal.application;
 
-import aprimorar.atendimentos.api.dto.AtendimentosAlunosKpisDTO;
-import aprimorar.atendimentos.api.dto.AtendimentosColaboradorKpisDTO;
-import aprimorar.atendimentos.api.dto.AtendimentosContentReportDTO;
-import aprimorar.atendimentos.api.dto.AtendimentosKpisDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentosAlunosKpisDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentosColaboradorKpisDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentosContentReportDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentosKpisDTO;
 import aprimorar.atendimentos.internal.infrastructure.persistence.AtendimentoRepository;
 import aprimorar.shared.PageDTO;
 import java.math.BigDecimal;

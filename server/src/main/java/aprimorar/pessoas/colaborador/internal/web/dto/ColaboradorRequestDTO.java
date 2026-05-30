@@ -3,7 +3,7 @@ package aprimorar.pessoas.colaborador.internal.web.dto;
 import java.time.LocalDate;
 
 import aprimorar.pessoas.colaborador.api.ColaboradorDutyEnum;
-import aprimorar.pessoas.shared.address.dto.AddressRequestDTO;
+import aprimorar.pessoas.common.address.dto.AddressRequestDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package aprimorar.pessoas.shared.address;
+package aprimorar.pessoas.common.address;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

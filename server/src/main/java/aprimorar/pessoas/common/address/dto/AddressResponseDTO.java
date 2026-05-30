@@ -1,6 +1,6 @@
-package aprimorar.pessoas.shared.address.dto;
+package aprimorar.pessoas.common.address.dto;
 
-import aprimorar.pessoas.shared.address.BrazilianStatesEnum;
+import aprimorar.pessoas.common.address.BrazilianStatesEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 

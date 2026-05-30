@@ -1,8 +1,8 @@
 package aprimorar.atendimentos.internal.web;
 
-import aprimorar.atendimentos.api.dto.AtendimentosAlunoResponseDTO;
-import aprimorar.atendimentos.api.dto.AtendimentosColaboradorResponseDTO;
-import aprimorar.atendimentos.api.dto.AtendimentoResponseDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentosAlunoResponseDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentosColaboradorResponseDTO;
+import aprimorar.atendimentos.internal.dto.AtendimentoResponseDTO;
 import aprimorar.atendimentos.internal.application.AtendimentoQueryService;
 import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.ProblemResponseDTO;

@@ -1,6 +1,6 @@
 package aprimorar.pessoas.responsavel.internal.domain;
 
-import aprimorar.pessoas.shared.Person;
+import aprimorar.pessoas.common.Person;
 import aprimorar.shared.enums.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

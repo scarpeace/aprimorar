@@ -2,10 +2,10 @@ package aprimorar.pessoas.colaborador.internal.application;
 
 import org.springframework.stereotype.Component;
 
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.ColaboradorResponseDTO;
 import aprimorar.pessoas.colaborador.internal.domain.Colaborador;
 import aprimorar.pessoas.colaborador.internal.web.dto.ColaboradorRequestDTO;
-import aprimorar.pessoas.shared.address.AddressMapper;
+import aprimorar.pessoas.common.address.AddressMapper;
 
 
 @Component

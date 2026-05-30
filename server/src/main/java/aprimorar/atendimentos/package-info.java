@@ -1,4 +1,4 @@
-@ApplicationModule(id = "atendimentos", displayName = "Atendimento", allowedDependencies = {"financeiro::api", "pessoas::api", "shared::*", "shared"})
+@ApplicationModule(id = "atendimentos", displayName = "Atendimento", allowedDependencies = {"pessoas::*", "shared::*", "shared", "pessoas"})
 package aprimorar.atendimentos;
 
 import org.springframework.modulith.ApplicationModule;

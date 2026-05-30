@@ -1,6 +1,6 @@
 package aprimorar.pessoas.colaborador.api;
 
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.ColaboradorResponseDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresListDTO;
 import aprimorar.pessoas.colaborador.api.dto.ColaboradoresResponseDTO;
 import java.util.List;

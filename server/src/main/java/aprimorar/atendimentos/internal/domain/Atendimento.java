@@ -1,6 +1,5 @@
 package aprimorar.atendimentos.internal.domain;
 
-import aprimorar.atendimentos.api.TipoAtendimentoEnum;
 import aprimorar.shared.exception.BusinessException;
 import jakarta.persistence.*;
 import java.io.Serializable;

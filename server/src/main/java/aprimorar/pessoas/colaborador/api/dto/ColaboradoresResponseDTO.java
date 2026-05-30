@@ -1,5 +1,6 @@
 package aprimorar.pessoas.colaborador.api.dto;
 
+import aprimorar.pessoas.ColaboradorResponseDTO;
 import aprimorar.shared.PageDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 

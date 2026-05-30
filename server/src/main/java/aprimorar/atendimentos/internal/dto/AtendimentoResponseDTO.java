@@ -1,10 +1,10 @@
-package aprimorar.atendimentos.api.dto;
+package aprimorar.atendimentos.internal.dto;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import aprimorar.atendimentos.api.TipoAtendimentoEnum;
+import aprimorar.atendimentos.internal.domain.TipoAtendimentoEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;

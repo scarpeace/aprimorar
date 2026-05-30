@@ -1,12 +1,13 @@
 package aprimorar.pessoas.colaborador.internal.application;
 
-import aprimorar.atendimentos.api.AtendimentosQueryApi;
+import aprimorar.pessoas.colaborador.api.ArchiveColaboradorVerificationEvent;
 import aprimorar.pessoas.colaborador.api.ColaboradorDeletedEvent;
-import aprimorar.pessoas.colaborador.api.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.colaborador.api.DeleteColaboradorVerificationEvent;
+import aprimorar.pessoas.ColaboradorResponseDTO;
 import aprimorar.pessoas.colaborador.internal.domain.Colaborador;
 import aprimorar.pessoas.colaborador.internal.infrastructure.persistence.ColaboradorRepository;
 import aprimorar.pessoas.colaborador.internal.web.dto.ColaboradorRequestDTO;
-import aprimorar.pessoas.shared.address.AddressMapper;
+import aprimorar.pessoas.common.address.AddressMapper;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.exception.BusinessException;
 import java.util.UUID;
@@ -25,18 +26,15 @@ public class ColaboradorMutationService {
     private final ColaboradorRepository colaboradorRepo;
     private final ColaboradorMapper colaboradorMapper;
     private final ApplicationEventPublisher eventPublisher;
-    private final AtendimentosQueryApi atendimentosQueryApi;
 
     public ColaboradorMutationService(
         ColaboradorRepository colaboradorRepo,
         ColaboradorMapper colaboradorMapper,
-        ApplicationEventPublisher eventPublisher,
-        AtendimentosQueryApi atendimentosQueryApi
+        ApplicationEventPublisher eventPublisher
     ) {
         this.colaboradorRepo = colaboradorRepo;
         this.colaboradorMapper = colaboradorMapper;
         this.eventPublisher = eventPublisher;
-        this.atendimentosQueryApi = atendimentosQueryApi;
     }
 
     @Transactional
@@ -65,7 +63,7 @@ public class ColaboradorMutationService {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um colaborador utilizando este e-mail.");
         }
 
-        validateNotSystemRecord(colaborador, "alterado");
+        validateNotSystemRecord(colaborador);
 
         colaborador.update(
             dto.name(),
@@ -84,9 +82,8 @@ public class ColaboradorMutationService {
     @Transactional
     public void archiveColaborador(UUID colaboradorId) {
         Colaborador colaborador = findByIdOrThrow(colaboradorId);
-        if (atendimentosQueryApi.colaboradorHasPendingPayment(colaboradorId)) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "É possivel arquivar um colaborador com pendências financeiras.");
-        }
+        eventPublisher.publishEvent(new ArchiveColaboradorVerificationEvent(colaboradorId));
+
         colaborador.archive();
         log.info("Colaborador {} arquivado com sucesso.", colaborador.getName().toUpperCase());
     }
@@ -102,12 +99,12 @@ public class ColaboradorMutationService {
     public void deleteColaborador(UUID colaboradorId) {
         Colaborador colaborador = findByIdOrThrow(colaboradorId);
 
-        validateNotSystemRecord(colaborador, "deletado");
-        if (atendimentosQueryApi.colaboradorHasPendingPayment(colaboradorId)) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "É possivel excluir um colaborador com pendências financeiras.");
-        }
+        validateNotSystemRecord(colaborador);
+
+        eventPublisher.publishEvent(new DeleteColaboradorVerificationEvent(colaboradorId));
 
         colaboradorRepo.delete(colaborador);
+
         eventPublisher.publishEvent(new ColaboradorDeletedEvent(colaboradorId));
 
         log.info(
@@ -122,9 +119,9 @@ public class ColaboradorMutationService {
             .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Colaborador não encontrado no banco de dados"));
     }
 
-    private void validateNotSystemRecord(Colaborador colaborador, String action) {
+    private void validateNotSystemRecord(Colaborador colaborador) {
         if (colaborador.isSystemRecord()) {
-            throw new BusinessException(HttpStatus.CONFLICT, "O registro 'Colaborador Removido' não pode ser " + action + ".");
+            throw new BusinessException(HttpStatus.CONFLICT, "Este registro de colaborador não pode ser alterado ou excluido");
         }
     }
 }
