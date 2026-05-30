@@ -37,15 +37,7 @@ openspec/
 # Arquivos locais/temporarios
 issues.txt
 skills-lock.json
-prettier.json
-sonar-project.properties
-generate_seed.py
-*.log
-
-node_modules/
-dist/
-target/
-kubb/
+package-lock.json
 
 # JWT keys locais do backend
 app.key

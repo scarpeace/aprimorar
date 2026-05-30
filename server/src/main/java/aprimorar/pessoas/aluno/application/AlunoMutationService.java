@@ -7,7 +7,7 @@ import aprimorar.pessoas.aluno.web.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.AlunoResponseDTO;
 import aprimorar.pessoas.aluno.domain.Aluno;
 import aprimorar.pessoas.aluno.infrastructure.persistence.AlunoRepository;
-import aprimorar.pessoas.responsavel.api.ResponsavelQueryApi;
+import aprimorar.pessoas.responsavel.ResponsavelQueryApi;
 import aprimorar.pessoas.common.address.Address;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.exception.BusinessException;
