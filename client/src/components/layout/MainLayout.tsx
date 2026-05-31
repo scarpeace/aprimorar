@@ -36,7 +36,7 @@ export function MainLayout() {
       <aside className="app-main-sidebar">
         <div className="app-main-brand">
           <div>
-            <h1 className="app-text text-xl font-extrabold tracking-tight">Aprimorar</h1>
+            <h1 className="text-xl font-extrabold tracking-tight text-base-content">Aprimorar</h1>
             <p className="app-main-brand-caption">Gestão educacional</p>
           </div>
         </div>

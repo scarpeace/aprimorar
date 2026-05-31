@@ -10,64 +10,44 @@
   --app-content-max-width: 1680px;
   --app-content-padding-x: clamp(1rem, 2vw, 2.5rem);
 
-  --app-bg: var(--color-base-200);
-  --app-surface: var(--color-base-100);
-  --app-surface-alt: var(--color-base-200);
-  --app-border: var(--color-base-300);
-
-  --app-text: var(--color-base-content);
-  --app-text-muted: color-mix(
-    in srgb,
-    var(--color-base-content) 72%,
-    transparent
-  );
-  --app-text-subtle: color-mix(
-    in srgb,
-    var(--color-base-content) 58%,
-    transparent
-  );
-
-  --app-primary: var(--color-primary);
-  --app-success: var(--color-success);
-
   --app-overlay-primary-soft: color-mix(
     in srgb,
-    var(--app-primary) 13%,
+    var(--color-primary) 13%,
     transparent
   );
   --app-overlay-success-soft: color-mix(
     in srgb,
-    var(--app-success) 11%,
+    var(--color-success) 11%,
     transparent
   );
   --app-overlay-primary-strong: color-mix(
     in srgb,
-    var(--app-primary) 26%,
+    var(--color-primary) 26%,
     transparent
   );
   --app-overlay-surface-soft: color-mix(
     in srgb,
-    var(--app-surface) 88%,
+    var(--color-base-100) 88%,
     transparent
   );
   --app-overlay-surface-alt: color-mix(
     in srgb,
-    var(--app-surface-alt) 95%,
+    var(--color-base-200) 95%,
     transparent
   );
   --app-overlay-highlight: color-mix(
     in srgb,
-    var(--app-surface) 70%,
+    var(--color-base-100) 70%,
     transparent
   );
-  --app-selection: color-mix(in srgb, var(--app-primary) 18%, transparent);
+  --app-selection: color-mix(in srgb, var(--color-primary) 18%, transparent);
 
   --app-elevation-soft: 0 14px 34px -26px
-    color-mix(in srgb, var(--app-text) 30%, transparent);
+    color-mix(in srgb, var(--color-base-content) 30%, transparent);
   --app-elevation-strong: 0 22px 46px -30px
-    color-mix(in srgb, var(--app-text) 36%, transparent);
+    color-mix(in srgb, var(--color-base-content) 36%, transparent);
   --app-elevation-inset: inset 0 1px 0
-    color-mix(in srgb, var(--app-surface) 80%, transparent);
+    color-mix(in srgb, var(--color-base-100) 80%, transparent);
 }
 
 @keyframes fade-up {
@@ -89,7 +69,7 @@
 
   body {
     min-height: 100vh;
-    color: var(--app-text);
+    color: var(--color-base-content);
     font-family: "Sora", "Segoe UI", "Helvetica Neue", sans-serif;
     background:
       radial-gradient(
@@ -102,7 +82,7 @@
         var(--app-overlay-success-soft),
         transparent 50%
       ),
-      var(--app-bg);
+      var(--color-base-200);
     background-attachment: fixed;
   }
 
@@ -115,47 +95,7 @@
 
   ::selection {
     background: var(--app-selection);
-    color: var(--app-text);
-  }
-}
-
-@layer utilities {
-  .app-text {
-    color: var(--app-text);
-  }
-
-  .app-text-muted {
-    color: var(--app-text-muted);
-  }
-
-  .app-text-subtle {
-    color: var(--app-text-subtle);
-  }
-
-  .app-surface {
-    background: var(--app-surface);
-  }
-
-  .app-surface-alt {
-    background: var(--app-surface-alt);
-  }
-
-  .app-border {
-    border-color: var(--app-border);
-  }
-
-  .app-inline-loading {
-    @apply flex items-center gap-2 text-sm;
-    color: var(--app-text-muted);
-  }
-
-  .app-kpi-label {
-    @apply text-sm font-medium text-base-content/80;
-  }
-
-  .app-kpi-value {
-    @apply text-2xl font-bold;
-    color: var(--app-text);
+    color: var(--color-base-content);
   }
 }
 
@@ -181,20 +121,20 @@
     align-items: center;
     justify-content: center;
     border-radius: 9999px;
-    background: color-mix(in srgb, var(--app-text) 8%, transparent);
-    color: var(--app-text-muted);
+    background: color-mix(in srgb, var(--color-base-content) 8%, transparent);
+    color: color-mix(in srgb, var(--color-base-content) 72%, transparent);
     font-size: 0.7rem;
     line-height: 1;
     transition: background 160ms ease, color 160ms ease;
   }
 
   .app-date-range .react-datepicker__close-icon:hover::after {
-    background: color-mix(in srgb, var(--app-primary) 14%, transparent);
-    color: var(--app-text);
+    background: color-mix(in srgb, var(--color-primary) 14%, transparent);
+    color: var(--color-base-content);
   }
 
   .app-date-range-popper .react-datepicker {
-    border: 1px solid var(--app-border);
+    border: 1px solid var(--color-base-300);
     border-radius: 1rem;
     box-shadow: var(--app-elevation-strong);
     overflow: hidden;
@@ -202,23 +142,23 @@
   }
 
   .app-date-range-popper .react-datepicker__header {
-    border-bottom: 1px solid var(--app-border);
+    border-bottom: 1px solid var(--color-base-300);
     background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--app-primary) 8%, var(--app-surface)),
-      var(--app-surface)
+      color-mix(in srgb, var(--color-primary) 8%, var(--color-base-100)),
+      var(--color-base-100)
     );
   }
 
   .app-date-range-popper .react-datepicker__current-month,
   .app-date-range-popper .react-datepicker-time__header,
   .app-date-range-popper .react-datepicker-year-header {
-    color: var(--app-text);
+    color: var(--color-base-content);
     font-weight: 700;
   }
 
   .app-date-range-popper .react-datepicker__day-name {
-    color: var(--app-text-subtle);
+    color: color-mix(in srgb, var(--color-base-content) 58%, transparent);
     font-weight: 600;
   }
 
@@ -232,13 +172,13 @@
   .app-date-range-popper .react-datepicker__month-text:hover,
   .app-date-range-popper .react-datepicker__quarter-text:hover,
   .app-date-range-popper .react-datepicker__year-text:hover {
-    background: color-mix(in srgb, var(--app-primary) 12%, transparent);
-    color: var(--app-text);
+    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+    color: var(--color-base-content);
   }
 
   .app-date-range-popper .react-datepicker__day--selected,
   .app-date-range-popper .react-datepicker__day--keyboard-selected {
-    background: var(--app-primary);
+    background: var(--color-primary);
     color: white;
   }
 
@@ -257,7 +197,7 @@
       var(--app-overlay-surface-soft),
       var(--app-overlay-surface-alt)
     );
-    border-color: var(--app-border);
+    border-color: var(--color-base-300);
     box-shadow: var(--app-elevation-soft);
     backdrop-filter: blur(6px);
   }
@@ -270,7 +210,7 @@
 
   .app-main-brand {
     @apply flex min-h-[4.5rem] items-center border-b px-5;
-    border-color: var(--app-border);
+    border-color: var(--color-base-300);
   }
 
   .app-main-brand-caption {
@@ -279,7 +219,7 @@
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--app-text-subtle);
+    color: color-mix(in srgb, var(--color-base-content) 58%, transparent);
   }
 
   .app-main-nav {
@@ -288,23 +228,23 @@
 
   .app-main-nav-link {
     @apply flex items-center gap-3 whitespace-nowrap rounded-[0.7rem] border border-transparent px-[0.82rem] py-[0.58rem] text-sm font-semibold transition;
-    color: var(--app-text-muted);
+    color: color-mix(in srgb, var(--color-base-content) 72%, transparent);
   }
 
   .app-main-nav-link:hover {
-    background: var(--app-surface-alt);
-    border-color: var(--app-border);
-    color: var(--app-text);
+    background: var(--color-base-200);
+    border-color: var(--color-base-300);
+    color: var(--color-base-content);
     transform: translateX(2px);
   }
 
   .app-main-nav-link-active {
     background:
       linear-gradient(90deg, var(--app-overlay-primary-soft), var(--app-overlay-success-soft)),
-      var(--app-surface);
+      var(--color-base-100);
     border-color: var(--app-overlay-primary-strong);
     box-shadow: var(--app-elevation-inset);
-    color: var(--app-text);
+    color: var(--color-base-content);
   }
 
   .app-main-content {
@@ -341,7 +281,7 @@
   }
 
   .fc .fc-daygrid-day:hover {
-    background: color-mix(in srgb, var(--app-primary) 9%, transparent);
+    background: color-mix(in srgb, var(--color-primary) 9%, transparent);
   }
 
   .fc .fc-event {
@@ -352,13 +292,13 @@
   .fc .fc-event:hover {
     filter: brightness(1.08);
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px -10px color-mix(in srgb, var(--app-text) 45%, transparent);
+    box-shadow: 0 6px 16px -10px color-mix(in srgb, var(--color-base-content) 45%, transparent);
   }
 
   .appointments-calendar .fc .fc-toolbar-title {
     font-size: 1rem;
     font-weight: 700;
-    color: var(--app-text);
+    color: var(--color-base-content);
   }
 
   .appointments-calendar .fc .fc-button-primary {

@@ -1,1 +1,0 @@
-import{q as a}from"./index-CGfWDbLg.js";function e({title:s}){return a.jsx("div",{className:"bg-base-100 card shadow-lg",children:a.jsxs("div",{className:"card-body flex flex-row justify-center gap-4",children:[a.jsx("h2",{className:"card-title",children:s}),a.jsx("span",{className:"loading loading-dots loading-xl"})]})})}export{e as L};

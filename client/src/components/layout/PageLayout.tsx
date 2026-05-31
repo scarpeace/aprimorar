@@ -39,10 +39,10 @@ export function PageLayout({
             <Icon size={48} />
           </div>
           <div className="ml-3 flex min-w-0 flex-col justify-center gap-0.5 sm:gap-1">
-            <h1 className="app-text truncate text-2xl font-bold sm:text-3xl">
+            <h1 className="truncate text-2xl font-bold text-base-content sm:text-3xl">
               {title}
             </h1>
-            <p className="app-text-muted line-clamp-2 text-xs sm:text-sm">
+            <p className="line-clamp-2 text-xs text-base-content/70 sm:text-sm">
               {description}
             </p>
           </div>
