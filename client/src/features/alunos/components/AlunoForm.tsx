@@ -25,20 +25,20 @@ export function AlunoForm({ initialData, onSuccess, onCancel }: AlunoFormProps) 
     resolver: zodResolver(alunoFormSchema),
     mode: "onBlur",
     defaultValues: {
-      name: initialData?.name ?? "",
-      cpf: initialData?.cpf ?? "",
+      name: initialData?.name,
+      cpf: initialData?.cpf,
       birthdate: formatDateForInput(initialData?.birthdate),
-      contact: initialData?.contact ?? "",
-      email: initialData?.email ?? "",
-      school: initialData?.school ?? "",
-      parentId: initialData?.parentId ?? "",
+      contact: initialData?.contact,
+      email: initialData?.email,
+      school: initialData?.school,
+      parentId: initialData?.parentId,
       address: {
-        street: initialData?.address.street ?? "",
+        street: initialData?.address.street ?? "Rua 10",
         complement: initialData?.address.complement ?? "N/A",
-        district: initialData?.address.district ?? "",
-        city: initialData?.address.city ?? "",
-        state: initialData?.address.state ?? "DF",
-        zip: initialData?.address.zip ?? "",
+        district: initialData?.address.district,
+        city: initialData?.address.city,
+        state: initialData?.address.state,
+        zip: initialData?.address.zip,
       },
     },
   });
@@ -46,6 +46,7 @@ export function AlunoForm({ initialData, onSuccess, onCancel }: AlunoFormProps) 
   const registerWithMask = useHookFormMask(register);
 
   const onSubmit = handleSubmit((data: AlunoFormSchema) => {
+    console.log(data)
     if (isEditMode && initialData.id) {
       updateStudent.mutate(
         { studentId: initialData.id, data },

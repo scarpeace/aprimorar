@@ -10,11 +10,11 @@ type ListSearchInputProps = {
 
 export function ListSearchInput({ placeholder, ariaLabel, className, value, onChange }: ListSearchInputProps) {
   return (
-    <label className={`input input-bordered flex w-full items-center gap-2 sm:max-w-xl ${className ?? ""}`.trim()}>
+    <label className={`input input-bordered max-w-xl ${className ?? ""}`.trim()}>
       <Search className="h-4 w-4 text-base-content/60" aria-hidden="true" />
       <input
         type="search"
-        className="grow"
+        className=""
         placeholder={placeholder}
         aria-label={ariaLabel ?? placeholder}
         value={value}

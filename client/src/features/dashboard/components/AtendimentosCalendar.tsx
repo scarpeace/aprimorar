@@ -105,7 +105,7 @@ export function AtendimentosCalendar({ onCreateAppointment }: Readonly<Atendimen
   }
 
   return (
-    <div className="card border border-base-300 bg-base-100 shadow-sm">
+    <div className="card border border-base-300 rounded-2xl bg-base-100 shadow-sm">
       <div className="card-body">
         <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>

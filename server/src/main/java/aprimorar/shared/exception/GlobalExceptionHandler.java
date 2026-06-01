@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getDefaultMessage())
                 .findFirst()
                 .orElse("Erro de validação nos campos informados");
-                
+
         log.error("Erro de validação de DTO: {}", errorMessage);
         return new ProblemResponseDTO(
             HttpStatus.BAD_REQUEST,
@@ -102,7 +102,7 @@ public class GlobalExceptionHandler {
         log.error("Ocorreu um erro interno: {}", ex.getMessage());
         return new ProblemResponseDTO(
             HttpStatus.INTERNAL_SERVER_ERROR,
-            "Um erro interno ocorreu, contate o suporte ou tente novamente mais tarde",
+            ex.getMessage(),
             request.getRequestURI()
         );
     }

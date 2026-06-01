@@ -12,6 +12,7 @@
     var(--color-primary) 13%,
     transparent
   );
+
   --app-overlay-success-soft: color-mix(
     in srgb,
     var(--color-success) 11%,

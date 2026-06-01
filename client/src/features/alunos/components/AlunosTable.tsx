@@ -63,7 +63,7 @@ export function AlunosTable() {
   }
 
   return (
-    <main className="">
+    <>
       <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
 
@@ -131,6 +131,6 @@ export function AlunosTable() {
         onPageChange={onPageChange}
         size={alunosQuery.data.alunos.size}
       />
-    </main>
+    </>
   );
 }

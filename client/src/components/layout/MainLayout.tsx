@@ -32,7 +32,7 @@ export function MainLayout() {
     : baseNavigation
 
   return (
-    <div className="min-h-screen flex flex-col md:h-screen md:flex-row">
+    <div className="min-h-screen w-full flex flex-col md:flex-row overfloww-y-hidden">
       <aside className="border-b border-base-300 bg-base-100 shadow-sm backdrop-blur md:w-68 md:border-b-0 md:border-r">
         <div className="flex min-h-18 items-center border-b border-base-300 px-5">
           <div>
@@ -47,7 +47,7 @@ export function MainLayout() {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center gap-3 whitespace-nowrap rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-base-content/70 transition hover:border-base-300 hover:bg-base-200 hover:text-base-content ${isActive ? "border-primary/25 bg-base-100 text-base-content shadow-sm" : ""}`.trim()}
+                className={`flex items-center gap-3 whitespace-nowrap rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-base-content/70 transition hover:border-base-300 hover:bg-base-200 hover:text-base-content ${isActive ? "border-primary/25 bg-base-200 text-base-content shadow-md" : ""}`.trim()}
               >
                 <item.icon className="h-5 w-5" />
                 {item.name}
@@ -72,8 +72,8 @@ export function MainLayout() {
           </button>
         </div>
       </aside>
-      <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto w-full max-w-[1680px] px-4 py-5 md:px-8 md:py-7">
+      <main className="min-w-0 w-full min-h-screen">
+        <div className="mx-auto min-w-0 w-full px-4 py-5 md:px-8 md:py-7">
           <Outlet/>
         </div>
       </main>

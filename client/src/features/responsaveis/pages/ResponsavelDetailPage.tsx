@@ -42,23 +42,22 @@ export function ResponsavelDetailPage() {
         >
           <ResponsavelAlunosTable parentId={parentId} />
         </SectionCard>
-
-        {isFormOpen && responsavelQuery.data && (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
-              <h3 className="mb-1 text-lg font-bold">Editar Responsavel</h3>
-              <p className="mb-4 text-sm text-base-content/60">
-                Revise os dados de contato, cadastro e identificacao do responsavel.
-              </p>
-              <ResponsavelForm
-                initialData={responsavelQuery.data}
-                onSuccess={() => setIsFormOpen(false)}
-                onCancel={() => setIsFormOpen(false)}
-              />
-            </div>
-          </div>
-        )}
       </div>
+      {isFormOpen && responsavelQuery.data && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
+            <h3 className="mb-1 text-lg font-bold">Editar Responsavel</h3>
+            <p className="mb-4 text-sm text-base-content/60">
+              Revise os dados de contato, cadastro e identificacao do responsavel.
+            </p>
+            <ResponsavelForm
+              initialData={responsavelQuery.data}
+              onSuccess={() => setIsFormOpen(false)}
+              onCancel={() => setIsFormOpen(false)}
+            />
+          </div>
+        </div>
+      )}
     </PageLayout>
   );
 }

@@ -32,8 +32,7 @@ export function ColaboradoresPage() {
 
   return (
     <PageLayout {...headerProps}>
-      <div className="flex w-full flex-col gap-3">
-        <section className="rounded-2xl bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
+        <section className="mb-3 rounded-2xl bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
           <div className="flex flex-row justify-between items-center gap-3">
             <div>
               <h3 className="text-2xl font-bold text-base-content">Resumo dos Colaboradores</h3>
@@ -94,7 +93,6 @@ export function ColaboradoresPage() {
             </div>
           </div>
         )}
-      </div>
     </PageLayout>
   );
 }

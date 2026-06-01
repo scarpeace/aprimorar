@@ -60,8 +60,7 @@ export function AtendimentosTable({ startDate, endDate }: AtendimentosTableProps
 
   return (
     <>
-      <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <section className="flex flex-row gap-12 my-3 animate-[fade-up_220ms_ease-out_both]">
           <ListSearchInput
             className="grow"
             placeholder="Buscar por aluno, colaborador, conteudo ou descricao"
@@ -69,7 +68,7 @@ export function AtendimentosTable({ startDate, endDate }: AtendimentosTableProps
             value={search}
             onChange={handleSearchChange}
           />
-          <div className="flex w-full flex-row items-start justify-between gap-3 xl:w-auto xl:justify-end">
+          <div className="flex gap-6">
             <ToggleSwitch
               label="Cobranca pendente"
               toggled={hideCharged}
@@ -84,7 +83,6 @@ export function AtendimentosTable({ startDate, endDate }: AtendimentosTableProps
               tip="Mostrar apenas atendimentoos onde o colaborador ainda nao foi pago"
               className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
             />
-          </div>
         </div>
       </section>
 

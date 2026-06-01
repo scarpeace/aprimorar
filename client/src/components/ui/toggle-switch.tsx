@@ -22,7 +22,7 @@ export function ToggleSwitch({
       <label htmlFor={id} className="label cursor-pointer gap-2">
         <input
           id={id}
-          className={`toggle w-10 h-6 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800 ${className}`}
+          className={`toggle h-6 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800 ${className}`}
           type="checkbox"
           checked={toggled}
           onChange={() => setToggle(!toggled)}

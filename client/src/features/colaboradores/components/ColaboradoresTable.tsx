@@ -71,17 +71,14 @@ export function ColaboradoresTable() {
 
   return (
     <>
-      <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-
+      <section className="flex my-3 gap-12 animate-[fade-up_220ms_ease-out_both]">
           <ListSearchInput
             className="grow"
             placeholder="Buscar colaborador por nome, email ou CPF"
             ariaLabel="Buscar colaborador"
             value={searchTerm}
             onChange={setSearchTerm}
-          />
-          <div className="flex w-full flex-row gap-3 xl:w-auto xl:justify-end">
+        />
             <ToggleSwitch
               label="Mostrar Arquivados"
               tip="Mostrar colaboradores arquivados"
@@ -89,21 +86,12 @@ export function ColaboradoresTable() {
               setToggle={handleShowArchivedChange}
               className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
             />
-            <ToggleSwitch
-              label="Ocultar pagos"
-              tip="Mostrar apenas colaboradores com pendencias no periodo"
-              toggled={hidePaid}
-              setToggle={handleHidePaidChange}
-              className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
-            />
-          </div>
-        </div>
       </section>
 
 
       {/*TABELA*/}
       <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
-      <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
+      <table className="table table-zebra w-full table-fixed bg-base-100 animate-[fade-up_280ms_ease-out_both]">
         <thead className="bg-base-200/80">
           <tr>
             <th className="text-left font-semibold text-base-content/80">
@@ -121,13 +109,13 @@ export function ColaboradoresTable() {
             <th className="text-left font-semibold text-base-content/80">
               Cadastro
             </th>
-            <th className="text-left font-semibold text-base-content/80">
+            <th className="text-center font-semibold text-base-content/80">
               Status
             </th>
           </tr>
         </thead>
 
-        <tbody className="whitespace-nowrap">
+        <tbody>
           {colaboradoresQuery.data.colaboradores?.content?.map((colaborador) => {
 
             return (
@@ -136,19 +124,21 @@ export function ColaboradoresTable() {
                 className="transition-colors hover:bg-base-300/70 hover:cursor-pointer"
                 onClick={() => colaborador.id && navigate(`/employees/${colaborador.id}`)}
               >
-                <td className="font-bold">{colaborador.name}</td>
+                <td className="max-w-0 truncate font-bold">{colaborador.name}</td>
                 <td>
-                  {colaborador.duty
+                  <span className="block truncate">
+                    {colaborador.duty
                     ? dutyLabels[colaborador.duty as keyof typeof dutyLabels]
                     : "-"}
+                  </span>
                 </td>
 
-                <td>{formatCpf(colaborador.cpf ?? "")}</td>
-                <td>{formatPhone(colaborador.contact ?? "")}</td>
+                <td className="whitespace-nowrap">{formatCpf(colaborador.cpf ?? "")}</td>
+                <td className="whitespace-nowrap">{formatPhone(colaborador.contact ?? "")}</td>
 
-                <td>{formatDateShortYear(colaborador.createdAt ?? "")}</td>
+                <td className="whitespace-nowrap">{formatDateShortYear(colaborador.createdAt ?? "")}</td>
 
-                <td>
+                <td className="text-center">
                   <span className={`badge ${(colaborador.active ?? true) ? "badge-success" : "badge-ghost"} badge-sm`}>
                     {(colaborador.active ?? true) ? "Ativo" : "Arquivado"}
                   </span>
