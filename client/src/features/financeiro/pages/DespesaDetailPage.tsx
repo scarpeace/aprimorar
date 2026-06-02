@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
@@ -12,6 +11,7 @@ import { DespesaForm } from "../components/DespesaForm";
 import { ToggleDespesaPaymentButton } from "../components/ToggleDespesaPaymentButton";
 import { useDespesaMutations } from "../hooks/use-despesa-mutations";
 import { DESPESA_CATEGORY_LABEL } from "../lib/despesa-category-labels";
+import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 
 function DetailItem({
   label,
@@ -164,14 +164,17 @@ export function DespesaDetailPage() {
         </div>
       ) : null}
 
-      <DeleteConfirmationModal
+      <ConfirmationModal
         isOpen={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
         onConfirm={handleDelete}
-        title="Excluir despesa"
-        isItemPending={deleteExpense.isPending}
-        itemName="despesa"
-      />
+        title="Atenção: EXCLUSÃO DEFINITIVA"
+        description="Essa ação não pode ser desfeita."
+        variant="danger"
+        isPending={deleteExpense.isPending}
+        disableCloseOnPending
+        confirmText="Excluir Despesa"
+        />
     </PageLayout>
   );
 }
