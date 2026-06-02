@@ -87,7 +87,7 @@ backend-deploy:
   script:
     - |
       curl --fail -X GET \
-        "https://coolify.shb.is/api/v1/deploy?uuid=$COOLIFY_BACKEND_UUID&force=false" \
+        "https://109.123.255.19/api/v1/deploy?uuid=$COOLIFY_BACKEND_UUID&force=false" \
         -H "Authorization: Bearer $COOLIFY_TOKEN"
   only:
     - main
@@ -100,7 +100,7 @@ frontend-deploy:
   script:
     - |
       curl --fail -X GET \
-        "https://coolify.shb.is/api/v1/deploy?uuid=$COOLIFY_FRONTEND_UUID&force=false" \
+        "https://109.123.255.19/api/v1/deploy?uuid=$COOLIFY_FRONTEND_UUID&force=false" \
         -H "Authorization: Bearer $COOLIFY_TOKEN"
   only:
     - main
