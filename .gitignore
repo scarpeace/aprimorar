@@ -18,6 +18,7 @@
 # Environment
 .env*
 !.env.example
+node_modules
 
 # IDE / caches locais
 .vscode/
@@ -43,6 +44,11 @@ package-lock.json
 app.key
 app.pub
 
+# builds
+client/dist
+build/
+target
+server/bin/
 
 docs
 

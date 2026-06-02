@@ -12,6 +12,7 @@ import aprimorar.pessoas.common.address.Address;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.exception.BusinessException;
 import java.time.Clock;
+import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,6 +128,12 @@ public class AlunoMutationService {
 
         alunoRepo.delete(aluno);
         log.info("Aluno {} deletado com sucesso.", aluno.getName().toUpperCase());
+    }
+
+    @Transactional
+    public void deleteAlunos(List<Aluno> alunos) {
+        alunoRepo.deleteAll(alunos);
+        log.info("Alunos deletados com sucesso.");
     }
 
     /* ----- Helper Methods ----- */

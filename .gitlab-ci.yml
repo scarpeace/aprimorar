@@ -1,6 +1,8 @@
 stages:
   - test
   - build
+  - docker
+  - deploy
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
@@ -20,8 +22,6 @@ backend-test:
     - chmod +x server/mvnw
   script:
     - cd server && ./mvnw test
-  only:
-    - main
 
 backend-build:
   stage: build
@@ -36,8 +36,6 @@ backend-build:
   artifacts:
     paths:
       - server/target/*.jar
-  only:
-    - main
 
 frontend-build:
   stage: build
@@ -50,5 +48,59 @@ frontend-build:
   artifacts:
     paths:
       - client/dist/
+
+backend-docker:
+  stage: docker
+  image: docker:24
+  services:
+    - docker:24-dind
+  needs:
+    - backend-build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $BACKEND_IMAGE ./server
+    - docker push $BACKEND_IMAGE
+  only:
+    - main
+
+frontend-docker:
+  stage: docker
+  image: docker:24
+  services:
+    - docker:24-dind
+  needs:
+    - frontend-build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $FRONTEND_IMAGE ./client
+    - docker push $FRONTEND_IMAGE
+  only:
+    - main
+
+backend-deploy:
+  stage: deploy
+  image: curlimages/curl:latest
+  needs:
+    - backend-docker
+  script:
+    - |
+      curl --fail -X GET \
+        "https://coolify.shb.is/api/v1/deploy?uuid=$COOLIFY_BACKEND_UUID&force=false" \
+        -H "Authorization: Bearer $COOLIFY_TOKEN"
+  only:
+    - main
+
+frontend-deploy:
+  stage: deploy
+  image: curlimages/curl:latest
+  needs:
+    - frontend-docker
+  script:
+    - |
+      curl --fail -X GET \
+        "https://coolify.shb.is/api/v1/deploy?uuid=$COOLIFY_FRONTEND_UUID&force=false" \
+        -H "Authorization: Bearer $COOLIFY_TOKEN"
   only:
     - main

@@ -1,12 +1,11 @@
 import {
-  deletarAlunoMutationKey,
-  buscarAlunoPorIdQueryKey,
+  getAlunoByIdQueryKey,
   getAlunosQueryKey,
-  useArquivarAluno,
+  useArchiveAluno,
   useCriarAluno,
-  useDeletarAluno,
-  useDesarquivarAluno,
-  useAtualizarAluno,
+  useDeleteAluno,
+  useUnarchiveAluno,
+  useUpdateAluno,
   type AlunoResponseDTO,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
@@ -31,7 +30,7 @@ export function useAlunoMutations() {
     },
   });
 
-  const updateStudent = useAtualizarAluno({
+  const updateStudent = useUpdateAluno({
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
@@ -40,25 +39,24 @@ export function useAlunoMutations() {
         toast.success("Aluno atualizado com sucesso");
         queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: buscarAlunoPorIdQueryKey(variables.studentId),
+          queryKey: getAlunoByIdQueryKey(variables.studentId),
         });
         navigate(`/students/${variables.studentId}`);
       },
     },
   });
 
-  const deleteStudent = useDeletarAluno({
+  const deleteStudent = useDeleteAluno({
     mutation: {
       onSuccess: () => {
         toast.success("Aluno excluído com sucesso");
         queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
-        queryClient.invalidateQueries({ queryKey: deletarAlunoMutationKey() });
         navigate("/alunos");
       },
     },
   });
 
-  const archiveStudent = useArquivarAluno({
+  const archiveStudent = useArchiveAluno({
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
@@ -67,13 +65,13 @@ export function useAlunoMutations() {
         toast.success("Aluno arquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: buscarAlunoPorIdQueryKey(variables.studentId),
+          queryKey: getAlunoByIdQueryKey(variables.studentId),
         });
       },
     },
   });
 
-  const unarchiveStudent = useDesarquivarAluno({
+  const unarchiveStudent = useUnarchiveAluno({
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error));
@@ -82,7 +80,7 @@ export function useAlunoMutations() {
         toast.success("Aluno desarquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: buscarAlunoPorIdQueryKey(variables.studentId),
+          queryKey: getAlunoByIdQueryKey(variables.studentId),
         });
       },
     },

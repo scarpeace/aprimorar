@@ -1,6 +1,8 @@
 package aprimorar.pessoas.responsavel.application;
 
-import aprimorar.pessoas.aluno.AlunoQueryApi;
+import aprimorar.pessoas.aluno.DeleteAlunoVerificationEvent;
+import aprimorar.pessoas.aluno.application.AlunoMutationService;
+import aprimorar.pessoas.aluno.infrastructure.persistence.AlunoRepository;
 import aprimorar.pessoas.responsavel.web.dto.ResponsavelRequestDTO;
 import aprimorar.pessoas.responsavel.web.dto.ResponsavelResponseDTO;
 import aprimorar.pessoas.responsavel.domain.Responsavel;
@@ -9,6 +11,7 @@ import aprimorar.shared.MapperUtils;
 import aprimorar.shared.exception.BusinessException;
 
 import java.util.UUID;
+import org.springframework.context.ApplicationEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,16 +25,22 @@ public class ResponsavelMutationService {
 
     private final ResponsavelRepository responsavelRepo;
     private final ResponsavelMapper responsavelMapper;
-    private final AlunoQueryApi alunoQueryApi;
+    private final AlunoRepository alunoRepo;
+    private final AlunoMutationService alunoMutationService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public ResponsavelMutationService(
         ResponsavelRepository responsavelRepo,
         ResponsavelMapper responsavelMapper,
-        AlunoQueryApi alunoQueryApi
+        AlunoRepository alunoRepo,
+        AlunoMutationService alunoMutationService,
+        ApplicationEventPublisher eventPublisher
     ) {
         this.responsavelRepo = responsavelRepo;
         this.responsavelMapper = responsavelMapper;
-        this.alunoQueryApi = alunoQueryApi;
+        this.alunoRepo = alunoRepo;
+        this.alunoMutationService = alunoMutationService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -74,7 +83,7 @@ public class ResponsavelMutationService {
     public void archiveResponsavel(UUID responsavelId) {
         Responsavel responsavel = findResponsavelOrThrow(responsavelId);
 
-        if (alunoQueryApi.hasActiveAlunosLinkedToResponsavel(responsavel.getId())) {
+        if (alunoRepo.existsByParentIdAndActiveTrue(responsavel.getId())) {
             throw new BusinessException(HttpStatus.BAD_REQUEST,"O responsável possui alunos ativos vinculados. Arquive os alunos antes de arquivar o responsável.");
         }
 
@@ -91,17 +100,25 @@ public class ResponsavelMutationService {
     }
 
     @Transactional
-    public void deleteResponsavel(UUID responsavelId) {
-        Responsavel responsavel = findResponsavelOrThrow(responsavelId);
+    public void deleteResponsavel(UUID parentId, boolean cascade) {
+        var responsavel = findResponsavelOrThrow(parentId);
+        var alunos = alunoRepo.findAllByParentId(parentId);
 
-        if (alunoQueryApi.hasActiveAlunosLinkedToResponsavel(responsavel.getId())) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST,
-                "O responsável possui ativos alunos vinculados. Arquive-os ou remova os alunos antes de excluí-lo."
+        if (!alunos.isEmpty() && !cascade) {
+            throw new BusinessException(
+                HttpStatus.BAD_REQUEST, "Este responsável possui alunos vinculados. Confirme a exclusão em cascata para continuar."
             );
         }
 
+        for (var aluno : alunos) {
+            if(Boolean.TRUE.equals(aluno.getActive())){
+                throw new BusinessException(HttpStatus.BAD_REQUEST, "Não é possível excluir o responsável com alunos ativos, vincule o aluno a outro responsável ou arquive o aluno antes de seguir.");
+            }
+            eventPublisher.publishEvent(new DeleteAlunoVerificationEvent(aluno.getId()));
+        }
+
+        alunoMutationService.deleteAlunos(alunos);
         responsavelRepo.delete(responsavel);
-        log.info("Responsável {} deletado com sucesso.", responsavel.getName().toUpperCase());
     }
 
     private Responsavel findResponsavelOrThrow(UUID responsavelId) {

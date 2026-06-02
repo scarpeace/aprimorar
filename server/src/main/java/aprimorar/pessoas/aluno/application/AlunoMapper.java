@@ -18,8 +18,8 @@ public class AlunoMapper {
             dto.birthdate(),
             dto.pix(),
             dto.contact(),
+                dto.cpf(),
             dto.email(),
-            dto.cpf(),
             dto.school(),
             dto.parentId(),
             AddressMapper.toEntity(dto.address())

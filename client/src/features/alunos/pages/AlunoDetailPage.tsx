@@ -4,7 +4,7 @@ import { KpiCard } from "@/components/ui/kpi-card";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 import { brl } from "@/lib/utils/formatter";
 import {
-  useBuscarAlunoPorId,
+  useGetAlunoById,
   useGetAtendimentosByAluno,
 } from "@/kubb";
 import {
@@ -34,7 +34,7 @@ export function AlunoDetailPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [hideCharged, setHideCharged] = useState(false);
 
-  const alunoQuery = useBuscarAlunoPorId(studentId);
+  const alunoQuery = useGetAlunoById(studentId);
 
   const dateFilter = usePageDateFilter();
   const { startDate, endDate } = dateFilter;

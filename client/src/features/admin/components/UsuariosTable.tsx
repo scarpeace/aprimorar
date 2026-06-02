@@ -6,7 +6,7 @@ import { useListUsers } from "@/kubb";
 import { formatDateShortYear } from "@/lib/utils/formatter";
 import { useMemo, useState } from "react";
 
-import { DeletarUsuarioButton } from "./DeletarUsuarioButton";
+import { DeletarUsuarioButton } from "./DeleteUsuarioButton";
 
 const roleLabels: Record<string, string> = {
   ADMIN: "Administrador",

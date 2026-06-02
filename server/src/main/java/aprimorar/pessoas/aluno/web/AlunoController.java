@@ -113,7 +113,7 @@ public class AlunoController {
     }
 
     @GetMapping("/responsavel/{parentId}")
-    @Operation(operationId = "listarAlunosPorResponsavel", description = "Retorna uma lista de alunos pelo ID do responsável.")
+    @Operation(operationId = "getAlunosByResponsavel", description = "Retorna uma lista de alunos pelo ID do responsável.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
     @ApiResponse(
         responseCode = "500",
@@ -128,7 +128,7 @@ public class AlunoController {
     }
 
     @GetMapping("/options")
-    @Operation(operationId = "listarOpcoesAlunos", description = "Retorna uma lista de opções de alunos.")
+    @Operation(operationId = "listAlunos", description = "Retorna uma lista de opções de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
     @ApiResponse(
         responseCode = "500",
@@ -141,7 +141,7 @@ public class AlunoController {
     }
 
     @GetMapping("/{studentId}")
-    @Operation(operationId = "buscarAlunoPorId", description = "Retorna um aluno por ID.")
+    @Operation(operationId = "getAlunoById", description = "Retorna um aluno por ID.")
     @ApiResponse(responseCode = "200", description = "Aluno retornado com sucesso.")
     @ApiResponse(
         responseCode = "404",
@@ -159,7 +159,7 @@ public class AlunoController {
     }
 
     @PutMapping("/{studentId}")
-    @Operation(operationId = "atualizarAluno", description = "Atualiza um aluno por ID.")
+    @Operation(operationId = "updateAluno", description = "Atualiza um aluno por ID.")
     @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso.")
     @ApiResponse(
         responseCode = "400",
@@ -190,7 +190,7 @@ public class AlunoController {
     }
 
     @DeleteMapping("/{studentId}")
-    @Operation(operationId = "deletarAluno", description = "Deleta um aluno por ID.")
+    @Operation(operationId = "deleteAluno", description = "Deleta um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno deletado com sucesso.")
     @ApiResponse(
         responseCode = "404",
@@ -213,7 +213,7 @@ public class AlunoController {
     }
 
     @PatchMapping("/{studentId}/archive")
-    @Operation(operationId = "arquivarAluno", description = "Arquiva um aluno por ID.")
+    @Operation(operationId = "archiveAluno", description = "Arquiva um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno arquivado com sucesso.")
     @ApiResponse(
         responseCode = "404",
@@ -236,7 +236,7 @@ public class AlunoController {
     }
 
     @PatchMapping("/{studentId}/unarchive")
-    @Operation(operationId = "desarquivarAluno", description = "Desarquiva um aluno por ID.")
+    @Operation(operationId = "unarchiveAluno", description = "Desarquiva um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno desarquivado com sucesso.")
     @ApiResponse(
         responseCode = "404",

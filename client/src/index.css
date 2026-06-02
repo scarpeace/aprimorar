@@ -7,47 +7,21 @@
 }
 
 :root {
-  --app-content-max-width: 1680px;
-  --app-content-padding-x: clamp(1rem, 2vw, 2.5rem);
-
   --app-overlay-primary-soft: color-mix(
     in srgb,
     var(--color-primary) 13%,
     transparent
   );
+
   --app-overlay-success-soft: color-mix(
     in srgb,
     var(--color-success) 11%,
     transparent
   );
-  --app-overlay-primary-strong: color-mix(
-    in srgb,
-    var(--color-primary) 26%,
-    transparent
-  );
-  --app-overlay-surface-soft: color-mix(
-    in srgb,
-    var(--color-base-100) 88%,
-    transparent
-  );
-  --app-overlay-surface-alt: color-mix(
-    in srgb,
-    var(--color-base-200) 95%,
-    transparent
-  );
-  --app-overlay-highlight: color-mix(
-    in srgb,
-    var(--color-base-100) 70%,
-    transparent
-  );
   --app-selection: color-mix(in srgb, var(--color-primary) 18%, transparent);
 
-  --app-elevation-soft: 0 14px 34px -26px
-    color-mix(in srgb, var(--color-base-content) 30%, transparent);
   --app-elevation-strong: 0 22px 46px -30px
     color-mix(in srgb, var(--color-base-content) 36%, transparent);
-  --app-elevation-inset: inset 0 1px 0
-    color-mix(in srgb, var(--color-base-100) 80%, transparent);
 }
 
 @keyframes fade-up {
@@ -184,95 +158,6 @@
 
   .app-date-range-popper .react-datepicker__triangle {
     display: none;
-  }
-
-  .app-main-layout {
-    @apply min-h-screen flex flex-col md:h-screen md:flex-row;
-  }
-
-  .app-main-sidebar {
-    @apply border-b md:w-[17rem] md:border-b-0 md:border-r;
-    background: linear-gradient(
-      165deg,
-      var(--app-overlay-surface-soft),
-      var(--app-overlay-surface-alt)
-    );
-    border-color: var(--color-base-300);
-    box-shadow: var(--app-elevation-soft);
-    backdrop-filter: blur(6px);
-  }
-
-  @media (min-width: 768px) {
-    .app-main-sidebar {
-      box-shadow: inset -1px 0 0 var(--app-overlay-highlight);
-    }
-  }
-
-  .app-main-brand {
-    @apply flex min-h-[4.5rem] items-center border-b px-5;
-    border-color: var(--color-base-300);
-  }
-
-  .app-main-brand-caption {
-    margin-top: 0.1rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-base-content) 58%, transparent);
-  }
-
-  .app-main-nav {
-    @apply flex gap-[0.45rem] overflow-x-auto p-[0.9rem] md:flex-col md:overflow-x-visible;
-  }
-
-  .app-main-nav-link {
-    @apply flex items-center gap-3 whitespace-nowrap rounded-[0.7rem] border border-transparent px-[0.82rem] py-[0.58rem] text-sm font-semibold transition;
-    color: color-mix(in srgb, var(--color-base-content) 72%, transparent);
-  }
-
-  .app-main-nav-link:hover {
-    background: var(--color-base-200);
-    border-color: var(--color-base-300);
-    color: var(--color-base-content);
-    transform: translateX(2px);
-  }
-
-  .app-main-nav-link-active {
-    background:
-      linear-gradient(90deg, var(--app-overlay-primary-soft), var(--app-overlay-success-soft)),
-      var(--color-base-100);
-    border-color: var(--app-overlay-primary-strong);
-    box-shadow: var(--app-elevation-inset);
-    color: var(--color-base-content);
-  }
-
-  .app-main-content {
-    @apply flex-1 overflow-y-auto;
-  }
-
-  .app-main-content-inner {
-    width: min(var(--app-content-max-width), 100%);
-    margin: 0 auto;
-    padding: 1.25rem var(--app-content-padding-x);
-  }
-
-  @media (min-width: 768px) {
-    .app-main-content-inner {
-      padding: 1.75rem var(--app-content-padding-x);
-    }
-  }
-
-  .app-dashboard-page {
-    @apply flex flex-col gap-7 animate-[fade-up_280ms_ease-out_both];
-  }
-
-  .app-dashboard-error {
-    @apply flex flex-col gap-5;
-  }
-
-  .app-dashboard-kpi-grid {
-    @apply grid grid-cols-1 gap-[1.15rem] md:grid-cols-2 lg:grid-cols-4;
   }
 
   .fc .fc-daygrid-day {

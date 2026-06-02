@@ -3,19 +3,16 @@ import { Collapse } from "@/components/ui/collapse";
 import { SummaryItem } from "@/components/ui/summary-item";
 import { AddressDetails } from "@/lib/shared/address/components/AddressDetails";
 import {
-  useBuscarResponsavelPorId,
-  useBuscarAlunoPorId,
-} from "@/kubb";
-import {
   formatCpf,
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
 import { Edit, Handshake, User } from "lucide-react";
-import { ArquivarAlunoButton } from "./ArquivarAlunoButton";
-import { DeletarAlunoButton } from "./DeletarAlunoButton";
+import { ArchiveAlunoButton } from "./ArchiveAlunoButton";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
+import { useGetAlunoById, useGetResponsavelById } from "@/kubb";
+import { DeleteAlunoButton } from "./DeleteAlunoButton";
 
 interface AlunoInfoSectionProps {
   studentId: string;
@@ -23,8 +20,8 @@ interface AlunoInfoSectionProps {
 }
 
 export const AlunoInfoSection = ({studentId,onEdit}: AlunoInfoSectionProps) => {
-  const alunoQuery = useBuscarAlunoPorId(studentId);
-  const responsavelQuery = useBuscarResponsavelPorId(alunoQuery.data?.parentId || "");
+  const alunoQuery = useGetAlunoById(studentId);
+  const responsavelQuery = useGetResponsavelById(alunoQuery.data?.parentId || "");
 
   if (alunoQuery.error || responsavelQuery.error) {
     return <ErrorCard title="Erro ao carregar detalhes do aluno" error={alunoQuery.error || responsavelQuery.error} />;
@@ -52,8 +49,8 @@ export const AlunoInfoSection = ({studentId,onEdit}: AlunoInfoSectionProps) => {
               <Edit className="h-4 w-4 mr-1 sm:mr-2" />
               Editar
             </Button>
-            <ArquivarAlunoButton className="btn-sm md:btn-md" studentId={alunoQuery.data.id} active={alunoQuery.data.active!} />
-            <DeletarAlunoButton className="btn-sm md:btn-md" studentId={alunoQuery.data.id} />
+            <ArchiveAlunoButton className="btn-sm md:btn-md" studentId={alunoQuery.data.id} active={alunoQuery.data.active!} />
+            <DeleteAlunoButton className="btn-sm md:btn-md" studentId={alunoQuery.data.id} />
           </div>
         </div>
 

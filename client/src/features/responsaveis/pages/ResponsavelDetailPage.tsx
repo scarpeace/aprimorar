@@ -4,17 +4,17 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { SectionCard } from "@/components/ui/section-card";
-import { useBuscarResponsavelPorId } from "@/kubb";
 import { ResponsavelForm } from "../components/ResponsavelForm";
 import { ResponsavelInfoSection } from "../components/ResponsavelInfoSection";
 import { ResponsavelAlunosTable } from "../components/ResponsavelAlunosTable";
+import { useGetResponsavelById } from "@/kubb";
 
 export function ResponsavelDetailPage() {
   const { id } = useParams<{ id: string }>();
   const parentId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const responsavelQuery = useBuscarResponsavelPorId(parentId);
+  const responsavelQuery = useGetResponsavelById(parentId);
 
   const headerProps = {
     description: "Veja os dados do responsável, os vínculos ativos e o histórico arquivado com alunos.",
@@ -42,23 +42,22 @@ export function ResponsavelDetailPage() {
         >
           <ResponsavelAlunosTable parentId={parentId} />
         </SectionCard>
-
-        {isFormOpen && responsavelQuery.data && (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
-              <h3 className="mb-1 text-lg font-bold">Editar Responsavel</h3>
-              <p className="mb-4 text-sm text-base-content/60">
-                Revise os dados de contato, cadastro e identificacao do responsavel.
-              </p>
-              <ResponsavelForm
-                initialData={responsavelQuery.data}
-                onSuccess={() => setIsFormOpen(false)}
-                onCancel={() => setIsFormOpen(false)}
-              />
-            </div>
-          </div>
-        )}
       </div>
+      {isFormOpen && responsavelQuery.data && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
+            <h3 className="mb-1 text-lg font-bold">Editar Responsavel</h3>
+            <p className="mb-4 text-sm text-base-content/60">
+              Revise os dados de contato, cadastro e identificacao do responsavel.
+            </p>
+            <ResponsavelForm
+              initialData={responsavelQuery.data}
+              onSuccess={() => setIsFormOpen(false)}
+              onCancel={() => setIsFormOpen(false)}
+            />
+          </div>
+        </div>
+      )}
     </PageLayout>
   );
 }

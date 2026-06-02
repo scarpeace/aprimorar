@@ -34,8 +34,8 @@ export function LoginPage() {
   };
 
   return (
-    <main className="min-h-130 overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-2xl">
-        <section className="flex items-center justify-center p-6 sm:p-10">
+    <main className="min-h-screen flex items-center justify-center overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-2xl">
+        <section className="p-6 sm:p-10">
           <div className="w-full max-w-md p-6 border border-base-300 rounded-xl">
             <div className="mb-8">
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-success">Login</p>
@@ -54,7 +54,7 @@ export function LoginPage() {
                     aria-label="Email"
                     className="grow"
                     onChange={(atendimento) => setEmail(atendimento.target.value)}
-                    placeholder="voce@aprimorar.com"
+                  placeholder="voce@aprimorar.com"
                     type="email"
                     value={email}
                   />
