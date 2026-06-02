@@ -47,6 +47,8 @@ app.pub
 # builds
 client/dist
 build/
+target
+server/bin/
 
 docs
 
