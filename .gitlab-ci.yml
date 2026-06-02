@@ -20,8 +20,6 @@ backend-test:
     - chmod +x server/mvnw
   script:
     - cd server && ./mvnw test
-  only:
-    - main
 
 backend-build:
   stage: build
@@ -36,8 +34,6 @@ backend-build:
   artifacts:
     paths:
       - server/target/*.jar
-  only:
-    - main
 
 frontend-build:
   stage: build
@@ -50,8 +46,6 @@ frontend-build:
   artifacts:
     paths:
       - client/dist/
-  only:
-    - main
 
 backend-docker:
   stage: docker
