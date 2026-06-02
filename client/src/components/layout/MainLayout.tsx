@@ -56,14 +56,14 @@ export function MainLayout() {
           })}
         </nav>
 
-        <div className="mt-auto border-t border-base-300 pt-4">
+        <div className="mt-auto border-t border-base-300 p-3">
           <div className="mb-3 px-3">
             <p className="text-xs font-semibold text-base-content/60 truncate">{user?.username}</p>
-            <p className="text-[10px] uppercase tracking-wider text-base-content/40">{user?.role}</p>
+            <p className="text-xs uppercase tracking-wider text-base-content/40"><strong>{user?.role}</strong></p>
           </div>
           <button
             onClick={logout}
-            className="w-full rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-base-content/70 transition hover:border-error/30 hover:bg-error/10 hover:text-error"
+            className="w-full rounded-lg border border-error/30 bg-error/10 p-3 text-sm font-semibold text-error transition hover:border-error/30 hover:cursor-pointer hover:bg-error/30 hover:text-error"
           >
             <span className="flex items-center gap-3">
               <LogOut className="h-5 w-5" />

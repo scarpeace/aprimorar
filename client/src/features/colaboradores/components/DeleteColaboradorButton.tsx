@@ -30,7 +30,6 @@ export const DeleteColaboradorButton = ({ colaboradorId }: { colaboradorId: stri
     );
   };
 
-
   return (
     <>
       <Button

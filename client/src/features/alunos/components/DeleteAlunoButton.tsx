@@ -35,7 +35,6 @@ export const DeleteAlunoButton = ({ studentId, className }: DeleteAlunoButtonPro
     );
   };
 
-
   return (
     <>
       <Button
@@ -59,8 +58,14 @@ export const DeleteAlunoButton = ({ studentId, className }: DeleteAlunoButtonPro
         isPending={deleteStudent.isPending}
         disableCloseOnPending
         confirmText="Excluir Aluno"
-      >
-        <span><strong>ATENÇÃO</strong>, todos os registros do aluno serão <strong>REMOVIDOS</strong> do sistema. Tem certeza que deseja continuar com essa exclusão?</span>
+      ><div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
+        Ao excluí-lo, seu histórico pessoal será apagado, mas{" "}
+        <strong>
+          todos os seus atendimentoos e atendimentos serão transferidos
+          automaticamente para um perfil de "Aluno Removido"
+        </strong>{" "}
+        para manter a consistência financeira e o histórico.
+      </div>
       </ConfirmationModal>
      </>
   );
