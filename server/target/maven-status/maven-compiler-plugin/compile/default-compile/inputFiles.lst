@@ -100,6 +100,7 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/common/address/dto/AddressResponseDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/common/address/exception/InvalidAddressException.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/package-info.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/ResponsavelDeletedEvent.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/ResponsavelQueryApi.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/application/ResponsavelMapper.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/application/ResponsavelMutationService.java

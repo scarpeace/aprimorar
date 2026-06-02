@@ -1,13 +1,12 @@
 import {
-  deletarResponsavelMutationKey,
-  buscarResponsavelPorIdQueryKey,
-  listarAlunosPorResponsavelQueryKey,
-  useArquivarResponsavel,
-  useCriarResponsavel,
-  useDeletarResponsavel,
-  useDesarquivarResponsavel,
-  useAtualizarResponsavel,
+    getAlunosByResponsavelQueryKey,
   getResponsaveisQueryKey,
+  getResponsavelByIdQueryKey,
+  useArchiveResponsavel,
+  useCreateResponsavel,
+  useDeleteResponsavel,
+  useUnarchiveResponsavel,
+  useUpdateResponsavel,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -18,7 +17,7 @@ export function useResponsavelMutations() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const createParent = useCriarResponsavel({
+  const createParent = useCreateResponsavel({
     mutation: {
       onError: (error) => {
         toast.error(
@@ -35,14 +34,12 @@ export function useResponsavelMutations() {
   });
 
 
-  const updateParent = useAtualizarResponsavel({
+  const updateParent = useUpdateResponsavel({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável atualizado com sucesso");
         queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
-        });
+        queryClient.invalidateQueries({ queryKey: getResponsavelByIdQueryKey(variables.responsavelId)});
         navigate(`/parents/${variables.responsavelId}`);
       },
       onError: (error) => {
@@ -55,12 +52,11 @@ export function useResponsavelMutations() {
   });
 
 
-  const deleteParent = useDeletarResponsavel({
+  const deleteParent = useDeleteResponsavel({
     mutation: {
       onSuccess: () => {
         toast.success("Responsável excluído com sucesso");
         queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
-        queryClient.invalidateQueries({ queryKey: deletarResponsavelMutationKey() });
         navigate("/parents");
       },
       onError: (error) => {
@@ -72,16 +68,16 @@ export function useResponsavelMutations() {
     },
   });
 
-  const archiveParent = useArquivarResponsavel({
+  const archiveParent = useArchiveResponsavel({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável arquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
+          queryKey: getResponsavelByIdQueryKey(variables.responsavelId),
         });
         queryClient.invalidateQueries({
-          queryKey: listarAlunosPorResponsavelQueryKey(variables.responsavelId),
+          queryKey: getAlunosByResponsavelQueryKey(variables.responsavelId),
         });
       },
       onError: (error) => {
@@ -93,16 +89,16 @@ export function useResponsavelMutations() {
     },
   });
 
-  const unarchiveParent = useDesarquivarResponsavel({
+  const unarchiveParent = useUnarchiveResponsavel({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Responsável desarquivado com sucesso");
         queryClient.invalidateQueries({ queryKey: getResponsaveisQueryKey() });
         queryClient.invalidateQueries({
-          queryKey: buscarResponsavelPorIdQueryKey(variables.responsavelId),
+          queryKey: getResponsavelByIdQueryKey(variables.responsavelId),
         });
         queryClient.invalidateQueries({
-          queryKey: listarAlunosPorResponsavelQueryKey(variables.responsavelId),
+          queryKey: getAlunosByResponsavelQueryKey(variables.responsavelId),
         });
       },
       onError: (error) => {

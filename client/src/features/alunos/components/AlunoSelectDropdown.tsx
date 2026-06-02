@@ -1,4 +1,4 @@
-import { useListarOpcoesAlunos } from "@/kubb";
+import { useListAlunos } from "@/kubb";
 import { TriangleAlert } from "lucide-react";
 import {type UseFormRegisterReturn} from "react-hook-form";
 
@@ -17,7 +17,7 @@ export function AlunoSelectDropdown({
   label,
   defaultValue,
 }: AlunoSelectDropdownProps) {
-  const { data: alunos, isPending } = useListarOpcoesAlunos();
+  const { data: alunos, isPending } = useListAlunos();
 
   const hasDefaultValue = defaultValue?.id && defaultValue?.name;
   const isDefaultInOptions = alunos?.some((s) => s.id === defaultValue?.id);

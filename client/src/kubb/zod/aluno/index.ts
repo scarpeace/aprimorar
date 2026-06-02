@@ -1,28 +1,11 @@
 export {
-  arquivarAluno204Schema,
-  arquivarAluno404Schema,
-  arquivarAluno409Schema,
-  arquivarAluno500Schema,
-  arquivarAlunoMutationResponseSchema,
-  arquivarAlunoPathParamsSchema,
-} from "./arquivarAlunoSchema.ts";
-export {
-  atualizarAluno200Schema,
-  atualizarAluno400Schema,
-  atualizarAluno404Schema,
-  atualizarAluno409Schema,
-  atualizarAluno500Schema,
-  atualizarAlunoMutationRequestSchema,
-  atualizarAlunoMutationResponseSchema,
-  atualizarAlunoPathParamsSchema,
-} from "./atualizarAlunoSchema.ts";
-export {
-  buscarAlunoPorId200Schema,
-  buscarAlunoPorId404Schema,
-  buscarAlunoPorId500Schema,
-  buscarAlunoPorIdPathParamsSchema,
-  buscarAlunoPorIdQueryResponseSchema,
-} from "./buscarAlunoPorIdSchema.ts";
+  archiveAluno204Schema,
+  archiveAluno404Schema,
+  archiveAluno409Schema,
+  archiveAluno500Schema,
+  archiveAlunoMutationResponseSchema,
+  archiveAlunoPathParamsSchema,
+} from "./archiveAlunoSchema.ts";
 export {
   criarAluno201Schema,
   criarAluno400Schema,
@@ -32,21 +15,26 @@ export {
   criarAlunoMutationResponseSchema,
 } from "./criarAlunoSchema.ts";
 export {
-  deletarAluno204Schema,
-  deletarAluno404Schema,
-  deletarAluno409Schema,
-  deletarAluno500Schema,
-  deletarAlunoMutationResponseSchema,
-  deletarAlunoPathParamsSchema,
-} from "./deletarAlunoSchema.ts";
+  deleteAluno204Schema,
+  deleteAluno404Schema,
+  deleteAluno409Schema,
+  deleteAluno500Schema,
+  deleteAlunoMutationResponseSchema,
+  deleteAlunoPathParamsSchema,
+} from "./deleteAlunoSchema.ts";
 export {
-  desarquivarAluno204Schema,
-  desarquivarAluno404Schema,
-  desarquivarAluno409Schema,
-  desarquivarAluno500Schema,
-  desarquivarAlunoMutationResponseSchema,
-  desarquivarAlunoPathParamsSchema,
-} from "./desarquivarAlunoSchema.ts";
+  getAlunoById200Schema,
+  getAlunoById404Schema,
+  getAlunoById500Schema,
+  getAlunoByIdPathParamsSchema,
+  getAlunoByIdQueryResponseSchema,
+} from "./getAlunoByIdSchema.ts";
+export {
+  getAlunosByResponsavel200Schema,
+  getAlunosByResponsavel500Schema,
+  getAlunosByResponsavelPathParamsSchema,
+  getAlunosByResponsavelQueryResponseSchema,
+} from "./getAlunosByResponsavelSchema.ts";
 export {
   getAlunosKpis200Schema,
   getAlunosKpis400Schema,
@@ -61,13 +49,25 @@ export {
   getAlunosQueryResponseSchema,
 } from "./getAlunosSchema.ts";
 export {
-  listarAlunosPorResponsavel200Schema,
-  listarAlunosPorResponsavel500Schema,
-  listarAlunosPorResponsavelPathParamsSchema,
-  listarAlunosPorResponsavelQueryResponseSchema,
-} from "./listarAlunosPorResponsavelSchema.ts";
+  listAlunos200Schema,
+  listAlunos500Schema,
+  listAlunosQueryResponseSchema,
+} from "./listAlunosSchema.ts";
 export {
-  listarOpcoesAlunos200Schema,
-  listarOpcoesAlunos500Schema,
-  listarOpcoesAlunosQueryResponseSchema,
-} from "./listarOpcoesAlunosSchema.ts";
+  unarchiveAluno204Schema,
+  unarchiveAluno404Schema,
+  unarchiveAluno409Schema,
+  unarchiveAluno500Schema,
+  unarchiveAlunoMutationResponseSchema,
+  unarchiveAlunoPathParamsSchema,
+} from "./unarchiveAlunoSchema.ts";
+export {
+  updateAluno200Schema,
+  updateAluno400Schema,
+  updateAluno404Schema,
+  updateAluno409Schema,
+  updateAluno500Schema,
+  updateAlunoMutationRequestSchema,
+  updateAlunoMutationResponseSchema,
+  updateAlunoPathParamsSchema,
+} from "./updateAlunoSchema.ts";

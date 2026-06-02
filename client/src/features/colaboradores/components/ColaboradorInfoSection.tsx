@@ -7,8 +7,8 @@ import { AddressDetails } from "@/lib/shared/address/components/AddressDetails";
 import { useFindColaboradorById } from "@/kubb";
 import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
 import { Edit, User } from "lucide-react";
-import { ArquivarColaboradorButton } from "./ArquivarColaboradorButton";
-import { DeletarColaboradorButton } from "./DeletarColaboradorButton";
+import { ArchiveColaboradorButton } from "./ArchiveColaboradorButton";
+import { DeleteColaboradorButton } from "./DeleteColaboradorButton";
 import { dutyLabels } from "../lib/dutyLabels";
 
 interface ColaboradorInfoSectionProps {
@@ -48,11 +48,11 @@ export function ColaboradorInfoSection({ colaboradorId, onEdit }: ColaboradorInf
               <Edit className="h-4 w-4 mr-2" />Editar
             </Button>
 
-            <ArquivarColaboradorButton
+            <ArchiveColaboradorButton
               colaboradorId={colaboradorQuery.data.id}
               isArchived={isArchived}
             />
-            <DeletarColaboradorButton colaboradorId={colaboradorQuery.data.id} />
+            <DeleteColaboradorButton colaboradorId={colaboradorQuery.data.id} />
           </div>
         </div>
 

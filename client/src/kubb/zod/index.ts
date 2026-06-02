@@ -1,30 +1,13 @@
 export { addressRequestDTOSchema } from "./addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./addressResponseDTOSchema.ts";
 export {
-  arquivarAluno204Schema,
-  arquivarAluno404Schema,
-  arquivarAluno409Schema,
-  arquivarAluno500Schema,
-  arquivarAlunoMutationResponseSchema,
-  arquivarAlunoPathParamsSchema,
-} from "./aluno/arquivarAlunoSchema.ts";
-export {
-  atualizarAluno200Schema,
-  atualizarAluno400Schema,
-  atualizarAluno404Schema,
-  atualizarAluno409Schema,
-  atualizarAluno500Schema,
-  atualizarAlunoMutationRequestSchema,
-  atualizarAlunoMutationResponseSchema,
-  atualizarAlunoPathParamsSchema,
-} from "./aluno/atualizarAlunoSchema.ts";
-export {
-  buscarAlunoPorId200Schema,
-  buscarAlunoPorId404Schema,
-  buscarAlunoPorId500Schema,
-  buscarAlunoPorIdPathParamsSchema,
-  buscarAlunoPorIdQueryResponseSchema,
-} from "./aluno/buscarAlunoPorIdSchema.ts";
+  archiveAluno204Schema,
+  archiveAluno404Schema,
+  archiveAluno409Schema,
+  archiveAluno500Schema,
+  archiveAlunoMutationResponseSchema,
+  archiveAlunoPathParamsSchema,
+} from "./aluno/archiveAlunoSchema.ts";
 export {
   criarAluno201Schema,
   criarAluno400Schema,
@@ -34,21 +17,26 @@ export {
   criarAlunoMutationResponseSchema,
 } from "./aluno/criarAlunoSchema.ts";
 export {
-  deletarAluno204Schema,
-  deletarAluno404Schema,
-  deletarAluno409Schema,
-  deletarAluno500Schema,
-  deletarAlunoMutationResponseSchema,
-  deletarAlunoPathParamsSchema,
-} from "./aluno/deletarAlunoSchema.ts";
+  deleteAluno204Schema,
+  deleteAluno404Schema,
+  deleteAluno409Schema,
+  deleteAluno500Schema,
+  deleteAlunoMutationResponseSchema,
+  deleteAlunoPathParamsSchema,
+} from "./aluno/deleteAlunoSchema.ts";
 export {
-  desarquivarAluno204Schema,
-  desarquivarAluno404Schema,
-  desarquivarAluno409Schema,
-  desarquivarAluno500Schema,
-  desarquivarAlunoMutationResponseSchema,
-  desarquivarAlunoPathParamsSchema,
-} from "./aluno/desarquivarAlunoSchema.ts";
+  getAlunoById200Schema,
+  getAlunoById404Schema,
+  getAlunoById500Schema,
+  getAlunoByIdPathParamsSchema,
+  getAlunoByIdQueryResponseSchema,
+} from "./aluno/getAlunoByIdSchema.ts";
+export {
+  getAlunosByResponsavel200Schema,
+  getAlunosByResponsavel500Schema,
+  getAlunosByResponsavelPathParamsSchema,
+  getAlunosByResponsavelQueryResponseSchema,
+} from "./aluno/getAlunosByResponsavelSchema.ts";
 export {
   getAlunosKpis200Schema,
   getAlunosKpis400Schema,
@@ -63,16 +51,28 @@ export {
   getAlunosQueryResponseSchema,
 } from "./aluno/getAlunosSchema.ts";
 export {
-  listarAlunosPorResponsavel200Schema,
-  listarAlunosPorResponsavel500Schema,
-  listarAlunosPorResponsavelPathParamsSchema,
-  listarAlunosPorResponsavelQueryResponseSchema,
-} from "./aluno/listarAlunosPorResponsavelSchema.ts";
+  listAlunos200Schema,
+  listAlunos500Schema,
+  listAlunosQueryResponseSchema,
+} from "./aluno/listAlunosSchema.ts";
 export {
-  listarOpcoesAlunos200Schema,
-  listarOpcoesAlunos500Schema,
-  listarOpcoesAlunosQueryResponseSchema,
-} from "./aluno/listarOpcoesAlunosSchema.ts";
+  unarchiveAluno204Schema,
+  unarchiveAluno404Schema,
+  unarchiveAluno409Schema,
+  unarchiveAluno500Schema,
+  unarchiveAlunoMutationResponseSchema,
+  unarchiveAlunoPathParamsSchema,
+} from "./aluno/unarchiveAlunoSchema.ts";
+export {
+  updateAluno200Schema,
+  updateAluno400Schema,
+  updateAluno404Schema,
+  updateAluno409Schema,
+  updateAluno500Schema,
+  updateAlunoMutationRequestSchema,
+  updateAlunoMutationResponseSchema,
+  updateAlunoPathParamsSchema,
+} from "./aluno/updateAlunoSchema.ts";
 export { alunoAtendimentosKpisSchema } from "./alunoAtendimentosKpisSchema.ts";
 export { alunoRequestDTOSchema } from "./alunoRequestDTOSchema.ts";
 export { alunoResponseDTOSchema } from "./alunoResponseDTOSchema.ts";
@@ -330,54 +330,30 @@ export { pageDTOResponsavelResponseDTOSchema } from "./pageDTOResponsavelRespons
 export { problemResponseDTOSchema } from "./problemResponseDTOSchema.ts";
 export { responsaveisListDTOSchema } from "./responsaveisListDTOSchema.ts";
 export {
-  arquivarResponsavel204Schema,
-  arquivarResponsavel404Schema,
-  arquivarResponsavel409Schema,
-  arquivarResponsavel500Schema,
-  arquivarResponsavelMutationResponseSchema,
-  arquivarResponsavelPathParamsSchema,
-} from "./responsavel/arquivarResponsavelSchema.ts";
+  archiveResponsavel204Schema,
+  archiveResponsavel404Schema,
+  archiveResponsavel409Schema,
+  archiveResponsavel500Schema,
+  archiveResponsavelMutationResponseSchema,
+  archiveResponsavelPathParamsSchema,
+} from "./responsavel/archiveResponsavelSchema.ts";
 export {
-  atualizarResponsavel200Schema,
-  atualizarResponsavel400Schema,
-  atualizarResponsavel404Schema,
-  atualizarResponsavel409Schema,
-  atualizarResponsavel500Schema,
-  atualizarResponsavelMutationRequestSchema,
-  atualizarResponsavelMutationResponseSchema,
-  atualizarResponsavelPathParamsSchema,
-} from "./responsavel/atualizarResponsavelSchema.ts";
+  createResponsavel201Schema,
+  createResponsavel400Schema,
+  createResponsavel409Schema,
+  createResponsavel500Schema,
+  createResponsavelMutationRequestSchema,
+  createResponsavelMutationResponseSchema,
+} from "./responsavel/createResponsavelSchema.ts";
 export {
-  buscarResponsavelPorId200Schema,
-  buscarResponsavelPorId404Schema,
-  buscarResponsavelPorId500Schema,
-  buscarResponsavelPorIdPathParamsSchema,
-  buscarResponsavelPorIdQueryResponseSchema,
-} from "./responsavel/buscarResponsavelPorIdSchema.ts";
-export {
-  criarResponsavel201Schema,
-  criarResponsavel400Schema,
-  criarResponsavel409Schema,
-  criarResponsavel500Schema,
-  criarResponsavelMutationRequestSchema,
-  criarResponsavelMutationResponseSchema,
-} from "./responsavel/criarResponsavelSchema.ts";
-export {
-  deletarResponsavel204Schema,
-  deletarResponsavel404Schema,
-  deletarResponsavel409Schema,
-  deletarResponsavel500Schema,
-  deletarResponsavelMutationResponseSchema,
-  deletarResponsavelPathParamsSchema,
-} from "./responsavel/deletarResponsavelSchema.ts";
-export {
-  desarquivarResponsavel204Schema,
-  desarquivarResponsavel404Schema,
-  desarquivarResponsavel409Schema,
-  desarquivarResponsavel500Schema,
-  desarquivarResponsavelMutationResponseSchema,
-  desarquivarResponsavelPathParamsSchema,
-} from "./responsavel/desarquivarResponsavelSchema.ts";
+  deleteResponsavel204Schema,
+  deleteResponsavel404Schema,
+  deleteResponsavel409Schema,
+  deleteResponsavel500Schema,
+  deleteResponsavelMutationResponseSchema,
+  deleteResponsavelPathParamsSchema,
+  deleteResponsavelQueryParamsSchema,
+} from "./responsavel/deleteResponsavelSchema.ts";
 export {
   getResponsaveis200Schema,
   getResponsaveis400Schema,
@@ -386,10 +362,35 @@ export {
   getResponsaveisQueryResponseSchema,
 } from "./responsavel/getResponsaveisSchema.ts";
 export {
-  listarOpcoesResponsaveis200Schema,
-  listarOpcoesResponsaveis500Schema,
-  listarOpcoesResponsaveisQueryResponseSchema,
-} from "./responsavel/listarOpcoesResponsaveisSchema.ts";
+  getResponsavelById200Schema,
+  getResponsavelById404Schema,
+  getResponsavelById500Schema,
+  getResponsavelByIdPathParamsSchema,
+  getResponsavelByIdQueryResponseSchema,
+} from "./responsavel/getResponsavelByIdSchema.ts";
+export {
+  listResponsaveis200Schema,
+  listResponsaveis500Schema,
+  listResponsaveisQueryResponseSchema,
+} from "./responsavel/listResponsaveisSchema.ts";
+export {
+  unarchiveResponsavel204Schema,
+  unarchiveResponsavel404Schema,
+  unarchiveResponsavel409Schema,
+  unarchiveResponsavel500Schema,
+  unarchiveResponsavelMutationResponseSchema,
+  unarchiveResponsavelPathParamsSchema,
+} from "./responsavel/unarchiveResponsavelSchema.ts";
+export {
+  updateResponsavel200Schema,
+  updateResponsavel400Schema,
+  updateResponsavel404Schema,
+  updateResponsavel409Schema,
+  updateResponsavel500Schema,
+  updateResponsavelMutationRequestSchema,
+  updateResponsavelMutationResponseSchema,
+  updateResponsavelPathParamsSchema,
+} from "./responsavel/updateResponsavelSchema.ts";
 export { responsavelRequestDTOSchema } from "./responsavelRequestDTOSchema.ts";
 export { responsavelResponseDTOSchema } from "./responsavelResponseDTOSchema.ts";
 export {

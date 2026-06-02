@@ -1,7 +1,7 @@
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useListarAlunosPorResponsavel } from "@/kubb";
+import { useGetAlunosByResponsavel } from "@/kubb";
 import {
   formatCpf,
   formatDateShortYear,
@@ -17,7 +17,7 @@ export function ResponsavelAlunosTable({
   parentId,
 }: Readonly<ResponsavelAlunosTableProps>) {
   const navigate = useNavigate();
-  const alunosQuery = useListarAlunosPorResponsavel(parentId);
+  const alunosQuery = useGetAlunosByResponsavel(parentId);
 
   if (alunosQuery.error) {
     return (

@@ -2,15 +2,15 @@ import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { useBuscarResponsavelPorId } from "@/kubb";
 import {
   formatCpf,
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
 import { Edit, Handshake, UserRound } from "lucide-react";
-import { ArquivarResponsavelButton } from "./ArquivarResponsavelButton";
-import { DeletarResponsavelButton } from "./DeletarResponsavelButton";
+import { ArchiveResponsavelButton } from "./ArchiveResponsavelButton";
+import { DeleteResponsavelButton } from "./DeleteResponsavelButton";
+import { useGetResponsavelById } from "@/kubb";
 
 interface ResponsavelInfoSectionProps {
   parentId: string;
@@ -18,7 +18,7 @@ interface ResponsavelInfoSectionProps {
 }
 
 export function ResponsavelInfoSection({ parentId, onEdit }: Readonly<ResponsavelInfoSectionProps>) {
-  const responsavelQuery = useBuscarResponsavelPorId(parentId);
+  const responsavelQuery = useGetResponsavelById(parentId);
 
   if (responsavelQuery.error) {
     return (
@@ -59,8 +59,8 @@ export function ResponsavelInfoSection({ parentId, onEdit }: Readonly<Responsave
               <Edit className="h-4 w-4" />
               Editar
             </Button>
-            <ArquivarResponsavelButton responsavelId={responsavel.parentId} isArchived={isArchived} />
-            <DeletarResponsavelButton responsavelId={responsavel.parentId} />
+            <ArchiveResponsavelButton responsavelId={responsavel.parentId} isArchived={isArchived} />
+            <DeleteResponsavelButton responsavelId={responsavel.parentId} />
           </div>
         </div>
 

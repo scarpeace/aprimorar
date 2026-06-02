@@ -1,52 +1,28 @@
 export {
-  arquivarResponsavel204Schema,
-  arquivarResponsavel404Schema,
-  arquivarResponsavel409Schema,
-  arquivarResponsavel500Schema,
-  arquivarResponsavelMutationResponseSchema,
-  arquivarResponsavelPathParamsSchema,
-} from "./arquivarResponsavelSchema.ts";
+  archiveResponsavel204Schema,
+  archiveResponsavel404Schema,
+  archiveResponsavel409Schema,
+  archiveResponsavel500Schema,
+  archiveResponsavelMutationResponseSchema,
+  archiveResponsavelPathParamsSchema,
+} from "./archiveResponsavelSchema.ts";
 export {
-  atualizarResponsavel200Schema,
-  atualizarResponsavel400Schema,
-  atualizarResponsavel404Schema,
-  atualizarResponsavel409Schema,
-  atualizarResponsavel500Schema,
-  atualizarResponsavelMutationRequestSchema,
-  atualizarResponsavelMutationResponseSchema,
-  atualizarResponsavelPathParamsSchema,
-} from "./atualizarResponsavelSchema.ts";
+  createResponsavel201Schema,
+  createResponsavel400Schema,
+  createResponsavel409Schema,
+  createResponsavel500Schema,
+  createResponsavelMutationRequestSchema,
+  createResponsavelMutationResponseSchema,
+} from "./createResponsavelSchema.ts";
 export {
-  buscarResponsavelPorId200Schema,
-  buscarResponsavelPorId404Schema,
-  buscarResponsavelPorId500Schema,
-  buscarResponsavelPorIdPathParamsSchema,
-  buscarResponsavelPorIdQueryResponseSchema,
-} from "./buscarResponsavelPorIdSchema.ts";
-export {
-  criarResponsavel201Schema,
-  criarResponsavel400Schema,
-  criarResponsavel409Schema,
-  criarResponsavel500Schema,
-  criarResponsavelMutationRequestSchema,
-  criarResponsavelMutationResponseSchema,
-} from "./criarResponsavelSchema.ts";
-export {
-  deletarResponsavel204Schema,
-  deletarResponsavel404Schema,
-  deletarResponsavel409Schema,
-  deletarResponsavel500Schema,
-  deletarResponsavelMutationResponseSchema,
-  deletarResponsavelPathParamsSchema,
-} from "./deletarResponsavelSchema.ts";
-export {
-  desarquivarResponsavel204Schema,
-  desarquivarResponsavel404Schema,
-  desarquivarResponsavel409Schema,
-  desarquivarResponsavel500Schema,
-  desarquivarResponsavelMutationResponseSchema,
-  desarquivarResponsavelPathParamsSchema,
-} from "./desarquivarResponsavelSchema.ts";
+  deleteResponsavel204Schema,
+  deleteResponsavel404Schema,
+  deleteResponsavel409Schema,
+  deleteResponsavel500Schema,
+  deleteResponsavelMutationResponseSchema,
+  deleteResponsavelPathParamsSchema,
+  deleteResponsavelQueryParamsSchema,
+} from "./deleteResponsavelSchema.ts";
 export {
   getResponsaveis200Schema,
   getResponsaveis400Schema,
@@ -55,7 +31,32 @@ export {
   getResponsaveisQueryResponseSchema,
 } from "./getResponsaveisSchema.ts";
 export {
-  listarOpcoesResponsaveis200Schema,
-  listarOpcoesResponsaveis500Schema,
-  listarOpcoesResponsaveisQueryResponseSchema,
-} from "./listarOpcoesResponsaveisSchema.ts";
+  getResponsavelById200Schema,
+  getResponsavelById404Schema,
+  getResponsavelById500Schema,
+  getResponsavelByIdPathParamsSchema,
+  getResponsavelByIdQueryResponseSchema,
+} from "./getResponsavelByIdSchema.ts";
+export {
+  listResponsaveis200Schema,
+  listResponsaveis500Schema,
+  listResponsaveisQueryResponseSchema,
+} from "./listResponsaveisSchema.ts";
+export {
+  unarchiveResponsavel204Schema,
+  unarchiveResponsavel404Schema,
+  unarchiveResponsavel409Schema,
+  unarchiveResponsavel500Schema,
+  unarchiveResponsavelMutationResponseSchema,
+  unarchiveResponsavelPathParamsSchema,
+} from "./unarchiveResponsavelSchema.ts";
+export {
+  updateResponsavel200Schema,
+  updateResponsavel400Schema,
+  updateResponsavel404Schema,
+  updateResponsavel409Schema,
+  updateResponsavel500Schema,
+  updateResponsavelMutationRequestSchema,
+  updateResponsavelMutationResponseSchema,
+  updateResponsavelPathParamsSchema,
+} from "./updateResponsavelSchema.ts";

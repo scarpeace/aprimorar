@@ -75,33 +75,14 @@ export type {
   UserResponseDTORoleEnumKey,
 } from "./UserResponseDTO.ts";
 export type {
-  ArquivarAluno204,
-  ArquivarAluno404,
-  ArquivarAluno409,
-  ArquivarAluno500,
-  ArquivarAlunoMutation,
-  ArquivarAlunoMutationResponse,
-  ArquivarAlunoPathParams,
-} from "./aluno/ArquivarAluno.ts";
-export type {
-  AtualizarAluno200,
-  AtualizarAluno400,
-  AtualizarAluno404,
-  AtualizarAluno409,
-  AtualizarAluno500,
-  AtualizarAlunoMutation,
-  AtualizarAlunoMutationRequest,
-  AtualizarAlunoMutationResponse,
-  AtualizarAlunoPathParams,
-} from "./aluno/AtualizarAluno.ts";
-export type {
-  BuscarAlunoPorId200,
-  BuscarAlunoPorId404,
-  BuscarAlunoPorId500,
-  BuscarAlunoPorIdPathParams,
-  BuscarAlunoPorIdQuery,
-  BuscarAlunoPorIdQueryResponse,
-} from "./aluno/BuscarAlunoPorId.ts";
+  ArchiveAluno204,
+  ArchiveAluno404,
+  ArchiveAluno409,
+  ArchiveAluno500,
+  ArchiveAlunoMutation,
+  ArchiveAlunoMutationResponse,
+  ArchiveAlunoPathParams,
+} from "./aluno/ArchiveAluno.ts";
 export type {
   CriarAluno201,
   CriarAluno400,
@@ -112,23 +93,22 @@ export type {
   CriarAlunoMutationResponse,
 } from "./aluno/CriarAluno.ts";
 export type {
-  DeletarAluno204,
-  DeletarAluno404,
-  DeletarAluno409,
-  DeletarAluno500,
-  DeletarAlunoMutation,
-  DeletarAlunoMutationResponse,
-  DeletarAlunoPathParams,
-} from "./aluno/DeletarAluno.ts";
+  DeleteAluno204,
+  DeleteAluno404,
+  DeleteAluno409,
+  DeleteAluno500,
+  DeleteAlunoMutation,
+  DeleteAlunoMutationResponse,
+  DeleteAlunoPathParams,
+} from "./aluno/DeleteAluno.ts";
 export type {
-  DesarquivarAluno204,
-  DesarquivarAluno404,
-  DesarquivarAluno409,
-  DesarquivarAluno500,
-  DesarquivarAlunoMutation,
-  DesarquivarAlunoMutationResponse,
-  DesarquivarAlunoPathParams,
-} from "./aluno/DesarquivarAluno.ts";
+  GetAlunoById200,
+  GetAlunoById404,
+  GetAlunoById500,
+  GetAlunoByIdPathParams,
+  GetAlunoByIdQuery,
+  GetAlunoByIdQueryResponse,
+} from "./aluno/GetAlunoById.ts";
 export type {
   GetAlunos200,
   GetAlunos400,
@@ -138,6 +118,13 @@ export type {
   GetAlunosQueryResponse,
 } from "./aluno/GetAlunos.ts";
 export type {
+  GetAlunosByResponsavel200,
+  GetAlunosByResponsavel500,
+  GetAlunosByResponsavelPathParams,
+  GetAlunosByResponsavelQuery,
+  GetAlunosByResponsavelQueryResponse,
+} from "./aluno/GetAlunosByResponsavel.ts";
+export type {
   GetAlunosKpis200,
   GetAlunosKpis400,
   GetAlunosKpis500,
@@ -145,18 +132,31 @@ export type {
   GetAlunosKpisQueryResponse,
 } from "./aluno/GetAlunosKpis.ts";
 export type {
-  ListarAlunosPorResponsavel200,
-  ListarAlunosPorResponsavel500,
-  ListarAlunosPorResponsavelPathParams,
-  ListarAlunosPorResponsavelQuery,
-  ListarAlunosPorResponsavelQueryResponse,
-} from "./aluno/ListarAlunosPorResponsavel.ts";
+  ListAlunos200,
+  ListAlunos500,
+  ListAlunosQuery,
+  ListAlunosQueryResponse,
+} from "./aluno/ListAlunos.ts";
 export type {
-  ListarOpcoesAlunos200,
-  ListarOpcoesAlunos500,
-  ListarOpcoesAlunosQuery,
-  ListarOpcoesAlunosQueryResponse,
-} from "./aluno/ListarOpcoesAlunos.ts";
+  UnarchiveAluno204,
+  UnarchiveAluno404,
+  UnarchiveAluno409,
+  UnarchiveAluno500,
+  UnarchiveAlunoMutation,
+  UnarchiveAlunoMutationResponse,
+  UnarchiveAlunoPathParams,
+} from "./aluno/UnarchiveAluno.ts";
+export type {
+  UpdateAluno200,
+  UpdateAluno400,
+  UpdateAluno404,
+  UpdateAluno409,
+  UpdateAluno500,
+  UpdateAlunoMutation,
+  UpdateAlunoMutationRequest,
+  UpdateAlunoMutationResponse,
+  UpdateAlunoPathParams,
+} from "./aluno/UpdateAluno.ts";
 export type {
   CreateAtendimento201,
   CreateAtendimento400,
@@ -410,60 +410,33 @@ export type {
   UpdateDespesaPathParams,
 } from "./financeiro/UpdateDespesa.ts";
 export type {
-  ArquivarResponsavel204,
-  ArquivarResponsavel404,
-  ArquivarResponsavel409,
-  ArquivarResponsavel500,
-  ArquivarResponsavelMutation,
-  ArquivarResponsavelMutationResponse,
-  ArquivarResponsavelPathParams,
-} from "./responsavel/ArquivarResponsavel.ts";
+  ArchiveResponsavel204,
+  ArchiveResponsavel404,
+  ArchiveResponsavel409,
+  ArchiveResponsavel500,
+  ArchiveResponsavelMutation,
+  ArchiveResponsavelMutationResponse,
+  ArchiveResponsavelPathParams,
+} from "./responsavel/ArchiveResponsavel.ts";
 export type {
-  AtualizarResponsavel200,
-  AtualizarResponsavel400,
-  AtualizarResponsavel404,
-  AtualizarResponsavel409,
-  AtualizarResponsavel500,
-  AtualizarResponsavelMutation,
-  AtualizarResponsavelMutationRequest,
-  AtualizarResponsavelMutationResponse,
-  AtualizarResponsavelPathParams,
-} from "./responsavel/AtualizarResponsavel.ts";
+  CreateResponsavel201,
+  CreateResponsavel400,
+  CreateResponsavel409,
+  CreateResponsavel500,
+  CreateResponsavelMutation,
+  CreateResponsavelMutationRequest,
+  CreateResponsavelMutationResponse,
+} from "./responsavel/CreateResponsavel.ts";
 export type {
-  BuscarResponsavelPorId200,
-  BuscarResponsavelPorId404,
-  BuscarResponsavelPorId500,
-  BuscarResponsavelPorIdPathParams,
-  BuscarResponsavelPorIdQuery,
-  BuscarResponsavelPorIdQueryResponse,
-} from "./responsavel/BuscarResponsavelPorId.ts";
-export type {
-  CriarResponsavel201,
-  CriarResponsavel400,
-  CriarResponsavel409,
-  CriarResponsavel500,
-  CriarResponsavelMutation,
-  CriarResponsavelMutationRequest,
-  CriarResponsavelMutationResponse,
-} from "./responsavel/CriarResponsavel.ts";
-export type {
-  DeletarResponsavel204,
-  DeletarResponsavel404,
-  DeletarResponsavel409,
-  DeletarResponsavel500,
-  DeletarResponsavelMutation,
-  DeletarResponsavelMutationResponse,
-  DeletarResponsavelPathParams,
-} from "./responsavel/DeletarResponsavel.ts";
-export type {
-  DesarquivarResponsavel204,
-  DesarquivarResponsavel404,
-  DesarquivarResponsavel409,
-  DesarquivarResponsavel500,
-  DesarquivarResponsavelMutation,
-  DesarquivarResponsavelMutationResponse,
-  DesarquivarResponsavelPathParams,
-} from "./responsavel/DesarquivarResponsavel.ts";
+  DeleteResponsavel204,
+  DeleteResponsavel404,
+  DeleteResponsavel409,
+  DeleteResponsavel500,
+  DeleteResponsavelMutation,
+  DeleteResponsavelMutationResponse,
+  DeleteResponsavelPathParams,
+  DeleteResponsavelQueryParams,
+} from "./responsavel/DeleteResponsavel.ts";
 export type {
   GetResponsaveis200,
   GetResponsaveis400,
@@ -473,11 +446,39 @@ export type {
   GetResponsaveisQueryResponse,
 } from "./responsavel/GetResponsaveis.ts";
 export type {
-  ListarOpcoesResponsaveis200,
-  ListarOpcoesResponsaveis500,
-  ListarOpcoesResponsaveisQuery,
-  ListarOpcoesResponsaveisQueryResponse,
-} from "./responsavel/ListarOpcoesResponsaveis.ts";
+  GetResponsavelById200,
+  GetResponsavelById404,
+  GetResponsavelById500,
+  GetResponsavelByIdPathParams,
+  GetResponsavelByIdQuery,
+  GetResponsavelByIdQueryResponse,
+} from "./responsavel/GetResponsavelById.ts";
+export type {
+  ListResponsaveis200,
+  ListResponsaveis500,
+  ListResponsaveisQuery,
+  ListResponsaveisQueryResponse,
+} from "./responsavel/ListResponsaveis.ts";
+export type {
+  UnarchiveResponsavel204,
+  UnarchiveResponsavel404,
+  UnarchiveResponsavel409,
+  UnarchiveResponsavel500,
+  UnarchiveResponsavelMutation,
+  UnarchiveResponsavelMutationResponse,
+  UnarchiveResponsavelPathParams,
+} from "./responsavel/UnarchiveResponsavel.ts";
+export type {
+  UpdateResponsavel200,
+  UpdateResponsavel400,
+  UpdateResponsavel404,
+  UpdateResponsavel409,
+  UpdateResponsavel500,
+  UpdateResponsavelMutation,
+  UpdateResponsavelMutationRequest,
+  UpdateResponsavelMutationResponse,
+  UpdateResponsavelPathParams,
+} from "./responsavel/UpdateResponsavel.ts";
 export type {
   ArchiveUser200,
   ArchiveUser404,

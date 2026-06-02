@@ -4,17 +4,17 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { SectionCard } from "@/components/ui/section-card";
-import { useBuscarResponsavelPorId } from "@/kubb";
 import { ResponsavelForm } from "../components/ResponsavelForm";
 import { ResponsavelInfoSection } from "../components/ResponsavelInfoSection";
 import { ResponsavelAlunosTable } from "../components/ResponsavelAlunosTable";
+import { useGetResponsavelById } from "@/kubb";
 
 export function ResponsavelDetailPage() {
   const { id } = useParams<{ id: string }>();
   const parentId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const responsavelQuery = useBuscarResponsavelPorId(parentId);
+  const responsavelQuery = useGetResponsavelById(parentId);
 
   const headerProps = {
     description: "Veja os dados do responsável, os vínculos ativos e o histórico arquivado com alunos.",

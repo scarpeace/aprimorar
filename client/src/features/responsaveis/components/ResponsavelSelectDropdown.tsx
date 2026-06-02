@@ -1,6 +1,6 @@
 import { ButtonLink } from "@/components/ui/button";
 import type { AlunoFormSchema } from "@/features/alunos/lib/studentFormSchema.ts";
-import { useListarOpcoesResponsaveis } from "@/kubb";
+import { useListResponsaveis } from "@/kubb";
 import { TriangleAlert, UserPlus } from "lucide-react";
 import {
   Controller,
@@ -20,7 +20,7 @@ export function ResponsavelSelectDropdown({
   className,
   label,
 }: ResponsavelSelectDropdownProps) {
-  const { data: responsavels, isPending } = useListarOpcoesResponsaveis();
+  const { data: responsavels, isPending } = useListResponsaveis();
   return (
     <fieldset className={`fieldset ${className}`}>
       <legend className="fieldset-legend w-full flex flex-row justify-between items-center">

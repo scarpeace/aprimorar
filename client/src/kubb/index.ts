@@ -1,13 +1,13 @@
-export type { ArquivarAlunoMutationKey } from "./hooks/aluno/useArquivarAluno.ts";
-export type { AtualizarAlunoMutationKey } from "./hooks/aluno/useAtualizarAluno.ts";
-export type { BuscarAlunoPorIdQueryKey } from "./hooks/aluno/useBuscarAlunoPorId.ts";
+export type { ArchiveAlunoMutationKey } from "./hooks/aluno/useArchiveAluno.ts";
 export type { CriarAlunoMutationKey } from "./hooks/aluno/useCriarAluno.ts";
-export type { DeletarAlunoMutationKey } from "./hooks/aluno/useDeletarAluno.ts";
-export type { DesarquivarAlunoMutationKey } from "./hooks/aluno/useDesarquivarAluno.ts";
+export type { DeleteAlunoMutationKey } from "./hooks/aluno/useDeleteAluno.ts";
+export type { GetAlunoByIdQueryKey } from "./hooks/aluno/useGetAlunoById.ts";
 export type { GetAlunosQueryKey } from "./hooks/aluno/useGetAlunos.ts";
+export type { GetAlunosByResponsavelQueryKey } from "./hooks/aluno/useGetAlunosByResponsavel.ts";
 export type { GetAlunosKpisQueryKey } from "./hooks/aluno/useGetAlunosKpis.ts";
-export type { ListarAlunosPorResponsavelQueryKey } from "./hooks/aluno/useListarAlunosPorResponsavel.ts";
-export type { ListarOpcoesAlunosQueryKey } from "./hooks/aluno/useListarOpcoesAlunos.ts";
+export type { ListAlunosQueryKey } from "./hooks/aluno/useListAlunos.ts";
+export type { UnarchiveAlunoMutationKey } from "./hooks/aluno/useUnarchiveAluno.ts";
+export type { UpdateAlunoMutationKey } from "./hooks/aluno/useUpdateAluno.ts";
 export type { CreateAtendimentoMutationKey } from "./hooks/atendimento/useCreateAtendimento.ts";
 export type { DeleteAtendimentoMutationKey } from "./hooks/atendimento/useDeleteAtendimento.ts";
 export type { GetAtendimentoByIdQueryKey } from "./hooks/atendimento/useGetAtendimentoById.ts";
@@ -37,14 +37,14 @@ export type { GetDespesaByIdQueryKey } from "./hooks/financeiro/useGetDespesaByI
 export type { GetDespesasQueryKey } from "./hooks/financeiro/useGetDespesas.ts";
 export type { ToggleDespesaPaymentMutationKey } from "./hooks/financeiro/useToggleDespesaPayment.ts";
 export type { UpdateDespesaMutationKey } from "./hooks/financeiro/useUpdateDespesa.ts";
-export type { ArquivarResponsavelMutationKey } from "./hooks/responsavel/useArquivarResponsavel.ts";
-export type { AtualizarResponsavelMutationKey } from "./hooks/responsavel/useAtualizarResponsavel.ts";
-export type { BuscarResponsavelPorIdQueryKey } from "./hooks/responsavel/useBuscarResponsavelPorId.ts";
-export type { CriarResponsavelMutationKey } from "./hooks/responsavel/useCriarResponsavel.ts";
-export type { DeletarResponsavelMutationKey } from "./hooks/responsavel/useDeletarResponsavel.ts";
-export type { DesarquivarResponsavelMutationKey } from "./hooks/responsavel/useDesarquivarResponsavel.ts";
+export type { ArchiveResponsavelMutationKey } from "./hooks/responsavel/useArchiveResponsavel.ts";
+export type { CreateResponsavelMutationKey } from "./hooks/responsavel/useCreateResponsavel.ts";
+export type { DeleteResponsavelMutationKey } from "./hooks/responsavel/useDeleteResponsavel.ts";
 export type { GetResponsaveisQueryKey } from "./hooks/responsavel/useGetResponsaveis.ts";
-export type { ListarOpcoesResponsaveisQueryKey } from "./hooks/responsavel/useListarOpcoesResponsaveis.ts";
+export type { GetResponsavelByIdQueryKey } from "./hooks/responsavel/useGetResponsavelById.ts";
+export type { ListResponsaveisQueryKey } from "./hooks/responsavel/useListResponsaveis.ts";
+export type { UnarchiveResponsavelMutationKey } from "./hooks/responsavel/useUnarchiveResponsavel.ts";
+export type { UpdateResponsavelMutationKey } from "./hooks/responsavel/useUpdateResponsavel.ts";
 export type { ArchiveUserMutationKey } from "./hooks/user/useArchiveUser.ts";
 export type { CreateUserMutationKey } from "./hooks/user/useCreateUser.ts";
 export type { DeleteUserMutationKey } from "./hooks/user/useDeleteUser.ts";
@@ -126,33 +126,14 @@ export type {
   UserResponseDTORoleEnumKey,
 } from "./types/UserResponseDTO.ts";
 export type {
-  ArquivarAluno204,
-  ArquivarAluno404,
-  ArquivarAluno409,
-  ArquivarAluno500,
-  ArquivarAlunoMutation,
-  ArquivarAlunoMutationResponse,
-  ArquivarAlunoPathParams,
-} from "./types/aluno/ArquivarAluno.ts";
-export type {
-  AtualizarAluno200,
-  AtualizarAluno400,
-  AtualizarAluno404,
-  AtualizarAluno409,
-  AtualizarAluno500,
-  AtualizarAlunoMutation,
-  AtualizarAlunoMutationRequest,
-  AtualizarAlunoMutationResponse,
-  AtualizarAlunoPathParams,
-} from "./types/aluno/AtualizarAluno.ts";
-export type {
-  BuscarAlunoPorId200,
-  BuscarAlunoPorId404,
-  BuscarAlunoPorId500,
-  BuscarAlunoPorIdPathParams,
-  BuscarAlunoPorIdQuery,
-  BuscarAlunoPorIdQueryResponse,
-} from "./types/aluno/BuscarAlunoPorId.ts";
+  ArchiveAluno204,
+  ArchiveAluno404,
+  ArchiveAluno409,
+  ArchiveAluno500,
+  ArchiveAlunoMutation,
+  ArchiveAlunoMutationResponse,
+  ArchiveAlunoPathParams,
+} from "./types/aluno/ArchiveAluno.ts";
 export type {
   CriarAluno201,
   CriarAluno400,
@@ -163,23 +144,22 @@ export type {
   CriarAlunoMutationResponse,
 } from "./types/aluno/CriarAluno.ts";
 export type {
-  DeletarAluno204,
-  DeletarAluno404,
-  DeletarAluno409,
-  DeletarAluno500,
-  DeletarAlunoMutation,
-  DeletarAlunoMutationResponse,
-  DeletarAlunoPathParams,
-} from "./types/aluno/DeletarAluno.ts";
+  DeleteAluno204,
+  DeleteAluno404,
+  DeleteAluno409,
+  DeleteAluno500,
+  DeleteAlunoMutation,
+  DeleteAlunoMutationResponse,
+  DeleteAlunoPathParams,
+} from "./types/aluno/DeleteAluno.ts";
 export type {
-  DesarquivarAluno204,
-  DesarquivarAluno404,
-  DesarquivarAluno409,
-  DesarquivarAluno500,
-  DesarquivarAlunoMutation,
-  DesarquivarAlunoMutationResponse,
-  DesarquivarAlunoPathParams,
-} from "./types/aluno/DesarquivarAluno.ts";
+  GetAlunoById200,
+  GetAlunoById404,
+  GetAlunoById500,
+  GetAlunoByIdPathParams,
+  GetAlunoByIdQuery,
+  GetAlunoByIdQueryResponse,
+} from "./types/aluno/GetAlunoById.ts";
 export type {
   GetAlunos200,
   GetAlunos400,
@@ -189,6 +169,13 @@ export type {
   GetAlunosQueryResponse,
 } from "./types/aluno/GetAlunos.ts";
 export type {
+  GetAlunosByResponsavel200,
+  GetAlunosByResponsavel500,
+  GetAlunosByResponsavelPathParams,
+  GetAlunosByResponsavelQuery,
+  GetAlunosByResponsavelQueryResponse,
+} from "./types/aluno/GetAlunosByResponsavel.ts";
+export type {
   GetAlunosKpis200,
   GetAlunosKpis400,
   GetAlunosKpis500,
@@ -196,18 +183,31 @@ export type {
   GetAlunosKpisQueryResponse,
 } from "./types/aluno/GetAlunosKpis.ts";
 export type {
-  ListarAlunosPorResponsavel200,
-  ListarAlunosPorResponsavel500,
-  ListarAlunosPorResponsavelPathParams,
-  ListarAlunosPorResponsavelQuery,
-  ListarAlunosPorResponsavelQueryResponse,
-} from "./types/aluno/ListarAlunosPorResponsavel.ts";
+  ListAlunos200,
+  ListAlunos500,
+  ListAlunosQuery,
+  ListAlunosQueryResponse,
+} from "./types/aluno/ListAlunos.ts";
 export type {
-  ListarOpcoesAlunos200,
-  ListarOpcoesAlunos500,
-  ListarOpcoesAlunosQuery,
-  ListarOpcoesAlunosQueryResponse,
-} from "./types/aluno/ListarOpcoesAlunos.ts";
+  UnarchiveAluno204,
+  UnarchiveAluno404,
+  UnarchiveAluno409,
+  UnarchiveAluno500,
+  UnarchiveAlunoMutation,
+  UnarchiveAlunoMutationResponse,
+  UnarchiveAlunoPathParams,
+} from "./types/aluno/UnarchiveAluno.ts";
+export type {
+  UpdateAluno200,
+  UpdateAluno400,
+  UpdateAluno404,
+  UpdateAluno409,
+  UpdateAluno500,
+  UpdateAlunoMutation,
+  UpdateAlunoMutationRequest,
+  UpdateAlunoMutationResponse,
+  UpdateAlunoPathParams,
+} from "./types/aluno/UpdateAluno.ts";
 export type {
   CreateAtendimento201,
   CreateAtendimento400,
@@ -461,60 +461,33 @@ export type {
   UpdateDespesaPathParams,
 } from "./types/financeiro/UpdateDespesa.ts";
 export type {
-  ArquivarResponsavel204,
-  ArquivarResponsavel404,
-  ArquivarResponsavel409,
-  ArquivarResponsavel500,
-  ArquivarResponsavelMutation,
-  ArquivarResponsavelMutationResponse,
-  ArquivarResponsavelPathParams,
-} from "./types/responsavel/ArquivarResponsavel.ts";
+  ArchiveResponsavel204,
+  ArchiveResponsavel404,
+  ArchiveResponsavel409,
+  ArchiveResponsavel500,
+  ArchiveResponsavelMutation,
+  ArchiveResponsavelMutationResponse,
+  ArchiveResponsavelPathParams,
+} from "./types/responsavel/ArchiveResponsavel.ts";
 export type {
-  AtualizarResponsavel200,
-  AtualizarResponsavel400,
-  AtualizarResponsavel404,
-  AtualizarResponsavel409,
-  AtualizarResponsavel500,
-  AtualizarResponsavelMutation,
-  AtualizarResponsavelMutationRequest,
-  AtualizarResponsavelMutationResponse,
-  AtualizarResponsavelPathParams,
-} from "./types/responsavel/AtualizarResponsavel.ts";
+  CreateResponsavel201,
+  CreateResponsavel400,
+  CreateResponsavel409,
+  CreateResponsavel500,
+  CreateResponsavelMutation,
+  CreateResponsavelMutationRequest,
+  CreateResponsavelMutationResponse,
+} from "./types/responsavel/CreateResponsavel.ts";
 export type {
-  BuscarResponsavelPorId200,
-  BuscarResponsavelPorId404,
-  BuscarResponsavelPorId500,
-  BuscarResponsavelPorIdPathParams,
-  BuscarResponsavelPorIdQuery,
-  BuscarResponsavelPorIdQueryResponse,
-} from "./types/responsavel/BuscarResponsavelPorId.ts";
-export type {
-  CriarResponsavel201,
-  CriarResponsavel400,
-  CriarResponsavel409,
-  CriarResponsavel500,
-  CriarResponsavelMutation,
-  CriarResponsavelMutationRequest,
-  CriarResponsavelMutationResponse,
-} from "./types/responsavel/CriarResponsavel.ts";
-export type {
-  DeletarResponsavel204,
-  DeletarResponsavel404,
-  DeletarResponsavel409,
-  DeletarResponsavel500,
-  DeletarResponsavelMutation,
-  DeletarResponsavelMutationResponse,
-  DeletarResponsavelPathParams,
-} from "./types/responsavel/DeletarResponsavel.ts";
-export type {
-  DesarquivarResponsavel204,
-  DesarquivarResponsavel404,
-  DesarquivarResponsavel409,
-  DesarquivarResponsavel500,
-  DesarquivarResponsavelMutation,
-  DesarquivarResponsavelMutationResponse,
-  DesarquivarResponsavelPathParams,
-} from "./types/responsavel/DesarquivarResponsavel.ts";
+  DeleteResponsavel204,
+  DeleteResponsavel404,
+  DeleteResponsavel409,
+  DeleteResponsavel500,
+  DeleteResponsavelMutation,
+  DeleteResponsavelMutationResponse,
+  DeleteResponsavelPathParams,
+  DeleteResponsavelQueryParams,
+} from "./types/responsavel/DeleteResponsavel.ts";
 export type {
   GetResponsaveis200,
   GetResponsaveis400,
@@ -524,11 +497,39 @@ export type {
   GetResponsaveisQueryResponse,
 } from "./types/responsavel/GetResponsaveis.ts";
 export type {
-  ListarOpcoesResponsaveis200,
-  ListarOpcoesResponsaveis500,
-  ListarOpcoesResponsaveisQuery,
-  ListarOpcoesResponsaveisQueryResponse,
-} from "./types/responsavel/ListarOpcoesResponsaveis.ts";
+  GetResponsavelById200,
+  GetResponsavelById404,
+  GetResponsavelById500,
+  GetResponsavelByIdPathParams,
+  GetResponsavelByIdQuery,
+  GetResponsavelByIdQueryResponse,
+} from "./types/responsavel/GetResponsavelById.ts";
+export type {
+  ListResponsaveis200,
+  ListResponsaveis500,
+  ListResponsaveisQuery,
+  ListResponsaveisQueryResponse,
+} from "./types/responsavel/ListResponsaveis.ts";
+export type {
+  UnarchiveResponsavel204,
+  UnarchiveResponsavel404,
+  UnarchiveResponsavel409,
+  UnarchiveResponsavel500,
+  UnarchiveResponsavelMutation,
+  UnarchiveResponsavelMutationResponse,
+  UnarchiveResponsavelPathParams,
+} from "./types/responsavel/UnarchiveResponsavel.ts";
+export type {
+  UpdateResponsavel200,
+  UpdateResponsavel400,
+  UpdateResponsavel404,
+  UpdateResponsavel409,
+  UpdateResponsavel500,
+  UpdateResponsavelMutation,
+  UpdateResponsavelMutationRequest,
+  UpdateResponsavelMutationResponse,
+  UpdateResponsavelPathParams,
+} from "./types/responsavel/UpdateResponsavel.ts";
 export type {
   ArchiveUser200,
   ArchiveUser404,
@@ -560,46 +561,46 @@ export type {
   ListUsersQuery,
   ListUsersQueryResponse,
 } from "./types/user/ListUsers.ts";
-export { arquivarAluno } from "./hooks/aluno/useArquivarAluno.ts";
-export { arquivarAlunoMutationKey } from "./hooks/aluno/useArquivarAluno.ts";
-export { arquivarAlunoMutationOptions } from "./hooks/aluno/useArquivarAluno.ts";
-export { useArquivarAluno } from "./hooks/aluno/useArquivarAluno.ts";
-export { atualizarAluno } from "./hooks/aluno/useAtualizarAluno.ts";
-export { atualizarAlunoMutationKey } from "./hooks/aluno/useAtualizarAluno.ts";
-export { atualizarAlunoMutationOptions } from "./hooks/aluno/useAtualizarAluno.ts";
-export { useAtualizarAluno } from "./hooks/aluno/useAtualizarAluno.ts";
-export { buscarAlunoPorId } from "./hooks/aluno/useBuscarAlunoPorId.ts";
-export { buscarAlunoPorIdQueryKey } from "./hooks/aluno/useBuscarAlunoPorId.ts";
-export { buscarAlunoPorIdQueryOptions } from "./hooks/aluno/useBuscarAlunoPorId.ts";
-export { useBuscarAlunoPorId } from "./hooks/aluno/useBuscarAlunoPorId.ts";
+export { archiveAluno } from "./hooks/aluno/useArchiveAluno.ts";
+export { archiveAlunoMutationKey } from "./hooks/aluno/useArchiveAluno.ts";
+export { archiveAlunoMutationOptions } from "./hooks/aluno/useArchiveAluno.ts";
+export { useArchiveAluno } from "./hooks/aluno/useArchiveAluno.ts";
 export { criarAluno } from "./hooks/aluno/useCriarAluno.ts";
 export { criarAlunoMutationKey } from "./hooks/aluno/useCriarAluno.ts";
 export { criarAlunoMutationOptions } from "./hooks/aluno/useCriarAluno.ts";
 export { useCriarAluno } from "./hooks/aluno/useCriarAluno.ts";
-export { deletarAluno } from "./hooks/aluno/useDeletarAluno.ts";
-export { deletarAlunoMutationKey } from "./hooks/aluno/useDeletarAluno.ts";
-export { deletarAlunoMutationOptions } from "./hooks/aluno/useDeletarAluno.ts";
-export { useDeletarAluno } from "./hooks/aluno/useDeletarAluno.ts";
-export { desarquivarAluno } from "./hooks/aluno/useDesarquivarAluno.ts";
-export { desarquivarAlunoMutationKey } from "./hooks/aluno/useDesarquivarAluno.ts";
-export { desarquivarAlunoMutationOptions } from "./hooks/aluno/useDesarquivarAluno.ts";
-export { useDesarquivarAluno } from "./hooks/aluno/useDesarquivarAluno.ts";
+export { deleteAluno } from "./hooks/aluno/useDeleteAluno.ts";
+export { deleteAlunoMutationKey } from "./hooks/aluno/useDeleteAluno.ts";
+export { deleteAlunoMutationOptions } from "./hooks/aluno/useDeleteAluno.ts";
+export { useDeleteAluno } from "./hooks/aluno/useDeleteAluno.ts";
+export { getAlunoById } from "./hooks/aluno/useGetAlunoById.ts";
+export { getAlunoByIdQueryKey } from "./hooks/aluno/useGetAlunoById.ts";
+export { getAlunoByIdQueryOptions } from "./hooks/aluno/useGetAlunoById.ts";
+export { useGetAlunoById } from "./hooks/aluno/useGetAlunoById.ts";
 export { getAlunos } from "./hooks/aluno/useGetAlunos.ts";
 export { getAlunosQueryKey } from "./hooks/aluno/useGetAlunos.ts";
 export { getAlunosQueryOptions } from "./hooks/aluno/useGetAlunos.ts";
 export { useGetAlunos } from "./hooks/aluno/useGetAlunos.ts";
+export { getAlunosByResponsavel } from "./hooks/aluno/useGetAlunosByResponsavel.ts";
+export { getAlunosByResponsavelQueryKey } from "./hooks/aluno/useGetAlunosByResponsavel.ts";
+export { getAlunosByResponsavelQueryOptions } from "./hooks/aluno/useGetAlunosByResponsavel.ts";
+export { useGetAlunosByResponsavel } from "./hooks/aluno/useGetAlunosByResponsavel.ts";
 export { getAlunosKpis } from "./hooks/aluno/useGetAlunosKpis.ts";
 export { getAlunosKpisQueryKey } from "./hooks/aluno/useGetAlunosKpis.ts";
 export { getAlunosKpisQueryOptions } from "./hooks/aluno/useGetAlunosKpis.ts";
 export { useGetAlunosKpis } from "./hooks/aluno/useGetAlunosKpis.ts";
-export { listarAlunosPorResponsavel } from "./hooks/aluno/useListarAlunosPorResponsavel.ts";
-export { listarAlunosPorResponsavelQueryKey } from "./hooks/aluno/useListarAlunosPorResponsavel.ts";
-export { listarAlunosPorResponsavelQueryOptions } from "./hooks/aluno/useListarAlunosPorResponsavel.ts";
-export { useListarAlunosPorResponsavel } from "./hooks/aluno/useListarAlunosPorResponsavel.ts";
-export { listarOpcoesAlunos } from "./hooks/aluno/useListarOpcoesAlunos.ts";
-export { listarOpcoesAlunosQueryKey } from "./hooks/aluno/useListarOpcoesAlunos.ts";
-export { listarOpcoesAlunosQueryOptions } from "./hooks/aluno/useListarOpcoesAlunos.ts";
-export { useListarOpcoesAlunos } from "./hooks/aluno/useListarOpcoesAlunos.ts";
+export { listAlunos } from "./hooks/aluno/useListAlunos.ts";
+export { listAlunosQueryKey } from "./hooks/aluno/useListAlunos.ts";
+export { listAlunosQueryOptions } from "./hooks/aluno/useListAlunos.ts";
+export { useListAlunos } from "./hooks/aluno/useListAlunos.ts";
+export { unarchiveAluno } from "./hooks/aluno/useUnarchiveAluno.ts";
+export { unarchiveAlunoMutationKey } from "./hooks/aluno/useUnarchiveAluno.ts";
+export { unarchiveAlunoMutationOptions } from "./hooks/aluno/useUnarchiveAluno.ts";
+export { useUnarchiveAluno } from "./hooks/aluno/useUnarchiveAluno.ts";
+export { updateAluno } from "./hooks/aluno/useUpdateAluno.ts";
+export { updateAlunoMutationKey } from "./hooks/aluno/useUpdateAluno.ts";
+export { updateAlunoMutationOptions } from "./hooks/aluno/useUpdateAluno.ts";
+export { useUpdateAluno } from "./hooks/aluno/useUpdateAluno.ts";
 export { createAtendimento } from "./hooks/atendimento/useCreateAtendimento.ts";
 export { createAtendimentoMutationKey } from "./hooks/atendimento/useCreateAtendimento.ts";
 export { createAtendimentoMutationOptions } from "./hooks/atendimento/useCreateAtendimento.ts";
@@ -716,38 +717,38 @@ export { updateDespesa } from "./hooks/financeiro/useUpdateDespesa.ts";
 export { updateDespesaMutationKey } from "./hooks/financeiro/useUpdateDespesa.ts";
 export { updateDespesaMutationOptions } from "./hooks/financeiro/useUpdateDespesa.ts";
 export { useUpdateDespesa } from "./hooks/financeiro/useUpdateDespesa.ts";
-export { arquivarResponsavel } from "./hooks/responsavel/useArquivarResponsavel.ts";
-export { arquivarResponsavelMutationKey } from "./hooks/responsavel/useArquivarResponsavel.ts";
-export { arquivarResponsavelMutationOptions } from "./hooks/responsavel/useArquivarResponsavel.ts";
-export { useArquivarResponsavel } from "./hooks/responsavel/useArquivarResponsavel.ts";
-export { atualizarResponsavel } from "./hooks/responsavel/useAtualizarResponsavel.ts";
-export { atualizarResponsavelMutationKey } from "./hooks/responsavel/useAtualizarResponsavel.ts";
-export { atualizarResponsavelMutationOptions } from "./hooks/responsavel/useAtualizarResponsavel.ts";
-export { useAtualizarResponsavel } from "./hooks/responsavel/useAtualizarResponsavel.ts";
-export { buscarResponsavelPorId } from "./hooks/responsavel/useBuscarResponsavelPorId.ts";
-export { buscarResponsavelPorIdQueryKey } from "./hooks/responsavel/useBuscarResponsavelPorId.ts";
-export { buscarResponsavelPorIdQueryOptions } from "./hooks/responsavel/useBuscarResponsavelPorId.ts";
-export { useBuscarResponsavelPorId } from "./hooks/responsavel/useBuscarResponsavelPorId.ts";
-export { criarResponsavel } from "./hooks/responsavel/useCriarResponsavel.ts";
-export { criarResponsavelMutationKey } from "./hooks/responsavel/useCriarResponsavel.ts";
-export { criarResponsavelMutationOptions } from "./hooks/responsavel/useCriarResponsavel.ts";
-export { useCriarResponsavel } from "./hooks/responsavel/useCriarResponsavel.ts";
-export { deletarResponsavel } from "./hooks/responsavel/useDeletarResponsavel.ts";
-export { deletarResponsavelMutationKey } from "./hooks/responsavel/useDeletarResponsavel.ts";
-export { deletarResponsavelMutationOptions } from "./hooks/responsavel/useDeletarResponsavel.ts";
-export { useDeletarResponsavel } from "./hooks/responsavel/useDeletarResponsavel.ts";
-export { desarquivarResponsavel } from "./hooks/responsavel/useDesarquivarResponsavel.ts";
-export { desarquivarResponsavelMutationKey } from "./hooks/responsavel/useDesarquivarResponsavel.ts";
-export { desarquivarResponsavelMutationOptions } from "./hooks/responsavel/useDesarquivarResponsavel.ts";
-export { useDesarquivarResponsavel } from "./hooks/responsavel/useDesarquivarResponsavel.ts";
+export { archiveResponsavel } from "./hooks/responsavel/useArchiveResponsavel.ts";
+export { archiveResponsavelMutationKey } from "./hooks/responsavel/useArchiveResponsavel.ts";
+export { archiveResponsavelMutationOptions } from "./hooks/responsavel/useArchiveResponsavel.ts";
+export { useArchiveResponsavel } from "./hooks/responsavel/useArchiveResponsavel.ts";
+export { createResponsavel } from "./hooks/responsavel/useCreateResponsavel.ts";
+export { createResponsavelMutationKey } from "./hooks/responsavel/useCreateResponsavel.ts";
+export { createResponsavelMutationOptions } from "./hooks/responsavel/useCreateResponsavel.ts";
+export { useCreateResponsavel } from "./hooks/responsavel/useCreateResponsavel.ts";
+export { deleteResponsavel } from "./hooks/responsavel/useDeleteResponsavel.ts";
+export { deleteResponsavelMutationKey } from "./hooks/responsavel/useDeleteResponsavel.ts";
+export { deleteResponsavelMutationOptions } from "./hooks/responsavel/useDeleteResponsavel.ts";
+export { useDeleteResponsavel } from "./hooks/responsavel/useDeleteResponsavel.ts";
 export { getResponsaveis } from "./hooks/responsavel/useGetResponsaveis.ts";
 export { getResponsaveisQueryKey } from "./hooks/responsavel/useGetResponsaveis.ts";
 export { getResponsaveisQueryOptions } from "./hooks/responsavel/useGetResponsaveis.ts";
 export { useGetResponsaveis } from "./hooks/responsavel/useGetResponsaveis.ts";
-export { listarOpcoesResponsaveis } from "./hooks/responsavel/useListarOpcoesResponsaveis.ts";
-export { listarOpcoesResponsaveisQueryKey } from "./hooks/responsavel/useListarOpcoesResponsaveis.ts";
-export { listarOpcoesResponsaveisQueryOptions } from "./hooks/responsavel/useListarOpcoesResponsaveis.ts";
-export { useListarOpcoesResponsaveis } from "./hooks/responsavel/useListarOpcoesResponsaveis.ts";
+export { getResponsavelById } from "./hooks/responsavel/useGetResponsavelById.ts";
+export { getResponsavelByIdQueryKey } from "./hooks/responsavel/useGetResponsavelById.ts";
+export { getResponsavelByIdQueryOptions } from "./hooks/responsavel/useGetResponsavelById.ts";
+export { useGetResponsavelById } from "./hooks/responsavel/useGetResponsavelById.ts";
+export { listResponsaveis } from "./hooks/responsavel/useListResponsaveis.ts";
+export { listResponsaveisQueryKey } from "./hooks/responsavel/useListResponsaveis.ts";
+export { listResponsaveisQueryOptions } from "./hooks/responsavel/useListResponsaveis.ts";
+export { useListResponsaveis } from "./hooks/responsavel/useListResponsaveis.ts";
+export { unarchiveResponsavel } from "./hooks/responsavel/useUnarchiveResponsavel.ts";
+export { unarchiveResponsavelMutationKey } from "./hooks/responsavel/useUnarchiveResponsavel.ts";
+export { unarchiveResponsavelMutationOptions } from "./hooks/responsavel/useUnarchiveResponsavel.ts";
+export { useUnarchiveResponsavel } from "./hooks/responsavel/useUnarchiveResponsavel.ts";
+export { updateResponsavel } from "./hooks/responsavel/useUpdateResponsavel.ts";
+export { updateResponsavelMutationKey } from "./hooks/responsavel/useUpdateResponsavel.ts";
+export { updateResponsavelMutationOptions } from "./hooks/responsavel/useUpdateResponsavel.ts";
+export { useUpdateResponsavel } from "./hooks/responsavel/useUpdateResponsavel.ts";
 export { archiveUser } from "./hooks/user/useArchiveUser.ts";
 export { archiveUserMutationKey } from "./hooks/user/useArchiveUser.ts";
 export { archiveUserMutationOptions } from "./hooks/user/useArchiveUser.ts";
@@ -780,30 +781,13 @@ export { getDespesasQueryParamsCategoriaEnum } from "./types/financeiro/GetDespe
 export { addressRequestDTOSchema } from "./zod/addressRequestDTOSchema.ts";
 export { addressResponseDTOSchema } from "./zod/addressResponseDTOSchema.ts";
 export {
-  arquivarAluno204Schema,
-  arquivarAluno404Schema,
-  arquivarAluno409Schema,
-  arquivarAluno500Schema,
-  arquivarAlunoMutationResponseSchema,
-  arquivarAlunoPathParamsSchema,
-} from "./zod/aluno/arquivarAlunoSchema.ts";
-export {
-  atualizarAluno200Schema,
-  atualizarAluno400Schema,
-  atualizarAluno404Schema,
-  atualizarAluno409Schema,
-  atualizarAluno500Schema,
-  atualizarAlunoMutationRequestSchema,
-  atualizarAlunoMutationResponseSchema,
-  atualizarAlunoPathParamsSchema,
-} from "./zod/aluno/atualizarAlunoSchema.ts";
-export {
-  buscarAlunoPorId200Schema,
-  buscarAlunoPorId404Schema,
-  buscarAlunoPorId500Schema,
-  buscarAlunoPorIdPathParamsSchema,
-  buscarAlunoPorIdQueryResponseSchema,
-} from "./zod/aluno/buscarAlunoPorIdSchema.ts";
+  archiveAluno204Schema,
+  archiveAluno404Schema,
+  archiveAluno409Schema,
+  archiveAluno500Schema,
+  archiveAlunoMutationResponseSchema,
+  archiveAlunoPathParamsSchema,
+} from "./zod/aluno/archiveAlunoSchema.ts";
 export {
   criarAluno201Schema,
   criarAluno400Schema,
@@ -813,21 +797,26 @@ export {
   criarAlunoMutationResponseSchema,
 } from "./zod/aluno/criarAlunoSchema.ts";
 export {
-  deletarAluno204Schema,
-  deletarAluno404Schema,
-  deletarAluno409Schema,
-  deletarAluno500Schema,
-  deletarAlunoMutationResponseSchema,
-  deletarAlunoPathParamsSchema,
-} from "./zod/aluno/deletarAlunoSchema.ts";
+  deleteAluno204Schema,
+  deleteAluno404Schema,
+  deleteAluno409Schema,
+  deleteAluno500Schema,
+  deleteAlunoMutationResponseSchema,
+  deleteAlunoPathParamsSchema,
+} from "./zod/aluno/deleteAlunoSchema.ts";
 export {
-  desarquivarAluno204Schema,
-  desarquivarAluno404Schema,
-  desarquivarAluno409Schema,
-  desarquivarAluno500Schema,
-  desarquivarAlunoMutationResponseSchema,
-  desarquivarAlunoPathParamsSchema,
-} from "./zod/aluno/desarquivarAlunoSchema.ts";
+  getAlunoById200Schema,
+  getAlunoById404Schema,
+  getAlunoById500Schema,
+  getAlunoByIdPathParamsSchema,
+  getAlunoByIdQueryResponseSchema,
+} from "./zod/aluno/getAlunoByIdSchema.ts";
+export {
+  getAlunosByResponsavel200Schema,
+  getAlunosByResponsavel500Schema,
+  getAlunosByResponsavelPathParamsSchema,
+  getAlunosByResponsavelQueryResponseSchema,
+} from "./zod/aluno/getAlunosByResponsavelSchema.ts";
 export {
   getAlunosKpis200Schema,
   getAlunosKpis400Schema,
@@ -842,16 +831,28 @@ export {
   getAlunosQueryResponseSchema,
 } from "./zod/aluno/getAlunosSchema.ts";
 export {
-  listarAlunosPorResponsavel200Schema,
-  listarAlunosPorResponsavel500Schema,
-  listarAlunosPorResponsavelPathParamsSchema,
-  listarAlunosPorResponsavelQueryResponseSchema,
-} from "./zod/aluno/listarAlunosPorResponsavelSchema.ts";
+  listAlunos200Schema,
+  listAlunos500Schema,
+  listAlunosQueryResponseSchema,
+} from "./zod/aluno/listAlunosSchema.ts";
 export {
-  listarOpcoesAlunos200Schema,
-  listarOpcoesAlunos500Schema,
-  listarOpcoesAlunosQueryResponseSchema,
-} from "./zod/aluno/listarOpcoesAlunosSchema.ts";
+  unarchiveAluno204Schema,
+  unarchiveAluno404Schema,
+  unarchiveAluno409Schema,
+  unarchiveAluno500Schema,
+  unarchiveAlunoMutationResponseSchema,
+  unarchiveAlunoPathParamsSchema,
+} from "./zod/aluno/unarchiveAlunoSchema.ts";
+export {
+  updateAluno200Schema,
+  updateAluno400Schema,
+  updateAluno404Schema,
+  updateAluno409Schema,
+  updateAluno500Schema,
+  updateAlunoMutationRequestSchema,
+  updateAlunoMutationResponseSchema,
+  updateAlunoPathParamsSchema,
+} from "./zod/aluno/updateAlunoSchema.ts";
 export { alunoAtendimentosKpisSchema } from "./zod/alunoAtendimentosKpisSchema.ts";
 export { alunoRequestDTOSchema } from "./zod/alunoRequestDTOSchema.ts";
 export { alunoResponseDTOSchema } from "./zod/alunoResponseDTOSchema.ts";
@@ -1109,54 +1110,30 @@ export { pageDTOResponsavelResponseDTOSchema } from "./zod/pageDTOResponsavelRes
 export { problemResponseDTOSchema } from "./zod/problemResponseDTOSchema.ts";
 export { responsaveisListDTOSchema } from "./zod/responsaveisListDTOSchema.ts";
 export {
-  arquivarResponsavel204Schema,
-  arquivarResponsavel404Schema,
-  arquivarResponsavel409Schema,
-  arquivarResponsavel500Schema,
-  arquivarResponsavelMutationResponseSchema,
-  arquivarResponsavelPathParamsSchema,
-} from "./zod/responsavel/arquivarResponsavelSchema.ts";
+  archiveResponsavel204Schema,
+  archiveResponsavel404Schema,
+  archiveResponsavel409Schema,
+  archiveResponsavel500Schema,
+  archiveResponsavelMutationResponseSchema,
+  archiveResponsavelPathParamsSchema,
+} from "./zod/responsavel/archiveResponsavelSchema.ts";
 export {
-  atualizarResponsavel200Schema,
-  atualizarResponsavel400Schema,
-  atualizarResponsavel404Schema,
-  atualizarResponsavel409Schema,
-  atualizarResponsavel500Schema,
-  atualizarResponsavelMutationRequestSchema,
-  atualizarResponsavelMutationResponseSchema,
-  atualizarResponsavelPathParamsSchema,
-} from "./zod/responsavel/atualizarResponsavelSchema.ts";
+  createResponsavel201Schema,
+  createResponsavel400Schema,
+  createResponsavel409Schema,
+  createResponsavel500Schema,
+  createResponsavelMutationRequestSchema,
+  createResponsavelMutationResponseSchema,
+} from "./zod/responsavel/createResponsavelSchema.ts";
 export {
-  buscarResponsavelPorId200Schema,
-  buscarResponsavelPorId404Schema,
-  buscarResponsavelPorId500Schema,
-  buscarResponsavelPorIdPathParamsSchema,
-  buscarResponsavelPorIdQueryResponseSchema,
-} from "./zod/responsavel/buscarResponsavelPorIdSchema.ts";
-export {
-  criarResponsavel201Schema,
-  criarResponsavel400Schema,
-  criarResponsavel409Schema,
-  criarResponsavel500Schema,
-  criarResponsavelMutationRequestSchema,
-  criarResponsavelMutationResponseSchema,
-} from "./zod/responsavel/criarResponsavelSchema.ts";
-export {
-  deletarResponsavel204Schema,
-  deletarResponsavel404Schema,
-  deletarResponsavel409Schema,
-  deletarResponsavel500Schema,
-  deletarResponsavelMutationResponseSchema,
-  deletarResponsavelPathParamsSchema,
-} from "./zod/responsavel/deletarResponsavelSchema.ts";
-export {
-  desarquivarResponsavel204Schema,
-  desarquivarResponsavel404Schema,
-  desarquivarResponsavel409Schema,
-  desarquivarResponsavel500Schema,
-  desarquivarResponsavelMutationResponseSchema,
-  desarquivarResponsavelPathParamsSchema,
-} from "./zod/responsavel/desarquivarResponsavelSchema.ts";
+  deleteResponsavel204Schema,
+  deleteResponsavel404Schema,
+  deleteResponsavel409Schema,
+  deleteResponsavel500Schema,
+  deleteResponsavelMutationResponseSchema,
+  deleteResponsavelPathParamsSchema,
+  deleteResponsavelQueryParamsSchema,
+} from "./zod/responsavel/deleteResponsavelSchema.ts";
 export {
   getResponsaveis200Schema,
   getResponsaveis400Schema,
@@ -1165,10 +1142,35 @@ export {
   getResponsaveisQueryResponseSchema,
 } from "./zod/responsavel/getResponsaveisSchema.ts";
 export {
-  listarOpcoesResponsaveis200Schema,
-  listarOpcoesResponsaveis500Schema,
-  listarOpcoesResponsaveisQueryResponseSchema,
-} from "./zod/responsavel/listarOpcoesResponsaveisSchema.ts";
+  getResponsavelById200Schema,
+  getResponsavelById404Schema,
+  getResponsavelById500Schema,
+  getResponsavelByIdPathParamsSchema,
+  getResponsavelByIdQueryResponseSchema,
+} from "./zod/responsavel/getResponsavelByIdSchema.ts";
+export {
+  listResponsaveis200Schema,
+  listResponsaveis500Schema,
+  listResponsaveisQueryResponseSchema,
+} from "./zod/responsavel/listResponsaveisSchema.ts";
+export {
+  unarchiveResponsavel204Schema,
+  unarchiveResponsavel404Schema,
+  unarchiveResponsavel409Schema,
+  unarchiveResponsavel500Schema,
+  unarchiveResponsavelMutationResponseSchema,
+  unarchiveResponsavelPathParamsSchema,
+} from "./zod/responsavel/unarchiveResponsavelSchema.ts";
+export {
+  updateResponsavel200Schema,
+  updateResponsavel400Schema,
+  updateResponsavel404Schema,
+  updateResponsavel409Schema,
+  updateResponsavel500Schema,
+  updateResponsavelMutationRequestSchema,
+  updateResponsavelMutationResponseSchema,
+  updateResponsavelPathParamsSchema,
+} from "./zod/responsavel/updateResponsavelSchema.ts";
 export { responsavelRequestDTOSchema } from "./zod/responsavelRequestDTOSchema.ts";
 export { responsavelResponseDTOSchema } from "./zod/responsavelResponseDTOSchema.ts";
 export {

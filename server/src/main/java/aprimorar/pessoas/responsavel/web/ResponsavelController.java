@@ -46,7 +46,7 @@ public class ResponsavelController {
     }
 
     @PostMapping
-    @Operation(operationId = "criarResponsavel", description = "Cria um novo responsável")
+    @Operation(operationId = "createResponsavel", description = "Cria um novo responsável")
     @ApiResponse(responseCode = "201", description = "Responsável criado com sucesso")
     @ApiResponse(
         responseCode = "400",
@@ -90,7 +90,7 @@ public class ResponsavelController {
     }
 
     @GetMapping("/options")
-    @Operation(operationId = "listarOpcoesResponsaveis", description = "Retorna uma lista de responsáveis para dropdown")
+    @Operation(operationId = "listResponsaveis", description = "Retorna uma lista de responsáveis para dropdown")
     @ApiResponse(responseCode = "200", description = "Lista de opções retornada com sucesso.")
     @ApiResponse(
         responseCode = "500",
@@ -102,7 +102,7 @@ public class ResponsavelController {
     }
 
     @GetMapping("/{responsavelId}")
-    @Operation(operationId = "buscarResponsavelPorId", description = "Retorna um responsável por ID")
+    @Operation(operationId = "getResponsavelById", description = "Retorna um responsável por ID")
     @ApiResponse(responseCode = "200", description = "Responsável retornado com sucesso")
     @ApiResponse(
         responseCode = "404",
@@ -120,7 +120,7 @@ public class ResponsavelController {
     }
 
     @PatchMapping("/{responsavelId}")
-    @Operation(operationId = "atualizarResponsavel", description = "Atualiza um responsável por ID")
+    @Operation(operationId = "updateResponsavel", description = "Atualiza um responsável por ID")
     @ApiResponse(responseCode = "200", description = "Responsável atualizado com sucesso")
     @ApiResponse(
         responseCode = "400",
@@ -152,7 +152,7 @@ public class ResponsavelController {
     }
 
     @PatchMapping("/{responsavelId}/archive")
-    @Operation(operationId = "arquivarResponsavel", description = "Arquiva um responsável por ID")
+    @Operation(operationId = "archiveResponsavel", description = "Arquiva um responsável por ID")
     @ApiResponse(responseCode = "204", description = "Responsável arquivado com sucesso")
     @ApiResponse(
         responseCode = "404",
@@ -175,7 +175,7 @@ public class ResponsavelController {
     }
 
     @PatchMapping("/{responsavelId}/unarchive")
-    @Operation(operationId = "desarquivarResponsavel", description = "Desarquiva um responsável por ID")
+    @Operation(operationId = "unarchiveResponsavel", description = "Desarquiva um responsável por ID")
     @ApiResponse(responseCode = "204", description = "Responsável desarquivado com sucesso")
     @ApiResponse(
         responseCode = "404",
@@ -198,7 +198,7 @@ public class ResponsavelController {
     }
 
     @DeleteMapping("/{responsavelId}")
-    @Operation(operationId = "deletarResponsavel", description = "Deleta um responsável por ID")
+    @Operation(operationId = "deleteResponsavel", description = "Deleta um responsável por ID")
     @ApiResponse(responseCode = "204", description = "Responsável deletado com sucesso")
     @ApiResponse(
         responseCode = "404",
@@ -215,8 +215,8 @@ public class ResponsavelController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<Void> deleteResponsavel(@PathVariable UUID responsavelId) {
-        responsavelMutationService.deleteResponsavel(responsavelId);
+    public ResponseEntity<Void> deleteResponsavel(@PathVariable UUID responsavelId, @RequestParam(required = false, defaultValue = "false") boolean cascade) {
+        responsavelMutationService.deleteResponsavel(responsavelId, cascade);
         return ResponseEntity.noContent().build();
     }
 }
