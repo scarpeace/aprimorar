@@ -44,7 +44,7 @@ frontend-build:
     paths:
       - client/node_modules
   script:
-    - cd client && npm ci && npm run build
+    - cd client && VITE_API_URL=/api npm ci && VITE_API_URL=/api npm run build
   artifacts:
     paths:
       - client/dist/
@@ -78,33 +78,21 @@ frontend-docker:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build -t $FRONTEND_IMAGE ./client
+    - docker build --build-arg VITE_API_URL=/api -t $FRONTEND_IMAGE ./client
     - docker push $FRONTEND_IMAGE
   only:
     - main
 
-backend-deploy:
+stack-deploy:
   stage: deploy
   image: curlimages/curl:latest
   needs:
     - backend-docker
-  script:
-    - |
-      curl --fail -k -X GET \
-        "http://109.123.255.19:8000/api/v1/deploy?uuid=$COOLIFY_BACKEND_UUID&force=false" \
-        -H "Authorization: Bearer $COOLIFY_TOKEN"
-  only:
-    - main
-
-frontend-deploy:
-  stage: deploy
-  image: curlimages/curl:latest
-  needs:
     - frontend-docker
   script:
     - |
       curl --fail -k -X GET \
-        "http://109.123.255.19:8000/api/v1/deploy?uuid=$COOLIFY_FRONTEND_UUID&force=false" \
+        "http://109.123.255.19:8000/api/v1/deploy?uuid=$COOLIFY_STACK_UUID&force=false" \
         -H "Authorization: Bearer $COOLIFY_TOKEN"
   only:
     - main
