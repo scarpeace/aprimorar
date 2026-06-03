@@ -57,6 +57,10 @@ backend-docker:
   needs:
     - backend-build
   before_script:
+    - mkdir -p server/src/main/resources/jwt
+    - openssl genrsa -out server/src/main/resources/jwt/app.key 2048
+    - openssl rsa -in server/src/main/resources/jwt/app.key -pubout -out server/src/main/resources/jwt/app.pub
+    - chmod +x server/mvnw
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker build -t $BACKEND_IMAGE ./server
