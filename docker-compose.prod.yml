@@ -1,12 +1,11 @@
-services:
+# Docker compose para referencia do que está rodando em produção, não funciona local
 
+services:
   backend:
     image: registry.gitlab.com/scarpellini1/aprimorar/server:latest
     restart: always
-    depends_on:
-      - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres://aprimorar_prod:5dQg4PzwzjHr3L67wcYkAB9nLAENRY6CYOJivHFkgemBsdI37mGZBvwIIEHRjsYt@dfdcryvfr7dr17yc3vpbdgon:5432/postgres/aprimorar-db
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     expose:
