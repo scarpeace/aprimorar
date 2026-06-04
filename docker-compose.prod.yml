@@ -1,28 +1,14 @@
 services:
-  db:
-    image: postgres:15-alpine
-    restart: always
-    environment:
-      POSTGRES_DB: aprimorar
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d aprimorar"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   backend:
     image: registry.gitlab.com/scarpellini1/aprimorar/server:latest
     restart: always
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     environment:
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres://aprimorar_prod:5dQg4PzwzjHr3L67wcYkAB9nLAENRY6CYOJivHFkgemBsdI37mGZBvwIIEHRjsYt@dfdcryvfr7dr17yc3vpbdgon:5432/postgres/aprimorar-db
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     expose:
       - "8080"
 
@@ -33,6 +19,3 @@ services:
       - "80"
     depends_on:
       - backend
-
-volumes:
-  pg_data:
