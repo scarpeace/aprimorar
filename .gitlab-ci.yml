@@ -63,8 +63,8 @@ backend-docker:
     - chmod +x server/mvnw
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build -t $BACKEND_IMAGE ./server
-    - docker push $BACKEND_IMAGE
+    - docker build -t $SERVER_IMAGE ./server
+    - docker push $SERVER_IMAGE
   only:
     - main
 
@@ -78,8 +78,8 @@ frontend-docker:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build --build-arg VITE_API_URL=/api -t $FRONTEND_IMAGE ./client
-    - docker push $FRONTEND_IMAGE
+    - docker build --build-arg VITE_API_URL=/api -t $CLIENT_IMAGE ./client
+    - docker push $CLIENT_IMAGE
   only:
     - main
 
@@ -92,7 +92,7 @@ stack-deploy:
   script:
     - |
       curl --fail -k -X GET \
-        "http://109.123.255.19:8000/api/v1/deploy?uuid=$COOLIFY_STACK_UUID&force=false" \
+        "http://109.123.255.19:8000/api/v1/deploy?uuid=$COOLIFY_PROJECT_UUID&force=false" \
         -H "Authorization: Bearer $COOLIFY_TOKEN"
   only:
     - main
