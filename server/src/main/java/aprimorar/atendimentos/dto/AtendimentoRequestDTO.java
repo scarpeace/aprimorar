@@ -19,6 +19,7 @@ public record AtendimentoRequestDTO(
     TipoAtendimentoEnum content,
 
     @NotNull(message = "Data/hora de inicio do atendimento e obrigatoria")
+    @Future(message = "A data/hora de inicio deve ser no futuro")
     @Schema(nullable = false, description = "Data/hora de inicio do atendimento", example = "2023-11-20T14:00:00Z")
     Instant startDate,
 

@@ -4,24 +4,17 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   despesaRequestDTOCategoryEnum,
-  despesaRequestDTOSchema,
   type DespesaRequestDTO,
   type DespesaResponseDTO,
 } from "@/kubb";
 import { DESPESA_CATEGORY_LABEL } from "../lib/despesa-category-labels";
 import { useDespesaMutations } from "../hooks/use-despesa-mutations";
+import { despesaFormSchema, type DespesaFormSchema } from "../lib/despesa-form-schema";
 
 type DespesaFormProps = {
   initialData?: DespesaResponseDTO | null;
   onSuccess: () => void;
   onCancel: () => void;
-};
-
-type DespesaFormValues = {
-  amount: number;
-  category: DespesaRequestDTO["category"];
-  date: string;
-  description: string;
 };
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -40,8 +33,8 @@ export function DespesaForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<DespesaFormValues>({
-    resolver: zodResolver(despesaRequestDTOSchema as never),
+  } = useForm<DespesaFormSchema>({
+    resolver: zodResolver(despesaFormSchema),
     defaultValues: {
       amount: initialData?.amount ?? 0,
       category: initialData?.category ?? despesaRequestDTOCategoryEnum.CONTAS,

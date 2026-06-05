@@ -1,4 +1,5 @@
 import { PageLayout } from "@/components/layout/PageLayout";
+import { Modal } from "@/components/ui/modal";
 import { AtendimentosCalendar } from "../components/AtendimentosCalendar";
 import { lazy, Suspense, useState } from "react";
 import { CalendarDays } from "lucide-react";
@@ -27,23 +28,21 @@ export function DashboardPage() {
           <AtendimentosCalendar onCreateAppointment={() => setIsFormOpen(true)} />
         </section>
 
-      {isFormOpen ? (
-        <div className="modal modal-open">
-          <div className="modal-box max-w-4xl border border-base-300 bg-base-100 shadow-2xl">
-            <h3 className="mb-1 text-lg font-bold">Cadastrar Novo Atendimento</h3>
-            <p className="mb-4 text-sm text-base-content/60">
-              Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados.
-            </p>
-            <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
-              <AtendimentoForm
-                initialData={null}
-                onSuccess={handleCloseForm}
-                onCancel={handleCloseForm}
-              />
-            </Suspense>
-          </div>
-        </div>
-        ) : null}
+      <Modal
+        isOpen={isFormOpen}
+        onClose={handleCloseForm}
+        title="Cadastrar Novo Atendimento"
+        description="Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados."
+        size="lg"
+      >
+        <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
+          <AtendimentoForm
+            initialData={null}
+            onSuccess={handleCloseForm}
+            onCancel={handleCloseForm}
+          />
+        </Suspense>
+      </Modal>
 
       </PageLayout>
       </>

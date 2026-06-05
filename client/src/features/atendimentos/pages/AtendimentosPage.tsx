@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { BellElectric, FileUser, Plus, UserCheck, UserCircle } from "lucide-react";
+import { BellElectric, Plus, UserCheck, UserCircle } from "lucide-react";
 import type { AtendimentoResponseDTO } from "@/kubb";
 import { AtendimentoForm } from "../components/AtendimentoForm";
 import { AtendimentosTable } from "../components/AtendimentosTable";
@@ -88,23 +89,19 @@ export function AtendimentosPage() {
           </section>
 
 
-        {isFormOpen && (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-4xl border border-base-300 bg-base-100 shadow-2xl">
-              <h3 className="mb-1 text-lg font-bold">
-                {selectedEvent ? "Editar Atendimento" : "Cadastrar Novo Atendimento"}
-              </h3>
-              <p className="mb-4 text-sm text-base-content/60">
-                Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados.
-              </p>
-              <AtendimentoForm
-                initialData={selectedEvent}
-                onSuccess={handleCloseForm}
-                onCancel={handleCloseForm}
-              />
-            </div>
-          </div>
-        )}
+        <Modal
+          isOpen={isFormOpen}
+          onClose={handleCloseForm}
+          title={selectedEvent ? "Editar Atendimento" : "Cadastrar Novo Atendimento"}
+          description="Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados."
+          size="lg"
+        >
+          <AtendimentoForm
+            initialData={selectedEvent}
+            onSuccess={handleCloseForm}
+            onCancel={handleCloseForm}
+          />
+        </Modal>
       </div>
 
       <PageDateFilterWidget startDate={startDate} endDate={endDate} {...dateFilter} />

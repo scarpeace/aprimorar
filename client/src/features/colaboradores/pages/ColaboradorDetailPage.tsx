@@ -1,4 +1,5 @@
 import { PageLayout } from "@/components/layout/PageLayout";
+import { Modal } from "@/components/ui/modal";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import {
   useFindColaboradorById,
@@ -89,21 +90,19 @@ export function ColaboradorDetailPage() {
         />
       </div>
 
-      {isFormOpen && (
-        <div className="modal modal-open">
-          <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
-            <h3 className="mb-1 text-lg font-bold">Editar Colaborador</h3>
-            <p className="mb-4 text-sm text-base-content/60">
-              Atualize dados pessoais, contato e funcao do colaborador para manter a operacao organizada.
-            </p>
-            <ColaboradorForm
-              initialData={colaboradorQuery.data}
-              onSuccess={() => setIsFormOpen(false)}
-              onCancel={() => setIsFormOpen(false)}
-            />
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        title="Editar Colaborador"
+        description="Atualize dados pessoais, contato e funcao do colaborador para manter a operacao organizada."
+        size="md"
+      >
+        <ColaboradorForm
+          initialData={colaboradorQuery.data}
+          onSuccess={() => setIsFormOpen(false)}
+          onCancel={() => setIsFormOpen(false)}
+        />
+      </Modal>
 
       <PageDateFilterWidget {...dateFilter} />
     </PageLayout>

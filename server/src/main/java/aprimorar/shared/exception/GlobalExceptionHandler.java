@@ -47,9 +47,9 @@ public class GlobalExceptionHandler {
     )
     public ProblemResponseDTO handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> error.getDefaultMessage())
-                .findFirst()
-                .orElse("Erro de validação nos campos informados");
+            .map(error -> error.getDefaultMessage())
+            .findFirst()
+            .orElse("Erro de validação nos campos informados");
 
         log.error("Erro de validação de DTO: {}", errorMessage);
         return new ProblemResponseDTO(

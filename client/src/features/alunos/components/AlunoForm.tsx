@@ -8,7 +8,7 @@ import { ResponsavelSelectDropdown } from "@/features/responsaveis/components/Re
 import { brazilianStates } from "@/lib/utils/brazilianStates";
 import type { AlunoResponseDTO } from "@/kubb";
 import { formatDateForInput } from "@/lib/utils/formatter";
-import { alunoFormSchema, type AlunoFormSchema } from "../lib/studentFormSchema.ts";
+import { alunoFormSchema, type AlunoFormSchema } from "../lib/alunoFormSchema.ts";
 import { useAlunoMutations } from "../hooks/use-aluno-mutations";
 
 interface AlunoFormProps {
@@ -33,11 +33,11 @@ export function AlunoForm({ initialData, onSuccess, onCancel }: AlunoFormProps) 
       school: initialData?.school,
       parentId: initialData?.parentId,
       address: {
-        street: initialData?.address.street ?? "Rua 10",
+        street: initialData?.address.street,
         complement: initialData?.address.complement ?? "N/A",
         district: initialData?.address.district,
         city: initialData?.address.city,
-        state: initialData?.address.state,
+        state: initialData?.address.state ?? brazilianStates.DF,
         zip: initialData?.address.zip,
       },
     },

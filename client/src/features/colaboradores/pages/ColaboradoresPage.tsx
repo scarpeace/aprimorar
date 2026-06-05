@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useGetColaboradoresKpis, type ColaboradorResponseDTO } from "@/kubb";
 import { Plus, UserCheck, UserCircle, UserCog } from "lucide-react";
@@ -76,23 +77,19 @@ export function ColaboradoresPage() {
           <ColaboradoresTable/>
         </section>
 
-        {isFormOpen && (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
-              <h3 className="mb-1 text-lg font-bold">
-                {selectedEmployee ? "Editar Colaborador" : "Cadastrar Novo Colaborador"}
-              </h3>
-              <p className="mb-4 text-sm text-base-content/60">
-                Atualize dados pessoais, contato e funcao do colaborador para manter a operacao organizada.
-              </p>
-              <ColaboradorForm
-                initialData={selectedEmployee}
-                onSuccess={handleCloseForm}
-                onCancel={handleCloseForm}
-              />
-            </div>
-          </div>
-        )}
+        <Modal
+          isOpen={isFormOpen}
+          onClose={handleCloseForm}
+          title={selectedEmployee ? "Editar Colaborador" : "Cadastrar Novo Colaborador"}
+          description="Atualize dados pessoais, contato e funcao do colaborador para manter a operacao organizada."
+          size="md"
+        >
+          <ColaboradorForm
+            initialData={selectedEmployee}
+            onSuccess={handleCloseForm}
+            onCancel={handleCloseForm}
+          />
+        </Modal>
     </PageLayout>
   );
 }

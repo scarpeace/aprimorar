@@ -168,7 +168,7 @@ export function ColaboradorForm({ initialData, onSuccess, onCancel }: Colaborado
           )}
         </fieldset>
 
-        <div className="divider col-span-3 m-0" />
+        <div className="divider col-span-3" />
 
         <fieldset className="fieldset md:col-span-2 mr-3">
           <legend className="fieldset-legend">Rua</legend>

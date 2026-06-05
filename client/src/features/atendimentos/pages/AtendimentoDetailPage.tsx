@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { useGetAtendimentoById } from "@/kubb";
@@ -118,22 +119,19 @@ export function AtendimentoDetailPage() {
           <AtendimentoInfoSection atendimento={atendimentoQuery.data} />
         </section>
 
-      {isFormOpen && (
-        <div className="modal modal-open">
-          <div className="modal-box max-w-4xl border border-base-300 bg-base-100 shadow-2xl">
-            <h3 className="mb-1 text-lg font-bold">Editar Atendimento</h3>
-            <p className="mb-4 text-sm text-base-content/60">
-              Ajuste participantes, horario e valores para manter agenda e
-              financeiro sincronizados.
-            </p>
-            <AtendimentoForm
-              initialData={atendimentoQuery.data}
-              onSuccess={() => setIsFormOpen(false)}
-              onCancel={() => setIsFormOpen(false)}
-            />
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        title="Editar Atendimento"
+        description="Ajuste participantes, horario e valores para manter agenda e financeiro sincronizados."
+        size="lg"
+      >
+        <AtendimentoForm
+          initialData={atendimentoQuery.data}
+          onSuccess={() => setIsFormOpen(false)}
+          onCancel={() => setIsFormOpen(false)}
+        />
+      </Modal>
     </PageLayout>
   );
 }

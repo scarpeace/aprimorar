@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { KpiCard } from "@/components/ui/kpi-card";
+import { Modal } from "@/components/ui/modal";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ResponsavelForm } from "@/features/responsaveis/components/ResponsavelForm";
 import { ResponsaveisTable } from "@/features/responsaveis/components/ResponsaveisTable";
@@ -102,41 +103,33 @@ export function AlunosPage() {
 
         </main>
 
-        {isFormOpen && (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-4xl border border-base-300 bg-base-100 shadow-2xl">
-              <h3 className="mb-1 text-lg font-bold">
-                {selectedStudent ? "Editar Aluno" : "Cadastrar Novo Aluno"}
-              </h3>
-              <p className="mb-4 text-sm text-base-content/60">
-                Atualize dados pessoais, contato e vinculos do aluno para manter a secretaria organizada.
-              </p>
-              <AlunoForm
-                initialData={selectedStudent}
-                onSuccess={handleCloseForm}
-                onCancel={handleCloseForm}
-              />
-            </div>
-          </div>
-        )}
+        <Modal
+          isOpen={isFormOpen}
+          onClose={handleCloseForm}
+          title={selectedStudent ? "Editar Aluno" : "Cadastrar Novo Aluno"}
+          description="Atualize dados pessoais, contato e vinculos do aluno para manter a secretaria organizada."
+          size="lg"
+        >
+          <AlunoForm
+            initialData={selectedStudent}
+            onSuccess={handleCloseForm}
+            onCancel={handleCloseForm}
+          />
+        </Modal>
 
-        {isResponsavelFormOpen && (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
-              <h3 className="mb-1 text-lg font-bold">
-                {selectedParent ? "Editar Responsável" : "Cadastrar Novo Responsável"}
-              </h3>
-              <p className="mb-4 text-sm text-base-content/60">
-                Atualize os dados principais do responsável e mantenha os vínculos organizados.
-              </p>
-              <ResponsavelForm
-                initialData={selectedParent}
-                onSuccess={handleCloseResponsavelForm}
-                onCancel={handleCloseResponsavelForm}
-              />
-            </div>
-          </div>
-        )}
-    </PageLayout>
+        <Modal
+          isOpen={isResponsavelFormOpen}
+          onClose={handleCloseResponsavelForm}
+          title={selectedParent ? "Editar Responsável" : "Cadastrar Novo Responsável"}
+          description="Atualize os dados principais do responsável e mantenha os vínculos organizados."
+          size="md"
+        >
+          <ResponsavelForm
+            initialData={selectedParent}
+            onSuccess={handleCloseResponsavelForm}
+            onCancel={handleCloseResponsavelForm}
+          />
+        </Modal>
+      </PageLayout>
   );
 }

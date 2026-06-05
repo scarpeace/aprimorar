@@ -13,7 +13,7 @@ import { toInstant } from "@/lib/utils/date-utils";
 import { ContentSelectDropdown } from "./ContentSelectDropdown";
 import { atendimentoFormSchema, type AtendimentoFormSchema } from "../lib/appointmentFormSchema.tsx";
 import { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
-import { formatDateTimeLocal } from "@/lib/utils/formatter";
+import { formatDateForInput } from "@/lib/utils/formatter";
 
 function formatDateTimeForInput(dateTimeStr?: string) {
   if (!dateTimeStr) return "";
@@ -58,10 +58,20 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Atendiment
     if (isNaN(start.getTime())) return "";
 
     const hoursInMs = durationValue * 60 * 60 * 1000;
-    const end = new Date(start.getTime() + hoursInMs);
+    const end = new Date(start.getTime() + hoursInMs).toString();
 
-    return formatDateTimeLocal(end);
+    return formatDateForInput(end);
   }, [startDateValue, durationValue]);
+
+  const formattedEndTime = displayEndTime
+    ? new Intl.DateTimeFormat('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date(displayEndTime))
+    : '';
 
   const onSubmit = handleSubmit((data: AtendimentoFormSchema) => {
     const formattedData: AtendimentoRequestDTO = {
@@ -141,7 +151,7 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Atendiment
           <input
             type="text"
             className="input w-full bg-base-200"
-            value={displayEndTime}
+            value={formattedEndTime}
             placeholder="--"
             disabled
           />
@@ -149,7 +159,7 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Atendiment
 
         <div className="flex flex-col sm:flex-row md:col-span-3 gap-3">
           <fieldset className="fieldset w-full">
-            <legend className="fieldset-legend">Preço (receita)</legend>
+            <legend className="fieldset-legend">Valor do atendimento</legend>
             <Controller
               control={control}
               name="price"
@@ -178,7 +188,7 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Atendiment
           </fieldset>
 
           <fieldset className="fieldset w-full">
-            <legend className="fieldset-legend">Pagamento (custo)</legend>
+            <legend className="fieldset-legend">Repasse p/ Colaborador</legend>
             <Controller
               control={control}
               name="payment"

@@ -1,6 +1,7 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { KpiCard } from "@/components/ui/kpi-card";
+import { Modal } from "@/components/ui/modal";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 import { brl } from "@/lib/utils/formatter";
 import {
@@ -105,18 +106,19 @@ export function AlunoDetailPage() {
         />
       </div>
 
-      {isFormOpen && (
-        <div className="modal modal-open">
-          <div className="modal-box max-w-4xl overflow-hidden">
-            <h3 className="font-bold text-lg mb-4">Editar Aluno</h3>
-            <AlunoForm
-              initialData={alunoQuery.data}
-              onSuccess={handleCloseForm}
-              onCancel={handleCloseForm}
-            />
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isFormOpen}
+        onClose={handleCloseForm}
+        title="Editar Aluno"
+        description="Atualize os dados do aluno para manter o cadastro consistente."
+        size="lg"
+      >
+        <AlunoForm
+          initialData={alunoQuery.data}
+          onSuccess={handleCloseForm}
+          onCancel={handleCloseForm}
+        />
+      </Modal>
 
       <PageDateFilterWidget {...dateFilter} />
     </PageLayout>

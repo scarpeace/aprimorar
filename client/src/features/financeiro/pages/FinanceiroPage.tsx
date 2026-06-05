@@ -1,6 +1,7 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import {useGetDespesas,} from "@/kubb";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
 import { Landmark, Plus } from "lucide-react";
@@ -85,20 +86,18 @@ export function FinanceiroPage() {
         />
         </section>
 
-    {isDespesaFormOpen ? (
-      <div className="modal modal-open">
-        <div className="modal-box max-w-lg border border-base-300 bg-base-100 shadow-2xl">
-          <h3 className="mb-1 text-lg font-bold">Nova Despesa</h3>
-              <p className="mb-4 text-sm text-base-content/60">
-                Registre uma nova despesa operacional.
-              </p>
-              <DespesaForm
-                onSuccess={handleCloseDespesaForm}
-                onCancel={handleCloseDespesaForm}
-              />
-            </div>
-          </div>
-      ) : null}
+      <Modal
+        isOpen={isDespesaFormOpen}
+        onClose={handleCloseDespesaForm}
+        title="Nova Despesa"
+        description="Registre uma nova despesa operacional."
+        size="sm"
+      >
+        <DespesaForm
+          onSuccess={handleCloseDespesaForm}
+          onCancel={handleCloseDespesaForm}
+        />
+      </Modal>
       </div>
 
     <PageDateFilterWidget startDate={startDate} endDate={endDate} {...dateFilter} />

@@ -1,18 +1,22 @@
 import { addressFormSchema } from "@/lib/shared/address/forms/addressSchema.ts";
-import { alunoRequestDTOSchema } from "@/kubb/zod";
+import type { AlunoRequestDTO } from "@/kubb";
 import { z } from "zod/v4";
 
-export const alunoFormSchema = alunoRequestDTOSchema.extend({
-  name: z.string().min(1, { message: "Nome do aluno é obrigatório" }),
-  cpf: z.string().min(1, { message: "CPF é obrigatório" }),
-  birthdate: z.string().min(1, { message: "Data de nascimento é obrigatória" })
-      .refine((value) => /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value), {
+const birthdateSchema = z.string()
+  .min(1, { message: "Data de nascimento é obrigatória" })
+  .refine((value) => /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value), {
     message: "Data de nascimento inválida",
   })
   .transform((value) => {
     const [day, month, year] = value.split("/");
     return `${year}-${month}-${day}`;
-  }),
+  });
+
+export const alunoFormSchema: z.ZodType<AlunoRequestDTO> = z.object({
+  name: z.string().min(1, { message: "Nome do aluno é obrigatório" }),
+  cpf: z.string().min(1, { message: "CPF é obrigatório" }),
+  birthdate: birthdateSchema,
+  pix: z.string().optional().nullable(),
   contact: z.string().min(1, { message: "Contato é obrigatório" }),
   email: z.string().min(1, { message: "Email é obrigatório" }),
   school: z.string().min(1, { message: "Escola é obrigatória" }),

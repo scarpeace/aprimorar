@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { PageLayout } from "@/components/layout/PageLayout";
 import type { ResponsavelResponseDTO } from "@/kubb";
 import { Handshake, Plus } from "lucide-react";
@@ -53,23 +54,19 @@ export function ResponsaveisPage() {
           <ResponsaveisTable/>
         </section>
 
-        {isFormOpen && (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
-              <h3 className="mb-1 text-lg font-bold">
-                {selectedParent ? "Editar Responsavel" : "Cadastrar Novo Responsavel"}
-              </h3>
-              <p className="mb-4 text-sm text-base-content/60">
-                Atualize os dados principais do responsavel e mantenha os vinculos organizados.
-              </p>
-              <ResponsavelForm
-                initialData={selectedParent}
-                onSuccess={handleCloseForm}
-                onCancel={handleCloseForm}
-              />
-            </div>
-          </div>
-        )}
+        <Modal
+          isOpen={isFormOpen}
+          onClose={handleCloseForm}
+          title={selectedParent ? "Editar Responsavel" : "Cadastrar Novo Responsavel"}
+          description="Atualize os dados principais do responsavel e mantenha os vinculos organizados."
+          size="md"
+        >
+          <ResponsavelForm
+            initialData={selectedParent}
+            onSuccess={handleCloseForm}
+            onCancel={handleCloseForm}
+          />
+        </Modal>
       </div>
     </PageLayout>
   );
