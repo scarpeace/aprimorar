@@ -12,7 +12,7 @@ const categoryOptions = Object.values(
 export const despesaFormSchema: z.ZodType<DespesaRequestDTO> = z.object({
   amount: z
     .number({ error: "O valor da despesa é obrigatório" })
-    .min(0, { message: "O valor deve ser maior ou igual a zero" }),
+    .positive({ message: "O valor deve ser maior que zero" }),
   category: z.enum(categoryOptions, { error: "A categoria da despesa é obrigatória" }),
   date: z.string().min(1, { message: "A data da despesa é obrigatória" }),
   description: z.string().min(1, { message: "A descrição da despesa é obrigatória" }),

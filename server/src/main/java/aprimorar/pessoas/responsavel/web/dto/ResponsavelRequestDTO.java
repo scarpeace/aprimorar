@@ -14,7 +14,7 @@ public record ResponsavelRequestDTO(
 
         @NotBlank(message = "Email do responsável é obrigatório")
         @Email(message = "Email deve ser um endereço de email válido")
-        @Schema(nullable = false, description = "Email do responsável", example = "[EMAIL_ADDRESS]")
+        @Schema(nullable = false, description = "E-mail do responsável", example = "joao.silva@example.com")
         String email,
 
         @NotBlank(message = "Contato do responsável é obrigatório")
@@ -24,7 +24,7 @@ public record ResponsavelRequestDTO(
         @Schema(nullable = true, description = "Data de nascimento do responsável", example = "1990-01-01")
         LocalDate birthdate,
 
-        @Schema(nullable = true, description = "Pix do responsável", example = "pix@pix.com")
+        @Schema(nullable = true, description = "Chave PIX do responsável", example = "joao.silva@example.com")
         String pix,
 
         @NotBlank(message = "CPF do responsável é obrigatório")

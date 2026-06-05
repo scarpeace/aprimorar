@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@Schema(description = "Payload para criacao ou atualizacao de despesa")
+@Schema(description = "Payload para criação ou atualização de despesa")
 public record DespesaRequestDTO(
     @NotNull
     @Positive
@@ -16,14 +16,14 @@ public record DespesaRequestDTO(
     BigDecimal amount,
 
     @NotNull
-    @Schema(description = "Data de competencia da despesa", example = "2026-05-24T00:00:00Z")
+    @Schema(description = "Data de competência da despesa", example = "2026-05-24T00:00:00Z")
     Instant date,
 
     @NotNull
-    @Schema(description = "Categoria da despesa", example = "OPERACIONAL")
+    @Schema(description = "Categoria da despesa", example = "CONTAS")
     CategoriaDespesaEnum category,
 
     @NotBlank
-    @Schema(description = "Descricao da despesa", example = "Pagamento de internet")
+    @Schema(description = "Descrição da despesa", example = "Pagamento de internet")
     String description
 ) {}

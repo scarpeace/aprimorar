@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 @Schema(description = "Endereço")
 public record AddressRequestDTO(
         @NotBlank(message = "A rua do endereço é obrigatória")
-        @Schema(description = "Rua ou Condomínio", nullable = false, minLength = 3, maxLength = 255)
+        @Schema(description = "Rua, avenida ou condomínio do endereço", nullable = false, minLength = 3, maxLength = 255)
         String street,
 
         @NotBlank(message = "O bairro do endereço é obrigatório")
@@ -21,7 +21,7 @@ public record AddressRequestDTO(
         String city,
 
         @NotNull(message = "Estado do endereço é obrigatório")
-        @Schema(description = "Estado do endereço")
+        @Schema(description = "Estado brasileiro do endereço")
         BrazilianStatesEnum state,
 
         @NotBlank(message = "O CEP do endereço é obrigatório")
