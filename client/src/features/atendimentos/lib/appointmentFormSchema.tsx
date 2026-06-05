@@ -1,6 +1,5 @@
 import {
   atendimentoRequestDTOContentEnum,
-  type AtendimentoRequestDTO,
   type AtendimentoRequestDTOContentEnumKey,
 } from "@/kubb";
 import { z } from "zod/v4";
@@ -9,7 +8,7 @@ const atendimentoContentOptions = Object.values(
   atendimentoRequestDTOContentEnum,
 ) as [AtendimentoRequestDTOContentEnumKey, ...AtendimentoRequestDTOContentEnumKey[]];
 
-export const atendimentoFormSchema: z.ZodType<AtendimentoRequestDTO> = z.object({
+export const atendimentoFormSchema = z.object({
   description: z.string().optional(),
   content: z.enum(atendimentoContentOptions, {
     error: "O tipo do atendimento é obrigatório",

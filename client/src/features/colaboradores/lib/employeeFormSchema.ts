@@ -1,7 +1,6 @@
 import { addressFormSchema } from "@/lib/shared/address/forms/addressSchema.ts";
 import {
   colaboradorRequestDTODutyEnum,
-  type ColaboradorRequestDTO,
   type ColaboradorRequestDTODutyEnumKey,
 } from "@/kubb";
 import { z } from "zod/v4";
@@ -20,7 +19,7 @@ const birthdateSchema = z.string()
     return `${year}-${month}-${day}`;
   });
 
-export const colaboradorFormSchema: z.ZodType<ColaboradorRequestDTO> = z.object({
+export const colaboradorFormSchema = z.object({
   name: z.string().min(1, { message: "Nome do colaborador é obrigatório" }),
   cpf: z.string().min(1, { message: "CPF é obrigatório" }),
   birthdate: birthdateSchema,

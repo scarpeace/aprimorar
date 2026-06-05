@@ -1,6 +1,5 @@
 import {
   despesaRequestDTOCategoryEnum,
-  type DespesaRequestDTO,
   type DespesaRequestDTOCategoryEnumKey,
 } from "@/kubb";
 import { z } from "zod/v4";
@@ -9,7 +8,7 @@ const categoryOptions = Object.values(
   despesaRequestDTOCategoryEnum,
 ) as [DespesaRequestDTOCategoryEnumKey, ...DespesaRequestDTOCategoryEnumKey[]];
 
-export const despesaFormSchema: z.ZodType<DespesaRequestDTO> = z.object({
+export const despesaFormSchema = z.object({
   amount: z
     .number({ error: "O valor da despesa é obrigatório" })
     .positive({ message: "O valor deve ser maior que zero" }),

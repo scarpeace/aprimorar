@@ -1,5 +1,4 @@
 import { addressFormSchema } from "@/lib/shared/address/forms/addressSchema.ts";
-import type { AlunoRequestDTO } from "@/kubb";
 import { z } from "zod/v4";
 
 const birthdateSchema = z.string()
@@ -12,7 +11,7 @@ const birthdateSchema = z.string()
     return `${year}-${month}-${day}`;
   });
 
-export const alunoFormSchema: z.ZodType<AlunoRequestDTO> = z.object({
+export const alunoFormSchema = z.object({
   name: z.string().min(1, { message: "Nome do aluno é obrigatório" }),
   cpf: z.string().min(1, { message: "CPF é obrigatório" }),
   birthdate: birthdateSchema,

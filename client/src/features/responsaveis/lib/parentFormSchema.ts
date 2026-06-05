@@ -1,4 +1,3 @@
-import type { ResponsavelRequestDTO } from "@/kubb";
 import { z } from "zod/v4";
 
 const birthdateSchema = z.string()
@@ -10,7 +9,7 @@ const birthdateSchema = z.string()
     return `${year}-${month}-${day}`;
   });
 
-export const responsavelFormSchema: z.ZodType<ResponsavelRequestDTO> = z.object({
+export const responsavelFormSchema = z.object({
   name: z.string().min(1, { message: "Nome do responsável é obrigatório" }),
   email: z.string().min(1, { message: "Email do responsável é obrigatório" }),
   contact: z.string().min(1, { message: "Contato do responsável é obrigatório" }),

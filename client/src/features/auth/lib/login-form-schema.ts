@@ -1,7 +1,6 @@
-import type { AuthRequestDTO } from "@/kubb";
 import { z } from "zod/v4";
 
-export const loginFormSchema: z.ZodType<AuthRequestDTO> = z.object({
+export const loginFormSchema = z.object({
   email: z
     .string()
     .min(1, { message: "Email é obrigatório" })

@@ -1,5 +1,5 @@
 import { addressRequestDTOStateEnum } from "@/kubb";
-import z from "zod";
+import { z } from "zod/v4";
 
 export const addressFormSchema = z.object({
   street: z.string().min(1, { message: "Rua é obrigatória" }),
