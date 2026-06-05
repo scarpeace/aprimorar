@@ -67,7 +67,7 @@ public class AlunoQueryService implements AlunoQueryApi {
 
     @Transactional(readOnly = true)
     public AlunosKpisDTO getAlunosKpis() {
-        long totalAlunos = alunoRepo.count();
+        long totalAlunos = alunoRepo.countByIdNot(GHOST_STUDENT_ID);
         //TODO: ese andIdNot funciona mas é terrível
         long totalAlunosAtivos = alunoRepo.countByActiveTrueAndIdNot(GHOST_STUDENT_ID);
         return new AlunosKpisDTO(totalAlunos, totalAlunosAtivos);

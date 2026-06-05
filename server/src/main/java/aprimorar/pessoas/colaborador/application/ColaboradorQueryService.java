@@ -64,7 +64,7 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
     }
 
     public ColaboradoresKpisDTO getColaboradoresKpis() {
-        long totalColaboradores = colaboradorRepo.count();
+        long totalColaboradores = colaboradorRepo.countByDutyNot(ColaboradorDutyEnum.SYSTEM);
         long totalColaboradoresAtivos = colaboradorRepo.countByActiveTrueAndDutyNot(ColaboradorDutyEnum.SYSTEM);
         return new ColaboradoresKpisDTO(totalColaboradores, totalColaboradoresAtivos);
     }

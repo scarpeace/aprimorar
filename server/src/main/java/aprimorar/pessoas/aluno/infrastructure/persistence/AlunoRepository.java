@@ -27,4 +27,6 @@ public interface AlunoRepository extends JpaRepository<Aluno, UUID>, JpaSpecific
 
 
     long countByActiveTrueAndIdNot(UUID id);
+
+    long countByIdNot(UUID id);
 }
