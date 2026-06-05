@@ -128,22 +128,6 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
           )}
         </fieldset>
 
-        <fieldset className="fieldset md:col-span-2">
-          <legend className="fieldset-legend">Pix</legend>
-          <input
-            type="text"
-            className="input w-full"
-            {...register("pix")}
-            placeholder="Chave Pix do responsável"
-          />
-          {errors?.pix && (
-            <p className="label text-error">
-              <TriangleAlert className="w-3 h-3" />
-              {errors.pix.message}
-            </p>
-          )}
-        </fieldset>
-
         <fieldset className="fieldset">
           <legend className="fieldset-legend">CPF</legend>
           <input

@@ -3,7 +3,6 @@ import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabe
 import { APPOINTMENT_CONTENT_COLORS } from "@/features/atendimentos/lib/appointment-content-colors";
 import { useGetAtendimentosContentReport } from "@/kubb";
 
-
 type AtendimentoContentLegendProps = {
   startDate: Date;
   endDate: Date;
