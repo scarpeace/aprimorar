@@ -2,11 +2,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { BellElectric, Plus, UserCheck, UserCircle } from "lucide-react";
+import { BellElectric, Plus } from "lucide-react";
 import type { AtendimentoResponseDTO } from "@/kubb";
 import { AtendimentoForm } from "../components/AtendimentoForm";
 import { AtendimentosTable } from "../components/AtendimentosTable";
-import { KpiCard } from "@/components/ui/kpi-card";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter";
 
@@ -37,39 +36,6 @@ export function AtendimentosPage() {
   return (
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-3">
-        <section className="rounded-2xl bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          <div className="flex flex-row justify-between items-center gap-3">
-            <div>
-              <h3 className="text-2xl font-bold text-base-content">Resumo dos Atendimentos</h3>
-              <p className="text-sm text-base-content/60">
-                Visão geral dos atendimentos por status e total.
-              </p>
-            </div>
-
-            <div className="flex gap-3">
-              <KpiCard
-                label="Total Pendentes"
-                value={10}
-                Icon={UserCheck}
-                className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-              />
-
-              <KpiCard
-                label="Total Pagos"
-                value={10}
-                Icon={UserCheck}
-                className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-              />
-              <KpiCard
-                label="Total Desde o início"
-                value={10}
-                Icon={UserCircle}
-                className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-              />
-            </div>
-          </div>
-        </section>
-
           <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
             <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
               <div>
