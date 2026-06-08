@@ -82,7 +82,6 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
     )
     long countByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
-
     @Query(
         """
         SELECT SUM(a.price)

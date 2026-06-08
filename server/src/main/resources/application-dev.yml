@@ -2,8 +2,10 @@ spring:
   docker:
     compose:
       enabled: false
+
   main:
     lazy-initialization: false
+
   jackson:
     time-zone: UTC
 
@@ -15,7 +17,7 @@ spring:
 
   sql:
     init:
-      mode: never
+      mode: always
 
   jpa:
     hibernate:
