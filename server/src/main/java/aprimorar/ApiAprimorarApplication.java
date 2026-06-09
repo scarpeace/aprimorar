@@ -15,4 +15,19 @@ public class ApiAprimorarApplication {
 		SpringApplication.run(ApiAprimorarApplication.class, args);
 	}
 
+ // @Override
+ //    public void run(ApplicationArguments args) {
+ //        if (userRepository.existsByUsername("admin@aprimorar.com")) {
+ //            return;
+ //        }
+
+ //        User user = new User(
+ //            "admin@aprimorar.com",
+ //            passwordEncoder.encode("Freerider"),
+ //            Role.ADMIN
+ //        );
+
+ //        userRepository.save(user);
+ //    }
+
 }

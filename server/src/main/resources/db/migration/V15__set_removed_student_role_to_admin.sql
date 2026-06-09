@@ -1,4 +1,0 @@
-UPDATE tb_students
-SET role = 3,
-    updated_at = CURRENT_TIMESTAMP
-WHERE id = '00000000-0000-0000-0000-000000000000';

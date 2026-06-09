@@ -41,7 +41,6 @@ export function AlunosTable() {
     setCurrentPage(0);
   };
 
-
   if (alunosQuery.isError) {
     return <ErrorCard title="Não foi possível carregar a listagem de Alunos" error={alunosQuery.error}/>;
   }
