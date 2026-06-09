@@ -21,7 +21,7 @@ import aprimorar.atendimentos.dto.ColaboradorAtendimentosKpis;
 import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.atendimentos.infrastructure.persistence.AtendimentoRepository;
 import aprimorar.atendimentos.infrastructure.persistence.AtendimentoSpecifications;
-import aprimorar.pessoas.aluno.AlunoQueryApi;
+import aprimorar.pessoas.events.AlunoQueryApi;
 import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
 

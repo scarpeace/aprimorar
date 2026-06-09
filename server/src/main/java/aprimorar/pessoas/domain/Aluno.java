@@ -19,9 +19,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
+@Table(name = "alunos")
 @Getter
-@Table(name = "responsaveis")
-public class Responsavel {
+public class Aluno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,7 +30,7 @@ public class Responsavel {
     @Column(name = "nome", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "data_nascimento")
+    @Column(name = "data_nascimento", nullable = false)
     private LocalDate birthdate;
 
     @Embedded
@@ -44,6 +44,15 @@ public class Responsavel {
     @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true))
     private Email email;
 
+    @Column(name = "escola")
+    private String school;
+
+    @Column(name = "responsavel_id", nullable = false)
+    private UUID parentId;
+
+    @Column(name = "ativo", nullable = false)
+    private Boolean active = true;
+
     @Column(name = "user_id", unique = true)
     private Long userId;
 
@@ -55,32 +64,52 @@ public class Responsavel {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    protected Responsavel() {}
+    @Embedded
+    private Endereco endereco;
 
-    public Responsavel(
-        String name,
-        LocalDate birthdate,
-        String contact,
-        String cpf,
-        String email
+    protected Aluno() {
+    }
+
+    public Aluno(
+            String name,
+            LocalDate birthdate,
+            String pix,
+            String contact,
+            String cpf,
+            String email,
+            String school,
+            UUID parentId,
+            Endereco endereco
     ) {
+        validateRequiredFields(endereco, parentId);
         this.name = validateName(name);
-        this.birthdate = birthdate;
+        this.birthdate = validateBirthdate(birthdate);
         this.contact = validateContact(contact);
         this.cpf = new Cpf(cpf);
         this.email = new Email(email);
+        this.school = school;
+        this.parentId = parentId;
+        this.endereco = endereco;
     }
 
-    public void updateDetails(
+    public void update(
         String name,
         LocalDate birthdate,
+        String pix,
         String contact,
-        String email
+        String email,
+        String school,
+        UUID parentId,
+        Endereco endereco
     ) {
+        validateRequiredFields(endereco, parentId);
         this.name = validateName(name);
-        this.birthdate = birthdate;
+        this.birthdate = validateBirthdate(birthdate);
         this.contact = validateContact(contact);
         this.email = new Email(email);
+        this.school = school;
+        this.parentId = parentId;
+        this.endereco = endereco;
     }
 
     public String getCpf() {
@@ -91,19 +120,46 @@ public class Responsavel {
         return email.value();
     }
 
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void archive() {
+        this.active = false;
+    }
+
+    public void unarchive() {
+        this.active = true;
+    }
+
+    private void validateRequiredFields(Endereco endereco, UUID parentId) {
+        if (endereco == null) {
+            throw new IllegalArgumentException("STATE: Endereço do aluno é obrigatório");
+        }
+        if (parentId == null) {
+            throw new IllegalArgumentException("STATE: Aluno não pode ser cadastrado sem um responsável");
+        }
+    }
+
     private String validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("STATE: Nome do resposável é obrigatório");
+            throw new IllegalArgumentException("STATE: Nome do aluno é obrigatório");
         }
         return name;
+    }
+
+    private LocalDate validateBirthdate(LocalDate birthdate) {
+        if (birthdate == null) {
+            throw new IllegalArgumentException("STATE: Data de nascimento do aluno é obrigatória");
+        }
+        return birthdate;
     }
 
     private String validateContact(String contact) {
         var normalized = MapperUtils.normalizeContact(contact);
         if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("STATE: Contato do responsável é obrigatório");
+            throw new IllegalArgumentException("STATE: Contato do aluno é obrigatório");
         }
         return normalized;
     }
-
 }
