@@ -99,13 +99,15 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/common/address/dto/AddressRequestDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/common/address/dto/AddressResponseDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/common/address/exception/InvalidAddressException.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/domain/Cpf.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/domain/Email.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/domain/Responsavel.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/package-info.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/ResponsavelDeletedEvent.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/ResponsavelQueryApi.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/application/ResponsavelMapper.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/application/ResponsavelMutationService.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/application/ResponsavelQueryService.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/domain/Responsavel.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/infrastructure/persistence/ResponsavelRepository.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/infrastructure/persistence/ResponsavelSpecifications.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/responsavel/web/ResponsavelController.java

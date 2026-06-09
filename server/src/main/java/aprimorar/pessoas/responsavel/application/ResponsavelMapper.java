@@ -12,7 +12,6 @@ public class ResponsavelMapper {
         return new Responsavel(
             dto.name(),
             dto.birthdate(),
-            dto.pix(),
             dto.contact(),
             dto.cpf(),
             dto.email()
@@ -27,8 +26,6 @@ public class ResponsavelMapper {
             responsavel.getCpf(),
             responsavel.getContact(),
             responsavel.getEmail(),
-            responsavel.getPix(),
-            responsavel.getActive(),
             responsavel.getCreatedAt(),
             responsavel.getUpdatedAt()
         );

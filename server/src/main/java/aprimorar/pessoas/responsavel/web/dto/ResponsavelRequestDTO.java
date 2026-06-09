@@ -24,9 +24,6 @@ public record ResponsavelRequestDTO(
         @Schema(nullable = true, description = "Data de nascimento do responsável", example = "1990-01-01")
         LocalDate birthdate,
 
-        @Schema(nullable = true, description = "Chave PIX do responsável", example = "joao.silva@example.com")
-        String pix,
-
         @NotBlank(message = "CPF do responsável é obrigatório")
         @Schema(nullable = false, description = "CPF do responsável", example = "12345678901")
         String cpf

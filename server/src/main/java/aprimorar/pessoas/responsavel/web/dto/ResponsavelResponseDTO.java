@@ -32,12 +32,6 @@ public record ResponsavelResponseDTO(
         @Schema(description = "Email do responsável", example = "email@email.com")
         String email,
 
-        @Schema(description = "Pix do Responsável", example = "email@email.com", nullable = true)
-        String pix,
-
-        @Schema(nullable = true, example = "true", description = "Indica se o responsável está ativo")
-        Boolean active,
-
         @NotNull
         @Schema(description = "Data e hora quando o aluno foi criado",example = "2023-01-01T00:00:00Z")
         Instant createdAt,

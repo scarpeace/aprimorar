@@ -12,6 +12,7 @@ aprimorar/atendimentos/infrastructure/persistence/AtendimentoRepository$ReportAt
 aprimorar/shared/exception/GlobalExceptionHandler.class
 aprimorar/atendimentos/application/AtendimentoEventListener.class
 aprimorar/atendimentos/infrastructure/persistence/AtendimentoRepository$KpisAlunoProjection.class
+aprimorar/pessoas/responsavel/domain/Cpf.class
 aprimorar/auth/web/UserController.class
 aprimorar/pessoas/responsavel/infrastructure/persistence/ResponsavelSpecifications.class
 aprimorar/pessoas/common/address/AddressMapper.class
@@ -23,6 +24,7 @@ aprimorar/atendimentos/dto/AtendimentosColaboradorResponseDTO.class
 aprimorar/pessoas/aluno/web/dto/AlunosListDTO.class
 aprimorar/auth/web/dto/UserResponseDTO.class
 aprimorar/financeiro/infrastructure/persistence/DespesaRepositoryCustom.class
+aprimorar/pessoas/responsavel/domain/Email.class
 aprimorar/config/CorsProperties.class
 aprimorar/pessoas/colaborador/web/ColaboradorController.class
 aprimorar/pessoas/colaborador/web/dto/ColaboradoresKpisDTO.class

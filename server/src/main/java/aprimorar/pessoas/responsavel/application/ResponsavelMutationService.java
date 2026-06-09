@@ -73,7 +73,7 @@ public class ResponsavelMutationService {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um responsável utilizando este e-mail.");
         }
 
-        responsavel.updateDetails(dto.name(), dto.birthdate(), dto.pix(), dto.contact(), dto.email());
+        responsavel.updateDetails(dto.name(), dto.birthdate(), dto.contact(), dto.email());
 
         log.info("Responsável {} atualizado com sucesso.", responsavel.getName().toUpperCase());
         return responsavelMapper.toResponseDto(responsavel);
@@ -87,7 +87,7 @@ public class ResponsavelMutationService {
             throw new BusinessException(HttpStatus.BAD_REQUEST,"O responsável possui alunos ativos vinculados. Arquive os alunos antes de arquivar o responsável.");
         }
 
-        responsavel.archive();
+        // TODO: reintroduzir arquivamento quando a nova tabela responsaveis tiver esse estado.
         log.info("Responsável {} arquivado com sucesso.", responsavel.getName().toUpperCase());
     }
 
@@ -95,7 +95,7 @@ public class ResponsavelMutationService {
     public void unarchiveResponsavel(UUID responsavelId) {
         Responsavel responsavel = findResponsavelOrThrow(responsavelId);
 
-        responsavel.unarchive();
+        // TODO: reintroduzir desarquivamento quando a nova tabela responsaveis tiver esse estado.
         log.info("Responsável {} desarquivado com sucesso.", responsavel.getName().toUpperCase());
     }
 
