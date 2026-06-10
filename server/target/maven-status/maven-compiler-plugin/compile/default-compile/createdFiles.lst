@@ -1,3 +1,4 @@
+aprimorar/atendimentos/controller/AtendimentoReportController.class
 aprimorar/pessoas/events/DeleteAlunoVerificationEvent.class
 aprimorar/pessoas/events/ArchiveAlunoVerificationEvent.class
 aprimorar/atendimentos/dto/AtendimentoResponseDTO.class
@@ -9,9 +10,12 @@ aprimorar/atendimentos/dto/AtendimentosAlunoResponseDTO.class
 aprimorar/atendimentos/service/AtendimentoMutationService.class
 aprimorar/pessoas/dto/AlunosKpisDTO.class
 aprimorar/shared/exception/GlobalExceptionHandler.class
+aprimorar/atendimentos/controller/AtendimentoMutationController.class
 aprimorar/auth/web/UserController.class
+aprimorar/pessoas/dto/ResponsavelFiltroRequest.class
 aprimorar/atendimentos/mappers/AtendimentoMapper.class
 aprimorar/auth/domain/User.class
+aprimorar/atendimentos/controller/AtendimentoQueryController.class
 aprimorar/atendimentos/dto/AtendimentosColaboradorResponseDTO.class
 aprimorar/auth/web/dto/UserResponseDTO.class
 aprimorar/pessoas/service/ColaboradorMutationService.class
@@ -31,7 +35,6 @@ aprimorar/pessoas/dto/AlunoResponseDTO.class
 aprimorar/auth/web/dto/AuthRequestDTO.class
 aprimorar/atendimentos/repository/AtendimentoRepository$KpisAlunoProjection.class
 aprimorar/atendimentos/enums/TipoAtendimentoEnum.class
-aprimorar/pessoas/mappers/ResponsavelMapper.class
 aprimorar/pessoas/domain/Colaborador.class
 aprimorar/atendimentos/service/AtendimentoReportService.class
 aprimorar/shared/PageDTO.class
@@ -60,7 +63,6 @@ aprimorar/atendimentos/enums/CategoriaTransacao.class
 aprimorar/pessoas/domain/Endereco.class
 aprimorar/atendimentos/repository/specifications/AtendimentoSpecifications.class
 aprimorar/pessoas/domain/Aluno.class
-aprimorar/atendimentos/web/AtendimentoMutationController.class
 aprimorar/pessoas/dto/AlunosListDTO.class
 aprimorar/auth/application/AuthService.class
 aprimorar/pessoas/dto/EnderecoResponseDTO.class
@@ -91,7 +93,6 @@ aprimorar/atendimentos/domain/Transacao.class
 aprimorar/config/JacksonConfig.class
 aprimorar/auth/web/AuthController.class
 aprimorar/atendimentos/enums/StatusTransacao.class
-aprimorar/atendimentos/web/AtendimentoReportController.class
 aprimorar/atendimentos/repository/AtendimentoRepository.class
 aprimorar/pessoas/events/AlunoQueryApi.class
 aprimorar/pessoas/dto/ColaboradorRequestDTO.class
@@ -110,7 +111,6 @@ aprimorar/auth/web/exception/AuthExceptionHandler.class
 aprimorar/atendimentos/enums/FormaPagamento.class
 aprimorar/atendimentos/dto/AtendimentoRequestDTO.class
 aprimorar/atendimentos/events/AtendimentoEventListener.class
-aprimorar/atendimentos/web/AtendimentoQueryController.class
 aprimorar/pessoas/repository/specifications/ColaboradorSpecifications.class
 aprimorar/pessoas/controller/ResponsavelController.class
 aprimorar/config/ClockConfig.class

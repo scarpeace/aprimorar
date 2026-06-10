@@ -37,7 +37,6 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
 
     @Transactional(readOnly = true)
     public Page<ColaboradorResponseDTO> getColaboradores(ColaboradorFiltroRequest filtro, Pageable pageable) {
-
         Specification<Colaborador> spec = ColaboradorSpecifications.comFiltros(filtro);
         Page<Colaborador> colaboradoresPage = colaboradorRepo.findAll(spec, pageable);
         Page<ColaboradorResponseDTO> colaboradoresDtoPage = colaboradoresPage.map(ColaboradorResponseDTO::toDto);

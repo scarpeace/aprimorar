@@ -14,12 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.pessoas.domain.Responsavel;
 import aprimorar.pessoas.dto.ResponsaveisListDTO;
+import aprimorar.pessoas.dto.ResponsavelFiltroRequest;
 import aprimorar.pessoas.dto.ResponsavelResponseDTO;
 import aprimorar.pessoas.events.ResponsavelQueryApi;
-import aprimorar.pessoas.mappers.ResponsavelMapper;
 import aprimorar.pessoas.repository.ResponsavelRepository;
 import aprimorar.pessoas.repository.specifications.ResponsavelSpecifications;
-import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
 
 @Service
@@ -28,30 +27,21 @@ public class ResponsavelQueryService implements ResponsavelQueryApi {
     private static final Logger log = LoggerFactory.getLogger(ResponsavelQueryService.class);
 
     private final ResponsavelRepository responsavelRepo;
-    private final ResponsavelMapper responsavelMapper;
 
-    public ResponsavelQueryService(ResponsavelRepository responsavelRepo, ResponsavelMapper responsavelMapper) {
+    public ResponsavelQueryService(ResponsavelRepository responsavelRepo) {
         this.responsavelRepo = responsavelRepo;
-        this.responsavelMapper = responsavelMapper;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageDTO<ResponsavelResponseDTO> getResponsaveis(Pageable pageable, String search, Boolean includeArchived) {
-        Specification<Responsavel> spec = ResponsavelSpecifications.isNotGhost();
-
-        if (Boolean.FALSE.equals(includeArchived)) {
-            spec = spec.and(ResponsavelSpecifications.isNotArchived());
-        }
-
-        if (search != null && !search.trim().isEmpty()) {
-            spec = spec.and(ResponsavelSpecifications.searchContainsIgnoreCase(search.trim()));
-        }
+    public Page<ResponsavelResponseDTO> getResponsaveis(ResponsavelFiltroRequest filtro, Pageable pageable) {
+        Specification<Responsavel> spec = ResponsavelSpecifications.comFiltros(filtro);
         Page<Responsavel> responsaveisPage = responsavelRepo.findAll(spec, pageable);
-        Page<ResponsavelResponseDTO> responsaveisDtoPage = responsaveisPage.map(responsavelMapper::toResponseDto);
+        Page<ResponsavelResponseDTO> responsaveisResponseDtoPage = responsaveisPage.map(ResponsavelResponseDTO::toDto);
+
 
         log.info("Consulta de responsáveis finalizada, {} registros encontrados.", responsaveisPage.getTotalElements());
-        return new PageDTO<>(responsaveisDtoPage);
+        return responsaveisResponseDtoPage;
     }
 
     @Transactional(readOnly = true)
@@ -70,7 +60,7 @@ public class ResponsavelQueryService implements ResponsavelQueryApi {
     public ResponsavelResponseDTO findResponsavelById(UUID responsavelId) {
         Responsavel responsavel = findResponsavelOrThrow(responsavelId);
         log.info("Responsável {} consultado com sucesso.", responsavel.getNome().toUpperCase());
-        return responsavelMapper.toResponseDto(responsavel);
+        return ResponsavelResponseDTO.toDto(responsavel);
     }
 
     private Responsavel findResponsavelOrThrow(UUID responsavelId) {

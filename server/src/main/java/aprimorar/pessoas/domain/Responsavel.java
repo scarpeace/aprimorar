@@ -10,12 +10,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "responsaveis")
@@ -46,52 +46,60 @@ public class Responsavel {
     private Long userId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    @CreationTimestamp
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @UpdateTimestamp
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     protected Responsavel() {}
 
     public Responsavel(
-        String name,
-        LocalDate birthdate,
-        String contact,
+        String nome,
+        LocalDate dataNascimento,
+        String telefone,
         String cpf,
         String email
     ) {
-        this.nome = validateName(name);
-        this.dataNascimento = birthdate;
-        this.telefone = validateContact(contact);
+        this.nome = validateName(nome);
+        this.dataNascimento = dataNascimento;
+        this.telefone = validateContact(telefone);
         this.cpf = new Cpf(cpf);
         this.email = new Email(email);
     }
 
-    public void updateDetails(
-        String name,
-        LocalDate birthdate,
-        String contact,
+    public void update(
+        String nome,
+        LocalDate dataNascimento,
+        String telefone,
         String email
     ) {
-        this.nome = validateName(name);
-        this.dataNascimento = birthdate;
-        this.telefone = validateContact(contact);
+        this.nome = validateName(nome);
+        this.dataNascimento = dataNascimento;
+        this.telefone = validateContact(telefone);
         this.email = new Email(email);
     }
 
-    private String validateName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("STATE: Nome do resposável é obrigatório");
+    private String validateName(String nome) {
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("Nome do responsável é obrigatório");
         }
-        return name;
+        return nome;
     }
 
-    private String validateContact(String contact) {
-        var normalized = MapperUtils.normalizeContact(contact);
+    private String validateContact(String telefone) {
+        var normalized = MapperUtils.normalizeContact(telefone);
         if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("STATE: Contato do responsável é obrigatório");
+            throw new IllegalArgumentException("Contato do responsável é obrigatório");
         }
         return normalized;
     }
@@ -116,16 +124,16 @@ public class Responsavel {
 		return nome;
 	}
 
-	public void setNome(String name) {
-		this.nome = name;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(LocalDate birthdate) {
-		this.dataNascimento = birthdate;
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 
 	public void setCpf(Cpf cpf) {
@@ -136,8 +144,8 @@ public class Responsavel {
 		return telefone;
 	}
 
-	public void setTelefone(String contact) {
-		this.telefone = contact;
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public void setEmail(Email email) {
@@ -152,19 +160,19 @@ public class Responsavel {
 		this.userId = userId;
 	}
 
-	public Instant getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Instant createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public Instant getUpdatedAt() {
+	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(Instant updatedAt) {
+	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

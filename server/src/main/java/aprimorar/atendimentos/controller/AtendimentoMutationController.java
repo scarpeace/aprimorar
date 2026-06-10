@@ -1,4 +1,4 @@
-package aprimorar.atendimentos.web;
+package aprimorar.atendimentos.controller;
 
 import aprimorar.atendimentos.dto.AtendimentoRequestDTO;
 import aprimorar.atendimentos.dto.AtendimentoResponseDTO;

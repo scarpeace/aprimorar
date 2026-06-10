@@ -1,4 +1,4 @@
-package aprimorar.atendimentos.web;
+package aprimorar.atendimentos.controller;
 
 import aprimorar.atendimentos.dto.AtendimentosAlunosKpisDTO;
 import aprimorar.atendimentos.dto.AtendimentosColaboradorKpisDTO;

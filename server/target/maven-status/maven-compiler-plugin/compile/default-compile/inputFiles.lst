@@ -1,4 +1,7 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/ApiAprimorarApplication.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/controller/AtendimentoMutationController.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/controller/AtendimentoQueryController.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/controller/AtendimentoReportController.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/domain/Atendimento.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/domain/Transacao.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/dto/AlunoAtendimentosKpis.java
@@ -24,9 +27,6 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/service/AtendimentoMutationService.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/service/AtendimentoQueryService.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/service/AtendimentoReportService.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/web/AtendimentoMutationController.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/web/AtendimentoQueryController.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/web/AtendimentoReportController.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/auth/application/AuthService.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/auth/application/UserMapper.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/auth/application/UserService.java
@@ -67,6 +67,7 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/EnderecoRequestDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/EnderecoResponseDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/ResponsaveisListDTO.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/ResponsavelFiltroRequest.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/ResponsavelRequestDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/ResponsavelResponseDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/events/AlunoDeletedEvent.java
@@ -81,7 +82,6 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/events/ResponsavelQueryApi.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/exception/InvalidAddressException.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/mappers/AlunoMapper.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/mappers/ResponsavelMapper.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/package-info.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/repository/AlunoRepository.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/repository/ColaboradorRepository.java

@@ -2,6 +2,7 @@ package aprimorar.pessoas.dto;
 
 import java.time.LocalDate;
 
+import aprimorar.pessoas.domain.Responsavel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -28,4 +29,13 @@ public record ResponsavelRequestDTO(
         @Schema(nullable = false, description = "CPF do responsável", example = "12345678901")
         String cpf
 ) {
+    public Responsavel toEntity() {
+        return new Responsavel(
+            this.nome(),
+            this.dataNascimento(),
+            this.telefone(),
+            this.cpf(),
+            this.email()
+        );
+    }
 }

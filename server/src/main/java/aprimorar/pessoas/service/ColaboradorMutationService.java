@@ -53,19 +53,20 @@ public class ColaboradorMutationService {
     public ColaboradorResponseDTO updateColaborador(UUID colaboradorId, ColaboradorRequestDTO dto) {
 
         Colaborador colaborador = findByIdOrThrow(colaboradorId);
+        Colaborador requestedColaborador = dto.toEntity();
 
-        if (colaboradorRepo.existsByEmailAndIdNot(dto.email(), colaboradorId)) {
+        if (colaboradorRepo.existsByEmailAndIdNot(requestedColaborador.getEmail(), colaboradorId)) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um colaborador utilizando este e-mail.");
         }
 
         colaborador.update(
-            dto.nome(),
-            dto.dataNascimento(),
-            dto.pix(),
-            dto.telefone(),
-            dto.email(),
-            dto.funcao(),
-            dto.endereco().toEntity()
+            requestedColaborador.getNome(),
+            requestedColaborador.getDataNascimento(),
+            requestedColaborador.getPix(),
+            requestedColaborador.getTelefone(),
+            requestedColaborador.getEmail(),
+            requestedColaborador.getFuncao(),
+            requestedColaborador.getEndereco()
         );
 
         log.info("Colaborador {} atualizado com sucesso.", colaborador.getNome().toUpperCase());

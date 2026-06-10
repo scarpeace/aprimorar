@@ -15,8 +15,8 @@ public interface ResponsavelRepository extends JpaRepository<Responsavel, UUID>,
     Optional<Responsavel> findByCpf(String cpf);
     Optional<Responsavel> findByEmail(String email);
 
-    Boolean existsByEmail(String cpf);
-    Boolean existsByCpf(String cpf);
+    boolean existsByEmail(String email);
+    boolean existsByCpf(String cpf);
     boolean existsByCpfAndIdNot(String cpf, UUID id);
     boolean existsByEmailAndIdNot(String email, UUID id);
 }

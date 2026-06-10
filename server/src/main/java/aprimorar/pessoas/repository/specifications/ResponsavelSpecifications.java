@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
 
 import aprimorar.pessoas.domain.Responsavel;
+import aprimorar.pessoas.dto.ResponsavelFiltroRequest;
 
 
 public final class ResponsavelSpecifications {
@@ -13,19 +14,36 @@ public final class ResponsavelSpecifications {
 
     private ResponsavelSpecifications() {}
 
-    public static Specification<Responsavel> searchContainsIgnoreCase(String term) {
+    public static Specification<Responsavel> comFiltros(ResponsavelFiltroRequest filtro) {
+        return Specification
+            .where(nomeContem(filtro.nome()))
+            .and(emailContem(filtro.email()))
+            .and(cpfContem(filtro.cpf()))
+            .and(isNotGhost());
+    }
+
+    public static Specification<Responsavel> nomeContem(String nome) {
         return (root, query, cb) -> {
-            String likeTerm = "%" + term.toLowerCase() + "%";
-            return cb.or(
-                    cb.like(cb.lower(root.get("name")), likeTerm),
-                    cb.like(cb.lower(root.get("email")), likeTerm),
-                    cb.like(cb.lower(root.get("cpf")), likeTerm)
-            );
+            if (nome == null || nome.isBlank()) return null;
+            String pattern = "%" + nome.toLowerCase() + "%";
+            return cb.like(cb.lower(root.get("nome")), pattern);
         };
     }
 
-    public static Specification<Responsavel> isNotArchived() {
-        return (root, query, cb) -> cb.isTrue(root.get("active"));
+    public static Specification<Responsavel> emailContem(String email) {
+        return (root, query, cb) -> {
+            if (email == null || email.isBlank()) return null;
+            String pattern = "%" + email.toLowerCase() + "%";
+            return cb.like(cb.lower(root.get("email").get("value")), pattern);
+        };
+    }
+
+    public static Specification<Responsavel> cpfContem(String cpf) {
+        return (root, query, cb) -> {
+            if (cpf == null || cpf.isBlank()) return null;
+            String pattern = "%" + cpf.toLowerCase() + "%";
+            return cb.like(cb.lower(root.get("cpf").get("value")), pattern);
+        };
     }
 
     public static Specification<Responsavel> isNotGhost() {

@@ -1,15 +1,12 @@
 package aprimorar.pessoas.controller;
 
 import aprimorar.pessoas.dto.ResponsaveisListDTO;
+import aprimorar.pessoas.dto.ResponsavelFiltroRequest;
 import aprimorar.pessoas.dto.ResponsavelRequestDTO;
 import aprimorar.pessoas.dto.ResponsavelResponseDTO;
 import aprimorar.pessoas.service.ResponsavelMutationService;
 import aprimorar.pessoas.service.ResponsavelQueryService;
-import aprimorar.shared.PageDTO;
-import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -17,6 +14,7 @@ import java.util.UUID;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -48,21 +46,6 @@ public class ResponsavelController {
     @PostMapping
     @Operation(operationId = "createResponsavel", description = "Cria um novo responsável")
     @ApiResponse(responseCode = "201", description = "Responsável criado com sucesso")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de validação",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<ResponsavelResponseDTO> createResponsavel(@RequestBody @Valid ResponsavelRequestDTO responsavelRequestDTO) {
         ResponsavelResponseDTO responsavel = responsavelMutationService.createResponsavel(responsavelRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responsavel);
@@ -71,32 +54,17 @@ public class ResponsavelController {
     @GetMapping
     @Operation(operationId = "getResponsaveis", description = "Retorna uma lista de responsáveis paginada")
     @ApiResponse(responseCode = "200", description = "Lista de responsáveis retornada com sucesso.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Parâmetros inválidos",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    public ResponseEntity<PageDTO<ResponsavelResponseDTO>> getResponsaveis(
-        @PageableDefault(sort = "name") @ParameterObject Pageable pageable,
-        @RequestParam(required = false) String search,
-        @RequestParam(required = false) Boolean archived
+    public ResponseEntity<Page<ResponsavelResponseDTO>> getResponsaveis(
+        @ParameterObject ResponsavelFiltroRequest filtro,
+        @ParameterObject @PageableDefault(sort = "nome") Pageable pageable
     ) {
-        return ResponseEntity.ok(responsavelQueryService.getResponsaveis(pageable, search, archived));
+        return ResponseEntity.ok(responsavelQueryService.getResponsaveis(filtro, pageable));
     }
 
     @GetMapping("/options")
     @Operation(operationId = "listResponsaveis", description = "Retorna uma lista de responsáveis para dropdown")
     @ApiResponse(responseCode = "200", description = "Lista de opções retornada com sucesso.")
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
+
     public ResponseEntity<List<ResponsaveisListDTO>> listResponsaveis() {
         return ResponseEntity.ok(responsavelQueryService.listResponsaveis());
     }
@@ -104,16 +72,6 @@ public class ResponsavelController {
     @GetMapping("/{responsavelId}")
     @Operation(operationId = "getResponsavelById", description = "Retorna um responsável por ID")
     @ApiResponse(responseCode = "200", description = "Responsável retornado com sucesso")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Responsável não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<ResponsavelResponseDTO> getResponsavelById(@PathVariable UUID responsavelId) {
         ResponsavelResponseDTO responsavel = responsavelQueryService.findResponsavelById(responsavelId);
         return ResponseEntity.ok(responsavel);
@@ -122,26 +80,6 @@ public class ResponsavelController {
     @PatchMapping("/{responsavelId}")
     @Operation(operationId = "updateResponsavel", description = "Atualiza um responsável por ID")
     @ApiResponse(responseCode = "200", description = "Responsável atualizado com sucesso")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de validação",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "404",
-        description = "Responsável não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<ResponsavelResponseDTO> updateResponsavel(
         @PathVariable UUID responsavelId,
         @RequestBody @Valid ResponsavelRequestDTO responsavelRequestDTO
@@ -154,21 +92,6 @@ public class ResponsavelController {
     @DeleteMapping("/{responsavelId}")
     @Operation(operationId = "deleteResponsavel", description = "Deleta um responsável por ID")
     @ApiResponse(responseCode = "204", description = "Responsável deletado com sucesso")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Responsável não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<Void> deleteResponsavel(@PathVariable UUID responsavelId, @RequestParam(required = false, defaultValue = "false") boolean cascade) {
         responsavelMutationService.deleteResponsavel(responsavelId, cascade);
         return ResponseEntity.noContent().build();
