@@ -10,9 +10,9 @@ public class ResponsavelMapper {
 
     public Responsavel toEntity(ResponsavelRequestDTO dto) {
         return new Responsavel(
-            dto.name(),
-            dto.birthdate(),
-            dto.contact(),
+            dto.nome(),
+            dto.dataNascimento(),
+            dto.telefone(),
             dto.cpf(),
             dto.email()
         );
@@ -21,10 +21,10 @@ public class ResponsavelMapper {
     public ResponsavelResponseDTO toResponseDto(Responsavel responsavel) {
         return new ResponsavelResponseDTO(
             responsavel.getId(),
-            responsavel.getName(),
-            responsavel.getBirthdate(),
+            responsavel.getNome(),
+            responsavel.getDataNascimento(),
             responsavel.getCpf(),
-            responsavel.getContact(),
+            responsavel.getTelefone(),
             responsavel.getEmail(),
             responsavel.getCreatedAt(),
             responsavel.getUpdatedAt()

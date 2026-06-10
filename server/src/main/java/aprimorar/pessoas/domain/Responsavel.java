@@ -14,12 +14,10 @@ import jakarta.persistence.Table;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
-import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Getter
 @Table(name = "responsaveis")
 public class Responsavel {
 
@@ -28,17 +26,17 @@ public class Responsavel {
     private UUID id;
 
     @Column(name = "nome", nullable = false, length = 50)
-    private String name;
+    private String nome;
 
     @Column(name = "data_nascimento")
-    private LocalDate birthdate;
+    private LocalDate dataNascimento;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "cpf", nullable = false, unique = true))
     private Cpf cpf;
 
     @Column(name = "telefone", nullable = false)
-    private String contact;
+    private String telefone;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true))
@@ -64,9 +62,9 @@ public class Responsavel {
         String cpf,
         String email
     ) {
-        this.name = validateName(name);
-        this.birthdate = birthdate;
-        this.contact = validateContact(contact);
+        this.nome = validateName(name);
+        this.dataNascimento = birthdate;
+        this.telefone = validateContact(contact);
         this.cpf = new Cpf(cpf);
         this.email = new Email(email);
     }
@@ -77,18 +75,10 @@ public class Responsavel {
         String contact,
         String email
     ) {
-        this.name = validateName(name);
-        this.birthdate = birthdate;
-        this.contact = validateContact(contact);
+        this.nome = validateName(name);
+        this.dataNascimento = birthdate;
+        this.telefone = validateContact(contact);
         this.email = new Email(email);
-    }
-
-    public String getCpf() {
-        return cpf.value();
-    }
-
-    public String getEmail() {
-        return email.value();
     }
 
     private String validateName(String name) {
@@ -105,5 +95,77 @@ public class Responsavel {
         }
         return normalized;
     }
+
+    public String getCpf() {
+        return cpf.value();
+    }
+
+    public String getEmail() {
+        return email.value();
+    }
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String name) {
+		this.nome = name;
+	}
+
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate birthdate) {
+		this.dataNascimento = birthdate;
+	}
+
+	public void setCpf(Cpf cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String contact) {
+		this.telefone = contact;
+	}
+
+	public void setEmail(Email email) {
+		this.email = email;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Instant updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
 }

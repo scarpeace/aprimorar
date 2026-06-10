@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 public record ResponsavelRequestDTO(
         @NotBlank(message = "Nome do responsável é obrigatório")
         @Schema(nullable = false, description = "Nome do responsável", example = "João Silva")
-        String name,
+        String nome,
 
         @NotBlank(message = "Email do responsável é obrigatório")
         @Email(message = "Email deve ser um endereço de email válido")
@@ -19,10 +19,10 @@ public record ResponsavelRequestDTO(
 
         @NotBlank(message = "Contato do responsável é obrigatório")
         @Schema(nullable = false, description = "Contato do responsável", example = "11999999999")
-        String contact,
+        String telefone,
 
         @Schema(nullable = true, description = "Data de nascimento do responsável", example = "1990-01-01")
-        LocalDate birthdate,
+        LocalDate dataNascimento,
 
         @NotBlank(message = "CPF do responsável é obrigatório")
         @Schema(nullable = false, description = "CPF do responsável", example = "12345678901")

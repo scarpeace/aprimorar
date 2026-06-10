@@ -46,9 +46,10 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
         return colaboradoresDtoPage;
     }
 
+    @Transactional(readOnly = true)
     public ColaboradoresKpisDTO getColaboradoresKpis() {
-        long totalColaboradores = colaboradorRepo.countByDutyNot(FuncoesColaborador.SYSTEM);
-        long totalColaboradoresAtivos = colaboradorRepo.countByActiveTrueAndDutyNot(FuncoesColaborador.SYSTEM);
+        long totalColaboradores = colaboradorRepo.countByFuncaoNot(FuncoesColaborador.SISTEMA);
+        long totalColaboradoresAtivos = colaboradorRepo.countByActiveTrueAndFuncaoNot(FuncoesColaborador.SISTEMA);
         return new ColaboradoresKpisDTO(totalColaboradores, totalColaboradoresAtivos);
     }
 
@@ -62,7 +63,7 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
 
     @Transactional(readOnly = true)
     public List<ColaboradoresListDTO> listColaboradores() {
-        return colaboradorRepo.findAllByDutyNotAndActiveTrueOrderByNameAsc(FuncoesColaborador.SYSTEM)
+        return colaboradorRepo.findAllByFuncaoNotAndActiveTrueOrderByNomeAsc(FuncoesColaborador.SISTEMA)
             .stream()
             .map(e -> new ColaboradoresListDTO(e.getId(), e.getNome()))
             .toList();

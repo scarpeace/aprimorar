@@ -29,9 +29,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/v1/colaboradores")
 @Tag(name = "Colaborador", description = "APIs de gestão de colaboradores")
@@ -63,7 +61,7 @@ public class ColaboradorController {
     @ApiResponse(responseCode = "200", description = "Lista de colaboradores retornada com sucesso.")
     public ResponseEntity<Page<ColaboradorResponseDTO>> getColaboradores(
         @ParameterObject ColaboradorFiltroRequest filtro,
-        @ParameterObject @PageableDefault(sort = "name") Pageable pageable
+        @ParameterObject @PageableDefault(sort = "nome") Pageable pageable
     ) {
         Page<ColaboradorResponseDTO> colaboradores = colaboradorQueryService.getColaboradores(filtro, pageable);
         return ResponseEntity.ok(colaboradores);
@@ -80,7 +78,7 @@ public class ColaboradorController {
     @GetMapping("/options")
     @Operation(operationId = "listColaboradores", description = "Retorna uma lista de opções de colaboradores para dropdown.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
-    public ResponseEntity<List<ColaboradoresListDTO>> listarOpcoes() {
+    public ResponseEntity<List<ColaboradoresListDTO>> listarColaboradores() {
         List<ColaboradoresListDTO> options = colaboradorQueryService.listColaboradores();
         return ResponseEntity.ok(options);
     }

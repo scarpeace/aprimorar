@@ -151,52 +151,6 @@ public class ResponsavelController {
         return ResponseEntity.ok(responsavel);
     }
 
-    @PatchMapping("/{responsavelId}/archive")
-    @Operation(operationId = "archiveResponsavel", description = "Arquiva um responsável por ID")
-    @ApiResponse(responseCode = "204", description = "Responsável arquivado com sucesso")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Responsável não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    public ResponseEntity<Void> archiveResponsavel(@PathVariable UUID responsavelId) {
-        responsavelMutationService.archiveResponsavel(responsavelId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{responsavelId}/unarchive")
-    @Operation(operationId = "unarchiveResponsavel", description = "Desarquiva um responsável por ID")
-    @ApiResponse(responseCode = "204", description = "Responsável desarquivado com sucesso")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Responsável não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    public ResponseEntity<Void> unarchiveResponsavel(@PathVariable UUID responsavelId) {
-        responsavelMutationService.unarchiveResponsavel(responsavelId);
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/{responsavelId}")
     @Operation(operationId = "deleteResponsavel", description = "Deleta um responsável por ID")
     @ApiResponse(responseCode = "204", description = "Responsável deletado com sucesso")

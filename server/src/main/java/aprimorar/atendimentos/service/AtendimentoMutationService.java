@@ -48,7 +48,7 @@ public class AtendimentoMutationService {
     public AtendimentoResponseDTO createAtendimento(AtendimentoRequestDTO dto) {
         AlunoResponseDTO student = alunoQueryApi.findAlunoById(dto.studentId());
         ColaboradorResponseDTO colaborador = colaboradorQueryApi.findColaboradorById(dto.employeeId());
-        Atendimento atendimento = atendimentoMapper.toEntity(dto, student.name(), colaborador.name(), clock.instant());
+        Atendimento atendimento = atendimentoMapper.toEntity(dto, student.name(), colaborador.nome(), clock.instant());
 
         validateParticipantAvailability(student, colaborador, dto.startDate(), dto.duration(), null);
 
@@ -75,7 +75,7 @@ public class AtendimentoMutationService {
             student.id(),
             student.name(),
             employee.id(),
-            employee.name(),
+            employee.nome(),
             Instant.now(clock)
         );
         log.info("Atendimento {} atualizado com sucesso.", atendimento.getTitle().toUpperCase());

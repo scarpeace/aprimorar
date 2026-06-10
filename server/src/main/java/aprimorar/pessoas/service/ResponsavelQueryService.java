@@ -61,7 +61,7 @@ public class ResponsavelQueryService implements ResponsavelQueryApi {
         log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
         return list
             .stream()
-            .map(responsavel -> new ResponsaveisListDTO(responsavel.getId(), responsavel.getName()))
+            .map(responsavel -> new ResponsaveisListDTO(responsavel.getId(), responsavel.getNome()))
             .toList();
     }
 
@@ -69,7 +69,7 @@ public class ResponsavelQueryService implements ResponsavelQueryApi {
     @Override
     public ResponsavelResponseDTO findResponsavelById(UUID responsavelId) {
         Responsavel responsavel = findResponsavelOrThrow(responsavelId);
-        log.info("Responsável {} consultado com sucesso.", responsavel.getName().toUpperCase());
+        log.info("Responsável {} consultado com sucesso.", responsavel.getNome().toUpperCase());
         return responsavelMapper.toResponseDto(responsavel);
     }
 

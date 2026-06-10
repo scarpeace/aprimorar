@@ -5,8 +5,8 @@ import aprimorar.pessoas.shared.FuncoesColaborador;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Schema(description = "Dados do colaborador retornados pela API")
@@ -40,7 +40,7 @@ public record ColaboradorResponseDTO(
     String email,
 
     @NotNull
-    @Schema(description = "Funcao do colaborador", example = "TEACHER")
+    @Schema(description = "Funcao do colaborador", example = "PROFESSOR")
     FuncoesColaborador funcao,
 
     @Schema(implementation = EnderecoResponseDTO.class, description = "Endereco do colaborador")
@@ -51,12 +51,12 @@ public record ColaboradorResponseDTO(
     boolean active,
 
     @NotNull
-    @Schema(description = "Data de criacao do colaborador", example = "2024-03-10T15:33:42Z")
-    Instant createdAt,
+    @Schema(description = "Data de criacao do colaborador", example = "2024-03-10T15:33:42")
+    LocalDateTime createdAt,
 
-    @Schema(nullable = true, description = "Data da ultima atualizacao do colaborador", example = "2024-03-11T11:10:00Z")
+    @Schema(nullable = true, description = "Data da ultima atualizacao do colaborador", example = "2024-03-11T11:10:00")
     @Nullable
-    Instant updatedAt
+    LocalDateTime updatedAt
 ) {
 
     public static ColaboradorResponseDTO toDto(Colaborador colaborador) {
@@ -66,8 +66,8 @@ public record ColaboradorResponseDTO(
             colaborador.getDataNascimento(),
             colaborador.getPix(),
             colaborador.getTelefone(),
-            colaborador.getCpf().value(),
-            colaborador.getEmail().value(),
+            colaborador.getCpf(),
+            colaborador.getEmail(),
             colaborador.getFuncao(),
             EnderecoResponseDTO.toDto(colaborador.getEndereco()),
             colaborador.getActive(),

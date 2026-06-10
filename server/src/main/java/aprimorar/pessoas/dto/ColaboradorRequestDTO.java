@@ -40,7 +40,7 @@ public record ColaboradorRequestDTO(
         String email,
 
         @NotNull(message = "Função do colaborador é obrigatória")
-        @Schema(description = "Função do colaborador", example = "TEACHER")
+        @Schema(description = "Função do colaborador", example = "PROFESSOR")
         FuncoesColaborador funcao,
 
         @Valid
@@ -48,16 +48,16 @@ public record ColaboradorRequestDTO(
         @Schema(nullable = false, description = "Endereço do colaborador", implementation = EnderecoRequestDTO.class)
         EnderecoRequestDTO endereco) {
 
-    public Colaborador toEntity(ColaboradorRequestDTO dto) {
+    public Colaborador toEntity() {
         return new Colaborador(
-            dto.nome(),
-            dto.dataNascimento(),
-            dto.pix(),
-            dto.telefone(),
-            dto.cpf(),
-            dto.email(),
-            dto.funcao(),
-            dto.endereco().toEntity()
+            this.nome(),
+            this.dataNascimento(),
+            this.pix(),
+            this.telefone(),
+            this.cpf(),
+            this.email(),
+            this.funcao(),
+            this.endereco().toEntity()
         );
     }
 }

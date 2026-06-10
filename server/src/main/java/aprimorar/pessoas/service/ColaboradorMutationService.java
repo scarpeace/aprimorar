@@ -34,13 +34,13 @@ public class ColaboradorMutationService {
 
     @Transactional
     public ColaboradorResponseDTO createColaborador(ColaboradorRequestDTO dto) {
-        Colaborador colaborador =  dto.toEntity(dto);
+        Colaborador colaborador = dto.toEntity();
 
-        if (colaboradorRepo.existsByCpf(colaborador.getCpf().value())) {
+        if (colaboradorRepo.existsByCpf(colaborador.getCpf())) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um colaborador cadastrado com este CPF.");
         }
 
-        if (colaboradorRepo.existsByEmail(colaborador.getEmail().value())) {
+        if (colaboradorRepo.existsByEmail(colaborador.getEmail())) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um colaborador cadastrado com este e-mail.");
         }
 
@@ -56,10 +56,6 @@ public class ColaboradorMutationService {
 
         if (colaboradorRepo.existsByEmailAndIdNot(dto.email(), colaboradorId)) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um colaborador utilizando este e-mail.");
-        }
-
-        if (colaborador.isSystemRecord()) {
-            throw new BusinessException(HttpStatus.CONFLICT, "Este registro de colaborador não pode ser alterado");
         }
 
         colaborador.update(

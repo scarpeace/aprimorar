@@ -15,11 +15,12 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, UUID>,
 
     boolean existsByEmailAndIdNot(String email, UUID id);
 
-    long countByDutyNotAndActiveTrue(FuncoesColaborador duty);
+    long countByFuncaoNotAndActiveTrue(FuncoesColaborador funcao);
 
-    long countByDutyNot(FuncoesColaborador duty);
+    long countByFuncaoNot(FuncoesColaborador funcao);
 
-    List<Colaborador> findAllByDutyNotAndActiveTrueOrderByNameAsc(FuncoesColaborador duty);
+    List<Colaborador> findAllByFuncaoNotAndActiveTrueOrderByNomeAsc(FuncoesColaborador funcao);
 
-    long countByActiveTrueAndDutyNot(FuncoesColaborador role);
+    long countByActiveTrueAndFuncaoNot(FuncoesColaborador role);
+
 }

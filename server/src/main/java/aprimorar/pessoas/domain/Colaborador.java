@@ -13,13 +13,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -62,15 +64,23 @@ public class Colaborador {
     private Long userId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    @CreationTimestamp
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @UpdateTimestamp
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @Embedded
     private Endereco endereco;
+
+    @PrePersist
+    protected void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     protected Colaborador() {
     }
@@ -116,7 +126,7 @@ public class Colaborador {
     }
 
     public boolean isSystemRecord() {
-        return FuncoesColaborador.SYSTEM.equals(this.funcao);
+        return FuncoesColaborador.SISTEMA.equals(this.funcao);
     }
 
     public void archive() {
@@ -126,7 +136,7 @@ public class Colaborador {
 
     private static String validatePix(String pix) {
         if (pix == null || pix.isBlank()) {
-            throw new IllegalArgumentException("Pix é obrigatório");
+            throw new IllegalArgumentException("Pix do colaborador é obrigatório");
         }
         return pix;
     }
@@ -138,14 +148,14 @@ public class Colaborador {
 
     private String validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("STATE: Nome do colaborador é obrigatório");
+            throw new IllegalArgumentException("Nome do colaborador é obrigatório");
         }
         return name;
     }
 
     private LocalDate validateDataNascimento(LocalDate dataNascimento) {
         if (dataNascimento == null) {
-            throw new IllegalArgumentException("STATE: Data de nascimento do colaborador é obrigatória");
+            throw new IllegalArgumentException("Data de nascimento do colaborador é obrigatória");
         }
         return dataNascimento;
     }
@@ -153,7 +163,7 @@ public class Colaborador {
     private String validateTelefone(String telefone) {
         var normalized = MapperUtils.normalizeContact(telefone);
         if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("STATE: Contato do colaborador é obrigatório");
+            throw new IllegalArgumentException("Contato do colaborador é obrigatório");
         }
         return normalized;
     }
@@ -199,8 +209,8 @@ public class Colaborador {
 		this.dataNascimento = dataNascimento;
 	}
 
-	public Cpf getCpf() {
-		return cpf;
+	public String getCpf() {
+		return cpf.value();
 	}
 
 	public void setCpf(Cpf cpf) {
@@ -215,8 +225,8 @@ public class Colaborador {
 		this.telefone = telefone;
 	}
 
-	public Email getEmail() {
-		return email;
+	public String getEmail() {
+		return email.value();
 	}
 
 	public void setEmail(Email email) {
@@ -255,19 +265,19 @@ public class Colaborador {
 		this.userId = userId;
 	}
 
-	public Instant getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Instant createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public Instant getUpdatedAt() {
+	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(Instant updatedAt) {
+	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

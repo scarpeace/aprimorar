@@ -57,7 +57,7 @@ public class ResponsavelMutationService {
 
         Responsavel savedResponsavel = responsavelRepo.save(responsavel);
 
-        log.info("Responsável {} cadastrado com sucesso.", savedResponsavel.getName().toUpperCase());
+        log.info("Responsável {} cadastrado com sucesso.", savedResponsavel.getNome().toUpperCase());
         return responsavelMapper.toResponseDto(savedResponsavel);
     }
 
@@ -73,30 +73,10 @@ public class ResponsavelMutationService {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um responsável utilizando este e-mail.");
         }
 
-        responsavel.updateDetails(dto.name(), dto.birthdate(), dto.contact(), dto.email());
+        responsavel.updateDetails(dto.nome(), dto.dataNascimento(), dto.telefone(), dto.email());
 
-        log.info("Responsável {} atualizado com sucesso.", responsavel.getName().toUpperCase());
+        log.info("Responsável {} atualizado com sucesso.", responsavel.getNome().toUpperCase());
         return responsavelMapper.toResponseDto(responsavel);
-    }
-
-    @Transactional
-    public void archiveResponsavel(UUID responsavelId) {
-        Responsavel responsavel = findResponsavelOrThrow(responsavelId);
-
-        if (alunoRepo.existsByParentIdAndActiveTrue(responsavel.getId())) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST,"O responsável possui alunos ativos vinculados. Arquive os alunos antes de arquivar o responsável.");
-        }
-
-        // TODO: reintroduzir arquivamento quando a nova tabela responsaveis tiver esse estado.
-        log.info("Responsável {} arquivado com sucesso.", responsavel.getName().toUpperCase());
-    }
-
-    @Transactional
-    public void unarchiveResponsavel(UUID responsavelId) {
-        Responsavel responsavel = findResponsavelOrThrow(responsavelId);
-
-        // TODO: reintroduzir desarquivamento quando a nova tabela responsaveis tiver esse estado.
-        log.info("Responsável {} desarquivado com sucesso.", responsavel.getName().toUpperCase());
     }
 
     @Transactional
