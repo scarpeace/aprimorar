@@ -3,13 +3,11 @@ package aprimorar.pessoas.service;
 import aprimorar.pessoas.domain.Responsavel;
 import aprimorar.pessoas.dto.ResponsavelRequestDTO;
 import aprimorar.pessoas.dto.ResponsavelResponseDTO;
-import aprimorar.pessoas.events.DeleteAlunoVerificationEvent;
 import aprimorar.pessoas.repository.AlunoRepository;
 import aprimorar.pessoas.repository.ResponsavelRepository;
 import aprimorar.shared.exception.BusinessException;
 
 import java.util.UUID;
-import org.springframework.context.ApplicationEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
