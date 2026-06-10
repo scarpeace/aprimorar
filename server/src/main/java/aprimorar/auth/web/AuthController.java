@@ -32,21 +32,6 @@ public class AuthController {
     @Operation(operationId = "login", description = "Autentica um usuario e retorna um access token JWT.")
     @SecurityRequirements({})
     @ApiResponse(responseCode = "200", description = "Usuario autenticado com sucesso.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de validação",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "401",
-        description = "Credenciais invalidas.",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthRequestDTO request) {
         return ResponseEntity.ok(authService.authenticate(request.email(), request.password()));
     }
