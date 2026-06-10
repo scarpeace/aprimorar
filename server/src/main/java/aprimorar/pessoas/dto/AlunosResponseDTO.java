@@ -1,6 +1,5 @@
 package aprimorar.pessoas.dto;
 
-import aprimorar.pessoas.events.AlunoResponseDTO;
 import aprimorar.shared.PageDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;

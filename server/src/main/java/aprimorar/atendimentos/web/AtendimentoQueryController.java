@@ -2,8 +2,8 @@ package aprimorar.atendimentos.web;
 
 import aprimorar.atendimentos.dto.AtendimentosAlunoResponseDTO;
 import aprimorar.atendimentos.dto.AtendimentosColaboradorResponseDTO;
+import aprimorar.atendimentos.service.AtendimentoQueryService;
 import aprimorar.atendimentos.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.application.AtendimentoQueryService;
 import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;

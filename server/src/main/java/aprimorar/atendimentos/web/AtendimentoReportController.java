@@ -4,7 +4,7 @@ import aprimorar.atendimentos.dto.AtendimentosAlunosKpisDTO;
 import aprimorar.atendimentos.dto.AtendimentosColaboradorKpisDTO;
 import aprimorar.atendimentos.dto.AtendimentosContentReportDTO;
 import aprimorar.atendimentos.dto.AtendimentosKpisDTO;
-import aprimorar.atendimentos.application.AtendimentoReportService;
+import aprimorar.atendimentos.service.AtendimentoReportService;
 import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;

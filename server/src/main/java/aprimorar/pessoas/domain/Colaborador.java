@@ -1,6 +1,6 @@
 package aprimorar.pessoas.domain;
 
-import aprimorar.pessoas.shared.ColaboradorDutyEnum;
+import aprimorar.pessoas.shared.FuncoesColaborador;
 import aprimorar.pessoas.shared.Cpf;
 import aprimorar.pessoas.shared.Email;
 import aprimorar.shared.MapperUtils;
@@ -23,7 +23,6 @@ import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-@Getter
 @Entity
 @Table(name = "colaboradores")
 public class Colaborador {
@@ -33,17 +32,17 @@ public class Colaborador {
     private UUID id;
 
     @Column(name = "nome", nullable = false, length = 50)
-    private String name;
+    private String nome;
 
     @Column(name = "data_nascimento", nullable = false)
-    private LocalDate birthdate;
+    private LocalDate dataNascimento;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "cpf", nullable = false, unique = true))
     private Cpf cpf;
 
     @Column(name = "telefone", nullable = false)
-    private String contact;
+    private String telefone;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true))
@@ -51,6 +50,10 @@ public class Colaborador {
 
     @Column(name = "pix", nullable = false)
     private String pix;
+
+    @Column(name = "funcao", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private FuncoesColaborador funcao;
 
     @Column(name = "ativo", nullable = false)
     private Boolean active = true;
@@ -66,10 +69,6 @@ public class Colaborador {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    @Column(name = "funcao", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ColaboradorDutyEnum duty;
-
     @Embedded
     private Endereco endereco;
 
@@ -78,56 +77,50 @@ public class Colaborador {
 
     public Colaborador(
             String name,
-            LocalDate birthdate,
+            LocalDate dataNascimento,
             String pix,
-            String contact,
+            String telefone,
             String cpf,
             String email,
-            ColaboradorDutyEnum duty,
+            FuncoesColaborador funcao,
             Endereco endereco
     ) {
 
-        this.name = validateName(name);
-        this.birthdate = validateBirthdate(birthdate);
+        this.nome = validateName(name);
+        this.dataNascimento = validateDataNascimento(dataNascimento);
         this.pix = validatePix(pix);
-        this.contact = validateContact(contact);
+        this.telefone = validateTelefone(telefone);
         this.cpf = new Cpf(cpf);
         this.email = new Email(email);
         this.endereco = validateEndereco(endereco);
-        this.duty = duty;
+        this.funcao = funcao;
     }
 
     public void update(
             String name,
-            LocalDate birthdate,
+            LocalDate dataNascimento,
             String pix,
-            String contact,
+            String telefone,
             String email,
-            ColaboradorDutyEnum duty,
+            FuncoesColaborador funcao,
             Endereco endereco
     ) {
-        this.name = validateName(name);
-        this.birthdate = validateBirthdate(birthdate);
+        validateNotSystemRecord(this);
+        this.nome = validateName(name);
+        this.dataNascimento = validateDataNascimento(dataNascimento);
         this.pix = validatePix(pix);
-        this.contact = validateContact(contact);
+        this.telefone = validateTelefone(telefone);
         this.email = new Email(email);
-        this.duty = duty;
+        this.funcao = funcao;
         this.endereco = validateEndereco(endereco);
     }
 
     public boolean isSystemRecord() {
-        return ColaboradorDutyEnum.SYSTEM.equals(this.duty);
-    }
-
-    public String getCpf() {
-        return cpf.value();
-    }
-
-    public String getEmail() {
-        return email.value();
+        return FuncoesColaborador.SYSTEM.equals(this.funcao);
     }
 
     public void archive() {
+        validateNotSystemRecord(this);
         this.active = false;
     }
 
@@ -139,9 +132,7 @@ public class Colaborador {
     }
 
     public void unarchive() {
-        if (isSystemRecord()) {
-            throw new IllegalArgumentException("Não é possível desarquivar este registro " + ColaboradorDutyEnum.SYSTEM.getDescription());
-        }
+        validateNotSystemRecord(this);
         this.active = true;
     }
 
@@ -152,15 +143,15 @@ public class Colaborador {
         return name;
     }
 
-    private LocalDate validateBirthdate(LocalDate birthdate) {
-        if (birthdate == null) {
+    private LocalDate validateDataNascimento(LocalDate dataNascimento) {
+        if (dataNascimento == null) {
             throw new IllegalArgumentException("STATE: Data de nascimento do colaborador é obrigatória");
         }
-        return birthdate;
+        return dataNascimento;
     }
 
-    private String validateContact(String contact) {
-        var normalized = MapperUtils.normalizeContact(contact);
+    private String validateTelefone(String telefone) {
+        var normalized = MapperUtils.normalizeContact(telefone);
         if (normalized == null || normalized.isBlank()) {
             throw new IllegalArgumentException("STATE: Contato do colaborador é obrigatório");
         }
@@ -177,5 +168,113 @@ public class Colaborador {
         }
         return endereco;
     }
+
+    private void validateNotSystemRecord(Colaborador colaborador) {
+        if (colaborador.isSystemRecord()) {
+            throw new IllegalArgumentException("Não é possível realizar esta operação em um registro do sistema.");
+        }
+    }
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+	public Cpf getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(Cpf cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public Email getEmail() {
+		return email;
+	}
+
+	public void setEmail(Email email) {
+		this.email = email;
+	}
+
+	public String getPix() {
+		return pix;
+	}
+
+	public void setPix(String pix) {
+		this.pix = pix;
+	}
+
+	public FuncoesColaborador getFuncao() {
+		return funcao;
+	}
+
+	public void setFuncao(FuncoesColaborador funcao) {
+		this.funcao = funcao;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Instant updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+
+
 
 }

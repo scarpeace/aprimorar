@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aprimorar.pessoas.dto.AlunoRequestDTO;
+import aprimorar.pessoas.dto.AlunoResponseDTO;
 import aprimorar.pessoas.dto.AlunosKpisDTO;
 import aprimorar.pessoas.dto.AlunosListDTO;
 import aprimorar.pessoas.dto.AlunosResponseDTO;
-import aprimorar.pessoas.events.AlunoResponseDTO;
 import aprimorar.pessoas.service.AlunoMutationService;
 import aprimorar.pessoas.service.AlunoQueryService;
 import aprimorar.shared.exception.ProblemResponseDTO;

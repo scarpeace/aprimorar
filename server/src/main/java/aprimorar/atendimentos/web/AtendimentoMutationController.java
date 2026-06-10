@@ -2,7 +2,7 @@ package aprimorar.atendimentos.web;
 
 import aprimorar.atendimentos.dto.AtendimentoRequestDTO;
 import aprimorar.atendimentos.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.application.AtendimentoMutationService;
+import aprimorar.atendimentos.service.AtendimentoMutationService;
 import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

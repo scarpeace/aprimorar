@@ -1,11 +1,11 @@
 package aprimorar.pessoas.service;
 
 import aprimorar.pessoas.domain.Aluno;
+import aprimorar.pessoas.dto.AlunoResponseDTO;
 import aprimorar.pessoas.dto.AlunosKpisDTO;
 import aprimorar.pessoas.dto.AlunosListDTO;
 import aprimorar.pessoas.dto.AlunosResponseDTO;
 import aprimorar.pessoas.events.AlunoQueryApi;
-import aprimorar.pessoas.events.AlunoResponseDTO;
 import aprimorar.pessoas.mappers.AlunoMapper;
 import aprimorar.pessoas.repository.AlunoRepository;
 import aprimorar.pessoas.repository.specifications.AlunoSpecifications;

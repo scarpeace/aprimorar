@@ -3,31 +3,53 @@ package aprimorar.pessoas.repository.specifications;
 import org.springframework.data.jpa.domain.Specification;
 
 import aprimorar.pessoas.domain.Colaborador;
-import aprimorar.pessoas.shared.ColaboradorDutyEnum;
+import aprimorar.pessoas.dto.ColaboradorFiltroRequest;
+import aprimorar.pessoas.shared.FuncoesColaborador;
 
 public final class ColaboradorSpecifications {
-    private ColaboradorSpecifications() {
+
+    public static Specification<Colaborador> comFiltros(ColaboradorFiltroRequest filtro) {
+        return Specification
+            .where(nomeContem(filtro.nome()))
+            .and(emailContem(filtro.email()))
+            .and(dutyContem(filtro.cpf()))
+            .and(ativosContem(filtro.ativos()))
+            .and(isNotGhost());
     }
 
-    public static Specification<Colaborador> isArchived() {
-        return (root, query, cb) -> cb.isFalse(root.get("active"));
+    public static Specification<Colaborador> nomeContem(String term) {
+        return (root, query, cb) -> {
+            String pattern = "%" + term.toLowerCase() + "%";
+            return cb.like(cb.lower(root.get("name")), pattern);
+        };
+    }
+
+    public static Specification<Colaborador> emailContem(String term) {
+        return (root, query, cb) -> {
+            String pattern = "%" + term.toLowerCase() + "%";
+            return cb.like(cb.lower(root.get("email")), pattern);
+        };
+    }
+
+    public static Specification<Colaborador> cpfContem(String term) {
+        return (root, query, cb) -> {
+            String pattern = "%" + term.toLowerCase() + "%";
+            return cb.like(cb.lower(root.get("cpf")), pattern);
+        };
+    }
+
+    public static Specification<Colaborador> ativosContem(Boolean ativos) {
+        return (root, query, cb) -> cb.equal(root.get("active"), ativos);
+    }
+
+    public static Specification<Colaborador> dutyContem(String term) {
+        return (root, query, cb) -> {
+            String pattern = "%" + term.toLowerCase() + "%";
+            return cb.like(cb.lower(root.get("duty").as(String.class)), pattern);
+        };
     }
 
     public static Specification<Colaborador> isNotGhost() {
-        return (root, query, cb) -> cb.notEqual(root.get("duty"), ColaboradorDutyEnum.SYSTEM);
-    }
-
-    public static Specification<Colaborador> searchContainsIgnoreCase(String term) {
-        return (root, query, cb) -> {
-            String pattern = "%" + term.toLowerCase() + "%";
-            return cb.and(
-                    cb.notEqual(root.get("duty"), ColaboradorDutyEnum.SYSTEM),
-                    cb.or(
-                            cb.like(cb.lower(root.get("name")), pattern),
-                            cb.like(cb.lower(root.get("email")), pattern),
-                            cb.like(cb.lower(root.get("duty").as(String.class)), pattern)
-                    )
-            );
-        };
+        return (root, query, cb) -> cb.notEqual(root.get("duty"), FuncoesColaborador.SYSTEM);
     }
 }

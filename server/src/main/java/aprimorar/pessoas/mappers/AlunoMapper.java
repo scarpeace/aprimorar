@@ -3,7 +3,7 @@ package aprimorar.pessoas.mappers;
 import aprimorar.pessoas.domain.Aluno;
 import aprimorar.pessoas.domain.Endereco;
 import aprimorar.pessoas.dto.AlunoRequestDTO;
-import aprimorar.pessoas.events.AlunoResponseDTO;
+import aprimorar.pessoas.dto.AlunoResponseDTO;
 import aprimorar.pessoas.shared.address.BrazilianStatesEnum;
 import aprimorar.pessoas.shared.address.dto.AddressResponseDTO;
 

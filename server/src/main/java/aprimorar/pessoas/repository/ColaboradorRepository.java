@@ -1,7 +1,7 @@
 package aprimorar.pessoas.repository;
 
 import aprimorar.pessoas.domain.Colaborador;
-import aprimorar.pessoas.shared.ColaboradorDutyEnum;
+import aprimorar.pessoas.shared.FuncoesColaborador;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,11 +15,11 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, UUID>,
 
     boolean existsByEmailAndIdNot(String email, UUID id);
 
-    long countByDutyNotAndActiveTrue(ColaboradorDutyEnum duty);
+    long countByDutyNotAndActiveTrue(FuncoesColaborador duty);
 
-    long countByDutyNot(ColaboradorDutyEnum duty);
+    long countByDutyNot(FuncoesColaborador duty);
 
-    List<Colaborador> findAllByDutyNotAndActiveTrueOrderByNameAsc(ColaboradorDutyEnum duty);
+    List<Colaborador> findAllByDutyNotAndActiveTrueOrderByNameAsc(FuncoesColaborador duty);
 
-    long countByActiveTrueAndDutyNot(ColaboradorDutyEnum role);
+    long countByActiveTrueAndDutyNot(FuncoesColaborador role);
 }

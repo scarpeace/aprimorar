@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import aprimorar.atendimentos.domain.TipoAtendimentoEnum;
+import aprimorar.atendimentos.enums.TipoAtendimentoEnum;
 
 @Schema(description = "Formato de payload para cadastro e atualização de atendimento")
 public record AtendimentoRequestDTO(

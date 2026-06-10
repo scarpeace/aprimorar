@@ -3,6 +3,8 @@ package aprimorar.pessoas.events;
 import java.util.List;
 import java.util.UUID;
 
+import aprimorar.pessoas.dto.AlunoResponseDTO;
+
 public interface AlunoQueryApi {
 
 

@@ -2,8 +2,8 @@ package aprimorar.pessoas.service;
 
 import aprimorar.pessoas.domain.Aluno;
 import aprimorar.pessoas.dto.AlunoRequestDTO;
+import aprimorar.pessoas.dto.AlunoResponseDTO;
 import aprimorar.pessoas.events.AlunoDeletedEvent;
-import aprimorar.pessoas.events.AlunoResponseDTO;
 import aprimorar.pessoas.events.ArchiveAlunoVerificationEvent;
 import aprimorar.pessoas.events.DeleteAlunoVerificationEvent;
 import aprimorar.pessoas.events.ResponsavelQueryApi;

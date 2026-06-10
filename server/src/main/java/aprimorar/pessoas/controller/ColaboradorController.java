@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -15,20 +16,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import aprimorar.pessoas.dto.ColaboradorFiltroRequest;
 import aprimorar.pessoas.dto.ColaboradorRequestDTO;
+import aprimorar.pessoas.dto.ColaboradorResponseDTO;
 import aprimorar.pessoas.dto.ColaboradoresKpisDTO;
 import aprimorar.pessoas.dto.ColaboradoresListDTO;
-import aprimorar.pessoas.dto.ColaboradoresResponseDTO;
-import aprimorar.pessoas.events.ColaboradorResponseDTO;
 import aprimorar.pessoas.service.ColaboradorMutationService;
 import aprimorar.pessoas.service.ColaboradorQueryService;
-import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -54,21 +51,6 @@ public class ColaboradorController {
     @PostMapping
     @Operation(operationId = "createColaborador", description = "Cria um novo colaborador com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Colaborador criado com sucesso.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de validação",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<ColaboradorResponseDTO> createColaborador(
         @RequestBody @Valid ColaboradorRequestDTO colaboradorRequestDto
     ) {
@@ -79,38 +61,17 @@ public class ColaboradorController {
     @GetMapping
     @Operation(operationId = "getColaboradores", description = "Retorna uma lista paginada de colaboradores.")
     @ApiResponse(responseCode = "200", description = "Lista de colaboradores retornada com sucesso.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Parâmetros inválidos",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    public ResponseEntity<ColaboradoresResponseDTO> getColaboradores(
-        @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
-        @RequestParam(required = false) String busca,
-        @RequestParam(required = false) Boolean arquivado
+    public ResponseEntity<Page<ColaboradorResponseDTO>> getColaboradores(
+        @ParameterObject ColaboradorFiltroRequest filtro,
+        @ParameterObject @PageableDefault(sort = "name") Pageable pageable
     ) {
-        ColaboradoresResponseDTO colaboradores = colaboradorQueryService.getColaboradores(pageable, busca, arquivado);
+        Page<ColaboradorResponseDTO> colaboradores = colaboradorQueryService.getColaboradores(filtro, pageable);
         return ResponseEntity.ok(colaboradores);
     }
 
     @GetMapping("/kpis")
     @Operation(operationId = "getColaboradoresKpis", description = "Retorna os KPIs de colaboradores.")
     @ApiResponse(responseCode = "200", description = "KPIs de colaboradores retornados com sucesso.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Parâmetros inválidos",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<ColaboradoresKpisDTO> getColaboradoresKpis() {
         ColaboradoresKpisDTO kpis = colaboradorQueryService.getColaboradoresKpis();
         return ResponseEntity.ok(kpis);
@@ -119,11 +80,6 @@ public class ColaboradorController {
     @GetMapping("/options")
     @Operation(operationId = "listColaboradores", description = "Retorna uma lista de opções de colaboradores para dropdown.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<List<ColaboradoresListDTO>> listarOpcoes() {
         List<ColaboradoresListDTO> options = colaboradorQueryService.listColaboradores();
         return ResponseEntity.ok(options);
@@ -132,16 +88,6 @@ public class ColaboradorController {
     @GetMapping("/{colaboradorId}")
     @Operation(operationId = "findColaboradorById", description = "Retorna um colaborador por ID.")
     @ApiResponse(responseCode = "200", description = "Colaborador retornado com sucesso.")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Colaborador não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<ColaboradorResponseDTO> buscarPorId(@PathVariable UUID colaboradorId) {
         ColaboradorResponseDTO colaborador = colaboradorQueryService.findColaboradorById(colaboradorId);
         return ResponseEntity.ok(colaborador);
@@ -150,26 +96,6 @@ public class ColaboradorController {
     @PatchMapping("/{colaboradorId}")
     @Operation(operationId = "updateColaborador", description = "Atualiza um colaborador por ID.")
     @ApiResponse(responseCode = "200", description = "Colaborador atualizado com sucesso.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de validação",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "404",
-        description = "Colaborador não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<ColaboradorResponseDTO> updateColaborador(
         @PathVariable UUID colaboradorId,
         @RequestBody @Valid ColaboradorRequestDTO colaboradorRequestDTO
@@ -181,21 +107,6 @@ public class ColaboradorController {
     @DeleteMapping("/{colaboradorId}")
     @Operation(operationId = "deleteColaborador", description = "Deleta um colaborador por ID.")
     @ApiResponse(responseCode = "204", description = "Colaborador deletado com sucesso.")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Colaborador não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<Void> deleteColaborador(@PathVariable UUID colaboradorId) {
         colaboradorMutationService.deleteColaborador(colaboradorId);
         return ResponseEntity.noContent().build();
@@ -204,21 +115,6 @@ public class ColaboradorController {
     @PatchMapping("/{colaboradorId}/archive")
     @Operation(operationId = "arquivarColaborador", description = "Arquiva um colaborador por ID.")
     @ApiResponse(responseCode = "204", description = "Colaborador arquivado com sucesso.")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Colaborador não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<Void> archiveColaborador(@PathVariable UUID colaboradorId) {
         colaboradorMutationService.archiveColaborador(colaboradorId);
         return ResponseEntity.noContent().build();
@@ -227,21 +123,6 @@ public class ColaboradorController {
     @PatchMapping("/{colaboradorId}/unarchive")
     @Operation(operationId = "desarquivarColaborador", description = "Desarquiva um colaborador por ID.")
     @ApiResponse(responseCode = "204", description = "Colaborador desarquivado com sucesso.")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Colaborador não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<Void> unarchiveColaborador(@PathVariable UUID colaboradorId) {
         colaboradorMutationService.unarchiveColaborador(colaboradorId);
         return ResponseEntity.noContent().build();
