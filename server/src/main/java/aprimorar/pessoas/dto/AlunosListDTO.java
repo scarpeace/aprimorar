@@ -11,6 +11,6 @@ public record AlunosListDTO(
         UUID id,
         @NotNull
         @Schema(description = "Nome completo do aluno", example = "Maria Silva")
-        String name
+        String nome
 ) {
 }

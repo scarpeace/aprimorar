@@ -1,27 +1,27 @@
 package aprimorar.pessoas.dto;
 
+import aprimorar.pessoas.domain.Aluno;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.UUID;
-
-import aprimorar.pessoas.shared.address.dto.AddressResponseDTO;
 
 @Schema(description = "Dados do aluno retornados pela API")
 public record AlunoResponseDTO(
         @NotNull
-        @Schema(description = "Indentificador único do aluno", example = "550e8400-e29b-41d4-a716-446655440000")
+        @Schema(description = "Identificador único do aluno", example = "550e8400-e29b-41d4-a716-446655440000")
         UUID id,
 
         @NotNull
         @Schema(example = "John Doe", description = "Nome do aluno")
-        String name,
+        String nome,
 
         @NotNull
         @Schema(example = "123456789", description = "Contato do aluno")
-        String contact,
+        String telefone,
 
         @NotNull
         @Schema(example = "john.doe@example.com", description = "Email do aluno")
@@ -33,32 +33,53 @@ public record AlunoResponseDTO(
 
         @NotNull
         @Schema(example = "1990-01-01", description = "Data de nascimento do aluno")
-        LocalDate birthdate,
+        LocalDate dataNascimento,
 
         @NotNull
         @Schema(example = "Leonardo da Vinci", description = "Nome da escola do aluno")
-        String school,
+        String escola,
 
         @NotNull
         @Schema(example = "30", description = "Idade do aluno")
-        Integer age,
+        Integer idade,
 
         @NotNull
         @Schema(example = "eb4be7ae-ebc6-423a-a380-da97f4a81511", description = "ID do responsável")
-        UUID parentId,
+        UUID responsavelId,
 
-        @Schema( example = "2023-01-01T00:00:00Z", description = "Data e hora quando o aluno foi arquivado")
+        @Schema(example = "true", description = "Indica se o aluno está ativo")
         Boolean active,
 
-        @Schema(nullable = true, example = "2023-01-01T00:00:00Z", description = "Data e hora quando o aluno foi atualizado")
-        Instant updatedAt,
+        @Schema(nullable = true, example = "2023-01-01T00:00:00", description = "Data e hora da última atualização do aluno")
+        LocalDateTime updatedAt,
 
         @NotNull
-        @Schema(example = "2023-01-01T00:00:00Z", description = "Data e hora quando o aluno foi criado")
-        Instant createdAt,
+        @Schema(example = "2023-01-01T00:00:00", description = "Data e hora de criação do aluno")
+        LocalDateTime createdAt,
 
         @NotNull
-        @Schema(implementation = AddressResponseDTO.class, example = "Street Name", description = "Endereço do aluno")
-        AddressResponseDTO address
+        @Schema(implementation = EnderecoResponseDTO.class, description = "Endereço do aluno")
+        EnderecoResponseDTO endereco
 ) {
+    public static AlunoResponseDTO toDto(Aluno aluno) {
+        return new AlunoResponseDTO(
+            aluno.getId(),
+            aluno.getNome(),
+            aluno.getTelefone(),
+            aluno.getEmail(),
+            aluno.getCpf(),
+            aluno.getDataNascimento(),
+            aluno.getEscola(),
+            calculateAge(aluno.getDataNascimento()),
+            aluno.getResponsavelId(),
+            aluno.getActive(),
+            aluno.getUpdatedAt(),
+            aluno.getCreatedAt(),
+            EnderecoResponseDTO.toDto(aluno.getEndereco())
+        );
+    }
+
+    private static Integer calculateAge(LocalDate dataNascimento) {
+        return Period.between(dataNascimento, LocalDate.now()).getYears();
+    }
 }

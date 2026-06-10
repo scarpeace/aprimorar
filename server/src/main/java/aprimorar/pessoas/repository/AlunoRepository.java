@@ -10,13 +10,13 @@ import aprimorar.pessoas.domain.Aluno;
 
 public interface AlunoRepository extends JpaRepository<Aluno, UUID>, JpaSpecificationExecutor<Aluno> {
 
-    List<Aluno> findAllByParentId(UUID parentId);
+    List<Aluno> findAllByResponsavelId(UUID responsavelId);
 
-    java.util.List<Aluno> findByNameContainingIgnoreCase(String name);
+    java.util.List<Aluno> findByNomeContainingIgnoreCase(String nome);
 
-    boolean existsByParentId(UUID parentId);
+    boolean existsByResponsavelId(UUID responsavelId);
 
-    boolean existsByParentIdAndActiveTrue(UUID parentId);
+    boolean existsByResponsavelIdAndActiveTrue(UUID responsavelId);
 
     boolean existsByCpf(String cpf);
     boolean existsByCpfAndIdNot(String cpf, UUID id);

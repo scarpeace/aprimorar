@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -16,14 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import aprimorar.pessoas.dto.AlunoFiltroRequest;
 import aprimorar.pessoas.dto.AlunoRequestDTO;
 import aprimorar.pessoas.dto.AlunoResponseDTO;
 import aprimorar.pessoas.dto.AlunosKpisDTO;
 import aprimorar.pessoas.dto.AlunosListDTO;
-import aprimorar.pessoas.dto.AlunosResponseDTO;
 import aprimorar.pessoas.service.AlunoMutationService;
 import aprimorar.pessoas.service.AlunoQueryService;
 import aprimorar.shared.exception.ProblemResponseDTO;
@@ -67,8 +67,8 @@ public class AlunoController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<AlunoResponseDTO> createStudent(@RequestBody @Valid AlunoRequestDTO createStudentDto) {
-        AlunoResponseDTO response = alunoMutationService.createAluno(createStudentDto);
+    public ResponseEntity<AlunoResponseDTO> createAluno(@RequestBody @Valid AlunoRequestDTO alunoRequestDTO) {
+        AlunoResponseDTO response = alunoMutationService.createAluno(alunoRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -85,13 +85,12 @@ public class AlunoController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<AlunosResponseDTO> getAlunos(
-        @ParameterObject @PageableDefault(sort = "name") Pageable pageable,
-        @RequestParam(required = false) String search,
-        @RequestParam(required = false) Boolean archived
+    public ResponseEntity<Page<AlunoResponseDTO>> getAlunos(
+        @ParameterObject AlunoFiltroRequest filtro,
+        @ParameterObject @PageableDefault(sort = "nome") Pageable pageable
     ) {
-        AlunosResponseDTO students = alunoQueryService.getAlunos(pageable, search, archived);
-        return ResponseEntity.ok(students);
+        Page<AlunoResponseDTO> alunos = alunoQueryService.getAlunos(filtro, pageable);
+        return ResponseEntity.ok(alunos);
     }
 
     @GetMapping("/kpis")
@@ -112,7 +111,7 @@ public class AlunoController {
         return ResponseEntity.ok(kpis);
     }
 
-    @GetMapping("/responsavel/{parentId}")
+    @GetMapping("/responsavel/{responsavelId}")
     @Operation(operationId = "getAlunosByResponsavel", description = "Retorna uma lista de alunos pelo ID do responsável.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
     @ApiResponse(
@@ -121,9 +120,9 @@ public class AlunoController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<List<AlunoResponseDTO>> getAlunosPorResponsavel(
-        @PathVariable UUID parentId
+        @PathVariable UUID responsavelId
     ) {
-        List<AlunoResponseDTO> options = alunoQueryService.getAlunosByResponsavelId(parentId);
+        List<AlunoResponseDTO> options = alunoQueryService.getAlunosByResponsavelId(responsavelId);
         return ResponseEntity.ok(options);
     }
 
@@ -140,7 +139,7 @@ public class AlunoController {
         return ResponseEntity.ok(options);
     }
 
-    @GetMapping("/{studentId}")
+    @GetMapping("/{alunoId}")
     @Operation(operationId = "getAlunoById", description = "Retorna um aluno por ID.")
     @ApiResponse(responseCode = "200", description = "Aluno retornado com sucesso.")
     @ApiResponse(
@@ -153,12 +152,12 @@ public class AlunoController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<AlunoResponseDTO> getStudentById(@PathVariable UUID studentId) {
-        AlunoResponseDTO foundAluno = alunoQueryService.findAlunoById(studentId);
+    public ResponseEntity<AlunoResponseDTO> getAlunoById(@PathVariable UUID alunoId) {
+        AlunoResponseDTO foundAluno = alunoQueryService.findAlunoById(alunoId);
         return ResponseEntity.ok(foundAluno);
     }
 
-    @PutMapping("/{studentId}")
+    @PutMapping("/{alunoId}")
     @Operation(operationId = "updateAluno", description = "Atualiza um aluno por ID.")
     @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso.")
     @ApiResponse(
@@ -181,15 +180,15 @@ public class AlunoController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<AlunoResponseDTO> updateStudent(
-        @PathVariable UUID studentId,
+    public ResponseEntity<AlunoResponseDTO> updateAluno(
+        @PathVariable UUID alunoId,
         @RequestBody @Valid AlunoRequestDTO dto
     ) {
-        AlunoResponseDTO updatedAluno = alunoMutationService.updateAluno(studentId, dto);
+        AlunoResponseDTO updatedAluno = alunoMutationService.updateAluno(alunoId, dto);
         return ResponseEntity.ok(updatedAluno);
     }
 
-    @DeleteMapping("/{studentId}")
+    @DeleteMapping("/{alunoId}")
     @Operation(operationId = "deleteAluno", description = "Deleta um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno deletado com sucesso.")
     @ApiResponse(
@@ -207,12 +206,12 @@ public class AlunoController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<Void> deleteStudent(@PathVariable UUID studentId) {
-        alunoMutationService.deleteAluno(studentId);
+    public ResponseEntity<Void> deleteAluno(@PathVariable UUID alunoId) {
+        alunoMutationService.deleteAluno(alunoId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{studentId}/archive")
+    @PatchMapping("/{alunoId}/archive")
     @Operation(operationId = "archiveAluno", description = "Arquiva um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno arquivado com sucesso.")
     @ApiResponse(
@@ -230,12 +229,12 @@ public class AlunoController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<Void> archiveStudent(@PathVariable UUID studentId) {
-        alunoMutationService.archiveAluno(studentId);
+    public ResponseEntity<Void> archiveAluno(@PathVariable UUID alunoId) {
+        alunoMutationService.archiveAluno(alunoId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{studentId}/unarchive")
+    @PatchMapping("/{alunoId}/unarchive")
     @Operation(operationId = "unarchiveAluno", description = "Desarquiva um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno desarquivado com sucesso.")
     @ApiResponse(
@@ -253,8 +252,8 @@ public class AlunoController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<Void> unarchiveStudent(@PathVariable UUID studentId) {
-        alunoMutationService.unarchiveAluno(studentId);
+    public ResponseEntity<Void> unarchiveAluno(@PathVariable UUID alunoId) {
+        alunoMutationService.unarchiveAluno(alunoId);
         return ResponseEntity.noContent().build();
     }
 }

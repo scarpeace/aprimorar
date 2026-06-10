@@ -1,17 +1,14 @@
 package aprimorar.pessoas.service;
 
 import aprimorar.pessoas.domain.Aluno;
+import aprimorar.pessoas.dto.AlunoFiltroRequest;
 import aprimorar.pessoas.dto.AlunoResponseDTO;
 import aprimorar.pessoas.dto.AlunosKpisDTO;
 import aprimorar.pessoas.dto.AlunosListDTO;
-import aprimorar.pessoas.dto.AlunosResponseDTO;
 import aprimorar.pessoas.events.AlunoQueryApi;
-import aprimorar.pessoas.mappers.AlunoMapper;
 import aprimorar.pessoas.repository.AlunoRepository;
 import aprimorar.pessoas.repository.specifications.AlunoSpecifications;
-import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
-import java.time.Clock;
 import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -28,42 +25,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlunoQueryService implements AlunoQueryApi {
 
     private static final Logger log = LoggerFactory.getLogger(AlunoQueryService.class);
-    private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-4000-8000-000000000002");
 
 
     private final AlunoRepository alunoRepo;
-    private final AlunoMapper alunoMapper;
 
-    private final Clock clock;
-
-    public AlunoQueryService(AlunoRepository studentRepo, AlunoMapper studentMapper, Clock clock) {
+    public AlunoQueryService(AlunoRepository studentRepo) {
         this.alunoRepo = studentRepo;
-        this.alunoMapper = studentMapper;
-        this.clock = clock;
     }
 
     @Transactional(readOnly = true)
-    public AlunosResponseDTO getAlunos(Pageable pageable, String search, Boolean includeArquived) {
-        Specification<Aluno> spec = AlunoSpecifications.isNotAdmin();
+    @Override
+    public Page<AlunoResponseDTO> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
+        Specification<Aluno> spec = AlunoSpecifications.comFiltros(filtro);
+        Page<Aluno> alunosPage = alunoRepo.findAll(spec, pageable);
+        Page<AlunoResponseDTO> alunosDtoPage = alunosPage.map(AlunoResponseDTO::toDto);
 
-        if (Boolean.FALSE.equals(includeArquived)) {
-            spec = spec.and(AlunoSpecifications.isNotArchived());
-        }
-
-        if (search != null && !search.trim().isEmpty()) {
-            spec = spec.and(AlunoSpecifications.searchContainsIgnoreCase(search.trim()));
-        }
-
-        Page<Aluno> studentPage = alunoRepo.findAll(spec, pageable);
-        var totalActiveStudents = alunoRepo.countByActiveTrueAndIdNot(GHOST_STUDENT_ID);
-
-        AlunosResponseDTO alunosResponseDTO = new AlunosResponseDTO(
-            totalActiveStudents,
-            new PageDTO<>(studentPage.map(student -> alunoMapper.toResponseDto(student, clock)))
-        );
-
-        log.info("Consulta de alunos finalizada, {} registros encontrados.", studentPage.getTotalElements());
-        return alunosResponseDTO;
+        log.info("Consulta de alunos finalizada, {} registros encontrados.", alunosPage.getTotalElements());
+        return alunosDtoPage;
     }
 
     @Transactional(readOnly = true)
@@ -76,12 +55,12 @@ public class AlunoQueryService implements AlunoQueryApi {
 
     @Transactional(readOnly = true)
     public List<AlunosListDTO> listAlunos() {
-        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        Sort sort = Sort.by(Sort.Direction.ASC, "nome");
 
         List<AlunosListDTO> alunos = alunoRepo
             .findAll(AlunoSpecifications.isNotArchived(), sort)
             .stream()
-            .map(e -> new AlunosListDTO(e.getId(), e.getName()))
+            .map(e -> new AlunosListDTO(e.getId(), e.getNome()))
             .toList();
 
         log.info("Consulta de opcoes de alunos finalizada, {} registros encontrados.", alunos.size());
@@ -92,17 +71,17 @@ public class AlunoQueryService implements AlunoQueryApi {
     @Override
     public AlunoResponseDTO findAlunoById(UUID studentId) {
         Aluno student = findStudentOrThrow(studentId);
-        log.info("Aluno {} consultado com sucesso.", student.getName().toUpperCase());
-        return alunoMapper.toResponseDto(student, clock);
+        log.info("Aluno {} consultado com sucesso.", student.getNome().toUpperCase());
+        return AlunoResponseDTO.toDto(student);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<AlunoResponseDTO> getAlunosByResponsavelId(UUID parentId) {
-        List<Aluno> students = alunoRepo.findAllByParentId(parentId);
+    public List<AlunoResponseDTO> getAlunosByResponsavelId(UUID responsavelId) {
+        List<Aluno> students = alunoRepo.findAllByResponsavelId(responsavelId);
         List<AlunoResponseDTO> alunos = students
             .stream()
-            .map(student -> alunoMapper.toResponseDto(student, clock))
+            .map(AlunoResponseDTO::toDto)
             .toList();
 
         log.info("Consulta de alunos por responsavel finalizada, {} registros encontrados.", alunos.size());
@@ -111,8 +90,8 @@ public class AlunoQueryService implements AlunoQueryApi {
 
     @Transactional(readOnly = true)
     @Override
-    public boolean hasActiveAlunosLinkedToResponsavel(UUID parentId) {
-        return alunoRepo.existsByParentIdAndActiveTrue(parentId);
+    public boolean hasActiveAlunosLinkedToResponsavel(UUID responsavelId) {
+        return alunoRepo.existsByResponsavelIdAndActiveTrue(responsavelId);
     }
 
     /* ----- Helper Methods ----- */

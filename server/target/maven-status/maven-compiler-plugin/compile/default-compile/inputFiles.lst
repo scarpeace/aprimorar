@@ -54,11 +54,11 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/domain/Colaborador.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/domain/Endereco.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/domain/Responsavel.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/AlunoFiltroRequest.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/AlunoRequestDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/AlunoResponseDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/AlunosKpisDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/AlunosListDTO.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/AlunosResponseDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/ColaboradorFiltroRequest.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/ColaboradorRequestDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/dto/ColaboradorResponseDTO.java
@@ -81,7 +81,6 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/events/ResponsavelDeletedEvent.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/events/ResponsavelQueryApi.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/exception/InvalidAddressException.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/mappers/AlunoMapper.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/package-info.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/repository/AlunoRepository.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/repository/ColaboradorRepository.java
@@ -99,9 +98,6 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/shared/Email.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/shared/FuncoesColaborador.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/shared/Person.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/shared/address/BrazilianStatesEnum.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/shared/address/dto/AddressRequestDTO.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/shared/address/dto/AddressResponseDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/shared/MapperUtils.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/shared/PageDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/shared/enums/Role.java

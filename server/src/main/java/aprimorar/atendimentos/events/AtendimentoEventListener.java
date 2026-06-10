@@ -18,7 +18,7 @@ import java.util.UUID;
 public class AtendimentoEventListener {
 
     private final AtendimentoRepository atendimentoRepo;
-    private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-4000-8000-000000000002");
     private static final UUID GHOST_COLABORADOR_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
 
     public AtendimentoEventListener(AtendimentoRepository atendimentoRepo) {

@@ -10,17 +10,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
-import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "alunos")
-@Getter
 public class Aluno {
 
     @Id
@@ -28,27 +26,27 @@ public class Aluno {
     private UUID id;
 
     @Column(name = "nome", nullable = false, length = 50)
-    private String name;
+    private String nome;
 
     @Column(name = "data_nascimento", nullable = false)
-    private LocalDate birthdate;
+    private LocalDate dataNascimento;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "cpf", nullable = false, unique = true))
     private Cpf cpf;
 
     @Column(name = "telefone", nullable = false)
-    private String contact;
+    private String telefone;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true))
     private Email email;
 
     @Column(name = "escola")
-    private String school;
+    private String escola;
 
     @Column(name = "responsavel_id", nullable = false)
-    private UUID parentId;
+    private UUID responsavelId;
 
     @Column(name = "ativo", nullable = false)
     private Boolean active = true;
@@ -57,12 +55,10 @@ public class Aluno {
     private Long userId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    @CreationTimestamp
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @UpdateTimestamp
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @Embedded
     private Endereco endereco;
@@ -70,45 +66,53 @@ public class Aluno {
     protected Aluno() {
     }
 
+    @PrePersist
+    protected void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public Aluno(
-            String name,
-            LocalDate birthdate,
-            String pix,
-            String contact,
+            String nome,
+            LocalDate dataNascimento,
+            String telefone,
             String cpf,
             String email,
-            String school,
-            UUID parentId,
+            String escola,
+            UUID responsavelId,
             Endereco endereco
     ) {
-        validateRequiredFields(endereco, parentId);
-        this.name = validateName(name);
-        this.birthdate = validateBirthdate(birthdate);
-        this.contact = validateContact(contact);
+        validateRequiredFields(endereco, responsavelId);
+        this.nome = validateNome(nome);
+        this.dataNascimento = validateDataNascimento(dataNascimento);
+        this.telefone = validateTelefone(telefone);
         this.cpf = new Cpf(cpf);
         this.email = new Email(email);
-        this.school = school;
-        this.parentId = parentId;
+        this.escola = escola;
+        this.responsavelId = responsavelId;
         this.endereco = endereco;
     }
 
     public void update(
-        String name,
-        LocalDate birthdate,
-        String pix,
-        String contact,
+        String nome,
+        LocalDate dataNascimento,
+        String telefone,
         String email,
-        String school,
-        UUID parentId,
+        String escola,
+        UUID responsavelId,
         Endereco endereco
     ) {
-        validateRequiredFields(endereco, parentId);
-        this.name = validateName(name);
-        this.birthdate = validateBirthdate(birthdate);
-        this.contact = validateContact(contact);
+        validateRequiredFields(endereco, responsavelId);
+        this.nome = validateNome(nome);
+        this.dataNascimento = validateDataNascimento(dataNascimento);
+        this.telefone = validateTelefone(telefone);
         this.email = new Email(email);
-        this.school = school;
-        this.parentId = parentId;
+        this.escola = escola;
+        this.responsavelId = responsavelId;
         this.endereco = endereco;
     }
 
@@ -132,34 +136,126 @@ public class Aluno {
         this.active = true;
     }
 
-    private void validateRequiredFields(Endereco endereco, UUID parentId) {
+    private void validateRequiredFields(Endereco endereco, UUID responsavelId) {
         if (endereco == null) {
-            throw new IllegalArgumentException("STATE: Endereço do aluno é obrigatório");
+            throw new IllegalArgumentException("Endereço do aluno é obrigatório");
         }
-        if (parentId == null) {
-            throw new IllegalArgumentException("STATE: Aluno não pode ser cadastrado sem um responsável");
+        if (responsavelId == null) {
+            throw new IllegalArgumentException("Aluno não pode ser cadastrado sem um responsável");
         }
     }
 
-    private String validateName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("STATE: Nome do aluno é obrigatório");
+    private String validateNome(String nome) {
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("Nome do aluno é obrigatório");
         }
-        return name;
+        return nome;
     }
 
-    private LocalDate validateBirthdate(LocalDate birthdate) {
-        if (birthdate == null) {
-            throw new IllegalArgumentException("STATE: Data de nascimento do aluno é obrigatória");
+    private LocalDate validateDataNascimento(LocalDate dataNascimento) {
+        if (dataNascimento == null) {
+            throw new IllegalArgumentException("Data de nascimento do aluno é obrigatória");
         }
-        return birthdate;
+        return dataNascimento;
     }
 
-    private String validateContact(String contact) {
-        var normalized = MapperUtils.normalizeContact(contact);
+    private String validateTelefone(String telefone) {
+        var normalized = MapperUtils.normalizeContact(telefone);
         if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("STATE: Contato do aluno é obrigatório");
+            throw new IllegalArgumentException("Contato do aluno é obrigatório");
         }
         return normalized;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public void setCpf(Cpf cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public void setEmail(Email email) {
+        this.email = email;
+    }
+
+    public String getEscola() {
+        return escola;
+    }
+
+    public void setEscola(String escola) {
+        this.escola = escola;
+    }
+
+    public UUID getResponsavelId() {
+        return responsavelId;
+    }
+
+    public void setResponsavelId(UUID responsavelId) {
+        this.responsavelId = responsavelId;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
     }
 }

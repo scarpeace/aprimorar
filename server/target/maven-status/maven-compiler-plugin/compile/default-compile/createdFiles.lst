@@ -10,6 +10,7 @@ aprimorar/atendimentos/dto/AtendimentosAlunoResponseDTO.class
 aprimorar/atendimentos/service/AtendimentoMutationService.class
 aprimorar/pessoas/dto/AlunosKpisDTO.class
 aprimorar/shared/exception/GlobalExceptionHandler.class
+aprimorar/pessoas/dto/AlunoFiltroRequest.class
 aprimorar/atendimentos/controller/AtendimentoMutationController.class
 aprimorar/auth/web/UserController.class
 aprimorar/pessoas/dto/ResponsavelFiltroRequest.class
@@ -39,7 +40,6 @@ aprimorar/pessoas/domain/Colaborador.class
 aprimorar/atendimentos/service/AtendimentoReportService.class
 aprimorar/shared/PageDTO.class
 aprimorar/pessoas/dto/ResponsavelRequestDTO.class
-aprimorar/pessoas/mappers/AlunoMapper.class
 aprimorar/pessoas/service/ResponsavelQueryService.class
 aprimorar/pessoas/shared/Cpf.class
 aprimorar/shared/exception/package-info.class
@@ -53,7 +53,6 @@ aprimorar/atendimentos/repository/AtendimentoRepository$KpisColaboradorProjectio
 aprimorar/atendimentos/enums/TipoTransacao.class
 aprimorar/shared/exception/BusinessException.class
 aprimorar/pessoas/shared/Person.class
-aprimorar/pessoas/shared/address/dto/AddressRequestDTO.class
 aprimorar/shared/enums/package-info.class
 aprimorar/auth/web/dto/UserRequestDTO.class
 aprimorar/auth/application/UserService.class
@@ -76,8 +75,6 @@ aprimorar/pessoas/service/AlunoMutationService.class
 aprimorar/atendimentos/service/AtendimentoQueryService.class
 aprimorar/atendimentos/domain/Atendimento.class
 aprimorar/atendimentos/dto/AtendimentosKpisDTO.class
-aprimorar/pessoas/shared/address/dto/AddressResponseDTO.class
-aprimorar/pessoas/dto/AlunosResponseDTO.class
 aprimorar/pessoas/events/DeleteColaboradorVerificationEvent.class
 aprimorar/pessoas/exception/InvalidAddressException.class
 aprimorar/config/JwtConfig.class
@@ -103,7 +100,6 @@ aprimorar/atendimentos/repository/AtendimentoRepository$TipoAtendimentoCount.cla
 aprimorar/shared/package-info.class
 aprimorar/pessoas/repository/specifications/AlunoSpecifications.class
 aprimorar/pessoas/events/ResponsavelQueryApi.class
-aprimorar/pessoas/shared/address/BrazilianStatesEnum.class
 aprimorar/pessoas/repository/ResponsavelRepository.class
 aprimorar/pessoas/events/ColaboradorQueryApi.class
 aprimorar/atendimentos/repository/AtendimentoRepository$ReportAtendimentosProjection.class
