@@ -27,7 +27,7 @@ public class AtendimentoEventListener {
 
     @EventListener
     public void onAlunoDeleted(AlunoDeletedEvent event) {
-        atendimentoRepo.reassingAtendimentoAlunosToGhost(event.studentId(), GHOST_STUDENT_ID);
+        atendimentoRepo.reassignAtendimentosAlunoToGhost(event.studentId(), GHOST_STUDENT_ID);
     }
 
     @EventListener
@@ -37,28 +37,28 @@ public class AtendimentoEventListener {
 
     @EventListener
     public void deleteAlunoVerification(DeleteAlunoVerificationEvent event){
-        if (atendimentoRepo.existsByStudentIdAndStudentChargeDateIsNull(event.uuid())){
+        if (atendimentoRepo.existsByAlunoIdAndDataCobrancaAlunoIsNull(event.uuid())){
             throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível excluir um aluno com cobranças pendentes");
         }
     }
 
     @EventListener
     public void archiveAlunoVerification(ArchiveAlunoVerificationEvent event){
-        if (atendimentoRepo.existsByStudentIdAndStudentChargeDateIsNull(event.uuid())){
+        if (atendimentoRepo.existsByAlunoIdAndDataCobrancaAlunoIsNull(event.uuid())){
             throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível arquivar um aluno com cobranças pendentes");
         }
     }
 
     @EventListener
     public void deleteColaboradorVerification(DeleteColaboradorVerificationEvent event){
-           if (atendimentoRepo.existsByEmployeeIdAndEmployeePaymentDateIsNull(event.uuid())){
+           if (atendimentoRepo.existsByColaboradorIdAndDataPagamentoColaboradorIsNull(event.uuid())){
                throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível excluir um colaborador com pagamentos pendentes");
            }
     }
 
     @EventListener
     public void archiveColaboradorVerification(ArchiveColaboradorVerificationEvent event){
-        if (atendimentoRepo.existsByEmployeeIdAndEmployeePaymentDateIsNull(event.uuid())){
+        if (atendimentoRepo.existsByColaboradorIdAndDataPagamentoColaboradorIsNull(event.uuid())){
             throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível arquivar um colaborador com pagamentos pendentes");
         }
     }

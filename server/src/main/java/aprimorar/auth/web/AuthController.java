@@ -2,10 +2,7 @@ package aprimorar.auth.web;
 
 import aprimorar.auth.web.dto.AuthRequestDTO;
 import aprimorar.auth.web.dto.AuthResponseDTO;
-import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;

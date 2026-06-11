@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus;
 // TODO: Adicionar campos do Google Calendar para a implementacao
 @Entity
 @Getter
-@Table(name = "tb_appointments")
+@Table(name = "atendimentos")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Atendimento implements Serializable {
 
@@ -35,197 +35,197 @@ public class Atendimento implements Serializable {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "titulo", nullable = false)
+    private String titulo;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "descricao", columnDefinition = "TEXT")
+    private String descricao;
 
-    @Column(name = "start_date", nullable = false)
-    private Instant startDate;
+    @Column(name = "inicio", nullable = false)
+    private Instant inicio;
 
-    @Column(name = "end_date", nullable = false)
-    private Instant endDate;
+    @Column(name = "fim", nullable = false)
+    private Instant fim;
 
-    @Column(name = "payment", precision = 19, scale = 2, nullable = false)
-    private BigDecimal payment;
+    @Column(name = "repasse", precision = 19, scale = 2, nullable = false)
+    private BigDecimal repasse;
 
-    @Column(name = "price", precision = 19, scale = 2, nullable = false)
-    private BigDecimal price;
+    @Column(name = "valor", precision = 19, scale = 2, nullable = false)
+    private BigDecimal valor;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "content", nullable = false)
-    private TipoAtendimentoEnum content;
+    @Column(name = "tipo", nullable = false)
+    private TipoAtendimentoEnum tipo;
 
-    @Column(name = "employee_payment_date", nullable = true)
-    private Instant employeePaymentDate;
+    @Column(name = "data_pagamento_colaborador")
+    private Instant dataPagamentoColaborador;
 
-    @Column(name = "student_charge_date", nullable = true)
-    private Instant studentChargeDate;
+    @Column(name = "data_cobranca_aluno")
+    private Instant dataCobrancaAluno;
 
-    @Column(name = "student_id", nullable = false)
-    private UUID studentId;
+    @Column(name = "aluno_id", nullable = false)
+    private UUID alunoId;
 
-    @Column(name = "student_name", nullable = false)
-    private String studentName;
+    @Column(name = "aluno_nome", nullable = false)
+    private String alunoNome;
 
-    @Column(name = "employee_id", nullable = false)
-    private UUID employeeId;
+    @Column(name = "colaborador_id", nullable = false)
+    private UUID colaboradorId;
 
-    @Column(name = "employee_name", nullable = false)
-    private String employeeName;
+    @Column(name = "colaborador_nome", nullable = false)
+    private String colaboradorNome;
 
     protected Atendimento() {}
 
     public Atendimento(
-        String description,
-        Instant startDate,
-        Double duration,
-        BigDecimal payment,
-        BigDecimal price,
-        TipoAtendimentoEnum content,
-        UUID studentId,
-        String studentName,
-        UUID employeeId,
-        String employeeName,
+        String descricao,
+        Instant inicio,
+        Double duracao,
+        BigDecimal repasse,
+        BigDecimal valor,
+        TipoAtendimentoEnum tipo,
+        UUID alunoId,
+        String alunoNome,
+        UUID colaboradorId,
+        String colaboradorNome,
         Instant now
     ) {
-        this.endDate = calculateEndDate(startDate, duration);
-        validateDates(startDate, now);
-        validateAmounts(payment, price);
-        validateParticipants(studentId, employeeId);
-        validateContent(content);
+        this.fim = calcularFim(inicio, duracao);
+        validarDatas(inicio, now);
+        validarValores(repasse, valor);
+        validarParticipantes(alunoId, colaboradorId);
+        validarTipo(tipo);
 
-        this.title = buildTitle(content, studentName, employeeName);
-        this.description = description;
-        this.startDate = startDate;
-        this.payment = payment;
-        this.price = price;
-        this.content = content;
-        this.studentId = studentId;
-        this.employeeId = employeeId;
-        this.studentName = studentName;
-        this.employeeName = employeeName;
+        this.titulo = montarTitulo(tipo, alunoNome, colaboradorNome);
+        this.descricao = descricao;
+        this.inicio = inicio;
+        this.repasse = repasse;
+        this.valor = valor;
+        this.tipo = tipo;
+        this.alunoId = alunoId;
+        this.colaboradorId = colaboradorId;
+        this.alunoNome = alunoNome;
+        this.colaboradorNome = colaboradorNome;
     }
 
     public Atendimento update(
-        String description,
-        Instant startDate,
-        Double duration,
-        BigDecimal payment,
-        BigDecimal price,
-        TipoAtendimentoEnum content,
-        UUID studentId,
-        String studentName,
-        UUID employeeId,
-        String employeeName,
+        String descricao,
+        Instant inicio,
+        Double duracao,
+        BigDecimal repasse,
+        BigDecimal valor,
+        TipoAtendimentoEnum tipo,
+        UUID alunoId,
+        String alunoNome,
+        UUID colaboradorId,
+        String colaboradorNome,
         Instant now
     ) {
-        this.endDate = calculateEndDate(startDate, duration);
-        validateEditWindow(now);
-        validateDates(startDate, now);
-        validateAmounts(payment, price);
-        validateParticipants(studentId, employeeId);
-        validateContent(content);
+        this.fim = calcularFim(inicio, duracao);
+        validarJanelaEdicao(now);
+        validarDatas(inicio, now);
+        validarValores(repasse, valor);
+        validarParticipantes(alunoId, colaboradorId);
+        validarTipo(tipo);
 
-        this.title = buildTitle(content, studentName, employeeName);
-        this.description = description;
-        this.startDate = startDate;
-        this.payment = payment;
-        this.price = price;
-        this.content = content;
-        this.studentId = studentId;
-        this.studentName = studentName;
-        this.employeeId = employeeId;
-        this.employeeName = employeeName;
+        this.titulo = montarTitulo(tipo, alunoNome, colaboradorNome);
+        this.descricao = descricao;
+        this.inicio = inicio;
+        this.repasse = repasse;
+        this.valor = valor;
+        this.tipo = tipo;
+        this.alunoId = alunoId;
+        this.alunoNome = alunoNome;
+        this.colaboradorId = colaboradorId;
+        this.colaboradorNome = colaboradorNome;
 
         return this;
     }
 
     @Transient
-    public Double getDuration() {
-        return Duration.between(startDate, endDate).toMinutes() / 60.0;
+    public Double getDuracao() {
+        return Duration.between(inicio, fim).toMinutes() / 60.0;
     }
 
     @Transient
-    public BigDecimal getProfit() {
-        return price.subtract(payment);
+    public BigDecimal getLucro() {
+        return valor.subtract(repasse);
     }
 
 
 
-    public void toggleStudentCharge(Instant now) {
-        if (this.studentChargeDate != null) {
-            this.studentChargeDate = null;
+    public void alternarCobrancaAluno(Instant now) {
+        if (this.dataCobrancaAluno != null) {
+            this.dataCobrancaAluno = null;
         } else {
-            this.studentChargeDate = now;
+            this.dataCobrancaAluno = now;
         }
     }
 
-    public void toggleEmployeePayment(Instant now) {
-        if (this.employeePaymentDate != null) {
-            this.employeePaymentDate = null;
+    public void alternarPagamentoColaborador(Instant now) {
+        if (this.dataPagamentoColaborador != null) {
+            this.dataPagamentoColaborador = null;
         } else {
-            this.employeePaymentDate = now;
+            this.dataPagamentoColaborador = now;
         }
     }
 
-    public static Instant calculateEndDate(Instant startDate, Double duration) {
-        if (startDate == null) {
+    public static Instant calcularFim(Instant inicio, Double duracao) {
+        if (inicio == null) {
             throw new IllegalStateException("Data de inicio do atendimento e obrigatoria");
         }
-        if (duration == null) {
+        if (duracao == null) {
             throw new IllegalStateException("Duracao do atendimento e obrigatoria");
         }
-        return startDate.plus((long) (duration * 60), ChronoUnit.MINUTES);
+        return inicio.plus((long) (duracao * 60), ChronoUnit.MINUTES);
     }
 
-    public void validateEditWindow(Instant now) {
-        if (this.endDate != null && now.isAfter(this.endDate.plus(20, ChronoUnit.DAYS))) {
+    public void validarJanelaEdicao(Instant now) {
+        if (this.fim != null && now.isAfter(this.fim.plus(20, ChronoUnit.DAYS))) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "A janela de 20 dias para editar as informacoes do atendimento encerrou");
         }
     }
 
-    private void validateDates(Instant startDate, Instant now) {
-        if (this.endDate.isBefore(startDate)) {
+    private void validarDatas(Instant inicio, Instant now) {
+        if (this.fim.isBefore(inicio)) {
             throw new IllegalStateException("Data de fim do atendimento nao pode ser anterior a data de inicio");
         }
-        if (this.endDate.isBefore(now)) {
+        if (this.fim.isBefore(now)) {
             throw new IllegalStateException("Data de fim do atendimento nao pode estar no passado");
         }
     }
 
-    private void validateAmounts(BigDecimal payment, BigDecimal price) {
-        if (payment == null) {
+    private void validarValores(BigDecimal repasse, BigDecimal valor) {
+        if (repasse == null) {
             throw new IllegalStateException("Pagamento do atendimento e obrigatorio");
         }
-        if (price == null) {
+        if (valor == null) {
             throw new IllegalStateException("Valor do atendimento e obrigatorio");
         }
-        if (price.compareTo(payment) < 0) {
+        if (valor.compareTo(repasse) < 0) {
             throw new IllegalStateException("O valor do atendimento nao pode ser menor que o pagamento");
         }
-        if (price.compareTo(BigDecimal.valueOf(50)) < 0) {
+        if (valor.compareTo(BigDecimal.valueOf(50)) < 0) {
             throw new IllegalStateException("O valor do atendimento nao pode ser menor que R$50,00");
         }
     }
 
-    private void validateParticipants(UUID studentId, UUID employeeId) {
-        if (studentId == null) {
-            throw new IllegalStateException("Um atendimento nao pode existir sem um estudante");
+    private void validarParticipantes(UUID alunoId, UUID colaboradorId) {
+        if (alunoId == null) {
+            throw new IllegalStateException("Um atendimento nao pode existir sem um aluno");
         }
-        if (employeeId == null) {
+        if (colaboradorId == null) {
             throw new IllegalStateException("Um atendimento nao pode existir sem um colaborador");
         }
     }
 
-    private void validateContent(TipoAtendimentoEnum content) {
-        if (content == null) {
+    private void validarTipo(TipoAtendimentoEnum tipo) {
+        if (tipo == null) {
             throw new IllegalStateException("O conteudo do atendimento e obrigatorio");
         }
     }
 
-    private String buildTitle(TipoAtendimentoEnum content, String studentName, String employeeName) {
-        return content + " - Col: " + employeeName + " - " + studentName;
+    private String montarTitulo(TipoAtendimentoEnum tipo, String alunoNome, String colaboradorNome) {
+        return tipo + " - Col: " + colaboradorNome + " - " + alunoNome;
     }
 }

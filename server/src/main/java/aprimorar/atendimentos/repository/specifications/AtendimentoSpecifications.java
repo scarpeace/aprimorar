@@ -1,6 +1,7 @@
 package aprimorar.atendimentos.repository.specifications;
 
 import aprimorar.atendimentos.domain.Atendimento;
+import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -12,50 +13,62 @@ public final class AtendimentoSpecifications {
     private AtendimentoSpecifications() {
     }
 
-    public static Specification<Atendimento> searchContains(String term) {
+    public static Specification<Atendimento> comFiltros(AtendimentoFiltroRequest filtro) {
+        Boolean cobrado = Boolean.TRUE.equals(filtro.ocultarCobrados()) ? Boolean.FALSE : null;
+        Boolean pago = Boolean.TRUE.equals(filtro.ocultarPagos()) ? Boolean.FALSE : null;
+
+        return Specification
+            .where(buscaContem(filtro.busca()))
+            .and(inicioMaiorOuIgual(filtro.inicio()))
+            .and(fimMenorOuIgual(filtro.fim()))
+            .and(alunoCobradoContem(cobrado))
+            .and(colaboradorPagoContem(pago));
+    }
+
+    public static Specification<Atendimento> buscaContem(String termo) {
         return (root, query, cb) -> {
-            if (term == null || term.trim().isEmpty()) {
+            if (termo == null || termo.trim().isEmpty()) {
                 return null;
             }
 
-            String pattern = "%" + term.trim().toLowerCase() + "%";
+            String pattern = "%" + termo.trim().toLowerCase() + "%";
 
             return cb.or(
-                cb.like(cb.lower(root.get("studentName")), pattern),
-                cb.like(cb.lower(root.get("employeeName")), pattern),
-                cb.like(cb.lower(root.get("description")), pattern),
-                cb.like(cb.lower(root.get("content").as(String.class)), pattern)
+                cb.like(cb.lower(root.get("alunoNome")), pattern),
+                cb.like(cb.lower(root.get("colaboradorNome")), pattern),
+                cb.like(cb.lower(root.get("descricao")), pattern),
+                cb.like(cb.lower(root.get("tipo").as(String.class)), pattern)
             );
         };
     }
 
-    public static Specification<Atendimento> withStartDateAfter(Instant startDate) {
-        return (root, query, cb) -> startDate == null ? null : cb.greaterThanOrEqualTo(root.get("startDate"), startDate);
+    public static Specification<Atendimento> inicioMaiorOuIgual(Instant inicio) {
+        return (root, query, cb) -> inicio == null ? null : cb.greaterThanOrEqualTo(root.get("inicio"), inicio);
     }
 
-    public static Specification<Atendimento> withEndDateBefore(Instant endDate) {
-        return (root, query, cb) -> endDate == null ? null : cb.lessThanOrEqualTo(root.get("endDate"), endDate);
+    public static Specification<Atendimento> fimMenorOuIgual(Instant fim) {
+        return (root, query, cb) -> fim == null ? null : cb.lessThanOrEqualTo(root.get("fim"), fim);
     }
 
-    public static Specification<Atendimento> withStudentId(UUID studentId) {
-        return (root, query, cb) -> studentId == null ? null : cb.equal(root.get("studentId"), studentId);
+    public static Specification<Atendimento> alunoIdIgual(UUID alunoId) {
+        return (root, query, cb) -> alunoId == null ? null : cb.equal(root.get("alunoId"), alunoId);
     }
 
-    public static Specification<Atendimento> withEmployeeId(UUID employeeId) {
-        return (root, query, cb) -> employeeId == null ? null : cb.equal(root.get("employeeId"), employeeId);
+    public static Specification<Atendimento> colaboradorIdIgual(UUID colaboradorId) {
+        return (root, query, cb) -> colaboradorId == null ? null : cb.equal(root.get("colaboradorId"), colaboradorId);
     }
 
-    public static Specification<Atendimento> withEmployeePaid(Boolean paid) {
+    public static Specification<Atendimento> colaboradorPagoContem(Boolean pago) {
         return (root, query, cb) -> {
-            if (paid == null) return null;
-            return paid ? cb.isNotNull(root.get("employeePaymentDate")) : cb.isNull(root.get("employeePaymentDate"));
+            if (pago == null) return null;
+            return pago ? cb.isNotNull(root.get("dataPagamentoColaborador")) : cb.isNull(root.get("dataPagamentoColaborador"));
         };
     }
 
-    public static Specification<Atendimento> withStudentCharged(Boolean charged) {
+    public static Specification<Atendimento> alunoCobradoContem(Boolean cobrado) {
         return (root, query, cb) -> {
-            if (charged == null) return null;
-            return charged ? cb.isNotNull(root.get("studentChargeDate")) : cb.isNull(root.get("studentChargeDate"));
+            if (cobrado == null) return null;
+            return cobrado ? cb.isNotNull(root.get("dataCobrancaAluno")) : cb.isNull(root.get("dataCobrancaAluno"));
         };
     }
 

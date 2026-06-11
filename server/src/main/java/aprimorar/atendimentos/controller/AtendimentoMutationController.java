@@ -109,8 +109,8 @@ public class AtendimentoMutationController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/toggle-student-charge")
-    @Operation(operationId = "toggleStudentAtendimentoCharge", description = "Alterna a baixa financeira do aluno para o atendimento.")
+    @PatchMapping("/{id}/alternar-cobranca-aluno")
+    @Operation(operationId = "alternarCobrancaAlunoAtendimento", description = "Alterna a baixa financeira do aluno para o atendimento.")
     @ApiResponse(responseCode = "200", description = "Status de cobranca do aluno atualizado e atendimento retornado.")
     @ApiResponse(
         responseCode = "404",
@@ -122,13 +122,13 @@ public class AtendimentoMutationController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<AtendimentoResponseDTO> toggleStudentAtendimentoCharge(@PathVariable UUID id) {
-        return ResponseEntity.ok(atendimentoMutationService.toggleStudentCharge(id));
+    public ResponseEntity<AtendimentoResponseDTO> alternarCobrancaAlunoAtendimento(@PathVariable UUID id) {
+        return ResponseEntity.ok(atendimentoMutationService.alternarCobrancaAluno(id));
     }
 
-    @PatchMapping("/{id}/toggle-employee-payment")
+    @PatchMapping("/{id}/alternar-pagamento-colaborador")
     @Operation(
-        operationId = "toggleEmployeeAtendimentoPayment",
+        operationId = "alternarPagamentoColaboradorAtendimento",
         description = "Alterna a baixa financeira do colaborador para o atendimento."
     )
     @ApiResponse(responseCode = "200", description = "Status de pagamento do colaborador atualizado e atendimento retornado.")
@@ -142,7 +142,7 @@ public class AtendimentoMutationController {
         description = "Erro interno do sistema",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    public ResponseEntity<AtendimentoResponseDTO> toggleEmployeeAtendimentoPayment(@PathVariable UUID id) {
-        return ResponseEntity.ok(atendimentoMutationService.toggleEmployeePayment(id));
+    public ResponseEntity<AtendimentoResponseDTO> alternarPagamentoColaboradorAtendimento(@PathVariable UUID id) {
+        return ResponseEntity.ok(atendimentoMutationService.alternarPagamentoColaborador(id));
     }
 }

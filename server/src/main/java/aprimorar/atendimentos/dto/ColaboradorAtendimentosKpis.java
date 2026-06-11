@@ -9,8 +9,8 @@ public record ColaboradorAtendimentosKpis(
     Long totalAtendimentos,
 
     @Schema(description = "Total pago no periodo selecionado")
-    BigDecimal totalPaid,
+    BigDecimal totalPago,
 
     @Schema(description = "Total em aberto no periodo selecionado")
-    BigDecimal totalUnpaid
+    BigDecimal totalPendente
 ) {}

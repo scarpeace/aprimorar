@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/atendimentos/report")
+@RequestMapping("/v1/atendimentos/relatorio")
 @Tag(name = "Atendimento")
 public class AtendimentoReportController {
 
@@ -51,10 +51,10 @@ public class AtendimentoReportController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<AtendimentosKpisDTO> getKpisAtendimentos(
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim
     ) {
-        return ResponseEntity.ok(atendimentoReportService.getKpisAtendimentos(startDate, endDate));
+        return ResponseEntity.ok(atendimentoReportService.getKpisAtendimentos(inicio, fim));
     }
 
     @GetMapping("/colaboradores")
@@ -74,12 +74,12 @@ public class AtendimentoReportController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<PageDTO<AtendimentosColaboradorKpisDTO>> getKpisAtendimentosColaboradores(
-        @ParameterObject @PageableDefault(sort = "employeeName") Pageable pageable,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+        @ParameterObject @PageableDefault(sort = "colaboradorNome") Pageable pageable,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim
     ) {
         return ResponseEntity.ok(
-            atendimentoReportService.getKpisAtendimentosColaboradores(pageable, startDate, endDate)
+            atendimentoReportService.getKpisAtendimentosColaboradores(pageable, inicio, fim)
         );
     }
 
@@ -100,16 +100,16 @@ public class AtendimentoReportController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<PageDTO<AtendimentosAlunosKpisDTO>> getKpisAtendimentosAlunos(
-        @ParameterObject @PageableDefault(sort = "studentName") Pageable pageable,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+        @ParameterObject @PageableDefault(sort = "alunoNome") Pageable pageable,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim
     ) {
         return ResponseEntity.ok(
-            atendimentoReportService.getKpisAtendimentosAlunos(pageable, startDate, endDate)
+            atendimentoReportService.getKpisAtendimentosAlunos(pageable, inicio, fim)
         );
     }
 
-    @GetMapping("/content")
+    @GetMapping("/tipos")
     @Operation(
         operationId = "getAtendimentosContentReport",
         description = "Consulta o relatório de atendimentos por tipo de conteúdo."
@@ -126,9 +126,9 @@ public class AtendimentoReportController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<AtendimentosContentReportDTO> getAtendimentosContentReport(
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim
     ) {
-        return ResponseEntity.ok(atendimentoReportService.getAtendimentosContentReport(startDate, endDate));
+        return ResponseEntity.ok(atendimentoReportService.getAtendimentosContentReport(inicio, fim));
     }
 }

@@ -2,7 +2,6 @@ package aprimorar.atendimentos.service;
 
 import aprimorar.atendimentos.dto.AtendimentoRequestDTO;
 import aprimorar.atendimentos.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.mappers.AtendimentoMapper;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.pessoas.dto.AlunoResponseDTO;
@@ -25,20 +24,17 @@ public class AtendimentoMutationService {
     private static final Logger log = LoggerFactory.getLogger(AtendimentoMutationService.class);
 
     private final AtendimentoRepository atendimentoRepo;
-    private final AtendimentoMapper atendimentoMapper;
     private final AlunoQueryApi alunoQueryApi;
     private final ColaboradorQueryApi colaboradorQueryApi;
     private final Clock clock;
 
     public AtendimentoMutationService(
         AtendimentoRepository atendimentoRepo,
-        AtendimentoMapper atendimentoMapper,
         AlunoQueryApi alunoQueryApi,
         ColaboradorQueryApi colaboradorQueryApi,
         Clock clock
     ) {
         this.atendimentoRepo = atendimentoRepo;
-        this.atendimentoMapper = atendimentoMapper;
         this.alunoQueryApi = alunoQueryApi;
         this.colaboradorQueryApi = colaboradorQueryApi;
         this.clock = clock;
@@ -46,68 +42,68 @@ public class AtendimentoMutationService {
 
     @Transactional
     public AtendimentoResponseDTO createAtendimento(AtendimentoRequestDTO dto) {
-        AlunoResponseDTO student = alunoQueryApi.findAlunoById(dto.studentId());
-        ColaboradorResponseDTO colaborador = colaboradorQueryApi.findColaboradorById(dto.employeeId());
-        Atendimento atendimento = atendimentoMapper.toEntity(dto, student.nome(), colaborador.nome(), clock.instant());
+        AlunoResponseDTO aluno = alunoQueryApi.findAlunoById(dto.alunoId());
+        ColaboradorResponseDTO colaborador = colaboradorQueryApi.findColaboradorById(dto.colaboradorId());
+        Atendimento atendimento = dto.toEntity(aluno.nome(), colaborador.nome(), clock.instant());
 
-        validateParticipantAvailability(student, colaborador, dto.startDate(), dto.duration(), null);
+        validateParticipantAvailability(aluno, colaborador, dto.inicio(), dto.duracao(), null);
 
         Atendimento saved = atendimentoRepo.save(atendimento);
-        log.info("Atendimento {} cadastrado com sucesso.", saved.getTitle().toUpperCase());
-        return atendimentoMapper.convertToDto(saved);
+        log.info("Atendimento {} cadastrado com sucesso.", saved.getTitulo().toUpperCase());
+        return AtendimentoResponseDTO.toDto(saved);
     }
 
     @Transactional
     public AtendimentoResponseDTO updateAtendimento(UUID id, AtendimentoRequestDTO dto) {
         Atendimento atendimento = findAtendimentoOrThrow(id);
-        AlunoResponseDTO student = alunoQueryApi.findAlunoById(dto.studentId());
-        ColaboradorResponseDTO employee = colaboradorQueryApi.findColaboradorById(dto.employeeId());
+        AlunoResponseDTO aluno = alunoQueryApi.findAlunoById(dto.alunoId());
+        ColaboradorResponseDTO colaborador = colaboradorQueryApi.findColaboradorById(dto.colaboradorId());
 
-        validateParticipantAvailability(student, employee, dto.startDate(), dto.duration(), atendimento);
+        validateParticipantAvailability(aluno, colaborador, dto.inicio(), dto.duracao(), atendimento);
 
         atendimento.update(
-            dto.description(),
-            dto.startDate(),
-            dto.duration(),
-            dto.payment(),
-            dto.price(),
-            dto.content(),
-            student.id(),
-            student.nome(),
-            employee.id(),
-            employee.nome(),
+            dto.descricao(),
+            dto.inicio(),
+            dto.duracao(),
+            dto.repasse(),
+            dto.valor(),
+            dto.tipo(),
+            aluno.id(),
+            aluno.nome(),
+            colaborador.id(),
+            colaborador.nome(),
             Instant.now(clock)
         );
-        log.info("Atendimento {} atualizado com sucesso.", atendimento.getTitle().toUpperCase());
-        return atendimentoMapper.convertToDto(atendimento);
+        log.info("Atendimento {} atualizado com sucesso.", atendimento.getTitulo().toUpperCase());
+        return AtendimentoResponseDTO.toDto(atendimento);
     }
 
     @Transactional
     public void deleteAtendimento(UUID id) {
         Atendimento atendimento = findAtendimentoOrThrow(id);
 
-        if (atendimento.getEmployeePaymentDate() == null || atendimento.getStudentChargeDate() == null) {
+        if (atendimento.getDataPagamentoColaborador() == null || atendimento.getDataCobrancaAluno() == null) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "Atendimento não pode ser excluído com cobranças ou pagamentos pendentes.");
         }
 
         atendimentoRepo.delete(atendimento);
-        log.info("Atendimento {} deletado com sucesso.", atendimento.getTitle().toUpperCase());
+        log.info("Atendimento {} deletado com sucesso.", atendimento.getTitulo().toUpperCase());
     }
 
     @Transactional
-    public AtendimentoResponseDTO toggleStudentCharge(UUID id) {
+    public AtendimentoResponseDTO alternarCobrancaAluno(UUID id) {
         Atendimento atendimento = findAtendimentoOrThrow(id);
-        atendimento.toggleStudentCharge(Instant.now(clock));
-        log.info("Status da cobranca do aluno no atendimento {} atualizado.", atendimento.getTitle());
-        return atendimentoMapper.convertToDto(atendimento);
+        atendimento.alternarCobrancaAluno(Instant.now(clock));
+        log.info("Status da cobranca do aluno no atendimento {} atualizado.", atendimento.getTitulo());
+        return AtendimentoResponseDTO.toDto(atendimento);
     }
 
     @Transactional
-    public AtendimentoResponseDTO toggleEmployeePayment(UUID id) {
+    public AtendimentoResponseDTO alternarPagamentoColaborador(UUID id) {
         Atendimento atendimento = findAtendimentoOrThrow(id);
-        atendimento.toggleEmployeePayment(Instant.now(clock));
-        log.info("Status do pagamento do colaborador no atendimento {} atualizado.", atendimento.getTitle());
-        return atendimentoMapper.convertToDto(atendimento);
+        atendimento.alternarPagamentoColaborador(Instant.now(clock));
+        log.info("Status do pagamento do colaborador no atendimento {} atualizado.", atendimento.getTitulo());
+        return AtendimentoResponseDTO.toDto(atendimento);
     }
 
     private Atendimento findAtendimentoOrThrow(UUID id) {
@@ -115,16 +111,16 @@ public class AtendimentoMutationService {
     }
 
     private void validateParticipantAvailability(
-        AlunoResponseDTO student,
+        AlunoResponseDTO aluno,
         ColaboradorResponseDTO colaborador,
-        Instant startDate,
-        Double duration,
+        Instant inicio,
+        Double duracao,
         Atendimento atendimento
     ) {
-        Instant endDate = Atendimento.calculateEndDate(startDate, duration);
+        Instant fim = Atendimento.calcularFim(inicio, duracao);
 
-        if (!student.active()) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "Atendimento nao pode ter estudantes arquivados");
+        if (!aluno.active()) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "Atendimento nao pode ter alunos arquivados");
         }
 
         if (!colaborador.active()) {
@@ -133,11 +129,11 @@ public class AtendimentoMutationService {
 
         UUID atendimentoId = atendimento != null ? atendimento.getId() : null;
 
-        if (atendimentoRepo.studentHasConflictingAtendimento(student.id(), startDate, endDate, atendimentoId)) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "O estudante informado ja possui um atendimento no intervalo");
+        if (atendimentoRepo.alunoPossuiAtendimentoConflitante(aluno.id(), inicio, fim, atendimentoId)) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "O aluno informado ja possui um atendimento no intervalo");
         }
 
-        if (atendimentoRepo.employeeHasConflictingAtendimento(colaborador.id(), startDate, endDate, atendimentoId)) {
+        if (atendimentoRepo.colaboradorPossuiAtendimentoConflitante(colaborador.id(), inicio, fim, atendimentoId)) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "O colaborador informado ja possui um atendimento no intervalo");
         }
     }

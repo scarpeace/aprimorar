@@ -1,15 +1,12 @@
 package aprimorar.pessoas.domain;
 
-import aprimorar.pessoas.shared.Cpf;
-import aprimorar.pessoas.shared.Email;
 import aprimorar.shared.MapperUtils;
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -31,16 +28,14 @@ public class Aluno {
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "cpf", nullable = false, unique = true))
-    private Cpf cpf;
+    @Column(name = "cpf", nullable = false, unique = true)
+    private String cpf;
 
     @Column(name = "telefone", nullable = false)
     private String telefone;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true))
-    private Email email;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     @Column(name = "escola")
     private String escola;
@@ -52,7 +47,7 @@ public class Aluno {
     private Boolean active = true;
 
     @Column(name = "user_id", unique = true)
-    private Long userId;
+    private UUID userId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -90,8 +85,8 @@ public class Aluno {
         this.nome = validateNome(nome);
         this.dataNascimento = validateDataNascimento(dataNascimento);
         this.telefone = validateTelefone(telefone);
-        this.cpf = new Cpf(cpf);
-        this.email = new Email(email);
+        this.cpf = validateCpf(cpf);
+        this.email = validateEmail(email);
         this.escola = escola;
         this.responsavelId = responsavelId;
         this.endereco = endereco;
@@ -110,18 +105,18 @@ public class Aluno {
         this.nome = validateNome(nome);
         this.dataNascimento = validateDataNascimento(dataNascimento);
         this.telefone = validateTelefone(telefone);
-        this.email = new Email(email);
+        this.email = validateEmail(email);
         this.escola = escola;
         this.responsavelId = responsavelId;
         this.endereco = endereco;
     }
 
     public String getCpf() {
-        return cpf.value();
+        return cpf;
     }
 
     public String getEmail() {
-        return email.value();
+        return email;
     }
 
     public Endereco getEndereco() {
@@ -167,6 +162,22 @@ public class Aluno {
         return normalized;
     }
 
+    private String validateCpf(String cpf) {
+        var normalized = MapperUtils.normalizeCpf(cpf);
+        if (normalized == null || normalized.isBlank()) {
+            throw new IllegalArgumentException("CPF do aluno é obrigatório");
+        }
+        return normalized;
+    }
+
+    private String validateEmail(String email) {
+        var normalized = MapperUtils.normalizeEmail(email);
+        if (normalized == null || normalized.isBlank()) {
+            throw new IllegalArgumentException("Email do aluno é obrigatório");
+        }
+        return normalized;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -191,7 +202,7 @@ public class Aluno {
         this.dataNascimento = dataNascimento;
     }
 
-    public void setCpf(Cpf cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
@@ -203,7 +214,7 @@ public class Aluno {
         this.telefone = telefone;
     }
 
-    public void setEmail(Email email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -231,11 +242,11 @@ public class Aluno {
         this.active = active;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

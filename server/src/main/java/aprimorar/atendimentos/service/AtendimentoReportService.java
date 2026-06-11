@@ -24,16 +24,16 @@ public class AtendimentoReportService {
 
     @Transactional(readOnly = true)
     public AtendimentosKpisDTO getKpisAtendimentos(Instant startDate, Instant endDate) {
-        BigDecimal totalStudentCharged = atendimentoRepo.sumTotalChargedInPeriod(startDate, endDate);
-        BigDecimal totalStudentPending = atendimentoRepo.sumTotalUnchargedInPeriod(startDate, endDate);
-        BigDecimal totalEmployeePaid = atendimentoRepo.sumTotalPaidInPeriod(startDate, endDate);
-        BigDecimal totalEmployeePending = atendimentoRepo.sumTotalUnpaidInPeriod(startDate, endDate);
+        BigDecimal totalCobradoAlunos = atendimentoRepo.sumTotalCobradoInPeriod(startDate, endDate);
+        BigDecimal totalPendenteAlunos = atendimentoRepo.sumTotalPendenteAlunoInPeriod(startDate, endDate);
+        BigDecimal totalPagoColaboradores = atendimentoRepo.sumTotalPagoInPeriod(startDate, endDate);
+        BigDecimal totalPendenteColaboradores = atendimentoRepo.sumTotalPendenteColaboradorInPeriod(startDate, endDate);
 
         return new AtendimentosKpisDTO(
-            totalStudentCharged,
-            totalStudentPending,
-            totalEmployeePaid,
-            totalEmployeePending
+            totalCobradoAlunos,
+            totalPendenteAlunos,
+            totalPagoColaboradores,
+            totalPendenteColaboradores
         );
     }
 
@@ -46,10 +46,10 @@ public class AtendimentoReportService {
         Page<AtendimentosColaboradorKpisDTO> resultado = atendimentoRepo
             .getOverviewFinanceiroColaboradores(pageable, startDate, endDate)
             .map(item -> new AtendimentosColaboradorKpisDTO(
-                item.getEmployeeId(),
+                item.getColaboradorId(),
                 item.getTotalAtendimentos(),
-                item.getTotalPaid(),
-                item.getTotalPending()
+                item.getTotalPago(),
+                item.getTotalPendente()
             ));
 
         return new PageDTO<>(resultado);
@@ -64,10 +64,10 @@ public class AtendimentoReportService {
         Page<AtendimentosAlunosKpisDTO> resultado = atendimentoRepo
             .getOverviewFinanceiroAlunos(pageable, startDate, endDate)
             .map(item -> new AtendimentosAlunosKpisDTO(
-                item.getStudentId(),
+                item.getAlunoId(),
                 item.getTotalAtendimentos(),
-                item.getTotalCharged(),
-                item.getTotalPending()
+                item.getTotalCobrado(),
+                item.getTotalPendente()
             ));
 
         return new PageDTO<>(resultado);

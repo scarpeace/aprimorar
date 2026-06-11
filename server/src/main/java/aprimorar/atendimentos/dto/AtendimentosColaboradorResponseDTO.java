@@ -9,5 +9,5 @@ public record AtendimentosColaboradorResponseDTO(
     PageDTO<AtendimentoResponseDTO> atendimentos,
 
     @Schema(description = "Indicadores do colaborador no periodo: total de atendimentos, total pago e total em aberto")
-    ColaboradorAtendimentosKpis summary
+    ColaboradorAtendimentosKpis resumo
 ) {}

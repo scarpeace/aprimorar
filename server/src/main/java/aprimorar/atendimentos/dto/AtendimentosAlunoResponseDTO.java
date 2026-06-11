@@ -9,5 +9,5 @@ public record AtendimentosAlunoResponseDTO(
     PageDTO<AtendimentoResponseDTO> atendimentos,
 
     @Schema(description = "Indicadores do aluno no periodo: total de atendimentos, total cobrado e total pendente")
-    AlunoAtendimentosKpis summary
+    AlunoAtendimentosKpis resumo
 ) {}

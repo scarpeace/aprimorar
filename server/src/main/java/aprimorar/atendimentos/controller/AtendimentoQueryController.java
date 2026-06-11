@@ -2,6 +2,7 @@ package aprimorar.atendimentos.controller;
 
 import aprimorar.atendimentos.dto.AtendimentosAlunoResponseDTO;
 import aprimorar.atendimentos.dto.AtendimentosColaboradorResponseDTO;
+import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
 import aprimorar.atendimentos.service.AtendimentoQueryService;
 import aprimorar.atendimentos.dto.AtendimentoResponseDTO;
 import aprimorar.shared.PageDTO;
@@ -52,13 +53,9 @@ public class AtendimentoQueryController {
     )
     public ResponseEntity<PageDTO<AtendimentoResponseDTO>> getAtendimentos(
         @ParameterObject Pageable pageable,
-        @RequestParam(required = false) String search,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
-        @RequestParam(required = false) Boolean hideCharged,
-        @RequestParam(required = false) Boolean hidePaid
+        @ParameterObject AtendimentoFiltroRequest filtro
     ) {
-        return ResponseEntity.ok(atendimentoQueryService.getAtendimentos(pageable, search, startDate, endDate, hideCharged, hidePaid));
+        return ResponseEntity.ok(atendimentoQueryService.getAtendimentos(pageable, filtro));
     }
 
     @GetMapping("/{id}")
@@ -105,11 +102,11 @@ public class AtendimentoQueryController {
     public ResponseEntity<AtendimentosAlunoResponseDTO> getAtendimentosByAluno(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate,
-        @RequestParam(required = false) Boolean charged
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim,
+        @RequestParam(required = false) Boolean cobrado
     ) {
-        return ResponseEntity.ok(atendimentoQueryService.getAtendimentosByAluno(pageable, id, startDate, endDate, charged));
+        return ResponseEntity.ok(atendimentoQueryService.getAtendimentosByAluno(pageable, id, inicio, fim, cobrado));
     }
 
     @GetMapping("/{id}/colaborador")
@@ -139,10 +136,10 @@ public class AtendimentoQueryController {
     public ResponseEntity<AtendimentosColaboradorResponseDTO> getAtendimentosByColaborador(
         @ParameterObject Pageable pageable,
         @PathVariable UUID id,
-        @RequestParam(required = false) Boolean hidePaid,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+        @RequestParam(required = false) Boolean ocultarPagos,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim
     ) {
-        return ResponseEntity.ok(atendimentoQueryService.getAtendimentosByColaborador(pageable, id, hidePaid, startDate, endDate));
+        return ResponseEntity.ok(atendimentoQueryService.getAtendimentosByColaborador(pageable, id, ocultarPagos, inicio, fim));
     }
 }

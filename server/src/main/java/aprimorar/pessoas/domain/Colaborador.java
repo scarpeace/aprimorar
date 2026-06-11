@@ -1,10 +1,7 @@
 package aprimorar.pessoas.domain;
 
 import aprimorar.pessoas.shared.FuncoesColaborador;
-import aprimorar.pessoas.shared.Cpf;
-import aprimorar.pessoas.shared.Email;
 import aprimorar.shared.MapperUtils;
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -16,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -35,16 +31,14 @@ public class Colaborador {
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "cpf", nullable = false, unique = true))
-    private Cpf cpf;
+    @Column(name = "cpf", nullable = false, unique = true)
+    private String cpf;
 
     @Column(name = "telefone", nullable = false)
     private String telefone;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true))
-    private Email email;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     @Column(name = "pix", nullable = false)
     private String pix;
@@ -57,7 +51,7 @@ public class Colaborador {
     private Boolean active = true;
 
     @Column(name = "user_id", unique = true)
-    private Long userId;
+    private UUID userId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -91,13 +85,12 @@ public class Colaborador {
             FuncoesColaborador funcao,
             Endereco endereco
     ) {
-
         this.nome = validateName(name);
         this.dataNascimento = validateDataNascimento(dataNascimento);
         this.pix = validatePix(pix);
         this.telefone = validateTelefone(telefone);
-        this.cpf = new Cpf(cpf);
-        this.email = new Email(email);
+        this.cpf = validateCpf(cpf);
+        this.email = validateEmail(email);
         this.endereco = validateEndereco(endereco);
         this.funcao = funcao;
     }
@@ -116,7 +109,7 @@ public class Colaborador {
         this.dataNascimento = validateDataNascimento(dataNascimento);
         this.pix = validatePix(pix);
         this.telefone = validateTelefone(telefone);
-        this.email = new Email(email);
+        this.email = validateEmail(email);
         this.funcao = funcao;
         this.endereco = validateEndereco(endereco);
     }
@@ -164,6 +157,22 @@ public class Colaborador {
         return normalized;
     }
 
+    private String validateCpf(String cpf) {
+        var normalized = MapperUtils.normalizeCpf(cpf);
+        if (normalized == null || normalized.isBlank()) {
+            throw new IllegalArgumentException("CPF do colaborador é obrigatório");
+        }
+        return normalized;
+    }
+
+    private String validateEmail(String email) {
+        var normalized = MapperUtils.normalizeEmail(email);
+        if (normalized == null || normalized.isBlank()) {
+            throw new IllegalArgumentException("Email do colaborador é obrigatório");
+        }
+        return normalized;
+    }
+
     public Endereco getEndereco() {
         return endereco;
     }
@@ -206,10 +215,10 @@ public class Colaborador {
 	}
 
 	public String getCpf() {
-		return cpf.value();
+		return cpf;
 	}
 
-	public void setCpf(Cpf cpf) {
+	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
 
@@ -222,10 +231,10 @@ public class Colaborador {
 	}
 
 	public String getEmail() {
-		return email.value();
+		return email;
 	}
 
-	public void setEmail(Email email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
@@ -253,11 +262,11 @@ public class Colaborador {
 		this.active = active;
 	}
 
-	public Long getUserId() {
+	public UUID getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(UUID userId) {
 		this.userId = userId;
 	}
 
@@ -280,7 +289,4 @@ public class Colaborador {
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
-
-
-
 }

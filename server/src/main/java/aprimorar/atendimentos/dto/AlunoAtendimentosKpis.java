@@ -9,8 +9,8 @@ public record AlunoAtendimentosKpis(
     Long totalAtendimentos,
 
     @Schema(description = "Total cobrado no periodo selecionado")
-    BigDecimal totalCharged,
+    BigDecimal totalCobrado,
 
     @Schema(description = "Total pendente no periodo selecionado")
-    BigDecimal totalPending
+    BigDecimal totalPendente
 ) {}

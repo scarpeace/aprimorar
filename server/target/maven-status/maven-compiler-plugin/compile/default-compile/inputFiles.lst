@@ -5,6 +5,7 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/domain/Atendimento.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/domain/Transacao.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/dto/AlunoAtendimentosKpis.java
+/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/dto/AtendimentoFiltroRequest.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/dto/AtendimentoRequestDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/dto/AtendimentoResponseDTO.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/dto/AtendimentosAlunoResponseDTO.java
@@ -20,7 +21,6 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/enums/TipoAtendimentoEnum.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/enums/TipoTransacao.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/events/AtendimentoEventListener.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/mappers/AtendimentoMapper.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/package-info.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/repository/AtendimentoRepository.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/atendimentos/repository/specifications/AtendimentoSpecifications.java
@@ -94,8 +94,6 @@
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/service/ColaboradorQueryService.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/service/ResponsavelMutationService.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/service/ResponsavelQueryService.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/shared/Cpf.java
-/home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/shared/Email.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/shared/FuncoesColaborador.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/pessoas/shared/Person.java
 /home/scarpellini/Documents/Projetos/aprimorar/server/src/main/java/aprimorar/shared/MapperUtils.java

@@ -75,8 +75,8 @@ public class ColaboradorController {
         return ResponseEntity.ok(kpis);
     }
 
-    @GetMapping("/options")
-    @Operation(operationId = "listColaboradores", description = "Retorna uma lista de opções de colaboradores para dropdown.")
+    @GetMapping("/list")
+    @Operation(operationId = "getColaboradoresList", description = "Retorna uma lista de opções de colaboradores para dropdown.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
     public ResponseEntity<List<ColaboradoresListDTO>> listarColaboradores() {
         List<ColaboradoresListDTO> options = colaboradorQueryService.listColaboradores();

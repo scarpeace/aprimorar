@@ -18,24 +18,24 @@ import org.springframework.data.repository.query.Param;
 
 public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>, JpaSpecificationExecutor<Atendimento> {
     interface TipoAtendimentoCount {
-        TipoAtendimentoEnum getContent();
+        TipoAtendimentoEnum getTipo();
         long getCount();
     }
 
     interface KpisAlunoProjection {
-        UUID getStudentId();
-        String getStudentName();
+        UUID getAlunoId();
+        String getAlunoNome();
         long getTotalAtendimentos();
-        BigDecimal getTotalCharged();
-        BigDecimal getTotalPending();
+        BigDecimal getTotalCobrado();
+        BigDecimal getTotalPendente();
     }
 
     interface KpisColaboradorProjection {
-        UUID getEmployeeId();
-        String getEmployeeName();
+        UUID getColaboradorId();
+        String getColaboradorNome();
         long getTotalAtendimentos();
-        BigDecimal getTotalPaid();
-        BigDecimal getTotalPending();
+        BigDecimal getTotalPago();
+        BigDecimal getTotalPendente();
     }
 
     interface ReportAtendimentosProjection{
@@ -48,240 +48,240 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         long getTotalOutros();
     }
 
-    boolean existsByStudentIdAndStudentChargeDateIsNull(UUID studentId);
-    boolean existsByEmployeeIdAndEmployeePaymentDateIsNull(UUID employeeId);
+    boolean existsByAlunoIdAndDataCobrancaAlunoIsNull(UUID alunoId);
+    boolean existsByColaboradorIdAndDataPagamentoColaboradorIsNull(UUID colaboradorId);
 
     @Query(
         """
         SELECT COUNT(a)
         FROM Atendimento a
-        WHERE a.startDate >= coalesce(:startDate, a.startDate)
-        AND a.endDate <= coalesce(:endDate, a.endDate)
+        WHERE a.inicio >= coalesce(:inicio, a.inicio)
+        AND a.fim <= coalesce(:fim, a.fim)
         """
     )
-    long countByPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    long countByPeriod(@Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
     @Query(
         """
         SELECT COUNT(a)
         FROM Atendimento a
-        WHERE a.studentId = :studentId
-        AND a.startDate >= coalesce(:startDate, a.startDate)
-        AND a.endDate <= coalesce(:endDate, a.endDate)
+        WHERE a.alunoId = :alunoId
+        AND a.inicio >= coalesce(:inicio, a.inicio)
+        AND a.fim <= coalesce(:fim, a.fim)
         """
     )
-    long countByStudentIdInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    long countByAlunoIdInPeriod(@Param("alunoId") UUID alunoId, @Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
     @Query(
         """
         SELECT COUNT(a)
         FROM Atendimento a
-        WHERE a.employeeId = :employeeId
-        AND a.startDate >= coalesce(:startDate, a.startDate)
-        AND a.endDate <= coalesce(:endDate, a.endDate)
+        WHERE a.colaboradorId = :colaboradorId
+        AND a.inicio >= coalesce(:inicio, a.inicio)
+        AND a.fim <= coalesce(:fim, a.fim)
         """
     )
-    long countByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    long countByColaboradorIdInPeriod(@Param("colaboradorId") UUID colaboradorId, @Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
     @Query(
         """
-        SELECT SUM(a.price)
+        SELECT SUM(a.valor)
         FROM Atendimento a
-        WHERE a.studentId = :studentId
-        AND a.startDate >= coalesce(:startDate, a.startDate)
-        AND a.endDate <= coalesce(:endDate, a.endDate)
-        AND a.studentChargeDate IS NOT NULL
+        WHERE a.alunoId = :alunoId
+        AND a.inicio >= coalesce(:inicio, a.inicio)
+        AND a.fim <= coalesce(:fim, a.fim)
+        AND a.dataCobrancaAluno IS NOT NULL
         """
     )
-    BigDecimal sumChargedByStudentInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumCobradoByAlunoInPeriod(@Param("alunoId") UUID alunoId, @Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
     @Query(
         """
-        SELECT SUM(a.price)
+        SELECT SUM(a.valor)
         FROM Atendimento a
-        WHERE a.studentId = :studentId
-        AND a.startDate >= coalesce(:startDate, a.startDate)
-        AND a.endDate <= coalesce(:endDate, a.endDate)
-        AND a.studentChargeDate IS NULL
+        WHERE a.alunoId = :alunoId
+        AND a.inicio >= coalesce(:inicio, a.inicio)
+        AND a.fim <= coalesce(:fim, a.fim)
+        AND a.dataCobrancaAluno IS NULL
         """
     )
-    BigDecimal sumPendingByStudentInPeriod(@Param("studentId") UUID studentId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumPendenteByAlunoInPeriod(@Param("alunoId") UUID alunoId, @Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
     @Query("""
-        SELECT COALESCE(SUM(a.payment), 0)
+        SELECT COALESCE(SUM(a.repasse), 0)
         FROM Atendimento a
-        WHERE a.employeeId = :employeeId
-          AND a.startDate >= coalesce(:startDate, a.startDate)
-          AND a.endDate <= coalesce(:endDate, a.endDate)
-          AND a.employeePaymentDate IS NOT NULL
+        WHERE a.colaboradorId = :colaboradorId
+          AND a.inicio >= coalesce(:inicio, a.inicio)
+          AND a.fim <= coalesce(:fim, a.fim)
+          AND a.dataPagamentoColaborador IS NOT NULL
         """)
-    BigDecimal sumPaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumPagoByColaboradorIdInPeriod(@Param("colaboradorId") UUID colaboradorId, @Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
     @Query("""
-        SELECT COALESCE(SUM(a.payment), 0)
+        SELECT COALESCE(SUM(a.repasse), 0)
         FROM Atendimento a
-        WHERE a.employeeId = :employeeId
-          AND a.startDate >= coalesce(:startDate, a.startDate)
-          AND a.endDate <= coalesce(:endDate, a.endDate)
-          AND a.employeePaymentDate IS NULL
+        WHERE a.colaboradorId = :colaboradorId
+          AND a.inicio >= coalesce(:inicio, a.inicio)
+          AND a.fim <= coalesce(:fim, a.fim)
+          AND a.dataPagamentoColaborador IS NULL
         """)
-    BigDecimal sumUnpaidByEmployeeIdInPeriod(@Param("employeeId") UUID employeeId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumPendenteByColaboradorIdInPeriod(@Param("colaboradorId") UUID colaboradorId, @Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
     @Modifying
     @Query(
         """
         UPDATE Atendimento a
-        SET a.studentId = :ghostId,
-            a.studentName = 'Aluno Removido'
-        WHERE a.studentId = :studentId
+        SET a.alunoId = :ghostId,
+            a.alunoNome = 'Aluno Removido'
+        WHERE a.alunoId = :alunoId
         """
     )
-    void reassingAtendimentoAlunosToGhost(@Param("studentId") UUID studentId, @Param("ghostId") UUID ghostId);
+    void reassignAtendimentosAlunoToGhost(@Param("alunoId") UUID alunoId, @Param("ghostId") UUID ghostId);
 
     @Modifying
     @Query(
         """
         UPDATE Atendimento a
-        SET a.employeeId = :ghostId,
-            a.employeeName = 'Colaborador Removido'
-        WHERE a.employeeId = :employeeId
+        SET a.colaboradorId = :ghostId,
+            a.colaboradorNome = 'Colaborador Removido'
+        WHERE a.colaboradorId = :colaboradorId
         """
     )
-    void reassignAtendimentosColaboradorToGhost(@Param("employeeId") UUID employeeId, @Param("ghostId") UUID ghostId);
+    void reassignAtendimentosColaboradorToGhost(@Param("colaboradorId") UUID colaboradorId, @Param("ghostId") UUID ghostId);
 
 
     @Query(
         """
-        select coalesce(sum(a.payment), 0)
+        select coalesce(sum(a.repasse), 0)
         from Atendimento a
-        where a.employeePaymentDate is not null
-          and a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
+        where a.dataPagamentoColaborador is not null
+          and a.inicio >= coalesce(:inicio, a.inicio)
+          and a.fim <= coalesce(:fim, a.fim)
         """
     )
-    BigDecimal sumTotalPaidInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumTotalPagoInPeriod(@Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
     @Query(
         """
-        select coalesce(sum(a.payment), 0)
+        select coalesce(sum(a.repasse), 0)
         from Atendimento a
-        where a.employeePaymentDate is null
-          and a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
+        where a.dataPagamentoColaborador is null
+          and a.inicio >= coalesce(:inicio, a.inicio)
+          and a.fim <= coalesce(:fim, a.fim)
         """
     )
-    BigDecimal sumTotalUnpaidInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumTotalPendenteColaboradorInPeriod(@Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
     @Query(
         """
-        select coalesce(sum(a.price), 0)
+        select coalesce(sum(a.valor), 0)
         from Atendimento a
-        where a.studentChargeDate is not null
-          and a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
+        where a.dataCobrancaAluno is not null
+          and a.inicio >= coalesce(:inicio, a.inicio)
+          and a.fim <= coalesce(:fim, a.fim)
         """
     )
-    BigDecimal sumTotalChargedInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumTotalCobradoInPeriod(@Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
 
     @Query(
         """
-        select coalesce(sum(a.price), 0)
+        select coalesce(sum(a.valor), 0)
         from Atendimento a
-        where a.studentChargeDate is null
-          and a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
+        where a.dataCobrancaAluno is null
+          and a.inicio >= coalesce(:inicio, a.inicio)
+          and a.fim <= coalesce(:fim, a.fim)
         """
     )
-    BigDecimal sumTotalUnchargedInPeriod(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+    BigDecimal sumTotalPendenteAlunoInPeriod(@Param("inicio") Instant inicio, @Param("fim") Instant fim);
 
 
     @Query(
         value = """
         select
-          a.employeeId as employeeId,
-          max(a.employeeName) as employeeName,
+          a.colaboradorId as colaboradorId,
+          max(a.colaboradorNome) as colaboradorNome,
           count(a.id) as totalAtendimentos,
-          coalesce(sum(case when a.employeePaymentDate is not null then a.payment else 0 end), 0) as totalPaid,
-          coalesce(sum(case when a.employeePaymentDate is null then a.payment else 0 end), 0) as totalPending
+          coalesce(sum(case when a.dataPagamentoColaborador is not null then a.repasse else 0 end), 0) as totalPago,
+          coalesce(sum(case when a.dataPagamentoColaborador is null then a.repasse else 0 end), 0) as totalPendente
         from Atendimento a
-        where a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
-        group by a.employeeId
+        where a.inicio >= coalesce(:inicio, a.inicio)
+          and a.fim <= coalesce(:fim, a.fim)
+        group by a.colaboradorId
         """,
         countQuery = """
-        select count(distinct a.employeeId)
+        select count(distinct a.colaboradorId)
         from Atendimento a
-        where a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
+        where a.inicio >= coalesce(:inicio, a.inicio)
+          and a.fim <= coalesce(:fim, a.fim)
         """
     )
     Page<KpisColaboradorProjection> getOverviewFinanceiroColaboradores(
         Pageable pageable,
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
+        @Param("inicio") Instant inicio,
+        @Param("fim") Instant fim
     );
 
     @Query(
         value = """
         select
-          a.studentId as studentId,
-          max(a.studentName) as studentName,
+          a.alunoId as alunoId,
+          max(a.alunoNome) as alunoNome,
           count(a.id) as totalAtendimentos,
-          coalesce(sum(case when a.studentChargeDate is not null then a.price else 0 end), 0) as totalCharged,
-          coalesce(sum(case when a.studentChargeDate is null then a.price else 0 end), 0) as totalPending
+          coalesce(sum(case when a.dataCobrancaAluno is not null then a.valor else 0 end), 0) as totalCobrado,
+          coalesce(sum(case when a.dataCobrancaAluno is null then a.valor else 0 end), 0) as totalPendente
         from Atendimento a
-        where a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
-        group by a.studentId
+        where a.inicio >= coalesce(:inicio, a.inicio)
+          and a.fim <= coalesce(:fim, a.fim)
+        group by a.alunoId
         """,
         countQuery = """
-        select count(distinct a.studentId)
+        select count(distinct a.alunoId)
         from Atendimento a
-        where a.startDate >= coalesce(:startDate, a.startDate)
-          and a.endDate <= coalesce(:endDate, a.endDate)
+        where a.inicio >= coalesce(:inicio, a.inicio)
+          and a.fim <= coalesce(:fim, a.fim)
         """
     )
     Page<KpisAlunoProjection> getOverviewFinanceiroAlunos(
         Pageable pageable,
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
+        @Param("inicio") Instant inicio,
+        @Param("fim") Instant fim
     );
 
     @Query(
         """
             select
-                count(case when a.content = 'AULA' then 1 end) as totalAulas,
-                count(case when a.content = 'MENTORIA' then 1 end) as totalMentoria,
-                count(case when a.content = 'TERAPIA' then 1 end) as totalTerapia,
-                count(case when a.content = 'OV' then 1 end) as totalOV,
-                count(case when a.content = 'ENEM' then 1 end) as totalENEM,
-                count(case when a.content = 'PAS' then 1 end) as totalPAS,
-                count(case when a.content = 'OUTROS' then 1 end) as totalOutros
+                count(case when a.tipo = 'AULA' then 1 end) as totalAulas,
+                count(case when a.tipo = 'MENTORIA' then 1 end) as totalMentoria,
+                count(case when a.tipo = 'TERAPIA' then 1 end) as totalTerapia,
+                count(case when a.tipo = 'OV' then 1 end) as totalOV,
+                count(case when a.tipo = 'ENEM' then 1 end) as totalENEM,
+                count(case when a.tipo = 'PAS' then 1 end) as totalPAS,
+                count(case when a.tipo = 'OUTROS' then 1 end) as totalOutros
             from Atendimento a
-            where a.startDate >= coalesce(:startDate, a.startDate)
-              and a.endDate <= coalesce(:endDate, a.endDate)
+            where a.inicio >= coalesce(:inicio, a.inicio)
+              and a.fim <= coalesce(:fim, a.fim)
         """
     )
     ReportAtendimentosProjection getAtendimentosContentReport(
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
+        @Param("inicio") Instant inicio,
+        @Param("fim") Instant fim
     );
 
     @Query(
         """
             select count(a) > 0
             from Atendimento a
-            where a.studentId = :studentId
-              and a.startDate < :endDate
-              and a.endDate > :startDate
+            where a.alunoId = :alunoId
+              and a.inicio < :fim
+              and a.fim > :inicio
               and (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
         """
     )
-    boolean studentHasConflictingAtendimento(
-        @Param("studentId") UUID studentId,
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate,
+    boolean alunoPossuiAtendimentoConflitante(
+        @Param("alunoId") UUID alunoId,
+        @Param("inicio") Instant inicio,
+        @Param("fim") Instant fim,
         @Param("ignoredAtendimentoId") UUID ignoredAtendimentoId
     );
 
@@ -289,46 +289,46 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         """
             select count(a) > 0
             from Atendimento a
-            where a.employeeId = :employeeId
-              and a.startDate < :endDate
-              and a.endDate > :startDate
+            where a.colaboradorId = :colaboradorId
+              and a.inicio < :fim
+              and a.fim > :inicio
               and (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
         """
     )
-    boolean employeeHasConflictingAtendimento(
-        @Param("employeeId") UUID employeeId,
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate,
+    boolean colaboradorPossuiAtendimentoConflitante(
+        @Param("colaboradorId") UUID colaboradorId,
+        @Param("inicio") Instant inicio,
+        @Param("fim") Instant fim,
         @Param("ignoredAtendimentoId") UUID ignoredAtendimentoId
     );
 
     @Query(
         """
-        select count(distinct a.studentId)
+        select count(distinct a.alunoId)
         from Atendimento a
-        where a.startDate >= :startDate
-          and a.startDate < :endDate
+        where a.inicio >= :inicio
+          and a.inicio < :fim
         """
     )
-    long countStudentsInPeriod(
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
+    long countAlunosInPeriod(
+        @Param("inicio") Instant inicio,
+        @Param("fim") Instant fim
     );
 
     @Query(
         value = """
-        select count(distinct a.student_id)
-        from tb_appointments a
-        join tb_students s on s.id = a.student_id
-        where a.start_date >= :startDate
-          and a.start_date < :endDate
-          and s.active = true
+        select count(distinct a.aluno_id)
+        from atendimentos a
+        join alunos s on s.id = a.aluno_id
+        where a.inicio >= :inicio
+          and a.inicio < :fim
+          and s.ativo = true
         """,
         nativeQuery = true
     )
-    long countActiveStudentsInPeriod(
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
+    long countAlunosAtivosInPeriod(
+        @Param("inicio") Instant inicio,
+        @Param("fim") Instant fim
     );
 
 
@@ -336,13 +336,13 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         """
         select count(a)
         from Atendimento a
-        where a.startDate >= :startDate
-          and a.startDate < :endDate
+        where a.inicio >= :inicio
+          and a.inicio < :fim
         """
     )
     long countAtendimentosInPeriod(
-        @Param("startDate") Instant startDate,
-        @Param("endDate") Instant endDate
+        @Param("inicio") Instant inicio,
+        @Param("fim") Instant fim
     );
 
 

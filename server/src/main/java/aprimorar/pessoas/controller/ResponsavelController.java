@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.UUID;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @RestController
 @RequestMapping("/v1/responsaveis")
 @Tag(name = "Responsavel", description = "APIs de gestão de responsáveis")
@@ -61,10 +59,9 @@ public class ResponsavelController {
         return ResponseEntity.ok(responsavelQueryService.getResponsaveis(filtro, pageable));
     }
 
-    @GetMapping("/options")
+    @GetMapping("/list")
     @Operation(operationId = "listResponsaveis", description = "Retorna uma lista de responsáveis para dropdown")
     @ApiResponse(responseCode = "200", description = "Lista de opções retornada com sucesso.")
-
     public ResponseEntity<List<ResponsaveisListDTO>> listResponsaveis() {
         return ResponseEntity.ok(responsavelQueryService.listResponsaveis());
     }
@@ -85,7 +82,6 @@ public class ResponsavelController {
         @RequestBody @Valid ResponsavelRequestDTO responsavelRequestDTO
     ) {
         ResponsavelResponseDTO responsavel = responsavelMutationService.updateResponsavel(responsavelId, responsavelRequestDTO);
-
         return ResponseEntity.ok(responsavel);
     }
 

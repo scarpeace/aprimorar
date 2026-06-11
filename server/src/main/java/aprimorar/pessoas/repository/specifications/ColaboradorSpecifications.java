@@ -29,7 +29,7 @@ public final class ColaboradorSpecifications {
         return (root, query, cb) -> {
             if (email == null || email.isBlank()) return null;
             String pattern = "%" + email.toLowerCase() + "%";
-            return cb.like(cb.lower(root.get("email").get("value")), pattern);
+            return cb.like(cb.lower(root.get("email")), pattern);
         };
     }
 
@@ -37,7 +37,7 @@ public final class ColaboradorSpecifications {
         return (root, query, cb) -> {
             if (cpf == null || cpf.isBlank()) return null;
             String pattern = "%" + cpf.toLowerCase() + "%";
-            return cb.like(cb.lower(root.get("cpf").get("value")), pattern);
+            return cb.like(cb.lower(root.get("cpf")), pattern);
         };
     }
 

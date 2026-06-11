@@ -1,11 +1,7 @@
 package aprimorar.pessoas.domain;
 
-import aprimorar.pessoas.shared.Cpf;
-import aprimorar.pessoas.shared.Email;
 import aprimorar.shared.MapperUtils;
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,19 +27,17 @@ public class Responsavel {
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "cpf", nullable = false, unique = true))
-    private Cpf cpf;
+    @Column(name = "cpf", nullable = false, unique = true)
+    private String cpf;
 
     @Column(name = "telefone", nullable = false)
     private String telefone;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true))
-    private Email email;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     @Column(name = "user_id", unique = true)
-    private Long userId;
+    private UUID userId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -73,8 +67,8 @@ public class Responsavel {
         this.nome = validateName(nome);
         this.dataNascimento = dataNascimento;
         this.telefone = validateContact(telefone);
-        this.cpf = new Cpf(cpf);
-        this.email = new Email(email);
+        this.cpf = validateCpf(cpf);
+        this.email = validateEmail(email);
     }
 
     public void update(
@@ -86,7 +80,7 @@ public class Responsavel {
         this.nome = validateName(nome);
         this.dataNascimento = dataNascimento;
         this.telefone = validateContact(telefone);
-        this.email = new Email(email);
+        this.email = validateEmail(email);
     }
 
     private String validateName(String nome) {
@@ -104,76 +98,56 @@ public class Responsavel {
         return normalized;
     }
 
+    private String validateCpf(String cpf) {
+        var normalized = MapperUtils.normalizeCpf(cpf);
+        if (normalized == null || normalized.isBlank()) {
+            throw new IllegalArgumentException("CPF do responsável é obrigatório");
+        }
+        return normalized;
+    }
+
+    private String validateEmail(String email) {
+        var normalized = MapperUtils.normalizeEmail(email);
+        if (normalized == null || normalized.isBlank()) {
+            throw new IllegalArgumentException("Email do responsável é obrigatório");
+        }
+        return normalized;
+    }
+
     public String getCpf() {
-        return cpf.value();
+        return cpf;
     }
 
     public String getEmail() {
-        return email.value();
+        return email;
     }
 
 	public UUID getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
-
 	public String getNome() {
 		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
 	}
 
 	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(LocalDate dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
-
-	public void setCpf(Cpf cpf) {
-		this.cpf = cpf;
-	}
-
 	public String getTelefone() {
 		return telefone;
 	}
 
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-
-	public void setEmail(Email email) {
-		this.email = email;
-	}
-
-	public Long getUserId() {
+	public UUID getUserId() {
 		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
 	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 
 }
