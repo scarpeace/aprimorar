@@ -3,6 +3,7 @@ package aprimorar.pessoas.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,13 +16,12 @@ import aprimorar.pessoas.repository.AlunoRepository;
 import aprimorar.pessoas.repository.ResponsavelRepository;
 import aprimorar.shared.exception.BusinessException;
 import java.time.LocalDate;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
@@ -250,7 +250,7 @@ class ResponsavelMutationServiceTest {
         );
 
         when(responsavelRepo.findById(responsavelId)).thenReturn(java.util.Optional.of(responsavel));
-        when(alunoRepo.findAllByResponsavelId(responsavelId)).thenReturn(List.of(Mockito.mock(Aluno.class)));
+        when(alunoRepo.findAllByResponsavelId(responsavelId)).thenReturn(List.of(mock(Aluno.class)));
 
         var exception = assertThrows(BusinessException.class, () -> service.deleteResponsavel(responsavelId, false));
 
@@ -259,6 +259,6 @@ class ResponsavelMutationServiceTest {
             "Este responsável possui alunos vinculados. Exclua os alunos antes de excluir o responsável.",
             exception.getMessage()
         );
-        verify(responsavelRepo, never()).delete(Mockito.any(Responsavel.class));
+        verify(responsavelRepo, never()).delete(any(Responsavel.class));
     }
 }
