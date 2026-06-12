@@ -66,11 +66,6 @@ public class AtendimentoQueryController {
         description = "Atendimento não encontrado",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<AtendimentoResponseDTO> getAtendimentoById(@PathVariable UUID id) {
         return ResponseEntity.ok(atendimentoQueryService.findAtendimentoById(id));
     }
@@ -83,21 +78,6 @@ public class AtendimentoQueryController {
     @ApiResponse(
         responseCode = "200",
         description = "Agenda e resumo financeiro do aluno retornados conforme periodo e filtros informados."
-    )
-    @ApiResponse(
-        responseCode = "400",
-        description = "Parâmetros inválidos",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "404",
-        description = "Aluno não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<AtendimentosAlunoResponseDTO> getAtendimentosByAluno(
         @ParameterObject Pageable pageable,
@@ -117,21 +97,6 @@ public class AtendimentoQueryController {
     @ApiResponse(
         responseCode = "200",
         description = "Agenda e resumo financeiro do colaborador retornados conforme periodo e filtros informados."
-    )
-    @ApiResponse(
-        responseCode = "400",
-        description = "Parâmetros inválidos",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "404",
-        description = "Colaborador não encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<AtendimentosColaboradorResponseDTO> getAtendimentosByColaborador(
         @ParameterObject Pageable pageable,
