@@ -1,13 +1,11 @@
-import type { AtendimentoResponseDTO, PageDTOAtendimentoResponseDTO } from "@/kubb";
+import { ButtonLink } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { ErrorCard } from "@/components/ui/error-card";
-import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
-import { Button, ButtonLink } from "@/components/ui/button";
+import type { AtendimentoResponseDTO, PageDTOAtendimentoResponseDTO } from "@/kubb";
+import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import {
   Calendar,
   CircleDollarSign,
@@ -15,7 +13,7 @@ import {
 } from "lucide-react";
 import { memo } from "react";
 
-interface ColaboradorEventsTableProps {
+type ColaboradorEventsTableProps = {
   atendimentos?: PageDTOAtendimentoResponseDTO;
   currentPage: number;
   error?: unknown;
@@ -23,7 +21,17 @@ interface ColaboradorEventsTableProps {
   isLoading: boolean;
   onHidePaidChange: (value: boolean) => void;
   onPageChange: (page: number) => void;
-}
+};
+
+const tipoLabels: Record<AtendimentoResponseDTO["tipo"], string> = {
+  AULA: "Aula",
+  MENTORIA: "Mentoria",
+  TERAPIA: "Terapia",
+  ORIENTACAO_VOCACIONAL: "Orientação Vocacional",
+  ENEM: "Enem",
+  PAS: "PAS",
+  OUTRO: "Outro",
+};
 
 export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
   atendimentos,
@@ -33,17 +41,12 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
   isLoading,
   onHidePaidChange,
   onPageChange,
-}: ColaboradorEventsTableProps) {
-  const { toggleEmployeePayment } = useAtendimentoMutations();
+}: Readonly<ColaboradorEventsTableProps>) {
   const events = atendimentos?.content ?? [];
   const totalEvents = atendimentos?.totalElements ?? events.length;
 
-  const handleToggleEmployeePayment = (atendimentoId: string) => {
-    toggleEmployeePayment.mutate({ id: atendimentoId });
-  };
-
   if (error) {
-    return <ErrorCard title="Não foi possível carregar a listagem de Eventos" error={error} />;
+    return <ErrorCard title="Não foi possível carregar a listagem de atendimentos" error={error} />;
   }
 
   if (isLoading) {
@@ -63,12 +66,12 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
             </h3>
             {events.length > 0 && (
               <span className="badge badge-outline badge-primary badge-sm font-semibold">
-                {totalEvents} {totalEvents === 1 ? "atendimentoo" : "atendimentoos"}
+                {totalEvents} {totalEvents === 1 ? "atendimento" : "atendimentos"}
               </span>
             )}
           </div>
           <p className="mt-1 text-sm text-base-content/60">
-            Acompanhe horarios, conteudos aplicados e o status dos repasses deste colaborador.
+            Acompanhe horários, tipos de atendimento e status dos repasses deste colaborador.
           </p>
         </div>
       </div>
@@ -96,7 +99,7 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
 
         <EmptyCard
           title="Nenhum atendimento encontrado"
-          description="Os atendimentoos vinculados ao colaborador aparecerao aqui assim que houver agendamentos registrados."
+          description="Os atendimentos vinculados ao colaborador aparecerão aqui assim que houver agendamentos registrados."
         />
       </section>
     );
@@ -112,64 +115,54 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
             <tr>
               <th className="font-bold text-base-content/70">Aluno</th>
               <th className="font-bold text-base-content/70">Data</th>
-              <th className="text-center font-bold text-base-content/70">Horario</th>
-              <th className="text-center font-bold text-base-content/70">Conteudo</th>
+              <th className="text-center font-bold text-base-content/70">Horário</th>
+              <th className="text-center font-bold text-base-content/70">Tipo</th>
               <th className="text-right font-bold text-base-content/70">Repasse</th>
-              <th className="text-center font-bold text-base-content/70 pr-6">Acoes</th>
+              <th className="text-center font-bold text-base-content/70 pr-6">Ações</th>
             </tr>
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {events.map((atendimento: AtendimentoResponseDTO) => (
-              <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
-                <td>
-                  <div className="font-semibold text-base-content">{atendimento.studentName}</div>
-                </td>
-                <td>{formatDateShortYear(atendimento.startDate)}</td>
-                <td className="text-center text-sm font-medium">
-                  {formatTime(atendimento.startDate)} - {formatTime(atendimento.endDate)}
-                </td>
-                <td className="text-center">
-                  <span className="badge badge-sm badge-outline font-bold uppercase text-[10px]">
-                    {EventContentLabels[atendimento.content] || atendimento.content}
-                  </span>
-                </td>
+            {events.map((atendimento) => {
+              const isPaid = atendimento.dataPagamentoColaborador != null;
 
-                <td className="text-right">
-                  <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
-                    <span
-                      className={`inline-block h-2.5 w-2.5 rounded-full ${atendimento.employeePaymentDate ? "bg-success" : "bg-warning"}`}
-                      title={atendimento.employeePaymentDate ? "Pago" : "Pendente"}
-                    />
-                    <span>{brl.format(atendimento.payment)}</span>
-                  </div>
-                </td>
+              return (
+                <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
+                  <td>
+                    <div className="font-semibold text-base-content">{atendimento.alunoNome}</div>
+                  </td>
+                  <td>{formatDateShortYear(atendimento.inicio)}</td>
+                  <td className="text-center text-sm font-medium">
+                    {formatTime(atendimento.inicio)} - {formatTime(atendimento.fim)}
+                  </td>
+                  <td className="text-center">
+                    <span className="badge badge-sm badge-outline font-bold uppercase text-[10px]">
+                      {tipoLabels[atendimento.tipo] ?? atendimento.tipo}
+                    </span>
+                  </td>
 
-                <td className="relative z-20 text-center">
-                  <div className="flex justify-center gap-1.5 opacity-80 transition-opacity group-hover:opacity-100">
-                    <div
-                      className="tooltip tooltip-left z-30 before:z-30 after:z-30"
-                      data-tip={atendimento.employeePaymentDate != null ? "Cancelar Pagamento" : "Marcar como Pago"}
-                    >
-                      <Button
-                        disabled={toggleEmployeePayment.isPending}
-                        className="h-9 w-9 p-0"
-                        size="sm"
-                        variant={atendimento.employeePaymentDate != null ? "success" : "warning"}
-                        onClick={() => handleToggleEmployeePayment(atendimento.id)}
-                      >
-                        <CircleDollarSign size={18} />
-                      </Button>
+                  <td className="text-right">
+                    <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
+                      <span
+                        className={`inline-block h-2.5 w-2.5 rounded-full ${isPaid ? "bg-success" : "bg-warning"}`}
+                        title={isPaid ? "Pago" : "Pendente"}
+                      />
+                      <span>{brl.format(atendimento.repasse)}</span>
                     </div>
-                    <div className="tooltip tooltip-left z-30 before:z-30 after:z-30" data-tip="Detalhes">
-                      <ButtonLink to={`/appointments/${atendimento.id}`} size="sm" className="h-9 w-9 p-0" variant="primary">
-                        <SquareArrowOutUpRight size={18} />
-                      </ButtonLink>
+                  </td>
+
+                  <td className="relative z-20 text-center">
+                    <div className="flex justify-center gap-1.5 opacity-80 transition-opacity group-hover:opacity-100">
+                      <div className="tooltip tooltip-left z-30 before:z-30 after:z-30" data-tip="Detalhes">
+                        <ButtonLink to={`/atendimentos/${atendimento.id}`} size="sm" className="h-9 w-9 p-0" variant="primary">
+                          <SquareArrowOutUpRight size={18} />
+                        </ButtonLink>
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

@@ -11,7 +11,7 @@ import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter";
 
 export function AtendimentosPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<AtendimentoResponseDTO | null>(null);
+  const [selectedAtendimento, setSelectedAtendimento] = useState<AtendimentoResponseDTO | null>(null);
   const { startDate, endDate, ...dateFilter } = usePageDateFilter();
 
 
@@ -19,17 +19,16 @@ export function AtendimentosPage() {
     description: "Gerencie aulas e atendimentos.",
     title: "Atendimentos",
     Icon: BellElectric,
-    backLink: "/",
     iconBg: "accent",
   } as const;
 
   const handleOpenForm = (atendimento?: AtendimentoResponseDTO) => {
-    setSelectedEvent(atendimento || null);
+    setSelectedAtendimento(atendimento || null);
     setIsFormOpen(true);
   };
 
   const handleCloseForm = () => {
-    setSelectedEvent(null);
+    setSelectedAtendimento(null);
     setIsFormOpen(false);
   };
 
@@ -58,12 +57,12 @@ export function AtendimentosPage() {
         <Modal
           isOpen={isFormOpen}
           onClose={handleCloseForm}
-          title={selectedEvent ? "Editar Atendimento" : "Cadastrar Novo Atendimento"}
+          title={selectedAtendimento ? "Editar Atendimento" : "Cadastrar Novo Atendimento"}
           description="Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados."
           size="lg"
         >
           <AtendimentoForm
-            initialData={selectedEvent}
+            initialData={selectedAtendimento}
             onSuccess={handleCloseForm}
             onCancel={handleCloseForm}
           />

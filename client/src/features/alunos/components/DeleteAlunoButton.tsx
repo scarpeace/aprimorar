@@ -5,28 +5,28 @@ import { useAlunoMutations } from "../hooks/use-aluno-mutations";
 import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 
 type DeleteAlunoButtonProps = {
-  studentId: string;
+  alunoId: string;
   className?: string;
 };
 
-export const DeleteAlunoButton = ({ studentId, className }: DeleteAlunoButtonProps) => {
+export const DeleteAlunoButton = ({ alunoId, className }: DeleteAlunoButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { deleteStudent } = useAlunoMutations();
+  const { deleteAluno } = useAlunoMutations();
 
   const handleOpenClick = () => {
     setIsOpen(true);
   };
 
   const handleClose = () => {
-    if (!deleteStudent.isPending) {
+    if (!deleteAluno.isPending) {
       setIsOpen(false);
     }
   };
 
   const handleConfirmDelete = () => {
-    deleteStudent.mutate(
-      { studentId },
+    deleteAluno.mutate(
+      { alunoId },
       {
         onSuccess: () => {
           setIsOpen(false);
@@ -40,12 +40,12 @@ export const DeleteAlunoButton = ({ studentId, className }: DeleteAlunoButtonPro
       <Button
         type="button"
         onClick={handleOpenClick}
-        disabled={deleteStudent.isPending}
+        disabled={deleteAluno.isPending}
         variant="danger"
         className={className}
       >
         <Trash2 className="h-4 w-4" />
-        {deleteStudent.isPending ? "Excluindo..." : "Excluir"}
+        {deleteAluno.isPending ? "Excluindo..." : "Excluir"}
       </Button>
 
       <ConfirmationModal
@@ -55,13 +55,13 @@ export const DeleteAlunoButton = ({ studentId, className }: DeleteAlunoButtonPro
         title="Atenção: EXCLUSÃO DEFINITIVA"
         description="Leia os termos de exclusão antes de confirmar."
         variant="danger"
-        isPending={deleteStudent.isPending}
+        isPending={deleteAluno.isPending}
         disableCloseOnPending
         confirmText="Excluir Aluno"
       ><div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
         Ao excluí-lo, seu histórico pessoal será apagado, mas{" "}
         <strong>
-          todos os seus atendimentoos e atendimentos serão transferidos
+          todos os seus atendimentos serão transferidos
           automaticamente para um perfil de "Aluno Removido"
         </strong>{" "}
         para manter a consistência financeira e o histórico.

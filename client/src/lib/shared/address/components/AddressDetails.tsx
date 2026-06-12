@@ -1,8 +1,8 @@
 import { SummaryItem } from "@/components/ui/summary-item.tsx";
-import type { AddressResponseDTO } from "@/kubb";
+import type { EnderecoResponseDTO } from "@/kubb";
 
 type AddressSummarySectionProps = {
-  address?: AddressResponseDTO;
+  address?: EnderecoResponseDTO;
 };
 
 export function AddressDetails({
@@ -10,15 +10,16 @@ export function AddressDetails({
 }: Readonly<AddressSummarySectionProps>) {
 
   return (
-       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-      <SummaryItem className="md:col-span-2" label="Rua" value={address?.street} />
-      <SummaryItem label="Complemento" value={address?.complement ?? "N/A"} />
-      <SummaryItem label="Bairro" value={address?.district} />
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <SummaryItem className="md:col-span-2" label="Rua" value={address?.rua} />
+      <SummaryItem label="Número" value={address?.numero ?? "N/A"} />
+      <SummaryItem label="Complemento" value={address?.complemento ?? "N/A"} />
+      <SummaryItem label="Bairro" value={address?.bairro} />
       <div className="flex gap-3 justify-between">
-        <SummaryItem className="grow" label="Cidade" value={address?.city}/>
-        <SummaryItem label="Estado" value={address?.state}/>
+        <SummaryItem className="grow" label="Cidade" value={address?.cidade}/>
+        <SummaryItem label="Estado" value={address?.estado}/>
       </div>
-        <SummaryItem label="CEP" value={address?.zip} />
+      <SummaryItem label="CEP" value={address?.cep} />
     </div>
   );
 }

@@ -71,7 +71,7 @@ export function ResponsavelAlunosTable({
                 <tr
                   key={aluno.id}
                   className="transition-colors hover:cursor-pointer hover:bg-base-200/70"
-                  onClick={() => navigate(`/students/${aluno.id}`)}
+                  onClick={() => navigate(`/alunos/${aluno.id}`)}
                 >
                   <td>{aluno.nome}</td>
                   <td>{formatCpf(aluno.cpf)}</td>

@@ -1,10 +1,8 @@
 import {
-  Calendar,
   LayoutDashboard,
   LogOut,
   UserCog,
   GraduationCap,
-  Banknote,
   ShieldCheck,
   BellElectric
 } from "lucide-react"
@@ -13,10 +11,9 @@ import { useAuth } from "@/features/auth/lib/use-auth"
 
 const baseNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Alunos e Responsáveis", href: "/students", icon: GraduationCap },
-  { name: "Colaboradores", href: "/employees", icon: UserCog },
-  { name: "Atendimentos", href: "/appointments", icon: BellElectric },
-  { name: "Financeiro", href: "/finance", icon: Banknote },
+  { name: "Alunos e Responsáveis", href: "/alunos", icon: GraduationCap },
+  { name: "Colaboradores", href: "/colaboradores", icon: UserCog },
+  { name: "Atendimentos", href: "/atendimentos", icon: BellElectric },
 ] as const
 
 function isNavigationActive(currentPath: string, itemHref: string) {

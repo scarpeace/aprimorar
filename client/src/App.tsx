@@ -21,9 +21,6 @@ const ColaboradorDetailPage = lazy(() => import("@/features/colaboradores/pages/
 const AtendimentosPage = lazy(() => import("@/features/atendimentos/pages/AtendimentosPage").then((module) => ({ default: module.AtendimentosPage })))
 const AtendimentoDetailPage = lazy(() => import("@/features/atendimentos/pages/AtendimentoDetailPage").then((module) => ({ default: module.AtendimentoDetailPage })))
 
-const FinanceiroPage = lazy(() => import("@/features/financeiro/pages/FinanceiroPage").then((module) => ({ default: module.FinanceiroPage })))
-const DespesaDetailPage = lazy(() => import("@/features/financeiro/pages/DespesaDetailPage").then((module) => ({ default: module.DespesaDetailPage })))
-
 const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage").then((module) => ({ default: module.LoginPage })))
 
 const AdminPage = lazy(() => import("@/features/admin/pages/AdminPage").then((module) => ({ default: module.AdminPage })))
@@ -46,22 +43,17 @@ function App() {
               <Route element={(<MainLayout />)}>
                 <Route path="/" element={<DashboardPage />} />
 
-                <Route path="/students" element={<AlunosPage />} />
-                <Route path="/students/:id" element={<AlunoDetailPage />} />
+                <Route path="/alunos" element={<AlunosPage />} />
+                <Route path="/alunos/:id" element={<AlunoDetailPage />} />
 
-                <Route path="/employees" element={<ColaboradoresPage />} />
-                <Route path="/employees/:id" element={<ColaboradorDetailPage />} />
+                <Route path="/colaboradores" element={<ColaboradoresPage />} />
+                <Route path="/colaboradores/:id" element={<ColaboradorDetailPage />} />
 
-                <Route path="/appointments" element={<AtendimentosPage />} />
-                <Route path="/appointments/:id" element={<AtendimentoDetailPage />} />
+                <Route path="/atendimentos" element={<AtendimentosPage />} />
+                <Route path="/atendimentos/:id" element={<AtendimentoDetailPage />} />
 
                 <Route path="/responsaveis" element={<ResponsaveisPage />} />
                 <Route path="/responsaveis/:id" element={<ResponsavelDetailPage />} />
-
-                <Route path="/finance" element={<FinanceiroPage />} />
-                <Route path="/finance/expenses" element={<FinanceiroPage />} />
-                <Route path="/finance/expenses/:id" element={<DespesaDetailPage />} />
-                <Route path="/finance/settlement" element={<FinanceiroPage />} />
 
                 <Route path="/admin" element={<AdminOnly><AdminPage /></AdminOnly>} />
                 <Route path="/admin/users" element={<AdminOnly><AdminPage /></AdminOnly>} />

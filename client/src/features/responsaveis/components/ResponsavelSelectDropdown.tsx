@@ -1,4 +1,4 @@
-import type { AlunoFormSchema } from "@/features/alunos/lib/alunoFormSchema";
+import type { AlunoFormSchema } from "@/features/alunos/lib/aluno-form-schema";
 import { useListResponsaveis } from "@/kubb";
 import { TriangleAlert } from "lucide-react";
 import {
@@ -31,7 +31,7 @@ export function ResponsavelSelectDropdown({
 
       <Controller
         control={control}
-        name="parentId"
+            name="responsavelId"
         render={({ field }) => (
           <select
             className="select select-bordered w-full"

@@ -1,6 +1,7 @@
 import {
   findColaboradorByIdQueryKey,
-  listColaboradoresQueryKey,
+  getAtendimentosByColaboradorQueryKey,
+  getColaboradoresListQueryKey,
   getColaboradoresQueryKey,
   useArquivarColaborador,
   useCreateColaborador,
@@ -17,95 +18,103 @@ export function useColaboradorMutations() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const createEmployee = useCreateColaborador({
+  const invalidateColaboradores = () => {
+    queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getColaboradoresListQueryKey() });
+  };
+
+  const invalidateColaboradorDetail = (colaboradorId: string) => {
+    queryClient.invalidateQueries({ queryKey: findColaboradorByIdQueryKey(colaboradorId) });
+    queryClient.invalidateQueries({ queryKey: getAtendimentosByColaboradorQueryKey(colaboradorId) });
+  };
+
+  const createColaborador = useCreateColaborador({
     mutation: {
-      onSuccess: (createdEmployee) => {
+      onSuccess: (createdColaborador) => {
         toast.success("Colaborador criado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: listColaboradoresQueryKey(),
-        });
-        navigate(`/employees/${createdEmployee.id}`);
+        invalidateColaboradores();
+        navigate(`/colaboradores/${createdColaborador.id}`);
       },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao criar o colaborador",
+        );
       },
     },
   });
 
-  const updateEmployee = useUpdateColaborador({
+  const updateColaborador = useUpdateColaborador({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Colaborador atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: findColaboradorByIdQueryKey(variables.colaboradorId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: listColaboradoresQueryKey(),
-        });
-        navigate(`/employees/${variables.colaboradorId}`);
+        invalidateColaboradores();
+        invalidateColaboradorDetail(variables.colaboradorId);
+        navigate(`/colaboradores/${variables.colaboradorId}`);
       },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao atualizar o colaborador",
+        );
       },
     },
   });
 
-  const archiveEmployee = useArquivarColaborador({
+  const archiveColaborador = useArquivarColaborador({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Colaborador arquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: findColaboradorByIdQueryKey(variables.colaboradorId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: listColaboradoresQueryKey(),
-        });
+        invalidateColaboradores();
+        invalidateColaboradorDetail(variables.colaboradorId);
       },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao arquivar o colaborador",
+        );
       },
     },
   });
 
-  const unarchiveEmployee = useDesarquivarColaborador({
+  const unarchiveColaborador = useDesarquivarColaborador({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Colaborador desarquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: findColaboradorByIdQueryKey(variables.colaboradorId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: listColaboradoresQueryKey(),
-        });
+        invalidateColaboradores();
+        invalidateColaboradorDetail(variables.colaboradorId);
       },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao desarquivar o colaborador",
+        );
       },
     },
   });
 
-  const deleteEmployee = useDeleteColaborador({
+  const deleteColaborador = useDeleteColaborador({
     mutation: {
-      onSuccess: () => {
+      onSuccess: (_, variables) => {
         toast.success("Colaborador excluído com sucesso");
-        queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: listColaboradoresQueryKey(),
-        });
+        invalidateColaboradores();
+        invalidateColaboradorDetail(variables.colaboradorId);
         navigate("/colaboradores");
+      },
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao excluir o colaborador",
+        );
       },
     },
   });
 
   return {
-    createEmployee,
-    updateEmployee,
-    archiveEmployee,
-    unarchiveEmployee,
-    deleteEmployee,
+    createColaborador,
+    updateColaborador,
+    archiveColaborador,
+    unarchiveColaborador,
+    deleteColaborador,
   };
 }

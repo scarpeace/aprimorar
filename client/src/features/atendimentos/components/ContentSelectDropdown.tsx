@@ -1,33 +1,29 @@
-import { atendimentoRequestDTOContentEnum } from "@/kubb";
+import { atendimentoRequestDTOTipoEnum } from "@/kubb";
 import { TriangleAlert } from "lucide-react";
-import { type UseFormRegisterReturn } from "react-hook-form";
+import type { UseFormRegisterReturn } from "react-hook-form";
+import { tipoAtendimentoLabels } from "../lib/tipo-atendimento-labels";
 
 type ContentSelectDropdownProps = {
   registration: UseFormRegisterReturn;
   error?: string;
-  className?: string;
   label: string;
 };
 
 export function ContentSelectDropdown({
   registration,
   error,
-  className,
   label,
-}: ContentSelectDropdownProps) {
+}: Readonly<ContentSelectDropdownProps>) {
   return (
-
-    <fieldset className={`fieldset ${className}`}>
+    <fieldset className="fieldset">
       <legend className="fieldset-legend">{label}</legend>
 
-      <select
-        className="select select-bordered w-full"
-        {...registration}
-      >
-       {Object.values(atendimentoRequestDTOContentEnum).map((content) => (
-              <option key={content} value={content}>
-                {content}
-              </option>
+      <select className="select select-bordered w-full" {...registration}>
+        <option value="">Selecione o tipo</option>
+        {Object.values(atendimentoRequestDTOTipoEnum).map((tipo) => (
+          <option key={tipo} value={tipo}>
+            {tipoAtendimentoLabels[tipo]}
+          </option>
         ))}
       </select>
 

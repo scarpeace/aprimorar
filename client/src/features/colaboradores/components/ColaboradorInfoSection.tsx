@@ -34,10 +34,10 @@ export function ColaboradorInfoSection({ colaboradorId, onEdit }: ColaboradorInf
   const isArchived = colaboradorQuery.data.active === false;
 
   return (
-    <section className={`p-4 rounded-xl border border-base-300 bg-base-100 shadow-sm`}>
+     <section className="p-4 rounded-xl border border-base-300 bg-base-100 shadow-sm">
       <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-             <span className="font-bold text-2xl text-base-content">{`${colaboradorQuery.data.name}`}</span>
+             <span className="font-bold text-2xl text-base-content">{colaboradorQuery.data.nome}</span>
               <span className={`text-xs md:text-md badge ${isArchived ? "badge-ghost" : "badge-success"} badge-md gap-1`}>
                 {isArchived ? "Arquivado" : "Ativo"}
               </span>
@@ -61,12 +61,12 @@ export function ColaboradorInfoSection({ colaboradorId, onEdit }: ColaboradorInf
           Dados do Colaborador
         </h4>
         <div className="grid gap-4 rounded-xl border border-base-300 bg-base-200/30 p-4 md:grid-cols-2 xl:grid-cols-3">
-          <SummaryItem label="Nome completo" value={colaboradorQuery.data.name} />
+          <SummaryItem label="Nome completo" value={colaboradorQuery.data.nome} />
           <SummaryItem label="E-mail" value={colaboradorQuery.data.email} />
-          <SummaryItem label="Cargo" value={dutyLabels[colaboradorQuery.data.duty] ?? "Desconhecido"} />
-          <SummaryItem label="Contato" value={formatPhone(colaboradorQuery.data.contact)} />
+          <SummaryItem label="Cargo" value={dutyLabels[colaboradorQuery.data.funcao] ?? "Desconhecido"} />
+          <SummaryItem label="Contato" value={formatPhone(colaboradorQuery.data.telefone)} />
           <SummaryItem label="CPF" value={formatCpf(colaboradorQuery.data.cpf)} />
-          <SummaryItem label="Data de nascimento" value={formatDateShortYear(colaboradorQuery.data.birthdate ?? "")} />
+          <SummaryItem label="Data de nascimento" value={formatDateShortYear(colaboradorQuery.data.dataNascimento ?? "")} />
           <SummaryItem label="Chave PIX" value={colaboradorQuery.data.pix} />
           <SummaryItem className="grow" label="Criado em" value={formatDateShortYear(colaboradorQuery.data.createdAt ?? "")} />
         </div>
@@ -75,7 +75,7 @@ export function ColaboradorInfoSection({ colaboradorId, onEdit }: ColaboradorInf
           title="Endereço"
           className="mt-4 shadow-sm border border-base-300 hover:bg-base-200/50 transition-colors animate-[fade-up_700ms_ease-out_both]"
         >
-          <AddressDetails address={colaboradorQuery.data.address} />
+          <AddressDetails address={colaboradorQuery.data.endereco} />
         </Collapse>
       </section>
   );

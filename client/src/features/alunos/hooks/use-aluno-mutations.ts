@@ -1,12 +1,14 @@
 import {
   getAlunoByIdQueryKey,
+  getAlunosByResponsavelQueryKey,
   getAlunosQueryKey,
+  getAtendimentosByAlunoQueryKey,
+  listAlunosQueryKey,
   useArchiveAluno,
   useCriarAluno,
   useDeleteAluno,
   useUnarchiveAluno,
   useUpdateAluno,
-  type AlunoResponseDTO,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -17,80 +19,108 @@ export function useAlunoMutations() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const createStudent = useCriarAluno({
+  const invalidateAlunos = () => {
+    queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
+    queryClient.invalidateQueries({ queryKey: listAlunosQueryKey() });
+  };
+
+  const invalidateAlunoDetail = (alunoId: string, responsavelId?: string) => {
+    queryClient.invalidateQueries({ queryKey: getAlunoByIdQueryKey(alunoId) });
+    queryClient.invalidateQueries({ queryKey: getAtendimentosByAlunoQueryKey(alunoId) });
+
+    if (responsavelId) {
+      queryClient.invalidateQueries({ queryKey: getAlunosByResponsavelQueryKey(responsavelId) });
+    }
+  };
+
+  const createAluno = useCriarAluno({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao criar o aluno",
+        );
       },
-      onSuccess: (createdStudent: AlunoResponseDTO) => {
+      onSuccess: (createdAluno) => {
         toast.success("Aluno criado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
-        navigate(`/students/${createdStudent.id}`);
+        invalidateAlunos();
+        invalidateAlunoDetail(createdAluno.id, createdAluno.responsavelId);
+        navigate(`/alunos/${createdAluno.id}`);
       },
     },
   });
 
-  const updateStudent = useUpdateAluno({
+  const updateAluno = useUpdateAluno({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao atualizar o aluno",
+        );
       },
-      onSuccess: (_,variables) => {
+      onSuccess: (_, variables) => {
         toast.success("Aluno atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: getAlunoByIdQueryKey(variables.studentId),
-        });
-        navigate(`/students/${variables.studentId}`);
+        invalidateAlunos();
+        invalidateAlunoDetail(variables.alunoId, variables.data.responsavelId);
+        navigate(`/alunos/${variables.alunoId}`);
       },
     },
   });
 
-  const deleteStudent = useDeleteAluno({
+  const deleteAluno = useDeleteAluno({
     mutation: {
-      onSuccess: () => {
+      onSuccess: (_, variables) => {
         toast.success("Aluno excluído com sucesso");
-        queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
+        invalidateAlunos();
+        invalidateAlunoDetail(variables.alunoId);
         navigate("/alunos");
       },
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao excluir o aluno",
+        );
+      },
     },
   });
 
-  const archiveStudent = useArchiveAluno({
+  const archiveAluno = useArchiveAluno({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao arquivar o aluno",
+        );
       },
       onSuccess: (_, variables) => {
         toast.success("Aluno arquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: getAlunoByIdQueryKey(variables.studentId),
-        });
+        invalidateAlunos();
+        invalidateAlunoDetail(variables.alunoId);
       },
     },
   });
 
-  const unarchiveStudent = useUnarchiveAluno({
+  const unarchiveAluno = useUnarchiveAluno({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao desarquivar o aluno",
+        );
       },
       onSuccess: (_, variables) => {
         toast.success("Aluno desarquivado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: getAlunoByIdQueryKey(variables.studentId),
-        });
+        invalidateAlunos();
+        invalidateAlunoDetail(variables.alunoId);
       },
     },
   });
 
   return {
-    createStudent,
-    updateStudent,
-    deleteStudent,
-    archiveStudent,
-    unarchiveStudent,
+    createAluno,
+    updateAluno,
+    deleteAluno,
+    archiveAluno,
+    unarchiveAluno,
   };
 }

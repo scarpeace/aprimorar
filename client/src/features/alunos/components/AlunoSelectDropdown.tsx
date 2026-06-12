@@ -1,6 +1,6 @@
 import { useListAlunos } from "@/kubb";
 import { TriangleAlert } from "lucide-react";
-import {type UseFormRegisterReturn} from "react-hook-form";
+import { type UseFormRegisterReturn } from "react-hook-form";
 
 type AlunoSelectDropdownProps = {
   registration: UseFormRegisterReturn;
@@ -41,7 +41,7 @@ export function AlunoSelectDropdown({
 
         {alunos?.map((aluno) => (
           <option key={aluno.id} value={aluno.id}>
-            {aluno.name}
+            {aluno.nome}
           </option>
         ))}
       </select>

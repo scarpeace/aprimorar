@@ -1,18 +1,16 @@
-import { Button, ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import type { AtendimentoResponseDTO, PageDTOAtendimentoResponseDTO } from "@/kubb";
-import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
 import { memo } from "react";
 import { AlunoAtendimentoMobileCard } from "./AlunoAtendimentoMobileCard";
-import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 
-interface AlunoEventsTableProps {
+type AlunoEventsTableProps = {
   atendimentos?: PageDTOAtendimentoResponseDTO;
   currentPage: number;
   error?: unknown;
@@ -20,7 +18,17 @@ interface AlunoEventsTableProps {
   isLoading: boolean;
   onHideChargedChange: (value: boolean) => void;
   onPageChange: (page: number) => void;
-}
+};
+
+const tipoLabels: Record<AtendimentoResponseDTO["tipo"], string> = {
+  AULA: "Aula",
+  MENTORIA: "Mentoria",
+  TERAPIA: "Terapia",
+  ORIENTACAO_VOCACIONAL: "Orientação Vocacional",
+  ENEM: "Enem",
+  PAS: "PAS",
+  OUTRO: "Outro",
+};
 
 export const AlunoEventsTable = memo(function AlunoEventsTable({
   atendimentos,
@@ -30,16 +38,12 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
   currentPage,
   onHideChargedChange,
   onPageChange,
-}: AlunoEventsTableProps) {
-  const { toggleStudentCharge } = useAtendimentoMutations();
+}: Readonly<AlunoEventsTableProps>) {
   const events = atendimentos?.content ?? [];
-
-  const handleToggleStudentCharge = (atendimentoId: string) => {
-    toggleStudentCharge.mutate({ id: atendimentoId });
-  };
+  const totalEvents = atendimentos?.totalElements ?? events.length;
 
   if (error) {
-    return <ErrorCard title="Não foi possível carregar a listagem de Eventos" error={error} />;
+    return <ErrorCard title="Não foi possível carregar a listagem de atendimentos" error={error} />;
   }
 
   if (isLoading) {
@@ -59,12 +63,12 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
             </h3>
             {events.length > 0 && (
               <span className="badge badge-outline badge-primary badge-sm font-semibold">
-                {events.length} {events.length === 1 ? "atendimentoo" : "atendimentoos"}
+                {totalEvents} {totalEvents === 1 ? "atendimento" : "atendimentos"}
               </span>
             )}
           </div>
           <p className="mt-1 text-sm text-base-content/60">
-            Acompanhe horarios, conteudos aplicados e o status das cobrancas registradas para este aluno.
+            Acompanhe horários, tipos de atendimento e status das cobranças registradas para este aluno.
           </p>
         </div>
       </div>
@@ -77,7 +81,7 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
           <ToggleSwitch
             toggled={hideCharged}
             setToggle={onHideChargedChange}
-            label="Ocultar Pagos"
+            label="Ocultar Cobrados"
             className="border-warning/30 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
           />
         </div>
@@ -92,7 +96,7 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
 
         <EmptyCard
           title="Nenhum atendimento encontrado"
-          description="Os atendimentoos vinculados ao aluno aparecerao aqui assim que houver agendamentos cadastrados."
+          description="Os atendimentos vinculados ao aluno aparecerão aqui assim que houver agendamentos cadastrados."
         />
       </section>
     );
@@ -109,80 +113,68 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
               <tr>
                 <th className="font-bold text-base-content/70">Colaborador</th>
                 <th className="font-bold text-base-content/70">Data</th>
-                <th className="text-center font-bold text-base-content/70">Horario</th>
-                <th className="text-center font-bold text-base-content/70">Conteudo</th>
-                <th className="text-right font-bold text-base-content/70">Cobranca</th>
-                <th className="text-center font-bold text-base-content/70 pr-6">Acoes</th>
+                <th className="text-center font-bold text-base-content/70">Horário</th>
+                <th className="text-center font-bold text-base-content/70">Tipo</th>
+                <th className="text-right font-bold text-base-content/70">Cobrança</th>
+                <th className="text-center font-bold text-base-content/70 pr-6">Ações</th>
               </tr>
             </thead>
 
             <tbody className="whitespace-nowrap">
-              {events.map((atendimento: AtendimentoResponseDTO) => (
-                <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
-                  <td>
-                    <div className="font-semibold text-base-content">{atendimento.employeeName}</div>
-                  </td>
-                  <td>{formatDateShortYear(atendimento.startDate)}</td>
-                  <td className="text-center text-sm font-medium">
-                    {formatTime(atendimento.startDate)} - {formatTime(atendimento.endDate)}
-                  </td>
-                  <td className="text-center">
-                    <span className="badge badge-sm badge-outline font-bold uppercase text-[10px]">
-                      {EventContentLabels[atendimento.content] || atendimento.content}
-                    </span>
-                  </td>
-                  <td className="text-right">
-                    <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
-                      <span
-                        className={`inline-block h-2.5 w-2.5 rounded-full ${atendimento.studentChargeDate ? "bg-success" : "bg-warning"}`}
-                        title={atendimento.studentChargeDate ? "Cobrado" : "Pendente"}
-                      />
-                      <span>{brl.format(atendimento.price)}</span>
-                    </div>
-                  </td>
-                  <td className="relative z-20 text-center">
-                    <div className="flex justify-center gap-1.5 opacity-80 transition-opacity group-hover:opacity-100">
-                      <div
-                        className="tooltip tooltip-left z-30 before:z-30 after:z-30"
-                        data-tip={atendimento.studentChargeDate != null ? "Cancelar Cobrança" : "Marcar como Cobrado"}
-                      >
-                        <Button
-                          disabled={toggleStudentCharge.isPending}
-                          className="h-9 w-9 p-0"
-                          size="sm"
-                          variant={atendimento.studentChargeDate != null ? "success" : "warning"}
-                          onClick={() => handleToggleStudentCharge(atendimento.id)}
-                        >
-                          <CircleDollarSign size={18} />
-                        </Button>
+              {events.map((atendimento) => {
+                const isCharged = atendimento.dataCobrancaAluno != null;
+
+                return (
+                  <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
+                    <td>
+                      <div className="font-semibold text-base-content">{atendimento.colaboradorNome}</div>
+                    </td>
+                    <td>{formatDateShortYear(atendimento.inicio)}</td>
+                    <td className="text-center text-sm font-medium">
+                      {formatTime(atendimento.inicio)} - {formatTime(atendimento.fim)}
+                    </td>
+                    <td className="text-center">
+                      <span className="badge badge-sm badge-outline font-bold uppercase text-[10px]">
+                        {tipoLabels[atendimento.tipo] ?? atendimento.tipo}
+                      </span>
+                    </td>
+                    <td className="text-right">
+                      <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
+                        <span
+                          className={`inline-block h-2.5 w-2.5 rounded-full ${isCharged ? "bg-success" : "bg-warning"}`}
+                          title={isCharged ? "Cobrado" : "Pendente"}
+                        />
+                        <span>{brl.format(atendimento.valor)}</span>
                       </div>
-                      <div className="tooltip tooltip-left z-30 before:z-30 after:z-30" data-tip="Detalhes">
-                        <ButtonLink
-                          to={`/appointments/${atendimento.id}`}
-                          size="sm"
-                          className="h-9 w-9 p-0"
-                          variant="primary"
-                        >
-                          <SquareArrowOutUpRight size={18} />
-                        </ButtonLink>
+                    </td>
+                    <td className="relative z-20 text-center">
+                      <div className="flex justify-center gap-1.5 opacity-80 transition-opacity group-hover:opacity-100">
+                        <div className="tooltip tooltip-left z-30 before:z-30 after:z-30" data-tip="Detalhes">
+                          <ButtonLink
+                            to={`/atendimentos/${atendimento.id}`}
+                            size="sm"
+                            className="h-9 w-9 p-0"
+                            variant="primary"
+                          >
+                            <SquareArrowOutUpRight size={18} />
+                          </ButtonLink>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
 
       <div className="flex flex-col gap-4 md:hidden">
-        {events.map((atendimento: AtendimentoResponseDTO, index: number) => (
+        {events.map((atendimento, index) => (
           <AlunoAtendimentoMobileCard
             key={atendimento.id}
             atendimento={atendimento}
             index={index}
-            isPending={toggleStudentCharge.isPending}
-            onToggleCharge={() => handleToggleStudentCharge(atendimento.id)}
           />
         ))}
       </div>

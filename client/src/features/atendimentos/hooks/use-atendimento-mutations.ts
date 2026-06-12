@@ -1,107 +1,145 @@
+import {
+  getAtendimentoByIdQueryKey,
+  getAtendimentosByAlunoQueryKey,
+  getAtendimentosByColaboradorQueryKey,
+  getAtendimentosQueryKey,
+  getIndicadoresAtendimentosQueryKey,
+  useAlternarCobrancaAlunoAtendimento,
+  useAlternarPagamentoColaboradorAtendimento,
+  useCreateAtendimento,
+  useDeleteAtendimento,
+  useUpdateAtendimento,
+} from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import {
-  getAtendimentoByIdQueryKey,
-  getAtendimentosQueryKey,
-  useCreateAtendimento,
-  useToggleEmployeeAtendimentoPayment,
-  useToggleStudentAtendimentoCharge,
-  useUpdateAtendimento,
-  getIndicadoresAtendimentosQueryKey,
-  getAtendimentosByColaboradorQueryKey,
-  getAtendimentosByAlunoQueryKey,
-} from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
 
 export function useAtendimentoMutations() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const createAppointment = useCreateAtendimento({
+  const invalidateAtendimentos = () => {
+    queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getIndicadoresAtendimentosQueryKey() });
+  };
+
+  const invalidateAtendimentoDetail = (atendimentoId: string, alunoId?: string, colaboradorId?: string) => {
+    queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(atendimentoId) });
+
+    if (alunoId) {
+      queryClient.invalidateQueries({ queryKey: getAtendimentosByAlunoQueryKey(alunoId) });
+    }
+
+    if (colaboradorId) {
+      queryClient.invalidateQueries({ queryKey: getAtendimentosByColaboradorQueryKey(colaboradorId) });
+    }
+  };
+
+  const createAtendimento = useCreateAtendimento({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
-        return error;
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao criar o atendimento",
+        );
       },
-      onSuccess: (createdAppointment) => {
-        toast.success("Evento criado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
-        queryClient.invalidateQueries({
-          queryKey: getAtendimentosByColaboradorQueryKey(createdAppointment.employeeId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: getAtendimentosByAlunoQueryKey(createdAppointment.studentId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: getIndicadoresAtendimentosQueryKey(),
-        });
-        navigate(`/appointments/${createdAppointment.id}`);
+      onSuccess: (createdAtendimento) => {
+        toast.success("Atendimento criado com sucesso");
+        invalidateAtendimentos();
+        invalidateAtendimentoDetail(
+          createdAtendimento.id,
+          createdAtendimento.alunoId,
+          createdAtendimento.colaboradorId,
+        );
+        navigate(`/atendimentos/${createdAtendimento.id}`);
       },
     },
   });
 
-  const updateAppointment = useUpdateAtendimento({
+  const updateAtendimento = useUpdateAtendimento({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao atualizar o atendimento",
+        );
       },
-      onSuccess: (updatedAppointment, variables) => {
-        toast.success("Evento atualizado com sucesso");
-        queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
-        queryClient.invalidateQueries({
-          queryKey: getAtendimentosByColaboradorQueryKey(updatedAppointment.employeeId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: getAtendimentosByAlunoQueryKey(updatedAppointment.studentId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: getIndicadoresAtendimentosQueryKey(),
-        });
-        navigate(`/appointments/${updatedAppointment.id}`);
+      onSuccess: (updatedAtendimento, variables) => {
+        toast.success("Atendimento atualizado com sucesso");
+        invalidateAtendimentos();
+        invalidateAtendimentoDetail(
+          variables.id,
+          updatedAtendimento.alunoId,
+          updatedAtendimento.colaboradorId,
+        );
+        navigate(`/atendimentos/${updatedAtendimento.id}`);
       },
     },
   });
 
-  const toggleStudentCharge = useToggleStudentAtendimentoCharge({
+  const deleteAtendimento = useDeleteAtendimento({
     mutation: {
-      onSuccess: (updatedAppointment, variables) => {
+      onSuccess: (_, variables) => {
+        toast.success("Atendimento excluído com sucesso");
+        invalidateAtendimentos();
+        invalidateAtendimentoDetail(variables.id);
+        navigate("/atendimentos");
+      },
+      onError: (error) => {
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao excluir o atendimento",
+        );
+      },
+    },
+  });
+
+  const alternarCobrancaAluno = useAlternarCobrancaAlunoAtendimento({
+    mutation: {
+      onSuccess: (updatedAtendimento, variables) => {
         toast.success("Status da cobrança atualizado");
-        queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
-        queryClient.invalidateQueries({ queryKey: getAtendimentosByAlunoQueryKey(updatedAppointment.studentId) });
-        queryClient.invalidateQueries({
-          queryKey: getIndicadoresAtendimentosQueryKey(),
-        });
+        invalidateAtendimentos();
+        invalidateAtendimentoDetail(
+          variables.id,
+          updatedAtendimento.alunoId,
+          updatedAtendimento.colaboradorId,
+        );
       },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao atualizar a cobrança",
+        );
       },
     },
   });
 
-  const toggleEmployeePayment = useToggleEmployeeAtendimentoPayment({
+  const alternarPagamentoColaborador = useAlternarPagamentoColaboradorAtendimento({
     mutation: {
-      onSuccess: (updatedAppointment, variables) => {
+      onSuccess: (updatedAtendimento, variables) => {
         toast.success("Status do pagamento atualizado");
-        queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
-        queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(variables.id) });
-        queryClient.invalidateQueries({ queryKey: getAtendimentosByColaboradorQueryKey(updatedAppointment.employeeId) });
-        queryClient.invalidateQueries({
-          queryKey: getIndicadoresAtendimentosQueryKey(),
-        });
+        invalidateAtendimentos();
+        invalidateAtendimentoDetail(
+          variables.id,
+          updatedAtendimento.alunoId,
+          updatedAtendimento.colaboradorId,
+        );
       },
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error));
+        toast.error(
+          getFriendlyErrorMessage(error) ||
+            "Algo deu errado ao atualizar o pagamento",
+        );
       },
     },
   });
 
   return {
-    createAppointment,
-    updateAppointment,
-    toggleStudentCharge,
-    toggleEmployeePayment,
+    createAtendimento,
+    updateAtendimento,
+    deleteAtendimento,
+    alternarCobrancaAluno,
+    alternarPagamentoColaborador,
   };
 }

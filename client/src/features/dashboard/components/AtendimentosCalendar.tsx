@@ -35,9 +35,9 @@ const BUTTON_TEXT = {
 function toCalendarEvent(atendimento: AtendimentoResponseDTO): EventInput {
   return {
     id: atendimento.id,
-    title: atendimento.studentName,
-    start: atendimento.startDate,
-    end: atendimento.endDate,
+    title: atendimento.alunoNome,
+    start: atendimento.inicio,
+    end: atendimento.fim,
     color: getAppointmentColor(atendimento).backgroundColor,
   };
 }
@@ -54,10 +54,10 @@ export function AtendimentosCalendar({ onCreateAppointment }: Readonly<Atendimen
   const calendarRange = getMonthRange(calendarDate);
 
   const eventsQuery = useGetAtendimentos({
-    startDate: calendarRange.startDate.toISOString(),
-    endDate: calendarRange.endDate.toISOString(),
+    inicio: calendarRange.startDate.toISOString(),
+    fim: calendarRange.endDate.toISOString(),
     size: 500,
-    sort: ["startDate,asc"],
+    sort: ["inicio,asc"],
   });
 
   const calendarEvents = useMemo(
@@ -72,7 +72,7 @@ export function AtendimentosCalendar({ onCreateAppointment }: Readonly<Atendimen
 
   const handleEventClick = (info: EventClickArg) => {
     info.jsEvent.preventDefault();
-    navigate(`/appointments/${info.event.id}`);
+    navigate(`/atendimentos/${info.event.id}`);
   };
 
   const handleDatesSet = (info: DatesSetArg) => {

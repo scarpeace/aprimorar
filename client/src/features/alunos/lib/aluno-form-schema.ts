@@ -1,7 +1,7 @@
-import { addressFormSchema } from "@/lib/shared/address/forms/addressSchema.ts";
+import { addressFormSchema } from "@/lib/shared/address/forms/addressSchema";
 import { z } from "zod/v4";
 
-const birthdateSchema = z.string()
+const dataNascimentoSchema = z.string()
   .min(1, { message: "Data de nascimento é obrigatória" })
   .refine((value) => /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value), {
     message: "Data de nascimento inválida",
@@ -12,17 +12,16 @@ const birthdateSchema = z.string()
   });
 
 export const alunoFormSchema = z.object({
-  name: z.string().min(1, { message: "Nome do aluno é obrigatório" }),
+  nome: z.string().min(1, { message: "Nome do aluno é obrigatório" }),
   cpf: z.string().min(1, { message: "CPF é obrigatório" }),
-  birthdate: birthdateSchema,
-  pix: z.string().optional().nullable(),
-  contact: z.string().min(1, { message: "Contato é obrigatório" }),
-  email: z.string().min(1, { message: "Email é obrigatório" }),
-  school: z.string().min(1, { message: "Escola é obrigatória" }),
-  address: addressFormSchema,
-  parentId: z.string()
+  dataNascimento: dataNascimentoSchema,
+  telefone: z.string().min(1, { message: "Telefone é obrigatório" }),
+  email: z.string().min(1, { message: "Email é obrigatório" }).email("Email inválido"),
+  escola: z.string().min(1, { message: "Escola é obrigatória" }),
+  endereco: addressFormSchema,
+  responsavelId: z.string()
     .min(1, { message: "Um aluno não pode ser cadastrado sem um responsável" })
-    .uuid({ message: "Responsável inválido" })
+    .uuid({ message: "Responsável inválido" }),
 });
 
 export type AlunoFormSchema = z.input<typeof alunoFormSchema>;

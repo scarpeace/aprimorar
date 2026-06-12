@@ -1,31 +1,24 @@
 import { Button } from "@/components/ui/button";
-import type { ProblemResponseDTO, ToggleEmployeeAtendimentoPaymentMutationResponse } from "@/kubb";
-import type { ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
-import type { UseMutationResult } from "@tanstack/react-query";
-import { Clock3, Check } from "lucide-react";
+import type { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
+import { Check, Clock3 } from "lucide-react";
 
-interface ToggleColaboradorPaymentButtonProps {
+type ToggleColaboradorPaymentButtonProps = {
   colaboradorPaymentPaid: boolean;
-  toggleEmployeePayment: UseMutationResult<
-    ToggleEmployeeAtendimentoPaymentMutationResponse,
-    ResponseErrorConfig<ProblemResponseDTO>,
-    { id: string },
-    unknown
-  >;
+  alternarPagamentoColaborador: ReturnType<typeof useAtendimentoMutations>["alternarPagamentoColaborador"];
   handleToggleEmployeePayment: () => void;
-}
+};
 
 export function ToggleColaboradorPaymentButton({
   colaboradorPaymentPaid,
-  toggleEmployeePayment,
+  alternarPagamentoColaborador,
   handleToggleEmployeePayment,
-}: ToggleColaboradorPaymentButtonProps) {
+}: Readonly<ToggleColaboradorPaymentButtonProps>) {
   return (
     <Button
       size="sm"
       variant={colaboradorPaymentPaid ? "outline" : "success"}
       onClick={handleToggleEmployeePayment}
-      disabled={toggleEmployeePayment.isPending}
+      disabled={alternarPagamentoColaborador.isPending}
       className="w-full sm:w-auto"
     >
       {colaboradorPaymentPaid ? (
@@ -33,7 +26,7 @@ export function ToggleColaboradorPaymentButton({
       ) : (
         <Check className="mr-1 h-4 w-4" />
       )}
-      {colaboradorPaymentPaid ? "Funcionário pendente" : "Marcar funcionário pago"}
+      {colaboradorPaymentPaid ? "Marcar repasse pendente" : "Marcar colaborador pago"}
     </Button>
   );
 }

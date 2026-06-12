@@ -1,132 +1,144 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TriangleAlert } from "lucide-react";
-import { useForm, Controller, useWatch } from "react-hook-form";
-import { NumericFormat } from "react-number-format";
 import { useMemo } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import { NumericFormat } from "react-number-format";
 
 import { Button } from "@/components/ui/button";
 import { DateTimeInput } from "@/components/ui/date-time-input";
-import { ColaboradorSelectDropdown } from "@/features/colaboradores/components/ColaboradorSelectDropdown";
 import { AlunoSelectDropdown } from "@/features/alunos/components/AlunoSelectDropdown";
+import { ColaboradorSelectDropdown } from "@/features/colaboradores/components/ColaboradorSelectDropdown";
 import type { AtendimentoRequestDTO, AtendimentoResponseDTO } from "@/kubb";
 import { toInstant } from "@/lib/utils/date-utils";
-import { ContentSelectDropdown } from "./ContentSelectDropdown";
-import { atendimentoFormSchema, type AtendimentoFormSchema } from "../lib/appointmentFormSchema.tsx";
 import { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
-import { formatDateForInput } from "@/lib/utils/formatter";
+import { atendimentoFormSchema, type AtendimentoFormSchema } from "../lib/atendimento-form-schema";
+import { ContentSelectDropdown } from "./ContentSelectDropdown";
 
 function formatDateTimeForInput(dateTimeStr?: string) {
-  if (!dateTimeStr) return "";
+  if (!dateTimeStr) {
+    return "";
+  }
+
   const date = new Date(dateTimeStr);
   const offset = date.getTimezoneOffset() * 60000;
-  const localISOTime = new Date(date.getTime() - offset).toISOString().slice(0, 16);
-  return localISOTime;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
 }
 
-interface AtendimentoFormProps {
+type AtendimentoFormProps = {
   initialData?: AtendimentoResponseDTO | null;
   onSuccess: () => void;
   onCancel: () => void;
+};
+
+function FieldErrorMessage({ message }: Readonly<{ message?: string }>) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <p className="label text-error">
+      <TriangleAlert className="w-3 h-3" />
+      {message}
+    </p>
+  );
 }
 
-export function AtendimentoForm({ initialData, onCancel, onSuccess }: AtendimentoFormProps) {
-  const { createAppointment, updateAppointment } = useAtendimentoMutations();
+export function AtendimentoForm({ initialData, onCancel, onSuccess }: Readonly<AtendimentoFormProps>) {
+  const { createAtendimento, updateAtendimento } = useAtendimentoMutations();
   const isEditMode = !!initialData;
 
   const { register, handleSubmit, control, formState: { errors } } = useForm<AtendimentoFormSchema>({
     resolver: zodResolver(atendimentoFormSchema),
     mode: "onBlur",
     defaultValues: {
-      price: initialData?.price ?? undefined,
-      payment: initialData?.payment ?? undefined,
-      startDate: formatDateTimeForInput(initialData?.startDate),
-      duration: initialData?.duration ?? 1,
-      content: initialData?.content ?? undefined,
-      studentId: initialData?.studentId ?? "",
-      employeeId: initialData?.employeeId ?? "",
-      description: initialData?.description ?? "",
-    }
+      valor: initialData?.valor ?? undefined,
+      repasse: initialData?.repasse ?? undefined,
+      inicio: formatDateTimeForInput(initialData?.inicio),
+      duracao: initialData?.duracao ?? 1,
+      tipo: initialData?.tipo ?? undefined,
+      alunoId: initialData?.alunoId ?? "",
+      colaboradorId: initialData?.colaboradorId ?? "",
+      descricao: initialData?.descricao ?? "",
+    },
   });
 
-  const startDateValue = useWatch({ control, name: "startDate" });
-  const durationValue = useWatch({ control, name: "duration" });
+  const inicioValue = useWatch({ control, name: "inicio" });
+  const duracaoValue = useWatch({ control, name: "duracao" });
 
-  const displayEndTime = useMemo(() => {
-    if (!startDateValue || !durationValue) return "";
+  const formattedEndTime = useMemo(() => {
+    if (!inicioValue || !duracaoValue) {
+      return "";
+    }
 
-    const start = new Date(startDateValue);
-    if (isNaN(start.getTime())) return "";
+    const start = new Date(inicioValue);
+    if (Number.isNaN(start.getTime())) {
+      return "";
+    }
 
-    const hoursInMs = durationValue * 60 * 60 * 1000;
-    const end = new Date(start.getTime() + hoursInMs).toString();
+    const hoursInMs = duracaoValue * 60 * 60 * 1000;
+    const end = new Date(start.getTime() + hoursInMs);
 
-    return formatDateForInput(end);
-  }, [startDateValue, durationValue]);
+    return new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(end);
+  }, [inicioValue, duracaoValue]);
 
-  const formattedEndTime = displayEndTime
-    ? new Intl.DateTimeFormat('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(new Date(displayEndTime))
-    : '';
-
-  const onSubmit = handleSubmit((data: AtendimentoFormSchema) => {
+  const onSubmit = handleSubmit((data) => {
     const formattedData: AtendimentoRequestDTO = {
-      description: data.description,
-      content: data.content,
-      startDate: toInstant(data.startDate),
-      duration: data.duration,
-      price: data.price,
-      payment: data.payment,
-      studentId: data.studentId,
-      employeeId: data.employeeId,
+      descricao: data.descricao,
+      tipo: data.tipo,
+      inicio: toInstant(data.inicio),
+      duracao: data.duracao,
+      valor: data.valor,
+      repasse: data.repasse,
+      alunoId: data.alunoId,
+      colaboradorId: data.colaboradorId,
     };
 
-    if (isEditMode && initialData.id) {
-      updateAppointment.mutate({ id: initialData.id, data: formattedData });
-    } else {
-      createAppointment.mutate({ data: formattedData });
+    if (isEditMode && initialData?.id) {
+      updateAtendimento.mutate(
+        { id: initialData.id, data: formattedData },
+        { onSuccess },
+      );
+      return;
     }
-    onSuccess()
+
+    createAtendimento.mutate({ data: formattedData }, { onSuccess });
   });
 
-  const isPending = createAppointment.isPending || updateAppointment.isPending;
+  const isPending = createAtendimento.isPending || updateAtendimento.isPending;
 
   return (
     <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-
         <AlunoSelectDropdown
-          registration={register("studentId")}
-          error={errors.studentId?.message}
+          registration={register("alunoId")}
+          error={errors.alunoId?.message}
           label="Aluno"
-          defaultValue={isEditMode ? { id: initialData.studentId, name: initialData.studentName } : undefined}
+          defaultValue={isEditMode && initialData ? { id: initialData.alunoId, name: initialData.alunoNome } : undefined}
         />
 
         <ColaboradorSelectDropdown
-          registration={register("employeeId")}
-          error={errors.employeeId?.message}
+          registration={register("colaboradorId")}
+          error={errors.colaboradorId?.message}
           label="Colaborador"
-          defaultValue={isEditMode ? { id: initialData.employeeId, name: initialData.employeeName } : undefined}
+          defaultValue={isEditMode && initialData ? { id: initialData.colaboradorId, name: initialData.colaboradorNome } : undefined}
         />
 
         <ContentSelectDropdown
-          label="Atendimento"
-          registration={register("content")}
-          error={errors.content?.message}
+          label="Tipo"
+          registration={register("tipo")}
+          error={errors.tipo?.message}
         />
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Data Início</legend>
-          <DateTimeInput control={control} name="startDate" placeholderText="Início" />
-          {errors?.startDate && (
-            <p className="label text-error">
-              <TriangleAlert className="w-3 h-3" /> {errors.startDate.message}
-            </p>
-          )}
+          <DateTimeInput control={control} name="inicio" placeholderText="Início" />
+          <FieldErrorMessage message={errors.inicio?.message} />
         </fieldset>
 
         <fieldset className="fieldset">
@@ -136,14 +148,10 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Atendiment
             className="input w-full"
             min="0.5"
             step="0.5"
-            {...register("duration", { valueAsNumber: true })}
+            {...register("duracao", { valueAsNumber: true })}
             placeholder="1.0"
           />
-          {errors?.duration && (
-            <p className="label text-error">
-              <TriangleAlert className="w-3 h-3" /> {errors.duration.message}
-            </p>
-          )}
+          <FieldErrorMessage message={errors.duracao?.message} />
         </fieldset>
 
         <fieldset className="fieldset">
@@ -162,7 +170,7 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Atendiment
             <legend className="fieldset-legend">Valor do atendimento</legend>
             <Controller
               control={control}
-              name="price"
+              name="valor"
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <NumericFormat
                   getInputRef={ref}
@@ -180,18 +188,14 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Atendiment
                 />
               )}
             />
-            {errors?.price && (
-              <p className="label text-error">
-                <TriangleAlert className="w-3 h-3" /> {errors.price.message}
-              </p>
-            )}
+            <FieldErrorMessage message={errors.valor?.message} />
           </fieldset>
 
           <fieldset className="fieldset w-full">
             <legend className="fieldset-legend">Repasse p/ Colaborador</legend>
             <Controller
               control={control}
-              name="payment"
+              name="repasse"
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <NumericFormat
                   getInputRef={ref}
@@ -209,27 +213,19 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Atendiment
                 />
               )}
             />
-            {errors?.payment && (
-              <p className="label text-error">
-                <TriangleAlert className="w-3 h-3" /> {errors.payment.message}
-              </p>
-            )}
+            <FieldErrorMessage message={errors.repasse?.message} />
           </fieldset>
         </div>
 
         <fieldset className="fieldset md:col-span-3">
           <legend className="fieldset-legend">Descrição (opcional)</legend>
-          <textarea className="textarea textarea-bordered w-full" placeholder="Observações do atendimento" {...register("description")} />
-          {errors?.description && (
-            <p className="label text-error">
-              <TriangleAlert className="w-3 h-3" /> {errors.description.message}
-            </p>
-          )}
+          <textarea className="textarea textarea-bordered w-full" placeholder="Observações do atendimento" {...register("descricao")} />
+          <FieldErrorMessage message={errors.descricao?.message} />
         </fieldset>
       </div>
 
       <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <Button type="button" variant="ghost" onClick={onCancel}>
+        <Button type="button" variant="ghost" onClick={onCancel} disabled={isPending}>
           Cancelar
         </Button>
         <Button type="submit" disabled={isPending} variant="primary">

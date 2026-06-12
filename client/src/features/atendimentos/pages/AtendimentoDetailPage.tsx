@@ -8,7 +8,7 @@ import { useGetAtendimentoById } from "@/kubb";
 import { Calendar, Edit } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
-import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
+import { tipoAtendimentoLabels } from "@/features/atendimentos/lib/tipo-atendimento-labels";
 import { useState } from "react";
 import { AtendimentoForm } from "../components/AtendimentoForm";
 import { AtendimentoInfoSection } from "../components/AtendimentoInfoSection";
@@ -21,14 +21,13 @@ export function AtendimentoDetailPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const atendimentoQuery = useGetAtendimentoById(atendimentoId);
-  const { toggleStudentCharge, toggleEmployeePayment } =
+  const { alternarCobrancaAluno, alternarPagamentoColaborador } =
     useAtendimentoMutations();
 
   const headerProps = {
-    description: "Veja e gerencie as informações do atendimentoo",
+    description: "Veja e gerencie as informações do atendimento",
     Icon: Calendar,
-    title: "Detalhes do atendimentoo",
-    backLink: "/atendimentos",
+    title: "Detalhes do atendimento",
     iconBg: "secondary",
   } as const;
 
@@ -36,7 +35,7 @@ export function AtendimentoDetailPage() {
     return (
       <PageLayout {...headerProps}>
         <ErrorCard
-          title="Erro ao carregar atendimentoo"
+          title="Erro ao carregar atendimento"
           error={atendimentoQuery.error}
         />
       </PageLayout>
@@ -46,29 +45,27 @@ export function AtendimentoDetailPage() {
   if (atendimentoQuery.isPending || !atendimentoQuery.data) {
     return (
       <PageLayout {...headerProps}>
-        <LoadingCard title="Carregando dados do atendimentoo" />
+        <LoadingCard title="Carregando dados do atendimento" />
       </PageLayout>
     );
   }
 
   const handleToggleIncomeStatus = () => {
-    toggleStudentCharge.mutate({
+    alternarCobrancaAluno.mutate({
       id: atendimentoQuery.data.id,
     });
   };
 
   const handleToggleExpenseStatus = () => {
-    toggleEmployeePayment.mutate({
+    alternarPagamentoColaborador.mutate({
       id: atendimentoQuery.data.id,
     });
   };
 
-  const contentLabel =
-    EventContentLabels[atendimentoQuery.data.content] ||
-    atendimentoQuery.data.content;
+  const contentLabel = tipoAtendimentoLabels[atendimentoQuery.data.tipo] || atendimentoQuery.data.tipo;
 
-  const alunoChargePaid = atendimentoQuery.data.studentChargeDate != null;
-  const colaboradorPaymentPaid = atendimentoQuery.data.employeePaymentDate != null;
+  const alunoChargePaid = atendimentoQuery.data.dataCobrancaAluno != null;
+  const colaboradorPaymentPaid = atendimentoQuery.data.dataPagamentoColaborador != null;
 
   return (
     <PageLayout {...headerProps}>
@@ -105,12 +102,12 @@ export function AtendimentoDetailPage() {
                 </Button>
                 <ToggleAlunoChargeButton
                   alunoChargePaid={alunoChargePaid}
-                  toggleStudentCharge={toggleStudentCharge}
+                  alternarCobrancaAluno={alternarCobrancaAluno}
                   handleToggleIncomeStatus={handleToggleIncomeStatus}
                 />
                 <ToggleColaboradorPaymentButton
                   colaboradorPaymentPaid={colaboradorPaymentPaid}
-                  toggleEmployeePayment={toggleEmployeePayment}
+                  alternarPagamentoColaborador={alternarPagamentoColaborador}
                   handleToggleEmployeePayment={handleToggleExpenseStatus}
                 />
               </div>

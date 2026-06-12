@@ -10,24 +10,23 @@ import { KpiCard } from "@/components/ui/kpi-card";
 
 export function ColaboradoresPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<ColaboradorResponseDTO | null>(null);
+  const [selectedColaborador, setSelectedColaborador] = useState<ColaboradorResponseDTO | null>(null);
 
   const headerProps = {
-    description: "Gerencie cadastros e matrículas.",
+    description: "Gerencie cadastros e funções dos colaboradores.",
     title: "Colaboradores",
     Icon: UserCog,
-    backLink: "/",
     iconBg: "warning",
   } as const;
 
   const { data: kpisColaboradores } = useGetColaboradoresKpis();
   const handleOpenForm = (colaborador?: ColaboradorResponseDTO) => {
-    setSelectedEmployee(colaborador || null);
+    setSelectedColaborador(colaborador || null);
     setIsFormOpen(true);
   };
 
   const handleCloseForm = () => {
-    setSelectedEmployee(null);
+    setSelectedColaborador(null);
     setIsFormOpen(false);
   };
 
@@ -38,7 +37,7 @@ export function ColaboradoresPage() {
             <div>
               <h3 className="text-2xl font-bold text-base-content">Resumo dos Colaboradores</h3>
               <p className="text-sm text-base-content/60">
-                Visão geral dos colaboradores ativos e do total cadastrado desde o inicio.
+                Visão geral dos colaboradores ativos e do total cadastrado desde o início.
               </p>
             </div>
 
@@ -80,12 +79,12 @@ export function ColaboradoresPage() {
         <Modal
           isOpen={isFormOpen}
           onClose={handleCloseForm}
-          title={selectedEmployee ? "Editar Colaborador" : "Cadastrar Novo Colaborador"}
-          description="Atualize dados pessoais, contato e funcao do colaborador para manter a operacao organizada."
+          title={selectedColaborador ? "Editar Colaborador" : "Cadastrar Novo Colaborador"}
+          description="Atualize dados pessoais, contato e função do colaborador para manter a operação organizada."
           size="md"
         >
           <ColaboradorForm
-            initialData={selectedEmployee}
+            initialData={selectedColaborador}
             onSuccess={handleCloseForm}
             onCancel={handleCloseForm}
           />

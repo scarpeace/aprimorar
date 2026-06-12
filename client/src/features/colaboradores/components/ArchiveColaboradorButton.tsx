@@ -15,19 +15,19 @@ export const ArchiveColaboradorButton = ({
 }: ArchiveColaboradorButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const { archiveEmployee, unarchiveEmployee } = useColaboradorMutations();
+  const { archiveColaborador, unarchiveColaborador } = useColaboradorMutations();
 
   const archived = !!isArchived;
-  const isPending = archiveEmployee.isPending || unarchiveEmployee.isPending;
+  const isPending = archiveColaborador.isPending || unarchiveColaborador.isPending;
   const actionLabel = archived ? "Desarquivar" : "Arquivar";
   const Icon = archived ? ArchiveRestoreIcon : ArchiveIcon;
   const variant = archived ? "outline" : "warning";
   const modalVariant = archived ? "info" : "warning";
 
   function handleConfirm() {
-    const action = archived ? unarchiveEmployee : archiveEmployee;
+    const action = archived ? unarchiveColaborador : archiveColaborador;
     action.mutate(
-      { colaboradorId: colaboradorId },
+      { colaboradorId },
       {
         onSettled: () => setShowConfirm(false),
       }

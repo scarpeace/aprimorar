@@ -14,35 +14,34 @@ const HEADER_PROPS = {
   description: "Resumo de alunos e responsáveis.",
   title: "Alunos e Responsáveis",
   Icon: GraduationCap,
-  backLink: "/",
   iconBg: "success",
 } as const;
 
 export function AlunosPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isResponsavelFormOpen, setIsResponsavelFormOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<AlunoResponseDTO | null>(null);
-  const [selectedParent, setSelectedParent] = useState<ResponsavelResponseDTO | null>(null);
+  const [selectedAluno, setSelectedAluno] = useState<AlunoResponseDTO | null>(null);
+  const [selectedResponsavel, setSelectedResponsavel] = useState<ResponsavelResponseDTO | null>(null);
 
   const { data: kpisAlunos } = useGetAlunosKpis();
 
   const handleOpenForm = (aluno?: AlunoResponseDTO) => {
-    setSelectedStudent(aluno || null);
+    setSelectedAluno(aluno || null);
     setIsFormOpen(true);
   };
 
   const handleCloseForm = () => {
-    setSelectedStudent(null);
+    setSelectedAluno(null);
     setIsFormOpen(false);
   };
 
   const handleOpenResponsavelForm = (responsavel?: ResponsavelResponseDTO) => {
-    setSelectedParent(responsavel || null);
+    setSelectedResponsavel(responsavel || null);
     setIsResponsavelFormOpen(true);
   };
 
   const handleCloseResponsavelForm = () => {
-    setSelectedParent(null);
+    setSelectedResponsavel(null);
     setIsResponsavelFormOpen(false);
   };
 
@@ -54,7 +53,7 @@ export function AlunosPage() {
           <div>
             <h3 className="text-2xl font-bold text-base-content">Resumo dos Alunos</h3>
             <p className="text-sm text-base-content/60">
-              Visão geral dos alunos ativos e do total cadastrado desde o inicio.
+              Visão geral dos alunos ativos e do total cadastrado desde o início.
             </p>
           </div>
 
@@ -106,12 +105,12 @@ export function AlunosPage() {
         <Modal
           isOpen={isFormOpen}
           onClose={handleCloseForm}
-          title={selectedStudent ? "Editar Aluno" : "Cadastrar Novo Aluno"}
-          description="Atualize dados pessoais, contato e vinculos do aluno para manter a secretaria organizada."
+          title={selectedAluno ? "Editar Aluno" : "Cadastrar Novo Aluno"}
+          description="Atualize dados pessoais, contato e vínculos do aluno para manter a secretaria organizada."
           size="lg"
         >
           <AlunoForm
-            initialData={selectedStudent}
+            initialData={selectedAluno}
             onSuccess={handleCloseForm}
             onCancel={handleCloseForm}
           />
@@ -120,12 +119,12 @@ export function AlunosPage() {
         <Modal
           isOpen={isResponsavelFormOpen}
           onClose={handleCloseResponsavelForm}
-          title={selectedParent ? "Editar Responsável" : "Cadastrar Novo Responsável"}
+          title={selectedResponsavel ? "Editar Responsável" : "Cadastrar Novo Responsável"}
           description="Atualize os dados principais do responsável e mantenha os vínculos organizados."
           size="md"
         >
           <ResponsavelForm
-            initialData={selectedParent}
+            initialData={selectedResponsavel}
             onSuccess={handleCloseResponsavelForm}
             onCancel={handleCloseResponsavelForm}
           />

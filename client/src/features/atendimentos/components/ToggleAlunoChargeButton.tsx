@@ -1,31 +1,24 @@
 import { Button } from "@/components/ui/button";
-import type { ProblemResponseDTO, ToggleStudentAtendimentoChargeMutationResponse } from "@/kubb";
-import type { ResponseErrorConfig } from "@kubb/plugin-client/clients/axios";
-import type { UseMutationResult } from "@tanstack/react-query";
+import type { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
 import { Check, Clock3 } from "lucide-react";
 
-interface ToggleAlunoChargeButtonProps {
+type ToggleAlunoChargeButtonProps = {
   alunoChargePaid: boolean;
-  toggleStudentCharge: UseMutationResult<
-    ToggleStudentAtendimentoChargeMutationResponse,
-    ResponseErrorConfig<ProblemResponseDTO>,
-    { id: string },
-    unknown
-  >;
+  alternarCobrancaAluno: ReturnType<typeof useAtendimentoMutations>["alternarCobrancaAluno"];
   handleToggleIncomeStatus: () => void;
-}
+};
 
 export function ToggleAlunoChargeButton({
   alunoChargePaid,
-  toggleStudentCharge,
+  alternarCobrancaAluno,
   handleToggleIncomeStatus,
-}: ToggleAlunoChargeButtonProps) {
+}: Readonly<ToggleAlunoChargeButtonProps>) {
   return (
     <Button
       size="sm"
       variant={alunoChargePaid ? "outline" : "success"}
       onClick={handleToggleIncomeStatus}
-      disabled={toggleStudentCharge.isPending}
+      disabled={alternarCobrancaAluno.isPending}
       className="w-full sm:w-auto"
     >
       {alunoChargePaid ? (

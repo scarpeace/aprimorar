@@ -1,7 +1,8 @@
 import { useMemo } from "react";
-import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
+import { tipoAtendimentoLabels } from "@/features/atendimentos/lib/tipo-atendimento-labels";
 import { APPOINTMENT_CONTENT_COLORS } from "@/features/atendimentos/lib/appointment-content-colors";
 import { useGetAtendimentosContentReport } from "@/kubb";
+import type { AtendimentoResponseDTO } from "@/kubb";
 
 type AtendimentoContentLegendProps = {
   startDate: Date;
@@ -13,8 +14,8 @@ export function AtendimentoContentLegend({
   endDate,
 }: Readonly<AtendimentoContentLegendProps>) {
   const { data: report, isLoading, isError } = useGetAtendimentosContentReport({
-    startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
+    inicio: startDate.toISOString(),
+    fim: endDate.toISOString(),
   });
 
   const countByContent = useMemo<Record<string, number>>(
@@ -46,20 +47,24 @@ export function AtendimentoContentLegend({
         <p className="text-sm text-error">Não foi possível carregar a distribuição.</p>
       ) : (
         <div className="flex flex-wrap gap-3">
-          {Object.entries(APPOINTMENT_CONTENT_COLORS).map(([content, color]) => (
-            <div
-              key={content}
-              className="flex items-center gap-2 rounded-lg border border-base-300 px-2 py-1 text-sm font-medium text-base-content/75"
-            >
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: color.backgroundColor }}
-              />
-              <span>
-                {EventContentLabels[content] ?? content} : {countByContent[content] ?? 0}
-              </span>
-            </div>
-          ))}
+          {Object.entries(APPOINTMENT_CONTENT_COLORS).map(([content, color]) => {
+            const tipo = content as AtendimentoResponseDTO["tipo"];
+
+            return (
+              <div
+                key={content}
+                className="flex items-center gap-2 rounded-lg border border-base-300 px-2 py-1 text-sm font-medium text-base-content/75"
+              >
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: color.backgroundColor }}
+                />
+                <span>
+                  {tipoAtendimentoLabels[tipo] ?? content} : {countByContent[content] ?? 0}
+                </span>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
