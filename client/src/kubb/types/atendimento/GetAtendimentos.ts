@@ -29,23 +29,23 @@ export type GetAtendimentosQueryParams = {
   /**
    * @type string | undefined
    */
-  search?: string;
+  busca?: string;
   /**
    * @type string | undefined, date-time
    */
-  startDate?: string;
+  inicio?: string;
   /**
    * @type string | undefined, date-time
    */
-  endDate?: string;
+  fim?: string;
   /**
    * @type boolean | undefined
    */
-  hideCharged?: boolean;
+  ocultarCobrados?: boolean;
   /**
    * @type boolean | undefined
    */
-  hidePaid?: boolean;
+  ocultarPagos?: boolean;
 };
 
 /**

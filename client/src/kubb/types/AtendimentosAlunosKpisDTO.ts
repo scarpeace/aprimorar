@@ -12,7 +12,7 @@ export type AtendimentosAlunosKpisDTO = {
    * @description ID do aluno
    * @type string | undefined, uuid
    */
-  studentId?: string;
+  alunoId?: string;
   /**
    * @description Total de atendimentos no periodo
    * @type integer | undefined, int64
@@ -22,10 +22,10 @@ export type AtendimentosAlunosKpisDTO = {
    * @description Total cobrado do aluno no periodo
    * @type number | undefined
    */
-  totalCharged?: number;
+  totalCobrado?: number;
   /**
    * @description Total pendente de cobranca do aluno no periodo
    * @type number | undefined
    */
-  totalPending?: number;
+  totalPendente?: number;
 };

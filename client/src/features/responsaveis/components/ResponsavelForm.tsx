@@ -4,11 +4,21 @@ import { useHookFormMask } from "use-mask-input";
 import { Button } from "@/components/ui/button";
 import { TriangleAlert } from "lucide-react";
 import type { ResponsavelResponseDTO } from "@/kubb";
-import { responsavelFormSchema, type ResponsavelFormSchema } from "../lib/parentFormSchema.ts";
+import { responsavelFormSchema, type ResponsavelFormSchema } from "../lib/responsavel-form-schema.ts";
 import { useResponsavelMutations } from "../hooks/use-responsavel-mutations";
-import { toast } from "sonner";
 import { formatDateForInput } from "@/lib/utils/formatter";
-import { getFriendlyErrorMessage } from "@/lib/shared/api.ts";
+import type { ReactNode } from "react";
+
+function FieldErrorMessage({ children }: { children: ReactNode }) {
+  if (!children) return null;
+
+  return (
+    <p className="label text-error">
+      <TriangleAlert className="h-3 w-3" />
+      {children}
+    </p>
+  );
+}
 
 interface ResponsavelFormProps {
   initialData?: ResponsavelResponseDTO | null;
@@ -17,7 +27,7 @@ interface ResponsavelFormProps {
 }
 
 export function ResponsavelForm({ initialData, onSuccess, onCancel }: ResponsavelFormProps) {
-  const { createParent, updateParent } = useResponsavelMutations();
+  const { createResponsavel, updateResponsavel } = useResponsavelMutations();
   const isEditMode = !!initialData;
 
   const {
@@ -27,11 +37,10 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
   } = useForm<ResponsavelFormSchema>({
     resolver: zodResolver(responsavelFormSchema),
     defaultValues: {
-      name: initialData?.name ?? "",
+      nome: initialData?.nome ?? "",
       email: initialData?.email ?? "",
-      contact: initialData?.contact ?? "",
-      birthdate: formatDateForInput(initialData?.birthdate),
-      pix: initialData?.pix ?? "",
+      telefone: initialData?.telefone ?? "",
+      dataNascimento: formatDateForInput(initialData?.dataNascimento),
       cpf: initialData?.cpf ?? "",
     },
     mode: "onBlur",
@@ -40,26 +49,24 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
   const registerWithMask = useHookFormMask(register);
 
   const onSubmit = handleSubmit((data: ResponsavelFormSchema) => {
-    if (isEditMode && initialData.parentId) {
-      updateParent.mutate(
-        { responsavelId: initialData.parentId, data },
+    if (isEditMode && initialData.id) {
+      updateResponsavel.mutate(
+        { responsavelId: initialData.id, data },
         {
           onSuccess: () => onSuccess(),
-          onError: (error) => toast.error(getFriendlyErrorMessage(error)),
         }
       );
     } else {
-      createParent.mutate(
+      createResponsavel.mutate(
         { data },
         {
           onSuccess: () => onSuccess(),
-          onError: (error) => toast.error(getFriendlyErrorMessage(error)),
         }
       );
     }
   });
 
-  const isPending = createParent.isPending || updateParent.isPending;
+  const isPending = createResponsavel.isPending || updateResponsavel.isPending;
 
   return (
     <form className="flex flex-col" onSubmit={onSubmit} autoComplete="off">
@@ -69,15 +76,10 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
           <input
             type="text"
             className="input w-full"
-            {...register("name")}
+            {...register("nome")}
             placeholder="Nome completo"
           />
-          {errors?.name && (
-            <p className="label text-error">
-              <TriangleAlert className="w-3 h-3" />
-              {errors.name.message}
-            </p>
-          )}
+          <FieldErrorMessage>{errors.nome?.message}</FieldErrorMessage>
         </fieldset>
 
         <fieldset className="fieldset md:col-span-2">
@@ -88,12 +90,7 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
             {...register("email")}
             placeholder="email@email.com"
           />
-          {errors?.email && (
-            <p className="label text-error">
-              <TriangleAlert className="w-3 h-3" />
-              {errors.email.message}
-            </p>
-          )}
+          <FieldErrorMessage>{errors.email?.message}</FieldErrorMessage>
         </fieldset>
 
         <fieldset className="fieldset">
@@ -101,15 +98,10 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
           <input
             type="text"
             className="input w-full"
-            {...registerWithMask("birthdate", ["##/##/####"])}
+            {...registerWithMask("dataNascimento", ["##/##/####"])}
             placeholder="Ex: 01/01/1990"
           />
-          {errors?.birthdate && (
-            <p className="label text-error">
-              <TriangleAlert className="w-3 h-3" />
-              {errors.birthdate.message}
-            </p>
-          )}
+          <FieldErrorMessage>{errors.dataNascimento?.message}</FieldErrorMessage>
         </fieldset>
 
         <fieldset className="fieldset">
@@ -118,14 +110,9 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
             type="text"
             className="input w-full"
             placeholder="Ex: (61) 99633-2332"
-            {...registerWithMask("contact", ["(##) #####-####", "(##) ####-####"])}
+            {...registerWithMask("telefone", ["(##) #####-####", "(##) ####-####"])}
           />
-          {errors?.contact && (
-            <p className="label text-error">
-              <TriangleAlert className="w-3 h-3" />
-              {errors.contact.message}
-            </p>
-          )}
+          <FieldErrorMessage>{errors.telefone?.message}</FieldErrorMessage>
         </fieldset>
 
         <fieldset className="fieldset">
@@ -137,12 +124,7 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
             placeholder="Ex: 123.456.789-00"
             {...registerWithMask("cpf", ["###.###.###-##"])}
           />
-          {errors?.cpf && (
-            <p className="label text-error">
-              <TriangleAlert className="w-3 h-3" />
-              {errors.cpf.message}
-            </p>
-          )}
+          <FieldErrorMessage>{errors.cpf?.message}</FieldErrorMessage>
         </fieldset>
       </div>
 

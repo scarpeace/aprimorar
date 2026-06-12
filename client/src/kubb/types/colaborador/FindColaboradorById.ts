@@ -4,7 +4,6 @@
  */
 
 import type { ColaboradorResponseDTO } from "../ColaboradorResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type FindColaboradorByIdPathParams = {
   /**
@@ -18,20 +17,10 @@ export type FindColaboradorByIdPathParams = {
  */
 export type FindColaboradorById200 = ColaboradorResponseDTO;
 
-/**
- * @description Colaborador não encontrado
- */
-export type FindColaboradorById404 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type FindColaboradorById500 = ProblemResponseDTO;
-
 export type FindColaboradorByIdQueryResponse = FindColaboradorById200;
 
 export type FindColaboradorByIdQuery = {
   Response: FindColaboradorById200;
   PathParams: FindColaboradorByIdPathParams;
-  Errors: FindColaboradorById404 | FindColaboradorById500;
+  Errors: any;
 };

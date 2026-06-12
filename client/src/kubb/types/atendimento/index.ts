@@ -1,4 +1,20 @@
 export type {
+  AlternarCobrancaAlunoAtendimento200,
+  AlternarCobrancaAlunoAtendimento404,
+  AlternarCobrancaAlunoAtendimento500,
+  AlternarCobrancaAlunoAtendimentoMutation,
+  AlternarCobrancaAlunoAtendimentoMutationResponse,
+  AlternarCobrancaAlunoAtendimentoPathParams,
+} from "./AlternarCobrancaAlunoAtendimento.ts";
+export type {
+  AlternarPagamentoColaboradorAtendimento200,
+  AlternarPagamentoColaboradorAtendimento404,
+  AlternarPagamentoColaboradorAtendimento500,
+  AlternarPagamentoColaboradorAtendimentoMutation,
+  AlternarPagamentoColaboradorAtendimentoMutationResponse,
+  AlternarPagamentoColaboradorAtendimentoPathParams,
+} from "./AlternarPagamentoColaboradorAtendimento.ts";
+export type {
   CreateAtendimento201,
   CreateAtendimento400,
   CreateAtendimento409,
@@ -84,22 +100,6 @@ export type {
   GetOverviewFinanceiroColaboradoresQueryParams,
   GetOverviewFinanceiroColaboradoresQueryResponse,
 } from "./GetOverviewFinanceiroColaboradores.ts";
-export type {
-  ToggleEmployeeAtendimentoPayment200,
-  ToggleEmployeeAtendimentoPayment404,
-  ToggleEmployeeAtendimentoPayment500,
-  ToggleEmployeeAtendimentoPaymentMutation,
-  ToggleEmployeeAtendimentoPaymentMutationResponse,
-  ToggleEmployeeAtendimentoPaymentPathParams,
-} from "./ToggleEmployeeAtendimentoPayment.ts";
-export type {
-  ToggleStudentAtendimentoCharge200,
-  ToggleStudentAtendimentoCharge404,
-  ToggleStudentAtendimentoCharge500,
-  ToggleStudentAtendimentoChargeMutation,
-  ToggleStudentAtendimentoChargeMutationResponse,
-  ToggleStudentAtendimentoChargePathParams,
-} from "./ToggleStudentAtendimentoCharge.ts";
 export type {
   UpdateAtendimento200,
   UpdateAtendimento400,

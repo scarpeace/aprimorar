@@ -4,10 +4,7 @@
  */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type {
-  ListColaboradoresQueryResponse,
-  ListColaboradores500,
-} from "../../types/colaborador/ListColaboradores.ts";
+import type { GetColaboradoresListQueryResponse } from "../../types/colaborador/GetColaboradoresList.ts";
 import type {
   Client,
   RequestConfig,
@@ -21,61 +18,64 @@ import type {
 } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const listColaboradoresQueryKey = () =>
-  [{ url: "/v1/colaboradores/options" }] as const;
+export const getColaboradoresListQueryKey = () =>
+  [{ url: "/v1/colaboradores/list" }] as const;
 
-export type ListColaboradoresQueryKey = ReturnType<
-  typeof listColaboradoresQueryKey
+export type GetColaboradoresListQueryKey = ReturnType<
+  typeof getColaboradoresListQueryKey
 >;
 
 /**
  * @description Retorna uma lista de opções de colaboradores para dropdown.
- * {@link /v1/colaboradores/options}
+ * {@link /v1/colaboradores/list}
  */
-export async function listColaboradores(
+export async function getColaboradoresList(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
-    ListColaboradoresQueryResponse,
-    ResponseErrorConfig<ListColaboradores500>,
+    GetColaboradoresListQueryResponse,
+    ResponseErrorConfig<Error>,
     unknown
-  >({ method: "GET", url: `/v1/colaboradores/options`, ...requestConfig });
+  >({ method: "GET", url: `/v1/colaboradores/list`, ...requestConfig });
   return res.data;
 }
 
-export function listColaboradoresQueryOptions(
+export function getColaboradoresListQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = listColaboradoresQueryKey();
+  const queryKey = getColaboradoresListQueryKey();
   return queryOptions<
-    ListColaboradoresQueryResponse,
-    ResponseErrorConfig<ListColaboradores500>,
-    ListColaboradoresQueryResponse,
+    GetColaboradoresListQueryResponse,
+    ResponseErrorConfig<Error>,
+    GetColaboradoresListQueryResponse,
     typeof queryKey
   >({
     queryKey,
     queryFn: async ({ signal }) => {
-      return listColaboradores({ ...config, signal: config.signal ?? signal });
+      return getColaboradoresList({
+        ...config,
+        signal: config.signal ?? signal,
+      });
     },
   });
 }
 
 /**
  * @description Retorna uma lista de opções de colaboradores para dropdown.
- * {@link /v1/colaboradores/options}
+ * {@link /v1/colaboradores/list}
  */
-export function useListColaboradores<
-  TData = ListColaboradoresQueryResponse,
-  TQueryData = ListColaboradoresQueryResponse,
-  TQueryKey extends QueryKey = ListColaboradoresQueryKey,
+export function useGetColaboradoresList<
+  TData = GetColaboradoresListQueryResponse,
+  TQueryData = GetColaboradoresListQueryResponse,
+  TQueryKey extends QueryKey = GetColaboradoresListQueryKey,
 >(
   options: {
     query?: Partial<
       QueryObserverOptions<
-        ListColaboradoresQueryResponse,
-        ResponseErrorConfig<ListColaboradores500>,
+        GetColaboradoresListQueryResponse,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -86,16 +86,16 @@ export function useListColaboradores<
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey = resolvedOptions?.queryKey ?? listColaboradoresQueryKey();
+  const queryKey = resolvedOptions?.queryKey ?? getColaboradoresListQueryKey();
 
   const query = useQuery(
     {
-      ...listColaboradoresQueryOptions(config),
+      ...getColaboradoresListQueryOptions(config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<ListColaboradores500>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
     queryKey: TQueryKey;
   };
 

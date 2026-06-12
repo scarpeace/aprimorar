@@ -3,10 +3,29 @@
  * Do not edit manually.
  */
 
-import type { AlunosResponseDTO } from "../AlunosResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
+import type { PagedModelAlunoResponseDTO } from "../PagedModelAlunoResponseDTO.ts";
 
 export type GetAlunosQueryParams = {
+  /**
+   * @type string | undefined
+   */
+  nome?: string;
+  /**
+   * @type string | undefined
+   */
+  email?: string;
+  /**
+   * @type string | undefined
+   */
+  cpf?: string;
+  /**
+   * @type string | undefined
+   */
+  escola?: string;
+  /**
+   * @type boolean | undefined
+   */
+  ativos?: boolean;
   /**
    * @description Zero-based page index (0..N)
    * @minLength 0
@@ -26,35 +45,17 @@ export type GetAlunosQueryParams = {
    * @type array | undefined
    */
   sort?: string[];
-  /**
-   * @type string | undefined
-   */
-  search?: string;
-  /**
-   * @type boolean | undefined
-   */
-  archived?: boolean;
 };
 
 /**
  * @description Lista de alunos retornada com sucesso.
  */
-export type GetAlunos200 = AlunosResponseDTO;
-
-/**
- * @description Parâmetros inválidos
- */
-export type GetAlunos400 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type GetAlunos500 = ProblemResponseDTO;
+export type GetAlunos200 = PagedModelAlunoResponseDTO;
 
 export type GetAlunosQueryResponse = GetAlunos200;
 
 export type GetAlunosQuery = {
   Response: GetAlunos200;
   QueryParams: GetAlunosQueryParams;
-  Errors: GetAlunos400 | GetAlunos500;
+  Errors: any;
 };

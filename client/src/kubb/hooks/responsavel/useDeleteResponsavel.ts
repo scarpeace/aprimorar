@@ -8,9 +8,6 @@ import type {
   DeleteResponsavelMutationResponse,
   DeleteResponsavelPathParams,
   DeleteResponsavelQueryParams,
-  DeleteResponsavel404,
-  DeleteResponsavel409,
-  DeleteResponsavel500,
 } from "../../types/responsavel/DeleteResponsavel.ts";
 import type {
   Client,
@@ -44,9 +41,7 @@ export async function deleteResponsavel(
 
   const res = await request<
     DeleteResponsavelMutationResponse,
-    ResponseErrorConfig<
-      DeleteResponsavel404 | DeleteResponsavel409 | DeleteResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "DELETE",
@@ -63,9 +58,7 @@ export function deleteResponsavelMutationOptions<TContext = unknown>(
   const mutationKey = deleteResponsavelMutationKey();
   return mutationOptions<
     DeleteResponsavelMutationResponse,
-    ResponseErrorConfig<
-      DeleteResponsavel404 | DeleteResponsavel409 | DeleteResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     {
       responsavelId: DeleteResponsavelPathParams["responsavelId"];
       params?: DeleteResponsavelQueryParams;
@@ -87,9 +80,7 @@ export function useDeleteResponsavel<TContext>(
   options: {
     mutation?: UseMutationOptions<
       DeleteResponsavelMutationResponse,
-      ResponseErrorConfig<
-        DeleteResponsavel404 | DeleteResponsavel409 | DeleteResponsavel500
-      >,
+      ResponseErrorConfig<Error>,
       {
         responsavelId: DeleteResponsavelPathParams["responsavelId"];
         params?: DeleteResponsavelQueryParams;
@@ -108,9 +99,7 @@ export function useDeleteResponsavel<TContext>(
     config,
   ) as UseMutationOptions<
     DeleteResponsavelMutationResponse,
-    ResponseErrorConfig<
-      DeleteResponsavel404 | DeleteResponsavel409 | DeleteResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     {
       responsavelId: DeleteResponsavelPathParams["responsavelId"];
       params?: DeleteResponsavelQueryParams;
@@ -120,9 +109,7 @@ export function useDeleteResponsavel<TContext>(
 
   return useMutation<
     DeleteResponsavelMutationResponse,
-    ResponseErrorConfig<
-      DeleteResponsavel404 | DeleteResponsavel409 | DeleteResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     {
       responsavelId: DeleteResponsavelPathParams["responsavelId"];
       params?: DeleteResponsavelQueryParams;
@@ -137,9 +124,7 @@ export function useDeleteResponsavel<TContext>(
     queryClient,
   ) as UseMutationResult<
     DeleteResponsavelMutationResponse,
-    ResponseErrorConfig<
-      DeleteResponsavel404 | DeleteResponsavel409 | DeleteResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     {
       responsavelId: DeleteResponsavelPathParams["responsavelId"];
       params?: DeleteResponsavelQueryParams;

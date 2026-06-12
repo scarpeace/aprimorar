@@ -16,10 +16,10 @@ export type AlunoAtendimentosKpis = {
    * @description Total cobrado no periodo selecionado
    * @type number | undefined
    */
-  totalCharged?: number;
+  totalCobrado?: number;
   /**
    * @description Total pendente no periodo selecionado
    * @type number | undefined
    */
-  totalPending?: number;
+  totalPendente?: number;
 };

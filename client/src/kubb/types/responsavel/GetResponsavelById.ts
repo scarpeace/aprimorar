@@ -3,7 +3,6 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 import type { ResponsavelResponseDTO } from "../ResponsavelResponseDTO.ts";
 
 export type GetResponsavelByIdPathParams = {
@@ -18,20 +17,10 @@ export type GetResponsavelByIdPathParams = {
  */
 export type GetResponsavelById200 = ResponsavelResponseDTO;
 
-/**
- * @description Responsável não encontrado
- */
-export type GetResponsavelById404 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type GetResponsavelById500 = ProblemResponseDTO;
-
 export type GetResponsavelByIdQueryResponse = GetResponsavelById200;
 
 export type GetResponsavelByIdQuery = {
   Response: GetResponsavelById200;
   PathParams: GetResponsavelByIdPathParams;
-  Errors: GetResponsavelById404 | GetResponsavelById500;
+  Errors: any;
 };

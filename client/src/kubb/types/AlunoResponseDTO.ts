@@ -3,14 +3,14 @@
  * Do not edit manually.
  */
 
-import type { AddressResponseDTO } from "./AddressResponseDTO.ts";
+import type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
 
 /**
  * @description Dados do aluno retornados pela API
  */
 export type AlunoResponseDTO = {
   /**
-   * @description Indentificador único do aluno
+   * @description Identificador único do aluno
    * @type string, uuid
    */
   id: string;
@@ -18,12 +18,12 @@ export type AlunoResponseDTO = {
    * @description Nome do aluno
    * @type string
    */
-  name: string;
+  nome: string;
   /**
    * @description Contato do aluno
    * @type string
    */
-  contact: string;
+  telefone: string;
   /**
    * @description Email do aluno
    * @type string
@@ -38,40 +38,40 @@ export type AlunoResponseDTO = {
    * @description Data de nascimento do aluno
    * @type string, date
    */
-  birthdate: string;
+  dataNascimento: string;
   /**
    * @description Nome da escola do aluno
    * @type string
    */
-  school: string;
+  escola: string;
   /**
    * @description Idade do aluno
    * @type integer, int32
    */
-  age: number;
+  idade: number;
   /**
    * @description ID do responsável
    * @type string, uuid
    */
-  parentId: string;
+  responsavelId: string;
   /**
-   * @description Data e hora quando o aluno foi arquivado
+   * @description Indica se o aluno está ativo
    * @type boolean | undefined
    */
   active?: boolean;
   /**
-   * @description Data e hora quando o aluno foi atualizado
+   * @description Data e hora da última atualização do aluno
    * @type string, date-time
    */
   updatedAt?: string | null;
   /**
-   * @description Data e hora quando o aluno foi criado
+   * @description Data e hora de criação do aluno
    * @type string, date-time
    */
   createdAt: string;
   /**
-   * @description Endereço
+   * @description Endereço do aluno
    * @type object
    */
-  address: AddressResponseDTO;
+  endereco: EnderecoResponseDTO;
 };

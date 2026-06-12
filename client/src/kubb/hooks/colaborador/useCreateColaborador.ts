@@ -7,9 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   CreateColaboradorMutationRequest,
   CreateColaboradorMutationResponse,
-  CreateColaborador400,
-  CreateColaborador409,
-  CreateColaborador500,
 } from "../../types/colaborador/CreateColaborador.ts";
 import type {
   Client,
@@ -46,9 +43,7 @@ export async function createColaborador(
 
   const res = await request<
     CreateColaboradorMutationResponse,
-    ResponseErrorConfig<
-      CreateColaborador400 | CreateColaborador409 | CreateColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     CreateColaboradorMutationRequest
   >({
     method: "POST",
@@ -67,9 +62,7 @@ export function createColaboradorMutationOptions<TContext = unknown>(
   const mutationKey = createColaboradorMutationKey();
   return mutationOptions<
     CreateColaboradorMutationResponse,
-    ResponseErrorConfig<
-      CreateColaborador400 | CreateColaborador409 | CreateColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { data: CreateColaboradorMutationRequest },
     TContext
   >({
@@ -88,9 +81,7 @@ export function useCreateColaborador<TContext>(
   options: {
     mutation?: UseMutationOptions<
       CreateColaboradorMutationResponse,
-      ResponseErrorConfig<
-        CreateColaborador400 | CreateColaborador409 | CreateColaborador500
-      >,
+      ResponseErrorConfig<Error>,
       { data: CreateColaboradorMutationRequest },
       TContext
     > & { client?: QueryClient };
@@ -108,18 +99,14 @@ export function useCreateColaborador<TContext>(
     config,
   ) as UseMutationOptions<
     CreateColaboradorMutationResponse,
-    ResponseErrorConfig<
-      CreateColaborador400 | CreateColaborador409 | CreateColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { data: CreateColaboradorMutationRequest },
     TContext
   >;
 
   return useMutation<
     CreateColaboradorMutationResponse,
-    ResponseErrorConfig<
-      CreateColaborador400 | CreateColaborador409 | CreateColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { data: CreateColaboradorMutationRequest },
     TContext
   >(
@@ -131,9 +118,7 @@ export function useCreateColaborador<TContext>(
     queryClient,
   ) as UseMutationResult<
     CreateColaboradorMutationResponse,
-    ResponseErrorConfig<
-      CreateColaborador400 | CreateColaborador409 | CreateColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { data: CreateColaboradorMutationRequest },
     TContext
   >;

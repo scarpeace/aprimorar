@@ -3,13 +3,11 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
-
 export type DeleteAlunoPathParams = {
   /**
    * @type string, uuid
    */
-  studentId: string;
+  alunoId: string;
 };
 
 /**
@@ -17,25 +15,10 @@ export type DeleteAlunoPathParams = {
  */
 export type DeleteAluno204 = any;
 
-/**
- * @description Aluno não encontrado
- */
-export type DeleteAluno404 = ProblemResponseDTO;
-
-/**
- * @description Conflito de regra de negócio
- */
-export type DeleteAluno409 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type DeleteAluno500 = ProblemResponseDTO;
-
 export type DeleteAlunoMutationResponse = DeleteAluno204;
 
 export type DeleteAlunoMutation = {
   Response: DeleteAluno204;
   PathParams: DeleteAlunoPathParams;
-  Errors: DeleteAluno404 | DeleteAluno409 | DeleteAluno500;
+  Errors: any;
 };

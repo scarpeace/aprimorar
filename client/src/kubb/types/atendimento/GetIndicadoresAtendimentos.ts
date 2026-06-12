@@ -10,11 +10,11 @@ export type GetIndicadoresAtendimentosQueryParams = {
   /**
    * @type string | undefined, date-time
    */
-  startDate?: string;
+  inicio?: string;
   /**
    * @type string | undefined, date-time
    */
-  endDate?: string;
+  fim?: string;
 };
 
 /**

@@ -9,60 +9,52 @@ import { ResponsavelForm } from "../components/ResponsavelForm";
 
 export function ResponsaveisPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedParent, setSelectedParent] = useState<ResponsavelResponseDTO | null>(null);
+  const [selectedResponsavel, setSelectedResponsavel] = useState<ResponsavelResponseDTO | null>(null);
 
   const headerProps = {
     description: "Gerencie os responsáveis cadastrados no sistema.",
     title: "Responsáveis",
     Icon: Handshake,
-    backLink: "/",
     iconBg: "info",
   } as const;
 
   const handleOpenForm = (responsavel?: ResponsavelResponseDTO) => {
-    setSelectedParent(responsavel || null);
+    setSelectedResponsavel(responsavel || null);
     setIsFormOpen(true);
   };
 
   const handleCloseForm = () => {
-    setSelectedParent(null);
+    setSelectedResponsavel(null);
     setIsFormOpen(false);
   };
 
   return (
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-4">
-
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
           <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h3 className="text-lg font-bold text-base-content">Responsaveis cadastrados</h3>
-              <p className="text-sm text-base-content/60">
-                Clique na linha para abrir os detalhes do cadastro.
-              </p>
+              <h3 className="text-lg font-bold text-base-content">Responsáveis cadastrados</h3>
+              <p className="text-sm text-base-content/60">Clique na linha para abrir os detalhes do cadastro.</p>
             </div>
-            <Button
-              className="sm:ml-auto"
-              onClick={() => handleOpenForm()}
-              variant="success"
-            >
+            <Button className="sm:ml-auto" onClick={() => handleOpenForm()} variant="success">
               <Plus className="mr-2 h-4 w-4" />
-              Novo Responsavel
+              Novo Responsável
             </Button>
           </div>
 
-          <ResponsaveisTable/>
+          <ResponsaveisTable />
         </section>
 
         <Modal
           isOpen={isFormOpen}
           onClose={handleCloseForm}
-          title={selectedParent ? "Editar Responsavel" : "Cadastrar Novo Responsavel"}
-          description="Atualize os dados principais do responsavel e mantenha os vinculos organizados."
+          title={selectedResponsavel ? "Editar Responsável" : "Cadastrar Novo Responsável"}
+          description="Atualize os dados principais do responsável e mantenha os vínculos organizados."
           size="md"
         >
           <ResponsavelForm
-            initialData={selectedParent}
+            initialData={selectedResponsavel}
             onSuccess={handleCloseForm}
             onCancel={handleCloseForm}
           />

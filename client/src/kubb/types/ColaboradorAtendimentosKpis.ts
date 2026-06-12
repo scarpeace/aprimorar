@@ -16,10 +16,10 @@ export type ColaboradorAtendimentosKpis = {
    * @description Total pago no periodo selecionado
    * @type number | undefined
    */
-  totalPaid?: number;
+  totalPago?: number;
   /**
    * @description Total em aberto no periodo selecionado
    * @type number | undefined
    */
-  totalUnpaid?: number;
+  totalPendente?: number;
 };

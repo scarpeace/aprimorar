@@ -5,27 +5,11 @@
 
 import type { AlunoRequestDTO } from "../AlunoRequestDTO.ts";
 import type { AlunoResponseDTO } from "../AlunoResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 /**
  * @description Aluno criado com sucesso.
  */
 export type CriarAluno201 = AlunoResponseDTO;
-
-/**
- * @description Falha de validação
- */
-export type CriarAluno400 = ProblemResponseDTO;
-
-/**
- * @description Conflito de regra de negócio
- */
-export type CriarAluno409 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type CriarAluno500 = ProblemResponseDTO;
 
 export type CriarAlunoMutationRequest = AlunoRequestDTO;
 
@@ -34,5 +18,5 @@ export type CriarAlunoMutationResponse = CriarAluno201;
 export type CriarAlunoMutation = {
   Response: CriarAluno201;
   Request: CriarAlunoMutationRequest;
-  Errors: CriarAluno400 | CriarAluno409 | CriarAluno500;
+  Errors: any;
 };

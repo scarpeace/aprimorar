@@ -12,9 +12,9 @@ export type ResponsavelRequestDTO = {
    * @minLength 1
    * @type string
    */
-  name: string;
+  nome: string;
   /**
-   * @description Email do responsável
+   * @description E-mail do responsável
    * @minLength 1
    * @type string
    */
@@ -24,17 +24,12 @@ export type ResponsavelRequestDTO = {
    * @minLength 1
    * @type string
    */
-  contact: string;
+  telefone: string;
   /**
    * @description Data de nascimento do responsável
    * @type string, date
    */
-  birthdate?: string | null;
-  /**
-   * @description Pix do responsável
-   * @type string
-   */
-  pix?: string | null;
+  dataNascimento?: string | null;
   /**
    * @description CPF do responsável
    * @minLength 1

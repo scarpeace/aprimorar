@@ -27,7 +27,7 @@ export const getOverviewFinanceiroAlunosQueryKey = (
   params?: GetOverviewFinanceiroAlunosQueryParams,
 ) =>
   [
-    { url: "/v1/atendimentos/report/alunos" },
+    { url: "/v1/atendimentos/relatorio/alunos" },
     ...(params ? [params] : []),
   ] as const;
 
@@ -37,7 +37,7 @@ export type GetOverviewFinanceiroAlunosQueryKey = ReturnType<
 
 /**
  * @description Lista alunos paginados com indicadores de cobrado e pendente por aluno.
- * {@link /v1/atendimentos/report/alunos}
+ * {@link /v1/atendimentos/relatorio/alunos}
  */
 export async function getOverviewFinanceiroAlunos(
   params?: GetOverviewFinanceiroAlunosQueryParams,
@@ -53,7 +53,7 @@ export async function getOverviewFinanceiroAlunos(
     unknown
   >({
     method: "GET",
-    url: `/v1/atendimentos/report/alunos`,
+    url: `/v1/atendimentos/relatorio/alunos`,
     params,
     ...requestConfig,
   });
@@ -85,7 +85,7 @@ export function getOverviewFinanceiroAlunosQueryOptions(
 
 /**
  * @description Lista alunos paginados com indicadores de cobrado e pendente por aluno.
- * {@link /v1/atendimentos/report/alunos}
+ * {@link /v1/atendimentos/relatorio/alunos}
  */
 export function useGetOverviewFinanceiroAlunos<
   TData = GetOverviewFinanceiroAlunosQueryResponse,

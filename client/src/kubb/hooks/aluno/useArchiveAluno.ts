@@ -7,9 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   ArchiveAlunoMutationResponse,
   ArchiveAlunoPathParams,
-  ArchiveAluno404,
-  ArchiveAluno409,
-  ArchiveAluno500,
 } from "../../types/aluno/ArchiveAluno.ts";
 import type {
   Client,
@@ -24,7 +21,7 @@ import type {
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const archiveAlunoMutationKey = () =>
-  [{ url: "/v1/alunos/:studentId/archive" }] as const;
+  [{ url: "/v1/alunos/:alunoId/archive" }] as const;
 
 export type ArchiveAlunoMutationKey = ReturnType<
   typeof archiveAlunoMutationKey
@@ -32,21 +29,21 @@ export type ArchiveAlunoMutationKey = ReturnType<
 
 /**
  * @description Arquiva um aluno por ID.
- * {@link /v1/alunos/:studentId/archive}
+ * {@link /v1/alunos/:alunoId/archive}
  */
 export async function archiveAluno(
-  studentId: ArchiveAlunoPathParams["studentId"],
+  alunoId: ArchiveAlunoPathParams["alunoId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
     ArchiveAlunoMutationResponse,
-    ResponseErrorConfig<ArchiveAluno404 | ArchiveAluno409 | ArchiveAluno500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "PATCH",
-    url: `/v1/alunos/${studentId}/archive`,
+    url: `/v1/alunos/${alunoId}/archive`,
     ...requestConfig,
   });
   return res.data;
@@ -58,27 +55,27 @@ export function archiveAlunoMutationOptions<TContext = unknown>(
   const mutationKey = archiveAlunoMutationKey();
   return mutationOptions<
     ArchiveAlunoMutationResponse,
-    ResponseErrorConfig<ArchiveAluno404 | ArchiveAluno409 | ArchiveAluno500>,
-    { studentId: ArchiveAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: ArchiveAlunoPathParams["alunoId"] },
     TContext
   >({
     mutationKey,
-    mutationFn: async ({ studentId }) => {
-      return archiveAluno(studentId, config);
+    mutationFn: async ({ alunoId }) => {
+      return archiveAluno(alunoId, config);
     },
   });
 }
 
 /**
  * @description Arquiva um aluno por ID.
- * {@link /v1/alunos/:studentId/archive}
+ * {@link /v1/alunos/:alunoId/archive}
  */
 export function useArchiveAluno<TContext>(
   options: {
     mutation?: UseMutationOptions<
       ArchiveAlunoMutationResponse,
-      ResponseErrorConfig<ArchiveAluno404 | ArchiveAluno409 | ArchiveAluno500>,
-      { studentId: ArchiveAlunoPathParams["studentId"] },
+      ResponseErrorConfig<Error>,
+      { alunoId: ArchiveAlunoPathParams["alunoId"] },
       TContext
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
@@ -90,15 +87,15 @@ export function useArchiveAluno<TContext>(
 
   const baseOptions = archiveAlunoMutationOptions(config) as UseMutationOptions<
     ArchiveAlunoMutationResponse,
-    ResponseErrorConfig<ArchiveAluno404 | ArchiveAluno409 | ArchiveAluno500>,
-    { studentId: ArchiveAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: ArchiveAlunoPathParams["alunoId"] },
     TContext
   >;
 
   return useMutation<
     ArchiveAlunoMutationResponse,
-    ResponseErrorConfig<ArchiveAluno404 | ArchiveAluno409 | ArchiveAluno500>,
-    { studentId: ArchiveAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: ArchiveAlunoPathParams["alunoId"] },
     TContext
   >(
     {
@@ -109,8 +106,8 @@ export function useArchiveAluno<TContext>(
     queryClient,
   ) as UseMutationResult<
     ArchiveAlunoMutationResponse,
-    ResponseErrorConfig<ArchiveAluno404 | ArchiveAluno409 | ArchiveAluno500>,
-    { studentId: ArchiveAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: ArchiveAlunoPathParams["alunoId"] },
     TContext
   >;
 }

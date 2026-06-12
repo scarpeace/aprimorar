@@ -7,9 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   UnarchiveAlunoMutationResponse,
   UnarchiveAlunoPathParams,
-  UnarchiveAluno404,
-  UnarchiveAluno409,
-  UnarchiveAluno500,
 } from "../../types/aluno/UnarchiveAluno.ts";
 import type {
   Client,
@@ -24,7 +21,7 @@ import type {
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const unarchiveAlunoMutationKey = () =>
-  [{ url: "/v1/alunos/:studentId/unarchive" }] as const;
+  [{ url: "/v1/alunos/:alunoId/unarchive" }] as const;
 
 export type UnarchiveAlunoMutationKey = ReturnType<
   typeof unarchiveAlunoMutationKey
@@ -32,23 +29,21 @@ export type UnarchiveAlunoMutationKey = ReturnType<
 
 /**
  * @description Desarquiva um aluno por ID.
- * {@link /v1/alunos/:studentId/unarchive}
+ * {@link /v1/alunos/:alunoId/unarchive}
  */
 export async function unarchiveAluno(
-  studentId: UnarchiveAlunoPathParams["studentId"],
+  alunoId: UnarchiveAlunoPathParams["alunoId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
     UnarchiveAlunoMutationResponse,
-    ResponseErrorConfig<
-      UnarchiveAluno404 | UnarchiveAluno409 | UnarchiveAluno500
-    >,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "PATCH",
-    url: `/v1/alunos/${studentId}/unarchive`,
+    url: `/v1/alunos/${alunoId}/unarchive`,
     ...requestConfig,
   });
   return res.data;
@@ -60,31 +55,27 @@ export function unarchiveAlunoMutationOptions<TContext = unknown>(
   const mutationKey = unarchiveAlunoMutationKey();
   return mutationOptions<
     UnarchiveAlunoMutationResponse,
-    ResponseErrorConfig<
-      UnarchiveAluno404 | UnarchiveAluno409 | UnarchiveAluno500
-    >,
-    { studentId: UnarchiveAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: UnarchiveAlunoPathParams["alunoId"] },
     TContext
   >({
     mutationKey,
-    mutationFn: async ({ studentId }) => {
-      return unarchiveAluno(studentId, config);
+    mutationFn: async ({ alunoId }) => {
+      return unarchiveAluno(alunoId, config);
     },
   });
 }
 
 /**
  * @description Desarquiva um aluno por ID.
- * {@link /v1/alunos/:studentId/unarchive}
+ * {@link /v1/alunos/:alunoId/unarchive}
  */
 export function useUnarchiveAluno<TContext>(
   options: {
     mutation?: UseMutationOptions<
       UnarchiveAlunoMutationResponse,
-      ResponseErrorConfig<
-        UnarchiveAluno404 | UnarchiveAluno409 | UnarchiveAluno500
-      >,
-      { studentId: UnarchiveAlunoPathParams["studentId"] },
+      ResponseErrorConfig<Error>,
+      { alunoId: UnarchiveAlunoPathParams["alunoId"] },
       TContext
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
@@ -99,19 +90,15 @@ export function useUnarchiveAluno<TContext>(
     config,
   ) as UseMutationOptions<
     UnarchiveAlunoMutationResponse,
-    ResponseErrorConfig<
-      UnarchiveAluno404 | UnarchiveAluno409 | UnarchiveAluno500
-    >,
-    { studentId: UnarchiveAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: UnarchiveAlunoPathParams["alunoId"] },
     TContext
   >;
 
   return useMutation<
     UnarchiveAlunoMutationResponse,
-    ResponseErrorConfig<
-      UnarchiveAluno404 | UnarchiveAluno409 | UnarchiveAluno500
-    >,
-    { studentId: UnarchiveAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: UnarchiveAlunoPathParams["alunoId"] },
     TContext
   >(
     {
@@ -122,10 +109,8 @@ export function useUnarchiveAluno<TContext>(
     queryClient,
   ) as UseMutationResult<
     UnarchiveAlunoMutationResponse,
-    ResponseErrorConfig<
-      UnarchiveAluno404 | UnarchiveAluno409 | UnarchiveAluno500
-    >,
-    { studentId: UnarchiveAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: UnarchiveAlunoPathParams["alunoId"] },
     TContext
   >;
 }

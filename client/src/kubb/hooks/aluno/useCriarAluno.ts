@@ -7,9 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   CriarAlunoMutationRequest,
   CriarAlunoMutationResponse,
-  CriarAluno400,
-  CriarAluno409,
-  CriarAluno500,
 } from "../../types/aluno/CriarAluno.ts";
 import type {
   Client,
@@ -43,7 +40,7 @@ export async function criarAluno(
 
   const res = await request<
     CriarAlunoMutationResponse,
-    ResponseErrorConfig<CriarAluno400 | CriarAluno409 | CriarAluno500>,
+    ResponseErrorConfig<Error>,
     CriarAlunoMutationRequest
   >({ method: "POST", url: `/v1/alunos`, data: requestData, ...requestConfig });
   return res.data;
@@ -57,7 +54,7 @@ export function criarAlunoMutationOptions<TContext = unknown>(
   const mutationKey = criarAlunoMutationKey();
   return mutationOptions<
     CriarAlunoMutationResponse,
-    ResponseErrorConfig<CriarAluno400 | CriarAluno409 | CriarAluno500>,
+    ResponseErrorConfig<Error>,
     { data: CriarAlunoMutationRequest },
     TContext
   >({
@@ -76,7 +73,7 @@ export function useCriarAluno<TContext>(
   options: {
     mutation?: UseMutationOptions<
       CriarAlunoMutationResponse,
-      ResponseErrorConfig<CriarAluno400 | CriarAluno409 | CriarAluno500>,
+      ResponseErrorConfig<Error>,
       { data: CriarAlunoMutationRequest },
       TContext
     > & { client?: QueryClient };
@@ -91,14 +88,14 @@ export function useCriarAluno<TContext>(
 
   const baseOptions = criarAlunoMutationOptions(config) as UseMutationOptions<
     CriarAlunoMutationResponse,
-    ResponseErrorConfig<CriarAluno400 | CriarAluno409 | CriarAluno500>,
+    ResponseErrorConfig<Error>,
     { data: CriarAlunoMutationRequest },
     TContext
   >;
 
   return useMutation<
     CriarAlunoMutationResponse,
-    ResponseErrorConfig<CriarAluno400 | CriarAluno409 | CriarAluno500>,
+    ResponseErrorConfig<Error>,
     { data: CriarAlunoMutationRequest },
     TContext
   >(
@@ -110,7 +107,7 @@ export function useCriarAluno<TContext>(
     queryClient,
   ) as UseMutationResult<
     CriarAlunoMutationResponse,
-    ResponseErrorConfig<CriarAluno400 | CriarAluno409 | CriarAluno500>,
+    ResponseErrorConfig<Error>,
     { data: CriarAlunoMutationRequest },
     TContext
   >;

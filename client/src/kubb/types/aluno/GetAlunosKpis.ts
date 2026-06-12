@@ -4,26 +4,15 @@
  */
 
 import type { AlunosKpisDTO } from "../AlunosKpisDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 /**
  * @description KPIs de alunos retornados com sucesso.
  */
 export type GetAlunosKpis200 = AlunosKpisDTO;
 
-/**
- * @description Parâmetros inválidos
- */
-export type GetAlunosKpis400 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type GetAlunosKpis500 = ProblemResponseDTO;
-
 export type GetAlunosKpisQueryResponse = GetAlunosKpis200;
 
 export type GetAlunosKpisQuery = {
   Response: GetAlunosKpis200;
-  Errors: GetAlunosKpis400 | GetAlunosKpis500;
+  Errors: any;
 };

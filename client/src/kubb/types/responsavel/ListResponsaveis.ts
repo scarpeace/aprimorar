@@ -3,7 +3,6 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 import type { ResponsaveisListDTO } from "../ResponsaveisListDTO.ts";
 
 /**
@@ -11,14 +10,9 @@ import type { ResponsaveisListDTO } from "../ResponsaveisListDTO.ts";
  */
 export type ListResponsaveis200 = ResponsaveisListDTO[];
 
-/**
- * @description Erro interno do sistema
- */
-export type ListResponsaveis500 = ProblemResponseDTO;
-
 export type ListResponsaveisQueryResponse = ListResponsaveis200;
 
 export type ListResponsaveisQuery = {
   Response: ListResponsaveis200;
-  Errors: ListResponsaveis500;
+  Errors: any;
 };

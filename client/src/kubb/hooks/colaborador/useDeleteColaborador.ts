@@ -7,9 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   DeleteColaboradorMutationResponse,
   DeleteColaboradorPathParams,
-  DeleteColaborador404,
-  DeleteColaborador409,
-  DeleteColaborador500,
 } from "../../types/colaborador/DeleteColaborador.ts";
 import type {
   Client,
@@ -42,9 +39,7 @@ export async function deleteColaborador(
 
   const res = await request<
     DeleteColaboradorMutationResponse,
-    ResponseErrorConfig<
-      DeleteColaborador404 | DeleteColaborador409 | DeleteColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "DELETE",
@@ -60,9 +55,7 @@ export function deleteColaboradorMutationOptions<TContext = unknown>(
   const mutationKey = deleteColaboradorMutationKey();
   return mutationOptions<
     DeleteColaboradorMutationResponse,
-    ResponseErrorConfig<
-      DeleteColaborador404 | DeleteColaborador409 | DeleteColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: DeleteColaboradorPathParams["colaboradorId"] },
     TContext
   >({
@@ -81,9 +74,7 @@ export function useDeleteColaborador<TContext>(
   options: {
     mutation?: UseMutationOptions<
       DeleteColaboradorMutationResponse,
-      ResponseErrorConfig<
-        DeleteColaborador404 | DeleteColaborador409 | DeleteColaborador500
-      >,
+      ResponseErrorConfig<Error>,
       { colaboradorId: DeleteColaboradorPathParams["colaboradorId"] },
       TContext
     > & { client?: QueryClient };
@@ -99,18 +90,14 @@ export function useDeleteColaborador<TContext>(
     config,
   ) as UseMutationOptions<
     DeleteColaboradorMutationResponse,
-    ResponseErrorConfig<
-      DeleteColaborador404 | DeleteColaborador409 | DeleteColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: DeleteColaboradorPathParams["colaboradorId"] },
     TContext
   >;
 
   return useMutation<
     DeleteColaboradorMutationResponse,
-    ResponseErrorConfig<
-      DeleteColaborador404 | DeleteColaborador409 | DeleteColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: DeleteColaboradorPathParams["colaboradorId"] },
     TContext
   >(
@@ -122,9 +109,7 @@ export function useDeleteColaborador<TContext>(
     queryClient,
   ) as UseMutationResult<
     DeleteColaboradorMutationResponse,
-    ResponseErrorConfig<
-      DeleteColaborador404 | DeleteColaborador409 | DeleteColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: DeleteColaboradorPathParams["colaboradorId"] },
     TContext
   >;

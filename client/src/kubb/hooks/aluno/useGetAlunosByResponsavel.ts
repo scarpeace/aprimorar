@@ -7,7 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetAlunosByResponsavelQueryResponse,
   GetAlunosByResponsavelPathParams,
-  GetAlunosByResponsavel500,
 } from "../../types/aluno/GetAlunosByResponsavel.ts";
 import type {
   Client,
@@ -23,10 +22,13 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getAlunosByResponsavelQueryKey = (
-  parentId: GetAlunosByResponsavelPathParams["parentId"] | undefined,
+  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"] | undefined,
 ) =>
   [
-    { url: "/v1/alunos/responsavel/:parentId", params: { parentId: parentId } },
+    {
+      url: "/v1/alunos/responsavel/:responsavelId",
+      params: { responsavelId: responsavelId },
+    },
   ] as const;
 
 export type GetAlunosByResponsavelQueryKey = ReturnType<
@@ -35,41 +37,41 @@ export type GetAlunosByResponsavelQueryKey = ReturnType<
 
 /**
  * @description Retorna uma lista de alunos pelo ID do responsável.
- * {@link /v1/alunos/responsavel/:parentId}
+ * {@link /v1/alunos/responsavel/:responsavelId}
  */
 export async function getAlunosByResponsavel(
-  parentId: GetAlunosByResponsavelPathParams["parentId"],
+  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
     GetAlunosByResponsavelQueryResponse,
-    ResponseErrorConfig<GetAlunosByResponsavel500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
-    url: `/v1/alunos/responsavel/${parentId}`,
+    url: `/v1/alunos/responsavel/${responsavelId}`,
     ...requestConfig,
   });
   return res.data;
 }
 
 export function getAlunosByResponsavelQueryOptions(
-  parentId: GetAlunosByResponsavelPathParams["parentId"] | undefined,
+  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"] | undefined,
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = getAlunosByResponsavelQueryKey(parentId);
+  const queryKey = getAlunosByResponsavelQueryKey(responsavelId);
   return queryOptions<
     GetAlunosByResponsavelQueryResponse,
-    ResponseErrorConfig<GetAlunosByResponsavel500>,
+    ResponseErrorConfig<Error>,
     GetAlunosByResponsavelQueryResponse,
     typeof queryKey
   >({
-    enabled: !!parentId,
+    enabled: !!responsavelId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getAlunosByResponsavel(parentId!, {
+      return getAlunosByResponsavel(responsavelId!, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -79,19 +81,19 @@ export function getAlunosByResponsavelQueryOptions(
 
 /**
  * @description Retorna uma lista de alunos pelo ID do responsável.
- * {@link /v1/alunos/responsavel/:parentId}
+ * {@link /v1/alunos/responsavel/:responsavelId}
  */
 export function useGetAlunosByResponsavel<
   TData = GetAlunosByResponsavelQueryResponse,
   TQueryData = GetAlunosByResponsavelQueryResponse,
   TQueryKey extends QueryKey = GetAlunosByResponsavelQueryKey,
 >(
-  parentId: GetAlunosByResponsavelPathParams["parentId"] | undefined,
+  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"] | undefined,
   options: {
     query?: Partial<
       QueryObserverOptions<
         GetAlunosByResponsavelQueryResponse,
-        ResponseErrorConfig<GetAlunosByResponsavel500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -103,16 +105,16 @@ export function useGetAlunosByResponsavel<
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
   const queryKey =
-    resolvedOptions?.queryKey ?? getAlunosByResponsavelQueryKey(parentId);
+    resolvedOptions?.queryKey ?? getAlunosByResponsavelQueryKey(responsavelId);
 
   const query = useQuery(
     {
-      ...getAlunosByResponsavelQueryOptions(parentId, config),
+      ...getAlunosByResponsavelQueryOptions(responsavelId, config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<GetAlunosByResponsavel500>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
     queryKey: TQueryKey;
   };
 

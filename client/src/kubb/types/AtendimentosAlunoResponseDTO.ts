@@ -19,5 +19,5 @@ export type AtendimentosAlunoResponseDTO = {
    * @description Resumo financeiro e quantitativo do aluno no periodo
    * @type object | undefined
    */
-  summary?: AlunoAtendimentosKpis;
+  resumo?: AlunoAtendimentosKpis;
 };

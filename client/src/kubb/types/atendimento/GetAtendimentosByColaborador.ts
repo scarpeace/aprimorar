@@ -36,15 +36,15 @@ export type GetAtendimentosByColaboradorQueryParams = {
   /**
    * @type boolean | undefined
    */
-  hidePaid?: boolean;
+  ocultarPagos?: boolean;
   /**
    * @type string | undefined, date-time
    */
-  startDate?: string;
+  inicio?: string;
   /**
    * @type string | undefined, date-time
    */
-  endDate?: string;
+  fim?: string;
 };
 
 /**

@@ -5,27 +5,11 @@
 
 import type { ColaboradorRequestDTO } from "../ColaboradorRequestDTO.ts";
 import type { ColaboradorResponseDTO } from "../ColaboradorResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 /**
  * @description Colaborador criado com sucesso.
  */
 export type CreateColaborador201 = ColaboradorResponseDTO;
-
-/**
- * @description Falha de validação
- */
-export type CreateColaborador400 = ProblemResponseDTO;
-
-/**
- * @description Conflito de regra de negócio
- */
-export type CreateColaborador409 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type CreateColaborador500 = ProblemResponseDTO;
 
 export type CreateColaboradorMutationRequest = ColaboradorRequestDTO;
 
@@ -34,5 +18,5 @@ export type CreateColaboradorMutationResponse = CreateColaborador201;
 export type CreateColaboradorMutation = {
   Response: CreateColaborador201;
   Request: CreateColaboradorMutationRequest;
-  Errors: CreateColaborador400 | CreateColaborador409 | CreateColaborador500;
+  Errors: any;
 };

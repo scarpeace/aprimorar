@@ -3,13 +3,11 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
-
 export type UnarchiveAlunoPathParams = {
   /**
    * @type string, uuid
    */
-  studentId: string;
+  alunoId: string;
 };
 
 /**
@@ -17,25 +15,10 @@ export type UnarchiveAlunoPathParams = {
  */
 export type UnarchiveAluno204 = any;
 
-/**
- * @description Aluno não encontrado
- */
-export type UnarchiveAluno404 = ProblemResponseDTO;
-
-/**
- * @description Conflito de regra de negócio
- */
-export type UnarchiveAluno409 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type UnarchiveAluno500 = ProblemResponseDTO;
-
 export type UnarchiveAlunoMutationResponse = UnarchiveAluno204;
 
 export type UnarchiveAlunoMutation = {
   Response: UnarchiveAluno204;
   PathParams: UnarchiveAlunoPathParams;
-  Errors: UnarchiveAluno404 | UnarchiveAluno409 | UnarchiveAluno500;
+  Errors: any;
 };

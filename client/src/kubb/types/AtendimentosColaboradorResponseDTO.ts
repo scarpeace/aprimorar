@@ -19,5 +19,5 @@ export type AtendimentosColaboradorResponseDTO = {
    * @description Resumo financeiro e quantitativo do colaborador no periodo
    * @type object | undefined
    */
-  summary?: ColaboradorAtendimentosKpis;
+  resumo?: ColaboradorAtendimentosKpis;
 };

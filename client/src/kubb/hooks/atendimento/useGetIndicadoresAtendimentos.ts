@@ -25,7 +25,8 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getIndicadoresAtendimentosQueryKey = (
   params?: GetIndicadoresAtendimentosQueryParams,
-) => [{ url: "/v1/atendimentos/report" }, ...(params ? [params] : [])] as const;
+) =>
+  [{ url: "/v1/atendimentos/relatorio" }, ...(params ? [params] : [])] as const;
 
 export type GetIndicadoresAtendimentosQueryKey = ReturnType<
   typeof getIndicadoresAtendimentosQueryKey
@@ -33,7 +34,7 @@ export type GetIndicadoresAtendimentosQueryKey = ReturnType<
 
 /**
  * @description Consolida o financeiro institucional no periodo informado
- * {@link /v1/atendimentos/report}
+ * {@link /v1/atendimentos/relatorio}
  */
 export async function getIndicadoresAtendimentos(
   params?: GetIndicadoresAtendimentosQueryParams,
@@ -49,7 +50,7 @@ export async function getIndicadoresAtendimentos(
     unknown
   >({
     method: "GET",
-    url: `/v1/atendimentos/report`,
+    url: `/v1/atendimentos/relatorio`,
     params,
     ...requestConfig,
   });
@@ -81,7 +82,7 @@ export function getIndicadoresAtendimentosQueryOptions(
 
 /**
  * @description Consolida o financeiro institucional no periodo informado
- * {@link /v1/atendimentos/report}
+ * {@link /v1/atendimentos/relatorio}
  */
 export function useGetIndicadoresAtendimentos<
   TData = GetIndicadoresAtendimentosQueryResponse,

@@ -5,39 +5,18 @@
 
 import type { AlunoRequestDTO } from "../AlunoRequestDTO.ts";
 import type { AlunoResponseDTO } from "../AlunoResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type UpdateAlunoPathParams = {
   /**
    * @type string, uuid
    */
-  studentId: string;
+  alunoId: string;
 };
 
 /**
  * @description Aluno atualizado com sucesso.
  */
 export type UpdateAluno200 = AlunoResponseDTO;
-
-/**
- * @description Falha de validação
- */
-export type UpdateAluno400 = ProblemResponseDTO;
-
-/**
- * @description Aluno não encontrado
- */
-export type UpdateAluno404 = ProblemResponseDTO;
-
-/**
- * @description Conflito de regra de negócio
- */
-export type UpdateAluno409 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type UpdateAluno500 = ProblemResponseDTO;
 
 export type UpdateAlunoMutationRequest = AlunoRequestDTO;
 
@@ -47,5 +26,5 @@ export type UpdateAlunoMutation = {
   Response: UpdateAluno200;
   Request: UpdateAlunoMutationRequest;
   PathParams: UpdateAlunoPathParams;
-  Errors: UpdateAluno400 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500;
+  Errors: any;
 };

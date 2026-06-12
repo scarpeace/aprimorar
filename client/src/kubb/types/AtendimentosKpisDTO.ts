@@ -11,20 +11,20 @@ export type AtendimentosKpisDTO = {
    * @description Total cobrado dos alunos no periodo
    * @type number | undefined
    */
-  totalStudentCharged?: number;
+  totalCobradoAlunos?: number;
   /**
    * @description Total pendente de cobranca dos alunos no periodo
    * @type number | undefined
    */
-  totalStudentPending?: number;
+  totalPendenteAlunos?: number;
   /**
    * @description Total pago aos colaboradores no periodo
    * @type number | undefined
    */
-  totalEmployeePaid?: number;
+  totalPagoColaboradores?: number;
   /**
    * @description Total pendente de pagamento aos colaboradores no periodo
    * @type number | undefined
    */
-  totalEmployeePending?: number;
+  totalPendenteColaboradores?: number;
 };

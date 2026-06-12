@@ -4,10 +4,7 @@
  */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type {
-  ListAlunosQueryResponse,
-  ListAlunos500,
-} from "../../types/aluno/ListAlunos.ts";
+import type { ListAlunosQueryResponse } from "../../types/aluno/ListAlunos.ts";
 import type {
   Client,
   RequestConfig,
@@ -37,7 +34,7 @@ export async function listAlunos(
 
   const res = await request<
     ListAlunosQueryResponse,
-    ResponseErrorConfig<ListAlunos500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({ method: "GET", url: `/v1/alunos/options`, ...requestConfig });
   return res.data;
@@ -49,7 +46,7 @@ export function listAlunosQueryOptions(
   const queryKey = listAlunosQueryKey();
   return queryOptions<
     ListAlunosQueryResponse,
-    ResponseErrorConfig<ListAlunos500>,
+    ResponseErrorConfig<Error>,
     ListAlunosQueryResponse,
     typeof queryKey
   >({
@@ -73,7 +70,7 @@ export function useListAlunos<
     query?: Partial<
       QueryObserverOptions<
         ListAlunosQueryResponse,
-        ResponseErrorConfig<ListAlunos500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -93,7 +90,7 @@ export function useListAlunos<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<ListAlunos500>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
     queryKey: TQueryKey;
   };
 

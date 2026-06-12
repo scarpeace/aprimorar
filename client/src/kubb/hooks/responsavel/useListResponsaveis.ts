@@ -4,10 +4,7 @@
  */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type {
-  ListResponsaveisQueryResponse,
-  ListResponsaveis500,
-} from "../../types/responsavel/ListResponsaveis.ts";
+import type { ListResponsaveisQueryResponse } from "../../types/responsavel/ListResponsaveis.ts";
 import type {
   Client,
   RequestConfig,
@@ -22,7 +19,7 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const listResponsaveisQueryKey = () =>
-  [{ url: "/v1/responsaveis/options" }] as const;
+  [{ url: "/v1/responsaveis/list" }] as const;
 
 export type ListResponsaveisQueryKey = ReturnType<
   typeof listResponsaveisQueryKey
@@ -30,7 +27,7 @@ export type ListResponsaveisQueryKey = ReturnType<
 
 /**
  * @description Retorna uma lista de responsáveis para dropdown
- * {@link /v1/responsaveis/options}
+ * {@link /v1/responsaveis/list}
  */
 export async function listResponsaveis(
   config: Partial<RequestConfig> & { client?: Client } = {},
@@ -39,9 +36,9 @@ export async function listResponsaveis(
 
   const res = await request<
     ListResponsaveisQueryResponse,
-    ResponseErrorConfig<ListResponsaveis500>,
+    ResponseErrorConfig<Error>,
     unknown
-  >({ method: "GET", url: `/v1/responsaveis/options`, ...requestConfig });
+  >({ method: "GET", url: `/v1/responsaveis/list`, ...requestConfig });
   return res.data;
 }
 
@@ -51,7 +48,7 @@ export function listResponsaveisQueryOptions(
   const queryKey = listResponsaveisQueryKey();
   return queryOptions<
     ListResponsaveisQueryResponse,
-    ResponseErrorConfig<ListResponsaveis500>,
+    ResponseErrorConfig<Error>,
     ListResponsaveisQueryResponse,
     typeof queryKey
   >({
@@ -64,7 +61,7 @@ export function listResponsaveisQueryOptions(
 
 /**
  * @description Retorna uma lista de responsáveis para dropdown
- * {@link /v1/responsaveis/options}
+ * {@link /v1/responsaveis/list}
  */
 export function useListResponsaveis<
   TData = ListResponsaveisQueryResponse,
@@ -75,7 +72,7 @@ export function useListResponsaveis<
     query?: Partial<
       QueryObserverOptions<
         ListResponsaveisQueryResponse,
-        ResponseErrorConfig<ListResponsaveis500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -95,7 +92,7 @@ export function useListResponsaveis<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<ListResponsaveis500>> & {
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
     queryKey: TQueryKey;
   };
 

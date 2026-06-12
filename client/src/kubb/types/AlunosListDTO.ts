@@ -16,5 +16,5 @@ export type AlunosListDTO = {
    * @description Nome completo do aluno
    * @type string
    */
-  name: string;
+  nome: string;
 };

@@ -27,7 +27,7 @@ export const getAtendimentosContentReportQueryKey = (
   params?: GetAtendimentosContentReportQueryParams,
 ) =>
   [
-    { url: "/v1/atendimentos/report/content" },
+    { url: "/v1/atendimentos/relatorio/tipos" },
     ...(params ? [params] : []),
   ] as const;
 
@@ -37,7 +37,7 @@ export type GetAtendimentosContentReportQueryKey = ReturnType<
 
 /**
  * @description Consulta o relatório de atendimentos por tipo de conteúdo.
- * {@link /v1/atendimentos/report/content}
+ * {@link /v1/atendimentos/relatorio/tipos}
  */
 export async function getAtendimentosContentReport(
   params?: GetAtendimentosContentReportQueryParams,
@@ -53,7 +53,7 @@ export async function getAtendimentosContentReport(
     unknown
   >({
     method: "GET",
-    url: `/v1/atendimentos/report/content`,
+    url: `/v1/atendimentos/relatorio/tipos`,
     params,
     ...requestConfig,
   });
@@ -85,7 +85,7 @@ export function getAtendimentosContentReportQueryOptions(
 
 /**
  * @description Consulta o relatório de atendimentos por tipo de conteúdo.
- * {@link /v1/atendimentos/report/content}
+ * {@link /v1/atendimentos/relatorio/tipos}
  */
 export function useGetAtendimentosContentReport<
   TData = GetAtendimentosContentReportQueryResponse,

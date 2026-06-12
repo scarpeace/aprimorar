@@ -3,8 +3,6 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
-
 export type DesarquivarColaboradorPathParams = {
   /**
    * @type string, uuid
@@ -17,28 +15,10 @@ export type DesarquivarColaboradorPathParams = {
  */
 export type DesarquivarColaborador204 = any;
 
-/**
- * @description Colaborador não encontrado
- */
-export type DesarquivarColaborador404 = ProblemResponseDTO;
-
-/**
- * @description Conflito de regra de negócio
- */
-export type DesarquivarColaborador409 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type DesarquivarColaborador500 = ProblemResponseDTO;
-
 export type DesarquivarColaboradorMutationResponse = DesarquivarColaborador204;
 
 export type DesarquivarColaboradorMutation = {
   Response: DesarquivarColaborador204;
   PathParams: DesarquivarColaboradorPathParams;
-  Errors:
-    | DesarquivarColaborador404
-    | DesarquivarColaborador409
-    | DesarquivarColaborador500;
+  Errors: any;
 };

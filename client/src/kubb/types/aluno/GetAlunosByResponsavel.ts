@@ -4,13 +4,12 @@
  */
 
 import type { AlunoResponseDTO } from "../AlunoResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetAlunosByResponsavelPathParams = {
   /**
    * @type string, uuid
    */
-  parentId: string;
+  responsavelId: string;
 };
 
 /**
@@ -18,15 +17,10 @@ export type GetAlunosByResponsavelPathParams = {
  */
 export type GetAlunosByResponsavel200 = AlunoResponseDTO[];
 
-/**
- * @description Erro interno do sistema
- */
-export type GetAlunosByResponsavel500 = ProblemResponseDTO;
-
 export type GetAlunosByResponsavelQueryResponse = GetAlunosByResponsavel200;
 
 export type GetAlunosByResponsavelQuery = {
   Response: GetAlunosByResponsavel200;
   PathParams: GetAlunosByResponsavelPathParams;
-  Errors: GetAlunosByResponsavel500;
+  Errors: any;
 };

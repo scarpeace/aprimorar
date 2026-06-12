@@ -10,14 +10,14 @@ import {
 import { useNavigate } from "react-router-dom";
 
 interface ResponsavelAlunosTableProps {
-  parentId: string;
+  responsavelId: string;
 }
 
 export function ResponsavelAlunosTable({
-  parentId,
+  responsavelId,
 }: Readonly<ResponsavelAlunosTableProps>) {
   const navigate = useNavigate();
-  const alunosQuery = useGetAlunosByResponsavel(parentId);
+  const alunosQuery = useGetAlunosByResponsavel(responsavelId);
 
   if (alunosQuery.error) {
     return (
@@ -62,9 +62,10 @@ export function ResponsavelAlunosTable({
               <th className="text-left font-semibold text-base-content/80">Status</th>
             </tr>
           </thead>
-        <tbody className="whitespace-nowrap">
+
+          <tbody className="whitespace-nowrap">
             {alunos.map((aluno) => {
-              const isArchived = aluno.active === false;
+              const isAlunoArquivado = aluno.active === false;
 
               return (
                 <tr
@@ -72,15 +73,15 @@ export function ResponsavelAlunosTable({
                   className="transition-colors hover:cursor-pointer hover:bg-base-200/70"
                   onClick={() => navigate(`/students/${aluno.id}`)}
                 >
-                  <td>{aluno.name}</td>
+                  <td>{aluno.nome}</td>
                   <td>{formatCpf(aluno.cpf)}</td>
-                  <td className="text-center">{aluno.age}</td>
-                  <td>{formatPhone(aluno.contact)}</td>
-                  <td>{aluno.school}</td>
+                  <td className="text-center">{aluno.idade}</td>
+                  <td>{formatPhone(aluno.telefone)}</td>
+                  <td>{aluno.escola}</td>
                   <td>{formatDateShortYear(aluno.createdAt)}</td>
                   <td>
-                    <span className={`badge ${isArchived ? "badge-ghost" : "badge-success"} badge-sm`}>
-                      {isArchived ? "Inativo" : "Ativo"}
+                    <span className={`badge ${isAlunoArquivado ? "badge-ghost" : "badge-success"} badge-sm`}>
+                      {isAlunoArquivado ? "Inativo" : "Ativo"}
                     </span>
                   </td>
                 </tr>

@@ -27,7 +27,7 @@ export const getOverviewFinanceiroColaboradoresQueryKey = (
   params?: GetOverviewFinanceiroColaboradoresQueryParams,
 ) =>
   [
-    { url: "/v1/atendimentos/report/colaboradores" },
+    { url: "/v1/atendimentos/relatorio/colaboradores" },
     ...(params ? [params] : []),
   ] as const;
 
@@ -37,7 +37,7 @@ export type GetOverviewFinanceiroColaboradoresQueryKey = ReturnType<
 
 /**
  * @description Lista colaboradores paginados com indicadores de pago e pendente por colaborador.
- * {@link /v1/atendimentos/report/colaboradores}
+ * {@link /v1/atendimentos/relatorio/colaboradores}
  */
 export async function getOverviewFinanceiroColaboradores(
   params?: GetOverviewFinanceiroColaboradoresQueryParams,
@@ -54,7 +54,7 @@ export async function getOverviewFinanceiroColaboradores(
     unknown
   >({
     method: "GET",
-    url: `/v1/atendimentos/report/colaboradores`,
+    url: `/v1/atendimentos/relatorio/colaboradores`,
     params,
     ...requestConfig,
   });
@@ -87,7 +87,7 @@ export function getOverviewFinanceiroColaboradoresQueryOptions(
 
 /**
  * @description Lista colaboradores paginados com indicadores de pago e pendente por colaborador.
- * {@link /v1/atendimentos/report/colaboradores}
+ * {@link /v1/atendimentos/relatorio/colaboradores}
  */
 export function useGetOverviewFinanceiroColaboradores<
   TData = GetOverviewFinanceiroColaboradoresQueryResponse,

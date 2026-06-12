@@ -55,8 +55,8 @@ function App() {
                 <Route path="/appointments" element={<AtendimentosPage />} />
                 <Route path="/appointments/:id" element={<AtendimentoDetailPage />} />
 
-                <Route path="/parents" element={<ResponsaveisPage />} />
-                <Route path="/parents/:id" element={<ResponsavelDetailPage />} />
+                <Route path="/responsaveis" element={<ResponsaveisPage />} />
+                <Route path="/responsaveis/:id" element={<ResponsavelDetailPage />} />
 
                 <Route path="/finance" element={<FinanceiroPage />} />
                 <Route path="/finance/expenses" element={<FinanceiroPage />} />

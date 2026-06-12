@@ -7,8 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetResponsavelByIdQueryResponse,
   GetResponsavelByIdPathParams,
-  GetResponsavelById404,
-  GetResponsavelById500,
 } from "../../types/responsavel/GetResponsavelById.ts";
 import type {
   Client,
@@ -49,7 +47,7 @@ export async function getResponsavelById(
 
   const res = await request<
     GetResponsavelByIdQueryResponse,
-    ResponseErrorConfig<GetResponsavelById404 | GetResponsavelById500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
@@ -66,7 +64,7 @@ export function getResponsavelByIdQueryOptions(
   const queryKey = getResponsavelByIdQueryKey(responsavelId);
   return queryOptions<
     GetResponsavelByIdQueryResponse,
-    ResponseErrorConfig<GetResponsavelById404 | GetResponsavelById500>,
+    ResponseErrorConfig<Error>,
     GetResponsavelByIdQueryResponse,
     typeof queryKey
   >({
@@ -95,7 +93,7 @@ export function useGetResponsavelById<
     query?: Partial<
       QueryObserverOptions<
         GetResponsavelByIdQueryResponse,
-        ResponseErrorConfig<GetResponsavelById404 | GetResponsavelById500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -116,10 +114,9 @@ export function useGetResponsavelById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<
-    TData,
-    ResponseErrorConfig<GetResponsavelById404 | GetResponsavelById500>
-  > & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

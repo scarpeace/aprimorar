@@ -12,7 +12,7 @@ export type AtendimentosColaboradorKpisDTO = {
    * @description ID do colaborador
    * @type string | undefined, uuid
    */
-  employeeId?: string;
+  colaboradorId?: string;
   /**
    * @description Total de atendimentos no periodo
    * @type integer | undefined, int64
@@ -22,10 +22,10 @@ export type AtendimentosColaboradorKpisDTO = {
    * @description Total pago ao colaborador no periodo
    * @type number | undefined
    */
-  totalPaid?: number;
+  totalPago?: number;
   /**
    * @description Total pendente de pagamento ao colaborador no periodo
    * @type number | undefined
    */
-  totalPending?: number;
+  totalPendente?: number;
 };
