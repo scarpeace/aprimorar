@@ -4,10 +4,10 @@ import aprimorar.atendimentos.dto.AtendimentoRequestDTO;
 import aprimorar.atendimentos.dto.AtendimentoResponseDTO;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.atendimentos.domain.Atendimento;
-import aprimorar.pessoas.dto.AlunoResponseDTO;
-import aprimorar.pessoas.dto.ColaboradorResponseDTO;
-import aprimorar.pessoas.events.AlunoQueryApi;
-import aprimorar.pessoas.events.ColaboradorQueryApi;
+import aprimorar.pessoas.api.AlunoResponseDTO;
+import aprimorar.pessoas.api.ColaboradorResponseDTO;
+import aprimorar.pessoas.api.AlunoQueryApi;
+import aprimorar.pessoas.api.ColaboradorQueryApi;
 import aprimorar.shared.exception.BusinessException;
 import java.time.Clock;
 import java.time.Instant;
@@ -40,11 +40,12 @@ public class AtendimentoMutationService {
         this.clock = clock;
     }
 
+    //TODO: TEM QUE COMEÇAR A REVISAR POR AQUI
     @Transactional
     public AtendimentoResponseDTO createAtendimento(AtendimentoRequestDTO dto) {
         AlunoResponseDTO aluno = alunoQueryApi.findAlunoById(dto.alunoId());
         ColaboradorResponseDTO colaborador = colaboradorQueryApi.findColaboradorById(dto.colaboradorId());
-        Atendimento atendimento = dto.toEntity(aluno.nome(), colaborador.nome(), clock.instant());
+        Atendimento atendimento = dto.toEntity(clock.instant());
 
         validateParticipantAvailability(aluno, colaborador, dto.inicio(), dto.duracao(), null);
 
@@ -69,9 +70,7 @@ public class AtendimentoMutationService {
             dto.valor(),
             dto.tipo(),
             aluno.id(),
-            aluno.nome(),
             colaborador.id(),
-            colaborador.nome(),
             Instant.now(clock)
         );
         log.info("Atendimento {} atualizado com sucesso.", atendimento.getTitulo().toUpperCase());

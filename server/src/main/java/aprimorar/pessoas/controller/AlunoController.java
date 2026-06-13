@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aprimorar.pessoas.dto.AlunoFiltroRequest;
 import aprimorar.pessoas.dto.AlunoRequestDTO;
-import aprimorar.pessoas.dto.AlunoResponseDTO;
+import aprimorar.pessoas.api.AlunoResponseDTO;
 import aprimorar.pessoas.dto.AlunosKpisDTO;
 import aprimorar.pessoas.dto.AlunosListDTO;
 import aprimorar.pessoas.service.AlunoMutationService;

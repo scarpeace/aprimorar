@@ -2,6 +2,7 @@ package aprimorar.pessoas.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import aprimorar.pessoas.api.AlunoResponseDTO;
 import aprimorar.pessoas.domain.Aluno;
 import aprimorar.pessoas.domain.Endereco;
 import java.lang.reflect.Field;

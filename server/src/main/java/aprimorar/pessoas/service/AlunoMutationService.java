@@ -2,11 +2,11 @@ package aprimorar.pessoas.service;
 
 import aprimorar.pessoas.domain.Aluno;
 import aprimorar.pessoas.dto.AlunoRequestDTO;
-import aprimorar.pessoas.dto.AlunoResponseDTO;
-import aprimorar.pessoas.events.AlunoDeletedEvent;
-import aprimorar.pessoas.events.ArchiveAlunoVerificationEvent;
-import aprimorar.pessoas.events.DeleteAlunoVerificationEvent;
-import aprimorar.pessoas.events.ResponsavelQueryApi;
+import aprimorar.pessoas.api.AlunoResponseDTO;
+import aprimorar.pessoas.api.AlunoDeletedEvent;
+import aprimorar.pessoas.api.ArchiveAlunoVerificationEvent;
+import aprimorar.pessoas.api.DeleteAlunoVerificationEvent;
+import aprimorar.pessoas.api.ResponsavelQueryApi;
 import aprimorar.pessoas.repository.AlunoRepository;
 import aprimorar.shared.MapperUtils;
 import aprimorar.shared.exception.BusinessException;

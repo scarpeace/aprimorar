@@ -73,10 +73,10 @@ class ResponsavelQueryServiceTest {
 
         when(responsavelRepo.findAll()).thenReturn(List.of(responsavel));
 
-        var result = service.listResponsaveis();
+        var result = service.getResponsaveisList();
 
         assertEquals(1, result.size());
-        assertEquals("João Silva", result.getFirst().name());
+        assertEquals("João Silva", result.getFirst().nome());
         assertEquals(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"), result.getFirst().id());
         verify(responsavelRepo).findAll();
     }

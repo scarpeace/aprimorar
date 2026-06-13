@@ -8,10 +8,11 @@ import { Button } from "@/components/ui/button";
 import { DateTimeInput } from "@/components/ui/date-time-input";
 import { AlunoSelectDropdown } from "@/features/alunos/components/AlunoSelectDropdown";
 import { ColaboradorSelectDropdown } from "@/features/colaboradores/components/ColaboradorSelectDropdown";
-import type { AtendimentoRequestDTO, AtendimentoResponseDTO } from "@/kubb";
+import { useGetColaboradoresList, useListAlunos, type AtendimentoRequestDTO, type AtendimentoResponseDTO } from "@/kubb";
 import { toInstant } from "@/lib/utils/date-utils";
 import { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
 import { atendimentoFormSchema, type AtendimentoFormSchema } from "../lib/atendimento-form-schema";
+import { getParticipantName } from "../lib/atendimento-participant-labels";
 import { ContentSelectDropdown } from "./ContentSelectDropdown";
 
 function formatDateTimeForInput(dateTimeStr?: string) {
@@ -45,6 +46,8 @@ function FieldErrorMessage({ message }: Readonly<{ message?: string }>) {
 
 export function AtendimentoForm({ initialData, onCancel, onSuccess }: Readonly<AtendimentoFormProps>) {
   const { createAtendimento, updateAtendimento } = useAtendimentoMutations();
+  const alunosQuery = useListAlunos();
+  const colaboradoresQuery = useGetColaboradoresList();
   const isEditMode = !!initialData;
 
   const { register, handleSubmit, control, formState: { errors } } = useForm<AtendimentoFormSchema>({
@@ -119,14 +122,14 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Readonly<A
           registration={register("alunoId")}
           error={errors.alunoId?.message}
           label="Aluno"
-          defaultValue={isEditMode && initialData ? { id: initialData.alunoId, name: initialData.alunoNome } : undefined}
+          defaultValue={isEditMode && initialData ? { id: initialData.alunoId, name: getParticipantName(initialData.alunoId, alunosQuery.data) } : undefined}
         />
 
         <ColaboradorSelectDropdown
           registration={register("colaboradorId")}
           error={errors.colaboradorId?.message}
           label="Colaborador"
-          defaultValue={isEditMode && initialData ? { id: initialData.colaboradorId, name: initialData.colaboradorNome } : undefined}
+          defaultValue={isEditMode && initialData ? { id: initialData.colaboradorId, name: getParticipantName(initialData.colaboradorId, colaboradoresQuery.data) } : undefined}
         />
 
         <ContentSelectDropdown

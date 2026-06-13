@@ -2,10 +2,10 @@ package aprimorar.pessoas.service;
 
 import aprimorar.pessoas.domain.Colaborador;
 import aprimorar.pessoas.dto.ColaboradorRequestDTO;
-import aprimorar.pessoas.dto.ColaboradorResponseDTO;
-import aprimorar.pessoas.events.ArchiveColaboradorVerificationEvent;
-import aprimorar.pessoas.events.ColaboradorDeletedEvent;
-import aprimorar.pessoas.events.DeleteColaboradorVerificationEvent;
+import aprimorar.pessoas.api.ColaboradorResponseDTO;
+import aprimorar.pessoas.api.ArchiveColaboradorVerificationEvent;
+import aprimorar.pessoas.api.ColaboradorDeletedEvent;
+import aprimorar.pessoas.api.DeleteColaboradorVerificationEvent;
 import aprimorar.pessoas.repository.ColaboradorRepository;
 import aprimorar.shared.exception.BusinessException;
 import java.util.UUID;

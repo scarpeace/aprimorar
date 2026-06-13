@@ -74,7 +74,7 @@ public class AtendimentoReportController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<PageDTO<AtendimentosColaboradorKpisDTO>> getKpisAtendimentosColaboradores(
-        @ParameterObject @PageableDefault(sort = "colaboradorNome") Pageable pageable,
+        @ParameterObject @PageableDefault(sort = "colaboradorId") Pageable pageable,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim
     ) {
@@ -100,7 +100,7 @@ public class AtendimentoReportController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
     )
     public ResponseEntity<PageDTO<AtendimentosAlunosKpisDTO>> getKpisAtendimentosAlunos(
-        @ParameterObject @PageableDefault(sort = "alunoNome") Pageable pageable,
+        @ParameterObject @PageableDefault(sort = "alunoId") Pageable pageable,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim
     ) {

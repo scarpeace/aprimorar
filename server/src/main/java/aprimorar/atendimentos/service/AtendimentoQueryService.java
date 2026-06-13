@@ -22,7 +22,7 @@ import aprimorar.atendimentos.dto.ColaboradorAtendimentosKpis;
 import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.atendimentos.repository.specifications.AtendimentoSpecifications;
-import aprimorar.pessoas.events.AlunoQueryApi;
+import aprimorar.pessoas.api.AlunoQueryApi;
 import aprimorar.shared.PageDTO;
 import aprimorar.shared.exception.BusinessException;
 

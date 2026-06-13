@@ -15,6 +15,8 @@ import { tipoAtendimentoLabels } from "../lib/tipo-atendimento-labels";
 
 type AtendimentoMobileCardProps = {
   atendimento: AtendimentoResponseDTO;
+  alunoNome: string;
+  colaboradorNome: string;
   index: number;
   isPending: boolean;
   onToggleCharge: (id: string) => void;
@@ -23,6 +25,8 @@ type AtendimentoMobileCardProps = {
 
 export const AtendimentoMobileCard = memo(function AtendimentoMobileCard({
   atendimento,
+  alunoNome,
+  colaboradorNome,
   index,
   isPending,
   onToggleCharge,
@@ -44,11 +48,11 @@ export const AtendimentoMobileCard = memo(function AtendimentoMobileCard({
             </div>
             <div className="flex items-center gap-2 text-sm text-base-content/70">
               <GraduationCap className="h-4 w-4 text-primary" />
-              <span className="font-semibold text-base-content">{atendimento.alunoNome}</span>
+              <span className="font-semibold text-base-content">{alunoNome}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-base-content/70">
               <BriefcaseBusiness className="h-4 w-4 text-secondary" />
-              <span className="font-medium text-base-content">{atendimento.colaboradorNome}</span>
+              <span className="font-medium text-base-content">{colaboradorNome}</span>
             </div>
           </div>
 

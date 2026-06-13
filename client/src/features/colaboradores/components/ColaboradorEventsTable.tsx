@@ -4,8 +4,9 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import type { AtendimentoResponseDTO, PageDTOAtendimentoResponseDTO } from "@/kubb";
+import { useListAlunos, type AtendimentoResponseDTO, type PageDTOAtendimentoResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
+import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
 import {
   Calendar,
   CircleDollarSign,
@@ -42,6 +43,7 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
   onHidePaidChange,
   onPageChange,
 }: Readonly<ColaboradorEventsTableProps>) {
+  const alunosQuery = useListAlunos();
   const events = atendimentos?.content ?? [];
   const totalEvents = atendimentos?.totalElements ?? events.length;
 
@@ -129,7 +131,7 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
               return (
                 <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
                   <td>
-                    <div className="font-semibold text-base-content">{atendimento.alunoNome}</div>
+                    <div className="font-semibold text-base-content">{getParticipantName(atendimento.alunoId, alunosQuery.data)}</div>
                   </td>
                   <td>{formatDateShortYear(atendimento.inicio)}</td>
                   <td className="text-center text-sm font-medium">

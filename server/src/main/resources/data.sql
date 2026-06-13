@@ -65,8 +65,8 @@ INSERT INTO alunos (id, nome, data_nascimento, cpf, telefone, email, ativo, crea
 INSERT INTO alunos (id, nome, data_nascimento, cpf, telefone, email, ativo, created_at, updated_at, escola, responsavel_id, rua, numero, bairro, cidade, estado, cep, complemento) VALUES ('4e816456-e58c-5c2c-b45d-15cfecf86787', 'Yasmin Castro', '2016-10-31', '473.580.219-32', '11970000024', 'yasmin.castro@example.com', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Colegio Sao Paulo', '39983380-6008-572e-95bc-3d0d2c806337', 'Rua das Palmeiras', '0', 'Centro', 'Sao Paulo', 'SP', '01000024', 'Casa 24');
 
 -- Appointments
-INSERT INTO atendimentos (id, created_at, updated_at, titulo, descricao, inicio, fim, repasse, valor, tipo, aluno_id, aluno_nome, colaborador_id, colaborador_nome)
-SELECT v.id::uuid, v.created_at, v.updated_at, v.titulo, v.descricao, v.inicio, v.fim, v.repasse, v.valor, v.tipo, v.aluno_id::uuid, a.nome, v.colaborador_id::uuid, c.nome
+INSERT INTO atendimentos (id, created_at, updated_at, titulo, descricao, inicio, fim, repasse, valor, tipo, aluno_id, colaborador_id)
+SELECT v.id::uuid, v.created_at, v.updated_at, v.titulo, v.descricao, v.inicio, v.fim, v.repasse, v.valor, v.tipo, v.aluno_id::uuid, v.colaborador_id::uuid
 FROM (VALUES
 ('ea57d4e7-8e25-4930-b481-fe1f673ea5db', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'MENTORIA - Col: Bruno Carvalho - Sofia Barros', 'Atendimento seed 051 para Sofia Barros', TIMESTAMP '2026-10-24 17:00:00', TIMESTAMP '2026-10-24 18:30:00', 75.00, 147.00, 'MENTORIA', '41e8e58f-124a-5969-b16f-ac57993d7a00', '82562c6d-0ef7-526e-b8e3-c6bf1bad81e0'),
 ('9f33c8b3-5c72-4fa2-a831-405dd2a065fc', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ORIENTACAO_VOCACIONAL - Col: Lucas Almeida - Arthur Andrade', 'Atendimento seed 052 para Arthur Andrade', TIMESTAMP '2026-10-25 14:00:00', TIMESTAMP '2026-10-25 15:30:00', 80.00, 156.00, 'ORIENTACAO_VOCACIONAL', 'de87ab23-c4f6-5cdb-88e4-c1e524f9f5b3', '890322e5-6327-53c6-a9a7-726765d704d8'),
@@ -138,5 +138,4 @@ FROM (VALUES
 ('4653b1ec-2bc7-4776-8b86-9b7ade555751', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ORIENTACAO_VOCACIONAL - Col: Pedro Henrique Silva - Enzo Moreira', 'Atendimento seed 118 para Enzo Moreira', TIMESTAMP '2026-12-30 14:00:00', TIMESTAMP '2026-12-30 15:30:00', 86.00, 192.00, 'ORIENTACAO_VOCACIONAL', 'd7dfcfa0-9018-5251-b775-b9af09b4c3a3', '35a26f86-91cb-58d6-bd36-20bd9a467eec'),
 ('502b83c3-6e95-405c-9124-72f94f3a2d8b', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'AULA - Col: Larissa Ferreira - Yasmin Castro', 'Atendimento seed 119 para Yasmin Castro', TIMESTAMP '2026-12-31 15:00:00', TIMESTAMP '2026-12-31 16:30:00', 91.00, 120.00, 'AULA', '4e816456-e58c-5c2c-b45d-15cfecf86787', 'cb6eac0d-dfb5-5ccc-9a0c-8770a1557476')
 ) AS v(id, created_at, updated_at, titulo, descricao, inicio, fim, repasse, valor, tipo, aluno_id, colaborador_id)
-JOIN alunos a ON a.id = v.aluno_id::uuid
-JOIN colaboradores c ON c.id = v.colaborador_id::uuid;
+;

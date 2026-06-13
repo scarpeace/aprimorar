@@ -34,8 +34,6 @@ public final class AtendimentoSpecifications {
             String pattern = "%" + termo.trim().toLowerCase() + "%";
 
             return cb.or(
-                cb.like(cb.lower(root.get("alunoNome")), pattern),
-                cb.like(cb.lower(root.get("colaboradorNome")), pattern),
                 cb.like(cb.lower(root.get("descricao")), pattern),
                 cb.like(cb.lower(root.get("tipo").as(String.class)), pattern)
             );

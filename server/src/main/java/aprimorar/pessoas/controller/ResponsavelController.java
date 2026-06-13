@@ -1,6 +1,5 @@
 package aprimorar.pessoas.controller;
 
-import aprimorar.pessoas.dto.ResponsaveisListDTO;
 import aprimorar.pessoas.dto.ResponsavelFiltroRequest;
 import aprimorar.pessoas.dto.ResponsavelRequestDTO;
 import aprimorar.pessoas.dto.ResponsavelResponseDTO;
@@ -62,8 +61,8 @@ public class ResponsavelController {
     @GetMapping("/list")
     @Operation(operationId = "listResponsaveis", description = "Retorna uma lista de responsáveis para dropdown")
     @ApiResponse(responseCode = "200", description = "Lista de opções retornada com sucesso.")
-    public ResponseEntity<List<ResponsaveisListDTO>> listResponsaveis() {
-        return ResponseEntity.ok(responsavelQueryService.listResponsaveis());
+    public ResponseEntity<List<ResponsavelResponseDTO>> listResponsaveis() {
+        return ResponseEntity.ok(responsavelQueryService.getResponsaveisList());
     }
 
     @GetMapping("/{responsavelId}")

@@ -4,11 +4,12 @@ import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { useGetAtendimentos, type AtendimentoResponseDTO } from "@/kubb";
+import { useGetAtendimentos, useGetColaboradoresList, useListAlunos, type AtendimentoResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
 import { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
 import { useAtendimentosFilters } from "../hooks/use-atendimentos-filters";
+import { getParticipantName } from "../lib/atendimento-participant-labels";
 import { tipoAtendimentoLabels } from "../lib/tipo-atendimento-labels";
 import { AtendimentoMobileCard } from "./AtendimentoMobileCard";
 
@@ -42,6 +43,8 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
     ocultarCobrados: hideCharged || undefined,
     ocultarPagos: hidePaid || undefined,
   });
+  const alunosQuery = useListAlunos();
+  const colaboradoresQuery = useGetColaboradoresList();
 
   const events = eventsQuery.data?.content ?? [];
   const hasEvents = events.length > 0;
@@ -123,9 +126,9 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
                       onClick={() => navigate(`/atendimentos/${atendimento.id}`)}
                     >
                       <td>
-                        <div className="font-semibold text-base-content">{atendimento.alunoNome}</div>
+                        <div className="font-semibold text-base-content">{getParticipantName(atendimento.alunoId, alunosQuery.data)}</div>
                       </td>
-                      <td>{atendimento.colaboradorNome}</td>
+                      <td>{getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}</td>
                       <td>{formatDateShortYear(atendimento.inicio)}</td>
                       <td className="text-center text-sm font-medium">
                         {formatTime(atendimento.inicio)} - {formatTime(atendimento.fim)}
@@ -165,6 +168,8 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
               <AtendimentoMobileCard
                 key={atendimento.id}
                 atendimento={atendimento}
+                alunoNome={getParticipantName(atendimento.alunoId, alunosQuery.data)}
+                colaboradorNome={getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}
                 index={index}
                 isPending={isTogglePending}
                 onToggleCharge={handleToggleCharge}

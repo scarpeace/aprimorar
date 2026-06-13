@@ -52,16 +52,8 @@ public record AtendimentoResponseDTO(
     UUID alunoId,
 
     @NotNull
-    @Schema(nullable = false, description = "Nome do aluno vinculado ao atendimento", example = "John Doe")
-    String alunoNome,
-
-    @NotNull
     @Schema(nullable = false, description = "ID do colaborador vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174001")
     UUID colaboradorId,
-
-    @NotNull
-    @Schema(nullable = false, description = "Nome do colaborador vinculado ao atendimento", example = "Jane Doe")
-    String colaboradorNome,
 
     @Nullable
     @Schema(nullable = true, description = "Data de pagamento ao colaborador", example = "2024-03-10T15:33:42Z")
@@ -91,9 +83,7 @@ public record AtendimentoResponseDTO(
             atendimento.getRepasse(),
             atendimento.getLucro(),
             atendimento.getAlunoId(),
-            atendimento.getAlunoNome(),
             atendimento.getColaboradorId(),
-            atendimento.getColaboradorNome(),
             atendimento.getDataPagamentoColaborador(),
             atendimento.getDataCobrancaAluno(),
             atendimento.getCreatedAt(),

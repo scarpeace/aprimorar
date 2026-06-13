@@ -24,7 +24,6 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
 
     interface KpisAlunoProjection {
         UUID getAlunoId();
-        String getAlunoNome();
         long getTotalAtendimentos();
         BigDecimal getTotalCobrado();
         BigDecimal getTotalPendente();
@@ -32,7 +31,6 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
 
     interface KpisColaboradorProjection {
         UUID getColaboradorId();
-        String getColaboradorNome();
         long getTotalAtendimentos();
         BigDecimal getTotalPago();
         BigDecimal getTotalPendente();
@@ -131,8 +129,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
     @Query(
         """
         UPDATE Atendimento a
-        SET a.alunoId = :ghostId,
-            a.alunoNome = 'Aluno Removido'
+        SET a.alunoId = :ghostId
         WHERE a.alunoId = :alunoId
         """
     )
@@ -142,8 +139,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
     @Query(
         """
         UPDATE Atendimento a
-        SET a.colaboradorId = :ghostId,
-            a.colaboradorNome = 'Colaborador Removido'
+        SET a.colaboradorId = :ghostId
         WHERE a.colaboradorId = :colaboradorId
         """
     )
@@ -200,7 +196,6 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         value = """
         select
           a.colaboradorId as colaboradorId,
-          max(a.colaboradorNome) as colaboradorNome,
           count(a.id) as totalAtendimentos,
           coalesce(sum(case when a.dataPagamentoColaborador is not null then a.repasse else 0 end), 0) as totalPago,
           coalesce(sum(case when a.dataPagamentoColaborador is null then a.repasse else 0 end), 0) as totalPendente
@@ -226,7 +221,6 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         value = """
         select
           a.alunoId as alunoId,
-          max(a.alunoNome) as alunoNome,
           count(a.id) as totalAtendimentos,
           coalesce(sum(case when a.dataCobrancaAluno is not null then a.valor else 0 end), 0) as totalCobrado,
           coalesce(sum(case when a.dataCobrancaAluno is null then a.valor else 0 end), 0) as totalPendente

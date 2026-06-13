@@ -400,6 +400,7 @@ Resultado de verificacao da etapa:
 - 2026-06-11: `curl http://localhost:8080/v3/api-docs` falhou porque o backend nao esta rodando em `localhost:8080`; `npm run sync` ficou pendente.
 - 2026-06-11: Kubb atual ainda contem `useArchiveResponsavel` e `useUnarchiveResponsavel`, refletindo contrato antigo. A feature piloto deve considerar esses hooks obsoletos ate o sync do backend novo.
 - 2026-06-11: Usuario rodou `npm run sync`; Kubb de responsavel foi atualizado e removeu archive/unarchive.
+- 2026-06-12: Seed idempotente de admin adicionado no bootstrap da aplicacao backend via `CommandLineRunner`, usando `PasswordEncoder` real do projeto para criar `admin@aprimorar.com` com a senha `Freerider` somente quando o usuario nao existir.
 
 ## Notas Para A Proxima Sessao
 - Comecar pela Etapa 1: inventario real da feature `responsaveis`.

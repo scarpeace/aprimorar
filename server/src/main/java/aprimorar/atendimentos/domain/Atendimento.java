@@ -66,14 +66,8 @@ public class Atendimento implements Serializable {
     @Column(name = "aluno_id", nullable = false)
     private UUID alunoId;
 
-    @Column(name = "aluno_nome", nullable = false)
-    private String alunoNome;
-
     @Column(name = "colaborador_id", nullable = false)
     private UUID colaboradorId;
-
-    @Column(name = "colaborador_nome", nullable = false)
-    private String colaboradorNome;
 
     protected Atendimento() {}
 
@@ -85,9 +79,7 @@ public class Atendimento implements Serializable {
         BigDecimal valor,
         TipoAtendimentoEnum tipo,
         UUID alunoId,
-        String alunoNome,
         UUID colaboradorId,
-        String colaboradorNome,
         Instant now
     ) {
         this.fim = calcularFim(inicio, duracao);
@@ -96,7 +88,7 @@ public class Atendimento implements Serializable {
         validarParticipantes(alunoId, colaboradorId);
         validarTipo(tipo);
 
-        this.titulo = montarTitulo(tipo, alunoNome, colaboradorNome);
+        this.titulo = montarTitulo(tipo);
         this.descricao = descricao;
         this.inicio = inicio;
         this.repasse = repasse;
@@ -104,8 +96,6 @@ public class Atendimento implements Serializable {
         this.tipo = tipo;
         this.alunoId = alunoId;
         this.colaboradorId = colaboradorId;
-        this.alunoNome = alunoNome;
-        this.colaboradorNome = colaboradorNome;
     }
 
     public Atendimento update(
@@ -116,9 +106,7 @@ public class Atendimento implements Serializable {
         BigDecimal valor,
         TipoAtendimentoEnum tipo,
         UUID alunoId,
-        String alunoNome,
         UUID colaboradorId,
-        String colaboradorNome,
         Instant now
     ) {
         this.fim = calcularFim(inicio, duracao);
@@ -128,16 +116,14 @@ public class Atendimento implements Serializable {
         validarParticipantes(alunoId, colaboradorId);
         validarTipo(tipo);
 
-        this.titulo = montarTitulo(tipo, alunoNome, colaboradorNome);
+        this.titulo = montarTitulo(tipo);
         this.descricao = descricao;
         this.inicio = inicio;
         this.repasse = repasse;
         this.valor = valor;
         this.tipo = tipo;
         this.alunoId = alunoId;
-        this.alunoNome = alunoNome;
         this.colaboradorId = colaboradorId;
-        this.colaboradorNome = colaboradorNome;
 
         return this;
     }
@@ -225,7 +211,7 @@ public class Atendimento implements Serializable {
         }
     }
 
-    private String montarTitulo(TipoAtendimentoEnum tipo, String alunoNome, String colaboradorNome) {
-        return tipo + " - Col: " + colaboradorNome + " - " + alunoNome;
+    private String montarTitulo(TipoAtendimentoEnum tipo) {
+        return tipo.name();
     }
 }

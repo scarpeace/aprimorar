@@ -12,8 +12,9 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
 import { getAppointmentColor } from "@/features/atendimentos/lib/appointment-content-colors";
-import { useGetAtendimentos } from "@/kubb";
+import { useGetAtendimentos, useListAlunos } from "@/kubb";
 import type { AtendimentoResponseDTO } from "@/kubb";
+import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { getMonthRange } from "@/lib/utils/date-utils";
 import { AtendimentoContentLegend } from "./AtendimentoContentLegend";
@@ -32,10 +33,10 @@ const BUTTON_TEXT = {
   day: "dia",
 };
 
-function toCalendarEvent(atendimento: AtendimentoResponseDTO): EventInput {
+function toCalendarEvent(atendimento: AtendimentoResponseDTO, alunoNome: string): EventInput {
   return {
     id: atendimento.id,
-    title: atendimento.alunoNome,
+    title: alunoNome,
     start: atendimento.inicio,
     end: atendimento.fim,
     color: getAppointmentColor(atendimento).backgroundColor,
@@ -59,10 +60,14 @@ export function AtendimentosCalendar({ onCreateAppointment }: Readonly<Atendimen
     size: 500,
     sort: ["inicio,asc"],
   });
+  const alunosQuery = useListAlunos();
 
   const calendarEvents = useMemo(
-    () => (eventsQuery.data?.content ?? []).map(toCalendarEvent),
-    [eventsQuery.data?.content],
+    () => (eventsQuery.data?.content ?? []).map((atendimento) => toCalendarEvent(
+      atendimento,
+      getParticipantName(atendimento.alunoId, alunosQuery.data),
+    )),
+    [alunosQuery.data, eventsQuery.data?.content],
   );
 
   const handleDateClick = (info: DateClickArg) => {

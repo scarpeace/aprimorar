@@ -1,5 +1,5 @@
 import { MiniCard } from "@/components/ui/mini-card";
-import type { AtendimentoResponseDTO } from "@/kubb";
+import { useGetColaboradoresList, useListAlunos, type AtendimentoResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import {
   Calendar,
@@ -9,6 +9,7 @@ import {
   UserRoundCog,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getParticipantName } from "../lib/atendimento-participant-labels";
 
 type AtendimentoInfoSectionProps = {
   atendimento: AtendimentoResponseDTO;
@@ -18,6 +19,8 @@ export function AtendimentoInfoSection({
   atendimento,
 }: Readonly<AtendimentoInfoSectionProps>) {
   const navigate = useNavigate();
+  const alunosQuery = useListAlunos();
+  const colaboradoresQuery = useGetColaboradoresList();
   const alunoChargePaid = atendimento.dataCobrancaAluno != null;
   const colaboradorPaymentPaid = atendimento.dataPagamentoColaborador != null;
 
@@ -26,14 +29,14 @@ export function AtendimentoInfoSection({
       <div className="tooltip" data-tip="Acessar Detalhes do Aluno">
         <MiniCard className="hover:bg-base-200 hover:cursor-pointer" label="Aluno" icon={GraduationCap} onClick={() => { navigate(`/alunos/${atendimento.alunoId}`); }}>
           <div className="text-2xl font-semibold text-base-content">
-            {atendimento.alunoNome}
+            {getParticipantName(atendimento.alunoId, alunosQuery.data)}
           </div>
         </MiniCard>
       </div>
       <div className="tooltip" data-tip="Acessar Detalhes do Colaborador">
         <MiniCard className="hover:bg-base-200 hover:cursor-pointer" label="Colaborador" icon={UserRoundCog} onClick={() => { navigate(`/colaboradores/${atendimento.colaboradorId}`); }}>
           <div className="text-2xl font-semibold text-base-content">
-            {atendimento.colaboradorNome}
+            {getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}
           </div>
         </MiniCard>
       </div>

@@ -6,6 +6,7 @@ import { memo } from "react";
 
 type AlunoAtendimentoMobileCardProps = {
   atendimento: AtendimentoResponseDTO;
+  colaboradorNome: string;
   index: number;
 };
 
@@ -21,6 +22,7 @@ const tipoLabels: Record<AtendimentoResponseDTO["tipo"], string> = {
 
 export const AlunoAtendimentoMobileCard = memo(function AlunoAtendimentoMobileCard({
   atendimento,
+  colaboradorNome,
   index,
 }: Readonly<AlunoAtendimentoMobileCardProps>) {
   const animationDelay = `${(index % 5) * 100}ms`;
@@ -34,7 +36,7 @@ export const AlunoAtendimentoMobileCard = memo(function AlunoAtendimentoMobileCa
         <div className="flex justify-between items-start">
           <div className="flex flex-col gap-1">
              <div className="flex items-center gap-2 text-xs font-bold text-base-content/50 uppercase tracking-tighter">
-                <UserIcon size={12} /> {atendimento.colaboradorNome}
+                 <UserIcon size={12} /> {colaboradorNome}
              </div>
              <div className="flex items-center gap-2 font-bold text-lg">
                 <Tag size={16} className="text-primary" />

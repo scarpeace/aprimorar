@@ -4,10 +4,11 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import type { AtendimentoResponseDTO, PageDTOAtendimentoResponseDTO } from "@/kubb";
+import { useGetColaboradoresList, type AtendimentoResponseDTO, type PageDTOAtendimentoResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
 import { memo } from "react";
+import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
 import { AlunoAtendimentoMobileCard } from "./AlunoAtendimentoMobileCard";
 
 type AlunoEventsTableProps = {
@@ -39,6 +40,7 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
   onHideChargedChange,
   onPageChange,
 }: Readonly<AlunoEventsTableProps>) {
+  const colaboradoresQuery = useGetColaboradoresList();
   const events = atendimentos?.content ?? [];
   const totalEvents = atendimentos?.totalElements ?? events.length;
 
@@ -127,7 +129,7 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
                 return (
                   <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
                     <td>
-                      <div className="font-semibold text-base-content">{atendimento.colaboradorNome}</div>
+                      <div className="font-semibold text-base-content">{getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}</div>
                     </td>
                     <td>{formatDateShortYear(atendimento.inicio)}</td>
                     <td className="text-center text-sm font-medium">
@@ -174,6 +176,7 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
           <AlunoAtendimentoMobileCard
             key={atendimento.id}
             atendimento={atendimento}
+            colaboradorNome={getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}
             index={index}
           />
         ))}

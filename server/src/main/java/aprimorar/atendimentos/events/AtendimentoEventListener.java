@@ -1,12 +1,12 @@
 package aprimorar.atendimentos.events;
 
 import aprimorar.atendimentos.repository.AtendimentoRepository;
-import aprimorar.pessoas.events.AlunoDeletedEvent;
-import aprimorar.pessoas.events.ArchiveAlunoVerificationEvent;
-import aprimorar.pessoas.events.ArchiveColaboradorVerificationEvent;
-import aprimorar.pessoas.events.ColaboradorDeletedEvent;
-import aprimorar.pessoas.events.DeleteAlunoVerificationEvent;
-import aprimorar.pessoas.events.DeleteColaboradorVerificationEvent;
+import aprimorar.pessoas.api.AlunoDeletedEvent;
+import aprimorar.pessoas.api.ArchiveAlunoVerificationEvent;
+import aprimorar.pessoas.api.ArchiveColaboradorVerificationEvent;
+import aprimorar.pessoas.api.ColaboradorDeletedEvent;
+import aprimorar.pessoas.api.DeleteAlunoVerificationEvent;
+import aprimorar.pessoas.api.DeleteColaboradorVerificationEvent;
 import aprimorar.shared.exception.BusinessException;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;

@@ -2,10 +2,10 @@ package aprimorar.pessoas.service;
 
 import aprimorar.pessoas.domain.Colaborador;
 import aprimorar.pessoas.dto.ColaboradorFiltroRequest;
-import aprimorar.pessoas.dto.ColaboradorResponseDTO;
+import aprimorar.pessoas.api.ColaboradorResponseDTO;
 import aprimorar.pessoas.dto.ColaboradoresKpisDTO;
 import aprimorar.pessoas.dto.ColaboradoresListDTO;
-import aprimorar.pessoas.events.ColaboradorQueryApi;
+import aprimorar.pessoas.api.ColaboradorQueryApi;
 import aprimorar.pessoas.repository.ColaboradorRepository;
 import aprimorar.pessoas.repository.specifications.ColaboradorSpecifications;
 import aprimorar.pessoas.shared.FuncoesColaborador;

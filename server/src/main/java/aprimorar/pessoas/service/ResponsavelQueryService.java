@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.pessoas.domain.Responsavel;
-import aprimorar.pessoas.dto.ResponsaveisListDTO;
 import aprimorar.pessoas.dto.ResponsavelFiltroRequest;
 import aprimorar.pessoas.dto.ResponsavelResponseDTO;
-import aprimorar.pessoas.events.ResponsavelQueryApi;
+import aprimorar.pessoas.api.ResponsavelQueryApi;
 import aprimorar.pessoas.repository.ResponsavelRepository;
 import aprimorar.pessoas.repository.specifications.ResponsavelSpecifications;
 import aprimorar.shared.exception.BusinessException;
@@ -46,12 +45,12 @@ public class ResponsavelQueryService implements ResponsavelQueryApi {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ResponsaveisListDTO> listResponsaveis() {
+    public List<ResponsavelResponseDTO> getResponsaveisList() {
         List<Responsavel> list = responsavelRepo.findAll();
         log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
         return list
             .stream()
-            .map(responsavel -> new ResponsaveisListDTO(responsavel.getId(), responsavel.getNome()))
+            .map(ResponsavelResponseDTO::toDto)
             .toList();
     }
 
