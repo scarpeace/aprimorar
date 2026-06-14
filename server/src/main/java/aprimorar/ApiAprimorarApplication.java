@@ -15,4 +15,8 @@ public class ApiAprimorarApplication {
 		SpringApplication.run(ApiAprimorarApplication.class, args);
 	}
 
+	// @Bean
+	// public CommandLineRunner seedAdminUser(aprimorar.auth.AuthBootstrap authBootstrap) {
+	// 	return args -> authBootstrap.ensureAdminUser();
+	// }
 }

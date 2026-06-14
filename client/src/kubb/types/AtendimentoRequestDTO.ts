@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export const atendimentoRequestDTOContentEnum = {
+export const atendimentoRequestDTOTipoEnum = {
   AULA: "AULA",
   MENTORIA: "MENTORIA",
   TERAPIA: "TERAPIA",
@@ -13,51 +13,51 @@ export const atendimentoRequestDTOContentEnum = {
   OUTRO: "OUTRO",
 } as const;
 
-export type AtendimentoRequestDTOContentEnumKey =
-  (typeof atendimentoRequestDTOContentEnum)[keyof typeof atendimentoRequestDTOContentEnum];
+export type AtendimentoRequestDTOTipoEnumKey =
+  (typeof atendimentoRequestDTOTipoEnum)[keyof typeof atendimentoRequestDTOTipoEnum];
 
 /**
- * @description Formato de payload para o cadastro e/ou atualizacao de um atendimento
+ * @description Formato de payload para cadastro e atualização de atendimento
  */
 export type AtendimentoRequestDTO = {
   /**
-   * @description Descricao do atendimento
+   * @description Descrição do atendimento
    * @type string | undefined
    */
-  description?: string;
+  descricao?: string;
   /**
    * @description Tipo de conteudo ou categoria do atendimento
    * @type string
    */
-  content: AtendimentoRequestDTOContentEnumKey;
+  tipo: AtendimentoRequestDTOTipoEnumKey;
   /**
-   * @description Data/hora de inicio do atendimento
+   * @description Data e hora de início do atendimento
    * @type string, date-time
    */
-  startDate: string;
+  inicio: string;
   /**
-   * @description Duracao do atendimento em horas
+   * @description Duração do atendimento em horas
    * @type number, double
    */
-  duration: number;
+  duracao: number;
   /**
    * @description Valor do atendimento cobrado do aluno
    * @type number
    */
-  price: number;
+  valor: number;
   /**
-   * @description Pagamento do atendimento ao colaborador
+   * @description Valor de repasse do atendimento ao colaborador
    * @type number
    */
-  payment: number;
+  repasse: number;
   /**
-   * @description ID do estudante vinculado ao atendimento
+   * @description ID do aluno vinculado ao atendimento
    * @type string, uuid
    */
-  studentId: string;
+  alunoId: string;
   /**
    * @description ID do colaborador vinculado ao atendimento
    * @type string, uuid
    */
-  employeeId: string;
+  colaboradorId: string;
 };

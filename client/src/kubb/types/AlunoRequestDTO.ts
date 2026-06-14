@@ -3,28 +3,23 @@
  * Do not edit manually.
  */
 
-import type { AddressRequestDTO } from "./AddressRequestDTO.ts";
+import type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
 
 /**
  * @description Formato de payload para o cadastro de um aluno
  */
 export type AlunoRequestDTO = {
   /**
-   * @description Nome do aluno
+   * @description Nome completo do aluno
    * @minLength 1
    * @type string
    */
-  name: string;
+  nome: string;
   /**
    * @description Data de nascimento do aluno
    * @type string, date
    */
-  birthdate: string;
-  /**
-   * @description Pix do aluno
-   * @type string
-   */
-  pix?: string | null;
+  dataNascimento: string;
   /**
    * @description CPF do aluno
    * @minLength 1
@@ -36,27 +31,27 @@ export type AlunoRequestDTO = {
    * @minLength 1
    * @type string
    */
-  school: string;
+  escola: string;
   /**
    * @description Contato do aluno
    * @minLength 1
    * @type string
    */
-  contact: string;
+  telefone: string;
   /**
-   * @description Email do aluno
+   * @description E-mail do aluno
    * @minLength 1
    * @type string
    */
   email: string;
   /**
-   * @description Endereço
+   * @description Endereço do aluno
    * @type object
    */
-  address: AddressRequestDTO;
+  endereco: EnderecoRequestDTO;
   /**
-   * @description ID do responsável atual do aluno
+   * @description ID do responsável vinculado ao aluno
    * @type string, uuid
    */
-  parentId: string;
+  responsavelId: string;
 };

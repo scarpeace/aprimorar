@@ -1,13 +1,15 @@
 package aprimorar.atendimentos.dto;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.UUID;
-
-import aprimorar.atendimentos.domain.TipoAtendimentoEnum;
+import aprimorar.atendimentos.domain.Atendimento;
+import aprimorar.atendimentos.enums.StatusAtendimento;
+import aprimorar.atendimentos.enums.TipoAtendimentoEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 
 @Schema(description = "Dados do atendimento retornados pela API")
 public record AtendimentoResponseDTO(
@@ -17,65 +19,72 @@ public record AtendimentoResponseDTO(
 
     @Nullable
     @Schema(nullable = false, description = "Descricao do atendimento", example = "Sessao focada em revisao de matematica basica")
-    String description,
+    String descricao,
 
     @NotNull
     @Schema(nullable = false, description = "Conteudo do atendimento (aula, mentoria etc.)", example = "MENTORIA")
-    TipoAtendimentoEnum content,
+    TipoAtendimentoEnum tipo,
 
     @NotNull
     @Schema(nullable = false, description = "Data/hora de inicio do atendimento", example = "2023-11-20T14:00:00Z")
-    Instant startDate,
+    LocalDateTime inicio,
 
     @NotNull
     @Schema(nullable = false, description = "Data/hora de fim do atendimento", example = "2023-11-20T16:00:00Z")
-    Instant endDate,
+    LocalDateTime fim,
 
     @NotNull
     @Schema(nullable = false, description = "Duracao do atendimento em horas", example = "1.5")
-    Double duration,
+    Double duracao,
 
     @NotNull
     @Schema(nullable = false, description = "Valor do atendimento cobrado do aluno", example = "150.00")
-    BigDecimal price,
+    BigDecimal valor,
 
     @NotNull
     @Schema(nullable = false, description = "Pagamento do atendimento ao colaborador", example = "100.00")
-    BigDecimal payment,
+    BigDecimal repasse,
 
     @NotNull
     @Schema(nullable = false, description = "Lucro do atendimento", example = "50.00")
-    BigDecimal profit,
+    BigDecimal lucro,
 
     @NotNull
-    @Schema(nullable = false, description = "ID do estudante vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174000")
-    UUID studentId,
-
-    @NotNull
-    @Schema(nullable = false, description = "Nome do aluno vinculado ao atendimento", example = "John Doe")
-    String studentName,
+    @Schema(nullable = false, description = "ID do aluno vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174000")
+    UUID alunoId,
 
     @NotNull
     @Schema(nullable = false, description = "ID do colaborador vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174001")
-    UUID employeeId,
+    UUID colaboradorId,
 
     @NotNull
-    @Schema(nullable = false, description = "Nome do colaborador vinculado ao atendimento", example = "Jane Doe")
-    String employeeName,
-
-    @Nullable
-    @Schema(nullable = true, description = "Data de pagamento ao colaborador", example = "2024-03-10T15:33:42Z")
-    Instant employeePaymentDate,
-
-    @Nullable
-    @Schema(nullable = true, description = "Data de cobrança do aluno", example = "2024-03-10T15:33:42Z")
-    Instant studentChargeDate,
+    @Schema(nullable = false, description = "Status do atendimento", example = "AGENDADO")
+    StatusAtendimento status,
 
     @NotNull
     @Schema(nullable = false, description = "Data de criacao do atendimento", example = "2024-03-10T15:33:42Z")
-    Instant createdAt,
+    LocalDateTime createdAt,
 
     @Nullable
     @Schema(nullable = true, description = "Data de atualizacao do atendimento", example = "2024-03-10T15:33:42Z")
-    Instant updatedAt
-) {}
+    LocalDateTime updatedAt
+) {
+    public static AtendimentoResponseDTO toDto(Atendimento atendimento) {
+        return new AtendimentoResponseDTO(
+            atendimento.getId(),
+            atendimento.getDescricao(),
+            atendimento.getTipo(),
+            atendimento.getInicio(),
+            atendimento.getFim(),
+            atendimento.getDuracao(),
+            atendimento.getValor(),
+            atendimento.getRepasse(),
+            atendimento.getLucro(),
+            atendimento.getAlunoId(),
+            atendimento.getColaboradorId(),
+            atendimento.getStatus(),
+            atendimento.getCreatedAt(),
+            atendimento.getUpdatedAt()
+        );
+    }
+}

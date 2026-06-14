@@ -3,7 +3,6 @@
  * Do not edit manually.
  */
 
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 import type { ResponsavelRequestDTO } from "../ResponsavelRequestDTO.ts";
 import type { ResponsavelResponseDTO } from "../ResponsavelResponseDTO.ts";
 
@@ -19,26 +18,6 @@ export type UpdateResponsavelPathParams = {
  */
 export type UpdateResponsavel200 = ResponsavelResponseDTO;
 
-/**
- * @description Falha de validação
- */
-export type UpdateResponsavel400 = ProblemResponseDTO;
-
-/**
- * @description Responsável não encontrado
- */
-export type UpdateResponsavel404 = ProblemResponseDTO;
-
-/**
- * @description Conflito de regra de negócio
- */
-export type UpdateResponsavel409 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type UpdateResponsavel500 = ProblemResponseDTO;
-
 export type UpdateResponsavelMutationRequest = ResponsavelRequestDTO;
 
 export type UpdateResponsavelMutationResponse = UpdateResponsavel200;
@@ -47,9 +26,5 @@ export type UpdateResponsavelMutation = {
   Response: UpdateResponsavel200;
   Request: UpdateResponsavelMutationRequest;
   PathParams: UpdateResponsavelPathParams;
-  Errors:
-    | UpdateResponsavel400
-    | UpdateResponsavel404
-    | UpdateResponsavel409
-    | UpdateResponsavel500;
+  Errors: any;
 };

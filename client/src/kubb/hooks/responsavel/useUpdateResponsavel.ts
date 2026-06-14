@@ -8,10 +8,6 @@ import type {
   UpdateResponsavelMutationRequest,
   UpdateResponsavelMutationResponse,
   UpdateResponsavelPathParams,
-  UpdateResponsavel400,
-  UpdateResponsavel404,
-  UpdateResponsavel409,
-  UpdateResponsavel500,
 } from "../../types/responsavel/UpdateResponsavel.ts";
 import type {
   Client,
@@ -49,12 +45,7 @@ export async function updateResponsavel(
 
   const res = await request<
     UpdateResponsavelMutationResponse,
-    ResponseErrorConfig<
-      | UpdateResponsavel400
-      | UpdateResponsavel404
-      | UpdateResponsavel409
-      | UpdateResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     UpdateResponsavelMutationRequest
   >({
     method: "PATCH",
@@ -73,12 +64,7 @@ export function updateResponsavelMutationOptions<TContext = unknown>(
   const mutationKey = updateResponsavelMutationKey();
   return mutationOptions<
     UpdateResponsavelMutationResponse,
-    ResponseErrorConfig<
-      | UpdateResponsavel400
-      | UpdateResponsavel404
-      | UpdateResponsavel409
-      | UpdateResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     {
       responsavelId: UpdateResponsavelPathParams["responsavelId"];
       data: UpdateResponsavelMutationRequest;
@@ -100,12 +86,7 @@ export function useUpdateResponsavel<TContext>(
   options: {
     mutation?: UseMutationOptions<
       UpdateResponsavelMutationResponse,
-      ResponseErrorConfig<
-        | UpdateResponsavel400
-        | UpdateResponsavel404
-        | UpdateResponsavel409
-        | UpdateResponsavel500
-      >,
+      ResponseErrorConfig<Error>,
       {
         responsavelId: UpdateResponsavelPathParams["responsavelId"];
         data: UpdateResponsavelMutationRequest;
@@ -126,12 +107,7 @@ export function useUpdateResponsavel<TContext>(
     config,
   ) as UseMutationOptions<
     UpdateResponsavelMutationResponse,
-    ResponseErrorConfig<
-      | UpdateResponsavel400
-      | UpdateResponsavel404
-      | UpdateResponsavel409
-      | UpdateResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     {
       responsavelId: UpdateResponsavelPathParams["responsavelId"];
       data: UpdateResponsavelMutationRequest;
@@ -141,12 +117,7 @@ export function useUpdateResponsavel<TContext>(
 
   return useMutation<
     UpdateResponsavelMutationResponse,
-    ResponseErrorConfig<
-      | UpdateResponsavel400
-      | UpdateResponsavel404
-      | UpdateResponsavel409
-      | UpdateResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     {
       responsavelId: UpdateResponsavelPathParams["responsavelId"];
       data: UpdateResponsavelMutationRequest;
@@ -161,12 +132,7 @@ export function useUpdateResponsavel<TContext>(
     queryClient,
   ) as UseMutationResult<
     UpdateResponsavelMutationResponse,
-    ResponseErrorConfig<
-      | UpdateResponsavel400
-      | UpdateResponsavel404
-      | UpdateResponsavel409
-      | UpdateResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     {
       responsavelId: UpdateResponsavelPathParams["responsavelId"];
       data: UpdateResponsavelMutationRequest;

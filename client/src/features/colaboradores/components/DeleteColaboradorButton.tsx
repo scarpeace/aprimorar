@@ -7,21 +7,21 @@ import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 export const DeleteColaboradorButton = ({ colaboradorId }: { colaboradorId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { deleteEmployee } = useColaboradorMutations();
+  const { deleteColaborador } = useColaboradorMutations();
 
   const handleOpenClick = () => {
     setIsOpen(true);
   };
 
   const handleClose = () => {
-    if (!deleteEmployee.isPending) {
+    if (!deleteColaborador.isPending) {
       setIsOpen(false);
     }
   };
 
   const handleConfirmDelete = () => {
-    deleteEmployee.mutate(
-      { colaboradorId: colaboradorId },
+    deleteColaborador.mutate(
+      { colaboradorId },
       {
         onSuccess: () => {
           setIsOpen(false);
@@ -35,11 +35,11 @@ export const DeleteColaboradorButton = ({ colaboradorId }: { colaboradorId: stri
       <Button
         type="button"
         onClick={handleOpenClick}
-        disabled={deleteEmployee.isPending}
+        disabled={deleteColaborador.isPending}
         variant="danger"
       >
         <Trash2 className="h-4 w-4" />
-        {deleteEmployee.isPending ? "Excluindo..." : "Excluir"}
+        {deleteColaborador.isPending ? "Excluindo..." : "Excluir"}
       </Button>
 
       <ConfirmationModal
@@ -49,14 +49,14 @@ export const DeleteColaboradorButton = ({ colaboradorId }: { colaboradorId: stri
         title="Atenção: EXCLUSÃO DEFINITIVA"
         description="Leia os termos de exclusão antes de confirmar."
         variant="danger"
-        isPending={deleteEmployee.isPending}
+        isPending={deleteColaborador.isPending}
         disableCloseOnPending
-        confirmText="Excluir Aluno"
+        confirmText="Excluir colaborador"
       >
         <div className="bg-warning/10 text-warning-content p-4 rounded-md text-sm">
           Ao excluí-lo, seu histórico pessoal será apagado, mas{" "}
           <strong>
-            todos os seus atendimentoos e atendimentos serão transferidos
+            todos os seus atendimentos serão transferidos
             automaticamente para um perfil de "Colaborador Removido"
           </strong>{" "}
           para manter a consistência financeira e o histórico.

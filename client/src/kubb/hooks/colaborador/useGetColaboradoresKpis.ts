@@ -4,11 +4,7 @@
  */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type {
-  GetColaboradoresKpisQueryResponse,
-  GetColaboradoresKpis400,
-  GetColaboradoresKpis500,
-} from "../../types/colaborador/GetColaboradoresKpis.ts";
+import type { GetColaboradoresKpisQueryResponse } from "../../types/colaborador/GetColaboradoresKpis.ts";
 import type {
   Client,
   RequestConfig,
@@ -40,7 +36,7 @@ export async function getColaboradoresKpis(
 
   const res = await request<
     GetColaboradoresKpisQueryResponse,
-    ResponseErrorConfig<GetColaboradoresKpis400 | GetColaboradoresKpis500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({ method: "GET", url: `/v1/colaboradores/kpis`, ...requestConfig });
   return res.data;
@@ -52,7 +48,7 @@ export function getColaboradoresKpisQueryOptions(
   const queryKey = getColaboradoresKpisQueryKey();
   return queryOptions<
     GetColaboradoresKpisQueryResponse,
-    ResponseErrorConfig<GetColaboradoresKpis400 | GetColaboradoresKpis500>,
+    ResponseErrorConfig<Error>,
     GetColaboradoresKpisQueryResponse,
     typeof queryKey
   >({
@@ -79,7 +75,7 @@ export function useGetColaboradoresKpis<
     query?: Partial<
       QueryObserverOptions<
         GetColaboradoresKpisQueryResponse,
-        ResponseErrorConfig<GetColaboradoresKpis400 | GetColaboradoresKpis500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -99,10 +95,9 @@ export function useGetColaboradoresKpis<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<
-    TData,
-    ResponseErrorConfig<GetColaboradoresKpis400 | GetColaboradoresKpis500>
-  > & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

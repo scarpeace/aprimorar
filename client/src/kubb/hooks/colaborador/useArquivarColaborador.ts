@@ -7,9 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   ArquivarColaboradorMutationResponse,
   ArquivarColaboradorPathParams,
-  ArquivarColaborador404,
-  ArquivarColaborador409,
-  ArquivarColaborador500,
 } from "../../types/colaborador/ArquivarColaborador.ts";
 import type {
   Client,
@@ -42,9 +39,7 @@ export async function arquivarColaborador(
 
   const res = await request<
     ArquivarColaboradorMutationResponse,
-    ResponseErrorConfig<
-      ArquivarColaborador404 | ArquivarColaborador409 | ArquivarColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "PATCH",
@@ -60,9 +55,7 @@ export function arquivarColaboradorMutationOptions<TContext = unknown>(
   const mutationKey = arquivarColaboradorMutationKey();
   return mutationOptions<
     ArquivarColaboradorMutationResponse,
-    ResponseErrorConfig<
-      ArquivarColaborador404 | ArquivarColaborador409 | ArquivarColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: ArquivarColaboradorPathParams["colaboradorId"] },
     TContext
   >({
@@ -81,9 +74,7 @@ export function useArquivarColaborador<TContext>(
   options: {
     mutation?: UseMutationOptions<
       ArquivarColaboradorMutationResponse,
-      ResponseErrorConfig<
-        ArquivarColaborador404 | ArquivarColaborador409 | ArquivarColaborador500
-      >,
+      ResponseErrorConfig<Error>,
       { colaboradorId: ArquivarColaboradorPathParams["colaboradorId"] },
       TContext
     > & { client?: QueryClient };
@@ -99,18 +90,14 @@ export function useArquivarColaborador<TContext>(
     config,
   ) as UseMutationOptions<
     ArquivarColaboradorMutationResponse,
-    ResponseErrorConfig<
-      ArquivarColaborador404 | ArquivarColaborador409 | ArquivarColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: ArquivarColaboradorPathParams["colaboradorId"] },
     TContext
   >;
 
   return useMutation<
     ArquivarColaboradorMutationResponse,
-    ResponseErrorConfig<
-      ArquivarColaborador404 | ArquivarColaborador409 | ArquivarColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: ArquivarColaboradorPathParams["colaboradorId"] },
     TContext
   >(
@@ -122,9 +109,7 @@ export function useArquivarColaborador<TContext>(
     queryClient,
   ) as UseMutationResult<
     ArquivarColaboradorMutationResponse,
-    ResponseErrorConfig<
-      ArquivarColaborador404 | ArquivarColaborador409 | ArquivarColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: ArquivarColaboradorPathParams["colaboradorId"] },
     TContext
   >;

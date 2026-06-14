@@ -1,4 +1,4 @@
-import { useListColaboradores } from "@/kubb";
+import { useGetColaboradoresList } from "@/kubb";
 import { TriangleAlert } from "lucide-react";
 import type { UseFormRegisterReturn } from "react-hook-form";
 
@@ -17,7 +17,7 @@ export function ColaboradorSelectDropdown({
   label,
   defaultValue,
 }: ColaboradorSelectDropdownProps) {
-  const { data: colaboradores, isPending } = useListColaboradores();
+  const { data: colaboradores, isPending } = useGetColaboradoresList();
 
   const hasDefaultValue = defaultValue?.id && defaultValue?.name;
   const isDefaultInOptions = colaboradores?.some((e) => e.id === defaultValue?.id);

@@ -7,9 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   CreateResponsavelMutationRequest,
   CreateResponsavelMutationResponse,
-  CreateResponsavel400,
-  CreateResponsavel409,
-  CreateResponsavel500,
 } from "../../types/responsavel/CreateResponsavel.ts";
 import type {
   Client,
@@ -46,9 +43,7 @@ export async function createResponsavel(
 
   const res = await request<
     CreateResponsavelMutationResponse,
-    ResponseErrorConfig<
-      CreateResponsavel400 | CreateResponsavel409 | CreateResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     CreateResponsavelMutationRequest
   >({
     method: "POST",
@@ -67,9 +62,7 @@ export function createResponsavelMutationOptions<TContext = unknown>(
   const mutationKey = createResponsavelMutationKey();
   return mutationOptions<
     CreateResponsavelMutationResponse,
-    ResponseErrorConfig<
-      CreateResponsavel400 | CreateResponsavel409 | CreateResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     { data: CreateResponsavelMutationRequest },
     TContext
   >({
@@ -88,9 +81,7 @@ export function useCreateResponsavel<TContext>(
   options: {
     mutation?: UseMutationOptions<
       CreateResponsavelMutationResponse,
-      ResponseErrorConfig<
-        CreateResponsavel400 | CreateResponsavel409 | CreateResponsavel500
-      >,
+      ResponseErrorConfig<Error>,
       { data: CreateResponsavelMutationRequest },
       TContext
     > & { client?: QueryClient };
@@ -108,18 +99,14 @@ export function useCreateResponsavel<TContext>(
     config,
   ) as UseMutationOptions<
     CreateResponsavelMutationResponse,
-    ResponseErrorConfig<
-      CreateResponsavel400 | CreateResponsavel409 | CreateResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     { data: CreateResponsavelMutationRequest },
     TContext
   >;
 
   return useMutation<
     CreateResponsavelMutationResponse,
-    ResponseErrorConfig<
-      CreateResponsavel400 | CreateResponsavel409 | CreateResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     { data: CreateResponsavelMutationRequest },
     TContext
   >(
@@ -131,9 +118,7 @@ export function useCreateResponsavel<TContext>(
     queryClient,
   ) as UseMutationResult<
     CreateResponsavelMutationResponse,
-    ResponseErrorConfig<
-      CreateResponsavel400 | CreateResponsavel409 | CreateResponsavel500
-    >,
+    ResponseErrorConfig<Error>,
     { data: CreateResponsavelMutationRequest },
     TContext
   >;

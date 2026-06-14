@@ -4,7 +4,7 @@
  */
 
 /**
- * @description Payload de autenticacao
+ * @description Payload de autenticação
  */
 export type AuthRequestDTO = {
   /**

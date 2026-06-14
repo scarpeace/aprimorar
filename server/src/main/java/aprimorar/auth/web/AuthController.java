@@ -2,10 +2,7 @@ package aprimorar.auth.web;
 
 import aprimorar.auth.web.dto.AuthRequestDTO;
 import aprimorar.auth.web.dto.AuthResponseDTO;
-import aprimorar.shared.exception.ProblemResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,21 +29,6 @@ public class AuthController {
     @Operation(operationId = "login", description = "Autentica um usuario e retorna um access token JWT.")
     @SecurityRequirements({})
     @ApiResponse(responseCode = "200", description = "Usuario autenticado com sucesso.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de validação",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "401",
-        description = "Credenciais invalidas.",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthRequestDTO request) {
         return ResponseEntity.ok(authService.authenticate(request.email(), request.password()));
     }

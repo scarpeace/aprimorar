@@ -4,7 +4,6 @@
  */
 
 import type { AtendimentoResponseDTO } from "../AtendimentoResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetAtendimentoByIdPathParams = {
   /**
@@ -18,20 +17,10 @@ export type GetAtendimentoByIdPathParams = {
  */
 export type GetAtendimentoById200 = AtendimentoResponseDTO;
 
-/**
- * @description Atendimento não encontrado
- */
-export type GetAtendimentoById404 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type GetAtendimentoById500 = ProblemResponseDTO;
-
 export type GetAtendimentoByIdQueryResponse = GetAtendimentoById200;
 
 export type GetAtendimentoByIdQuery = {
   Response: GetAtendimentoById200;
   PathParams: GetAtendimentoByIdPathParams;
-  Errors: GetAtendimentoById404 | GetAtendimentoById500;
+  Errors: any;
 };

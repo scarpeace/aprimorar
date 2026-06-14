@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export const atendimentoResponseDTOContentEnum = {
+export const atendimentoResponseDTOTipoEnum = {
   AULA: "AULA",
   MENTORIA: "MENTORIA",
   TERAPIA: "TERAPIA",
@@ -13,8 +13,17 @@ export const atendimentoResponseDTOContentEnum = {
   OUTRO: "OUTRO",
 } as const;
 
-export type AtendimentoResponseDTOContentEnumKey =
-  (typeof atendimentoResponseDTOContentEnum)[keyof typeof atendimentoResponseDTOContentEnum];
+export type AtendimentoResponseDTOTipoEnumKey =
+  (typeof atendimentoResponseDTOTipoEnum)[keyof typeof atendimentoResponseDTOTipoEnum];
+
+export const atendimentoResponseDTOStatusEnum = {
+  AGENDADO: "AGENDADO",
+  CONCLUIDO: "CONCLUIDO",
+  CANCELADO: "CANCELADO",
+} as const;
+
+export type AtendimentoResponseDTOStatusEnumKey =
+  (typeof atendimentoResponseDTOStatusEnum)[keyof typeof atendimentoResponseDTOStatusEnum];
 
 /**
  * @description Dados do atendimento retornados pela API
@@ -29,72 +38,57 @@ export type AtendimentoResponseDTO = {
    * @description Descricao do atendimento
    * @type string | undefined
    */
-  description?: string;
+  descricao?: string;
   /**
    * @description Tipo de conteudo ou categoria do atendimento
    * @type string
    */
-  content: AtendimentoResponseDTOContentEnumKey;
+  tipo: AtendimentoResponseDTOTipoEnumKey;
   /**
    * @description Data/hora de inicio do atendimento
    * @type string, date-time
    */
-  startDate: string;
+  inicio: string;
   /**
    * @description Data/hora de fim do atendimento
    * @type string, date-time
    */
-  endDate: string;
+  fim: string;
   /**
    * @description Duracao do atendimento em horas
    * @type number, double
    */
-  duration: number;
+  duracao: number;
   /**
    * @description Valor do atendimento cobrado do aluno
    * @type number
    */
-  price: number;
+  valor: number;
   /**
    * @description Pagamento do atendimento ao colaborador
    * @type number
    */
-  payment: number;
+  repasse: number;
   /**
    * @description Lucro do atendimento
    * @type number
    */
-  profit: number;
+  lucro: number;
   /**
-   * @description ID do estudante vinculado ao atendimento
+   * @description ID do aluno vinculado ao atendimento
    * @type string, uuid
    */
-  studentId: string;
-  /**
-   * @description Nome do aluno vinculado ao atendimento
-   * @type string
-   */
-  studentName: string;
+  alunoId: string;
   /**
    * @description ID do colaborador vinculado ao atendimento
    * @type string, uuid
    */
-  employeeId: string;
+  colaboradorId: string;
   /**
-   * @description Nome do colaborador vinculado ao atendimento
+   * @description Status do atendimento
    * @type string
    */
-  employeeName: string;
-  /**
-   * @description Data de pagamento ao colaborador
-   * @type string, date-time
-   */
-  employeePaymentDate?: string | null;
-  /**
-   * @description Data de cobrança do aluno
-   * @type string, date-time
-   */
-  studentChargeDate?: string | null;
+  status: AtendimentoResponseDTOStatusEnumKey;
   /**
    * @description Data de criacao do atendimento
    * @type string, date-time

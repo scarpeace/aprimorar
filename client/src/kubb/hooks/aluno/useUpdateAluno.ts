@@ -8,10 +8,6 @@ import type {
   UpdateAlunoMutationRequest,
   UpdateAlunoMutationResponse,
   UpdateAlunoPathParams,
-  UpdateAluno400,
-  UpdateAluno404,
-  UpdateAluno409,
-  UpdateAluno500,
 } from "../../types/aluno/UpdateAluno.ts";
 import type {
   Client,
@@ -26,16 +22,16 @@ import type {
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const updateAlunoMutationKey = () =>
-  [{ url: "/v1/alunos/:studentId" }] as const;
+  [{ url: "/v1/alunos/:alunoId" }] as const;
 
 export type UpdateAlunoMutationKey = ReturnType<typeof updateAlunoMutationKey>;
 
 /**
  * @description Atualiza um aluno por ID.
- * {@link /v1/alunos/:studentId}
+ * {@link /v1/alunos/:alunoId}
  */
 export async function updateAluno(
-  studentId: UpdateAlunoPathParams["studentId"],
+  alunoId: UpdateAlunoPathParams["alunoId"],
   data: UpdateAlunoMutationRequest,
   config: Partial<RequestConfig<UpdateAlunoMutationRequest>> & {
     client?: Client;
@@ -47,13 +43,11 @@ export async function updateAluno(
 
   const res = await request<
     UpdateAlunoMutationResponse,
-    ResponseErrorConfig<
-      UpdateAluno400 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500
-    >,
+    ResponseErrorConfig<Error>,
     UpdateAlunoMutationRequest
   >({
     method: "PUT",
-    url: `/v1/alunos/${studentId}`,
+    url: `/v1/alunos/${alunoId}`,
     data: requestData,
     ...requestConfig,
   });
@@ -68,35 +62,31 @@ export function updateAlunoMutationOptions<TContext = unknown>(
   const mutationKey = updateAlunoMutationKey();
   return mutationOptions<
     UpdateAlunoMutationResponse,
-    ResponseErrorConfig<
-      UpdateAluno400 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500
-    >,
+    ResponseErrorConfig<Error>,
     {
-      studentId: UpdateAlunoPathParams["studentId"];
+      alunoId: UpdateAlunoPathParams["alunoId"];
       data: UpdateAlunoMutationRequest;
     },
     TContext
   >({
     mutationKey,
-    mutationFn: async ({ studentId, data }) => {
-      return updateAluno(studentId, data, config);
+    mutationFn: async ({ alunoId, data }) => {
+      return updateAluno(alunoId, data, config);
     },
   });
 }
 
 /**
  * @description Atualiza um aluno por ID.
- * {@link /v1/alunos/:studentId}
+ * {@link /v1/alunos/:alunoId}
  */
 export function useUpdateAluno<TContext>(
   options: {
     mutation?: UseMutationOptions<
       UpdateAlunoMutationResponse,
-      ResponseErrorConfig<
-        UpdateAluno400 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500
-      >,
+      ResponseErrorConfig<Error>,
       {
-        studentId: UpdateAlunoPathParams["studentId"];
+        alunoId: UpdateAlunoPathParams["alunoId"];
         data: UpdateAlunoMutationRequest;
       },
       TContext
@@ -112,11 +102,9 @@ export function useUpdateAluno<TContext>(
 
   const baseOptions = updateAlunoMutationOptions(config) as UseMutationOptions<
     UpdateAlunoMutationResponse,
-    ResponseErrorConfig<
-      UpdateAluno400 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500
-    >,
+    ResponseErrorConfig<Error>,
     {
-      studentId: UpdateAlunoPathParams["studentId"];
+      alunoId: UpdateAlunoPathParams["alunoId"];
       data: UpdateAlunoMutationRequest;
     },
     TContext
@@ -124,11 +112,9 @@ export function useUpdateAluno<TContext>(
 
   return useMutation<
     UpdateAlunoMutationResponse,
-    ResponseErrorConfig<
-      UpdateAluno400 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500
-    >,
+    ResponseErrorConfig<Error>,
     {
-      studentId: UpdateAlunoPathParams["studentId"];
+      alunoId: UpdateAlunoPathParams["alunoId"];
       data: UpdateAlunoMutationRequest;
     },
     TContext
@@ -141,11 +127,9 @@ export function useUpdateAluno<TContext>(
     queryClient,
   ) as UseMutationResult<
     UpdateAlunoMutationResponse,
-    ResponseErrorConfig<
-      UpdateAluno400 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500
-    >,
+    ResponseErrorConfig<Error>,
     {
-      studentId: UpdateAlunoPathParams["studentId"];
+      alunoId: UpdateAlunoPathParams["alunoId"];
       data: UpdateAlunoMutationRequest;
     },
     TContext

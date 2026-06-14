@@ -45,9 +45,11 @@ app.key
 app.pub
 
 # builds
-client/dist
+dist/
+client/dist/
 build/
-target
+target/
+**/target/
 server/bin/
 
 docs

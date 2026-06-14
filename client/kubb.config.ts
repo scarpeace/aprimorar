@@ -1,7 +1,6 @@
 import { defineConfig } from '@kubb/core'
 import { pluginOas } from '@kubb/plugin-oas'
 import { pluginTs } from '@kubb/plugin-ts'
-import { pluginZod } from '@kubb/plugin-zod'
 import { pluginReactQuery } from '@kubb/plugin-react-query'
 
 export default defineConfig({
@@ -18,14 +17,6 @@ export default defineConfig({
     pluginOas({ generators: [] , collisionDetection: true}),
     pluginTs({
       output: { path: './types'},
-      group: {
-        type: 'tag',
-        name: ({ group }) => group.toLowerCase(),
-      },
-    }),
-
-    pluginZod({
-      output: { path: './zod' },
       group: {
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),

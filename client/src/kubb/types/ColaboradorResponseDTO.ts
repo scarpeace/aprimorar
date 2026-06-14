@@ -3,18 +3,18 @@
  * Do not edit manually.
  */
 
-import type { AddressResponseDTO } from "./AddressResponseDTO.ts";
+import type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
 
-export const colaboradorResponseDTODutyEnum = {
-  TEACHER: "TEACHER",
-  ADM: "ADM",
-  THERAPIST: "THERAPIST",
+export const colaboradorResponseDTOFuncaoEnum = {
+  PROFESSOR: "PROFESSOR",
+  ADMINISTRATIVO: "ADMINISTRATIVO",
+  TERAPEUTA: "TERAPEUTA",
   MENTOR: "MENTOR",
-  SYSTEM: "SYSTEM",
+  SISTEMA: "SISTEMA",
 } as const;
 
-export type ColaboradorResponseDTODutyEnumKey =
-  (typeof colaboradorResponseDTODutyEnum)[keyof typeof colaboradorResponseDTODutyEnum];
+export type ColaboradorResponseDTOFuncaoEnumKey =
+  (typeof colaboradorResponseDTOFuncaoEnum)[keyof typeof colaboradorResponseDTOFuncaoEnum];
 
 /**
  * @description Dados do colaborador retornados pela API
@@ -29,12 +29,12 @@ export type ColaboradorResponseDTO = {
    * @description Nome completo do colaborador
    * @type string
    */
-  name: string;
+  nome: string;
   /**
    * @description Data de nascimento do colaborador
    * @type string, date
    */
-  birthdate: string;
+  dataNascimento: string;
   /**
    * @description Chave PIX do colaborador
    * @type string
@@ -44,7 +44,7 @@ export type ColaboradorResponseDTO = {
    * @description Telefone de contato do colaborador
    * @type string
    */
-  contact: string;
+  telefone: string;
   /**
    * @description CPF do colaborador
    * @type string
@@ -59,12 +59,12 @@ export type ColaboradorResponseDTO = {
    * @description Função/Papel do funcionário
    * @type string
    */
-  duty: ColaboradorResponseDTODutyEnumKey;
+  funcao: ColaboradorResponseDTOFuncaoEnumKey;
   /**
-   * @description Endereço
+   * @description Dados do endereco retornados pela API
    * @type object
    */
-  address: AddressResponseDTO;
+  endereco: EnderecoResponseDTO;
   /**
    * @description Indica se o colaborador esta ativo
    * @type boolean | undefined

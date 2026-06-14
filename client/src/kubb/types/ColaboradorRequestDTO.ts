@@ -3,18 +3,18 @@
  * Do not edit manually.
  */
 
-import type { AddressRequestDTO } from "./AddressRequestDTO.ts";
+import type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
 
-export const colaboradorRequestDTODutyEnum = {
-  TEACHER: "TEACHER",
-  ADM: "ADM",
-  THERAPIST: "THERAPIST",
+export const colaboradorRequestDTOFuncaoEnum = {
+  PROFESSOR: "PROFESSOR",
+  ADMINISTRATIVO: "ADMINISTRATIVO",
+  TERAPEUTA: "TERAPEUTA",
   MENTOR: "MENTOR",
-  SYSTEM: "SYSTEM",
+  SISTEMA: "SISTEMA",
 } as const;
 
-export type ColaboradorRequestDTODutyEnumKey =
-  (typeof colaboradorRequestDTODutyEnum)[keyof typeof colaboradorRequestDTODutyEnum];
+export type ColaboradorRequestDTOFuncaoEnumKey =
+  (typeof colaboradorRequestDTOFuncaoEnum)[keyof typeof colaboradorRequestDTOFuncaoEnum];
 
 /**
  * @description Formato de payload para criar um novo colaborador
@@ -25,12 +25,12 @@ export type ColaboradorRequestDTO = {
    * @minLength 1
    * @type string
    */
-  name: string;
+  nome: string;
   /**
    * @description Data de nascimento do colaborador
    * @type string, date
    */
-  birthdate: string;
+  dataNascimento: string;
   /**
    * @description Chave PIX do colaborador
    * @minLength 1
@@ -42,7 +42,7 @@ export type ColaboradorRequestDTO = {
    * @minLength 1
    * @type string
    */
-  contact: string;
+  telefone: string;
   /**
    * @description CPF do colaborador
    * @minLength 1
@@ -50,7 +50,7 @@ export type ColaboradorRequestDTO = {
    */
   cpf: string;
   /**
-   * @description Email do colaborador
+   * @description E-mail do colaborador
    * @minLength 1
    * @type string
    */
@@ -59,10 +59,10 @@ export type ColaboradorRequestDTO = {
    * @description Função/Papel do funcionário
    * @type string
    */
-  duty: ColaboradorRequestDTODutyEnumKey;
+  funcao: ColaboradorRequestDTOFuncaoEnumKey;
   /**
-   * @description Endereço
+   * @description Endereço do aluno
    * @type object
    */
-  address: AddressRequestDTO;
+  endereco: EnderecoRequestDTO;
 };

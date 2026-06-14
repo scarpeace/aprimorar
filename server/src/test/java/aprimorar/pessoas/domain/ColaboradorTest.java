@@ -1,0 +1,145 @@
+package aprimorar.pessoas.domain;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import aprimorar.pessoas.shared.FuncoesColaborador;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+
+class ColaboradorTest {
+
+    @Test
+    void shouldCreateColaboradorNormalizingData() {
+        var colaborador = new Colaborador(
+            "João Pereira",
+            LocalDate.of(1990, 5, 21),
+            "joao.pereira@example.com",
+            "(61) 99999-9999",
+            "123.456.789-00",
+            "JOAO.PEREIRA@EXAMPLE.COM",
+            FuncoesColaborador.PROFESSOR,
+            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
+        );
+
+        assertEquals("João Pereira", colaborador.getNome());
+        assertEquals(LocalDate.of(1990, 5, 21), colaborador.getDataNascimento());
+        assertEquals("joao.pereira@example.com", colaborador.getPix());
+        assertEquals("61999999999", colaborador.getTelefone());
+        assertEquals("12345678900", colaborador.getCpf());
+        assertEquals("joao.pereira@example.com", colaborador.getEmail());
+        assertEquals(FuncoesColaborador.PROFESSOR, colaborador.getFuncao());
+        assertTrue(colaborador.getActive());
+        assertEquals("70000000", colaborador.getEndereco().getCep());
+    }
+
+    @Test
+    void shouldUpdateColaboradorFields() {
+        var colaborador = new Colaborador(
+            "João Pereira",
+            LocalDate.of(1990, 5, 21),
+            "joao.pereira@example.com",
+            "(61) 99999-9999",
+            "123.456.789-00",
+            "joao.pereira@example.com",
+            FuncoesColaborador.PROFESSOR,
+            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
+        );
+
+        colaborador.update(
+            "Maria Pereira",
+            LocalDate.of(1992, 6, 10),
+            "maria.pereira@example.com",
+            "(21) 98888-7777",
+            "maria.pereira@example.com",
+            FuncoesColaborador.ADMINISTRATIVO,
+            new Endereco("Rua B", "20", "Bairro", "Rio", "RJ", "20000-000", "Sala 2")
+        );
+
+        assertEquals("Maria Pereira", colaborador.getNome());
+        assertEquals(LocalDate.of(1992, 6, 10), colaborador.getDataNascimento());
+        assertEquals("maria.pereira@example.com", colaborador.getPix());
+        assertEquals("21988887777", colaborador.getTelefone());
+        assertEquals("maria.pereira@example.com", colaborador.getEmail());
+        assertEquals(FuncoesColaborador.ADMINISTRATIVO, colaborador.getFuncao());
+        assertEquals("20000000", colaborador.getEndereco().getCep());
+        assertEquals("12345678900", colaborador.getCpf());
+    }
+
+    @Test
+    void shouldArchiveAndUnarchiveColaborador() {
+        var colaborador = new Colaborador(
+            "João Pereira",
+            LocalDate.of(1990, 5, 21),
+            "joao.pereira@example.com",
+            "(61) 99999-9999",
+            "123.456.789-00",
+            "joao.pereira@example.com",
+            FuncoesColaborador.PROFESSOR,
+            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
+        );
+
+        colaborador.archive();
+
+        assertFalse(colaborador.getActive());
+
+        colaborador.unarchive();
+
+        assertTrue(colaborador.getActive());
+    }
+
+    @Test
+    void shouldRejectSystemRecordUpdate() {
+        var colaborador = new Colaborador(
+            "Sistema",
+            LocalDate.of(1990, 5, 21),
+            "sistema@example.com",
+            "(61) 99999-9999",
+            "123.456.789-00",
+            "sistema@example.com",
+            FuncoesColaborador.SISTEMA,
+            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
+        );
+
+        var exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> colaborador.update(
+                "Sistema 2",
+                LocalDate.of(1991, 1, 1),
+                "outro@example.com",
+                "(11) 99999-9999",
+                "outro@example.com",
+                FuncoesColaborador.ADMINISTRATIVO,
+                new Endereco("Rua B", "20", "Bairro", "Rio", "RJ", "20000-000", "Sala 2")
+            )
+        );
+
+        assertEquals("Não é possível realizar esta operação em um registro do sistema.", exception.getMessage());
+    }
+
+    @Test
+    void shouldSetCreatedAtAndUpdatedAt() {
+        var colaborador = new Colaborador(
+            "João Pereira",
+            LocalDate.of(1990, 5, 21),
+            "joao.pereira@example.com",
+            "(61) 99999-9999",
+            "123.456.789-00",
+            "joao.pereira@example.com",
+            FuncoesColaborador.PROFESSOR,
+            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
+        );
+
+        colaborador.prePersist();
+        colaborador.preUpdate();
+
+        assertTrue(colaborador.getCreatedAt() != null);
+        assertTrue(colaborador.getUpdatedAt() != null);
+        assertTrue(colaborador.getCreatedAt().isBefore(LocalDateTime.now().plusSeconds(1)));
+        assertTrue(colaborador.getUpdatedAt().isBefore(LocalDateTime.now().plusSeconds(1)));
+    }
+}

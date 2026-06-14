@@ -7,9 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   LoginMutationRequest,
   LoginMutationResponse,
-  Login400,
-  Login401,
-  Login500,
 } from "../../types/auth/Login.ts";
 import type {
   Client,
@@ -43,7 +40,7 @@ export async function login(
 
   const res = await request<
     LoginMutationResponse,
-    ResponseErrorConfig<Login400 | Login401 | Login500>,
+    ResponseErrorConfig<Error>,
     LoginMutationRequest
   >({
     method: "POST",
@@ -62,7 +59,7 @@ export function loginMutationOptions<TContext = unknown>(
   const mutationKey = loginMutationKey();
   return mutationOptions<
     LoginMutationResponse,
-    ResponseErrorConfig<Login400 | Login401 | Login500>,
+    ResponseErrorConfig<Error>,
     { data: LoginMutationRequest },
     TContext
   >({
@@ -81,7 +78,7 @@ export function useLogin<TContext>(
   options: {
     mutation?: UseMutationOptions<
       LoginMutationResponse,
-      ResponseErrorConfig<Login400 | Login401 | Login500>,
+      ResponseErrorConfig<Error>,
       { data: LoginMutationRequest },
       TContext
     > & { client?: QueryClient };
@@ -94,14 +91,14 @@ export function useLogin<TContext>(
 
   const baseOptions = loginMutationOptions(config) as UseMutationOptions<
     LoginMutationResponse,
-    ResponseErrorConfig<Login400 | Login401 | Login500>,
+    ResponseErrorConfig<Error>,
     { data: LoginMutationRequest },
     TContext
   >;
 
   return useMutation<
     LoginMutationResponse,
-    ResponseErrorConfig<Login400 | Login401 | Login500>,
+    ResponseErrorConfig<Error>,
     { data: LoginMutationRequest },
     TContext
   >(
@@ -113,7 +110,7 @@ export function useLogin<TContext>(
     queryClient,
   ) as UseMutationResult<
     LoginMutationResponse,
-    ResponseErrorConfig<Login400 | Login401 | Login500>,
+    ResponseErrorConfig<Error>,
     { data: LoginMutationRequest },
     TContext
   >;

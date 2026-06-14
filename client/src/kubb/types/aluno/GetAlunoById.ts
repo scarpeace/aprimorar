@@ -4,13 +4,12 @@
  */
 
 import type { AlunoResponseDTO } from "../AlunoResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type GetAlunoByIdPathParams = {
   /**
    * @type string, uuid
    */
-  studentId: string;
+  alunoId: string;
 };
 
 /**
@@ -18,20 +17,10 @@ export type GetAlunoByIdPathParams = {
  */
 export type GetAlunoById200 = AlunoResponseDTO;
 
-/**
- * @description Aluno não encontrado
- */
-export type GetAlunoById404 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type GetAlunoById500 = ProblemResponseDTO;
-
 export type GetAlunoByIdQueryResponse = GetAlunoById200;
 
 export type GetAlunoByIdQuery = {
   Response: GetAlunoById200;
   PathParams: GetAlunoByIdPathParams;
-  Errors: GetAlunoById404 | GetAlunoById500;
+  Errors: any;
 };

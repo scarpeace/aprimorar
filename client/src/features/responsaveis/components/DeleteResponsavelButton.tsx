@@ -8,19 +8,18 @@ import { useResponsavelMutations } from "../hooks/use-responsavel-mutations";
 export const DeleteResponsavelButton = ({ responsavelId }: { responsavelId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const {deleteParent} = useResponsavelMutations();
+  const { deleteResponsavel } = useResponsavelMutations();
 
   const {
-    data: linkedStudents,
-    isLoading: isLinkedStudentsLoading,
+    data: alunosVinculados,
+    isLoading: isAlunosVinculadosLoading,
   } = useGetAlunosByResponsavel(responsavelId);
 
-  const linkedStudentsCount = linkedStudents?.length ?? 0;
-  const isParentStudentsLoading = isLinkedStudentsLoading;
+  const alunosVinculadosCount = alunosVinculados?.length ?? 0;
 
-  const linkedStudentsWarning = linkedStudentsCount > 0 ? (
+  const alunosVinculadosWarning = alunosVinculadosCount > 0 ? (
     <div className="rounded-md bg-warning/10 p-4 text-sm text-warning-content">
-      Atenção: este responsável possui {linkedStudentsCount} aluno(s) vinculado(s).
+      Atenção: este responsável possui {alunosVinculadosCount} aluno(s) vinculado(s).
       Ao confirmar, todos os alunos vinculados também serão removidos do sistema.
     </div>
   ) : null;
@@ -30,13 +29,13 @@ export const DeleteResponsavelButton = ({ responsavelId }: { responsavelId: stri
   };
 
   const handleClose = () => {
-    if (!deleteParent.isPending) {
+    if (!deleteResponsavel.isPending) {
       setIsOpen(false);
     }
   };
 
   const handleConfirmDelete = () => {
-    deleteParent.mutate({ responsavelId: responsavelId, params: { cascade: true } }, {
+    deleteResponsavel.mutate({ responsavelId, params: { cascade: true } }, {
       onSuccess: () => {
         setIsOpen(false);
       },
@@ -48,11 +47,11 @@ export const DeleteResponsavelButton = ({ responsavelId }: { responsavelId: stri
       <Button
         type="button"
         onClick={handleOpenClick}
-        disabled={deleteParent.isPending}
+        disabled={deleteResponsavel.isPending}
         variant="danger"
       >
         <Trash2 className="h-4 w-4" />
-        {deleteParent.isPending ? "Excluindo..." : "Excluir"}
+        {deleteResponsavel.isPending ? "Excluindo..." : "Excluir"}
       </Button>
       <ConfirmationModal
         isOpen={isOpen}
@@ -61,14 +60,14 @@ export const DeleteResponsavelButton = ({ responsavelId }: { responsavelId: stri
         title="Atenção: exclusão definitiva"
         description="Atenção, todos os registros serão removidos do sistema. Tem certeza que deseja continuar com essa exclusão?"
         variant="danger"
-        isPending={deleteParent.isPending}
+        isPending={deleteResponsavel.isPending}
         disableCloseOnPending
         confirmText="Excluir responsável e alunos"
       >
-        {isParentStudentsLoading ? (
+        {isAlunosVinculadosLoading ? (
           <p className="text-sm text-base-content/70">Verificando dados vinculados...</p>
         ) : (
-          linkedStudentsWarning
+          alunosVinculadosWarning
         )}
       </ConfirmationModal>
     </>

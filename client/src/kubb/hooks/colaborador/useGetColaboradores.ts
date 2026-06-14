@@ -7,8 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetColaboradoresQueryResponse,
   GetColaboradoresQueryParams,
-  GetColaboradores400,
-  GetColaboradores500,
 } from "../../types/colaborador/GetColaboradores.ts";
 import type {
   Client,
@@ -43,7 +41,7 @@ export async function getColaboradores(
 
   const res = await request<
     GetColaboradoresQueryResponse,
-    ResponseErrorConfig<GetColaboradores400 | GetColaboradores500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({ method: "GET", url: `/v1/colaboradores`, params, ...requestConfig });
   return res.data;
@@ -56,7 +54,7 @@ export function getColaboradoresQueryOptions(
   const queryKey = getColaboradoresQueryKey(params);
   return queryOptions<
     GetColaboradoresQueryResponse,
-    ResponseErrorConfig<GetColaboradores400 | GetColaboradores500>,
+    ResponseErrorConfig<Error>,
     GetColaboradoresQueryResponse,
     typeof queryKey
   >({
@@ -84,7 +82,7 @@ export function useGetColaboradores<
     query?: Partial<
       QueryObserverOptions<
         GetColaboradoresQueryResponse,
-        ResponseErrorConfig<GetColaboradores400 | GetColaboradores500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -105,10 +103,9 @@ export function useGetColaboradores<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<
-    TData,
-    ResponseErrorConfig<GetColaboradores400 | GetColaboradores500>
-  > & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

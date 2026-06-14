@@ -4,11 +4,7 @@
  */
 
 import fetch from "@kubb/plugin-client/clients/axios";
-import type {
-  GetAlunosKpisQueryResponse,
-  GetAlunosKpis400,
-  GetAlunosKpis500,
-} from "../../types/aluno/GetAlunosKpis.ts";
+import type { GetAlunosKpisQueryResponse } from "../../types/aluno/GetAlunosKpis.ts";
 import type {
   Client,
   RequestConfig,
@@ -38,7 +34,7 @@ export async function getAlunosKpis(
 
   const res = await request<
     GetAlunosKpisQueryResponse,
-    ResponseErrorConfig<GetAlunosKpis400 | GetAlunosKpis500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({ method: "GET", url: `/v1/alunos/kpis`, ...requestConfig });
   return res.data;
@@ -50,7 +46,7 @@ export function getAlunosKpisQueryOptions(
   const queryKey = getAlunosKpisQueryKey();
   return queryOptions<
     GetAlunosKpisQueryResponse,
-    ResponseErrorConfig<GetAlunosKpis400 | GetAlunosKpis500>,
+    ResponseErrorConfig<Error>,
     GetAlunosKpisQueryResponse,
     typeof queryKey
   >({
@@ -74,7 +70,7 @@ export function useGetAlunosKpis<
     query?: Partial<
       QueryObserverOptions<
         GetAlunosKpisQueryResponse,
-        ResponseErrorConfig<GetAlunosKpis400 | GetAlunosKpis500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -94,10 +90,9 @@ export function useGetAlunosKpis<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<
-    TData,
-    ResponseErrorConfig<GetAlunosKpis400 | GetAlunosKpis500>
-  > & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

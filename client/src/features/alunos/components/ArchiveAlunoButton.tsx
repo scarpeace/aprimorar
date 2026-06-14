@@ -6,36 +6,36 @@ import { useState } from "react";
 import { useAlunoMutations } from "../hooks/use-aluno-mutations";
 
 type ArchiveAlunoButtonProps = {
-  studentId: string;
+  alunoId: string;
   active: boolean;
   className?: string;
 };
 
 export const ArchiveAlunoButton = ({
-  studentId,
+  alunoId,
   active,
   className,
 }: ArchiveAlunoButtonProps) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const {
-    archiveStudent: { mutate: archiveStudent, isPending: isArchivingStudent },
-    unarchiveStudent: {
-      mutate: unarchiveStudent,
-      isPending: isUnarchivingStudent,
+    archiveAluno: { mutate: archiveAluno, isPending: isArchivingAluno },
+    unarchiveAluno: {
+      mutate: unarchiveAluno,
+      isPending: isUnarchivingAluno,
     },
   } = useAlunoMutations();
 
-  const isPending = isArchivingStudent || isUnarchivingStudent;
+  const isPending = isArchivingAluno || isUnarchivingAluno;
   const actionLabel = active ? "Arquivar" : "Desarquivar";
   const Icon = active ? ArchiveRestoreIcon : ArchiveIcon;
   const variant = active ? "warning" : "outline";
   const modalVariant = active ? "warning" : "info";
 
   function handleConfirm() {
-    const action = active ? archiveStudent : unarchiveStudent;
+    const action = active ? archiveAluno : unarchiveAluno;
     action(
-      { studentId },
+      { alunoId },
       {
         onSettled: () => setShowConfirm(false),
       }

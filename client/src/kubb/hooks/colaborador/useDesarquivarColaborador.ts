@@ -7,9 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   DesarquivarColaboradorMutationResponse,
   DesarquivarColaboradorPathParams,
-  DesarquivarColaborador404,
-  DesarquivarColaborador409,
-  DesarquivarColaborador500,
 } from "../../types/colaborador/DesarquivarColaborador.ts";
 import type {
   Client,
@@ -42,11 +39,7 @@ export async function desarquivarColaborador(
 
   const res = await request<
     DesarquivarColaboradorMutationResponse,
-    ResponseErrorConfig<
-      | DesarquivarColaborador404
-      | DesarquivarColaborador409
-      | DesarquivarColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "PATCH",
@@ -62,11 +55,7 @@ export function desarquivarColaboradorMutationOptions<TContext = unknown>(
   const mutationKey = desarquivarColaboradorMutationKey();
   return mutationOptions<
     DesarquivarColaboradorMutationResponse,
-    ResponseErrorConfig<
-      | DesarquivarColaborador404
-      | DesarquivarColaborador409
-      | DesarquivarColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: DesarquivarColaboradorPathParams["colaboradorId"] },
     TContext
   >({
@@ -85,11 +74,7 @@ export function useDesarquivarColaborador<TContext>(
   options: {
     mutation?: UseMutationOptions<
       DesarquivarColaboradorMutationResponse,
-      ResponseErrorConfig<
-        | DesarquivarColaborador404
-        | DesarquivarColaborador409
-        | DesarquivarColaborador500
-      >,
+      ResponseErrorConfig<Error>,
       { colaboradorId: DesarquivarColaboradorPathParams["colaboradorId"] },
       TContext
     > & { client?: QueryClient };
@@ -105,22 +90,14 @@ export function useDesarquivarColaborador<TContext>(
     config,
   ) as UseMutationOptions<
     DesarquivarColaboradorMutationResponse,
-    ResponseErrorConfig<
-      | DesarquivarColaborador404
-      | DesarquivarColaborador409
-      | DesarquivarColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: DesarquivarColaboradorPathParams["colaboradorId"] },
     TContext
   >;
 
   return useMutation<
     DesarquivarColaboradorMutationResponse,
-    ResponseErrorConfig<
-      | DesarquivarColaborador404
-      | DesarquivarColaborador409
-      | DesarquivarColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: DesarquivarColaboradorPathParams["colaboradorId"] },
     TContext
   >(
@@ -132,11 +109,7 @@ export function useDesarquivarColaborador<TContext>(
     queryClient,
   ) as UseMutationResult<
     DesarquivarColaboradorMutationResponse,
-    ResponseErrorConfig<
-      | DesarquivarColaborador404
-      | DesarquivarColaborador409
-      | DesarquivarColaborador500
-    >,
+    ResponseErrorConfig<Error>,
     { colaboradorId: DesarquivarColaboradorPathParams["colaboradorId"] },
     TContext
   >;

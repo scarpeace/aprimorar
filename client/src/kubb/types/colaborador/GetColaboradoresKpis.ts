@@ -4,26 +4,15 @@
  */
 
 import type { ColaboradoresKpisDTO } from "../ColaboradoresKpisDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 /**
  * @description KPIs de colaboradores retornados com sucesso.
  */
 export type GetColaboradoresKpis200 = ColaboradoresKpisDTO;
 
-/**
- * @description Parâmetros inválidos
- */
-export type GetColaboradoresKpis400 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type GetColaboradoresKpis500 = ProblemResponseDTO;
-
 export type GetColaboradoresKpisQueryResponse = GetColaboradoresKpis200;
 
 export type GetColaboradoresKpisQuery = {
   Response: GetColaboradoresKpis200;
-  Errors: GetColaboradoresKpis400 | GetColaboradoresKpis500;
+  Errors: any;
 };

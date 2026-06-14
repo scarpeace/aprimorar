@@ -1,7 +1,8 @@
 import { PageLayout } from "@/components/layout/PageLayout";
+import { Modal } from "@/components/ui/modal";
 import { Handshake } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { SectionCard } from "@/components/ui/section-card";
 import { ResponsavelForm } from "../components/ResponsavelForm";
@@ -11,16 +12,16 @@ import { useGetResponsavelById } from "@/kubb";
 
 export function ResponsavelDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const parentId = id ?? "";
+  const responsavelId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const responsavelQuery = useGetResponsavelById(parentId);
+  const responsavelQuery = useGetResponsavelById(responsavelId);
 
   const headerProps = {
-    description: "Veja os dados do responsável, os vínculos ativos e o histórico arquivado com alunos.",
+    description: "Veja os dados do responsável e os alunos vinculados.",
     title: "Detalhes do Responsável",
     Icon: Handshake,
-    backLink: "/responsavels",
     iconBg: "info",
   } as const;
 
@@ -28,36 +29,37 @@ export function ResponsavelDetailPage() {
     <PageLayout {...headerProps}>
       <div className="grid gap-4 animate-[fade-up_300ms_ease-out_both]">
         <div className="animate-[fade-up_360ms_ease-out_both]">
-          <ResponsavelInfoSection parentId={parentId} onEdit={() => setIsFormOpen(true)} />
+          <ResponsavelInfoSection responsavelId={responsavelId} onEdit={() => setIsFormOpen(true)} />
         </div>
 
         <SectionCard
           title="Alunos vinculados"
-          description="Relação de alunos ativos e histórico arquivado associados a este responsável."
+          description="Relação de alunos associados a este responsável."
           headerActions={
             <div className="rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
-              Historico familiar
+              Histórico familiar
             </div>
           }
         >
-          <ResponsavelAlunosTable parentId={parentId} />
+          <ResponsavelAlunosTable responsavelId={responsavelId} />
         </SectionCard>
       </div>
-      {isFormOpen && responsavelQuery.data && (
-        <div className="modal modal-open">
-          <div className="modal-box max-w-2xl border border-base-300 bg-base-100 shadow-2xl">
-            <h3 className="mb-1 text-lg font-bold">Editar Responsavel</h3>
-            <p className="mb-4 text-sm text-base-content/60">
-              Revise os dados de contato, cadastro e identificacao do responsavel.
-            </p>
-            <ResponsavelForm
-              initialData={responsavelQuery.data}
-              onSuccess={() => setIsFormOpen(false)}
-              onCancel={() => setIsFormOpen(false)}
-            />
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isFormOpen && !!responsavelQuery.data}
+        onClose={() => setIsFormOpen(false)}
+        title="Editar Responsável"
+        description="Revise os dados de contato, cadastro e identificação do responsável."
+        size="md"
+      >
+        <ResponsavelForm
+          initialData={responsavelQuery.data}
+          onSuccess={() => {
+            setIsFormOpen(false);
+            navigate(`/responsaveis/${responsavelId}`);
+          }}
+          onCancel={() => setIsFormOpen(false)}
+        />
+      </Modal>
     </PageLayout>
   );
 }

@@ -5,7 +5,6 @@
 
 import type { ColaboradorRequestDTO } from "../ColaboradorRequestDTO.ts";
 import type { ColaboradorResponseDTO } from "../ColaboradorResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
 
 export type UpdateColaboradorPathParams = {
   /**
@@ -19,26 +18,6 @@ export type UpdateColaboradorPathParams = {
  */
 export type UpdateColaborador200 = ColaboradorResponseDTO;
 
-/**
- * @description Falha de validação
- */
-export type UpdateColaborador400 = ProblemResponseDTO;
-
-/**
- * @description Colaborador não encontrado
- */
-export type UpdateColaborador404 = ProblemResponseDTO;
-
-/**
- * @description Conflito de regra de negócio
- */
-export type UpdateColaborador409 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type UpdateColaborador500 = ProblemResponseDTO;
-
 export type UpdateColaboradorMutationRequest = ColaboradorRequestDTO;
 
 export type UpdateColaboradorMutationResponse = UpdateColaborador200;
@@ -47,9 +26,5 @@ export type UpdateColaboradorMutation = {
   Response: UpdateColaborador200;
   Request: UpdateColaboradorMutationRequest;
   PathParams: UpdateColaboradorPathParams;
-  Errors:
-    | UpdateColaborador400
-    | UpdateColaborador404
-    | UpdateColaborador409
-    | UpdateColaborador500;
+  Errors: any;
 };

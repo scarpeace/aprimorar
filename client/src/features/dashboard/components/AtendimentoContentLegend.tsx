@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
+import { tipoAtendimentoLabels } from "@/features/atendimentos/lib/tipo-atendimento-labels";
 import { APPOINTMENT_CONTENT_COLORS } from "@/features/atendimentos/lib/appointment-content-colors";
-import { useGetAtendimentosContentReport } from "@/kubb";
-
+import { useGetAtendimentos } from "@/kubb";
+import type { AtendimentoResponseDTO } from "@/kubb";
 
 type AtendimentoContentLegendProps = {
   startDate: Date;
@@ -13,22 +13,25 @@ export function AtendimentoContentLegend({
   startDate,
   endDate,
 }: Readonly<AtendimentoContentLegendProps>) {
-  const { data: report, isLoading, isError } = useGetAtendimentosContentReport({
-    startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
+  const { data: atendimentos, isLoading, isError } = useGetAtendimentos({
+    inicio: startDate.toISOString(),
+    fim: endDate.toISOString(),
+    size: 500,
   });
 
   const countByContent = useMemo<Record<string, number>>(
-    () => ({
-      AULA: report?.totalAulas ?? 0,
-      MENTORIA: report?.totalMentoria ?? 0,
-      TERAPIA: report?.totalTerapia ?? 0,
-      ORIENTACAO_VOCACIONAL: report?.totalOV ?? 0,
-      ENEM: report?.totalENEM ?? 0,
-      PAS: report?.totalPAS ?? 0,
-      OUTRO: report?.totalOutros ?? 0,
-    }),
-    [report],
+    () => {
+      const counts = Object.fromEntries(
+        Object.keys(APPOINTMENT_CONTENT_COLORS).map((content) => [content, 0]),
+      ) as Record<string, number>;
+
+      atendimentos?.content?.forEach((atendimento) => {
+        counts[atendimento.tipo] = (counts[atendimento.tipo] ?? 0) + 1;
+      });
+
+      return counts;
+    },
+    [atendimentos],
   );
 
   const totalAppointments = useMemo(
@@ -47,20 +50,24 @@ export function AtendimentoContentLegend({
         <p className="text-sm text-error">Não foi possível carregar a distribuição.</p>
       ) : (
         <div className="flex flex-wrap gap-3">
-          {Object.entries(APPOINTMENT_CONTENT_COLORS).map(([content, color]) => (
-            <div
-              key={content}
-              className="flex items-center gap-2 rounded-lg border border-base-300 px-2 py-1 text-sm font-medium text-base-content/75"
-            >
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: color.backgroundColor }}
-              />
-              <span>
-                {EventContentLabels[content] ?? content} : {countByContent[content] ?? 0}
-              </span>
-            </div>
-          ))}
+          {Object.entries(APPOINTMENT_CONTENT_COLORS).map(([content, color]) => {
+            const tipo = content as AtendimentoResponseDTO["tipo"];
+
+            return (
+              <div
+                key={content}
+                className="flex items-center gap-2 rounded-lg border border-base-300 px-2 py-1 text-sm font-medium text-base-content/75"
+              >
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: color.backgroundColor }}
+                />
+                <span>
+                  {tipoAtendimentoLabels[tipo] ?? content} : {countByContent[content] ?? 0}
+                </span>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

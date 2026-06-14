@@ -1,7 +1,6 @@
-import { ButtonLink } from "@/components/ui/button";
-import type { AlunoFormSchema } from "@/features/alunos/lib/studentFormSchema.ts";
+import type { AlunoFormSchema } from "@/features/alunos/lib/aluno-form-schema";
 import { useListResponsaveis } from "@/kubb";
-import { TriangleAlert, UserPlus } from "lucide-react";
+import { TriangleAlert } from "lucide-react";
 import {
   Controller,
   type Control
@@ -25,16 +24,14 @@ export function ResponsavelSelectDropdown({
     <fieldset className={`fieldset ${className}`}>
       <legend className="fieldset-legend w-full flex flex-row justify-between items-center">
         {label}
-        <div className="tooltip flex" data-tip={"Novo Responsável"}>
-          <ButtonLink to="/parents/new" variant="success" className="btn-xs flex">
-            <UserPlus className="w-5 h-3" />
-          </ButtonLink>
-        </div>
+        <span className="text-xs font-normal text-base-content/60">
+          Cadastre novos responsáveis na página de responsáveis.
+        </span>
       </legend>
 
       <Controller
         control={control}
-        name="parentId"
+            name="responsavelId"
         render={({ field }) => (
           <select
             className="select select-bordered w-full"
@@ -45,7 +42,7 @@ export function ResponsavelSelectDropdown({
             <option value="">Selecione um responsável</option>
             {responsavels?.map((responsavel) => (
               <option key={responsavel.id} value={responsavel.id}>
-                {responsavel.name}
+                {responsavel.nome}
               </option>
             ))}
           </select>

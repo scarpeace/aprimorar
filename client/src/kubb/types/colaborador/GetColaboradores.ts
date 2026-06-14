@@ -3,10 +3,25 @@
  * Do not edit manually.
  */
 
-import type { ColaboradoresResponseDTO } from "../ColaboradoresResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
+import type { PagedModelColaboradorResponseDTO } from "../PagedModelColaboradorResponseDTO.ts";
 
 export type GetColaboradoresQueryParams = {
+  /**
+   * @type string | undefined
+   */
+  nome?: string;
+  /**
+   * @type string | undefined
+   */
+  email?: string;
+  /**
+   * @type string | undefined
+   */
+  cpf?: string;
+  /**
+   * @type boolean | undefined
+   */
+  ativos?: boolean;
   /**
    * @description Zero-based page index (0..N)
    * @minLength 0
@@ -26,35 +41,17 @@ export type GetColaboradoresQueryParams = {
    * @type array | undefined
    */
   sort?: string[];
-  /**
-   * @type string | undefined
-   */
-  busca?: string;
-  /**
-   * @type boolean | undefined
-   */
-  arquivado?: boolean;
 };
 
 /**
  * @description Lista de colaboradores retornada com sucesso.
  */
-export type GetColaboradores200 = ColaboradoresResponseDTO;
-
-/**
- * @description Parâmetros inválidos
- */
-export type GetColaboradores400 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type GetColaboradores500 = ProblemResponseDTO;
+export type GetColaboradores200 = PagedModelColaboradorResponseDTO;
 
 export type GetColaboradoresQueryResponse = GetColaboradores200;
 
 export type GetColaboradoresQuery = {
   Response: GetColaboradores200;
   QueryParams: GetColaboradoresQueryParams;
-  Errors: GetColaboradores400 | GetColaboradores500;
+  Errors: any;
 };

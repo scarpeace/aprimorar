@@ -4,16 +4,16 @@
  */
 
 /**
- * @description Formato de payload para obter opções de colaboradores
+ * @description Resumo de alunos cadastrados
  */
 export type AlunosKpisDTO = {
   /**
-   * @description ID do funcionário
+   * @description Total de alunos cadastrados
    * @type integer | undefined, int64
    */
   totalAlunos?: number;
   /**
-   * @description Total de colaboradores ativos
+   * @description Total de alunos ativos
    * @type integer | undefined, int64
    */
   totalAlunosAtivos?: number;

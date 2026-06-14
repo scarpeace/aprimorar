@@ -1,0 +1,80 @@
+package aprimorar.pessoas.service;
+
+import aprimorar.pessoas.domain.Colaborador;
+import aprimorar.pessoas.dto.ColaboradorFiltroRequest;
+import aprimorar.pessoas.api.ColaboradorResponseDTO;
+import aprimorar.pessoas.dto.ColaboradoresKpisDTO;
+import aprimorar.pessoas.dto.ColaboradoresListDTO;
+import aprimorar.pessoas.api.ColaboradorQueryApi;
+import aprimorar.pessoas.repository.ColaboradorRepository;
+import aprimorar.pessoas.repository.specifications.ColaboradorSpecifications;
+import aprimorar.pessoas.shared.FuncoesColaborador;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import aprimorar.shared.exception.BusinessException;
+
+@Service
+public class ColaboradorQueryService implements ColaboradorQueryApi {
+
+    private static final Logger log = LoggerFactory.getLogger(ColaboradorQueryService.class);
+
+    private final ColaboradorRepository colaboradorRepo;
+
+    public ColaboradorQueryService(ColaboradorRepository colaboradorRepo) {
+        this.colaboradorRepo = colaboradorRepo;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ColaboradorResponseDTO> getColaboradores(ColaboradorFiltroRequest filtro, Pageable pageable) {
+        Specification<Colaborador> spec = ColaboradorSpecifications.comFiltros(filtro);
+        Page<Colaborador> colaboradoresPage = colaboradorRepo.findAll(spec, pageable);
+        Page<ColaboradorResponseDTO> colaboradoresDtoPage = colaboradoresPage.map(ColaboradorResponseDTO::toDto);
+
+        log.info("Consulta de colaboradores finalizada, {} registros encontrados.", colaboradoresPage.getTotalElements());
+        return colaboradoresDtoPage;
+    }
+
+    @Transactional(readOnly = true)
+    public ColaboradoresKpisDTO getColaboradoresKpis() {
+        long totalColaboradores = colaboradorRepo.countByFuncaoNot(FuncoesColaborador.SISTEMA);
+        long totalColaboradoresAtivos = colaboradorRepo.countByActiveTrueAndFuncaoNot(FuncoesColaborador.SISTEMA);
+        return new ColaboradoresKpisDTO(totalColaboradores, totalColaboradoresAtivos);
+    }
+
+    @Transactional(readOnly = true)
+    public ColaboradorResponseDTO findById(UUID colaboradorId) {
+        Colaborador colaborador = findByIdOrThrow(colaboradorId);
+        log.info("Colaborador {} consultado com sucesso.", colaborador.getNome().toUpperCase());
+        return ColaboradorResponseDTO.toDto(colaborador);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ColaboradoresListDTO> listColaboradores() {
+        return colaboradorRepo.findAllByFuncaoNotAndActiveTrueOrderByNomeAsc(FuncoesColaborador.SISTEMA)
+            .stream()
+            .map(e -> new ColaboradoresListDTO(e.getId(), e.getNome()))
+            .toList();
+    }
+
+    private Colaborador findByIdOrThrow(UUID colaboradorId) {
+        return colaboradorRepo
+            .findById(colaboradorId)
+            .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Colaborador não encontrado no banco de dados"));
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return colaboradorRepo.existsById(id);
+    }
+}

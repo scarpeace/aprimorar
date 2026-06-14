@@ -3,10 +3,21 @@
  * Do not edit manually.
  */
 
-import type { PageDTOResponsavelResponseDTO } from "../PageDTOResponsavelResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
+import type { PagedModelResponsavelResponseDTO } from "../PagedModelResponsavelResponseDTO.ts";
 
 export type GetResponsaveisQueryParams = {
+  /**
+   * @type string | undefined
+   */
+  nome?: string;
+  /**
+   * @type string | undefined
+   */
+  email?: string;
+  /**
+   * @type string | undefined
+   */
+  cpf?: string;
   /**
    * @description Zero-based page index (0..N)
    * @minLength 0
@@ -26,35 +37,17 @@ export type GetResponsaveisQueryParams = {
    * @type array | undefined
    */
   sort?: string[];
-  /**
-   * @type string | undefined
-   */
-  search?: string;
-  /**
-   * @type boolean | undefined
-   */
-  archived?: boolean;
 };
 
 /**
  * @description Lista de responsáveis retornada com sucesso.
  */
-export type GetResponsaveis200 = PageDTOResponsavelResponseDTO;
-
-/**
- * @description Parâmetros inválidos
- */
-export type GetResponsaveis400 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type GetResponsaveis500 = ProblemResponseDTO;
+export type GetResponsaveis200 = PagedModelResponsavelResponseDTO;
 
 export type GetResponsaveisQueryResponse = GetResponsaveis200;
 
 export type GetResponsaveisQuery = {
   Response: GetResponsaveis200;
   QueryParams: GetResponsaveisQueryParams;
-  Errors: GetResponsaveis400 | GetResponsaveis500;
+  Errors: any;
 };

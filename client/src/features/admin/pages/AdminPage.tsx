@@ -1,5 +1,6 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
@@ -34,17 +35,15 @@ export function AdminPage() {
         <UsuariosTable />
       </section>
 
-      {isFormOpen ? (
-        <div className="modal modal-open">
-          <div className="modal-box max-w-xl border border-base-300 bg-base-100 shadow-2xl">
-            <h3 className="mb-1 text-lg font-bold">Cadastrar novo usuario</h3>
-            <p className="mb-4 text-sm text-base-content/60">
-              Defina e-mail, senha e perfil para liberar acesso ao sistema.
-            </p>
-            <UsuarioForm onSuccess={() => setIsFormOpen(false)} onCancel={() => setIsFormOpen(false)} />
-          </div>
-        </div>
-      ) : null}
+      <Modal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        title="Cadastrar novo usuario"
+        description="Defina e-mail, senha e perfil para liberar acesso ao sistema."
+        size="sm"
+      >
+        <UsuarioForm onSuccess={() => setIsFormOpen(false)} onCancel={() => setIsFormOpen(false)} />
+      </Modal>
     </PageLayout>
   );
 }

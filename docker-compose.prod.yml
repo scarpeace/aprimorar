@@ -1,20 +1,20 @@
-# Docker compose para referencia do que está rodando em produção, não funciona local
+# # Docker compose para referencia do que está rodando em produção, não funciona local
 
-services:
-  backend:
-    image: registry.gitlab.com/scarpellini1/aprimorar/server:latest
-    restart: always
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
-    expose:
-      - "8080"
+# services:
+#   backend:
+#     image: registry.gitlab.com/scarpellini1/aprimorar/server:latest
+#     restart: always
+#     environment:
+#       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+#       SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+#       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+#     expose:
+#       - "8080"
 
-  frontend:
-    image: registry.gitlab.com/scarpellini1/aprimorar/client:latest
-    restart: always
-    expose:
-      - "80"
-    depends_on:
-      - backend
+#   frontend:
+#     image: registry.gitlab.com/scarpellini1/aprimorar/client:latest
+#     restart: always
+#     expose:
+#       - "80"
+#     depends_on:
+#       - backend

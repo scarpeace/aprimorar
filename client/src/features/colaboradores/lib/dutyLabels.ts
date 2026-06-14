@@ -1,9 +1,9 @@
-import { colaboradorResponseDTODutyEnum } from "@/kubb";
+import { colaboradorResponseDTOFuncaoEnum } from "@/kubb";
 
-export const dutyLabels: Record<keyof typeof colaboradorResponseDTODutyEnum, string> = {
-  TEACHER: "Professor",
-  ADM: "Administrativo",
-  THERAPIST: "Terapeuta",
+export const dutyLabels: Record<keyof typeof colaboradorResponseDTOFuncaoEnum, string> = {
+  PROFESSOR: "Professor",
+  ADMINISTRATIVO: "Administrativo",
+  TERAPEUTA: "Terapeuta",
   MENTOR: "Mentor",
-  SYSTEM: "Sistema",
+  SISTEMA: "Sistema",
 } as const;

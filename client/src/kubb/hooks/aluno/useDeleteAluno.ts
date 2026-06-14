@@ -7,9 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   DeleteAlunoMutationResponse,
   DeleteAlunoPathParams,
-  DeleteAluno404,
-  DeleteAluno409,
-  DeleteAluno500,
 } from "../../types/aluno/DeleteAluno.ts";
 import type {
   Client,
@@ -24,25 +21,25 @@ import type {
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const deleteAlunoMutationKey = () =>
-  [{ url: "/v1/alunos/:studentId" }] as const;
+  [{ url: "/v1/alunos/:alunoId" }] as const;
 
 export type DeleteAlunoMutationKey = ReturnType<typeof deleteAlunoMutationKey>;
 
 /**
  * @description Deleta um aluno por ID.
- * {@link /v1/alunos/:studentId}
+ * {@link /v1/alunos/:alunoId}
  */
 export async function deleteAluno(
-  studentId: DeleteAlunoPathParams["studentId"],
+  alunoId: DeleteAlunoPathParams["alunoId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
     DeleteAlunoMutationResponse,
-    ResponseErrorConfig<DeleteAluno404 | DeleteAluno409 | DeleteAluno500>,
+    ResponseErrorConfig<Error>,
     unknown
-  >({ method: "DELETE", url: `/v1/alunos/${studentId}`, ...requestConfig });
+  >({ method: "DELETE", url: `/v1/alunos/${alunoId}`, ...requestConfig });
   return res.data;
 }
 
@@ -52,27 +49,27 @@ export function deleteAlunoMutationOptions<TContext = unknown>(
   const mutationKey = deleteAlunoMutationKey();
   return mutationOptions<
     DeleteAlunoMutationResponse,
-    ResponseErrorConfig<DeleteAluno404 | DeleteAluno409 | DeleteAluno500>,
-    { studentId: DeleteAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: DeleteAlunoPathParams["alunoId"] },
     TContext
   >({
     mutationKey,
-    mutationFn: async ({ studentId }) => {
-      return deleteAluno(studentId, config);
+    mutationFn: async ({ alunoId }) => {
+      return deleteAluno(alunoId, config);
     },
   });
 }
 
 /**
  * @description Deleta um aluno por ID.
- * {@link /v1/alunos/:studentId}
+ * {@link /v1/alunos/:alunoId}
  */
 export function useDeleteAluno<TContext>(
   options: {
     mutation?: UseMutationOptions<
       DeleteAlunoMutationResponse,
-      ResponseErrorConfig<DeleteAluno404 | DeleteAluno409 | DeleteAluno500>,
-      { studentId: DeleteAlunoPathParams["studentId"] },
+      ResponseErrorConfig<Error>,
+      { alunoId: DeleteAlunoPathParams["alunoId"] },
       TContext
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
@@ -84,15 +81,15 @@ export function useDeleteAluno<TContext>(
 
   const baseOptions = deleteAlunoMutationOptions(config) as UseMutationOptions<
     DeleteAlunoMutationResponse,
-    ResponseErrorConfig<DeleteAluno404 | DeleteAluno409 | DeleteAluno500>,
-    { studentId: DeleteAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: DeleteAlunoPathParams["alunoId"] },
     TContext
   >;
 
   return useMutation<
     DeleteAlunoMutationResponse,
-    ResponseErrorConfig<DeleteAluno404 | DeleteAluno409 | DeleteAluno500>,
-    { studentId: DeleteAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: DeleteAlunoPathParams["alunoId"] },
     TContext
   >(
     {
@@ -103,8 +100,8 @@ export function useDeleteAluno<TContext>(
     queryClient,
   ) as UseMutationResult<
     DeleteAlunoMutationResponse,
-    ResponseErrorConfig<DeleteAluno404 | DeleteAluno409 | DeleteAluno500>,
-    { studentId: DeleteAlunoPathParams["studentId"] },
+    ResponseErrorConfig<Error>,
+    { alunoId: DeleteAlunoPathParams["alunoId"] },
     TContext
   >;
 }

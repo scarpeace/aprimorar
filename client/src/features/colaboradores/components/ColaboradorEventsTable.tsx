@@ -1,49 +1,48 @@
-import type { AtendimentoResponseDTO, PageDTOAtendimentoResponseDTO } from "@/kubb";
+import { ButtonLink } from "@/components/ui/button";
 import { EmptyCard } from "@/components/ui/empty-card";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { ErrorCard } from "@/components/ui/error-card";
-import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { EventContentLabels } from "@/features/atendimentos/lib/eventContentLabels";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { useListAlunos, type AtendimentoResponseDTO, type PagedModelAtendimentoResponseDTO } from "@/kubb";
+import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
+import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
 import {
   Calendar,
-  CircleDollarSign,
   SquareArrowOutUpRight,
 } from "lucide-react";
 import { memo } from "react";
 
-interface ColaboradorEventsTableProps {
-  atendimentos?: PageDTOAtendimentoResponseDTO;
+type ColaboradorEventsTableProps = {
+  atendimentos?: PagedModelAtendimentoResponseDTO;
   currentPage: number;
   error?: unknown;
-  hidePaid: boolean;
   isLoading: boolean;
-  onHidePaidChange: (value: boolean) => void;
   onPageChange: (page: number) => void;
-}
+};
+
+const tipoLabels: Record<AtendimentoResponseDTO["tipo"], string> = {
+  AULA: "Aula",
+  MENTORIA: "Mentoria",
+  TERAPIA: "Terapia",
+  ORIENTACAO_VOCACIONAL: "Orientação Vocacional",
+  ENEM: "Enem",
+  PAS: "PAS",
+  OUTRO: "Outro",
+};
 
 export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
   atendimentos,
   currentPage,
   error,
-  hidePaid,
   isLoading,
-  onHidePaidChange,
   onPageChange,
-}: ColaboradorEventsTableProps) {
-  const { toggleEmployeePayment } = useAtendimentoMutations();
+}: Readonly<ColaboradorEventsTableProps>) {
+  const alunosQuery = useListAlunos();
   const events = atendimentos?.content ?? [];
-  const totalEvents = atendimentos?.totalElements ?? events.length;
-
-  const handleToggleEmployeePayment = (atendimentoId: string) => {
-    toggleEmployeePayment.mutate({ id: atendimentoId });
-  };
+  const totalEvents = atendimentos?.page?.totalElements ?? events.length;
 
   if (error) {
-    return <ErrorCard title="Não foi possível carregar a listagem de Eventos" error={error} />;
+    return <ErrorCard title="Não foi possível carregar a listagem de atendimentos" error={error} />;
   }
 
   if (isLoading) {
@@ -63,27 +62,13 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
             </h3>
             {events.length > 0 && (
               <span className="badge badge-outline badge-primary badge-sm font-semibold">
-                {totalEvents} {totalEvents === 1 ? "atendimentoo" : "atendimentoos"}
+                {totalEvents} {totalEvents === 1 ? "atendimento" : "atendimentos"}
               </span>
             )}
           </div>
           <p className="mt-1 text-sm text-base-content/60">
-            Acompanhe horarios, conteudos aplicados e o status dos repasses deste colaborador.
+            Acompanhe horários, tipos de atendimento e valores de repasse deste colaborador.
           </p>
-        </div>
-      </div>
-
-      <div className="shrink-0 rounded-2xl border border-info/20 bg-linear-to-r from-info/8 via-base-100 to-base-100 px-3 py-2 shadow-sm transition-all duration-200 hover:border-info/30 hover:shadow-md">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-            <CircleDollarSign className="w-4" />
-          </div>
-          <ToggleSwitch
-            toggled={hidePaid}
-            setToggle={onHidePaidChange}
-            label="Ocultar Pagos"
-            className="border-info/30 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
-          />
         </div>
       </div>
     </div>
@@ -96,7 +81,7 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
 
         <EmptyCard
           title="Nenhum atendimento encontrado"
-          description="Os atendimentoos vinculados ao colaborador aparecerao aqui assim que houver agendamentos registrados."
+          description="Os atendimentos vinculados ao colaborador aparecerão aqui assim que houver agendamentos registrados."
         />
       </section>
     );
@@ -112,72 +97,54 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
             <tr>
               <th className="font-bold text-base-content/70">Aluno</th>
               <th className="font-bold text-base-content/70">Data</th>
-              <th className="text-center font-bold text-base-content/70">Horario</th>
-              <th className="text-center font-bold text-base-content/70">Conteudo</th>
+              <th className="text-center font-bold text-base-content/70">Horário</th>
+              <th className="text-center font-bold text-base-content/70">Tipo</th>
               <th className="text-right font-bold text-base-content/70">Repasse</th>
-              <th className="text-center font-bold text-base-content/70 pr-6">Acoes</th>
+              <th className="text-center font-bold text-base-content/70 pr-6">Ações</th>
             </tr>
           </thead>
 
           <tbody className="whitespace-nowrap">
             {events.map((atendimento: AtendimentoResponseDTO) => (
-              <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
-                <td>
-                  <div className="font-semibold text-base-content">{atendimento.studentName}</div>
-                </td>
-                <td>{formatDateShortYear(atendimento.startDate)}</td>
-                <td className="text-center text-sm font-medium">
-                  {formatTime(atendimento.startDate)} - {formatTime(atendimento.endDate)}
-                </td>
-                <td className="text-center">
-                  <span className="badge badge-sm badge-outline font-bold uppercase text-[10px]">
-                    {EventContentLabels[atendimento.content] || atendimento.content}
-                  </span>
-                </td>
+                <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
+                  <td>
+                    <div className="font-semibold text-base-content">{getParticipantName(atendimento.alunoId, alunosQuery.data)}</div>
+                  </td>
+                  <td>{formatDateShortYear(atendimento.inicio)}</td>
+                  <td className="text-center text-sm font-medium">
+                    {formatTime(atendimento.inicio)} - {formatTime(atendimento.fim)}
+                  </td>
+                  <td className="text-center">
+                    <span className="badge badge-sm badge-outline font-bold uppercase text-[10px]">
+                      {tipoLabels[atendimento.tipo] ?? atendimento.tipo}
+                    </span>
+                  </td>
 
-                <td className="text-right">
-                  <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
-                    <span
-                      className={`inline-block h-2.5 w-2.5 rounded-full ${atendimento.employeePaymentDate ? "bg-success" : "bg-warning"}`}
-                      title={atendimento.employeePaymentDate ? "Pago" : "Pendente"}
-                    />
-                    <span>{brl.format(atendimento.payment)}</span>
-                  </div>
-                </td>
+                  <td className="text-right">
+                    <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
+                      <span>{brl.format(atendimento.repasse)}</span>
+                    </div>
+                  </td>
 
-                <td className="relative z-20 text-center">
-                  <div className="flex justify-center gap-1.5 opacity-80 transition-opacity group-hover:opacity-100">
-                    <div
-                      className="tooltip tooltip-left z-30 before:z-30 after:z-30"
-                      data-tip={atendimento.employeePaymentDate != null ? "Cancelar Pagamento" : "Marcar como Pago"}
-                    >
-                      <Button
-                        disabled={toggleEmployeePayment.isPending}
-                        className="h-9 w-9 p-0"
-                        size="sm"
-                        variant={atendimento.employeePaymentDate != null ? "success" : "warning"}
-                        onClick={() => handleToggleEmployeePayment(atendimento.id)}
-                      >
-                        <CircleDollarSign size={18} />
-                      </Button>
+                  <td className="relative z-20 text-center">
+                    <div className="flex justify-center gap-1.5 opacity-80 transition-opacity group-hover:opacity-100">
+                      <div className="tooltip tooltip-left z-30 before:z-30 after:z-30" data-tip="Detalhes">
+                        <ButtonLink to={`/atendimentos/${atendimento.id}`} size="sm" className="h-9 w-9 p-0" variant="primary">
+                          <SquareArrowOutUpRight size={18} />
+                        </ButtonLink>
+                      </div>
                     </div>
-                    <div className="tooltip tooltip-left z-30 before:z-30 after:z-30" data-tip="Detalhes">
-                      <ButtonLink to={`/appointments/${atendimento.id}`} size="sm" className="h-9 w-9 p-0" variant="primary">
-                        <SquareArrowOutUpRight size={18} />
-                      </ButtonLink>
-                    </div>
-                  </div>
-                </td>
-              </tr>
+                  </td>
+                </tr>
             ))}
           </tbody>
         </table>
       </div>
 
       <Pagination
-        size={atendimentos?.size ?? 0}
-        totalElements={atendimentos?.totalElements ?? 0}
-        totalPages={atendimentos?.totalPages ?? 0}
+        size={atendimentos?.page?.size ?? 0}
+        totalElements={atendimentos?.page?.totalElements ?? 0}
+        totalPages={atendimentos?.page?.totalPages ?? 0}
         currentPage={currentPage}
         onPageChange={onPageChange}
       />

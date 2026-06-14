@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { BellElectric, FileUser, Plus, UserCheck, UserCircle } from "lucide-react";
+import { BellElectric, Plus } from "lucide-react";
 import type { AtendimentoResponseDTO } from "@/kubb";
 import { AtendimentoForm } from "../components/AtendimentoForm";
 import { AtendimentosTable } from "../components/AtendimentosTable";
-import { KpiCard } from "@/components/ui/kpi-card";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter";
 
 export function AtendimentosPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<AtendimentoResponseDTO | null>(null);
+  const [selectedAtendimento, setSelectedAtendimento] = useState<AtendimentoResponseDTO | null>(null);
   const { startDate, endDate, ...dateFilter } = usePageDateFilter();
 
 
@@ -19,56 +19,22 @@ export function AtendimentosPage() {
     description: "Gerencie aulas e atendimentos.",
     title: "Atendimentos",
     Icon: BellElectric,
-    backLink: "/",
     iconBg: "accent",
   } as const;
 
   const handleOpenForm = (atendimento?: AtendimentoResponseDTO) => {
-    setSelectedEvent(atendimento || null);
+    setSelectedAtendimento(atendimento || null);
     setIsFormOpen(true);
   };
 
   const handleCloseForm = () => {
-    setSelectedEvent(null);
+    setSelectedAtendimento(null);
     setIsFormOpen(false);
   };
 
   return (
     <PageLayout {...headerProps}>
       <div className="flex w-full flex-col gap-3">
-        <section className="rounded-2xl bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          <div className="flex flex-row justify-between items-center gap-3">
-            <div>
-              <h3 className="text-2xl font-bold text-base-content">Resumo dos Atendimentos</h3>
-              <p className="text-sm text-base-content/60">
-                Visão geral dos atendimentos por status e total.
-              </p>
-            </div>
-
-            <div className="flex gap-3">
-              <KpiCard
-                label="Total Pendentes"
-                value={10}
-                Icon={UserCheck}
-                className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-              />
-
-              <KpiCard
-                label="Total Pagos"
-                value={10}
-                Icon={UserCheck}
-                className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-              />
-              <KpiCard
-                label="Total Desde o início"
-                value={10}
-                Icon={UserCircle}
-                className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-              />
-            </div>
-          </div>
-        </section>
-
           <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
             <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -88,23 +54,19 @@ export function AtendimentosPage() {
           </section>
 
 
-        {isFormOpen && (
-          <div className="modal modal-open">
-            <div className="modal-box max-w-4xl border border-base-300 bg-base-100 shadow-2xl">
-              <h3 className="mb-1 text-lg font-bold">
-                {selectedEvent ? "Editar Atendimento" : "Cadastrar Novo Atendimento"}
-              </h3>
-              <p className="mb-4 text-sm text-base-content/60">
-                Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados.
-              </p>
-              <AtendimentoForm
-                initialData={selectedEvent}
-                onSuccess={handleCloseForm}
-                onCancel={handleCloseForm}
-              />
-            </div>
-          </div>
-        )}
+        <Modal
+          isOpen={isFormOpen}
+          onClose={handleCloseForm}
+          title={selectedAtendimento ? "Editar Atendimento" : "Cadastrar Novo Atendimento"}
+          description="Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados."
+          size="lg"
+        >
+          <AtendimentoForm
+            initialData={selectedAtendimento}
+            onSuccess={handleCloseForm}
+            onCancel={handleCloseForm}
+          />
+        </Modal>
       </div>
 
       <PageDateFilterWidget startDate={startDate} endDate={endDate} {...dateFilter} />

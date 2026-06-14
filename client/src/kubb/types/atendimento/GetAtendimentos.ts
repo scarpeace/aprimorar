@@ -3,8 +3,7 @@
  * Do not edit manually.
  */
 
-import type { PageDTOAtendimentoResponseDTO } from "../PageDTOAtendimentoResponseDTO.ts";
-import type { ProblemResponseDTO } from "../ProblemResponseDTO.ts";
+import type { PagedModelAtendimentoResponseDTO } from "../PagedModelAtendimentoResponseDTO.ts";
 
 export type GetAtendimentosQueryParams = {
   /**
@@ -29,44 +28,42 @@ export type GetAtendimentosQueryParams = {
   /**
    * @type string | undefined
    */
-  search?: string;
+  busca?: string;
   /**
    * @type string | undefined, date-time
    */
-  startDate?: string;
+  inicio?: string;
   /**
    * @type string | undefined, date-time
    */
-  endDate?: string;
+  fim?: string;
   /**
    * @type boolean | undefined
    */
-  hideCharged?: boolean;
+  ocultarCobrados?: boolean;
   /**
    * @type boolean | undefined
    */
-  hidePaid?: boolean;
+  ocultarPagos?: boolean;
+  /**
+   * @type string | undefined, uuid
+   */
+  colaboradorId?: string;
+  /**
+   * @type string | undefined, uuid
+   */
+  alunoId?: string;
 };
 
 /**
  * @description Pagina de atendimentos retornada conforme os filtros informados.
  */
-export type GetAtendimentos200 = PageDTOAtendimentoResponseDTO;
-
-/**
- * @description Parâmetros inválidos
- */
-export type GetAtendimentos400 = ProblemResponseDTO;
-
-/**
- * @description Erro interno do sistema
- */
-export type GetAtendimentos500 = ProblemResponseDTO;
+export type GetAtendimentos200 = PagedModelAtendimentoResponseDTO;
 
 export type GetAtendimentosQueryResponse = GetAtendimentos200;
 
 export type GetAtendimentosQuery = {
   Response: GetAtendimentos200;
   QueryParams: GetAtendimentosQueryParams;
-  Errors: GetAtendimentos400 | GetAtendimentos500;
+  Errors: any;
 };

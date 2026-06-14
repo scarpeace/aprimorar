@@ -1,56 +1,39 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
-import { KpiCard } from "@/components/ui/kpi-card";
+import { Modal } from "@/components/ui/modal";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
-import { brl } from "@/lib/utils/formatter";
 import {
   useGetAlunoById,
-  useGetAtendimentosByAluno,
+  useGetAtendimentos,
 } from "@/kubb";
 import {
-  Calendar,
-  CircleDollarSign,
-  Clock3,
   GraduationCap,
 } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AlunoEventsTable } from "../components/AlunoEventsTable";
 import { AlunoForm } from "../components/AlunoForm";
 import { AlunoInfoSection } from "../components/AlunoInfoSection";
 
-const HEADER_PROPS = {
-  description: "Veja e gerencie as informações do aluno",
-  title: "Detalhes do aluno",
-  Icon: GraduationCap,
-  backLink: "/alunos",
-  iconBg: "success",
-} as const;
-
 export function AlunoDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const studentId = id ?? "";
+  const alunoId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const [hideCharged, setHideCharged] = useState(false);
+  const navigate = useNavigate();
 
-  const alunoQuery = useGetAlunoById(studentId);
+  const alunoQuery = useGetAlunoById(alunoId);
 
   const dateFilter = usePageDateFilter();
   const { startDate, endDate } = dateFilter;
 
-  const alunoAppointments = useGetAtendimentosByAluno(studentId, {
+  const alunoAppointments = useGetAtendimentos({
+    alunoId,
     page: currentPage,
-    sort: ["endDate,desc", "id,asc"],
-    startDate: startDate?.toISOString(),
-    endDate: endDate?.toISOString(),
-    charged: hideCharged ? false : undefined,
+    sort: ["fim,desc", "id,asc"],
+    inicio: startDate?.toISOString(),
+    fim: endDate?.toISOString(),
   });
-
-  const handleToggleHideCharged = (value: boolean) => {
-    setHideCharged(value);
-    setCurrentPage(0);
-  };
 
   const handleOpenForm = () => {
     setIsFormOpen(true);
@@ -60,63 +43,48 @@ export function AlunoDetailPage() {
     setIsFormOpen(false);
   };
 
+  const headerProps = {
+    description: "Veja e gerencie as informações do aluno",
+    title: "Detalhes do aluno",
+    Icon: GraduationCap,
+    iconBg: "success",
+  } as const;
+
   return (
-    <PageLayout {...HEADER_PROPS}>
+    <PageLayout {...headerProps}>
       <div className="mb-3">
         <AlunoInfoSection
-          studentId={studentId}
+          alunoId={alunoId}
           onEdit={handleOpenForm}
         />
       </div>
 
-      <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <KpiCard
-            label="Total de Atendimentos"
-            value={alunoAppointments.data?.summary?.totalAtendimentos}
-            Icon={Calendar}
-          />
-
-          <KpiCard
-            label="Total pago"
-            value={<span className="text-success">{brl.format(alunoAppointments.data?.summary?.totalCharged ?? 0)}</span>}
-            Icon={CircleDollarSign}
-            className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-          />
-
-          <KpiCard
-            label="Total pendente"
-            value={<span className="text-warning">{brl.format(alunoAppointments.data?.summary?.totalPending ?? 0)}</span>}
-            Icon={Clock3}
-            className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
-          />
-        </div>
-      </div>
-
       <div className="animate-[fade-up_600ms_ease-out_both]">
         <AlunoEventsTable
-          atendimentos={alunoAppointments.data?.atendimentos}
+          atendimentos={alunoAppointments.data}
           error={alunoAppointments.error}
-          hideCharged={hideCharged}
           isLoading={alunoAppointments.isLoading}
           currentPage={currentPage}
-          onHideChargedChange={handleToggleHideCharged}
           onPageChange={setCurrentPage}
         />
       </div>
 
-      {isFormOpen && (
-        <div className="modal modal-open">
-          <div className="modal-box max-w-4xl overflow-hidden">
-            <h3 className="font-bold text-lg mb-4">Editar Aluno</h3>
-            <AlunoForm
-              initialData={alunoQuery.data}
-              onSuccess={handleCloseForm}
-              onCancel={handleCloseForm}
-            />
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isFormOpen}
+        onClose={handleCloseForm}
+        title="Editar Aluno"
+        description="Atualize os dados do aluno para manter o cadastro consistente."
+        size="lg"
+      >
+        <AlunoForm
+          initialData={alunoQuery.data}
+          onSuccess={() => {
+            handleCloseForm();
+            navigate(`/alunos/${alunoId}`);
+          }}
+          onCancel={handleCloseForm}
+        />
+      </Modal>
 
       <PageDateFilterWidget {...dateFilter} />
     </PageLayout>

@@ -11,17 +11,17 @@ export type ResponsavelResponseDTO = {
    * @description ID do responsável
    * @type string, uuid
    */
-  parentId: string;
+  id: string;
   /**
    * @description Nome do responsável
    * @type string
    */
-  name: string;
+  nome: string;
   /**
    * @description Data de nascimento do responsável
    * @type string, date
    */
-  birthdate?: string | null;
+  dataNascimento?: string | null;
   /**
    * @description CPF do responsável
    * @type string
@@ -31,29 +31,19 @@ export type ResponsavelResponseDTO = {
    * @description Contato do responsável
    * @type string
    */
-  contact: string;
+  telefone: string;
   /**
    * @description Email do responsável
    * @type string
    */
   email: string;
   /**
-   * @description Pix do Responsável
-   * @type string
-   */
-  pix?: string | null;
-  /**
-   * @description Indica se o responsável está ativo
-   * @type boolean
-   */
-  active?: boolean | null;
-  /**
-   * @description Data e hora quando o aluno foi criado
+   * @description Data e hora quando o responsável foi criado
    * @type string, date-time
    */
   createdAt: string;
   /**
-   * @description Data e hora quando o aluno foi atualizado
+   * @description Data e hora quando o responsável foi atualizado
    * @type string, date-time
    */
   updatedAt?: string | null;

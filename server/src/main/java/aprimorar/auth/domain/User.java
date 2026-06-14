@@ -18,7 +18,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Entity
-@Table(name = "tb_users")
+@Table(name = "users")
 public class User {
 
     @Id

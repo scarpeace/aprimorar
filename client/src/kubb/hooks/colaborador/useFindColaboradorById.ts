@@ -7,8 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   FindColaboradorByIdQueryResponse,
   FindColaboradorByIdPathParams,
-  FindColaboradorById404,
-  FindColaboradorById500,
 } from "../../types/colaborador/FindColaboradorById.ts";
 import type {
   Client,
@@ -49,7 +47,7 @@ export async function findColaboradorById(
 
   const res = await request<
     FindColaboradorByIdQueryResponse,
-    ResponseErrorConfig<FindColaboradorById404 | FindColaboradorById500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
@@ -66,7 +64,7 @@ export function findColaboradorByIdQueryOptions(
   const queryKey = findColaboradorByIdQueryKey(colaboradorId);
   return queryOptions<
     FindColaboradorByIdQueryResponse,
-    ResponseErrorConfig<FindColaboradorById404 | FindColaboradorById500>,
+    ResponseErrorConfig<Error>,
     FindColaboradorByIdQueryResponse,
     typeof queryKey
   >({
@@ -95,7 +93,7 @@ export function useFindColaboradorById<
     query?: Partial<
       QueryObserverOptions<
         FindColaboradorByIdQueryResponse,
-        ResponseErrorConfig<FindColaboradorById404 | FindColaboradorById500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -116,10 +114,9 @@ export function useFindColaboradorById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<
-    TData,
-    ResponseErrorConfig<FindColaboradorById404 | FindColaboradorById500>
-  > & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

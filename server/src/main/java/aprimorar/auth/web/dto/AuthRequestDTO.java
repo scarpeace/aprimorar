@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-@Schema(description = "Payload de autenticacao")
+@Schema(description = "Payload de autenticação")
 public record AuthRequestDTO(
     @NotBlank(message = "E-mail é obrigatório")
     @Email(message = "E-mail deve ser um endereço de e-mail válido")

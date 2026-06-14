@@ -14,7 +14,7 @@ export type UserRequestDTORoleEnumKey =
   (typeof userRequestDTORoleEnum)[keyof typeof userRequestDTORoleEnum];
 
 /**
- * @description Payload para criacao de usuario
+ * @description Payload para criação de usuário
  */
 export type UserRequestDTO = {
   /**
@@ -25,7 +25,8 @@ export type UserRequestDTO = {
   username: string;
   /**
    * @description Senha
-   * @minLength 1
+   * @minLength 6
+   * @maxLength 2147483647
    * @type string
    */
   password: string;

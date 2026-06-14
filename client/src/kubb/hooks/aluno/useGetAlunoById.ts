@@ -7,8 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetAlunoByIdQueryResponse,
   GetAlunoByIdPathParams,
-  GetAlunoById404,
-  GetAlunoById500,
 } from "../../types/aluno/GetAlunoById.ts";
 import type {
   Client,
@@ -24,45 +22,44 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getAlunoByIdQueryKey = (
-  studentId: GetAlunoByIdPathParams["studentId"] | undefined,
-) =>
-  [{ url: "/v1/alunos/:studentId", params: { studentId: studentId } }] as const;
+  alunoId: GetAlunoByIdPathParams["alunoId"] | undefined,
+) => [{ url: "/v1/alunos/:alunoId", params: { alunoId: alunoId } }] as const;
 
 export type GetAlunoByIdQueryKey = ReturnType<typeof getAlunoByIdQueryKey>;
 
 /**
  * @description Retorna um aluno por ID.
- * {@link /v1/alunos/:studentId}
+ * {@link /v1/alunos/:alunoId}
  */
 export async function getAlunoById(
-  studentId: GetAlunoByIdPathParams["studentId"],
+  alunoId: GetAlunoByIdPathParams["alunoId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
     GetAlunoByIdQueryResponse,
-    ResponseErrorConfig<GetAlunoById404 | GetAlunoById500>,
+    ResponseErrorConfig<Error>,
     unknown
-  >({ method: "GET", url: `/v1/alunos/${studentId}`, ...requestConfig });
+  >({ method: "GET", url: `/v1/alunos/${alunoId}`, ...requestConfig });
   return res.data;
 }
 
 export function getAlunoByIdQueryOptions(
-  studentId: GetAlunoByIdPathParams["studentId"] | undefined,
+  alunoId: GetAlunoByIdPathParams["alunoId"] | undefined,
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = getAlunoByIdQueryKey(studentId);
+  const queryKey = getAlunoByIdQueryKey(alunoId);
   return queryOptions<
     GetAlunoByIdQueryResponse,
-    ResponseErrorConfig<GetAlunoById404 | GetAlunoById500>,
+    ResponseErrorConfig<Error>,
     GetAlunoByIdQueryResponse,
     typeof queryKey
   >({
-    enabled: !!studentId,
+    enabled: !!alunoId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getAlunoById(studentId!, {
+      return getAlunoById(alunoId!, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -72,19 +69,19 @@ export function getAlunoByIdQueryOptions(
 
 /**
  * @description Retorna um aluno por ID.
- * {@link /v1/alunos/:studentId}
+ * {@link /v1/alunos/:alunoId}
  */
 export function useGetAlunoById<
   TData = GetAlunoByIdQueryResponse,
   TQueryData = GetAlunoByIdQueryResponse,
   TQueryKey extends QueryKey = GetAlunoByIdQueryKey,
 >(
-  studentId: GetAlunoByIdPathParams["studentId"] | undefined,
+  alunoId: GetAlunoByIdPathParams["alunoId"] | undefined,
   options: {
     query?: Partial<
       QueryObserverOptions<
         GetAlunoByIdQueryResponse,
-        ResponseErrorConfig<GetAlunoById404 | GetAlunoById500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -95,19 +92,18 @@ export function useGetAlunoById<
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey = resolvedOptions?.queryKey ?? getAlunoByIdQueryKey(studentId);
+  const queryKey = resolvedOptions?.queryKey ?? getAlunoByIdQueryKey(alunoId);
 
   const query = useQuery(
     {
-      ...getAlunoByIdQueryOptions(studentId, config),
+      ...getAlunoByIdQueryOptions(alunoId, config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<
-    TData,
-    ResponseErrorConfig<GetAlunoById404 | GetAlunoById500>
-  > & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

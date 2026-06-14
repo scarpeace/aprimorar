@@ -7,8 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetResponsaveisQueryResponse,
   GetResponsaveisQueryParams,
-  GetResponsaveis400,
-  GetResponsaveis500,
 } from "../../types/responsavel/GetResponsaveis.ts";
 import type {
   Client,
@@ -42,7 +40,7 @@ export async function getResponsaveis(
 
   const res = await request<
     GetResponsaveisQueryResponse,
-    ResponseErrorConfig<GetResponsaveis400 | GetResponsaveis500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({ method: "GET", url: `/v1/responsaveis`, params, ...requestConfig });
   return res.data;
@@ -55,7 +53,7 @@ export function getResponsaveisQueryOptions(
   const queryKey = getResponsaveisQueryKey(params);
   return queryOptions<
     GetResponsaveisQueryResponse,
-    ResponseErrorConfig<GetResponsaveis400 | GetResponsaveis500>,
+    ResponseErrorConfig<Error>,
     GetResponsaveisQueryResponse,
     typeof queryKey
   >({
@@ -83,7 +81,7 @@ export function useGetResponsaveis<
     query?: Partial<
       QueryObserverOptions<
         GetResponsaveisQueryResponse,
-        ResponseErrorConfig<GetResponsaveis400 | GetResponsaveis500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -103,10 +101,9 @@ export function useGetResponsaveis<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<
-    TData,
-    ResponseErrorConfig<GetResponsaveis400 | GetResponsaveis500>
-  > & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 
