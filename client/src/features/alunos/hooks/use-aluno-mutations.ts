@@ -2,7 +2,7 @@ import {
   getAlunoByIdQueryKey,
   getAlunosByResponsavelQueryKey,
   getAlunosQueryKey,
-  getAtendimentosByAlunoQueryKey,
+  getAtendimentosQueryKey,
   listAlunosQueryKey,
   useArchiveAluno,
   useCriarAluno,
@@ -26,7 +26,7 @@ export function useAlunoMutations() {
 
   const invalidateAlunoDetail = (alunoId: string, responsavelId?: string) => {
     queryClient.invalidateQueries({ queryKey: getAlunoByIdQueryKey(alunoId) });
-    queryClient.invalidateQueries({ queryKey: getAtendimentosByAlunoQueryKey(alunoId) });
+    queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey({ alunoId }) });
 
     if (responsavelId) {
       queryClient.invalidateQueries({ queryKey: getAlunosByResponsavelQueryKey(responsavelId) });

@@ -3,11 +3,9 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetAtendimentos, useGetColaboradoresList, useListAlunos, type AtendimentoResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
-import { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
 import { useAtendimentosFilters } from "../hooks/use-atendimentos-filters";
 import { getParticipantName } from "../lib/atendimento-participant-labels";
 import { tipoAtendimentoLabels } from "../lib/tipo-atendimento-labels";
@@ -20,16 +18,11 @@ type AtendimentosTableProps = {
 
 export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosTableProps>) {
   const navigate = useNavigate();
-  const { alternarCobrancaAluno, alternarPagamentoColaborador } = useAtendimentoMutations();
 
   const {
     search,
-    hideCharged,
-    hidePaid,
     page,
     handleSearchChange,
-    handleHideChargedToggle,
-    handleHidePaidToggle,
     handlePageChange,
   } = useAtendimentosFilters();
 
@@ -40,23 +33,12 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
     fim: endDate?.toISOString(),
     sort: ["inicio,desc", "id,asc"],
     busca: search || undefined,
-    ocultarCobrados: hideCharged || undefined,
-    ocultarPagos: hidePaid || undefined,
   });
   const alunosQuery = useListAlunos();
   const colaboradoresQuery = useGetColaboradoresList();
 
   const events = eventsQuery.data?.content ?? [];
   const hasEvents = events.length > 0;
-  const isTogglePending = alternarCobrancaAluno.isPending || alternarPagamentoColaborador.isPending;
-
-  const handleToggleCharge = (id: string) => {
-    alternarCobrancaAluno.mutate({ id });
-  };
-
-  const handleTogglePayment = (id: string) => {
-    alternarPagamentoColaborador.mutate({ id });
-  };
 
   return (
     <>
@@ -68,22 +50,6 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
           value={search}
           onChange={handleSearchChange}
         />
-        <div className="flex gap-6">
-          <ToggleSwitch
-            label="Cobrança pendente"
-            toggled={hideCharged}
-            setToggle={handleHideChargedToggle}
-            tip="Mostrar apenas atendimentos onde o aluno ainda não foi cobrado"
-            className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
-          />
-          <ToggleSwitch
-            label="Pagamento pendente"
-            toggled={hidePaid}
-            setToggle={handleHidePaidToggle}
-            tip="Mostrar apenas atendimentos onde o colaborador ainda não foi pago"
-            className="border-warning/25 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
-          />
-        </div>
       </section>
 
       {eventsQuery.isError && (
@@ -113,7 +79,7 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
                     <th className="font-bold text-base-content/70">Data</th>
                     <th className="text-center font-bold text-base-content/70">Horário</th>
                     <th className="text-center font-bold text-base-content/70">Tipo</th>
-                    <th className="text-right font-bold text-base-content/70">Cobrança</th>
+                    <th className="text-right font-bold text-base-content/70">Valor</th>
                     <th className="text-right font-bold text-base-content/70">Repasse</th>
                   </tr>
                 </thead>
@@ -140,19 +106,11 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
                       </td>
                       <td className="text-right">
                         <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
-                          <span
-                            className={`inline-block h-2.5 w-2.5 rounded-full ${atendimento.dataCobrancaAluno ? "bg-success" : "bg-warning"}`}
-                            title={atendimento.dataCobrancaAluno ? "Cobrado" : "Pendente"}
-                          />
                           <span>{brl.format(atendimento.valor)}</span>
                         </div>
                       </td>
                       <td className="text-right">
                         <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
-                          <span
-                            className={`inline-block h-2.5 w-2.5 rounded-full ${atendimento.dataPagamentoColaborador ? "bg-success" : "bg-warning"}`}
-                            title={atendimento.dataPagamentoColaborador ? "Pago" : "Pendente"}
-                          />
                           <span>{brl.format(atendimento.repasse)}</span>
                         </div>
                       </td>
@@ -171,9 +129,6 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
                 alunoNome={getParticipantName(atendimento.alunoId, alunosQuery.data)}
                 colaboradorNome={getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}
                 index={index}
-                isPending={isTogglePending}
-                onToggleCharge={handleToggleCharge}
-                onTogglePayment={handleTogglePayment}
               />
             ))}
           </div>
@@ -181,9 +136,9 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
       )}
 
       <Pagination
-        size={eventsQuery.data?.size ?? 0}
-        totalElements={eventsQuery.data?.totalElements ?? 0}
-        totalPages={eventsQuery.data?.totalPages ?? 0}
+        size={eventsQuery.data?.page?.size ?? 0}
+        totalElements={eventsQuery.data?.page?.totalElements ?? 0}
+        totalPages={eventsQuery.data?.page?.totalPages ?? 0}
         currentPage={page}
         onPageChange={handlePageChange}
       />

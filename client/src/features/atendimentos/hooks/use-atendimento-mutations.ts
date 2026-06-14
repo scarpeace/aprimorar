@@ -1,14 +1,9 @@
 import {
   getAtendimentoByIdQueryKey,
-  getAtendimentosByAlunoQueryKey,
-  getAtendimentosByColaboradorQueryKey,
   getAtendimentosQueryKey,
-  getIndicadoresAtendimentosQueryKey,
-  useAlternarCobrancaAlunoAtendimento,
-  useAlternarPagamentoColaboradorAtendimento,
-  useCreateAtendimento,
-  useDeleteAtendimento,
-  useUpdateAtendimento,
+  useAgendarAtendimento,
+  useExcluirAtendimento,
+  useReagendarAtendimento,
 } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -21,22 +16,21 @@ export function useAtendimentoMutations() {
 
   const invalidateAtendimentos = () => {
     queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
-    queryClient.invalidateQueries({ queryKey: getIndicadoresAtendimentosQueryKey() });
   };
 
   const invalidateAtendimentoDetail = (atendimentoId: string, alunoId?: string, colaboradorId?: string) => {
     queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(atendimentoId) });
 
     if (alunoId) {
-      queryClient.invalidateQueries({ queryKey: getAtendimentosByAlunoQueryKey(alunoId) });
+      queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey({ alunoId }) });
     }
 
     if (colaboradorId) {
-      queryClient.invalidateQueries({ queryKey: getAtendimentosByColaboradorQueryKey(colaboradorId) });
+      queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey({ colaboradorId }) });
     }
   };
 
-  const createAtendimento = useCreateAtendimento({
+  const createAtendimento = useAgendarAtendimento({
     mutation: {
       onError: (error) => {
         toast.error(
@@ -57,7 +51,7 @@ export function useAtendimentoMutations() {
     },
   });
 
-  const updateAtendimento = useUpdateAtendimento({
+  const updateAtendimento = useReagendarAtendimento({
     mutation: {
       onError: (error) => {
         toast.error(
@@ -78,7 +72,7 @@ export function useAtendimentoMutations() {
     },
   });
 
-  const deleteAtendimento = useDeleteAtendimento({
+  const deleteAtendimento = useExcluirAtendimento({
     mutation: {
       onSuccess: (_, variables) => {
         toast.success("Atendimento excluído com sucesso");
@@ -95,51 +89,9 @@ export function useAtendimentoMutations() {
     },
   });
 
-  const alternarCobrancaAluno = useAlternarCobrancaAlunoAtendimento({
-    mutation: {
-      onSuccess: (updatedAtendimento, variables) => {
-        toast.success("Status da cobrança atualizado");
-        invalidateAtendimentos();
-        invalidateAtendimentoDetail(
-          variables.id,
-          updatedAtendimento.alunoId,
-          updatedAtendimento.colaboradorId,
-        );
-      },
-      onError: (error) => {
-        toast.error(
-          getFriendlyErrorMessage(error) ||
-            "Algo deu errado ao atualizar a cobrança",
-        );
-      },
-    },
-  });
-
-  const alternarPagamentoColaborador = useAlternarPagamentoColaboradorAtendimento({
-    mutation: {
-      onSuccess: (updatedAtendimento, variables) => {
-        toast.success("Status do pagamento atualizado");
-        invalidateAtendimentos();
-        invalidateAtendimentoDetail(
-          variables.id,
-          updatedAtendimento.alunoId,
-          updatedAtendimento.colaboradorId,
-        );
-      },
-      onError: (error) => {
-        toast.error(
-          getFriendlyErrorMessage(error) ||
-            "Algo deu errado ao atualizar o pagamento",
-        );
-      },
-    },
-  });
-
   return {
     createAtendimento,
     updateAtendimento,
     deleteAtendimento,
-    alternarCobrancaAluno,
-    alternarPagamentoColaborador,
   };
 }

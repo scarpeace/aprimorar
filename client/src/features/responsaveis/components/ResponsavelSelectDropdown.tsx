@@ -42,7 +42,7 @@ export function ResponsavelSelectDropdown({
             <option value="">Selecione um responsável</option>
             {responsavels?.map((responsavel) => (
               <option key={responsavel.id} value={responsavel.id}>
-                {responsavel.name}
+                {responsavel.nome}
               </option>
             ))}
           </select>

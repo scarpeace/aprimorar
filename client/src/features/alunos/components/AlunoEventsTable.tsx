@@ -3,21 +3,18 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { useGetColaboradoresList, type AtendimentoResponseDTO, type PageDTOAtendimentoResponseDTO } from "@/kubb";
+import { useGetColaboradoresList, type AtendimentoResponseDTO, type PagedModelAtendimentoResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
-import { Calendar, CircleDollarSign, SquareArrowOutUpRight } from "lucide-react";
+import { Calendar, SquareArrowOutUpRight } from "lucide-react";
 import { memo } from "react";
 import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
 import { AlunoAtendimentoMobileCard } from "./AlunoAtendimentoMobileCard";
 
 type AlunoEventsTableProps = {
-  atendimentos?: PageDTOAtendimentoResponseDTO;
+  atendimentos?: PagedModelAtendimentoResponseDTO;
   currentPage: number;
   error?: unknown;
-  hideCharged: boolean;
   isLoading: boolean;
-  onHideChargedChange: (value: boolean) => void;
   onPageChange: (page: number) => void;
 };
 
@@ -34,15 +31,13 @@ const tipoLabels: Record<AtendimentoResponseDTO["tipo"], string> = {
 export const AlunoEventsTable = memo(function AlunoEventsTable({
   atendimentos,
   error,
-  hideCharged,
   isLoading,
   currentPage,
-  onHideChargedChange,
   onPageChange,
 }: Readonly<AlunoEventsTableProps>) {
   const colaboradoresQuery = useGetColaboradoresList();
   const events = atendimentos?.content ?? [];
-  const totalEvents = atendimentos?.totalElements ?? events.length;
+  const totalEvents = atendimentos?.page?.totalElements ?? events.length;
 
   if (error) {
     return <ErrorCard title="Não foi possível carregar a listagem de atendimentos" error={error} />;
@@ -70,22 +65,8 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
             )}
           </div>
           <p className="mt-1 text-sm text-base-content/60">
-            Acompanhe horários, tipos de atendimento e status das cobranças registradas para este aluno.
+            Acompanhe horários, tipos de atendimento e valores registrados para este aluno.
           </p>
-        </div>
-      </div>
-
-      <div className="shrink-0 rounded-2xl border border-warning/20 bg-linear-to-r from-warning/8 via-base-100 to-base-100 px-3 py-2 shadow-sm transition-all duration-200 hover:border-warning/30 hover:shadow-md">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-warning/12 text-warning">
-            <CircleDollarSign className="w-4" />
-          </div>
-          <ToggleSwitch
-            toggled={hideCharged}
-            setToggle={onHideChargedChange}
-            label="Ocultar Cobrados"
-            className="border-warning/30 bg-base-100 shadow-sm checked:border-warning checked:bg-warning checked:text-warning-content"
-          />
         </div>
       </div>
     </div>
@@ -117,16 +98,13 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
                 <th className="font-bold text-base-content/70">Data</th>
                 <th className="text-center font-bold text-base-content/70">Horário</th>
                 <th className="text-center font-bold text-base-content/70">Tipo</th>
-                <th className="text-right font-bold text-base-content/70">Cobrança</th>
+                <th className="text-right font-bold text-base-content/70">Valor</th>
                 <th className="text-center font-bold text-base-content/70 pr-6">Ações</th>
               </tr>
             </thead>
 
             <tbody className="whitespace-nowrap">
-              {events.map((atendimento) => {
-                const isCharged = atendimento.dataCobrancaAluno != null;
-
-                return (
+              {events.map((atendimento: AtendimentoResponseDTO) => (
                   <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
                     <td>
                       <div className="font-semibold text-base-content">{getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}</div>
@@ -142,10 +120,6 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
                     </td>
                     <td className="text-right">
                       <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
-                        <span
-                          className={`inline-block h-2.5 w-2.5 rounded-full ${isCharged ? "bg-success" : "bg-warning"}`}
-                          title={isCharged ? "Cobrado" : "Pendente"}
-                        />
                         <span>{brl.format(atendimento.valor)}</span>
                       </div>
                     </td>
@@ -164,8 +138,7 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
                       </div>
                     </td>
                   </tr>
-                );
-              })}
+              ))}
             </tbody>
           </table>
         </div>
@@ -183,9 +156,9 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
       </div>
 
       <Pagination
-        size={atendimentos?.size ?? 0}
-        totalElements={atendimentos?.totalElements ?? 0}
-        totalPages={atendimentos?.totalPages ?? 0}
+        size={atendimentos?.page?.size ?? 0}
+        totalElements={atendimentos?.page?.totalElements ?? 0}
+        totalPages={atendimentos?.page?.totalPages ?? 0}
         currentPage={currentPage}
         onPageChange={onPageChange}
       />

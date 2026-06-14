@@ -1,17 +1,12 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
-import { KpiCard } from "@/components/ui/kpi-card";
 import { Modal } from "@/components/ui/modal";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
-import { brl } from "@/lib/utils/formatter";
 import {
   useGetAlunoById,
-  useGetAtendimentosByAluno,
+  useGetAtendimentos,
 } from "@/kubb";
 import {
-  Calendar,
-  CircleDollarSign,
-  Clock3,
   GraduationCap,
 } from "lucide-react";
 import { useState } from "react";
@@ -25,7 +20,6 @@ export function AlunoDetailPage() {
   const alunoId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const [hideCharged, setHideCharged] = useState(false);
   const navigate = useNavigate();
 
   const alunoQuery = useGetAlunoById(alunoId);
@@ -33,18 +27,13 @@ export function AlunoDetailPage() {
   const dateFilter = usePageDateFilter();
   const { startDate, endDate } = dateFilter;
 
-  const alunoAppointments = useGetAtendimentosByAluno(alunoId, {
+  const alunoAppointments = useGetAtendimentos({
+    alunoId,
     page: currentPage,
     sort: ["fim,desc", "id,asc"],
     inicio: startDate?.toISOString(),
     fim: endDate?.toISOString(),
-    cobrado: hideCharged ? false : undefined,
   });
-
-  const handleToggleHideCharged = (value: boolean) => {
-    setHideCharged(value);
-    setCurrentPage(0);
-  };
 
   const handleOpenForm = () => {
     setIsFormOpen(true);
@@ -70,38 +59,12 @@ export function AlunoDetailPage() {
         />
       </div>
 
-      <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <KpiCard
-            label="Total de Atendimentos"
-            value={alunoAppointments.data?.resumo?.totalAtendimentos}
-            Icon={Calendar}
-          />
-
-          <KpiCard
-            label="Total pago"
-            value={<span className="text-success">{brl.format(alunoAppointments.data?.resumo?.totalCobrado ?? 0)}</span>}
-            Icon={CircleDollarSign}
-            className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-          />
-
-          <KpiCard
-            label="Total pendente"
-            value={<span className="text-warning">{brl.format(alunoAppointments.data?.resumo?.totalPendente ?? 0)}</span>}
-            Icon={Clock3}
-            className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
-          />
-        </div>
-      </div>
-
       <div className="animate-[fade-up_600ms_ease-out_both]">
         <AlunoEventsTable
-          atendimentos={alunoAppointments.data?.atendimentos}
+          atendimentos={alunoAppointments.data}
           error={alunoAppointments.error}
-          hideCharged={hideCharged}
           isLoading={alunoAppointments.isLoading}
           currentPage={currentPage}
-          onHideChargedChange={handleToggleHideCharged}
           onPageChange={setCurrentPage}
         />
       </div>

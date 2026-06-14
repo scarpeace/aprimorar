@@ -7,13 +7,10 @@ import { LoadingCard } from "@/components/ui/loading-card";
 import { useGetAtendimentoById } from "@/kubb";
 import { Calendar, Edit } from "lucide-react";
 import { useParams } from "react-router-dom";
-import { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
 import { tipoAtendimentoLabels } from "@/features/atendimentos/lib/tipo-atendimento-labels";
 import { useState } from "react";
 import { AtendimentoForm } from "../components/AtendimentoForm";
 import { AtendimentoInfoSection } from "../components/AtendimentoInfoSection";
-import { ToggleAlunoChargeButton } from "../components/ToggleAlunoChargeButton";
-import { ToggleColaboradorPaymentButton } from "../components/ToggleColaboradorPaymentButton";
 
 export function AtendimentoDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,8 +18,6 @@ export function AtendimentoDetailPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const atendimentoQuery = useGetAtendimentoById(atendimentoId);
-  const { alternarCobrancaAluno, alternarPagamentoColaborador } =
-    useAtendimentoMutations();
 
   const headerProps = {
     description: "Veja e gerencie as informações do atendimento",
@@ -50,22 +45,7 @@ export function AtendimentoDetailPage() {
     );
   }
 
-  const handleToggleIncomeStatus = () => {
-    alternarCobrancaAluno.mutate({
-      id: atendimentoQuery.data.id,
-    });
-  };
-
-  const handleToggleExpenseStatus = () => {
-    alternarPagamentoColaborador.mutate({
-      id: atendimentoQuery.data.id,
-    });
-  };
-
   const contentLabel = tipoAtendimentoLabels[atendimentoQuery.data.tipo] || atendimentoQuery.data.tipo;
-
-  const alunoChargePaid = atendimentoQuery.data.dataCobrancaAluno != null;
-  const colaboradorPaymentPaid = atendimentoQuery.data.dataPagamentoColaborador != null;
 
   return (
     <PageLayout {...headerProps}>
@@ -76,18 +56,9 @@ export function AtendimentoDetailPage() {
               <Badge variant="primary" className="px-3 py-1 font-semibold">
                 {contentLabel}
               </Badge>
-              <Badge
-                variant={alunoChargePaid ? "success" : "warning"}
-                className="px-3 py-1 font-semibold"
-              >
-                {alunoChargePaid ? "Aluno cobrado" : "Cobranca pendente"}
+              <Badge variant="neutral" className="px-3 py-1 font-semibold">
+                {atendimentoQuery.data.status}
               </Badge>
-              <Badge
-                variant={colaboradorPaymentPaid ? "success" : "warning"}
-                className="px-3 py-1 font-semibold"
-              >
-                {colaboradorPaymentPaid ? "Colaborador pago" : "Repasse pendente"}
-            </Badge>
             </div>
 
 
@@ -100,16 +71,6 @@ export function AtendimentoDetailPage() {
                 >
                   <Edit className="mr-1 h-4 w-4" /> Editar
                 </Button>
-                <ToggleAlunoChargeButton
-                  alunoChargePaid={alunoChargePaid}
-                  alternarCobrancaAluno={alternarCobrancaAluno}
-                  handleToggleIncomeStatus={handleToggleIncomeStatus}
-                />
-                <ToggleColaboradorPaymentButton
-                  colaboradorPaymentPaid={colaboradorPaymentPaid}
-                  alternarPagamentoColaborador={alternarPagamentoColaborador}
-                  handleToggleEmployeePayment={handleToggleExpenseStatus}
-                />
               </div>
         </div>
 

@@ -104,7 +104,13 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Readonly<A
 
     if (isEditMode && initialData?.id) {
       updateAtendimento.mutate(
-        { id: initialData.id, data: formattedData },
+        {
+          id: initialData.id,
+          data: {
+            novoInicio: formattedData.inicio,
+            duracao: formattedData.duracao,
+          },
+        },
         { onSuccess },
       );
       return;

@@ -3,24 +3,20 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { useListAlunos, type AtendimentoResponseDTO, type PageDTOAtendimentoResponseDTO } from "@/kubb";
+import { useListAlunos, type AtendimentoResponseDTO, type PagedModelAtendimentoResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
 import {
   Calendar,
-  CircleDollarSign,
   SquareArrowOutUpRight,
 } from "lucide-react";
 import { memo } from "react";
 
 type ColaboradorEventsTableProps = {
-  atendimentos?: PageDTOAtendimentoResponseDTO;
+  atendimentos?: PagedModelAtendimentoResponseDTO;
   currentPage: number;
   error?: unknown;
-  hidePaid: boolean;
   isLoading: boolean;
-  onHidePaidChange: (value: boolean) => void;
   onPageChange: (page: number) => void;
 };
 
@@ -38,14 +34,12 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
   atendimentos,
   currentPage,
   error,
-  hidePaid,
   isLoading,
-  onHidePaidChange,
   onPageChange,
 }: Readonly<ColaboradorEventsTableProps>) {
   const alunosQuery = useListAlunos();
   const events = atendimentos?.content ?? [];
-  const totalEvents = atendimentos?.totalElements ?? events.length;
+  const totalEvents = atendimentos?.page?.totalElements ?? events.length;
 
   if (error) {
     return <ErrorCard title="Não foi possível carregar a listagem de atendimentos" error={error} />;
@@ -73,22 +67,8 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
             )}
           </div>
           <p className="mt-1 text-sm text-base-content/60">
-            Acompanhe horários, tipos de atendimento e status dos repasses deste colaborador.
+            Acompanhe horários, tipos de atendimento e valores de repasse deste colaborador.
           </p>
-        </div>
-      </div>
-
-      <div className="shrink-0 rounded-2xl border border-info/20 bg-linear-to-r from-info/8 via-base-100 to-base-100 px-3 py-2 shadow-sm transition-all duration-200 hover:border-info/30 hover:shadow-md">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-            <CircleDollarSign className="w-4" />
-          </div>
-          <ToggleSwitch
-            toggled={hidePaid}
-            setToggle={onHidePaidChange}
-            label="Ocultar Pagos"
-            className="border-info/30 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
-          />
         </div>
       </div>
     </div>
@@ -125,10 +105,7 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {events.map((atendimento) => {
-              const isPaid = atendimento.dataPagamentoColaborador != null;
-
-              return (
+            {events.map((atendimento: AtendimentoResponseDTO) => (
                 <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
                   <td>
                     <div className="font-semibold text-base-content">{getParticipantName(atendimento.alunoId, alunosQuery.data)}</div>
@@ -145,10 +122,6 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
 
                   <td className="text-right">
                     <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
-                      <span
-                        className={`inline-block h-2.5 w-2.5 rounded-full ${isPaid ? "bg-success" : "bg-warning"}`}
-                        title={isPaid ? "Pago" : "Pendente"}
-                      />
                       <span>{brl.format(atendimento.repasse)}</span>
                     </div>
                   </td>
@@ -163,16 +136,15 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
                     </div>
                   </td>
                 </tr>
-              );
-            })}
+            ))}
           </tbody>
         </table>
       </div>
 
       <Pagination
-        size={atendimentos?.size ?? 0}
-        totalElements={atendimentos?.totalElements ?? 0}
-        totalPages={atendimentos?.totalPages ?? 0}
+        size={atendimentos?.page?.size ?? 0}
+        totalElements={atendimentos?.page?.totalElements ?? 0}
+        totalPages={atendimentos?.page?.totalPages ?? 0}
         currentPage={currentPage}
         onPageChange={onPageChange}
       />

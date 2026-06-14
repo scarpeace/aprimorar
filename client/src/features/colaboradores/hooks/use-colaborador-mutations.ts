@@ -1,6 +1,6 @@
 import {
   findColaboradorByIdQueryKey,
-  getAtendimentosByColaboradorQueryKey,
+  getAtendimentosQueryKey,
   getColaboradoresListQueryKey,
   getColaboradoresQueryKey,
   useArquivarColaborador,
@@ -25,7 +25,7 @@ export function useColaboradorMutations() {
 
   const invalidateColaboradorDetail = (colaboradorId: string) => {
     queryClient.invalidateQueries({ queryKey: findColaboradorByIdQueryKey(colaboradorId) });
-    queryClient.invalidateQueries({ queryKey: getAtendimentosByColaboradorQueryKey(colaboradorId) });
+    queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey({ colaboradorId }) });
   };
 
   const createColaborador = useCreateColaborador({

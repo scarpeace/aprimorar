@@ -1,10 +1,9 @@
-import { Button, ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import type { AtendimentoResponseDTO } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import {
   BriefcaseBusiness,
   Calendar,
-  CircleDollarSign,
   Clock3,
   GraduationCap,
   SquareArrowOutUpRight,
@@ -18,9 +17,6 @@ type AtendimentoMobileCardProps = {
   alunoNome: string;
   colaboradorNome: string;
   index: number;
-  isPending: boolean;
-  onToggleCharge: (id: string) => void;
-  onTogglePayment: (id: string) => void;
 };
 
 export const AtendimentoMobileCard = memo(function AtendimentoMobileCard({
@@ -28,9 +24,6 @@ export const AtendimentoMobileCard = memo(function AtendimentoMobileCard({
   alunoNome,
   colaboradorNome,
   index,
-  isPending,
-  onToggleCharge,
-  onTogglePayment,
 }: Readonly<AtendimentoMobileCardProps>) {
   const animationDelay = `${(index % 5) * 90}ms`;
 
@@ -80,11 +73,7 @@ export const AtendimentoMobileCard = memo(function AtendimentoMobileCard({
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <div className="rounded-2xl border border-base-200 bg-base-100 px-3 py-2">
             <div className="mb-1 flex items-center justify-between gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-base-content/45">
-              <span>Cobrança</span>
-              <span
-                className={`inline-block h-2.5 w-2.5 rounded-full ${atendimento.dataCobrancaAluno ? "bg-success" : "bg-warning"}`}
-                title={atendimento.dataCobrancaAluno ? "Cobrado" : "Pendente"}
-              />
+              <span>Valor</span>
             </div>
             <div className="font-mono text-sm font-semibold text-base-content">{brl.format(atendimento.valor)}</div>
           </div>
@@ -92,36 +81,13 @@ export const AtendimentoMobileCard = memo(function AtendimentoMobileCard({
           <div className="rounded-2xl border border-base-200 bg-base-100 px-3 py-2">
             <div className="mb-1 flex items-center justify-between gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-base-content/45">
               <span>Repasse</span>
-              <span
-                className={`inline-block h-2.5 w-2.5 rounded-full ${atendimento.dataPagamentoColaborador ? "bg-success" : "bg-warning"}`}
-                title={atendimento.dataPagamentoColaborador ? "Pago" : "Pendente"}
-              />
+              <span>Colaborador</span>
             </div>
             <div className="font-mono text-sm font-semibold text-base-content">{brl.format(atendimento.repasse)}</div>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-2 pt-1">
-          <Button
-            disabled={isPending}
-            className="flex-1 gap-2"
-            size="sm"
-            variant={atendimento.dataCobrancaAluno ? "success" : "warning"}
-            onClick={() => onToggleCharge(atendimento.id)}
-          >
-            <CircleDollarSign className="h-4 w-4" />
-            {atendimento.dataCobrancaAluno ? "Cobrado" : "Cobrar"}
-          </Button>
-          <Button
-            disabled={isPending}
-            className="flex-1 gap-2"
-            size="sm"
-            variant={atendimento.dataPagamentoColaborador ? "success" : "warning"}
-            onClick={() => onTogglePayment(atendimento.id)}
-          >
-            <CircleDollarSign className="h-4 w-4" />
-            {atendimento.dataPagamentoColaborador ? "Pago" : "Pagar"}
-          </Button>
           <ButtonLink to={`/atendimentos/${atendimento.id}`} size="sm" className="w-full gap-2 sm:w-auto" variant="primary">
             <SquareArrowOutUpRight className="h-4 w-4" />
             Detalhes

@@ -58,8 +58,8 @@ export const AlunoAtendimentoMobileCard = memo(function AlunoAtendimentoMobileCa
         </div>
 
         <div className="flex gap-2 pt-1">
-          <span className={`badge ${atendimento.dataCobrancaAluno ? "badge-success" : "badge-warning"} flex-1 gap-2`}>
-            {atendimento.dataCobrancaAluno ? "Cobrado" : "Pendente"}
+          <span className="badge badge-neutral flex-1 gap-2">
+            {atendimento.status}
           </span>
           <ButtonLink to={`/atendimentos/${atendimento.id}`} size="sm" className="gap-2" variant="primary">
             <SquareArrowOutUpRight size={18}/> Detalhes

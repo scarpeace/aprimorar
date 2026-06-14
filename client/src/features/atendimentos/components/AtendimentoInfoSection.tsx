@@ -21,8 +21,6 @@ export function AtendimentoInfoSection({
   const navigate = useNavigate();
   const alunosQuery = useListAlunos();
   const colaboradoresQuery = useGetColaboradoresList();
-  const alunoChargePaid = atendimento.dataCobrancaAluno != null;
-  const colaboradorPaymentPaid = atendimento.dataPagamentoColaborador != null;
 
   return (
     <div className="grid gap-3 sm:grid-cols-2">
@@ -52,11 +50,8 @@ export function AtendimentoInfoSection({
             {formatTime(atendimento.inicio)} - {formatTime(atendimento.fim)}
           </div>
         </MiniCard>
-        <MiniCard label="Cobrança do aluno">
+        <MiniCard label="Valor do atendimento">
           <div className="flex items-center gap-3">
-            <span
-              className={`h-2.5 w-2.5 rounded-full ${alunoChargePaid ? "bg-success" : "bg-warning"}`}
-            />
             <div className="font-mono text-xl font-bold text-base-content">
               {brl.format(atendimento.valor)}
             </div>
@@ -67,9 +62,6 @@ export function AtendimentoInfoSection({
       <div className="flex items-center gap-3">
         <MiniCard label="Repasse do colaborador">
           <div className="flex items-center gap-3">
-            <span
-              className={`h-2.5 w-2.5 rounded-full ${colaboradorPaymentPaid ? "bg-success" : "bg-warning"}`}
-            />
             <div className="font-mono text-xl font-bold text-base-content">
               {brl.format(atendimento.repasse)}
             </div>

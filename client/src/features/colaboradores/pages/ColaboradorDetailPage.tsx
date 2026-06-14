@@ -3,13 +3,11 @@ import { Modal } from "@/components/ui/modal";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import {
   useFindColaboradorById,
-  useGetAtendimentosByColaborador,
+  useGetAtendimentos,
 } from "@/kubb";
-import { Calendar, CircleDollarSign, Clock3, FileUser } from "lucide-react";
+import { FileUser } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { KpiCard } from "@/components/ui/kpi-card";
-import { brl } from "@/lib/utils/formatter";
 import { ColaboradorEventsTable } from "../components/ColaboradorEventsTable";
 import { ColaboradorInfoSection } from "../components/ColaboradorInfoSection";
 import { ColaboradorForm } from "../components/ColaboradorForm";
@@ -20,7 +18,6 @@ export function ColaboradorDetailPage() {
   const colaboradorId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const [hidePaid, setHidePaid] = useState(false);
   const navigate = useNavigate();
 
   const dateFilter = usePageDateFilter();
@@ -28,18 +25,13 @@ export function ColaboradorDetailPage() {
 
   const colaboradorQuery = useFindColaboradorById(colaboradorId);
 
-  const colaboradorAtendimentos = useGetAtendimentosByColaborador(colaboradorId, {
+  const colaboradorAtendimentos = useGetAtendimentos({
+    colaboradorId,
     page: currentPage,
     sort: ["fim,desc", "id,asc"],
     inicio: startDate?.toISOString(),
     fim: endDate?.toISOString(),
-    ocultarPagos: hidePaid,
   });
-
-  const handleToggleHidePaid = (value: boolean) => {
-    setHidePaid(value);
-    setCurrentPage(0);
-  };
 
   const headerProps = {
     description: "Veja e gerencie as informações do colaborador",
@@ -54,38 +46,12 @@ export function ColaboradorDetailPage() {
         <ColaboradorInfoSection colaboradorId={colaboradorId} onEdit={() => setIsFormOpen(true)} />
       </div>
 
-      <div className="mb-3 animate-[fade-up_600ms_ease-out_both]">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <KpiCard
-            label="Total de Atendimentos"
-            value={colaboradorAtendimentos.data?.resumo?.totalAtendimentos}
-            Icon={Calendar}
-          />
-
-          <KpiCard
-            label="Total pago"
-            value={<span className="text-success">{brl.format(colaboradorAtendimentos.data?.resumo?.totalPago ?? 0)}</span>}
-            Icon={CircleDollarSign}
-            className="bg-linear-to-br from-success/8 via-base-100 to-base-100"
-          />
-
-          <KpiCard
-            label="Total pendente"
-            value={<span className="text-warning">{brl.format(colaboradorAtendimentos.data?.resumo?.totalPendente ?? 0)}</span>}
-            Icon={Clock3}
-            className="bg-linear-to-br from-warning/10 via-base-100 to-base-100"
-          />
-        </div>
-      </div>
-
       <div className="animate-[fade-up_600ms_ease-out_both]">
         <ColaboradorEventsTable
-          atendimentos={colaboradorAtendimentos.data?.atendimentos}
+          atendimentos={colaboradorAtendimentos.data}
           error={colaboradorAtendimentos.error}
-          hidePaid={hidePaid}
           isLoading={colaboradorAtendimentos.isLoading}
           currentPage={currentPage}
-          onHidePaidChange={handleToggleHidePaid}
           onPageChange={setCurrentPage}
         />
       </div>
