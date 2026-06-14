@@ -2,14 +2,8 @@ package aprimorar.atendimentos.events;
 
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.pessoas.api.AlunoDeletedEvent;
-import aprimorar.pessoas.api.ArchiveAlunoVerificationEvent;
-import aprimorar.pessoas.api.ArchiveColaboradorVerificationEvent;
 import aprimorar.pessoas.api.ColaboradorDeletedEvent;
-import aprimorar.pessoas.api.DeleteAlunoVerificationEvent;
-import aprimorar.pessoas.api.DeleteColaboradorVerificationEvent;
-import aprimorar.shared.exception.BusinessException;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -35,31 +29,4 @@ public class AtendimentoEventListener {
         atendimentoRepo.reassignAtendimentosColaboradorToGhost(event.colaboradorId(), GHOST_COLABORADOR_ID);
     }
 
-    @EventListener
-    public void deleteAlunoVerification(DeleteAlunoVerificationEvent event){
-        if (atendimentoRepo.existsByAlunoIdAndDataCobrancaAlunoIsNull(event.uuid())){
-            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível excluir um aluno com cobranças pendentes");
-        }
-    }
-
-    @EventListener
-    public void archiveAlunoVerification(ArchiveAlunoVerificationEvent event){
-        if (atendimentoRepo.existsByAlunoIdAndDataCobrancaAlunoIsNull(event.uuid())){
-            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível arquivar um aluno com cobranças pendentes");
-        }
-    }
-
-    @EventListener
-    public void deleteColaboradorVerification(DeleteColaboradorVerificationEvent event){
-           if (atendimentoRepo.existsByColaboradorIdAndDataPagamentoColaboradorIsNull(event.uuid())){
-               throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível excluir um colaborador com pagamentos pendentes");
-           }
-    }
-
-    @EventListener
-    public void archiveColaboradorVerification(ArchiveColaboradorVerificationEvent event){
-        if (atendimentoRepo.existsByColaboradorIdAndDataPagamentoColaboradorIsNull(event.uuid())){
-            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível arquivar um colaborador com pagamentos pendentes");
-        }
-    }
 }

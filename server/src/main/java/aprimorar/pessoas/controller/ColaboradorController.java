@@ -87,7 +87,7 @@ public class ColaboradorController {
     @Operation(operationId = "findColaboradorById", description = "Retorna um colaborador por ID.")
     @ApiResponse(responseCode = "200", description = "Colaborador retornado com sucesso.")
     public ResponseEntity<ColaboradorResponseDTO> buscarPorId(@PathVariable UUID colaboradorId) {
-        ColaboradorResponseDTO colaborador = colaboradorQueryService.findColaboradorById(colaboradorId);
+        ColaboradorResponseDTO colaborador = colaboradorQueryService.findById(colaboradorId);
         return ResponseEntity.ok(colaborador);
     }
 

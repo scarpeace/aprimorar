@@ -53,8 +53,7 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
-    public ColaboradorResponseDTO findColaboradorById(UUID colaboradorId) {
+    public ColaboradorResponseDTO findById(UUID colaboradorId) {
         Colaborador colaborador = findByIdOrThrow(colaboradorId);
         log.info("Colaborador {} consultado com sucesso.", colaborador.getNome().toUpperCase());
         return ColaboradorResponseDTO.toDto(colaborador);
@@ -72,5 +71,10 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
         return colaboradorRepo
             .findById(colaboradorId)
             .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Colaborador não encontrado no banco de dados"));
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return colaboradorRepo.existsById(id);
     }
 }

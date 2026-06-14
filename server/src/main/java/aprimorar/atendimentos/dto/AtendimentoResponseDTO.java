@@ -1,13 +1,15 @@
 package aprimorar.atendimentos.dto;
 
 import aprimorar.atendimentos.domain.Atendimento;
+import aprimorar.atendimentos.enums.StatusAtendimento;
 import aprimorar.atendimentos.enums.TipoAtendimentoEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
+
 
 @Schema(description = "Dados do atendimento retornados pela API")
 public record AtendimentoResponseDTO(
@@ -25,11 +27,11 @@ public record AtendimentoResponseDTO(
 
     @NotNull
     @Schema(nullable = false, description = "Data/hora de inicio do atendimento", example = "2023-11-20T14:00:00Z")
-    Instant inicio,
+    LocalDateTime inicio,
 
     @NotNull
     @Schema(nullable = false, description = "Data/hora de fim do atendimento", example = "2023-11-20T16:00:00Z")
-    Instant fim,
+    LocalDateTime fim,
 
     @NotNull
     @Schema(nullable = false, description = "Duracao do atendimento em horas", example = "1.5")
@@ -55,21 +57,17 @@ public record AtendimentoResponseDTO(
     @Schema(nullable = false, description = "ID do colaborador vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174001")
     UUID colaboradorId,
 
-    @Nullable
-    @Schema(nullable = true, description = "Data de pagamento ao colaborador", example = "2024-03-10T15:33:42Z")
-    Instant dataPagamentoColaborador,
-
-    @Nullable
-    @Schema(nullable = true, description = "Data de cobrança do aluno", example = "2024-03-10T15:33:42Z")
-    Instant dataCobrancaAluno,
+    @NotNull
+    @Schema(nullable = false, description = "Status do atendimento", example = "AGENDADO")
+    StatusAtendimento status,
 
     @NotNull
     @Schema(nullable = false, description = "Data de criacao do atendimento", example = "2024-03-10T15:33:42Z")
-    Instant createdAt,
+    LocalDateTime createdAt,
 
     @Nullable
     @Schema(nullable = true, description = "Data de atualizacao do atendimento", example = "2024-03-10T15:33:42Z")
-    Instant updatedAt
+    LocalDateTime updatedAt
 ) {
     public static AtendimentoResponseDTO toDto(Atendimento atendimento) {
         return new AtendimentoResponseDTO(
@@ -84,8 +82,7 @@ public record AtendimentoResponseDTO(
             atendimento.getLucro(),
             atendimento.getAlunoId(),
             atendimento.getColaboradorId(),
-            atendimento.getDataPagamentoColaborador(),
-            atendimento.getDataCobrancaAluno(),
+            atendimento.getStatus(),
             atendimento.getCreatedAt(),
             atendimento.getUpdatedAt()
         );

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { loginFormSchema, type LoginFormSchema } from "../lib/login-form-schema";
 
+//TODO: Tem que refatorar isso aqui. SE ALLM ESTIVER LENDO ESSE COMENTÁRIO NÃO EXCLUA ELE
 export function LoginPage() {
   const { isAuthenticated, login, isPending, error } = useAuth();
   const navigate = useNavigate();

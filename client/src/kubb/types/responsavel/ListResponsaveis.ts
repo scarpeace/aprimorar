@@ -3,12 +3,12 @@
  * Do not edit manually.
  */
 
-import type { ResponsaveisListDTO } from "../ResponsaveisListDTO.ts";
+import type { ResponsavelResponseDTO } from "../ResponsavelResponseDTO.ts";
 
 /**
  * @description Lista de opções retornada com sucesso.
  */
-export type ListResponsaveis200 = ResponsaveisListDTO[];
+export type ListResponsaveis200 = ResponsavelResponseDTO[];
 
 export type ListResponsaveisQueryResponse = ListResponsaveis200;
 

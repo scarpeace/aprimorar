@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Schema(description = "Formato de payload para cadastro e atualização de atendimento")
@@ -24,7 +24,7 @@ public record AtendimentoRequestDTO(
     @NotNull(message = "Data/hora de inicio do atendimento e obrigatoria")
     @Future(message = "A data/hora de inicio deve ser no futuro")
     @Schema(nullable = false, description = "Data e hora de início do atendimento", example = "2026-11-20T14:00:00Z")
-    Instant inicio,
+    LocalDateTime inicio,
 
     @NotNull(message = "A duracao do atendimento e obrigatoria")
     @Positive(message = "A duracao deve ser maior que zero")
@@ -49,7 +49,7 @@ public record AtendimentoRequestDTO(
     @Schema(nullable = false, description = "ID do colaborador vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174000")
     UUID colaboradorId
 ) {
-    public Atendimento toEntity(Instant now) {
+    public Atendimento toEntity() {
         return new Atendimento(
             descricao,
             inicio,
@@ -58,8 +58,7 @@ public record AtendimentoRequestDTO(
             valor,
             tipo,
             alunoId,
-            colaboradorId,
-            now
+            colaboradorId
         );
     }
 }

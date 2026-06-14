@@ -76,8 +76,6 @@ CREATE INDEX idx_colaboradores_funcao ON colaboradores(funcao);
 
 CREATE TABLE IF NOT EXISTS atendimentos (
   id UUID NOT NULL PRIMARY KEY,
-  aluno_id UUID NOT NULL REFERENCES alunos(id),
-  colaborador_id UUID NOT NULL REFERENCES colaboradores(id),
   titulo VARCHAR(255),
   descricao TEXT,
   inicio TIMESTAMP NOT NULL,
@@ -85,8 +83,9 @@ CREATE TABLE IF NOT EXISTS atendimentos (
   valor NUMERIC(10,2) NOT NULL CHECK (valor >= 0),
   repasse NUMERIC(10,2) NOT NULL CHECK (repasse >= 0),
   tipo VARCHAR(255) NOT NULL CHECK (tipo in ('AULA','MENTORIA','TERAPIA','ORIENTACAO_VOCACIONAL','ENEM','PAS','OUTROS')),
-  data_pagamento_colaborador TIMESTAMP,
-  data_cobranca_aluno TIMESTAMP,
+  status VARCHAR(20) NOT NULL CHECK (status in ('AGENDADO','CONCLUIDO','CANCELADO')),
+  aluno_id UUID NOT NULL REFERENCES alunos(id),
+  colaborador_id UUID NOT NULL REFERENCES colaboradores(id),
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP
 );

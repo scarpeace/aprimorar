@@ -87,7 +87,7 @@ class ColaboradorQueryServiceTest {
 
         when(colaboradorRepo.findById(colaboradorId)).thenReturn(Optional.of(colaborador));
 
-        var result = service.findColaboradorById(colaboradorId);
+        var result = service.findById(colaboradorId);
 
         assertEquals(colaboradorId, result.id());
         assertEquals("João Pereira", result.nome());
@@ -98,7 +98,7 @@ class ColaboradorQueryServiceTest {
         var colaboradorId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
         when(colaboradorRepo.findById(colaboradorId)).thenReturn(Optional.empty());
 
-        var exception = assertThrows(BusinessException.class, () -> service.findColaboradorById(colaboradorId));
+        var exception = assertThrows(BusinessException.class, () -> service.findById(colaboradorId));
 
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
         assertEquals("Colaborador não encontrado no banco de dados", exception.getMessage());

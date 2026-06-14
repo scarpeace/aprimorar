@@ -16,6 +16,15 @@ export const atendimentoResponseDTOTipoEnum = {
 export type AtendimentoResponseDTOTipoEnumKey =
   (typeof atendimentoResponseDTOTipoEnum)[keyof typeof atendimentoResponseDTOTipoEnum];
 
+export const atendimentoResponseDTOStatusEnum = {
+  AGENDADO: "AGENDADO",
+  CONCLUIDO: "CONCLUIDO",
+  CANCELADO: "CANCELADO",
+} as const;
+
+export type AtendimentoResponseDTOStatusEnumKey =
+  (typeof atendimentoResponseDTOStatusEnum)[keyof typeof atendimentoResponseDTOStatusEnum];
+
 /**
  * @description Dados do atendimento retornados pela API
  */
@@ -71,30 +80,15 @@ export type AtendimentoResponseDTO = {
    */
   alunoId: string;
   /**
-   * @description Nome do aluno vinculado ao atendimento
-   * @type string
-   */
-  alunoNome: string;
-  /**
    * @description ID do colaborador vinculado ao atendimento
    * @type string, uuid
    */
   colaboradorId: string;
   /**
-   * @description Nome do colaborador vinculado ao atendimento
+   * @description Status do atendimento
    * @type string
    */
-  colaboradorNome: string;
-  /**
-   * @description Data de pagamento ao colaborador
-   * @type string, date-time
-   */
-  dataPagamentoColaborador?: string | null;
-  /**
-   * @description Data de cobrança do aluno
-   * @type string, date-time
-   */
-  dataCobrancaAluno?: string | null;
+  status: AtendimentoResponseDTOStatusEnumKey;
   /**
    * @description Data de criacao do atendimento
    * @type string, date-time

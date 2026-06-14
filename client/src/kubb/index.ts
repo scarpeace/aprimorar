@@ -8,19 +8,13 @@ export type { GetAlunosKpisQueryKey } from "./hooks/aluno/useGetAlunosKpis.ts";
 export type { ListAlunosQueryKey } from "./hooks/aluno/useListAlunos.ts";
 export type { UnarchiveAlunoMutationKey } from "./hooks/aluno/useUnarchiveAluno.ts";
 export type { UpdateAlunoMutationKey } from "./hooks/aluno/useUpdateAluno.ts";
-export type { AlternarCobrancaAlunoAtendimentoMutationKey } from "./hooks/atendimento/useAlternarCobrancaAlunoAtendimento.ts";
-export type { AlternarPagamentoColaboradorAtendimentoMutationKey } from "./hooks/atendimento/useAlternarPagamentoColaboradorAtendimento.ts";
-export type { CreateAtendimentoMutationKey } from "./hooks/atendimento/useCreateAtendimento.ts";
-export type { DeleteAtendimentoMutationKey } from "./hooks/atendimento/useDeleteAtendimento.ts";
+export type { AgendarAtendimentoMutationKey } from "./hooks/atendimento/useAgendarAtendimento.ts";
+export type { CancelarAtendimentoMutationKey } from "./hooks/atendimento/useCancelarAtendimento.ts";
+export type { ConcluirAtendimentoMutationKey } from "./hooks/atendimento/useConcluirAtendimento.ts";
+export type { ExcluirAtendimentoMutationKey } from "./hooks/atendimento/useExcluirAtendimento.ts";
 export type { GetAtendimentoByIdQueryKey } from "./hooks/atendimento/useGetAtendimentoById.ts";
 export type { GetAtendimentosQueryKey } from "./hooks/atendimento/useGetAtendimentos.ts";
-export type { GetAtendimentosByAlunoQueryKey } from "./hooks/atendimento/useGetAtendimentosByAluno.ts";
-export type { GetAtendimentosByColaboradorQueryKey } from "./hooks/atendimento/useGetAtendimentosByColaborador.ts";
-export type { GetAtendimentosContentReportQueryKey } from "./hooks/atendimento/useGetAtendimentosContentReport.ts";
-export type { GetIndicadoresAtendimentosQueryKey } from "./hooks/atendimento/useGetIndicadoresAtendimentos.ts";
-export type { GetOverviewFinanceiroAlunosQueryKey } from "./hooks/atendimento/useGetOverviewFinanceiroAlunos.ts";
-export type { GetOverviewFinanceiroColaboradoresQueryKey } from "./hooks/atendimento/useGetOverviewFinanceiroColaboradores.ts";
-export type { UpdateAtendimentoMutationKey } from "./hooks/atendimento/useUpdateAtendimento.ts";
+export type { ReagendarAtendimentoMutationKey } from "./hooks/atendimento/useReagendarAtendimento.ts";
 export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
 export type { ArquivarColaboradorMutationKey } from "./hooks/colaborador/useArquivarColaborador.ts";
 export type { CreateColaboradorMutationKey } from "./hooks/colaborador/useCreateColaborador.ts";
@@ -41,7 +35,6 @@ export type { ArchiveUserMutationKey } from "./hooks/user/useArchiveUser.ts";
 export type { CreateUserMutationKey } from "./hooks/user/useCreateUser.ts";
 export type { DeleteUserMutationKey } from "./hooks/user/useDeleteUser.ts";
 export type { ListUsersQueryKey } from "./hooks/user/useListUsers.ts";
-export type { AlunoAtendimentosKpis } from "./types/AlunoAtendimentosKpis.ts";
 export type { AlunoRequestDTO } from "./types/AlunoRequestDTO.ts";
 export type { AlunoResponseDTO } from "./types/AlunoResponseDTO.ts";
 export type { AlunosKpisDTO } from "./types/AlunosKpisDTO.ts";
@@ -52,20 +45,14 @@ export type {
 } from "./types/AtendimentoRequestDTO.ts";
 export type {
   AtendimentoResponseDTO,
+  AtendimentoResponseDTOStatusEnumKey,
   AtendimentoResponseDTOTipoEnumKey,
 } from "./types/AtendimentoResponseDTO.ts";
-export type { AtendimentosAlunoResponseDTO } from "./types/AtendimentosAlunoResponseDTO.ts";
-export type { AtendimentosAlunosKpisDTO } from "./types/AtendimentosAlunosKpisDTO.ts";
-export type { AtendimentosColaboradorKpisDTO } from "./types/AtendimentosColaboradorKpisDTO.ts";
-export type { AtendimentosColaboradorResponseDTO } from "./types/AtendimentosColaboradorResponseDTO.ts";
-export type { AtendimentosContentReportDTO } from "./types/AtendimentosContentReportDTO.ts";
-export type { AtendimentosKpisDTO } from "./types/AtendimentosKpisDTO.ts";
 export type { AuthRequestDTO } from "./types/AuthRequestDTO.ts";
 export type {
   AuthResponseDTO,
   AuthResponseDTORoleEnumKey,
 } from "./types/AuthResponseDTO.ts";
-export type { ColaboradorAtendimentosKpis } from "./types/ColaboradorAtendimentosKpis.ts";
 export type {
   ColaboradorRequestDTO,
   ColaboradorRequestDTOFuncaoEnumKey,
@@ -78,18 +65,16 @@ export type { ColaboradoresKpisDTO } from "./types/ColaboradoresKpisDTO.ts";
 export type { ColaboradoresListDTO } from "./types/ColaboradoresListDTO.ts";
 export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
-export type { PageDTOAtendimentoResponseDTO } from "./types/PageDTOAtendimentoResponseDTO.ts";
-export type { PageDTOAtendimentosAlunosKpisDTO } from "./types/PageDTOAtendimentosAlunosKpisDTO.ts";
-export type { PageDTOAtendimentosColaboradorKpisDTO } from "./types/PageDTOAtendimentosColaboradorKpisDTO.ts";
 export type { PageMetadata } from "./types/PageMetadata.ts";
 export type { PagedModelAlunoResponseDTO } from "./types/PagedModelAlunoResponseDTO.ts";
+export type { PagedModelAtendimentoResponseDTO } from "./types/PagedModelAtendimentoResponseDTO.ts";
 export type { PagedModelColaboradorResponseDTO } from "./types/PagedModelColaboradorResponseDTO.ts";
 export type { PagedModelResponsavelResponseDTO } from "./types/PagedModelResponsavelResponseDTO.ts";
 export type {
   ProblemResponseDTO,
   ProblemResponseDTOStatusEnumKey,
 } from "./types/ProblemResponseDTO.ts";
-export type { ResponsaveisListDTO } from "./types/ResponsaveisListDTO.ts";
+export type { ReagendarRequestDTO } from "./types/ReagendarRequestDTO.ts";
 export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./types/ResponsavelResponseDTO.ts";
 export type {
@@ -160,118 +145,48 @@ export type {
   UpdateAlunoPathParams,
 } from "./types/aluno/UpdateAluno.ts";
 export type {
-  AlternarCobrancaAlunoAtendimento200,
-  AlternarCobrancaAlunoAtendimento404,
-  AlternarCobrancaAlunoAtendimento500,
-  AlternarCobrancaAlunoAtendimentoMutation,
-  AlternarCobrancaAlunoAtendimentoMutationResponse,
-  AlternarCobrancaAlunoAtendimentoPathParams,
-} from "./types/atendimento/AlternarCobrancaAlunoAtendimento.ts";
+  AgendarAtendimento201,
+  AgendarAtendimentoMutation,
+  AgendarAtendimentoMutationRequest,
+  AgendarAtendimentoMutationResponse,
+} from "./types/atendimento/AgendarAtendimento.ts";
 export type {
-  AlternarPagamentoColaboradorAtendimento200,
-  AlternarPagamentoColaboradorAtendimento404,
-  AlternarPagamentoColaboradorAtendimento500,
-  AlternarPagamentoColaboradorAtendimentoMutation,
-  AlternarPagamentoColaboradorAtendimentoMutationResponse,
-  AlternarPagamentoColaboradorAtendimentoPathParams,
-} from "./types/atendimento/AlternarPagamentoColaboradorAtendimento.ts";
+  CancelarAtendimento200,
+  CancelarAtendimentoMutation,
+  CancelarAtendimentoMutationResponse,
+  CancelarAtendimentoPathParams,
+} from "./types/atendimento/CancelarAtendimento.ts";
 export type {
-  CreateAtendimento201,
-  CreateAtendimento400,
-  CreateAtendimento409,
-  CreateAtendimento500,
-  CreateAtendimentoMutation,
-  CreateAtendimentoMutationRequest,
-  CreateAtendimentoMutationResponse,
-} from "./types/atendimento/CreateAtendimento.ts";
+  ConcluirAtendimento200,
+  ConcluirAtendimentoMutation,
+  ConcluirAtendimentoMutationResponse,
+  ConcluirAtendimentoPathParams,
+} from "./types/atendimento/ConcluirAtendimento.ts";
 export type {
-  DeleteAtendimento204,
-  DeleteAtendimento404,
-  DeleteAtendimento409,
-  DeleteAtendimento500,
-  DeleteAtendimentoMutation,
-  DeleteAtendimentoMutationResponse,
-  DeleteAtendimentoPathParams,
-} from "./types/atendimento/DeleteAtendimento.ts";
+  ExcluirAtendimento204,
+  ExcluirAtendimentoMutation,
+  ExcluirAtendimentoMutationResponse,
+  ExcluirAtendimentoPathParams,
+} from "./types/atendimento/ExcluirAtendimento.ts";
 export type {
   GetAtendimentoById200,
-  GetAtendimentoById404,
-  GetAtendimentoById500,
   GetAtendimentoByIdPathParams,
   GetAtendimentoByIdQuery,
   GetAtendimentoByIdQueryResponse,
 } from "./types/atendimento/GetAtendimentoById.ts";
 export type {
   GetAtendimentos200,
-  GetAtendimentos400,
-  GetAtendimentos500,
   GetAtendimentosQuery,
   GetAtendimentosQueryParams,
   GetAtendimentosQueryResponse,
 } from "./types/atendimento/GetAtendimentos.ts";
 export type {
-  GetAtendimentosByAluno200,
-  GetAtendimentosByAluno400,
-  GetAtendimentosByAluno404,
-  GetAtendimentosByAluno500,
-  GetAtendimentosByAlunoPathParams,
-  GetAtendimentosByAlunoQuery,
-  GetAtendimentosByAlunoQueryParams,
-  GetAtendimentosByAlunoQueryResponse,
-} from "./types/atendimento/GetAtendimentosByAluno.ts";
-export type {
-  GetAtendimentosByColaborador200,
-  GetAtendimentosByColaborador400,
-  GetAtendimentosByColaborador404,
-  GetAtendimentosByColaborador500,
-  GetAtendimentosByColaboradorPathParams,
-  GetAtendimentosByColaboradorQuery,
-  GetAtendimentosByColaboradorQueryParams,
-  GetAtendimentosByColaboradorQueryResponse,
-} from "./types/atendimento/GetAtendimentosByColaborador.ts";
-export type {
-  GetAtendimentosContentReport200,
-  GetAtendimentosContentReport400,
-  GetAtendimentosContentReport500,
-  GetAtendimentosContentReportQuery,
-  GetAtendimentosContentReportQueryParams,
-  GetAtendimentosContentReportQueryResponse,
-} from "./types/atendimento/GetAtendimentosContentReport.ts";
-export type {
-  GetIndicadoresAtendimentos200,
-  GetIndicadoresAtendimentos400,
-  GetIndicadoresAtendimentos500,
-  GetIndicadoresAtendimentosQuery,
-  GetIndicadoresAtendimentosQueryParams,
-  GetIndicadoresAtendimentosQueryResponse,
-} from "./types/atendimento/GetIndicadoresAtendimentos.ts";
-export type {
-  GetOverviewFinanceiroAlunos200,
-  GetOverviewFinanceiroAlunos400,
-  GetOverviewFinanceiroAlunos500,
-  GetOverviewFinanceiroAlunosQuery,
-  GetOverviewFinanceiroAlunosQueryParams,
-  GetOverviewFinanceiroAlunosQueryResponse,
-} from "./types/atendimento/GetOverviewFinanceiroAlunos.ts";
-export type {
-  GetOverviewFinanceiroColaboradores200,
-  GetOverviewFinanceiroColaboradores400,
-  GetOverviewFinanceiroColaboradores500,
-  GetOverviewFinanceiroColaboradoresQuery,
-  GetOverviewFinanceiroColaboradoresQueryParams,
-  GetOverviewFinanceiroColaboradoresQueryResponse,
-} from "./types/atendimento/GetOverviewFinanceiroColaboradores.ts";
-export type {
-  UpdateAtendimento200,
-  UpdateAtendimento400,
-  UpdateAtendimento404,
-  UpdateAtendimento409,
-  UpdateAtendimento500,
-  UpdateAtendimentoMutation,
-  UpdateAtendimentoMutationRequest,
-  UpdateAtendimentoMutationResponse,
-  UpdateAtendimentoPathParams,
-} from "./types/atendimento/UpdateAtendimento.ts";
+  ReagendarAtendimento200,
+  ReagendarAtendimentoMutation,
+  ReagendarAtendimentoMutationRequest,
+  ReagendarAtendimentoMutationResponse,
+  ReagendarAtendimentoPathParams,
+} from "./types/atendimento/ReagendarAtendimento.ts";
 export type {
   Login200,
   LoginMutation,
@@ -439,22 +354,22 @@ export { updateAluno } from "./hooks/aluno/useUpdateAluno.ts";
 export { updateAlunoMutationKey } from "./hooks/aluno/useUpdateAluno.ts";
 export { updateAlunoMutationOptions } from "./hooks/aluno/useUpdateAluno.ts";
 export { useUpdateAluno } from "./hooks/aluno/useUpdateAluno.ts";
-export { alternarCobrancaAlunoAtendimento } from "./hooks/atendimento/useAlternarCobrancaAlunoAtendimento.ts";
-export { alternarCobrancaAlunoAtendimentoMutationKey } from "./hooks/atendimento/useAlternarCobrancaAlunoAtendimento.ts";
-export { alternarCobrancaAlunoAtendimentoMutationOptions } from "./hooks/atendimento/useAlternarCobrancaAlunoAtendimento.ts";
-export { useAlternarCobrancaAlunoAtendimento } from "./hooks/atendimento/useAlternarCobrancaAlunoAtendimento.ts";
-export { alternarPagamentoColaboradorAtendimento } from "./hooks/atendimento/useAlternarPagamentoColaboradorAtendimento.ts";
-export { alternarPagamentoColaboradorAtendimentoMutationKey } from "./hooks/atendimento/useAlternarPagamentoColaboradorAtendimento.ts";
-export { alternarPagamentoColaboradorAtendimentoMutationOptions } from "./hooks/atendimento/useAlternarPagamentoColaboradorAtendimento.ts";
-export { useAlternarPagamentoColaboradorAtendimento } from "./hooks/atendimento/useAlternarPagamentoColaboradorAtendimento.ts";
-export { createAtendimento } from "./hooks/atendimento/useCreateAtendimento.ts";
-export { createAtendimentoMutationKey } from "./hooks/atendimento/useCreateAtendimento.ts";
-export { createAtendimentoMutationOptions } from "./hooks/atendimento/useCreateAtendimento.ts";
-export { useCreateAtendimento } from "./hooks/atendimento/useCreateAtendimento.ts";
-export { deleteAtendimento } from "./hooks/atendimento/useDeleteAtendimento.ts";
-export { deleteAtendimentoMutationKey } from "./hooks/atendimento/useDeleteAtendimento.ts";
-export { deleteAtendimentoMutationOptions } from "./hooks/atendimento/useDeleteAtendimento.ts";
-export { useDeleteAtendimento } from "./hooks/atendimento/useDeleteAtendimento.ts";
+export { agendarAtendimento } from "./hooks/atendimento/useAgendarAtendimento.ts";
+export { agendarAtendimentoMutationKey } from "./hooks/atendimento/useAgendarAtendimento.ts";
+export { agendarAtendimentoMutationOptions } from "./hooks/atendimento/useAgendarAtendimento.ts";
+export { useAgendarAtendimento } from "./hooks/atendimento/useAgendarAtendimento.ts";
+export { cancelarAtendimento } from "./hooks/atendimento/useCancelarAtendimento.ts";
+export { cancelarAtendimentoMutationKey } from "./hooks/atendimento/useCancelarAtendimento.ts";
+export { cancelarAtendimentoMutationOptions } from "./hooks/atendimento/useCancelarAtendimento.ts";
+export { useCancelarAtendimento } from "./hooks/atendimento/useCancelarAtendimento.ts";
+export { concluirAtendimento } from "./hooks/atendimento/useConcluirAtendimento.ts";
+export { concluirAtendimentoMutationKey } from "./hooks/atendimento/useConcluirAtendimento.ts";
+export { concluirAtendimentoMutationOptions } from "./hooks/atendimento/useConcluirAtendimento.ts";
+export { useConcluirAtendimento } from "./hooks/atendimento/useConcluirAtendimento.ts";
+export { excluirAtendimento } from "./hooks/atendimento/useExcluirAtendimento.ts";
+export { excluirAtendimentoMutationKey } from "./hooks/atendimento/useExcluirAtendimento.ts";
+export { excluirAtendimentoMutationOptions } from "./hooks/atendimento/useExcluirAtendimento.ts";
+export { useExcluirAtendimento } from "./hooks/atendimento/useExcluirAtendimento.ts";
 export { getAtendimentoById } from "./hooks/atendimento/useGetAtendimentoById.ts";
 export { getAtendimentoByIdQueryKey } from "./hooks/atendimento/useGetAtendimentoById.ts";
 export { getAtendimentoByIdQueryOptions } from "./hooks/atendimento/useGetAtendimentoById.ts";
@@ -463,34 +378,10 @@ export { getAtendimentos } from "./hooks/atendimento/useGetAtendimentos.ts";
 export { getAtendimentosQueryKey } from "./hooks/atendimento/useGetAtendimentos.ts";
 export { getAtendimentosQueryOptions } from "./hooks/atendimento/useGetAtendimentos.ts";
 export { useGetAtendimentos } from "./hooks/atendimento/useGetAtendimentos.ts";
-export { getAtendimentosByAluno } from "./hooks/atendimento/useGetAtendimentosByAluno.ts";
-export { getAtendimentosByAlunoQueryKey } from "./hooks/atendimento/useGetAtendimentosByAluno.ts";
-export { getAtendimentosByAlunoQueryOptions } from "./hooks/atendimento/useGetAtendimentosByAluno.ts";
-export { useGetAtendimentosByAluno } from "./hooks/atendimento/useGetAtendimentosByAluno.ts";
-export { getAtendimentosByColaborador } from "./hooks/atendimento/useGetAtendimentosByColaborador.ts";
-export { getAtendimentosByColaboradorQueryKey } from "./hooks/atendimento/useGetAtendimentosByColaborador.ts";
-export { getAtendimentosByColaboradorQueryOptions } from "./hooks/atendimento/useGetAtendimentosByColaborador.ts";
-export { useGetAtendimentosByColaborador } from "./hooks/atendimento/useGetAtendimentosByColaborador.ts";
-export { getAtendimentosContentReport } from "./hooks/atendimento/useGetAtendimentosContentReport.ts";
-export { getAtendimentosContentReportQueryKey } from "./hooks/atendimento/useGetAtendimentosContentReport.ts";
-export { getAtendimentosContentReportQueryOptions } from "./hooks/atendimento/useGetAtendimentosContentReport.ts";
-export { useGetAtendimentosContentReport } from "./hooks/atendimento/useGetAtendimentosContentReport.ts";
-export { getIndicadoresAtendimentos } from "./hooks/atendimento/useGetIndicadoresAtendimentos.ts";
-export { getIndicadoresAtendimentosQueryKey } from "./hooks/atendimento/useGetIndicadoresAtendimentos.ts";
-export { getIndicadoresAtendimentosQueryOptions } from "./hooks/atendimento/useGetIndicadoresAtendimentos.ts";
-export { useGetIndicadoresAtendimentos } from "./hooks/atendimento/useGetIndicadoresAtendimentos.ts";
-export { getOverviewFinanceiroAlunos } from "./hooks/atendimento/useGetOverviewFinanceiroAlunos.ts";
-export { getOverviewFinanceiroAlunosQueryKey } from "./hooks/atendimento/useGetOverviewFinanceiroAlunos.ts";
-export { getOverviewFinanceiroAlunosQueryOptions } from "./hooks/atendimento/useGetOverviewFinanceiroAlunos.ts";
-export { useGetOverviewFinanceiroAlunos } from "./hooks/atendimento/useGetOverviewFinanceiroAlunos.ts";
-export { getOverviewFinanceiroColaboradores } from "./hooks/atendimento/useGetOverviewFinanceiroColaboradores.ts";
-export { getOverviewFinanceiroColaboradoresQueryKey } from "./hooks/atendimento/useGetOverviewFinanceiroColaboradores.ts";
-export { getOverviewFinanceiroColaboradoresQueryOptions } from "./hooks/atendimento/useGetOverviewFinanceiroColaboradores.ts";
-export { useGetOverviewFinanceiroColaboradores } from "./hooks/atendimento/useGetOverviewFinanceiroColaboradores.ts";
-export { updateAtendimento } from "./hooks/atendimento/useUpdateAtendimento.ts";
-export { updateAtendimentoMutationKey } from "./hooks/atendimento/useUpdateAtendimento.ts";
-export { updateAtendimentoMutationOptions } from "./hooks/atendimento/useUpdateAtendimento.ts";
-export { useUpdateAtendimento } from "./hooks/atendimento/useUpdateAtendimento.ts";
+export { reagendarAtendimento } from "./hooks/atendimento/useReagendarAtendimento.ts";
+export { reagendarAtendimentoMutationKey } from "./hooks/atendimento/useReagendarAtendimento.ts";
+export { reagendarAtendimentoMutationOptions } from "./hooks/atendimento/useReagendarAtendimento.ts";
+export { useReagendarAtendimento } from "./hooks/atendimento/useReagendarAtendimento.ts";
 export { login } from "./hooks/auth/useLogin.ts";
 export { loginMutationKey } from "./hooks/auth/useLogin.ts";
 export { loginMutationOptions } from "./hooks/auth/useLogin.ts";
@@ -572,6 +463,7 @@ export { listUsersQueryKey } from "./hooks/user/useListUsers.ts";
 export { listUsersQueryOptions } from "./hooks/user/useListUsers.ts";
 export { useListUsers } from "./hooks/user/useListUsers.ts";
 export { atendimentoRequestDTOTipoEnum } from "./types/AtendimentoRequestDTO.ts";
+export { atendimentoResponseDTOStatusEnum } from "./types/AtendimentoResponseDTO.ts";
 export { atendimentoResponseDTOTipoEnum } from "./types/AtendimentoResponseDTO.ts";
 export { authResponseDTORoleEnum } from "./types/AuthResponseDTO.ts";
 export { colaboradorRequestDTOFuncaoEnum } from "./types/ColaboradorRequestDTO.ts";

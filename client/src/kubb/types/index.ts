@@ -1,4 +1,3 @@
-export type { AlunoAtendimentosKpis } from "./AlunoAtendimentosKpis.ts";
 export type { AlunoRequestDTO } from "./AlunoRequestDTO.ts";
 export type { AlunoResponseDTO } from "./AlunoResponseDTO.ts";
 export type { AlunosKpisDTO } from "./AlunosKpisDTO.ts";
@@ -9,20 +8,14 @@ export type {
 } from "./AtendimentoRequestDTO.ts";
 export type {
   AtendimentoResponseDTO,
+  AtendimentoResponseDTOStatusEnumKey,
   AtendimentoResponseDTOTipoEnumKey,
 } from "./AtendimentoResponseDTO.ts";
-export type { AtendimentosAlunoResponseDTO } from "./AtendimentosAlunoResponseDTO.ts";
-export type { AtendimentosAlunosKpisDTO } from "./AtendimentosAlunosKpisDTO.ts";
-export type { AtendimentosColaboradorKpisDTO } from "./AtendimentosColaboradorKpisDTO.ts";
-export type { AtendimentosColaboradorResponseDTO } from "./AtendimentosColaboradorResponseDTO.ts";
-export type { AtendimentosContentReportDTO } from "./AtendimentosContentReportDTO.ts";
-export type { AtendimentosKpisDTO } from "./AtendimentosKpisDTO.ts";
 export type { AuthRequestDTO } from "./AuthRequestDTO.ts";
 export type {
   AuthResponseDTO,
   AuthResponseDTORoleEnumKey,
 } from "./AuthResponseDTO.ts";
-export type { ColaboradorAtendimentosKpis } from "./ColaboradorAtendimentosKpis.ts";
 export type {
   ColaboradorRequestDTO,
   ColaboradorRequestDTOFuncaoEnumKey,
@@ -35,18 +28,16 @@ export type { ColaboradoresKpisDTO } from "./ColaboradoresKpisDTO.ts";
 export type { ColaboradoresListDTO } from "./ColaboradoresListDTO.ts";
 export type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
-export type { PageDTOAtendimentoResponseDTO } from "./PageDTOAtendimentoResponseDTO.ts";
-export type { PageDTOAtendimentosAlunosKpisDTO } from "./PageDTOAtendimentosAlunosKpisDTO.ts";
-export type { PageDTOAtendimentosColaboradorKpisDTO } from "./PageDTOAtendimentosColaboradorKpisDTO.ts";
 export type { PageMetadata } from "./PageMetadata.ts";
 export type { PagedModelAlunoResponseDTO } from "./PagedModelAlunoResponseDTO.ts";
+export type { PagedModelAtendimentoResponseDTO } from "./PagedModelAtendimentoResponseDTO.ts";
 export type { PagedModelColaboradorResponseDTO } from "./PagedModelColaboradorResponseDTO.ts";
 export type { PagedModelResponsavelResponseDTO } from "./PagedModelResponsavelResponseDTO.ts";
 export type {
   ProblemResponseDTO,
   ProblemResponseDTOStatusEnumKey,
 } from "./ProblemResponseDTO.ts";
-export type { ResponsaveisListDTO } from "./ResponsaveisListDTO.ts";
+export type { ReagendarRequestDTO } from "./ReagendarRequestDTO.ts";
 export type { ResponsavelRequestDTO } from "./ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./ResponsavelResponseDTO.ts";
 export type {
@@ -117,118 +108,48 @@ export type {
   UpdateAlunoPathParams,
 } from "./aluno/UpdateAluno.ts";
 export type {
-  AlternarCobrancaAlunoAtendimento200,
-  AlternarCobrancaAlunoAtendimento404,
-  AlternarCobrancaAlunoAtendimento500,
-  AlternarCobrancaAlunoAtendimentoMutation,
-  AlternarCobrancaAlunoAtendimentoMutationResponse,
-  AlternarCobrancaAlunoAtendimentoPathParams,
-} from "./atendimento/AlternarCobrancaAlunoAtendimento.ts";
+  AgendarAtendimento201,
+  AgendarAtendimentoMutation,
+  AgendarAtendimentoMutationRequest,
+  AgendarAtendimentoMutationResponse,
+} from "./atendimento/AgendarAtendimento.ts";
 export type {
-  AlternarPagamentoColaboradorAtendimento200,
-  AlternarPagamentoColaboradorAtendimento404,
-  AlternarPagamentoColaboradorAtendimento500,
-  AlternarPagamentoColaboradorAtendimentoMutation,
-  AlternarPagamentoColaboradorAtendimentoMutationResponse,
-  AlternarPagamentoColaboradorAtendimentoPathParams,
-} from "./atendimento/AlternarPagamentoColaboradorAtendimento.ts";
+  CancelarAtendimento200,
+  CancelarAtendimentoMutation,
+  CancelarAtendimentoMutationResponse,
+  CancelarAtendimentoPathParams,
+} from "./atendimento/CancelarAtendimento.ts";
 export type {
-  CreateAtendimento201,
-  CreateAtendimento400,
-  CreateAtendimento409,
-  CreateAtendimento500,
-  CreateAtendimentoMutation,
-  CreateAtendimentoMutationRequest,
-  CreateAtendimentoMutationResponse,
-} from "./atendimento/CreateAtendimento.ts";
+  ConcluirAtendimento200,
+  ConcluirAtendimentoMutation,
+  ConcluirAtendimentoMutationResponse,
+  ConcluirAtendimentoPathParams,
+} from "./atendimento/ConcluirAtendimento.ts";
 export type {
-  DeleteAtendimento204,
-  DeleteAtendimento404,
-  DeleteAtendimento409,
-  DeleteAtendimento500,
-  DeleteAtendimentoMutation,
-  DeleteAtendimentoMutationResponse,
-  DeleteAtendimentoPathParams,
-} from "./atendimento/DeleteAtendimento.ts";
+  ExcluirAtendimento204,
+  ExcluirAtendimentoMutation,
+  ExcluirAtendimentoMutationResponse,
+  ExcluirAtendimentoPathParams,
+} from "./atendimento/ExcluirAtendimento.ts";
 export type {
   GetAtendimentoById200,
-  GetAtendimentoById404,
-  GetAtendimentoById500,
   GetAtendimentoByIdPathParams,
   GetAtendimentoByIdQuery,
   GetAtendimentoByIdQueryResponse,
 } from "./atendimento/GetAtendimentoById.ts";
 export type {
   GetAtendimentos200,
-  GetAtendimentos400,
-  GetAtendimentos500,
   GetAtendimentosQuery,
   GetAtendimentosQueryParams,
   GetAtendimentosQueryResponse,
 } from "./atendimento/GetAtendimentos.ts";
 export type {
-  GetAtendimentosByAluno200,
-  GetAtendimentosByAluno400,
-  GetAtendimentosByAluno404,
-  GetAtendimentosByAluno500,
-  GetAtendimentosByAlunoPathParams,
-  GetAtendimentosByAlunoQuery,
-  GetAtendimentosByAlunoQueryParams,
-  GetAtendimentosByAlunoQueryResponse,
-} from "./atendimento/GetAtendimentosByAluno.ts";
-export type {
-  GetAtendimentosByColaborador200,
-  GetAtendimentosByColaborador400,
-  GetAtendimentosByColaborador404,
-  GetAtendimentosByColaborador500,
-  GetAtendimentosByColaboradorPathParams,
-  GetAtendimentosByColaboradorQuery,
-  GetAtendimentosByColaboradorQueryParams,
-  GetAtendimentosByColaboradorQueryResponse,
-} from "./atendimento/GetAtendimentosByColaborador.ts";
-export type {
-  GetAtendimentosContentReport200,
-  GetAtendimentosContentReport400,
-  GetAtendimentosContentReport500,
-  GetAtendimentosContentReportQuery,
-  GetAtendimentosContentReportQueryParams,
-  GetAtendimentosContentReportQueryResponse,
-} from "./atendimento/GetAtendimentosContentReport.ts";
-export type {
-  GetIndicadoresAtendimentos200,
-  GetIndicadoresAtendimentos400,
-  GetIndicadoresAtendimentos500,
-  GetIndicadoresAtendimentosQuery,
-  GetIndicadoresAtendimentosQueryParams,
-  GetIndicadoresAtendimentosQueryResponse,
-} from "./atendimento/GetIndicadoresAtendimentos.ts";
-export type {
-  GetOverviewFinanceiroAlunos200,
-  GetOverviewFinanceiroAlunos400,
-  GetOverviewFinanceiroAlunos500,
-  GetOverviewFinanceiroAlunosQuery,
-  GetOverviewFinanceiroAlunosQueryParams,
-  GetOverviewFinanceiroAlunosQueryResponse,
-} from "./atendimento/GetOverviewFinanceiroAlunos.ts";
-export type {
-  GetOverviewFinanceiroColaboradores200,
-  GetOverviewFinanceiroColaboradores400,
-  GetOverviewFinanceiroColaboradores500,
-  GetOverviewFinanceiroColaboradoresQuery,
-  GetOverviewFinanceiroColaboradoresQueryParams,
-  GetOverviewFinanceiroColaboradoresQueryResponse,
-} from "./atendimento/GetOverviewFinanceiroColaboradores.ts";
-export type {
-  UpdateAtendimento200,
-  UpdateAtendimento400,
-  UpdateAtendimento404,
-  UpdateAtendimento409,
-  UpdateAtendimento500,
-  UpdateAtendimentoMutation,
-  UpdateAtendimentoMutationRequest,
-  UpdateAtendimentoMutationResponse,
-  UpdateAtendimentoPathParams,
-} from "./atendimento/UpdateAtendimento.ts";
+  ReagendarAtendimento200,
+  ReagendarAtendimentoMutation,
+  ReagendarAtendimentoMutationRequest,
+  ReagendarAtendimentoMutationResponse,
+  ReagendarAtendimentoPathParams,
+} from "./atendimento/ReagendarAtendimento.ts";
 export type {
   Login200,
   LoginMutation,
@@ -357,6 +278,7 @@ export type {
   ListUsersQueryResponse,
 } from "./user/ListUsers.ts";
 export { atendimentoRequestDTOTipoEnum } from "./AtendimentoRequestDTO.ts";
+export { atendimentoResponseDTOStatusEnum } from "./AtendimentoResponseDTO.ts";
 export { atendimentoResponseDTOTipoEnum } from "./AtendimentoResponseDTO.ts";
 export { authResponseDTORoleEnum } from "./AuthResponseDTO.ts";
 export { colaboradorRequestDTOFuncaoEnum } from "./ColaboradorRequestDTO.ts";

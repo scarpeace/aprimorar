@@ -61,7 +61,7 @@ export type ColaboradorResponseDTO = {
    */
   funcao: ColaboradorResponseDTOFuncaoEnumKey;
   /**
-   * @description Endereço do aluno
+   * @description Dados do endereco retornados pela API
    * @type object
    */
   endereco: EnderecoResponseDTO;

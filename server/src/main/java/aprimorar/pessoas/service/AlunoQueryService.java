@@ -27,7 +27,6 @@ public class AlunoQueryService implements AlunoQueryApi {
     private static final Logger log = LoggerFactory.getLogger(AlunoQueryService.class);
     private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-4000-8000-000000000002");
 
-
     private final AlunoRepository alunoRepo;
 
     public AlunoQueryService(AlunoRepository studentRepo) {
@@ -35,7 +34,6 @@ public class AlunoQueryService implements AlunoQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
     public Page<AlunoResponseDTO> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
         Specification<Aluno> spec = AlunoSpecifications.comFiltros(filtro);
         Page<Aluno> alunosPage = alunoRepo.findAll(spec, pageable);
@@ -68,7 +66,6 @@ public class AlunoQueryService implements AlunoQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
     public AlunoResponseDTO findAlunoById(UUID studentId) {
         Aluno student = findStudentOrThrow(studentId);
         log.info("Aluno {} consultado com sucesso.", student.getNome().toUpperCase());
@@ -76,7 +73,6 @@ public class AlunoQueryService implements AlunoQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
     public List<AlunoResponseDTO> getAlunosByResponsavelId(UUID responsavelId) {
         List<Aluno> students = alunoRepo.findAllByResponsavelId(responsavelId);
         List<AlunoResponseDTO> alunos = students
@@ -89,15 +85,18 @@ public class AlunoQueryService implements AlunoQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
     public boolean hasActiveAlunosLinkedToResponsavel(UUID responsavelId) {
         return alunoRepo.existsByResponsavelIdAndActiveTrue(responsavelId);
     }
 
-    /* ----- Helper Methods ----- */
     private Aluno findStudentOrThrow(UUID studentId) {
         return alunoRepo
             .findById(studentId)
             .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Aluno não encontrado no banco de dados"));
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return alunoRepo.existsById(id);
     }
 }

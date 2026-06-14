@@ -7,8 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetAtendimentosQueryResponse,
   GetAtendimentosQueryParams,
-  GetAtendimentos400,
-  GetAtendimentos500,
 } from "../../types/atendimento/GetAtendimentos.ts";
 import type {
   Client,
@@ -31,7 +29,7 @@ export type GetAtendimentosQueryKey = ReturnType<
 >;
 
 /**
- * @description Lista atendimentos com paginacao, ordenacao e filtros opcionais por texto, periodo, cobranca do aluno e pagamento do colaborador.
+ * @description Lista atendimentos com paginacao, ordenacao e filtros opcionais.
  * {@link /v1/atendimentos}
  */
 export async function getAtendimentos(
@@ -42,7 +40,7 @@ export async function getAtendimentos(
 
   const res = await request<
     GetAtendimentosQueryResponse,
-    ResponseErrorConfig<GetAtendimentos400 | GetAtendimentos500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({ method: "GET", url: `/v1/atendimentos`, params, ...requestConfig });
   return res.data;
@@ -55,7 +53,7 @@ export function getAtendimentosQueryOptions(
   const queryKey = getAtendimentosQueryKey(params);
   return queryOptions<
     GetAtendimentosQueryResponse,
-    ResponseErrorConfig<GetAtendimentos400 | GetAtendimentos500>,
+    ResponseErrorConfig<Error>,
     GetAtendimentosQueryResponse,
     typeof queryKey
   >({
@@ -70,7 +68,7 @@ export function getAtendimentosQueryOptions(
 }
 
 /**
- * @description Lista atendimentos com paginacao, ordenacao e filtros opcionais por texto, periodo, cobranca do aluno e pagamento do colaborador.
+ * @description Lista atendimentos com paginacao, ordenacao e filtros opcionais.
  * {@link /v1/atendimentos}
  */
 export function useGetAtendimentos<
@@ -83,7 +81,7 @@ export function useGetAtendimentos<
     query?: Partial<
       QueryObserverOptions<
         GetAtendimentosQueryResponse,
-        ResponseErrorConfig<GetAtendimentos400 | GetAtendimentos500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -103,10 +101,9 @@ export function useGetAtendimentos<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<
-    TData,
-    ResponseErrorConfig<GetAtendimentos400 | GetAtendimentos500>
-  > & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

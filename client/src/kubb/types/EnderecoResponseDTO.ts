@@ -4,35 +4,35 @@
  */
 
 /**
- * @description Endereço do aluno
+ * @description Dados do endereco retornados pela API
  */
 export type EnderecoResponseDTO = {
   /**
-   * @type string | undefined
+   * @type string
    */
-  rua?: string;
+  rua: string;
   /**
-   * @type string | undefined
+   * @type string
    */
-  numero?: string;
-  /**
-   * @type string | undefined
-   */
-  bairro?: string;
-  /**
-   * @type string | undefined
-   */
-  cidade?: string;
-  /**
-   * @type string | undefined
-   */
-  estado?: string;
-  /**
-   * @type string | undefined
-   */
-  cep?: string;
+  numero: string;
   /**
    * @type string | undefined
    */
   complemento?: string;
+  /**
+   * @type string
+   */
+  bairro: string;
+  /**
+   * @type string
+   */
+  cidade: string;
+  /**
+   * @type string
+   */
+  estado: string;
+  /**
+   * @type string
+   */
+  cep: string;
 };

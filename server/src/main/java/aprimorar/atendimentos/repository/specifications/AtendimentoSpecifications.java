@@ -14,15 +14,12 @@ public final class AtendimentoSpecifications {
     }
 
     public static Specification<Atendimento> comFiltros(AtendimentoFiltroRequest filtro) {
-        Boolean cobrado = Boolean.TRUE.equals(filtro.ocultarCobrados()) ? Boolean.FALSE : null;
-        Boolean pago = Boolean.TRUE.equals(filtro.ocultarPagos()) ? Boolean.FALSE : null;
-
         return Specification
             .where(buscaContem(filtro.busca()))
             .and(inicioMaiorOuIgual(filtro.inicio()))
             .and(fimMenorOuIgual(filtro.fim()))
-            .and(alunoCobradoContem(cobrado))
-            .and(colaboradorPagoContem(pago));
+            .and(alunoIdIgual(filtro.alunoId()))
+            .and(colaboradorIdIgual(filtro.colaboradorId()));
     }
 
     public static Specification<Atendimento> buscaContem(String termo) {
@@ -54,20 +51,6 @@ public final class AtendimentoSpecifications {
 
     public static Specification<Atendimento> colaboradorIdIgual(UUID colaboradorId) {
         return (root, query, cb) -> colaboradorId == null ? null : cb.equal(root.get("colaboradorId"), colaboradorId);
-    }
-
-    public static Specification<Atendimento> colaboradorPagoContem(Boolean pago) {
-        return (root, query, cb) -> {
-            if (pago == null) return null;
-            return pago ? cb.isNotNull(root.get("dataPagamentoColaborador")) : cb.isNull(root.get("dataPagamentoColaborador"));
-        };
-    }
-
-    public static Specification<Atendimento> alunoCobradoContem(Boolean cobrado) {
-        return (root, query, cb) -> {
-            if (cobrado == null) return null;
-            return cobrado ? cb.isNotNull(root.get("dataCobrancaAluno")) : cb.isNull(root.get("dataCobrancaAluno"));
-        };
     }
 
 }

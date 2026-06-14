@@ -3,6 +3,7 @@ package aprimorar.atendimentos.domain;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
@@ -40,7 +41,7 @@ public class Transacao {
     private BigDecimal valor;
 
     @Column(name = "data_efetivada", nullable = false)
-    private LocalDate dataEfetivada;
+    private LocalDateTime dataEfetivada;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false, length = 20)
@@ -67,6 +68,26 @@ public class Transacao {
     private Instant updatedAt;
 
     protected Transacao() {
+    }
+
+    public Transacao(
+            UUID pagadorId,
+            UUID recebedorID,
+            BigDecimal valor,
+            LocalDateTime dataEfetivada,
+            TipoTransacao tipo,
+            FormaPagamento formaPagamento,
+            StatusTransacao status,
+            CategoriaTransacao categoria
+            ){
+        this.pagadorId = pagadorId;
+        this.recebedorId = recebedorID;
+        this.valor = valor;
+        this.dataEfetivada = dataEfetivada;
+        this.tipo = tipo;
+        this.formaPagamento = formaPagamento;
+        this.status = status;
+        this.categoria = categoria;
     }
 
 }

@@ -1,18 +1,17 @@
 package aprimorar.atendimentos.domain;
 
+import aprimorar.atendimentos.enums.StatusAtendimento;
 import aprimorar.atendimentos.enums.TipoAtendimentoEnum;
 import aprimorar.shared.exception.BusinessException;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.http.HttpStatus;
 
 // TODO: Adicionar campos do Google Calendar para a implementacao
@@ -27,14 +26,6 @@ public class Atendimento implements Serializable {
     @EqualsAndHashCode.Include
     private UUID id;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @CreationTimestamp
-    private Instant createdAt;
-
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    private Instant updatedAt;
-
     @Column(name = "titulo", nullable = false)
     private String titulo;
 
@@ -42,10 +33,10 @@ public class Atendimento implements Serializable {
     private String descricao;
 
     @Column(name = "inicio", nullable = false)
-    private Instant inicio;
+    private LocalDateTime inicio;
 
     @Column(name = "fim", nullable = false)
-    private Instant fim;
+    private LocalDateTime fim;
 
     @Column(name = "repasse", precision = 19, scale = 2, nullable = false)
     private BigDecimal repasse;
@@ -57,11 +48,9 @@ public class Atendimento implements Serializable {
     @Column(name = "tipo", nullable = false)
     private TipoAtendimentoEnum tipo;
 
-    @Column(name = "data_pagamento_colaborador")
-    private Instant dataPagamentoColaborador;
-
-    @Column(name = "data_cobranca_aluno")
-    private Instant dataCobrancaAluno;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusAtendimento status;
 
     @Column(name = "aluno_id", nullable = false)
     private UUID alunoId;
@@ -69,63 +58,89 @@ public class Atendimento implements Serializable {
     @Column(name = "colaborador_id", nullable = false)
     private UUID colaboradorId;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     protected Atendimento() {}
+
+    @PrePersist
+    void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     public Atendimento(
         String descricao,
-        Instant inicio,
+        LocalDateTime inicio,
         Double duracao,
         BigDecimal repasse,
         BigDecimal valor,
         TipoAtendimentoEnum tipo,
         UUID alunoId,
-        UUID colaboradorId,
-        Instant now
+        UUID colaboradorId
     ) {
         this.fim = calcularFim(inicio, duracao);
-        validarDatas(inicio, now);
+        validarDatas(inicio);
         validarValores(repasse, valor);
         validarParticipantes(alunoId, colaboradorId);
         validarTipo(tipo);
 
-        this.titulo = montarTitulo(tipo);
+        this.titulo = tipo.name();
         this.descricao = descricao;
         this.inicio = inicio;
         this.repasse = repasse;
         this.valor = valor;
         this.tipo = tipo;
+        this.status = StatusAtendimento.AGENDADO;
         this.alunoId = alunoId;
         this.colaboradorId = colaboradorId;
     }
 
-    public Atendimento update(
-        String descricao,
-        Instant inicio,
-        Double duracao,
-        BigDecimal repasse,
-        BigDecimal valor,
-        TipoAtendimentoEnum tipo,
-        UUID alunoId,
-        UUID colaboradorId,
-        Instant now
-    ) {
-        this.fim = calcularFim(inicio, duracao);
-        validarJanelaEdicao(now);
-        validarDatas(inicio, now);
-        validarValores(repasse, valor);
-        validarParticipantes(alunoId, colaboradorId);
-        validarTipo(tipo);
+    public void cancelar(){
+        if(this.status == StatusAtendimento.CANCELADO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Evento já cancelado");
+        }
 
-        this.titulo = montarTitulo(tipo);
-        this.descricao = descricao;
+        if(this.status == StatusAtendimento.CONCLUIDO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível cancelar um evento concluído");
+        }
+        this.status = StatusAtendimento.CANCELADO;
+    }
+
+    public void concluir(){
+        if(this.status == StatusAtendimento.CANCELADO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível concluir um evento cancelado");
+        }
+
+        if(this.status == StatusAtendimento.CONCLUIDO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Evento já concluido");
+        }
+
+        this.status = StatusAtendimento.CONCLUIDO;
+    }
+
+    public void reagendar(LocalDateTime inicio, Double duracao){
+        if(this.status == StatusAtendimento.CANCELADO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível reagendar um evento cancelado");
+        }
+
+        if(this.status == StatusAtendimento.CONCLUIDO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível reagendar um evento concluído");
+        }
         this.inicio = inicio;
-        this.repasse = repasse;
-        this.valor = valor;
-        this.tipo = tipo;
+        this.fim = calcularFim(inicio, duracao);
+    }
+
+    public void alterarParticipantes(UUID alunoId, UUID colaboradorId){
         this.alunoId = alunoId;
         this.colaboradorId = colaboradorId;
-
-        return this;
     }
 
     @Transient
@@ -138,55 +153,37 @@ public class Atendimento implements Serializable {
         return valor.subtract(repasse);
     }
 
-
-
-    public void alternarCobrancaAluno(Instant now) {
-        if (this.dataCobrancaAluno != null) {
-            this.dataCobrancaAluno = null;
-        } else {
-            this.dataCobrancaAluno = now;
-        }
-    }
-
-    public void alternarPagamentoColaborador(Instant now) {
-        if (this.dataPagamentoColaborador != null) {
-            this.dataPagamentoColaborador = null;
-        } else {
-            this.dataPagamentoColaborador = now;
-        }
-    }
-
-    public static Instant calcularFim(Instant inicio, Double duracao) {
+    public static LocalDateTime calcularFim(LocalDateTime inicio, Double duracao) {
         if (inicio == null) {
-            throw new IllegalStateException("Data de inicio do atendimento e obrigatoria");
+            throw new IllegalStateException("Data de inicio do atendimento é obrigatória");
         }
         if (duracao == null) {
-            throw new IllegalStateException("Duracao do atendimento e obrigatoria");
+            throw new IllegalStateException("Duração do atendimento é obrigatória");
         }
         return inicio.plus((long) (duracao * 60), ChronoUnit.MINUTES);
     }
 
-    public void validarJanelaEdicao(Instant now) {
-        if (this.fim != null && now.isAfter(this.fim.plus(20, ChronoUnit.DAYS))) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "A janela de 20 dias para editar as informacoes do atendimento encerrou");
+    public void validarJanelaEdicao() {
+        if (this.fim != null && LocalDateTime.now().isAfter(this.fim.plus(20, ChronoUnit.DAYS))) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "A janela de 20 dias para editar as informações do atendimento encerrou");
         }
     }
 
-    private void validarDatas(Instant inicio, Instant now) {
+    private void validarDatas(LocalDateTime inicio) {
         if (this.fim.isBefore(inicio)) {
             throw new IllegalStateException("Data de fim do atendimento nao pode ser anterior a data de inicio");
         }
-        if (this.fim.isBefore(now)) {
+        if (this.fim.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("Data de fim do atendimento nao pode estar no passado");
         }
     }
 
     private void validarValores(BigDecimal repasse, BigDecimal valor) {
         if (repasse == null) {
-            throw new IllegalStateException("Pagamento do atendimento e obrigatorio");
+            throw new IllegalStateException("Pagamento do atendimento é obrigatório");
         }
         if (valor == null) {
-            throw new IllegalStateException("Valor do atendimento e obrigatorio");
+            throw new IllegalStateException("Valor do atendimento é obrigatorio");
         }
         if (valor.compareTo(repasse) < 0) {
             throw new IllegalStateException("O valor do atendimento nao pode ser menor que o pagamento");
@@ -207,11 +204,11 @@ public class Atendimento implements Serializable {
 
     private void validarTipo(TipoAtendimentoEnum tipo) {
         if (tipo == null) {
-            throw new IllegalStateException("O conteudo do atendimento e obrigatorio");
+            throw new IllegalStateException("O conteúdo do atendimento é obrigatório");
         }
     }
 
-    private String montarTitulo(TipoAtendimentoEnum tipo) {
-        return tipo.name();
+    private String montarTitulo(Atendimento atendimento, String nomeColaborador, String nomeAluno) {
+        return atendimento.getTipo().name() + ": " + nomeColaborador + " - " + nomeAluno;
     }
 }

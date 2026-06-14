@@ -7,8 +7,6 @@ import fetch from "@kubb/plugin-client/clients/axios";
 import type {
   GetAtendimentoByIdQueryResponse,
   GetAtendimentoByIdPathParams,
-  GetAtendimentoById404,
-  GetAtendimentoById500,
 } from "../../types/atendimento/GetAtendimentoById.ts";
 import type {
   Client,
@@ -43,7 +41,7 @@ export async function getAtendimentoById(
 
   const res = await request<
     GetAtendimentoByIdQueryResponse,
-    ResponseErrorConfig<GetAtendimentoById404 | GetAtendimentoById500>,
+    ResponseErrorConfig<Error>,
     unknown
   >({ method: "GET", url: `/v1/atendimentos/${id}`, ...requestConfig });
   return res.data;
@@ -56,7 +54,7 @@ export function getAtendimentoByIdQueryOptions(
   const queryKey = getAtendimentoByIdQueryKey(id);
   return queryOptions<
     GetAtendimentoByIdQueryResponse,
-    ResponseErrorConfig<GetAtendimentoById404 | GetAtendimentoById500>,
+    ResponseErrorConfig<Error>,
     GetAtendimentoByIdQueryResponse,
     typeof queryKey
   >({
@@ -85,7 +83,7 @@ export function useGetAtendimentoById<
     query?: Partial<
       QueryObserverOptions<
         GetAtendimentoByIdQueryResponse,
-        ResponseErrorConfig<GetAtendimentoById404 | GetAtendimentoById500>,
+        ResponseErrorConfig<Error>,
         TData,
         TQueryData,
         TQueryKey
@@ -105,10 +103,9 @@ export function useGetAtendimentoById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<
-    TData,
-    ResponseErrorConfig<GetAtendimentoById404 | GetAtendimentoById500>
-  > & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

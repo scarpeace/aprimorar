@@ -1,12 +1,15 @@
 package aprimorar.atendimentos.dto;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public record AtendimentoFiltroRequest(
     String busca,
     Instant inicio,
     Instant fim,
     Boolean ocultarCobrados,
-    Boolean ocultarPagos
+    Boolean ocultarPagos,
+    UUID colaboradorId,
+    UUID alunoId
 ) {
 }
