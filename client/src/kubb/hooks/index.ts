@@ -14,6 +14,7 @@ export type { ConcluirAtendimentoMutationKey } from "./atendimento/useConcluirAt
 export type { ExcluirAtendimentoMutationKey } from "./atendimento/useExcluirAtendimento.ts";
 export type { GetAtendimentoByIdQueryKey } from "./atendimento/useGetAtendimentoById.ts";
 export type { GetAtendimentosQueryKey } from "./atendimento/useGetAtendimentos.ts";
+export type { GetDashboardQueryKey } from "./atendimento/useGetDashboard.ts";
 export type { ReagendarAtendimentoMutationKey } from "./atendimento/useReagendarAtendimento.ts";
 export type { LoginMutationKey } from "./auth/useLogin.ts";
 export type { ArquivarColaboradorMutationKey } from "./colaborador/useArquivarColaborador.ts";
@@ -99,6 +100,10 @@ export { getAtendimentos } from "./atendimento/useGetAtendimentos.ts";
 export { getAtendimentosQueryKey } from "./atendimento/useGetAtendimentos.ts";
 export { getAtendimentosQueryOptions } from "./atendimento/useGetAtendimentos.ts";
 export { useGetAtendimentos } from "./atendimento/useGetAtendimentos.ts";
+export { getDashboard } from "./atendimento/useGetDashboard.ts";
+export { getDashboardQueryKey } from "./atendimento/useGetDashboard.ts";
+export { getDashboardQueryOptions } from "./atendimento/useGetDashboard.ts";
+export { useGetDashboard } from "./atendimento/useGetDashboard.ts";
 export { reagendarAtendimento } from "./atendimento/useReagendarAtendimento.ts";
 export { reagendarAtendimentoMutationKey } from "./atendimento/useReagendarAtendimento.ts";
 export { reagendarAtendimentoMutationOptions } from "./atendimento/useReagendarAtendimento.ts";

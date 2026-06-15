@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { PagedModelAtendimentoResponseDTO } from "../PagedModelAtendimentoResponseDTO.ts";
+import type { PagedModelAtendimentoResponse } from "../PagedModelAtendimentoResponse.ts";
 
 export type GetAtendimentosQueryParams = {
   /**
@@ -58,7 +58,7 @@ export type GetAtendimentosQueryParams = {
 /**
  * @description Pagina de atendimentos retornada conforme os filtros informados.
  */
-export type GetAtendimentos200 = PagedModelAtendimentoResponseDTO;
+export type GetAtendimentos200 = PagedModelAtendimentoResponse;
 
 export type GetAtendimentosQueryResponse = GetAtendimentos200;
 

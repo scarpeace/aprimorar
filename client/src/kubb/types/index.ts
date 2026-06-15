@@ -3,14 +3,18 @@ export type { AlunoResponseDTO } from "./AlunoResponseDTO.ts";
 export type { AlunosKpisDTO } from "./AlunosKpisDTO.ts";
 export type { AlunosListDTO } from "./AlunosListDTO.ts";
 export type {
-  AtendimentoRequestDTO,
-  AtendimentoRequestDTOTipoEnumKey,
-} from "./AtendimentoRequestDTO.ts";
+  AtendimentoCalendarioResponse,
+  AtendimentoCalendarioResponseTipoEnumKey,
+} from "./AtendimentoCalendarioResponse.ts";
 export type {
-  AtendimentoResponseDTO,
-  AtendimentoResponseDTOStatusEnumKey,
-  AtendimentoResponseDTOTipoEnumKey,
-} from "./AtendimentoResponseDTO.ts";
+  AtendimentoRequest,
+  AtendimentoRequestTipoEnumKey,
+} from "./AtendimentoRequest.ts";
+export type {
+  AtendimentoResponse,
+  AtendimentoResponseStatusEnumKey,
+  AtendimentoResponseTipoEnumKey,
+} from "./AtendimentoResponse.ts";
 export type { AuthRequestDTO } from "./AuthRequestDTO.ts";
 export type {
   AuthResponseDTO,
@@ -26,18 +30,19 @@ export type {
 } from "./ColaboradorResponseDTO.ts";
 export type { ColaboradoresKpisDTO } from "./ColaboradoresKpisDTO.ts";
 export type { ColaboradoresListDTO } from "./ColaboradoresListDTO.ts";
+export type { DashboardResponse } from "./DashboardResponse.ts";
 export type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
 export type { PageMetadata } from "./PageMetadata.ts";
 export type { PagedModelAlunoResponseDTO } from "./PagedModelAlunoResponseDTO.ts";
-export type { PagedModelAtendimentoResponseDTO } from "./PagedModelAtendimentoResponseDTO.ts";
+export type { PagedModelAtendimentoResponse } from "./PagedModelAtendimentoResponse.ts";
 export type { PagedModelColaboradorResponseDTO } from "./PagedModelColaboradorResponseDTO.ts";
 export type { PagedModelResponsavelResponseDTO } from "./PagedModelResponsavelResponseDTO.ts";
 export type {
   ProblemResponseDTO,
   ProblemResponseDTOStatusEnumKey,
 } from "./ProblemResponseDTO.ts";
-export type { ReagendarRequestDTO } from "./ReagendarRequestDTO.ts";
+export type { ReagendarAtendimentoRequest } from "./ReagendarAtendimentoRequest.ts";
 export type { ResponsavelRequestDTO } from "./ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./ResponsavelResponseDTO.ts";
 export type {
@@ -143,6 +148,12 @@ export type {
   GetAtendimentosQueryParams,
   GetAtendimentosQueryResponse,
 } from "./atendimento/GetAtendimentos.ts";
+export type {
+  GetDashboard200,
+  GetDashboardQuery,
+  GetDashboardQueryParams,
+  GetDashboardQueryResponse,
+} from "./atendimento/GetDashboard.ts";
 export type {
   ReagendarAtendimento200,
   ReagendarAtendimentoMutation,
@@ -277,9 +288,10 @@ export type {
   ListUsersQuery,
   ListUsersQueryResponse,
 } from "./user/ListUsers.ts";
-export { atendimentoRequestDTOTipoEnum } from "./AtendimentoRequestDTO.ts";
-export { atendimentoResponseDTOStatusEnum } from "./AtendimentoResponseDTO.ts";
-export { atendimentoResponseDTOTipoEnum } from "./AtendimentoResponseDTO.ts";
+export { atendimentoCalendarioResponseTipoEnum } from "./AtendimentoCalendarioResponse.ts";
+export { atendimentoRequestTipoEnum } from "./AtendimentoRequest.ts";
+export { atendimentoResponseStatusEnum } from "./AtendimentoResponse.ts";
+export { atendimentoResponseTipoEnum } from "./AtendimentoResponse.ts";
 export { authResponseDTORoleEnum } from "./AuthResponseDTO.ts";
 export { colaboradorRequestDTOFuncaoEnum } from "./ColaboradorRequestDTO.ts";
 export { colaboradorResponseDTOFuncaoEnum } from "./ColaboradorResponseDTO.ts";

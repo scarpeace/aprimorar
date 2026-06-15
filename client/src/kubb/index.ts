@@ -14,6 +14,7 @@ export type { ConcluirAtendimentoMutationKey } from "./hooks/atendimento/useConc
 export type { ExcluirAtendimentoMutationKey } from "./hooks/atendimento/useExcluirAtendimento.ts";
 export type { GetAtendimentoByIdQueryKey } from "./hooks/atendimento/useGetAtendimentoById.ts";
 export type { GetAtendimentosQueryKey } from "./hooks/atendimento/useGetAtendimentos.ts";
+export type { GetDashboardQueryKey } from "./hooks/atendimento/useGetDashboard.ts";
 export type { ReagendarAtendimentoMutationKey } from "./hooks/atendimento/useReagendarAtendimento.ts";
 export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
 export type { ArquivarColaboradorMutationKey } from "./hooks/colaborador/useArquivarColaborador.ts";
@@ -40,14 +41,18 @@ export type { AlunoResponseDTO } from "./types/AlunoResponseDTO.ts";
 export type { AlunosKpisDTO } from "./types/AlunosKpisDTO.ts";
 export type { AlunosListDTO } from "./types/AlunosListDTO.ts";
 export type {
-  AtendimentoRequestDTO,
-  AtendimentoRequestDTOTipoEnumKey,
-} from "./types/AtendimentoRequestDTO.ts";
+  AtendimentoCalendarioResponse,
+  AtendimentoCalendarioResponseTipoEnumKey,
+} from "./types/AtendimentoCalendarioResponse.ts";
 export type {
-  AtendimentoResponseDTO,
-  AtendimentoResponseDTOStatusEnumKey,
-  AtendimentoResponseDTOTipoEnumKey,
-} from "./types/AtendimentoResponseDTO.ts";
+  AtendimentoRequest,
+  AtendimentoRequestTipoEnumKey,
+} from "./types/AtendimentoRequest.ts";
+export type {
+  AtendimentoResponse,
+  AtendimentoResponseStatusEnumKey,
+  AtendimentoResponseTipoEnumKey,
+} from "./types/AtendimentoResponse.ts";
 export type { AuthRequestDTO } from "./types/AuthRequestDTO.ts";
 export type {
   AuthResponseDTO,
@@ -63,18 +68,19 @@ export type {
 } from "./types/ColaboradorResponseDTO.ts";
 export type { ColaboradoresKpisDTO } from "./types/ColaboradoresKpisDTO.ts";
 export type { ColaboradoresListDTO } from "./types/ColaboradoresListDTO.ts";
+export type { DashboardResponse } from "./types/DashboardResponse.ts";
 export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
 export type { PageMetadata } from "./types/PageMetadata.ts";
 export type { PagedModelAlunoResponseDTO } from "./types/PagedModelAlunoResponseDTO.ts";
-export type { PagedModelAtendimentoResponseDTO } from "./types/PagedModelAtendimentoResponseDTO.ts";
+export type { PagedModelAtendimentoResponse } from "./types/PagedModelAtendimentoResponse.ts";
 export type { PagedModelColaboradorResponseDTO } from "./types/PagedModelColaboradorResponseDTO.ts";
 export type { PagedModelResponsavelResponseDTO } from "./types/PagedModelResponsavelResponseDTO.ts";
 export type {
   ProblemResponseDTO,
   ProblemResponseDTOStatusEnumKey,
 } from "./types/ProblemResponseDTO.ts";
-export type { ReagendarRequestDTO } from "./types/ReagendarRequestDTO.ts";
+export type { ReagendarAtendimentoRequest } from "./types/ReagendarAtendimentoRequest.ts";
 export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./types/ResponsavelResponseDTO.ts";
 export type {
@@ -180,6 +186,12 @@ export type {
   GetAtendimentosQueryParams,
   GetAtendimentosQueryResponse,
 } from "./types/atendimento/GetAtendimentos.ts";
+export type {
+  GetDashboard200,
+  GetDashboardQuery,
+  GetDashboardQueryParams,
+  GetDashboardQueryResponse,
+} from "./types/atendimento/GetDashboard.ts";
 export type {
   ReagendarAtendimento200,
   ReagendarAtendimentoMutation,
@@ -378,6 +390,10 @@ export { getAtendimentos } from "./hooks/atendimento/useGetAtendimentos.ts";
 export { getAtendimentosQueryKey } from "./hooks/atendimento/useGetAtendimentos.ts";
 export { getAtendimentosQueryOptions } from "./hooks/atendimento/useGetAtendimentos.ts";
 export { useGetAtendimentos } from "./hooks/atendimento/useGetAtendimentos.ts";
+export { getDashboard } from "./hooks/atendimento/useGetDashboard.ts";
+export { getDashboardQueryKey } from "./hooks/atendimento/useGetDashboard.ts";
+export { getDashboardQueryOptions } from "./hooks/atendimento/useGetDashboard.ts";
+export { useGetDashboard } from "./hooks/atendimento/useGetDashboard.ts";
 export { reagendarAtendimento } from "./hooks/atendimento/useReagendarAtendimento.ts";
 export { reagendarAtendimentoMutationKey } from "./hooks/atendimento/useReagendarAtendimento.ts";
 export { reagendarAtendimentoMutationOptions } from "./hooks/atendimento/useReagendarAtendimento.ts";
@@ -462,9 +478,10 @@ export { listUsers } from "./hooks/user/useListUsers.ts";
 export { listUsersQueryKey } from "./hooks/user/useListUsers.ts";
 export { listUsersQueryOptions } from "./hooks/user/useListUsers.ts";
 export { useListUsers } from "./hooks/user/useListUsers.ts";
-export { atendimentoRequestDTOTipoEnum } from "./types/AtendimentoRequestDTO.ts";
-export { atendimentoResponseDTOStatusEnum } from "./types/AtendimentoResponseDTO.ts";
-export { atendimentoResponseDTOTipoEnum } from "./types/AtendimentoResponseDTO.ts";
+export { atendimentoCalendarioResponseTipoEnum } from "./types/AtendimentoCalendarioResponse.ts";
+export { atendimentoRequestTipoEnum } from "./types/AtendimentoRequest.ts";
+export { atendimentoResponseStatusEnum } from "./types/AtendimentoResponse.ts";
+export { atendimentoResponseTipoEnum } from "./types/AtendimentoResponse.ts";
 export { authResponseDTORoleEnum } from "./types/AuthResponseDTO.ts";
 export { colaboradorRequestDTOFuncaoEnum } from "./types/ColaboradorRequestDTO.ts";
 export { colaboradorResponseDTOFuncaoEnum } from "./types/ColaboradorResponseDTO.ts";

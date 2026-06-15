@@ -4,6 +4,7 @@ export type { ConcluirAtendimentoMutationKey } from "./useConcluirAtendimento.ts
 export type { ExcluirAtendimentoMutationKey } from "./useExcluirAtendimento.ts";
 export type { GetAtendimentoByIdQueryKey } from "./useGetAtendimentoById.ts";
 export type { GetAtendimentosQueryKey } from "./useGetAtendimentos.ts";
+export type { GetDashboardQueryKey } from "./useGetDashboard.ts";
 export type { ReagendarAtendimentoMutationKey } from "./useReagendarAtendimento.ts";
 export { agendarAtendimento } from "./useAgendarAtendimento.ts";
 export { agendarAtendimentoMutationKey } from "./useAgendarAtendimento.ts";
@@ -29,6 +30,10 @@ export { getAtendimentos } from "./useGetAtendimentos.ts";
 export { getAtendimentosQueryKey } from "./useGetAtendimentos.ts";
 export { getAtendimentosQueryOptions } from "./useGetAtendimentos.ts";
 export { useGetAtendimentos } from "./useGetAtendimentos.ts";
+export { getDashboard } from "./useGetDashboard.ts";
+export { getDashboardQueryKey } from "./useGetDashboard.ts";
+export { getDashboardQueryOptions } from "./useGetDashboard.ts";
+export { useGetDashboard } from "./useGetDashboard.ts";
 export { reagendarAtendimento } from "./useReagendarAtendimento.ts";
 export { reagendarAtendimentoMutationKey } from "./useReagendarAtendimento.ts";
 export { reagendarAtendimentoMutationOptions } from "./useReagendarAtendimento.ts";

@@ -2,10 +2,11 @@ package aprimorar.atendimentos.repository;
 
 
 import aprimorar.atendimentos.domain.Atendimento;
-import aprimorar.atendimentos.enums.TipoAtendimentoEnum;
+import aprimorar.atendimentos.repository.projections.CalendarioAtendimentoProjection;
+import aprimorar.atendimentos.repository.projections.RelatorioMensalAtendimentosProjection;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,20 +16,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>, JpaSpecificationExecutor<Atendimento> {
-    interface TipoAtendimentoCount {
-        TipoAtendimentoEnum getTipo();
-        long getCount();
-    }
-
-    interface ReportAtendimentosProjection{
-        long getTotalAulas();
-        long getTotalMentoria();
-        long getTotalTerapia();
-        long getTotalOV();
-        long getTotalENEM();
-        long getTotalPAS();
-        long getTotalOutros();
-    }
 
     @Modifying
     @Query(
@@ -50,39 +37,54 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
     )
     void reassignAtendimentosColaboradorToGhost(@Param("colaboradorId") UUID colaboradorId, @Param("ghostId") UUID ghostId);
 
-    @Query(
-        value = """
-        select
-          a.colaboradorId as colaboradorId,
-          count(a.id) as totalAtendimentos,
-          coalesce(sum(a.repasse), 0) as totalPago,
-          0 as totalPendente
-        from Atendimento a
-        where a.inicio >= coalesce(:inicio, a.inicio)
-          and a.fim <= coalesce(:fim, a.fim)
-        group by a.colaboradorId
-        """,
-        countQuery = """
-        select count(distinct a.colaboradorId)
-        from Atendimento a
-        where a.inicio >= coalesce(:inicio, a.inicio)
-          and a.fim <= coalesce(:fim, a.fim)
-        """
-    )
+    @Query("""
+        SELECT
+          COUNT(*) FILTER (WHERE at.tipo = 'AULA') AS totalAulas,
+          COUNT(*) FILTER (WHERE at.tipo = 'PAS') AS totalPAS,
+          COUNT(*) FILTER (WHERE at.tipo = 'ENEM') AS totalENEM,
+          COUNT(*) FILTER (WHERE at.tipo = 'MENTORIA') AS totalMentoria,
+          COUNT(*) FILTER (WHERE at.tipo = 'TERAPIA') AS totalTerapia,
+          COUNT(*) FILTER (WHERE at.tipo = 'ORIENTACAO_VOCACIONAL') AS totalOV,
+          COUNT(*) FILTER (WHERE at.tipo = 'OUTRO') AS totalOutros
+        FROM Atendimento at
+        WHERE at.inicio >= :inicio
+          AND at.fim <= :fim
+        """)
+    RelatorioMensalAtendimentosProjection getRelatorioMensal(
+        @Param("inicio") LocalDateTime inicio,
+        @Param("fim") LocalDateTime fim
+    );
 
-    ReportAtendimentosProjection getAtendimentosContentReport(
+    @Query("""
+        SELECT
+          at.id AS id,
+          at.colaboradorId AS colaboradorId,
+          at.alunoId AS alunoId,
+          at.inicio AS inicio,
+          at.fim AS fim,
+          at.tipo AS tipo,
+          c.nome AS nomeColaborador,
+          al.nome AS nomeAluno
+        FROM Atendimento at
+        JOIN Colaborador c ON at.colaboradorId = c.id
+        JOIN Aluno al ON at.alunoId = al.id
+        WHERE at.inicio >= :inicio
+          AND at.fim <= :fim
+        ORDER BY at.inicio
+        """)
+    List<CalendarioAtendimentoProjection> getCalendarioMensal(
         @Param("inicio") LocalDateTime inicio,
         @Param("fim") LocalDateTime fim
     );
 
     @Query(
         """
-            select count(a) > 0
-            from Atendimento a
-            where a.alunoId = :alunoId
-              and a.inicio < :fim
-              and a.fim > :inicio
-              and (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
+            SELECT count(a) > 0
+            FROM Atendimento a
+            WHERE a.alunoId = :alunoId
+              AND a.inicio < :fim
+              AND a.fim > :inicio
+              AND (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
         """
     )
     boolean alunoPossuiAtendimentoConflitante(
@@ -94,12 +96,12 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
 
     @Query(
         """
-            select count(a) > 0
-            from Atendimento a
-            where a.colaboradorId = :colaboradorId
-              and a.inicio < :fim
-              and a.fim > :inicio
-              and (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
+            SELECT count(a) > 0
+            FROM Atendimento a
+            WHERE a.colaboradorId = :colaboradorId
+              AND a.inicio < :fim
+              AND a.fim > :inicio
+              AND (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
         """
     )
     boolean colaboradorPossuiAtendimentoConflitante(

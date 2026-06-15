@@ -1,7 +1,7 @@
 package aprimorar.atendimentos.domain;
 
 import aprimorar.atendimentos.enums.StatusAtendimento;
-import aprimorar.atendimentos.enums.TipoAtendimentoEnum;
+import aprimorar.atendimentos.enums.TipoAtendimento;
 import aprimorar.shared.exception.BusinessException;
 import jakarta.persistence.*;
 import java.io.Serializable;
@@ -46,7 +46,7 @@ public class Atendimento implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false)
-    private TipoAtendimentoEnum tipo;
+    private TipoAtendimento tipo;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -82,7 +82,7 @@ public class Atendimento implements Serializable {
         Double duracao,
         BigDecimal repasse,
         BigDecimal valor,
-        TipoAtendimentoEnum tipo,
+        TipoAtendimento tipo,
         UUID alunoId,
         UUID colaboradorId
     ) {
@@ -202,7 +202,7 @@ public class Atendimento implements Serializable {
         }
     }
 
-    private void validarTipo(TipoAtendimentoEnum tipo) {
+    private void validarTipo(TipoAtendimento tipo) {
         if (tipo == null) {
             throw new IllegalStateException("O conteúdo do atendimento é obrigatório");
         }

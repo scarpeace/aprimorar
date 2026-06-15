@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export const atendimentoRequestDTOTipoEnum = {
+export const atendimentoRequestTipoEnum = {
   AULA: "AULA",
   MENTORIA: "MENTORIA",
   TERAPIA: "TERAPIA",
@@ -13,13 +13,13 @@ export const atendimentoRequestDTOTipoEnum = {
   OUTRO: "OUTRO",
 } as const;
 
-export type AtendimentoRequestDTOTipoEnumKey =
-  (typeof atendimentoRequestDTOTipoEnum)[keyof typeof atendimentoRequestDTOTipoEnum];
+export type AtendimentoRequestTipoEnumKey =
+  (typeof atendimentoRequestTipoEnum)[keyof typeof atendimentoRequestTipoEnum];
 
 /**
  * @description Formato de payload para cadastro e atualização de atendimento
  */
-export type AtendimentoRequestDTO = {
+export type AtendimentoRequest = {
   /**
    * @description Descrição do atendimento
    * @type string | undefined
@@ -29,7 +29,7 @@ export type AtendimentoRequestDTO = {
    * @description Tipo de conteudo ou categoria do atendimento
    * @type string
    */
-  tipo: AtendimentoRequestDTOTipoEnumKey;
+  tipo: AtendimentoRequestTipoEnumKey;
   /**
    * @description Data e hora de início do atendimento
    * @type string, date-time

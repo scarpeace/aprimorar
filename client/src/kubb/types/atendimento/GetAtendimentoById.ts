@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { AtendimentoResponseDTO } from "../AtendimentoResponseDTO.ts";
+import type { AtendimentoResponse } from "../AtendimentoResponse.ts";
 
 export type GetAtendimentoByIdPathParams = {
   /**
@@ -15,7 +15,7 @@ export type GetAtendimentoByIdPathParams = {
 /**
  * @description Atendimento encontrado e retornado.
  */
-export type GetAtendimentoById200 = AtendimentoResponseDTO;
+export type GetAtendimentoById200 = AtendimentoResponse;
 
 export type GetAtendimentoByIdQueryResponse = GetAtendimentoById200;
 

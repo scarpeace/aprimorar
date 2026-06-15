@@ -35,6 +35,12 @@ export type {
   GetAtendimentosQueryResponse,
 } from "./GetAtendimentos.ts";
 export type {
+  GetDashboard200,
+  GetDashboardQuery,
+  GetDashboardQueryParams,
+  GetDashboardQueryResponse,
+} from "./GetDashboard.ts";
+export type {
   ReagendarAtendimento200,
   ReagendarAtendimentoMutation,
   ReagendarAtendimentoMutationRequest,

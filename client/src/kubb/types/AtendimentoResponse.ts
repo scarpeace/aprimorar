@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export const atendimentoResponseDTOTipoEnum = {
+export const atendimentoResponseTipoEnum = {
   AULA: "AULA",
   MENTORIA: "MENTORIA",
   TERAPIA: "TERAPIA",
@@ -13,22 +13,22 @@ export const atendimentoResponseDTOTipoEnum = {
   OUTRO: "OUTRO",
 } as const;
 
-export type AtendimentoResponseDTOTipoEnumKey =
-  (typeof atendimentoResponseDTOTipoEnum)[keyof typeof atendimentoResponseDTOTipoEnum];
+export type AtendimentoResponseTipoEnumKey =
+  (typeof atendimentoResponseTipoEnum)[keyof typeof atendimentoResponseTipoEnum];
 
-export const atendimentoResponseDTOStatusEnum = {
+export const atendimentoResponseStatusEnum = {
   AGENDADO: "AGENDADO",
   CONCLUIDO: "CONCLUIDO",
   CANCELADO: "CANCELADO",
 } as const;
 
-export type AtendimentoResponseDTOStatusEnumKey =
-  (typeof atendimentoResponseDTOStatusEnum)[keyof typeof atendimentoResponseDTOStatusEnum];
+export type AtendimentoResponseStatusEnumKey =
+  (typeof atendimentoResponseStatusEnum)[keyof typeof atendimentoResponseStatusEnum];
 
 /**
  * @description Dados do atendimento retornados pela API
  */
-export type AtendimentoResponseDTO = {
+export type AtendimentoResponse = {
   /**
    * @description Identificador unico do atendimento
    * @type string, uuid
@@ -43,7 +43,7 @@ export type AtendimentoResponseDTO = {
    * @description Tipo de conteudo ou categoria do atendimento
    * @type string
    */
-  tipo: AtendimentoResponseDTOTipoEnumKey;
+  tipo: AtendimentoResponseTipoEnumKey;
   /**
    * @description Data/hora de inicio do atendimento
    * @type string, date-time
@@ -88,7 +88,7 @@ export type AtendimentoResponseDTO = {
    * @description Status do atendimento
    * @type string
    */
-  status: AtendimentoResponseDTOStatusEnumKey;
+  status: AtendimentoResponseStatusEnumKey;
   /**
    * @description Data de criacao do atendimento
    * @type string, date-time

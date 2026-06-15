@@ -3,8 +3,8 @@
  * Do not edit manually.
  */
 
-import type { AtendimentoResponseDTO } from "../AtendimentoResponseDTO.ts";
-import type { ReagendarRequestDTO } from "../ReagendarRequestDTO.ts";
+import type { AtendimentoResponse } from "../AtendimentoResponse.ts";
+import type { ReagendarAtendimentoRequest } from "../ReagendarAtendimentoRequest.ts";
 
 export type ReagendarAtendimentoPathParams = {
   /**
@@ -16,9 +16,9 @@ export type ReagendarAtendimentoPathParams = {
 /**
  * @description Atendimento reagendado e retornado com os dados consolidados de aluno e colaborador.
  */
-export type ReagendarAtendimento200 = AtendimentoResponseDTO;
+export type ReagendarAtendimento200 = AtendimentoResponse;
 
-export type ReagendarAtendimentoMutationRequest = ReagendarRequestDTO;
+export type ReagendarAtendimentoMutationRequest = ReagendarAtendimentoRequest;
 
 export type ReagendarAtendimentoMutationResponse = ReagendarAtendimento200;
 

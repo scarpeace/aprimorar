@@ -3,14 +3,14 @@
  * Do not edit manually.
  */
 
-import type { AtendimentoResponseDTO } from "./AtendimentoResponseDTO.ts";
+import type { AtendimentoResponse } from "./AtendimentoResponse.ts";
 import type { PageMetadata } from "./PageMetadata.ts";
 
-export type PagedModelAtendimentoResponseDTO = {
+export type PagedModelAtendimentoResponse = {
   /**
    * @type array | undefined
    */
-  content?: AtendimentoResponseDTO[];
+  content?: AtendimentoResponse[];
   /**
    * @type object | undefined
    */

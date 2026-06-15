@@ -2,7 +2,7 @@ package aprimorar.atendimentos.dto;
 
 import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.atendimentos.enums.StatusAtendimento;
-import aprimorar.atendimentos.enums.TipoAtendimentoEnum;
+import aprimorar.atendimentos.enums.TipoAtendimento;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +12,7 @@ import java.util.UUID;
 
 
 @Schema(description = "Dados do atendimento retornados pela API")
-public record AtendimentoResponseDTO(
+public record AtendimentoResponse(
     @NotNull
     @Schema(nullable = false, description = "Identificador unico do atendimento", example = "550e8400-e29b-41d4-a716-446655440000")
     UUID id,
@@ -23,7 +23,7 @@ public record AtendimentoResponseDTO(
 
     @NotNull
     @Schema(nullable = false, description = "Conteudo do atendimento (aula, mentoria etc.)", example = "MENTORIA")
-    TipoAtendimentoEnum tipo,
+    TipoAtendimento tipo,
 
     @NotNull
     @Schema(nullable = false, description = "Data/hora de inicio do atendimento", example = "2023-11-20T14:00:00Z")
@@ -69,8 +69,8 @@ public record AtendimentoResponseDTO(
     @Schema(nullable = true, description = "Data de atualizacao do atendimento", example = "2024-03-10T15:33:42Z")
     LocalDateTime updatedAt
 ) {
-    public static AtendimentoResponseDTO toDto(Atendimento atendimento) {
-        return new AtendimentoResponseDTO(
+    public static AtendimentoResponse toDto(Atendimento atendimento) {
+        return new AtendimentoResponse(
             atendimento.getId(),
             atendimento.getDescricao(),
             atendimento.getTipo(),

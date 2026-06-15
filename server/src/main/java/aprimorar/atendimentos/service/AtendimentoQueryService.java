@@ -1,6 +1,7 @@
 package aprimorar.atendimentos.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -13,8 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
-import aprimorar.atendimentos.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.dto.AtendimentosContentReportDTO;
+import aprimorar.atendimentos.dto.AtendimentoResponse;
+import aprimorar.atendimentos.dto.AtendimentoCalendarioResponse;
+import aprimorar.atendimentos.dto.DashboardResponse;
 import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.atendimentos.repository.specifications.AtendimentoSpecifications;
@@ -32,19 +34,42 @@ public class AtendimentoQueryService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AtendimentoResponseDTO> getAtendimentos(Pageable pageable,AtendimentoFiltroRequest filtro) {
+    public Page<AtendimentoResponse> getAtendimentos(Pageable pageable,AtendimentoFiltroRequest filtro) {
         Specification<Atendimento> spec = AtendimentoSpecifications.comFiltros(filtro);
         Page<Atendimento> atendimentoPage = atendimentoRepo.findAll(spec, pageable);
 
         log.info("Consulta de atendimentos finalizada, {} registros encontrados.", atendimentoPage.getTotalElements());
-        return atendimentoPage.map(AtendimentoResponseDTO::toDto);
+        return atendimentoPage.map(AtendimentoResponse::toDto);
     }
 
     @Transactional(readOnly = true)
-    public AtendimentoResponseDTO findAtendimentoById(UUID id) {
+    public AtendimentoResponse findAtendimentoById(UUID id) {
         Atendimento atendimento = atendimentoRepo.findById(id).orElseThrow(
             () -> new BusinessException(HttpStatus.NOT_FOUND, "Atendimento não encontrado"));
+
         log.info("Atendimento {} consultado com sucesso.", atendimento.getTitulo().toUpperCase());
-        return AtendimentoResponseDTO.toDto(atendimento);
+        return AtendimentoResponse.toDto(atendimento);
     }
+
+    @Transactional(readOnly = true)
+    public DashboardResponse getDashboard(YearMonth mes) {
+        var dataInicio = mes.atDay(1).atStartOfDay();
+        var dataFim = mes.atEndOfMonth().atTime(LocalTime.MAX);
+
+        var atendimentos = atendimentoRepo.getCalendarioMensal(dataInicio, dataFim);
+        var resumo = atendimentoRepo.getRelatorioMensal(dataInicio, dataFim);
+
+        return new DashboardResponse(
+            resumo.getTotalAulas(),
+            resumo.getTotalMentoria(),
+            resumo.getTotalTerapia(),
+            resumo.getTotalOV(),
+            resumo.getTotalENEM(),
+            resumo.getTotalPAS(),
+            resumo.getTotalOutros(),
+            atendimentos.stream().map(AtendimentoCalendarioResponse::toDto).toList()
+        );
+    }
+
+
 }

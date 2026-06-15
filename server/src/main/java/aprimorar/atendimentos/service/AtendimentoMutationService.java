@@ -1,8 +1,8 @@
 package aprimorar.atendimentos.service;
 
-import aprimorar.atendimentos.dto.AtendimentoRequestDTO;
-import aprimorar.atendimentos.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.dto.ReagendarRequestDTO;
+import aprimorar.atendimentos.dto.AtendimentoRequest;
+import aprimorar.atendimentos.dto.AtendimentoResponse;
+import aprimorar.atendimentos.dto.ReagendarAtendimentoRequest;
 import aprimorar.atendimentos.enums.StatusAtendimento;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.atendimentos.domain.Atendimento;
@@ -37,7 +37,7 @@ public class AtendimentoMutationService {
     }
 
     @Transactional
-    public AtendimentoResponseDTO agendar(AtendimentoRequestDTO dto) {
+    public AtendimentoResponse agendar(AtendimentoRequest dto) {
         Atendimento atendimento = dto.toEntity();
 
         if(!alunoQueryApi.existsById(atendimento.getAlunoId())){
@@ -77,7 +77,7 @@ public class AtendimentoMutationService {
 //        transacaoRepo.save(entradaAluno, saidaProfessor);
 
         log.info("Atendimento {} cadastrado com sucesso.", saved.getTitulo().toUpperCase());
-        return AtendimentoResponseDTO.toDto(saved);
+        return AtendimentoResponse.toDto(saved);
     }
 
     @Transactional
@@ -88,7 +88,7 @@ public class AtendimentoMutationService {
     }
 
     @Transactional
-    public void reagendar(UUID id, ReagendarRequestDTO request){
+    public void reagendar(UUID id, ReagendarAtendimentoRequest request){
         Atendimento atendimento = findAtendimentoOrThrow(id);
         atendimento.reagendar(request.novoInicio(), request.duracao());
         log.info("Atendimento {} reagendado com sucesso.", atendimento.getTitulo().toUpperCase());
