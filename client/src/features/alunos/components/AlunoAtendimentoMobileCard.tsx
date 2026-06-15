@@ -1,16 +1,16 @@
 import { ButtonLink } from "@/components/ui/button";
-import type { AtendimentoResponseDTO } from "@/kubb";
+import type { AtendimentoResponse } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, Clock, SquareArrowOutUpRight, Tag, User as UserIcon } from "lucide-react";
 import { memo } from "react";
 
 type AlunoAtendimentoMobileCardProps = {
-  atendimento: AtendimentoResponseDTO;
+  atendimento: AtendimentoResponse;
   colaboradorNome: string;
   index: number;
 };
 
-const tipoLabels: Record<AtendimentoResponseDTO["tipo"], string> = {
+const tipoLabels: Record<AtendimentoResponse["tipo"], string> = {
   AULA: "Aula",
   MENTORIA: "Mentoria",
   TERAPIA: "Terapia",

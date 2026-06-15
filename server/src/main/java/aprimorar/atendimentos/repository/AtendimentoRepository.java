@@ -2,8 +2,8 @@ package aprimorar.atendimentos.repository;
 
 
 import aprimorar.atendimentos.domain.Atendimento;
-import aprimorar.atendimentos.repository.projections.CalendarioAtendimentoProjection;
-import aprimorar.atendimentos.repository.projections.RelatorioMensalAtendimentosProjection;
+import aprimorar.atendimentos.repository.projections.AtendimentoCalendarioProjection;
+import aprimorar.atendimentos.repository.projections.AtendimentosReportProjection;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +50,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         WHERE at.inicio >= :inicio
           AND at.fim <= :fim
         """)
-    RelatorioMensalAtendimentosProjection getRelatorioMensal(
+    AtendimentosReportProjection getRelatorioMensal(
         @Param("inicio") LocalDateTime inicio,
         @Param("fim") LocalDateTime fim
     );
@@ -72,7 +72,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
           AND at.fim <= :fim
         ORDER BY at.inicio
         """)
-    List<CalendarioAtendimentoProjection> getCalendarioMensal(
+    List<AtendimentoCalendarioProjection> getCalendarioMensal(
         @Param("inicio") LocalDateTime inicio,
         @Param("fim") LocalDateTime fim
     );

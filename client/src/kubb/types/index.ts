@@ -6,6 +6,7 @@ export type {
   AtendimentoCalendarioResponse,
   AtendimentoCalendarioResponseTipoEnumKey,
 } from "./AtendimentoCalendarioResponse.ts";
+export type { AtendimentoReportResponse } from "./AtendimentoReportResponse.ts";
 export type {
   AtendimentoRequest,
   AtendimentoRequestTipoEnumKey,
@@ -30,7 +31,6 @@ export type {
 } from "./ColaboradorResponseDTO.ts";
 export type { ColaboradoresKpisDTO } from "./ColaboradoresKpisDTO.ts";
 export type { ColaboradoresListDTO } from "./ColaboradoresListDTO.ts";
-export type { DashboardResponse } from "./DashboardResponse.ts";
 export type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
 export type { PageMetadata } from "./PageMetadata.ts";
@@ -149,11 +149,17 @@ export type {
   GetAtendimentosQueryResponse,
 } from "./atendimento/GetAtendimentos.ts";
 export type {
-  GetDashboard200,
-  GetDashboardQuery,
-  GetDashboardQueryParams,
-  GetDashboardQueryResponse,
-} from "./atendimento/GetDashboard.ts";
+  GetAtendimentosReport200,
+  GetAtendimentosReportQuery,
+  GetAtendimentosReportQueryParams,
+  GetAtendimentosReportQueryResponse,
+} from "./atendimento/GetAtendimentosReport.ts";
+export type {
+  GetCalendarioAtendimentos200,
+  GetCalendarioAtendimentosQuery,
+  GetCalendarioAtendimentosQueryParams,
+  GetCalendarioAtendimentosQueryResponse,
+} from "./atendimento/GetCalendarioAtendimentos.ts";
 export type {
   ReagendarAtendimento200,
   ReagendarAtendimentoMutation,

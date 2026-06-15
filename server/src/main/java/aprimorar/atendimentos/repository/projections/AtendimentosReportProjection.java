@@ -1,7 +1,7 @@
 package aprimorar.atendimentos.repository.projections;
 
 
-public interface RelatorioMensalAtendimentosProjection {
+public interface AtendimentosReportProjection {
 
     Long getTotalAulas();
     Long getTotalMentoria();

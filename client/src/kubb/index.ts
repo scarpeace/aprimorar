@@ -14,7 +14,8 @@ export type { ConcluirAtendimentoMutationKey } from "./hooks/atendimento/useConc
 export type { ExcluirAtendimentoMutationKey } from "./hooks/atendimento/useExcluirAtendimento.ts";
 export type { GetAtendimentoByIdQueryKey } from "./hooks/atendimento/useGetAtendimentoById.ts";
 export type { GetAtendimentosQueryKey } from "./hooks/atendimento/useGetAtendimentos.ts";
-export type { GetDashboardQueryKey } from "./hooks/atendimento/useGetDashboard.ts";
+export type { GetAtendimentosReportQueryKey } from "./hooks/atendimento/useGetAtendimentosReport.ts";
+export type { GetCalendarioAtendimentosQueryKey } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
 export type { ReagendarAtendimentoMutationKey } from "./hooks/atendimento/useReagendarAtendimento.ts";
 export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
 export type { ArquivarColaboradorMutationKey } from "./hooks/colaborador/useArquivarColaborador.ts";
@@ -44,6 +45,7 @@ export type {
   AtendimentoCalendarioResponse,
   AtendimentoCalendarioResponseTipoEnumKey,
 } from "./types/AtendimentoCalendarioResponse.ts";
+export type { AtendimentoReportResponse } from "./types/AtendimentoReportResponse.ts";
 export type {
   AtendimentoRequest,
   AtendimentoRequestTipoEnumKey,
@@ -68,7 +70,6 @@ export type {
 } from "./types/ColaboradorResponseDTO.ts";
 export type { ColaboradoresKpisDTO } from "./types/ColaboradoresKpisDTO.ts";
 export type { ColaboradoresListDTO } from "./types/ColaboradoresListDTO.ts";
-export type { DashboardResponse } from "./types/DashboardResponse.ts";
 export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
 export type { PageMetadata } from "./types/PageMetadata.ts";
@@ -187,11 +188,17 @@ export type {
   GetAtendimentosQueryResponse,
 } from "./types/atendimento/GetAtendimentos.ts";
 export type {
-  GetDashboard200,
-  GetDashboardQuery,
-  GetDashboardQueryParams,
-  GetDashboardQueryResponse,
-} from "./types/atendimento/GetDashboard.ts";
+  GetAtendimentosReport200,
+  GetAtendimentosReportQuery,
+  GetAtendimentosReportQueryParams,
+  GetAtendimentosReportQueryResponse,
+} from "./types/atendimento/GetAtendimentosReport.ts";
+export type {
+  GetCalendarioAtendimentos200,
+  GetCalendarioAtendimentosQuery,
+  GetCalendarioAtendimentosQueryParams,
+  GetCalendarioAtendimentosQueryResponse,
+} from "./types/atendimento/GetCalendarioAtendimentos.ts";
 export type {
   ReagendarAtendimento200,
   ReagendarAtendimentoMutation,
@@ -390,10 +397,14 @@ export { getAtendimentos } from "./hooks/atendimento/useGetAtendimentos.ts";
 export { getAtendimentosQueryKey } from "./hooks/atendimento/useGetAtendimentos.ts";
 export { getAtendimentosQueryOptions } from "./hooks/atendimento/useGetAtendimentos.ts";
 export { useGetAtendimentos } from "./hooks/atendimento/useGetAtendimentos.ts";
-export { getDashboard } from "./hooks/atendimento/useGetDashboard.ts";
-export { getDashboardQueryKey } from "./hooks/atendimento/useGetDashboard.ts";
-export { getDashboardQueryOptions } from "./hooks/atendimento/useGetDashboard.ts";
-export { useGetDashboard } from "./hooks/atendimento/useGetDashboard.ts";
+export { getAtendimentosReport } from "./hooks/atendimento/useGetAtendimentosReport.ts";
+export { getAtendimentosReportQueryKey } from "./hooks/atendimento/useGetAtendimentosReport.ts";
+export { getAtendimentosReportQueryOptions } from "./hooks/atendimento/useGetAtendimentosReport.ts";
+export { useGetAtendimentosReport } from "./hooks/atendimento/useGetAtendimentosReport.ts";
+export { getCalendarioAtendimentos } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
+export { getCalendarioAtendimentosQueryKey } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
+export { getCalendarioAtendimentosQueryOptions } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
+export { useGetCalendarioAtendimentos } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
 export { reagendarAtendimento } from "./hooks/atendimento/useReagendarAtendimento.ts";
 export { reagendarAtendimentoMutationKey } from "./hooks/atendimento/useReagendarAtendimento.ts";
 export { reagendarAtendimentoMutationOptions } from "./hooks/atendimento/useReagendarAtendimento.ts";

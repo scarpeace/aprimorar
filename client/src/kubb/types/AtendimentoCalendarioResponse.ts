@@ -20,6 +20,10 @@ export type AtendimentoCalendarioResponse = {
   /**
    * @type string | undefined, uuid
    */
+  id?: string;
+  /**
+   * @type string | undefined, uuid
+   */
   colaboradorId?: string;
   /**
    * @type string | undefined, uuid

@@ -3,15 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { BellElectric, Plus } from "lucide-react";
-import type { AtendimentoResponseDTO } from "@/kubb";
 import { AtendimentoForm } from "../components/AtendimentoForm";
 import { AtendimentosTable } from "../components/AtendimentosTable";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter";
+import type { AtendimentoResponse } from "@/kubb";
 
 export function AtendimentosPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedAtendimento, setSelectedAtendimento] = useState<AtendimentoResponseDTO | null>(null);
+  const [selectedAtendimento, setSelectedAtendimento] = useState<AtendimentoResponse | null>(null);
   const { startDate, endDate, ...dateFilter } = usePageDateFilter();
 
 
@@ -22,7 +22,7 @@ export function AtendimentosPage() {
     iconBg: "accent",
   } as const;
 
-  const handleOpenForm = (atendimento?: AtendimentoResponseDTO) => {
+  const handleOpenForm = (atendimento?: AtendimentoResponse) => {
     setSelectedAtendimento(atendimento || null);
     setIsFormOpen(true);
   };

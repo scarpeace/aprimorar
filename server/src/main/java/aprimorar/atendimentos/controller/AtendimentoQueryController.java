@@ -1,14 +1,16 @@
 package aprimorar.atendimentos.controller;
 
+import aprimorar.atendimentos.dto.AtendimentoCalendarioResponse;
 import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
 import aprimorar.atendimentos.service.AtendimentoQueryService;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
-import aprimorar.atendimentos.dto.DashboardResponse;
+import aprimorar.atendimentos.dto.AtendimentoReportResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.time.YearMonth;
+import java.util.List;
 import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -48,11 +50,18 @@ public class AtendimentoQueryController {
         return ResponseEntity.ok(atendimentoQueryService.findAtendimentoById(id));
     }
 
-    @GetMapping("/dashboard")
-    @Operation(operationId = "getDashboard", description = "Retorna o conteúdo para montar o dashboard.")
-    @ApiResponse(responseCode = "200", description = "Dashboard retornado com sucesso.")
-    public ResponseEntity<DashboardResponse> getDashboard(@RequestParam YearMonth mes) {
-        return ResponseEntity.ok(atendimentoQueryService.getDashboard(mes));
+    @GetMapping("/calendario")
+    @Operation(operationId = "getCalendarioAtendimentos", description = "Retorna o conteúdo para montar o calendário de atendimentos.")
+    @ApiResponse(responseCode = "200", description = "Calendário retornado com sucesso.")
+    public ResponseEntity<List<AtendimentoCalendarioResponse>> getCalendarioAtendimentos(@RequestParam YearMonth anoMes) {
+        return ResponseEntity.ok(atendimentoQueryService.getCalendarioAtendimentos(anoMes));
+    }
+
+    @GetMapping("/report")
+    @Operation(operationId = "getAtendimentosReport", description = "Retorna o conteúdo para montar o relatório.")
+    @ApiResponse(responseCode = "200", description = "Relatório retornado com sucesso.")
+    public ResponseEntity<AtendimentoReportResponse> getAtendimentosReport(@RequestParam YearMonth anoMes) {
+        return ResponseEntity.ok(atendimentoQueryService.getAtendimentosReport(anoMes));
     }
 
 }

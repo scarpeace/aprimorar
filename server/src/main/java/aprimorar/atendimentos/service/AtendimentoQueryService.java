@@ -2,6 +2,7 @@ package aprimorar.atendimentos.service;
 
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -16,9 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
 import aprimorar.atendimentos.dto.AtendimentoCalendarioResponse;
-import aprimorar.atendimentos.dto.DashboardResponse;
+import aprimorar.atendimentos.dto.AtendimentoReportResponse;
 import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
+import aprimorar.atendimentos.repository.projections.AtendimentosReportProjection;
+import aprimorar.atendimentos.repository.projections.AtendimentoCalendarioProjection;
 import aprimorar.atendimentos.repository.specifications.AtendimentoSpecifications;
 import aprimorar.shared.exception.BusinessException;
 
@@ -52,24 +55,47 @@ public class AtendimentoQueryService {
     }
 
     @Transactional(readOnly = true)
-    public DashboardResponse getDashboard(YearMonth mes) {
+    public List<AtendimentoCalendarioResponse> getCalendarioAtendimentos(YearMonth mes) {
         var dataInicio = mes.atDay(1).atStartOfDay();
         var dataFim = mes.atEndOfMonth().atTime(LocalTime.MAX);
 
-        var atendimentos = atendimentoRepo.getCalendarioMensal(dataInicio, dataFim);
-        var resumo = atendimentoRepo.getRelatorioMensal(dataInicio, dataFim);
+        List<AtendimentoCalendarioProjection> atendimentos = atendimentoRepo.getCalendarioMensal(dataInicio, dataFim);
 
-        return new DashboardResponse(
-            resumo.getTotalAulas(),
-            resumo.getTotalMentoria(),
-            resumo.getTotalTerapia(),
-            resumo.getTotalOV(),
-            resumo.getTotalENEM(),
-            resumo.getTotalPAS(),
-            resumo.getTotalOutros(),
-            atendimentos.stream().map(AtendimentoCalendarioResponse::toDto).toList()
-        );
+        return atendimentos.stream().map(AtendimentoCalendarioResponse::toDto).toList();
     }
 
+    @Transactional(readOnly = true)
+    public AtendimentoReportResponse getAtendimentosReport(YearMonth mes) {
+        var dataInicio = mes.atDay(1).atStartOfDay();
+        var dataFim = mes.atEndOfMonth().atTime(LocalTime.MAX);
 
+        AtendimentosReportProjection resumo = atendimentoRepo.getRelatorioMensal(dataInicio, dataFim);
+
+        var totalAtendimentos = resumo.getTotalAulas() + resumo.getTotalMentoria() + resumo.getTotalTerapia() + resumo.getTotalOV() + resumo.getTotalENEM() + resumo.getTotalPAS() + resumo.getTotalOutros();
+        var porcentagemAulas = (double) resumo.getTotalAulas() / totalAtendimentos * 100;
+        var porcentagemMentoria = (double) resumo.getTotalMentoria() / totalAtendimentos * 100;
+        var porcentagemTerapia = (double) resumo.getTotalTerapia() / totalAtendimentos * 100;
+        var porcentagemOV = (double) resumo.getTotalOV() / totalAtendimentos * 100;
+        var porcentagemENEM = (double) resumo.getTotalENEM() / totalAtendimentos * 100;
+        var porcentagemPAS = (double) resumo.getTotalPAS() / totalAtendimentos * 100;
+        var porcentagemOutros = (double) resumo.getTotalOutros() / totalAtendimentos * 100;
+
+        return new AtendimentoReportResponse(
+            totalAtendimentos,
+            resumo.getTotalAulas(),
+            porcentagemAulas,
+            resumo.getTotalMentoria(),
+            porcentagemMentoria,
+            resumo.getTotalTerapia(),
+            porcentagemTerapia,
+            resumo.getTotalOV(),
+            porcentagemOV,
+            resumo.getTotalENEM(),
+            porcentagemENEM,
+            resumo.getTotalPAS(),
+            porcentagemPAS,
+            resumo.getTotalOutros(),
+            porcentagemOutros
+        );
+    }
 }

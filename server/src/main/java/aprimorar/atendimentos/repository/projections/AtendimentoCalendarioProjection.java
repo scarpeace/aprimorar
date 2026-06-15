@@ -5,8 +5,9 @@ import java.util.UUID;
 
 import aprimorar.atendimentos.enums.TipoAtendimento;
 
-public interface CalendarioAtendimentoProjection {
+public interface AtendimentoCalendarioProjection {
 
+    UUID getId();
     UUID getColaboradorId();
     UUID getAlunoId();
     LocalDateTime getInicio();

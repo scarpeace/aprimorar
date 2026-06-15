@@ -5,9 +5,9 @@
 
 import fetch from "@kubb/plugin-client/clients/axios";
 import type {
-  GetDashboardQueryResponse,
-  GetDashboardQueryParams,
-} from "../../types/atendimento/GetDashboard.ts";
+  GetAtendimentosReportQueryResponse,
+  GetAtendimentosReportQueryParams,
+} from "../../types/atendimento/GetAtendimentosReport.ts";
 import type {
   Client,
   RequestConfig,
@@ -21,48 +21,51 @@ import type {
 } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getDashboardQueryKey = (params: GetDashboardQueryParams) =>
-  [{ url: "/v1/atendimentos/dashboard" }, ...(params ? [params] : [])] as const;
+export const getAtendimentosReportQueryKey = (
+  params: GetAtendimentosReportQueryParams,
+) => [{ url: "/v1/atendimentos/report" }, ...(params ? [params] : [])] as const;
 
-export type GetDashboardQueryKey = ReturnType<typeof getDashboardQueryKey>;
+export type GetAtendimentosReportQueryKey = ReturnType<
+  typeof getAtendimentosReportQueryKey
+>;
 
 /**
- * @description Retorna o conteúdo para montar o dashboard.
- * {@link /v1/atendimentos/dashboard}
+ * @description Retorna o conteúdo para montar o relatório.
+ * {@link /v1/atendimentos/report}
  */
-export async function getDashboard(
-  params: GetDashboardQueryParams,
+export async function getAtendimentosReport(
+  params: GetAtendimentosReportQueryParams,
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
-    GetDashboardQueryResponse,
+    GetAtendimentosReportQueryResponse,
     ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
-    url: `/v1/atendimentos/dashboard`,
+    url: `/v1/atendimentos/report`,
     params,
     ...requestConfig,
   });
   return res.data;
 }
 
-export function getDashboardQueryOptions(
-  params: GetDashboardQueryParams,
+export function getAtendimentosReportQueryOptions(
+  params: GetAtendimentosReportQueryParams,
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = getDashboardQueryKey(params);
+  const queryKey = getAtendimentosReportQueryKey(params);
   return queryOptions<
-    GetDashboardQueryResponse,
+    GetAtendimentosReportQueryResponse,
     ResponseErrorConfig<Error>,
-    GetDashboardQueryResponse,
+    GetAtendimentosReportQueryResponse,
     typeof queryKey
   >({
     queryKey,
     queryFn: async ({ signal }) => {
-      return getDashboard(params, {
+      return getAtendimentosReport(params, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -71,19 +74,19 @@ export function getDashboardQueryOptions(
 }
 
 /**
- * @description Retorna o conteúdo para montar o dashboard.
- * {@link /v1/atendimentos/dashboard}
+ * @description Retorna o conteúdo para montar o relatório.
+ * {@link /v1/atendimentos/report}
  */
-export function useGetDashboard<
-  TData = GetDashboardQueryResponse,
-  TQueryData = GetDashboardQueryResponse,
-  TQueryKey extends QueryKey = GetDashboardQueryKey,
+export function useGetAtendimentosReport<
+  TData = GetAtendimentosReportQueryResponse,
+  TQueryData = GetAtendimentosReportQueryResponse,
+  TQueryKey extends QueryKey = GetAtendimentosReportQueryKey,
 >(
-  params: GetDashboardQueryParams,
+  params: GetAtendimentosReportQueryParams,
   options: {
     query?: Partial<
       QueryObserverOptions<
-        GetDashboardQueryResponse,
+        GetAtendimentosReportQueryResponse,
         ResponseErrorConfig<Error>,
         TData,
         TQueryData,
@@ -95,11 +98,12 @@ export function useGetDashboard<
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey = resolvedOptions?.queryKey ?? getDashboardQueryKey(params);
+  const queryKey =
+    resolvedOptions?.queryKey ?? getAtendimentosReportQueryKey(params);
 
   const query = useQuery(
     {
-      ...getDashboardQueryOptions(params, config),
+      ...getAtendimentosReportQueryOptions(params, config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,

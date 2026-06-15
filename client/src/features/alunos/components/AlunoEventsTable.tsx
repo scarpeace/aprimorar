@@ -3,7 +3,7 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { useGetColaboradoresList, type AtendimentoResponseDTO, type PagedModelAtendimentoResponseDTO } from "@/kubb";
+import { useGetColaboradoresList, type AtendimentoResponse, type PagedModelAtendimentoResponse } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { Calendar, SquareArrowOutUpRight } from "lucide-react";
 import { memo } from "react";
@@ -11,14 +11,14 @@ import { getParticipantName } from "@/features/atendimentos/lib/atendimento-part
 import { AlunoAtendimentoMobileCard } from "./AlunoAtendimentoMobileCard";
 
 type AlunoEventsTableProps = {
-  atendimentos?: PagedModelAtendimentoResponseDTO;
+  atendimentos?: PagedModelAtendimentoResponse;
   currentPage: number;
   error?: unknown;
   isLoading: boolean;
   onPageChange: (page: number) => void;
 };
 
-const tipoLabels: Record<AtendimentoResponseDTO["tipo"], string> = {
+const tipoLabels: Record<AtendimentoResponse["tipo"], string> = {
   AULA: "Aula",
   MENTORIA: "Mentoria",
   TERAPIA: "Terapia",
@@ -104,7 +104,7 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
             </thead>
 
             <tbody className="whitespace-nowrap">
-              {events.map((atendimento: AtendimentoResponseDTO) => (
+              {events.map((atendimento: AtendimentoResponse) => (
                   <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
                     <td>
                       <div className="font-semibold text-base-content">{getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}</div>
@@ -145,7 +145,7 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
       </div>
 
       <div className="flex flex-col gap-4 md:hidden">
-        {events.map((atendimento, index) => (
+        {events.map((atendimento: AtendimentoResponse, index: number) => (
           <AlunoAtendimentoMobileCard
             key={atendimento.id}
             atendimento={atendimento}

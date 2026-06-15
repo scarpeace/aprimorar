@@ -1,6 +1,6 @@
-import type { AtendimentoResponseDTO } from "@/kubb";
+import type { AtendimentoResponse } from "@/kubb";
 
-export const tipoAtendimentoLabels: Record<AtendimentoResponseDTO["tipo"], string> = {
+export const tipoAtendimentoLabels: Record<AtendimentoResponse["tipo"], string> = {
   AULA: "Aula",
   MENTORIA: "Mentoria",
   TERAPIA: "Terapia",

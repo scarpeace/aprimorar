@@ -4,9 +4,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import aprimorar.atendimentos.enums.TipoAtendimento;
-import aprimorar.atendimentos.repository.projections.CalendarioAtendimentoProjection;
+import aprimorar.atendimentos.repository.projections.AtendimentoCalendarioProjection;
 
 public record AtendimentoCalendarioResponse(
+    UUID id,
     UUID colaboradorId,
     UUID alunoId,
     LocalDateTime inicio,
@@ -16,8 +17,9 @@ public record AtendimentoCalendarioResponse(
     String nomeAluno
 ) {
 
-    public static AtendimentoCalendarioResponse toDto(CalendarioAtendimentoProjection projection) {
+    public static AtendimentoCalendarioResponse toDto(AtendimentoCalendarioProjection projection) {
         return new AtendimentoCalendarioResponse(
+            projection.getId(),
             projection.getColaboradorId(),
             projection.getAlunoId(),
             projection.getInicio(),

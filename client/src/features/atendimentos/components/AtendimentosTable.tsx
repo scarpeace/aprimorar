@@ -3,7 +3,7 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { useGetAtendimentos, useGetColaboradoresList, useListAlunos, type AtendimentoResponseDTO } from "@/kubb";
+import { useGetAtendimentos, useGetColaboradoresList, useListAlunos, type AtendimentoResponse } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
 import { useAtendimentosFilters } from "../hooks/use-atendimentos-filters";
@@ -85,7 +85,7 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
                 </thead>
 
                 <tbody className="whitespace-nowrap">
-                  {events.map((atendimento: AtendimentoResponseDTO) => (
+                  {events.map((atendimento: AtendimentoResponse) => (
                     <tr
                       key={atendimento.id}
                       className="group cursor-pointer transition-colors hover:bg-base-200/50"
@@ -122,7 +122,7 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
           </div>
 
           <div className="flex flex-col gap-4 md:hidden">
-            {events.map((atendimento: AtendimentoResponseDTO, index: number) => (
+            {events.map((atendimento: AtendimentoResponse, index: number) => (
               <AtendimentoMobileCard
                 key={atendimento.id}
                 atendimento={atendimento}
