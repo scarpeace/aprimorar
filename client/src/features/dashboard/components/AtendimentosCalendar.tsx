@@ -10,9 +10,8 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 
 import { ErrorCard } from "@/components/ui/error-card";
 import { getAppointmentColor } from "@/features/atendimentos/lib/cores-tipo-atendimento";
-import { useGetCalendarioAtendimentos } from "@/kubb";
-import type { AtendimentoCalendarioResponse} from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { useGetCalendarioAtendimentos, type CalendarioAtendimentosRespose } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api/api";
 
 const CALENDAR_PLUGINS = [dayGridPlugin, timeGridPlugin, interactionPlugin];
 
@@ -28,7 +27,7 @@ const BUTTON_TEXT = {
   day: "dia",
 };
 
-function toCalendarEvent(atendimento: AtendimentoCalendarioResponse): EventInput {
+function toCalendarEvent(atendimento: CalendarioAtendimentosRespose): EventInput {
   return {
     id: atendimento.id,
     title: `${atendimento.nomeAluno} - ${atendimento.nomeColaborador}`,
@@ -101,7 +100,6 @@ export function AtendimentosCalendar() {
               detalhes.
             </p>
           </div>
-
         </div>
 
 

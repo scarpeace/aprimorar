@@ -1,10 +1,10 @@
 package aprimorar.atendimentos.controller;
 
-import aprimorar.atendimentos.dto.AtendimentoCalendarioResponse;
+import aprimorar.atendimentos.dto.CalendarioAtendimentosRespose;
 import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
+import aprimorar.atendimentos.dto.RelatorioAtendimentosResponse;
 import aprimorar.atendimentos.service.AtendimentoQueryService;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
-import aprimorar.atendimentos.dto.AtendimentoReportResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,15 +53,15 @@ public class AtendimentoQueryController {
     @GetMapping("/calendario")
     @Operation(operationId = "getCalendarioAtendimentos", description = "Retorna o conteúdo para montar o calendário de atendimentos.")
     @ApiResponse(responseCode = "200", description = "Calendário retornado com sucesso.")
-    public ResponseEntity<List<AtendimentoCalendarioResponse>> getCalendarioAtendimentos(@RequestParam YearMonth anoMes) {
+    public ResponseEntity<List<CalendarioAtendimentosRespose>> getCalendarioAtendimentos(@RequestParam YearMonth anoMes) {
         return ResponseEntity.ok(atendimentoQueryService.getCalendarioAtendimentos(anoMes));
     }
 
-    @GetMapping("/report")
-    @Operation(operationId = "getAtendimentosReport", description = "Retorna o conteúdo para montar o relatório.")
+    @GetMapping("/relatorio")
+    @Operation(operationId = "getRelatorioAtendimentos", description = "Retorna o conteúdo para montar o relatório.")
     @ApiResponse(responseCode = "200", description = "Relatório retornado com sucesso.")
-    public ResponseEntity<AtendimentoReportResponse> getAtendimentosReport(@RequestParam YearMonth anoMes) {
-        return ResponseEntity.ok(atendimentoQueryService.getAtendimentosReport(anoMes));
+    public ResponseEntity<RelatorioAtendimentosResponse> getAtendimentosRelatorio(@RequestParam YearMonth anoMes) {
+        return ResponseEntity.ok(atendimentoQueryService.getRelatorioAtendimentos(anoMes));
     }
 
 }

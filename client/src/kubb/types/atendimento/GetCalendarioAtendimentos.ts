@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { AtendimentoCalendarioResponse } from "../AtendimentoCalendarioResponse.ts";
+import type { CalendarioAtendimentosRespose } from "../CalendarioAtendimentosRespose.ts";
 
 export type GetCalendarioAtendimentosQueryParams = {
   /**
@@ -15,7 +15,7 @@ export type GetCalendarioAtendimentosQueryParams = {
 /**
  * @description Calendário retornado com sucesso.
  */
-export type GetCalendarioAtendimentos200 = AtendimentoCalendarioResponse[];
+export type GetCalendarioAtendimentos200 = CalendarioAtendimentosRespose[];
 
 export type GetCalendarioAtendimentosQueryResponse =
   GetCalendarioAtendimentos200;

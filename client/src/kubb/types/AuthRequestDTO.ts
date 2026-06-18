@@ -12,7 +12,7 @@ export type AuthRequestDTO = {
    * @minLength 1
    * @type string
    */
-  email: string;
+  username: string;
   /**
    * @description Senha do usuário
    * @minLength 1

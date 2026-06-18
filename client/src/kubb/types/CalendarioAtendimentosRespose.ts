@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export const atendimentoCalendarioResponseTipoEnum = {
+export const calendarioAtendimentosResposeTipoEnum = {
   AULA: "AULA",
   MENTORIA: "MENTORIA",
   TERAPIA: "TERAPIA",
@@ -13,10 +13,10 @@ export const atendimentoCalendarioResponseTipoEnum = {
   OUTRO: "OUTRO",
 } as const;
 
-export type AtendimentoCalendarioResponseTipoEnumKey =
-  (typeof atendimentoCalendarioResponseTipoEnum)[keyof typeof atendimentoCalendarioResponseTipoEnum];
+export type CalendarioAtendimentosResposeTipoEnumKey =
+  (typeof calendarioAtendimentosResposeTipoEnum)[keyof typeof calendarioAtendimentosResposeTipoEnum];
 
-export type AtendimentoCalendarioResponse = {
+export type CalendarioAtendimentosRespose = {
   /**
    * @type string | undefined, uuid
    */
@@ -41,7 +41,7 @@ export type AtendimentoCalendarioResponse = {
    * @description Tipo de conteudo ou categoria do atendimento
    * @type string | undefined
    */
-  tipo?: AtendimentoCalendarioResponseTipoEnumKey;
+  tipo?: CalendarioAtendimentosResposeTipoEnumKey;
   /**
    * @type string | undefined
    */

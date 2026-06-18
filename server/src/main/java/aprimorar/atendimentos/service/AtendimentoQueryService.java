@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
-import aprimorar.atendimentos.dto.AtendimentoCalendarioResponse;
-import aprimorar.atendimentos.dto.AtendimentoReportResponse;
+import aprimorar.atendimentos.dto.CalendarioAtendimentosRespose;
+import aprimorar.atendimentos.dto.RelatorioAtendimentosResponse;
 import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.atendimentos.repository.projections.AtendimentosReportProjection;
@@ -55,17 +55,17 @@ public class AtendimentoQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<AtendimentoCalendarioResponse> getCalendarioAtendimentos(YearMonth mes) {
+    public List<CalendarioAtendimentosRespose> getCalendarioAtendimentos(YearMonth mes) {
         var dataInicio = mes.atDay(1).atStartOfDay();
         var dataFim = mes.atEndOfMonth().atTime(LocalTime.MAX);
 
         List<AtendimentoCalendarioProjection> atendimentos = atendimentoRepo.getCalendarioMensal(dataInicio, dataFim);
 
-        return atendimentos.stream().map(AtendimentoCalendarioResponse::toDto).toList();
+        return atendimentos.stream().map(CalendarioAtendimentosRespose::toDto).toList();
     }
 
     @Transactional(readOnly = true)
-    public AtendimentoReportResponse getAtendimentosReport(YearMonth mes) {
+    public RelatorioAtendimentosResponse getRelatorioAtendimentos(YearMonth mes) {
         var dataInicio = mes.atDay(1).atStartOfDay();
         var dataFim = mes.atEndOfMonth().atTime(LocalTime.MAX);
 
@@ -80,7 +80,7 @@ public class AtendimentoQueryService {
         var porcentagemPAS = (double) resumo.getTotalPAS() / totalAtendimentos * 100;
         var porcentagemOutros = (double) resumo.getTotalOutros() / totalAtendimentos * 100;
 
-        return new AtendimentoReportResponse(
+        return new RelatorioAtendimentosResponse(
             totalAtendimentos,
             resumo.getTotalAulas(),
             porcentagemAulas,

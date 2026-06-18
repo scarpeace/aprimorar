@@ -10,7 +10,7 @@ import {
   useUnarchiveAluno,
   useUpdateAluno,
 } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";

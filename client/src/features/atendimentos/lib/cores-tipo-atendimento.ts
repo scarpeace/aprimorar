@@ -1,4 +1,4 @@
-import type { AtendimentoCalendarioResponse } from "@/kubb";
+import type { CalendarioAtendimentosRespose } from "@/kubb";
 
 export const CORES_TIPO_ATENDIMENTO: Record<string, { backgroundColor: string; borderColor: string }> = {
   AULA: { backgroundColor: "#3b82f6", borderColor: "#2563eb" },
@@ -10,6 +10,6 @@ export const CORES_TIPO_ATENDIMENTO: Record<string, { backgroundColor: string; b
   OUTRO: { backgroundColor: "#6b7280", borderColor: "#4b5563" },
 };
 
-export function getAppointmentColor(atendimento: AtendimentoCalendarioResponse) {
+export function getAppointmentColor(atendimento: CalendarioAtendimentosRespose) {
   return CORES_TIPO_ATENDIMENTO[atendimento.tipo ?? "OUTRO"] ?? CORES_TIPO_ATENDIMENTO.OUTRO;
 }

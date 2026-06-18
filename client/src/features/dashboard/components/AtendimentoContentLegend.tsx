@@ -1,10 +1,10 @@
 import { tipoAtendimentoLabels } from "@/features/atendimentos/lib/tipo-atendimento-labels";
 import { CORES_TIPO_ATENDIMENTO } from "@/features/atendimentos/lib/cores-tipo-atendimento";
-import { useGetAtendimentosReport } from "@/kubb";
+import { useGetRelatorioAtendimentos } from "@/kubb";
 
 export function AtendimentoContentLegend() {
   const anoMes = new Date().toISOString().slice(0, 7);
-  const realtorioAtendimentos = useGetAtendimentosReport({ anoMes });
+  const realtorioAtendimentos = useGetRelatorioAtendimentos({ anoMes });
   console.log(realtorioAtendimentos.data)
 
   const itens = [

@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export type AtendimentoReportResponse = {
+export type RelatorioAtendimentosResponse = {
   /**
    * @type integer | undefined, int64
    */

@@ -5,7 +5,7 @@ import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { useGetResponsaveis } from "@/kubb";
-import { useDebounce } from "@/lib/hooks/use-debounce";
+import { useDebounce } from "@/lib/shared/use-debounce";
 import { formatCpf, formatPhone } from "@/lib/utils/formatter";
 import { BrushCleaning } from "lucide-react";
 import { useState } from "react";

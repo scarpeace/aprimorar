@@ -6,7 +6,7 @@ import { BellElectric, Plus } from "lucide-react";
 import { AtendimentoForm } from "../components/AtendimentoForm";
 import { AtendimentosTable } from "../components/AtendimentosTable";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
-import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter";
+import { usePageDateFilter } from "@/lib/shared/use-page-date-filter";
 import type { AtendimentoResponse } from "@/kubb";
 
 export function AtendimentosPage() {

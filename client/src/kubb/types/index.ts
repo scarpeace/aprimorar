@@ -3,11 +3,6 @@ export type { AlunoResponseDTO } from "./AlunoResponseDTO.ts";
 export type { AlunosKpisDTO } from "./AlunosKpisDTO.ts";
 export type { AlunosListDTO } from "./AlunosListDTO.ts";
 export type {
-  AtendimentoCalendarioResponse,
-  AtendimentoCalendarioResponseTipoEnumKey,
-} from "./AtendimentoCalendarioResponse.ts";
-export type { AtendimentoReportResponse } from "./AtendimentoReportResponse.ts";
-export type {
   AtendimentoRequest,
   AtendimentoRequestTipoEnumKey,
 } from "./AtendimentoRequest.ts";
@@ -21,6 +16,10 @@ export type {
   AuthResponseDTO,
   AuthResponseDTORoleEnumKey,
 } from "./AuthResponseDTO.ts";
+export type {
+  CalendarioAtendimentosRespose,
+  CalendarioAtendimentosResposeTipoEnumKey,
+} from "./CalendarioAtendimentosRespose.ts";
 export type {
   ColaboradorRequestDTO,
   ColaboradorRequestDTOFuncaoEnumKey,
@@ -43,6 +42,7 @@ export type {
   ProblemResponseDTOStatusEnumKey,
 } from "./ProblemResponseDTO.ts";
 export type { ReagendarAtendimentoRequest } from "./ReagendarAtendimentoRequest.ts";
+export type { RelatorioAtendimentosResponse } from "./RelatorioAtendimentosResponse.ts";
 export type { ResponsavelRequestDTO } from "./ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./ResponsavelResponseDTO.ts";
 export type {
@@ -149,17 +149,17 @@ export type {
   GetAtendimentosQueryResponse,
 } from "./atendimento/GetAtendimentos.ts";
 export type {
-  GetAtendimentosReport200,
-  GetAtendimentosReportQuery,
-  GetAtendimentosReportQueryParams,
-  GetAtendimentosReportQueryResponse,
-} from "./atendimento/GetAtendimentosReport.ts";
-export type {
   GetCalendarioAtendimentos200,
   GetCalendarioAtendimentosQuery,
   GetCalendarioAtendimentosQueryParams,
   GetCalendarioAtendimentosQueryResponse,
 } from "./atendimento/GetCalendarioAtendimentos.ts";
+export type {
+  GetRelatorioAtendimentos200,
+  GetRelatorioAtendimentosQuery,
+  GetRelatorioAtendimentosQueryParams,
+  GetRelatorioAtendimentosQueryResponse,
+} from "./atendimento/GetRelatorioAtendimentos.ts";
 export type {
   ReagendarAtendimento200,
   ReagendarAtendimentoMutation,
@@ -294,11 +294,11 @@ export type {
   ListUsersQuery,
   ListUsersQueryResponse,
 } from "./user/ListUsers.ts";
-export { atendimentoCalendarioResponseTipoEnum } from "./AtendimentoCalendarioResponse.ts";
 export { atendimentoRequestTipoEnum } from "./AtendimentoRequest.ts";
 export { atendimentoResponseStatusEnum } from "./AtendimentoResponse.ts";
 export { atendimentoResponseTipoEnum } from "./AtendimentoResponse.ts";
 export { authResponseDTORoleEnum } from "./AuthResponseDTO.ts";
+export { calendarioAtendimentosResposeTipoEnum } from "./CalendarioAtendimentosRespose.ts";
 export { colaboradorRequestDTOFuncaoEnum } from "./ColaboradorRequestDTO.ts";
 export { colaboradorResponseDTOFuncaoEnum } from "./ColaboradorResponseDTO.ts";
 export { problemResponseDTOStatusEnum } from "./ProblemResponseDTO.ts";

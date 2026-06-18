@@ -5,9 +5,9 @@
 
 import fetch from "@kubb/plugin-client/clients/axios";
 import type {
-  GetAtendimentosReportQueryResponse,
-  GetAtendimentosReportQueryParams,
-} from "../../types/atendimento/GetAtendimentosReport.ts";
+  GetRelatorioAtendimentosQueryResponse,
+  GetRelatorioAtendimentosQueryParams,
+} from "../../types/atendimento/GetRelatorioAtendimentos.ts";
 import type {
   Client,
   RequestConfig,
@@ -21,51 +21,52 @@ import type {
 } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getAtendimentosReportQueryKey = (
-  params: GetAtendimentosReportQueryParams,
-) => [{ url: "/v1/atendimentos/report" }, ...(params ? [params] : [])] as const;
+export const getRelatorioAtendimentosQueryKey = (
+  params: GetRelatorioAtendimentosQueryParams,
+) =>
+  [{ url: "/v1/atendimentos/relatorio" }, ...(params ? [params] : [])] as const;
 
-export type GetAtendimentosReportQueryKey = ReturnType<
-  typeof getAtendimentosReportQueryKey
+export type GetRelatorioAtendimentosQueryKey = ReturnType<
+  typeof getRelatorioAtendimentosQueryKey
 >;
 
 /**
  * @description Retorna o conteúdo para montar o relatório.
- * {@link /v1/atendimentos/report}
+ * {@link /v1/atendimentos/relatorio}
  */
-export async function getAtendimentosReport(
-  params: GetAtendimentosReportQueryParams,
+export async function getRelatorioAtendimentos(
+  params: GetRelatorioAtendimentosQueryParams,
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const res = await request<
-    GetAtendimentosReportQueryResponse,
+    GetRelatorioAtendimentosQueryResponse,
     ResponseErrorConfig<Error>,
     unknown
   >({
     method: "GET",
-    url: `/v1/atendimentos/report`,
+    url: `/v1/atendimentos/relatorio`,
     params,
     ...requestConfig,
   });
   return res.data;
 }
 
-export function getAtendimentosReportQueryOptions(
-  params: GetAtendimentosReportQueryParams,
+export function getRelatorioAtendimentosQueryOptions(
+  params: GetRelatorioAtendimentosQueryParams,
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = getAtendimentosReportQueryKey(params);
+  const queryKey = getRelatorioAtendimentosQueryKey(params);
   return queryOptions<
-    GetAtendimentosReportQueryResponse,
+    GetRelatorioAtendimentosQueryResponse,
     ResponseErrorConfig<Error>,
-    GetAtendimentosReportQueryResponse,
+    GetRelatorioAtendimentosQueryResponse,
     typeof queryKey
   >({
     queryKey,
     queryFn: async ({ signal }) => {
-      return getAtendimentosReport(params, {
+      return getRelatorioAtendimentos(params, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -75,18 +76,18 @@ export function getAtendimentosReportQueryOptions(
 
 /**
  * @description Retorna o conteúdo para montar o relatório.
- * {@link /v1/atendimentos/report}
+ * {@link /v1/atendimentos/relatorio}
  */
-export function useGetAtendimentosReport<
-  TData = GetAtendimentosReportQueryResponse,
-  TQueryData = GetAtendimentosReportQueryResponse,
-  TQueryKey extends QueryKey = GetAtendimentosReportQueryKey,
+export function useGetRelatorioAtendimentos<
+  TData = GetRelatorioAtendimentosQueryResponse,
+  TQueryData = GetRelatorioAtendimentosQueryResponse,
+  TQueryKey extends QueryKey = GetRelatorioAtendimentosQueryKey,
 >(
-  params: GetAtendimentosReportQueryParams,
+  params: GetRelatorioAtendimentosQueryParams,
   options: {
     query?: Partial<
       QueryObserverOptions<
-        GetAtendimentosReportQueryResponse,
+        GetRelatorioAtendimentosQueryResponse,
         ResponseErrorConfig<Error>,
         TData,
         TQueryData,
@@ -99,11 +100,11 @@ export function useGetAtendimentosReport<
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
   const queryKey =
-    resolvedOptions?.queryKey ?? getAtendimentosReportQueryKey(params);
+    resolvedOptions?.queryKey ?? getRelatorioAtendimentosQueryKey(params);
 
   const query = useQuery(
     {
-      ...getAtendimentosReportQueryOptions(params, config),
+      ...getRelatorioAtendimentosQueryOptions(params, config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,

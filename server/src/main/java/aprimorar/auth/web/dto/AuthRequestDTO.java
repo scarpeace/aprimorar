@@ -9,7 +9,7 @@ public record AuthRequestDTO(
     @NotBlank(message = "E-mail é obrigatório")
     @Email(message = "E-mail deve ser um endereço de e-mail válido")
     @Schema(description = "E-mail usado no login", example = "admin@aprimorar.local")
-    String email,
+    String username,
 
     @NotBlank(message = "Senha é obrigatória")
     @Schema(description = "Senha do usuário", example = "admin123")

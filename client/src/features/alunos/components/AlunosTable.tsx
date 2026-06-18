@@ -6,7 +6,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetAlunos } from "@/kubb";
-import { useDebounce } from "@/lib/hooks/use-debounce";
+import { useDebounce } from "@/lib/shared/use-debounce";
 import { formatCpf } from "@/lib/utils/formatter";
 import { BrushCleaning } from "lucide-react";
 import { useState } from "react";

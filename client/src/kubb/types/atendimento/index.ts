@@ -35,17 +35,17 @@ export type {
   GetAtendimentosQueryResponse,
 } from "./GetAtendimentos.ts";
 export type {
-  GetAtendimentosReport200,
-  GetAtendimentosReportQuery,
-  GetAtendimentosReportQueryParams,
-  GetAtendimentosReportQueryResponse,
-} from "./GetAtendimentosReport.ts";
-export type {
   GetCalendarioAtendimentos200,
   GetCalendarioAtendimentosQuery,
   GetCalendarioAtendimentosQueryParams,
   GetCalendarioAtendimentosQueryResponse,
 } from "./GetCalendarioAtendimentos.ts";
+export type {
+  GetRelatorioAtendimentos200,
+  GetRelatorioAtendimentosQuery,
+  GetRelatorioAtendimentosQueryParams,
+  GetRelatorioAtendimentosQueryResponse,
+} from "./GetRelatorioAtendimentos.ts";
 export type {
   ReagendarAtendimento200,
   ReagendarAtendimentoMutation,

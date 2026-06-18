@@ -1,7 +1,7 @@
 package aprimorar.atendimentos.dto;
 
 
-public record AtendimentoReportResponse(
+public record RelatorioAtendimentosResponse(
     Long totalAtendimentos,
 
     Long totalAulas,
