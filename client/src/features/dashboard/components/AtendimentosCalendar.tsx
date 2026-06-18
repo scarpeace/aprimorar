@@ -12,11 +12,12 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { getAppointmentColor } from "@/features/atendimentos/lib/cores-tipo-atendimento";
 import { useGetCalendarioAtendimentos, type CalendarioAtendimentosRespose } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/lib/shared/api/api";
+import { AtendimentoContentLegend } from "./AtendimentoContentLegend";
 
 const CALENDAR_PLUGINS = [dayGridPlugin, timeGridPlugin, interactionPlugin];
 
 const HEADER_TOOLBAR = {
-  left: "prev,next dayGridMonth,timeGridDay",
+  left: "prev,next dayGridMonth,timeGridWeek,timeGridDay",
   center: "title",
   right: "today",
 };
@@ -24,6 +25,7 @@ const HEADER_TOOLBAR = {
 const BUTTON_TEXT = {
   today: "hoje",
   month: "mês",
+  week: "semana",
   day: "dia",
 };
 
@@ -39,10 +41,10 @@ function toCalendarEvent(atendimento: CalendarioAtendimentosRespose): EventInput
 
 export function AtendimentosCalendar() {
   const [calendarDate, setCalendarDate] = useState(() => new Date());
-  const calendarRef = useRef<FullCalendar>(null);
+  const calendar = useRef<FullCalendar>(null);
   const navigate = useNavigate();
 
-  const anoMes = new Date("2026-11-28").toISOString().slice(0, 7);
+  const anoMes = calendarDate.toISOString().slice(0, 7);
   const calendarioAtendimentos = useGetCalendarioAtendimentos({ anoMes });
 
   const calendarEvents = useMemo(
@@ -52,7 +54,7 @@ export function AtendimentosCalendar() {
 
   const handleDateClick = (info: DateClickArg) => {
     setCalendarDate(info.date);
-    calendarRef.current?.getApi().changeView("timeGridDay", info.date);
+    calendar.current?.getApi().changeView("timeGridDay", info.date);
   };
 
   const handleEventClick = (info: EventClickArg) => {
@@ -100,12 +102,14 @@ export function AtendimentosCalendar() {
               detalhes.
             </p>
           </div>
+
         </div>
 
+        <AtendimentoContentLegend anoMes={anoMes} />
 
         <div className="appointments-calendar rounded-2xl border border-base-300 bg-base-100 p-3">
           <FullCalendar
-            ref={calendarRef}
+            ref={calendar}
             locale={ptBrLocale}
             plugins={CALENDAR_PLUGINS}
             initialView="dayGridMonth"

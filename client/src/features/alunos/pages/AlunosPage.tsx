@@ -1,13 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { KpiCard } from "@/components/ui/kpi-card";
-import { Modal } from "@/components/ui/modal";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { ResponsavelForm } from "@/features/responsaveis/components/ResponsavelForm";
 import { ResponsaveisTable } from "@/features/responsaveis/components/ResponsaveisTable";
-import { useGetAlunosKpis, type AlunoResponseDTO, type ResponsavelResponseDTO } from "@/kubb";
+import { useGetAlunosKpis } from "@/kubb";
 import { GraduationCap, Plus, UserCheck, UserCircle } from "lucide-react";
-import { useState } from "react";
-import { AlunoForm } from "../components/AlunoForm";
 import { AlunosTable } from "../components/AlunosTable";
 
 const HEADER_PROPS = {
@@ -18,32 +14,7 @@ const HEADER_PROPS = {
 } as const;
 
 export function AlunosPage() {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isResponsavelFormOpen, setIsResponsavelFormOpen] = useState(false);
-  const [selectedAluno, setSelectedAluno] = useState<AlunoResponseDTO | null>(null);
-  const [selectedResponsavel, setSelectedResponsavel] = useState<ResponsavelResponseDTO | null>(null);
-
   const { data: kpisAlunos } = useGetAlunosKpis();
-
-  const handleOpenForm = (aluno?: AlunoResponseDTO) => {
-    setSelectedAluno(aluno || null);
-    setIsFormOpen(true);
-  };
-
-  const handleCloseForm = () => {
-    setSelectedAluno(null);
-    setIsFormOpen(false);
-  };
-
-  const handleOpenResponsavelForm = (responsavel?: ResponsavelResponseDTO) => {
-    setSelectedResponsavel(responsavel || null);
-    setIsResponsavelFormOpen(true);
-  };
-
-  const handleCloseResponsavelForm = () => {
-    setSelectedResponsavel(null);
-    setIsResponsavelFormOpen(false);
-  };
 
   return (
     <PageLayout {...HEADER_PROPS}>
@@ -81,7 +52,7 @@ export function AlunosPage() {
                   <h3 className="text-2xl font-bold text-base-content">Alunos</h3>
                   <p className="text-sm text-base-content/60">Selecione um aluno para ver os detalhes.</p>
                 </div>
-                <Button onClick={() => handleOpenForm()} variant="success"><Plus size={16} />Novo Aluno</Button>
+                <Button onClick={() => null} variant="success"><Plus size={16} />Novo Aluno</Button>
               </div>
 
               <AlunosTable />
@@ -93,7 +64,7 @@ export function AlunosPage() {
                   <h3 className="text-2xl font-bold text-base-content">Responsáveis</h3>
                   <p className="text-sm text-base-content/60">Selecione um responsável para ver os detalhes.</p>
                 </div>
-                <Button onClick={() => handleOpenResponsavelForm()} variant="success"><Plus size={16} />Novo Responsável</Button>
+                <Button onClick={() => null} variant="success"><Plus size={16} />Novo Responsável</Button>
               </div>
 
               <ResponsaveisTable />
@@ -101,34 +72,6 @@ export function AlunosPage() {
 
 
         </main>
-
-        <Modal
-          isOpen={isFormOpen}
-          onClose={handleCloseForm}
-          title={selectedAluno ? "Editar Aluno" : "Cadastrar Novo Aluno"}
-          description="Atualize dados pessoais, contato e vínculos do aluno para manter a secretaria organizada."
-          size="lg"
-        >
-          <AlunoForm
-            initialData={selectedAluno}
-            onSuccess={handleCloseForm}
-            onCancel={handleCloseForm}
-          />
-        </Modal>
-
-        <Modal
-          isOpen={isResponsavelFormOpen}
-          onClose={handleCloseResponsavelForm}
-          title={selectedResponsavel ? "Editar Responsável" : "Cadastrar Novo Responsável"}
-          description="Atualize os dados principais do responsável e mantenha os vínculos organizados."
-          size="md"
-        >
-          <ResponsavelForm
-            initialData={selectedResponsavel}
-            onSuccess={handleCloseResponsavelForm}
-            onCancel={handleCloseResponsavelForm}
-          />
-        </Modal>
       </PageLayout>
   );
 }

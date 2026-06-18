@@ -2,10 +2,8 @@ import { tipoAtendimentoLabels } from "@/features/atendimentos/lib/tipo-atendime
 import { CORES_TIPO_ATENDIMENTO } from "@/features/atendimentos/lib/cores-tipo-atendimento";
 import { useGetRelatorioAtendimentos } from "@/kubb";
 
-export function AtendimentoContentLegend() {
-  const anoMes = new Date().toISOString().slice(0, 7);
+export function AtendimentoContentLegend({ anoMes }: { anoMes: string }) {
   const realtorioAtendimentos = useGetRelatorioAtendimentos({ anoMes });
-  console.log(realtorioAtendimentos.data)
 
   const itens = [
     ["AULA", realtorioAtendimentos.data?.totalAulas],

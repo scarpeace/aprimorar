@@ -44,7 +44,7 @@ function FieldErrorMessage({ message }: Readonly<{ message?: string }>) {
   );
 }
 
-export function AtendimentoForm({ initialData, onCancel, onSuccess }: Readonly<AtendimentoFormProps>) {
+export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<AtendimentoFormProps>) {
   const { createAtendimento, updateAtendimento } = useAtendimentoMutations();
   const alunosQuery = useListAlunos();
   const colaboradoresQuery = useGetColaboradoresList();
@@ -102,7 +102,7 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Readonly<A
       colaboradorId: data.colaboradorId,
     };
 
-    if (isEditMode && initialData?.id) {
+      if (isEditMode && initialData?.id) {
       updateAtendimento.mutate(
         {
           id: initialData.id,

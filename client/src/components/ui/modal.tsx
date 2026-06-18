@@ -1,15 +1,13 @@
-import type { ReactNode } from "react"
-import { createPortal } from "react-dom"
+import { type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title: string
-  description?: string
-  children: ReactNode
-  size?: "sm" | "md" | "lg" | "xl"
-  closeOnBackdrop?: boolean
-  closeOnEscape?: boolean
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  description?: string;
+  children: ReactNode;
+  size?: "sm" | "md" | "lg" | "xl";
 }
 
 const sizeClasses = {
@@ -20,20 +18,14 @@ const sizeClasses = {
 } as const
 
 export function Modal({
-  isOpen,
-  onClose,
   title,
   description,
   children,
   size = "md",
-  closeOnBackdrop = true,
-  closeOnEscape = true,
+  isOpen,
+  onClose,
 }: ModalProps) {
-  if (!isOpen || typeof document === "undefined") return null
-
-  const handleBackdropClick = () => {
-    if (closeOnBackdrop) onClose()
-  }
+  if (!isOpen || typeof document === "undefined") return null;
 
   const modalContent = (
     <div className="modal modal-open" role="presentation">
@@ -46,13 +38,10 @@ export function Modal({
         type="button"
         className="modal-backdrop"
         aria-label="Fechar modal"
-        onClick={handleBackdropClick}
-        onKeyDown={(event) => {
-          if (closeOnEscape && event.key === "Escape") onClose()
-        }}
+        onClick={onClose}
       />
     </div>
-  )
+  );
 
-  return createPortal(modalContent, document.body)
+  return createPortal(modalContent, document.body);
 }
