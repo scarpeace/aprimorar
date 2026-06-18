@@ -25,15 +25,18 @@ public class AtendimentoMutationService {
     private final AtendimentoRepository atendimentoRepo;
     private final AlunoQueryApi alunoQueryApi;
     private final ColaboradorQueryApi colaboradorQueryApi;
+    private final TransacaoMutationService transacaoMutationService;
 
     public AtendimentoMutationService(
         AtendimentoRepository atendimentoRepo,
         AlunoQueryApi alunoQueryApi,
-        ColaboradorQueryApi colaboradorQueryApi
+        ColaboradorQueryApi colaboradorQueryApi,
+        TransacaoMutationService transacaoMutationService
     ) {
         this.atendimentoRepo = atendimentoRepo;
         this.alunoQueryApi = alunoQueryApi;
         this.colaboradorQueryApi = colaboradorQueryApi;
+        this.transacaoMutationService = transacaoMutationService;
     }
 
     @Transactional
@@ -52,29 +55,9 @@ public class AtendimentoMutationService {
 
         Atendimento saved = atendimentoRepo.save(atendimento);
 
-//        Transacao entradaAluno = new Transacao(
-//                atendimento.getAlunoId(),
-//                'idDoAdmin',
-//                atendimento.getValor(),
-//                null,
-//                TipoTransacao.ENTRADA,
-//                null,
-//                StatusTransacao.PENDENTE,
-//                CategoriaTransacao.PGTO_ALUNO
-//                );
-//
-//        Transacao saidaProfessor = new Transacao(
-//                'idDoAdmin',
-//                atendimento.getColaboradorId(),
-//                atendimento.getRepasse(),
-//                null,
-//                TipoTransacao.SAIDA,
-//                null,
-//                StatusTransacao.PENDENTE,
-//                CategoriaTransacao.PGTO_COLABORADOR
-//        );
-//
-//        transacaoRepo.save(entradaAluno, saidaProfessor);
+        transacaoMutationService.criarEntradaAluno(atendimento.getAlunoId(), atendimento.getValor());
+        transacaoMutationService.criarSaidaColaborador(atendimento.getColaboradorId(), atendimento.getRepasse());
+
 
         log.info("Atendimento {} cadastrado com sucesso.", saved.getTitulo().toUpperCase());
         return AtendimentoResponse.toDto(saved);

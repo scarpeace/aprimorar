@@ -81,7 +81,7 @@ public class Aluno {
             UUID responsavelId,
             Endereco endereco
     ) {
-        validateRequiredFields(endereco, responsavelId);
+        validateRequiredFields();
         this.nome = validateNome(nome);
         this.dataNascimento = validateDataNascimento(dataNascimento);
         this.telefone = validateTelefone(telefone);
@@ -101,7 +101,7 @@ public class Aluno {
         UUID responsavelId,
         Endereco endereco
     ) {
-        validateRequiredFields(endereco, responsavelId);
+        validateRequiredFields();
         this.nome = validateNome(nome);
         this.dataNascimento = validateDataNascimento(dataNascimento);
         this.telefone = validateTelefone(telefone);
@@ -109,18 +109,6 @@ public class Aluno {
         this.escola = escola;
         this.responsavelId = responsavelId;
         this.endereco = endereco;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Endereco getEndereco() {
-        return endereco;
     }
 
     public void archive() {
@@ -131,11 +119,11 @@ public class Aluno {
         this.active = true;
     }
 
-    private void validateRequiredFields(Endereco endereco, UUID responsavelId) {
-        if (endereco == null) {
+    private void validateRequiredFields() {
+        if (this.endereco == null) {
             throw new IllegalArgumentException("Endereço do aluno é obrigatório");
         }
-        if (responsavelId == null) {
+        if (this.responsavelId == null) {
             throw new IllegalArgumentException("Aluno não pode ser cadastrado sem um responsável");
         }
     }
@@ -192,6 +180,18 @@ public class Aluno {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
     }
 
     public LocalDate getDataNascimento() {

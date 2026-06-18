@@ -12,6 +12,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,7 +42,7 @@ public class Transacao {
     @Column(name = "valor", nullable = false, precision = 10, scale = 2)
     private BigDecimal valor;
 
-    @Column(name = "data_efetivada", nullable = false)
+    @Column(name = "data_efetivada")
     private LocalDateTime dataEfetivada;
 
     @Enumerated(EnumType.STRING)
@@ -48,7 +50,7 @@ public class Transacao {
     private TipoTransacao tipo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "forma_pagamento", nullable = false, length = 20)
+    @Column(name = "forma_pagamento", length = 20)
     private FormaPagamento formaPagamento;
 
     @Enumerated(EnumType.STRING)
@@ -61,14 +63,16 @@ public class Transacao {
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     protected Transacao() {
     }
+
+    private final UUID ADMIN_ID = UUID.fromString("b3a092e0-fc48-43ff-8b35-149eb81a033f");
 
     public Transacao(
             UUID pagadorId,
@@ -80,6 +84,8 @@ public class Transacao {
             StatusTransacao status,
             CategoriaTransacao categoria
             ){
+        validateRequiredFields();
+        validateValores();
         this.pagadorId = pagadorId;
         this.recebedorId = recebedorID;
         this.valor = valor;
@@ -90,4 +96,35 @@ public class Transacao {
         this.categoria = categoria;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void efetivar(FormaPagamento formaPagamento) {
+        this.formaPagamento = formaPagamento;
+        this.status = StatusTransacao.PAGO;
+        this.dataEfetivada = LocalDateTime.now();
+    }
+
+    public void cancelar() {
+        this.status = StatusTransacao.CANCELADO;
+    }
+
+    private void validateValores() {
+        if (this.valor == null || this.valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor deve ser maior que zero");
+        }
+    }
+
+    private void validateRequiredFields() {
+        if (this.pagadorId == null || this.recebedorId == null || this.tipo == null || this.formaPagamento == null || this.status == null || this.categoria == null) {
+            throw new IllegalArgumentException("Campos obrigatórios não foram preenchidos");
+        }
+    }
 }
