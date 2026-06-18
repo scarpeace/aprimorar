@@ -43,7 +43,7 @@ export function ResponsaveisPage() {
             </Button>
           </div>
 
-          <ResponsaveisTable />
+          <ResponsaveisTable openForm={() => setIsFormOpen(true)} />
         </section>
 
         <Modal
