@@ -12,12 +12,12 @@ import {
   formatDateShortYear,
   formatPhone,
 } from "@/lib/utils/formatter";
-import { BrushCleaning } from "lucide-react";
+import { BrushCleaning, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { dutyLabels } from "../lib/dutyLabels";
 
-export function ColaboradoresTable() {
+export function ColaboradoresTable({ openForm }: { openForm: () => void }) {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
@@ -53,6 +53,13 @@ export function ColaboradoresTable() {
     <main>
       <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h3 className="text-2xl font-bold text-base-content">Colaboradores cadastrados</h3>
+            <p className="text-sm text-base-content/60">
+              Clique na linha para abrir os detalhes do cadastro.
+            </p>
+          </div>
+
           <ListSearchInput
             className="grow"
             placeholder="Buscar colaborador por nome, email ou CPF"
@@ -60,13 +67,18 @@ export function ColaboradoresTable() {
             value={searchTerm}
             onChange={setSearchTerm}
           />
-          <ToggleSwitch
-            label="Mostrar Arquivados"
+          {/*<ToggleSwitch
+            label="Arquivados"
             tip="Mostrar colaboradores arquivados"
             toggled={showArchived}
             setToggle={handleShowArchivedChange}
             className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
-          />
+          />*/}
+
+          <Button className="sm:ml-auto" onClick={() => openForm()} variant="success">
+            <Plus className="mr-2 h-4 w-4" />
+            Novo Colaborador
+          </Button>
         </div>
       </section>
 

@@ -32,7 +32,8 @@ export function ColaboradoresPage() {
 
   return (
     <PageLayout {...headerProps}>
-        <section className="mb-3 rounded-2xl bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
+
+      <section className="mb-3 rounded-2xl bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
           <div className="flex flex-row justify-between items-center gap-3">
             <div>
               <h3 className="text-2xl font-bold text-base-content">Resumo dos Colaboradores</h3>
@@ -59,21 +60,7 @@ export function ColaboradoresPage() {
         </section>
 
         <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-2xl font-bold text-base-content">Colaboradores cadastrados</h3>
-              <p className="text-sm text-base-content/60">
-                Clique na linha para abrir os detalhes do cadastro.
-              </p>
-            </div>
-
-            <Button className="sm:ml-auto" onClick={() => handleOpenForm()} variant="success">
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Colaborador
-            </Button>
-          </div>
-
-          <ColaboradoresTable/>
+          <ColaboradoresTable openForm={() => setIsFormOpen(true)}/>
         </section>
 
         <Modal
