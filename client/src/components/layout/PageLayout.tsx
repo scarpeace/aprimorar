@@ -34,8 +34,6 @@ export function PageLayout({
   iconBg,
 }: Readonly<PropsWithChildren<PageLayoutProps>>) {
   const iconBgClass = ICON_BG_VARIANTS[iconBg] ?? ICON_BG_VARIANTS.primary;
-  const [isAtendimentoFormOpen, setIsAtendimentoFormOpen] = useState(false);
-  const [isAlunoFormOpen, setIsAlunoFormOpen] = useState(false);
 
   return (
     <>
@@ -54,29 +52,9 @@ export function PageLayout({
               </p>
             </div>
           </div>
-
-          <div className="flex gap-3">
-          <Button variant="success" onClick={() => setIsAtendimentoFormOpen(true)}><Plus className="mr-2 h-4 w-4" />Novo atendimento</Button>
-          </div>
         </div>
       </header>
       {children}
-
-      <Modal
-        isOpen={isAtendimentoFormOpen}
-        onClose={() => setIsAtendimentoFormOpen(false)}
-        title="Cadastrar Novo Atendimento"
-        description="Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados."
-        size="lg"
-      >
-        <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
-          <AtendimentoForm
-            initialData={null}
-            onSuccess={() => setIsAtendimentoFormOpen(false)}
-            onCancel={() => setIsAtendimentoFormOpen(false)}
-          />
-        </Suspense>
-      </Modal>
     </>
   );
 }

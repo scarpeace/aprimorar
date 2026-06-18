@@ -51,15 +51,15 @@ export function AlunosPage() {
         </div>
       </section>
 
-      <main className="grid grid-cols-2 gap-6 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both] 2xl:grid-cols-2">
-            <section className="min-w-0 rounded-2xl border border-base-300 p-3">
+      <section className="grid grid-cols-2 gap-6 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both] 2xl:grid-cols-2">
+            <div className="min-w-0 rounded-2xl border border-base-300 p-3">
               <AlunosTable openForm={() => setIsAlunoFormOpen(true)} />
-            </section>
+            </div>
 
-            <section className="min-w-0 rounded-2xl border border-base-300 p-3">
+            <div className="min-w-0 rounded-2xl border border-base-300 p-3">
               <ResponsaveisTable openForm={() => setIsResponsavelFormOpen(true)} />
-            </section>
-
+            </div>
+      </section>
 
         <Modal
               isOpen={isAlunoFormOpen}
@@ -92,8 +92,6 @@ export function AlunosPage() {
             />
           </Suspense>
         </Modal>
-
-        </main>
       </PageLayout>
   );
 }
