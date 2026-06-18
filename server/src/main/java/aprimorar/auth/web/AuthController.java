@@ -30,6 +30,6 @@ public class AuthController {
     @SecurityRequirements({})
     @ApiResponse(responseCode = "200", description = "Usuario autenticado com sucesso.")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthRequestDTO request) {
-        return ResponseEntity.ok(authService.authenticate(request.email(), request.password()));
+        return ResponseEntity.ok(authService.authenticate(request.username(), request.password()));
     }
 }

@@ -2,11 +2,12 @@ import { useCallback, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import {
   AuthContext,
-} from "./auth-context";
-import type { AuthContextValue, AuthUser, StoredAuth } from "./auth-context";
+} from "./authContext";
+import type { AuthContextValue, StoredAuth } from "./authContext";
 import { useAuthMutations } from "@/features/auth/hooks/use-auth-mutations";
 import { clearStoredAuth, readStoredAuth, saveStoredAuth } from "./auth-storage";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api/api";
+import type { AuthRequestDTO, UserResponseDTO } from "@/kubb";
 
 export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [storedAuth, setStoredAuth] = useState<StoredAuth | null>(() => readStoredAuth());
@@ -14,15 +15,15 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [error, setError] = useState<string | null>(null);
   const { loginMutation } = useAuthMutations();
 
-  const login = useCallback(async ({ email, password }: { email: string; password: string }) => {
+  const login = useCallback(async ({ username, password }: AuthRequestDTO) => {
     setIsPending(true);
     setError(null);
     try {
-      const data = await loginMutation.mutateAsync({ data: { email, password } });
+      const data = await loginMutation.mutateAsync({ data: { username, password } });
 
-      const user: AuthUser = {
+      const user: UserResponseDTO = {
         username: data.username!,
-        role: data.role! as AuthUser["role"]
+        role: data.role! as UserResponseDTO["role"]
       };
 
       const nextAuth: StoredAuth = { token: data.accessToken!, user };

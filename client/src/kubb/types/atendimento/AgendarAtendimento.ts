@@ -3,15 +3,15 @@
  * Do not edit manually.
  */
 
-import type { AtendimentoRequestDTO } from "../AtendimentoRequestDTO.ts";
-import type { AtendimentoResponseDTO } from "../AtendimentoResponseDTO.ts";
+import type { AtendimentoRequest } from "../AtendimentoRequest.ts";
+import type { AtendimentoResponse } from "../AtendimentoResponse.ts";
 
 /**
  * @description Atendimento agendado e retornado com os dados consolidados de aluno e colaborador.
  */
-export type AgendarAtendimento201 = AtendimentoResponseDTO;
+export type AgendarAtendimento201 = AtendimentoResponse;
 
-export type AgendarAtendimentoMutationRequest = AtendimentoRequestDTO;
+export type AgendarAtendimentoMutationRequest = AtendimentoRequest;
 
 export type AgendarAtendimentoMutationResponse = AgendarAtendimento201;
 

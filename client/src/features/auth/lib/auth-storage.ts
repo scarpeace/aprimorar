@@ -1,4 +1,4 @@
-import { AUTH_STORAGE_KEY, type StoredAuth } from "./auth-context";
+import { AUTH_STORAGE_KEY, type StoredAuth } from "./authContext";
 
 export function readStoredAuth(): StoredAuth | null {
   const storedValue = localStorage.getItem(AUTH_STORAGE_KEY);

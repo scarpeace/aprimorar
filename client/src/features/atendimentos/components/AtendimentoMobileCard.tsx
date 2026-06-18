@@ -1,5 +1,5 @@
 import { ButtonLink } from "@/components/ui/button";
-import type { AtendimentoResponseDTO } from "@/kubb";
+import type { AtendimentoResponse } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import {
   BriefcaseBusiness,
@@ -13,7 +13,7 @@ import { memo } from "react";
 import { tipoAtendimentoLabels } from "../lib/tipo-atendimento-labels";
 
 type AtendimentoMobileCardProps = {
-  atendimento: AtendimentoResponseDTO;
+  atendimento: AtendimentoResponse;
   alunoNome: string;
   colaboradorNome: string;
   index: number;

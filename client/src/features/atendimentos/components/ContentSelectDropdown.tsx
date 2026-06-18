@@ -1,7 +1,7 @@
-import { atendimentoRequestDTOTipoEnum } from "@/kubb";
 import { TriangleAlert } from "lucide-react";
 import type { UseFormRegisterReturn } from "react-hook-form";
 import { tipoAtendimentoLabels } from "../lib/tipo-atendimento-labels";
+import { atendimentoRequestTipoEnum } from "@/kubb";
 
 type ContentSelectDropdownProps = {
   registration: UseFormRegisterReturn;
@@ -20,7 +20,7 @@ export function ContentSelectDropdown({
 
       <select className="select select-bordered w-full" {...registration}>
         <option value="">Selecione o tipo</option>
-        {Object.values(atendimentoRequestDTOTipoEnum).map((tipo) => (
+        {Object.values(atendimentoRequestTipoEnum).map((tipo) => (
           <option key={tipo} value={tipo}>
             {tipoAtendimentoLabels[tipo]}
           </option>

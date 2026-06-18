@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DateTimeInput } from "@/components/ui/date-time-input";
 import { AlunoSelectDropdown } from "@/features/alunos/components/AlunoSelectDropdown";
 import { ColaboradorSelectDropdown } from "@/features/colaboradores/components/ColaboradorSelectDropdown";
-import { useGetColaboradoresList, useListAlunos, type AtendimentoRequestDTO, type AtendimentoResponseDTO } from "@/kubb";
+import { useGetColaboradoresList, useListAlunos, type AtendimentoRequest, type AtendimentoResponse } from "@/kubb";
 import { toInstant } from "@/lib/utils/date-utils";
 import { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
 import { atendimentoFormSchema, type AtendimentoFormSchema } from "../lib/atendimento-form-schema";
@@ -26,7 +26,7 @@ function formatDateTimeForInput(dateTimeStr?: string) {
 }
 
 type AtendimentoFormProps = {
-  initialData?: AtendimentoResponseDTO | null;
+  initialData?: AtendimentoResponse | null;
   onSuccess: () => void;
   onCancel: () => void;
 };
@@ -44,7 +44,7 @@ function FieldErrorMessage({ message }: Readonly<{ message?: string }>) {
   );
 }
 
-export function AtendimentoForm({ initialData, onCancel, onSuccess }: Readonly<AtendimentoFormProps>) {
+export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<AtendimentoFormProps>) {
   const { createAtendimento, updateAtendimento } = useAtendimentoMutations();
   const alunosQuery = useListAlunos();
   const colaboradoresQuery = useGetColaboradoresList();
@@ -91,7 +91,7 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Readonly<A
   }, [inicioValue, duracaoValue]);
 
   const onSubmit = handleSubmit((data) => {
-    const formattedData: AtendimentoRequestDTO = {
+    const formattedData: AtendimentoRequest = {
       descricao: data.descricao,
       tipo: data.tipo,
       inicio: toInstant(data.inicio),
@@ -102,7 +102,7 @@ export function AtendimentoForm({ initialData, onCancel, onSuccess }: Readonly<A
       colaboradorId: data.colaboradorId,
     };
 
-    if (isEditMode && initialData?.id) {
+      if (isEditMode && initialData?.id) {
       updateAtendimento.mutate(
         {
           id: initialData.id,

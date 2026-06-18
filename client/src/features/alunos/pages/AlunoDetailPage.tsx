@@ -1,7 +1,7 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { Modal } from "@/components/ui/modal";
-import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
+import { usePageDateFilter } from "@/lib/shared/use-page-date-filter.ts";
 import {
   useGetAlunoById,
   useGetAtendimentos,

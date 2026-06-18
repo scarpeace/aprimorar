@@ -3,7 +3,7 @@ import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { useListAlunos, type AtendimentoResponseDTO, type PagedModelAtendimentoResponseDTO } from "@/kubb";
+import { useListAlunos, type AtendimentoResponse, type PagedModelAtendimentoResponse } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
 import {
@@ -13,14 +13,14 @@ import {
 import { memo } from "react";
 
 type ColaboradorEventsTableProps = {
-  atendimentos?: PagedModelAtendimentoResponseDTO;
+  atendimentos?: PagedModelAtendimentoResponse;
   currentPage: number;
   error?: unknown;
   isLoading: boolean;
   onPageChange: (page: number) => void;
 };
 
-const tipoLabels: Record<AtendimentoResponseDTO["tipo"], string> = {
+const tipoLabels: Record<AtendimentoResponse["tipo"], string> = {
   AULA: "Aula",
   MENTORIA: "Mentoria",
   TERAPIA: "Terapia",
@@ -105,7 +105,7 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
           </thead>
 
           <tbody className="whitespace-nowrap">
-            {events.map((atendimento: AtendimentoResponseDTO) => (
+            {events.map((atendimento: AtendimentoResponse) => (
                 <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
                   <td>
                     <div className="font-semibold text-base-content">{getParticipantName(atendimento.alunoId, alunosQuery.data)}</div>

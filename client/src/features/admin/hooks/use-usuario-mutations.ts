@@ -1,5 +1,5 @@
 import { listUsersQueryKey, useCreateUser, useDeleteUser } from "@/kubb";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
+import { getFriendlyErrorMessage } from "@/lib/shared/api/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 

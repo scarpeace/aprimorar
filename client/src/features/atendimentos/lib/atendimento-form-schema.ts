@@ -1,17 +1,10 @@
-import {
-  atendimentoRequestDTOTipoEnum,
-  type AtendimentoRequestDTOTipoEnumKey,
-} from "@/kubb";
+import { atendimentoRequestTipoEnum } from "@/kubb";
 import { z } from "zod/v4";
 
-const tipoOptions = Object.values(atendimentoRequestDTOTipoEnum) as [
-  AtendimentoRequestDTOTipoEnumKey,
-  ...AtendimentoRequestDTOTipoEnumKey[],
-];
 
 export const atendimentoFormSchema = z.object({
   descricao: z.string().optional(),
-  tipo: z.enum(tipoOptions, {
+  tipo: z.enum(atendimentoRequestTipoEnum, {
     error: "O tipo do atendimento é obrigatório",
   }),
   inicio: z.string().min(1, { message: "A data de início do atendimento é obrigatória" }),

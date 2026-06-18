@@ -1,8 +1,8 @@
 package aprimorar.atendimentos.controller;
 
-import aprimorar.atendimentos.dto.AtendimentoRequestDTO;
-import aprimorar.atendimentos.dto.AtendimentoResponseDTO;
-import aprimorar.atendimentos.dto.ReagendarRequestDTO;
+import aprimorar.atendimentos.dto.AtendimentoRequest;
+import aprimorar.atendimentos.dto.AtendimentoResponse;
+import aprimorar.atendimentos.dto.ReagendarAtendimentoRequest;
 import aprimorar.atendimentos.service.AtendimentoMutationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,15 +34,15 @@ public class AtendimentoMutationController {
     @PostMapping
     @Operation(operationId = "agendarAtendimento", description = "Cria um atendimento vinculando aluno e colaborador.")
     @ApiResponse(responseCode = "201", description = "Atendimento agendado e retornado com os dados consolidados de aluno e colaborador.")
-    public ResponseEntity<AtendimentoResponseDTO> agendar(@RequestBody @Valid AtendimentoRequestDTO request) {
-        AtendimentoResponseDTO created = atendimentoMutationService.agendar(request);
+    public ResponseEntity<AtendimentoResponse> agendar(@RequestBody @Valid AtendimentoRequest request) {
+        AtendimentoResponse created = atendimentoMutationService.agendar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PatchMapping("/{id}/concluir")
     @Operation(operationId = "concluirAtendimento", description = "Muda o status de um atendimento para CONCLUIDO.")
     @ApiResponse(responseCode = "200", description = "Atendimento concluído e retornado com os dados consolidados de aluno e colaborador.")
-    public ResponseEntity<AtendimentoResponseDTO> concluir(@PathVariable UUID id) {
+    public ResponseEntity<AtendimentoResponse> concluir(@PathVariable UUID id) {
         atendimentoMutationService.concluir(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
@@ -50,9 +50,9 @@ public class AtendimentoMutationController {
     @PatchMapping("/{id}/reagendar")
     @Operation(operationId = "reagendarAtendimento", description = "Reagenda um atendimento para uma nova data e hora.")
     @ApiResponse(responseCode = "200", description = "Atendimento reagendado e retornado com os dados consolidados de aluno e colaborador.")
-    public ResponseEntity<AtendimentoResponseDTO> reagendar(
+    public ResponseEntity<AtendimentoResponse> reagendar(
         @PathVariable UUID id,
-        @RequestBody ReagendarRequestDTO request
+        @RequestBody ReagendarAtendimentoRequest request
     ) {
         atendimentoMutationService.reagendar(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(null);
@@ -61,7 +61,7 @@ public class AtendimentoMutationController {
     @PatchMapping("/{id}/cancelar")
     @Operation(operationId = "cancelarAtendimento", description = "Muda o status de um atendimento para CANCELADO.")
     @ApiResponse(responseCode = "200", description = "Atendimento cancelado e retornado com os dados consolidados de aluno e colaborador.")
-    public ResponseEntity<AtendimentoResponseDTO> cancelar(@PathVariable UUID id) {
+    public ResponseEntity<AtendimentoResponse> cancelar(@PathVariable UUID id) {
         atendimentoMutationService.cancelar(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }

@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react";
-import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { DatesSetArg, EventClickArg, EventInput } from "@fullcalendar/core";
 import ptBrLocale from "@fullcalendar/core/locales/pt-br";
@@ -9,20 +8,16 @@ import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
-import { Button } from "@/components/ui/button";
 import { ErrorCard } from "@/components/ui/error-card";
-import { getAppointmentColor } from "@/features/atendimentos/lib/appointment-content-colors";
-import { useGetAtendimentos, useListAlunos } from "@/kubb";
-import type { AtendimentoResponseDTO } from "@/kubb";
-import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
-import { getFriendlyErrorMessage } from "@/lib/shared/api";
-import { getMonthRange } from "@/lib/utils/date-utils";
+import { getAppointmentColor } from "@/features/atendimentos/lib/cores-tipo-atendimento";
+import { useGetCalendarioAtendimentos, type CalendarioAtendimentosRespose } from "@/kubb";
+import { getFriendlyErrorMessage } from "@/lib/shared/api/api";
 import { AtendimentoContentLegend } from "./AtendimentoContentLegend";
 
 const CALENDAR_PLUGINS = [dayGridPlugin, timeGridPlugin, interactionPlugin];
 
 const HEADER_TOOLBAR = {
-  left: "prev,next dayGridMonth,timeGridDay",
+  left: "prev,next dayGridMonth,timeGridWeek,timeGridDay",
   center: "title",
   right: "today",
 };
@@ -30,49 +25,36 @@ const HEADER_TOOLBAR = {
 const BUTTON_TEXT = {
   today: "hoje",
   month: "mês",
+  week: "semana",
   day: "dia",
 };
 
-function toCalendarEvent(atendimento: AtendimentoResponseDTO, alunoNome: string): EventInput {
+function toCalendarEvent(atendimento: CalendarioAtendimentosRespose): EventInput {
   return {
     id: atendimento.id,
-    title: alunoNome,
+    title: `${atendimento.nomeAluno} - ${atendimento.nomeColaborador}`,
     start: atendimento.inicio,
     end: atendimento.fim,
-    color: getAppointmentColor(atendimento).backgroundColor,
+    color: getAppointmentColor({ tipo: atendimento.tipo }).backgroundColor,
   };
 }
 
-type AtendimentosCalendarProps = {
-  onCreateAppointment: () => void;
-};
-
-export function AtendimentosCalendar({ onCreateAppointment }: Readonly<AtendimentosCalendarProps>) {
+export function AtendimentosCalendar() {
   const [calendarDate, setCalendarDate] = useState(() => new Date());
-  const calendarRef = useRef<FullCalendar>(null);
+  const calendar = useRef<FullCalendar>(null);
   const navigate = useNavigate();
 
-  const calendarRange = getMonthRange(calendarDate);
-
-  const eventsQuery = useGetAtendimentos({
-    inicio: calendarRange.startDate.toISOString(),
-    fim: calendarRange.endDate.toISOString(),
-    size: 500,
-    sort: ["inicio,asc"],
-  });
-  const alunosQuery = useListAlunos();
+  const anoMes = calendarDate.toISOString().slice(0, 7);
+  const calendarioAtendimentos = useGetCalendarioAtendimentos({ anoMes });
 
   const calendarEvents = useMemo(
-    () => (eventsQuery.data?.content ?? []).map((atendimento) => toCalendarEvent(
-      atendimento,
-      getParticipantName(atendimento.alunoId, alunosQuery.data),
-    )),
-    [alunosQuery.data, eventsQuery.data?.content],
+    () => (calendarioAtendimentos.data ?? []).map((atendimento) => toCalendarEvent(atendimento)),
+    [calendarioAtendimentos.data],
   );
 
   const handleDateClick = (info: DateClickArg) => {
     setCalendarDate(info.date);
-    calendarRef.current?.getApi().changeView("timeGridDay", info.date);
+    calendar.current?.getApi().changeView("timeGridDay", info.date);
   };
 
   const handleEventClick = (info: EventClickArg) => {
@@ -88,16 +70,16 @@ export function AtendimentosCalendar({ onCreateAppointment }: Readonly<Atendimen
     }
   };
 
-  if (eventsQuery.isError) {
+  if (calendarioAtendimentos.isError) {
     return (
       <ErrorCard
         title="Não foi possível carregar os atendimentos"
-        description={getFriendlyErrorMessage(eventsQuery.error)}
+        description={getFriendlyErrorMessage(calendarioAtendimentos.error)}
       />
     );
   }
 
-  if (eventsQuery.isLoading) {
+  if (calendarioAtendimentos.isLoading) {
     return (
       <div className="card border border-base-300 bg-base-100 shadow-sm">
         <div className="card-body">
@@ -120,20 +102,14 @@ export function AtendimentosCalendar({ onCreateAppointment }: Readonly<Atendimen
               detalhes.
             </p>
           </div>
-          <Button onClick={onCreateAppointment} variant="success">
-            <Plus className="mr-2 h-4 w-4" />
-            Novo atendimento
-          </Button>
+
         </div>
 
-        <AtendimentoContentLegend
-          startDate={calendarRange.startDate}
-          endDate={calendarRange.endDate}
-        />
+        <AtendimentoContentLegend anoMes={anoMes} />
 
         <div className="appointments-calendar rounded-2xl border border-base-300 bg-base-100 p-3">
           <FullCalendar
-            ref={calendarRef}
+            ref={calendar}
             locale={ptBrLocale}
             plugins={CALENDAR_PLUGINS}
             initialView="dayGridMonth"

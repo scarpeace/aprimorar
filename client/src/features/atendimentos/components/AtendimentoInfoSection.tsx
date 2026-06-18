@@ -1,5 +1,5 @@
 import { MiniCard } from "@/components/ui/mini-card";
-import { useGetColaboradoresList, useListAlunos, type AtendimentoResponseDTO } from "@/kubb";
+import { useGetColaboradoresList, useListAlunos, type AtendimentoResponse } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import {
   Calendar,
@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { getParticipantName } from "../lib/atendimento-participant-labels";
 
 type AtendimentoInfoSectionProps = {
-  atendimento: AtendimentoResponseDTO;
+  atendimento: AtendimentoResponse;
 };
 
 export function AtendimentoInfoSection({

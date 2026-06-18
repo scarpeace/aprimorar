@@ -3,20 +3,23 @@ import { ErrorCard } from "@/components/ui/error-card";
 import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { useGetAtendimentos, useGetColaboradoresList, useListAlunos, type AtendimentoResponseDTO } from "@/kubb";
+import { useGetAtendimentos, useGetColaboradoresList, useListAlunos, type AtendimentoResponse } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
 import { useAtendimentosFilters } from "../hooks/use-atendimentos-filters";
 import { getParticipantName } from "../lib/atendimento-participant-labels";
 import { tipoAtendimentoLabels } from "../lib/tipo-atendimento-labels";
 import { AtendimentoMobileCard } from "./AtendimentoMobileCard";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 type AtendimentosTableProps = {
   startDate?: Date;
   endDate?: Date;
+  openForm: () => void;
 };
 
-export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosTableProps>) {
+export function AtendimentosTable({ startDate, endDate, openForm }: AtendimentosTableProps) {
   const navigate = useNavigate();
 
   const {
@@ -43,6 +46,13 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
   return (
     <>
       <section className="flex flex-col gap-3 my-3 animate-[fade-up_220ms_ease-out_both] lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h3 className="text-2xl font-bold text-base-content">Atendimentos registrados</h3>
+          <p className="text-sm text-base-content/60">
+            Selecione um atendimento para visualizar os detalhes.
+          </p>
+        </div>
+
         <ListSearchInput
           className="grow"
           placeholder="Buscar por aluno, colaborador, tipo ou descrição"
@@ -50,6 +60,9 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
           value={search}
           onChange={handleSearchChange}
         />
+
+        <Button variant="success" onClick={() => openForm()}><Plus className="mr-2 h-4 w-4" />Novo atendimento</Button>
+
       </section>
 
       {eventsQuery.isError && (
@@ -85,7 +98,7 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
                 </thead>
 
                 <tbody className="whitespace-nowrap">
-                  {events.map((atendimento: AtendimentoResponseDTO) => (
+                  {events.map((atendimento: AtendimentoResponse) => (
                     <tr
                       key={atendimento.id}
                       className="group cursor-pointer transition-colors hover:bg-base-200/50"
@@ -122,7 +135,7 @@ export function AtendimentosTable({ startDate, endDate }: Readonly<AtendimentosT
           </div>
 
           <div className="flex flex-col gap-4 md:hidden">
-            {events.map((atendimento: AtendimentoResponseDTO, index: number) => (
+            {events.map((atendimento: AtendimentoResponse, index: number) => (
               <AtendimentoMobileCard
                 key={atendimento.id}
                 atendimento={atendimento}

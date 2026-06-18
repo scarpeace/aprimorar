@@ -6,7 +6,7 @@
 /**
  * @description Reagendar um atendimento
  */
-export type ReagendarRequestDTO = {
+export type ReagendarAtendimentoRequest = {
   /**
    * @description Novo inicio do atendimento
    * @type string | undefined, date-time

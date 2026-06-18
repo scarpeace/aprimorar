@@ -1,10 +1,10 @@
 import { z } from "zod/v4";
 
 export const loginFormSchema = z.object({
-  email: z
+  username: z
     .string()
-    .min(1, { message: "Email é obrigatório" })
-    .email({ message: "Email inválido" }),
+    .min(1, { message: "Usuário é obrigatório" })
+    .email({ message: "Usuário inválido" }),
   password: z.string().min(1, { message: "Senha é obrigatória" }),
 });
 

@@ -5,13 +5,13 @@ import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
 import { useGetResponsaveis } from "@/kubb";
-import { useDebounce } from "@/lib/hooks/use-debounce";
+import { useDebounce } from "@/lib/shared/use-debounce";
 import { formatCpf, formatPhone } from "@/lib/utils/formatter";
-import { BrushCleaning } from "lucide-react";
+import { BrushCleaning, Plus, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export function ResponsaveisTable() {
+export function ResponsaveisTable({ openForm }: { openForm: () => void }) {
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,13 +45,20 @@ export function ResponsaveisTable() {
     <main>
       <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-2xl font-bold text-base-content">Responsáveis</h3>
+              <p className="text-sm text-base-content/60">Selecione um responsável para ver os detalhes.</p>
+            </div>
+          </div>
           <ListSearchInput
             className="grow"
-            placeholder="Buscar responsável por nome, email ou CPF"
+            placeholder="Nome, email ou CPF"
             ariaLabel="Buscar responsável"
             value={searchTerm}
             onChange={setSearchTerm}
           />
+            <Button onClick={() => openForm()} variant="success"><UserPlus size={21} /></Button>
         </div>
       </section>
 
@@ -86,8 +93,6 @@ export function ResponsaveisTable() {
               <tr>
                 <th className="text-left font-semibold text-base-content/80">Nome</th>
                 <th className="text-left font-semibold text-base-content/80">Contato</th>
-                <th className="text-left font-semibold text-base-content/80">E-mail</th>
-                <th className="text-left font-semibold text-base-content/80">CPF</th>
               </tr>
             </thead>
 
@@ -100,8 +105,6 @@ export function ResponsaveisTable() {
                 >
                   <td className="font-bold">{responsavel.nome}</td>
                   <td>{formatPhone(responsavel.telefone)}</td>
-                  <td>{responsavel.email}</td>
-                  <td>{formatCpf(responsavel.cpf)}</td>
                 </tr>
               ))}
             </tbody>

@@ -1,5 +1,9 @@
-import type { LucideIcon } from "lucide-react";
-import type { PropsWithChildren, ReactNode } from "react";
+import { Plus, type LucideIcon } from "lucide-react";
+import { Suspense, useState, type PropsWithChildren, type ReactNode } from "react";
+import { Button } from "../ui/button";
+import { Modal } from "@/components/ui/modal";
+import { AtendimentoForm } from "@/features/atendimentos/components/AtendimentoForm";
+import { AlunoForm } from "@/features/alunos/components/AlunoForm";
 
 const ICON_BG_VARIANTS = {
   primary: "bg-primary/30 text-primary",
@@ -34,17 +38,19 @@ export function PageLayout({
   return (
     <>
       <header className="flex justify-between flex-col items-start gap-4 min-w-0 mb-6 sm:flex-row sm:items-center">
-        <div className="flex w-full items-center sm:w-auto">
-          <div className={`shrink-0 rounded-full p-3 ${iconBgClass}`}>
-            <Icon size={48} />
-          </div>
-          <div className="ml-3 flex min-w-0 flex-col justify-center gap-0.5 sm:gap-1">
-            <h1 className="truncate text-2xl font-bold text-base-content sm:text-3xl">
-              {title}
-            </h1>
-            <p className="line-clamp-2 text-xs text-base-content/70 sm:text-sm">
-              {description}
-            </p>
+        <div className="flex w-full items-center justify-between ">
+          <div className="ml-3 flex min-w-0 flex-row justify-center gap-0.5 sm:gap-1">
+            <div className={`shrink-0 rounded-full p-3 mr-3 ${iconBgClass}`}>
+              <Icon size={48} />
+            </div>
+            <div>
+              <h1 className="truncate text-2xl font-bold text-base-content sm:text-3xl">
+                {title}
+              </h1>
+              <p className="line-clamp-2 text-xs text-base-content/70 sm:text-sm">
+                {description}
+              </p>
+            </div>
           </div>
         </div>
       </header>

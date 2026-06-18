@@ -11,7 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ColaboradorEventsTable } from "../components/ColaboradorEventsTable";
 import { ColaboradorInfoSection } from "../components/ColaboradorInfoSection";
 import { ColaboradorForm } from "../components/ColaboradorForm";
-import { usePageDateFilter } from "@/lib/hooks/use-page-date-filter.ts";
+import { usePageDateFilter } from "@/lib/shared/use-page-date-filter.ts";
 
 export function ColaboradorDetailPage() {
   const { id } = useParams<{ id: string }>();

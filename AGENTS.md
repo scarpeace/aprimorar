@@ -1,28 +1,33 @@
-# Aprimorar Agent Notes (global)
+# Aprimorar Agent Notes
 
-## Escopo deste arquivo
-- Este AGENTS raiz define apenas regras globais do repositorio.
-- Regras tecnicas de implementacao ficam nos arquivos locais: `server/AGENTS.md` e `client/AGENTS.md`.
+## Scope
+- This root file is only for repo-wide guidance. Use `server/AGENTS.md` and `client/AGENTS.md` for implementation rules inside each app.
 
-## Layout e execucao
-- As raizes reais da aplicacao sao `server/` e `client/`.
-- Scripts de dev no `package.json` da raiz estao defasados para backend/frontend (ex.: `start:backend` aponta para `server/api-aprimorar`); execute comandos dentro de `server/` e `client/`.
+## Real workspace roots
+- The actual app roots are `server/` and `client/`.
+- Do not trust root `package.json` dev scripts for normal backend/frontend work: `start:backend` still points to `server/api-aprimorar`, which does not match the current layout.
 
-## Baseline tecnico rapido
-- Backend: Java 21, Spring Boot 3.5.x, Spring Modulith, PostgreSQL, Flyway.
-- Frontend: React 19, Vite 7, TypeScript, Tailwind 4, DaisyUI, TanStack Query, Kubb.
-- Modulos backend atuais: `auth`, `pessoas`, `atendimentos`, `financeiro`, `shared`.
+## Verified commands
+- Backend: run everything from `server/`.
+- Frontend: run everything from `client/`.
+- Backend local run: `./mvnw spring-boot:run`
+- Backend verify: `./mvnw clean compile` and `./mvnw test`
+- Frontend local run: `npm run dev`
+- Frontend verify: `npm run lint` and `npm run build`
 
-## Regras globais obrigatorias
-- Nao editar manualmente codigo gerado em `client/src/kubb/`.
-- Mudanca de contrato backend que afeta frontend exige regeneracao via `npm run sync` (backend com `/v3/api-docs` disponivel).
-- Dependencias entre modulos backend devem respeitar `package-info.java` e contratos `...api`.
-- Se alterar fronteira de modulo backend, rodar `./mvnw test -Dtest=ModuleVerificationTest` em `server/`.
+## Cross-app contract workflow
+- `client/src/kubb/` is generated; never edit it manually.
+- Backend API contract changes require `npm run sync` in `client/`.
+- `npm run sync` pulls from `http://localhost:8080/v3/api-docs`, so the backend must be running first.
 
-## Comandos de verificacao padrao
-- Backend (em `server/`): `./mvnw clean compile`, `./mvnw test`.
-- Frontend (em `client/`): `npm run lint`, `npm run build`.
+## Backend module boundaries
+- The backend is a Spring Modulith app. Module boundaries are enforced from each module's `package-info.java`.
+- Verified top-level modules today: `auth`, `atendimentos`, `pessoas`, `shared`.
+- If you change inter-module dependencies or module boundaries, run `./mvnw test -Dtest=ModuleVerificationTest` in `server/`.
+- That test also regenerates Modulith docs into `server/src/main/resources/docs`.
 
-## Sonar (quando aplicavel)
-- Scripts Sonar usam `SONAR_TOKEN` do `.env.local` na raiz.
-- Infra local Sonar sobe a partir de `server/` com `docker compose up -d db sonar_db sonarqube`.
+## Local infra and env quirks
+- Local database and Sonar services are defined in `server/docker-compose.yml`.
+- Minimal app DB startup: `docker compose up -d db` from `server/`.
+- Sonar scripts at the repo root expect `SONAR_TOKEN` in `.env.local`.
+- Local Sonar stack: `docker compose up -d db sonar_db sonarqube` from `server/`.

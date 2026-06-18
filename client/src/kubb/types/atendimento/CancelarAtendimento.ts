@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { AtendimentoResponseDTO } from "../AtendimentoResponseDTO.ts";
+import type { AtendimentoResponse } from "../AtendimentoResponse.ts";
 
 export type CancelarAtendimentoPathParams = {
   /**
@@ -15,7 +15,7 @@ export type CancelarAtendimentoPathParams = {
 /**
  * @description Atendimento cancelado e retornado com os dados consolidados de aluno e colaborador.
  */
-export type CancelarAtendimento200 = AtendimentoResponseDTO;
+export type CancelarAtendimento200 = AtendimentoResponse;
 
 export type CancelarAtendimentoMutationResponse = CancelarAtendimento200;
 

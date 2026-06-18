@@ -20,8 +20,8 @@ export function LoginPage() {
     resolver: zodResolver(loginFormSchema),
     mode: "onBlur",
     defaultValues: {
-      email: "admin@aprimorar.local",
-      password: "admin123",
+      username: "",
+      password: "",
     },
   });
 
@@ -63,17 +63,17 @@ export function LoginPage() {
                 <div className="input input-bordered w-full flex items-center gap-2 bg-base-100">
                   <Mail className="h-4 w-4 text-base-content/40" />
                   <input
-                    aria-label="Email"
+                    aria-label="Username"
                     className="grow"
                     placeholder="voce@aprimorar.com"
                     type="email"
-                    {...register("email")}
+                    {...register("username")}
                   />
                 </div>
-                {errors.email ? (
+                {errors.username ? (
                   <p className="label text-error">
                     <TriangleAlert className="h-3 w-3" />
-                    {errors.email.message}
+                    {errors.username.message}
                   </p>
                 ) : null}
               </label>

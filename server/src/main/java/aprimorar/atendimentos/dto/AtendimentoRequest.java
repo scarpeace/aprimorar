@@ -1,7 +1,7 @@
 package aprimorar.atendimentos.dto;
 
 import aprimorar.atendimentos.domain.Atendimento;
-import aprimorar.atendimentos.enums.TipoAtendimentoEnum;
+import aprimorar.atendimentos.enums.TipoAtendimento;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Schema(description = "Formato de payload para cadastro e atualização de atendimento")
-public record AtendimentoRequestDTO(
+public record AtendimentoRequest(
 
     @Schema(nullable = false, description = "Descrição do atendimento", example = "Sessão focada em revisão de matemática básica")
     String descricao,
 
     @NotNull(message = "Conteudo do atendimento e obrigatorio")
     @Schema(nullable = false, description = "Tipo de conteúdo do atendimento", example = "MENTORIA")
-    TipoAtendimentoEnum tipo,
+    TipoAtendimento tipo,
 
     @NotNull(message = "Data/hora de inicio do atendimento e obrigatoria")
     @Future(message = "A data/hora de inicio deve ser no futuro")

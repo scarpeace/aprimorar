@@ -1,75 +1,36 @@
-import { useMemo } from "react";
 import { tipoAtendimentoLabels } from "@/features/atendimentos/lib/tipo-atendimento-labels";
-import { APPOINTMENT_CONTENT_COLORS } from "@/features/atendimentos/lib/appointment-content-colors";
-import { useGetAtendimentos } from "@/kubb";
-import type { AtendimentoResponseDTO } from "@/kubb";
+import { CORES_TIPO_ATENDIMENTO } from "@/features/atendimentos/lib/cores-tipo-atendimento";
+import { useGetRelatorioAtendimentos } from "@/kubb";
 
-type AtendimentoContentLegendProps = {
-  startDate: Date;
-  endDate: Date;
-};
+export function AtendimentoContentLegend({ anoMes }: { anoMes: string }) {
+  const realtorioAtendimentos = useGetRelatorioAtendimentos({ anoMes });
 
-export function AtendimentoContentLegend({
-  startDate,
-  endDate,
-}: Readonly<AtendimentoContentLegendProps>) {
-  const { data: atendimentos, isLoading, isError } = useGetAtendimentos({
-    inicio: startDate.toISOString(),
-    fim: endDate.toISOString(),
-    size: 500,
-  });
-
-  const countByContent = useMemo<Record<string, number>>(
-    () => {
-      const counts = Object.fromEntries(
-        Object.keys(APPOINTMENT_CONTENT_COLORS).map((content) => [content, 0]),
-      ) as Record<string, number>;
-
-      atendimentos?.content?.forEach((atendimento) => {
-        counts[atendimento.tipo] = (counts[atendimento.tipo] ?? 0) + 1;
-      });
-
-      return counts;
-    },
-    [atendimentos],
-  );
-
-  const totalAppointments = useMemo(
-    () => Object.values(countByContent).reduce((acc, count) => acc + count, 0),
-    [countByContent],
-  );
+  const itens = [
+    ["AULA", realtorioAtendimentos.data?.totalAulas],
+    ["ENEM", realtorioAtendimentos.data?.totalENEM],
+    ["PAS", realtorioAtendimentos.data?.totalPAS],
+    ["MENTORIA", realtorioAtendimentos.data?.totalMentoria],
+    ["TERAPIA", realtorioAtendimentos.data?.totalTerapia],
+    ["OUTRO", realtorioAtendimentos.data?.totalOutros],
+  ] as const;
 
   return (
     <div className="mb-4 rounded-2xl border border-base-300 bg-base-200/40 px-4 py-3">
       <p className="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-base-content/50">
-        Total de atendimentos: {totalAppointments}
+        Total de atendimentos : {realtorioAtendimentos.data?.totalAtendimentos}
       </p>
-      {isLoading ? (
-        <p className="text-sm text-base-content/60">Carregando distribuição...</p>
-      ) : isError ? (
-        <p className="text-sm text-error">Não foi possível carregar a distribuição.</p>
-      ) : (
-        <div className="flex flex-wrap gap-3">
-          {Object.entries(APPOINTMENT_CONTENT_COLORS).map(([content, color]) => {
-            const tipo = content as AtendimentoResponseDTO["tipo"];
 
-            return (
-              <div
-                key={content}
-                className="flex items-center gap-2 rounded-lg border border-base-300 px-2 py-1 text-sm font-medium text-base-content/75"
-              >
-                <span
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: color.backgroundColor }}
-                />
-                <span>
-                  {tipoAtendimentoLabels[tipo] ?? content} : {countByContent[content] ?? 0}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <div className="flex flex-wrap gap-3">
+        {itens.map(([tipo, total]) => (
+          <div
+            key={tipo}
+            className="flex items-center gap-2 rounded-lg border border-base-300 px-2 py-1 text-sm font-medium text-base-content/75"
+          >
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: CORES_TIPO_ATENDIMENTO[tipo].backgroundColor }} />
+            <span>{tipoAtendimentoLabels[tipo]} : {total}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

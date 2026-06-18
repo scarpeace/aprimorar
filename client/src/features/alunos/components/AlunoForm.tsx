@@ -191,7 +191,7 @@ export function AlunoForm({ initialData, onSuccess, onCancel }: Readonly<AlunoFo
         </fieldset>
       </div>
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
         <Button type="button" variant="ghost" onClick={onCancel} disabled={isPending}>
           Cancelar
         </Button>
