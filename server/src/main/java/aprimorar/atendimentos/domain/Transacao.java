@@ -1,8 +1,6 @@
 package aprimorar.atendimentos.domain;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import jakarta.persistence.Entity;
@@ -127,4 +125,6 @@ public class Transacao {
             throw new IllegalArgumentException("Campos obrigatórios não foram preenchidos");
         }
     }
+
+
 }

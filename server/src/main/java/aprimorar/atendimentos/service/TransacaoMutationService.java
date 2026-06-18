@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.atendimentos.domain.Transacao;
+import aprimorar.atendimentos.dto.TransacaoRequestDTO;
+import aprimorar.atendimentos.dto.TransacaoResponseDTO;
 import aprimorar.atendimentos.enums.CategoriaTransacao;
 import aprimorar.atendimentos.enums.FormaPagamento;
 import aprimorar.atendimentos.enums.StatusTransacao;
@@ -57,7 +59,24 @@ public class TransacaoMutationService {
     }
 
     @Transactional
-    public void efetivarTransacao(UUID transacaoId, FormaPagamento formaPagamento) {
+    public TransacaoResponseDTO criarSaidaDespesa(TransacaoRequestDTO request) {
+        var transacao = new Transacao(
+                ADMIN_ID,
+                null,
+                request.valor(),
+                null,
+                TipoTransacao.SAIDA,
+                null,
+                StatusTransacao.PENDENTE,
+                request.categoria()
+        );
+
+        transacaoRepository.save(transacao);
+        return TransacaoResponseDTO.toDto(transacao);
+    }
+
+    @Transactional
+    public void efetivarTransacao(Long transacaoId, FormaPagamento formaPagamento) {
         var transacao = transacaoRepository.findById(transacaoId)
                 .orElseThrow(() -> new IllegalArgumentException("Transação não encontrada"));
 
@@ -66,7 +85,7 @@ public class TransacaoMutationService {
     }
 
     @Transactional
-    public void cancelarTransacao(UUID transacaoId) {
+    public void cancelarTransacao(Long transacaoId) {
         var transacao = transacaoRepository.findById(transacaoId)
                 .orElseThrow(() -> new IllegalArgumentException("Transação não encontrada"));
 
