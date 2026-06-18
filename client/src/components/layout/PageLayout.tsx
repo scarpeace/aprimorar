@@ -57,7 +57,6 @@ export function PageLayout({
 
           <div className="flex gap-3">
           <Button variant="success" onClick={() => setIsAtendimentoFormOpen(true)}><Plus className="mr-2 h-4 w-4" />Novo atendimento</Button>
-          <Button variant="success" onClick={() => setIsAlunoFormOpen(true)}><Plus className="mr-2 h-4 w-4" />Novo aluno</Button>
           </div>
         </div>
       </header>
@@ -78,23 +77,6 @@ export function PageLayout({
           />
         </Suspense>
       </Modal>
-
-      <Modal
-        isOpen={isAlunoFormOpen}
-        onClose={() => setIsAlunoFormOpen(false)}
-        title="Cadastrar Novo Aluno"
-        description="Atualize dados pessoais, contato e vínculos do aluno para manter a secretaria organizada."
-        size="lg"
-      >
-        <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
-          <AlunoForm
-            initialData={null}
-            onSuccess={() => setIsAlunoFormOpen(false)}
-            onCancel={() => setIsAlunoFormOpen(false)}
-          />
-        </Suspense>
-      </Modal>
-
     </>
   );
 }

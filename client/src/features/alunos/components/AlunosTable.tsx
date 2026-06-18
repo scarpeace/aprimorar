@@ -8,11 +8,11 @@ import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useGetAlunos } from "@/kubb";
 import { useDebounce } from "@/lib/shared/use-debounce";
 import { formatCpf } from "@/lib/utils/formatter";
-import { BrushCleaning } from "lucide-react";
+import { BrushCleaning, CircleAlert, Eye, EyeClosed, FolderClock, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export function AlunosTable() {
+export function AlunosTable({ openForm }: { openForm: () => void }) {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
@@ -34,7 +34,7 @@ export function AlunosTable() {
   const pageSize = page?.size ?? alunos.length;
   const hasAlunos = alunos.length > 0;
 
-  const handleShowArchivedChange = (value: boolean) => {
+  const handleShowArchived = (value: boolean) => {
     setShowArchived(value);
     setCurrentPage(0);
   };
@@ -49,20 +49,33 @@ export function AlunosTable() {
     <main>
       <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-2xl font-bold text-base-content">Alunos</h3>
+              <p className="text-sm text-base-content/60">Selecione um aluno para ver os detalhes.</p>
+            </div>
+          </div>
+
           <ListSearchInput
             className="grow"
-            placeholder="Buscar aluno por nome, email ou CPF"
+            placeholder="Nome, email ou CPF"
             ariaLabel="Buscar aluno"
             value={searchTerm}
             onChange={setSearchTerm}
           />
-          <ToggleSwitch
-            label="Arquivados"
-            tip="Mostrar alunos arquivados"
-            toggled={showArchived}
-            setToggle={handleShowArchivedChange}
-            className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
-          />
+
+          {/*<div className="tooltip flex" data-tip={"Mostrar alunos arquivados"}>
+          <div className="flex flex-col gap-1 items-center">
+            <span className="text-sm text-secondary"><FolderClock size={21}/></span>
+            <label className="toggle text-base h-5 p-1">
+                <input type="checkbox" checked={showArchived} onChange={() => handleShowArchived(!showArchived)} />
+                <EyeClosed size={15} />
+                <Eye size={15} />
+              </label>
+            </div>
+          </div>*/}
+
+        <Button onClick={() => openForm()} variant="success"><UserPlus size={21} /></Button>
         </div>
       </section>
 

@@ -7,7 +7,6 @@ import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { usePageDateFilter } from "@/lib/shared/use-page-date-filter";
 
 export function AtendimentosPage() {
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const { startDate, endDate, ...dateFilter } = usePageDateFilter();
 
 
@@ -18,13 +17,6 @@ export function AtendimentosPage() {
     iconBg: "accent",
   } as const;
 
-  const handleOpenForm = () => {
-    setIsFormOpen(true);
-  };
-
-  const handleCloseForm = () => {
-    setIsFormOpen(false);
-  };
 
   return (
     <PageLayout {...headerProps}>
@@ -37,11 +29,6 @@ export function AtendimentosPage() {
                   Clique na linha para abrir os detalhes do cadastro.
                 </p>
               </div>
-
-              <Button className="sm:ml-auto" onClick={() => handleOpenForm()} variant="success">
-                <Plus className="mr-2 h-4 w-4" />
-                Novo Atendimento
-              </Button>
             </div>
 
             <AtendimentosTable startDate={startDate} endDate={endDate}/>

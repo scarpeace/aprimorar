@@ -19,7 +19,8 @@ export function ToggleSwitch({
 
   return (
     <div className="tooltip flex" data-tip={tip}>
-      <label htmlFor={id} className="label cursor-pointer gap-2">
+      <label htmlFor={id} className="label flex flex-col cursor-pointer gap-2">
+        <span className="text-sm font-medium">{label}</span>
         <input
           id={id}
           className={`toggle h-6 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800 ${className}`}
@@ -27,7 +28,6 @@ export function ToggleSwitch({
           checked={toggled}
           onChange={() => setToggle(!toggled)}
         />
-        <span className="text-sm font-medium">{label}</span>
       </label>
     </div>
   );
