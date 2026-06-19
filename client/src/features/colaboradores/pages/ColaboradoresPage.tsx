@@ -20,11 +20,6 @@ export function ColaboradoresPage() {
   } as const;
 
   const { data: kpisColaboradores } = useGetColaboradoresKpis();
-  const handleOpenForm = (colaborador?: ColaboradorResponseDTO) => {
-    setSelectedColaborador(colaborador || null);
-    setIsFormOpen(true);
-  };
-
   const handleCloseForm = () => {
     setSelectedColaborador(null);
     setIsFormOpen(false);
@@ -67,8 +62,8 @@ export function ColaboradoresPage() {
           isOpen={isFormOpen}
           onClose={handleCloseForm}
           title={selectedColaborador ? "Editar Colaborador" : "Cadastrar Novo Colaborador"}
-          description="Atualize dados pessoais, contato e função do colaborador para manter a operação organizada."
-          size="md"
+          description="Informe os dados do colaborador para seu cadastro ou edição."
+          size="lg"
         >
           <ColaboradorForm
             initialData={selectedColaborador}

@@ -58,7 +58,6 @@ export function AlunoForm({ initialData, onSuccess, onCancel }: Readonly<AlunoFo
   });
 
   const onSubmit = methods.handleSubmit((data) => {
-    console.log(data)
     if (isEditMode && initialData?.id) {
       updateAluno.mutate({ alunoId: initialData.id, data },
         { onSuccess },
@@ -95,11 +94,11 @@ export function AlunoForm({ initialData, onSuccess, onCancel }: Readonly<AlunoFo
           <div className="divider col-span-3" />
 
           <span className="col-span-3 text-md font-bold">Endereço</span>
-          <FieldSet name="endereco.rua" legend="Rua" placeholder="Ex: SQS 406, Bloco C" type="text" />
-          <FieldSet name="endereco.numero" legend="Número" placeholder="Ex: 101" type="text" />
-          <FieldSet name="endereco.complemento" legend="Complemento" placeholder="" type="text" />
-          <FieldSet name="endereco.bairro" legend="Bairro" placeholder="Ex: Asa Sul" type="text" />
-          <FieldSet name="endereco.cidade" legend="Cidade" placeholder="Ex: Brasília" type="text" />
+          <TextInput name="endereco.rua" label="Rua" placeholder="Ex: SQS 406, Bloco C" type="text" />
+          <TextInput name="endereco.numero" label="Número" placeholder="Ex: 101" type="text" />
+          <TextInput name="endereco.complemento" label="Complemento" placeholder="" type="text" />
+          <TextInput name="endereco.bairro" label="Bairro" placeholder="Ex: Asa Sul" type="text" />
+          <TextInput name="endereco.cidade" label="Cidade" placeholder="Ex: Brasília" type="text" />
           <SelectInput name="endereco.estado" label="Estado" options={estadosOptions} />
           <MaskedInput name="endereco.cep" label="CEP" placeholder="Ex: 70254-010" mask="00000-000" />
       </div>

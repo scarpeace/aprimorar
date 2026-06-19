@@ -64,7 +64,7 @@ export function AlunosPage() {
               isOpen={isAlunoFormOpen}
               onClose={() => setIsAlunoFormOpen(false)}
               title="Cadastrar Novo Aluno"
-              description="Atualize dados pessoais, contato e vínculos do aluno para manter a secretaria organizada."
+              description="Informe os dados do aluno para efetuar a matrícula, um aluno deve ter um responsável no momento do seu cadastro."
               size="lg"
             >
               <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
@@ -79,7 +79,7 @@ export function AlunosPage() {
           isOpen={isResponsavelFormOpen}
           onClose={() => setIsResponsavelFormOpen(false)}
           title="Cadastrar Novo Responsável"
-          description="Atualize dados pessoais, contato e vínculos do responsável para manter a secretaria organizada."
+          description="Informe os dados do responsável para efetuar o cadastro."
           size="lg"
         >
           <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>

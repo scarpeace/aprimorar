@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormMask } from "use-mask-input";
 import { Button } from "@/components/ui/button";
@@ -8,17 +8,8 @@ import { responsavelFormSchema, type ResponsavelFormSchema } from "../lib/respon
 import { useResponsavelMutations } from "../hooks/use-responsavel-mutations";
 import { formatDateForInput } from "@/lib/utils/formatter";
 import type { ReactNode } from "react";
-
-function FieldErrorMessage({ children }: { children: ReactNode }) {
-  if (!children) return null;
-
-  return (
-    <p className="label text-error">
-      <TriangleAlert className="h-3 w-3" />
-      {children}
-    </p>
-  );
-}
+import { TextInput } from "@/components/forms/TextInput.tsx";
+import { MaskedInput } from "@/components/forms/MaskedInput.tsx";
 
 interface ResponsavelFormProps {
   initialData?: ResponsavelResponseDTO | null;
@@ -30,38 +21,27 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
   const { createResponsavel, updateResponsavel } = useResponsavelMutations();
   const isEditMode = !!initialData;
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ResponsavelFormSchema>({
+  const methods = useForm<ResponsavelFormSchema>({
     resolver: zodResolver(responsavelFormSchema),
-    defaultValues: {
-      nome: initialData?.nome ?? "",
-      email: initialData?.email ?? "",
-      telefone: initialData?.telefone ?? "",
-      dataNascimento: formatDateForInput(initialData?.dataNascimento),
-      cpf: initialData?.cpf ?? "",
-    },
     mode: "onBlur",
+    defaultValues: {
+      nome: initialData?.nome,
+      email: initialData?.email,
+      telefone: initialData?.telefone,
+      dataNascimento: formatDateForInput(initialData?.dataNascimento),
+      cpf: initialData?.cpf,
+    },
   });
 
-  const registerWithMask = useHookFormMask(register);
 
-  const onSubmit = handleSubmit((data: ResponsavelFormSchema) => {
+  const onSubmit = methods.handleSubmit((data: ResponsavelFormSchema) => {
     if (isEditMode && initialData.id) {
-      updateResponsavel.mutate(
-        { responsavelId: initialData.id, data },
-        {
-          onSuccess: () => onSuccess(),
-        }
+      updateResponsavel.mutate({ responsavelId: initialData.id, data },
+        { onSuccess }
       );
     } else {
-      createResponsavel.mutate(
-        { data },
-        {
-          onSuccess: () => onSuccess(),
-        }
+      createResponsavel.mutate({ data },
+        { onSuccess }
       );
     }
   });
@@ -69,73 +49,26 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
   const isPending = createResponsavel.isPending || updateResponsavel.isPending;
 
   return (
-    <form className="flex flex-col" onSubmit={onSubmit} autoComplete="off">
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        <fieldset className="fieldset md:col-span-2">
-          <legend className="fieldset-legend">Nome</legend>
-          <input
-            type="text"
-            className="input w-full"
-            {...register("nome")}
-            placeholder="Nome completo"
-          />
-          <FieldErrorMessage>{errors.nome?.message}</FieldErrorMessage>
-        </fieldset>
+    <FormProvider {...methods}>
+      <form className="flex flex-col" onSubmit={onSubmit} autoComplete="off">
+        <div className="grid grid-cols-1 gap-x-3 md:grid-cols-3">
 
-        <fieldset className="fieldset md:col-span-2">
-          <legend className="fieldset-legend">Email</legend>
-          <input
-            type="text"
-            className="input w-full"
-            {...register("email")}
-            placeholder="email@email.com"
-          />
-          <FieldErrorMessage>{errors.email?.message}</FieldErrorMessage>
-        </fieldset>
+          <TextInput name="nome" label="Nome" placeholder="Nome completo" />
+          <TextInput name="email" label="Email" type="email" placeholder="Email"/>
+          <MaskedInput name="dataNascimento" label="Data de Nascimento" mask="00/00/0000" placeholder="Ex: 11/12/2003"/>
+          <MaskedInput name="telefone" label="Telefone" mask="(00) 00000-0000" placeholder="Ex: (11) 99999-9999"/>
+          <MaskedInput name="cpf" label="CPF" mask="000.000.000-00" placeholder="Ex: 123.456.789-00"/>
+        </div>
 
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Data de Nascimento</legend>
-          <input
-            type="text"
-            className="input w-full"
-            {...registerWithMask("dataNascimento", ["##/##/####"])}
-            placeholder="Ex: 01/01/1990"
-          />
-          <FieldErrorMessage>{errors.dataNascimento?.message}</FieldErrorMessage>
-        </fieldset>
-
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Contato</legend>
-          <input
-            type="text"
-            className="input w-full"
-            placeholder="Ex: (61) 99633-2332"
-            {...registerWithMask("telefone", ["(##) #####-####", "(##) ####-####"])}
-          />
-          <FieldErrorMessage>{errors.telefone?.message}</FieldErrorMessage>
-        </fieldset>
-
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">CPF</legend>
-          <input
-            type="text"
-            className="input w-full"
-            disabled={isEditMode}
-            placeholder="Ex: 123.456.789-00"
-            {...registerWithMask("cpf", ["###.###.###-##"])}
-          />
-          <FieldErrorMessage>{errors.cpf?.message}</FieldErrorMessage>
-        </fieldset>
-      </div>
-
-      <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <Button type="button" variant="ghost" onClick={onCancel}>
-          Cancelar
-        </Button>
-        <Button type="submit" disabled={isPending} variant="primary">
-          {isPending ? "Salvando..." : (isEditMode ? "Atualizar Responsável" : "Salvar Responsável")}
-        </Button>
-      </div>
-    </form>
+        <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <Button type="button" variant="ghost" onClick={onCancel}>
+            Cancelar
+          </Button>
+          <Button type="submit" disabled={isPending} variant="primary">
+            {isPending ? "Salvando..." : (isEditMode ? "Atualizar Responsável" : "Salvar Responsável")}
+          </Button>
+        </div>
+      </form>
+    </FormProvider>
   );
 }
