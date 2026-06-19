@@ -3,23 +3,22 @@ import { useListResponsaveis } from "@/kubb";
 import { TriangleAlert } from "lucide-react";
 import {
   Controller,
+  useFormContext,
   type Control
 } from "react-hook-form";
 
 type ResponsavelSelectDropdownProps = {
   className?: string;
   label?: string;
-  control: Control<AlunoFormSchema>;
-  error?: string;
 };
 
 export function ResponsavelSelectDropdown({
-  control,
-  error,
   className,
   label,
 }: ResponsavelSelectDropdownProps) {
   const { data: responsavels, isPending } = useListResponsaveis();
+  const { register, formState: { errors } } = useFormContext();
+
   return (
     <fieldset className={`fieldset ${className}`}>
       <legend className="fieldset-legend w-full flex flex-row justify-between items-center">
@@ -29,28 +28,26 @@ export function ResponsavelSelectDropdown({
         </span>
       </legend>
 
-      <Controller
-        control={control}
-            name="responsavelId"
-        render={({ field }) => (
-          <select
-            className="select select-bordered w-full"
-            disabled={isPending}
-            {...field}
-            value={field.value ?? ""}
-          >
-            <option value="">Selecione um responsável</option>
-            {responsavels?.map((responsavel) => (
-              <option key={responsavel.id} value={responsavel.id}>
-                {responsavel.nome}
-              </option>
-            ))}
-          </select>
-        )}
-      />
+      <select
+        className="select select-bordered w-full"
+        disabled={isPending}
+        {...register("responsavelId")}
+      >
+        <option value="">Selecione um responsável</option>
+        {responsavels?.map((responsavel) => (
+          <option key={responsavel.id} value={responsavel.id}>
+            {responsavel.nome}
+          </option>
+        ))}
+      </select>
 
-      {error && (<p className="label text-error"> <TriangleAlert className="w-3 h-3" />{error}</p>
+      {errors["responsavelId"] && (
+        <span className="text-error text-sm">
+          {String(errors["responsavelId"]?.message)}
+        </span>
       )}
+
+
     </fieldset>
   );
 }

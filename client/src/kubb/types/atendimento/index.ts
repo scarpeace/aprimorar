@@ -1,55 +1,9 @@
-export type {
-  AgendarAtendimento201,
-  AgendarAtendimentoMutation,
-  AgendarAtendimentoMutationRequest,
-  AgendarAtendimentoMutationResponse,
-} from "./AgendarAtendimento.ts";
-export type {
-  CancelarAtendimento200,
-  CancelarAtendimentoMutation,
-  CancelarAtendimentoMutationResponse,
-  CancelarAtendimentoPathParams,
-} from "./CancelarAtendimento.ts";
-export type {
-  ConcluirAtendimento200,
-  ConcluirAtendimentoMutation,
-  ConcluirAtendimentoMutationResponse,
-  ConcluirAtendimentoPathParams,
-} from "./ConcluirAtendimento.ts";
-export type {
-  ExcluirAtendimento204,
-  ExcluirAtendimentoMutation,
-  ExcluirAtendimentoMutationResponse,
-  ExcluirAtendimentoPathParams,
-} from "./ExcluirAtendimento.ts";
-export type {
-  GetAtendimentoById200,
-  GetAtendimentoByIdPathParams,
-  GetAtendimentoByIdQuery,
-  GetAtendimentoByIdQueryResponse,
-} from "./GetAtendimentoById.ts";
-export type {
-  GetAtendimentos200,
-  GetAtendimentosQuery,
-  GetAtendimentosQueryParams,
-  GetAtendimentosQueryResponse,
-} from "./GetAtendimentos.ts";
-export type {
-  GetCalendarioAtendimentos200,
-  GetCalendarioAtendimentosQuery,
-  GetCalendarioAtendimentosQueryParams,
-  GetCalendarioAtendimentosQueryResponse,
-} from "./GetCalendarioAtendimentos.ts";
-export type {
-  GetRelatorioAtendimentos200,
-  GetRelatorioAtendimentosQuery,
-  GetRelatorioAtendimentosQueryParams,
-  GetRelatorioAtendimentosQueryResponse,
-} from "./GetRelatorioAtendimentos.ts";
-export type {
-  ReagendarAtendimento200,
-  ReagendarAtendimentoMutation,
-  ReagendarAtendimentoMutationRequest,
-  ReagendarAtendimentoMutationResponse,
-  ReagendarAtendimentoPathParams,
-} from "./ReagendarAtendimento.ts";
+export type { AgendarAtendimento201, AgendarAtendimentoMutationRequest, AgendarAtendimentoMutationResponse, AgendarAtendimentoMutation } from "./AgendarAtendimento.ts";
+export type { CancelarAtendimentoPathParams, CancelarAtendimento200, CancelarAtendimentoMutationResponse, CancelarAtendimentoMutation } from "./CancelarAtendimento.ts";
+export type { ConcluirAtendimentoPathParams, ConcluirAtendimento200, ConcluirAtendimentoMutationResponse, ConcluirAtendimentoMutation } from "./ConcluirAtendimento.ts";
+export type { ExcluirAtendimentoPathParams, ExcluirAtendimento204, ExcluirAtendimentoMutationResponse, ExcluirAtendimentoMutation } from "./ExcluirAtendimento.ts";
+export type { GetAtendimentoByIdPathParams, GetAtendimentoById200, GetAtendimentoByIdQueryResponse, GetAtendimentoByIdQuery } from "./GetAtendimentoById.ts";
+export type { GetAtendimentosQueryParams, GetAtendimentos200, GetAtendimentosQueryResponse, GetAtendimentosQuery } from "./GetAtendimentos.ts";
+export type { GetCalendarioAtendimentosQueryParams, GetCalendarioAtendimentos200, GetCalendarioAtendimentosQueryResponse, GetCalendarioAtendimentosQuery } from "./GetCalendarioAtendimentos.ts";
+export type { GetRelatorioAtendimentosQueryParams, GetRelatorioAtendimentos200, GetRelatorioAtendimentosQueryResponse, GetRelatorioAtendimentosQuery } from "./GetRelatorioAtendimentos.ts";
+export type { ReagendarAtendimentoPathParams, ReagendarAtendimento200, ReagendarAtendimentoMutationRequest, ReagendarAtendimentoMutationResponse, ReagendarAtendimentoMutation } from "./ReagendarAtendimento.ts";

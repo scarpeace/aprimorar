@@ -1,59 +1,10 @@
-export type {
-  ArchiveAluno204,
-  ArchiveAlunoMutation,
-  ArchiveAlunoMutationResponse,
-  ArchiveAlunoPathParams,
-} from "./ArchiveAluno.ts";
-export type {
-  CriarAluno201,
-  CriarAlunoMutation,
-  CriarAlunoMutationRequest,
-  CriarAlunoMutationResponse,
-} from "./CriarAluno.ts";
-export type {
-  DeleteAluno204,
-  DeleteAlunoMutation,
-  DeleteAlunoMutationResponse,
-  DeleteAlunoPathParams,
-} from "./DeleteAluno.ts";
-export type {
-  GetAlunoById200,
-  GetAlunoByIdPathParams,
-  GetAlunoByIdQuery,
-  GetAlunoByIdQueryResponse,
-} from "./GetAlunoById.ts";
-export type {
-  GetAlunos200,
-  GetAlunosQuery,
-  GetAlunosQueryParams,
-  GetAlunosQueryResponse,
-} from "./GetAlunos.ts";
-export type {
-  GetAlunosByResponsavel200,
-  GetAlunosByResponsavelPathParams,
-  GetAlunosByResponsavelQuery,
-  GetAlunosByResponsavelQueryResponse,
-} from "./GetAlunosByResponsavel.ts";
-export type {
-  GetAlunosKpis200,
-  GetAlunosKpisQuery,
-  GetAlunosKpisQueryResponse,
-} from "./GetAlunosKpis.ts";
-export type {
-  ListAlunos200,
-  ListAlunosQuery,
-  ListAlunosQueryResponse,
-} from "./ListAlunos.ts";
-export type {
-  UnarchiveAluno204,
-  UnarchiveAlunoMutation,
-  UnarchiveAlunoMutationResponse,
-  UnarchiveAlunoPathParams,
-} from "./UnarchiveAluno.ts";
-export type {
-  UpdateAluno200,
-  UpdateAlunoMutation,
-  UpdateAlunoMutationRequest,
-  UpdateAlunoMutationResponse,
-  UpdateAlunoPathParams,
-} from "./UpdateAluno.ts";
+export type { ArchiveAlunoPathParams, ArchiveAluno204, ArchiveAlunoMutationResponse, ArchiveAlunoMutation } from "./ArchiveAluno.ts";
+export type { CriarAluno201, CriarAlunoMutationRequest, CriarAlunoMutationResponse, CriarAlunoMutation } from "./CriarAluno.ts";
+export type { DeleteAlunoPathParams, DeleteAluno204, DeleteAlunoMutationResponse, DeleteAlunoMutation } from "./DeleteAluno.ts";
+export type { GetAlunoByIdPathParams, GetAlunoById200, GetAlunoByIdQueryResponse, GetAlunoByIdQuery } from "./GetAlunoById.ts";
+export type { GetAlunosQueryParams, GetAlunos200, GetAlunosQueryResponse, GetAlunosQuery } from "./GetAlunos.ts";
+export type { GetAlunosByResponsavelPathParams, GetAlunosByResponsavel200, GetAlunosByResponsavelQueryResponse, GetAlunosByResponsavelQuery } from "./GetAlunosByResponsavel.ts";
+export type { GetAlunosKpis200, GetAlunosKpisQueryResponse, GetAlunosKpisQuery } from "./GetAlunosKpis.ts";
+export type { ListAlunos200, ListAlunosQueryResponse, ListAlunosQuery } from "./ListAlunos.ts";
+export type { UnarchiveAlunoPathParams, UnarchiveAluno204, UnarchiveAlunoMutationResponse, UnarchiveAlunoMutation } from "./UnarchiveAluno.ts";
+export type { UpdateAlunoPathParams, UpdateAluno200, UpdateAlunoMutationRequest, UpdateAlunoMutationResponse, UpdateAlunoMutation } from "./UpdateAluno.ts";

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class AuthBootstrap {
 
 	private static final String ADMIN_EMAIL = "admin@aprimorar.com";
-	private static final String ADMIN_PASSWORD = "";
+	private static final String ADMIN_PASSWORD = "Freerider";
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;

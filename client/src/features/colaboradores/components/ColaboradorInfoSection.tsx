@@ -3,7 +3,7 @@ import { Collapse } from "@/components/ui/collapse";
 import { ErrorCard } from "@/components/ui/error-card";
 import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { AddressDetails } from "@/lib/shared/address/components/AddressDetails";
+import { AddressDetails } from "@/lib/shared/address/AddressDetails";
 import { useFindColaboradorById } from "@/kubb";
 import { formatCpf, formatDateShortYear, formatPhone } from "@/lib/utils/formatter";
 import { Edit, User } from "lucide-react";

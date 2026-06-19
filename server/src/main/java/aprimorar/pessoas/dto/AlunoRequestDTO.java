@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import aprimorar.pessoas.domain.Aluno;
+import aprimorar.shared.MapperUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -52,9 +53,9 @@ public record AlunoRequestDTO(
         return new Aluno(
             this.nome(),
             this.dataNascimento(),
-            this.telefone(),
-            this.cpf(),
-            this.email(),
+            MapperUtils.normalizeContact(this.telefone()),
+            MapperUtils.normalizeCpf(this.cpf()),
+            MapperUtils.normalizeEmail(this.email()),
             this.escola(),
             this.responsavelId(),
             this.endereco().toEntity()

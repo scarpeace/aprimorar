@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { KpiCard } from "@/components/ui/kpi-card";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ResponsaveisTable } from "@/features/responsaveis/components/ResponsaveisTable";
@@ -70,7 +69,6 @@ export function AlunosPage() {
             >
               <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
                 <AlunoForm
-                  initialData={null}
                   onSuccess={() => setIsAlunoFormOpen(false)}
                   onCancel={() => setIsAlunoFormOpen(false)}
                 />
@@ -86,7 +84,6 @@ export function AlunosPage() {
         >
           <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
             <ResponsavelForm
-              initialData={null}
               onSuccess={() => setIsResponsavelFormOpen(false)}
               onCancel={() => setIsResponsavelFormOpen(false)}
             />

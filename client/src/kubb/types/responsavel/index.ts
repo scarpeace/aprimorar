@@ -1,37 +1,6 @@
-export type {
-  CreateResponsavel201,
-  CreateResponsavelMutation,
-  CreateResponsavelMutationRequest,
-  CreateResponsavelMutationResponse,
-} from "./CreateResponsavel.ts";
-export type {
-  DeleteResponsavel204,
-  DeleteResponsavelMutation,
-  DeleteResponsavelMutationResponse,
-  DeleteResponsavelPathParams,
-  DeleteResponsavelQueryParams,
-} from "./DeleteResponsavel.ts";
-export type {
-  GetResponsaveis200,
-  GetResponsaveisQuery,
-  GetResponsaveisQueryParams,
-  GetResponsaveisQueryResponse,
-} from "./GetResponsaveis.ts";
-export type {
-  GetResponsavelById200,
-  GetResponsavelByIdPathParams,
-  GetResponsavelByIdQuery,
-  GetResponsavelByIdQueryResponse,
-} from "./GetResponsavelById.ts";
-export type {
-  ListResponsaveis200,
-  ListResponsaveisQuery,
-  ListResponsaveisQueryResponse,
-} from "./ListResponsaveis.ts";
-export type {
-  UpdateResponsavel200,
-  UpdateResponsavelMutation,
-  UpdateResponsavelMutationRequest,
-  UpdateResponsavelMutationResponse,
-  UpdateResponsavelPathParams,
-} from "./UpdateResponsavel.ts";
+export type { CreateResponsavel201, CreateResponsavelMutationRequest, CreateResponsavelMutationResponse, CreateResponsavelMutation } from "./CreateResponsavel.ts";
+export type { DeleteResponsavelPathParams, DeleteResponsavelQueryParams, DeleteResponsavel204, DeleteResponsavelMutationResponse, DeleteResponsavelMutation } from "./DeleteResponsavel.ts";
+export type { GetResponsaveisQueryParams, GetResponsaveis200, GetResponsaveisQueryResponse, GetResponsaveisQuery } from "./GetResponsaveis.ts";
+export type { GetResponsavelByIdPathParams, GetResponsavelById200, GetResponsavelByIdQueryResponse, GetResponsavelByIdQuery } from "./GetResponsavelById.ts";
+export type { ListResponsaveis200, ListResponsaveisQueryResponse, ListResponsaveisQuery } from "./ListResponsaveis.ts";
+export type { UpdateResponsavelPathParams, UpdateResponsavel200, UpdateResponsavelMutationRequest, UpdateResponsavelMutationResponse, UpdateResponsavelMutation } from "./UpdateResponsavel.ts";

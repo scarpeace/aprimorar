@@ -3,7 +3,6 @@ import { Collapse } from "@/components/ui/collapse";
 import { ErrorCard } from "@/components/ui/error-card";
 import { LoadingCard } from "@/components/ui/loading-card";
 import { SummaryItem } from "@/components/ui/summary-item";
-import { AddressDetails } from "@/lib/shared/address/components/AddressDetails";
 import {
   formatCpf,
   formatDateShortYear,
@@ -13,6 +12,7 @@ import { useGetAlunoById, useGetResponsavelById } from "@/kubb";
 import { Edit, Handshake, User } from "lucide-react";
 import { ArchiveAlunoButton } from "./ArchiveAlunoButton";
 import { DeleteAlunoButton } from "./DeleteAlunoButton";
+import { AddressDetails } from "@/lib/shared/address/AddressDetails";
 
 type AlunoInfoSectionProps = {
   alunoId: string;

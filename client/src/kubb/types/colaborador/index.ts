@@ -1,53 +1,9 @@
-export type {
-  ArquivarColaborador204,
-  ArquivarColaboradorMutation,
-  ArquivarColaboradorMutationResponse,
-  ArquivarColaboradorPathParams,
-} from "./ArquivarColaborador.ts";
-export type {
-  CreateColaborador201,
-  CreateColaboradorMutation,
-  CreateColaboradorMutationRequest,
-  CreateColaboradorMutationResponse,
-} from "./CreateColaborador.ts";
-export type {
-  DeleteColaborador204,
-  DeleteColaboradorMutation,
-  DeleteColaboradorMutationResponse,
-  DeleteColaboradorPathParams,
-} from "./DeleteColaborador.ts";
-export type {
-  DesarquivarColaborador204,
-  DesarquivarColaboradorMutation,
-  DesarquivarColaboradorMutationResponse,
-  DesarquivarColaboradorPathParams,
-} from "./DesarquivarColaborador.ts";
-export type {
-  FindColaboradorById200,
-  FindColaboradorByIdPathParams,
-  FindColaboradorByIdQuery,
-  FindColaboradorByIdQueryResponse,
-} from "./FindColaboradorById.ts";
-export type {
-  GetColaboradores200,
-  GetColaboradoresQuery,
-  GetColaboradoresQueryParams,
-  GetColaboradoresQueryResponse,
-} from "./GetColaboradores.ts";
-export type {
-  GetColaboradoresKpis200,
-  GetColaboradoresKpisQuery,
-  GetColaboradoresKpisQueryResponse,
-} from "./GetColaboradoresKpis.ts";
-export type {
-  GetColaboradoresList200,
-  GetColaboradoresListQuery,
-  GetColaboradoresListQueryResponse,
-} from "./GetColaboradoresList.ts";
-export type {
-  UpdateColaborador200,
-  UpdateColaboradorMutation,
-  UpdateColaboradorMutationRequest,
-  UpdateColaboradorMutationResponse,
-  UpdateColaboradorPathParams,
-} from "./UpdateColaborador.ts";
+export type { ArquivarColaboradorPathParams, ArquivarColaborador204, ArquivarColaboradorMutationResponse, ArquivarColaboradorMutation } from "./ArquivarColaborador.ts";
+export type { CreateColaborador201, CreateColaboradorMutationRequest, CreateColaboradorMutationResponse, CreateColaboradorMutation } from "./CreateColaborador.ts";
+export type { DeleteColaboradorPathParams, DeleteColaborador204, DeleteColaboradorMutationResponse, DeleteColaboradorMutation } from "./DeleteColaborador.ts";
+export type { DesarquivarColaboradorPathParams, DesarquivarColaborador204, DesarquivarColaboradorMutationResponse, DesarquivarColaboradorMutation } from "./DesarquivarColaborador.ts";
+export type { FindColaboradorByIdPathParams, FindColaboradorById200, FindColaboradorByIdQueryResponse, FindColaboradorByIdQuery } from "./FindColaboradorById.ts";
+export type { GetColaboradoresQueryParams, GetColaboradores200, GetColaboradoresQueryResponse, GetColaboradoresQuery } from "./GetColaboradores.ts";
+export type { GetColaboradoresKpis200, GetColaboradoresKpisQueryResponse, GetColaboradoresKpisQuery } from "./GetColaboradoresKpis.ts";
+export type { GetColaboradoresList200, GetColaboradoresListQueryResponse, GetColaboradoresListQuery } from "./GetColaboradoresList.ts";
+export type { UpdateColaboradorPathParams, UpdateColaborador200, UpdateColaboradorMutationRequest, UpdateColaboradorMutationResponse, UpdateColaboradorMutation } from "./UpdateColaborador.ts";

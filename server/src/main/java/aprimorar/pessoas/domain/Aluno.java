@@ -1,6 +1,5 @@
 package aprimorar.pessoas.domain;
 
-import aprimorar.shared.MapperUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,10 +9,13 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "alunos")
 public class Aluno {
@@ -81,12 +83,11 @@ public class Aluno {
             UUID responsavelId,
             Endereco endereco
     ) {
-        validateRequiredFields();
-        this.nome = validateNome(nome);
-        this.dataNascimento = validateDataNascimento(dataNascimento);
-        this.telefone = validateTelefone(telefone);
-        this.cpf = validateCpf(cpf);
-        this.email = validateEmail(email);
+        this.nome = nome;
+        this.dataNascimento = dataNascimento;
+        this.telefone = telefone;
+        this.cpf = cpf;
+        this.email = email;
         this.escola = escola;
         this.responsavelId = responsavelId;
         this.endereco = endereco;
@@ -101,11 +102,10 @@ public class Aluno {
         UUID responsavelId,
         Endereco endereco
     ) {
-        validateRequiredFields();
-        this.nome = validateNome(nome);
-        this.dataNascimento = validateDataNascimento(dataNascimento);
-        this.telefone = validateTelefone(telefone);
-        this.email = validateEmail(email);
+        this.nome = nome;
+        this.dataNascimento = dataNascimento;
+        this.telefone = telefone;
+        this.email = email;
         this.escola = escola;
         this.responsavelId = responsavelId;
         this.endereco = endereco;
@@ -117,156 +117,5 @@ public class Aluno {
 
     public void unarchive() {
         this.active = true;
-    }
-
-    private void validateRequiredFields() {
-        if (this.endereco == null) {
-            throw new IllegalArgumentException("Endereço do aluno é obrigatório");
-        }
-        if (this.responsavelId == null) {
-            throw new IllegalArgumentException("Aluno não pode ser cadastrado sem um responsável");
-        }
-    }
-
-    private String validateNome(String nome) {
-        if (nome == null || nome.isBlank()) {
-            throw new IllegalArgumentException("Nome do aluno é obrigatório");
-        }
-        return nome;
-    }
-
-    private LocalDate validateDataNascimento(LocalDate dataNascimento) {
-        if (dataNascimento == null) {
-            throw new IllegalArgumentException("Data de nascimento do aluno é obrigatória");
-        }
-        return dataNascimento;
-    }
-
-    private String validateTelefone(String telefone) {
-        var normalized = MapperUtils.normalizeContact(telefone);
-        if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("Contato do aluno é obrigatório");
-        }
-        return normalized;
-    }
-
-    private String validateCpf(String cpf) {
-        var normalized = MapperUtils.normalizeCpf(cpf);
-        if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("CPF do aluno é obrigatório");
-        }
-        return normalized;
-    }
-
-    private String validateEmail(String email) {
-        var normalized = MapperUtils.normalizeEmail(email);
-        if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("Email do aluno é obrigatório");
-        }
-        return normalized;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(LocalDate dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEscola() {
-        return escola;
-    }
-
-    public void setEscola(String escola) {
-        this.escola = escola;
-    }
-
-    public UUID getResponsavelId() {
-        return responsavelId;
-    }
-
-    public void setResponsavelId(UUID responsavelId) {
-        this.responsavelId = responsavelId;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
     }
 }
