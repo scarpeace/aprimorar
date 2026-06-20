@@ -15,7 +15,7 @@ export type CancelarAtendimentoMutationKey = ReturnType<typeof cancelarAtendimen
 
 /**
  * @description Muda o status de um atendimento para CANCELADO.
- * {@link /v1/atendimentos/:id/cancelar}
+ * {@link /v1/Atendimento/:id/cancelar}
  */
 export async function cancelarAtendimento(id: CancelarAtendimentoPathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
@@ -36,7 +36,7 @@ export function cancelarAtendimentoMutationOptions(config: Partial<RequestConfig
 
 /**
  * @description Muda o status de um atendimento para CANCELADO.
- * {@link /v1/atendimentos/:id/cancelar}
+ * {@link /v1/Atendimento/:id/cancelar}
  */
 export function useCancelarAtendimento<TContext>(options: 
 {

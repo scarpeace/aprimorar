@@ -15,7 +15,7 @@ export type ConcluirAtendimentoMutationKey = ReturnType<typeof concluirAtendimen
 
 /**
  * @description Muda o status de um atendimento para CONCLUIDO.
- * {@link /v1/atendimentos/:id/concluir}
+ * {@link /v1/Atendimento/:id/concluir}
  */
 export async function concluirAtendimento(id: ConcluirAtendimentoPathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
@@ -36,7 +36,7 @@ export function concluirAtendimentoMutationOptions(config: Partial<RequestConfig
 
 /**
  * @description Muda o status de um atendimento para CONCLUIDO.
- * {@link /v1/atendimentos/:id/concluir}
+ * {@link /v1/Atendimento/:id/concluir}
  */
 export function useConcluirAtendimento<TContext>(options: 
 {

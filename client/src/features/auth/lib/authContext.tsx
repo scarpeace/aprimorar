@@ -28,6 +28,6 @@ export type AuthContextValue = {
   error: string | null;
 };
 
-export const AUTH_STORAGE_KEY = "aprimorar.auth";
+export const AUTH_STORAGE_KEY = "aprimorar.Auth";
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

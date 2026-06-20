@@ -15,7 +15,7 @@ export type AgendarAtendimentoMutationKey = ReturnType<typeof agendarAtendimento
 
 /**
  * @description Cria um atendimento vinculando aluno e colaborador.
- * {@link /v1/atendimentos}
+ * {@link /v1/Atendimento}
  */
 export async function agendarAtendimento(data: AgendarAtendimentoMutationRequest, config: Partial<RequestConfig<AgendarAtendimentoMutationRequest>> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
@@ -38,7 +38,7 @@ export function agendarAtendimentoMutationOptions(config: Partial<RequestConfig<
 
 /**
  * @description Cria um atendimento vinculando aluno e colaborador.
- * {@link /v1/atendimentos}
+ * {@link /v1/Atendimento}
  */
 export function useAgendarAtendimento<TContext>(options: 
 {

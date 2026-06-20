@@ -15,7 +15,7 @@ export type ExcluirAtendimentoMutationKey = ReturnType<typeof excluirAtendimento
 
 /**
  * @description Remove definitivamente um atendimento.
- * {@link /v1/atendimentos/:id}
+ * {@link /v1/Atendimento/:id}
  */
 export async function excluirAtendimento(id: ExcluirAtendimentoPathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
@@ -36,7 +36,7 @@ export function excluirAtendimentoMutationOptions(config: Partial<RequestConfig>
 
 /**
  * @description Remove definitivamente um atendimento.
- * {@link /v1/atendimentos/:id}
+ * {@link /v1/Atendimento/:id}
  */
 export function useExcluirAtendimento<TContext>(options: 
 {

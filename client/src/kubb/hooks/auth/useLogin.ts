@@ -15,7 +15,7 @@ export type LoginMutationKey = ReturnType<typeof loginMutationKey>
 
 /**
  * @description Autentica um usuario e retorna um access token JWT.
- * {@link /v1/auth/login}
+ * {@link /v1/Auth/login}
  */
 export async function login(data: LoginMutationRequest, config: Partial<RequestConfig<LoginMutationRequest>> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
@@ -38,7 +38,7 @@ export function loginMutationOptions(config: Partial<RequestConfig<LoginMutation
 
 /**
  * @description Autentica um usuario e retorna um access token JWT.
- * {@link /v1/auth/login}
+ * {@link /v1/Auth/login}
  */
 export function useLogin<TContext>(options: 
 {

@@ -4,9 +4,9 @@ import {
   AuthContext,
 } from "./authContext";
 import type { AuthContextValue, StoredAuth } from "./authContext";
-import { useAuthMutations } from "@/features/auth/hooks/use-auth-mutations";
-import { clearStoredAuth, readStoredAuth, saveStoredAuth } from "./auth-storage";
-import { getFriendlyErrorMessage } from "@/lib/shared/api/api";
+import { useAuthMutations } from "@/hooks/use-auth-mutations.ts";
+import { clearStoredAuth, readStoredAuth, saveStoredAuth } from "../../../store/authStore.ts";
+import { getFriendlyErrorMessage } from "@/services/api.ts";
 import type { AuthRequestDTO, UserResponseDTO } from "@/kubb";
 
 export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {

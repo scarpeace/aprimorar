@@ -14,8 +14,8 @@ export const getAtendimentosQueryKey = (params?: GetAtendimentosQueryParams) => 
 export type GetAtendimentosQueryKey = ReturnType<typeof getAtendimentosQueryKey>
 
 /**
- * @description Lista atendimentos com paginacao, ordenacao e filtros opcionais.
- * {@link /v1/atendimentos}
+ * @description Lista Atendimento com paginacao, ordenacao e filtros opcionais.
+ * {@link /v1/Atendimento}
  */
 export async function getAtendimentos(params?: GetAtendimentosQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
@@ -37,8 +37,8 @@ export function getAtendimentosQueryOptions(params?: GetAtendimentosQueryParams,
 }
 
 /**
- * @description Lista atendimentos com paginacao, ordenacao e filtros opcionais.
- * {@link /v1/atendimentos}
+ * @description Lista Atendimento com paginacao, ordenacao e filtros opcionais.
+ * {@link /v1/Atendimento}
  */
 export function useGetAtendimentos<TData = GetAtendimentosQueryResponse, TQueryData = GetAtendimentosQueryResponse, TQueryKey extends QueryKey = GetAtendimentosQueryKey>(params?: GetAtendimentosQueryParams, options: 
 {

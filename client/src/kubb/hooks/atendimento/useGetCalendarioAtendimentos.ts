@@ -14,8 +14,8 @@ export const getCalendarioAtendimentosQueryKey = (params: GetCalendarioAtendimen
 export type GetCalendarioAtendimentosQueryKey = ReturnType<typeof getCalendarioAtendimentosQueryKey>
 
 /**
- * @description Retorna o conteúdo para montar o calendário de atendimentos.
- * {@link /v1/atendimentos/calendario}
+ * @description Retorna o conteúdo para montar o calendário de Atendimento.
+ * {@link /v1/Atendimento/calendario}
  */
 export async function getCalendarioAtendimentos(params: GetCalendarioAtendimentosQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
@@ -37,8 +37,8 @@ export function getCalendarioAtendimentosQueryOptions(params: GetCalendarioAtend
 }
 
 /**
- * @description Retorna o conteúdo para montar o calendário de atendimentos.
- * {@link /v1/atendimentos/calendario}
+ * @description Retorna o conteúdo para montar o calendário de Atendimento.
+ * {@link /v1/Atendimento/calendario}
  */
 export function useGetCalendarioAtendimentos<TData = GetCalendarioAtendimentosQueryResponse, TQueryData = GetCalendarioAtendimentosQueryResponse, TQueryKey extends QueryKey = GetCalendarioAtendimentosQueryKey>(params: GetCalendarioAtendimentosQueryParams, options: 
 {

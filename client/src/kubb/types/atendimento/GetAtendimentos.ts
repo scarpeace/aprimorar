@@ -56,7 +56,7 @@ export type GetAtendimentosQueryParams = {
 };
 
 /**
- * @description Pagina de atendimentos retornada conforme os filtros informados.
+ * @description Pagina de Atendimento retornada conforme os filtros informados.
 */
 export type GetAtendimentos200 = PagedModelAtendimentoResponse;
 

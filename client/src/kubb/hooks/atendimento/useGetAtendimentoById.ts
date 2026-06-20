@@ -15,7 +15,7 @@ export type GetAtendimentoByIdQueryKey = ReturnType<typeof getAtendimentoByIdQue
 
 /**
  * @description Consulta um atendimento especifico pelo ID.
- * {@link /v1/atendimentos/:id}
+ * {@link /v1/Atendimento/:id}
  */
 export async function getAtendimentoById(id: GetAtendimentoByIdPathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
@@ -38,7 +38,7 @@ export function getAtendimentoByIdQueryOptions(id: GetAtendimentoByIdPathParams[
 
 /**
  * @description Consulta um atendimento especifico pelo ID.
- * {@link /v1/atendimentos/:id}
+ * {@link /v1/Atendimento/:id}
  */
 export function useGetAtendimentoById<TData = GetAtendimentoByIdQueryResponse, TQueryData = GetAtendimentoByIdQueryResponse, TQueryKey extends QueryKey = GetAtendimentoByIdQueryKey>(id: GetAtendimentoByIdPathParams["id"], options: 
 {

@@ -15,7 +15,7 @@ export type GetRelatorioAtendimentosQueryKey = ReturnType<typeof getRelatorioAte
 
 /**
  * @description Retorna o conteúdo para montar o relatório.
- * {@link /v1/atendimentos/relatorio}
+ * {@link /v1/Atendimento/relatorio}
  */
 export async function getRelatorioAtendimentos(params: GetRelatorioAtendimentosQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
@@ -38,7 +38,7 @@ export function getRelatorioAtendimentosQueryOptions(params: GetRelatorioAtendim
 
 /**
  * @description Retorna o conteúdo para montar o relatório.
- * {@link /v1/atendimentos/relatorio}
+ * {@link /v1/Atendimento/relatorio}
  */
 export function useGetRelatorioAtendimentos<TData = GetRelatorioAtendimentosQueryResponse, TQueryData = GetRelatorioAtendimentosQueryResponse, TQueryKey extends QueryKey = GetRelatorioAtendimentosQueryKey>(params: GetRelatorioAtendimentosQueryParams, options: 
 {

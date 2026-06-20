@@ -15,7 +15,7 @@ export type ReagendarAtendimentoMutationKey = ReturnType<typeof reagendarAtendim
 
 /**
  * @description Reagenda um atendimento para uma nova data e hora.
- * {@link /v1/atendimentos/:id/reagendar}
+ * {@link /v1/Atendimento/:id/reagendar}
  */
 export async function reagendarAtendimento(id: ReagendarAtendimentoPathParams["id"], data?: ReagendarAtendimentoMutationRequest, config: Partial<RequestConfig<ReagendarAtendimentoMutationRequest>> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
@@ -38,7 +38,7 @@ export function reagendarAtendimentoMutationOptions(config: Partial<RequestConfi
 
 /**
  * @description Reagenda um atendimento para uma nova data e hora.
- * {@link /v1/atendimentos/:id/reagendar}
+ * {@link /v1/Atendimento/:id/reagendar}
  */
 export function useReagendarAtendimento<TContext>(options: 
 {
