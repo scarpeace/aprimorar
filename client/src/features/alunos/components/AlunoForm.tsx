@@ -7,7 +7,6 @@ import { brazilianStates } from "@/lib/utils/brazilianStates";
 import { formatDateForInput } from "@/lib/utils/formatter";
 import { useAlunoMutations } from "../hooks/use-aluno-mutations";
 import { alunoFormSchema, type AlunoFormSchema } from "../lib/aluno-form-schema";
-import { FieldSet } from "@/components/ui/FieldSet";
 import { SelectInput } from "@/components/forms/SelectInput";
 import { TextInput } from "@/components/forms/TextInput";
 import { MaskedInput } from "@/components/forms/MaskedInput";

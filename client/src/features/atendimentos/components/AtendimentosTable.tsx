@@ -1,33 +1,29 @@
 import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/ui/error-card";
-import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Pagination } from "@/components/ui/pagination";
-import { useGetAtendimentos, useGetColaboradoresList, useListAlunos, type AtendimentoResponse } from "@/kubb";
+import { useGetAtendimentos, type AtendimentoResponse } from "@/kubb";
 import { brl, formatDateShortYear, formatTime } from "@/lib/utils/formatter";
 import { useNavigate } from "react-router-dom";
-import { useAtendimentosFilters } from "../hooks/use-atendimentos-filters";
-import { getParticipantName } from "../lib/atendimento-participant-labels";
 import { tipoAtendimentoLabels } from "../lib/tipo-atendimento-labels";
 import { AtendimentoMobileCard } from "./AtendimentoMobileCard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { TextSearchInput } from "@/components/ui/TextSearchInput";
+import { useDebounce } from "@/lib/shared/use-debounce";
+import { useState } from "react";
 
 type AtendimentosTableProps = {
-  startDate?: Date;
-  endDate?: Date;
   openForm: () => void;
 };
 
-export function AtendimentosTable({ startDate, endDate, openForm }: AtendimentosTableProps) {
+export function AtendimentosTable({ openForm }: AtendimentosTableProps) {
   const navigate = useNavigate();
-
-  const {
-    search,
-    page,
-    handleSearchChange,
-    handlePageChange,
-  } = useAtendimentosFilters();
+  const [page, setPage] = useState(0);
+  const [search, setSearch] = useState("");
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const debouncedSearch = useDebounce(search, 500);
 
   const eventsQuery = useGetAtendimentos({
     page,
@@ -35,16 +31,16 @@ export function AtendimentosTable({ startDate, endDate, openForm }: Atendimentos
     inicio: startDate?.toISOString(),
     fim: endDate?.toISOString(),
     sort: ["inicio,desc", "id,asc"],
-    busca: search || undefined,
-  });
-  const alunosQuery = useListAlunos();
-  const colaboradoresQuery = useGetColaboradoresList();
+    busca: debouncedSearch || undefined,
+  })
 
   const events = eventsQuery.data?.content ?? [];
+  const pagination = eventsQuery.data?.page;
   const hasEvents = events.length > 0;
 
   return (
     <>
+
       <section className="flex flex-col gap-3 my-3 animate-[fade-up_220ms_ease-out_both] lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h3 className="text-2xl font-bold text-base-content">Atendimentos registrados</h3>
@@ -52,17 +48,8 @@ export function AtendimentosTable({ startDate, endDate, openForm }: Atendimentos
             Selecione um atendimento para visualizar os detalhes.
           </p>
         </div>
-
-        <ListSearchInput
-          className="grow"
-          placeholder="Buscar por aluno, colaborador, tipo ou descrição"
-          ariaLabel="Buscar atendimento"
-          value={search}
-          onChange={handleSearchChange}
-        />
-
-        <Button variant="success" onClick={() => openForm()}><Plus className="mr-2 h-4 w-4" />Novo atendimento</Button>
-
+          <TextSearchInput className="w-120" placeholder="Aluno, colaborador, ou tipo do atendimento" onChange={(value) => setSearch(value)} />
+          <Button variant="success" onClick={() => openForm()}><Plus className="mr-2 h-4 w-4" />Novo atendimento</Button>
       </section>
 
       {eventsQuery.isError && (
@@ -85,13 +72,14 @@ export function AtendimentosTable({ startDate, endDate, openForm }: Atendimentos
           <div className="hidden md:block">
             <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
               <table className="table table-zebra w-full table-auto bg-base-100">
-                <thead className="sticky top-0 z-10 bg-base-200/90 backdrop-blur">
+                <thead className="sticky z-10 bg-base-200/90">
                   <tr>
                     <th className="font-bold text-base-content/70">Aluno</th>
                     <th className="font-bold text-base-content/70">Colaborador</th>
                     <th className="font-bold text-base-content/70">Data</th>
                     <th className="text-center font-bold text-base-content/70">Horário</th>
                     <th className="text-center font-bold text-base-content/70">Tipo</th>
+                    <th className="text-center font-bold text-base-content/70">Status</th>
                     <th className="text-right font-bold text-base-content/70">Valor</th>
                     <th className="text-right font-bold text-base-content/70">Repasse</th>
                   </tr>
@@ -105,9 +93,9 @@ export function AtendimentosTable({ startDate, endDate, openForm }: Atendimentos
                       onClick={() => navigate(`/atendimentos/${atendimento.id}`)}
                     >
                       <td>
-                        <div className="font-semibold text-base-content">{getParticipantName(atendimento.alunoId, alunosQuery.data)}</div>
+                        <div className="font-semibold text-base-content">{atendimento.nomeAluno}</div>
                       </td>
-                      <td>{getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}</td>
+                      <td>{atendimento.nomeColaborador}</td>
                       <td>{formatDateShortYear(atendimento.inicio)}</td>
                       <td className="text-center text-sm font-medium">
                         {formatTime(atendimento.inicio)} - {formatTime(atendimento.fim)}
@@ -115,6 +103,11 @@ export function AtendimentosTable({ startDate, endDate, openForm }: Atendimentos
                       <td className="text-center">
                         <span className="badge badge-sm badge-outline font-bold uppercase text-[10px]">
                           {tipoAtendimentoLabels[atendimento.tipo] ?? atendimento.tipo}
+                        </span>
+                      </td>
+                      <td className="text-center">
+                        <span className="badge badge-sm badge-outline font-bold uppercase text-[10px]">
+                          {atendimento.status}
                         </span>
                       </td>
                       <td className="text-right">
@@ -139,8 +132,8 @@ export function AtendimentosTable({ startDate, endDate, openForm }: Atendimentos
               <AtendimentoMobileCard
                 key={atendimento.id}
                 atendimento={atendimento}
-                alunoNome={getParticipantName(atendimento.alunoId, alunosQuery.data)}
-                colaboradorNome={getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}
+                alunoNome={atendimento.nomeAluno}
+                colaboradorNome={atendimento.nomeColaborador}
                 index={index}
               />
             ))}
@@ -149,11 +142,11 @@ export function AtendimentosTable({ startDate, endDate, openForm }: Atendimentos
       )}
 
       <Pagination
-        size={eventsQuery.data?.page?.size ?? 0}
-        totalElements={eventsQuery.data?.page?.totalElements ?? 0}
-        totalPages={eventsQuery.data?.page?.totalPages ?? 0}
+        size={pagination?.size ?? 0}
+        totalElements={pagination?.totalElements ?? 0}
+        totalPages={pagination?.totalPages ?? 0}
         currentPage={page}
-        onPageChange={handlePageChange}
+        onPageChange={(page) => {setPage(page)}}
       />
     </>
   );

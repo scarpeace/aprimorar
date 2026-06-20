@@ -42,7 +42,7 @@ public class AtendimentoMutationController {
     @PatchMapping("/{id}/concluir")
     @Operation(operationId = "concluirAtendimento", description = "Muda o status de um atendimento para CONCLUIDO.")
     @ApiResponse(responseCode = "200", description = "Atendimento concluído e retornado com os dados consolidados de aluno e colaborador.")
-    public ResponseEntity<AtendimentoResponse> concluir(@PathVariable UUID id) {
+    public ResponseEntity<AtendimentoResponse> concluir(@PathVariable Long id) {
         atendimentoMutationService.concluir(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
@@ -51,7 +51,7 @@ public class AtendimentoMutationController {
     @Operation(operationId = "reagendarAtendimento", description = "Reagenda um atendimento para uma nova data e hora.")
     @ApiResponse(responseCode = "200", description = "Atendimento reagendado e retornado com os dados consolidados de aluno e colaborador.")
     public ResponseEntity<AtendimentoResponse> reagendar(
-        @PathVariable UUID id,
+        @PathVariable Long id,
         @RequestBody ReagendarAtendimentoRequest request
     ) {
         atendimentoMutationService.reagendar(id, request);
@@ -61,7 +61,7 @@ public class AtendimentoMutationController {
     @PatchMapping("/{id}/cancelar")
     @Operation(operationId = "cancelarAtendimento", description = "Muda o status de um atendimento para CANCELADO.")
     @ApiResponse(responseCode = "200", description = "Atendimento cancelado e retornado com os dados consolidados de aluno e colaborador.")
-    public ResponseEntity<AtendimentoResponse> cancelar(@PathVariable UUID id) {
+    public ResponseEntity<AtendimentoResponse> cancelar(@PathVariable Long id) {
         atendimentoMutationService.cancelar(id);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
@@ -69,7 +69,7 @@ public class AtendimentoMutationController {
     @DeleteMapping("/{id}")
     @Operation(operationId = "excluirAtendimento", description = "Remove definitivamente um atendimento.")
     @ApiResponse(responseCode = "204", description = "Atendimento removido sem corpo de resposta.")
-    public ResponseEntity<Void> deleteAtendimento(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteAtendimento(@PathVariable Long id) {
         atendimentoMutationService.excluir(id);
         return ResponseEntity.noContent().build();
     }

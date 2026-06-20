@@ -7,7 +7,7 @@ import aprimorar.atendimentos.enums.TipoAtendimento;
 import aprimorar.atendimentos.repository.projections.AtendimentoCalendarioProjection;
 
 public record CalendarioAtendimentosRespose(
-    UUID id,
+    Long id,
     UUID colaboradorId,
     UUID alunoId,
     LocalDateTime inicio,

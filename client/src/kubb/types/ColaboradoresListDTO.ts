@@ -10,12 +10,12 @@
 export type ColaboradoresListDTO = {
     /**
      * @description ID do funcionário
-     * @type string | undefined, uuid
+     * @type string, uuid
     */
-    id?: string;
+    id: string;
     /**
      * @description Nome do funcionário
-     * @type string | undefined
+     * @type string
     */
-    name?: string;
+    nome: string;
 };

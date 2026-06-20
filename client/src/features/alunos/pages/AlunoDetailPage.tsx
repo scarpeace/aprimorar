@@ -1,5 +1,4 @@
 import { PageLayout } from "@/components/layout/PageLayout";
-import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { Modal } from "@/components/ui/modal";
 import { usePageDateFilter } from "@/lib/shared/use-page-date-filter.ts";
 import {
@@ -14,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AlunoEventsTable } from "../components/AlunoEventsTable";
 import { AlunoForm } from "../components/AlunoForm";
 import { AlunoInfoSection } from "../components/AlunoInfoSection";
+import { DateRangeSelectWidget } from "@/components/ui/DateRangeSelectWidget";
 
 export function AlunoDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -86,7 +86,7 @@ export function AlunoDetailPage() {
         />
       </Modal>
 
-      <PageDateFilterWidget {...dateFilter} />
+      <DateRangeSelectWidget {...dateFilter} />
     </PageLayout>
   );
 }

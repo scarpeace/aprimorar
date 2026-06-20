@@ -9,7 +9,9 @@ public record AtendimentoFiltroRequest(
     Instant fim,
     Boolean ocultarCobrados,
     Boolean ocultarPagos,
+    UUID alunoId,
+    String alunoNome,
     UUID colaboradorId,
-    UUID alunoId
+    String colaboradorNome
 ) {
 }

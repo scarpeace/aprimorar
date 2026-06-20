@@ -49,7 +49,7 @@ public record AtendimentoRequest(
     @Schema(nullable = false, description = "ID do colaborador vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174000")
     UUID colaboradorId
 ) {
-    public Atendimento toEntity() {
+    public Atendimento toEntity(String nomeAluno, String nomeColaborador) {
         return new Atendimento(
             descricao,
             inicio,
@@ -58,7 +58,9 @@ public record AtendimentoRequest(
             valor,
             tipo,
             alunoId,
-            colaboradorId
+            nomeAluno,
+            colaboradorId,
+            nomeColaborador
         );
     }
 }

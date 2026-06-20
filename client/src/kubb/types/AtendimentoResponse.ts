@@ -30,9 +30,9 @@ export type AtendimentoResponseStatusEnumKey = (typeof atendimentoResponseStatus
 export type AtendimentoResponse = {
     /**
      * @description Identificador unico do atendimento
-     * @type string, uuid
+     * @type integer, int64
     */
-    id: string;
+    id: number;
     /**
      * @description Descricao do atendimento
      * @type string | undefined
@@ -79,10 +79,20 @@ export type AtendimentoResponse = {
     */
     alunoId: string;
     /**
+     * @description Nome do aluno vinculado ao atendimento
+     * @type string
+    */
+    nomeAluno: string;
+    /**
      * @description ID do colaborador vinculado ao atendimento
      * @type string, uuid
     */
     colaboradorId: string;
+    /**
+     * @description Nome do colaborador vinculado ao atendimento
+     * @type string
+    */
+    nomeColaborador: string;
     /**
      * @description Status do atendimento
      * @type string

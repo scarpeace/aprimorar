@@ -6,10 +6,12 @@ import aprimorar.atendimentos.dto.ReagendarAtendimentoRequest;
 import aprimorar.atendimentos.enums.StatusAtendimento;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.atendimentos.domain.Atendimento;
+import aprimorar.atendimentos.domain.Transacao;
 import aprimorar.pessoas.api.AlunoQueryApi;
 import aprimorar.pessoas.api.ColaboradorQueryApi;
 import aprimorar.shared.exception.BusinessException;
 
+import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,15 +43,10 @@ public class AtendimentoMutationService {
 
     @Transactional
     public AtendimentoResponse agendar(AtendimentoRequest dto) {
-        Atendimento atendimento = dto.toEntity();
 
-        if(!alunoQueryApi.existsById(atendimento.getAlunoId())){
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "Aluno não encontrado para a criação do atendimento");
-        }
-
-        if(!colaboradorQueryApi.existsById(atendimento.getColaboradorId())){
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "Colaborador não encontrado para a criação do atendimento");
-        }
+        String nomeAluno = alunoQueryApi.getNomeById(dto.alunoId());
+        String nomeColaborador = colaboradorQueryApi.getNomeById(dto.colaboradorId());
+        Atendimento atendimento = dto.toEntity(nomeAluno, nomeColaborador);
 
         validarDisponibilidadeDosParticipantes(atendimento);
 
@@ -64,28 +61,30 @@ public class AtendimentoMutationService {
     }
 
     @Transactional
-    public void cancelar(UUID id){
+    public void cancelar(Long id){
         Atendimento atendimento = findAtendimentoOrThrow(id);
+
         atendimento.cancelar();
+        transacaoMutationService.cancelarTransacoesByAtendimentoId(id);
         log.info("Atendimento {} cancelado com sucesso.", atendimento.getTitulo().toUpperCase());
     }
 
     @Transactional
-    public void reagendar(UUID id, ReagendarAtendimentoRequest request){
+    public void reagendar(Long id, ReagendarAtendimentoRequest request){
         Atendimento atendimento = findAtendimentoOrThrow(id);
         atendimento.reagendar(request.novoInicio(), request.duracao());
         log.info("Atendimento {} reagendado com sucesso.", atendimento.getTitulo().toUpperCase());
     }
 
     @Transactional
-    public void concluir(UUID id){
+    public void concluir(Long id){
         Atendimento atendimento = findAtendimentoOrThrow(id);
         atendimento.concluir();
         log.info("Atendimento {} concluído com sucesso.", atendimento.getTitulo().toUpperCase());
     }
 
     @Transactional
-    public void alterarParticipantes(UUID id, UUID alunoId, UUID colaboradorId){
+    public void alterarParticipantes(Long id, UUID alunoId, UUID colaboradorId){
         Atendimento atendimento = findAtendimentoOrThrow(id);
 
         atendimento.alterarParticipantes(alunoId, colaboradorId);
@@ -93,7 +92,7 @@ public class AtendimentoMutationService {
     }
 
     @Transactional
-    public void excluir(UUID id) {
+    public void excluir(Long id) {
         Atendimento atendimento = findAtendimentoOrThrow(id);
 
         if(atendimento.getStatus() == StatusAtendimento.CONCLUIDO) {
@@ -104,7 +103,7 @@ public class AtendimentoMutationService {
         log.info("Atendimento {} deletado com sucesso.", atendimento.getTitulo().toUpperCase());
     }
 
-    private Atendimento findAtendimentoOrThrow(UUID id) {
+    private Atendimento findAtendimentoOrThrow(Long id) {
         return atendimentoRepo.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Atendimento não encontrado"));
     }
 

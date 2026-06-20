@@ -12,8 +12,13 @@ import { useGetColaboradoresList, useListAlunos, type AtendimentoRequest, type A
 import { toInstant } from "@/lib/utils/date-utils";
 import { useAtendimentoMutations } from "../hooks/use-atendimento-mutations";
 import { atendimentoFormSchema, type AtendimentoFormSchema } from "../lib/atendimento-form-schema";
-import { getParticipantName } from "../lib/atendimento-participant-labels";
 import { ContentSelectDropdown } from "./ContentSelectDropdown";
+import { SelectInput } from "@/components/forms/SelectInput";
+import { tipoAtendimentoLabels } from "../lib/tipo-atendimento-labels";
+import { DateInput } from "@/components/forms/DateInput";
+import { TextInput } from "@/components/forms/TextInput";
+import { NumberInput } from "@/components/forms/NumberInput";
+import { TextareaInput } from "@/components/forms/TextAreaInput";
 
 function formatDateTimeForInput(dateTimeStr?: string) {
   if (!dateTimeStr) {
@@ -31,92 +36,69 @@ type AtendimentoFormProps = {
   onCancel: () => void;
 };
 
-function FieldErrorMessage({ message }: Readonly<{ message?: string }>) {
-  if (!message) {
-    return null;
-  }
-
-  return (
-    <p className="label text-error">
-      <TriangleAlert className="w-3 h-3" />
-      {message}
-    </p>
-  );
-}
 
 export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<AtendimentoFormProps>) {
   const { createAtendimento, updateAtendimento } = useAtendimentoMutations();
-  const alunosQuery = useListAlunos();
-  const colaboradoresQuery = useGetColaboradoresList();
-  const isEditMode = !!initialData;
+  const alunosList = useListAlunos();
+  const colaboradoresList = useGetColaboradoresList();
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm<AtendimentoFormSchema>({
+  const alunoOptions = alunosList.data?.map((aluno) => ({ value: aluno.id, label: aluno.nome }))?? [];
+  const colaboradorOptions = colaboradoresList.data?.map((colaborador) => ({ value: colaborador.id, label: colaborador.nome })) ?? [];
+  const tipoAtendimentoOptions = Object.entries(tipoAtendimentoLabels).map(([value, label]) => ({ value, label }));
+
+  const isEditMode = !!initialData;
+  const methods = useForm<AtendimentoFormSchema>({
     resolver: zodResolver(atendimentoFormSchema),
     mode: "onBlur",
     defaultValues: {
-      valor: initialData?.valor ?? undefined,
-      repasse: initialData?.repasse ?? undefined,
+      valor: initialData?.valor ,
+      repasse: initialData?.repasse,
       inicio: formatDateTimeForInput(initialData?.inicio),
-      duracao: initialData?.duracao ?? 1,
-      tipo: initialData?.tipo ?? undefined,
-      alunoId: initialData?.alunoId ?? "",
-      colaboradorId: initialData?.colaboradorId ?? "",
-      descricao: initialData?.descricao ?? "",
+      duracao: initialData?.duracao,
+      tipo: initialData?.tipo,
+      alunoId: initialData?.alunoId,
+      colaboradorId: initialData?.colaboradorId,
+      descricao: initialData?.descricao,
     },
   });
 
-  const inicioValue = useWatch({ control, name: "inicio" });
-  const duracaoValue = useWatch({ control, name: "duracao" });
-
+  const { inicio, duracao } = methods.watch();
   const formattedEndTime = useMemo(() => {
-    if (!inicioValue || !duracaoValue) {
+    if (!inicio || !duracao) {
       return "";
     }
 
-    const start = new Date(inicioValue);
+    const start = new Date(inicio);
     if (Number.isNaN(start.getTime())) {
       return "";
     }
 
-    const hoursInMs = duracaoValue * 60 * 60 * 1000;
-    const end = new Date(start.getTime() + hoursInMs);
+    const hoursInMs = duracao * 60 * 60 * 1000;
+    return new Date(start.getTime() + hoursInMs).toDateString();
 
-    return new Intl.DateTimeFormat("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(end);
-  }, [inicioValue, duracaoValue]);
+    // return new Intl.DateTimeFormat("pt-BR", {
+    //   day: "2-digit",
+    //   month: "2-digit",
+    //   year: "numeric",
+    //   hour: "2-digit",
+    //   minute: "2-digit",
+    // }).format(end);
+  }, [inicio, duracao]);
 
-  const onSubmit = handleSubmit((data) => {
-    const formattedData: AtendimentoRequest = {
-      descricao: data.descricao,
-      tipo: data.tipo,
-      inicio: toInstant(data.inicio),
-      duracao: data.duracao,
-      valor: data.valor,
-      repasse: data.repasse,
-      alunoId: data.alunoId,
-      colaboradorId: data.colaboradorId,
-    };
-
-      if (isEditMode && initialData?.id) {
-      updateAtendimento.mutate(
-        {
+  const onSubmit = methods.handleSubmit((data: AtendimentoFormSchema) => {
+    if (isEditMode && initialData?.id) {
+      updateAtendimento.mutate({
           id: initialData.id,
           data: {
-            novoInicio: formattedData.inicio,
-            duracao: formattedData.duracao,
+            novoInicio: data.inicio,
+            duracao: data.duracao,
           },
         },
         { onSuccess },
       );
       return;
     }
-
-    createAtendimento.mutate({ data: formattedData }, { onSuccess });
+    createAtendimento.mutate({ data }, { onSuccess });
   });
 
   const isPending = createAtendimento.isPending || updateAtendimento.isPending;
@@ -124,113 +106,27 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
   return (
     <form className="flex flex-col gap-3" onSubmit={onSubmit} autoComplete="off">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-        <AlunoSelectDropdown
-          registration={register("alunoId")}
-          error={errors.alunoId?.message}
-          label="Aluno"
-          defaultValue={isEditMode && initialData ? { id: initialData.alunoId, name: getParticipantName(initialData.alunoId, alunosQuery.data) } : undefined}
+
+        <SelectInput name="alunoId" label="Aluno" options={alunoOptions} />
+        <SelectInput name="colaboradorId" label="Colaborador" options={colaboradorOptions} />
+        <SelectInput name="tipo" label="Tipo" options={tipoAtendimentoOptions} />
+
+        <DateInput
+          dateTime={true}
+          name="inicio"
+          placeholder="Início"
+          label="Data Início"
+          registration={methods.register("inicio")}
+          error={methods.formState.errors.inicio?.message}
         />
+        <input type="number" name="duracao" placeholder="Duração (horas)" />
 
-        <ColaboradorSelectDropdown
-          registration={register("colaboradorId")}
-          error={errors.colaboradorId?.message}
-          label="Colaborador"
-          defaultValue={isEditMode && initialData ? { id: initialData.colaboradorId, name: getParticipantName(initialData.colaboradorId, colaboradoresQuery.data) } : undefined}
-        />
+        <TextInput name="duracao" label="Duração (horas)" />
 
-        <ContentSelectDropdown
-          label="Tipo"
-          registration={register("tipo")}
-          error={errors.tipo?.message}
-        />
-
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Data Início</legend>
-          <DateTimeInput control={control} name="inicio" placeholderText="Início" />
-          <FieldErrorMessage message={errors.inicio?.message} />
-        </fieldset>
-
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Duração (horas)</legend>
-          <input
-            type="number"
-            className="input w-full"
-            min="0.5"
-            step="0.5"
-            {...register("duracao", { valueAsNumber: true })}
-            placeholder="1.0"
-          />
-          <FieldErrorMessage message={errors.duracao?.message} />
-        </fieldset>
-
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Fim (calculado)</legend>
-          <input
-            type="text"
-            className="input w-full bg-base-200"
-            value={formattedEndTime}
-            placeholder="--"
-            disabled
-          />
-        </fieldset>
-
-        <div className="flex flex-col sm:flex-row md:col-span-3 gap-3">
-          <fieldset className="fieldset w-full">
-            <legend className="fieldset-legend">Valor do atendimento</legend>
-            <Controller
-              control={control}
-              name="valor"
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <NumericFormat
-                  getInputRef={ref}
-                  className="input w-full"
-                  placeholder="R$ 0,00"
-                  value={value}
-                  onBlur={onBlur}
-                  onValueChange={(values) => onChange(values.floatValue)}
-                  thousandSeparator="."
-                  decimalSeparator=","
-                  prefix="R$ "
-                  decimalScale={2}
-                  fixedDecimalScale
-                  allowNegative={false}
-                />
-              )}
-            />
-            <FieldErrorMessage message={errors.valor?.message} />
-          </fieldset>
-
-          <fieldset className="fieldset w-full">
-            <legend className="fieldset-legend">Repasse p/ Colaborador</legend>
-            <Controller
-              control={control}
-              name="repasse"
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <NumericFormat
-                  getInputRef={ref}
-                  className="input w-full"
-                  placeholder="R$ 0,00"
-                  value={value}
-                  onBlur={onBlur}
-                  onValueChange={(values) => onChange(values.floatValue)}
-                  thousandSeparator="."
-                  decimalSeparator=","
-                  prefix="R$ "
-                  decimalScale={2}
-                  fixedDecimalScale
-                  allowNegative={false}
-                />
-              )}
-            />
-            <FieldErrorMessage message={errors.repasse?.message} />
-          </fieldset>
-        </div>
-
-        <fieldset className="fieldset md:col-span-3">
-          <legend className="fieldset-legend">Descrição (opcional)</legend>
-          <textarea className="textarea textarea-bordered w-full" placeholder="Observações do atendimento" {...register("descricao")} />
-          <FieldErrorMessage message={errors.descricao?.message} />
-        </fieldset>
+        <TextInput label="Fim" name={"fim"} disabled={true} value={formattedEndTime} />
+        <NumberInput label="Valor do Atendimento" name={"valor"} />
+        <NumberInput label="Repasse p/ Colaborador" name={"repasse"} />
+        <TextareaInput label="Descrição (opcional)" name={"descricao"} />
       </div>
 
       <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">

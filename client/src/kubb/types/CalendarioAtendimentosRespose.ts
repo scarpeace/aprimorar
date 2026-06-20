@@ -18,9 +18,9 @@ export type CalendarioAtendimentosResposeTipoEnumKey = (typeof calendarioAtendim
 
 export type CalendarioAtendimentosRespose = {
     /**
-     * @type string | undefined, uuid
+     * @type integer | undefined, int64
     */
-    id?: string;
+    id?: number;
     /**
      * @type string | undefined, uuid
     */

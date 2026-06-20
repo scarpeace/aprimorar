@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Calendar, SlidersHorizontal, X } from "lucide-react";
 
-import { Button } from "../ui/button";
-import { DateRangeInput } from "../ui/date-range-input";
+import { Button } from "./button";
+import { DateRangeInput } from "./date-range-input";
 import { formatDateShortYear } from "@/lib/utils/formatter";
 import type { PageDateFilter } from "@/lib/shared/use-page-date-filter.ts";
 
@@ -22,29 +22,38 @@ function getPeriodLabel(startDate?: Date, endDate?: Date) {
   return "Todo periodo";
 }
 
-type PageDateFilterWidgetProps = PageDateFilter;
+type DateRangeSelectWidgetProps = PageDateFilter;
 
-export function PageDateFilterWidget({
+function FilterIndicator({ hasFilters }: { hasFilters: boolean }) {
+  return (
+    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+      <Calendar className="h-5 w-5" />
+      {hasFilters ? (
+        <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-base-100 bg-success" />
+      ) : null}
+    </span>
+  );
+}
+
+export function DateRangeSelectWidget({
   startDate,
   endDate,
   handleStartDateChange,
   handleEndDateChange,
   clearDateFilters,
   hasFilters,
-}: Readonly<PageDateFilterWidgetProps>) {
+}: Readonly<DateRangeSelectWidgetProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const periodLabel = getPeriodLabel(startDate, endDate);
+  const toggleOpen = () => setIsOpen((current) => !current);
+  const close = () => setIsOpen(false);
 
   return (
     <div className="fixed bottom-4 left-3 z-50 flex w-[calc(100vw-2rem)] flex-col items-end sm:bottom-6 sm:left-3 sm:w-auto">
       {isOpen ? (
         <section className="mb-3 w-full max-w-xl rounded-3xl border border-base-300 bg-base-100/95 p-4 shadow-2xl backdrop-blur sm:w-xl animate-[fade-up_180ms_ease-out_both]">
           <div className="mb-4 flex items-start justify-between gap-4">
-            <div>
-              <h2 className="mt-1 text-lg font-bold text-base-content">
-                Selecione as datas
-              </h2>
-            </div>
+            <h2 className="mt-1 text-lg font-bold text-base-content">Selecione as datas</h2>
 
             <Button
               type="button"
@@ -52,7 +61,7 @@ export function PageDateFilterWidget({
               size="sm"
               className="btn-square"
               aria-label="Fechar filtro de periodo"
-              onClick={() => setIsOpen(false)}
+              onClick={close}
             >
               <X className="h-4 w-4" />
             </Button>
@@ -91,14 +100,9 @@ export function PageDateFilterWidget({
         className={`group flex max-w-full items-center gap-3 rounded-2xl border border-base-300 bg-base-100/95 px-4 py-3 text-left shadow-2xl backdrop-blur transition hover:-translate-y-0.5 hover:border-primary/35 ${hasFilters ? "ring-2 ring-primary/15" : ""}`}
         aria-expanded={isOpen}
         aria-label="Abrir filtro de periodo"
-        onClick={() => setIsOpen((current) => !current)}
+        onClick={toggleOpen}
       >
-        <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <Calendar className="h-5 w-5" />
-          {hasFilters ? (
-            <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-base-100 bg-success" />
-          ) : null}
-        </span>
+        <FilterIndicator hasFilters={hasFilters} />
         <span className="min-w-0">
           <span className="block text-[10px] font-bold uppercase tracking-[0.22em] text-base-content/45">
             Filtro de Datas

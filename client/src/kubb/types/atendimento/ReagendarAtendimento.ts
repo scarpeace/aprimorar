@@ -8,9 +8,9 @@ import type { ReagendarAtendimentoRequest } from "../ReagendarAtendimentoRequest
 
 export type ReagendarAtendimentoPathParams = {
     /**
-     * @type string, uuid
+     * @type integer, int64
     */
-    id: string;
+    id: number;
 };
 
 /**

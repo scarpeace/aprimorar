@@ -4,9 +4,11 @@ import aprimorar.pessoas.domain.Colaborador;
 import aprimorar.pessoas.shared.FuncoesColaborador;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 public interface ColaboradorRepository extends JpaRepository<Colaborador, UUID>, JpaSpecificationExecutor<Colaborador> {
     boolean existsByCpf(String cpf);
@@ -22,5 +24,8 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, UUID>,
     List<Colaborador> findAllByFuncaoNotAndActiveTrueOrderByNomeAsc(FuncoesColaborador funcao);
 
     long countByActiveTrueAndFuncaoNot(FuncoesColaborador role);
+
+    @Query("SELECT c.nome FROM Colaborador c WHERE c.id = :id")
+    Optional<String> getNomeById(UUID id);
 
 }

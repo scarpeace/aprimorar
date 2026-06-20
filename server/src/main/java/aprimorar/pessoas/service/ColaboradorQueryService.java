@@ -11,6 +11,7 @@ import aprimorar.pessoas.repository.specifications.ColaboradorSpecifications;
 import aprimorar.pessoas.shared.FuncoesColaborador;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -74,7 +75,15 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsById(UUID id) {
         return colaboradorRepo.existsById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String getNomeById(UUID colaboradorId) {
+        return colaboradorRepo.getNomeById(colaboradorId)
+        .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Colaborador não encontrado no banco de dados"));
     }
 }

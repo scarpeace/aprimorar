@@ -47,7 +47,6 @@ CREATE INDEX idx_alunos_nome ON alunos(nome);
 CREATE INDEX idx_alunos_escola ON alunos(escola);
 CREATE INDEX idx_alunos_responsavel_id ON alunos(responsavel_id);
 
-
 CREATE TABLE IF NOT EXISTS colaboradores (
   id UUID NOT NULL PRIMARY KEY,
   nome VARCHAR(50) NOT NULL,
@@ -75,7 +74,7 @@ CREATE INDEX idx_colaboradores_nome ON colaboradores(nome);
 CREATE INDEX idx_colaboradores_funcao ON colaboradores(funcao);
 
 CREATE TABLE IF NOT EXISTS atendimentos (
-  id UUID NOT NULL PRIMARY KEY,
+  id BIGSERIAL NOT NULL PRIMARY KEY,
   titulo VARCHAR(255),
   descricao TEXT,
   inicio TIMESTAMP NOT NULL,
@@ -86,6 +85,8 @@ CREATE TABLE IF NOT EXISTS atendimentos (
   status VARCHAR(20) NOT NULL CHECK (status in ('AGENDADO','CONCLUIDO','CANCELADO')),
   aluno_id UUID NOT NULL REFERENCES alunos(id),
   colaborador_id UUID NOT NULL REFERENCES colaboradores(id),
+  nome_aluno VARCHAR(255) NOT NULL,
+  nome_colaborador VARCHAR(255) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP
 );
@@ -96,9 +97,12 @@ CREATE INDEX idx_atendimentos_fim ON atendimentos(fim);
 
 CREATE INDEX idx_atendimentos_aluno_inicio ON atendimentos(aluno_id, inicio);
 CREATE INDEX idx_atendimentos_colaborador_inicio ON atendimentos(colaborador_id, inicio);
+CREATE INDEX idx_atendimentos_nome_aluno ON atendimentos(nome_aluno);
+CREATE INDEX idx_atendimentos_nome_colaborador ON atendimentos(nome_colaborador);
 
 CREATE TABLE IF NOT EXISTS transacoes (
   id BIGSERIAL NOT NULL PRIMARY KEY,
+  atendimento_id BIGINT REFERENCES atendimentos(id),
   pagador_id UUID NOT NULL,
   recebedor_id UUID NOT NULL,
   valor NUMERIC(10,2) NOT NULL CHECK (valor >= 0),

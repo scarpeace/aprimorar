@@ -74,7 +74,7 @@ class ColaboradorQueryServiceTest {
         var result = service.listColaboradores();
 
         assertEquals(1, result.size());
-        assertEquals("João Pereira", result.getFirst().name());
+        assertEquals("João Pereira", result.getFirst().nome());
         verify(colaboradorRepo).findAllByFuncaoNotAndActiveTrueOrderByNomeAsc(FuncoesColaborador.SISTEMA);
     }
 

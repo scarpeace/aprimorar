@@ -9,7 +9,7 @@ import {
   UserRoundCog,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { getParticipantName } from "../lib/atendimento-participant-labels";
+import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
 
 type AtendimentoInfoSectionProps = {
   atendimento: AtendimentoResponse;

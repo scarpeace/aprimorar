@@ -15,7 +15,7 @@ import java.util.UUID;
 public record AtendimentoResponse(
     @NotNull
     @Schema(nullable = false, description = "Identificador unico do atendimento", example = "550e8400-e29b-41d4-a716-446655440000")
-    UUID id,
+    Long id,
 
     @Nullable
     @Schema(nullable = false, description = "Descricao do atendimento", example = "Sessao focada em revisao de matematica basica")
@@ -54,8 +54,16 @@ public record AtendimentoResponse(
     UUID alunoId,
 
     @NotNull
+    @Schema(nullable = false, description = "Nome do aluno vinculado ao atendimento", example = "Joao Silva")
+    String nomeAluno,
+
+    @NotNull
     @Schema(nullable = false, description = "ID do colaborador vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174001")
     UUID colaboradorId,
+
+    @NotNull
+    @Schema(nullable = false, description = "Nome do colaborador vinculado ao atendimento", example = "Maria Souza")
+    String nomeColaborador,
 
     @NotNull
     @Schema(nullable = false, description = "Status do atendimento", example = "AGENDADO")
@@ -81,7 +89,9 @@ public record AtendimentoResponse(
             atendimento.getRepasse(),
             atendimento.getLucro(),
             atendimento.getAlunoId(),
+            atendimento.getNomeAluno(),
             atendimento.getColaboradorId(),
+            atendimento.getNomeColaborador(),
             atendimento.getStatus(),
             atendimento.getCreatedAt(),
             atendimento.getUpdatedAt()

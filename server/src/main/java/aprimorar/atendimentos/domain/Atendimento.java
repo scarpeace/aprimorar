@@ -10,7 +10,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -18,13 +17,11 @@ import org.springframework.http.HttpStatus;
 @Entity
 @Getter
 @Table(name = "atendimentos")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Atendimento implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @EqualsAndHashCode.Include
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "titulo", nullable = false)
     private String titulo;
@@ -55,8 +52,14 @@ public class Atendimento implements Serializable {
     @Column(name = "aluno_id", nullable = false)
     private UUID alunoId;
 
+    @Column(name = "nomeAluno", nullable = false)
+    private String nomeAluno;
+
     @Column(name = "colaborador_id", nullable = false)
     private UUID colaboradorId;
+
+    @Column(name = "nomeColaborador", nullable = false)
+    private String nomeColaborador;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -84,7 +87,9 @@ public class Atendimento implements Serializable {
         BigDecimal valor,
         TipoAtendimento tipo,
         UUID alunoId,
-        UUID colaboradorId
+        String nomeAluno,
+        UUID colaboradorId,
+        String nomeColaborador
     ) {
         this.fim = calcularFim(inicio, duracao);
         validarDatas(inicio);
@@ -100,7 +105,9 @@ public class Atendimento implements Serializable {
         this.tipo = tipo;
         this.status = StatusAtendimento.AGENDADO;
         this.alunoId = alunoId;
+        this.nomeAluno = nomeAluno;
         this.colaboradorId = colaboradorId;
+        this.nomeColaborador = nomeColaborador;
     }
 
     public void cancelar(){

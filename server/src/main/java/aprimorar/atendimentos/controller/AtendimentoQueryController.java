@@ -46,7 +46,7 @@ public class AtendimentoQueryController {
     @GetMapping("/{id}")
     @Operation(operationId = "getAtendimentoById", description = "Consulta um atendimento especifico pelo ID.")
     @ApiResponse(responseCode = "200", description = "Atendimento encontrado e retornado.")
-    public ResponseEntity<AtendimentoResponse> getAtendimentoById(@PathVariable UUID id) {
+    public ResponseEntity<AtendimentoResponse> getAtendimentoById(@PathVariable Long id) {
         return ResponseEntity.ok(atendimentoQueryService.findAtendimentoById(id));
     }
 

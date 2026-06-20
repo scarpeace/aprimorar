@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>, JpaSpecificationExecutor<Atendimento> {
+public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>, JpaSpecificationExecutor<Atendimento> {
 
     @Modifying
     @Query(
@@ -91,7 +91,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         @Param("alunoId") UUID alunoId,
         @Param("inicio") LocalDateTime inicio,
         @Param("fim") LocalDateTime fim,
-        @Param("ignoredAtendimentoId") UUID ignoredAtendimentoId
+        @Param("ignoredAtendimentoId") Long ignoredAtendimentoId
     );
 
     @Query(
@@ -108,7 +108,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID>,
         @Param("colaboradorId") UUID colaboradorId,
         @Param("inicio") LocalDateTime inicio,
         @Param("fim") LocalDateTime fim,
-        @Param("ignoredAtendimentoId") UUID ignoredAtendimentoId
+        @Param("ignoredAtendimentoId") Long ignoredAtendimentoId
     );
 
 

@@ -18,6 +18,7 @@ public final class AtendimentoSpecifications {
             .where(buscaContem(filtro.busca()))
             .and(inicioMaiorOuIgual(filtro.inicio()))
             .and(fimMenorOuIgual(filtro.fim()))
+            .and(fimMenorOuIgual(filtro.fim()))
             .and(alunoIdIgual(filtro.alunoId()))
             .and(colaboradorIdIgual(filtro.colaboradorId()));
     }
@@ -31,8 +32,9 @@ public final class AtendimentoSpecifications {
             String pattern = "%" + termo.trim().toLowerCase() + "%";
 
             return cb.or(
-                cb.like(cb.lower(root.get("descricao")), pattern),
-                cb.like(cb.lower(root.get("tipo").as(String.class)), pattern)
+                cb.like(cb.lower(root.get("tipo").as(String.class)), pattern),
+                cb.like(cb.lower(root.get("nomeAluno")), pattern),
+                cb.like(cb.lower(root.get("nomeColaborador")), pattern)
             );
         };
     }
@@ -52,5 +54,7 @@ public final class AtendimentoSpecifications {
     public static Specification<Atendimento> colaboradorIdIgual(UUID colaboradorId) {
         return (root, query, cb) -> colaboradorId == null ? null : cb.equal(root.get("colaboradorId"), colaboradorId);
     }
+
+
 
 }

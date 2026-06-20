@@ -7,7 +7,7 @@ import aprimorar.atendimentos.enums.TipoAtendimento;
 
 public interface AtendimentoCalendarioProjection {
 
-    UUID getId();
+    Long getId();
     UUID getColaboradorId();
     UUID getAlunoId();
     LocalDateTime getInicio();

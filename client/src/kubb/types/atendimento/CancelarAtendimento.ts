@@ -7,9 +7,9 @@ import type { AtendimentoResponse } from "../AtendimentoResponse.ts";
 
 export type CancelarAtendimentoPathParams = {
     /**
-     * @type string, uuid
+     * @type integer, int64
     */
-    id: string;
+    id: number;
 };
 
 /**

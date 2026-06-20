@@ -6,9 +6,9 @@
 
 export type ExcluirAtendimentoPathParams = {
     /**
-     * @type string, uuid
+     * @type integer, int64
     */
-    id: string;
+    id: number;
 };
 
 /**

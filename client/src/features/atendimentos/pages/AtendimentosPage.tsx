@@ -1,11 +1,11 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { BellElectric, Plus } from "lucide-react";
 import { AtendimentosTable } from "../components/AtendimentosTable";
-import { PageDateFilterWidget } from "@/components/layout/PageDateFilterWidget";
 import { usePageDateFilter } from "@/lib/shared/use-page-date-filter";
 import { Modal } from "@/components/ui/modal";
 import { Suspense, useState } from "react";
 import { AtendimentoForm } from "../components/AtendimentoForm";
+import { DateRangeSelectWidget } from "@/components/ui/DateRangeSelectWidget";
 
 export function AtendimentosPage() {
   const { startDate, endDate, ...dateFilter } = usePageDateFilter();
@@ -22,10 +22,10 @@ export function AtendimentosPage() {
   return (
     <PageLayout {...headerProps}>
       <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
-        <AtendimentosTable startDate={startDate} endDate={endDate} openForm={() => setIsFormOpen(true)} />
+        <AtendimentosTable openForm={() => setIsFormOpen(true)} />
       </section>
 
-      <PageDateFilterWidget startDate={startDate} endDate={endDate} {...dateFilter} />
+      <DateRangeSelectWidget startDate={startDate} endDate={endDate} {...dateFilter} />
 
       <Modal
         isOpen={isFormOpen}

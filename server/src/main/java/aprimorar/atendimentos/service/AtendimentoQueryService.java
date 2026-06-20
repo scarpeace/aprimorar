@@ -46,7 +46,7 @@ public class AtendimentoQueryService {
     }
 
     @Transactional(readOnly = true)
-    public AtendimentoResponse findAtendimentoById(UUID id) {
+    public AtendimentoResponse findAtendimentoById(Long id) {
         Atendimento atendimento = atendimentoRepo.findById(id).orElseThrow(
             () -> new BusinessException(HttpStatus.NOT_FOUND, "Atendimento não encontrado"));
 
