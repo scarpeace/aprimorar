@@ -1,6 +1,6 @@
-import { MiniCard } from "@/components/ui/mini-card";
-import { useGetColaboradoresList, useListAlunos, type AtendimentoResponse } from "@/kubb";
-import { brl, formatDateShortYear, formatTime } from "@/utils/formatter.ts";
+import type { AtendimentoResponse } from "@/kubb";
+import { brl } from "@/utils/formatter.ts";
+import { formatDateShortYear, formatTime } from "@/utils/date-utils.ts";
 import {
   Calendar,
   CircleDollarSign,
@@ -9,7 +9,7 @@ import {
   UserRoundCog,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
+import {MiniCard} from "@/components/MiniCard.tsx";
 
 type AtendimentoInfoSectionProps = {
   atendimento: AtendimentoResponse;
@@ -19,22 +19,20 @@ export function AtendimentoInfoSection({
   atendimento,
 }: Readonly<AtendimentoInfoSectionProps>) {
   const navigate = useNavigate();
-  const alunosQuery = useListAlunos();
-  const colaboradoresQuery = useGetColaboradoresList();
 
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       <div className="tooltip" data-tip="Acessar Detalhes do Aluno">
         <MiniCard className="hover:bg-base-200 hover:cursor-pointer" label="Aluno" icon={GraduationCap} onClick={() => { navigate(`/alunos/${atendimento.alunoId}`); }}>
           <div className="text-2xl font-semibold text-base-content">
-            {getParticipantName(atendimento.alunoId, alunosQuery.data)}
+            {atendimento.nomeAluno}
           </div>
         </MiniCard>
       </div>
       <div className="tooltip" data-tip="Acessar Detalhes do Colaborador">
         <MiniCard className="hover:bg-base-200 hover:cursor-pointer" label="Colaborador" icon={UserRoundCog} onClick={() => { navigate(`/colaboradores/${atendimento.colaboradorId}`); }}>
           <div className="text-2xl font-semibold text-base-content">
-            {getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}
+            {atendimento.nomeColaborador}
           </div>
         </MiniCard>
       </div>

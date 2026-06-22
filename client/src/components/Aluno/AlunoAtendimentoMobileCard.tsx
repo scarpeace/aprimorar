@@ -1,6 +1,7 @@
 import { ButtonLink } from "@/components/button.tsx";
 import type { AtendimentoResponse } from "@/kubb";
-import { brl, formatDateShortYear, formatTime } from "@/utils/formatter.ts";
+import { brl } from "@/utils/formatter.ts";
+import { formatDateShortYear, formatTime } from "@/utils/date-utils.ts";
 import { Calendar, Clock, SquareArrowOutUpRight, Tag, User as UserIcon } from "lucide-react";
 import { memo } from "react";
 

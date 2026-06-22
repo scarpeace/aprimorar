@@ -1,4 +1,4 @@
-import { useAuth } from "@/features/auth/lib/use-auth";
+import { useAuth } from "@/auth/use-auth";
 import { Navigate } from "react-router-dom";
 import type { ReactNode } from "react";
 

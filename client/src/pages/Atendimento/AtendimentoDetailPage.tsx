@@ -6,7 +6,7 @@ import { LoadingCard } from "@/components/loading-card.tsx";
 import { useGetAtendimentoById } from "@/kubb";
 import { Calendar, Edit } from "lucide-react";
 import { useParams } from "react-router-dom";
-import { tipoAtendimentoLabels } from "@/utils/constants/tipo-atendimento-labels.ts";
+import { tipoAtendimentoLabels } from "@/utils/constants/atendimento-constants.ts";
 import { useState } from "react";
 import { AtendimentoForm } from "../../components/Atendimento/AtendimentoForm.tsx";
 import { AtendimentoInfoSection } from "../../components/Atendimento/AtendimentoInfoSection.tsx";
@@ -16,7 +16,7 @@ export function AtendimentoDetailPage() {
   const atendimentoId = id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const atendimentoQuery = useGetAtendimentoById(atendimentoId);
+  const atendimentoQuery = useGetAtendimentoById(Number(atendimentoId));
 
   const headerProps = {
     description: "Veja e gerencie as informações do atendimento",

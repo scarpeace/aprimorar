@@ -10,11 +10,11 @@ export default defineConfig({
   output: {
     path: './src/kubb',
     clean: true,
-    format: 'auto',
+    format: 'prettier',
   },
 
   plugins: [
-    pluginOas({ generators: [] , collisionDetection: true}),
+    pluginOas({ generators: []}),
     pluginTs({
       output: { path: './types'},
       group: {

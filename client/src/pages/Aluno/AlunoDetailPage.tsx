@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AlunoEventsTable } from "../../components/Aluno/AlunoEventsTable.tsx";
+import { AtendimentosAlunoTable } from "../../components/Aluno/AtendimentosAlunoTable.tsx";
 import { AlunoForm } from "../../components/Aluno/AlunoForm.tsx";
 import { AlunoInfoSection } from "../../components/Aluno/AlunoInfoSection.tsx";
 import { DateRangeSelectWidget } from "@/components/DateRangeSelectWidget.tsx";
@@ -60,7 +60,7 @@ export function AlunoDetailPage() {
       </div>
 
       <div className="animate-[fade-up_600ms_ease-out_both]">
-        <AlunoEventsTable
+        <AtendimentosAlunoTable
           atendimentos={alunoAppointments.data}
           error={alunoAppointments.error}
           isLoading={alunoAppointments.isLoading}

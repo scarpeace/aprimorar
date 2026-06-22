@@ -41,7 +41,7 @@ export function ColaboradorSelectDropdown({
 
         {colaboradores?.map((colaborador) => (
           <option key={colaborador.id} value={colaborador.id}>
-            {colaborador.name}
+            {colaborador.nome}
           </option>
         ))}
       </select>

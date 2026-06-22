@@ -7,7 +7,7 @@ import "@/services/api.ts";
 import "./style/index.css";
 import App from "./App.tsx";
 import "react-datepicker/dist/react-datepicker.css";
-import { AuthProvider } from "@/features/auth/lib/authProvider.tsx";
+import { AuthProvider } from "@/auth/auth-context";
 import { queryClient } from "./services/queryClient.ts";
 
 createRoot(document.getElementById("root")!).render(

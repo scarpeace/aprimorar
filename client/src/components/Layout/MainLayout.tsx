@@ -6,8 +6,8 @@ import {
   ShieldCheck,
   BellElectric
 } from "lucide-react"
+import { useAuth } from "@/auth/use-auth"
 import { Link, Outlet, useLocation } from "react-router-dom"
-import { useAuth } from "@/features/auth/lib/use-auth"
 
 const baseNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },

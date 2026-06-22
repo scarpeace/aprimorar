@@ -1,7 +1,5 @@
 import { Button } from "@/components/button.tsx";
-import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/error-card.tsx";
-import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/loading-spinner.tsx";
 import { Pagination } from "@/components/pagination.tsx";
 import { useGetResponsaveis } from "@/kubb";
@@ -51,13 +49,13 @@ export function ResponsaveisTable({ openForm }: { openForm: () => void }) {
               <p className="text-sm text-base-content/60">Selecione um responsável para ver os detalhes.</p>
             </div>
           </div>
-          <ListSearchInput
-            className="grow"
-            placeholder="Nome, email ou CPF"
-            ariaLabel="Buscar responsável"
-            value={searchTerm}
-            onChange={setSearchTerm}
-          />
+          {/*<ListSearchInput*/}
+          {/*  className="grow"*/}
+          {/*  placeholder="Nome, email ou CPF"*/}
+          {/*  ariaLabel="Buscar responsável"*/}
+          {/*  value={searchTerm}*/}
+          {/*  onChange={setSearchTerm}*/}
+          {/*/>*/}
             <Button onClick={() => openForm()} variant="success"><UserPlus size={21} /></Button>
         </div>
       </section>
@@ -73,18 +71,18 @@ export function ResponsaveisTable({ openForm }: { openForm: () => void }) {
         <LoadingSpinner text="Carregando responsáveis..." />
       )}
 
-      {!responsaveisQuery.isLoading && !responsaveisQuery.isError && !hasResponsaveis && (
-        <EmptyCard
-          title="Nenhum responsável encontrado"
-          description="Ajuste a busca para localizar os cadastros desejados."
-          action={
-            <Button variant="outline" onClick={handleCleanFilter}>
-              Limpar filtros
-              <BrushCleaning size={18} />
-            </Button>
-          }
-        />
-      )}
+      {/*{!responsaveisQuery.isLoading && !responsaveisQuery.isError && !hasResponsaveis && (*/}
+      {/*  <div*/}
+      {/*    title="Nenhum responsável encontrado"*/}
+      {/*    description="Ajuste a busca para localizar os cadastros desejados."*/}
+      {/*    action={*/}
+      {/*      <Button variant="outline" onClick={handleCleanFilter}>*/}
+      {/*        Limpar filtros*/}
+      {/*        <BrushCleaning size={18} />*/}
+      {/*      </Button>*/}
+      {/*    }*/}
+      {/*  />*/}
+      {/*)}*/}
 
       {hasResponsaveis && (
         <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">

@@ -6,7 +6,7 @@ import { TriangleAlert } from "lucide-react";
 import type { ResponsavelResponseDTO } from "@/kubb";
 import { responsavelFormSchema, type ResponsavelFormSchema } from "../../utils/zod/responsavel-form-schema.ts";
 import { useResponsavelMutations } from "../../services/use-responsavel-mutations.ts";
-import { formatDateForInput } from "@/utils/formatter.ts";
+import { formatDateForInput } from "@/utils/date-utils.ts";
 import type { ReactNode } from "react";
 import { TextInput } from "@/components/Forms/TextInput.tsx";
 import { MaskedInput } from "@/components/Forms/MaskedInput.tsx";

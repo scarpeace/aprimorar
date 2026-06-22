@@ -1,5 +1,4 @@
-import { tipoAtendimentoLabels } from "@/utils/constants/tipo-atendimento-labels.ts";
-import { CORES_TIPO_ATENDIMENTO } from "@/utils/constants/atendimento-constants.ts";
+import { CORES_TIPO_ATENDIMENTO, tipoAtendimentoLabels } from "@/utils/constants/atendimento-constants.ts";
 import { useGetRelatorioAtendimentos } from "@/kubb";
 
 export function AtendimentoContentLegend({ anoMes }: { anoMes: string }) {

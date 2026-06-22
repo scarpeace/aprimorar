@@ -4,7 +4,7 @@ import {
   type ColaboradorResponseDTO,
 } from "@/kubb";
 import { addressConstants } from "@/utils/constants/address-constants.ts";
-import { formatDateForInput } from "@/utils/formatter.ts";
+import { formatDateForInput } from "@/utils/date-utils.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TriangleAlert } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";

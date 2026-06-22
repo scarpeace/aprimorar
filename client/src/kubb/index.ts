@@ -37,48 +37,211 @@ export type { ArchiveUserMutationKey } from "./hooks/user/useArchiveUser.ts";
 export type { CreateUserMutationKey } from "./hooks/user/useCreateUser.ts";
 export type { DeleteUserMutationKey } from "./hooks/user/useDeleteUser.ts";
 export type { ListUsersQueryKey } from "./hooks/user/useListUsers.ts";
-export type { ArchiveAlunoPathParams, ArchiveAluno204, ArchiveAlunoMutationResponse, ArchiveAlunoMutation } from "./types/aluno/ArchiveAluno.ts";
-export type { CriarAluno201, CriarAlunoMutationRequest, CriarAlunoMutationResponse, CriarAlunoMutation } from "./types/aluno/CriarAluno.ts";
-export type { DeleteAlunoPathParams, DeleteAluno204, DeleteAlunoMutationResponse, DeleteAlunoMutation } from "./types/aluno/DeleteAluno.ts";
-export type { GetAlunoByIdPathParams, GetAlunoById200, GetAlunoByIdQueryResponse, GetAlunoByIdQuery } from "./types/aluno/GetAlunoById.ts";
-export type { GetAlunosQueryParams, GetAlunos200, GetAlunosQueryResponse, GetAlunosQuery } from "./types/aluno/GetAlunos.ts";
-export type { GetAlunosByResponsavelPathParams, GetAlunosByResponsavel200, GetAlunosByResponsavelQueryResponse, GetAlunosByResponsavelQuery } from "./types/aluno/GetAlunosByResponsavel.ts";
-export type { GetAlunosKpis200, GetAlunosKpisQueryResponse, GetAlunosKpisQuery } from "./types/aluno/GetAlunosKpis.ts";
-export type { ListAlunos200, ListAlunosQueryResponse, ListAlunosQuery } from "./types/aluno/ListAlunos.ts";
-export type { UnarchiveAlunoPathParams, UnarchiveAluno204, UnarchiveAlunoMutationResponse, UnarchiveAlunoMutation } from "./types/aluno/UnarchiveAluno.ts";
-export type { UpdateAlunoPathParams, UpdateAluno200, UpdateAlunoMutationRequest, UpdateAlunoMutationResponse, UpdateAlunoMutation } from "./types/aluno/UpdateAluno.ts";
+export type {
+  ArchiveAlunoPathParams,
+  ArchiveAluno204,
+  ArchiveAlunoMutationResponse,
+  ArchiveAlunoMutation,
+} from "./types/aluno/ArchiveAluno.ts";
+export type {
+  CriarAluno201,
+  CriarAlunoMutationRequest,
+  CriarAlunoMutationResponse,
+  CriarAlunoMutation,
+} from "./types/aluno/CriarAluno.ts";
+export type {
+  DeleteAlunoPathParams,
+  DeleteAluno204,
+  DeleteAlunoMutationResponse,
+  DeleteAlunoMutation,
+} from "./types/aluno/DeleteAluno.ts";
+export type {
+  GetAlunoByIdPathParams,
+  GetAlunoById200,
+  GetAlunoByIdQueryResponse,
+  GetAlunoByIdQuery,
+} from "./types/aluno/GetAlunoById.ts";
+export type {
+  GetAlunosQueryParams,
+  GetAlunos200,
+  GetAlunosQueryResponse,
+  GetAlunosQuery,
+} from "./types/aluno/GetAlunos.ts";
+export type {
+  GetAlunosByResponsavelPathParams,
+  GetAlunosByResponsavel200,
+  GetAlunosByResponsavelQueryResponse,
+  GetAlunosByResponsavelQuery,
+} from "./types/aluno/GetAlunosByResponsavel.ts";
+export type {
+  GetAlunosKpis200,
+  GetAlunosKpisQueryResponse,
+  GetAlunosKpisQuery,
+} from "./types/aluno/GetAlunosKpis.ts";
+export type {
+  ListAlunos200,
+  ListAlunosQueryResponse,
+  ListAlunosQuery,
+} from "./types/aluno/ListAlunos.ts";
+export type {
+  UnarchiveAlunoPathParams,
+  UnarchiveAluno204,
+  UnarchiveAlunoMutationResponse,
+  UnarchiveAlunoMutation,
+} from "./types/aluno/UnarchiveAluno.ts";
+export type {
+  UpdateAlunoPathParams,
+  UpdateAluno200,
+  UpdateAlunoMutationRequest,
+  UpdateAlunoMutationResponse,
+  UpdateAlunoMutation,
+} from "./types/aluno/UpdateAluno.ts";
 export type { AlunoRequestDTO } from "./types/AlunoRequestDTO.ts";
 export type { AlunoResponseDTO } from "./types/AlunoResponseDTO.ts";
 export type { AlunosKpisDTO } from "./types/AlunosKpisDTO.ts";
 export type { AlunosListDTO } from "./types/AlunosListDTO.ts";
-export type { AgendarAtendimento201, AgendarAtendimentoMutationRequest, AgendarAtendimentoMutationResponse, AgendarAtendimentoMutation } from "./types/atendimento/AgendarAtendimento.ts";
-export type { CancelarAtendimentoPathParams, CancelarAtendimento200, CancelarAtendimentoMutationResponse, CancelarAtendimentoMutation } from "./types/atendimento/CancelarAtendimento.ts";
-export type { ConcluirAtendimentoPathParams, ConcluirAtendimento200, ConcluirAtendimentoMutationResponse, ConcluirAtendimentoMutation } from "./types/atendimento/ConcluirAtendimento.ts";
-export type { ExcluirAtendimentoPathParams, ExcluirAtendimento204, ExcluirAtendimentoMutationResponse, ExcluirAtendimentoMutation } from "./types/atendimento/ExcluirAtendimento.ts";
-export type { GetAtendimentoByIdPathParams, GetAtendimentoById200, GetAtendimentoByIdQueryResponse, GetAtendimentoByIdQuery } from "./types/atendimento/GetAtendimentoById.ts";
-export type { GetAtendimentosQueryParams, GetAtendimentos200, GetAtendimentosQueryResponse, GetAtendimentosQuery } from "./types/atendimento/GetAtendimentos.ts";
-export type { GetCalendarioAtendimentosQueryParams, GetCalendarioAtendimentos200, GetCalendarioAtendimentosQueryResponse, GetCalendarioAtendimentosQuery } from "./types/atendimento/GetCalendarioAtendimentos.ts";
-export type { GetRelatorioAtendimentosQueryParams, GetRelatorioAtendimentos200, GetRelatorioAtendimentosQueryResponse, GetRelatorioAtendimentosQuery } from "./types/atendimento/GetRelatorioAtendimentos.ts";
-export type { ReagendarAtendimentoPathParams, ReagendarAtendimento200, ReagendarAtendimentoMutationRequest, ReagendarAtendimentoMutationResponse, ReagendarAtendimentoMutation } from "./types/atendimento/ReagendarAtendimento.ts";
-export type { AtendimentoRequestTipoEnumKey, AtendimentoRequest } from "./types/AtendimentoRequest.ts";
-export type { AtendimentoResponseTipoEnumKey, AtendimentoResponseStatusEnumKey, AtendimentoResponse } from "./types/AtendimentoResponse.ts";
-export type { Login200, LoginMutationRequest, LoginMutationResponse, LoginMutation } from "./types/auth/Login.ts";
+export type {
+  AgendarAtendimento201,
+  AgendarAtendimentoMutationRequest,
+  AgendarAtendimentoMutationResponse,
+  AgendarAtendimentoMutation,
+} from "./types/atendimento/AgendarAtendimento.ts";
+export type {
+  CancelarAtendimentoPathParams,
+  CancelarAtendimento200,
+  CancelarAtendimentoMutationResponse,
+  CancelarAtendimentoMutation,
+} from "./types/atendimento/CancelarAtendimento.ts";
+export type {
+  ConcluirAtendimentoPathParams,
+  ConcluirAtendimento200,
+  ConcluirAtendimentoMutationResponse,
+  ConcluirAtendimentoMutation,
+} from "./types/atendimento/ConcluirAtendimento.ts";
+export type {
+  ExcluirAtendimentoPathParams,
+  ExcluirAtendimento204,
+  ExcluirAtendimentoMutationResponse,
+  ExcluirAtendimentoMutation,
+} from "./types/atendimento/ExcluirAtendimento.ts";
+export type {
+  GetAtendimentoByIdPathParams,
+  GetAtendimentoById200,
+  GetAtendimentoByIdQueryResponse,
+  GetAtendimentoByIdQuery,
+} from "./types/atendimento/GetAtendimentoById.ts";
+export type {
+  GetAtendimentosQueryParams,
+  GetAtendimentos200,
+  GetAtendimentosQueryResponse,
+  GetAtendimentosQuery,
+} from "./types/atendimento/GetAtendimentos.ts";
+export type {
+  GetCalendarioAtendimentosQueryParams,
+  GetCalendarioAtendimentos200,
+  GetCalendarioAtendimentosQueryResponse,
+  GetCalendarioAtendimentosQuery,
+} from "./types/atendimento/GetCalendarioAtendimentos.ts";
+export type {
+  GetRelatorioAtendimentosQueryParams,
+  GetRelatorioAtendimentos200,
+  GetRelatorioAtendimentosQueryResponse,
+  GetRelatorioAtendimentosQuery,
+} from "./types/atendimento/GetRelatorioAtendimentos.ts";
+export type {
+  ReagendarAtendimentoPathParams,
+  ReagendarAtendimento200,
+  ReagendarAtendimentoMutationRequest,
+  ReagendarAtendimentoMutationResponse,
+  ReagendarAtendimentoMutation,
+} from "./types/atendimento/ReagendarAtendimento.ts";
+export type {
+  AtendimentoRequestTipoEnumKey,
+  AtendimentoRequest,
+} from "./types/AtendimentoRequest.ts";
+export type {
+  AtendimentoResponseTipoEnumKey,
+  AtendimentoResponseStatusEnumKey,
+  AtendimentoResponse,
+} from "./types/AtendimentoResponse.ts";
+export type {
+  Login200,
+  LoginMutationRequest,
+  LoginMutationResponse,
+  LoginMutation,
+} from "./types/auth/Login.ts";
 export type { AuthRequestDTO } from "./types/AuthRequestDTO.ts";
-export type { AuthResponseDTORoleEnumKey, AuthResponseDTO } from "./types/AuthResponseDTO.ts";
-export type { CalendarioAtendimentosResposeTipoEnumKey, CalendarioAtendimentosRespose } from "./types/CalendarioAtendimentosRespose.ts";
-export type { ArquivarColaboradorPathParams, ArquivarColaborador204, ArquivarColaboradorMutationResponse, ArquivarColaboradorMutation } from "./types/colaborador/ArquivarColaborador.ts";
-export type { CreateColaborador201, CreateColaboradorMutationRequest, CreateColaboradorMutationResponse, CreateColaboradorMutation } from "./types/colaborador/CreateColaborador.ts";
-export type { DeleteColaboradorPathParams, DeleteColaborador204, DeleteColaboradorMutationResponse, DeleteColaboradorMutation } from "./types/colaborador/DeleteColaborador.ts";
-export type { DesarquivarColaboradorPathParams, DesarquivarColaborador204, DesarquivarColaboradorMutationResponse, DesarquivarColaboradorMutation } from "./types/colaborador/DesarquivarColaborador.ts";
-export type { FindColaboradorByIdPathParams, FindColaboradorById200, FindColaboradorByIdQueryResponse, FindColaboradorByIdQuery } from "./types/colaborador/FindColaboradorById.ts";
-export type { GetColaboradoresQueryParams, GetColaboradores200, GetColaboradoresQueryResponse, GetColaboradoresQuery } from "./types/colaborador/GetColaboradores.ts";
-export type { GetColaboradoresKpis200, GetColaboradoresKpisQueryResponse, GetColaboradoresKpisQuery } from "./types/colaborador/GetColaboradoresKpis.ts";
-export type { GetColaboradoresList200, GetColaboradoresListQueryResponse, GetColaboradoresListQuery } from "./types/colaborador/GetColaboradoresList.ts";
-export type { UpdateColaboradorPathParams, UpdateColaborador200, UpdateColaboradorMutationRequest, UpdateColaboradorMutationResponse, UpdateColaboradorMutation } from "./types/colaborador/UpdateColaborador.ts";
+export type {
+  AuthResponseDTORoleEnumKey,
+  AuthResponseDTO,
+} from "./types/AuthResponseDTO.ts";
+export type {
+  CalendarioAtendimentosResposeTipoEnumKey,
+  CalendarioAtendimentosRespose,
+} from "./types/CalendarioAtendimentosRespose.ts";
+export type {
+  ArquivarColaboradorPathParams,
+  ArquivarColaborador204,
+  ArquivarColaboradorMutationResponse,
+  ArquivarColaboradorMutation,
+} from "./types/colaborador/ArquivarColaborador.ts";
+export type {
+  CreateColaborador201,
+  CreateColaboradorMutationRequest,
+  CreateColaboradorMutationResponse,
+  CreateColaboradorMutation,
+} from "./types/colaborador/CreateColaborador.ts";
+export type {
+  DeleteColaboradorPathParams,
+  DeleteColaborador204,
+  DeleteColaboradorMutationResponse,
+  DeleteColaboradorMutation,
+} from "./types/colaborador/DeleteColaborador.ts";
+export type {
+  DesarquivarColaboradorPathParams,
+  DesarquivarColaborador204,
+  DesarquivarColaboradorMutationResponse,
+  DesarquivarColaboradorMutation,
+} from "./types/colaborador/DesarquivarColaborador.ts";
+export type {
+  FindColaboradorByIdPathParams,
+  FindColaboradorById200,
+  FindColaboradorByIdQueryResponse,
+  FindColaboradorByIdQuery,
+} from "./types/colaborador/FindColaboradorById.ts";
+export type {
+  GetColaboradoresQueryParams,
+  GetColaboradores200,
+  GetColaboradoresQueryResponse,
+  GetColaboradoresQuery,
+} from "./types/colaborador/GetColaboradores.ts";
+export type {
+  GetColaboradoresKpis200,
+  GetColaboradoresKpisQueryResponse,
+  GetColaboradoresKpisQuery,
+} from "./types/colaborador/GetColaboradoresKpis.ts";
+export type {
+  GetColaboradoresList200,
+  GetColaboradoresListQueryResponse,
+  GetColaboradoresListQuery,
+} from "./types/colaborador/GetColaboradoresList.ts";
+export type {
+  UpdateColaboradorPathParams,
+  UpdateColaborador200,
+  UpdateColaboradorMutationRequest,
+  UpdateColaboradorMutationResponse,
+  UpdateColaboradorMutation,
+} from "./types/colaborador/UpdateColaborador.ts";
 export type { ColaboradoresKpisDTO } from "./types/ColaboradoresKpisDTO.ts";
 export type { ColaboradoresListDTO } from "./types/ColaboradoresListDTO.ts";
-export type { ColaboradorRequestDTOFuncaoEnumKey, ColaboradorRequestDTO } from "./types/ColaboradorRequestDTO.ts";
-export type { ColaboradorResponseDTOFuncaoEnumKey, ColaboradorResponseDTO } from "./types/ColaboradorResponseDTO.ts";
+export type {
+  ColaboradorRequestDTOFuncaoEnumKey,
+  ColaboradorRequestDTO,
+} from "./types/ColaboradorRequestDTO.ts";
+export type {
+  ColaboradorResponseDTOFuncaoEnumKey,
+  ColaboradorResponseDTO,
+} from "./types/ColaboradorResponseDTO.ts";
 export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
 export type { PagedModelAlunoResponseDTO } from "./types/PagedModelAlunoResponseDTO.ts";
@@ -86,68 +249,320 @@ export type { PagedModelAtendimentoResponse } from "./types/PagedModelAtendiment
 export type { PagedModelColaboradorResponseDTO } from "./types/PagedModelColaboradorResponseDTO.ts";
 export type { PagedModelResponsavelResponseDTO } from "./types/PagedModelResponsavelResponseDTO.ts";
 export type { PageMetadata } from "./types/PageMetadata.ts";
-export type { ProblemResponseDTOStatusEnumKey, ProblemResponseDTO } from "./types/ProblemResponseDTO.ts";
 export type { ReagendarAtendimentoRequest } from "./types/ReagendarAtendimentoRequest.ts";
 export type { RelatorioAtendimentosResponse } from "./types/RelatorioAtendimentosResponse.ts";
-export type { CreateResponsavel201, CreateResponsavelMutationRequest, CreateResponsavelMutationResponse, CreateResponsavelMutation } from "./types/responsavel/CreateResponsavel.ts";
-export type { DeleteResponsavelPathParams, DeleteResponsavelQueryParams, DeleteResponsavel204, DeleteResponsavelMutationResponse, DeleteResponsavelMutation } from "./types/responsavel/DeleteResponsavel.ts";
-export type { GetResponsaveisQueryParams, GetResponsaveis200, GetResponsaveisQueryResponse, GetResponsaveisQuery } from "./types/responsavel/GetResponsaveis.ts";
-export type { GetResponsavelByIdPathParams, GetResponsavelById200, GetResponsavelByIdQueryResponse, GetResponsavelByIdQuery } from "./types/responsavel/GetResponsavelById.ts";
-export type { ListResponsaveis200, ListResponsaveisQueryResponse, ListResponsaveisQuery } from "./types/responsavel/ListResponsaveis.ts";
-export type { UpdateResponsavelPathParams, UpdateResponsavel200, UpdateResponsavelMutationRequest, UpdateResponsavelMutationResponse, UpdateResponsavelMutation } from "./types/responsavel/UpdateResponsavel.ts";
+export type {
+  CreateResponsavel201,
+  CreateResponsavelMutationRequest,
+  CreateResponsavelMutationResponse,
+  CreateResponsavelMutation,
+} from "./types/responsavel/CreateResponsavel.ts";
+export type {
+  DeleteResponsavelPathParams,
+  DeleteResponsavelQueryParams,
+  DeleteResponsavel204,
+  DeleteResponsavelMutationResponse,
+  DeleteResponsavelMutation,
+} from "./types/responsavel/DeleteResponsavel.ts";
+export type {
+  GetResponsaveisQueryParams,
+  GetResponsaveis200,
+  GetResponsaveisQueryResponse,
+  GetResponsaveisQuery,
+} from "./types/responsavel/GetResponsaveis.ts";
+export type {
+  GetResponsavelByIdPathParams,
+  GetResponsavelById200,
+  GetResponsavelByIdQueryResponse,
+  GetResponsavelByIdQuery,
+} from "./types/responsavel/GetResponsavelById.ts";
+export type {
+  ListResponsaveis200,
+  ListResponsaveisQueryResponse,
+  ListResponsaveisQuery,
+} from "./types/responsavel/ListResponsaveis.ts";
+export type {
+  UpdateResponsavelPathParams,
+  UpdateResponsavel200,
+  UpdateResponsavelMutationRequest,
+  UpdateResponsavelMutationResponse,
+  UpdateResponsavelMutation,
+} from "./types/responsavel/UpdateResponsavel.ts";
 export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./types/ResponsavelResponseDTO.ts";
-export type { ArchiveUserPathParams, ArchiveUser200, ArchiveUser404, ArchiveUser500, ArchiveUserMutationResponse, ArchiveUserMutation } from "./types/user/ArchiveUser.ts";
-export type { CreateUser201, CreateUser400, CreateUser409, CreateUser500, CreateUserMutationRequest, CreateUserMutationResponse, CreateUserMutation } from "./types/user/CreateUser.ts";
-export type { DeleteUserPathParams, DeleteUser204, DeleteUser404, DeleteUser500, DeleteUserMutationResponse, DeleteUserMutation } from "./types/user/DeleteUser.ts";
-export type { ListUsers200, ListUsers500, ListUsersQueryResponse, ListUsersQuery } from "./types/user/ListUsers.ts";
-export type { UserRequestDTORoleEnumKey, UserRequestDTO } from "./types/UserRequestDTO.ts";
-export type { UserResponseDTORoleEnumKey, UserResponseDTO } from "./types/UserResponseDTO.ts";
-export { archiveAlunoMutationKey, archiveAluno, archiveAlunoMutationOptions, useArchiveAluno } from "./hooks/aluno/useArchiveAluno.ts";
-export { criarAlunoMutationKey, criarAluno, criarAlunoMutationOptions, useCriarAluno } from "./hooks/aluno/useCriarAluno.ts";
-export { deleteAlunoMutationKey, deleteAluno, deleteAlunoMutationOptions, useDeleteAluno } from "./hooks/aluno/useDeleteAluno.ts";
-export { getAlunoByIdQueryKey, getAlunoById, getAlunoByIdQueryOptions, useGetAlunoById } from "./hooks/aluno/useGetAlunoById.ts";
-export { getAlunosQueryKey, getAlunos, getAlunosQueryOptions, useGetAlunos } from "./hooks/aluno/useGetAlunos.ts";
-export { getAlunosByResponsavelQueryKey, getAlunosByResponsavel, getAlunosByResponsavelQueryOptions, useGetAlunosByResponsavel } from "./hooks/aluno/useGetAlunosByResponsavel.ts";
-export { getAlunosKpisQueryKey, getAlunosKpis, getAlunosKpisQueryOptions, useGetAlunosKpis } from "./hooks/aluno/useGetAlunosKpis.ts";
-export { listAlunosQueryKey, listAlunos, listAlunosQueryOptions, useListAlunos } from "./hooks/aluno/useListAlunos.ts";
-export { unarchiveAlunoMutationKey, unarchiveAluno, unarchiveAlunoMutationOptions, useUnarchiveAluno } from "./hooks/aluno/useUnarchiveAluno.ts";
-export { updateAlunoMutationKey, updateAluno, updateAlunoMutationOptions, useUpdateAluno } from "./hooks/aluno/useUpdateAluno.ts";
-export { agendarAtendimentoMutationKey, agendarAtendimento, agendarAtendimentoMutationOptions, useAgendarAtendimento } from "./hooks/atendimento/useAgendarAtendimento.ts";
-export { cancelarAtendimentoMutationKey, cancelarAtendimento, cancelarAtendimentoMutationOptions, useCancelarAtendimento } from "./hooks/atendimento/useCancelarAtendimento.ts";
-export { concluirAtendimentoMutationKey, concluirAtendimento, concluirAtendimentoMutationOptions, useConcluirAtendimento } from "./hooks/atendimento/useConcluirAtendimento.ts";
-export { excluirAtendimentoMutationKey, excluirAtendimento, excluirAtendimentoMutationOptions, useExcluirAtendimento } from "./hooks/atendimento/useExcluirAtendimento.ts";
-export { getAtendimentoByIdQueryKey, getAtendimentoById, getAtendimentoByIdQueryOptions, useGetAtendimentoById } from "./hooks/atendimento/useGetAtendimentoById.ts";
-export { getAtendimentosQueryKey, getAtendimentos, getAtendimentosQueryOptions, useGetAtendimentos } from "./hooks/atendimento/useGetAtendimentos.ts";
-export { getCalendarioAtendimentosQueryKey, getCalendarioAtendimentos, getCalendarioAtendimentosQueryOptions, useGetCalendarioAtendimentos } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
-export { getRelatorioAtendimentosQueryKey, getRelatorioAtendimentos, getRelatorioAtendimentosQueryOptions, useGetRelatorioAtendimentos } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
-export { reagendarAtendimentoMutationKey, reagendarAtendimento, reagendarAtendimentoMutationOptions, useReagendarAtendimento } from "./hooks/atendimento/useReagendarAtendimento.ts";
-export { loginMutationKey, login, loginMutationOptions, useLogin } from "./hooks/auth/useLogin.ts";
-export { arquivarColaboradorMutationKey, arquivarColaborador, arquivarColaboradorMutationOptions, useArquivarColaborador } from "./hooks/colaborador/useArquivarColaborador.ts";
-export { createColaboradorMutationKey, createColaborador, createColaboradorMutationOptions, useCreateColaborador } from "./hooks/colaborador/useCreateColaborador.ts";
-export { deleteColaboradorMutationKey, deleteColaborador, deleteColaboradorMutationOptions, useDeleteColaborador } from "./hooks/colaborador/useDeleteColaborador.ts";
-export { desarquivarColaboradorMutationKey, desarquivarColaborador, desarquivarColaboradorMutationOptions, useDesarquivarColaborador } from "./hooks/colaborador/useDesarquivarColaborador.ts";
-export { findColaboradorByIdQueryKey, findColaboradorById, findColaboradorByIdQueryOptions, useFindColaboradorById } from "./hooks/colaborador/useFindColaboradorById.ts";
-export { getColaboradoresQueryKey, getColaboradores, getColaboradoresQueryOptions, useGetColaboradores } from "./hooks/colaborador/useGetColaboradores.ts";
-export { getColaboradoresKpisQueryKey, getColaboradoresKpis, getColaboradoresKpisQueryOptions, useGetColaboradoresKpis } from "./hooks/colaborador/useGetColaboradoresKpis.ts";
-export { getColaboradoresListQueryKey, getColaboradoresList, getColaboradoresListQueryOptions, useGetColaboradoresList } from "./hooks/colaborador/useGetColaboradoresList.ts";
-export { updateColaboradorMutationKey, updateColaborador, updateColaboradorMutationOptions, useUpdateColaborador } from "./hooks/colaborador/useUpdateColaborador.ts";
-export { createResponsavelMutationKey, createResponsavel, createResponsavelMutationOptions, useCreateResponsavel } from "./hooks/responsavel/useCreateResponsavel.ts";
-export { deleteResponsavelMutationKey, deleteResponsavel, deleteResponsavelMutationOptions, useDeleteResponsavel } from "./hooks/responsavel/useDeleteResponsavel.ts";
-export { getResponsaveisQueryKey, getResponsaveis, getResponsaveisQueryOptions, useGetResponsaveis } from "./hooks/responsavel/useGetResponsaveis.ts";
-export { getResponsavelByIdQueryKey, getResponsavelById, getResponsavelByIdQueryOptions, useGetResponsavelById } from "./hooks/responsavel/useGetResponsavelById.ts";
-export { listResponsaveisQueryKey, listResponsaveis, listResponsaveisQueryOptions, useListResponsaveis } from "./hooks/responsavel/useListResponsaveis.ts";
-export { updateResponsavelMutationKey, updateResponsavel, updateResponsavelMutationOptions, useUpdateResponsavel } from "./hooks/responsavel/useUpdateResponsavel.ts";
-export { archiveUserMutationKey, archiveUser, archiveUserMutationOptions, useArchiveUser } from "./hooks/user/useArchiveUser.ts";
-export { createUserMutationKey, createUser, createUserMutationOptions, useCreateUser } from "./hooks/user/useCreateUser.ts";
-export { deleteUserMutationKey, deleteUser, deleteUserMutationOptions, useDeleteUser } from "./hooks/user/useDeleteUser.ts";
-export { listUsersQueryKey, listUsers, listUsersQueryOptions, useListUsers } from "./hooks/user/useListUsers.ts";
+export type {
+  ArchiveUserPathParams,
+  ArchiveUser200,
+  ArchiveUserMutationResponse,
+  ArchiveUserMutation,
+} from "./types/user/ArchiveUser.ts";
+export type {
+  CreateUser201,
+  CreateUserMutationRequest,
+  CreateUserMutationResponse,
+  CreateUserMutation,
+} from "./types/user/CreateUser.ts";
+export type {
+  DeleteUserPathParams,
+  DeleteUser204,
+  DeleteUserMutationResponse,
+  DeleteUserMutation,
+} from "./types/user/DeleteUser.ts";
+export type {
+  ListUsers200,
+  ListUsersQueryResponse,
+  ListUsersQuery,
+} from "./types/user/ListUsers.ts";
+export type {
+  UserRequestDTORoleEnumKey,
+  UserRequestDTO,
+} from "./types/UserRequestDTO.ts";
+export type {
+  UserResponseDTORoleEnumKey,
+  UserResponseDTO,
+} from "./types/UserResponseDTO.ts";
+export {
+  archiveAlunoMutationKey,
+  archiveAluno,
+  archiveAlunoMutationOptions,
+  useArchiveAluno,
+} from "./hooks/aluno/useArchiveAluno.ts";
+export {
+  criarAlunoMutationKey,
+  criarAluno,
+  criarAlunoMutationOptions,
+  useCriarAluno,
+} from "./hooks/aluno/useCriarAluno.ts";
+export {
+  deleteAlunoMutationKey,
+  deleteAluno,
+  deleteAlunoMutationOptions,
+  useDeleteAluno,
+} from "./hooks/aluno/useDeleteAluno.ts";
+export {
+  getAlunoByIdQueryKey,
+  getAlunoById,
+  getAlunoByIdQueryOptions,
+  useGetAlunoById,
+} from "./hooks/aluno/useGetAlunoById.ts";
+export {
+  getAlunosQueryKey,
+  getAlunos,
+  getAlunosQueryOptions,
+  useGetAlunos,
+} from "./hooks/aluno/useGetAlunos.ts";
+export {
+  getAlunosByResponsavelQueryKey,
+  getAlunosByResponsavel,
+  getAlunosByResponsavelQueryOptions,
+  useGetAlunosByResponsavel,
+} from "./hooks/aluno/useGetAlunosByResponsavel.ts";
+export {
+  getAlunosKpisQueryKey,
+  getAlunosKpis,
+  getAlunosKpisQueryOptions,
+  useGetAlunosKpis,
+} from "./hooks/aluno/useGetAlunosKpis.ts";
+export {
+  listAlunosQueryKey,
+  listAlunos,
+  listAlunosQueryOptions,
+  useListAlunos,
+} from "./hooks/aluno/useListAlunos.ts";
+export {
+  unarchiveAlunoMutationKey,
+  unarchiveAluno,
+  unarchiveAlunoMutationOptions,
+  useUnarchiveAluno,
+} from "./hooks/aluno/useUnarchiveAluno.ts";
+export {
+  updateAlunoMutationKey,
+  updateAluno,
+  updateAlunoMutationOptions,
+  useUpdateAluno,
+} from "./hooks/aluno/useUpdateAluno.ts";
+export {
+  agendarAtendimentoMutationKey,
+  agendarAtendimento,
+  agendarAtendimentoMutationOptions,
+  useAgendarAtendimento,
+} from "./hooks/atendimento/useAgendarAtendimento.ts";
+export {
+  cancelarAtendimentoMutationKey,
+  cancelarAtendimento,
+  cancelarAtendimentoMutationOptions,
+  useCancelarAtendimento,
+} from "./hooks/atendimento/useCancelarAtendimento.ts";
+export {
+  concluirAtendimentoMutationKey,
+  concluirAtendimento,
+  concluirAtendimentoMutationOptions,
+  useConcluirAtendimento,
+} from "./hooks/atendimento/useConcluirAtendimento.ts";
+export {
+  excluirAtendimentoMutationKey,
+  excluirAtendimento,
+  excluirAtendimentoMutationOptions,
+  useExcluirAtendimento,
+} from "./hooks/atendimento/useExcluirAtendimento.ts";
+export {
+  getAtendimentoByIdQueryKey,
+  getAtendimentoById,
+  getAtendimentoByIdQueryOptions,
+  useGetAtendimentoById,
+} from "./hooks/atendimento/useGetAtendimentoById.ts";
+export {
+  getAtendimentosQueryKey,
+  getAtendimentos,
+  getAtendimentosQueryOptions,
+  useGetAtendimentos,
+} from "./hooks/atendimento/useGetAtendimentos.ts";
+export {
+  getCalendarioAtendimentosQueryKey,
+  getCalendarioAtendimentos,
+  getCalendarioAtendimentosQueryOptions,
+  useGetCalendarioAtendimentos,
+} from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
+export {
+  getRelatorioAtendimentosQueryKey,
+  getRelatorioAtendimentos,
+  getRelatorioAtendimentosQueryOptions,
+  useGetRelatorioAtendimentos,
+} from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
+export {
+  reagendarAtendimentoMutationKey,
+  reagendarAtendimento,
+  reagendarAtendimentoMutationOptions,
+  useReagendarAtendimento,
+} from "./hooks/atendimento/useReagendarAtendimento.ts";
+export {
+  loginMutationKey,
+  login,
+  loginMutationOptions,
+  useLogin,
+} from "./hooks/auth/useLogin.ts";
+export {
+  arquivarColaboradorMutationKey,
+  arquivarColaborador,
+  arquivarColaboradorMutationOptions,
+  useArquivarColaborador,
+} from "./hooks/colaborador/useArquivarColaborador.ts";
+export {
+  createColaboradorMutationKey,
+  createColaborador,
+  createColaboradorMutationOptions,
+  useCreateColaborador,
+} from "./hooks/colaborador/useCreateColaborador.ts";
+export {
+  deleteColaboradorMutationKey,
+  deleteColaborador,
+  deleteColaboradorMutationOptions,
+  useDeleteColaborador,
+} from "./hooks/colaborador/useDeleteColaborador.ts";
+export {
+  desarquivarColaboradorMutationKey,
+  desarquivarColaborador,
+  desarquivarColaboradorMutationOptions,
+  useDesarquivarColaborador,
+} from "./hooks/colaborador/useDesarquivarColaborador.ts";
+export {
+  findColaboradorByIdQueryKey,
+  findColaboradorById,
+  findColaboradorByIdQueryOptions,
+  useFindColaboradorById,
+} from "./hooks/colaborador/useFindColaboradorById.ts";
+export {
+  getColaboradoresQueryKey,
+  getColaboradores,
+  getColaboradoresQueryOptions,
+  useGetColaboradores,
+} from "./hooks/colaborador/useGetColaboradores.ts";
+export {
+  getColaboradoresKpisQueryKey,
+  getColaboradoresKpis,
+  getColaboradoresKpisQueryOptions,
+  useGetColaboradoresKpis,
+} from "./hooks/colaborador/useGetColaboradoresKpis.ts";
+export {
+  getColaboradoresListQueryKey,
+  getColaboradoresList,
+  getColaboradoresListQueryOptions,
+  useGetColaboradoresList,
+} from "./hooks/colaborador/useGetColaboradoresList.ts";
+export {
+  updateColaboradorMutationKey,
+  updateColaborador,
+  updateColaboradorMutationOptions,
+  useUpdateColaborador,
+} from "./hooks/colaborador/useUpdateColaborador.ts";
+export {
+  createResponsavelMutationKey,
+  createResponsavel,
+  createResponsavelMutationOptions,
+  useCreateResponsavel,
+} from "./hooks/responsavel/useCreateResponsavel.ts";
+export {
+  deleteResponsavelMutationKey,
+  deleteResponsavel,
+  deleteResponsavelMutationOptions,
+  useDeleteResponsavel,
+} from "./hooks/responsavel/useDeleteResponsavel.ts";
+export {
+  getResponsaveisQueryKey,
+  getResponsaveis,
+  getResponsaveisQueryOptions,
+  useGetResponsaveis,
+} from "./hooks/responsavel/useGetResponsaveis.ts";
+export {
+  getResponsavelByIdQueryKey,
+  getResponsavelById,
+  getResponsavelByIdQueryOptions,
+  useGetResponsavelById,
+} from "./hooks/responsavel/useGetResponsavelById.ts";
+export {
+  listResponsaveisQueryKey,
+  listResponsaveis,
+  listResponsaveisQueryOptions,
+  useListResponsaveis,
+} from "./hooks/responsavel/useListResponsaveis.ts";
+export {
+  updateResponsavelMutationKey,
+  updateResponsavel,
+  updateResponsavelMutationOptions,
+  useUpdateResponsavel,
+} from "./hooks/responsavel/useUpdateResponsavel.ts";
+export {
+  archiveUserMutationKey,
+  archiveUser,
+  archiveUserMutationOptions,
+  useArchiveUser,
+} from "./hooks/user/useArchiveUser.ts";
+export {
+  createUserMutationKey,
+  createUser,
+  createUserMutationOptions,
+  useCreateUser,
+} from "./hooks/user/useCreateUser.ts";
+export {
+  deleteUserMutationKey,
+  deleteUser,
+  deleteUserMutationOptions,
+  useDeleteUser,
+} from "./hooks/user/useDeleteUser.ts";
+export {
+  listUsersQueryKey,
+  listUsers,
+  listUsersQueryOptions,
+  useListUsers,
+} from "./hooks/user/useListUsers.ts";
 export { atendimentoRequestTipoEnum } from "./types/AtendimentoRequest.ts";
-export { atendimentoResponseTipoEnum, atendimentoResponseStatusEnum } from "./types/AtendimentoResponse.ts";
+export {
+  atendimentoResponseTipoEnum,
+  atendimentoResponseStatusEnum,
+} from "./types/AtendimentoResponse.ts";
 export { authResponseDTORoleEnum } from "./types/AuthResponseDTO.ts";
 export { calendarioAtendimentosResposeTipoEnum } from "./types/CalendarioAtendimentosRespose.ts";
 export { colaboradorRequestDTOFuncaoEnum } from "./types/ColaboradorRequestDTO.ts";
 export { colaboradorResponseDTOFuncaoEnum } from "./types/ColaboradorResponseDTO.ts";
-export { problemResponseDTOStatusEnum } from "./types/ProblemResponseDTO.ts";
 export { userRequestDTORoleEnum } from "./types/UserRequestDTO.ts";
 export { userResponseDTORoleEnum } from "./types/UserResponseDTO.ts";

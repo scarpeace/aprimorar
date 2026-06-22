@@ -8,13 +8,63 @@ export type { GetAlunosKpisQueryKey } from "./useGetAlunosKpis.ts";
 export type { ListAlunosQueryKey } from "./useListAlunos.ts";
 export type { UnarchiveAlunoMutationKey } from "./useUnarchiveAluno.ts";
 export type { UpdateAlunoMutationKey } from "./useUpdateAluno.ts";
-export { archiveAlunoMutationKey, archiveAluno, archiveAlunoMutationOptions, useArchiveAluno } from "./useArchiveAluno.ts";
-export { criarAlunoMutationKey, criarAluno, criarAlunoMutationOptions, useCriarAluno } from "./useCriarAluno.ts";
-export { deleteAlunoMutationKey, deleteAluno, deleteAlunoMutationOptions, useDeleteAluno } from "./useDeleteAluno.ts";
-export { getAlunoByIdQueryKey, getAlunoById, getAlunoByIdQueryOptions, useGetAlunoById } from "./useGetAlunoById.ts";
-export { getAlunosQueryKey, getAlunos, getAlunosQueryOptions, useGetAlunos } from "./useGetAlunos.ts";
-export { getAlunosByResponsavelQueryKey, getAlunosByResponsavel, getAlunosByResponsavelQueryOptions, useGetAlunosByResponsavel } from "./useGetAlunosByResponsavel.ts";
-export { getAlunosKpisQueryKey, getAlunosKpis, getAlunosKpisQueryOptions, useGetAlunosKpis } from "./useGetAlunosKpis.ts";
-export { listAlunosQueryKey, listAlunos, listAlunosQueryOptions, useListAlunos } from "./useListAlunos.ts";
-export { unarchiveAlunoMutationKey, unarchiveAluno, unarchiveAlunoMutationOptions, useUnarchiveAluno } from "./useUnarchiveAluno.ts";
-export { updateAlunoMutationKey, updateAluno, updateAlunoMutationOptions, useUpdateAluno } from "./useUpdateAluno.ts";
+export {
+  archiveAlunoMutationKey,
+  archiveAluno,
+  archiveAlunoMutationOptions,
+  useArchiveAluno,
+} from "./useArchiveAluno.ts";
+export {
+  criarAlunoMutationKey,
+  criarAluno,
+  criarAlunoMutationOptions,
+  useCriarAluno,
+} from "./useCriarAluno.ts";
+export {
+  deleteAlunoMutationKey,
+  deleteAluno,
+  deleteAlunoMutationOptions,
+  useDeleteAluno,
+} from "./useDeleteAluno.ts";
+export {
+  getAlunoByIdQueryKey,
+  getAlunoById,
+  getAlunoByIdQueryOptions,
+  useGetAlunoById,
+} from "./useGetAlunoById.ts";
+export {
+  getAlunosQueryKey,
+  getAlunos,
+  getAlunosQueryOptions,
+  useGetAlunos,
+} from "./useGetAlunos.ts";
+export {
+  getAlunosByResponsavelQueryKey,
+  getAlunosByResponsavel,
+  getAlunosByResponsavelQueryOptions,
+  useGetAlunosByResponsavel,
+} from "./useGetAlunosByResponsavel.ts";
+export {
+  getAlunosKpisQueryKey,
+  getAlunosKpis,
+  getAlunosKpisQueryOptions,
+  useGetAlunosKpis,
+} from "./useGetAlunosKpis.ts";
+export {
+  listAlunosQueryKey,
+  listAlunos,
+  listAlunosQueryOptions,
+  useListAlunos,
+} from "./useListAlunos.ts";
+export {
+  unarchiveAlunoMutationKey,
+  unarchiveAluno,
+  unarchiveAlunoMutationOptions,
+  useUnarchiveAluno,
+} from "./useUnarchiveAluno.ts";
+export {
+  updateAlunoMutationKey,
+  updateAluno,
+  updateAlunoMutationOptions,
+  useUpdateAluno,
+} from "./useUpdateAluno.ts";

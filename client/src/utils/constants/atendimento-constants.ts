@@ -1,4 +1,14 @@
-import type {AtendimentoResponse, CalendarioAtendimentosRespose} from "@/kubb";
+import type { CalendarioAtendimentosRespose } from "@/kubb";
+
+export const tipoAtendimentoLabels: Record<string, string> = {
+  AULA: "Aula",
+  MENTORIA: "Mentoria",
+  TERAPIA: "Terapia",
+  ORIENTACAO_VOCACIONAL: "Orientação Vocacional",
+  ENEM: "Enem",
+  PAS: "PAS",
+  OUTRO: "Outro",
+};
 
 export const CORES_TIPO_ATENDIMENTO: Record<string, { backgroundColor: string; borderColor: string }> = {
   AULA: { backgroundColor: "#3b82f6", borderColor: "#2563eb" },
@@ -10,26 +20,6 @@ export const CORES_TIPO_ATENDIMENTO: Record<string, { backgroundColor: string; b
   OUTRO: { backgroundColor: "#6b7280", borderColor: "#4b5563" },
 };
 
-export function getAppointmentColor(atendimento: CalendarioAtendimentosRespose) {
+export function getCorAtendimento(atendimento: CalendarioAtendimentosRespose) {
   return CORES_TIPO_ATENDIMENTO[atendimento.tipo ?? "OUTRO"] ?? CORES_TIPO_ATENDIMENTO.OUTRO;
 }
-
-export const EventContentLabels: Record<string, string> = {
-  AULA: "Aula",
-  MENTORIA: "Mentoria",
-  TERAPIA: "Terapia",
-  ORIENTACAO_VOCACIONAL: "O.V",
-  ENEM: "ENEM",
-  PAS: "PAS",
-  OUTRO: "Outro",
-};
-
-export const tipoAtendimentoLabels: Record<AtendimentoResponse["tipo"], string> = {
-  AULA: "Aula",
-  MENTORIA: "Mentoria",
-  TERAPIA: "Terapia",
-  ORIENTACAO_VOCACIONAL: "Orientação Vocacional",
-  ENEM: "Enem",
-  PAS: "PAS",
-  OUTRO: "Outro",
-};

@@ -1,6 +1,6 @@
 import { TriangleAlert } from "lucide-react";
 import type { UseFormRegisterReturn } from "react-hook-form";
-import { tipoAtendimentoLabels } from "../../utils/constants/tipo-atendimento-labels.ts";
+import { tipoAtendimentoLabels } from "@/utils/constants/atendimento-constants.ts";
 import { atendimentoRequestTipoEnum } from "@/kubb";
 
 type ContentSelectDropdownProps = {

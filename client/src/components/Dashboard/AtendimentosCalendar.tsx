@@ -9,10 +9,10 @@ import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
 import { ErrorCard } from "@/components/error-card.tsx";
-import { getAppointmentColor } from "@/utils/constants/atendimento-constants.ts";
 import { useGetCalendarioAtendimentos, type CalendarioAtendimentosRespose } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/services/api.ts";
 import { AtendimentoContentLegend } from "./AtendimentoContentLegend.tsx";
+import {getCorAtendimento} from "@/utils/constants/atendimento-constants.ts";
 
 const CALENDAR_PLUGINS = [dayGridPlugin, timeGridPlugin, interactionPlugin];
 
@@ -31,11 +31,11 @@ const BUTTON_TEXT = {
 
 function toCalendarEvent(atendimento: CalendarioAtendimentosRespose): EventInput {
   return {
-    id: atendimento.id,
+    id: String(atendimento.id),
     title: `${atendimento.nomeAluno} - ${atendimento.nomeColaborador}`,
     start: atendimento.inicio,
     end: atendimento.fim,
-    color: getAppointmentColor({ tipo: atendimento.tipo }).backgroundColor,
+    color: getCorAtendimento({ tipo: atendimento.tipo }).backgroundColor,
   };
 }
 

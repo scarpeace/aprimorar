@@ -1,1 +1,6 @@
-export type { Login200, LoginMutationRequest, LoginMutationResponse, LoginMutation } from "./Login.ts";
+export type {
+  Login200,
+  LoginMutationRequest,
+  LoginMutationResponse,
+  LoginMutation,
+} from "./Login.ts";

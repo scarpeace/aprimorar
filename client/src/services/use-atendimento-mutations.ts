@@ -18,7 +18,7 @@ export function useAtendimentoMutations() {
     queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
   };
 
-  const invalidateAtendimentoDetail = (atendimentoId: string, alunoId?: string, colaboradorId?: string) => {
+  const invalidateAtendimentoDetail = (atendimentoId: number, alunoId?: string, colaboradorId?: string) => {
     queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(atendimentoId) });
 
     if (alunoId) {

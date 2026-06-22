@@ -39,21 +39,6 @@ public class UserController {
     @PostMapping
     @Operation(operationId = "createUser", summary = "Create a new user")
     @ApiResponse(responseCode = "201", description = "Usuario criado com sucesso")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de validação",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "409",
-        description = "Conflito de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO dto) {
         var response = userService.createUser(dto);
         return ResponseEntity.created(URI.create("/v1/users/" + response.id())).body(response);
@@ -62,28 +47,20 @@ public class UserController {
     @GetMapping
     @Operation(operationId = "listUsers", summary = "List all users")
     @ApiResponse(responseCode = "200", description = "Lista de usuarios retornada com sucesso")
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<List<UserResponseDTO>> listUsers() {
         return ResponseEntity.ok(userService.findAll());
+    }
+
+    @GetMapping("/me/{userId}")
+    @Operation(operationId = "me", summary = "Get the authenticated user")
+    @ApiResponse(responseCode = "200", description = "Usuario autenticado retornado com sucesso")
+    public ResponseEntity<UserResponseDTO> me(@PathVariable String username) {
+        return ResponseEntity.ok(userService.findByUsername(username));
     }
 
     @DeleteMapping("/{id}")
     @Operation(operationId = "deleteUser", summary = "Delete a user")
     @ApiResponse(responseCode = "204", description = "Usuario excluido com sucesso")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Usuario nao encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
@@ -92,16 +69,6 @@ public class UserController {
     @PatchMapping("/{id}/archive")
     @Operation(operationId = "archiveUser", summary = "Toggle active status of a user")
     @ApiResponse(responseCode = "200", description = "Status ativo alternado com sucesso")
-    @ApiResponse(
-        responseCode = "404",
-        description = "Usuario nao encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
-    @ApiResponse(
-        responseCode = "500",
-        description = "Erro interno do sistema",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemResponseDTO.class))
-    )
     public ResponseEntity<UserResponseDTO> archiveUser(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.toggleActive(id));
     }

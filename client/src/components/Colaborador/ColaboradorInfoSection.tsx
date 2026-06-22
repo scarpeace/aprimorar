@@ -1,11 +1,11 @@
 import { Button } from "@/components/button.tsx";
 import { Collapse } from "@/components/collapse.tsx";
 import { ErrorCard } from "@/components/error-card.tsx";
-import { SectionCard } from "@/components/ui/section-card";
 import { SummaryItem } from "@/components/summary-item.tsx";
 import { AddressDetails } from "@/components/AddressDetails.tsx";
 import { useFindColaboradorById } from "@/kubb";
-import { formatCpf, formatDateShortYear, formatPhone } from "@/utils/formatter.ts";
+import { formatCpf, formatPhone } from "@/utils/formatter.ts";
+import { formatDateShortYear } from "@/utils/date-utils.ts";
 import { Edit, User } from "lucide-react";
 import { ArchiveColaboradorButton } from "./ArchiveColaboradorButton.tsx";
 import { DeleteColaboradorButton } from "./DeleteColaboradorButton.tsx";
@@ -25,9 +25,7 @@ export function ColaboradorInfoSection({ colaboradorId, onEdit }: ColaboradorInf
 
   if (colaboradorQuery.isPending || !colaboradorQuery.data) {
     return (
-      <SectionCard title="Colaborador" description="Dados do Colaborador">
-        <div className="h-48 w-full animate-pulse rounded-lg bg-base-300/50" />
-      </SectionCard>
+      <h1>Olá</h1>
     );
   }
 

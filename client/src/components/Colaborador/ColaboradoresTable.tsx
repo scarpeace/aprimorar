@@ -1,17 +1,14 @@
 import { Button } from "@/components/button.tsx";
-import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/error-card.tsx";
-import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/loading-spinner.tsx";
 import { Pagination } from "@/components/pagination.tsx";
-import { ToggleSwitch } from "@/components/toggle-switch.tsx";
 import { useGetColaboradores } from "@/kubb";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 import {
   formatCpf,
-  formatDateShortYear,
   formatPhone,
 } from "@/utils/formatter.ts";
+import { formatDateShortYear } from "@/utils/date-utils.ts";
 import { BrushCleaning, Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -60,13 +57,13 @@ export function ColaboradoresTable({ openForm }: { openForm: () => void }) {
             </p>
           </div>
 
-          <ListSearchInput
-            className="grow"
-            placeholder="Buscar colaborador por nome, email ou CPF"
-            ariaLabel="Buscar colaborador"
-            value={searchTerm}
-            onChange={setSearchTerm}
-          />
+          {/*<ListSearchInput*/}
+          {/*  className="grow"*/}
+          {/*  placeholder="Buscar colaborador por nome, email ou CPF"*/}
+          {/*  ariaLabel="Buscar colaborador"*/}
+          {/*  value={searchTerm}*/}
+          {/*  onChange={setSearchTerm}*/}
+          {/*/>*/}
           {/*<ToggleSwitch
             label="Arquivados"
             tip="Mostrar colaboradores arquivados"
@@ -93,18 +90,18 @@ export function ColaboradoresTable({ openForm }: { openForm: () => void }) {
         <LoadingSpinner text="Carregando colaboradores..." />
       )}
 
-      {!colaboradoresQuery.isLoading && !colaboradoresQuery.isError && !hasColaboradores && (
-        <EmptyCard
-          title="Nenhum colaborador encontrado"
-          description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
-          action={
-            <Button variant="outline" onClick={handleCleanFilter}>
-              Limpar filtros
-              <BrushCleaning size={18} />
-            </Button>
-          }
-        />
-      )}
+      {/*{!colaboradoresQuery.isLoading && !colaboradoresQuery.isError && !hasColaboradores && (*/}
+      {/*  <EmptyCard*/}
+      {/*    title="Nenhum colaborador encontrado"*/}
+      {/*    description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."*/}
+      {/*    action={*/}
+      {/*      <Button variant="outline" onClick={handleCleanFilter}>*/}
+      {/*        Limpar filtros*/}
+      {/*        <BrushCleaning size={18} />*/}
+      {/*      </Button>*/}
+      {/*    }*/}
+      {/*  />*/}
+      {/*)}*/}
 
       {hasColaboradores && (
         <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">

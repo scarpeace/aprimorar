@@ -5,9 +5,9 @@ import { LoadingCard } from "@/components/loading-card.tsx";
 import { SummaryItem } from "@/components/summary-item.tsx";
 import {
   formatCpf,
-  formatDateShortYear,
   formatPhone,
 } from "@/utils/formatter.ts";
+import { formatDateShortYear } from "@/utils/date-utils.ts";
 import { useGetAlunoById, useGetResponsavelById } from "@/kubb";
 import { Edit, Handshake, User } from "lucide-react";
 import { ArchiveAlunoButton } from "./ArchiveAlunoButton.tsx";

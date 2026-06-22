@@ -1,13 +1,12 @@
 import { ButtonLink } from "@/components/button.tsx";
-import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/error-card.tsx";
 import { LoadingSpinner } from "@/components/loading-spinner.tsx";
 import { Pagination } from "@/components/pagination.tsx";
-import { useGetColaboradoresList, type AtendimentoResponse, type PagedModelAtendimentoResponse } from "@/kubb";
-import { brl, formatDateShortYear, formatTime } from "@/utils/formatter.ts";
+import type { AtendimentoResponse, PagedModelAtendimentoResponse } from "@/kubb";
+import { brl } from "@/utils/formatter.ts";
+import { formatDateShortYear, formatTime } from "@/utils/date-utils.ts";
 import { Calendar, SquareArrowOutUpRight } from "lucide-react";
 import { memo } from "react";
-import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
 import { AlunoAtendimentoMobileCard } from "./AlunoAtendimentoMobileCard.tsx";
 
 type AlunoEventsTableProps = {
@@ -28,14 +27,13 @@ const tipoLabels: Record<AtendimentoResponse["tipo"], string> = {
   OUTRO: "Outro",
 };
 
-export const AlunoEventsTable = memo(function AlunoEventsTable({
+export const AtendimentosAlunoTable = memo(function AlunoEventsTable({
   atendimentos,
   error,
   isLoading,
   currentPage,
   onPageChange,
 }: Readonly<AlunoEventsTableProps>) {
-  const colaboradoresQuery = useGetColaboradoresList();
   const events = atendimentos?.content ?? [];
   const totalEvents = atendimentos?.page?.totalElements ?? events.length;
 
@@ -72,18 +70,18 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
     </div>
   );
 
-  if (events.length === 0) {
-    return (
-      <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_280ms_ease-out_both]">
-        {header}
-
-        <EmptyCard
-          title="Nenhum atendimento encontrado"
-          description="Os atendimentos vinculados ao aluno aparecerão aqui assim que houver agendamentos cadastrados."
-        />
-      </section>
-    );
-  }
+  // if (events.length === 0) {
+  //   return (
+  //     <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_280ms_ease-out_both]">
+  //       {header}
+  //
+  //       <EmptyCard
+  //         title="Nenhum atendimento encontrado"
+  //         description="Os atendimentos vinculados ao aluno aparecerão aqui assim que houver agendamentos cadastrados."
+  //       />
+  //     </section>
+  //   );
+  // }
 
   return (
     <section className="relative rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_280ms_ease-out_both]">
@@ -107,7 +105,7 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
               {events.map((atendimento: AtendimentoResponse) => (
                   <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
                     <td>
-                      <div className="font-semibold text-base-content">{getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}</div>
+                      <div className="font-semibold text-base-content">{atendimento.nomeColaborador}</div>
                     </td>
                     <td>{formatDateShortYear(atendimento.inicio)}</td>
                     <td className="text-center text-sm font-medium">
@@ -149,7 +147,7 @@ export const AlunoEventsTable = memo(function AlunoEventsTable({
           <AlunoAtendimentoMobileCard
             key={atendimento.id}
             atendimento={atendimento}
-            colaboradorNome={getParticipantName(atendimento.colaboradorId, colaboradoresQuery.data)}
+            colaboradorNome={atendimento.nomeColaborador}
             index={index}
           />
         ))}

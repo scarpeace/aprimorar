@@ -1,6 +1,6 @@
 import { MainLayout } from "@/components/Layout/MainLayout"
-import { ProtectedRoute } from "@/components/Auth/ProtectedRoute"
-import { AdminOnly } from "@/components/Auth/AdminOnly"
+import { ProtectedRoute } from "@/auth/components/ProtectedRoute.tsx"
+import { AdminOnly } from "@/auth/components/AdminOnly.tsx"
 import { PageLoading } from "@/components/page-loading.tsx"
 import { Suspense, lazy } from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
@@ -21,7 +21,7 @@ const ColaboradorDetailPage = lazy(() => import("@/pages/Colaborador/Colaborador
 const AtendimentosPage = lazy(() => import("@/pages/Atendimento/AtendimentosPage.tsx").then((module) => ({ default: module.AtendimentosPage })))
 const AtendimentoDetailPage = lazy(() => import("@/pages/Atendimento/AtendimentoDetailPage.tsx").then((module) => ({ default: module.AtendimentoDetailPage })))
 
-const LoginPage = lazy(() => import("@/pages/Auth/LoginPage.tsx").then((module) => ({ default: module.LoginPage })))
+const LoginPage = lazy(() => import("@/auth/pages/Login.tsx").then((module) => ({ default: module.Login })))
 
 const AdminPage = lazy(() => import("@/pages/Admin/AdminPage.tsx").then((module) => ({ default: module.AdminPage })))
 

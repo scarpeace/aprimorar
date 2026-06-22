@@ -1,8 +1,11 @@
 package aprimorar.auth.application;
 
 import aprimorar.auth.web.dto.AuthResponseDTO;
+import aprimorar.auth.web.dto.UserResponseDTO;
 import aprimorar.auth.domain.User;
 import java.time.Instant;
+import java.util.UUID;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -53,4 +56,6 @@ public class AuthService {
         String accessToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         return new AuthResponseDTO(accessToken, ACCESS_TOKEN_EXPIRES_IN_SECONDS, user.getUsername(), user.getRole());
     }
+
+
 }

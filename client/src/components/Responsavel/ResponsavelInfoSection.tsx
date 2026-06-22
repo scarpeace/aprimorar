@@ -4,9 +4,9 @@ import { LoadingCard } from "@/components/loading-card.tsx";
 import { SummaryItem } from "@/components/summary-item.tsx";
 import {
   formatCpf,
-  formatDateShortYear,
   formatPhone,
 } from "@/utils/formatter.ts";
+import { formatDateShortYear } from "@/utils/date-utils.ts";
 import { Edit, Handshake, UserRound } from "lucide-react";
 import { DeleteResponsavelButton } from "./DeleteResponsavelButton.tsx";
 import { useGetResponsavelById } from "@/kubb";

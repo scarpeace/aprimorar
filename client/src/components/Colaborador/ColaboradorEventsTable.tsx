@@ -1,11 +1,10 @@
 import { ButtonLink } from "@/components/button.tsx";
-import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/error-card.tsx";
 import { LoadingSpinner } from "@/components/loading-spinner.tsx";
 import { Pagination } from "@/components/pagination.tsx";
-import { useListAlunos, type AtendimentoResponse, type PagedModelAtendimentoResponse } from "@/kubb";
-import { brl, formatDateShortYear, formatTime } from "@/utils/formatter.ts";
-import { getParticipantName } from "@/features/atendimentos/lib/atendimento-participant-labels";
+import type { AtendimentoResponse, PagedModelAtendimentoResponse } from "@/kubb";
+import { brl } from "@/utils/formatter.ts";
+import { formatDateShortYear, formatTime } from "@/utils/date-utils.ts";
 import {
   Calendar,
   SquareArrowOutUpRight,
@@ -37,7 +36,6 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
   isLoading,
   onPageChange,
 }: Readonly<ColaboradorEventsTableProps>) {
-  const alunosQuery = useListAlunos();
   const events = atendimentos?.content ?? [];
   const totalEvents = atendimentos?.page?.totalElements ?? events.length;
 
@@ -79,10 +77,10 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
       <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_280ms_ease-out_both]">
         {header}
 
-        <EmptyCard
-          title="Nenhum atendimento encontrado"
-          description="Os atendimentos vinculados ao colaborador aparecerão aqui assim que houver agendamentos registrados."
-        />
+        {/*<EmptyCard*/}
+        {/*  title="Nenhum atendimento encontrado"*/}
+        {/*  description="Os atendimentos vinculados ao colaborador aparecerão aqui assim que houver agendamentos registrados."*/}
+        {/*/>*/}
       </section>
     );
   }
@@ -108,7 +106,7 @@ export const ColaboradorEventsTable = memo(function ColaboradorEventsTable({
             {events.map((atendimento: AtendimentoResponse) => (
                 <tr key={atendimento.id} className="group transition-colors hover:bg-base-200/50">
                   <td>
-                    <div className="font-semibold text-base-content">{getParticipantName(atendimento.alunoId, alunosQuery.data)}</div>
+                    <div className="font-semibold text-base-content">{atendimento.nomeAluno}</div>
                   </td>
                   <td>{formatDateShortYear(atendimento.inicio)}</td>
                   <td className="text-center text-sm font-medium">

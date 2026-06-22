@@ -1,20 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TriangleAlert } from "lucide-react";
 import { useMemo } from "react";
-import { Controller, useForm, useWatch } from "react-hook-form";
-import { NumericFormat } from "react-number-format";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/button.tsx";
-import { DateTimeInput } from "@/components/ui/date-time-input";
-import { AlunoSelectDropdown } from "@/components/Aluno/AlunoSelectDropdown.tsx";
-import { ColaboradorSelectDropdown } from "@/components/Colaborador/ColaboradorSelectDropdown.tsx";
-import { useGetColaboradoresList, useListAlunos, type AtendimentoRequest, type AtendimentoResponse } from "@/kubb";
-import { toInstant } from "@/utils/date-utils.ts";
+import { useGetColaboradoresList, useListAlunos, type AtendimentoResponse } from "@/kubb";
 import { useAtendimentoMutations } from "../../services/use-atendimento-mutations.ts";
 import { atendimentoFormSchema, type AtendimentoFormSchema } from "../../utils/zod/atendimento-form-schema.ts";
-import { ContentSelectDropdown } from "./ContentSelectDropdown.tsx";
 import { SelectInput } from "@/components/Forms/SelectInput.tsx";
-import { tipoAtendimentoLabels } from "../../utils/constants/tipo-atendimento-labels.ts";
+import { tipoAtendimentoLabels } from "@/utils/constants/atendimento-constants.ts";
 import { DateInput } from "@/components/Forms/DateInput.tsx";
 import { TextInput } from "@/components/Forms/TextInput.tsx";
 import { NumberInput } from "@/components/Forms/NumberInput.tsx";

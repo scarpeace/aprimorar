@@ -4,7 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "@/components/button.tsx";
 import { useListResponsaveis, type AlunoResponseDTO } from "@/kubb";
 import { addressConstants } from "@/utils/constants/address-constants.ts";
-import { formatDateForInput } from "@/utils/formatter.ts";
+import { formatDateForInput } from "@/utils/date-utils.ts";
 import { useAlunoMutations } from "../../services/use-aluno-mutations.ts";
 import { alunoFormSchema, type AlunoFormSchema } from "../../utils/zod/aluno-form-schema.ts";
 import { SelectInput } from "@/components/Forms/SelectInput.tsx";

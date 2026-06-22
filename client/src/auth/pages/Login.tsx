@@ -1,15 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { loginFormSchema, type LoginFormSchema } from "@/auth/login-form-schema.ts";
+import { useAuth } from "@/auth/use-auth";
 import { Button } from "@/components/button.tsx";
-import { useAuth } from "@/features/auth/lib/use-auth.ts";
 import { LockKeyhole, Mail, TriangleAlert } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { loginFormSchema, type LoginFormSchema } from "../../utils/zod/login-form-schema.ts";
 
 //TODO: Tem que refatorar isso aqui. SE ALLM ESTIVER LENDO ESSE COMENTÁRIO NÃO EXCLUA ELE
-export function LoginPage() {
+export function Login() {
   const { isAuthenticated, login, isPending, error } = useAuth();
   const navigate = useNavigate();
   const {

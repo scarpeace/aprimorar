@@ -4,9 +4,39 @@ export type { GetResponsaveisQueryKey } from "./useGetResponsaveis.ts";
 export type { GetResponsavelByIdQueryKey } from "./useGetResponsavelById.ts";
 export type { ListResponsaveisQueryKey } from "./useListResponsaveis.ts";
 export type { UpdateResponsavelMutationKey } from "./useUpdateResponsavel.ts";
-export { createResponsavelMutationKey, createResponsavel, createResponsavelMutationOptions, useCreateResponsavel } from "./useCreateResponsavel.ts";
-export { deleteResponsavelMutationKey, deleteResponsavel, deleteResponsavelMutationOptions, useDeleteResponsavel } from "./useDeleteResponsavel.ts";
-export { getResponsaveisQueryKey, getResponsaveis, getResponsaveisQueryOptions, useGetResponsaveis } from "./useGetResponsaveis.ts";
-export { getResponsavelByIdQueryKey, getResponsavelById, getResponsavelByIdQueryOptions, useGetResponsavelById } from "./useGetResponsavelById.ts";
-export { listResponsaveisQueryKey, listResponsaveis, listResponsaveisQueryOptions, useListResponsaveis } from "./useListResponsaveis.ts";
-export { updateResponsavelMutationKey, updateResponsavel, updateResponsavelMutationOptions, useUpdateResponsavel } from "./useUpdateResponsavel.ts";
+export {
+  createResponsavelMutationKey,
+  createResponsavel,
+  createResponsavelMutationOptions,
+  useCreateResponsavel,
+} from "./useCreateResponsavel.ts";
+export {
+  deleteResponsavelMutationKey,
+  deleteResponsavel,
+  deleteResponsavelMutationOptions,
+  useDeleteResponsavel,
+} from "./useDeleteResponsavel.ts";
+export {
+  getResponsaveisQueryKey,
+  getResponsaveis,
+  getResponsaveisQueryOptions,
+  useGetResponsaveis,
+} from "./useGetResponsaveis.ts";
+export {
+  getResponsavelByIdQueryKey,
+  getResponsavelById,
+  getResponsavelByIdQueryOptions,
+  useGetResponsavelById,
+} from "./useGetResponsavelById.ts";
+export {
+  listResponsaveisQueryKey,
+  listResponsaveis,
+  listResponsaveisQueryOptions,
+  useListResponsaveis,
+} from "./useListResponsaveis.ts";
+export {
+  updateResponsavelMutationKey,
+  updateResponsavel,
+  updateResponsavelMutationOptions,
+  useUpdateResponsavel,
+} from "./useUpdateResponsavel.ts";

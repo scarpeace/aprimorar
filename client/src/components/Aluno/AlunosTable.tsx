@@ -1,14 +1,11 @@
 import { Button } from "@/components/button.tsx";
-import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/error-card.tsx";
-import { ListSearchInput } from "@/components/ui/list-search-input";
 import { LoadingSpinner } from "@/components/loading-spinner.tsx";
 import { Pagination } from "@/components/pagination.tsx";
-import { ToggleSwitch } from "@/components/toggle-switch.tsx";
 import { useGetAlunos } from "@/kubb";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 import { formatCpf } from "@/utils/formatter.ts";
-import { BrushCleaning, CircleAlert, Eye, EyeClosed, FolderClock, UserPlus } from "lucide-react";
+import { BrushCleaning, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -56,13 +53,13 @@ export function AlunosTable({ openForm }: { openForm: () => void }) {
             </div>
           </div>
 
-          <ListSearchInput
-            className="grow"
-            placeholder="Nome, email ou CPF"
-            ariaLabel="Buscar aluno"
-            value={searchTerm}
-            onChange={setSearchTerm}
-          />
+          {/*<ListSearchInput*/}
+          {/*  className="grow"*/}
+          {/*  placeholder="Nome, email ou CPF"*/}
+          {/*  ariaLabel="Buscar aluno"*/}
+          {/*  value={searchTerm}*/}
+          {/*  onChange={setSearchTerm}*/}
+          {/*/>*/}
 
           {/*<div className="tooltip flex" data-tip={"Mostrar alunos arquivados"}>
           <div className="flex flex-col gap-1 items-center">
@@ -87,18 +84,18 @@ export function AlunosTable({ openForm }: { openForm: () => void }) {
         <LoadingSpinner text="Carregando alunos..." />
       )}
 
-      {!alunosQuery.isLoading && !alunosQuery.isError && !hasAlunos && (
-        <EmptyCard
-          title="Nenhum aluno encontrado"
-          description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
-          action={
-            <Button variant="outline" onClick={handleCleanFilter}>
-              Limpar filtros
-              <BrushCleaning size={18} />
-            </Button>
-          }
-        />
-      )}
+      {/*{!alunosQuery.isLoading && !alunosQuery.isError && !hasAlunos && (*/}
+      {/*  <EmptyCard*/}
+      {/*    title="Nenhum aluno encontrado"*/}
+      {/*    description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."*/}
+      {/*    action={*/}
+      {/*      <Button variant="outline" onClick={handleCleanFilter}>*/}
+      {/*        Limpar filtros*/}
+      {/*        <BrushCleaning size={18} />*/}
+      {/*      </Button>*/}
+      {/*    }*/}
+      {/*  />*/}
+      {/*)}*/}
 
       {hasAlunos && (
         <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">

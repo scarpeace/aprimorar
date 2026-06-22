@@ -85,13 +85,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findByUsername(String username) {
+    public UserResponseDTO findByUsername(String username) {
         String normalizedUsername = MapperUtils.normalizeEmail(username);
-        if (normalizedUsername == null) {
-            return Optional.empty();
-        }
 
-        return userRepository.findByUsername(normalizedUsername);
+        return userRepository.findByUsername(normalizedUsername)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new UserBusinessException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
     }
 
     @Transactional(readOnly = true)

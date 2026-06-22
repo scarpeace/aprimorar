@@ -1,12 +1,11 @@
-import { EmptyCard } from "@/components/ui/empty-card";
 import { ErrorCard } from "@/components/error-card.tsx";
 import { LoadingSpinner } from "@/components/loading-spinner.tsx";
 import { useGetAlunosByResponsavel } from "@/kubb";
 import {
   formatCpf,
-  formatDateShortYear,
   formatPhone,
 } from "@/utils/formatter.ts";
+import { formatDateShortYear } from "@/utils/date-utils.ts";
 import { useNavigate } from "react-router-dom";
 
 interface ResponsavelAlunosTableProps {
@@ -38,17 +37,13 @@ export function ResponsavelAlunosTable({
 
   if (!alunosQuery.data || alunosQuery.data.length === 0) {
     return (
-      <EmptyCard
-        title="Nenhum aluno vinculado"
-        description="Este responsavel ainda nao possui alunos associados."
-      />
+      <div>Nada encontrado</div>
     );
   }
 
   const alunos = alunosQuery.data;
 
   return (
-    <>
       <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
         <table className="table table-zebra animate-[fade-up_280ms_ease-out_both]">
           <thead className="bg-base-200/80">
@@ -90,6 +85,5 @@ export function ResponsavelAlunosTable({
           </tbody>
         </table>
       </div>
-    </>
   );
 }
