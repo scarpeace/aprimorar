@@ -5,9 +5,9 @@ import {PageLayout} from "@/components/Layout/PageLayout.tsx";
 import {Modal} from "@/components/Ui/Modal.tsx";
 import {KpiCard} from "@/components/Ui/KpiCard.tsx";
 import {AlunoForm} from "@/components/Aluno/AlunoForm.tsx";
-import {TransacoesEntradaTable} from "@/components/Financeiro/TransacoesEntradaTable.tsx";
-import { TransacoesSaidaTable } from "@/components/Financeiro/TransacoesSaidaTable";
 import { DateRangeSelectWidget } from "@/components/Ui/DateRangeSelectWidget";
+import { TransacoesTable } from "@/components/Financeiro/TransacoesTable";
+import { transacaoResponseDTOTipoEnum } from "@/kubb";
 
 export function FinanceiroPage(){
     const { startDate, endDate, ...dateFilter } = usePageDateFilter();
@@ -50,14 +50,22 @@ export function FinanceiroPage(){
             </section>
 
             <section className="grid grid-cols-2 gap-6 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both] 2xl:grid-cols-2">
-                <div className="min-w-0 rounded-2xl border border-base-300 p-3">
-                    <TransacoesEntradaTable openForm={()=> setIsFormOpen(true)} />
-                </div>
+          <div className="min-w-0 rounded-2xl border border-base-300 p-3">
+            <TransacoesTable
+              title="Entradas"
+              tipo={transacaoResponseDTOTipoEnum.ENTRADA}
+              openForm={() => setIsFormOpen(true)}
+            />
+          </div>
 
-                <div className="min-w-0 rounded-2xl border border-base-300 p-3">
-                    <TransacoesSaidaTable openForm={()=> setIsFormOpen(true)} />
-                </div>
-            </section>
+          <div className="min-w-0 rounded-2xl border border-base-300 p-3">
+            <TransacoesTable
+              title="Saídas"
+              tipo={transacaoResponseDTOTipoEnum.SAIDA}
+              openForm={() => setIsFormOpen(true)}
+            />
+          </div>
+        </section>
 
             <DateRangeSelectWidget startDate={startDate} endDate={endDate} {...dateFilter} />
 

@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export type CancelarTransacaoQueryParams = {
+export type CancelarTransacaoPathParams = {
   /**
    * @type integer, int64
    */
@@ -19,6 +19,6 @@ export type CancelarTransacaoMutationResponse = CancelarTransacao200;
 
 export type CancelarTransacaoMutation = {
   Response: CancelarTransacao200;
-  QueryParams: CancelarTransacaoQueryParams;
+  PathParams: CancelarTransacaoPathParams;
   Errors: any;
 };

@@ -48,7 +48,7 @@ export type {
   CancelarAtendimentoMutation,
 } from "./CancelarAtendimento.ts";
 export type {
-  CancelarTransacaoQueryParams,
+  CancelarTransacaoPathParams,
   CancelarTransacao200,
   CancelarTransacaoMutationResponse,
   CancelarTransacaoMutation,
@@ -131,7 +131,7 @@ export type {
   DesarquivarColaboradorMutation,
 } from "./DesarquivarColaborador.ts";
 export type {
-  EfetivarTransacaoQueryParams,
+  EfetivarTransacaoPathParams,
   EfetivarTransacao200,
   EfetivarTransacaoMutationRequestEnumKey,
   EfetivarTransacaoMutationRequest,

@@ -55,9 +55,17 @@ export type TransacaoResponseDTO = {
    */
   pagadorId?: string;
   /**
+   * @type string | undefined
+   */
+  nomePagador?: string;
+  /**
    * @type string | undefined, uuid
    */
   recebedorId?: string;
+  /**
+   * @type string | undefined
+   */
+  nomeRecebedor?: string;
   /**
    * @type number | undefined
    */
@@ -86,8 +94,4 @@ export type TransacaoResponseDTO = {
    * @type string | undefined, date-time
    */
   createdAt?: string;
-  /**
-   * @type string | undefined, date-time
-   */
-  updatedAt?: string;
 };

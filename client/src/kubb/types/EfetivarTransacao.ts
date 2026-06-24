@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-export type EfetivarTransacaoQueryParams = {
+export type EfetivarTransacaoPathParams = {
   /**
    * @type integer, int64
    */
@@ -34,6 +34,6 @@ export type EfetivarTransacaoMutationResponse = EfetivarTransacao200;
 export type EfetivarTransacaoMutation = {
   Response: EfetivarTransacao200;
   Request: EfetivarTransacaoMutationRequest;
-  QueryParams: EfetivarTransacaoQueryParams;
+  PathParams: EfetivarTransacaoPathParams;
   Errors: any;
 };

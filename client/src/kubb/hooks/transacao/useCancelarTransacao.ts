@@ -6,7 +6,7 @@
 import fetch from "@/services/api";
 import type {
   CancelarTransacaoMutationResponse,
-  CancelarTransacaoQueryParams,
+  CancelarTransacaoPathParams,
 } from "../../types/CancelarTransacao.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/services/api";
 import type {
@@ -28,7 +28,7 @@ export type CancelarTransacaoMutationKey = ReturnType<
  * {@link /transacoes/transacoes/:transacaoId/cancelar}
  */
 export async function cancelarTransacao(
-  params: CancelarTransacaoQueryParams,
+  transacaoId: CancelarTransacaoPathParams["transacaoId"],
   config: Partial<RequestConfig> & { client?: typeof fetch } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
@@ -40,7 +40,6 @@ export async function cancelarTransacao(
   >({
     method: "POST",
     url: `/transacoes/transacoes/${transacaoId}/cancelar`,
-    params,
     ...requestConfig,
   });
   return res.data;
@@ -53,12 +52,12 @@ export function cancelarTransacaoMutationOptions(
   return mutationOptions<
     CancelarTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
-    { params: CancelarTransacaoQueryParams },
+    { transacaoId: CancelarTransacaoPathParams["transacaoId"] },
     typeof mutationKey
   >({
     mutationKey,
-    mutationFn: async ({ params }) => {
-      return cancelarTransacao(params, config);
+    mutationFn: async ({ transacaoId }) => {
+      return cancelarTransacao(transacaoId, config);
     },
   });
 }
@@ -72,7 +71,7 @@ export function useCancelarTransacao<TContext>(
     mutation?: UseMutationOptions<
       CancelarTransacaoMutationResponse,
       ResponseErrorConfig<Error>,
-      { params: CancelarTransacaoQueryParams },
+      { transacaoId: CancelarTransacaoPathParams["transacaoId"] },
       TContext
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: typeof fetch };
@@ -88,14 +87,14 @@ export function useCancelarTransacao<TContext>(
   ) as UseMutationOptions<
     CancelarTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
-    { params: CancelarTransacaoQueryParams },
+    { transacaoId: CancelarTransacaoPathParams["transacaoId"] },
     TContext
   >;
 
   return useMutation<
     CancelarTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
-    { params: CancelarTransacaoQueryParams },
+    { transacaoId: CancelarTransacaoPathParams["transacaoId"] },
     TContext
   >(
     {
@@ -107,7 +106,7 @@ export function useCancelarTransacao<TContext>(
   ) as UseMutationResult<
     CancelarTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
-    { params: CancelarTransacaoQueryParams },
+    { transacaoId: CancelarTransacaoPathParams["transacaoId"] },
     TContext
   >;
 }

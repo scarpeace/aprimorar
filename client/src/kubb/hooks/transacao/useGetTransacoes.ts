@@ -18,13 +18,13 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getTransacoesQueryKey = (params?: GetTransacoesQueryParams) =>
-  [{ url: "/transacoes" }, ...(params ? [params] : [])] as const;
+  [{ url: "/v1/transacoes" }, ...(params ? [params] : [])] as const;
 
 export type GetTransacoesQueryKey = ReturnType<typeof getTransacoesQueryKey>;
 
 /**
  * @description Lista transacoes com paginacao, ordenacao e filtros opcionais.
- * {@link /transacoes}
+ * {@link /v1/transacoes}
  */
 export async function getTransacoes(
   params?: GetTransacoesQueryParams,
@@ -36,7 +36,7 @@ export async function getTransacoes(
     GetTransacoesQueryResponse,
     ResponseErrorConfig<Error>,
     unknown
-  >({ method: "GET", url: `/transacoes`, params, ...requestConfig });
+  >({ method: "GET", url: `/v1/transacoes`, params, ...requestConfig });
   return res.data;
 }
 
@@ -61,7 +61,7 @@ export function getTransacoesQueryOptions(
 
 /**
  * @description Lista transacoes com paginacao, ordenacao e filtros opcionais.
- * {@link /transacoes}
+ * {@link /v1/transacoes}
  */
 export function useGetTransacoes<
   TData = GetTransacoesQueryResponse,

@@ -19,7 +19,7 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getTransacaoByIdQueryKey = (
   id: GetTransacaoByIdPathParams["id"],
-) => [{ url: "/transacoes/:id", params: { id: id } }] as const;
+) => [{ url: "/v1/transacoes/:id", params: { id: id } }] as const;
 
 export type GetTransacaoByIdQueryKey = ReturnType<
   typeof getTransacaoByIdQueryKey
@@ -27,7 +27,7 @@ export type GetTransacaoByIdQueryKey = ReturnType<
 
 /**
  * @description Consulta uma transacao especifica pelo ID.
- * {@link /transacoes/:id}
+ * {@link /v1/transacoes/:id}
  */
 export async function getTransacaoById(
   id: GetTransacaoByIdPathParams["id"],
@@ -39,7 +39,7 @@ export async function getTransacaoById(
     GetTransacaoByIdQueryResponse,
     ResponseErrorConfig<Error>,
     unknown
-  >({ method: "GET", url: `/transacoes/${id}`, ...requestConfig });
+  >({ method: "GET", url: `/v1/transacoes/${id}`, ...requestConfig });
   return res.data;
 }
 
@@ -65,7 +65,7 @@ export function getTransacaoByIdQueryOptions(
 
 /**
  * @description Consulta uma transacao especifica pelo ID.
- * {@link /transacoes/:id}
+ * {@link /v1/transacoes/:id}
  */
 export function useGetTransacaoById<
   TData = GetTransacaoByIdQueryResponse,

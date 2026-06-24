@@ -7,7 +7,7 @@ import fetch from "@/services/api";
 import type {
   EfetivarTransacaoMutationRequest,
   EfetivarTransacaoMutationResponse,
-  EfetivarTransacaoQueryParams,
+  EfetivarTransacaoPathParams,
 } from "../../types/EfetivarTransacao.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/services/api";
 import type {
@@ -29,7 +29,7 @@ export type EfetivarTransacaoMutationKey = ReturnType<
  * {@link /transacoes/transacoes/:transacaoId/efetivar}
  */
 export async function efetivarTransacao(
-  params: EfetivarTransacaoQueryParams,
+  transacaoId: EfetivarTransacaoPathParams["transacaoId"],
   data?: EfetivarTransacaoMutationRequest,
   config: Partial<RequestConfig<EfetivarTransacaoMutationRequest>> & {
     client?: typeof fetch;
@@ -46,7 +46,6 @@ export async function efetivarTransacao(
   >({
     method: "POST",
     url: `/transacoes/transacoes/${transacaoId}/efetivar`,
-    params,
     data: requestData,
     ...requestConfig,
   });
@@ -63,14 +62,14 @@ export function efetivarTransacaoMutationOptions(
     EfetivarTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
     {
-      params: EfetivarTransacaoQueryParams;
+      transacaoId: EfetivarTransacaoPathParams["transacaoId"];
       data?: EfetivarTransacaoMutationRequest;
     },
     typeof mutationKey
   >({
     mutationKey,
-    mutationFn: async ({ params, data }) => {
-      return efetivarTransacao(params, data, config);
+    mutationFn: async ({ transacaoId, data }) => {
+      return efetivarTransacao(transacaoId, data, config);
     },
   });
 }
@@ -85,7 +84,7 @@ export function useEfetivarTransacao<TContext>(
       EfetivarTransacaoMutationResponse,
       ResponseErrorConfig<Error>,
       {
-        params: EfetivarTransacaoQueryParams;
+        transacaoId: EfetivarTransacaoPathParams["transacaoId"];
         data?: EfetivarTransacaoMutationRequest;
       },
       TContext
@@ -106,7 +105,7 @@ export function useEfetivarTransacao<TContext>(
     EfetivarTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
     {
-      params: EfetivarTransacaoQueryParams;
+      transacaoId: EfetivarTransacaoPathParams["transacaoId"];
       data?: EfetivarTransacaoMutationRequest;
     },
     TContext
@@ -116,7 +115,7 @@ export function useEfetivarTransacao<TContext>(
     EfetivarTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
     {
-      params: EfetivarTransacaoQueryParams;
+      transacaoId: EfetivarTransacaoPathParams["transacaoId"];
       data?: EfetivarTransacaoMutationRequest;
     },
     TContext
@@ -131,7 +130,7 @@ export function useEfetivarTransacao<TContext>(
     EfetivarTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
     {
-      params: EfetivarTransacaoQueryParams;
+      transacaoId: EfetivarTransacaoPathParams["transacaoId"];
       data?: EfetivarTransacaoMutationRequest;
     },
     TContext

@@ -23,6 +23,7 @@ const AtendimentosPage = lazy(() => import("@/pages/Atendimento/AtendimentosPage
 const AtendimentoDetailPage = lazy(() => import("@/pages/Atendimento/AtendimentoDetailPage.tsx").then((module) => ({ default: module.AtendimentoDetailPage })))
 
 const FinanceiroPage = lazy(() => import("@/pages/Financeiro/FinanceiroPage.tsx").then((module) => ({ default: module.FinanceiroPage })))
+const TransacaoDetailPage = lazy(() => import("@/pages/Financeiro/TransacaoDetailPage.tsx").then((module) => ({ default: module.TransacaoDetailPage })))
 
 const LoginPage = lazy(() => import("@/auth/pages/Login.tsx").then((module) => ({ default: module.Login })))
 
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
           { path: "responsaveis", element: <ResponsaveisPage /> },
           { path: "responsaveis/:id", element: <ResponsavelDetailPage /> },
           { path: "financeiro", element: <FinanceiroPage /> },
+          { path: "transacoes/:id", element: <TransacaoDetailPage /> },
         ],
       },
     ],

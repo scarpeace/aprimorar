@@ -3,7 +3,9 @@
   "properties": {
     "id": { "type": "integer", "format": "int64" },
     "pagadorId": { "type": "string", "format": "uuid" },
+    "nomePagador": { "type": "string" },
     "recebedorId": { "type": "string", "format": "uuid" },
+    "nomeRecebedor": { "type": "string" },
     "valor": { "type": "number" },
     "dataEfetivada": { "type": "string", "format": "date-time" },
     "tipo": { "type": "string", "enum": ["ENTRADA", "SAIDA"] },
@@ -27,8 +29,7 @@
         "MANUTENCAO"
       ]
     },
-    "createdAt": { "type": "string", "format": "date-time" },
-    "updatedAt": { "type": "string", "format": "date-time" }
+    "createdAt": { "type": "string", "format": "date-time" }
   },
   "x-readme-ref-name": "TransacaoResponseDTO"
 }
