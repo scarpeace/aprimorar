@@ -1,0 +1,15 @@
+{
+  "required": ["bairro", "cep", "cidade", "estado", "numero", "rua"],
+  "type": "object",
+  "properties": {
+    "rua": { "type": "string" },
+    "numero": { "type": "string" },
+    "complemento": { "type": "string" },
+    "bairro": { "type": "string" },
+    "cidade": { "type": "string" },
+    "estado": { "type": "string" },
+    "cep": { "type": "string" }
+  },
+  "description": "Dados do endereco retornados pela API",
+  "x-readme-ref-name": "EnderecoResponseDTO"
+}

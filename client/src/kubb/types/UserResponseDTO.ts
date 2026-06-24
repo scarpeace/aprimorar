@@ -19,32 +19,32 @@ export type UserResponseDTORoleEnumKey =
 export type UserResponseDTO = {
   /**
    * @description ID do usuario
-   * @type string | undefined, uuid
+   * @type string, uuid
    */
-  id?: string;
+  id: string;
   /**
    * @description E-mail usado no login
-   * @type string | undefined
+   * @type string
    */
-  username?: string;
+  username: string;
   /**
    * @description Perfil de acesso
-   * @type string | undefined
+   * @type string
    */
-  role?: UserResponseDTORoleEnumKey;
+  role: UserResponseDTORoleEnumKey;
   /**
    * @description Indica se a conta esta ativa
-   * @type boolean | undefined
+   * @type boolean
    */
-  active?: boolean;
+  active: boolean;
   /**
    * @description Data de criacao
-   * @type string | undefined, date-time
+   * @type string, date-time
    */
-  createdAt?: string;
+  createdAt: string;
   /**
    * @description Data de atualizacao
-   * @type string | undefined, date-time
+   * @type string, date-time
    */
-  updatedAt?: string;
+  updatedAt: string;
 };

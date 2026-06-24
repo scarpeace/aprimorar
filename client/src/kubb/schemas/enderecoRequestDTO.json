@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "rua": { "type": "string" },
+    "numero": { "type": "string" },
+    "bairro": { "type": "string" },
+    "cidade": { "type": "string" },
+    "estado": { "type": "string" },
+    "cep": { "type": "string" },
+    "complemento": { "type": "string" }
+  },
+  "description": "Endereço do aluno",
+  "x-readme-ref-name": "EnderecoRequestDTO"
+}

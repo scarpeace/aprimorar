@@ -3,12 +3,9 @@
  * Do not edit manually.
  */
 
-import fetch from "@kubb/plugin-client/clients/axios";
-import type { ListUsersQueryResponse } from "../../types/user/ListUsers.ts";
-import type {
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@kubb/plugin-client/clients/axios";
+import fetch from "@/services/api";
+import type { ListUsersQueryResponse } from "../../types/ListUsers.ts";
+import type { RequestConfig, ResponseErrorConfig } from "@/services/api";
 import type {
   QueryKey,
   QueryClient,

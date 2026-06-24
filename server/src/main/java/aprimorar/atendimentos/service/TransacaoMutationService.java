@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,20 +19,20 @@ import aprimorar.atendimentos.repository.TransacaoRepository;
 
 @Service
 public class TransacaoMutationService {
+    private final UUID adminId;
     private final TransacaoRepository transacaoRepository;
 
-    public TransacaoMutationService(TransacaoRepository transacaoRepository) {
+    public TransacaoMutationService(TransacaoRepository transacaoRepository, @Value("${aprimorar.admin-id}") UUID adminId) {
         this.transacaoRepository = transacaoRepository;
+        this.adminId = adminId;
     }
 
-    //TODO: Mover isso para uma variável de ambiente no aplication.properties
-    private final UUID ADMIN_ID = UUID.fromString("b3a092e0-fc48-43ff-8b35-149eb81a033f");
 
     @Transactional
     public void criarEntradaAluno(UUID alunoId, BigDecimal valor) {
         var transacao = new Transacao(
                 alunoId,
-                ADMIN_ID,
+                adminId,
                 valor,
                 null,
                 TipoTransacao.ENTRADA,
@@ -46,7 +47,7 @@ public class TransacaoMutationService {
     @Transactional
     public void criarSaidaColaborador(UUID colaboradorId, BigDecimal repasse) {
         var transacao = new Transacao(
-                ADMIN_ID,
+                adminId,
                 colaboradorId,
                 repasse,
                 null,
@@ -62,7 +63,7 @@ public class TransacaoMutationService {
     @Transactional
     public TransacaoResponseDTO criarSaidaDespesa(TransacaoRequestDTO request) {
         var transacao = new Transacao(
-                ADMIN_ID,
+                adminId,
                 null,
                 request.valor(),
                 null,

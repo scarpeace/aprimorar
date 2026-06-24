@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "pagadorId": { "type": "string", "format": "uuid" },
+          "recebedorId": { "type": "string", "format": "uuid" },
+          "valor": { "type": "number" },
+          "dataEfetivada": { "type": "string", "format": "date-time" },
+          "tipo": { "type": "string", "enum": ["ENTRADA", "SAIDA"] },
+          "formaPagamento": {
+            "type": "string",
+            "enum": ["CREDITO", "DEBITO", "PIX", "TRANSFERENCIA", "DINHEIRO"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PAGO", "PENDENTE", "ATRASADO", "CANCELADO"]
+          },
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "PGTO_ALUNO",
+              "INVESTIMENTO",
+              "PGTO_COLABORADOR",
+              "CONTAS",
+              "MATERIAL",
+              "DESPENSA",
+              "MANUTENCAO"
+            ]
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "x-readme-ref-name": "TransacaoResponseDTO"
+      }
+    },
+    "page": {
+      "type": "object",
+      "properties": {
+        "size": { "type": "integer", "format": "int64" },
+        "number": { "type": "integer", "format": "int64" },
+        "totalElements": { "type": "integer", "format": "int64" },
+        "totalPages": { "type": "integer", "format": "int64" }
+      },
+      "x-readme-ref-name": "PageMetadata"
+    }
+  },
+  "x-readme-ref-name": "PagedModelTransacaoResponseDTO"
+}

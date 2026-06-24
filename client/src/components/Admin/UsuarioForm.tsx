@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TriangleAlert } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/button.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
 import { userRequestDTORoleEnum } from "@/kubb";
 
 import { useUsuarioMutations } from "../../services/use-usuario-mutations.ts";

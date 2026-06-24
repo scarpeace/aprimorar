@@ -1,5 +1,5 @@
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
-import { Modal } from "@/components/modal.tsx";
+import { Modal } from "@/components/Ui/Modal.tsx";
 import {
   useFindColaboradorById,
   useGetAtendimentos,
@@ -11,7 +11,7 @@ import { ColaboradorEventsTable } from "../../components/Colaborador/Colaborador
 import { ColaboradorInfoSection } from "../../components/Colaborador/ColaboradorInfoSection.tsx";
 import { ColaboradorForm } from "../../components/Colaborador/ColaboradorForm.tsx";
 import { usePageDateFilter } from "@/hooks/usePageDateFilter.ts";
-import { DateRangeSelectWidget } from "@/components/DateRangeSelectWidget.tsx";
+import { DateRangeSelectWidget } from "@/components/Ui/DateRangeSelectWidget.tsx";
 
 export function ColaboradorDetailPage() {
   const { id } = useParams<{ id: string }>();

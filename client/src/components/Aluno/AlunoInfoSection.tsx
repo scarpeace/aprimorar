@@ -1,8 +1,8 @@
-import { Button } from "@/components/button.tsx";
-import { Collapse } from "@/components/collapse.tsx";
-import { ErrorCard } from "@/components/error-card.tsx";
-import { LoadingCard } from "@/components/loading-card.tsx";
-import { SummaryItem } from "@/components/summary-item.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
+import { Collapse } from "@/components/Ui/Collapse.tsx";
+import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
+import { LoadingCard } from "@/components/Ui/LoadingCard.tsx";
+import { SummaryItem } from "@/components/Ui/SummaryItem.tsx";
 import {
   formatCpf,
   formatPhone,
@@ -12,7 +12,7 @@ import { useGetAlunoById, useGetResponsavelById } from "@/kubb";
 import { Edit, Handshake, User } from "lucide-react";
 import { ArchiveAlunoButton } from "./ArchiveAlunoButton.tsx";
 import { DeleteAlunoButton } from "./DeleteAlunoButton.tsx";
-import { AddressDetails } from "@/components/AddressDetails.tsx";
+import { AddressDetails } from "@/components/Ui/AddressDetails.tsx";
 
 type AlunoInfoSectionProps = {
   alunoId: string;

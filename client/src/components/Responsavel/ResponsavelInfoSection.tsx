@@ -1,7 +1,7 @@
-import { Button } from "@/components/button.tsx";
-import { ErrorCard } from "@/components/error-card.tsx";
-import { LoadingCard } from "@/components/loading-card.tsx";
-import { SummaryItem } from "@/components/summary-item.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
+import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
+import { LoadingCard } from "@/components/Ui/LoadingCard.tsx";
+import { SummaryItem } from "@/components/Ui/SummaryItem.tsx";
 import {
   formatCpf,
   formatPhone,

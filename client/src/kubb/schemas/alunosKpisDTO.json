@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "properties": {
+    "totalAlunos": {
+      "type": "integer",
+      "description": "Total de alunos cadastrados",
+      "format": "int64"
+    },
+    "totalAlunosAtivos": {
+      "type": "integer",
+      "description": "Total de alunos ativos",
+      "format": "int64"
+    }
+  },
+  "description": "Resumo de alunos cadastrados",
+  "x-readme-ref-name": "AlunosKpisDTO"
+}

@@ -1,8 +1,8 @@
-import { Button } from "@/components/button.tsx";
-import { Collapse } from "@/components/collapse.tsx";
-import { ErrorCard } from "@/components/error-card.tsx";
-import { SummaryItem } from "@/components/summary-item.tsx";
-import { AddressDetails } from "@/components/AddressDetails.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
+import { Collapse } from "@/components/Ui/Collapse.tsx";
+import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
+import { SummaryItem } from "@/components/Ui/SummaryItem.tsx";
+import { AddressDetails } from "@/components/Ui/AddressDetails.tsx";
 import { useFindColaboradorById } from "@/kubb";
 import { formatCpf, formatPhone } from "@/utils/formatter.ts";
 import { formatDateShortYear } from "@/utils/date-utils.ts";

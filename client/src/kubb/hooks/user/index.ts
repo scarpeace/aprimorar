@@ -2,6 +2,7 @@ export type { ArchiveUserMutationKey } from "./useArchiveUser.ts";
 export type { CreateUserMutationKey } from "./useCreateUser.ts";
 export type { DeleteUserMutationKey } from "./useDeleteUser.ts";
 export type { ListUsersQueryKey } from "./useListUsers.ts";
+export type { MeQueryKey } from "./useMe.ts";
 export {
   archiveUserMutationKey,
   archiveUser,
@@ -26,3 +27,4 @@ export {
   listUsersQueryOptions,
   useListUsers,
 } from "./useListUsers.ts";
+export { meQueryKey, me, meQueryOptions, useMe } from "./useMe.ts";

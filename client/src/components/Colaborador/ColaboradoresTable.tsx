@@ -1,7 +1,7 @@
-import { Button } from "@/components/button.tsx";
-import { ErrorCard } from "@/components/error-card.tsx";
-import { LoadingSpinner } from "@/components/loading-spinner.tsx";
-import { Pagination } from "@/components/pagination.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
+import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
+import { LoadingSpinner } from "@/components/Ui/LoadingSpinner.tsx";
+import { Pagination } from "@/components/Ui/Pagination.tsx";
 import { useGetColaboradores } from "@/kubb";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 import {

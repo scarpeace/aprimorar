@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "properties": {
+    "totalColaboradores": {
+      "type": "integer",
+      "description": "ID do funcionário",
+      "format": "int64"
+    },
+    "totalColaboradoresAtivos": {
+      "type": "integer",
+      "description": "Total de colaboradores ativos",
+      "format": "int64"
+    }
+  },
+  "description": "Formato de payload para obter opções de colaboradores",
+  "x-readme-ref-name": "ColaboradoresKpisDTO"
+}

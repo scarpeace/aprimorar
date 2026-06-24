@@ -3,15 +3,12 @@
  * Do not edit manually.
  */
 
-import fetch from "@kubb/plugin-client/clients/axios";
+import fetch from "@/services/api";
 import type {
   FindColaboradorByIdQueryResponse,
   FindColaboradorByIdPathParams,
-} from "../../types/colaborador/FindColaboradorById.ts";
-import type {
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@kubb/plugin-client/clients/axios";
+} from "../../types/FindColaboradorById.ts";
+import type { RequestConfig, ResponseErrorConfig } from "@/services/api";
 import type {
   QueryKey,
   QueryClient,

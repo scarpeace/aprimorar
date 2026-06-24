@@ -3,15 +3,12 @@
  * Do not edit manually.
  */
 
-import fetch from "@kubb/plugin-client/clients/axios";
+import fetch from "@/services/api";
 import type {
   GetAtendimentoByIdQueryResponse,
   GetAtendimentoByIdPathParams,
-} from "../../types/atendimento/GetAtendimentoById.ts";
-import type {
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@kubb/plugin-client/clients/axios";
+} from "../../types/GetAtendimentoById.ts";
+import type { RequestConfig, ResponseErrorConfig } from "@/services/api";
 import type {
   QueryKey,
   QueryClient,

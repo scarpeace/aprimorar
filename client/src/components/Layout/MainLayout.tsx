@@ -4,16 +4,17 @@ import {
   UserCog,
   GraduationCap,
   ShieldCheck,
-  BellElectric
+  BellElectric, HandCoins
 } from "lucide-react"
-import { useAuth } from "@/auth/use-auth"
 import { Link, Outlet, useLocation } from "react-router-dom"
+import {useAuth} from "@/auth/authContext.tsx";
 
 const baseNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Alunos e Responsáveis", href: "/alunos", icon: GraduationCap },
   { name: "Colaboradores", href: "/colaboradores", icon: UserCog },
-  { name: "Atendimentos", href: "/Atendimento", icon: BellElectric },
+  { name: "Atendimentos", href: "/atendimentos", icon: BellElectric },
+  { name: "Financeiro", href: "/financeiro", icon: HandCoins },
 ] as const
 
 function isNavigationActive(currentPath: string, itemHref: string) {

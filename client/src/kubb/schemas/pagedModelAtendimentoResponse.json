@@ -1,0 +1,140 @@
+{
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "array",
+      "items": {
+        "required": [
+          "alunoId",
+          "colaboradorId",
+          "createdAt",
+          "duracao",
+          "fim",
+          "id",
+          "inicio",
+          "lucro",
+          "nomeAluno",
+          "nomeColaborador",
+          "repasse",
+          "status",
+          "tipo",
+          "valor"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificador unico do atendimento",
+            "format": "int64"
+          },
+          "descricao": {
+            "type": "string",
+            "description": "Descricao do atendimento",
+            "example": "Sessao focada em revisao de matematica basica"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Tipo de conteudo ou categoria do atendimento",
+            "example": "MENTORIA",
+            "enum": [
+              "AULA",
+              "MENTORIA",
+              "TERAPIA",
+              "ORIENTACAO_VOCACIONAL",
+              "ENEM",
+              "PAS",
+              "OUTRO"
+            ]
+          },
+          "inicio": {
+            "type": "string",
+            "description": "Data/hora de inicio do atendimento",
+            "format": "date-time",
+            "example": "2023-11-20T14:00:00Z"
+          },
+          "fim": {
+            "type": "string",
+            "description": "Data/hora de fim do atendimento",
+            "format": "date-time",
+            "example": "2023-11-20T16:00:00Z"
+          },
+          "duracao": {
+            "type": "number",
+            "description": "Duracao do atendimento em horas",
+            "format": "double",
+            "example": 1.5
+          },
+          "valor": {
+            "type": "number",
+            "description": "Valor do atendimento cobrado do aluno",
+            "example": 150
+          },
+          "repasse": {
+            "type": "number",
+            "description": "Pagamento do atendimento ao colaborador",
+            "example": 100
+          },
+          "lucro": {
+            "type": "number",
+            "description": "Lucro do atendimento",
+            "example": 50
+          },
+          "alunoId": {
+            "type": "string",
+            "description": "ID do aluno vinculado ao atendimento",
+            "format": "uuid",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "nomeAluno": {
+            "type": "string",
+            "description": "Nome do aluno vinculado ao atendimento",
+            "example": "Joao Silva"
+          },
+          "colaboradorId": {
+            "type": "string",
+            "description": "ID do colaborador vinculado ao atendimento",
+            "format": "uuid",
+            "example": "123e4567-e89b-12d3-a456-426614174001"
+          },
+          "nomeColaborador": {
+            "type": "string",
+            "description": "Nome do colaborador vinculado ao atendimento",
+            "example": "Maria Souza"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status do atendimento",
+            "example": "AGENDADO",
+            "enum": ["AGENDADO", "CONCLUIDO", "CANCELADO"]
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Data de criacao do atendimento",
+            "format": "date-time",
+            "example": "2024-03-10T15:33:42Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Data de atualizacao do atendimento",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2024-03-10T15:33:42Z"
+          }
+        },
+        "description": "Dados do atendimento retornados pela API",
+        "x-readme-ref-name": "AtendimentoResponse"
+      }
+    },
+    "page": {
+      "type": "object",
+      "properties": {
+        "size": { "type": "integer", "format": "int64" },
+        "number": { "type": "integer", "format": "int64" },
+        "totalElements": { "type": "integer", "format": "int64" },
+        "totalPages": { "type": "integer", "format": "int64" }
+      },
+      "x-readme-ref-name": "PageMetadata"
+    }
+  },
+  "x-readme-ref-name": "PagedModelAtendimentoResponse"
+}

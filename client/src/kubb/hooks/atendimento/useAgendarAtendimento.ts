@@ -3,15 +3,12 @@
  * Do not edit manually.
  */
 
-import fetch from "@kubb/plugin-client/clients/axios";
+import fetch from "@/services/api";
 import type {
   AgendarAtendimentoMutationRequest,
   AgendarAtendimentoMutationResponse,
-} from "../../types/atendimento/AgendarAtendimento.ts";
-import type {
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@kubb/plugin-client/clients/axios";
+} from "../../types/AgendarAtendimento.ts";
+import type { RequestConfig, ResponseErrorConfig } from "@/services/api";
 import type {
   UseMutationOptions,
   UseMutationResult,

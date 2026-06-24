@@ -1,11 +1,12 @@
 import { MainLayout } from "@/components/Layout/MainLayout"
 import { ProtectedRoute } from "@/auth/components/ProtectedRoute.tsx"
-import { AdminOnly } from "@/auth/components/AdminOnly.tsx"
-import { PageLoading } from "@/components/page-loading.tsx"
+import { PageLoading } from "@/components/Ui/PageLoading.tsx"
 import { Suspense, lazy } from "react"
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import { Toaster } from "sonner"
-import { ErrorBoundary } from "./components/error-boundary.tsx"
+import { ErrorBoundary } from "./pages/ErrorBoundary.tsx"
+import { pt } from "zod/locales"
+import z from "zod/v4"
 
 const DashboardPage = lazy(() => import("@/pages/Dashboard/DashboardPage.tsx").then((module) => ({ default: module.DashboardPage })))
 
@@ -21,50 +22,64 @@ const ColaboradorDetailPage = lazy(() => import("@/pages/Colaborador/Colaborador
 const AtendimentosPage = lazy(() => import("@/pages/Atendimento/AtendimentosPage.tsx").then((module) => ({ default: module.AtendimentosPage })))
 const AtendimentoDetailPage = lazy(() => import("@/pages/Atendimento/AtendimentoDetailPage.tsx").then((module) => ({ default: module.AtendimentoDetailPage })))
 
+const FinanceiroPage = lazy(() => import("@/pages/Financeiro/FinanceiroPage.tsx").then((module) => ({ default: module.FinanceiroPage })))
+
 const LoginPage = lazy(() => import("@/auth/pages/Login.tsx").then((module) => ({ default: module.Login })))
 
 const AdminPage = lazy(() => import("@/pages/Admin/AdminPage.tsx").then((module) => ({ default: module.AdminPage })))
 
-import { pt } from "zod/locales"
-import z from "zod/v4"
+const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <MainLayout />,
+        children: [
+          { index: true, element: <DashboardPage /> },
+          { path: "alunos", element: <AlunosPage /> },
+          { path: "alunos/:id", element: <AlunoDetailPage /> },
+          { path: "colaboradores", element: <ColaboradoresPage /> },
+          { path: "colaboradores/:id", element: <ColaboradorDetailPage /> },
+          { path: "atendimentos", element: <AtendimentosPage /> },
+          { path: "atendimentos/:id", element: <AtendimentoDetailPage /> },
+          { path: "responsaveis", element: <ResponsaveisPage /> },
+          { path: "responsaveis/:id", element: <ResponsavelDetailPage /> },
+          { path: "financeiro", element: <FinanceiroPage /> },
+        ],
+      },
+    ],
+  },
+  {
+    element: <ProtectedRoute allowedRoles={["ROLE_ADMIN"]} />,
+    children: [
+      {
+        element: <MainLayout />,
+        children: [
+          { path: "admin", element: <AdminPage /> },
+          // { path: "admin/users", element: <AdminPage /> },
+        ],
+      },
+    ],
+  },
+  { path: "*", element: <Navigate to="/" replace /> },
+]);
 
 function App() {
   z.config(pt())
 
   return (
-    <BrowserRouter>
+    <>
       <Toaster position="top-right" richColors />
       <ErrorBoundary>
         <Suspense fallback={<PageLoading message="Carregando tela..." />}>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-
-            <Route element={<ProtectedRoute />}>
-              <Route element={(<MainLayout />)}>
-                <Route path="/" element={<DashboardPage />} />
-
-                <Route path="/alunos" element={<AlunosPage />} />
-                <Route path="/alunos/:id" element={<AlunoDetailPage />} />
-
-                <Route path="/colaboradores" element={<ColaboradoresPage />} />
-                <Route path="/colaboradores/:id" element={<ColaboradorDetailPage />} />
-
-                <Route path="/atendimentos" element={<AtendimentosPage />} />
-                <Route path="/atendimentos/:id" element={<AtendimentoDetailPage />} />
-
-                <Route path="/responsaveis" element={<ResponsaveisPage />} />
-                <Route path="/responsaveis/:id" element={<ResponsavelDetailPage />} />
-
-                <Route path="/admin" element={<AdminOnly><AdminPage /></AdminOnly>} />
-                <Route path="/admin/users" element={<AdminOnly><AdminPage /></AdminOnly>} />
-              </Route>
-            </Route>
-
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <RouterProvider router={router} />
         </Suspense>
       </ErrorBoundary>
-    </BrowserRouter>
+    </>
   )
 }
 

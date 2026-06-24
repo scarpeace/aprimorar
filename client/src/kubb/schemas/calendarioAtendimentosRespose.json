@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer", "format": "int64" },
+    "colaboradorId": { "type": "string", "format": "uuid" },
+    "alunoId": { "type": "string", "format": "uuid" },
+    "inicio": { "type": "string", "format": "date-time" },
+    "fim": { "type": "string", "format": "date-time" },
+    "tipo": {
+      "type": "string",
+      "description": "Tipo de conteudo ou categoria do atendimento",
+      "enum": [
+        "AULA",
+        "MENTORIA",
+        "TERAPIA",
+        "ORIENTACAO_VOCACIONAL",
+        "ENEM",
+        "PAS",
+        "OUTRO"
+      ]
+    },
+    "nomeColaborador": { "type": "string" },
+    "nomeAluno": { "type": "string" }
+  },
+  "x-readme-ref-name": "CalendarioAtendimentosRespose"
+}

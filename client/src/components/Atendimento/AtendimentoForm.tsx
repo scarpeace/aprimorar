@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/button.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
 import { useGetColaboradoresList, useListAlunos, type AtendimentoResponse } from "@/kubb";
 import { useAtendimentoMutations } from "../../services/use-atendimento-mutations.ts";
 import { atendimentoFormSchema, type AtendimentoFormSchema } from "../../utils/zod/atendimento-form-schema.ts";

@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "valor": { "type": "number" },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "PGTO_ALUNO",
+        "INVESTIMENTO",
+        "PGTO_COLABORADOR",
+        "CONTAS",
+        "MATERIAL",
+        "DESPENSA",
+        "MANUTENCAO"
+      ]
+    }
+  },
+  "x-readme-ref-name": "TransacaoRequestDTO"
+}

@@ -1,4 +1,4 @@
-import { ButtonLink } from "@/components/button.tsx";
+import { ButtonLink } from "@/components/Ui/Button.tsx";
 import type { AtendimentoResponse } from "@/kubb";
 import { brl } from "@/utils/formatter.ts";
 import { formatDateShortYear, formatTime } from "@/utils/date-utils.ts";

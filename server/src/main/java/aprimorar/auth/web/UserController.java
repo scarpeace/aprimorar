@@ -51,7 +51,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping("/me/{userId}")
+    @GetMapping("/me/{username}")
     @Operation(operationId = "me", summary = "Get the authenticated user")
     @ApiResponse(responseCode = "200", description = "Usuario autenticado retornado com sucesso")
     public ResponseEntity<UserResponseDTO> me(@PathVariable String username) {

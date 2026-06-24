@@ -1,4 +1,4 @@
-import { Button } from "@/components/button.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
 import {
   colaboradorRequestDTOFuncaoEnum,
   type ColaboradorResponseDTO,

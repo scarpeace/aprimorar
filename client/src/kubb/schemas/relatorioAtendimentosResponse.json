@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "totalAtendimentos": { "type": "integer", "format": "int64" },
+    "totalAulas": { "type": "integer", "format": "int64" },
+    "procentagemAulas": { "type": "number", "format": "double" },
+    "totalMentoria": { "type": "integer", "format": "int64" },
+    "procentagemMentoria": { "type": "number", "format": "double" },
+    "totalTerapia": { "type": "integer", "format": "int64" },
+    "procentagemTerapia": { "type": "number", "format": "double" },
+    "totalOV": { "type": "integer", "format": "int64" },
+    "procentagemOV": { "type": "number", "format": "double" },
+    "totalENEM": { "type": "integer", "format": "int64" },
+    "procentagemENEM": { "type": "number", "format": "double" },
+    "totalPAS": { "type": "integer", "format": "int64" },
+    "procentagemPAS": { "type": "number", "format": "double" },
+    "totalOutros": { "type": "integer", "format": "int64" },
+    "procentagemOutros": { "type": "number", "format": "double" }
+  },
+  "x-readme-ref-name": "RelatorioAtendimentosResponse"
+}

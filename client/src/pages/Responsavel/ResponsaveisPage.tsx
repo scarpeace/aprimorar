@@ -1,5 +1,5 @@
-import { Button } from "@/components/button.tsx";
-import { Modal } from "@/components/modal.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
+import { Modal } from "@/components/Ui/Modal.tsx";
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
 import type { ResponsavelResponseDTO } from "@/kubb";
 import { Handshake, Plus } from "lucide-react";

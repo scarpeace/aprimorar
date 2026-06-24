@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import { Button } from "@/components/button.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
 
 import { useUsuarioMutations } from "../../services/use-usuario-mutations.ts";
-import { ConfirmationModal } from "@/components/confirmation-modal.tsx";
+import { ConfirmationModal } from "@/components/Ui/confirmation-modal.tsx";
 
 type DeleteUsuarioButtonProps = {
   usuarioId: string;

@@ -14,14 +14,8 @@ export default defineConfig({
   },
 
   plugins: [
-    pluginOas({ generators: []}),
-    pluginTs({
-      output: { path: './types'},
-      group: {
-        type: 'tag',
-        name: ({ group }) => group.toLowerCase(),
-      },
-    }),
+    pluginOas(),
+    pluginTs(),
 
     pluginReactQuery({
       output: { path: './hooks', barrelType: 'named' },
@@ -31,8 +25,13 @@ export default defineConfig({
         type: 'tag',
         name: ({ group }) => group.toLowerCase(),
       },
+      client: {
+        importPath: '@/services/api',
+      },
       suspense: false,
       paramsCasing: 'camelcase',
+      // mutation: { methods: ["post", "put", "patch", "delete"] },
+      // query: { methods: ["get"] },
     }),
   ],
 })

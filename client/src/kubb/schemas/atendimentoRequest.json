@@ -1,0 +1,69 @@
+{
+  "required": [
+    "alunoId",
+    "colaboradorId",
+    "duracao",
+    "inicio",
+    "repasse",
+    "tipo",
+    "valor"
+  ],
+  "type": "object",
+  "properties": {
+    "descricao": {
+      "type": "string",
+      "description": "Descrição do atendimento",
+      "example": "Sessão focada em revisão de matemática básica"
+    },
+    "tipo": {
+      "type": "string",
+      "description": "Tipo de conteudo ou categoria do atendimento",
+      "example": "MENTORIA",
+      "enum": [
+        "AULA",
+        "MENTORIA",
+        "TERAPIA",
+        "ORIENTACAO_VOCACIONAL",
+        "ENEM",
+        "PAS",
+        "OUTRO"
+      ]
+    },
+    "inicio": {
+      "type": "string",
+      "description": "Data e hora de início do atendimento",
+      "format": "date-time",
+      "example": "2026-11-20T14:00:00Z"
+    },
+    "duracao": {
+      "type": "number",
+      "description": "Duração do atendimento em horas",
+      "format": "double",
+      "example": 1.5
+    },
+    "valor": {
+      "type": "number",
+      "description": "Valor do atendimento cobrado do aluno",
+      "example": 150
+    },
+    "repasse": {
+      "type": "number",
+      "description": "Valor de repasse do atendimento ao colaborador",
+      "example": 100
+    },
+    "alunoId": {
+      "type": "string",
+      "description": "ID do aluno vinculado ao atendimento",
+      "format": "uuid",
+      "example": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "colaboradorId": {
+      "type": "string",
+      "description": "ID do colaborador vinculado ao atendimento",
+      "format": "uuid",
+      "example": "123e4567-e89b-12d3-a456-426614174000"
+    }
+  },
+  "description": "Formato de payload para cadastro e atualização de atendimento",
+  "x-readme-ref-name": "AtendimentoRequest"
+}

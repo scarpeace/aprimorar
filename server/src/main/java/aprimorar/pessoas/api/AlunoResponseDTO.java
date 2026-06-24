@@ -2,6 +2,7 @@ package aprimorar.pessoas.api;
 
 import aprimorar.pessoas.domain.Aluno;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.UUID;
 
+@Tag(name = "Aluno", description = "Dados do aluno retornados pela API")
 @Schema(description = "Dados do aluno retornados pela API")
 public record AlunoResponseDTO(
         @NotNull

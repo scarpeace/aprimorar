@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "novoInicio": {
+      "type": "string",
+      "description": "Novo inicio do atendimento",
+      "format": "date-time"
+    },
+    "duracao": {
+      "type": "number",
+      "description": "Duracao do atendimento",
+      "format": "double",
+      "example": 60
+    }
+  },
+  "description": "Reagendar um atendimento",
+  "x-readme-ref-name": "ReagendarAtendimentoRequest"
+}

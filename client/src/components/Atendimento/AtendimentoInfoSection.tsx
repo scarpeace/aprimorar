@@ -9,7 +9,7 @@ import {
   UserRoundCog,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {MiniCard} from "@/components/MiniCard.tsx";
+import {MiniCard} from "@/components/Ui/MiniCard.tsx";
 
 type AtendimentoInfoSectionProps = {
   atendimento: AtendimentoResponse;

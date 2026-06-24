@@ -3,12 +3,9 @@
  * Do not edit manually.
  */
 
-import fetch from "@kubb/plugin-client/clients/axios";
-import type { GetColaboradoresListQueryResponse } from "../../types/colaborador/GetColaboradoresList.ts";
-import type {
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@kubb/plugin-client/clients/axios";
+import fetch from "@/services/api";
+import type { GetColaboradoresListQueryResponse } from "../../types/GetColaboradoresList.ts";
+import type { RequestConfig, ResponseErrorConfig } from "@/services/api";
 import type {
   QueryKey,
   QueryClient,

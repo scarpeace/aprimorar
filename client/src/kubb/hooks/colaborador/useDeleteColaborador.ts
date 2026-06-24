@@ -3,15 +3,12 @@
  * Do not edit manually.
  */
 
-import fetch from "@kubb/plugin-client/clients/axios";
+import fetch from "@/services/api";
 import type {
   DeleteColaboradorMutationResponse,
   DeleteColaboradorPathParams,
-} from "../../types/colaborador/DeleteColaborador.ts";
-import type {
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@kubb/plugin-client/clients/axios";
+} from "../../types/DeleteColaborador.ts";
+import type { RequestConfig, ResponseErrorConfig } from "@/services/api";
 import type {
   UseMutationOptions,
   UseMutationResult,

@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormMask } from "use-mask-input";
-import { Button } from "@/components/button.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
 import { TriangleAlert } from "lucide-react";
 import type { ResponsavelResponseDTO } from "@/kubb";
 import { responsavelFormSchema, type ResponsavelFormSchema } from "../../utils/zod/responsavel-form-schema.ts";

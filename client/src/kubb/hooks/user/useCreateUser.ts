@@ -3,15 +3,12 @@
  * Do not edit manually.
  */
 
-import fetch from "@kubb/plugin-client/clients/axios";
+import fetch from "@/services/api";
 import type {
   CreateUserMutationRequest,
   CreateUserMutationResponse,
-} from "../../types/user/CreateUser.ts";
-import type {
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@kubb/plugin-client/clients/axios";
+} from "../../types/CreateUser.ts";
+import type { RequestConfig, ResponseErrorConfig } from "@/services/api";
 import type {
   UseMutationOptions,
   UseMutationResult,

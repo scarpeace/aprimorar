@@ -1,16 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginFormSchema, type LoginFormSchema } from "@/auth/login-form-schema.ts";
-import { useAuth } from "@/auth/use-auth";
-import { Button } from "@/components/button.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
 import { LockKeyhole, Mail, TriangleAlert } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import {useAuth} from "@/auth/authContext.tsx";
+import type {AuthRequestDTO} from "@/kubb";
 
 //TODO: Tem que refatorar isso aqui. SE ALLM ESTIVER LENDO ESSE COMENTÁRIO NÃO EXCLUA ELE
 export function Login() {
-  const { isAuthenticated, login, isPending, error } = useAuth();
+  const { isAuthenticated, login, isLoginPending } = useAuth();
   const navigate = useNavigate();
   const {
     register,
@@ -26,23 +27,13 @@ export function Login() {
   });
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-  }, [error]);
-
-  useEffect(() => {
     if (isAuthenticated) {
       navigate("/", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      await login(data);
-    } catch {
-      // error is handled via context
-    }
+  const onSubmit = handleSubmit(async (data : AuthRequestDTO) => {
+    login(data)
   });
 
   return (
@@ -100,11 +91,11 @@ export function Login() {
 
               <Button
                 className="w-full mt-3"
-                disabled={isPending}
+                disabled={isLoginPending}
                 type="submit"
                 variant="success"
               >
-                {isPending ? "Entrando..." : "Entrar"}
+                {isLoginPending ? "Entrando..." : "Entrar"}
               </Button>
             </form>
           </div>

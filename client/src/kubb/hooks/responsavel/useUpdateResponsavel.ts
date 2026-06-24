@@ -3,16 +3,13 @@
  * Do not edit manually.
  */
 
-import fetch from "@kubb/plugin-client/clients/axios";
+import fetch from "@/services/api";
 import type {
   UpdateResponsavelMutationRequest,
   UpdateResponsavelMutationResponse,
   UpdateResponsavelPathParams,
-} from "../../types/responsavel/UpdateResponsavel.ts";
-import type {
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@kubb/plugin-client/clients/axios";
+} from "../../types/UpdateResponsavel.ts";
+import type { RequestConfig, ResponseErrorConfig } from "@/services/api";
 import type {
   UseMutationOptions,
   UseMutationResult,

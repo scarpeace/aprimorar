@@ -8,7 +8,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
-import { ErrorCard } from "@/components/error-card.tsx";
+import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
 import { useGetCalendarioAtendimentos, type CalendarioAtendimentosRespose } from "@/kubb";
 import { getFriendlyErrorMessage } from "@/services/api.ts";
 import { AtendimentoContentLegend } from "./AtendimentoContentLegend.tsx";

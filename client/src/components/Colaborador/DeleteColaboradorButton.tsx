@@ -1,8 +1,8 @@
-import { Button } from "@/components/button.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useColaboradorMutations } from "../../services/use-colaborador-mutations.ts";
-import { ConfirmationModal } from "@/components/confirmation-modal.tsx";
+import { ConfirmationModal } from "@/components/Ui/confirmation-modal.tsx";
 
 export const DeleteColaboradorButton = ({ colaboradorId }: { colaboradorId: string }) => {
   const [isOpen, setIsOpen] = useState(false);

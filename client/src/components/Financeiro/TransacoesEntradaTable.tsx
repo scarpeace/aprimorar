@@ -1,0 +1,151 @@
+import { Button } from "@/components/Ui/Button.tsx";
+import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
+import { LoadingSpinner } from "@/components/Ui/LoadingSpinner.tsx";
+import { Pagination } from "@/components/Ui/Pagination.tsx";
+import {
+  type PagedModelTransacaoResponseDTO,
+  transacaoResponseDTOTipoEnum,
+  useGetAlunos,
+  useGetTransacoes
+} from "@/kubb";
+import { useDebounce } from "@/hooks/useDebounce.ts";
+import { formatCpf } from "@/utils/formatter.ts";
+import { BrushCleaning, UserPlus } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import type {UseQueryResult} from "@tanstack/react-query";
+
+export function TransacoesEntradaTable({ openForm }: { openForm: () => void }) {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  const transacoesQuery = useGetTransacoes({
+    page: currentPage,
+    sort: ["createdAt,asc"],
+    tipo: transacaoResponseDTOTipoEnum.ENTRADA,
+  });
+
+  const transacoes = transacoesQuery.data?.content ?? [];
+
+  const page = transacoesQuery.data?.page;
+  const totalElements = page?.totalElements ?? 0;
+  const totalPages = page?.totalPages ?? 0;
+  const pageSize = page?.size ?? transacoes.length;
+
+  // const handleShowArchived = (value: boolean) => {
+  //   setShowArchived(value);
+  //   setCurrentPage(0);
+  // };
+  //
+  // const handleCleanFilter = () => {
+  //   setSearchTerm("");
+  //   setShowArchived(false);
+  //   setCurrentPage(0);
+  // };
+
+  return (
+    <main>
+      <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-2xl font-bold text-base-content">Entradas</h3>
+              <p className="text-sm text-base-content/60">Selecione uma entrada para ver os detalhes.</p>
+            </div>
+          </div>
+
+          {/*<ListSearchInput*/}
+          {/*  className="grow"*/}
+          {/*  placeholder="Nome, email ou CPF"*/}
+          {/*  ariaLabel="Buscar aluno"*/}
+          {/*  value={searchTerm}*/}
+          {/*  onChange={setSearchTerm}*/}
+          {/*/>*/}
+
+          {/*<div className="tooltip flex" data-tip={"Mostrar alunos arquivados"}>
+          <div className="flex flex-col gap-1 items-center">
+            <span className="text-sm text-secondary"><FolderClock size={21}/></span>
+            <label className="toggle text-base h-5 p-1">
+                <input type="checkbox" checked={showArchived} onChange={() => handleShowArchived(!showArchived)} />
+                <EyeClosed size={15} />
+                <Eye size={15} />
+              </label>
+            </div>
+          </div>*/}
+
+        <Button onClick={() => openForm()} variant="success"><UserPlus size={21} /></Button>
+        </div>
+      </section>
+
+      {transacoesQuery.isError && (
+        <ErrorCard title="Não foi possível carregar a listagem de entradas" error={transacoesQuery.error} />
+      )}
+
+      {transacoesQuery.isLoading && (
+        <LoadingSpinner text="Carregando entradas..." />
+      )}
+
+      {/*{!transacoesQuery.isLoading && !transacoesQuery.isError && !hasAlunos && (*/}
+      {/*  <EmptyCard*/}
+      {/*    title="Nenhuma entrada encontrada"*/}
+      {/*    description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."*/}
+      {/*    action={*/}
+      {/*      <Button variant="outline" onClick={handleCleanFilter}>*/}
+      {/*        Limpar filtros*/}
+      {/*        <BrushCleaning size={18} />*/}
+      {/*      </Button>*/}
+      {/*    }*/}
+      {/*  />*/}
+      {/*)}*/}
+
+      {transacoes.length === 0 && (
+        <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
+          <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
+            <thead className="bg-base-200/80">
+              <tr>
+                <th className="text-left font-semibold text-base-content/80">Criada em:</th>
+                <th className="text-left font-semibold text-base-content/80">Pagante:</th>
+                <th className="text-left font-semibold text-base-content/80">Recebedor:</th>
+                <th className="text-left font-semibold text-base-content/80">Valor</th>
+                <th className="text-left font-semibold text-base-content/80">Categoria</th>
+                <th className="text-left font-semibold text-base-content/80">Forma Pagamento</th>
+                <th className="text-left font-semibold text-base-content/80">Status</th>
+              </tr>
+            </thead>
+
+            <tbody className="whitespace-nowrap">
+              {transacoes.map((transacao) => {
+                return (
+                  <tr
+                    key={transacao.id}
+                    className="transition-colors hover:bg-base-200/70 hover:cursor-pointer"
+                    onClick={() => navigate(`/transacoes/${transacao.id}`)}
+                  >
+                    <td className="font-bold">{transacao.createdAt}</td>
+                    <td>{transacao.pagadorId}</td>
+                    <td>{transacao.recebedorId}</td>
+                    <td>{transacao.valor}</td>
+                    <td>{transacao.categoria}</td>
+                    <td>{transacao.formaPagamento}</td>
+                    <td>{transacao.status }</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <Pagination
+        totalElements={totalElements}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        size={pageSize}
+      />
+    </main>
+  );
+}

@@ -3,15 +3,7 @@
  * Do not edit manually.
  */
 
-export const authResponseDTORoleEnum = {
-  STUDENT: "STUDENT",
-  EMPLOYEE: "EMPLOYEE",
-  PARENT: "PARENT",
-  ADMIN: "ADMIN",
-} as const;
-
-export type AuthResponseDTORoleEnumKey =
-  (typeof authResponseDTORoleEnum)[keyof typeof authResponseDTORoleEnum];
+import type { UserResponseDTO } from "./UserResponseDTO.ts";
 
 /**
  * @description Resposta de autenticacao com access token JWT
@@ -19,22 +11,17 @@ export type AuthResponseDTORoleEnumKey =
 export type AuthResponseDTO = {
   /**
    * @description JWT de acesso
-   * @type string | undefined
+   * @type string
    */
-  accessToken?: string;
+  accessToken: string;
   /**
    * @description Tempo de expiração em segundos
-   * @type integer | undefined, int64
+   * @type integer, int64
    */
-  expiresIn?: number;
+  expiresIn: number;
   /**
-   * @description E-mail do usuário autenticado
-   * @type string | undefined
+   * @description Dados do usuario retornados pela API
+   * @type object
    */
-  username?: string;
-  /**
-   * @description Perfil de acesso do usuário autenticado
-   * @type string | undefined
-   */
-  role?: AuthResponseDTORoleEnumKey;
+  user: UserResponseDTO;
 };

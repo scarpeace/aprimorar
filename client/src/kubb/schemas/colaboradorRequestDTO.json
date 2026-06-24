@@ -1,0 +1,73 @@
+{
+  "required": [
+    "cpf",
+    "dataNascimento",
+    "email",
+    "endereco",
+    "funcao",
+    "nome",
+    "pix",
+    "telefone"
+  ],
+  "type": "object",
+  "properties": {
+    "nome": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Nome completo do colaborador",
+      "example": "João Pereira"
+    },
+    "dataNascimento": {
+      "type": "string",
+      "description": "Data de nascimento do colaborador",
+      "format": "date",
+      "example": "1990-05-21"
+    },
+    "pix": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Chave PIX do colaborador",
+      "example": "joao.pereira@example.com"
+    },
+    "telefone": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Telefone de contato do colaborador",
+      "example": "(61) 99999-9999"
+    },
+    "cpf": {
+      "minLength": 1,
+      "type": "string",
+      "description": "CPF do colaborador",
+      "example": "123.456.789-00"
+    },
+    "email": {
+      "minLength": 1,
+      "type": "string",
+      "description": "E-mail do colaborador",
+      "example": "joao.pereira@example.com"
+    },
+    "funcao": {
+      "type": "string",
+      "description": "Função/Papel do funcionário",
+      "example": "PROFESSOR",
+      "enum": ["PROFESSOR", "ADMINISTRATIVO", "TERAPEUTA", "MENTOR", "SISTEMA"]
+    },
+    "endereco": {
+      "type": "object",
+      "properties": {
+        "rua": { "type": "string" },
+        "numero": { "type": "string" },
+        "bairro": { "type": "string" },
+        "cidade": { "type": "string" },
+        "estado": { "type": "string" },
+        "cep": { "type": "string" },
+        "complemento": { "type": "string" }
+      },
+      "description": "Endereço do aluno",
+      "x-readme-ref-name": "EnderecoRequestDTO"
+    }
+  },
+  "description": "Formato de payload para criar um novo colaborador",
+  "x-readme-ref-name": "ColaboradorRequestDTO"
+}

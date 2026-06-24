@@ -1,5 +1,5 @@
-import { Button } from "@/components/button.tsx";
-import { ConfirmModal } from "@/components/confirm-modal.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
+import { ConfirmModal } from "@/components/Ui/confirm-modal.tsx";
 import { ArchiveIcon, ArchiveRestoreIcon } from "lucide-react";
 import { useState } from "react";
 

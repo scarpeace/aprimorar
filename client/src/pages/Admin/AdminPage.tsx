@@ -1,6 +1,6 @@
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
-import { Button } from "@/components/button.tsx";
-import { Modal } from "@/components/modal.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
+import { Modal } from "@/components/Ui/Modal.tsx";
 import { ShieldCheck } from "lucide-react";
 import { useState } from "react";
 

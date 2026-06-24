@@ -33,10 +33,16 @@ export type { GetResponsaveisQueryKey } from "./responsavel/useGetResponsaveis.t
 export type { GetResponsavelByIdQueryKey } from "./responsavel/useGetResponsavelById.ts";
 export type { ListResponsaveisQueryKey } from "./responsavel/useListResponsaveis.ts";
 export type { UpdateResponsavelMutationKey } from "./responsavel/useUpdateResponsavel.ts";
+export type { CancelarTransacaoMutationKey } from "./transacao/useCancelarTransacao.ts";
+export type { CreateTransacaoMutationKey } from "./transacao/useCreateTransacao.ts";
+export type { EfetivarTransacaoMutationKey } from "./transacao/useEfetivarTransacao.ts";
+export type { GetTransacaoByIdQueryKey } from "./transacao/useGetTransacaoById.ts";
+export type { GetTransacoesQueryKey } from "./transacao/useGetTransacoes.ts";
 export type { ArchiveUserMutationKey } from "./user/useArchiveUser.ts";
 export type { CreateUserMutationKey } from "./user/useCreateUser.ts";
 export type { DeleteUserMutationKey } from "./user/useDeleteUser.ts";
 export type { ListUsersQueryKey } from "./user/useListUsers.ts";
+export type { MeQueryKey } from "./user/useMe.ts";
 export {
   archiveAlunoMutationKey,
   archiveAluno,
@@ -248,6 +254,36 @@ export {
   useUpdateResponsavel,
 } from "./responsavel/useUpdateResponsavel.ts";
 export {
+  cancelarTransacaoMutationKey,
+  cancelarTransacao,
+  cancelarTransacaoMutationOptions,
+  useCancelarTransacao,
+} from "./transacao/useCancelarTransacao.ts";
+export {
+  createTransacaoMutationKey,
+  createTransacao,
+  createTransacaoMutationOptions,
+  useCreateTransacao,
+} from "./transacao/useCreateTransacao.ts";
+export {
+  efetivarTransacaoMutationKey,
+  efetivarTransacao,
+  efetivarTransacaoMutationOptions,
+  useEfetivarTransacao,
+} from "./transacao/useEfetivarTransacao.ts";
+export {
+  getTransacaoByIdQueryKey,
+  getTransacaoById,
+  getTransacaoByIdQueryOptions,
+  useGetTransacaoById,
+} from "./transacao/useGetTransacaoById.ts";
+export {
+  getTransacoesQueryKey,
+  getTransacoes,
+  getTransacoesQueryOptions,
+  useGetTransacoes,
+} from "./transacao/useGetTransacoes.ts";
+export {
   archiveUserMutationKey,
   archiveUser,
   archiveUserMutationOptions,
@@ -271,3 +307,4 @@ export {
   listUsersQueryOptions,
   useListUsers,
 } from "./user/useListUsers.ts";
+export { meQueryKey, me, meQueryOptions, useMe } from "./user/useMe.ts";

@@ -1,5 +1,5 @@
-import { Button } from "@/components/button.tsx";
-import { ConfirmationModal } from "@/components/confirmation-modal.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
+import { ConfirmationModal } from "@/components/Ui/confirmation-modal.tsx";
 import { useGetAlunosByResponsavel } from "@/kubb";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";

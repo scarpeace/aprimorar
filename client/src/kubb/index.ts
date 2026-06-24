@@ -33,128 +33,44 @@ export type { GetResponsaveisQueryKey } from "./hooks/responsavel/useGetResponsa
 export type { GetResponsavelByIdQueryKey } from "./hooks/responsavel/useGetResponsavelById.ts";
 export type { ListResponsaveisQueryKey } from "./hooks/responsavel/useListResponsaveis.ts";
 export type { UpdateResponsavelMutationKey } from "./hooks/responsavel/useUpdateResponsavel.ts";
+export type { CancelarTransacaoMutationKey } from "./hooks/transacao/useCancelarTransacao.ts";
+export type { CreateTransacaoMutationKey } from "./hooks/transacao/useCreateTransacao.ts";
+export type { EfetivarTransacaoMutationKey } from "./hooks/transacao/useEfetivarTransacao.ts";
+export type { GetTransacaoByIdQueryKey } from "./hooks/transacao/useGetTransacaoById.ts";
+export type { GetTransacoesQueryKey } from "./hooks/transacao/useGetTransacoes.ts";
 export type { ArchiveUserMutationKey } from "./hooks/user/useArchiveUser.ts";
 export type { CreateUserMutationKey } from "./hooks/user/useCreateUser.ts";
 export type { DeleteUserMutationKey } from "./hooks/user/useDeleteUser.ts";
 export type { ListUsersQueryKey } from "./hooks/user/useListUsers.ts";
-export type {
-  ArchiveAlunoPathParams,
-  ArchiveAluno204,
-  ArchiveAlunoMutationResponse,
-  ArchiveAlunoMutation,
-} from "./types/aluno/ArchiveAluno.ts";
-export type {
-  CriarAluno201,
-  CriarAlunoMutationRequest,
-  CriarAlunoMutationResponse,
-  CriarAlunoMutation,
-} from "./types/aluno/CriarAluno.ts";
-export type {
-  DeleteAlunoPathParams,
-  DeleteAluno204,
-  DeleteAlunoMutationResponse,
-  DeleteAlunoMutation,
-} from "./types/aluno/DeleteAluno.ts";
-export type {
-  GetAlunoByIdPathParams,
-  GetAlunoById200,
-  GetAlunoByIdQueryResponse,
-  GetAlunoByIdQuery,
-} from "./types/aluno/GetAlunoById.ts";
-export type {
-  GetAlunosQueryParams,
-  GetAlunos200,
-  GetAlunosQueryResponse,
-  GetAlunosQuery,
-} from "./types/aluno/GetAlunos.ts";
-export type {
-  GetAlunosByResponsavelPathParams,
-  GetAlunosByResponsavel200,
-  GetAlunosByResponsavelQueryResponse,
-  GetAlunosByResponsavelQuery,
-} from "./types/aluno/GetAlunosByResponsavel.ts";
-export type {
-  GetAlunosKpis200,
-  GetAlunosKpisQueryResponse,
-  GetAlunosKpisQuery,
-} from "./types/aluno/GetAlunosKpis.ts";
-export type {
-  ListAlunos200,
-  ListAlunosQueryResponse,
-  ListAlunosQuery,
-} from "./types/aluno/ListAlunos.ts";
-export type {
-  UnarchiveAlunoPathParams,
-  UnarchiveAluno204,
-  UnarchiveAlunoMutationResponse,
-  UnarchiveAlunoMutation,
-} from "./types/aluno/UnarchiveAluno.ts";
-export type {
-  UpdateAlunoPathParams,
-  UpdateAluno200,
-  UpdateAlunoMutationRequest,
-  UpdateAlunoMutationResponse,
-  UpdateAlunoMutation,
-} from "./types/aluno/UpdateAluno.ts";
-export type { AlunoRequestDTO } from "./types/AlunoRequestDTO.ts";
-export type { AlunoResponseDTO } from "./types/AlunoResponseDTO.ts";
-export type { AlunosKpisDTO } from "./types/AlunosKpisDTO.ts";
-export type { AlunosListDTO } from "./types/AlunosListDTO.ts";
+export type { MeQueryKey } from "./hooks/user/useMe.ts";
 export type {
   AgendarAtendimento201,
   AgendarAtendimentoMutationRequest,
   AgendarAtendimentoMutationResponse,
   AgendarAtendimentoMutation,
-} from "./types/atendimento/AgendarAtendimento.ts";
+} from "./types/AgendarAtendimento.ts";
+export type { AlunoRequestDTO } from "./types/AlunoRequestDTO.ts";
+export type { AlunoResponseDTO } from "./types/AlunoResponseDTO.ts";
+export type { AlunosKpisDTO } from "./types/AlunosKpisDTO.ts";
+export type { AlunosListDTO } from "./types/AlunosListDTO.ts";
 export type {
-  CancelarAtendimentoPathParams,
-  CancelarAtendimento200,
-  CancelarAtendimentoMutationResponse,
-  CancelarAtendimentoMutation,
-} from "./types/atendimento/CancelarAtendimento.ts";
+  ArchiveAlunoPathParams,
+  ArchiveAluno204,
+  ArchiveAlunoMutationResponse,
+  ArchiveAlunoMutation,
+} from "./types/ArchiveAluno.ts";
 export type {
-  ConcluirAtendimentoPathParams,
-  ConcluirAtendimento200,
-  ConcluirAtendimentoMutationResponse,
-  ConcluirAtendimentoMutation,
-} from "./types/atendimento/ConcluirAtendimento.ts";
+  ArchiveUserPathParams,
+  ArchiveUser200,
+  ArchiveUserMutationResponse,
+  ArchiveUserMutation,
+} from "./types/ArchiveUser.ts";
 export type {
-  ExcluirAtendimentoPathParams,
-  ExcluirAtendimento204,
-  ExcluirAtendimentoMutationResponse,
-  ExcluirAtendimentoMutation,
-} from "./types/atendimento/ExcluirAtendimento.ts";
-export type {
-  GetAtendimentoByIdPathParams,
-  GetAtendimentoById200,
-  GetAtendimentoByIdQueryResponse,
-  GetAtendimentoByIdQuery,
-} from "./types/atendimento/GetAtendimentoById.ts";
-export type {
-  GetAtendimentosQueryParams,
-  GetAtendimentos200,
-  GetAtendimentosQueryResponse,
-  GetAtendimentosQuery,
-} from "./types/atendimento/GetAtendimentos.ts";
-export type {
-  GetCalendarioAtendimentosQueryParams,
-  GetCalendarioAtendimentos200,
-  GetCalendarioAtendimentosQueryResponse,
-  GetCalendarioAtendimentosQuery,
-} from "./types/atendimento/GetCalendarioAtendimentos.ts";
-export type {
-  GetRelatorioAtendimentosQueryParams,
-  GetRelatorioAtendimentos200,
-  GetRelatorioAtendimentosQueryResponse,
-  GetRelatorioAtendimentosQuery,
-} from "./types/atendimento/GetRelatorioAtendimentos.ts";
-export type {
-  ReagendarAtendimentoPathParams,
-  ReagendarAtendimento200,
-  ReagendarAtendimentoMutationRequest,
-  ReagendarAtendimentoMutationResponse,
-  ReagendarAtendimentoMutation,
-} from "./types/atendimento/ReagendarAtendimento.ts";
+  ArquivarColaboradorPathParams,
+  ArquivarColaborador204,
+  ArquivarColaboradorMutationResponse,
+  ArquivarColaboradorMutation,
+} from "./types/ArquivarColaborador.ts";
 export type {
   AtendimentoRequestTipoEnumKey,
   AtendimentoRequest,
@@ -164,74 +80,24 @@ export type {
   AtendimentoResponseStatusEnumKey,
   AtendimentoResponse,
 } from "./types/AtendimentoResponse.ts";
-export type {
-  Login200,
-  LoginMutationRequest,
-  LoginMutationResponse,
-  LoginMutation,
-} from "./types/auth/Login.ts";
 export type { AuthRequestDTO } from "./types/AuthRequestDTO.ts";
-export type {
-  AuthResponseDTORoleEnumKey,
-  AuthResponseDTO,
-} from "./types/AuthResponseDTO.ts";
+export type { AuthResponseDTO } from "./types/AuthResponseDTO.ts";
 export type {
   CalendarioAtendimentosResposeTipoEnumKey,
   CalendarioAtendimentosRespose,
 } from "./types/CalendarioAtendimentosRespose.ts";
 export type {
-  ArquivarColaboradorPathParams,
-  ArquivarColaborador204,
-  ArquivarColaboradorMutationResponse,
-  ArquivarColaboradorMutation,
-} from "./types/colaborador/ArquivarColaborador.ts";
+  CancelarAtendimentoPathParams,
+  CancelarAtendimento200,
+  CancelarAtendimentoMutationResponse,
+  CancelarAtendimentoMutation,
+} from "./types/CancelarAtendimento.ts";
 export type {
-  CreateColaborador201,
-  CreateColaboradorMutationRequest,
-  CreateColaboradorMutationResponse,
-  CreateColaboradorMutation,
-} from "./types/colaborador/CreateColaborador.ts";
-export type {
-  DeleteColaboradorPathParams,
-  DeleteColaborador204,
-  DeleteColaboradorMutationResponse,
-  DeleteColaboradorMutation,
-} from "./types/colaborador/DeleteColaborador.ts";
-export type {
-  DesarquivarColaboradorPathParams,
-  DesarquivarColaborador204,
-  DesarquivarColaboradorMutationResponse,
-  DesarquivarColaboradorMutation,
-} from "./types/colaborador/DesarquivarColaborador.ts";
-export type {
-  FindColaboradorByIdPathParams,
-  FindColaboradorById200,
-  FindColaboradorByIdQueryResponse,
-  FindColaboradorByIdQuery,
-} from "./types/colaborador/FindColaboradorById.ts";
-export type {
-  GetColaboradoresQueryParams,
-  GetColaboradores200,
-  GetColaboradoresQueryResponse,
-  GetColaboradoresQuery,
-} from "./types/colaborador/GetColaboradores.ts";
-export type {
-  GetColaboradoresKpis200,
-  GetColaboradoresKpisQueryResponse,
-  GetColaboradoresKpisQuery,
-} from "./types/colaborador/GetColaboradoresKpis.ts";
-export type {
-  GetColaboradoresList200,
-  GetColaboradoresListQueryResponse,
-  GetColaboradoresListQuery,
-} from "./types/colaborador/GetColaboradoresList.ts";
-export type {
-  UpdateColaboradorPathParams,
-  UpdateColaborador200,
-  UpdateColaboradorMutationRequest,
-  UpdateColaboradorMutationResponse,
-  UpdateColaboradorMutation,
-} from "./types/colaborador/UpdateColaborador.ts";
+  CancelarTransacaoQueryParams,
+  CancelarTransacao200,
+  CancelarTransacaoMutationResponse,
+  CancelarTransacaoMutation,
+} from "./types/CancelarTransacao.ts";
 export type { ColaboradoresKpisDTO } from "./types/ColaboradoresKpisDTO.ts";
 export type { ColaboradoresListDTO } from "./types/ColaboradoresListDTO.ts";
 export type {
@@ -242,77 +108,268 @@ export type {
   ColaboradorResponseDTOFuncaoEnumKey,
   ColaboradorResponseDTO,
 } from "./types/ColaboradorResponseDTO.ts";
-export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
-export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
-export type { PagedModelAlunoResponseDTO } from "./types/PagedModelAlunoResponseDTO.ts";
-export type { PagedModelAtendimentoResponse } from "./types/PagedModelAtendimentoResponse.ts";
-export type { PagedModelColaboradorResponseDTO } from "./types/PagedModelColaboradorResponseDTO.ts";
-export type { PagedModelResponsavelResponseDTO } from "./types/PagedModelResponsavelResponseDTO.ts";
-export type { PageMetadata } from "./types/PageMetadata.ts";
-export type { ReagendarAtendimentoRequest } from "./types/ReagendarAtendimentoRequest.ts";
-export type { RelatorioAtendimentosResponse } from "./types/RelatorioAtendimentosResponse.ts";
+export type {
+  ConcluirAtendimentoPathParams,
+  ConcluirAtendimento200,
+  ConcluirAtendimentoMutationResponse,
+  ConcluirAtendimentoMutation,
+} from "./types/ConcluirAtendimento.ts";
+export type {
+  CreateColaborador201,
+  CreateColaboradorMutationRequest,
+  CreateColaboradorMutationResponse,
+  CreateColaboradorMutation,
+} from "./types/CreateColaborador.ts";
 export type {
   CreateResponsavel201,
   CreateResponsavelMutationRequest,
   CreateResponsavelMutationResponse,
   CreateResponsavelMutation,
-} from "./types/responsavel/CreateResponsavel.ts";
+} from "./types/CreateResponsavel.ts";
+export type {
+  CreateTransacao201,
+  CreateTransacaoMutationRequest,
+  CreateTransacaoMutationResponse,
+  CreateTransacaoMutation,
+} from "./types/CreateTransacao.ts";
+export type {
+  CreateUser201,
+  CreateUserMutationRequest,
+  CreateUserMutationResponse,
+  CreateUserMutation,
+} from "./types/CreateUser.ts";
+export type {
+  CriarAluno201,
+  CriarAlunoMutationRequest,
+  CriarAlunoMutationResponse,
+  CriarAlunoMutation,
+} from "./types/CriarAluno.ts";
+export type {
+  DeleteAlunoPathParams,
+  DeleteAluno204,
+  DeleteAlunoMutationResponse,
+  DeleteAlunoMutation,
+} from "./types/DeleteAluno.ts";
+export type {
+  DeleteColaboradorPathParams,
+  DeleteColaborador204,
+  DeleteColaboradorMutationResponse,
+  DeleteColaboradorMutation,
+} from "./types/DeleteColaborador.ts";
 export type {
   DeleteResponsavelPathParams,
   DeleteResponsavelQueryParams,
   DeleteResponsavel204,
   DeleteResponsavelMutationResponse,
   DeleteResponsavelMutation,
-} from "./types/responsavel/DeleteResponsavel.ts";
+} from "./types/DeleteResponsavel.ts";
+export type {
+  DeleteUserPathParams,
+  DeleteUser204,
+  DeleteUserMutationResponse,
+  DeleteUserMutation,
+} from "./types/DeleteUser.ts";
+export type {
+  DesarquivarColaboradorPathParams,
+  DesarquivarColaborador204,
+  DesarquivarColaboradorMutationResponse,
+  DesarquivarColaboradorMutation,
+} from "./types/DesarquivarColaborador.ts";
+export type {
+  EfetivarTransacaoQueryParams,
+  EfetivarTransacao200,
+  EfetivarTransacaoMutationRequestEnumKey,
+  EfetivarTransacaoMutationRequest,
+  EfetivarTransacaoMutationResponse,
+  EfetivarTransacaoMutation,
+} from "./types/EfetivarTransacao.ts";
+export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
+export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
+export type {
+  ExcluirAtendimentoPathParams,
+  ExcluirAtendimento204,
+  ExcluirAtendimentoMutationResponse,
+  ExcluirAtendimentoMutation,
+} from "./types/ExcluirAtendimento.ts";
+export type {
+  FindColaboradorByIdPathParams,
+  FindColaboradorById200,
+  FindColaboradorByIdQueryResponse,
+  FindColaboradorByIdQuery,
+} from "./types/FindColaboradorById.ts";
+export type {
+  GetAlunoByIdPathParams,
+  GetAlunoById200,
+  GetAlunoByIdQueryResponse,
+  GetAlunoByIdQuery,
+} from "./types/GetAlunoById.ts";
+export type {
+  GetAlunosQueryParams,
+  GetAlunos200,
+  GetAlunosQueryResponse,
+  GetAlunosQuery,
+} from "./types/GetAlunos.ts";
+export type {
+  GetAlunosByResponsavelPathParams,
+  GetAlunosByResponsavel200,
+  GetAlunosByResponsavelQueryResponse,
+  GetAlunosByResponsavelQuery,
+} from "./types/GetAlunosByResponsavel.ts";
+export type {
+  GetAlunosKpis200,
+  GetAlunosKpisQueryResponse,
+  GetAlunosKpisQuery,
+} from "./types/GetAlunosKpis.ts";
+export type {
+  GetAtendimentoByIdPathParams,
+  GetAtendimentoById200,
+  GetAtendimentoByIdQueryResponse,
+  GetAtendimentoByIdQuery,
+} from "./types/GetAtendimentoById.ts";
+export type {
+  GetAtendimentosQueryParams,
+  GetAtendimentos200,
+  GetAtendimentosQueryResponse,
+  GetAtendimentosQuery,
+} from "./types/GetAtendimentos.ts";
+export type {
+  GetCalendarioAtendimentosQueryParams,
+  GetCalendarioAtendimentos200,
+  GetCalendarioAtendimentosQueryResponse,
+  GetCalendarioAtendimentosQuery,
+} from "./types/GetCalendarioAtendimentos.ts";
+export type {
+  GetColaboradoresQueryParams,
+  GetColaboradores200,
+  GetColaboradoresQueryResponse,
+  GetColaboradoresQuery,
+} from "./types/GetColaboradores.ts";
+export type {
+  GetColaboradoresKpis200,
+  GetColaboradoresKpisQueryResponse,
+  GetColaboradoresKpisQuery,
+} from "./types/GetColaboradoresKpis.ts";
+export type {
+  GetColaboradoresList200,
+  GetColaboradoresListQueryResponse,
+  GetColaboradoresListQuery,
+} from "./types/GetColaboradoresList.ts";
+export type {
+  GetRelatorioAtendimentosQueryParams,
+  GetRelatorioAtendimentos200,
+  GetRelatorioAtendimentosQueryResponse,
+  GetRelatorioAtendimentosQuery,
+} from "./types/GetRelatorioAtendimentos.ts";
 export type {
   GetResponsaveisQueryParams,
   GetResponsaveis200,
   GetResponsaveisQueryResponse,
   GetResponsaveisQuery,
-} from "./types/responsavel/GetResponsaveis.ts";
+} from "./types/GetResponsaveis.ts";
 export type {
   GetResponsavelByIdPathParams,
   GetResponsavelById200,
   GetResponsavelByIdQueryResponse,
   GetResponsavelByIdQuery,
-} from "./types/responsavel/GetResponsavelById.ts";
+} from "./types/GetResponsavelById.ts";
+export type {
+  GetTransacaoByIdPathParams,
+  GetTransacaoById200,
+  GetTransacaoByIdQueryResponse,
+  GetTransacaoByIdQuery,
+} from "./types/GetTransacaoById.ts";
+export type {
+  GetTransacoesQueryParamsTipoEnumKey,
+  GetTransacoesQueryParamsCategoriaEnumKey,
+  GetTransacoesQueryParamsStatusEnumKey,
+  GetTransacoesQueryParamsFormaPagamentoEnumKey,
+  GetTransacoesQueryParams,
+  GetTransacoes200,
+  GetTransacoesQueryResponse,
+  GetTransacoesQuery,
+} from "./types/GetTransacoes.ts";
+export type {
+  ListAlunos200,
+  ListAlunosQueryResponse,
+  ListAlunosQuery,
+} from "./types/ListAlunos.ts";
 export type {
   ListResponsaveis200,
   ListResponsaveisQueryResponse,
   ListResponsaveisQuery,
-} from "./types/responsavel/ListResponsaveis.ts";
+} from "./types/ListResponsaveis.ts";
+export type {
+  ListUsers200,
+  ListUsersQueryResponse,
+  ListUsersQuery,
+} from "./types/ListUsers.ts";
+export type {
+  Login200,
+  LoginMutationRequest,
+  LoginMutationResponse,
+  LoginMutation,
+} from "./types/Login.ts";
+export type {
+  MePathParams,
+  Me200,
+  MeQueryResponse,
+  MeQuery,
+} from "./types/Me.ts";
+export type { PagedModelAlunoResponseDTO } from "./types/PagedModelAlunoResponseDTO.ts";
+export type { PagedModelAtendimentoResponse } from "./types/PagedModelAtendimentoResponse.ts";
+export type { PagedModelColaboradorResponseDTO } from "./types/PagedModelColaboradorResponseDTO.ts";
+export type { PagedModelResponsavelResponseDTO } from "./types/PagedModelResponsavelResponseDTO.ts";
+export type { PagedModelTransacaoResponseDTO } from "./types/PagedModelTransacaoResponseDTO.ts";
+export type { PageMetadata } from "./types/PageMetadata.ts";
+export type {
+  ReagendarAtendimentoPathParams,
+  ReagendarAtendimento200,
+  ReagendarAtendimentoMutationRequest,
+  ReagendarAtendimentoMutationResponse,
+  ReagendarAtendimentoMutation,
+} from "./types/ReagendarAtendimento.ts";
+export type { ReagendarAtendimentoRequest } from "./types/ReagendarAtendimentoRequest.ts";
+export type { RelatorioAtendimentosResponse } from "./types/RelatorioAtendimentosResponse.ts";
+export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
+export type { ResponsavelResponseDTO } from "./types/ResponsavelResponseDTO.ts";
+export type {
+  TransacaoRequestDTOCategoriaEnumKey,
+  TransacaoRequestDTO,
+} from "./types/TransacaoRequestDTO.ts";
+export type {
+  TransacaoResponseDTOTipoEnumKey,
+  TransacaoResponseDTOFormaPagamentoEnumKey,
+  TransacaoResponseDTOStatusEnumKey,
+  TransacaoResponseDTOCategoriaEnumKey,
+  TransacaoResponseDTO,
+} from "./types/TransacaoResponseDTO.ts";
+export type {
+  UnarchiveAlunoPathParams,
+  UnarchiveAluno204,
+  UnarchiveAlunoMutationResponse,
+  UnarchiveAlunoMutation,
+} from "./types/UnarchiveAluno.ts";
+export type {
+  UpdateAlunoPathParams,
+  UpdateAluno200,
+  UpdateAlunoMutationRequest,
+  UpdateAlunoMutationResponse,
+  UpdateAlunoMutation,
+} from "./types/UpdateAluno.ts";
+export type {
+  UpdateColaboradorPathParams,
+  UpdateColaborador200,
+  UpdateColaboradorMutationRequest,
+  UpdateColaboradorMutationResponse,
+  UpdateColaboradorMutation,
+} from "./types/UpdateColaborador.ts";
 export type {
   UpdateResponsavelPathParams,
   UpdateResponsavel200,
   UpdateResponsavelMutationRequest,
   UpdateResponsavelMutationResponse,
   UpdateResponsavelMutation,
-} from "./types/responsavel/UpdateResponsavel.ts";
-export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
-export type { ResponsavelResponseDTO } from "./types/ResponsavelResponseDTO.ts";
-export type {
-  ArchiveUserPathParams,
-  ArchiveUser200,
-  ArchiveUserMutationResponse,
-  ArchiveUserMutation,
-} from "./types/user/ArchiveUser.ts";
-export type {
-  CreateUser201,
-  CreateUserMutationRequest,
-  CreateUserMutationResponse,
-  CreateUserMutation,
-} from "./types/user/CreateUser.ts";
-export type {
-  DeleteUserPathParams,
-  DeleteUser204,
-  DeleteUserMutationResponse,
-  DeleteUserMutation,
-} from "./types/user/DeleteUser.ts";
-export type {
-  ListUsers200,
-  ListUsersQueryResponse,
-  ListUsersQuery,
-} from "./types/user/ListUsers.ts";
+} from "./types/UpdateResponsavel.ts";
 export type {
   UserRequestDTORoleEnumKey,
   UserRequestDTO,
@@ -532,6 +589,36 @@ export {
   useUpdateResponsavel,
 } from "./hooks/responsavel/useUpdateResponsavel.ts";
 export {
+  cancelarTransacaoMutationKey,
+  cancelarTransacao,
+  cancelarTransacaoMutationOptions,
+  useCancelarTransacao,
+} from "./hooks/transacao/useCancelarTransacao.ts";
+export {
+  createTransacaoMutationKey,
+  createTransacao,
+  createTransacaoMutationOptions,
+  useCreateTransacao,
+} from "./hooks/transacao/useCreateTransacao.ts";
+export {
+  efetivarTransacaoMutationKey,
+  efetivarTransacao,
+  efetivarTransacaoMutationOptions,
+  useEfetivarTransacao,
+} from "./hooks/transacao/useEfetivarTransacao.ts";
+export {
+  getTransacaoByIdQueryKey,
+  getTransacaoById,
+  getTransacaoByIdQueryOptions,
+  useGetTransacaoById,
+} from "./hooks/transacao/useGetTransacaoById.ts";
+export {
+  getTransacoesQueryKey,
+  getTransacoes,
+  getTransacoesQueryOptions,
+  useGetTransacoes,
+} from "./hooks/transacao/useGetTransacoes.ts";
+export {
   archiveUserMutationKey,
   archiveUser,
   archiveUserMutationOptions,
@@ -555,14 +642,28 @@ export {
   listUsersQueryOptions,
   useListUsers,
 } from "./hooks/user/useListUsers.ts";
+export { meQueryKey, me, meQueryOptions, useMe } from "./hooks/user/useMe.ts";
 export { atendimentoRequestTipoEnum } from "./types/AtendimentoRequest.ts";
 export {
   atendimentoResponseTipoEnum,
   atendimentoResponseStatusEnum,
 } from "./types/AtendimentoResponse.ts";
-export { authResponseDTORoleEnum } from "./types/AuthResponseDTO.ts";
 export { calendarioAtendimentosResposeTipoEnum } from "./types/CalendarioAtendimentosRespose.ts";
 export { colaboradorRequestDTOFuncaoEnum } from "./types/ColaboradorRequestDTO.ts";
 export { colaboradorResponseDTOFuncaoEnum } from "./types/ColaboradorResponseDTO.ts";
+export { efetivarTransacaoMutationRequestEnum } from "./types/EfetivarTransacao.ts";
+export {
+  getTransacoesQueryParamsTipoEnum,
+  getTransacoesQueryParamsCategoriaEnum,
+  getTransacoesQueryParamsStatusEnum,
+  getTransacoesQueryParamsFormaPagamentoEnum,
+} from "./types/GetTransacoes.ts";
+export { transacaoRequestDTOCategoriaEnum } from "./types/TransacaoRequestDTO.ts";
+export {
+  transacaoResponseDTOTipoEnum,
+  transacaoResponseDTOFormaPagamentoEnum,
+  transacaoResponseDTOStatusEnum,
+  transacaoResponseDTOCategoriaEnum,
+} from "./types/TransacaoResponseDTO.ts";
 export { userRequestDTORoleEnum } from "./types/UserRequestDTO.ts";
 export { userResponseDTORoleEnum } from "./types/UserResponseDTO.ts";

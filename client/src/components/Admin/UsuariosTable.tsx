@@ -1,5 +1,5 @@
-import { ErrorCard } from "@/components/error-card.tsx";
-import { LoadingSpinner } from "@/components/loading-spinner.tsx";
+import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
+import { LoadingSpinner } from "@/components/Ui/LoadingSpinner.tsx";
 import { useListUsers } from "@/kubb";
 import { formatDateShortYear } from "@/utils/date-utils.ts";
 import { useMemo, useState } from "react";

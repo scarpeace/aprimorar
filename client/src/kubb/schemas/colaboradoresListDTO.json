@@ -1,0 +1,14 @@
+{
+  "required": ["id", "nome"],
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "ID do funcionário",
+      "format": "uuid"
+    },
+    "nome": { "type": "string", "description": "Nome do funcionário" }
+  },
+  "description": "Formato de payload para obter opções de colaboradores",
+  "x-readme-ref-name": "ColaboradoresListDTO"
+}

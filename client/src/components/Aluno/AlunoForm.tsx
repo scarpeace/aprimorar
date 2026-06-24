@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { Button } from "@/components/button.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
 import { useListResponsaveis, type AlunoResponseDTO } from "@/kubb";
 import { addressConstants } from "@/utils/constants/address-constants.ts";
 import { formatDateForInput } from "@/utils/date-utils.ts";

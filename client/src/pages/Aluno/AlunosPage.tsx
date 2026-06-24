@@ -1,10 +1,10 @@
-import { KpiCard } from "@/components/kpi-card.tsx";
+import { KpiCard } from "@/components/Ui/KpiCard.tsx";
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
 import { ResponsaveisTable } from "@/components/Responsavel/ResponsaveisTable.tsx";
 import { useGetAlunosKpis } from "@/kubb";
 import { GraduationCap, UserCheck, UserCircle } from "lucide-react";
 import { AlunosTable } from "../../components/Aluno/AlunosTable.tsx";
-import { Modal } from "@/components/modal.tsx";
+import { Modal } from "@/components/Ui/Modal.tsx";
 import { Suspense, useState } from "react";
 import { AlunoForm } from "../../components/Aluno/AlunoForm.tsx";
 import { ResponsavelForm } from "@/components/Responsavel/ResponsavelForm.tsx";

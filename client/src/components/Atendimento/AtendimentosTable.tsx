@@ -1,15 +1,15 @@
-import { ErrorCard } from "@/components/error-card.tsx";
-import { LoadingSpinner } from "@/components/loading-spinner.tsx";
-import { Pagination } from "@/components/pagination.tsx";
+import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
+import { LoadingSpinner } from "@/components/Ui/LoadingSpinner.tsx";
+import { Pagination } from "@/components/Ui/Pagination.tsx";
 import { useGetAtendimentos, type AtendimentoResponse } from "@/kubb";
 import { brl } from "@/utils/formatter.ts";
 import { formatDateShortYear, formatTime } from "@/utils/date-utils.ts";
 import { useNavigate } from "react-router-dom";
 import { tipoAtendimentoLabels } from "@/utils/constants/atendimento-constants.ts";
 import { AtendimentoMobileCard } from "./AtendimentoMobileCard.tsx";
-import { Button } from "@/components/button.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
 import { Plus } from "lucide-react";
-import { TextSearchInput } from "@/components/TextSearchInput.tsx";
+import { TextSearchInput } from "@/components/Ui/TextSearchInput.tsx";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 import { useState } from "react";
 

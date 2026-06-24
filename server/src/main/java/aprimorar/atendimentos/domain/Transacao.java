@@ -76,8 +76,6 @@ public class Transacao {
     protected Transacao() {
     }
 
-    private final UUID ADMIN_ID = UUID.fromString("b3a092e0-fc48-43ff-8b35-149eb81a033f");
-
     public Transacao(
             UUID pagadorId,
             UUID recebedorID,

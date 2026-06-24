@@ -1,7 +1,7 @@
 import { Plus, type LucideIcon } from "lucide-react";
 import { Suspense, useState, type PropsWithChildren, type ReactNode } from "react";
-import { Button } from "../button.tsx";
-import { Modal } from "@/components/modal.tsx";
+import { Button } from "../Ui/Button.tsx";
+import { Modal } from "@/components/Ui/Modal.tsx";
 import { AtendimentoForm } from "@/components/Atendimento/AtendimentoForm.tsx";
 import { AlunoForm } from "@/components/Aluno/AlunoForm.tsx";
 

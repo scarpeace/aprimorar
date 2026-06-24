@@ -1,5 +1,5 @@
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
-import { Modal } from "@/components/modal.tsx";
+import { Modal } from "@/components/Ui/Modal.tsx";
 import { usePageDateFilter } from "@/hooks/usePageDateFilter.ts";
 import {
   useGetAlunoById,
@@ -13,7 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AtendimentosAlunoTable } from "../../components/Aluno/AtendimentosAlunoTable.tsx";
 import { AlunoForm } from "../../components/Aluno/AlunoForm.tsx";
 import { AlunoInfoSection } from "../../components/Aluno/AlunoInfoSection.tsx";
-import { DateRangeSelectWidget } from "@/components/DateRangeSelectWidget.tsx";
+import { DateRangeSelectWidget } from "@/components/Ui/DateRangeSelectWidget.tsx";
 
 export function AlunoDetailPage() {
   const { id } = useParams<{ id: string }>();

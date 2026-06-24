@@ -54,8 +54,6 @@ public class AuthService {
             .build();
 
         String accessToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-        return new AuthResponseDTO(accessToken, ACCESS_TOKEN_EXPIRES_IN_SECONDS, user.getUsername(), user.getRole());
+        return AuthResponseDTO.toDto(accessToken, ACCESS_TOKEN_EXPIRES_IN_SECONDS, user);
     }
-
-
 }

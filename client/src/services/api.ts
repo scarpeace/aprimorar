@@ -1,77 +1,71 @@
-import { axiosInstance } from "@kubb/plugin-client/clients/axios";
-import axios from "axios";
-import type { InternalAxiosRequestConfig } from "axios";
-import { toast } from "sonner";
-import {ZodError} from "zod";
+import axios, { type AxiosRequestConfig } from "axios";
+import { ZodError } from "zod";
 
-const ACCESS_TOKEN_KEY = 'aprimorar.auth';
-const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY ?? "access_token";
 
-const apiConfig = {
-  baseURL: apiBaseUrl,
-  headers: { "Content-Type": "application/json" },
-} as const;
+export type RequestConfig<TData = unknown> = {
+    url?: string;
+    method: "GET" | "PUT" | "PATCH" | "POST" | "DELETE";
+    params?: object;
+    data?: TData | FormData;
+    responseType?: "arraybuffer" | "blob" | "document" | "json" | "text" | "stream";
+    signal?: AbortSignal;
+    headers?: AxiosRequestConfig["headers"];
+};
 
-export const api = axios.create(apiConfig);
+export type ResponseConfig<TData = unknown> = {
+    data: TData;
+    status: number;
+    statusText: string;
+};
 
-// In-memory access token storage
-export function setStoredAccessToken(token: string | null): void {
-  localStorage.setItem(ACCESS_TOKEN_KEY, token ?? '');
-}
+export type ResponseErrorConfig<TError = unknown> = TError;
 
-export function getStoredAccessToken(): string | null {
-  return localStorage.getItem(ACCESS_TOKEN_KEY);
-}
+export type Client = <TData, _TError = unknown, TVariables = unknown>(
+    config: RequestConfig<TVariables>,
+) => Promise<ResponseConfig<TData>>;
 
-export function clearStoredAccessToken(): void {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
-}
+export const apiClient = axios.create({
+    baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:8080",
+    headers: { "Content-Type": "application/json" },
+});
 
-// Inject access token into every private request
-api.interceptors.request.use(
-    (config: InternalAxiosRequestConfig) => {
-      if (!isLoginUrl(config.url) && getStoredAccessToken()) {
-        config.headers.Authorization = `Bearer ${getStoredAccessToken()}`;
-      }
+// Injeta o token em toda requisição
+apiClient.interceptors.request.use((config) => {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
 
-      return config;
-    },
-    (error) => Promise.reject(error)
-);
-
-// Intercept 401 errors to automatically refresh using localStorage token
-api.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      if (!axios.isAxiosError(error)) {
+// Trata 401 globalmente — redireciona pro login limpando o storage
+apiClient.interceptors.response.use(
+    (res) => res,
+    (error) => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem("auth_user");
+            // Força reload para o router pegar o estado limpo
+            window.location.href = "/login";
+        }
         return Promise.reject(error);
-      }
-
-      if (isLoginUrl(error.config?.url)) {
-        return Promise.reject(error);
-      }
-
-      if (error.response?.status === 401) {
-        clearStoredAccessToken();
-        setStoredAccessToken(null);
-        toast.error("Sessão expirada. Faça login novamente.");
-        window.location.href = "/login";
-      }
-
-      return Promise.reject(error)
     }
 );
 
-Object.assign(axiosInstance.defaults, apiConfig);
+export const client: Client = async (config) => {
+    const response = await apiClient.request(config);
 
-function isLoginUrl(url?: string): boolean {
-  if (!url) {
-    return false;
-  }
-  return url === "/v1/auth/login" || url.endsWith("/v1/auth/login");
-}
+    return {
+        data: response.data,
+        status: response.status,
+        statusText: response.statusText,
+    };
+};
 
-export function getFriendlyErrorMessage(error: any): string {
+export default client;
+
+export function getFriendlyErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
     return error.response?.data?.message || error.message;
   }
@@ -80,5 +74,9 @@ export function getFriendlyErrorMessage(error: any): string {
      return "Resposta da API em formato inesperado";
  }
 
-  return error.message || "Ocorreu um erro desconhecido.";
+  if (error instanceof Error) {
+      return error.message;
+  }
+
+  return "Ocorreu um erro desconhecido.";
 }

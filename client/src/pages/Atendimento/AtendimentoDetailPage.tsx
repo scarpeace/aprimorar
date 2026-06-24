@@ -1,8 +1,8 @@
-import { Badge } from "@/components/badge.tsx";
+import { Badge } from "@/components/Ui/Badge.tsx";
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
-import { Button } from "@/components/button.tsx";
-import { ErrorCard } from "@/components/error-card.tsx";
-import { LoadingCard } from "@/components/loading-card.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
+import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
+import { LoadingCard } from "@/components/Ui/LoadingCard.tsx";
 import { useGetAtendimentoById } from "@/kubb";
 import { Calendar, Edit } from "lucide-react";
 import { useParams } from "react-router-dom";

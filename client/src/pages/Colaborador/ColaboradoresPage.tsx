@@ -1,12 +1,12 @@
-import { Button } from "@/components/button.tsx";
-import { Modal } from "@/components/modal.tsx";
+import { Button } from "@/components/Ui/Button.tsx";
+import { Modal } from "@/components/Ui/Modal.tsx";
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
 import { useGetColaboradoresKpis, type ColaboradorResponseDTO } from "@/kubb";
 import { Plus, UserCheck, UserCircle, UserCog } from "lucide-react";
 import { useState } from "react";
 import { ColaboradoresTable } from "../../components/Colaborador/ColaboradoresTable.tsx";
 import { ColaboradorForm } from "../../components/Colaborador/ColaboradorForm.tsx";
-import { KpiCard } from "@/components/kpi-card.tsx";
+import { KpiCard } from "@/components/Ui/KpiCard.tsx";
 
 export function ColaboradoresPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);

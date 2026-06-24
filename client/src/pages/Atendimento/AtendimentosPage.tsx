@@ -2,10 +2,10 @@ import { PageLayout } from "@/components/Layout/PageLayout.tsx";
 import { BellElectric, Plus } from "lucide-react";
 import { AtendimentosTable } from "../../components/Atendimento/AtendimentosTable.tsx";
 import { usePageDateFilter } from "@/hooks/usePageDateFilter.ts";
-import { Modal } from "@/components/modal.tsx";
+import { Modal } from "@/components/Ui/Modal.tsx";
 import { Suspense, useState } from "react";
 import { AtendimentoForm } from "../../components/Atendimento/AtendimentoForm.tsx";
-import { DateRangeSelectWidget } from "@/components/DateRangeSelectWidget.tsx";
+import { DateRangeSelectWidget } from "@/components/Ui/DateRangeSelectWidget.tsx";
 
 export function AtendimentosPage() {
   const { startDate, endDate, ...dateFilter } = usePageDateFilter();

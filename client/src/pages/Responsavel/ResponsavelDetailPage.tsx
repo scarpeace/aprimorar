@@ -1,5 +1,5 @@
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
-import { Modal } from "@/components/modal.tsx";
+import { Modal } from "@/components/Ui/Modal.tsx";
 import { Handshake } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
