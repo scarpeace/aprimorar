@@ -146,7 +146,9 @@ JOIN colaboradores c ON c.id = v.colaborador_id::uuid
 -- Transactions
 INSERT INTO transacoes (
   pagador_id,
+  nome_pagador,
   recebedor_id,
+  nome_recebedor,
   valor,
   tipo,
   status,
@@ -154,7 +156,17 @@ INSERT INTO transacoes (
   created_at,
   updated_at
 )
-SELECT v.pagador_id::uuid, v.recebedor_id::uuid, v.valor, v.tipo, v.status, v.categoria, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+SELECT
+  v.pagador_id::uuid,
+  CASE WHEN v.tipo = 'ENTRADA' THEN a.nome ELSE 'Aprimorar' END,
+  v.recebedor_id::uuid,
+  CASE WHEN v.tipo = 'SAIDA' THEN c.nome ELSE 'Aprimorar' END,
+  v.valor,
+  v.tipo,
+  v.status,
+  v.categoria,
+  CURRENT_TIMESTAMP,
+  CURRENT_TIMESTAMP
 FROM (VALUES
 ('41e8e58f-124a-5969-b16f-ac57993d7a00', 'b3a092e0-fc48-43ff-8b35-149eb81a033f', 147.00, 'ENTRADA', 'PENDENTE', 'PGTO_ALUNO'),
 ('b3a092e0-fc48-43ff-8b35-149eb81a033f', '82562c6d-0ef7-526e-b8e3-c6bf1bad81e0', 75.00, 'SAIDA', 'PENDENTE', 'PGTO_COLABORADOR'),
@@ -294,4 +306,6 @@ FROM (VALUES
 ('b3a092e0-fc48-43ff-8b35-149eb81a033f', '35a26f86-91cb-58d6-bd36-20bd9a467eec', 86.00, 'SAIDA', 'PENDENTE', 'PGTO_COLABORADOR'),
 ('4e816456-e58c-5c2c-b45d-15cfecf86787', 'b3a092e0-fc48-43ff-8b35-149eb81a033f', 120.00, 'ENTRADA', 'PENDENTE', 'PGTO_ALUNO'),
 ('b3a092e0-fc48-43ff-8b35-149eb81a033f', 'cb6eac0d-dfb5-5ccc-9a0c-8770a1557476', 91.00, 'SAIDA', 'PENDENTE', 'PGTO_COLABORADOR')
-) AS v(pagador_id, recebedor_id, valor, tipo, status, categoria);
+) AS v(pagador_id, recebedor_id, valor, tipo, status, categoria)
+LEFT JOIN alunos a ON a.id = v.pagador_id::uuid
+LEFT JOIN colaboradores c ON c.id = v.recebedor_id::uuid;

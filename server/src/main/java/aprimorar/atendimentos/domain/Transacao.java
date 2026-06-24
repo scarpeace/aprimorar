@@ -9,9 +9,10 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -33,15 +34,21 @@ public class Transacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "atendimento_id")
     private Atendimento atendimento;
 
     @Column(name = "pagador_id", nullable = false)
     private UUID pagadorId;
 
+    @Column(name = "nome_pagador")
+    private String nomePagador;
+
     @Column(name = "recebedor_id", nullable = false)
     private UUID recebedorId;
+
+    @Column(name = "nome_recebedor")
+    private String nomeRecebedor;
 
     @Column(name = "valor", nullable = false, precision = 10, scale = 2)
     private BigDecimal valor;
@@ -77,8 +84,11 @@ public class Transacao {
     }
 
     public Transacao(
+            Atendimento atendimento,
             UUID pagadorId,
+            String nomePagador,
             UUID recebedorID,
+            String nomeRecebedor,
             BigDecimal valor,
             LocalDateTime dataEfetivada,
             TipoTransacao tipo,
@@ -86,16 +96,19 @@ public class Transacao {
             StatusTransacao status,
             CategoriaTransacao categoria
             ){
-        validateRequiredFields();
-        validateValores();
+        this.atendimento = atendimento;
         this.pagadorId = pagadorId;
+        this.nomePagador = nomePagador;
         this.recebedorId = recebedorID;
+        this.nomeRecebedor = nomeRecebedor;
         this.valor = valor;
         this.dataEfetivada = dataEfetivada;
         this.tipo = tipo;
         this.formaPagamento = formaPagamento;
         this.status = status;
         this.categoria = categoria;
+        validateRequiredFields();
+        validateValores();
     }
 
     @PrePersist
@@ -125,7 +138,7 @@ public class Transacao {
     }
 
     private void validateRequiredFields() {
-        if (this.pagadorId == null || this.recebedorId == null || this.tipo == null || this.formaPagamento == null || this.status == null || this.categoria == null) {
+        if (this.pagadorId == null || this.recebedorId == null || this.tipo == null || this.status == null || this.categoria == null) {
             throw new IllegalArgumentException("Campos obrigatórios não foram preenchidos");
         }
     }

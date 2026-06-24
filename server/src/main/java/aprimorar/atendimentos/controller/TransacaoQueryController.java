@@ -19,7 +19,7 @@ import aprimorar.atendimentos.dto.TransacaoFiltroRequest;
 
 @Tag(name = "Transacao", description = "Operacoes relacionadas a transacoes.")
 @RestController
-@RequestMapping("/transacoes")
+@RequestMapping("/v1/transacoes")
 public class TransacaoQueryController {
     private final TransacaoQueryService transacaoQueryService;
 

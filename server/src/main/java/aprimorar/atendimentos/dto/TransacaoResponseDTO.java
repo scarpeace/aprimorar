@@ -13,30 +13,32 @@ import aprimorar.atendimentos.enums.TipoTransacao;
 public record TransacaoResponseDTO(
         Long id,
         UUID pagadorId,
+        String nomePagador,
         UUID recebedorId,
+        String nomeRecebedor,
         BigDecimal valor,
         LocalDateTime dataEfetivada,
         TipoTransacao tipo,
         FormaPagamento formaPagamento,
         StatusTransacao status,
         CategoriaTransacao categoria,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime createdAt
 ) {
 
     public static TransacaoResponseDTO toDto(Transacao transacao) {
         return new TransacaoResponseDTO(
                 transacao.getId(),
                 transacao.getPagadorId(),
+                transacao.getNomePagador(),
                 transacao.getRecebedorId(),
+                transacao.getNomeRecebedor(),
                 transacao.getValor(),
                 transacao.getDataEfetivada(),
                 transacao.getTipo(),
                 transacao.getFormaPagamento(),
                 transacao.getStatus(),
                 transacao.getCategoria(),
-                transacao.getCreatedAt(),
-                transacao.getUpdatedAt()
+                transacao.getCreatedAt()
         );
     }
 }

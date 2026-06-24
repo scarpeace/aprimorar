@@ -34,7 +34,8 @@ public final class TransacaoSpecifications {
             String pattern = "%" + termo.trim().toLowerCase() + "%";
 
             return cb.or(
-                cb.like(cb.lower(root.get("tipo").as(String.class)), pattern)
+                cb.like(cb.lower(root.get("nomePagador")), pattern),
+                cb.like(cb.lower(root.get("nomeRecebedor")), pattern)
             );
         };
     }

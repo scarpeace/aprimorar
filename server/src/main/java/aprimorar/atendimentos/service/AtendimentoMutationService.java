@@ -52,8 +52,8 @@ public class AtendimentoMutationService {
 
         Atendimento saved = atendimentoRepo.save(atendimento);
 
-        transacaoMutationService.criarEntradaAluno(atendimento.getAlunoId(), atendimento.getValor());
-        transacaoMutationService.criarSaidaColaborador(atendimento.getColaboradorId(), atendimento.getRepasse());
+        transacaoMutationService.criarEntradaAluno(saved);
+        transacaoMutationService.criarSaidaColaborador(saved);
 
 
         log.info("Atendimento {} cadastrado com sucesso.", saved.getTitulo().toUpperCase());

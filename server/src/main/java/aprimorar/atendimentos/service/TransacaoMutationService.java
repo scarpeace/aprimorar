@@ -1,6 +1,5 @@
 package aprimorar.atendimentos.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.atendimentos.domain.Transacao;
 import aprimorar.atendimentos.dto.TransacaoRequestDTO;
 import aprimorar.atendimentos.dto.TransacaoResponseDTO;
@@ -29,11 +29,14 @@ public class TransacaoMutationService {
 
 
     @Transactional
-    public void criarEntradaAluno(UUID alunoId, BigDecimal valor) {
+    public void criarEntradaAluno(Atendimento atendimento) {
         var transacao = new Transacao(
-                alunoId,
+                atendimento,
+                atendimento.getAlunoId(),
+                atendimento.getNomeAluno(),
                 adminId,
-                valor,
+                "Aprimorar",
+                atendimento.getValor(),
                 null,
                 TipoTransacao.ENTRADA,
                 null,
@@ -45,11 +48,14 @@ public class TransacaoMutationService {
     }
 
     @Transactional
-    public void criarSaidaColaborador(UUID colaboradorId, BigDecimal repasse) {
+    public void criarSaidaColaborador(Atendimento atendimento) {
         var transacao = new Transacao(
+                atendimento,
                 adminId,
-                colaboradorId,
-                repasse,
+                "Aprimorar",
+                atendimento.getColaboradorId(),
+                atendimento.getNomeColaborador(),
+                atendimento.getRepasse(),
                 null,
                 TipoTransacao.SAIDA,
                 null,
@@ -63,8 +69,11 @@ public class TransacaoMutationService {
     @Transactional
     public TransacaoResponseDTO criarSaidaDespesa(TransacaoRequestDTO request) {
         var transacao = new Transacao(
-                adminId,
                 null,
+                adminId,
+                "Aprimorar",
+                adminId,
+                request.categoria().name(),
                 request.valor(),
                 null,
                 TipoTransacao.SAIDA,

@@ -1,8 +1,5 @@
 package aprimorar.atendimentos.service;
 
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,12 +15,10 @@ import aprimorar.atendimentos.repository.specifications.TransacaoSpecifications;
 @Service
 public class TransacaoQueryService {
 
-    private final UUID adminId;
     private final TransacaoRepository transacaoRepository;
 
-    public TransacaoQueryService(TransacaoRepository transacaoRepository, @Value("${aprimorar.admin-id}") UUID adminId) {
+    public TransacaoQueryService(TransacaoRepository transacaoRepository) {
         this.transacaoRepository = transacaoRepository;
-        this.adminId = adminId;
     }
 
     @Transactional(readOnly = true)

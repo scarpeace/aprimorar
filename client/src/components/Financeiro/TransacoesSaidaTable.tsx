@@ -9,7 +9,7 @@ import {
 } from "@/kubb";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 import { brl } from "@/utils/formatter.ts";
-import { BrushCleaning, UserPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatDateShortYear } from "@/utils/date-utils";
@@ -30,6 +30,7 @@ export function TransacoesSaidaTable({ openForm }: { openForm: () => void }) {
     sort: ["createdAt,asc"],
     tipo: transacaoResponseDTOTipoEnum.SAIDA,
     status: filterStatus !== null ? filterStatus : undefined,
+    busca: debouncedSearchTerm,
   });
 
   const transacoes = transacoesQuery.data?.content ?? [];
@@ -75,15 +76,6 @@ export function TransacoesSaidaTable({ openForm }: { openForm: () => void }) {
     setCurrentPage(0);
   };
 
-
-
-  //
-  // const handleCleanFilter = () => {
-  //   setSearchTerm("");
-  //   setShowArchived(false);
-  //   setCurrentPage(0);
-  // };
-
   return (
     <main>
       <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
@@ -116,7 +108,7 @@ export function TransacoesSaidaTable({ openForm }: { openForm: () => void }) {
             checked={filterStatus === transacaoResponseDTOStatusEnum.CANCELADO}
             setToggle={handleToggleCancelados} />
 
-        <Button onClick={() => openForm()} variant="success"><UserPlus size={21} /></Button>
+          <Button onClick={() => openForm()} variant="success"><UserPlus size={21} /></Button>
         </div>
       </section>
 
@@ -124,20 +116,13 @@ export function TransacoesSaidaTable({ openForm }: { openForm: () => void }) {
         <ErrorCard title="Não foi possível carregar a listagem de entradas" error={transacoesQuery.error}/>
       )}
 
-      {transacoesQuery.isLoading && (<LoadingSpinner text="Carregando entradas..." />)}
+      {transacoesQuery.isLoading && (
+        <LoadingSpinner text="Carregando entradas..." />
+      )}
 
-      {!transacoesQuery.isLoading && !transacoesQuery.isError && !hasSaidas ? (
-        <EmptyCard
-          title="Nenhuma entrada encontrada"
-          description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
-          action={
-            <Button variant="outline">
-              Limpar filtros
-              <BrushCleaning size={18} />
-            </Button>
-          }
-        />
-      ) : null}
+      {(!transacoesQuery.isLoading && !transacoesQuery.isError && !hasSaidas) && (
+        <EmptyCard title="Nenhuma entrada encontrada" description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados." />
+      )}
 
       {hasSaidas && (
         <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
@@ -192,6 +177,7 @@ export function TransacoesSaidaTable({ openForm }: { openForm: () => void }) {
             size={pageSize}
           />
         </div>
-      )}    </main>
+      )}
+    </main>
   );
 }
