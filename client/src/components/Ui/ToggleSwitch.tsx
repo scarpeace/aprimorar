@@ -1,15 +1,15 @@
 import { useId } from "react";
 
 export type ToggleSwitchProps = {
-  toggled: boolean;
+  label: string;
+  checked: boolean;
   setToggle: (value: boolean) => void;
   className?: string;
-  label: string;
   tip?: string;
 };
 
 export function ToggleSwitch({
-  toggled,
+  checked,
   setToggle,
   className,
   label,
@@ -25,8 +25,8 @@ export function ToggleSwitch({
           id={id}
           className={`toggle h-6 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800 ${className}`}
           type="checkbox"
-          checked={toggled}
-          onChange={() => setToggle(!toggled)}
+          checked={checked}
+          onChange={() => setToggle(!checked)}
         />
       </label>
     </div>

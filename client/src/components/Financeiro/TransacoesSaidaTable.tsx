@@ -2,40 +2,81 @@ import { Button } from "@/components/Ui/Button.tsx";
 import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
 import { LoadingSpinner } from "@/components/Ui/LoadingSpinner.tsx";
 import { Pagination } from "@/components/Ui/Pagination.tsx";
-import { transacaoResponseDTOTipoEnum, useGetTransacoes } from "@/kubb";
+import {
+  transacaoResponseDTOStatusEnum,
+  transacaoResponseDTOTipoEnum,
+  useGetTransacoes
+} from "@/kubb";
 import { useDebounce } from "@/hooks/useDebounce.ts";
+import { brl } from "@/utils/formatter.ts";
+import { BrushCleaning, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BrushCleaning, UserPlus } from "lucide-react";
+import { formatDateShortYear } from "@/utils/date-utils";
 import { EmptyCard } from "../Ui/EmptyCard";
-import { formatDateShortYear, formatDateTimeLocal } from "@/utils/date-utils";
-import { brl } from "@/utils/formatter";
+import { TextSearchInput } from "../Ui/TextSearchInput";
+import { ToggleSwitch } from "../Ui/ToggleSwitch";
 
-export function TransacoesEntradaTable({ openForm }: { openForm: () => void }) {
+export function TransacoesSaidaTable({ openForm }: { openForm: () => void }) {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
+  const [filterStatus, setFilterStatus] = useState<keyof typeof transacaoResponseDTOStatusEnum | null>(transacaoResponseDTOStatusEnum.PENDENTE);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const transacoesQuery = useGetTransacoes({
     page: currentPage,
     sort: ["createdAt,asc"],
-    tipo: transacaoResponseDTOTipoEnum.ENTRADA,
+    tipo: transacaoResponseDTOTipoEnum.SAIDA,
+    status: filterStatus !== null ? filterStatus : undefined,
   });
 
   const transacoes = transacoesQuery.data?.content ?? [];
-
+  const hasSaidas = transacoes.length > 0;
   const page = transacoesQuery.data?.page;
   const totalElements = page?.totalElements ?? 0;
   const totalPages = page?.totalPages ?? 0;
   const pageSize = page?.size ?? transacoes.length;
-  const hasEntradas = transacoes.length > 0;
 
-  // const handleShowArchived = (value: boolean) => {
-  //   setShowArchived(value);
-  //   setCurrentPage(0);
-  // };
+  const handleTogglePendentes = () => {
+    if (filterStatus === transacaoResponseDTOStatusEnum.PENDENTE) {
+      setFilterStatus(null);
+    } else {
+      setFilterStatus(transacaoResponseDTOStatusEnum.PENDENTE);
+    }
+    setCurrentPage(0);
+  };
+
+  const handleTogglePagos = () => {
+    if (filterStatus === transacaoResponseDTOStatusEnum.PAGO) {
+      setFilterStatus(null);
+    } else {
+      setFilterStatus(transacaoResponseDTOStatusEnum.PAGO);
+    }
+    setCurrentPage(0);
+  };
+
+  const handleToggleCancelados = () => {
+    if (filterStatus === transacaoResponseDTOStatusEnum.CANCELADO) {
+      setFilterStatus(null);
+    } else {
+      setFilterStatus(transacaoResponseDTOStatusEnum.CANCELADO);
+    }
+    setCurrentPage(0);
+  };
+
+  const handleToggleAtrasados = () => {
+    if (filterStatus === transacaoResponseDTOStatusEnum.ATRASADO) {
+      setFilterStatus(null);
+    } else {
+      setFilterStatus(transacaoResponseDTOStatusEnum.ATRASADO);
+    }
+    setCurrentPage(0);
+  };
+
+
+
   //
   // const handleCleanFilter = () => {
   //   setSearchTerm("");
@@ -49,50 +90,43 @@ export function TransacoesEntradaTable({ openForm }: { openForm: () => void }) {
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="text-2xl font-bold text-base-content">Entradas</h3>
-              <p className="text-sm text-base-content/60">
-                Selecione uma entrada para ver os detalhes.
-              </p>
+              <h3 className="text-2xl font-bold text-base-content">Saídas</h3>
             </div>
           </div>
 
-          {/*<ListSearchInput*/}
-          {/*  className="grow"*/}
-          {/*  placeholder="Nome, email ou CPF"*/}
-          {/*  ariaLabel="Buscar aluno"*/}
-          {/*  value={searchTerm}*/}
-          {/*  onChange={setSearchTerm}*/}
-          {/*/>*/}
+          <TextSearchInput className="grow" placeholder="Nome, email ou CPF" onChange={setSearchTerm}/>
 
-          {/*<div className="tooltip flex" data-tip={"Mostrar alunos arquivados"}>
-          <div className="flex flex-col gap-1 items-center">
-            <span className="text-sm text-secondary"><FolderClock size={21}/></span>
-            <label className="toggle text-base h-5 p-1">
-                <input type="checkbox" checked={showArchived} onChange={() => handleShowArchived(!showArchived)} />
-                <EyeClosed size={15} />
-                <Eye size={15} />
-              </label>
-            </div>
-          </div>*/}
+          <ToggleSwitch
+            label={"Pendentes"}
+            checked={filterStatus != null && filterStatus === transacaoResponseDTOStatusEnum.PENDENTE}
+            setToggle={handleTogglePendentes} />
 
-          <Button onClick={() => openForm()} variant="success">
-            <UserPlus size={21} />
-          </Button>
+          <ToggleSwitch
+            label={"Pagos"}
+            checked={filterStatus === transacaoResponseDTOStatusEnum.PAGO}
+            setToggle={handleTogglePagos} />
+
+          <ToggleSwitch
+            label={"Atrasados"}
+            checked={filterStatus === transacaoResponseDTOStatusEnum.ATRASADO}
+            setToggle={handleToggleAtrasados} />
+
+          <ToggleSwitch
+            label={"Cancelados"}
+            checked={filterStatus === transacaoResponseDTOStatusEnum.CANCELADO}
+            setToggle={handleToggleCancelados} />
+
+        <Button onClick={() => openForm()} variant="success"><UserPlus size={21} /></Button>
         </div>
       </section>
 
       {transacoesQuery.isError && (
-        <ErrorCard
-          title="Não foi possível carregar a listagem de entradas"
-          error={transacoesQuery.error}
-        />
+        <ErrorCard title="Não foi possível carregar a listagem de entradas" error={transacoesQuery.error}/>
       )}
 
-      {transacoesQuery.isLoading && (
-        <LoadingSpinner text="Carregando entradas..." />
-      )}
+      {transacoesQuery.isLoading && (<LoadingSpinner text="Carregando entradas..." />)}
 
-      {!transacoesQuery.isLoading && !transacoesQuery.isError && !hasEntradas ? (
+      {!transacoesQuery.isLoading && !transacoesQuery.isError && !hasSaidas ? (
         <EmptyCard
           title="Nenhuma entrada encontrada"
           description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."
@@ -105,7 +139,7 @@ export function TransacoesEntradaTable({ openForm }: { openForm: () => void }) {
         />
       ) : null}
 
-      {hasEntradas && (
+      {hasSaidas && (
         <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">
           <table className="table table-zebra bg-base-100 animate-[fade-up_280ms_ease-out_both]">
             <thead className="bg-base-200/80">
@@ -158,7 +192,6 @@ export function TransacoesEntradaTable({ openForm }: { openForm: () => void }) {
             size={pageSize}
           />
         </div>
-      )}
-    </main>
+      )}    </main>
   );
 }

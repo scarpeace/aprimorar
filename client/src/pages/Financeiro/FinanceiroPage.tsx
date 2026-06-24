@@ -6,6 +6,8 @@ import {Modal} from "@/components/Ui/Modal.tsx";
 import {KpiCard} from "@/components/Ui/KpiCard.tsx";
 import {AlunoForm} from "@/components/Aluno/AlunoForm.tsx";
 import {TransacoesEntradaTable} from "@/components/Financeiro/TransacoesEntradaTable.tsx";
+import { TransacoesSaidaTable } from "@/components/Financeiro/TransacoesSaidaTable";
+import { DateRangeSelectWidget } from "@/components/Ui/DateRangeSelectWidget";
 
 export function FinanceiroPage(){
     const { startDate, endDate, ...dateFilter } = usePageDateFilter();
@@ -53,9 +55,11 @@ export function FinanceiroPage(){
                 </div>
 
                 <div className="min-w-0 rounded-2xl border border-base-300 p-3">
-                    tabela de despesas de entrada
+                    <TransacoesSaidaTable openForm={()=> setIsFormOpen(true)} />
                 </div>
             </section>
+
+            <DateRangeSelectWidget startDate={startDate} endDate={endDate} {...dateFilter} />
 
             <Modal
                 isOpen={isFormOpen}
