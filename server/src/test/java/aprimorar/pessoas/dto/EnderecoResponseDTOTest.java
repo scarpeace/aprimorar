@@ -27,7 +27,7 @@ class EnderecoResponseDTOTest {
         assertEquals("Centro", dto.bairro());
         assertEquals("Brasilia", dto.cidade());
         assertEquals("DF", dto.estado());
-        assertEquals("70000000", dto.cep());
+        assertEquals("70000-000", dto.cep());
         assertEquals("Apto 1", dto.complemento());
     }
 }

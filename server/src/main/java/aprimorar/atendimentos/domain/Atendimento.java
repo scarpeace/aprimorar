@@ -94,9 +94,6 @@ public class Atendimento implements Serializable {
         this.fim = calcularFim(inicio, duracao);
         validarDatas(inicio);
         validarValores(repasse, valor);
-        validarParticipantes(alunoId, colaboradorId);
-        validarTipo(tipo);
-
         this.titulo = tipo.name();
         this.descricao = descricao;
         this.inicio = inicio;
@@ -197,21 +194,6 @@ public class Atendimento implements Serializable {
         }
         if (valor.compareTo(BigDecimal.valueOf(50)) < 0) {
             throw new IllegalStateException("O valor do atendimento nao pode ser menor que R$50,00");
-        }
-    }
-
-    private void validarParticipantes(UUID alunoId, UUID colaboradorId) {
-        if (alunoId == null) {
-            throw new IllegalStateException("Um atendimento nao pode existir sem um aluno");
-        }
-        if (colaboradorId == null) {
-            throw new IllegalStateException("Um atendimento nao pode existir sem um colaborador");
-        }
-    }
-
-    private void validarTipo(TipoAtendimento tipo) {
-        if (tipo == null) {
-            throw new IllegalStateException("O conteúdo do atendimento é obrigatório");
         }
     }
 

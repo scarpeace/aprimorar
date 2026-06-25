@@ -47,17 +47,9 @@ class ResponsavelMutationServiceTest {
             "123.456.789-01"
         );
 
-        var saved = new Responsavel(
-            "João Silva",
-            LocalDate.of(1990, 1, 1),
-            "(11) 99999-9999",
-            "123.456.789-01",
-            "joao.silva@example.com"
-        );
-
         when(responsavelRepo.existsByCpf("12345678901")).thenReturn(false);
         when(responsavelRepo.existsByEmail("joao.silva@example.com")).thenReturn(false);
-        when(responsavelRepo.save(any(Responsavel.class))).thenReturn(saved);
+        when(responsavelRepo.save(any(Responsavel.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         ResponsavelResponseDTO response = service.createResponsavel(dto);
 
@@ -113,8 +105,8 @@ class ResponsavelMutationServiceTest {
         var existing = new Responsavel(
             "João Silva",
             LocalDate.of(1990, 1, 1),
-            "(11) 99999-9999",
-            "123.456.789-01",
+            "11999999999",
+            "12345678901",
             "joao.silva@example.com"
         );
 
@@ -146,8 +138,8 @@ class ResponsavelMutationServiceTest {
         var existing = new Responsavel(
             "João Silva",
             LocalDate.of(1990, 1, 1),
-            "(11) 99999-9999",
-            "123.456.789-01",
+            "11999999999",
+            "12345678901",
             "joao.silva@example.com"
         );
 
@@ -175,8 +167,8 @@ class ResponsavelMutationServiceTest {
         var existing = new Responsavel(
             "João Silva",
             LocalDate.of(1990, 1, 1),
-            "(11) 99999-9999",
-            "123.456.789-01",
+            "11999999999",
+            "12345678901",
             "joao.silva@example.com"
         );
 
@@ -225,8 +217,8 @@ class ResponsavelMutationServiceTest {
         var responsavel = new Responsavel(
             "João Silva",
             LocalDate.of(1990, 1, 1),
-            "(11) 99999-9999",
-            "123.456.789-01",
+            "11999999999",
+            "12345678901",
             "joao.silva@example.com"
         );
 
@@ -244,8 +236,8 @@ class ResponsavelMutationServiceTest {
         var responsavel = new Responsavel(
             "João Silva",
             LocalDate.of(1990, 1, 1),
-            "(11) 99999-9999",
-            "123.456.789-01",
+            "11999999999",
+            "12345678901",
             "joao.silva@example.com"
         );
 

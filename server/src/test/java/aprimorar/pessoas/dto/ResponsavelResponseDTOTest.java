@@ -28,8 +28,8 @@ class ResponsavelResponseDTOTest {
 
         assertEquals("João Silva", dto.nome());
         assertEquals(LocalDate.of(1990, 1, 1), dto.dataNascimento());
-        assertEquals("12345678901", dto.cpf());
-        assertEquals("11999999999", dto.telefone());
+        assertEquals("123.456.789-01", dto.cpf());
+        assertEquals("(11) 99999-9999", dto.telefone());
         assertEquals("joao.silva@example.com", dto.email());
         assertEquals(LocalDateTime.of(2024, 1, 1, 10, 0), dto.createdAt());
         assertEquals(LocalDateTime.of(2024, 1, 2, 10, 0), dto.updatedAt());

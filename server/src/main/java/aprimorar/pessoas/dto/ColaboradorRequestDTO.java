@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import aprimorar.pessoas.domain.Colaborador;
 import aprimorar.pessoas.shared.FuncoesColaborador;
+import aprimorar.shared.MapperUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -53,9 +54,9 @@ public record ColaboradorRequestDTO(
             this.nome(),
             this.dataNascimento(),
             this.pix(),
-            this.telefone(),
-            this.cpf(),
-            this.email(),
+            MapperUtils.normalizeContact(this.telefone()),
+            MapperUtils.normalizeCpf(this.cpf()),
+            MapperUtils.normalizeEmail(this.email()),
             this.funcao(),
             this.endereco().toEntity()
         );

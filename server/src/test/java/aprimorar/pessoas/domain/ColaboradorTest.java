@@ -29,12 +29,12 @@ class ColaboradorTest {
         assertEquals("João Pereira", colaborador.getNome());
         assertEquals(LocalDate.of(1990, 5, 21), colaborador.getDataNascimento());
         assertEquals("joao.pereira@example.com", colaborador.getPix());
-        assertEquals("61999999999", colaborador.getTelefone());
-        assertEquals("12345678900", colaborador.getCpf());
-        assertEquals("joao.pereira@example.com", colaborador.getEmail());
+        assertEquals("(61) 99999-9999", colaborador.getTelefone());
+        assertEquals("123.456.789-00", colaborador.getCpf());
+        assertEquals("JOAO.PEREIRA@EXAMPLE.COM", colaborador.getEmail());
         assertEquals(FuncoesColaborador.PROFESSOR, colaborador.getFuncao());
         assertTrue(colaborador.getActive());
-        assertEquals("70000000", colaborador.getEndereco().getCep());
+        assertEquals("70000-000", colaborador.getEndereco().getCep());
     }
 
     @Test
@@ -63,11 +63,11 @@ class ColaboradorTest {
         assertEquals("Maria Pereira", colaborador.getNome());
         assertEquals(LocalDate.of(1992, 6, 10), colaborador.getDataNascimento());
         assertEquals("maria.pereira@example.com", colaborador.getPix());
-        assertEquals("21988887777", colaborador.getTelefone());
+        assertEquals("(21) 98888-7777", colaborador.getTelefone());
         assertEquals("maria.pereira@example.com", colaborador.getEmail());
         assertEquals(FuncoesColaborador.ADMINISTRATIVO, colaborador.getFuncao());
-        assertEquals("20000000", colaborador.getEndereco().getCep());
-        assertEquals("12345678900", colaborador.getCpf());
+        assertEquals("20000-000", colaborador.getEndereco().getCep());
+        assertEquals("123.456.789-00", colaborador.getCpf());
     }
 
     @Test

@@ -8,7 +8,6 @@ import aprimorar.pessoas.api.ArchiveAlunoVerificationEvent;
 import aprimorar.pessoas.api.DeleteAlunoVerificationEvent;
 import aprimorar.pessoas.api.ResponsavelQueryApi;
 import aprimorar.pessoas.repository.AlunoRepository;
-import aprimorar.shared.MapperUtils;
 import aprimorar.shared.exception.BusinessException;
 import java.util.List;
 import java.util.UUID;
@@ -43,11 +42,11 @@ public class AlunoMutationService {
     public AlunoResponseDTO createAluno(AlunoRequestDTO dto) {
         Aluno aluno = dto.toEntity();
 
-        if (alunoRepo.existsByCpf(MapperUtils.normalizeCpf(aluno.getCpf()))) {
+        if (alunoRepo.existsByCpf(aluno.getCpf())) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um aluno cadastrado com este CPF.");
         }
 
-        if (alunoRepo.existsByEmail(MapperUtils.normalizeEmail(aluno.getEmail()))) {
+        if (alunoRepo.existsByEmail(aluno.getEmail())) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um aluno cadastrado com este e-mail.");
         }
 
@@ -63,21 +62,30 @@ public class AlunoMutationService {
     @Transactional
     public AlunoResponseDTO updateAluno(UUID alunoId, AlunoRequestDTO dto) {
         Aluno aluno = findAlunoOrThrow(alunoId);
+        Aluno requestedAluno = dto.toEntity();
 
         if (GHOST_STUDENT_ID.equals(alunoId)) {
             throw new BusinessException(HttpStatus.CONFLICT, "Não é possível modificar o registro de sistema 'Aluno Removido'.");
         }
 
-        if (alunoRepo.existsByCpfAndIdNot(MapperUtils.normalizeCpf(dto.cpf()), alunoId)) {
+        if (alunoRepo.existsByCpfAndIdNot(requestedAluno.getCpf(), alunoId)) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um aluno utilizando este CPF.");
         }
 
-        if (alunoRepo.existsByEmailAndIdNot(MapperUtils.normalizeEmail(dto.email()), alunoId)) {
+        if (alunoRepo.existsByEmailAndIdNot(requestedAluno.getEmail(), alunoId)) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um aluno utilizando este e-mail.");
         }
 
-        responsavelQueryApi.findResponsavelById(dto.responsavelId());
-        aluno.update(dto.nome(), dto.dataNascimento(), dto.telefone(), dto.email(), dto.escola(), dto.responsavelId(), dto.endereco().toEntity());
+        responsavelQueryApi.findResponsavelById(requestedAluno.getResponsavelId());
+        aluno.update(
+            requestedAluno.getNome(),
+            requestedAluno.getDataNascimento(),
+            requestedAluno.getTelefone(),
+            requestedAluno.getEmail(),
+            requestedAluno.getEscola(),
+            requestedAluno.getResponsavelId(),
+            requestedAluno.getEndereco()
+        );
 
         log.info("Aluno {} atualizado com sucesso.", aluno.getNome().toUpperCase());
         return AlunoResponseDTO.toDto(aluno);

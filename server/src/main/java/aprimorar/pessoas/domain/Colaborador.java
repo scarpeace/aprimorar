@@ -1,7 +1,6 @@
 package aprimorar.pessoas.domain;
 
 import aprimorar.pessoas.shared.FuncoesColaborador;
-import aprimorar.shared.MapperUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -85,13 +84,13 @@ public class Colaborador {
             FuncoesColaborador funcao,
             Endereco endereco
     ) {
-        this.nome = validateName(name);
-        this.dataNascimento = validateDataNascimento(dataNascimento);
-        this.pix = validatePix(pix);
-        this.telefone = validateTelefone(telefone);
-        this.cpf = validateCpf(cpf);
-        this.email = validateEmail(email);
-        this.endereco = validateEndereco(endereco);
+        this.nome = name;
+        this.dataNascimento = dataNascimento;
+        this.pix = pix;
+        this.telefone = telefone;
+        this.cpf = cpf;
+        this.email = email;
+        this.endereco = endereco;
         this.funcao = funcao;
     }
 
@@ -105,13 +104,13 @@ public class Colaborador {
             Endereco endereco
     ) {
         validateNotSystemRecord(this);
-        this.nome = validateName(name);
-        this.dataNascimento = validateDataNascimento(dataNascimento);
-        this.pix = validatePix(pix);
-        this.telefone = validateTelefone(telefone);
-        this.email = validateEmail(email);
+        this.nome = name;
+        this.dataNascimento = dataNascimento;
+        this.pix = pix;
+        this.telefone = telefone;
+        this.email = email;
         this.funcao = funcao;
-        this.endereco = validateEndereco(endereco);
+        this.endereco = endereco;
     }
 
     public boolean isSystemRecord() {
@@ -123,64 +122,12 @@ public class Colaborador {
         this.active = false;
     }
 
-    private static String validatePix(String pix) {
-        if (pix == null || pix.isBlank()) {
-            throw new IllegalArgumentException("Pix do colaborador é obrigatório");
-        }
-        return pix;
-    }
-
     public void unarchive() {
         validateNotSystemRecord(this);
         this.active = true;
     }
 
-    private String validateName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Nome do colaborador é obrigatório");
-        }
-        return name;
-    }
-
-    private LocalDate validateDataNascimento(LocalDate dataNascimento) {
-        if (dataNascimento == null) {
-            throw new IllegalArgumentException("Data de nascimento do colaborador é obrigatória");
-        }
-        return dataNascimento;
-    }
-
-    private String validateTelefone(String telefone) {
-        var normalized = MapperUtils.normalizeContact(telefone);
-        if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("Contato do colaborador é obrigatório");
-        }
-        return normalized;
-    }
-
-    private String validateCpf(String cpf) {
-        var normalized = MapperUtils.normalizeCpf(cpf);
-        if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("CPF do colaborador é obrigatório");
-        }
-        return normalized;
-    }
-
-    private String validateEmail(String email) {
-        var normalized = MapperUtils.normalizeEmail(email);
-        if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("Email do colaborador é obrigatório");
-        }
-        return normalized;
-    }
-
     public Endereco getEndereco() {
-        return endereco;
-    }
-
-    private Endereco validateEndereco(Endereco endereco) {
-        if (endereco == null) {
-            throw new IllegalArgumentException("Endereço do colaborador é obrigatório");
-        }
         return endereco;
     }
 

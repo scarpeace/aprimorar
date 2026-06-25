@@ -3,6 +3,7 @@ package aprimorar.pessoas.dto;
 import java.time.LocalDate;
 
 import aprimorar.pessoas.domain.Responsavel;
+import aprimorar.shared.MapperUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -33,9 +34,9 @@ public record ResponsavelRequestDTO(
         return new Responsavel(
             this.nome(),
             this.dataNascimento(),
-            this.telefone(),
-            this.cpf(),
-            this.email()
+            MapperUtils.normalizeContact(this.telefone()),
+            MapperUtils.normalizeCpf(this.cpf()),
+            MapperUtils.normalizeEmail(this.email())
         );
     }
 }

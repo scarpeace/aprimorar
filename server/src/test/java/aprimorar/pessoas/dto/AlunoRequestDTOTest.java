@@ -18,7 +18,7 @@ class AlunoRequestDTOTest {
             "Colégio Aprimorar",
             "(61) 99999-9999",
             "ANA.SILVA@EXAMPLE.COM",
-            new EnderecoRequestDTO("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1"),
+            new EnderecoRequestDTO("Rua A", "10", "Apto 1", "Centro", "Brasilia", "DF", "70000-000"),
             UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
         );
 

@@ -107,7 +107,6 @@ public class Transacao {
         this.formaPagamento = formaPagamento;
         this.status = status;
         this.categoria = categoria;
-        validateRequiredFields();
         validateValores();
     }
 
@@ -136,12 +135,5 @@ public class Transacao {
             throw new IllegalArgumentException("Valor deve ser maior que zero");
         }
     }
-
-    private void validateRequiredFields() {
-        if (this.pagadorId == null || this.recebedorId == null || this.tipo == null || this.status == null || this.categoria == null) {
-            throw new IllegalArgumentException("Campos obrigatórios não foram preenchidos");
-        }
-    }
-
 
 }

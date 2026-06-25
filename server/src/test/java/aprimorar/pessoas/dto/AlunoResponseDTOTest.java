@@ -33,9 +33,9 @@ class AlunoResponseDTOTest {
         var dto = AlunoResponseDTO.toDto(aluno);
 
         assertEquals("Ana Silva", dto.nome());
-        assertEquals("61999999999", dto.telefone());
+        assertEquals("(61) 99999-9999", dto.telefone());
         assertEquals("ana.silva@example.com", dto.email());
-        assertEquals("12345678900", dto.cpf());
+        assertEquals("123.456.789-00", dto.cpf());
         assertEquals(LocalDate.of(2000, 1, 1), dto.dataNascimento());
         assertEquals("Colégio Aprimorar", dto.escola());
         assertEquals(Period.between(LocalDate.of(2000, 1, 1), LocalDate.now()).getYears(), dto.idade());

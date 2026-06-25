@@ -48,11 +48,10 @@ class AlunoMutationServiceTest {
     @Test
     void shouldCreateAlunoWhenCpfAndEmailAreAvailable() {
         var dto = validRequest();
-        var saved = validAluno();
 
         when(alunoRepo.existsByCpf("12345678900")).thenReturn(false);
         when(alunoRepo.existsByEmail("ana.silva@example.com")).thenReturn(false);
-        when(alunoRepo.save(any(Aluno.class))).thenReturn(saved);
+        when(alunoRepo.save(any(Aluno.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(responsavelQueryApi.findResponsavelById(dto.responsavelId())).thenReturn(null);
 
         var response = service.createAluno(dto);
@@ -194,12 +193,12 @@ class AlunoMutationServiceTest {
         return new Aluno(
             "Ana Silva",
             LocalDate.of(2000, 1, 1),
-            "(61) 99999-9999",
-            "123.456.789-00",
+            "61999999999",
+            "12345678900",
             "ana.silva@example.com",
             "Colégio Aprimorar",
             UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
-            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
+            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000000", "Apto 1")
         );
     }
 }

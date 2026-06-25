@@ -30,20 +30,13 @@ public class Endereco {
     protected Endereco() {}
 
     public Endereco(String rua, String numero, String bairro, String cidade, String estado, String cep, String complemento) {
-        this.rua = validateRequired(rua, "Rua é obrigatória");
-        this.numero = validateRequired(numero, "Número é obrigatório");
-        this.bairro = validateRequired(bairro, "Bairro é obrigatório");
-        this.cidade = validateRequired(cidade, "Cidade é obrigatória");
-        this.estado = validateRequired(estado, "Estado é obrigatório");
-        this.cep = validateRequired(cep, "CEP é obrigatório").replaceAll("\\D", "");
+        this.rua = rua;
+        this.numero = numero;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+        this.cep = cep;
         this.complemento = complemento;
-    }
-
-    private String validateRequired(String value, String message) {
-        if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(message);
-        }
-        return value;
     }
 
 	public String getRua() {

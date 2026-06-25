@@ -3,6 +3,7 @@ package aprimorar;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.modulith.Modulithic;
 
@@ -19,8 +20,8 @@ public class ApiAprimorarApplication {
 		SpringApplication.run(ApiAprimorarApplication.class, args);
 	}
 
-	 @Bean
-	 public CommandLineRunner seedAdminUser(AuthBootstrap authBootstrap) {
-	 	return args -> authBootstrap.ensureAdminUser();
-	 }
+	@Bean
+	public CommandLineRunner seedAdminUser(ObjectProvider<AuthBootstrap> authBootstrap) {
+		return args -> authBootstrap.ifAvailable(AuthBootstrap::ensureAdminUser);
+	}
 }

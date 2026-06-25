@@ -3,10 +3,12 @@ package aprimorar.auth;
 import aprimorar.auth.domain.User;
 import aprimorar.auth.infrastructure.persistence.UserRepository;
 import aprimorar.shared.enums.Role;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnBean(UserRepository.class)
 public class AuthBootstrap {
 
 	private static final String ADMIN_EMAIL = "admin@aprimorar.com";

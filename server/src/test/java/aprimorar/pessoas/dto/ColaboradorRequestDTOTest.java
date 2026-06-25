@@ -18,7 +18,7 @@ class ColaboradorRequestDTOTest {
             "123.456.789-00",
             "JOAO.PEREIRA@EXAMPLE.COM",
             FuncoesColaborador.PROFESSOR,
-            new EnderecoRequestDTO("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
+            new EnderecoRequestDTO("Rua A", "10", "Apto 1", "Centro", "Brasilia", "DF", "70000-000")
         );
 
         var entity = dto.toEntity();

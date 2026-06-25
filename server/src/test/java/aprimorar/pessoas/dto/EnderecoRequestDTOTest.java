@@ -12,11 +12,11 @@ class EnderecoRequestDTOTest {
         var dto = new EnderecoRequestDTO(
             "Rua A",
             "10",
+            "Apto 1",
             "Centro",
             "Brasilia",
             "DF",
-            "70000-000",
-            "Apto 1"
+            "70000-000"
         );
 
         Endereco endereco = dto.toEntity();

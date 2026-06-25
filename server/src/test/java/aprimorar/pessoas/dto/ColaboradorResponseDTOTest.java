@@ -35,9 +35,9 @@ class ColaboradorResponseDTOTest {
         assertEquals("João Pereira", dto.nome());
         assertEquals(LocalDate.of(1990, 5, 21), dto.dataNascimento());
         assertEquals("joao.pereira@example.com", dto.pix());
-        assertEquals("61999999999", dto.telefone());
-        assertEquals("12345678900", dto.cpf());
-        assertEquals("joao.pereira@example.com", dto.email());
+        assertEquals("(61) 99999-9999", dto.telefone());
+        assertEquals("123.456.789-00", dto.cpf());
+        assertEquals("JOAO.PEREIRA@EXAMPLE.COM", dto.email());
         assertEquals(FuncoesColaborador.PROFESSOR, dto.funcao());
         assertEquals("Rua A", dto.endereco().rua());
         assertEquals(true, dto.active());

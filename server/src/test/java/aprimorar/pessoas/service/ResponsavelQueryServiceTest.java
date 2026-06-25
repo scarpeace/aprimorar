@@ -56,7 +56,7 @@ class ResponsavelQueryServiceTest {
 
         assertEquals(1, result.getTotalElements());
         assertEquals("João Silva", result.getContent().getFirst().nome());
-        assertEquals("12345678901", result.getContent().getFirst().cpf());
+        assertEquals("123.456.789-01", result.getContent().getFirst().cpf());
         verify(responsavelRepo).findAll(any(Specification.class), any(Pageable.class));
     }
 

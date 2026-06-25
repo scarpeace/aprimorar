@@ -44,11 +44,10 @@ class ColaboradorMutationServiceTest {
     @Test
     void shouldCreateColaboradorWhenCpfAndEmailAreAvailable() {
         var dto = validRequest();
-        var saved = validColaborador();
 
         when(colaboradorRepo.existsByCpf("12345678900")).thenReturn(false);
         when(colaboradorRepo.existsByEmail("joao.pereira@example.com")).thenReturn(false);
-        when(colaboradorRepo.save(any(Colaborador.class))).thenReturn(saved);
+        when(colaboradorRepo.save(any(Colaborador.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         var response = service.createColaborador(dto);
 
@@ -216,11 +215,11 @@ class ColaboradorMutationServiceTest {
             "João Pereira",
             LocalDate.of(1990, 5, 21),
             "joao.pereira@example.com",
-            "(61) 99999-9999",
-            "123.456.789-00",
+            "61999999999",
+            "12345678900",
             "JOAO.PEREIRA@EXAMPLE.COM",
             FuncoesColaborador.PROFESSOR,
-            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
+            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000000", "Apto 1")
         );
     }
 }

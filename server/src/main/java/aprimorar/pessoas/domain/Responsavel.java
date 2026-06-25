@@ -1,6 +1,5 @@
 package aprimorar.pessoas.domain;
 
-import aprimorar.shared.MapperUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -64,11 +63,11 @@ public class Responsavel {
         String cpf,
         String email
     ) {
-        this.nome = validateName(nome);
+        this.nome = nome;
         this.dataNascimento = dataNascimento;
-        this.telefone = validateContact(telefone);
-        this.cpf = validateCpf(cpf);
-        this.email = validateEmail(email);
+        this.telefone = telefone;
+        this.cpf = cpf;
+        this.email = email;
     }
 
     public void update(
@@ -77,41 +76,10 @@ public class Responsavel {
         String telefone,
         String email
     ) {
-        this.nome = validateName(nome);
+        this.nome = nome;
         this.dataNascimento = dataNascimento;
-        this.telefone = validateContact(telefone);
-        this.email = validateEmail(email);
-    }
-
-    private String validateName(String nome) {
-        if (nome == null || nome.isBlank()) {
-            throw new IllegalArgumentException("Nome do responsável é obrigatório");
-        }
-        return nome;
-    }
-
-    private String validateContact(String telefone) {
-        var normalized = MapperUtils.normalizeContact(telefone);
-        if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("Contato do responsável é obrigatório");
-        }
-        return normalized;
-    }
-
-    private String validateCpf(String cpf) {
-        var normalized = MapperUtils.normalizeCpf(cpf);
-        if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("CPF do responsável é obrigatório");
-        }
-        return normalized;
-    }
-
-    private String validateEmail(String email) {
-        var normalized = MapperUtils.normalizeEmail(email);
-        if (normalized == null || normalized.isBlank()) {
-            throw new IllegalArgumentException("Email do responsável é obrigatório");
-        }
-        return normalized;
+        this.telefone = telefone;
+        this.email = email;
     }
 
     public String getCpf() {
