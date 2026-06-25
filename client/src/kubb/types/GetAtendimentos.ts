@@ -5,6 +5,28 @@
 
 import type { PagedModelAtendimentoResponse } from "./PagedModelAtendimentoResponse.ts";
 
+export const getAtendimentosQueryParamsStatusEnum = {
+  AGENDADO: "AGENDADO",
+  CONCLUIDO: "CONCLUIDO",
+  CANCELADO: "CANCELADO",
+} as const;
+
+export type GetAtendimentosQueryParamsStatusEnumKey =
+  (typeof getAtendimentosQueryParamsStatusEnum)[keyof typeof getAtendimentosQueryParamsStatusEnum];
+
+export const getAtendimentosQueryParamsTipoEnum = {
+  AULA: "AULA",
+  MENTORIA: "MENTORIA",
+  TERAPIA: "TERAPIA",
+  ORIENTACAO_VOCACIONAL: "ORIENTACAO_VOCACIONAL",
+  ENEM: "ENEM",
+  PAS: "PAS",
+  OUTRO: "OUTRO",
+} as const;
+
+export type GetAtendimentosQueryParamsTipoEnumKey =
+  (typeof getAtendimentosQueryParamsTipoEnum)[keyof typeof getAtendimentosQueryParamsTipoEnum];
+
 export type GetAtendimentosQueryParams = {
   /**
    * @description Zero-based page index (0..N)
@@ -26,41 +48,60 @@ export type GetAtendimentosQueryParams = {
    */
   sort?: string[];
   /**
-   * @type string | undefined
+   * @description Texto livre de busca
+   * @type string
    */
-  busca?: string;
+  busca?: string | null;
   /**
-   * @type string | undefined, date-time
+   * @description Data inicial
+   * @type string, date-time
    */
-  inicio?: string;
+  inicio?: string | null;
   /**
-   * @type string | undefined, date-time
+   * @description Data final
+   * @type string, date-time
    */
-  fim?: string;
+  fim?: string | null;
   /**
-   * @type boolean | undefined
+   * @description Status do atendimento
+   * @type string
    */
-  ocultarCobrados?: boolean;
+  status?: GetAtendimentosQueryParamsStatusEnumKey | null;
   /**
-   * @type boolean | undefined
+   * @description Tipo de conteudo ou categoria do atendimento
+   * @type string
    */
-  ocultarPagos?: boolean;
+  tipo?: GetAtendimentosQueryParamsTipoEnumKey | null;
   /**
-   * @type string | undefined, uuid
+   * @description Ocultar atendimentos cobrados
+   * @type boolean
    */
-  alunoId?: string;
+  ocultarCobrados?: boolean | null;
   /**
-   * @type string | undefined
+   * @description Ocultar atendimentos pagos
+   * @type boolean
    */
-  alunoNome?: string;
+  ocultarPagos?: boolean | null;
   /**
-   * @type string | undefined, uuid
+   * @description ID do aluno
+   * @type string, uuid
    */
-  colaboradorId?: string;
+  alunoId?: string | null;
   /**
-   * @type string | undefined
+   * @description Nome do aluno
+   * @type string
    */
-  colaboradorNome?: string;
+  alunoNome?: string | null;
+  /**
+   * @description ID do colaborador
+   * @type string, uuid
+   */
+  colaboradorId?: string | null;
+  /**
+   * @description Nome do colaborador
+   * @type string
+   */
+  colaboradorNome?: string | null;
 };
 
 /**

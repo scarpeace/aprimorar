@@ -66,7 +66,7 @@ export type ColaboradorResponseDTO = {
    */
   endereco: EnderecoResponseDTO;
   /**
-   * @description Indica se o colaborador esta ativo
+   * @description Indica se o colaborador está ativo
    * @type boolean | undefined
    */
   active?: boolean;

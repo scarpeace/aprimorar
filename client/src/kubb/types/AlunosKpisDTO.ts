@@ -9,12 +9,12 @@
 export type AlunosKpisDTO = {
   /**
    * @description Total de alunos cadastrados
-   * @type integer | undefined, int64
+   * @type integer, int64
    */
-  totalAlunos?: number;
+  totalAlunos: number;
   /**
    * @description Total de alunos ativos
-   * @type integer | undefined, int64
+   * @type integer, int64
    */
-  totalAlunosAtivos?: number;
+  totalAlunosAtivos: number;
 };

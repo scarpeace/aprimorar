@@ -7,21 +7,25 @@ import type { PagedModelColaboradorResponseDTO } from "./PagedModelColaboradorRe
 
 export type GetColaboradoresQueryParams = {
   /**
-   * @type string | undefined
+   * @description Nome do colaborador
+   * @type string
    */
-  nome?: string;
+  nome?: string | null;
   /**
-   * @type string | undefined
+   * @description E-mail do colaborador
+   * @type string
    */
-  email?: string;
+  email?: string | null;
   /**
-   * @type string | undefined
+   * @description CPF do colaborador
+   * @type string
    */
-  cpf?: string;
+  cpf?: string | null;
   /**
-   * @type boolean | undefined
+   * @description Filtrar por colaboradores ativos
+   * @type boolean
    */
-  ativos?: boolean;
+  ativos?: boolean | null;
   /**
    * @description Zero-based page index (0..N)
    * @minLength 0

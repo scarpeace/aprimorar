@@ -7,17 +7,20 @@ import type { PagedModelResponsavelResponseDTO } from "./PagedModelResponsavelRe
 
 export type GetResponsaveisQueryParams = {
   /**
-   * @type string | undefined
+   * @description Nome do responsável
+   * @type string
    */
-  nome?: string;
+  nome?: string | null;
   /**
-   * @type string | undefined
+   * @description E-mail do responsável
+   * @type string
    */
-  email?: string;
+  email?: string | null;
   /**
-   * @type string | undefined
+   * @description CPF do responsável
+   * @type string
    */
-  cpf?: string;
+  cpf?: string | null;
   /**
    * @description Zero-based page index (0..N)
    * @minLength 0

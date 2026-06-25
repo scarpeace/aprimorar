@@ -1,11 +1,14 @@
 import { Button } from "@/components/Ui/Button.tsx";
+import { EmptyCard } from "@/components/Ui/EmptyCard";
 import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
 import { LoadingSpinner } from "@/components/Ui/LoadingSpinner.tsx";
 import { Pagination } from "@/components/Ui/Pagination.tsx";
+import { TextSearchInput } from "@/components/Ui/TextSearchInput";
+import { ToggleSwitch } from "@/components/Ui/ToggleSwitch";
 import { useGetAlunos } from "@/kubb";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 import { formatCpf } from "@/utils/formatter.ts";
-import { BrushCleaning, UserPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +23,7 @@ export function AlunosTable({ openForm }: { openForm: () => void }) {
   const alunosQuery = useGetAlunos({
     page: currentPage,
     nome: debouncedSearchTerm || undefined,
-    ativos: showArchived ? false : true,
+    ativos: showArchived ? undefined : true,
     sort: ["nome,asc"],
   });
 
@@ -36,43 +39,36 @@ export function AlunosTable({ openForm }: { openForm: () => void }) {
     setCurrentPage(0);
   };
 
-  const handleCleanFilter = () => {
-    setSearchTerm("");
-    setShowArchived(false);
-    setCurrentPage(0);
-  };
-
   return (
     <main>
       <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex justify-between items-center">
-            <div>
-              <h3 className="text-2xl font-bold text-base-content">Alunos</h3>
-              <p className="text-sm text-base-content/60">Selecione um aluno para ver os detalhes.</p>
-            </div>
+          <div>
+            <h3 className="text-2xl font-bold text-base-content">Alunos</h3>
+            <p className="text-sm text-base-content/60">Selecione um aluno para ver os detalhes.</p>
           </div>
 
-          {/*<ListSearchInput*/}
-          {/*  className="grow"*/}
-          {/*  placeholder="Nome, email ou CPF"*/}
-          {/*  ariaLabel="Buscar aluno"*/}
-          {/*  value={searchTerm}*/}
-          {/*  onChange={setSearchTerm}*/}
-          {/*/>*/}
+          <TextSearchInput
+            label="Pesquisar"
+            className="grow"
+            placeholder="Nome, email ou CPF"
+            onChange={(value) => {
+              setSearchTerm(value);
+              setCurrentPage(0);
+            }}
+          />
 
-          {/*<div className="tooltip flex" data-tip={"Mostrar alunos arquivados"}>
-          <div className="flex flex-col gap-1 items-center">
-            <span className="text-sm text-secondary"><FolderClock size={21}/></span>
-            <label className="toggle text-base h-5 p-1">
-                <input type="checkbox" checked={showArchived} onChange={() => handleShowArchived(!showArchived)} />
-                <EyeClosed size={15} />
-                <Eye size={15} />
-              </label>
-            </div>
-          </div>*/}
+          <ToggleSwitch
+            label="Mostrar Arquivados"
+            tip="Exibe alunos arquivados junto com os ativos"
+            checked={showArchived}
+            setToggle={handleShowArchived}
+            variant="info"
+          />
 
-        <Button onClick={() => openForm()} variant="success"><UserPlus size={21} /></Button>
+          <Button onClick={() => openForm()} variant="success">
+            <UserPlus size={21} />
+          </Button>
         </div>
       </section>
 
@@ -84,18 +80,12 @@ export function AlunosTable({ openForm }: { openForm: () => void }) {
         <LoadingSpinner text="Carregando alunos..." />
       )}
 
-      {/*{!alunosQuery.isLoading && !alunosQuery.isError && !hasAlunos && (*/}
-      {/*  <EmptyCard*/}
-      {/*    title="Nenhum aluno encontrado"*/}
-      {/*    description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."*/}
-      {/*    action={*/}
-      {/*      <Button variant="outline" onClick={handleCleanFilter}>*/}
-      {/*        Limpar filtros*/}
-      {/*        <BrushCleaning size={18} />*/}
-      {/*      </Button>*/}
-      {/*    }*/}
-      {/*  />*/}
-      {/*)}*/}
+      {!alunosQuery.isLoading && !alunosQuery.isError && !hasAlunos && (
+        <EmptyCard
+          title="Nenhum aluno encontrado"
+          description="Ajuste a busca para localizar os cadastros desejados."
+        />
+      )}
 
       {hasAlunos && (
         <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">

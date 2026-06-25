@@ -55,7 +55,6 @@ public class AtendimentoMutationService {
         transacaoMutationService.criarEntradaAluno(saved);
         transacaoMutationService.criarSaidaColaborador(saved);
 
-
         log.info("Atendimento {} cadastrado com sucesso.", saved.getTitulo().toUpperCase());
         return AtendimentoResponse.toDto(saved);
     }

@@ -33,7 +33,7 @@ export type UserResponseDTO = {
    */
   role: UserResponseDTORoleEnumKey;
   /**
-   * @description Indica se a conta esta ativa
+   * @description Indica se a conta está ativa
    * @type boolean
    */
   active: boolean;

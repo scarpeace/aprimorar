@@ -1,14 +1,48 @@
 {
+  "required": [
+    "alunoId",
+    "colaboradorId",
+    "fim",
+    "id",
+    "inicio",
+    "nomeAluno",
+    "nomeColaborador",
+    "tipo"
+  ],
   "type": "object",
   "properties": {
-    "id": { "type": "integer", "format": "int64" },
-    "colaboradorId": { "type": "string", "format": "uuid" },
-    "alunoId": { "type": "string", "format": "uuid" },
-    "inicio": { "type": "string", "format": "date-time" },
-    "fim": { "type": "string", "format": "date-time" },
+    "id": {
+      "type": "integer",
+      "description": "Identificador do atendimento",
+      "format": "int64",
+      "example": 1
+    },
+    "colaboradorId": {
+      "type": "string",
+      "description": "ID do colaborador",
+      "format": "uuid",
+      "example": "123e4567-e89b-12d3-a456-426614174000"
+    },
+    "alunoId": {
+      "type": "string",
+      "description": "ID do aluno",
+      "format": "uuid",
+      "example": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "inicio": {
+      "type": "string",
+      "description": "Início do atendimento",
+      "format": "date-time"
+    },
+    "fim": {
+      "type": "string",
+      "description": "Fim do atendimento",
+      "format": "date-time"
+    },
     "tipo": {
       "type": "string",
       "description": "Tipo de conteudo ou categoria do atendimento",
+      "example": "MENTORIA",
       "enum": [
         "AULA",
         "MENTORIA",
@@ -19,8 +53,17 @@
         "OUTRO"
       ]
     },
-    "nomeColaborador": { "type": "string" },
-    "nomeAluno": { "type": "string" }
+    "nomeColaborador": {
+      "type": "string",
+      "description": "Nome do colaborador",
+      "example": "Maria Souza"
+    },
+    "nomeAluno": {
+      "type": "string",
+      "description": "Nome do aluno",
+      "example": "João Silva"
+    }
   },
+  "description": "Evento simplificado para o calendário de atendimentos",
   "x-readme-ref-name": "CalendarioAtendimentosRespose"
 }

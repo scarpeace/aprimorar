@@ -16,38 +16,48 @@ export const calendarioAtendimentosResposeTipoEnum = {
 export type CalendarioAtendimentosResposeTipoEnumKey =
   (typeof calendarioAtendimentosResposeTipoEnum)[keyof typeof calendarioAtendimentosResposeTipoEnum];
 
+/**
+ * @description Evento simplificado para o calendário de atendimentos
+ */
 export type CalendarioAtendimentosRespose = {
   /**
-   * @type integer | undefined, int64
+   * @description Identificador do atendimento
+   * @type integer, int64
    */
-  id?: number;
+  id: number;
   /**
-   * @type string | undefined, uuid
+   * @description ID do colaborador
+   * @type string, uuid
    */
-  colaboradorId?: string;
+  colaboradorId: string;
   /**
-   * @type string | undefined, uuid
+   * @description ID do aluno
+   * @type string, uuid
    */
-  alunoId?: string;
+  alunoId: string;
   /**
-   * @type string | undefined, date-time
+   * @description Início do atendimento
+   * @type string, date-time
    */
-  inicio?: string;
+  inicio: string;
   /**
-   * @type string | undefined, date-time
+   * @description Fim do atendimento
+   * @type string, date-time
    */
-  fim?: string;
+  fim: string;
   /**
    * @description Tipo de conteudo ou categoria do atendimento
-   * @type string | undefined
+   * @type string
    */
-  tipo?: CalendarioAtendimentosResposeTipoEnumKey;
+  tipo: CalendarioAtendimentosResposeTipoEnumKey;
   /**
-   * @type string | undefined
+   * @description Nome do colaborador
+   * @type string
    */
-  nomeColaborador?: string;
+  nomeColaborador: string;
   /**
-   * @type string | undefined
+   * @description Nome do aluno
+   * @type string
    */
-  nomeAluno?: string;
+  nomeAluno: string;
 };

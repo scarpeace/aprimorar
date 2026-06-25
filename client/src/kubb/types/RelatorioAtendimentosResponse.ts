@@ -3,65 +3,83 @@
  * Do not edit manually.
  */
 
+/**
+ * @description Resumo mensal dos atendimentos
+ */
 export type RelatorioAtendimentosResponse = {
   /**
-   * @type integer | undefined, int64
+   * @description Total de atendimentos
+   * @type integer, int64
    */
-  totalAtendimentos?: number;
+  totalAtendimentos: number;
   /**
-   * @type integer | undefined, int64
+   * @description Total de aulas
+   * @type integer, int64
    */
-  totalAulas?: number;
+  totalAulas: number;
   /**
-   * @type number | undefined, double
+   * @description Percentual de aulas
+   * @type number, double
    */
-  procentagemAulas?: number;
+  procentagemAulas: number;
   /**
-   * @type integer | undefined, int64
+   * @description Total de mentorias
+   * @type integer, int64
    */
-  totalMentoria?: number;
+  totalMentoria: number;
   /**
-   * @type number | undefined, double
+   * @description Percentual de mentorias
+   * @type number, double
    */
-  procentagemMentoria?: number;
+  procentagemMentoria: number;
   /**
-   * @type integer | undefined, int64
+   * @description Total de terapias
+   * @type integer, int64
    */
-  totalTerapia?: number;
+  totalTerapia: number;
   /**
-   * @type number | undefined, double
+   * @description Percentual de terapias
+   * @type number, double
    */
-  procentagemTerapia?: number;
+  procentagemTerapia: number;
   /**
-   * @type integer | undefined, int64
+   * @description Total de orientações vocacionais
+   * @type integer, int64
    */
-  totalOV?: number;
+  totalOV: number;
   /**
-   * @type number | undefined, double
+   * @description Percentual de orientações vocacionais
+   * @type number, double
    */
-  procentagemOV?: number;
+  procentagemOV: number;
   /**
-   * @type integer | undefined, int64
+   * @description Total de atendimentos de ENEM
+   * @type integer, int64
    */
-  totalENEM?: number;
+  totalENEM: number;
   /**
-   * @type number | undefined, double
+   * @description Percentual de atendimentos de ENEM
+   * @type number, double
    */
-  procentagemENEM?: number;
+  procentagemENEM: number;
   /**
-   * @type integer | undefined, int64
+   * @description Total de atendimentos de PAS
+   * @type integer, int64
    */
-  totalPAS?: number;
+  totalPAS: number;
   /**
-   * @type number | undefined, double
+   * @description Percentual de atendimentos de PAS
+   * @type number, double
    */
-  procentagemPAS?: number;
+  procentagemPAS: number;
   /**
-   * @type integer | undefined, int64
+   * @description Total de outros atendimentos
+   * @type integer, int64
    */
-  totalOutros?: number;
+  totalOutros: number;
   /**
-   * @type number | undefined, double
+   * @description Percentual de outros atendimentos
+   * @type number, double
    */
-  procentagemOutros?: number;
+  procentagemOutros: number;
 };

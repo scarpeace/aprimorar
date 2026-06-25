@@ -2,6 +2,8 @@ package aprimorar.atendimentos.repository.specifications;
 
 import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
+import aprimorar.atendimentos.enums.StatusAtendimento;
+import aprimorar.atendimentos.enums.TipoAtendimento;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -18,7 +20,8 @@ public final class AtendimentoSpecifications {
             .where(buscaContem(filtro.busca()))
             .and(inicioMaiorOuIgual(filtro.inicio()))
             .and(fimMenorOuIgual(filtro.fim()))
-            .and(fimMenorOuIgual(filtro.fim()))
+            .and(statusIgual(filtro.status()))
+            .and(tipoIgual(filtro.tipo()))
             .and(alunoIdIgual(filtro.alunoId()))
             .and(colaboradorIdIgual(filtro.colaboradorId()));
     }
@@ -51,10 +54,15 @@ public final class AtendimentoSpecifications {
         return (root, query, cb) -> alunoId == null ? null : cb.equal(root.get("alunoId"), alunoId);
     }
 
+    public static Specification<Atendimento> statusIgual(StatusAtendimento status) {
+        return (root, query, cb) -> status == null ? null : cb.equal(root.get("status"), status);
+    }
+
+    public static Specification<Atendimento> tipoIgual(TipoAtendimento tipo) {
+        return (root, query, cb) -> tipo == null ? null : cb.equal(root.get("tipo"), tipo);
+    }
+
     public static Specification<Atendimento> colaboradorIdIgual(UUID colaboradorId) {
         return (root, query, cb) -> colaboradorId == null ? null : cb.equal(root.get("colaboradorId"), colaboradorId);
     }
-
-
-
 }

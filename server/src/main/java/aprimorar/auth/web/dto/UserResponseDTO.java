@@ -23,7 +23,7 @@ public record UserResponseDTO(
         Role role,
 
         @NotNull
-        @Schema(description = "Indica se a conta esta ativa", example = "true")
+        @Schema(description = "Indica se a conta está ativa", example = "true")
         boolean active,
 
         @NotNull

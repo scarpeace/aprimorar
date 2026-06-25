@@ -7,25 +7,30 @@ import type { PagedModelAlunoResponseDTO } from "./PagedModelAlunoResponseDTO.ts
 
 export type GetAlunosQueryParams = {
   /**
-   * @type string | undefined
+   * @description Nome do aluno
+   * @type string
    */
-  nome?: string;
+  nome?: string | null;
   /**
-   * @type string | undefined
+   * @description E-mail do aluno
+   * @type string
    */
-  email?: string;
+  email?: string | null;
   /**
-   * @type string | undefined
+   * @description CPF do aluno
+   * @type string
    */
-  cpf?: string;
+  cpf?: string | null;
   /**
-   * @type string | undefined
+   * @description Escola do aluno
+   * @type string
    */
-  escola?: string;
+  escola?: string | null;
   /**
-   * @type boolean | undefined
+   * @description Filtrar por alunos ativos
+   * @type boolean
    */
-  ativos?: boolean;
+  ativos?: boolean | null;
   /**
    * @description Zero-based page index (0..N)
    * @minLength 0

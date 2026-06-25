@@ -17,7 +17,7 @@ import type {
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const createTransacaoMutationKey = () =>
-  [{ url: "/transacoes/transacoes" }] as const;
+  [{ url: "/v1/transacoes" }] as const;
 
 export type CreateTransacaoMutationKey = ReturnType<
   typeof createTransacaoMutationKey
@@ -25,10 +25,10 @@ export type CreateTransacaoMutationKey = ReturnType<
 
 /**
  * @description Cria uma transacao manual de saida para despesa.
- * {@link /transacoes/transacoes}
+ * {@link /v1/transacoes}
  */
 export async function createTransacao(
-  data?: CreateTransacaoMutationRequest,
+  data: CreateTransacaoMutationRequest,
   config: Partial<RequestConfig<CreateTransacaoMutationRequest>> & {
     client?: typeof fetch;
   } = {},
@@ -43,7 +43,7 @@ export async function createTransacao(
     CreateTransacaoMutationRequest
   >({
     method: "POST",
-    url: `/transacoes/transacoes`,
+    url: `/v1/transacoes`,
     data: requestData,
     ...requestConfig,
   });
@@ -59,7 +59,7 @@ export function createTransacaoMutationOptions(
   return mutationOptions<
     CreateTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
-    { data?: CreateTransacaoMutationRequest },
+    { data: CreateTransacaoMutationRequest },
     typeof mutationKey
   >({
     mutationKey,
@@ -71,14 +71,14 @@ export function createTransacaoMutationOptions(
 
 /**
  * @description Cria uma transacao manual de saida para despesa.
- * {@link /transacoes/transacoes}
+ * {@link /v1/transacoes}
  */
 export function useCreateTransacao<TContext>(
   options: {
     mutation?: UseMutationOptions<
       CreateTransacaoMutationResponse,
       ResponseErrorConfig<Error>,
-      { data?: CreateTransacaoMutationRequest },
+      { data: CreateTransacaoMutationRequest },
       TContext
     > & { client?: QueryClient };
     client?: Partial<RequestConfig<CreateTransacaoMutationRequest>> & {
@@ -96,14 +96,14 @@ export function useCreateTransacao<TContext>(
   ) as UseMutationOptions<
     CreateTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
-    { data?: CreateTransacaoMutationRequest },
+    { data: CreateTransacaoMutationRequest },
     TContext
   >;
 
   return useMutation<
     CreateTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
-    { data?: CreateTransacaoMutationRequest },
+    { data: CreateTransacaoMutationRequest },
     TContext
   >(
     {
@@ -115,7 +115,7 @@ export function useCreateTransacao<TContext>(
   ) as UseMutationResult<
     CreateTransacaoMutationResponse,
     ResponseErrorConfig<Error>,
-    { data?: CreateTransacaoMutationRequest },
+    { data: CreateTransacaoMutationRequest },
     TContext
   >;
 }

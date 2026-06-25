@@ -4,35 +4,50 @@
  */
 
 /**
- * @description Endereço do aluno
+ * @description Endereço do cadastro
  */
 export type EnderecoRequestDTO = {
   /**
-   * @type string | undefined
+   * @description Rua
+   * @minLength 1
+   * @type string
    */
-  rua?: string;
+  rua: string;
   /**
-   * @type string | undefined
+   * @description Número
+   * @minLength 1
+   * @type string
    */
-  numero?: string;
+  numero: string;
   /**
-   * @type string | undefined
+   * @description Complemento
+   * @type string
    */
-  bairro?: string;
+  complemento?: string | null;
   /**
-   * @type string | undefined
+   * @description Bairro
+   * @minLength 1
+   * @type string
    */
-  cidade?: string;
+  bairro: string;
   /**
-   * @type string | undefined
+   * @description Cidade
+   * @minLength 1
+   * @type string
    */
-  estado?: string;
+  cidade: string;
   /**
-   * @type string | undefined
+   * @description UF
+   * @minLength 2
+   * @maxLength 2
+   * @type string
    */
-  cep?: string;
+  estado: string;
   /**
-   * @type string | undefined
+   * @description CEP sem pontuação
+   * @minLength 1
+   * @pattern ^\d{8}$
+   * @type string
    */
-  complemento?: string;
+  cep: string;
 };

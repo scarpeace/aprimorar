@@ -19,7 +19,7 @@ public record AlunoRequestDTO(
     String nome,
 
     @NotNull(message = "Data de nascimento do aluno é obrigatória")
-    @PastOrPresent()
+    @PastOrPresent(message = "A data de nascimento não pode ser futura")
     @Schema(nullable = false, description = "Data de nascimento do aluno", example = "2000-01-01")
     LocalDate dataNascimento,
 
@@ -36,7 +36,7 @@ public record AlunoRequestDTO(
     String telefone,
 
     @NotBlank(message = "Email do aluno é obrigatório")
-    @Email()
+    @Email(message = "Use um e-mail válido")
     @Schema(nullable = false,description = "E-mail do aluno", example = "ana.silva@example.com")
     String email,
 

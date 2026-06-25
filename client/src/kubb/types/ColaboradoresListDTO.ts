@@ -4,16 +4,16 @@
  */
 
 /**
- * @description Formato de payload para obter opções de colaboradores
+ * @description Opção simplificada de colaborador para seletores
  */
 export type ColaboradoresListDTO = {
   /**
-   * @description ID do funcionário
+   * @description Identificador único do colaborador
    * @type string, uuid
    */
   id: string;
   /**
-   * @description Nome do funcionário
+   * @description Nome completo do colaborador
    * @type string
    */
   nome: string;

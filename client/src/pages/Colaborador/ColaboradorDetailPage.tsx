@@ -11,7 +11,6 @@ import { ColaboradorEventsTable } from "../../components/Colaborador/Colaborador
 import { ColaboradorInfoSection } from "../../components/Colaborador/ColaboradorInfoSection.tsx";
 import { ColaboradorForm } from "../../components/Colaborador/ColaboradorForm.tsx";
 import { usePageDateFilter } from "@/hooks/usePageDateFilter.ts";
-import { DateRangeSelectWidget } from "@/components/Ui/DateRangeSelectWidget.tsx";
 
 export function ColaboradorDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -73,7 +72,6 @@ export function ColaboradorDetailPage() {
         />
       </Modal>
 
-      <DateRangeSelectWidget {...dateFilter} />
     </PageLayout>
   );
 }

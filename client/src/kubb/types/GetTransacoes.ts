@@ -68,37 +68,45 @@ export type GetTransacoesQueryParams = {
    */
   sort?: string[];
   /**
-   * @type string | undefined, uuid
+   * @description ID do pagador
+   * @type string, uuid
    */
-  pagadorId?: string;
+  pagadorId?: string | null;
   /**
-   * @type string | undefined, uuid
+   * @description ID do recebedor
+   * @type string, uuid
    */
-  recebedorId?: string;
+  recebedorId?: string | null;
   /**
-   * @type string | undefined, date-time
+   * @description Data de efetivação
+   * @type string, date-time
    */
-  dataEfetivada?: string;
+  dataEfetivada?: string | null;
   /**
-   * @type string | undefined
+   * @description Tipo da transação
+   * @type string
    */
-  tipo?: GetTransacoesQueryParamsTipoEnumKey;
+  tipo?: GetTransacoesQueryParamsTipoEnumKey | null;
   /**
-   * @type string | undefined
+   * @description Categoria financeira
+   * @type string
    */
-  categoria?: GetTransacoesQueryParamsCategoriaEnumKey;
+  categoria?: GetTransacoesQueryParamsCategoriaEnumKey | null;
   /**
-   * @type string | undefined
+   * @description Status da transação
+   * @type string
    */
-  status?: GetTransacoesQueryParamsStatusEnumKey;
+  status?: GetTransacoesQueryParamsStatusEnumKey | null;
   /**
-   * @type string | undefined
+   * @description Forma de pagamento
+   * @type string
    */
-  formaPagamento?: GetTransacoesQueryParamsFormaPagamentoEnumKey;
+  formaPagamento?: GetTransacoesQueryParamsFormaPagamentoEnumKey | null;
   /**
-   * @type string | undefined
+   * @description Busca por nome do pagador ou recebedor
+   * @type string
    */
-  busca?: string;
+  busca?: string | null;
 };
 
 /**

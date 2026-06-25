@@ -88,13 +88,48 @@
             "required": ["bairro", "cep", "cidade", "estado", "numero", "rua"],
             "type": "object",
             "properties": {
-              "rua": { "type": "string" },
-              "numero": { "type": "string" },
-              "complemento": { "type": "string" },
-              "bairro": { "type": "string" },
-              "cidade": { "type": "string" },
-              "estado": { "type": "string" },
-              "cep": { "type": "string" }
+              "rua": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Rua",
+                "example": "Avenida Paulista"
+              },
+              "numero": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Número",
+                "example": "1000"
+              },
+              "complemento": {
+                "type": "string",
+                "description": "Complemento",
+                "nullable": true,
+                "example": "Sala 101"
+              },
+              "bairro": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Bairro",
+                "example": "Bela Vista"
+              },
+              "cidade": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Cidade",
+                "example": "São Paulo"
+              },
+              "estado": {
+                "minLength": 1,
+                "type": "string",
+                "description": "UF",
+                "example": "SP"
+              },
+              "cep": {
+                "minLength": 1,
+                "type": "string",
+                "description": "CEP sem pontuação",
+                "example": "01310000"
+              }
             },
             "description": "Dados do endereco retornados pela API",
             "x-readme-ref-name": "EnderecoResponseDTO"

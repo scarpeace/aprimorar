@@ -3,6 +3,7 @@
   "type": "object",
   "properties": {
     "accessToken": {
+      "minLength": 1,
       "type": "string",
       "description": "JWT de acesso",
       "example": "eyJhbGciOiJSUzI1NiJ9..."
@@ -43,7 +44,7 @@
         },
         "active": {
           "type": "boolean",
-          "description": "Indica se a conta esta ativa",
+          "description": "Indica se a conta está ativa",
           "example": true
         },
         "createdAt": {

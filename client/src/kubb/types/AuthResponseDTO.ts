@@ -11,6 +11,7 @@ import type { UserResponseDTO } from "./UserResponseDTO.ts";
 export type AuthResponseDTO = {
   /**
    * @description JWT de acesso
+   * @minLength 1
    * @type string
    */
   accessToken: string;

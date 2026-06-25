@@ -38,7 +38,7 @@ public record ColaboradorResponseDTO(
     @Schema(implementation = EnderecoResponseDTO.class, description = "Endereco do colaborador")
     @NotNull
     EnderecoResponseDTO endereco,
-    @Schema(nullable = false, description = "Indica se o colaborador esta ativo", example = "true")
+    @Schema(nullable = false, description = "Indica se o colaborador está ativo", example = "true")
     boolean active,
     @NotNull
     @Schema(description = "Data de criacao do colaborador", example = "2024-03-10T15:33:42")

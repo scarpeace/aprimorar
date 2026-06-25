@@ -5,7 +5,6 @@ import {PageLayout} from "@/components/Layout/PageLayout.tsx";
 import {Modal} from "@/components/Ui/Modal.tsx";
 import {KpiCard} from "@/components/Ui/KpiCard.tsx";
 import {AlunoForm} from "@/components/Aluno/AlunoForm.tsx";
-import { DateRangeSelectWidget } from "@/components/Ui/DateRangeSelectWidget";
 import { TransacoesTable } from "@/components/Financeiro/TransacoesTable";
 import { transacaoResponseDTOTipoEnum } from "@/kubb";
 
@@ -47,9 +46,10 @@ export function FinanceiroPage(){
                         />
                     </div>
                 </div>
-            </section>
+          </section>
 
-            <section className="grid grid-cols-2 gap-6 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both] 2xl:grid-cols-2">
+        <section className="grid grid-cols-2 gap-6 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both] 2xl:grid-cols-2">
+
           <div className="min-w-0 rounded-2xl border border-base-300 p-3">
             <TransacoesTable
               title="Entradas"
@@ -67,23 +67,21 @@ export function FinanceiroPage(){
           </div>
         </section>
 
-            <DateRangeSelectWidget startDate={startDate} endDate={endDate} {...dateFilter} />
+        <Modal
+          isOpen={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+          title="Cadastrar Novo Aluno"
+          description="Informe os dados do aluno para efetuar a matrícula, um aluno deve ter um responsável no momento do seu cadastro."
+          size="lg"
+        >
+          <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
+            <AlunoForm
+              onSuccess={() => setIsFormOpen(false)}
+              onCancel={() => setIsFormOpen(false)}
+            />
+          </Suspense>
+        </Modal>
 
-            <Modal
-                isOpen={isFormOpen}
-                onClose={() => setIsFormOpen(false)}
-                title="Cadastrar Novo Aluno"
-                description="Informe os dados do aluno para efetuar a matrícula, um aluno deve ter um responsável no momento do seu cadastro."
-                size="lg"
-            >
-                <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
-                    <AlunoForm
-                        onSuccess={() => setIsFormOpen(false)}
-                        onCancel={() => setIsFormOpen(false)}
-                    />
-                </Suspense>
-            </Modal>
-
-        </PageLayout>
-    );
+    </PageLayout>
+  );
 }

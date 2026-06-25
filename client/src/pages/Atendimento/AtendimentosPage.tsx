@@ -5,7 +5,6 @@ import { usePageDateFilter } from "@/hooks/usePageDateFilter.ts";
 import { Modal } from "@/components/Ui/Modal.tsx";
 import { Suspense, useState } from "react";
 import { AtendimentoForm } from "../../components/Atendimento/AtendimentoForm.tsx";
-import { DateRangeSelectWidget } from "@/components/Ui/DateRangeSelectWidget.tsx";
 
 export function AtendimentosPage() {
   const { startDate, endDate, ...dateFilter } = usePageDateFilter();
@@ -25,7 +24,6 @@ export function AtendimentosPage() {
         <AtendimentosTable openForm={() => setIsFormOpen(true)} />
       </section>
 
-      <DateRangeSelectWidget startDate={startDate} endDate={endDate} {...dateFilter} />
 
       <Modal
         isOpen={isFormOpen}

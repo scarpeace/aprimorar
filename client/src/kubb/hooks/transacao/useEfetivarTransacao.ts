@@ -18,7 +18,7 @@ import type {
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const efetivarTransacaoMutationKey = () =>
-  [{ url: "/transacoes/transacoes/:transacaoId/efetivar" }] as const;
+  [{ url: "/v1/transacoes/:transacaoId/efetivar" }] as const;
 
 export type EfetivarTransacaoMutationKey = ReturnType<
   typeof efetivarTransacaoMutationKey
@@ -26,7 +26,7 @@ export type EfetivarTransacaoMutationKey = ReturnType<
 
 /**
  * @description Efetiva uma transacao pendente informando a forma de pagamento.
- * {@link /transacoes/transacoes/:transacaoId/efetivar}
+ * {@link /v1/transacoes/:transacaoId/efetivar}
  */
 export async function efetivarTransacao(
   transacaoId: EfetivarTransacaoPathParams["transacaoId"],
@@ -45,7 +45,7 @@ export async function efetivarTransacao(
     EfetivarTransacaoMutationRequest
   >({
     method: "POST",
-    url: `/transacoes/transacoes/${transacaoId}/efetivar`,
+    url: `/v1/transacoes/${transacaoId}/efetivar`,
     data: requestData,
     ...requestConfig,
   });
@@ -76,7 +76,7 @@ export function efetivarTransacaoMutationOptions(
 
 /**
  * @description Efetiva uma transacao pendente informando a forma de pagamento.
- * {@link /transacoes/transacoes/:transacaoId/efetivar}
+ * {@link /v1/transacoes/:transacaoId/efetivar}
  */
 export function useEfetivarTransacao<TContext>(
   options: {

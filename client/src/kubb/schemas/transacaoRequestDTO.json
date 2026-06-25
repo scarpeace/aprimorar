@@ -1,9 +1,16 @@
 {
+  "required": ["categoria", "valor"],
   "type": "object",
   "properties": {
-    "valor": { "type": "number" },
+    "valor": {
+      "type": "number",
+      "description": "Valor da despesa",
+      "example": 150
+    },
     "categoria": {
       "type": "string",
+      "description": "Categoria da despesa",
+      "example": "DESPENSA",
       "enum": [
         "PGTO_ALUNO",
         "INVESTIMENTO",
@@ -15,5 +22,6 @@
       ]
     }
   },
+  "description": "Payload para criar uma despesa manual",
   "x-readme-ref-name": "TransacaoRequestDTO"
 }

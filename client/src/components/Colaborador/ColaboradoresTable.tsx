@@ -1,15 +1,15 @@
 import { Button } from "@/components/Ui/Button.tsx";
+import { EmptyCard } from "@/components/Ui/EmptyCard";
 import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
 import { LoadingSpinner } from "@/components/Ui/LoadingSpinner.tsx";
 import { Pagination } from "@/components/Ui/Pagination.tsx";
+import { TextSearchInput } from "@/components/Ui/TextSearchInput";
+import { ToggleSwitch } from "@/components/Ui/ToggleSwitch";
 import { useGetColaboradores } from "@/kubb";
 import { useDebounce } from "@/hooks/useDebounce.ts";
-import {
-  formatCpf,
-  formatPhone,
-} from "@/utils/formatter.ts";
+import { formatCpf, formatPhone } from "@/utils/formatter.ts";
 import { formatDateShortYear } from "@/utils/date-utils.ts";
-import { BrushCleaning, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { colaboradorConstants } from "../../utils/constants/colaborador-constants.ts";
@@ -24,7 +24,7 @@ export function ColaboradoresTable({ openForm }: { openForm: () => void }) {
   const colaboradoresQuery = useGetColaboradores({
     page: currentPage,
     nome: debouncedSearchTerm || undefined,
-    ativos: showArchived ? false : true,
+    ativos: showArchived ? undefined : true,
     sort: ["nome,asc"],
   });
 
@@ -35,14 +35,8 @@ export function ColaboradoresTable({ openForm }: { openForm: () => void }) {
   const pageSize = page?.size ?? colaboradores.length;
   const hasColaboradores = colaboradores.length > 0;
 
-  const handleShowArchivedChange = (value: boolean) => {
+  const handleShowArchived = (value: boolean) => {
     setShowArchived(value);
-    setCurrentPage(0);
-  };
-
-  const handleCleanFilter = () => {
-    setSearchTerm("");
-    setShowArchived(false);
     setCurrentPage(0);
   };
 
@@ -57,20 +51,23 @@ export function ColaboradoresTable({ openForm }: { openForm: () => void }) {
             </p>
           </div>
 
-          {/*<ListSearchInput*/}
-          {/*  className="grow"*/}
-          {/*  placeholder="Buscar colaborador por nome, email ou CPF"*/}
-          {/*  ariaLabel="Buscar colaborador"*/}
-          {/*  value={searchTerm}*/}
-          {/*  onChange={setSearchTerm}*/}
-          {/*/>*/}
-          {/*<ToggleSwitch
-            label="Arquivados"
-            tip="Mostrar colaboradores arquivados"
-            toggled={showArchived}
-            setToggle={handleShowArchivedChange}
-            className="border-info/25 bg-base-100 shadow-sm checked:border-info checked:bg-info checked:text-info-content"
-          />*/}
+          <TextSearchInput
+            className="grow"
+            label="Pesquisar"
+            placeholder="Buscar colaborador por nome, email ou CPF"
+            onChange={(value) => {
+              setSearchTerm(value);
+              setCurrentPage(0);
+            }}
+          />
+
+          <ToggleSwitch
+            label="Mostrar Arquivados"
+            tip="Exibe colaboradores arquivados junto com os ativos"
+            checked={showArchived}
+            setToggle={handleShowArchived}
+            variant="info"
+          />
 
           <Button className="sm:ml-auto" onClick={() => openForm()} variant="success">
             <Plus className="mr-2 h-4 w-4" />
@@ -90,18 +87,12 @@ export function ColaboradoresTable({ openForm }: { openForm: () => void }) {
         <LoadingSpinner text="Carregando colaboradores..." />
       )}
 
-      {/*{!colaboradoresQuery.isLoading && !colaboradoresQuery.isError && !hasColaboradores && (*/}
-      {/*  <EmptyCard*/}
-      {/*    title="Nenhum colaborador encontrado"*/}
-      {/*    description="Ajuste a busca ou o filtro de arquivados para localizar os cadastros desejados."*/}
-      {/*    action={*/}
-      {/*      <Button variant="outline" onClick={handleCleanFilter}>*/}
-      {/*        Limpar filtros*/}
-      {/*        <BrushCleaning size={18} />*/}
-      {/*      </Button>*/}
-      {/*    }*/}
-      {/*  />*/}
-      {/*)}*/}
+      {!colaboradoresQuery.isLoading && !colaboradoresQuery.isError && !hasColaboradores && (
+        <EmptyCard
+          title="Nenhum colaborador encontrado"
+          description="Ajuste a busca para localizar os cadastros desejados."
+        />
+      )}
 
       {hasColaboradores && (
         <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow-lg">

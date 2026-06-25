@@ -17,7 +17,7 @@ import type {
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const cancelarTransacaoMutationKey = () =>
-  [{ url: "/transacoes/transacoes/:transacaoId/cancelar" }] as const;
+  [{ url: "/v1/transacoes/:transacaoId/cancelar" }] as const;
 
 export type CancelarTransacaoMutationKey = ReturnType<
   typeof cancelarTransacaoMutationKey
@@ -25,7 +25,7 @@ export type CancelarTransacaoMutationKey = ReturnType<
 
 /**
  * @description Cancela uma transacao pelo ID.
- * {@link /transacoes/transacoes/:transacaoId/cancelar}
+ * {@link /v1/transacoes/:transacaoId/cancelar}
  */
 export async function cancelarTransacao(
   transacaoId: CancelarTransacaoPathParams["transacaoId"],
@@ -39,7 +39,7 @@ export async function cancelarTransacao(
     unknown
   >({
     method: "POST",
-    url: `/transacoes/transacoes/${transacaoId}/cancelar`,
+    url: `/v1/transacoes/${transacaoId}/cancelar`,
     ...requestConfig,
   });
   return res.data;
@@ -64,7 +64,7 @@ export function cancelarTransacaoMutationOptions(
 
 /**
  * @description Cancela uma transacao pelo ID.
- * {@link /transacoes/transacoes/:transacaoId/cancelar}
+ * {@link /v1/transacoes/:transacaoId/cancelar}
  */
 export function useCancelarTransacao<TContext>(
   options: {

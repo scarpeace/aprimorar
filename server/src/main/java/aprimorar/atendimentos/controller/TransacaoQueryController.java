@@ -25,7 +25,7 @@ public class TransacaoQueryController {
 
     public TransacaoQueryController(TransacaoQueryService transacaoQueryService) {
         this.transacaoQueryService = transacaoQueryService;
-    }
+}
 
     @GetMapping()
     @Operation(operationId = "getTransacoes", description = "Lista transacoes com paginacao, ordenacao e filtros opcionais.")

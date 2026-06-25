@@ -45,7 +45,7 @@ export type AlunoRequestDTO = {
    */
   email: string;
   /**
-   * @description Endereço do aluno
+   * @description Endereço do cadastro
    * @type object
    */
   endereco: EnderecoRequestDTO;

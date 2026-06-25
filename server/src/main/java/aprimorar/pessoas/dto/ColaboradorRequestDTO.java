@@ -18,7 +18,7 @@ public record ColaboradorRequestDTO(
         String nome,
 
         @NotNull(message = "Data de nascimento do colaborador é obrigatória")
-        @Past(message = "A data de nascimento do colaborador deve estar no passado")
+        @Past(message = "A data de nascimento precisa ser anterior a hoje")
         @Schema(description = "Data de nascimento do colaborador", example = "1990-05-21")
         LocalDate dataNascimento,
 
@@ -35,7 +35,7 @@ public record ColaboradorRequestDTO(
         String cpf,
 
         @NotBlank(message = "Email do colaborador é obrigatório")
-        @Email(message = "Email deve ser um endereço de email válido")
+        @Email(message = "Use um e-mail válido")
         @Schema(description = "E-mail do colaborador", example = "joao.pereira@example.com")
         String email,
 

@@ -61,7 +61,7 @@ export type ColaboradorRequestDTO = {
    */
   funcao: ColaboradorRequestDTOFuncaoEnumKey;
   /**
-   * @description Endereço do aluno
+   * @description Endereço do cadastro
    * @type object
    */
   endereco: EnderecoRequestDTO;

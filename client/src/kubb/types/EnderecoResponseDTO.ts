@@ -8,30 +8,43 @@
  */
 export type EnderecoResponseDTO = {
   /**
+   * @description Rua
+   * @minLength 1
    * @type string
    */
   rua: string;
   /**
+   * @description Número
+   * @minLength 1
    * @type string
    */
   numero: string;
   /**
-   * @type string | undefined
+   * @description Complemento
+   * @type string
    */
-  complemento?: string;
+  complemento?: string | null;
   /**
+   * @description Bairro
+   * @minLength 1
    * @type string
    */
   bairro: string;
   /**
+   * @description Cidade
+   * @minLength 1
    * @type string
    */
   cidade: string;
   /**
+   * @description UF
+   * @minLength 1
    * @type string
    */
   estado: string;
   /**
+   * @description CEP sem pontuação
+   * @minLength 1
    * @type string
    */
   cep: string;

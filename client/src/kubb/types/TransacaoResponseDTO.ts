@@ -45,53 +45,68 @@ export const transacaoResponseDTOCategoriaEnum = {
 export type TransacaoResponseDTOCategoriaEnumKey =
   (typeof transacaoResponseDTOCategoriaEnum)[keyof typeof transacaoResponseDTOCategoriaEnum];
 
+/**
+ * @description Dados da transação retornados pela API
+ */
 export type TransacaoResponseDTO = {
   /**
-   * @type integer | undefined, int64
+   * @description Identificador da transação
+   * @type integer, int64
    */
-  id?: number;
+  id: number;
   /**
-   * @type string | undefined, uuid
+   * @description ID do pagador
+   * @type string, uuid
    */
-  pagadorId?: string;
+  pagadorId: string;
   /**
-   * @type string | undefined
+   * @description Nome do pagador
+   * @type string
    */
-  nomePagador?: string;
+  nomePagador: string;
   /**
-   * @type string | undefined, uuid
+   * @description ID do recebedor
+   * @type string, uuid
    */
-  recebedorId?: string;
+  recebedorId: string;
   /**
-   * @type string | undefined
+   * @description Nome do recebedor
+   * @type string
    */
-  nomeRecebedor?: string;
+  nomeRecebedor: string;
   /**
-   * @type number | undefined
+   * @description Valor da transação
+   * @type number
    */
-  valor?: number;
+  valor: number;
   /**
-   * @type string | undefined, date-time
+   * @description Data em que a transação foi efetivada
+   * @type string, date-time
    */
-  dataEfetivada?: string;
+  dataEfetivada?: string | null;
   /**
-   * @type string | undefined
+   * @description Tipo da transação
+   * @type string
    */
-  tipo?: TransacaoResponseDTOTipoEnumKey;
+  tipo: TransacaoResponseDTOTipoEnumKey;
   /**
-   * @type string | undefined
+   * @description Forma de pagamento usada na efetivação
+   * @type string
    */
-  formaPagamento?: TransacaoResponseDTOFormaPagamentoEnumKey;
+  formaPagamento?: TransacaoResponseDTOFormaPagamentoEnumKey | null;
   /**
-   * @type string | undefined
+   * @description Status atual da transação
+   * @type string
    */
-  status?: TransacaoResponseDTOStatusEnumKey;
+  status: TransacaoResponseDTOStatusEnumKey;
   /**
-   * @type string | undefined
+   * @description Categoria financeira
+   * @type string
    */
-  categoria?: TransacaoResponseDTOCategoriaEnumKey;
+  categoria: TransacaoResponseDTOCategoriaEnumKey;
   /**
-   * @type string | undefined, date-time
+   * @description Data de criação
+   * @type string, date-time
    */
-  createdAt?: string;
+  createdAt: string;
 };

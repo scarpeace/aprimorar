@@ -9,10 +9,9 @@ type TextSearchInputProps = {
 
 export function TextSearchInput({ placeholder, label, onChange, className }: TextSearchInputProps) {
   return (
-    <label className={`input ${className}`}>
-     <Search size={12}/>
-      <input type="search" placeholder={placeholder} onChange={(e) => onChange?.(e.target.value)} />
-      {label && <span>{label}</span>}
-    </label>
+  <fieldset className={`fieldset ${className}`}>
+    <legend className="fieldset-legend">{label}</legend>
+      <input type="search" className="input" placeholder={placeholder} onChange={(e) => onChange?.(e.target.value)} />
+      </fieldset>
   );
 }

@@ -227,6 +227,8 @@ export type {
   GetAtendimentoByIdQuery,
 } from "./types/GetAtendimentoById.ts";
 export type {
+  GetAtendimentosQueryParamsStatusEnumKey,
+  GetAtendimentosQueryParamsTipoEnumKey,
   GetAtendimentosQueryParams,
   GetAtendimentos200,
   GetAtendimentosQueryResponse,
@@ -652,6 +654,10 @@ export { calendarioAtendimentosResposeTipoEnum } from "./types/CalendarioAtendim
 export { colaboradorRequestDTOFuncaoEnum } from "./types/ColaboradorRequestDTO.ts";
 export { colaboradorResponseDTOFuncaoEnum } from "./types/ColaboradorResponseDTO.ts";
 export { efetivarTransacaoMutationRequestEnum } from "./types/EfetivarTransacao.ts";
+export {
+  getAtendimentosQueryParamsStatusEnum,
+  getAtendimentosQueryParamsTipoEnum,
+} from "./types/GetAtendimentos.ts";
 export {
   getTransacoesQueryParamsTipoEnum,
   getTransacoesQueryParamsCategoriaEnum,

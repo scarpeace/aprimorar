@@ -4,11 +4,16 @@
   "properties": {
     "id": {
       "type": "string",
-      "description": "ID do funcionário",
-      "format": "uuid"
+      "description": "Identificador único do colaborador",
+      "format": "uuid",
+      "example": "550e8400-e29b-41d4-a716-446655440000"
     },
-    "nome": { "type": "string", "description": "Nome do funcionário" }
+    "nome": {
+      "type": "string",
+      "description": "Nome completo do colaborador",
+      "example": "João Pereira"
+    }
   },
-  "description": "Formato de payload para obter opções de colaboradores",
+  "description": "Opção simplificada de colaborador para seletores",
   "x-readme-ref-name": "ColaboradoresListDTO"
 }

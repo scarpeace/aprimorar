@@ -21,7 +21,7 @@
     },
     "active": {
       "type": "boolean",
-      "description": "Indica se a conta esta ativa",
+      "description": "Indica se a conta está ativa",
       "example": true
     },
     "createdAt": {

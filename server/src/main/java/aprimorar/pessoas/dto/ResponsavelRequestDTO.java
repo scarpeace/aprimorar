@@ -14,7 +14,7 @@ public record ResponsavelRequestDTO(
         String nome,
 
         @NotBlank(message = "Email do responsável é obrigatório")
-        @Email(message = "Email deve ser um endereço de email válido")
+        @Email(message = "Use um e-mail válido")
         @Schema(nullable = false, description = "E-mail do responsável", example = "joao.silva@example.com")
         String email,
 

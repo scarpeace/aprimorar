@@ -1,21 +1,114 @@
 {
+  "required": [
+    "procentagemAulas",
+    "procentagemENEM",
+    "procentagemMentoria",
+    "procentagemOV",
+    "procentagemOutros",
+    "procentagemPAS",
+    "procentagemTerapia",
+    "totalAtendimentos",
+    "totalAulas",
+    "totalENEM",
+    "totalMentoria",
+    "totalOV",
+    "totalOutros",
+    "totalPAS",
+    "totalTerapia"
+  ],
   "type": "object",
   "properties": {
-    "totalAtendimentos": { "type": "integer", "format": "int64" },
-    "totalAulas": { "type": "integer", "format": "int64" },
-    "procentagemAulas": { "type": "number", "format": "double" },
-    "totalMentoria": { "type": "integer", "format": "int64" },
-    "procentagemMentoria": { "type": "number", "format": "double" },
-    "totalTerapia": { "type": "integer", "format": "int64" },
-    "procentagemTerapia": { "type": "number", "format": "double" },
-    "totalOV": { "type": "integer", "format": "int64" },
-    "procentagemOV": { "type": "number", "format": "double" },
-    "totalENEM": { "type": "integer", "format": "int64" },
-    "procentagemENEM": { "type": "number", "format": "double" },
-    "totalPAS": { "type": "integer", "format": "int64" },
-    "procentagemPAS": { "type": "number", "format": "double" },
-    "totalOutros": { "type": "integer", "format": "int64" },
-    "procentagemOutros": { "type": "number", "format": "double" }
+    "totalAtendimentos": {
+      "type": "integer",
+      "description": "Total de atendimentos",
+      "format": "int64",
+      "example": 120
+    },
+    "totalAulas": {
+      "type": "integer",
+      "description": "Total de aulas",
+      "format": "int64",
+      "example": 50
+    },
+    "procentagemAulas": {
+      "type": "number",
+      "description": "Percentual de aulas",
+      "format": "double",
+      "example": 41.6
+    },
+    "totalMentoria": {
+      "type": "integer",
+      "description": "Total de mentorias",
+      "format": "int64",
+      "example": 20
+    },
+    "procentagemMentoria": {
+      "type": "number",
+      "description": "Percentual de mentorias",
+      "format": "double",
+      "example": 16.6
+    },
+    "totalTerapia": {
+      "type": "integer",
+      "description": "Total de terapias",
+      "format": "int64",
+      "example": 10
+    },
+    "procentagemTerapia": {
+      "type": "number",
+      "description": "Percentual de terapias",
+      "format": "double",
+      "example": 8.3
+    },
+    "totalOV": {
+      "type": "integer",
+      "description": "Total de orientações vocacionais",
+      "format": "int64",
+      "example": 15
+    },
+    "procentagemOV": {
+      "type": "number",
+      "description": "Percentual de orientações vocacionais",
+      "format": "double",
+      "example": 12.5
+    },
+    "totalENEM": {
+      "type": "integer",
+      "description": "Total de atendimentos de ENEM",
+      "format": "int64",
+      "example": 8
+    },
+    "procentagemENEM": {
+      "type": "number",
+      "description": "Percentual de atendimentos de ENEM",
+      "format": "double",
+      "example": 6.6
+    },
+    "totalPAS": {
+      "type": "integer",
+      "description": "Total de atendimentos de PAS",
+      "format": "int64",
+      "example": 12
+    },
+    "procentagemPAS": {
+      "type": "number",
+      "description": "Percentual de atendimentos de PAS",
+      "format": "double",
+      "example": 10
+    },
+    "totalOutros": {
+      "type": "integer",
+      "description": "Total de outros atendimentos",
+      "format": "int64",
+      "example": 5
+    },
+    "procentagemOutros": {
+      "type": "number",
+      "description": "Percentual de outros atendimentos",
+      "format": "double",
+      "example": 4.1
+    }
   },
+  "description": "Resumo mensal dos atendimentos",
   "x-readme-ref-name": "RelatorioAtendimentosResponse"
 }

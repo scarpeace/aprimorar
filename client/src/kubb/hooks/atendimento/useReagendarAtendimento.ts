@@ -30,7 +30,7 @@ export type ReagendarAtendimentoMutationKey = ReturnType<
  */
 export async function reagendarAtendimento(
   id: ReagendarAtendimentoPathParams["id"],
-  data?: ReagendarAtendimentoMutationRequest,
+  data: ReagendarAtendimentoMutationRequest,
   config: Partial<RequestConfig<ReagendarAtendimentoMutationRequest>> & {
     client?: typeof fetch;
   } = {},
@@ -63,7 +63,7 @@ export function reagendarAtendimentoMutationOptions(
     ResponseErrorConfig<Error>,
     {
       id: ReagendarAtendimentoPathParams["id"];
-      data?: ReagendarAtendimentoMutationRequest;
+      data: ReagendarAtendimentoMutationRequest;
     },
     typeof mutationKey
   >({
@@ -85,7 +85,7 @@ export function useReagendarAtendimento<TContext>(
       ResponseErrorConfig<Error>,
       {
         id: ReagendarAtendimentoPathParams["id"];
-        data?: ReagendarAtendimentoMutationRequest;
+        data: ReagendarAtendimentoMutationRequest;
       },
       TContext
     > & { client?: QueryClient };
@@ -106,7 +106,7 @@ export function useReagendarAtendimento<TContext>(
     ResponseErrorConfig<Error>,
     {
       id: ReagendarAtendimentoPathParams["id"];
-      data?: ReagendarAtendimentoMutationRequest;
+      data: ReagendarAtendimentoMutationRequest;
     },
     TContext
   >;
@@ -116,7 +116,7 @@ export function useReagendarAtendimento<TContext>(
     ResponseErrorConfig<Error>,
     {
       id: ReagendarAtendimentoPathParams["id"];
-      data?: ReagendarAtendimentoMutationRequest;
+      data: ReagendarAtendimentoMutationRequest;
     },
     TContext
   >(
@@ -131,7 +131,7 @@ export function useReagendarAtendimento<TContext>(
     ResponseErrorConfig<Error>,
     {
       id: ReagendarAtendimentoPathParams["id"];
-      data?: ReagendarAtendimentoMutationRequest;
+      data: ReagendarAtendimentoMutationRequest;
     },
     TContext
   >;

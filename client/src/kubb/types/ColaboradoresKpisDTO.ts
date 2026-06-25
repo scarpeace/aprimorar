@@ -4,17 +4,17 @@
  */
 
 /**
- * @description Formato de payload para obter opções de colaboradores
+ * @description Resumo de colaboradores cadastrados
  */
 export type ColaboradoresKpisDTO = {
   /**
-   * @description ID do funcionário
-   * @type integer | undefined, int64
+   * @description Total de colaboradores cadastrados
+   * @type integer, int64
    */
-  totalColaboradores?: number;
+  totalColaboradores: number;
   /**
    * @description Total de colaboradores ativos
-   * @type integer | undefined, int64
+   * @type integer, int64
    */
-  totalColaboradoresAtivos?: number;
+  totalColaboradoresAtivos: number;
 };

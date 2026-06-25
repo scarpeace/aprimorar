@@ -16,13 +16,18 @@ export const transacaoRequestDTOCategoriaEnum = {
 export type TransacaoRequestDTOCategoriaEnumKey =
   (typeof transacaoRequestDTOCategoriaEnum)[keyof typeof transacaoRequestDTOCategoriaEnum];
 
+/**
+ * @description Payload para criar uma despesa manual
+ */
 export type TransacaoRequestDTO = {
   /**
-   * @type number | undefined
+   * @description Valor da despesa
+   * @type number
    */
-  valor?: number;
+  valor: number;
   /**
-   * @type string | undefined
+   * @description Categoria da despesa
+   * @type string
    */
-  categoria?: TransacaoRequestDTOCategoriaEnumKey;
+  categoria: TransacaoRequestDTOCategoriaEnumKey;
 };

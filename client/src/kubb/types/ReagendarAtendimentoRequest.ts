@@ -8,13 +8,13 @@
  */
 export type ReagendarAtendimentoRequest = {
   /**
-   * @description Novo inicio do atendimento
-   * @type string | undefined, date-time
+   * @description Novo horário do atendimento
+   * @type string, date-time
    */
-  novoInicio?: string;
+  novoInicio: string;
   /**
-   * @description Duracao do atendimento
-   * @type number | undefined, double
+   * @description Duração do atendimento
+   * @type number, double
    */
-  duracao?: number;
+  duracao: number;
 };
