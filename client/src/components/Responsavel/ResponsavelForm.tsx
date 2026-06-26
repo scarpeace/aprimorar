@@ -1,13 +1,10 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useHookFormMask } from "use-mask-input";
 import { Button } from "@/components/Ui/Button.tsx";
-import { TriangleAlert } from "lucide-react";
 import type { ResponsavelResponseDTO } from "@/kubb";
 import { responsavelFormSchema, type ResponsavelFormSchema } from "../../utils/zod/responsavel-form-schema.ts";
 import { useResponsavelMutations } from "../../services/use-responsavel-mutations.ts";
 import { formatDateForInput } from "@/utils/date-utils.ts";
-import type { ReactNode } from "react";
 import { TextInput } from "@/components/Forms/TextInput.tsx";
 import { MaskedInput } from "@/components/Forms/MaskedInput.tsx";
 
@@ -25,11 +22,11 @@ export function ResponsavelForm({ initialData, onSuccess, onCancel }: Responsave
     resolver: zodResolver(responsavelFormSchema),
     mode: "onBlur",
     defaultValues: {
-      nome: initialData?.nome,
-      email: initialData?.email,
-      telefone: initialData?.telefone,
+      nome: initialData?.nome ?? "",
+      email: initialData?.email ?? "",
+      telefone: initialData?.telefone ?? "",
       dataNascimento: formatDateForInput(initialData?.dataNascimento),
-      cpf: initialData?.cpf,
+      cpf: initialData?.cpf ?? "",
     },
   });
 

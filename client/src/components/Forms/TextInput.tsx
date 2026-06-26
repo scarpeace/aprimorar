@@ -1,4 +1,4 @@
-import { useFormContext } from "react-hook-form";
+import { get, useFormContext } from "react-hook-form";
 import { Field } from "./Field";
 import type { InputHTMLAttributes } from "react";
 
@@ -11,7 +11,7 @@ type TextInputProps =
 
 export function TextInput({ name, label, disabled, ...props }: TextInputProps) {
   const { register, formState: { errors } } = useFormContext();
-  const error = errors[name]?.message?.toString();
+  const error = get(errors, name)?.message?.toString();
 
   return (
     <Field label={label} error={error}>

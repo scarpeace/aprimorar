@@ -6,9 +6,7 @@ import {
 import { addressConstants } from "@/utils/constants/address-constants.ts";
 import { formatDateForInput } from "@/utils/date-utils.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TriangleAlert } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useHookFormMask } from "use-mask-input";
 import { useColaboradorMutations } from "../../services/use-colaborador-mutations.ts";
 import {
   colaboradorFormSchema,
@@ -47,10 +45,10 @@ export function ColaboradorForm({ initialData, onSuccess, onCancel }: Readonly<C
       endereco: {
         rua: initialData?.endereco?.rua ?? "",
         numero: initialData?.endereco?.numero ?? "",
-        complemento: initialData?.endereco?.complemento ?? "N/A",
+        complemento: initialData?.endereco?.complemento ?? "",
         bairro: initialData?.endereco?.bairro ?? "",
         cidade: initialData?.endereco?.cidade ?? "",
-        estado: initialData?.endereco?.estado ?? "DF",
+        estado: initialData?.endereco?.estado ?? "",
         cep: initialData?.endereco?.cep ?? "",
       },
     },
