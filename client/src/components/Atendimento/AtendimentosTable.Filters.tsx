@@ -23,18 +23,11 @@ export function AtendimentosTableFilters({
   onTipoChange,
 }: AtendimentosFiltersProps) {
   return (
-    <section className="my-3 flex flex-col gap-3 animate-[fade-up_220ms_ease-out_both] lg:flex-row lg:items-center lg:justify-between">
-      <div>
-        <h3 className="text-2xl font-bold text-base-content">Atendimentos registrados</h3>
-        <p className="text-sm text-base-content/60">
-          Navegue por mês e selecione um atendimento para visualizar os detalhes.
-        </p>
-      </div>
-
-      <div className="flex flex-wrap items-end gap-3">
+    <section className="flex flex-row items-center justify-between">
+      <div className="flex gap-3 w-5xl">
         <TextSearchInput
           label="Pesquisar"
-          className="w-120"
+          className=""
           placeholder="Aluno, colaborador, ou tipo do atendimento"
           onChange={onSearchChange}
         />
@@ -54,12 +47,12 @@ export function AtendimentosTableFilters({
           options={tipoOptions}
           onChange={(value) => onTipoChange(value as AtendimentoResponseTipoEnumKey | "")}
         />
+      </div>
 
         <Button variant="success" onClick={openForm}>
           <Plus className="mr-2 h-4 w-4" />
           Novo atendimento
         </Button>
-      </div>
     </section>
   );
 }

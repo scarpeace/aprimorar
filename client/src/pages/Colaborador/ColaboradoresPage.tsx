@@ -1,8 +1,8 @@
-import { Button } from "@/components/Ui/Button.tsx";
+import { ColaboradoresTableFilters } from "@/components/Colaborador/ColaboradoresTable.Filters.tsx";
 import { Modal } from "@/components/Ui/Modal.tsx";
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
 import { useGetColaboradoresKpis, type ColaboradorResponseDTO } from "@/kubb";
-import { Plus, UserCheck, UserCircle, UserCog } from "lucide-react";
+import { UserCheck, UserCircle, UserCog } from "lucide-react";
 import { useState } from "react";
 import { ColaboradoresTable } from "../../components/Colaborador/ColaboradoresTable.tsx";
 import { ColaboradorForm } from "../../components/Colaborador/ColaboradorForm.tsx";
@@ -11,6 +11,8 @@ import { KpiCard } from "@/components/Ui/KpiCard.tsx";
 export function ColaboradoresPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedColaborador, setSelectedColaborador] = useState<ColaboradorResponseDTO | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showArchived, setShowArchived] = useState(false);
 
   const headerProps = {
     description: "Gerencie cadastros e funções dos colaboradores.",
@@ -27,11 +29,11 @@ export function ColaboradoresPage() {
 
   return (
     <PageLayout {...headerProps}>
-
-      <section className="mb-3 rounded-2xl bg-base-100 p-4 shadow-sm animate-[fade-up_180ms_ease-out_both]">
-          <div className="flex flex-row justify-between items-center gap-3">
+      <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
+          <div className="flex flex-col">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
             <div>
-              <h3 className="text-2xl font-bold text-base-content">Resumo dos Colaboradores</h3>
+              <h3 className="text-2xl font-bold text-base-content">Colaboradores</h3>
               <p className="text-sm text-base-content/60">
                 Visão geral dos colaboradores ativos e do total cadastrado desde o início.
               </p>
@@ -52,10 +54,23 @@ export function ColaboradoresPage() {
               />
             </div>
           </div>
+          <ColaboradoresTableFilters
+            openForm={() => setIsFormOpen(true)}
+            showArchived={showArchived}
+            onSearchChange={setSearchTerm}
+            onShowArchivedChange={(value) => {
+              setShowArchived(value);
+            }}
+          />
+        </div>
         </section>
 
-        <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
-          <ColaboradoresTable openForm={() => setIsFormOpen(true)}/>
+        <section className="rounded-2xl mt-3 border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
+          <ColaboradoresTable
+            key={`${showArchived}-${searchTerm}`}
+            searchTerm={searchTerm}
+            showArchived={showArchived}
+          />
         </section>
 
         <Modal

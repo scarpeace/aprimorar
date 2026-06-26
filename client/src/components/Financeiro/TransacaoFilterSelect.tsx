@@ -21,7 +21,7 @@ export function TransacaoFilterSelect({
   className = "",
 }: Readonly<TransacaoFilterSelectProps>) {
   return (
-    <fieldset className={`fieldset ${className}`}>
+    <fieldset className={`fieldset w-full ${className}`}>
       <legend className="fieldset-legend">{label}</legend>
       <select
         className="select select-bordered w-full"

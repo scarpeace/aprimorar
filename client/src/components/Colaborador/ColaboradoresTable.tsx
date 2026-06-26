@@ -1,24 +1,23 @@
-import { Button } from "@/components/Ui/Button.tsx";
 import { EmptyCard } from "@/components/Ui/EmptyCard";
 import { ErrorCard } from "@/components/Ui/ErrorCard.tsx";
 import { LoadingSpinner } from "@/components/Ui/LoadingSpinner.tsx";
 import { Pagination } from "@/components/Ui/Pagination.tsx";
-import { TextSearchInput } from "@/components/Ui/TextSearchInput";
-import { ToggleSwitch } from "@/components/Ui/ToggleSwitch";
 import { useGetColaboradores } from "@/kubb";
 import { useDebounce } from "@/hooks/useDebounce.ts";
 import { formatCpf, formatPhone } from "@/utils/formatter.ts";
 import { formatDateShortYear } from "@/utils/date-utils.ts";
-import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { colaboradorConstants } from "../../utils/constants/colaborador-constants.ts";
 
-export function ColaboradoresTable({ openForm }: { openForm: () => void }) {
+type ColaboradoresTableProps = {
+  searchTerm: string;
+  showArchived: boolean;
+};
+
+export function ColaboradoresTable({ searchTerm, showArchived }: ColaboradoresTableProps) {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  const [showArchived, setShowArchived] = useState(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const colaboradoresQuery = useGetColaboradores({
@@ -35,47 +34,8 @@ export function ColaboradoresTable({ openForm }: { openForm: () => void }) {
   const pageSize = page?.size ?? colaboradores.length;
   const hasColaboradores = colaboradores.length > 0;
 
-  const handleShowArchived = (value: boolean) => {
-    setShowArchived(value);
-    setCurrentPage(0);
-  };
-
   return (
     <main>
-      <section className="my-3 animate-[fade-up_220ms_ease-out_both]">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <h3 className="text-2xl font-bold text-base-content">Colaboradores cadastrados</h3>
-            <p className="text-sm text-base-content/60">
-              Clique na linha para abrir os detalhes do cadastro.
-            </p>
-          </div>
-
-          <TextSearchInput
-            className="grow"
-            label="Pesquisar"
-            placeholder="Buscar colaborador por nome, email ou CPF"
-            onChange={(value) => {
-              setSearchTerm(value);
-              setCurrentPage(0);
-            }}
-          />
-
-          <ToggleSwitch
-            label="Mostrar Arquivados"
-            tip="Exibe colaboradores arquivados junto com os ativos"
-            checked={showArchived}
-            setToggle={handleShowArchived}
-            variant="info"
-          />
-
-          <Button className="sm:ml-auto" onClick={() => openForm()} variant="success">
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Colaborador
-          </Button>
-        </div>
-      </section>
-
       {colaboradoresQuery.isError && (
         <ErrorCard
           title="Não foi possível carregar a listagem de colaboradores"
