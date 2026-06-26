@@ -4,12 +4,15 @@ import aprimorar.atendimentos.enums.StatusAtendimento;
 import aprimorar.atendimentos.enums.TipoAtendimento;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
+import java.time.YearMonth;
 import java.util.UUID;
 
 @Schema(description = "Filtros opcionais para listar atendimentos")
 public record AtendimentoFiltroRequest(
     @Schema(description = "Texto livre de busca", nullable = true)
     String busca,
+    @Schema(description = "Ano e mes do filtro", example = "2026-06", nullable = true)
+    YearMonth anoMes,
     @Schema(description = "Data inicial", format = "date-time", nullable = true)
     Instant inicio,
     @Schema(description = "Data final", format = "date-time", nullable = true)

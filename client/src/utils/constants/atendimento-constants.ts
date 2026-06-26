@@ -1,4 +1,8 @@
-import type { CalendarioAtendimentosRespose } from "@/kubb";
+import {
+  atendimentoResponseStatusEnum,
+  atendimentoResponseTipoEnum,
+  type CalendarioAtendimentosRespose,
+} from "@/kubb";
 
 export const tipoAtendimentoLabels: Record<string, string> = {
   AULA: "Aula",
@@ -9,6 +13,37 @@ export const tipoAtendimentoLabels: Record<string, string> = {
   PAS: "PAS",
   OUTRO: "Outro",
 };
+
+export const statusOptions = [
+  { value: atendimentoResponseStatusEnum.AGENDADO, label: "Agendados" },
+  { value: atendimentoResponseStatusEnum.CONCLUIDO, label: "Concluídos" },
+  { value: atendimentoResponseStatusEnum.CANCELADO, label: "Cancelados" },
+] as const;
+
+export const tipoOptions = [
+  { value: atendimentoResponseTipoEnum.AULA, label: tipoAtendimentoLabels.AULA },
+  { value: atendimentoResponseTipoEnum.MENTORIA, label: tipoAtendimentoLabels.MENTORIA },
+  { value: atendimentoResponseTipoEnum.TERAPIA, label: tipoAtendimentoLabels.TERAPIA },
+  { value: atendimentoResponseTipoEnum.ORIENTACAO_VOCACIONAL, label: tipoAtendimentoLabels.ORIENTACAO_VOCACIONAL },
+  { value: atendimentoResponseTipoEnum.ENEM, label: tipoAtendimentoLabels.ENEM },
+  { value: atendimentoResponseTipoEnum.PAS, label: tipoAtendimentoLabels.PAS },
+  { value: atendimentoResponseTipoEnum.OUTRO, label: tipoAtendimentoLabels.OUTRO },
+] as const;
+
+export const monthTabs = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
+] as const;
 
 export const CORES_TIPO_ATENDIMENTO: Record<string, { backgroundColor: string; borderColor: string }> = {
   AULA: { backgroundColor: "#3b82f6", borderColor: "#2563eb" },

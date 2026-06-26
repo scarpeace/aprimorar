@@ -1,13 +1,11 @@
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
-import { BellElectric, Plus } from "lucide-react";
+import { BellElectric } from "lucide-react";
 import { AtendimentosTable } from "../../components/Atendimento/AtendimentosTable.tsx";
-import { usePageDateFilter } from "@/hooks/usePageDateFilter.ts";
 import { Modal } from "@/components/Ui/Modal.tsx";
 import { Suspense, useState } from "react";
 import { AtendimentoForm } from "../../components/Atendimento/AtendimentoForm.tsx";
 
 export function AtendimentosPage() {
-  const { startDate, endDate, ...dateFilter } = usePageDateFilter();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const headerProps = {

@@ -53,6 +53,11 @@ export type GetAtendimentosQueryParams = {
    */
   busca?: string | null;
   /**
+   * @description Ano e mes do filtro
+   * @type string
+   */
+  anoMes?: string | null;
+  /**
    * @description Data inicial
    * @type string, date-time
    */

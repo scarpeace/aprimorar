@@ -6,6 +6,7 @@ import aprimorar.atendimentos.enums.StatusAtendimento;
 import aprimorar.atendimentos.enums.TipoAtendimento;
 
 import java.time.Instant;
+import java.time.YearMonth;
 import java.util.UUID;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -18,8 +19,9 @@ public final class AtendimentoSpecifications {
     public static Specification<Atendimento> comFiltros(AtendimentoFiltroRequest filtro) {
         return Specification
             .where(buscaContem(filtro.busca()))
-            .and(inicioMaiorOuIgual(filtro.inicio()))
-            .and(fimMenorOuIgual(filtro.fim()))
+            .and(anoMesEntre(filtro.anoMes()))
+            .and(inicioMaiorOuIgual(filtro.anoMes() == null ? filtro.inicio() : null))
+            .and(fimMenorOuIgual(filtro.anoMes() == null ? filtro.fim() : null))
             .and(statusIgual(filtro.status()))
             .and(tipoIgual(filtro.tipo()))
             .and(alunoIdIgual(filtro.alunoId()))
@@ -48,6 +50,22 @@ public final class AtendimentoSpecifications {
 
     public static Specification<Atendimento> fimMenorOuIgual(Instant fim) {
         return (root, query, cb) -> fim == null ? null : cb.lessThanOrEqualTo(root.get("fim"), fim);
+    }
+
+    public static Specification<Atendimento> anoMesEntre(YearMonth anoMes) {
+        return (root, query, cb) -> {
+            if (anoMes == null) {
+                return null;
+            }
+
+            var inicio = anoMes.atDay(1).atStartOfDay();
+            var fim = anoMes.atEndOfMonth().atTime(23, 59, 59, 999_999_999);
+
+            return cb.and(
+                cb.greaterThanOrEqualTo(root.get("inicio"), inicio),
+                cb.lessThanOrEqualTo(root.get("fim"), fim)
+            );
+        };
     }
 
     public static Specification<Atendimento> alunoIdIgual(UUID alunoId) {
