@@ -23,7 +23,7 @@ export function AtendimentosTablePeriodTabs({
   children,
 }: AtendimentosPeriodTabsProps) {
   return (
-    <section className="mb-4 overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-sm">
+    <section className="mb-2 overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-sm">
       <div className="flex items-center justify-center gap-2 border-b border-base-300 px-3 py-3 sm:gap-3">
         <Button type="button" variant="ghost" size="sm" className="btn-square" aria-label="Ano anterior" onClick={onPrevYear}>
           <ChevronLeft className="h-4 w-4" />
@@ -39,7 +39,7 @@ export function AtendimentosTablePeriodTabs({
       </div>
 
       <div className="overflow-x-auto">
-        <div className="tabs tabs-lift px-2 pt-2 justify-between">
+        <div className="tabs tabs-lift pt-2 justify-between">
           {monthTabs.map((month, monthIndex) => {
             const isActive = monthIndex === selectedMonthIndex;
 
@@ -53,7 +53,7 @@ export function AtendimentosTablePeriodTabs({
                   checked={isActive}
                   onChange={() => onMonthChange(monthIndex)}
                 />
-                <div className="tab-content border-base-300 bg-base-100 px-0 pt-4">
+                <div className="tab-content border-base-300 rounded-xl">
                   {isActive ? children : null}
                 </div>
               </Fragment>
