@@ -1,35 +1,51 @@
 import DatePicker, { registerLocale } from "react-datepicker";
+import { Field } from "./Field";
+import { useState } from "react";
 
 type DateTimePickerProps = {
   name: string;
   label: string;
   error?: string;
-  date?: Date | null;
-  handleDateChange: (date: Date | null) => void;
+  // handleDateChange: (date: Date | null) => void;
   tip?: string;
 };
 
-export function DateTimePicker({ name, label, error, date, handleDateChange, tip }: DateTimePickerProps) {
+// registerLocale("pt-BR");
+
+export function DateTimePicker({ name, label, error, tip }: DateTimePickerProps) {
+  const [date, setDate] = useState<Date | null>(null);
+
   return (
     <>
-      <div className="tooltip" data-tip={tip}>
+      <fieldset className="fieldset w-full">
+        <legend className="fieldset-legend">
+          {label}
+        </legend>
+
         <DatePicker
           selected={date}
           isClearable
           clearButtonClassName="app-date-range-clear"
-          onChange={handleDateChange}
+          onChange={setDate}
           timeInputLabel="Horário"
           locale="pt-BR"
           // timeIntervals={15}
-          dateFormat="dd/MM/yyy hh:mm"
-          showTimeInput
-          timeFormat="24h"
+          dateFormat="dd/MM/yyyy"
+          showTimeSelect
+          timeFormat="HH:mm"
           className="w-full border border-base-content/50 rounded-sm p-2 cursor-pointer bg-transparent text-sm text-base-content hover:border-base-content"
           placeholderText="dd/mm/yyyy"
-          wrapperClassName="w-full"
+          wrapperClassName="input"
+          popperPlacement="top-end"
         />
-      </div>
-      {error && <span>{error}</span>}
+
+        {error && (
+          <p className="text-error text-xs">
+            {error}
+          </p>
+        )}
+      </fieldset>
+
     </>
   );
 }

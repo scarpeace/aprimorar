@@ -1,5 +1,6 @@
-import { Controller, useFormContext } from "react-hook-form";
 import { IMaskInput } from "react-imask";
+import { Controller, useFormContext } from "react-hook-form";
+
 import { Field } from "./Field";
 
 type Props = {

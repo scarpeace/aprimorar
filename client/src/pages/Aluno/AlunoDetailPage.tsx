@@ -13,7 +13,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AtendimentosAlunoTable } from "../../components/Aluno/AtendimentosAlunoTable.tsx";
 import { AlunoForm } from "../../components/Aluno/AlunoForm.tsx";
 import { AlunoInfoSection } from "../../components/Aluno/AlunoInfoSection.tsx";
-import { DateRangeSelectWidget } from "@/components/Ui/DateRangeSelectWidget.tsx";
 
 export function AlunoDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -86,7 +85,6 @@ export function AlunoDetailPage() {
         />
       </Modal>
 
-      <DateRangeSelectWidget {...dateFilter} />
     </PageLayout>
   );
 }

@@ -10,7 +10,6 @@ type TextInputProps =
   };
 
 export function TextInput({ name, label, disabled, ...props }: TextInputProps) {
-
   const { register, formState: { errors } } = useFormContext();
   const error = errors[name]?.message?.toString();
 

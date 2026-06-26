@@ -9,7 +9,6 @@ type SelectInputProps = {
 };
 
 export function SelectInput({name,label,options,className}: SelectInputProps) {
-
   const { control, formState: { errors } } = useFormContext();
   const error = errors[name]?.message?.toString();
 
