@@ -3,7 +3,7 @@ package aprimorar.pessoas.repository.specifications;
 import org.springframework.data.jpa.domain.Specification;
 
 import aprimorar.pessoas.domain.Aluno;
-import aprimorar.pessoas.dto.AlunoFiltroRequest;
+import aprimorar.pessoas.dto.aluno.AlunoFiltroRequest;
 
 public final class AlunoSpecifications {
 

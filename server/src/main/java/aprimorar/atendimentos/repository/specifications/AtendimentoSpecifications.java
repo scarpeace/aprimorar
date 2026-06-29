@@ -38,18 +38,18 @@ public final class AtendimentoSpecifications {
 
             return cb.or(
                 cb.like(cb.lower(root.get("tipo").as(String.class)), pattern),
-                cb.like(cb.lower(root.get("nomeAluno")), pattern),
-                cb.like(cb.lower(root.get("nomeColaborador")), pattern)
+                cb.like(cb.lower(root.join("aluno").get("nome")), pattern),
+                cb.like(cb.lower(root.join("colaborador").get("nome")), pattern)
             );
         };
     }
 
     public static Specification<Atendimento> inicioMaiorOuIgual(Instant inicio) {
-        return (root, query, cb) -> inicio == null ? null : cb.greaterThanOrEqualTo(root.get("inicio"), inicio);
+        return (root, query, cb) -> inicio == null ? null : cb.greaterThanOrEqualTo(root.get("dataHoraInicio"), inicio);
     }
 
     public static Specification<Atendimento> fimMenorOuIgual(Instant fim) {
-        return (root, query, cb) -> fim == null ? null : cb.lessThanOrEqualTo(root.get("fim"), fim);
+        return (root, query, cb) -> fim == null ? null : cb.lessThanOrEqualTo(root.get("dataHoraFim"), fim);
     }
 
     public static Specification<Atendimento> anoMesEntre(YearMonth anoMes) {
@@ -62,14 +62,14 @@ public final class AtendimentoSpecifications {
             var fim = anoMes.atEndOfMonth().atTime(23, 59, 59, 999_999_999);
 
             return cb.and(
-                cb.greaterThanOrEqualTo(root.get("inicio"), inicio),
-                cb.lessThanOrEqualTo(root.get("fim"), fim)
+                cb.greaterThanOrEqualTo(root.get("dataHoraInicio"), inicio),
+                cb.lessThanOrEqualTo(root.get("dataHoraFim"), fim)
             );
         };
     }
 
     public static Specification<Atendimento> alunoIdIgual(UUID alunoId) {
-        return (root, query, cb) -> alunoId == null ? null : cb.equal(root.get("alunoId"), alunoId);
+        return (root, query, cb) -> alunoId == null ? null : cb.equal(root.get("aluno").get("id"), alunoId);
     }
 
     public static Specification<Atendimento> statusIgual(StatusAtendimento status) {
@@ -81,6 +81,6 @@ public final class AtendimentoSpecifications {
     }
 
     public static Specification<Atendimento> colaboradorIdIgual(UUID colaboradorId) {
-        return (root, query, cb) -> colaboradorId == null ? null : cb.equal(root.get("colaboradorId"), colaboradorId);
+        return (root, query, cb) -> colaboradorId == null ? null : cb.equal(root.get("colaborador").get("id"), colaboradorId);
     }
 }

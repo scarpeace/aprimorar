@@ -3,7 +3,7 @@ package aprimorar.pessoas.repository.specifications;
 import org.springframework.data.jpa.domain.Specification;
 
 import aprimorar.pessoas.domain.Colaborador;
-import aprimorar.pessoas.dto.ColaboradorFiltroRequest;
+import aprimorar.pessoas.dto.colaborador.ColaboradorFiltroRequest;
 import aprimorar.pessoas.shared.FuncoesColaborador;
 
 public final class ColaboradorSpecifications {
@@ -13,8 +13,8 @@ public final class ColaboradorSpecifications {
             .where(nomeContem(filtro.nome()))
             .and(emailContem(filtro.email()))
             .and(cpfContem(filtro.cpf()))
-            .and(ativosContem(filtro.ativos()))
-            .and(isNotGhost());
+            .and(ativosContem(filtro.ativos()));
+            // .and(isNotGhost());
     }
 
     public static Specification<Colaborador> nomeContem(String nome) {
@@ -48,7 +48,7 @@ public final class ColaboradorSpecifications {
         };
     }
 
-    public static Specification<Colaborador> isNotGhost() {
-        return (root, query, cb) -> cb.notEqual(root.get("funcao"), FuncoesColaborador.SISTEMA);
-    }
+    // public static Specification<Colaborador> isNotGhost() {
+    //     return (root, query, cb) -> cb.notEqual(root.get("funcao"), FuncoesColaborador.SISTEMA);
+    // }
 }

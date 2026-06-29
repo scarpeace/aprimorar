@@ -17,53 +17,41 @@ public record AtendimentoResponse(
     @Schema(nullable = false, description = "Identificador unico do atendimento", example = "550e8400-e29b-41d4-a716-446655440000")
     Long id,
 
-    @Nullable
-    @Schema(nullable = false, description = "Descricao do atendimento", example = "Sessao focada em revisao de matematica basica")
-    String descricao,
-
     @NotNull
     @Schema(nullable = false, description = "Conteudo do atendimento (aula, mentoria etc.)", example = "MENTORIA")
     TipoAtendimento tipo,
 
     @NotNull
     @Schema(nullable = false, description = "Data/hora de inicio do atendimento", example = "2023-11-20T14:00:00Z")
-    LocalDateTime inicio,
+    LocalDateTime dataHoraInicio,
 
     @NotNull
     @Schema(nullable = false, description = "Data/hora de fim do atendimento", example = "2023-11-20T16:00:00Z")
-    LocalDateTime fim,
+    LocalDateTime dataHoraFim,
 
     @NotNull
-    @Schema(nullable = false, description = "Duracao do atendimento em horas", example = "1.5")
-    Double duracao,
+    @Schema(nullable = false, description = "Valor pago pelo aluno", example = "150.00")
+    BigDecimal pagamentoAluno,
 
     @NotNull
-    @Schema(nullable = false, description = "Valor do atendimento cobrado do aluno", example = "150.00")
-    BigDecimal valor,
-
-    @NotNull
-    @Schema(nullable = false, description = "Pagamento do atendimento ao colaborador", example = "100.00")
-    BigDecimal repasse,
-
-    @NotNull
-    @Schema(nullable = false, description = "Lucro do atendimento", example = "50.00")
-    BigDecimal lucro,
+    @Schema(nullable = false, description = "Valor de repasse ao colaborador", example = "100.00")
+    BigDecimal repasseColaborador,
 
     @NotNull
     @Schema(nullable = false, description = "ID do aluno vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174000")
     UUID alunoId,
 
     @NotNull
-    @Schema(nullable = false, description = "Nome do aluno vinculado ao atendimento", example = "Joao Silva")
-    String nomeAluno,
-
-    @NotNull
     @Schema(nullable = false, description = "ID do colaborador vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174001")
     UUID colaboradorId,
 
-    @NotNull
-    @Schema(nullable = false, description = "Nome do colaborador vinculado ao atendimento", example = "Maria Souza")
-    String nomeColaborador,
+    @Nullable
+    @Schema(nullable = true, description = "Data do pagamento do aluno", example = "2024-03-10T15:33:42Z")
+    LocalDateTime dataPagamentoAluno,
+
+    @Nullable
+    @Schema(nullable = true, description = "Data do pagamento do colaborador", example = "2024-03-10T15:33:42Z")
+    LocalDateTime dataPagamentoColaborador,
 
     @NotNull
     @Schema(nullable = false, description = "Status do atendimento", example = "AGENDADO")
@@ -80,18 +68,15 @@ public record AtendimentoResponse(
     public static AtendimentoResponse toDto(Atendimento atendimento) {
         return new AtendimentoResponse(
             atendimento.getId(),
-            atendimento.getDescricao(),
             atendimento.getTipo(),
-            atendimento.getInicio(),
-            atendimento.getFim(),
-            atendimento.getDuracao(),
-            atendimento.getValor(),
-            atendimento.getRepasse(),
-            atendimento.getLucro(),
+            atendimento.getDataHoraInicio(),
+            atendimento.getDataHoraFim(),
+            atendimento.getPagamentoAluno(),
+            atendimento.getRepasseColaborador(),
             atendimento.getAlunoId(),
-            atendimento.getNomeAluno(),
             atendimento.getColaboradorId(),
-            atendimento.getNomeColaborador(),
+            atendimento.getDataPagamentoAluno(),
+            atendimento.getDataPagamentoColaborador(),
             atendimento.getStatus(),
             atendimento.getCreatedAt(),
             atendimento.getUpdatedAt()

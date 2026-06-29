@@ -10,7 +10,6 @@ export const colaboradorResponseDTOFuncaoEnum = {
   ADMINISTRATIVO: "ADMINISTRATIVO",
   TERAPEUTA: "TERAPEUTA",
   MENTOR: "MENTOR",
-  SISTEMA: "SISTEMA",
 } as const;
 
 export type ColaboradorResponseDTOFuncaoEnumKey =
@@ -56,20 +55,20 @@ export type ColaboradorResponseDTO = {
    */
   email: string;
   /**
-   * @description Função/Papel do funcionário
+   * @description Funcao do colaborador
    * @type string
    */
   funcao: ColaboradorResponseDTOFuncaoEnumKey;
   /**
-   * @description Dados do endereco retornados pela API
+   * @description Endereco do colaborador
    * @type object
    */
   endereco: EnderecoResponseDTO;
   /**
    * @description Indica se o colaborador está ativo
-   * @type boolean | undefined
+   * @type boolean
    */
-  active?: boolean;
+  active: boolean;
   /**
    * @description Data de criacao do colaborador
    * @type string, date-time

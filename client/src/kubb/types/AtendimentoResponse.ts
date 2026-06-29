@@ -35,11 +35,6 @@ export type AtendimentoResponse = {
    */
   id: number;
   /**
-   * @description Descricao do atendimento
-   * @type string | undefined
-   */
-  descricao?: string;
-  /**
    * @description Tipo de conteudo ou categoria do atendimento
    * @type string
    */
@@ -48,52 +43,42 @@ export type AtendimentoResponse = {
    * @description Data/hora de inicio do atendimento
    * @type string, date-time
    */
-  inicio: string;
+  dataHoraInicio: string;
   /**
    * @description Data/hora de fim do atendimento
    * @type string, date-time
    */
-  fim: string;
+  dataHoraFim: string;
   /**
-   * @description Duracao do atendimento em horas
-   * @type number, double
-   */
-  duracao: number;
-  /**
-   * @description Valor do atendimento cobrado do aluno
+   * @description Valor pago pelo aluno
    * @type number
    */
-  valor: number;
+  pagamentoAluno: number;
   /**
-   * @description Pagamento do atendimento ao colaborador
+   * @description Valor de repasse ao colaborador
    * @type number
    */
-  repasse: number;
-  /**
-   * @description Lucro do atendimento
-   * @type number
-   */
-  lucro: number;
+  repasseColaborador: number;
   /**
    * @description ID do aluno vinculado ao atendimento
    * @type string, uuid
    */
   alunoId: string;
   /**
-   * @description Nome do aluno vinculado ao atendimento
-   * @type string
-   */
-  nomeAluno: string;
-  /**
    * @description ID do colaborador vinculado ao atendimento
    * @type string, uuid
    */
   colaboradorId: string;
   /**
-   * @description Nome do colaborador vinculado ao atendimento
-   * @type string
+   * @description Data de pagamento do aluno
+   * @type string, date-time
    */
-  nomeColaborador: string;
+  dataPagamentoAluno?: string | null;
+  /**
+   * @description Data de pagamento do colaborador
+   * @type string, date-time
+   */
+  dataPagamentoColaborador?: string | null;
   /**
    * @description Status do atendimento
    * @type string

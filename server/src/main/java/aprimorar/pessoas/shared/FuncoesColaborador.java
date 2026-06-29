@@ -7,8 +7,7 @@ public enum FuncoesColaborador {
     PROFESSOR("Professor"),
     ADMINISTRATIVO("Administrativo"),
     TERAPEUTA("Terapeuta"),
-    MENTOR("Mentor"),
-    SISTEMA("Sistema");
+    MENTOR("Mentor");
 
     private final String description;
 

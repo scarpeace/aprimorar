@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
 
 import aprimorar.pessoas.domain.Responsavel;
-import aprimorar.pessoas.dto.ResponsavelFiltroRequest;
+import aprimorar.pessoas.dto.responsavel.ResponsavelFiltroRequest;
 
 
 public final class ResponsavelSpecifications {

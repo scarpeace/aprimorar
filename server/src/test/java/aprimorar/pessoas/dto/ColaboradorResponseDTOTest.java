@@ -2,9 +2,9 @@ package aprimorar.pessoas.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import aprimorar.pessoas.api.ColaboradorResponseDTO;
 import aprimorar.pessoas.domain.Colaborador;
 import aprimorar.pessoas.domain.Endereco;
+import aprimorar.pessoas.dto.colaborador.ColaboradorResponseDTO;
 import aprimorar.pessoas.shared.FuncoesColaborador;
 import java.lang.reflect.Field;
 import java.time.LocalDate;

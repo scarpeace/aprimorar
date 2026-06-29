@@ -21,11 +21,6 @@ export type AtendimentoRequestTipoEnumKey =
  */
 export type AtendimentoRequest = {
   /**
-   * @description Descrição do atendimento
-   * @type string | undefined
-   */
-  descricao?: string;
-  /**
    * @description Tipo de conteudo ou categoria do atendimento
    * @type string
    */
@@ -34,22 +29,22 @@ export type AtendimentoRequest = {
    * @description Data e hora de início do atendimento
    * @type string, date-time
    */
-  inicio: string;
+  dataHoraInicio: string;
   /**
-   * @description Duração do atendimento em horas
-   * @type number, double
+   * @description Data e hora de fim do atendimento
+   * @type string, date-time
    */
-  duracao: number;
+  dataHoraFim: string;
   /**
-   * @description Valor do atendimento cobrado do aluno
+   * @description Valor pago pelo aluno
    * @type number
    */
-  valor: number;
+  pagamentoAluno: number;
   /**
-   * @description Valor de repasse do atendimento ao colaborador
+   * @description Valor de repasse ao colaborador
    * @type number
    */
-  repasse: number;
+  repasseColaborador: number;
   /**
    * @description ID do aluno vinculado ao atendimento
    * @type string, uuid

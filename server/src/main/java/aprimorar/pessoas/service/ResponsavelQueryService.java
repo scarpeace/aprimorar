@@ -12,16 +12,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import aprimorar.exception.BusinessException;
 import aprimorar.pessoas.domain.Responsavel;
-import aprimorar.pessoas.dto.ResponsavelFiltroRequest;
-import aprimorar.pessoas.dto.ResponsavelResponseDTO;
-import aprimorar.pessoas.api.ResponsavelQueryApi;
+import aprimorar.pessoas.dto.responsavel.ResponsavelFiltroRequest;
+import aprimorar.pessoas.dto.responsavel.ResponsavelResponseDTO;
 import aprimorar.pessoas.repository.ResponsavelRepository;
 import aprimorar.pessoas.repository.specifications.ResponsavelSpecifications;
-import aprimorar.shared.exception.BusinessException;
 
 @Service
-public class ResponsavelQueryService implements ResponsavelQueryApi {
+public class ResponsavelQueryService {
 
     private static final Logger log = LoggerFactory.getLogger(ResponsavelQueryService.class);
 
@@ -32,7 +31,6 @@ public class ResponsavelQueryService implements ResponsavelQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
     public Page<ResponsavelResponseDTO> getResponsaveis(ResponsavelFiltroRequest filtro, Pageable pageable) {
         Specification<Responsavel> spec = ResponsavelSpecifications.comFiltros(filtro);
         Page<Responsavel> responsaveisPage = responsavelRepo.findAll(spec, pageable);
@@ -44,7 +42,6 @@ public class ResponsavelQueryService implements ResponsavelQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
     public List<ResponsavelResponseDTO> getResponsaveisList() {
         List<Responsavel> list = responsavelRepo.findAll();
         log.info("Consulta de opções de responsáveis finalizada, {} registros encontrados.", list.size());
@@ -55,7 +52,6 @@ public class ResponsavelQueryService implements ResponsavelQueryApi {
     }
 
     @Transactional(readOnly = true)
-    @Override
     public ResponsavelResponseDTO findResponsavelById(UUID responsavelId) {
         Responsavel responsavel = findResponsavelOrThrow(responsavelId);
         log.info("Responsável {} consultado com sucesso.", responsavel.getNome().toUpperCase());

@@ -1,6 +1,5 @@
 package aprimorar.pessoas.controller;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -18,11 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import aprimorar.pessoas.dto.ColaboradorFiltroRequest;
-import aprimorar.pessoas.dto.ColaboradorRequestDTO;
-import aprimorar.pessoas.api.ColaboradorResponseDTO;
-import aprimorar.pessoas.dto.ColaboradoresKpisDTO;
-import aprimorar.pessoas.dto.ColaboradoresListDTO;
+import aprimorar.pessoas.dto.colaborador.ColaboradorFiltroRequest;
+import aprimorar.pessoas.dto.colaborador.ColaboradorRequestDTO;
+import aprimorar.pessoas.dto.colaborador.ColaboradorResponseDTO;
 import aprimorar.pessoas.service.ColaboradorMutationService;
 import aprimorar.pessoas.service.ColaboradorQueryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,21 +64,21 @@ public class ColaboradorController {
         return ResponseEntity.ok(colaboradores);
     }
 
-    @GetMapping("/kpis")
-    @Operation(operationId = "getColaboradoresKpis", description = "Retorna os KPIs de colaboradores.")
-    @ApiResponse(responseCode = "200", description = "KPIs de colaboradores retornados com sucesso.")
-    public ResponseEntity<ColaboradoresKpisDTO> getColaboradoresKpis() {
-        ColaboradoresKpisDTO kpis = colaboradorQueryService.getColaboradoresKpis();
-        return ResponseEntity.ok(kpis);
-    }
+    // @GetMapping("/kpis")
+    // @Operation(operationId = "getColaboradoresKpis", description = "Retorna os KPIs de colaboradores.")
+    // @ApiResponse(responseCode = "200", description = "KPIs de colaboradores retornados com sucesso.")
+    // public ResponseEntity<ColaboradoresKpisDTO> getColaboradoresKpis() {
+    //     ColaboradoresKpisDTO kpis = colaboradorQueryService.getColaboradoresKpis();
+    //     return ResponseEntity.ok(kpis);
+    // }
 
-    @GetMapping("/list")
-    @Operation(operationId = "getColaboradoresList", description = "Retorna uma lista de opções de colaboradores para dropdown.")
-    @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
-    public ResponseEntity<List<ColaboradoresListDTO>> listarColaboradores() {
-        List<ColaboradoresListDTO> options = colaboradorQueryService.listColaboradores();
-        return ResponseEntity.ok(options);
-    }
+    // @GetMapping("/list")
+    // @Operation(operationId = "getColaboradoresList", description = "Retorna uma lista de opções de colaboradores para dropdown.")
+    // @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
+    // public ResponseEntity<List<ColaboradoresListDTO>> listarColaboradores() {
+    //     List<ColaboradoresListDTO> options = colaboradorQueryService.listColaboradores();
+    //     return ResponseEntity.ok(options);
+    // }
 
     @GetMapping("/{colaboradorId}")
     @Operation(operationId = "findColaboradorById", description = "Retorna um colaborador por ID.")
@@ -110,19 +107,19 @@ public class ColaboradorController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{colaboradorId}/archive")
-    @Operation(operationId = "arquivarColaborador", description = "Arquiva um colaborador por ID.")
-    @ApiResponse(responseCode = "204", description = "Colaborador arquivado com sucesso.")
-    public ResponseEntity<Void> archiveColaborador(@PathVariable UUID colaboradorId) {
-        colaboradorMutationService.archiveColaborador(colaboradorId);
-        return ResponseEntity.noContent().build();
-    }
+    // @PatchMapping("/{colaboradorId}/archive")
+    // @Operation(operationId = "arquivarColaborador", description = "Arquiva um colaborador por ID.")
+    // @ApiResponse(responseCode = "204", description = "Colaborador arquivado com sucesso.")
+    // public ResponseEntity<Void> archiveColaborador(@PathVariable UUID colaboradorId) {
+    //     colaboradorMutationService.archiveColaborador(colaboradorId);
+    //     return ResponseEntity.noContent().build();
+    // }
 
-    @PatchMapping("/{colaboradorId}/unarchive")
-    @Operation(operationId = "desarquivarColaborador", description = "Desarquiva um colaborador por ID.")
-    @ApiResponse(responseCode = "204", description = "Colaborador desarquivado com sucesso.")
-    public ResponseEntity<Void> unarchiveColaborador(@PathVariable UUID colaboradorId) {
-        colaboradorMutationService.unarchiveColaborador(colaboradorId);
-        return ResponseEntity.noContent().build();
-    }
+    // @PatchMapping("/{colaboradorId}/unarchive")
+    // @Operation(operationId = "desarquivarColaborador", description = "Desarquiva um colaborador por ID.")
+    // @ApiResponse(responseCode = "204", description = "Colaborador desarquivado com sucesso.")
+    // public ResponseEntity<Void> unarchiveColaborador(@PathVariable UUID colaboradorId) {
+    //     colaboradorMutationService.unarchiveColaborador(colaboradorId);
+    //     return ResponseEntity.noContent().build();
+    // }
 }

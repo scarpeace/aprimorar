@@ -41,8 +41,8 @@ public record CalendarioAtendimentosRespose(
             projection.getId(),
             projection.getColaboradorId(),
             projection.getAlunoId(),
-            projection.getInicio(),
-            projection.getFim(),
+            projection.getDataHoraInicio(),
+            projection.getDataHoraFim(),
             projection.getTipo(),
             projection.getNomeColaborador(),
             projection.getNomeAluno()

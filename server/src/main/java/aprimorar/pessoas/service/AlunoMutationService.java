@@ -1,19 +1,15 @@
 package aprimorar.pessoas.service;
 
+import aprimorar.exception.BusinessException;
 import aprimorar.pessoas.domain.Aluno;
-import aprimorar.pessoas.dto.AlunoRequestDTO;
-import aprimorar.pessoas.api.AlunoResponseDTO;
-import aprimorar.pessoas.api.AlunoDeletedEvent;
-import aprimorar.pessoas.api.ArchiveAlunoVerificationEvent;
-import aprimorar.pessoas.api.DeleteAlunoVerificationEvent;
-import aprimorar.pessoas.api.ResponsavelQueryApi;
+import aprimorar.pessoas.dto.aluno.AlunoRequestDTO;
+import aprimorar.pessoas.dto.aluno.AlunoResponseDTO;
 import aprimorar.pessoas.repository.AlunoRepository;
-import aprimorar.shared.exception.BusinessException;
+
 import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,17 +21,9 @@ public class AlunoMutationService {
     private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-4000-8000-000000000002");
 
     private final AlunoRepository alunoRepo;
-    private final ResponsavelQueryApi responsavelQueryApi;
-    private final ApplicationEventPublisher eventPublisher;
 
-    public AlunoMutationService(
-        AlunoRepository alunoRepo,
-        ResponsavelQueryApi responsavelQueryApi,
-        ApplicationEventPublisher eventPublisher
-    ) {
+    public AlunoMutationService(AlunoRepository alunoRepo) {
         this.alunoRepo = alunoRepo;
-        this.responsavelQueryApi = responsavelQueryApi;
-        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -50,8 +38,7 @@ public class AlunoMutationService {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um aluno cadastrado com este e-mail.");
         }
 
-        //TODO: isso aqui talvez pode virar um "existsById"
-        responsavelQueryApi.findResponsavelById(dto.responsavelId());
+        //TODO FIND RESPONSAVELBY ID
 
         Aluno savedAluno = alunoRepo.save(aluno);
 
@@ -76,7 +63,6 @@ public class AlunoMutationService {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um aluno utilizando este e-mail.");
         }
 
-        responsavelQueryApi.findResponsavelById(requestedAluno.getResponsavelId());
         aluno.update(
             requestedAluno.getNome(),
             requestedAluno.getDataNascimento(),
@@ -96,7 +82,6 @@ public class AlunoMutationService {
         Aluno aluno = findAlunoOrThrow(alunoId);
 
         log.info("Verificando se aluno não tem cobranças pendentes {}.", aluno.getNome().toUpperCase());
-        eventPublisher.publishEvent(new ArchiveAlunoVerificationEvent(alunoId));
 
         aluno.archive();
         log.info("Aluno {} arquivado com sucesso.", aluno.getNome().toUpperCase());
@@ -118,10 +103,8 @@ public class AlunoMutationService {
         ensureNotGhost(alunoId);
 
         log.info("Verificando se aluno não tem cobranças pendentes {}.", aluno.getNome().toUpperCase());
-        eventPublisher.publishEvent(new DeleteAlunoVerificationEvent(alunoId));
 
         log.info("Realocando atendimentos do aluno ao Aluno Fantasma.", aluno.getNome().toUpperCase());
-        eventPublisher.publishEvent(new AlunoDeletedEvent(alunoId));
 
         alunoRepo.delete(aluno);
         log.info("Aluno {} deletado com sucesso.", aluno.getNome().toUpperCase());

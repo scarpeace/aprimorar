@@ -2,7 +2,7 @@ package aprimorar.pessoas.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import aprimorar.pessoas.shared.FuncoesColaborador;
+import aprimorar.pessoas.dto.aluno.AlunoRequestDTO;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

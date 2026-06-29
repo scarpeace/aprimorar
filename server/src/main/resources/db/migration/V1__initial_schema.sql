@@ -60,7 +60,7 @@ CREATE TABLE colaboradores (
   email VARCHAR(255) NOT NULL UNIQUE,
   data_nascimento DATE NOT NULL,
   telefone VARCHAR(20) NOT NULL,
-  funcao VARCHAR(100) NOT NULL CHECK (funcao IN ('PROFESSOR', 'ADMINISTRATIVO', 'TERAPEUTA', 'MENTOR', 'SISTEMA')),
+  funcao VARCHAR(100) NOT NULL CHECK (funcao IN ('PROFESSOR', 'ADMINISTRATIVO', 'TERAPEUTA', 'MENTOR')),
   pix VARCHAR(255) NOT NULL,
   ativo BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -72,29 +72,22 @@ CREATE INDEX idx_colaboradores_funcao ON colaboradores(funcao);
 
 CREATE TABLE atendimentos (
   id BIGSERIAL NOT NULL PRIMARY KEY,
-  titulo VARCHAR(255) NOT NULL,
-  descricao TEXT,
-  inicio TIMESTAMP NOT NULL,
-  fim TIMESTAMP NOT NULL,
-  valor NUMERIC(10,2) NOT NULL CHECK (valor >= 0),
-  repasse NUMERIC(10,2) NOT NULL CHECK (repasse >= 0),
-  tipo VARCHAR(255) NOT NULL CHECK (tipo IN ('AULA','MENTORIA','TERAPIA','ORIENTACAO_VOCACIONAL','ENEM','PAS','OUTRO')),
-  status VARCHAR(20) NOT NULL CHECK (status IN ('AGENDADO','CONCLUIDO','CANCELADO')),
   aluno_id UUID NOT NULL REFERENCES alunos(id),
   colaborador_id UUID NOT NULL REFERENCES colaboradores(id),
-  nome_aluno VARCHAR(255) NOT NULL,
-  nome_colaborador VARCHAR(255) NOT NULL,
+  data_hora_inicio TIMESTAMP NOT NULL,
+  data_hora_fim TIMESTAMP NOT NULL,
+  tipo VARCHAR(255) NOT NULL CHECK (tipo IN ('AULA','MENTORIA','TERAPIA','ORIENTACAO_VOCACIONAL','ENEM','PAS','OUTRO')),
+  status VARCHAR(20) NOT NULL CHECK (status IN ('AGENDADO','CONCLUIDO','CANCELADO')),
+  pagamento_aluno NUMERIC(10,2) NOT NULL CHECK (pagamento_aluno >= 0),
+  repasse_colaborador NUMERIC(10,2) NOT NULL CHECK (repasse_colaborador >= 0),
+  data_pagamento_aluno TIMESTAMP,
+  data_pagamento_colaborador TIMESTAMP,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP
 );
 
 CREATE INDEX idx_atendimentos_tipo ON atendimentos(tipo);
-CREATE INDEX idx_atendimentos_inicio ON atendimentos(inicio);
-CREATE INDEX idx_atendimentos_fim ON atendimentos(fim);
-CREATE INDEX idx_atendimentos_aluno_inicio ON atendimentos(aluno_id, inicio);
-CREATE INDEX idx_atendimentos_colaborador_inicio ON atendimentos(colaborador_id, inicio);
-CREATE INDEX idx_atendimentos_nome_aluno ON atendimentos(nome_aluno);
-CREATE INDEX idx_atendimentos_nome_colaborador ON atendimentos(nome_colaborador);
+CREATE INDEX idx_atendimentos_status ON atendimentos(status);
 
 -- Contas inativas sem hash BCrypt utilizavel, exclusivas dos registros removidos.
 INSERT INTO users (id, username, password, role, active) VALUES
@@ -140,7 +133,7 @@ INSERT INTO colaboradores (id, user_id, endereco_id, nome, cpf, email, data_nasc
   'colaborador.removido@aprimorar.local',
   DATE '2000-01-01',
   '00000000001',
-  'SISTEMA',
+  'ADMINISTRATIVO',
   '00000000001',
   FALSE
 );

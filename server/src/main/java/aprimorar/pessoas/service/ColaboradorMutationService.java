@@ -1,17 +1,14 @@
 package aprimorar.pessoas.service;
 
+import aprimorar.exception.BusinessException;
 import aprimorar.pessoas.domain.Colaborador;
-import aprimorar.pessoas.dto.ColaboradorRequestDTO;
-import aprimorar.pessoas.api.ColaboradorResponseDTO;
-import aprimorar.pessoas.api.ArchiveColaboradorVerificationEvent;
-import aprimorar.pessoas.api.ColaboradorDeletedEvent;
-import aprimorar.pessoas.api.DeleteColaboradorVerificationEvent;
+import aprimorar.pessoas.dto.colaborador.ColaboradorRequestDTO;
+import aprimorar.pessoas.dto.colaborador.ColaboradorResponseDTO;
 import aprimorar.pessoas.repository.ColaboradorRepository;
-import aprimorar.shared.exception.BusinessException;
+
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +19,9 @@ public class ColaboradorMutationService {
     private static final Logger log = LoggerFactory.getLogger(ColaboradorMutationService.class);
 
     private final ColaboradorRepository colaboradorRepo;
-    private final ApplicationEventPublisher eventPublisher;
 
-    public ColaboradorMutationService(
-        ColaboradorRepository colaboradorRepo,
-        ApplicationEventPublisher eventPublisher
-    ) {
+    public ColaboradorMutationService(ColaboradorRepository colaboradorRepo) {
         this.colaboradorRepo = colaboradorRepo;
-        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -73,30 +65,28 @@ public class ColaboradorMutationService {
         return ColaboradorResponseDTO.toDto(colaborador);
     }
 
-    @Transactional
-    public void archiveColaborador(UUID colaboradorId) {
-        Colaborador colaborador = findByIdOrThrow(colaboradorId);
+    // @Transactional
+    // public void archiveColaborador(UUID colaboradorId) {
+    //     Colaborador colaborador = findByIdOrThrow(colaboradorId);
 
-        eventPublisher.publishEvent(new ArchiveColaboradorVerificationEvent(colaboradorId));
-        colaborador.archive();
-        log.info("Colaborador {} arquivado com sucesso.", colaborador.getNome().toUpperCase());
-    }
+    //     eventPublisher.publishEvent(new ArchiveColaboradorVerificationEvent(colaboradorId));
+    //     colaborador.archive();
+    //     log.info("Colaborador {} arquivado com sucesso.", colaborador.getNome().toUpperCase());
+    // }
 
-    @Transactional
-    public void unarchiveColaborador(UUID colaboradorId) {
-        Colaborador colaborador = findByIdOrThrow(colaboradorId);
+    // @Transactional
+    // public void unarchiveColaborador(UUID colaboradorId) {
+    //     Colaborador colaborador = findByIdOrThrow(colaboradorId);
 
-        colaborador.unarchive();
-        log.info("Colaborador {} desarquivado com sucesso.", colaborador.getNome().toUpperCase());
-    }
+    //     colaborador.unarchive();
+    //     log.info("Colaborador {} desarquivado com sucesso.", colaborador.getNome().toUpperCase());
+    // }
 
     @Transactional
     public void deleteColaborador(UUID colaboradorId) {
         Colaborador colaborador = findByIdOrThrow(colaboradorId);
 
-        eventPublisher.publishEvent(new DeleteColaboradorVerificationEvent(colaboradorId));
         colaboradorRepo.delete(colaborador);
-        eventPublisher.publishEvent(new ColaboradorDeletedEvent(colaboradorId));
 
         log.info(
             "Colaborador {} deletado com sucesso. Eventos transferidos para 'Colaborador Removido'.",

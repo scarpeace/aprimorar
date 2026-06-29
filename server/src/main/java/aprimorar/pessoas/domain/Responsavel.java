@@ -8,10 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "responsaveis")
 public class Responsavel {
@@ -29,7 +32,7 @@ public class Responsavel {
     @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
-    @Column(name = "telefone", nullable = false)
+    @Column(name = "telefone", nullable = false, length = 20)
     private String telefone;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -81,41 +84,4 @@ public class Responsavel {
         this.telefone = telefone;
         this.email = email;
     }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-	public UUID getId() {
-		return id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public LocalDate getDataNascimento() {
-		return dataNascimento;
-	}
-
-	public String getTelefone() {
-		return telefone;
-	}
-
-	public UUID getUserId() {
-		return userId;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
 }

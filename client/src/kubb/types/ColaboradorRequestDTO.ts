@@ -10,7 +10,6 @@ export const colaboradorRequestDTOFuncaoEnum = {
   ADMINISTRATIVO: "ADMINISTRATIVO",
   TERAPEUTA: "TERAPEUTA",
   MENTOR: "MENTOR",
-  SISTEMA: "SISTEMA",
 } as const;
 
 export type ColaboradorRequestDTOFuncaoEnumKey =
@@ -56,12 +55,12 @@ export type ColaboradorRequestDTO = {
    */
   email: string;
   /**
-   * @description Função/Papel do funcionário
+   * @description Função do colaborador
    * @type string
    */
   funcao: ColaboradorRequestDTOFuncaoEnumKey;
   /**
-   * @description Endereço do cadastro
+   * @description Endereço do colaborador
    * @type object
    */
   endereco: EnderecoRequestDTO;

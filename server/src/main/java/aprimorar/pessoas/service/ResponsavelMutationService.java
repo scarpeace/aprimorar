@@ -1,11 +1,11 @@
 package aprimorar.pessoas.service;
 
+import aprimorar.exception.BusinessException;
 import aprimorar.pessoas.domain.Responsavel;
-import aprimorar.pessoas.dto.ResponsavelRequestDTO;
-import aprimorar.pessoas.dto.ResponsavelResponseDTO;
+import aprimorar.pessoas.dto.responsavel.ResponsavelRequestDTO;
+import aprimorar.pessoas.dto.responsavel.ResponsavelResponseDTO;
 import aprimorar.pessoas.repository.AlunoRepository;
 import aprimorar.pessoas.repository.ResponsavelRepository;
-import aprimorar.shared.exception.BusinessException;
 
 import java.util.UUID;
 import org.slf4j.Logger;

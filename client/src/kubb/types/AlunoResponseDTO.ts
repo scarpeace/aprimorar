@@ -70,7 +70,7 @@ export type AlunoResponseDTO = {
    */
   createdAt: string;
   /**
-   * @description Dados do endereco retornados pela API
+   * @description Endereço do aluno
    * @type object
    */
   endereco: EnderecoResponseDTO;

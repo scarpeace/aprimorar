@@ -4,6 +4,8 @@ package aprimorar.atendimentos.repository;
 import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.atendimentos.repository.projections.AtendimentoCalendarioProjection;
 import aprimorar.atendimentos.repository.projections.AtendimentosReportProjection;
+import aprimorar.pessoas.domain.Aluno;
+import aprimorar.pessoas.domain.Colaborador;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,21 +23,21 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
     @Query(
         """
         UPDATE Atendimento a
-        SET a.alunoId = :ghostId
-        WHERE a.alunoId = :alunoId
+        SET a.aluno = :ghost
+        WHERE a.aluno.id = :alunoId
         """
     )
-    void reassignAtendimentosAlunoToGhost(@Param("alunoId") UUID alunoId, @Param("ghostId") UUID ghostId);
+    void reassignAtendimentosAlunoToGhost(@Param("alunoId") UUID alunoId, @Param("ghost") Aluno ghost);
 
     @Modifying
     @Query(
         """
         UPDATE Atendimento a
-        SET a.colaboradorId = :ghostId
-        WHERE a.colaboradorId = :colaboradorId
+        SET a.colaborador = :ghost
+        WHERE a.colaborador.id = :colaboradorId
         """
     )
-    void reassignAtendimentosColaboradorToGhost(@Param("colaboradorId") UUID colaboradorId, @Param("ghostId") UUID ghostId);
+    void reassignAtendimentosColaboradorToGhost(@Param("colaboradorId") UUID colaboradorId, @Param("ghost") Colaborador ghost);
 
     @Query("""
         SELECT
@@ -47,8 +49,8 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
           COUNT(*) FILTER (WHERE at.tipo = 'ORIENTACAO_VOCACIONAL') AS totalOV,
           COUNT(*) FILTER (WHERE at.tipo = 'OUTRO') AS totalOutros
         FROM Atendimento at
-        WHERE at.inicio >= :inicio
-          AND at.fim <= :fim
+        WHERE at.dataHoraInicio >= :inicio
+          AND at.dataHoraFim <= :fim
         """)
     AtendimentosReportProjection getRelatorioMensal(
         @Param("inicio") LocalDateTime inicio,
@@ -58,19 +60,19 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
     @Query("""
         SELECT
           at.id AS id,
-          at.colaboradorId AS colaboradorId,
-          at.alunoId AS alunoId,
-          at.inicio AS inicio,
-          at.fim AS fim,
+          at.colaborador.id AS colaboradorId,
+          at.aluno.id AS alunoId,
+          at.dataHoraInicio AS dataHoraInicio,
+          at.dataHoraFim AS dataHoraFim,
           at.tipo AS tipo,
           c.nome AS nomeColaborador,
           al.nome AS nomeAluno
         FROM Atendimento at
-        JOIN Colaborador c ON at.colaboradorId = c.id
-        JOIN Aluno al ON at.alunoId = al.id
-        WHERE at.inicio >= :inicio
-          AND at.fim <= :fim
-        ORDER BY at.inicio
+        JOIN at.colaborador c
+        JOIN at.aluno al
+        WHERE at.dataHoraInicio >= :inicio
+          AND at.dataHoraFim <= :fim
+        ORDER BY at.dataHoraInicio
         """)
     List<AtendimentoCalendarioProjection> getCalendarioMensal(
         @Param("inicio") LocalDateTime inicio,
@@ -81,13 +83,13 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
         """
             SELECT count(a) > 0
             FROM Atendimento a
-            WHERE a.alunoId = :alunoId
-              AND a.inicio < :fim
-              AND a.fim > :inicio
+            WHERE a.aluno.id = :alunoId
+              AND a.dataHoraInicio < :fim
+              AND a.dataHoraFim > :inicio
               AND (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
         """
     )
-    boolean alunoPossuiAtendimentoConflitante(
+    boolean hasAtendimetoConflitante(
         @Param("alunoId") UUID alunoId,
         @Param("inicio") LocalDateTime inicio,
         @Param("fim") LocalDateTime fim,
@@ -98,9 +100,9 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
         """
             SELECT count(a) > 0
             FROM Atendimento a
-            WHERE a.colaboradorId = :colaboradorId
-              AND a.inicio < :fim
-              AND a.fim > :inicio
+            WHERE a.colaborador.id = :colaboradorId
+              AND a.dataHoraInicio < :fim
+              AND a.dataHoraFim > :inicio
               AND (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
         """
     )

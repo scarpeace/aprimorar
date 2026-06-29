@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
+import aprimorar.pessoas.dto.responsavel.ResponsavelRequestDTO;
+
 class ResponsavelRequestDTOTest {
 
     @Test

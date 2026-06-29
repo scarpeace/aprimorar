@@ -3,7 +3,6 @@ package aprimorar.atendimentos.service;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.atendimentos.repository.projections.AtendimentosReportProjection;
 import aprimorar.atendimentos.repository.projections.AtendimentoCalendarioProjection;
 import aprimorar.atendimentos.repository.specifications.AtendimentoSpecifications;
-import aprimorar.shared.exception.BusinessException;
+import aprimorar.exception.BusinessException;
 
 @Service
 public class AtendimentoQueryService {
@@ -50,7 +49,7 @@ public class AtendimentoQueryService {
         Atendimento atendimento = atendimentoRepo.findById(id).orElseThrow(
             () -> new BusinessException(HttpStatus.NOT_FOUND, "Atendimento não encontrado"));
 
-        log.info("Atendimento {} consultado com sucesso.", atendimento.getTitulo().toUpperCase());
+        log.info("Atendimento {} consultado com sucesso.", atendimento.getId());
         return AtendimentoResponse.toDto(atendimento);
     }
 

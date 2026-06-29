@@ -1,7 +1,7 @@
 package aprimorar.auth.domain;
 
-import aprimorar.shared.MapperUtils;
-import aprimorar.shared.enums.Role;
+import aprimorar.auth.Role;
+import aprimorar.utils.MapperUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

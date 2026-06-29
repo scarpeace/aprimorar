@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import aprimorar.pessoas.dto.AlunoFiltroRequest;
-import aprimorar.pessoas.dto.AlunoRequestDTO;
-import aprimorar.pessoas.api.AlunoResponseDTO;
-import aprimorar.pessoas.dto.AlunosKpisDTO;
-import aprimorar.pessoas.dto.AlunosListDTO;
+import aprimorar.pessoas.dto.aluno.AlunoFiltroRequest;
+import aprimorar.pessoas.dto.aluno.AlunoRequestDTO;
+import aprimorar.pessoas.dto.aluno.AlunoResponseDTO;
+import aprimorar.pessoas.dto.aluno.AlunosKpisDTO;
+import aprimorar.pessoas.dto.aluno.AlunosListDTO;
 import aprimorar.pessoas.service.AlunoMutationService;
 import aprimorar.pessoas.service.AlunoQueryService;
 import io.swagger.v3.oas.annotations.Operation;

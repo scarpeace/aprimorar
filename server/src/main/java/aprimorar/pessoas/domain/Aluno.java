@@ -35,7 +35,7 @@ public class Aluno {
     @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
-    @Column(name = "telefone", nullable = false)
+    @Column(name = "telefone", nullable = false, length = 20)
     private String telefone;
 
     @Column(name = "email", nullable = false, unique = true)

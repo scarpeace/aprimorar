@@ -1,17 +1,12 @@
 package aprimorar.pessoas.service;
 
+import aprimorar.exception.BusinessException;
 import aprimorar.pessoas.domain.Colaborador;
-import aprimorar.pessoas.dto.ColaboradorFiltroRequest;
-import aprimorar.pessoas.api.ColaboradorResponseDTO;
-import aprimorar.pessoas.dto.ColaboradoresKpisDTO;
-import aprimorar.pessoas.dto.ColaboradoresListDTO;
-import aprimorar.pessoas.api.ColaboradorQueryApi;
+import aprimorar.pessoas.dto.colaborador.ColaboradorFiltroRequest;
+import aprimorar.pessoas.dto.colaborador.ColaboradorResponseDTO;
 import aprimorar.pessoas.repository.ColaboradorRepository;
 import aprimorar.pessoas.repository.specifications.ColaboradorSpecifications;
-import aprimorar.pessoas.shared.FuncoesColaborador;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -23,10 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import aprimorar.shared.exception.BusinessException;
-
 @Service
-public class ColaboradorQueryService implements ColaboradorQueryApi {
+public class ColaboradorQueryService {
 
     private static final Logger log = LoggerFactory.getLogger(ColaboradorQueryService.class);
 
@@ -47,26 +40,19 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
     }
 
     @Transactional(readOnly = true)
-    public ColaboradoresKpisDTO getColaboradoresKpis() {
-        long totalColaboradores = colaboradorRepo.countByFuncaoNot(FuncoesColaborador.SISTEMA);
-        long totalColaboradoresAtivos = colaboradorRepo.countByActiveTrueAndFuncaoNot(FuncoesColaborador.SISTEMA);
-        return new ColaboradoresKpisDTO(totalColaboradores, totalColaboradoresAtivos);
-    }
-
-    @Transactional(readOnly = true)
     public ColaboradorResponseDTO findById(UUID colaboradorId) {
         Colaborador colaborador = findByIdOrThrow(colaboradorId);
         log.info("Colaborador {} consultado com sucesso.", colaborador.getNome().toUpperCase());
         return ColaboradorResponseDTO.toDto(colaborador);
     }
 
-    @Transactional(readOnly = true)
-    public List<ColaboradoresListDTO> listColaboradores() {
-        return colaboradorRepo.findAllByFuncaoNotAndActiveTrueOrderByNomeAsc(FuncoesColaborador.SISTEMA)
-            .stream()
-            .map(e -> new ColaboradoresListDTO(e.getId(), e.getNome()))
-            .toList();
-    }
+    // @Transactional(readOnly = true)
+    // public List<ColaboradoresListDTO> listColaboradores() {
+    //     return colaboradorRepo.findAllByFuncaoNotAndActiveTrueOrderByNomeAsc(FuncoesColaborador.SISTEMA)
+    //         .stream()
+    //         .map(e -> new ColaboradoresListDTO(e.getId(), e.getNome()))
+    //         .toList();
+    // }
 
     private Colaborador findByIdOrThrow(UUID colaboradorId) {
         return colaboradorRepo
@@ -74,16 +60,5 @@ public class ColaboradorQueryService implements ColaboradorQueryApi {
             .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Colaborador não encontrado no banco de dados"));
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public boolean existsById(UUID id) {
-        return colaboradorRepo.existsById(id);
-    }
 
-    @Override
-    @Transactional(readOnly = true)
-    public String getNomeById(UUID colaboradorId) {
-        return colaboradorRepo.getNomeById(colaboradorId)
-        .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Colaborador não encontrado no banco de dados"));
-    }
 }

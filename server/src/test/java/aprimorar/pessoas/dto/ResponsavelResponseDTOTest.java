@@ -3,6 +3,8 @@ package aprimorar.pessoas.dto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import aprimorar.pessoas.domain.Responsavel;
+import aprimorar.pessoas.dto.responsavel.ResponsavelResponseDTO;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;

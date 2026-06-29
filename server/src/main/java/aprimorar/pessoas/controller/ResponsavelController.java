@@ -1,8 +1,8 @@
 package aprimorar.pessoas.controller;
 
-import aprimorar.pessoas.dto.ResponsavelFiltroRequest;
-import aprimorar.pessoas.dto.ResponsavelRequestDTO;
-import aprimorar.pessoas.dto.ResponsavelResponseDTO;
+import aprimorar.pessoas.dto.responsavel.ResponsavelFiltroRequest;
+import aprimorar.pessoas.dto.responsavel.ResponsavelRequestDTO;
+import aprimorar.pessoas.dto.responsavel.ResponsavelResponseDTO;
 import aprimorar.pessoas.service.ResponsavelMutationService;
 import aprimorar.pessoas.service.ResponsavelQueryService;
 import io.swagger.v3.oas.annotations.Operation;

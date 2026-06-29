@@ -10,8 +10,8 @@ public interface AtendimentoCalendarioProjection {
     Long getId();
     UUID getColaboradorId();
     UUID getAlunoId();
-    LocalDateTime getInicio();
-    LocalDateTime getFim();
+    LocalDateTime getDataHoraInicio();
+    LocalDateTime getDataHoraFim();
     TipoAtendimento getTipo();
     String getNomeColaborador();
     String getNomeAluno();

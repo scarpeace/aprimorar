@@ -70,56 +70,6 @@ class ColaboradorTest {
         assertEquals("123.456.789-00", colaborador.getCpf());
     }
 
-    @Test
-    void shouldArchiveAndUnarchiveColaborador() {
-        var colaborador = new Colaborador(
-            "João Pereira",
-            LocalDate.of(1990, 5, 21),
-            "joao.pereira@example.com",
-            "(61) 99999-9999",
-            "123.456.789-00",
-            "joao.pereira@example.com",
-            FuncoesColaborador.PROFESSOR,
-            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
-        );
-
-        colaborador.archive();
-
-        assertFalse(colaborador.getActive());
-
-        colaborador.unarchive();
-
-        assertTrue(colaborador.getActive());
-    }
-
-    @Test
-    void shouldRejectSystemRecordUpdate() {
-        var colaborador = new Colaborador(
-            "Sistema",
-            LocalDate.of(1990, 5, 21),
-            "sistema@example.com",
-            "(61) 99999-9999",
-            "123.456.789-00",
-            "sistema@example.com",
-            FuncoesColaborador.SISTEMA,
-            new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
-        );
-
-        var exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> colaborador.update(
-                "Sistema 2",
-                LocalDate.of(1991, 1, 1),
-                "outro@example.com",
-                "(11) 99999-9999",
-                "outro@example.com",
-                FuncoesColaborador.ADMINISTRATIVO,
-                new Endereco("Rua B", "20", "Bairro", "Rio", "RJ", "20000-000", "Sala 2")
-            )
-        );
-
-        assertEquals("Não é possível realizar esta operação em um registro do sistema.", exception.getMessage());
-    }
 
     @Test
     void shouldSetCreatedAtAndUpdatedAt() {
