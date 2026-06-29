@@ -6,7 +6,6 @@ import aprimorar.atendimentos.dto.ReagendarAtendimentoRequest;
 import aprimorar.atendimentos.enums.StatusAtendimento;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.atendimentos.domain.Atendimento;
-import aprimorar.atendimentos.domain.Transacao;
 import aprimorar.pessoas.api.AlunoQueryApi;
 import aprimorar.pessoas.api.ColaboradorQueryApi;
 import aprimorar.shared.exception.BusinessException;
@@ -27,18 +26,15 @@ public class AtendimentoMutationService {
     private final AtendimentoRepository atendimentoRepo;
     private final AlunoQueryApi alunoQueryApi;
     private final ColaboradorQueryApi colaboradorQueryApi;
-    private final TransacaoMutationService transacaoMutationService;
 
     public AtendimentoMutationService(
         AtendimentoRepository atendimentoRepo,
         AlunoQueryApi alunoQueryApi,
-        ColaboradorQueryApi colaboradorQueryApi,
-        TransacaoMutationService transacaoMutationService
+        ColaboradorQueryApi colaboradorQueryApi
     ) {
         this.atendimentoRepo = atendimentoRepo;
         this.alunoQueryApi = alunoQueryApi;
         this.colaboradorQueryApi = colaboradorQueryApi;
-        this.transacaoMutationService = transacaoMutationService;
     }
 
     @Transactional
@@ -52,9 +48,6 @@ public class AtendimentoMutationService {
 
         Atendimento saved = atendimentoRepo.save(atendimento);
 
-        transacaoMutationService.criarEntradaAluno(saved);
-        transacaoMutationService.criarSaidaColaborador(saved);
-
         log.info("Atendimento {} cadastrado com sucesso.", saved.getTitulo().toUpperCase());
         return AtendimentoResponse.toDto(saved);
     }
@@ -64,7 +57,6 @@ public class AtendimentoMutationService {
         Atendimento atendimento = findAtendimentoOrThrow(id);
 
         atendimento.cancelar();
-        transacaoMutationService.cancelarTransacoesByAtendimentoId(id);
         log.info("Atendimento {} cancelado com sucesso.", atendimento.getTitulo().toUpperCase());
     }
 

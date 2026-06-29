@@ -2,13 +2,15 @@ package aprimorar.pessoas.domain;
 
 import aprimorar.pessoas.shared.FuncoesColaborador;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -58,7 +60,8 @@ public class Colaborador {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Embedded
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "endereco_id", nullable = false, unique = true)
     private Endereco endereco;
 
     @PrePersist

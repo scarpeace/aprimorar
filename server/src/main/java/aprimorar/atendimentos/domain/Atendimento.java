@@ -13,7 +13,6 @@ import java.util.UUID;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-// TODO: Adicionar campos do Google Calendar para a implementacao
 @Entity
 @Getter
 @Table(name = "atendimentos")
@@ -52,13 +51,13 @@ public class Atendimento implements Serializable {
     @Column(name = "aluno_id", nullable = false)
     private UUID alunoId;
 
-    @Column(name = "nomeAluno", nullable = false)
+    @Column(name = "nome_aluno", nullable = false)
     private String nomeAluno;
 
     @Column(name = "colaborador_id", nullable = false)
     private UUID colaboradorId;
 
-    @Column(name = "nomeColaborador", nullable = false)
+    @Column(name = "nome_colaborador", nullable = false)
     private String nomeColaborador;
 
     @Column(name = "created_at", nullable = false, updatable = false)

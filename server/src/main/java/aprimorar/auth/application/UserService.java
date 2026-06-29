@@ -41,7 +41,7 @@ public class UserService {
             throw new UserBusinessException(HttpStatus.CONFLICT, "E-mail já cadastrado");
         }
 
-        if (dto.role() == Role.PARENT || dto.role() == Role.STUDENT || dto.role() == Role.ADMIN) {
+        if (dto.role() != Role.COLABORADOR) {
             throw new UserBusinessException(HttpStatus.CONFLICT, "Não é possível criar um usuário com este perfil");
         }
 
@@ -57,8 +57,8 @@ public class UserService {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new UserBusinessException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        if (user.getRole() == Role.ADMIN) {
-            throw new UserBusinessException(HttpStatus.CONFLICT, "Não é permitido alterar o usuário ADMIN");
+        if (user.getRole() == Role.ADMIN || user.getRole() == Role.SISTEMA) {
+            throw new UserBusinessException(HttpStatus.CONFLICT, "Não é permitido alterar este usuário");
         }
 
         userRepository.delete(user);
@@ -69,8 +69,8 @@ public class UserService {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new UserBusinessException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-        if (user.getRole() == Role.ADMIN) {
-            throw new UserBusinessException(HttpStatus.CONFLICT, "Não é permitido alterar o usuário ADMIN");
+        if (user.getRole() == Role.ADMIN || user.getRole() == Role.SISTEMA) {
+            throw new UserBusinessException(HttpStatus.CONFLICT, "Não é permitido alterar este usuário");
         }
 
         user.toggleActive();

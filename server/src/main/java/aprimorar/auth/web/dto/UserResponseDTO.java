@@ -19,7 +19,7 @@ public record UserResponseDTO(
         String username,
 
         @NotNull
-        @Schema(description = "Perfil de acesso", example = "EMPLOYEE")
+        @Schema(description = "Perfil de acesso", example = "COLABORADOR")
         Role role,
 
         @NotNull

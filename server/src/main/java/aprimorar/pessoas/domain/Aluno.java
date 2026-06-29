@@ -1,11 +1,13 @@
 package aprimorar.pessoas.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Embedded;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -57,7 +59,8 @@ public class Aluno {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Embedded
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "endereco_id", nullable = false, unique = true)
     private Endereco endereco;
 
     protected Aluno() {

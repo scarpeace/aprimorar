@@ -51,14 +51,4 @@ public record EnderecoRequestDTO(
         );
     }
 
-    public void build(Endereco endereco) {
-        endereco.setRua(rua);
-        endereco.setNumero(numero);
-        endereco.setBairro(bairro);
-        endereco.setCidade(cidade);
-        endereco.setEstado(estado);
-        endereco.setCep(MapperUtils.normalizeZip(cep));
-        endereco.setComplemento(complemento);
-    }
-
 }

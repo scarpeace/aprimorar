@@ -12,7 +12,7 @@ import { useDebounce } from "@/hooks/useDebounce.ts";
 import { Fragment, useId, useState } from "react";
 import { Button } from "@/components/Ui/Button.tsx";
 import { monthTabs, tipoAtendimentoLabels } from "@/utils/constants/atendimento-constants.ts";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Handshake, Link } from "lucide-react";
 import { EmptyCard } from "../Ui/EmptyCard.tsx";
 import { AtendimentoMobileCard } from "./AtendimentoMobileCard.tsx";
 import { brl } from "@/utils/formatter.ts";
@@ -22,9 +22,11 @@ type AtendimentosTableProps = {
   search: string;
   filterStatus: AtendimentoResponseStatusEnumKey | "";
   filterTipo: AtendimentoResponseTipoEnumKey | "";
+  alunoId?: string;
+  colaboradorId?: string;
 };
 
-export function AtendimentosTable({ search, filterStatus, filterTipo }: AtendimentosTableProps) {
+export function AtendimentosTable({ search, filterStatus, filterTipo, alunoId, colaboradorId }: AtendimentosTableProps) {
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const now = new Date();
@@ -38,6 +40,8 @@ export function AtendimentosTable({ search, filterStatus, filterTipo }: Atendime
     page,
     size: 20,
     anoMes,
+    alunoId,
+    colaboradorId,
     sort: ["inicio,desc", "id,asc"],
     busca: debouncedSearch || undefined,
     status: filterStatus || undefined,
@@ -50,41 +54,41 @@ export function AtendimentosTable({ search, filterStatus, filterTipo }: Atendime
 
   return (
     <section className="mb-2 overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-sm">
-      <div className="flex items-center justify-center gap-2 border-b border-base-300 px-3 py-3 sm:gap-3">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="btn-square"
-          aria-label="Ano anterior"
-          onClick={() => {
-            setSelectedYear((currentYear) => currentYear - 1);
-            setPage(0);
-          }}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-
-        <span className="min-w-20 text-2xl text-center font-semibold text-base-content">
-          {selectedYear}
-        </span>
-
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="btn-square"
-          aria-label="Próximo ano"
-          onClick={() => {
-            setSelectedYear((currentYear) => currentYear + 1);
-            setPage(0);
-          }}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
-
       <div className="overflow-x-auto">
+
+        <div className="flex items-center justify-center gap-2 border-b border-base-300 px-3 py-3 sm:gap-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="btn-square"
+            aria-label="Ano anterior"
+            onClick={() => {
+              setSelectedYear((currentYear) => currentYear - 1);
+              setPage(0);
+            }}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+
+          <span className="min-w-20 text-2xl text-center font-semibold text-base-content">
+            {selectedYear}
+          </span>
+
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="btn-square"
+            aria-label="Próximo ano"
+            onClick={() => {
+              setSelectedYear((currentYear) => currentYear + 1);
+              setPage(0);
+            }}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
         <div className="tabs tabs-lift pt-2 justify-between">
           {monthTabs.map((month, monthIndex) => {
             const isActive = monthIndex === selectedMonthIndex;
@@ -132,6 +136,7 @@ export function AtendimentosTable({ search, filterStatus, filterTipo }: Atendime
                                     <th className="text-center font-bold text-base-content/70">Status</th>
                                     <th className="text-right font-bold text-base-content/70">Valor</th>
                                     <th className="text-right font-bold text-base-content/70">Repasse</th>
+                                    <th className="text-right font-bold text-base-content/70">Situação</th>
                                   </tr>
                                 </thead>
 
@@ -161,14 +166,13 @@ export function AtendimentosTable({ search, filterStatus, filterTipo }: Atendime
                                         </span>
                                       </td>
                                       <td className="text-right">
-                                        <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
                                           <span>{brl.format(atendimento.valor)}</span>
-                                        </div>
                                       </td>
                                       <td className="text-right">
-                                        <div className="flex items-center justify-end gap-2 font-mono text-sm font-semibold text-base-content">
                                           <span>{brl.format(atendimento.repasse)}</span>
-                                        </div>
+                                      </td>
+                                      <td className="text-right">
+                                          {}
                                       </td>
                                     </tr>
                                   ))}

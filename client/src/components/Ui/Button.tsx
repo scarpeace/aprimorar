@@ -22,6 +22,7 @@ type CommonButtonProps = {
   variant?: ButtonVariant
   size?: ButtonSize
   className?: string
+  tooltip?: string
 }
 
 function getVariantClass(variant: ButtonVariant) {
@@ -38,15 +39,17 @@ function getVariantClass(variant: ButtonVariant) {
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & CommonButtonProps
 
-export function Button({ variant = "primary", size = "md", className = "", ...props }: ButtonProps) {
+export function Button({ variant = "primary", size = "md", className = "", tooltip, ...props }: ButtonProps) {
   const sizeClass = size === "md" ? "" : `btn-${size}`
   const variantClass = getVariantClass(variant)
-  
+
   return (
-    <button 
-      className={`btn ${variantClass} ${sizeClass} ${className}`.trim()} 
-      {...props} 
-    />
+    <div className="tooltip" data-tip={tooltip}>
+      <button
+        className={`btn ${variantClass} ${sizeClass} ${className}`.trim()}
+        {...props}
+      />
+    </div>
   )
 }
 
@@ -57,9 +60,9 @@ export function ButtonLink({ variant = "primary", size = "md", className = "", .
   const variantClass = getVariantClass(variant)
 
   return (
-    <Link 
-      className={`btn ${variantClass} ${sizeClass} ${className}`.trim()} 
-      {...props} 
+    <Link
+      className={`btn ${variantClass} ${sizeClass} ${className}`.trim()}
+      {...props}
     />
   )
 }

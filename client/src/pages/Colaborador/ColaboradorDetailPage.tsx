@@ -2,35 +2,28 @@ import { PageLayout } from "@/components/Layout/PageLayout.tsx";
 import { Modal } from "@/components/Ui/Modal.tsx";
 import {
   useFindColaboradorById,
-  useGetAtendimentos,
+  type AtendimentoResponseStatusEnumKey,
+  type AtendimentoResponseTipoEnumKey,
 } from "@/kubb";
 import { FileUser } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ColaboradorEventsTable } from "../../components/Colaborador/ColaboradorEventsTable.tsx";
 import { ColaboradorInfoSection } from "../../components/Colaborador/ColaboradorInfoSection.tsx";
 import { ColaboradorForm } from "../../components/Colaborador/ColaboradorForm.tsx";
-import { usePageDateFilter } from "@/hooks/usePageDateFilter.ts";
+import { AtendimentosTable } from "@/components/Atendimento/AtendimentosTable.tsx";
+import { AtendimentosTableHeader } from "@/components/Atendimento/AtendimentosTable.Header.tsx";
 
 export function ColaboradorDetailPage() {
   const { id } = useParams<{ id: string }>();
   const colaboradorId = id ?? "";
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
 
-  const dateFilter = usePageDateFilter();
-  const { startDate, endDate } = dateFilter;
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState<AtendimentoResponseStatusEnumKey | "">("");
+  const [filterTipo, setFilterTipo] = useState<AtendimentoResponseTipoEnumKey | "">("");
 
   const colaboradorQuery = useFindColaboradorById(colaboradorId);
-
-  const colaboradorAtendimentos = useGetAtendimentos({
-    colaboradorId,
-    page: currentPage,
-    sort: ["fim,desc", "id,asc"],
-    inicio: startDate?.toISOString(),
-    fim: endDate?.toISOString(),
-  });
 
   const headerProps = {
     description: "Veja e gerencie as informações do colaborador",
@@ -45,15 +38,25 @@ export function ColaboradorDetailPage() {
         <ColaboradorInfoSection colaboradorId={colaboradorId} onEdit={() => setIsFormOpen(true)} />
       </div>
 
-      <div className="animate-[fade-up_600ms_ease-out_both]">
-        <ColaboradorEventsTable
-          atendimentos={colaboradorAtendimentos.data}
-          error={colaboradorAtendimentos.error}
-          isLoading={colaboradorAtendimentos.isLoading}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
+      <section className="flex flex-col gap-3 p-4 rounded-2xl border border-base-300 bg-base-100 shadow-sm animate-[fade-up_320ms_ease-out_both]">
+        <AtendimentosTableHeader
+          openForm={() => setIsFormOpen(true)}
+          filterStatus={filterStatus}
+          filterTipo={filterTipo}
+          onSearchChange={setSearch}
+          onStatusChange={setFilterStatus}
+          onTipoChange={setFilterTipo}
+          title="Eventos Vinculados"
+          description="Veja e navegue pelos eventos vinculados ao colaborador."
         />
-      </div>
+
+        <AtendimentosTable
+          colaboradorId={colaboradorId}
+          search={search}
+          filterStatus={filterStatus}
+          filterTipo={filterTipo}
+        />
+      </section>
 
       <Modal
         isOpen={isFormOpen}

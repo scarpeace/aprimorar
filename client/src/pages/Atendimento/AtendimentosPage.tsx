@@ -1,4 +1,4 @@
-import { AtendimentosTableFilters } from "@/components/Atendimento/AtendimentosTable.Filters.tsx";
+import { AtendimentosTableHeader } from "@/components/Atendimento/AtendimentosTable.Header.tsx";
 import { PageLayout } from "@/components/Layout/PageLayout.tsx";
 import { KpiCard } from "@/components/Ui/KpiCard.tsx";
 import { BellElectric } from "lucide-react";
@@ -7,7 +7,10 @@ import { Modal } from "@/components/Ui/Modal.tsx";
 import { Suspense, useState } from "react";
 import { AtendimentoForm } from "../../components/Atendimento/AtendimentoForm.tsx";
 import { ChartPie, NotebookPen } from "lucide-react";
-import type { AtendimentoResponseStatusEnumKey, AtendimentoResponseTipoEnumKey } from "@/kubb";
+import type {
+  AtendimentoResponseStatusEnumKey,
+  AtendimentoResponseTipoEnumKey,
+} from "@/kubb";
 
 export function AtendimentosPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -21,56 +24,21 @@ export function AtendimentosPage() {
     Icon: BellElectric,
     iconBg: "accent",
   } as const;
-  const mockIndicators = [
-    {
-      label: "Total atendimentos do mês",
-      value: 42,
-      Icon: NotebookPen,
-    },
-    {
-      label: "Distribuição do Tipo",
-      value: "Mock",
-      Icon: ChartPie,
-    },
-  ] as const;
 
   return (
     <PageLayout {...headerProps}>
-      <section className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
-        <div className="flex flex-col">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
-            <div>
-              <h3 className="text-2xl font-bold text-base-content">Atendimentos</h3>
-              <p className="text-sm text-base-content/60">
-                Navegue por mês e selecione um atendimento para visualizar os detalhes.
-              </p>
-            </div>
+      <section className="flex flex-col gap-3 p-4 rounded-2xl border border-base-300 bg-base-100 shadow-sm animate-[fade-up_320ms_ease-out_both]">
+        <AtendimentosTableHeader
+          openForm={() => setIsFormOpen(true)}
+          filterStatus={filterStatus}
+          filterTipo={filterTipo}
+          onSearchChange={setSearch}
+          onStatusChange={setFilterStatus}
+          onTipoChange={setFilterTipo}
+          title="Atendimentos"
+          description="Navegue por mês e selecione um atendimento para visualizar os detalhes."
+        />
 
-            <div className="flex gap-3">
-              {mockIndicators.map(({ label, value, Icon }) => (
-                <KpiCard
-                  key={label}
-                  label={label}
-                  value={value}
-                  Icon={Icon}
-                  className="min-w-52 bg-linear-to-br from-accent/8 via-base-100 to-base-100"
-                />
-              ))}
-            </div>
-          </div>
-
-          <AtendimentosTableFilters
-            openForm={() => setIsFormOpen(true)}
-            filterStatus={filterStatus}
-            filterTipo={filterTipo}
-            onSearchChange={setSearch}
-            onStatusChange={setFilterStatus}
-            onTipoChange={setFilterTipo}
-          />
-        </div>
-      </section>
-
-      <section className="rounded-2xl mt-3 border border-base-300 bg-base-100 p-4 shadow-sm animate-[fade-up_320ms_ease-out_both]">
         <AtendimentosTable
           search={search}
           filterStatus={filterStatus}
@@ -85,7 +53,13 @@ export function AtendimentosPage() {
         description="Defina aluno, colaborador, horario e valores do atendimento para manter agenda e financeiro sincronizados."
         size="lg"
       >
-        <Suspense fallback={<p className="text-sm text-base-content/60">Carregando formulário...</p>}>
+        <Suspense
+          fallback={
+            <p className="text-sm text-base-content/60">
+              Carregando formulário...
+            </p>
+          }
+        >
           <AtendimentoForm
             initialData={null}
             onSuccess={() => setIsFormOpen(false)}
@@ -93,7 +67,6 @@ export function AtendimentosPage() {
           />
         </Suspense>
       </Modal>
-
     </PageLayout>
   );
 }

@@ -18,6 +18,6 @@ public record UserRequestDTO(
         @Schema(description = "Senha", example = "password123", nullable = false)
         String password,
         @NotNull(message = "Escolha um perfil")
-        @Schema(description = "Perfil de acesso", example = "EMPLOYEE", nullable = false)
+        @Schema(description = "Perfil de acesso", example = "COLABORADOR", nullable = false)
         Role role) {
 }
