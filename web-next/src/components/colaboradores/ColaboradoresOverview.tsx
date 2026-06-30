@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useState, type FormEvent } from "react";
-import { ResponsavelForm } from "@/components/responsaveis/ResponsavelForm";
-import type { ResponsavelResponseDTO } from "@/lib/api/generated/types/ResponsavelResponseDTO";
-import { useGetResponsaveis } from "@/lib/api/generated/hooks/responsavel/useGetResponsaveis";
+import { ColaboradorForm } from "@/components/colaboradores/ColaboradorForm";
+import { useGetColaboradores } from "@/lib/api/generated/hooks/colaborador/useGetColaboradores";
+import type { ColaboradorResponseDTO } from "@/lib/api/generated/types/ColaboradorResponseDTO";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
@@ -14,22 +14,34 @@ import { formatCpf, formatPhone } from "@/lib/utils/formatter";
 
 const PAGE_SIZE = 10;
 
-export function ResponsaveisOverview() {
+function StatusBadge({ active }: Readonly<{ active?: boolean }>) {
+  const archived = active === false;
+
+  return (
+    <span className={`badge badge-sm ${archived ? "badge-ghost" : "badge-success"}`}>
+      {archived ? "Arquivado" : "Ativo"}
+    </span>
+  );
+}
+
+export function ColaboradoresOverview() {
   const [page, setPage] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [showArchived, setShowArchived] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [editingResponsavel, setEditingResponsavel] = useState<ResponsavelResponseDTO | null>(null);
+  const [editingColaborador, setEditingColaborador] = useState<ColaboradorResponseDTO | null>(null);
 
-  const responsaveis = useGetResponsaveis({
+  const colaboradores = useGetColaboradores({
     page,
     size: PAGE_SIZE,
     nome: search || undefined,
+    ativos: showArchived ? undefined : true,
     sort: ["nome,asc"],
   });
 
-  const content = useMemo(() => responsaveis.data?.content ?? [], [responsaveis.data?.content]);
-  const metadata = responsaveis.data?.page;
+  const content = useMemo(() => colaboradores.data?.content ?? [], [colaboradores.data?.content]);
+  const metadata = colaboradores.data?.page;
   const totalPages = metadata?.totalPages ?? 0;
   const totalElements = metadata?.totalElements ?? 0;
   const currentPage = metadata?.number ?? page;
@@ -42,12 +54,17 @@ export function ResponsaveisOverview() {
     setSearch(searchInput.trim());
   }
 
+  function handleArchivedChange(checked: boolean) {
+    setPage(0);
+    setShowArchived(checked);
+  }
+
   return (
     <section className="app-shell-card p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-base-content">Responsáveis</h2>
-          <p className="mt-2 text-sm text-base-content/65">Listagem paginada dos responsáveis cadastrados.</p>
+          <h2 className="text-2xl font-bold text-base-content">Colaboradores</h2>
+          <p className="mt-2 text-sm text-base-content/65">Listagem paginada dos colaboradores cadastrados.</p>
         </div>
 
         <form className="flex flex-col gap-3 md:flex-row md:items-end" onSubmit={handleSubmit}>
@@ -57,7 +74,17 @@ export function ResponsaveisOverview() {
               className="input input-bordered w-full"
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Digite o nome do responsável"
+              placeholder="Digite o nome do colaborador"
+            />
+          </label>
+
+          <label className="label cursor-pointer gap-3 rounded-xl border border-base-300 px-4 py-3">
+            <span className="label-text text-sm text-base-content/70">Mostrar arquivados</span>
+            <input
+              type="checkbox"
+              className="toggle toggle-sm toggle-primary"
+              checked={showArchived}
+              onChange={(event) => handleArchivedChange(event.target.checked)}
             />
           </label>
 
@@ -66,25 +93,25 @@ export function ResponsaveisOverview() {
           </Button>
 
           <Button type="button" onClick={() => setIsCreateOpen(true)}>
-            Novo responsável
+            Novo colaborador
           </Button>
         </form>
       </div>
 
-      {responsaveis.isLoading ? (
-        <PageLoading message="Carregando responsáveis..." />
-      ) : responsaveis.error ? (
+      {colaboradores.isLoading ? (
+        <PageLoading message="Carregando colaboradores..." />
+      ) : colaboradores.error ? (
         <div className="mt-6">
           <ErrorCard
-            title="Não foi possível carregar a listagem de responsáveis"
+            title="Não foi possível carregar a listagem de colaboradores"
             description="A consulta paginada da API falhou para o filtro selecionado."
-            error={responsaveis.error}
+            error={colaboradores.error}
           />
         </div>
       ) : content.length === 0 ? (
         <EmptyCard
-          title="Nenhum responsável encontrado"
-          description="Ajuste o filtro atual para localizar os responsáveis desejados."
+          title="Nenhum colaborador encontrado"
+          description="Ajuste o filtro atual para localizar os colaboradores desejados."
         />
       ) : (
         <div className="mt-6 space-y-4">
@@ -95,24 +122,28 @@ export function ResponsaveisOverview() {
                   <th>Nome</th>
                   <th>CPF</th>
                   <th>Telefone</th>
-                  <th>E-mail</th>
+                  <th>Função</th>
+                  <th>Status</th>
                   <th className="w-1">Ações</th>
                 </tr>
               </thead>
 
               <tbody>
-                {content.map((responsavel) => (
-                  <tr key={responsavel.id}>
+                {content.map((colaborador) => (
+                  <tr key={colaborador.id}>
                     <td>
-                      <Link className="font-semibold text-base-content hover:underline" href={`/responsaveis/${responsavel.id}`}>
-                        {responsavel.nome}
+                      <Link className="font-semibold text-base-content hover:underline" href={`/colaboradores/${colaborador.id}`}>
+                        {colaborador.nome}
                       </Link>
                     </td>
-                    <td>{formatCpf(responsavel.cpf)}</td>
-                    <td>{formatPhone(responsavel.telefone)}</td>
-                    <td>{responsavel.email}</td>
+                    <td>{formatCpf(colaborador.cpf)}</td>
+                    <td>{formatPhone(colaborador.telefone)}</td>
+                    <td>{colaborador.funcao}</td>
                     <td>
-                      <Button type="button" size="sm" variant="outline" onClick={() => setEditingResponsavel(responsavel)}>
+                      <StatusBadge active={colaborador.active} />
+                    </td>
+                    <td>
+                      <Button type="button" size="sm" variant="outline" onClick={() => setEditingColaborador(colaborador)}>
                         Editar
                       </Button>
                     </td>
@@ -124,7 +155,7 @@ export function ResponsaveisOverview() {
 
           <div className="flex flex-col gap-3 rounded-xl border border-base-300 bg-base-100 px-4 py-3 text-sm text-base-content/70 md:flex-row md:items-center md:justify-between">
             <p>
-              {totalElements} responsável(is) encontrado(s) • página {currentPage + 1}
+              {totalElements} colaborador(es) encontrado(s) • página {currentPage + 1}
               {totalPages > 0 ? ` de ${totalPages}` : ""}
             </p>
 
@@ -143,25 +174,25 @@ export function ResponsaveisOverview() {
       <Modal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
-        title="Cadastrar responsável"
-        description="Preencha os dados para criar um novo responsável."
-        size="md"
+        title="Cadastrar colaborador"
+        description="Preencha os dados para criar um novo colaborador."
+        size="lg"
       >
-        <ResponsavelForm onSuccess={() => setIsCreateOpen(false)} onCancel={() => setIsCreateOpen(false)} />
+        <ColaboradorForm onSuccess={() => setIsCreateOpen(false)} onCancel={() => setIsCreateOpen(false)} />
       </Modal>
 
       <Modal
-        isOpen={!!editingResponsavel}
-        onClose={() => setEditingResponsavel(null)}
-        title="Editar responsável"
-        description="Atualize os dados do responsável sem sair da listagem."
-        size="md"
+        isOpen={!!editingColaborador}
+        onClose={() => setEditingColaborador(null)}
+        title="Editar colaborador"
+        description="Atualize os dados do colaborador sem sair da listagem."
+        size="lg"
       >
-        {editingResponsavel ? (
-          <ResponsavelForm
-            initialData={editingResponsavel}
-            onSuccess={() => setEditingResponsavel(null)}
-            onCancel={() => setEditingResponsavel(null)}
+        {editingColaborador ? (
+          <ColaboradorForm
+            initialData={editingColaborador}
+            onSuccess={() => setEditingColaborador(null)}
+            onCancel={() => setEditingColaborador(null)}
           />
         ) : null}
       </Modal>
