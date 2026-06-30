@@ -1,0 +1,124 @@
+{
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "array",
+      "items": {
+        "required": [
+          "alunoId",
+          "colaboradorId",
+          "createdAt",
+          "dataHoraFim",
+          "dataHoraInicio",
+          "id",
+          "pagamentoAluno",
+          "repasseColaborador",
+          "status",
+          "tipo"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificador unico do atendimento",
+            "format": "int64"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Tipo de conteudo ou categoria do atendimento",
+            "example": "MENTORIA",
+            "enum": [
+              "AULA",
+              "MENTORIA",
+              "TERAPIA",
+              "ORIENTACAO_VOCACIONAL",
+              "ENEM",
+              "PAS",
+              "OUTRO"
+            ]
+          },
+          "dataHoraInicio": {
+            "type": "string",
+            "description": "Data/hora de inicio do atendimento",
+            "format": "date-time",
+            "example": "2023-11-20T14:00:00Z"
+          },
+          "dataHoraFim": {
+            "type": "string",
+            "description": "Data/hora de fim do atendimento",
+            "format": "date-time",
+            "example": "2023-11-20T16:00:00Z"
+          },
+          "pagamentoAluno": {
+            "type": "number",
+            "description": "Valor pago pelo aluno",
+            "example": 150
+          },
+          "repasseColaborador": {
+            "type": "number",
+            "description": "Valor de repasse ao colaborador",
+            "example": 100
+          },
+          "alunoId": {
+            "type": "string",
+            "description": "ID do aluno vinculado ao atendimento",
+            "format": "uuid",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "colaboradorId": {
+            "type": "string",
+            "description": "ID do colaborador vinculado ao atendimento",
+            "format": "uuid",
+            "example": "123e4567-e89b-12d3-a456-426614174001"
+          },
+          "dataPagamentoAluno": {
+            "type": "string",
+            "description": "Data do pagamento do aluno",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2024-03-10T15:33:42Z"
+          },
+          "dataPagamentoColaborador": {
+            "type": "string",
+            "description": "Data do pagamento do colaborador",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2024-03-10T15:33:42Z"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status do atendimento",
+            "example": "AGENDADO",
+            "enum": ["AGENDADO", "CONCLUIDO", "CANCELADO"]
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Data de criacao do atendimento",
+            "format": "date-time",
+            "example": "2024-03-10T15:33:42Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Data de atualizacao do atendimento",
+            "format": "date-time",
+            "nullable": true,
+            "example": "2024-03-10T15:33:42Z"
+          }
+        },
+        "description": "Dados do atendimento retornados pela API",
+        "x-readme-ref-name": "AtendimentoResponse"
+      }
+    },
+    "page": {
+      "type": "object",
+      "properties": {
+        "size": { "type": "integer", "format": "int64" },
+        "number": { "type": "integer", "format": "int64" },
+        "totalElements": { "type": "integer", "format": "int64" },
+        "totalPages": { "type": "integer", "format": "int64" }
+      },
+      "x-readme-ref-name": "PageMetadata"
+    }
+  },
+  "x-readme-ref-name": "PagedModelAtendimentoResponse"
+}

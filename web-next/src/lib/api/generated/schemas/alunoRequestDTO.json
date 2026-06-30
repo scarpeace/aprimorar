@@ -1,0 +1,110 @@
+{
+  "required": [
+    "cpf",
+    "dataNascimento",
+    "email",
+    "endereco",
+    "escola",
+    "nome",
+    "responsavelId",
+    "telefone"
+  ],
+  "type": "object",
+  "properties": {
+    "nome": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Nome completo do aluno",
+      "example": "Ana Silva"
+    },
+    "dataNascimento": {
+      "type": "string",
+      "description": "Data de nascimento do aluno",
+      "format": "date",
+      "example": "2000-01-01"
+    },
+    "cpf": {
+      "minLength": 1,
+      "type": "string",
+      "description": "CPF do aluno",
+      "example": "123.456.789-00"
+    },
+    "escola": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Escola do aluno",
+      "example": "Colégio Aprimorar"
+    },
+    "telefone": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Contato do aluno",
+      "example": "(61) 99999-9999"
+    },
+    "email": {
+      "minLength": 1,
+      "type": "string",
+      "description": "E-mail do aluno",
+      "example": "ana.silva@example.com"
+    },
+    "endereco": {
+      "required": ["bairro", "cep", "cidade", "estado", "numero", "rua"],
+      "type": "object",
+      "properties": {
+        "rua": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Rua",
+          "example": "Avenida Paulista"
+        },
+        "numero": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Número",
+          "example": "1000"
+        },
+        "complemento": {
+          "type": "string",
+          "description": "Complemento",
+          "nullable": true,
+          "example": "Sala 101"
+        },
+        "bairro": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Bairro",
+          "example": "Bela Vista"
+        },
+        "cidade": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Cidade",
+          "example": "São Paulo"
+        },
+        "estado": {
+          "maxLength": 2,
+          "minLength": 2,
+          "type": "string",
+          "description": "UF",
+          "example": "SP"
+        },
+        "cep": {
+          "minLength": 1,
+          "pattern": "^\\d{8}$",
+          "type": "string",
+          "description": "CEP sem pontuação",
+          "example": "01310000"
+        }
+      },
+      "description": "Endereço do cadastro",
+      "x-readme-ref-name": "EnderecoRequestDTO"
+    },
+    "responsavelId": {
+      "type": "string",
+      "description": "ID do responsável vinculado ao aluno",
+      "format": "uuid"
+    }
+  },
+  "description": "Formato de payload para o cadastro de um aluno",
+  "x-readme-ref-name": "AlunoRequestDTO"
+}
