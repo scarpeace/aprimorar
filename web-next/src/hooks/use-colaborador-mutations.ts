@@ -2,7 +2,9 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useArquivarColaborador } from "@/lib/api/generated/hooks/colaborador/useArquivarColaborador";
 import { useCreateColaborador } from "@/lib/api/generated/hooks/colaborador/useCreateColaborador";
+import { useDesarquivarColaborador } from "@/lib/api/generated/hooks/colaborador/useDesarquivarColaborador";
 import { findColaboradorByIdQueryKey } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
 import { getColaboradoresQueryKey } from "@/lib/api/generated/hooks/colaborador/useGetColaboradores";
 import { useUpdateColaborador } from "@/lib/api/generated/hooks/colaborador/useUpdateColaborador";
@@ -43,8 +45,34 @@ export function useColaboradorMutations() {
     },
   });
 
+  const archiveColaborador = useArquivarColaborador({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao arquivar o colaborador");
+      },
+      onSuccess: async (_, variables) => {
+        toast.success("Colaborador arquivado com sucesso");
+        await Promise.all([invalidateColaboradores(), invalidateColaboradorDetail(variables.colaboradorId)]);
+      },
+    },
+  });
+
+  const unarchiveColaborador = useDesarquivarColaborador({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao desarquivar o colaborador");
+      },
+      onSuccess: async (_, variables) => {
+        toast.success("Colaborador desarquivado com sucesso");
+        await Promise.all([invalidateColaboradores(), invalidateColaboradorDetail(variables.colaboradorId)]);
+      },
+    },
+  });
+
   return {
     createColaborador,
+    archiveColaborador,
+    unarchiveColaborador,
     updateColaborador,
   };
 }

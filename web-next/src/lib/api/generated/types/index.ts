@@ -21,6 +21,12 @@ export type {
   ArchiveUserPathParams,
 } from "./ArchiveUser.ts";
 export type {
+  ArquivarColaborador204,
+  ArquivarColaboradorMutation,
+  ArquivarColaboradorMutationResponse,
+  ArquivarColaboradorPathParams,
+} from "./ArquivarColaborador.ts";
+export type {
   AtendimentoRequest,
   AtendimentoRequestTipoEnumKey,
 } from "./AtendimentoRequest.ts";
@@ -104,6 +110,12 @@ export type {
   DeleteUserMutationResponse,
   DeleteUserPathParams,
 } from "./DeleteUser.ts";
+export type {
+  DesarquivarColaborador204,
+  DesarquivarColaboradorMutation,
+  DesarquivarColaboradorMutationResponse,
+  DesarquivarColaboradorPathParams,
+} from "./DesarquivarColaborador.ts";
 export type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
 export type {

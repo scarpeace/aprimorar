@@ -6,31 +6,17 @@ import { useFindColaboradorById } from "@/lib/api/generated/hooks/colaborador/us
 import { ColaboradorForm } from "@/components/colaboradores/ColaboradorForm";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { DetailField } from "@/components/ui/DetailField";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
-import { formatCpf, formatPhone, formatZip } from "@/lib/utils/formatter";
-
-function formatDate(value?: string | null) {
-  if (!value) {
-    return "—";
-  }
-
-  return new Intl.DateTimeFormat("pt-BR").format(new Date(value));
-}
-
-function Field({ label, value }: Readonly<{ label: string; value?: string | number | null }>) {
-  return (
-    <div className="space-y-1">
-      <p className="text-xs font-semibold uppercase tracking-wider text-base-content/50">{label}</p>
-      <p className="text-sm text-base-content">{value || "—"}</p>
-    </div>
-  );
-}
+import { useColaboradorMutations } from "@/hooks/use-colaborador-mutations";
+import { formatCpf, formatDate, formatPhone, formatZip } from "@/lib/utils/formatter";
 
 export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: string }>) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const colaborador = useFindColaboradorById(colaboradorId);
+  const { archiveColaborador, unarchiveColaborador } = useColaboradorMutations();
 
   if (colaborador.isLoading) {
     return <PageLoading message="Carregando colaborador..." />;
@@ -55,6 +41,18 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
   const { data } = colaborador;
   const endereco = data.endereco;
   const active = data.active !== false;
+  const isPending = archiveColaborador.isPending || unarchiveColaborador.isPending;
+
+  function handleArchiveToggle() {
+    const actionLabel = active ? "arquivar" : "desarquivar";
+
+    if (!window.confirm(`Deseja mesmo ${actionLabel} este colaborador?`)) {
+      return;
+    }
+
+    const action = active ? archiveColaborador : unarchiveColaborador;
+    action.mutate({ colaboradorId });
+  }
 
   return (
     <div className="space-y-6">
@@ -74,6 +72,10 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
             <div className="flex flex-wrap gap-2">
               <Button type="button" size="sm" variant="primary" onClick={() => setIsEditOpen(true)}>
                 Editar
+              </Button>
+
+              <Button type="button" size="sm" variant={active ? "warning" : "outline"} disabled={isPending} onClick={handleArchiveToggle}>
+                {isPending ? "Processando..." : active ? "Arquivar" : "Desarquivar"}
               </Button>
 
               <Link className="btn btn-outline btn-sm" href="/colaboradores">
@@ -99,14 +101,14 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
           <h2 className="text-xl font-bold text-base-content">Dados cadastrais</h2>
 
           <div className="mt-6 grid gap-5 md:grid-cols-2">
-            <Field label="Nome" value={data.nome} />
-            <Field label="CPF" value={formatCpf(data.cpf)} />
-            <Field label="Telefone" value={formatPhone(data.telefone)} />
-            <Field label="E-mail" value={data.email} />
-            <Field label="Data de nascimento" value={formatDate(data.dataNascimento)} />
-            <Field label="Função" value={data.funcao} />
-            <Field label="PIX" value={data.pix} />
-            <Field label="Criado em" value={formatDate(data.createdAt)} />
+            <DetailField label="Nome" value={data.nome} />
+            <DetailField label="CPF" value={formatCpf(data.cpf)} />
+            <DetailField label="Telefone" value={formatPhone(data.telefone)} />
+            <DetailField label="E-mail" value={data.email} />
+            <DetailField label="Data de nascimento" value={formatDate(data.dataNascimento)} />
+            <DetailField label="Função" value={data.funcao} />
+            <DetailField label="PIX" value={data.pix} />
+            <DetailField label="Criado em" value={formatDate(data.createdAt)} />
           </div>
         </div>
 
@@ -114,13 +116,13 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
           <h2 className="text-xl font-bold text-base-content">Endereço</h2>
 
           <div className="mt-6 grid gap-5 md:grid-cols-2">
-            <Field label="Rua" value={endereco.rua} />
-            <Field label="Número" value={endereco.numero} />
-            <Field label="Complemento" value={endereco.complemento} />
-            <Field label="Bairro" value={endereco.bairro} />
-            <Field label="Cidade" value={endereco.cidade} />
-            <Field label="UF" value={endereco.estado} />
-            <Field label="CEP" value={formatZip(endereco.cep)} />
+            <DetailField label="Rua" value={endereco.rua} />
+            <DetailField label="Número" value={endereco.numero} />
+            <DetailField label="Complemento" value={endereco.complemento} />
+            <DetailField label="Bairro" value={endereco.bairro} />
+            <DetailField label="Cidade" value={endereco.cidade} />
+            <DetailField label="UF" value={endereco.estado} />
+            <DetailField label="CEP" value={formatZip(endereco.cep)} />
           </div>
         </div>
       </section>

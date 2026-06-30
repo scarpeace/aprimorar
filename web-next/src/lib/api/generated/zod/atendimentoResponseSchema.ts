@@ -29,9 +29,13 @@ export const atendimentoResponseSchema = z
     pagamentoAluno: z.number().describe("Valor pago pelo aluno"),
     repasseColaborador: z.number().describe("Valor de repasse ao colaborador"),
     alunoId: z.uuid().describe("ID do aluno vinculado ao atendimento"),
+    nomeAluno: z.string().describe("Nome do aluno vinculado ao atendimento"),
     colaboradorId: z
       .uuid()
       .describe("ID do colaborador vinculado ao atendimento"),
+    nomeColaborador: z
+      .string()
+      .describe("Nome do colaborador vinculado ao atendimento"),
     dataPagamentoAluno: z.iso
       .datetime()
       .describe("Data do pagamento do aluno")

@@ -17,6 +17,11 @@ export {
   archiveUserMutationResponseSchema,
   archiveUserPathParamsSchema,
 } from "./archiveUserSchema.ts";
+export {
+  arquivarColaborador204Schema,
+  arquivarColaboradorMutationResponseSchema,
+  arquivarColaboradorPathParamsSchema,
+} from "./arquivarColaboradorSchema.ts";
 export { atendimentoRequestSchema } from "./atendimentoRequestSchema.ts";
 export { atendimentoResponseSchema } from "./atendimentoResponseSchema.ts";
 export { authRequestDTOSchema } from "./authRequestDTOSchema.ts";
@@ -75,6 +80,11 @@ export {
   deleteUserMutationResponseSchema,
   deleteUserPathParamsSchema,
 } from "./deleteUserSchema.ts";
+export {
+  desarquivarColaborador204Schema,
+  desarquivarColaboradorMutationResponseSchema,
+  desarquivarColaboradorPathParamsSchema,
+} from "./desarquivarColaboradorSchema.ts";
 export { enderecoRequestDTOSchema } from "./enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./enderecoResponseDTOSchema.ts";
 export {

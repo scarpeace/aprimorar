@@ -11,6 +11,8 @@
           "dataHoraFim",
           "dataHoraInicio",
           "id",
+          "nomeAluno",
+          "nomeColaborador",
           "pagamentoAluno",
           "repasseColaborador",
           "status",
@@ -65,11 +67,21 @@
             "format": "uuid",
             "example": "123e4567-e89b-12d3-a456-426614174000"
           },
+          "nomeAluno": {
+            "type": "string",
+            "description": "Nome do aluno vinculado ao atendimento",
+            "example": "Maria da Silva"
+          },
           "colaboradorId": {
             "type": "string",
             "description": "ID do colaborador vinculado ao atendimento",
             "format": "uuid",
             "example": "123e4567-e89b-12d3-a456-426614174001"
+          },
+          "nomeColaborador": {
+            "type": "string",
+            "description": "Nome do colaborador vinculado ao atendimento",
+            "example": "João Santos"
           },
           "dataPagamentoAluno": {
             "type": "string",

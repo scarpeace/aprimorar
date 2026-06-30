@@ -6,24 +6,12 @@ import { AlunoForm } from "@/components/alunos/AlunoForm";
 import { useGetAlunoById } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { DetailField } from "@/components/ui/DetailField";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { useAlunoMutations } from "@/hooks/use-aluno-mutations";
-import { formatCpf, formatPhone, formatZip } from "@/lib/utils/formatter";
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("pt-BR").format(new Date(value));
-}
-
-function Field({ label, value }: Readonly<{ label: string; value?: string | number | null }>) {
-  return (
-    <div className="space-y-1">
-      <p className="text-xs font-semibold uppercase tracking-wider text-base-content/50">{label}</p>
-      <p className="text-sm text-base-content">{value || "—"}</p>
-    </div>
-  );
-}
+import { formatCpf, formatDate, formatPhone, formatZip } from "@/lib/utils/formatter";
 
 export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -118,14 +106,14 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
           <h2 className="text-xl font-bold text-base-content">Dados cadastrais</h2>
 
           <div className="mt-6 grid gap-5 md:grid-cols-2">
-            <Field label="Nome" value={data.nome} />
-            <Field label="CPF" value={formatCpf(data.cpf)} />
-            <Field label="E-mail" value={data.email} />
-            <Field label="Telefone" value={formatPhone(data.telefone)} />
-            <Field label="Data de nascimento" value={formatDate(data.dataNascimento)} />
-            <Field label="Idade" value={data.idade} />
-            <Field label="Escola" value={data.escola} />
-            <Field label="Responsável vinculado" value={data.responsavelId} />
+            <DetailField label="Nome" value={data.nome} />
+            <DetailField label="CPF" value={formatCpf(data.cpf)} />
+            <DetailField label="E-mail" value={data.email} />
+            <DetailField label="Telefone" value={formatPhone(data.telefone)} />
+            <DetailField label="Data de nascimento" value={formatDate(data.dataNascimento)} />
+            <DetailField label="Idade" value={data.idade} />
+            <DetailField label="Escola" value={data.escola} />
+            <DetailField label="Responsável vinculado" value={data.responsavelId} />
           </div>
         </div>
 
@@ -133,13 +121,13 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
           <h2 className="text-xl font-bold text-base-content">Endereço</h2>
 
           <div className="mt-6 grid gap-5 md:grid-cols-2">
-            <Field label="Rua" value={endereco.rua} />
-            <Field label="Número" value={endereco.numero} />
-            <Field label="Complemento" value={endereco.complemento} />
-            <Field label="Bairro" value={endereco.bairro} />
-            <Field label="Cidade" value={endereco.cidade} />
-            <Field label="UF" value={endereco.estado} />
-            <Field label="CEP" value={formatZip(endereco.cep)} />
+            <DetailField label="Rua" value={endereco.rua} />
+            <DetailField label="Número" value={endereco.numero} />
+            <DetailField label="Complemento" value={endereco.complemento} />
+            <DetailField label="Bairro" value={endereco.bairro} />
+            <DetailField label="Cidade" value={endereco.cidade} />
+            <DetailField label="UF" value={endereco.estado} />
+            <DetailField label="CEP" value={formatZip(endereco.cep)} />
           </div>
         </div>
       </section>

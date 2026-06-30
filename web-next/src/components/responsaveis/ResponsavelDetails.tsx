@@ -5,27 +5,11 @@ import { useState } from "react";
 import { useGetResponsavelById } from "@/lib/api/generated/hooks/responsavel/useGetResponsavelById";
 import { ResponsavelForm } from "@/components/responsaveis/ResponsavelForm";
 import { Button } from "@/components/ui/Button";
+import { DetailField } from "@/components/ui/DetailField";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
-import { formatCpf, formatPhone } from "@/lib/utils/formatter";
-
-function formatDate(value?: string | null) {
-  if (!value) {
-    return "—";
-  }
-
-  return new Intl.DateTimeFormat("pt-BR").format(new Date(value));
-}
-
-function Field({ label, value }: Readonly<{ label: string; value?: string | number | null }>) {
-  return (
-    <div className="space-y-1">
-      <p className="text-xs font-semibold uppercase tracking-wider text-base-content/50">{label}</p>
-      <p className="text-sm text-base-content">{value || "—"}</p>
-    </div>
-  );
-}
+import { formatCpf, formatDate, formatPhone } from "@/lib/utils/formatter";
 
 export function ResponsavelDetails({ responsavelId }: Readonly<{ responsavelId: string }>) {
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -91,12 +75,12 @@ export function ResponsavelDetails({ responsavelId }: Readonly<{ responsavelId: 
         <h2 className="text-xl font-bold text-base-content">Dados cadastrais</h2>
 
         <div className="mt-6 grid gap-5 md:grid-cols-2">
-          <Field label="Nome" value={data.nome} />
-          <Field label="CPF" value={formatCpf(data.cpf)} />
-          <Field label="Telefone" value={formatPhone(data.telefone)} />
-          <Field label="E-mail" value={data.email} />
-          <Field label="Data de nascimento" value={formatDate(data.dataNascimento)} />
-          <Field label="Criado em" value={formatDate(data.createdAt)} />
+          <DetailField label="Nome" value={data.nome} />
+          <DetailField label="CPF" value={formatCpf(data.cpf)} />
+          <DetailField label="Telefone" value={formatPhone(data.telefone)} />
+          <DetailField label="E-mail" value={data.email} />
+          <DetailField label="Data de nascimento" value={formatDate(data.dataNascimento)} />
+          <DetailField label="Criado em" value={formatDate(data.createdAt)} />
         </div>
       </section>
     </div>

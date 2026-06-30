@@ -10,6 +10,8 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { Button } from "@/components/ui/Button";
+import { SearchInput } from "@/components/ui/SearchInput";
+import { TablePagination } from "@/components/ui/TablePagination";
 import { formatCpf, formatPhone } from "@/lib/utils/formatter";
 
 const PAGE_SIZE = 10;
@@ -68,15 +70,7 @@ export function ColaboradoresOverview() {
         </div>
 
         <form className="flex flex-col gap-3 md:flex-row md:items-end" onSubmit={handleSubmit}>
-          <label className="form-control w-full md:w-80">
-            <span className="label-text mb-2 text-sm font-medium text-base-content/70">Buscar por nome</span>
-            <input
-              className="input input-bordered w-full"
-              value={searchInput}
-              onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Digite o nome do colaborador"
-            />
-          </label>
+          <SearchInput label="Buscar por nome" value={searchInput} onChange={setSearchInput} placeholder="Digite o nome do colaborador" />
 
           <label className="label cursor-pointer gap-3 rounded-xl border border-base-300 px-4 py-3">
             <span className="label-text text-sm text-base-content/70">Mostrar arquivados</span>
@@ -153,21 +147,13 @@ export function ColaboradoresOverview() {
             </table>
           </div>
 
-          <div className="flex flex-col gap-3 rounded-xl border border-base-300 bg-base-100 px-4 py-3 text-sm text-base-content/70 md:flex-row md:items-center md:justify-between">
-            <p>
-              {totalElements} colaborador(es) encontrado(s) • página {currentPage + 1}
-              {totalPages > 0 ? ` de ${totalPages}` : ""}
-            </p>
-
-            <div className="flex gap-2">
-              <Button type="button" variant="outline" disabled={!hasPrevious} onClick={() => setPage((value) => value - 1)}>
-                Anterior
-              </Button>
-              <Button type="button" variant="outline" disabled={!hasNext} onClick={() => setPage((value) => value + 1)}>
-                Próxima
-              </Button>
-            </div>
-          </div>
+          <TablePagination
+            summary={`${totalElements} colaborador(es) encontrado(s) • página ${currentPage + 1}${totalPages > 0 ? ` de ${totalPages}` : ""}`}
+            hasPrevious={hasPrevious}
+            hasNext={hasNext}
+            onPrevious={() => setPage((value) => value - 1)}
+            onNext={() => setPage((value) => value + 1)}
+          />
         </div>
       )}
 

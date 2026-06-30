@@ -18,8 +18,10 @@ export type { GetCalendarioAtendimentosQueryKey } from "./hooks/atendimento/useG
 export type { GetRelatorioAtendimentosQueryKey } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
 export type { ReagendarAtendimentoMutationKey } from "./hooks/atendimento/useReagendarAtendimento.ts";
 export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
+export type { ArquivarColaboradorMutationKey } from "./hooks/colaborador/useArquivarColaborador.ts";
 export type { CreateColaboradorMutationKey } from "./hooks/colaborador/useCreateColaborador.ts";
 export type { DeleteColaboradorMutationKey } from "./hooks/colaborador/useDeleteColaborador.ts";
+export type { DesarquivarColaboradorMutationKey } from "./hooks/colaborador/useDesarquivarColaborador.ts";
 export type { FindColaboradorByIdQueryKey } from "./hooks/colaborador/useFindColaboradorById.ts";
 export type { GetColaboradoresQueryKey } from "./hooks/colaborador/useGetColaboradores.ts";
 export type { UpdateColaboradorMutationKey } from "./hooks/colaborador/useUpdateColaborador.ts";
@@ -56,6 +58,12 @@ export type {
   ArchiveUserMutationResponse,
   ArchiveUserPathParams,
 } from "./types/ArchiveUser.ts";
+export type {
+  ArquivarColaborador204,
+  ArquivarColaboradorMutation,
+  ArquivarColaboradorMutationResponse,
+  ArquivarColaboradorPathParams,
+} from "./types/ArquivarColaborador.ts";
 export type {
   AtendimentoRequest,
   AtendimentoRequestTipoEnumKey,
@@ -140,6 +148,12 @@ export type {
   DeleteUserMutationResponse,
   DeleteUserPathParams,
 } from "./types/DeleteUser.ts";
+export type {
+  DesarquivarColaborador204,
+  DesarquivarColaboradorMutation,
+  DesarquivarColaboradorMutationResponse,
+  DesarquivarColaboradorPathParams,
+} from "./types/DesarquivarColaborador.ts";
 export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
 export type {
@@ -379,6 +393,10 @@ export { login } from "./hooks/auth/useLogin.ts";
 export { loginMutationKey } from "./hooks/auth/useLogin.ts";
 export { loginMutationOptions } from "./hooks/auth/useLogin.ts";
 export { useLogin } from "./hooks/auth/useLogin.ts";
+export { arquivarColaborador } from "./hooks/colaborador/useArquivarColaborador.ts";
+export { arquivarColaboradorMutationKey } from "./hooks/colaborador/useArquivarColaborador.ts";
+export { arquivarColaboradorMutationOptions } from "./hooks/colaborador/useArquivarColaborador.ts";
+export { useArquivarColaborador } from "./hooks/colaborador/useArquivarColaborador.ts";
 export { createColaborador } from "./hooks/colaborador/useCreateColaborador.ts";
 export { createColaboradorMutationKey } from "./hooks/colaborador/useCreateColaborador.ts";
 export { createColaboradorMutationOptions } from "./hooks/colaborador/useCreateColaborador.ts";
@@ -387,6 +405,10 @@ export { deleteColaborador } from "./hooks/colaborador/useDeleteColaborador.ts";
 export { deleteColaboradorMutationKey } from "./hooks/colaborador/useDeleteColaborador.ts";
 export { deleteColaboradorMutationOptions } from "./hooks/colaborador/useDeleteColaborador.ts";
 export { useDeleteColaborador } from "./hooks/colaborador/useDeleteColaborador.ts";
+export { desarquivarColaborador } from "./hooks/colaborador/useDesarquivarColaborador.ts";
+export { desarquivarColaboradorMutationKey } from "./hooks/colaborador/useDesarquivarColaborador.ts";
+export { desarquivarColaboradorMutationOptions } from "./hooks/colaborador/useDesarquivarColaborador.ts";
+export { useDesarquivarColaborador } from "./hooks/colaborador/useDesarquivarColaborador.ts";
 export { findColaboradorById } from "./hooks/colaborador/useFindColaboradorById.ts";
 export { findColaboradorByIdQueryKey } from "./hooks/colaborador/useFindColaboradorById.ts";
 export { findColaboradorByIdQueryOptions } from "./hooks/colaborador/useFindColaboradorById.ts";
@@ -472,6 +494,11 @@ export {
   archiveUserMutationResponseSchema,
   archiveUserPathParamsSchema,
 } from "./zod/archiveUserSchema.ts";
+export {
+  arquivarColaborador204Schema,
+  arquivarColaboradorMutationResponseSchema,
+  arquivarColaboradorPathParamsSchema,
+} from "./zod/arquivarColaboradorSchema.ts";
 export { atendimentoRequestSchema } from "./zod/atendimentoRequestSchema.ts";
 export { atendimentoResponseSchema } from "./zod/atendimentoResponseSchema.ts";
 export { authRequestDTOSchema } from "./zod/authRequestDTOSchema.ts";
@@ -530,6 +557,11 @@ export {
   deleteUserMutationResponseSchema,
   deleteUserPathParamsSchema,
 } from "./zod/deleteUserSchema.ts";
+export {
+  desarquivarColaborador204Schema,
+  desarquivarColaboradorMutationResponseSchema,
+  desarquivarColaboradorPathParamsSchema,
+} from "./zod/desarquivarColaboradorSchema.ts";
 export { enderecoRequestDTOSchema } from "./zod/enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./zod/enderecoResponseDTOSchema.ts";
 export {

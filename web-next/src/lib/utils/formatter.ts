@@ -3,6 +3,14 @@ export const brl = new Intl.NumberFormat("pt-BR", {
   currency: "BRL",
 });
 
+export function formatDate(value?: string | null): string {
+  if (!value) {
+    return "—";
+  }
+
+  return new Intl.DateTimeFormat("pt-BR").format(new Date(value));
+}
+
 export function formatPhone(value: string): string {
   const cleaned = value.replace(/\D/g, "");
   if (cleaned.length <= 11) {
@@ -26,4 +34,3 @@ export function formatZip(value: string): string {
   }
   return value;
 }
-

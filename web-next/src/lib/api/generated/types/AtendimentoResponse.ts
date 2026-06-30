@@ -65,10 +65,20 @@ export type AtendimentoResponse = {
    */
   alunoId: string;
   /**
+   * @description Nome do aluno vinculado ao atendimento
+   * @type string
+   */
+  nomeAluno: string;
+  /**
    * @description ID do colaborador vinculado ao atendimento
    * @type string, uuid
    */
   colaboradorId: string;
+  /**
+   * @description Nome do colaborador vinculado ao atendimento
+   * @type string
+   */
+  nomeColaborador: string;
   /**
    * @description Data do pagamento do aluno
    * @type string, date-time
