@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { AlunoForm } from "@/components/alunos/AlunoForm";
 import { useGetAlunoById } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { ErrorCard } from "@/components/ui/ErrorCard";
+import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { useAlunoMutations } from "@/hooks/use-aluno-mutations";
 import { formatCpf, formatPhone, formatZip } from "@/lib/utils/formatter";
@@ -23,6 +26,7 @@ function Field({ label, value }: Readonly<{ label: string; value?: string | numb
 }
 
 export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const aluno = useGetAlunoById(alunoId);
   const { archiveAluno, unarchiveAluno } = useAlunoMutations();
 
@@ -83,6 +87,10 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
             </Badge>
 
             <div className="flex flex-wrap gap-2">
+              <Button type="button" size="sm" variant="primary" onClick={() => setIsEditOpen(true)}>
+                Editar
+              </Button>
+
               <Button type="button" size="sm" variant={active ? "warning" : "outline"} disabled={isPending} onClick={handleArchiveToggle}>
                 {isPending ? "Processando..." : active ? "Arquivar" : "Desarquivar"}
               </Button>
@@ -94,6 +102,16 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
           </div>
         </div>
       </section>
+
+      <Modal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        title="Editar aluno"
+        description="Atualize os dados cadastrais do aluno sem sair da tela de detalhe."
+        size="lg"
+      >
+        <AlunoForm initialData={data} onSuccess={() => setIsEditOpen(false)} onCancel={() => setIsEditOpen(false)} />
+      </Modal>
 
       <section className="grid gap-6 xl:grid-cols-2">
         <div className="app-shell-card p-6">

@@ -453,3 +453,208 @@ export { getAtendimentosQueryParamsStatusEnum } from "./types/GetAtendimentos.ts
 export { getAtendimentosQueryParamsTipoEnum } from "./types/GetAtendimentos.ts";
 export { userRequestDTORoleEnum } from "./types/UserRequestDTO.ts";
 export { userResponseDTORoleEnum } from "./types/UserResponseDTO.ts";
+export {
+  agendarAtendimento201Schema,
+  agendarAtendimentoMutationRequestSchema,
+  agendarAtendimentoMutationResponseSchema,
+} from "./zod/agendarAtendimentoSchema.ts";
+export { alunoRequestDTOSchema } from "./zod/alunoRequestDTOSchema.ts";
+export { alunoResponseDTOSchema } from "./zod/alunoResponseDTOSchema.ts";
+export { alunosKpisDTOSchema } from "./zod/alunosKpisDTOSchema.ts";
+export { alunosListDTOSchema } from "./zod/alunosListDTOSchema.ts";
+export {
+  archiveAluno204Schema,
+  archiveAlunoMutationResponseSchema,
+  archiveAlunoPathParamsSchema,
+} from "./zod/archiveAlunoSchema.ts";
+export {
+  archiveUser200Schema,
+  archiveUserMutationResponseSchema,
+  archiveUserPathParamsSchema,
+} from "./zod/archiveUserSchema.ts";
+export { atendimentoRequestSchema } from "./zod/atendimentoRequestSchema.ts";
+export { atendimentoResponseSchema } from "./zod/atendimentoResponseSchema.ts";
+export { authRequestDTOSchema } from "./zod/authRequestDTOSchema.ts";
+export { authResponseDTOSchema } from "./zod/authResponseDTOSchema.ts";
+export { calendarioAtendimentosResposeSchema } from "./zod/calendarioAtendimentosResposeSchema.ts";
+export {
+  cancelarAtendimento200Schema,
+  cancelarAtendimentoMutationResponseSchema,
+  cancelarAtendimentoPathParamsSchema,
+} from "./zod/cancelarAtendimentoSchema.ts";
+export { colaboradorRequestDTOSchema } from "./zod/colaboradorRequestDTOSchema.ts";
+export { colaboradorResponseDTOSchema } from "./zod/colaboradorResponseDTOSchema.ts";
+export {
+  concluirAtendimento200Schema,
+  concluirAtendimentoMutationResponseSchema,
+  concluirAtendimentoPathParamsSchema,
+} from "./zod/concluirAtendimentoSchema.ts";
+export {
+  createColaborador201Schema,
+  createColaboradorMutationRequestSchema,
+  createColaboradorMutationResponseSchema,
+} from "./zod/createColaboradorSchema.ts";
+export {
+  createResponsavel201Schema,
+  createResponsavelMutationRequestSchema,
+  createResponsavelMutationResponseSchema,
+} from "./zod/createResponsavelSchema.ts";
+export {
+  createUser201Schema,
+  createUserMutationRequestSchema,
+  createUserMutationResponseSchema,
+} from "./zod/createUserSchema.ts";
+export {
+  criarAluno201Schema,
+  criarAlunoMutationRequestSchema,
+  criarAlunoMutationResponseSchema,
+} from "./zod/criarAlunoSchema.ts";
+export {
+  deleteAluno204Schema,
+  deleteAlunoMutationResponseSchema,
+  deleteAlunoPathParamsSchema,
+} from "./zod/deleteAlunoSchema.ts";
+export {
+  deleteColaborador204Schema,
+  deleteColaboradorMutationResponseSchema,
+  deleteColaboradorPathParamsSchema,
+} from "./zod/deleteColaboradorSchema.ts";
+export {
+  deleteResponsavel204Schema,
+  deleteResponsavelMutationResponseSchema,
+  deleteResponsavelPathParamsSchema,
+  deleteResponsavelQueryParamsSchema,
+} from "./zod/deleteResponsavelSchema.ts";
+export {
+  deleteUser204Schema,
+  deleteUserMutationResponseSchema,
+  deleteUserPathParamsSchema,
+} from "./zod/deleteUserSchema.ts";
+export { enderecoRequestDTOSchema } from "./zod/enderecoRequestDTOSchema.ts";
+export { enderecoResponseDTOSchema } from "./zod/enderecoResponseDTOSchema.ts";
+export {
+  excluirAtendimento204Schema,
+  excluirAtendimentoMutationResponseSchema,
+  excluirAtendimentoPathParamsSchema,
+} from "./zod/excluirAtendimentoSchema.ts";
+export {
+  findColaboradorById200Schema,
+  findColaboradorByIdPathParamsSchema,
+  findColaboradorByIdQueryResponseSchema,
+} from "./zod/findColaboradorByIdSchema.ts";
+export {
+  getAlunoById200Schema,
+  getAlunoByIdPathParamsSchema,
+  getAlunoByIdQueryResponseSchema,
+} from "./zod/getAlunoByIdSchema.ts";
+export {
+  getAlunosByResponsavel200Schema,
+  getAlunosByResponsavelPathParamsSchema,
+  getAlunosByResponsavelQueryResponseSchema,
+} from "./zod/getAlunosByResponsavelSchema.ts";
+export {
+  getAlunosKpis200Schema,
+  getAlunosKpisQueryResponseSchema,
+} from "./zod/getAlunosKpisSchema.ts";
+export {
+  getAlunos200Schema,
+  getAlunosQueryParamsSchema,
+  getAlunosQueryResponseSchema,
+} from "./zod/getAlunosSchema.ts";
+export {
+  getAtendimentoById200Schema,
+  getAtendimentoByIdPathParamsSchema,
+  getAtendimentoByIdQueryResponseSchema,
+} from "./zod/getAtendimentoByIdSchema.ts";
+export {
+  getAtendimentos200Schema,
+  getAtendimentosQueryParamsSchema,
+  getAtendimentosQueryResponseSchema,
+} from "./zod/getAtendimentosSchema.ts";
+export {
+  getCalendarioAtendimentos200Schema,
+  getCalendarioAtendimentosQueryParamsSchema,
+  getCalendarioAtendimentosQueryResponseSchema,
+} from "./zod/getCalendarioAtendimentosSchema.ts";
+export {
+  getColaboradores200Schema,
+  getColaboradoresQueryParamsSchema,
+  getColaboradoresQueryResponseSchema,
+} from "./zod/getColaboradoresSchema.ts";
+export {
+  getRelatorioAtendimentos200Schema,
+  getRelatorioAtendimentosQueryParamsSchema,
+  getRelatorioAtendimentosQueryResponseSchema,
+} from "./zod/getRelatorioAtendimentosSchema.ts";
+export {
+  getResponsaveis200Schema,
+  getResponsaveisQueryParamsSchema,
+  getResponsaveisQueryResponseSchema,
+} from "./zod/getResponsaveisSchema.ts";
+export {
+  getResponsavelById200Schema,
+  getResponsavelByIdPathParamsSchema,
+  getResponsavelByIdQueryResponseSchema,
+} from "./zod/getResponsavelByIdSchema.ts";
+export {
+  listAlunos200Schema,
+  listAlunosQueryResponseSchema,
+} from "./zod/listAlunosSchema.ts";
+export {
+  listResponsaveis200Schema,
+  listResponsaveisQueryResponseSchema,
+} from "./zod/listResponsaveisSchema.ts";
+export {
+  listUsers200Schema,
+  listUsersQueryResponseSchema,
+} from "./zod/listUsersSchema.ts";
+export {
+  login200Schema,
+  loginMutationRequestSchema,
+  loginMutationResponseSchema,
+} from "./zod/loginSchema.ts";
+export {
+  me200Schema,
+  mePathParamsSchema,
+  meQueryResponseSchema,
+} from "./zod/meSchema.ts";
+export { pageMetadataSchema } from "./zod/pageMetadataSchema.ts";
+export { pagedModelAlunoResponseDTOSchema } from "./zod/pagedModelAlunoResponseDTOSchema.ts";
+export { pagedModelAtendimentoResponseSchema } from "./zod/pagedModelAtendimentoResponseSchema.ts";
+export { pagedModelColaboradorResponseDTOSchema } from "./zod/pagedModelColaboradorResponseDTOSchema.ts";
+export { pagedModelResponsavelResponseDTOSchema } from "./zod/pagedModelResponsavelResponseDTOSchema.ts";
+export { reagendarAtendimentoRequestSchema } from "./zod/reagendarAtendimentoRequestSchema.ts";
+export {
+  reagendarAtendimento200Schema,
+  reagendarAtendimentoMutationRequestSchema,
+  reagendarAtendimentoMutationResponseSchema,
+  reagendarAtendimentoPathParamsSchema,
+} from "./zod/reagendarAtendimentoSchema.ts";
+export { relatorioAtendimentosResponseSchema } from "./zod/relatorioAtendimentosResponseSchema.ts";
+export { responsavelRequestDTOSchema } from "./zod/responsavelRequestDTOSchema.ts";
+export { responsavelResponseDTOSchema } from "./zod/responsavelResponseDTOSchema.ts";
+export {
+  unarchiveAluno204Schema,
+  unarchiveAlunoMutationResponseSchema,
+  unarchiveAlunoPathParamsSchema,
+} from "./zod/unarchiveAlunoSchema.ts";
+export {
+  updateAluno200Schema,
+  updateAlunoMutationRequestSchema,
+  updateAlunoMutationResponseSchema,
+  updateAlunoPathParamsSchema,
+} from "./zod/updateAlunoSchema.ts";
+export {
+  updateColaborador200Schema,
+  updateColaboradorMutationRequestSchema,
+  updateColaboradorMutationResponseSchema,
+  updateColaboradorPathParamsSchema,
+} from "./zod/updateColaboradorSchema.ts";
+export {
+  updateResponsavel200Schema,
+  updateResponsavelMutationRequestSchema,
+  updateResponsavelMutationResponseSchema,
+  updateResponsavelPathParamsSchema,
+} from "./zod/updateResponsavelSchema.ts";
+export { userRequestDTOSchema } from "./zod/userRequestDTOSchema.ts";
+export { userResponseDTOSchema } from "./zod/userResponseDTOSchema.ts";

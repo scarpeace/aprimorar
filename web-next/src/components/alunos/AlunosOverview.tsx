@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useMemo, useState, type FormEvent } from "react";
+import { AlunoForm } from "@/components/alunos/AlunoForm";
 import { useGetAlunos } from "@/lib/api/generated/hooks/aluno/useGetAlunos";
 import { useGetAlunosKpis } from "@/lib/api/generated/hooks/aluno/useGetAlunosKpis";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { MetricCard } from "@/components/ui/MetricCard";
+import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { Button } from "@/components/ui/Button";
 import { formatCpf } from "@/lib/utils/formatter";
@@ -28,6 +30,7 @@ export function AlunosOverview() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [showArchived, setShowArchived] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const alunosKpis = useGetAlunosKpis();
   const alunos = useGetAlunos({
@@ -94,7 +97,13 @@ export function AlunosOverview() {
               />
             </label>
 
-            <Button type="submit">Buscar</Button>
+            <Button type="submit" variant="outline">
+              Buscar
+            </Button>
+
+            <Button type="button" onClick={() => setIsCreateOpen(true)}>
+              Novo aluno
+            </Button>
           </form>
         </div>
 
@@ -175,6 +184,16 @@ export function AlunosOverview() {
           </div>
         )}
       </section>
+
+      <Modal
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+        title="Cadastrar aluno"
+        description="Preencha os dados para criar um novo aluno."
+        size="lg"
+      >
+        <AlunoForm onSuccess={() => setIsCreateOpen(false)} onCancel={() => setIsCreateOpen(false)} />
+      </Modal>
     </div>
   );
 }

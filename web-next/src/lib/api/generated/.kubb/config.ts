@@ -1,7 +1,6 @@
 export function buildFormData<T = unknown>(data: T): FormData {
   const formData = new FormData();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function appendData(key: string, value: any) {
     if (value instanceof Blob) {
       formData.append(key, value);
