@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AtendimentoPaymentBadge } from "@/components/atendimentos/AtendimentoPaymentBadge";
 import { AtendimentoStatusBadge } from "@/components/atendimentos/AtendimentoStatusBadge";
 import { AtendimentoTipoBadge } from "@/components/atendimentos/AtendimentoTipoBadge";
@@ -30,6 +30,8 @@ type AtendimentosResultsProps = {
 };
 
 export function AtendimentosResults({ atendimentos, isLoading, error, pagination }: Readonly<AtendimentosResultsProps>) {
+  const router = useRouter();
+
   if (isLoading) {
     return <PageLoading message="Carregando atendimentos..." />;
   }
@@ -63,18 +65,17 @@ export function AtendimentosResults({ atendimentos, isLoading, error, pagination
               <th className="text-right">Valor</th>
               <th className="text-right">Repasse</th>
               <th>Pagamento</th>
-              <th className="w-1">Ações</th>
             </tr>
           </thead>
 
           <tbody>
             {atendimentos.map((atendimento) => (
-              <tr key={atendimento.id}>
-                <td>
-                  <Link className="font-semibold text-base-content hover:underline" href={`/atendimentos/${atendimento.id}`}>
-                    {atendimento.nomeAluno}
-                  </Link>
-                </td>
+              <tr
+                key={atendimento.id}
+                className="cursor-pointer transition-colors hover:bg-base-200/70"
+                onClick={() => router.push(`/atendimentos/${atendimento.id}`)}
+              >
+                <td className="font-semibold text-base-content">{atendimento.nomeAluno}</td>
                 <td>{atendimento.nomeColaborador}</td>
                 <td>{formatDateShortYear(atendimento.dataHoraInicio)}</td>
                 <td>
@@ -94,11 +95,6 @@ export function AtendimentosResults({ atendimentos, isLoading, error, pagination
                     <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataPagamentoColaborador} />
                   </div>
                 </td>
-                <td>
-                  <Link className="btn btn-outline btn-sm" href={`/atendimentos/${atendimento.id}`}>
-                    Detalhes
-                  </Link>
-                </td>
               </tr>
             ))}
           </tbody>
@@ -107,7 +103,11 @@ export function AtendimentosResults({ atendimentos, isLoading, error, pagination
 
       <div className="grid gap-4 md:hidden">
         {atendimentos.map((atendimento) => (
-          <article key={atendimento.id} className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm">
+          <article
+            key={atendimento.id}
+            className="cursor-pointer rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm transition-colors hover:bg-base-200/40"
+            onClick={() => router.push(`/atendimentos/${atendimento.id}`)}
+          >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <AtendimentoTipoBadge tipo={atendimento.tipo} />
@@ -137,9 +137,6 @@ export function AtendimentosResults({ atendimentos, isLoading, error, pagination
             <div className="mt-3 flex flex-wrap gap-2">
               <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
               <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataPagamentoColaborador} />
-              <Link className="btn btn-outline btn-sm" href={`/atendimentos/${atendimento.id}`}>
-                Detalhes
-              </Link>
             </div>
           </article>
         ))}

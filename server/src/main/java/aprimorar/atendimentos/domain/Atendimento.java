@@ -114,6 +114,20 @@ public class Atendimento implements Serializable {
         return this;
     }
 
+    public void efetivarPagamentoAluno() {
+        if (this.dataPagamentoAluno != null) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "Pagamento já efetivado para o aluno");
+        }
+        this.dataPagamentoAluno = LocalDateTime.now();
+    }
+
+    public void efetivarRepasseColaborador() {
+        if (this.dataPagamentoColaborador != null) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "Repasse já efetivado para o colaborador");
+        }
+        this.dataPagamentoColaborador = LocalDateTime.now();
+    }
+
     public void cancelar(){
         if(this.status == StatusAtendimento.CANCELADO){
             throw new BusinessException(HttpStatus.BAD_REQUEST,"Evento já cancelado");

@@ -3,11 +3,11 @@ package aprimorar;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.modulith.Modulithic;
+import org.springframework.beans.factory.annotation.Value;
 
-import aprimorar.auth.AuthBootstrap;
+import aprimorar.auth.service.UserService;
 
 @Modulithic(
 		additionalPackages = "aprimorar",
@@ -21,7 +21,11 @@ public class AprimorarAplication {
 	}
 
 	@Bean
-	public CommandLineRunner seedAdminUser(ObjectProvider<AuthBootstrap> authBootstrap) {
-		return args -> authBootstrap.ifAvailable(AuthBootstrap::ensureAdminUser);
+	public CommandLineRunner seedAdminUser(
+		UserService userService,
+		@Value("${aprimorar.admin-username:admin@aprimorar.com}") String adminUsername,
+		@Value("${aprimorar.admin-password:}") String adminPassword
+	) {
+		return args -> userService.ensureAdminUser(adminUsername, adminPassword);
 	}
 }

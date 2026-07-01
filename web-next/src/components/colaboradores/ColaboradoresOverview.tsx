@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { ColaboradorForm } from "@/components/colaboradores/ColaboradorForm";
 import { useGetColaboradores } from "@/lib/api/generated/hooks/colaborador/useGetColaboradores";
-import type { ColaboradorResponseDTO } from "@/lib/api/generated/types/ColaboradorResponseDTO";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
@@ -27,12 +26,12 @@ function StatusBadge({ active }: Readonly<{ active?: boolean }>) {
 }
 
 export function ColaboradoresOverview() {
+  const router = useRouter();
   const [page, setPage] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [showArchived, setShowArchived] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [editingColaborador, setEditingColaborador] = useState<ColaboradorResponseDTO | null>(null);
 
   const colaboradores = useGetColaboradores({
     page,
@@ -118,28 +117,22 @@ export function ColaboradoresOverview() {
                   <th>Telefone</th>
                   <th>Função</th>
                   <th>Status</th>
-                  <th className="w-1">Ações</th>
                 </tr>
               </thead>
 
               <tbody>
                 {content.map((colaborador) => (
-                  <tr key={colaborador.id}>
-                    <td>
-                      <Link className="font-semibold text-base-content hover:underline" href={`/colaboradores/${colaborador.id}`}>
-                        {colaborador.nome}
-                      </Link>
-                    </td>
+                  <tr
+                    key={colaborador.id}
+                    className="cursor-pointer transition-colors hover:bg-base-200/70"
+                    onClick={() => router.push(`/colaboradores/${colaborador.id}`)}
+                  >
+                    <td className="font-semibold text-base-content">{colaborador.nome}</td>
                     <td>{formatCpf(colaborador.cpf)}</td>
                     <td>{formatPhone(colaborador.telefone)}</td>
                     <td>{colaborador.funcao}</td>
                     <td>
                       <StatusBadge active={colaborador.active} />
-                    </td>
-                    <td>
-                      <Button type="button" size="sm" variant="outline" onClick={() => setEditingColaborador(colaborador)}>
-                        Editar
-                      </Button>
                     </td>
                   </tr>
                 ))}
@@ -165,22 +158,6 @@ export function ColaboradoresOverview() {
         size="lg"
       >
         <ColaboradorForm onSuccess={() => setIsCreateOpen(false)} onCancel={() => setIsCreateOpen(false)} />
-      </Modal>
-
-      <Modal
-        isOpen={!!editingColaborador}
-        onClose={() => setEditingColaborador(null)}
-        title="Editar colaborador"
-        description="Atualize os dados do colaborador sem sair da listagem."
-        size="lg"
-      >
-        {editingColaborador ? (
-          <ColaboradorForm
-            initialData={editingColaborador}
-            onSuccess={() => setEditingColaborador(null)}
-            onCancel={() => setEditingColaborador(null)}
-          />
-        ) : null}
       </Modal>
     </section>
   );

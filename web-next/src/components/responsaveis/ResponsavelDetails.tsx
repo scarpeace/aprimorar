@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { ResponsavelAlunos } from "@/components/responsaveis/ResponsavelAlunos";
 import { useGetResponsavelById } from "@/lib/api/generated/hooks/responsavel/useGetResponsavelById";
 import { ResponsavelForm } from "@/components/responsaveis/ResponsavelForm";
 import { Button } from "@/components/ui/Button";
@@ -78,6 +79,8 @@ export function ResponsavelDetails({ responsavelId }: Readonly<{ responsavelId: 
           <DetailField label="Criado em" value={formatDate(data.createdAt)} />
         </div>
       </section>
+
+      <ResponsavelAlunos responsavelId={responsavelId} />
     </div>
   );
 }

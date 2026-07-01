@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { AtendimentoPaymentBadge } from "@/components/atendimentos/AtendimentoPaymentBadge";
 import { AtendimentoStatusBadge } from "@/components/atendimentos/AtendimentoStatusBadge";
 import { AtendimentoTipoBadge } from "@/components/atendimentos/AtendimentoTipoBadge";
@@ -24,6 +24,7 @@ import { brl } from "@/lib/utils/formatter";
 const PAGE_SIZE = 20;
 
 export function ColaboradorAtendimentos({ colaboradorId }: Readonly<{ colaboradorId: string }>) {
+  const router = useRouter();
   const [page, setPage] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -154,18 +155,17 @@ export function ColaboradorAtendimentos({ colaboradorId }: Readonly<{ colaborado
                     <th>Status</th>
                     <th className="text-right">Repasse</th>
                     <th>Pagamento</th>
-                    <th className="w-1">Ações</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {content.map((atendimento) => (
-                    <tr key={atendimento.id}>
-                      <td>
-                        <Link className="font-semibold text-base-content hover:underline" href={`/atendimentos/${atendimento.id}`}>
-                          {atendimento.nomeAluno}
-                        </Link>
-                      </td>
+                    <tr
+                      key={atendimento.id}
+                      className="cursor-pointer transition-colors hover:bg-base-200/70"
+                      onClick={() => router.push(`/atendimentos/${atendimento.id}`)}
+                    >
+                      <td className="font-semibold text-base-content">{atendimento.nomeAluno}</td>
                       <td>{formatDateShortYear(atendimento.dataHoraInicio)}</td>
                       <td>
                         {formatTime(atendimento.dataHoraInicio)} - {formatTime(atendimento.dataHoraFim)}
@@ -182,11 +182,6 @@ export function ColaboradorAtendimentos({ colaboradorId }: Readonly<{ colaborado
                           <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataPagamentoColaborador} />
                         </div>
                       </td>
-                      <td>
-                        <Link className="btn btn-outline btn-sm" href={`/atendimentos/${atendimento.id}`}>
-                          Detalhes
-                        </Link>
-                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -195,7 +190,11 @@ export function ColaboradorAtendimentos({ colaboradorId }: Readonly<{ colaborado
 
             <div className="grid gap-4 md:hidden">
               {content.map((atendimento) => (
-                <article key={atendimento.id} className="rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm">
+                <article
+                  key={atendimento.id}
+                  className="cursor-pointer rounded-2xl border border-base-300 bg-base-100 p-4 shadow-sm transition-colors hover:bg-base-200/40"
+                  onClick={() => router.push(`/atendimentos/${atendimento.id}`)}
+                >
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <AtendimentoTipoBadge tipo={atendimento.tipo} />
@@ -220,9 +219,6 @@ export function ColaboradorAtendimentos({ colaboradorId }: Readonly<{ colaborado
 
                   <div className="mt-3 flex flex-wrap gap-2">
                     <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataPagamentoColaborador} />
-                    <Link className="btn btn-outline btn-sm" href={`/atendimentos/${atendimento.id}`}>
-                      Detalhes
-                    </Link>
                   </div>
                 </article>
               ))}

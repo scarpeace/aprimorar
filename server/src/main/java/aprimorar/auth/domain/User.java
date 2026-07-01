@@ -82,4 +82,10 @@ public class User {
     public void toggleActive() {
         this.active = !this.active;
     }
+
+    public void syncAdminAccess(String encodedPassword) {
+        this.password = validatePassword(encodedPassword);
+        this.role = Role.ADMIN;
+        this.active = true;
+    }
 }

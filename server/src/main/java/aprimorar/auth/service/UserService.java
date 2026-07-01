@@ -53,6 +53,29 @@ public class UserService {
     }
 
     @Transactional
+    public void ensureAdminUser(String username, String password) {
+        String normalizedUsername = MapperUtils.normalizeEmail(username);
+        if (normalizedUsername == null) {
+            throw new IllegalStateException("Configuração aprimorar.admin-username inválida");
+        }
+
+        if (password == null || password.isBlank()) {
+            throw new IllegalStateException("Configuração aprimorar.admin-password ausente");
+        }
+
+        String encodedPassword = passwordEncoder.encode(password);
+
+        userRepository.findByUsername(normalizedUsername).ifPresentOrElse(user -> {
+            user.syncAdminAccess(encodedPassword);
+        }, () -> userRepository.save(new User(
+            normalizedUsername,
+            encodedPassword,
+            Role.ADMIN,
+            true
+        )));
+    }
+
+    @Transactional
     public void deleteUser(UUID id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new UserBusinessException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));

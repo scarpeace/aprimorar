@@ -72,4 +72,20 @@ public class AtendimentoMutationController {
         atendimentoMutationService.excluir(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/efetivarPgtoAluno")
+    @Operation(operationId = "efetivarPagamentoAluno", description = "Efetiva o pagamento do aluno.")
+    @ApiResponse(responseCode = "200", description = "Pagamento do aluno efetivado.")
+    public ResponseEntity<Void> efetivarPagamentoAluno(@PathVariable Long id) {
+        atendimentoMutationService.efetivarPagamentoAluno(id);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @PatchMapping("/{id}/efetivarRepasseColaborador")
+    @Operation(operationId = "efetivarRepasseColaborador", description = "Efetiva o repasse do colaborador.")
+    @ApiResponse(responseCode = "200", description = "Repasse do colaborador efetivado.")
+    public ResponseEntity<Void> efetivarRepasseColaborador(@PathVariable Long id) {
+        atendimentoMutationService.efetivarRepasseColaborador(id);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 }

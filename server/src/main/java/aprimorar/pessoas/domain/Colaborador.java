@@ -117,4 +117,12 @@ public class Colaborador {
         this.funcao = funcao;
         this.endereco = endereco;
     }
+
+    public void archive() {
+        this.active = false;
+    }
+
+    public void unarchive() {
+        this.active = true;
+    }
 }

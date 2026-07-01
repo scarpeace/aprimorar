@@ -42,8 +42,16 @@ public record AtendimentoResponse(
     UUID alunoId,
 
     @NotNull
+    @Schema(nullable = false, description = "Nome do aluno vinculado ao atendimento", example = "Maria da Silva")
+    String nomeAluno,
+
+    @NotNull
     @Schema(nullable = false, description = "ID do colaborador vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174001")
     UUID colaboradorId,
+
+    @NotNull
+    @Schema(nullable = false, description = "Nome do colaborador vinculado ao atendimento", example = "João Santos")
+    String nomeColaborador,
 
     @Nullable
     @Schema(nullable = true, description = "Data do pagamento do aluno", example = "2024-03-10T15:33:42Z")
@@ -74,7 +82,9 @@ public record AtendimentoResponse(
             atendimento.getPagamentoAluno(),
             atendimento.getRepasseColaborador(),
             atendimento.getAlunoId(),
+            atendimento.getAluno().getNome(),
             atendimento.getColaboradorId(),
+            atendimento.getColaborador().getNome(),
             atendimento.getDataPagamentoAluno(),
             atendimento.getDataPagamentoColaborador(),
             atendimento.getStatus(),

@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.YearMonth;
 import java.util.UUID;
 
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 public final class AtendimentoSpecifications {
@@ -25,7 +26,9 @@ public final class AtendimentoSpecifications {
             .and(statusIgual(filtro.status()))
             .and(tipoIgual(filtro.tipo()))
             .and(alunoIdIgual(filtro.alunoId()))
-            .and(colaboradorIdIgual(filtro.colaboradorId()));
+            .and(alunoNomeContem(filtro.alunoNome()))
+            .and(colaboradorIdIgual(filtro.colaboradorId()))
+            .and(colaboradorNomeContem(filtro.colaboradorNome()));
     }
 
     public static Specification<Atendimento> buscaContem(String termo) {
@@ -35,11 +38,13 @@ public final class AtendimentoSpecifications {
             }
 
             String pattern = "%" + termo.trim().toLowerCase() + "%";
+            var aluno = root.join("aluno", JoinType.INNER);
+            var colaborador = root.join("colaborador", JoinType.INNER);
 
             return cb.or(
                 cb.like(cb.lower(root.get("tipo").as(String.class)), pattern),
-                cb.like(cb.lower(root.join("aluno").get("nome")), pattern),
-                cb.like(cb.lower(root.join("colaborador").get("nome")), pattern)
+                cb.like(cb.lower(aluno.get("nome")), pattern),
+                cb.like(cb.lower(colaborador.get("nome")), pattern)
             );
         };
     }
@@ -72,6 +77,19 @@ public final class AtendimentoSpecifications {
         return (root, query, cb) -> alunoId == null ? null : cb.equal(root.get("aluno").get("id"), alunoId);
     }
 
+    public static Specification<Atendimento> alunoNomeContem(String nomeAluno) {
+        return (root, query, cb) -> {
+            if (nomeAluno == null || nomeAluno.trim().isEmpty()) {
+                return null;
+            }
+
+            String pattern = "%" + nomeAluno.trim().toLowerCase() + "%";
+            var aluno = root.join("aluno", JoinType.INNER);
+
+            return cb.like(cb.lower(aluno.get("nome")), pattern);
+        };
+    }
+
     public static Specification<Atendimento> statusIgual(StatusAtendimento status) {
         return (root, query, cb) -> status == null ? null : cb.equal(root.get("status"), status);
     }
@@ -82,5 +100,18 @@ public final class AtendimentoSpecifications {
 
     public static Specification<Atendimento> colaboradorIdIgual(UUID colaboradorId) {
         return (root, query, cb) -> colaboradorId == null ? null : cb.equal(root.get("colaborador").get("id"), colaboradorId);
+    }
+
+    public static Specification<Atendimento> colaboradorNomeContem(String colaboradorNome) {
+        return (root, query, cb) -> {
+            if (colaboradorNome == null || colaboradorNome.trim().isEmpty()) {
+                return null;
+            }
+
+            String pattern = "%" + colaboradorNome.trim().toLowerCase() + "%";
+            var colaborador = root.join("colaborador", JoinType.INNER);
+
+            return cb.like(cb.lower(colaborador.get("nome")), pattern);
+        };
     }
 }

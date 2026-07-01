@@ -65,22 +65,21 @@ public class ColaboradorMutationService {
         return ColaboradorResponseDTO.toDto(colaborador);
     }
 
-    // @Transactional
-    // public void archiveColaborador(UUID colaboradorId) {
-    //     Colaborador colaborador = findByIdOrThrow(colaboradorId);
+    @Transactional
+    public void archiveColaborador(UUID colaboradorId) {
+        Colaborador colaborador = findByIdOrThrow(colaboradorId);
 
-    //     eventPublisher.publishEvent(new ArchiveColaboradorVerificationEvent(colaboradorId));
-    //     colaborador.archive();
-    //     log.info("Colaborador {} arquivado com sucesso.", colaborador.getNome().toUpperCase());
-    // }
+        colaborador.archive();
+        log.info("Colaborador {} arquivado com sucesso.", colaborador.getNome().toUpperCase());
+    }
 
-    // @Transactional
-    // public void unarchiveColaborador(UUID colaboradorId) {
-    //     Colaborador colaborador = findByIdOrThrow(colaboradorId);
+    @Transactional
+    public void unarchiveColaborador(UUID colaboradorId) {
+        Colaborador colaborador = findByIdOrThrow(colaboradorId);
 
-    //     colaborador.unarchive();
-    //     log.info("Colaborador {} desarquivado com sucesso.", colaborador.getNome().toUpperCase());
-    // }
+        colaborador.unarchive();
+        log.info("Colaborador {} desarquivado com sucesso.", colaborador.getNome().toUpperCase());
+    }
 
     @Transactional
     public void deleteColaborador(UUID colaboradorId) {

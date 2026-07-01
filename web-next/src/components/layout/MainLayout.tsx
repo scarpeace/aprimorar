@@ -9,7 +9,6 @@ import type { AuthUser } from "@/lib/auth/types";
 const navigation = [
   { name: "Dashboard", href: "/" },
   { name: "Alunos", href: "/alunos" },
-  { name: "Responsáveis", href: "/responsaveis" },
   { name: "Colaboradores", href: "/colaboradores" },
   { name: "Atendimentos", href: "/atendimentos" },
   { name: "Admin", href: "/admin" },

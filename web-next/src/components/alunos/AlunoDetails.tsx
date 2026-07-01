@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AlunoAtendimentos } from "@/components/alunos/AlunoAtendimentos";
 import { AlunoForm } from "@/components/alunos/AlunoForm";
 import { useGetAlunoById } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
+import { useGetResponsavelById } from "@/lib/api/generated/hooks/responsavel/useGetResponsavelById";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { DetailField } from "@/components/ui/DetailField";
@@ -17,6 +18,7 @@ import { formatCpf, formatDate, formatPhone, formatZip } from "@/lib/utils/forma
 export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const aluno = useGetAlunoById(alunoId);
+  const responsavel = useGetResponsavelById(aluno.data?.responsavelId);
   const { archiveAluno, unarchiveAluno } = useAlunoMutations();
 
   if (aluno.isLoading) {
@@ -109,7 +111,36 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
             <DetailField label="Data de nascimento" value={formatDate(data.dataNascimento)} />
             <DetailField label="Idade" value={data.idade} />
             <DetailField label="Escola" value={data.escola} />
-            <DetailField label="Responsável vinculado" value={data.responsavelId} />
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-base-300 bg-base-200/25 p-4">
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-base-content/50">Responsável vinculado</p>
+                <p className="mt-1 text-sm text-base-content/65">Dados do responsável associado a este aluno.</p>
+              </div>
+
+              {responsavel.data ? (
+                <Link className="btn btn-outline btn-sm" href={`/responsaveis/${responsavel.data.id}`}>
+                  Ver responsável
+                </Link>
+              ) : null}
+            </div>
+
+            {responsavel.isLoading ? (
+              <p className="text-sm text-base-content/60">Carregando responsável...</p>
+            ) : responsavel.error ? (
+              <p className="text-sm text-error">Não foi possível carregar os dados do responsável.</p>
+            ) : responsavel.data ? (
+              <div className="grid gap-5 md:grid-cols-2">
+                <DetailField label="Nome" value={responsavel.data.nome} />
+                <DetailField label="CPF" value={formatCpf(responsavel.data.cpf)} />
+                <DetailField label="Telefone" value={formatPhone(responsavel.data.telefone)} />
+                <DetailField label="E-mail" value={responsavel.data.email} />
+              </div>
+            ) : (
+              <p className="text-sm text-base-content/60">Nenhum responsável vinculado encontrado.</p>
+            )}
           </div>
         </div>
 

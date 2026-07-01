@@ -4,9 +4,11 @@ import aprimorar.exception.BusinessException;
 import aprimorar.pessoas.domain.Colaborador;
 import aprimorar.pessoas.dto.colaborador.ColaboradorFiltroRequest;
 import aprimorar.pessoas.dto.colaborador.ColaboradorResponseDTO;
+import aprimorar.pessoas.dto.colaborador.ColaboradoresOptionsDTO;
 import aprimorar.pessoas.repository.ColaboradorRepository;
 import aprimorar.pessoas.repository.specifications.ColaboradorSpecifications;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -46,13 +48,14 @@ public class ColaboradorQueryService {
         return ColaboradorResponseDTO.toDto(colaborador);
     }
 
-    // @Transactional(readOnly = true)
-    // public List<ColaboradoresListDTO> listColaboradores() {
-    //     return colaboradorRepo.findAllByFuncaoNotAndActiveTrueOrderByNomeAsc(FuncoesColaborador.SISTEMA)
-    //         .stream()
-    //         .map(e -> new ColaboradoresListDTO(e.getId(), e.getNome()))
-    //         .toList();
-    // }
+    @Transactional(readOnly = true)
+    public List<ColaboradoresOptionsDTO> getColaboradoresOptions() {
+
+        return colaboradorRepo.findAll()
+            .stream()
+            .map(e -> new ColaboradoresOptionsDTO(e.getId(), e.getNome()))
+            .toList();
+    }
 
     private Colaborador findByIdOrThrow(UUID colaboradorId) {
         return colaboradorRepo
