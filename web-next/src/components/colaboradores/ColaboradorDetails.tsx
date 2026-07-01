@@ -56,36 +56,6 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
 
   return (
     <div className="space-y-6">
-      <section className="app-shell-card p-6 md:p-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-success">Colaborador</p>
-            <h1 className="mt-2 text-3xl font-bold text-base-content">{data.nome}</h1>
-            <p className="mt-3 max-w-2xl text-sm text-base-content/65">
-              Dados cadastrais e endereço do colaborador selecionado.
-            </p>
-          </div>
-
-          <div className="flex flex-col items-start gap-3">
-            <Badge variant={active ? "success" : "ghost"}>{active ? "Ativo" : "Arquivado"}</Badge>
-
-            <div className="flex flex-wrap gap-2">
-              <Button type="button" size="sm" variant="primary" onClick={() => setIsEditOpen(true)}>
-                Editar
-              </Button>
-
-              <Button type="button" size="sm" variant={active ? "warning" : "outline"} disabled={isPending} onClick={handleArchiveToggle}>
-                {isPending ? "Processando..." : active ? "Arquivar" : "Desarquivar"}
-              </Button>
-
-              <Link className="btn btn-outline btn-sm" href="/colaboradores">
-                Voltar para colaboradores
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <Modal
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
@@ -98,10 +68,35 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
 
       <section className="grid gap-6 xl:grid-cols-2">
         <div className="app-shell-card p-6">
-          <h2 className="text-xl font-bold text-base-content">Dados cadastrais</h2>
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div className="space-y-3">
+              <h2 className="text-xl font-bold text-base-content">Dados cadastrais</h2>
+              <Badge variant={active ? "success" : "ghost"}>{active ? "Ativo" : "Arquivado"}</Badge>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Button type="button" size="sm" variant="primary" onClick={() => setIsEditOpen(true)}>
+                Editar
+              </Button>
+
+              <Button type="button" size="sm" variant={active ? "warning" : "outline"} disabled={isPending} onClick={handleArchiveToggle}>
+                {isPending ? "Processando..." : active ? "Arquivar" : "Desarquivar"}
+              </Button>
+
+              <Link className="btn btn-outline btn-sm" href="/colaboradores">
+                Voltar
+              </Link>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 rounded-2xl border border-base-300 bg-base-200/25 p-4">
+            <div className="space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-wider text-base-content/50">Colaborador</p>
+              <p className="text-2xl font-bold text-base-content">{data.nome}</p>
+            </div>
+          </div>
 
           <div className="mt-6 grid gap-5 md:grid-cols-2">
-            <DetailField label="Nome" value={data.nome} />
             <DetailField label="CPF" value={formatCpf(data.cpf)} />
             <DetailField label="Telefone" value={formatPhone(data.telefone)} />
             <DetailField label="E-mail" value={data.email} />

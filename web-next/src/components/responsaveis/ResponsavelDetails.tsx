@@ -39,28 +39,6 @@ export function ResponsavelDetails({ responsavelId }: Readonly<{ responsavelId: 
 
   return (
     <div className="space-y-6">
-      <section className="app-shell-card p-6 md:p-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-success">Responsável</p>
-            <h1 className="mt-2 text-3xl font-bold text-base-content">{data.nome}</h1>
-            <p className="mt-3 max-w-2xl text-sm text-base-content/65">
-              Dados cadastrais do responsável selecionado.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <Button type="button" size="sm" variant="primary" onClick={() => setIsEditOpen(true)}>
-              Editar
-            </Button>
-
-            <Link className="btn btn-outline btn-sm" href="/responsaveis">
-              Voltar para responsáveis
-            </Link>
-          </div>
-        </div>
-      </section>
-
       <Modal
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
@@ -72,10 +50,27 @@ export function ResponsavelDetails({ responsavelId }: Readonly<{ responsavelId: 
       </Modal>
 
       <section className="app-shell-card p-6">
-        <h2 className="text-xl font-bold text-base-content">Dados cadastrais</h2>
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="space-y-3">
+            <h2 className="text-xl font-bold text-base-content">Dados cadastrais</h2>
+            <div className="space-y-1">
+              <p className="text-xs font-semibold uppercase tracking-wider text-base-content/50">Responsável</p>
+              <p className="text-2xl font-bold text-base-content">{data.nome}</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" size="sm" variant="primary" onClick={() => setIsEditOpen(true)}>
+              Editar
+            </Button>
+
+            <Link className="btn btn-outline btn-sm" href="/responsaveis">
+              Voltar
+            </Link>
+          </div>
+        </div>
 
         <div className="mt-6 grid gap-5 md:grid-cols-2">
-          <DetailField label="Nome" value={data.nome} />
           <DetailField label="CPF" value={formatCpf(data.cpf)} />
           <DetailField label="Telefone" value={formatPhone(data.telefone)} />
           <DetailField label="E-mail" value={data.email} />

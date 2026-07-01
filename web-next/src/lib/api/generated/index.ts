@@ -11,6 +11,8 @@ export type { UpdateAlunoMutationKey } from "./hooks/aluno/useUpdateAluno.ts";
 export type { AgendarAtendimentoMutationKey } from "./hooks/atendimento/useAgendarAtendimento.ts";
 export type { CancelarAtendimentoMutationKey } from "./hooks/atendimento/useCancelarAtendimento.ts";
 export type { ConcluirAtendimentoMutationKey } from "./hooks/atendimento/useConcluirAtendimento.ts";
+export type { EfetivarPagamentoAlunoMutationKey } from "./hooks/atendimento/useEfetivarPagamentoAluno.ts";
+export type { EfetivarRepasseColaboradorMutationKey } from "./hooks/atendimento/useEfetivarRepasseColaborador.ts";
 export type { ExcluirAtendimentoMutationKey } from "./hooks/atendimento/useExcluirAtendimento.ts";
 export type { GetAtendimentoByIdQueryKey } from "./hooks/atendimento/useGetAtendimentoById.ts";
 export type { GetAtendimentosQueryKey } from "./hooks/atendimento/useGetAtendimentos.ts";
@@ -24,6 +26,7 @@ export type { DeleteColaboradorMutationKey } from "./hooks/colaborador/useDelete
 export type { DesarquivarColaboradorMutationKey } from "./hooks/colaborador/useDesarquivarColaborador.ts";
 export type { FindColaboradorByIdQueryKey } from "./hooks/colaborador/useFindColaboradorById.ts";
 export type { GetColaboradoresQueryKey } from "./hooks/colaborador/useGetColaboradores.ts";
+export type { GetColaboradoresListQueryKey } from "./hooks/colaborador/useGetColaboradoresList.ts";
 export type { UpdateColaboradorMutationKey } from "./hooks/colaborador/useUpdateColaborador.ts";
 export type { CreateResponsavelMutationKey } from "./hooks/responsavel/useCreateResponsavel.ts";
 export type { DeleteResponsavelMutationKey } from "./hooks/responsavel/useDeleteResponsavel.ts";
@@ -93,6 +96,7 @@ export type {
   ColaboradorResponseDTO,
   ColaboradorResponseDTOFuncaoEnumKey,
 } from "./types/ColaboradorResponseDTO.ts";
+export type { ColaboradoresOptionsDTO } from "./types/ColaboradoresOptionsDTO.ts";
 export type {
   ConcluirAtendimento200,
   ConcluirAtendimentoMutation,
@@ -154,6 +158,18 @@ export type {
   DesarquivarColaboradorMutationResponse,
   DesarquivarColaboradorPathParams,
 } from "./types/DesarquivarColaborador.ts";
+export type {
+  EfetivarPagamentoAluno200,
+  EfetivarPagamentoAlunoMutation,
+  EfetivarPagamentoAlunoMutationResponse,
+  EfetivarPagamentoAlunoPathParams,
+} from "./types/EfetivarPagamentoAluno.ts";
+export type {
+  EfetivarRepasseColaborador200,
+  EfetivarRepasseColaboradorMutation,
+  EfetivarRepasseColaboradorMutationResponse,
+  EfetivarRepasseColaboradorPathParams,
+} from "./types/EfetivarRepasseColaborador.ts";
 export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
 export type {
@@ -217,6 +233,11 @@ export type {
   GetColaboradoresQueryParams,
   GetColaboradoresQueryResponse,
 } from "./types/GetColaboradores.ts";
+export type {
+  GetColaboradoresList200,
+  GetColaboradoresListQuery,
+  GetColaboradoresListQueryResponse,
+} from "./types/GetColaboradoresList.ts";
 export type {
   GetRelatorioAtendimentos200,
   GetRelatorioAtendimentosQuery,
@@ -365,6 +386,14 @@ export { concluirAtendimento } from "./hooks/atendimento/useConcluirAtendimento.
 export { concluirAtendimentoMutationKey } from "./hooks/atendimento/useConcluirAtendimento.ts";
 export { concluirAtendimentoMutationOptions } from "./hooks/atendimento/useConcluirAtendimento.ts";
 export { useConcluirAtendimento } from "./hooks/atendimento/useConcluirAtendimento.ts";
+export { efetivarPagamentoAluno } from "./hooks/atendimento/useEfetivarPagamentoAluno.ts";
+export { efetivarPagamentoAlunoMutationKey } from "./hooks/atendimento/useEfetivarPagamentoAluno.ts";
+export { efetivarPagamentoAlunoMutationOptions } from "./hooks/atendimento/useEfetivarPagamentoAluno.ts";
+export { useEfetivarPagamentoAluno } from "./hooks/atendimento/useEfetivarPagamentoAluno.ts";
+export { efetivarRepasseColaborador } from "./hooks/atendimento/useEfetivarRepasseColaborador.ts";
+export { efetivarRepasseColaboradorMutationKey } from "./hooks/atendimento/useEfetivarRepasseColaborador.ts";
+export { efetivarRepasseColaboradorMutationOptions } from "./hooks/atendimento/useEfetivarRepasseColaborador.ts";
+export { useEfetivarRepasseColaborador } from "./hooks/atendimento/useEfetivarRepasseColaborador.ts";
 export { excluirAtendimento } from "./hooks/atendimento/useExcluirAtendimento.ts";
 export { excluirAtendimentoMutationKey } from "./hooks/atendimento/useExcluirAtendimento.ts";
 export { excluirAtendimentoMutationOptions } from "./hooks/atendimento/useExcluirAtendimento.ts";
@@ -417,6 +446,10 @@ export { getColaboradores } from "./hooks/colaborador/useGetColaboradores.ts";
 export { getColaboradoresQueryKey } from "./hooks/colaborador/useGetColaboradores.ts";
 export { getColaboradoresQueryOptions } from "./hooks/colaborador/useGetColaboradores.ts";
 export { useGetColaboradores } from "./hooks/colaborador/useGetColaboradores.ts";
+export { getColaboradoresList } from "./hooks/colaborador/useGetColaboradoresList.ts";
+export { getColaboradoresListQueryKey } from "./hooks/colaborador/useGetColaboradoresList.ts";
+export { getColaboradoresListQueryOptions } from "./hooks/colaborador/useGetColaboradoresList.ts";
+export { useGetColaboradoresList } from "./hooks/colaborador/useGetColaboradoresList.ts";
 export { updateColaborador } from "./hooks/colaborador/useUpdateColaborador.ts";
 export { updateColaboradorMutationKey } from "./hooks/colaborador/useUpdateColaborador.ts";
 export { updateColaboradorMutationOptions } from "./hooks/colaborador/useUpdateColaborador.ts";
@@ -511,6 +544,7 @@ export {
 } from "./zod/cancelarAtendimentoSchema.ts";
 export { colaboradorRequestDTOSchema } from "./zod/colaboradorRequestDTOSchema.ts";
 export { colaboradorResponseDTOSchema } from "./zod/colaboradorResponseDTOSchema.ts";
+export { colaboradoresOptionsDTOSchema } from "./zod/colaboradoresOptionsDTOSchema.ts";
 export {
   concluirAtendimento200Schema,
   concluirAtendimentoMutationResponseSchema,
@@ -562,6 +596,16 @@ export {
   desarquivarColaboradorMutationResponseSchema,
   desarquivarColaboradorPathParamsSchema,
 } from "./zod/desarquivarColaboradorSchema.ts";
+export {
+  efetivarPagamentoAluno200Schema,
+  efetivarPagamentoAlunoMutationResponseSchema,
+  efetivarPagamentoAlunoPathParamsSchema,
+} from "./zod/efetivarPagamentoAlunoSchema.ts";
+export {
+  efetivarRepasseColaborador200Schema,
+  efetivarRepasseColaboradorMutationResponseSchema,
+  efetivarRepasseColaboradorPathParamsSchema,
+} from "./zod/efetivarRepasseColaboradorSchema.ts";
 export { enderecoRequestDTOSchema } from "./zod/enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./zod/enderecoResponseDTOSchema.ts";
 export {
@@ -608,6 +652,10 @@ export {
   getCalendarioAtendimentosQueryParamsSchema,
   getCalendarioAtendimentosQueryResponseSchema,
 } from "./zod/getCalendarioAtendimentosSchema.ts";
+export {
+  getColaboradoresList200Schema,
+  getColaboradoresListQueryResponseSchema,
+} from "./zod/getColaboradoresListSchema.ts";
 export {
   getColaboradores200Schema,
   getColaboradoresQueryParamsSchema,

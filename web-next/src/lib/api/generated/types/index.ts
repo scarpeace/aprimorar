@@ -55,6 +55,7 @@ export type {
   ColaboradorResponseDTO,
   ColaboradorResponseDTOFuncaoEnumKey,
 } from "./ColaboradorResponseDTO.ts";
+export type { ColaboradoresOptionsDTO } from "./ColaboradoresOptionsDTO.ts";
 export type {
   ConcluirAtendimento200,
   ConcluirAtendimentoMutation,
@@ -116,6 +117,18 @@ export type {
   DesarquivarColaboradorMutationResponse,
   DesarquivarColaboradorPathParams,
 } from "./DesarquivarColaborador.ts";
+export type {
+  EfetivarPagamentoAluno200,
+  EfetivarPagamentoAlunoMutation,
+  EfetivarPagamentoAlunoMutationResponse,
+  EfetivarPagamentoAlunoPathParams,
+} from "./EfetivarPagamentoAluno.ts";
+export type {
+  EfetivarRepasseColaborador200,
+  EfetivarRepasseColaboradorMutation,
+  EfetivarRepasseColaboradorMutationResponse,
+  EfetivarRepasseColaboradorPathParams,
+} from "./EfetivarRepasseColaborador.ts";
 export type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
 export type {
@@ -179,6 +192,11 @@ export type {
   GetColaboradoresQueryParams,
   GetColaboradoresQueryResponse,
 } from "./GetColaboradores.ts";
+export type {
+  GetColaboradoresList200,
+  GetColaboradoresListQuery,
+  GetColaboradoresListQueryResponse,
+} from "./GetColaboradoresList.ts";
 export type {
   GetRelatorioAtendimentos200,
   GetRelatorioAtendimentosQuery,

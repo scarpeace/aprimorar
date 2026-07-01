@@ -34,6 +34,7 @@ export {
 } from "./cancelarAtendimentoSchema.ts";
 export { colaboradorRequestDTOSchema } from "./colaboradorRequestDTOSchema.ts";
 export { colaboradorResponseDTOSchema } from "./colaboradorResponseDTOSchema.ts";
+export { colaboradoresOptionsDTOSchema } from "./colaboradoresOptionsDTOSchema.ts";
 export {
   concluirAtendimento200Schema,
   concluirAtendimentoMutationResponseSchema,
@@ -85,6 +86,16 @@ export {
   desarquivarColaboradorMutationResponseSchema,
   desarquivarColaboradorPathParamsSchema,
 } from "./desarquivarColaboradorSchema.ts";
+export {
+  efetivarPagamentoAluno200Schema,
+  efetivarPagamentoAlunoMutationResponseSchema,
+  efetivarPagamentoAlunoPathParamsSchema,
+} from "./efetivarPagamentoAlunoSchema.ts";
+export {
+  efetivarRepasseColaborador200Schema,
+  efetivarRepasseColaboradorMutationResponseSchema,
+  efetivarRepasseColaboradorPathParamsSchema,
+} from "./efetivarRepasseColaboradorSchema.ts";
 export { enderecoRequestDTOSchema } from "./enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./enderecoResponseDTOSchema.ts";
 export {
@@ -131,6 +142,10 @@ export {
   getCalendarioAtendimentosQueryParamsSchema,
   getCalendarioAtendimentosQueryResponseSchema,
 } from "./getCalendarioAtendimentosSchema.ts";
+export {
+  getColaboradoresList200Schema,
+  getColaboradoresListQueryResponseSchema,
+} from "./getColaboradoresListSchema.ts";
 export {
   getColaboradores200Schema,
   getColaboradoresQueryParamsSchema,
