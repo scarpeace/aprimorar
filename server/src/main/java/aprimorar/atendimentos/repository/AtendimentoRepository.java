@@ -97,7 +97,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
               AND (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
         """
     )
-    boolean hasAtendimetoConflitante(
+    boolean alunoPossuiAtendimentoConflitante(
         @Param("alunoId") UUID alunoId,
         @Param("inicio") LocalDateTime inicio,
         @Param("fim") LocalDateTime fim,
@@ -120,6 +120,27 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
         @Param("fim") LocalDateTime fim,
         @Param("ignoredAtendimentoId") Long ignoredAtendimentoId
     );
+
+    @Query(
+        """
+            SELECT count(a) > 0
+            FROM Atendimento a
+            WHERE a.aluno.id = :alunoId
+              AND a.status = aprimorar.atendimentos.enums.StatusAtendimento.AGENDADO
+        """
+    )
+    boolean alunoPossuiAtendimentoAgendado(@Param("alunoId") UUID alunoId);
+
+    @Query(
+        """
+            SELECT count(a) > 0
+            FROM Atendimento a
+            WHERE a.aluno.id = :alunoId
+              AND a.status = aprimorar.atendimentos.enums.StatusAtendimento.CONCLUIDO
+              AND a.dataPagamentoAluno IS NULL
+        """
+    )
+    boolean alunoPossuiPagamentoAlunoPendente(@Param("alunoId") UUID alunoId);
 
 
 }

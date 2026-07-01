@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,17 +26,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlunoQueryService {
 
     private static final Logger log = LoggerFactory.getLogger(AlunoQueryService.class);
-    private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-4000-8000-000000000002");
 
     private final AlunoRepository alunoRepo;
+    private final UUID ghostStudentId;
 
-    public AlunoQueryService(AlunoRepository studentRepo) {
+    public AlunoQueryService(
+        AlunoRepository studentRepo,
+        @Value("${aprimorar.ghost-student-id:00000000-0000-4000-8000-000000000002}") String ghostStudentId
+    ) {
         this.alunoRepo = studentRepo;
+        this.ghostStudentId = UUID.fromString(ghostStudentId);
     }
 
     @Transactional(readOnly = true)
     public Page<AlunoResponseDTO> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
-        Specification<Aluno> spec = AlunoSpecifications.comFiltros(filtro);
+        Specification<Aluno> spec = AlunoSpecifications.comFiltros(filtro, ghostStudentId);
         Page<Aluno> alunosPage = alunoRepo.findAll(spec, pageable);
         Page<AlunoResponseDTO> alunosDtoPage = alunosPage.map(AlunoResponseDTO::toDto);
 
@@ -45,9 +50,9 @@ public class AlunoQueryService {
 
     @Transactional(readOnly = true)
     public AlunosKpisDTO getAlunosKpis() {
-        long totalAlunos = alunoRepo.countByIdNot(GHOST_STUDENT_ID);
+        long totalAlunos = alunoRepo.countByIdNot(ghostStudentId);
         //TODO: ese andIdNot funciona mas é terrível
-        long totalAlunosAtivos = alunoRepo.countByActiveTrueAndIdNot(GHOST_STUDENT_ID);
+        long totalAlunosAtivos = alunoRepo.countByActiveTrueAndIdNot(ghostStudentId);
         return new AlunosKpisDTO(totalAlunos, totalAlunosAtivos);
     }
 
@@ -56,7 +61,7 @@ public class AlunoQueryService {
         Sort sort = Sort.by(Sort.Direction.ASC, "nome");
 
         List<AlunosListDTO> alunos = alunoRepo
-            .findAll(AlunoSpecifications.isNotArchived(), sort)
+            .findAll(AlunoSpecifications.isNotArchived().and(AlunoSpecifications.isNotGhost(ghostStudentId)), sort)
             .stream()
             .map(e -> new AlunosListDTO(e.getId(), e.getNome()))
             .toList();

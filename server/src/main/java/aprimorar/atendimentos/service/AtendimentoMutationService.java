@@ -145,7 +145,7 @@ public class AtendimentoMutationService {
     private void validarDisponibilidadeDosParticipantes(
         Atendimento atendimento
     ) {
-        if (atendimentoRepo.hasAtendimetoConflitante(
+        if (atendimentoRepo.alunoPossuiAtendimentoConflitante(
             atendimento.getAlunoId(),
             atendimento.getDataHoraInicio(),
             atendimento.getDataHoraFim(),

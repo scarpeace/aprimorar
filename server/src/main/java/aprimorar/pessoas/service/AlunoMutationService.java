@@ -1,5 +1,6 @@
 package aprimorar.pessoas.service;
 
+import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.exception.BusinessException;
 import aprimorar.pessoas.domain.Aluno;
 import aprimorar.pessoas.dto.aluno.AlunoRequestDTO;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlunoMutationService {
 
     private static final Logger log = LoggerFactory.getLogger(AlunoMutationService.class);
-    private static final UUID GHOST_STUDENT_ID = UUID.fromString("00000000-0000-4000-8000-000000000002");
 
     private final AlunoRepository alunoRepo;
+    private final AtendimentoRepository atendimentoRepo;
+    private final UUID ghostStudentId;
 
-    public AlunoMutationService(AlunoRepository alunoRepo) {
+    public AlunoMutationService(
+        AlunoRepository alunoRepo,
+        AtendimentoRepository atendimentoRepo,
+        @Value("${aprimorar.ghost-student-id:00000000-0000-4000-8000-000000000002}") String ghostStudentId
+    ) {
         this.alunoRepo = alunoRepo;
+        this.atendimentoRepo = atendimentoRepo;
+        this.ghostStudentId = UUID.fromString(ghostStudentId);
     }
 
     @Transactional
@@ -51,7 +60,7 @@ public class AlunoMutationService {
         Aluno aluno = findAlunoOrThrow(alunoId);
         Aluno requestedAluno = dto.toEntity();
 
-        if (GHOST_STUDENT_ID.equals(alunoId)) {
+        if (ghostStudentId.equals(alunoId)) {
             throw new BusinessException(HttpStatus.CONFLICT, "Não é possível modificar o registro de sistema 'Aluno Removido'.");
         }
 
@@ -81,7 +90,12 @@ public class AlunoMutationService {
     public void archiveAluno(UUID alunoId) {
         Aluno aluno = findAlunoOrThrow(alunoId);
 
-        log.info("Verificando se aluno não tem cobranças pendentes {}.", aluno.getNome().toUpperCase());
+        if (ghostStudentId.equals(alunoId)) {
+            throw new BusinessException(HttpStatus.CONFLICT, "O registro não pode ser modificado.");
+        }
+
+        log.info("Verificando se aluno {} pode ser arquivado.", aluno.getNome().toUpperCase());
+        ensureAlunoPodeSerArquivado(alunoId);
 
         aluno.archive();
         log.info("Aluno {} arquivado com sucesso.", aluno.getNome().toUpperCase());
@@ -90,7 +104,10 @@ public class AlunoMutationService {
     @Transactional
     public void unarchiveAluno(UUID alunoId) {
         Aluno aluno = findAlunoOrThrow(alunoId);
-        ensureNotGhost(alunoId);
+
+        if (ghostStudentId.equals(alunoId)) {
+            throw new BusinessException(HttpStatus.CONFLICT, "O registro não pode ser modificado.");
+        }
 
         aluno.unarchive();
         log.info("Aluno {} desarquivado com sucesso.", aluno.getNome().toUpperCase());
@@ -100,11 +117,15 @@ public class AlunoMutationService {
     public void deleteAluno(UUID alunoId) {
         Aluno aluno = findAlunoOrThrow(alunoId);
 
-        ensureNotGhost(alunoId);
+        if (ghostStudentId.equals(alunoId)) {
+            throw new BusinessException(HttpStatus.CONFLICT, "O registro não pode ser modificado.");
+        }
 
-        log.info("Verificando se aluno não tem cobranças pendentes {}.", aluno.getNome().toUpperCase());
+        ensureAlunoArquivado(aluno);
+        ensureAlunoPodeSerArquivado(alunoId);
 
         log.info("Realocando atendimentos do aluno ao Aluno Fantasma.", aluno.getNome().toUpperCase());
+        atendimentoRepo.reassignAtendimentosAlunoToGhost(alunoId, alunoRepo.getReferenceById(ghostStudentId));
 
         alunoRepo.delete(aluno);
         log.info("Aluno {} deletado com sucesso.", aluno.getNome().toUpperCase());
@@ -112,7 +133,7 @@ public class AlunoMutationService {
 
     @Transactional
     public void deleteAlunos(List<Aluno> alunos) {
-        alunoRepo.deleteAll(alunos);
+        alunos.forEach(aluno -> deleteAluno(aluno.getId()));
         log.info("Alunos deletados com sucesso.");
     }
 
@@ -123,9 +144,19 @@ public class AlunoMutationService {
             .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Aluno não encontrado no banco de dados"));
     }
 
-    private void ensureNotGhost(UUID id) {
-        if (GHOST_STUDENT_ID.equals(id)) {
-            throw new BusinessException(HttpStatus.CONFLICT, "O registro não pode ser modificado.");
+    private void ensureAlunoPodeSerArquivado(UUID alunoId) {
+        if (atendimentoRepo.alunoPossuiAtendimentoAgendado(alunoId)) {
+            throw new BusinessException(HttpStatus.CONFLICT, "Não é possível arquivar um aluno com atendimentos agendados.");
+        }
+
+        if (atendimentoRepo.alunoPossuiPagamentoAlunoPendente(alunoId)) {
+            throw new BusinessException(HttpStatus.CONFLICT, "Não é possível arquivar um aluno com pagamento pendente.");
+        }
+    }
+
+    private void ensureAlunoArquivado(Aluno aluno) {
+        if (!Boolean.FALSE.equals(aluno.getActive())) {
+            throw new BusinessException(HttpStatus.CONFLICT, "O aluno precisa estar arquivado antes de ser excluído.");
         }
     }
 }
