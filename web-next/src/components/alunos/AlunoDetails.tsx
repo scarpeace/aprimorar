@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { AlunoAtendimentos } from "@/components/alunos/AlunoAtendimentos";
 import { AlunoForm } from "@/components/alunos/AlunoForm";
 import { useGetAlunoById } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
 import { Badge } from "@/components/ui/Badge";
@@ -126,6 +127,8 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
           </div>
         </div>
       </section>
+
+      <AlunoAtendimentos alunoId={alunoId} />
     </div>
   );
 }

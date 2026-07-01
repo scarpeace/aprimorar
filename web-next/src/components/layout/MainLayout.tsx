@@ -12,7 +12,6 @@ const navigation = [
   { name: "Responsáveis", href: "/responsaveis" },
   { name: "Colaboradores", href: "/colaboradores" },
   { name: "Atendimentos", href: "/atendimentos" },
-  { name: "Financeiro", href: "/financeiro" },
   { name: "Admin", href: "/admin" },
 ] as const;
 

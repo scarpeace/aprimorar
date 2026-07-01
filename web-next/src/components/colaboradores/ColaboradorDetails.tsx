@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { ColaboradorAtendimentos } from "@/components/colaboradores/ColaboradorAtendimentos";
 import { useFindColaboradorById } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
 import { ColaboradorForm } from "@/components/colaboradores/ColaboradorForm";
 import { Badge } from "@/components/ui/Badge";
@@ -121,6 +122,8 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
           </div>
         </div>
       </section>
+
+      <ColaboradorAtendimentos colaboradorId={colaboradorId} />
     </div>
   );
 }
