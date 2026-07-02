@@ -1,7 +1,9 @@
 package aprimorar.atendimentos.controller;
 
-import aprimorar.atendimentos.dto.CalendarioAtendimentosRespose;
 import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
+import aprimorar.atendimentos.dto.AlunoResumoFinanceiroResponse;
+import aprimorar.atendimentos.dto.CalendarioMensalAtendimentosResponse;
+import aprimorar.atendimentos.dto.ColaboradorResumoFinanceiroResponse;
 import aprimorar.atendimentos.dto.RelatorioAtendimentosResponse;
 import aprimorar.atendimentos.service.AtendimentoQueryService;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
@@ -10,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.time.YearMonth;
-import java.util.List;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +53,7 @@ public class AtendimentoQueryController {
     @GetMapping("/calendario")
     @Operation(operationId = "getCalendarioAtendimentos", description = "Retorna o conteúdo para montar o calendário de atendimentos.")
     @ApiResponse(responseCode = "200", description = "Calendário retornado com sucesso.")
-    public ResponseEntity<List<CalendarioAtendimentosRespose>> getCalendarioAtendimentos(@RequestParam YearMonth anoMes) {
+    public ResponseEntity<CalendarioMensalAtendimentosResponse> getCalendarioAtendimentos(@RequestParam YearMonth anoMes) {
         return ResponseEntity.ok(atendimentoQueryService.getCalendarioAtendimentos(anoMes));
     }
 
@@ -61,6 +62,26 @@ public class AtendimentoQueryController {
     @ApiResponse(responseCode = "200", description = "Relatório retornado com sucesso.")
     public ResponseEntity<RelatorioAtendimentosResponse> getAtendimentosRelatorio(@RequestParam YearMonth anoMes) {
         return ResponseEntity.ok(atendimentoQueryService.getRelatorioAtendimentos(anoMes));
+    }
+
+    @GetMapping("/colaboradores/{colaboradorId}/resumo-financeiro")
+    @Operation(operationId = "getResumoFinanceiroColaborador", description = "Retorna o resumo financeiro mensal de um colaborador.")
+    @ApiResponse(responseCode = "200", description = "Resumo financeiro retornado com sucesso.")
+    public ResponseEntity<ColaboradorResumoFinanceiroResponse> getResumoFinanceiroColaborador(
+        @PathVariable java.util.UUID colaboradorId,
+        @RequestParam YearMonth anoMes
+    ) {
+        return ResponseEntity.ok(atendimentoQueryService.getResumoFinanceiroColaborador(colaboradorId, anoMes));
+    }
+
+    @GetMapping("/alunos/{alunoId}/resumo-financeiro")
+    @Operation(operationId = "getResumoFinanceiroAluno", description = "Retorna o resumo financeiro mensal de um aluno.")
+    @ApiResponse(responseCode = "200", description = "Resumo financeiro retornado com sucesso.")
+    public ResponseEntity<AlunoResumoFinanceiroResponse> getResumoFinanceiroAluno(
+        @PathVariable java.util.UUID alunoId,
+        @RequestParam YearMonth anoMes
+    ) {
+        return ResponseEntity.ok(atendimentoQueryService.getResumoFinanceiroAluno(alunoId, anoMes));
     }
 
 }

@@ -15,14 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
-import aprimorar.atendimentos.dto.CalendarioAtendimentosRespose;
+import aprimorar.atendimentos.dto.AlunoResumoFinanceiroResponse;
+import aprimorar.atendimentos.dto.CalendarioAtendimentosResponse;
+import aprimorar.atendimentos.dto.CalendarioMensalAtendimentosResponse;
+import aprimorar.atendimentos.dto.ColaboradorResumoFinanceiroResponse;
 import aprimorar.atendimentos.dto.RelatorioAtendimentosResponse;
 import aprimorar.atendimentos.domain.Atendimento;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.atendimentos.repository.projections.AtendimentosReportProjection;
-import aprimorar.atendimentos.repository.projections.AtendimentoCalendarioProjection;
 import aprimorar.atendimentos.repository.specifications.AtendimentoSpecifications;
 import aprimorar.exception.BusinessException;
+import java.util.UUID;
 
 @Service
 public class AtendimentoQueryService {
@@ -54,13 +57,24 @@ public class AtendimentoQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CalendarioAtendimentosRespose> getCalendarioAtendimentos(YearMonth mes) {
+    public CalendarioMensalAtendimentosResponse getCalendarioAtendimentos(YearMonth mes) {
         var dataInicio = mes.atDay(1).atStartOfDay();
         var dataFim = mes.atEndOfMonth().atTime(LocalTime.MAX);
+        var relatorio = getRelatorioAtendimentos(mes);
+        List<CalendarioAtendimentosResponse> eventos = atendimentoRepo.getCalendarioMensal(dataInicio, dataFim);
 
-        List<AtendimentoCalendarioProjection> atendimentos = atendimentoRepo.getCalendarioMensal(dataInicio, dataFim);
-
-        return atendimentos.stream().map(CalendarioAtendimentosRespose::toDto).toList();
+        return new CalendarioMensalAtendimentosResponse(
+            mes,
+            relatorio.totalAtendimentos(),
+            relatorio.totalAulas(),
+            relatorio.totalMentoria(),
+            relatorio.totalTerapia(),
+            relatorio.totalOV(),
+            relatorio.totalENEM(),
+            relatorio.totalPAS(),
+            relatorio.totalOutros(),
+            eventos
+        );
     }
 
     @Transactional(readOnly = true)
@@ -71,30 +85,38 @@ public class AtendimentoQueryService {
         AtendimentosReportProjection resumo = atendimentoRepo.getRelatorioMensal(dataInicio, dataFim);
 
         var totalAtendimentos = resumo.getTotalAulas() + resumo.getTotalMentoria() + resumo.getTotalTerapia() + resumo.getTotalOV() + resumo.getTotalENEM() + resumo.getTotalPAS() + resumo.getTotalOutros();
-        var porcentagemAulas = (double) resumo.getTotalAulas() / totalAtendimentos * 100;
-        var porcentagemMentoria = (double) resumo.getTotalMentoria() / totalAtendimentos * 100;
-        var porcentagemTerapia = (double) resumo.getTotalTerapia() / totalAtendimentos * 100;
-        var porcentagemOV = (double) resumo.getTotalOV() / totalAtendimentos * 100;
-        var porcentagemENEM = (double) resumo.getTotalENEM() / totalAtendimentos * 100;
-        var porcentagemPAS = (double) resumo.getTotalPAS() / totalAtendimentos * 100;
-        var porcentagemOutros = (double) resumo.getTotalOutros() / totalAtendimentos * 100;
 
         return new RelatorioAtendimentosResponse(
             totalAtendimentos,
             resumo.getTotalAulas(),
-            porcentagemAulas,
             resumo.getTotalMentoria(),
-            porcentagemMentoria,
             resumo.getTotalTerapia(),
-            porcentagemTerapia,
             resumo.getTotalOV(),
-            porcentagemOV,
             resumo.getTotalENEM(),
-            porcentagemENEM,
             resumo.getTotalPAS(),
-            porcentagemPAS,
-            resumo.getTotalOutros(),
-            porcentagemOutros
+            resumo.getTotalOutros()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public ColaboradorResumoFinanceiroResponse getResumoFinanceiroColaborador(UUID colaboradorId, YearMonth mes) {
+        var dataInicio = mes.atDay(1).atStartOfDay();
+        var dataFim = mes.atEndOfMonth().atTime(LocalTime.MAX);
+
+        return new ColaboradorResumoFinanceiroResponse(
+            atendimentoRepo.getTotalRepassePagoColaborador(colaboradorId, dataInicio, dataFim),
+            atendimentoRepo.getTotalRepassePendenteColaborador(colaboradorId, dataInicio, dataFim)
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public AlunoResumoFinanceiroResponse getResumoFinanceiroAluno(UUID alunoId, YearMonth mes) {
+        var dataInicio = mes.atDay(1).atStartOfDay();
+        var dataFim = mes.atEndOfMonth().atTime(LocalTime.MAX);
+
+        return new AlunoResumoFinanceiroResponse(
+            atendimentoRepo.getTotalPagamentoPagoAluno(alunoId, dataInicio, dataFim),
+            atendimentoRepo.getTotalPagamentoPendenteAluno(alunoId, dataInicio, dataFim)
         );
     }
 }

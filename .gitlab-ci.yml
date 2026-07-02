@@ -44,10 +44,14 @@ frontend-build:
     paths:
       - client/node_modules
   script:
-    - cd client && VITE_API_URL=/api npm ci && VITE_API_URL=/api npm run build
+    - cd client
+    - npm ci
+    - npm run build
   artifacts:
     paths:
-      - client/dist/
+      - client/.next/
+      - client/package.json
+      - client/package-lock.json
 
 backend-docker:
   stage: docker
@@ -78,7 +82,7 @@ frontend-docker:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build --build-arg VITE_API_URL=/api -t $CLIENT_IMAGE ./client
+    - docker build -t $CLIENT_IMAGE ./client
     - docker push $CLIENT_IMAGE
   only:
     - main

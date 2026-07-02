@@ -1,132 +1,239 @@
-# Sistema de Gerenciamento de Cursinho
+# Aprimorar
 
-## 1. Visão Geral do Projeto
+Sistema de gestão para operação do Aprimorar: cadastro de alunos, responsáveis e colaboradores, agendamento de atendimentos, autenticação e acompanhamento operacional.
 
-Este projeto é um sistema de gerenciamento para um cursinho preparatório para ENEM e aulas particulares. O sistema permite o controle completo de alunos, responsáveis e o agendamento de atendimentos. O objetivo foi criar uma aplicação robusta, performática e segura, seguindo as melhores práticas de desenvolvimento full-stack.
+## Stack
 
-## 2. 📋 Funcionalidades Principais
+- Backend: Java 21, Spring Boot 3.5, Spring Security, Spring Data JPA, Flyway, Spring Modulith
+- Frontend: Next.js 16, React 19, React Query, React Hook Form, Zod, DaisyUI
+- Banco: PostgreSQL 15
+- Contrato: OpenAPI + Kubb
 
-* **Gerenciamento de Alunos:** CRUD completo de alunos, incluindo dados pessoais, escolares e endereço.
-* **Gerenciamento de Responsáveis:** Cadastro e vínculo de responsáveis aos alunos.
-* **Agendamento:** Fluxo de registro e agendamento de atendimentos (integração com Google Calendar).
-* **Paginação e Filtros:** Busca de alunos e atendimentos com paginação e filtros realizados diretamente no banco de dados para alta performance.
-* **Segurança:** Autenticação segura com JWT e controle de acesso baseado em cargos.
+## Estrutura
 
-## 3. 🧰 Tecnologias Utilizadas
+```text
+.
+├── server/    # backend Spring Boot
+├── client/    # frontend Next.js
+└── AGENTS.md  # documentação operacional viva
+```
 
-| Categoria | Tecnologia |
-| :--- | :--- |
-| **Backend** | Java 21, Spring Boot 3.5, Hibernate, JUnit 5, Mockito |
-| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS, TanStack Query |
-| **Banco de Dados** | PostgreSQL, Flyway Migrations |
-| **Outros** | Docker, Docker Compose, OpenAPI/Kubb |
+## Pré-requisitos
 
-## 4. 🚀 Como Instalar e Rodar Localmente
+- Java 21
+- Node.js 20+
+- Docker + Docker Compose
 
-Para iniciar o projeto, você precisará ter o **Docker** e o **Docker Compose** instalados.
+## Variáveis de ambiente
 
-### 4.1. Configuração
+O backend lê variáveis destes arquivos, nessa ordem:
 
-1. **Clone o Repositório:**
-   ```bash
-   git clone <url-do-repositorio>
-   cd aprimorar
-   ```
+- `./.env`
+- `./.env.local`
+- `./server/.env`
+- `./server/.env.local`
 
-2. **Crie o arquivo `.env`:**
-   Na raiz do projeto, crie um arquivo `.env` com as variáveis necessárias (exemplo abaixo):
-   ```env
-   JWT_SECRET_KEY=sua_chave_secreta_segura
-   DB_PASSWORD=sua_senha_do_banco
-   # ... outras variáveis conforme necessário
-   ```
+### Backend
 
-3. **Crie o arquivo `.env.local` para integrações locais opcionais:**
-   Use esse arquivo para variáveis que nao devem ir para o repositório, como o token do SonarQube:
-   ```env
-   SONAR_TOKEN=seu_token_do_sonar
-   ```
+Variáveis mínimas:
 
-### 4.2. Inicialização
+```env
+APP_ADMIN_USERNAME=admin@aprimorar.com
+APP_ADMIN_PASSWORD=admin123
+APRIMORAR_ADMIN_ID=b3a092e0-fc48-43ff-8b35-149eb81a033f
+APRIMORAR_GHOST_STUDENT_ID=00000000-0000-4000-8000-000000000002
+APRIMORAR_GHOST_COLABORADOR_ID=00000000-0000-4000-8000-000000000001
+```
 
-1. **Inicie os Containers:**
-   ```bash
-   docker compose up -d db
-   ```
+Notas:
 
-2. **Instale e Sincronize as Dependências:**
-   No diretório `client/`:
-   ```bash
-   npm install
-   npm run sync
-   ```
-   *Nota: O comando `npm run sync` é obrigatório para gerar os tipos e hooks da API a partir da especificação OpenAPI.*
+- `APP_ADMIN_PASSWORD` é obrigatória
+- os IDs ghost devem bater com a migration inicial
+- no profile `dev`, o banco local já aponta para `localhost:5432/aprimorar` com `myuser/mypassword`
 
-3. **Execute o Backend:**
-   No diretório `server/`:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
+Arquivos de exemplo:
 
-   Se você quiser que o seed de `server/src/main/resources/data.sql` rode durante a inicialização em desenvolvimento, ajuste temporariamente `server/src/main/resources/application-dev.yml` para:
-   ```yaml
-   spring:
-     sql:
-       init:
-         mode: always
-   ```
-   Depois, reinicie o backend.
+- [/.env.example](/home/scarpellini/Documents/Projetos/aprimorar/.env.example)
+- [server/.env.example](/home/scarpellini/Documents/Projetos/aprimorar/server/.env.example)
 
-4. **Execute o Frontend:**
-   No diretório `client/`:
-   ```bash
-   npm run dev
-   ```
+### Frontend
 
-Após a inicialização, o backend estará acessível em `http://localhost:8080` e o frontend em `http://localhost:5173`.
+Se precisar sobrescrever a URL da API:
 
-## 5. Documentação de Módulos
+```env
+API_URL=http://localhost:8080
+NEXT_PUBLIC_API_URL=http://localhost:8080
+```
 
-O backend gera documentação arquitetural do Spring Modulith em `server/src/main/resources/docs`, incluindo diagramas `.puml` e arquivos `.adoc` por módulo.
+Arquivo de exemplo:
 
-Para regenerar esses arquivos, execute em `server/`:
+- [client/.env.example](/home/scarpellini/Documents/Projetos/aprimorar/client/.env.example)
+
+### SonarQube local
+
+Opcional:
+
+```env
+SONAR_TOKEN=seu_token
+```
+
+## Como rodar localmente
+
+### 1. Subir o banco
+
+Dentro de `server/`:
 
 ```bash
+docker compose up -d db
+```
+
+Banco local:
+
+- host: `localhost`
+- porta: `5432`
+- database: `aprimorar`
+- user: `myuser`
+- password: `mypassword`
+
+### 2. Rodar o backend
+
+Dentro de `server/`:
+
+```bash
+./mvnw spring-boot:run
+```
+
+Pontos úteis:
+
+- profile padrão: `dev`
+- Flyway roda automaticamente
+- `data.sql` roda no profile `dev`
+- o usuário admin é criado/sincronizado na inicialização
+
+Endpoints úteis:
+
+- API: `http://localhost:8080`
+- OpenAPI: `http://localhost:8080/v3/api-docs`
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+
+### 3. Rodar o frontend
+
+Dentro de `client/`:
+
+```bash
+npm install
+npm run dev
+```
+
+Frontend local:
+
+- `http://localhost:3000`
+
+## Acesso inicial
+
+Se `APP_ADMIN_PASSWORD` estiver configurada, o backend garante a existência do usuário admin:
+
+- login: `admin@aprimorar.com`
+- senha: valor de `APP_ADMIN_PASSWORD`
+
+## Contrato backend -> frontend
+
+Quando um endpoint, DTO ou enum mudar no backend:
+
+1. suba o backend
+2. rode em `client/`:
+
+```bash
+npm run sync
+```
+
+O Kubb lê:
+
+- `http://localhost:8080/v3/api-docs`
+
+E gera código em:
+
+- `src/lib/api/generated/`
+
+Regra:
+
+- não editar manualmente código gerado
+
+## Comandos úteis
+
+### Backend
+
+Dentro de `server/`:
+
+```bash
+./mvnw clean compile
+./mvnw test
 ./mvnw test -Dtest=ModuleVerificationTest
 ```
 
-## 6. Qualidade de Código e Scripts
+O `ModuleVerificationTest` também regenera a documentação do Spring Modulith em:
 
-O projeto possui scripts utilitários na raiz para análise com SonarQube e consulta de issues abertas.
+- `server/src/main/resources/docs`
 
-Antes de usar os scripts do SonarQube, suba os containers necessários em `server/`:
+### Frontend
+
+Dentro de `client/`:
+
+```bash
+npm run lint
+npm run build
+```
+
+## Qualidade local
+
+Referência prática:
+
+- backend: compile + testes
+- frontend: lint + build
+- contrato: `npm run sync` após mudanças de API
+
+SonarQube local:
+
+Dentro de `server/`:
 
 ```bash
 docker compose up -d db sonar_db sonarqube
 ```
 
-O token de autenticação deve estar em `.env.local`:
+URLs/portas:
 
-```env
-SONAR_TOKEN=seu_token_do_sonar
-```
+- SonarQube: `http://localhost:9000`
+- banco do Sonar: `localhost:5433`
 
-Você pode gerar esse token em `http://localhost:9000/account/security`.
+## Convenções importantes
 
-### 6.1. Scripts disponíveis
+- backend sanitiza e normaliza os dados; o frontend pode ser mais simples
+- migrations são a fonte de verdade do schema
+- atendimento usa relações JPA com aluno e colaborador
+- ações destrutivas de aluno/colaborador respeitam validações de negócio antes de excluir
+- componentes de formulário são padronizados em `src/components/ui/forms/`
+- detalhes de aluno e colaborador seguem o mesmo layout base
 
-| Script | Descrição |
-| :--- | :--- |
-| `npm run sonar:backend` | Executa testes, gera cobertura JaCoCo e envia a análise do backend para o SonarQube. |
-| `npm run sonar:frontend` | Executa a análise do frontend no SonarQube. |
-| `npm run sonar:all` | Executa a análise de backend e frontend em sequência. |
-| `npm run sonar:issues` | Consulta e lista no terminal as issues abertas do projeto `aprimorar-server`. |
-| `npm run sonar:issues:frontend` | Consulta e lista no terminal as issues abertas do projeto `aprimorar-client`. |
+## Problemas comuns
 
-### 6.2. Observações
+### O frontend quebrou depois de mudar o backend
 
-* Os scripts `sonar:issues` usam a API do SonarQube e dependem de `jq` instalado no ambiente.
-* O backend gera o relatório de cobertura JaCoCo em `server/target/site/jacoco/jacoco.xml`.
-* O dashboard do SonarQube fica disponível em `http://localhost:9000`.
-* O arquivo `server/src/main/resources/data.sql` nao roda no profile `dev` enquanto `spring.sql.init.mode` estiver como `never` em `server/src/main/resources/application-dev.yml`.
-* Para reexecutar o seed localmente, troque temporariamente para `spring.sql.init.mode: always` e reinicie o backend.
+Provavelmente o contrato está desatualizado. Rode `npm run sync`.
+
+### O admin não foi criado
+
+Verifique principalmente:
+
+- `APP_ADMIN_PASSWORD`
+- `APP_ADMIN_USERNAME`
+
+### O backend não sobe por erro de usuário ghost
+
+Verifique:
+
+- `APRIMORAR_GHOST_STUDENT_ID`
+- `APRIMORAR_GHOST_COLABORADOR_ID`
+
+### Não sei onde está o contexto técnico mais completo
+
+Veja [AGENTS.md](/home/scarpellini/Documents/Projetos/aprimorar/AGENTS.md).

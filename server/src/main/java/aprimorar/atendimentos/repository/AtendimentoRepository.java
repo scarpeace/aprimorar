@@ -2,12 +2,13 @@ package aprimorar.atendimentos.repository;
 
 
 import aprimorar.atendimentos.domain.Atendimento;
-import aprimorar.atendimentos.repository.projections.AtendimentoCalendarioProjection;
+import aprimorar.atendimentos.dto.CalendarioAtendimentosResponse;
 import aprimorar.atendimentos.repository.projections.AtendimentosReportProjection;
 import aprimorar.pessoas.domain.Aluno;
 import aprimorar.pessoas.domain.Colaborador;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,15 +67,16 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
     );
 
     @Query("""
-        SELECT
-          at.id AS id,
-          at.colaborador.id AS colaboradorId,
-          at.aluno.id AS alunoId,
-          at.dataHoraInicio AS dataHoraInicio,
-          at.dataHoraFim AS dataHoraFim,
-          at.tipo AS tipo,
-          c.nome AS nomeColaborador,
-          al.nome AS nomeAluno
+        SELECT new aprimorar.atendimentos.dto.CalendarioAtendimentosResponse(
+          at.id,
+          al.id,
+          al.nome,
+          c.id,
+          c.nome,
+          at.dataHoraInicio,
+          at.dataHoraFim,
+          at.tipo
+        )
         FROM Atendimento at
         JOIN at.colaborador c
         JOIN at.aluno al
@@ -82,7 +84,71 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
           AND at.dataHoraFim <= :fim
         ORDER BY at.dataHoraInicio
         """)
-    List<AtendimentoCalendarioProjection> getCalendarioMensal(
+    List<CalendarioAtendimentosResponse> getCalendarioMensal(
+        @Param("inicio") LocalDateTime inicio,
+        @Param("fim") LocalDateTime fim
+    );
+
+    @Query(
+        """
+            SELECT COALESCE(SUM(a.repasseColaborador), 0)
+            FROM Atendimento a
+            WHERE a.colaborador.id = :colaboradorId
+              AND a.dataPagamentoColaborador IS NOT NULL
+              AND a.dataHoraInicio >= :inicio
+              AND a.dataHoraFim <= :fim
+        """
+    )
+    BigDecimal getTotalRepassePagoColaborador(
+        @Param("colaboradorId") UUID colaboradorId,
+        @Param("inicio") LocalDateTime inicio,
+        @Param("fim") LocalDateTime fim
+    );
+
+    @Query(
+        """
+            SELECT COALESCE(SUM(a.repasseColaborador), 0)
+            FROM Atendimento a
+            WHERE a.colaborador.id = :colaboradorId
+              AND a.dataPagamentoColaborador IS NULL
+              AND a.dataHoraInicio >= :inicio
+              AND a.dataHoraFim <= :fim
+        """
+    )
+    BigDecimal getTotalRepassePendenteColaborador(
+        @Param("colaboradorId") UUID colaboradorId,
+        @Param("inicio") LocalDateTime inicio,
+        @Param("fim") LocalDateTime fim
+    );
+
+    @Query(
+        """
+            SELECT COALESCE(SUM(a.pagamentoAluno), 0)
+            FROM Atendimento a
+            WHERE a.aluno.id = :alunoId
+              AND a.dataPagamentoAluno IS NOT NULL
+              AND a.dataHoraInicio >= :inicio
+              AND a.dataHoraFim <= :fim
+        """
+    )
+    BigDecimal getTotalPagamentoPagoAluno(
+        @Param("alunoId") UUID alunoId,
+        @Param("inicio") LocalDateTime inicio,
+        @Param("fim") LocalDateTime fim
+    );
+
+    @Query(
+        """
+            SELECT COALESCE(SUM(a.pagamentoAluno), 0)
+            FROM Atendimento a
+            WHERE a.aluno.id = :alunoId
+              AND a.dataPagamentoAluno IS NULL
+              AND a.dataHoraInicio >= :inicio
+              AND a.dataHoraFim <= :fim
+        """
+    )
+    BigDecimal getTotalPagamentoPendenteAluno(
+        @Param("alunoId") UUID alunoId,
         @Param("inicio") LocalDateTime inicio,
         @Param("fim") LocalDateTime fim
     );

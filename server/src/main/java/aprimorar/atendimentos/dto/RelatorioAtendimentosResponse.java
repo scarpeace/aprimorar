@@ -17,19 +17,9 @@ public record RelatorioAtendimentosResponse(
     Long totalAulas,
 
     @NotNull
-    @PositiveOrZero(message = "A porcentagem não pode ser negativa")
-    @Schema(description = "Percentual de aulas", example = "41.6")
-    Double procentagemAulas,
-
-    @NotNull
     @PositiveOrZero(message = "O total não pode ser negativo")
     @Schema(description = "Total de mentorias", example = "20")
     Long totalMentoria,
-
-    @NotNull
-    @PositiveOrZero(message = "A porcentagem não pode ser negativa")
-    @Schema(description = "Percentual de mentorias", example = "16.6")
-    Double procentagemMentoria,
 
     @NotNull
     @PositiveOrZero(message = "O total não pode ser negativo")
@@ -37,19 +27,9 @@ public record RelatorioAtendimentosResponse(
     Long totalTerapia,
 
     @NotNull
-    @PositiveOrZero(message = "A porcentagem não pode ser negativa")
-    @Schema(description = "Percentual de terapias", example = "8.3")
-    Double procentagemTerapia,
-
-    @NotNull
     @PositiveOrZero(message = "O total não pode ser negativo")
     @Schema(description = "Total de orientações vocacionais", example = "15")
     Long totalOV,
-
-    @NotNull
-    @PositiveOrZero(message = "A porcentagem não pode ser negativa")
-    @Schema(description = "Percentual de orientações vocacionais", example = "12.5")
-    Double procentagemOV,
 
     @NotNull
     @PositiveOrZero(message = "O total não pode ser negativo")
@@ -57,28 +37,13 @@ public record RelatorioAtendimentosResponse(
     Long totalENEM,
 
     @NotNull
-    @PositiveOrZero(message = "A porcentagem não pode ser negativa")
-    @Schema(description = "Percentual de atendimentos de ENEM", example = "6.6")
-    Double procentagemENEM,
-
-    @NotNull
     @PositiveOrZero(message = "O total não pode ser negativo")
     @Schema(description = "Total de atendimentos de PAS", example = "12")
     Long totalPAS,
 
     @NotNull
-    @PositiveOrZero(message = "A porcentagem não pode ser negativa")
-    @Schema(description = "Percentual de atendimentos de PAS", example = "10.0")
-    Double procentagemPAS,
-
-    @NotNull
     @PositiveOrZero(message = "O total não pode ser negativo")
     @Schema(description = "Total de outros atendimentos", example = "5")
-    Long totalOutros,
-
-    @NotNull
-    @PositiveOrZero(message = "A porcentagem não pode ser negativa")
-    @Schema(description = "Percentual de outros atendimentos", example = "4.1")
-    Double procentagemOutros
+    Long totalOutros
 ) {
 }

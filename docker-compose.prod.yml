@@ -14,7 +14,10 @@
 #   frontend:
 #     image: registry.gitlab.com/scarpellini1/aprimorar/client:latest
 #     restart: always
+#     environment:
+#       API_URL: ${API_URL}
+#       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
 #     expose:
-#       - "80"
+#       - "3000"
 #     depends_on:
 #       - backend
