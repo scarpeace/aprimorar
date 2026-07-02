@@ -3,6 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useCreateResponsavel } from "@/lib/api/generated/hooks/responsavel/useCreateResponsavel";
+import { useDeleteResponsavel } from "@/lib/api/generated/hooks/responsavel/useDeleteResponsavel";
 import { useUpdateResponsavel } from "@/lib/api/generated/hooks/responsavel/useUpdateResponsavel";
 import { getResponsaveisQueryKey } from "@/lib/api/generated/hooks/responsavel/useGetResponsaveis";
 import { getResponsavelByIdQueryKey } from "@/lib/api/generated/hooks/responsavel/useGetResponsavelById";
@@ -45,8 +46,21 @@ export function useResponsavelMutations() {
     },
   });
 
+  const deleteResponsavel = useDeleteResponsavel({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao excluir o responsável");
+      },
+      onSuccess: async (_, variables) => {
+        toast.success("Responsável excluído com sucesso");
+        await Promise.all([invalidateResponsaveis(), invalidateResponsavelDetail(variables.responsavelId)]);
+      },
+    },
+  });
+
   return {
     createResponsavel,
     updateResponsavel,
+    deleteResponsavel,
   };
 }

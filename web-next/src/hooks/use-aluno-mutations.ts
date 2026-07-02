@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useArchiveAluno } from "@/lib/api/generated/hooks/aluno/useArchiveAluno";
 import { useCriarAluno } from "@/lib/api/generated/hooks/aluno/useCriarAluno";
+import { useDeleteAluno } from "@/lib/api/generated/hooks/aluno/useDeleteAluno";
 import { useUnarchiveAluno } from "@/lib/api/generated/hooks/aluno/useUnarchiveAluno";
 import { useUpdateAluno } from "@/lib/api/generated/hooks/aluno/useUpdateAluno";
 import { getAlunoByIdQueryKey } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
@@ -71,10 +72,23 @@ export function useAlunoMutations() {
     },
   });
 
+  const deleteAluno = useDeleteAluno({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao excluir o aluno");
+      },
+      onSuccess: async (_, variables) => {
+        toast.success("Aluno excluído com sucesso");
+        await Promise.all([invalidateAlunos(), invalidateAlunoDetail(variables.alunoId)]);
+      },
+    },
+  });
+
   return {
     createAluno,
     archiveAluno,
     unarchiveAluno,
     updateAluno,
+    deleteAluno,
   };
 }

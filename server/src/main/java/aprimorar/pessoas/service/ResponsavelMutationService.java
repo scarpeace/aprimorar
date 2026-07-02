@@ -21,16 +21,13 @@ public class ResponsavelMutationService {
 
     private final ResponsavelRepository responsavelRepo;
     private final AlunoRepository alunoRepo;
-    private final AlunoMutationService alunoMutationService;
 
     public ResponsavelMutationService(
         ResponsavelRepository responsavelRepo,
-        AlunoRepository alunoRepo,
-        AlunoMutationService alunoMutationService
+        AlunoRepository alunoRepo
     ) {
         this.responsavelRepo = responsavelRepo;
         this.alunoRepo = alunoRepo;
-        this.alunoMutationService = alunoMutationService;
     }
 
     @Transactional
@@ -76,18 +73,14 @@ public class ResponsavelMutationService {
     }
 
     @Transactional
-    public void deleteResponsavel(UUID responsavelId, boolean cascade) {
+    public void deleteResponsavel(UUID responsavelId) {
         var responsavel = findResponsavelOrThrow(responsavelId);
         var alunos = alunoRepo.findAllByResponsavelId(responsavelId);
 
-        if (!cascade && !alunos.isEmpty()) {
+        if (!alunos.isEmpty()) {
             throw new BusinessException(
                 HttpStatus.BAD_REQUEST, "Este responsável possui alunos vinculados. Exclua os alunos antes de excluir o responsável."
             );
-        }
-
-        if (cascade && !alunos.isEmpty()) {
-            alunoMutationService.deleteAlunos(alunos);
         }
 
         responsavelRepo.delete(responsavel);

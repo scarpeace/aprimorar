@@ -144,7 +144,6 @@ export type {
   DeleteResponsavelMutation,
   DeleteResponsavelMutationResponse,
   DeleteResponsavelPathParams,
-  DeleteResponsavelQueryParams,
 } from "./types/DeleteResponsavel.ts";
 export type {
   DeleteUser204,
@@ -584,7 +583,6 @@ export {
   deleteResponsavel204Schema,
   deleteResponsavelMutationResponseSchema,
   deleteResponsavelPathParamsSchema,
-  deleteResponsavelQueryParamsSchema,
 } from "./zod/deleteResponsavelSchema.ts";
 export {
   deleteUser204Schema,

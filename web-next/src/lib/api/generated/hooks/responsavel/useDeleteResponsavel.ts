@@ -7,7 +7,6 @@ import fetch from "@/lib/api/client";
 import type {
   DeleteResponsavelMutationResponse,
   DeleteResponsavelPathParams,
-  DeleteResponsavelQueryParams,
 } from "../../types/DeleteResponsavel.ts";
 import type {
   Client,
@@ -34,7 +33,6 @@ export type DeleteResponsavelMutationKey = ReturnType<
  */
 export async function deleteResponsavel(
   responsavelId: DeleteResponsavelPathParams["responsavelId"],
-  params?: DeleteResponsavelQueryParams,
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
@@ -46,7 +44,6 @@ export async function deleteResponsavel(
   >({
     method: "DELETE",
     url: `/v1/responsaveis/${responsavelId}`,
-    params,
     ...requestConfig,
   });
   return res.data;
@@ -59,15 +56,12 @@ export function deleteResponsavelMutationOptions<TContext = unknown>(
   return mutationOptions<
     DeleteResponsavelMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      responsavelId: DeleteResponsavelPathParams["responsavelId"];
-      params?: DeleteResponsavelQueryParams;
-    },
+    { responsavelId: DeleteResponsavelPathParams["responsavelId"] },
     TContext
   >({
     mutationKey,
-    mutationFn: async ({ responsavelId, params }) => {
-      return deleteResponsavel(responsavelId, params, config);
+    mutationFn: async ({ responsavelId }) => {
+      return deleteResponsavel(responsavelId, config);
     },
   });
 }
@@ -81,10 +75,7 @@ export function useDeleteResponsavel<TContext>(
     mutation?: UseMutationOptions<
       DeleteResponsavelMutationResponse,
       ResponseErrorConfig<Error>,
-      {
-        responsavelId: DeleteResponsavelPathParams["responsavelId"];
-        params?: DeleteResponsavelQueryParams;
-      },
+      { responsavelId: DeleteResponsavelPathParams["responsavelId"] },
       TContext
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
@@ -100,20 +91,14 @@ export function useDeleteResponsavel<TContext>(
   ) as UseMutationOptions<
     DeleteResponsavelMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      responsavelId: DeleteResponsavelPathParams["responsavelId"];
-      params?: DeleteResponsavelQueryParams;
-    },
+    { responsavelId: DeleteResponsavelPathParams["responsavelId"] },
     TContext
   >;
 
   return useMutation<
     DeleteResponsavelMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      responsavelId: DeleteResponsavelPathParams["responsavelId"];
-      params?: DeleteResponsavelQueryParams;
-    },
+    { responsavelId: DeleteResponsavelPathParams["responsavelId"] },
     TContext
   >(
     {
@@ -125,10 +110,7 @@ export function useDeleteResponsavel<TContext>(
   ) as UseMutationResult<
     DeleteResponsavelMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      responsavelId: DeleteResponsavelPathParams["responsavelId"];
-      params?: DeleteResponsavelQueryParams;
-    },
+    { responsavelId: DeleteResponsavelPathParams["responsavelId"] },
     TContext
   >;
 }

@@ -10,14 +10,6 @@ export type DeleteResponsavelPathParams = {
   responsavelId: string;
 };
 
-export type DeleteResponsavelQueryParams = {
-  /**
-   * @default false
-   * @type boolean | undefined
-   */
-  cascade?: boolean;
-};
-
 /**
  * @description Responsável deletado com sucesso
  */
@@ -28,6 +20,5 @@ export type DeleteResponsavelMutationResponse = DeleteResponsavel204;
 export type DeleteResponsavelMutation = {
   Response: DeleteResponsavel204;
   PathParams: DeleteResponsavelPathParams;
-  QueryParams: DeleteResponsavelQueryParams;
   Errors: any;
 };

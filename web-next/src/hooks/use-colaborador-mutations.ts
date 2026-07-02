@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useArquivarColaborador } from "@/lib/api/generated/hooks/colaborador/useArquivarColaborador";
 import { useCreateColaborador } from "@/lib/api/generated/hooks/colaborador/useCreateColaborador";
+import { useDeleteColaborador } from "@/lib/api/generated/hooks/colaborador/useDeleteColaborador";
 import { useDesarquivarColaborador } from "@/lib/api/generated/hooks/colaborador/useDesarquivarColaborador";
 import { findColaboradorByIdQueryKey } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
 import { getColaboradoresQueryKey } from "@/lib/api/generated/hooks/colaborador/useGetColaboradores";
@@ -69,10 +70,23 @@ export function useColaboradorMutations() {
     },
   });
 
+  const deleteColaborador = useDeleteColaborador({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao excluir o colaborador");
+      },
+      onSuccess: async (_, variables) => {
+        toast.success("Colaborador excluído com sucesso");
+        await Promise.all([invalidateColaboradores(), invalidateColaboradorDetail(variables.colaboradorId)]);
+      },
+    },
+  });
+
   return {
     createColaborador,
     archiveColaborador,
     unarchiveColaborador,
     updateColaborador,
+    deleteColaborador,
   };
 }

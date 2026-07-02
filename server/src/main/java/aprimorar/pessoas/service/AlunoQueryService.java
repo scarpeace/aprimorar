@@ -32,7 +32,7 @@ public class AlunoQueryService {
 
     public AlunoQueryService(
         AlunoRepository studentRepo,
-        @Value("${aprimorar.ghost-student-id:00000000-0000-4000-8000-000000000002}") String ghostStudentId
+        @Value("${aprimorar.ghost-student-id}") String ghostStudentId
     ) {
         this.alunoRepo = studentRepo;
         this.ghostStudentId = UUID.fromString(ghostStudentId);

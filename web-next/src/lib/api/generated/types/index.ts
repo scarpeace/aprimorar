@@ -103,7 +103,6 @@ export type {
   DeleteResponsavelMutation,
   DeleteResponsavelMutationResponse,
   DeleteResponsavelPathParams,
-  DeleteResponsavelQueryParams,
 } from "./DeleteResponsavel.ts";
 export type {
   DeleteUser204,

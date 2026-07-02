@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { PencilLine, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ColaboradorAtendimentos } from "@/components/colaboradores/ColaboradorAtendimentos";
 import { useFindColaboradorById } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
@@ -15,9 +17,10 @@ import { useColaboradorMutations } from "@/hooks/use-colaborador-mutations";
 import { formatCpf, formatDate, formatPhone, formatZip } from "@/lib/utils/formatter";
 
 export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: string }>) {
+  const router = useRouter();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const colaborador = useFindColaboradorById(colaboradorId);
-  const { archiveColaborador, unarchiveColaborador } = useColaboradorMutations();
+  const { archiveColaborador, unarchiveColaborador, deleteColaborador } = useColaboradorMutations();
 
   if (colaborador.isLoading) {
     return <PageLoading message="Carregando colaborador..." />;
@@ -42,7 +45,8 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
   const { data } = colaborador;
   const endereco = data.endereco;
   const active = data.active !== false;
-  const isPending = archiveColaborador.isPending || unarchiveColaborador.isPending;
+  const isArchivePending = archiveColaborador.isPending || unarchiveColaborador.isPending;
+  const isPending = isArchivePending || deleteColaborador.isPending;
 
   function handleArchiveToggle() {
     const actionLabel = active ? "arquivar" : "desarquivar";
@@ -53,6 +57,21 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
 
     const action = active ? archiveColaborador : unarchiveColaborador;
     action.mutate({ colaboradorId });
+  }
+
+  function handleDelete() {
+    if (!window.confirm("Deseja mesmo excluir este colaborador? Esta ação não pode ser desfeita.")) {
+      return;
+    }
+
+    deleteColaborador.mutate(
+      { colaboradorId },
+      {
+        onSuccess: () => {
+          router.push("/colaboradores");
+        },
+      },
+    );
   }
 
   return (
@@ -76,12 +95,16 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <Button type="button" size="sm" variant="primary" onClick={() => setIsEditOpen(true)}>
-                Editar
+              <Button type="button" size="sm" variant="primary" className="btn-square" aria-label="Editar colaborador" title="Editar colaborador" onClick={() => setIsEditOpen(true)}>
+                <PencilLine size={18} />
               </Button>
 
               <Button type="button" size="sm" variant={active ? "warning" : "outline"} disabled={isPending} onClick={handleArchiveToggle}>
-                {isPending ? "Processando..." : active ? "Arquivar" : "Desarquivar"}
+                {isArchivePending ? "Processando..." : active ? "Arquivar" : "Desarquivar"}
+              </Button>
+
+              <Button type="button" size="sm" variant="error" className="btn-square" aria-label="Excluir colaborador" title="Excluir colaborador" disabled={isPending} onClick={handleDelete}>
+                <Trash2 size={18} />
               </Button>
 
               <Link className="btn btn-outline btn-sm" href="/colaboradores">

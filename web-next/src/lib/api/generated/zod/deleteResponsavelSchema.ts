@@ -9,10 +9,6 @@ export const deleteResponsavelPathParamsSchema = z.object({
   responsavelId: z.uuid(),
 });
 
-export const deleteResponsavelQueryParamsSchema = z.object({
-  cascade: z.boolean().default(false),
-});
-
 /**
  * @description Responsável deletado com sucesso
  */

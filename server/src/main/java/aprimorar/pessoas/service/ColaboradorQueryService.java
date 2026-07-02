@@ -13,8 +13,10 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,14 +28,19 @@ public class ColaboradorQueryService {
     private static final Logger log = LoggerFactory.getLogger(ColaboradorQueryService.class);
 
     private final ColaboradorRepository colaboradorRepo;
+    private final UUID ghostColaboradorId;
 
-    public ColaboradorQueryService(ColaboradorRepository colaboradorRepo) {
+    public ColaboradorQueryService(
+        ColaboradorRepository colaboradorRepo,
+        @Value("${aprimorar.ghost-colaborador-id}") String ghostColaboradorId
+    ) {
         this.colaboradorRepo = colaboradorRepo;
+        this.ghostColaboradorId = UUID.fromString(ghostColaboradorId);
     }
 
     @Transactional(readOnly = true)
     public Page<ColaboradorResponseDTO> getColaboradores(ColaboradorFiltroRequest filtro, Pageable pageable) {
-        Specification<Colaborador> spec = ColaboradorSpecifications.comFiltros(filtro);
+        Specification<Colaborador> spec = ColaboradorSpecifications.comFiltros(filtro, ghostColaboradorId);
         Page<Colaborador> colaboradoresPage = colaboradorRepo.findAll(spec, pageable);
         Page<ColaboradorResponseDTO> colaboradoresDtoPage = colaboradoresPage.map(ColaboradorResponseDTO::toDto);
 
@@ -50,8 +57,10 @@ public class ColaboradorQueryService {
 
     @Transactional(readOnly = true)
     public List<ColaboradoresOptionsDTO> getColaboradoresOptions() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "nome");
 
-        return colaboradorRepo.findAll()
+        return colaboradorRepo
+            .findAll(ColaboradorSpecifications.isNotArchived().and(ColaboradorSpecifications.isNotGhost(ghostColaboradorId)), sort)
             .stream()
             .map(e -> new ColaboradoresOptionsDTO(e.getId(), e.getNome()))
             .toList();

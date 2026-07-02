@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { PencilLine, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlunoAtendimentos } from "@/components/alunos/AlunoAtendimentos";
 import { AlunoForm } from "@/components/alunos/AlunoForm";
@@ -16,10 +18,11 @@ import { useAlunoMutations } from "@/hooks/use-aluno-mutations";
 import { formatCpf, formatDate, formatPhone, formatZip } from "@/lib/utils/formatter";
 
 export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
+  const router = useRouter();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const aluno = useGetAlunoById(alunoId);
   const responsavel = useGetResponsavelById(aluno.data?.responsavelId);
-  const { archiveAluno, unarchiveAluno } = useAlunoMutations();
+  const { archiveAluno, unarchiveAluno, deleteAluno } = useAlunoMutations();
 
   if (aluno.isLoading) {
     return <PageLoading message="Carregando aluno..." />;
@@ -47,7 +50,8 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
   const { data } = aluno;
   const endereco = data.endereco;
   const active = data.active !== false;
-  const isPending = archiveAluno.isPending || unarchiveAluno.isPending;
+  const isArchivePending = archiveAluno.isPending || unarchiveAluno.isPending;
+  const isPending = isArchivePending || deleteAluno.isPending;
 
   function handleArchiveToggle() {
     const actionLabel = active ? "arquivar" : "desarquivar";
@@ -58,6 +62,21 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
 
     const action = active ? archiveAluno : unarchiveAluno;
     action.mutate({ alunoId });
+  }
+
+  function handleDelete() {
+    if (!window.confirm("Deseja mesmo excluir este aluno? Esta ação não pode ser desfeita.")) {
+      return;
+    }
+
+    deleteAluno.mutate(
+      { alunoId },
+      {
+        onSuccess: () => {
+          router.push("/alunos");
+        },
+      },
+    );
   }
 
   return (
@@ -83,12 +102,16 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <Button type="button" size="sm" variant="primary" onClick={() => setIsEditOpen(true)}>
-                Editar
+              <Button type="button" size="sm" variant="primary" className="btn-square" aria-label="Editar aluno" title="Editar aluno" onClick={() => setIsEditOpen(true)}>
+                <PencilLine size={18} />
               </Button>
 
               <Button type="button" size="sm" variant={active ? "warning" : "outline"} disabled={isPending} onClick={handleArchiveToggle}>
-                {isPending ? "Processando..." : active ? "Arquivar" : "Desarquivar"}
+                {isArchivePending ? "Processando..." : active ? "Arquivar" : "Desarquivar"}
+              </Button>
+
+              <Button type="button" size="sm" variant="error" className="btn-square" aria-label="Excluir aluno" title="Excluir aluno" disabled={isPending} onClick={handleDelete}>
+                <Trash2 size={18} />
               </Button>
 
               <Link className="btn btn-outline btn-sm" href="/alunos">

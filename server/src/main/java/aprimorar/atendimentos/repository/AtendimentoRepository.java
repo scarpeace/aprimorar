@@ -142,5 +142,26 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
     )
     boolean alunoPossuiPagamentoAlunoPendente(@Param("alunoId") UUID alunoId);
 
+    @Query(
+        """
+            SELECT count(a) > 0
+            FROM Atendimento a
+            WHERE a.colaborador.id = :colaboradorId
+              AND a.status = aprimorar.atendimentos.enums.StatusAtendimento.AGENDADO
+        """
+    )
+    boolean colaboradorPossuiAtendimentoAgendado(@Param("colaboradorId") UUID colaboradorId);
+
+    @Query(
+        """
+            SELECT count(a) > 0
+            FROM Atendimento a
+            WHERE a.colaborador.id = :colaboradorId
+              AND a.status = aprimorar.atendimentos.enums.StatusAtendimento.CONCLUIDO
+              AND a.dataPagamentoColaborador IS NULL
+        """
+    )
+    boolean colaboradorPossuiRepassePendente(@Param("colaboradorId") UUID colaboradorId);
+
 
 }

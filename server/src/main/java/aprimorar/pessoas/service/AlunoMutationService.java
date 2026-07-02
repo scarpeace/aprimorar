@@ -28,7 +28,7 @@ public class AlunoMutationService {
     public AlunoMutationService(
         AlunoRepository alunoRepo,
         AtendimentoRepository atendimentoRepo,
-        @Value("${aprimorar.ghost-student-id:00000000-0000-4000-8000-000000000002}") String ghostStudentId
+        @Value("${aprimorar.ghost-student-id}") String ghostStudentId
     ) {
         this.alunoRepo = alunoRepo;
         this.atendimentoRepo = atendimentoRepo;

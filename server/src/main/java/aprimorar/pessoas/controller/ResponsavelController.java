@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -87,8 +86,8 @@ public class ResponsavelController {
     @DeleteMapping("/{responsavelId}")
     @Operation(operationId = "deleteResponsavel", description = "Deleta um responsável por ID")
     @ApiResponse(responseCode = "204", description = "Responsável deletado com sucesso")
-    public ResponseEntity<Void> deleteResponsavel(@PathVariable UUID responsavelId, @RequestParam(required = false, defaultValue = "false") boolean cascade) {
-        responsavelMutationService.deleteResponsavel(responsavelId, cascade);
+    public ResponseEntity<Void> deleteResponsavel(@PathVariable UUID responsavelId) {
+        responsavelMutationService.deleteResponsavel(responsavelId);
         return ResponseEntity.noContent().build();
     }
 }

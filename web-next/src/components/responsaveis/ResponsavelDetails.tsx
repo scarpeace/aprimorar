@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { PencilLine, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ResponsavelAlunos } from "@/components/responsaveis/ResponsavelAlunos";
 import { useGetResponsavelById } from "@/lib/api/generated/hooks/responsavel/useGetResponsavelById";
@@ -10,11 +12,14 @@ import { DetailField } from "@/components/ui/DetailField";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
+import { useResponsavelMutations } from "@/hooks/use-responsavel-mutations";
 import { formatCpf, formatDate, formatPhone } from "@/lib/utils/formatter";
 
 export function ResponsavelDetails({ responsavelId }: Readonly<{ responsavelId: string }>) {
+  const router = useRouter();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const responsavel = useGetResponsavelById(responsavelId);
+  const { deleteResponsavel } = useResponsavelMutations();
 
   if (responsavel.isLoading) {
     return <PageLoading message="Carregando responsável..." />;
@@ -37,6 +42,21 @@ export function ResponsavelDetails({ responsavelId }: Readonly<{ responsavelId: 
   }
 
   const { data } = responsavel;
+
+  function handleDelete() {
+    if (!window.confirm("Deseja mesmo excluir este responsável? Esta ação não pode ser desfeita.")) {
+      return;
+    }
+
+    deleteResponsavel.mutate(
+      { responsavelId },
+      {
+        onSuccess: () => {
+          router.push("/alunos");
+        },
+      },
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -61,8 +81,21 @@ export function ResponsavelDetails({ responsavelId }: Readonly<{ responsavelId: 
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Button type="button" size="sm" variant="primary" onClick={() => setIsEditOpen(true)}>
-              Editar
+            <Button type="button" size="sm" variant="primary" className="btn-square" aria-label="Editar responsável" title="Editar responsável" onClick={() => setIsEditOpen(true)}>
+              <PencilLine size={18} />
+            </Button>
+
+            <Button
+              type="button"
+              size="sm"
+              variant="error"
+              className="btn-square"
+              aria-label="Excluir responsável"
+              title="Excluir responsável"
+              disabled={deleteResponsavel.isPending}
+              onClick={handleDelete}
+            >
+              <Trash2 size={18} />
             </Button>
 
             <Link className="btn btn-outline btn-sm" href="/responsaveis">

@@ -74,7 +74,6 @@ export {
   deleteResponsavel204Schema,
   deleteResponsavelMutationResponseSchema,
   deleteResponsavelPathParamsSchema,
-  deleteResponsavelQueryParamsSchema,
 } from "./deleteResponsavelSchema.ts";
 export {
   deleteUser204Schema,
