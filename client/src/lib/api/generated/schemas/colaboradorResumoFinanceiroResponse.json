@@ -1,0 +1,18 @@
+{
+  "required": ["totalPago", "totalPendente"],
+  "type": "object",
+  "properties": {
+    "totalPago": {
+      "type": "number",
+      "description": "Total de repasses pagos no período",
+      "example": 1500
+    },
+    "totalPendente": {
+      "type": "number",
+      "description": "Total de repasses pendentes no período",
+      "example": 320
+    }
+  },
+  "description": "Resumo financeiro mensal de um colaborador",
+  "x-readme-ref-name": "ColaboradorResumoFinanceiroResponse"
+}

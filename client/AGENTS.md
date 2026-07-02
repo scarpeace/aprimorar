@@ -1,81 +1,80 @@
-# AGENTS - Client (tecnico-first)
+# AGENTS - Frontend Next.js
 
-## Objetivo
-- Guiar implementacao de frontend com foco em fluxo previsivel de dados, UX consistente e baixo acoplamento entre features.
-- Priorizar padrao unico para pagina, hooks, formularios e mutacoes.
+## Escopo
 
-## Arquitetura em uma frase
-- UI por feature com fluxo `Page -> hooks da feature -> components`, usando React Query para estado remoto e estado local apenas para interacao da tela.
-- Features atuais estao em ingles (`students`, `parents`, `employees`, `appointments`, `finance`, `auth`, `dashboard`, `admin`), enquanto contratos de API podem vir em portugues via Kubb; manter consistencia no contexto de cada camada.
+Este arquivo vale para o frontend atual do projeto em `client/`.
 
-## Fluxo de implementacao obrigatorio
-- Page: compoe layout, roteamento, filtros locais e conexao entre blocos; sem regra de API inline.
-- Hooks da feature: concentram leitura/mutacao, invalidacao de cache, toasts e navegacao pos-sucesso.
-- Components: renderizacao e eventos de UI; recebem dados/acoes por props, sem conhecer detalhes de endpoint.
-- API client: usar hooks/tipos gerados do `@/kubb`; nao chamar `fetch`/`axios` direto em componente.
+## Stack
 
-## Padroes de escrita de codigo
-- Imports internos via alias `@`.
-- Nomear hooks e componentes por caso de uso (`useExpenseMutations`, `ArchiveStudentButton`).
-- Componentes de acao devem expor estado de loading/desabilitado e feedback de erro/sucesso.
-- Nao duplicar regra de negocio entre componentes; extrair para hook compartilhado da feature.
+- Next.js App Router
+- React 19
+- React Query
+- React Hook Form
+- Zod
+- DaisyUI + Tailwind
+- Kubb para código gerado do contrato OpenAPI
 
-## Formularios e validacao (RHF + Zod)
-- Formularios novos devem usar React Hook Form + schema Zod.
-- Validacao de formato/regra simples fica no schema; regra de negocio final continua no backend.
-- Erros de validacao devem aparecer perto do campo e manter mensagem amigavel.
-- Ao submeter com sucesso, seguir padrao da feature (toast + navegacao + invalidacao de cache).
+## Regras principais
 
-## Erros e excecoes
-- Erro de request deve passar por `getFriendlyErrorMessage` para UX consistente.
-- Interceptadores globais em `@/lib/shared/api` tratam autenticacao e 401; nao repetir isso por hook.
-- Evitar `console.error` espalhado em componente de tela; tratar no hook da mutacao/query.
+- não editar manualmente nada em `src/lib/api/generated/`
+- mudou endpoint/DTO/enum no backend: rodar `npm run sync`
+- componente novo deve seguir padrão já existente na feature irmã
+- preferir componente pequeno reutilizável a duplicação de bloco visual
+- estado remoto fica com React Query
+- estado local fica na tela/componente
 
-## Estado local vs remoto
-- Estado remoto: sempre React Query (hooks gerados Kubb + query keys oficiais).
-- Estado local: UI efemera (modal aberto, aba ativa, filtro local de pagina).
-- Nao mover filtro local para contexto global sem necessidade real de compartilhamento.
-- `usePageDateFilter()` segue local por pagina (nao compartilhado/persistido).
+## Estrutura preferida
 
-## Mutacao, invalidacao e consistencia
-- Mutacoes devem ficar em hooks de feature (ex.: students, parents, employees, appointments, finance).
-- Em `onSuccess`, invalidar explicitamente listas + detalhe afetado + relatorios derivados quando aplicavel.
-- Padrao atual confirmado: hooks de mutacao centralizam `toast`, `navigate` e `invalidateQueries`.
-- Manter `queryClient` global com defaults do projeto (`staleTime`, `retry`, `placeholderData`, `refetchOnWindowFocus`).
+- `src/app/` para rotas e composição de páginas
+- `src/components/` para blocos de UI por feature
+- `src/components/ui/` para componentes base reutilizáveis
+- `src/components/ui/forms/` para inputs integrados com RHF
+- `src/hooks/` para mutações e coordenação de cache/toast
+- `src/lib/` para api, auth, constants, utils e validação
 
-## Consultas e performance
-- Reaproveitar query keys geradas pelo Kubb para evitar cache paralelo acidental.
-- Evitar refetch manual desnecessario quando invalidacao cobre o fluxo.
-- Para paginas com listas, preservar UX durante troca de filtro/pagina com comportamento de placeholder.
+## Formulários
 
-## Contratos e integracao
-- Nao editar `client/src/kubb/` manualmente (codigo gerado).
-- Mudou contrato backend: subir backend e rodar `npm run sync` para regenerar cliente.
-- `npm run sync` depende de `http://localhost:8080/v3/api-docs` disponivel.
-- Autenticacao e header Bearer sao centralizados no setup compartilhado de API.
-- Se o contrato gerado mudar nomes/DTOs, ajuste somente codigo de feature fora de `client/src/kubb/`.
+- usar React Hook Form com `FormProvider` quando o form ficar distribuído
+- usar componentes de `src/components/ui/forms/`
+- validação de UX fica no schema Zod
+- sanitização e normalização pesada continuam no backend
 
-## Matriz de verificacao por tipo de mudanca
-- Componente visual: validar estados `loading`, `erro` e `empty` na tela afetada.
-- Formulario: validar schema, mensagens de erro e submit de sucesso.
-- Mutacao: validar invalidacoes corretas (lista, detalhe e derivados) e toasts.
-- Mudanca de contrato com backend: `npm run sync`, depois `npm run lint` e `npm run build`.
-- Mudanca geral frontend: `npm run lint` e `npm run build`.
+## Dados e API
 
-## Anti-padroes
-- Chamar endpoint direto em component/page ignorando hooks da feature.
-- Editar qualquer arquivo dentro de `client/src/kubb/`.
-- Duplicar `queryKey` manualmente quando existe helper gerado.
-- Formulario sem schema de validacao.
-- Estado global para problema que e apenas local de uma pagina.
+- usar hooks e tipos gerados pelo Kubb
+- mutações manuais ficam em `src/hooks/`
+- invalidar lista, detalhe e derivados quando a mutação alterar esses dados
+- evitar `fetch` direto em componente
 
-## Regras de negocio do projeto (resumo)
-- Acoes de pagamento/cobranca de eventos devem refletir no relatorio financeiro apos mutacao.
-- `ToggleExpensePaymentButton` ja encapsula mutacao via `useExpenseMutations`.
-- Fluxo autenticado deve tratar expiracao de sessao com limpeza de auth e redirecionamento para login.
+## Padrões já fechados
 
-## Comandos de verificacao (executar em `client/`)
-- `npm run dev`
-- `npm run sync`
-- `npm run lint`
-- `npm run build`
+- telas de detalhe usam:
+  - cabeçalho simples com nome/status/ações
+  - bloco de dados
+  - seletor de mês quando a tela depende de período
+  - resumo financeiro
+  - tabela de atendimentos vinculados
+- ações:
+  - editar: `primary`
+  - arquivar: `warning`
+  - excluir: `error`
+- tabelas com detalhe geralmente usam linha clicável em vez de botão extra
+
+## Comandos úteis
+
+- desenvolvimento: `npm run dev`
+- lint: `npm run lint`
+- build: `npm run build`
+- regenerar contrato: `npm run sync`
+
+## Dependências externas do fluxo
+
+- `npm run sync` depende do backend rodando em `http://localhost:8080/v3/api-docs`
+- a API base default é `http://localhost:8080`
+
+## O que evitar
+
+- criar um segundo padrão de formulário para a mesma aplicação
+- editar código gerado
+- criar estado global sem necessidade real
+- adicionar biblioteca para resolver coisa que já existe no projeto

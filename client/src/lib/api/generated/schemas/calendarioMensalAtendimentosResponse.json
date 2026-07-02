@@ -1,0 +1,145 @@
+{
+  "required": [
+    "anoMes",
+    "eventos",
+    "totalAtendimentos",
+    "totalAulas",
+    "totalENEM",
+    "totalMentoria",
+    "totalOV",
+    "totalOutros",
+    "totalPAS",
+    "totalTerapia"
+  ],
+  "type": "object",
+  "properties": {
+    "anoMes": {
+      "type": "string",
+      "description": "Mês de referência",
+      "example": "2026-07"
+    },
+    "totalAtendimentos": {
+      "type": "integer",
+      "description": "Total de atendimentos do mês",
+      "format": "int64",
+      "example": 120
+    },
+    "totalAulas": {
+      "type": "integer",
+      "description": "Total de aulas do mês",
+      "format": "int64",
+      "example": 50
+    },
+    "totalMentoria": {
+      "type": "integer",
+      "description": "Total de mentorias do mês",
+      "format": "int64",
+      "example": 20
+    },
+    "totalTerapia": {
+      "type": "integer",
+      "description": "Total de terapias do mês",
+      "format": "int64",
+      "example": 10
+    },
+    "totalOV": {
+      "type": "integer",
+      "description": "Total de orientações vocacionais do mês",
+      "format": "int64",
+      "example": 15
+    },
+    "totalENEM": {
+      "type": "integer",
+      "description": "Total de atendimentos ENEM do mês",
+      "format": "int64",
+      "example": 8
+    },
+    "totalPAS": {
+      "type": "integer",
+      "description": "Total de atendimentos PAS do mês",
+      "format": "int64",
+      "example": 12
+    },
+    "totalOutros": {
+      "type": "integer",
+      "description": "Total de outros atendimentos do mês",
+      "format": "int64",
+      "example": 5
+    },
+    "eventos": {
+      "type": "array",
+      "description": "Eventos do mês",
+      "items": {
+        "required": [
+          "alunoId",
+          "colaboradorId",
+          "dataHoraFim",
+          "dataHoraInicio",
+          "id",
+          "nomeAluno",
+          "nomeColaborador",
+          "tipo"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificador do atendimento",
+            "format": "int64",
+            "example": 1
+          },
+          "alunoId": {
+            "type": "string",
+            "description": "ID do aluno",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "nomeAluno": {
+            "type": "string",
+            "description": "Nome do aluno",
+            "example": "João Silva"
+          },
+          "colaboradorId": {
+            "type": "string",
+            "description": "ID do colaborador",
+            "format": "uuid",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "nomeColaborador": {
+            "type": "string",
+            "description": "Nome do colaborador",
+            "example": "Maria Souza"
+          },
+          "dataHoraInicio": {
+            "type": "string",
+            "description": "Início do atendimento",
+            "format": "date-time"
+          },
+          "dataHoraFim": {
+            "type": "string",
+            "description": "Fim do atendimento",
+            "format": "date-time"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Tipo de conteudo ou categoria do atendimento",
+            "example": "MENTORIA",
+            "enum": [
+              "AULA",
+              "MENTORIA",
+              "TERAPIA",
+              "ORIENTACAO_VOCACIONAL",
+              "ENEM",
+              "PAS",
+              "OUTRO"
+            ]
+          }
+        },
+        "description": "Evento simplificado para o calendário de atendimentos",
+        "x-readme-ref-name": "CalendarioAtendimentosResponse"
+      }
+    }
+  },
+  "description": "Conteúdo mensal do dashboard de atendimentos",
+  "x-readme-ref-name": "CalendarioMensalAtendimentosResponse"
+}

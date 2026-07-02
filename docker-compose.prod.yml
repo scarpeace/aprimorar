@@ -1,21 +1,23 @@
-services:
+# # Docker compose para referencia do que está rodando em produção, não funciona local
 
-  backend:
-    image: registry.gitlab.com/scarpellini1/aprimorar/server:latest
-    restart: always
-    depends_on:
-      - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres://aprimorar_prod:5dQg4PzwzjHr3L67wcYkAB9nLAENRY6CYOJivHFkgemBsdI37mGZBvwIIEHRjsYt@dfdcryvfr7dr17yc3vpbdgon:5432/postgres/aprimorar-db
-      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
-    expose:
-      - "8080"
+# services:
+#   backend:
+#     image: registry.gitlab.com/scarpellini1/aprimorar/server:latest
+#     restart: always
+#     environment:
+#       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+#       SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+#       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+#     expose:
+#       - "8080"
 
-  frontend:
-    image: registry.gitlab.com/scarpellini1/aprimorar/client:latest
-    restart: always
-    expose:
-      - "80"
-    depends_on:
-      - backend
+#   frontend:
+#     image: registry.gitlab.com/scarpellini1/aprimorar/client:latest
+#     restart: always
+#     environment:
+#       API_URL: ${API_URL}
+#       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+#     expose:
+#       - "3000"
+#     depends_on:
+#       - backend

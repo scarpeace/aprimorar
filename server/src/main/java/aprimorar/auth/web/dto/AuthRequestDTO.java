@@ -4,15 +4,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-@Schema(description = "Payload de autenticacao")
+@Schema(description = "Payload de autenticação")
 public record AuthRequestDTO(
-    @NotBlank(message = "E-mail é obrigatório")
-    @Email(message = "E-mail deve ser um endereço de e-mail válido")
-    @Schema(description = "E-mail usado no login", example = "admin@aprimorar.local")
-    String email,
+    @NotBlank(message = "Informe o e-mail")
+    @Email(message = "Use um e-mail válido")
+    @Schema(description = "E-mail usado no login", example = "admin@aprimorar.local", nullable = false)
+    String username,
 
-    @NotBlank(message = "Senha é obrigatória")
-    @Schema(description = "Senha do usuário", example = "admin123")
+    @NotBlank(message = "Informe a senha")
+    @Schema(description = "Senha do usuário", example = "admin123", nullable = false)
     String password
 ) {
 }

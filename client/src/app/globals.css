@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: corporate --default;
+  logs: false;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-height: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    color: var(--color-base-content);
+    font-family: "Sora", "Segoe UI", "Helvetica Neue", sans-serif;
+    background:
+      radial-gradient(
+        1200px 420px at 10% -5%,
+        color-mix(in srgb, var(--color-primary) 13%, transparent),
+        transparent 55%
+      ),
+      radial-gradient(
+        980px 340px at 95% 3%,
+        color-mix(in srgb, var(--color-success) 11%, transparent),
+        transparent 50%
+      ),
+      var(--color-base-200);
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  .app-shell-card {
+    @apply rounded-2xl border border-base-300 bg-base-100 shadow-xl;
+  }
+}
+

@@ -3,6 +3,14 @@ export const brl = new Intl.NumberFormat("pt-BR", {
   currency: "BRL",
 });
 
+export function formatDate(value?: string | null): string {
+  if (!value) {
+    return "—";
+  }
+
+  return new Intl.DateTimeFormat("pt-BR").format(new Date(value));
+}
+
 export function formatPhone(value: string): string {
   const cleaned = value.replace(/\D/g, "");
   if (cleaned.length <= 11) {
@@ -19,46 +27,10 @@ export function formatCpf(value: string): string {
   return value;
 }
 
-export function formatDateShortYear(date: string | Date): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toLocaleDateString("pt-BR");
-}
-
-export function formatTime(date: string | Date): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-}
-
-export function formatDateTimeLocal(date: string | Date): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toISOString().slice(0, 16);
-}
-
-export function formatDateForInput(date?: string | null): string {
-  if (!date) return "";
-
-  const [year, month, day] = date.split("-");
-
-  if (!year || !month || !day) return date;
-
-  return `${day}/${month}/${year}`;
-}
-
 export function formatZip(value: string): string {
   const cleaned = value.replace(/\D/g, "");
   if (cleaned.length === 8) {
     return cleaned.replace(/(\d{5})(\d{3})/, "$1-$2");
   }
   return value;
-}
-
-export function isValidCpf(cpf: string): boolean {
-  const cleaned = cpf.replace(/\D/g, "");
-  if (cleaned.length !== 11) return false;
-  return true;
-}
-
-export function isValidBrazilianPhone(phone: string): boolean {
-  const cleaned = phone.replace(/\D/g, "");
-  return cleaned.length === 10 || cleaned.length === 11;
 }

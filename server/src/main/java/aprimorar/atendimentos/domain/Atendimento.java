@@ -1,230 +1,206 @@
 package aprimorar.atendimentos.domain;
 
-import aprimorar.shared.exception.BusinessException;
+import aprimorar.atendimentos.enums.StatusAtendimento;
+import aprimorar.atendimentos.enums.TipoAtendimento;
+import aprimorar.exception.BusinessException;
+import aprimorar.pessoas.domain.Aluno;
+import aprimorar.pessoas.domain.Colaborador;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.UUID;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.http.HttpStatus;
 
-// TODO: Adicionar campos do Google Calendar para a implementacao
 @Entity
 @Getter
-@Table(name = "tb_appointments")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "atendimentos")
 public class Atendimento implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @EqualsAndHashCode.Include
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @CreationTimestamp
-    private Instant createdAt;
+    @Column(name = "data_hora_inicio", nullable = false)
+    private LocalDateTime dataHoraInicio;
 
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    private Instant updatedAt;
-
-    @Column(name = "title", nullable = false)
-    private String title;
-
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
-
-    @Column(name = "start_date", nullable = false)
-    private Instant startDate;
-
-    @Column(name = "end_date", nullable = false)
-    private Instant endDate;
-
-    @Column(name = "payment", precision = 19, scale = 2, nullable = false)
-    private BigDecimal payment;
-
-    @Column(name = "price", precision = 19, scale = 2, nullable = false)
-    private BigDecimal price;
+    @Column(name = "data_hora_fim", nullable = false)
+    private LocalDateTime dataHoraFim;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "content", nullable = false)
-    private TipoAtendimentoEnum content;
+    @Column(name = "tipo", nullable = false)
+    private TipoAtendimento tipo;
 
-    @Column(name = "employee_payment_date", nullable = true)
-    private Instant employeePaymentDate;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusAtendimento status;
 
-    @Column(name = "student_charge_date", nullable = true)
-    private Instant studentChargeDate;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "aluno_id", nullable = false)
+    private Aluno aluno;
 
-    @Column(name = "student_id", nullable = false)
-    private UUID studentId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "colaborador_id", nullable = false)
+    private Colaborador colaborador;
 
-    @Column(name = "student_name", nullable = false)
-    private String studentName;
+    @Column(name = "pagamento_aluno", precision = 10, scale = 2, nullable = false)
+    private BigDecimal pagamentoAluno;
 
-    @Column(name = "employee_id", nullable = false)
-    private UUID employeeId;
+    @Column(name = "repasse_colaborador", precision = 10, scale = 2, nullable = false)
+    private BigDecimal repasseColaborador;
 
-    @Column(name = "employee_name", nullable = false)
-    private String employeeName;
+    @Column(name = "data_pagamento_aluno")
+    private LocalDateTime dataPagamentoAluno;
+
+    @Column(name = "data_pagamento_colaborador")
+    private LocalDateTime dataPagamentoColaborador;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     protected Atendimento() {}
 
-    public Atendimento(
-        String description,
-        Instant startDate,
-        Double duration,
-        BigDecimal payment,
-        BigDecimal price,
-        TipoAtendimentoEnum content,
-        UUID studentId,
-        String studentName,
-        UUID employeeId,
-        String employeeName,
-        Instant now
-    ) {
-        this.endDate = calculateEndDate(startDate, duration);
-        validateDates(startDate, now);
-        validateAmounts(payment, price);
-        validateParticipants(studentId, employeeId);
-        validateContent(content);
+    @PrePersist
+    void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 
-        this.title = buildTitle(content, studentName, employeeName);
-        this.description = description;
-        this.startDate = startDate;
-        this.payment = payment;
-        this.price = price;
-        this.content = content;
-        this.studentId = studentId;
-        this.employeeId = employeeId;
-        this.studentName = studentName;
-        this.employeeName = employeeName;
+    @PreUpdate
+    void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public Atendimento(
+        LocalDateTime dataHoraInicio,
+        LocalDateTime dataHoraFim,
+        TipoAtendimento tipo,
+        Aluno aluno,
+        Colaborador colaborador,
+        BigDecimal pagamentoAluno,
+        BigDecimal repasseColaborador
+    ) {
+        validarDatas(dataHoraInicio, dataHoraFim);
+        validarValores(pagamentoAluno, repasseColaborador);
+        this.dataHoraInicio = dataHoraInicio;
+        this.dataHoraFim = dataHoraFim;
+        this.tipo = tipo;
+        this.status = StatusAtendimento.AGENDADO;
+        this.aluno = aluno;
+        this.colaborador = colaborador;
+        this.pagamentoAluno = pagamentoAluno;
+        this.repasseColaborador = repasseColaborador;
     }
 
     public Atendimento update(
-        String description,
-        Instant startDate,
-        Double duration,
-        BigDecimal payment,
-        BigDecimal price,
-        TipoAtendimentoEnum content,
-        UUID studentId,
-        String studentName,
-        UUID employeeId,
-        String employeeName,
-        Instant now
+        LocalDateTime dataHoraInicio,
+        LocalDateTime dataHoraFim,
+        TipoAtendimento tipo,
+        Aluno aluno,
+        Colaborador colaborador,
+        BigDecimal pagamentoAluno,
+        BigDecimal repasseColaborador
     ) {
-        this.endDate = calculateEndDate(startDate, duration);
-        validateEditWindow(now);
-        validateDates(startDate, now);
-        validateAmounts(payment, price);
-        validateParticipants(studentId, employeeId);
-        validateContent(content);
-
-        this.title = buildTitle(content, studentName, employeeName);
-        this.description = description;
-        this.startDate = startDate;
-        this.payment = payment;
-        this.price = price;
-        this.content = content;
-        this.studentId = studentId;
-        this.studentName = studentName;
-        this.employeeId = employeeId;
-        this.employeeName = employeeName;
-
+        validarDatas(dataHoraInicio, dataHoraFim);
+        validarValores(pagamentoAluno, repasseColaborador);
+        reagendar(dataHoraInicio, dataHoraFim);
+        alterarParticipantes(aluno, colaborador);
+        this.tipo = tipo;
+        this.pagamentoAluno = pagamentoAluno;
+        this.repasseColaborador = repasseColaborador;
         return this;
     }
 
+    public void efetivarPagamentoAluno() {
+        if (this.dataPagamentoAluno != null) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "Pagamento já efetivado para o aluno");
+        }
+        this.dataPagamentoAluno = LocalDateTime.now();
+    }
+
+    public void efetivarRepasseColaborador() {
+        if (this.dataPagamentoColaborador != null) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "Repasse já efetivado para o colaborador");
+        }
+        this.dataPagamentoColaborador = LocalDateTime.now();
+    }
+
+    public void cancelar(){
+        if(this.status == StatusAtendimento.CANCELADO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Evento já cancelado");
+        }
+
+        if(this.status == StatusAtendimento.CONCLUIDO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível cancelar um evento concluído");
+        }
+        this.status = StatusAtendimento.CANCELADO;
+    }
+
+    public void concluir(){
+        if(this.status == StatusAtendimento.CANCELADO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível concluir um evento cancelado");
+        }
+
+        if(this.status == StatusAtendimento.CONCLUIDO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Evento já concluido");
+        }
+
+        this.status = StatusAtendimento.CONCLUIDO;
+    }
+
+    public void reagendar(LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim){
+        if(this.status == StatusAtendimento.CANCELADO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível reagendar um evento cancelado");
+        }
+
+        if(this.status == StatusAtendimento.CONCLUIDO){
+            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível reagendar um evento concluído");
+        }
+
+        validarDatas(dataHoraInicio, dataHoraFim);
+        this.dataHoraInicio = dataHoraInicio;
+        this.dataHoraFim = dataHoraFim;
+    }
+
+    public void alterarParticipantes(Aluno aluno, Colaborador colaborador){
+        this.aluno = aluno;
+        this.colaborador = colaborador;
+    }
+
     @Transient
-    public Double getDuration() {
-        return Duration.between(startDate, endDate).toMinutes() / 60.0;
+    public java.util.UUID getAlunoId() {
+        return aluno.getId();
     }
 
     @Transient
-    public BigDecimal getProfit() {
-        return price.subtract(payment);
+    public java.util.UUID getColaboradorId() {
+        return colaborador.getId();
     }
 
-
-
-    public void toggleStudentCharge(Instant now) {
-        if (this.studentChargeDate != null) {
-            this.studentChargeDate = null;
-        } else {
-            this.studentChargeDate = now;
+    public void validarJanelaEdicao() {
+        if (this.dataHoraFim != null && LocalDateTime.now().isAfter(this.dataHoraFim.plus(20, ChronoUnit.DAYS))) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "A janela de 20 dias para editar as informações do atendimento encerrou");
         }
     }
 
-    public void toggleEmployeePayment(Instant now) {
-        if (this.employeePaymentDate != null) {
-            this.employeePaymentDate = null;
-        } else {
-            this.employeePaymentDate = now;
-        }
-    }
-
-    public static Instant calculateEndDate(Instant startDate, Double duration) {
-        if (startDate == null) {
-            throw new IllegalStateException("Data de inicio do atendimento e obrigatoria");
-        }
-        if (duration == null) {
-            throw new IllegalStateException("Duracao do atendimento e obrigatoria");
-        }
-        return startDate.plus((long) (duration * 60), ChronoUnit.MINUTES);
-    }
-
-    public void validateEditWindow(Instant now) {
-        if (this.endDate != null && now.isAfter(this.endDate.plus(20, ChronoUnit.DAYS))) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "A janela de 20 dias para editar as informacoes do atendimento encerrou");
-        }
-    }
-
-    private void validateDates(Instant startDate, Instant now) {
-        if (this.endDate.isBefore(startDate)) {
+    private void validarDatas(LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
+        if (dataHoraFim.isBefore(dataHoraInicio)) {
             throw new IllegalStateException("Data de fim do atendimento nao pode ser anterior a data de inicio");
         }
-        if (this.endDate.isBefore(now)) {
+        if (dataHoraFim.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("Data de fim do atendimento nao pode estar no passado");
         }
     }
 
-    private void validateAmounts(BigDecimal payment, BigDecimal price) {
-        if (payment == null) {
-            throw new IllegalStateException("Pagamento do atendimento e obrigatorio");
-        }
-        if (price == null) {
-            throw new IllegalStateException("Valor do atendimento e obrigatorio");
-        }
-        if (price.compareTo(payment) < 0) {
+    private void validarValores(BigDecimal pagamentoAluno, BigDecimal repasseColaborador) {
+        if (pagamentoAluno.compareTo(repasseColaborador) < 0) {
             throw new IllegalStateException("O valor do atendimento nao pode ser menor que o pagamento");
         }
-        if (price.compareTo(BigDecimal.valueOf(50)) < 0) {
+        if (pagamentoAluno.compareTo(BigDecimal.valueOf(50)) < 0) {
             throw new IllegalStateException("O valor do atendimento nao pode ser menor que R$50,00");
         }
-    }
-
-    private void validateParticipants(UUID studentId, UUID employeeId) {
-        if (studentId == null) {
-            throw new IllegalStateException("Um atendimento nao pode existir sem um estudante");
-        }
-        if (employeeId == null) {
-            throw new IllegalStateException("Um atendimento nao pode existir sem um colaborador");
-        }
-    }
-
-    private void validateContent(TipoAtendimentoEnum content) {
-        if (content == null) {
-            throw new IllegalStateException("O conteudo do atendimento e obrigatorio");
-        }
-    }
-
-    private String buildTitle(TipoAtendimentoEnum content, String studentName, String employeeName) {
-        return content + " - Col: " + employeeName + " - " + studentName;
     }
 }

@@ -1,32 +1,60 @@
-export const toInstant = (v: string) => new Date(v).toISOString();
+function pad(value: number): string {
+  return String(value).padStart(2, "0");
+}
 
-export const toDatetimeLocalInput = (iso?: string | null) => {
-  if (!iso) return "";
-  const d = new Date(iso);
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-};
+export function formatDateShortYear(date: string | Date): string {
+  const value = typeof date === "string" ? new Date(date) : date;
+  return value.toLocaleDateString("pt-BR");
+}
 
-export const fromDateToDatetimeLocalInput = (date: Date | null) => {
-  if (!date) return "";
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-};
+export function formatTime(date: string | Date): string {
+  const value = typeof date === "string" ? new Date(date) : date;
+  return value.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+}
 
-export const getStartOfMonthISO = (date: Date = new Date()) => {
-  return new Date(date.getFullYear(), date.getMonth(), 1).toISOString();
-};
+export function formatDateTimeLocal(date: string | Date): string {
+  const value = typeof date === "string" ? new Date(date) : date;
 
-export const getEndOfMonthISO = (date: Date = new Date()) => {
-  const d = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
-  return d.toISOString();
-};
+  return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}T${pad(value.getHours())}:${pad(value.getMinutes())}`;
+}
 
-export const getMonthRange = (date: Date) => {
-  const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+export function toAnoMes(date: string | Date): string {
+  const value = typeof date === "string" ? new Date(date) : date;
 
-  return {
-    startDate,
-    endDate: new Date(startDate.getFullYear(), startDate.getMonth() + 1, 1),
-  };
-};
+  return `${value.getFullYear()}-${pad(value.getMonth() + 1)}`;
+}
+
+export function addHoursToDateTimeLocal(value: string, hours?: number): string {
+  if (!value || !hours || hours <= 0) {
+    return "";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  date.setMinutes(date.getMinutes() + hours * 60);
+  return formatDateTimeLocal(date);
+}
+
+export function getDurationInHours(start: string | Date, end: string | Date): number {
+  const startDate = typeof start === "string" ? new Date(start) : start;
+  const endDate = typeof end === "string" ? new Date(end) : end;
+
+  return (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+}
+
+export function formatDateForInput(date?: string | null): string {
+  if (!date) {
+    return "";
+  }
+
+  const [year, month, day] = date.split("-");
+  if (!year || !month || !day) {
+    return date;
+  }
+
+  return `${day}/${month}/${year}`;
+}

@@ -1,0 +1,154 @@
+{
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "array",
+      "items": {
+        "required": [
+          "cpf",
+          "createdAt",
+          "dataNascimento",
+          "email",
+          "endereco",
+          "escola",
+          "id",
+          "idade",
+          "nome",
+          "responsavelId",
+          "telefone"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único do aluno",
+            "format": "uuid",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome do aluno",
+            "example": "John Doe"
+          },
+          "telefone": {
+            "type": "string",
+            "description": "Contato do aluno",
+            "example": "123456789"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email do aluno",
+            "example": "john.doe@example.com"
+          },
+          "cpf": {
+            "type": "string",
+            "description": "CPF do aluno",
+            "example": "123.456.789-00"
+          },
+          "dataNascimento": {
+            "type": "string",
+            "description": "Data de nascimento do aluno",
+            "format": "date",
+            "example": "1990-01-01"
+          },
+          "escola": {
+            "type": "string",
+            "description": "Nome da escola do aluno",
+            "example": "Leonardo da Vinci"
+          },
+          "idade": {
+            "type": "integer",
+            "description": "Idade do aluno",
+            "format": "int32",
+            "example": 30
+          },
+          "responsavelId": {
+            "type": "string",
+            "description": "ID do responsável",
+            "format": "uuid",
+            "example": "eb4be7ae-ebc6-423a-a380-da97f4a81511"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Indica se o aluno está ativo",
+            "example": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Data e hora da última atualização do aluno",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Data e hora de criação do aluno",
+            "format": "date-time"
+          },
+          "endereco": {
+            "required": ["bairro", "cep", "cidade", "estado", "numero", "rua"],
+            "type": "object",
+            "properties": {
+              "rua": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Rua",
+                "example": "Avenida Paulista"
+              },
+              "numero": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Número",
+                "example": "1000"
+              },
+              "complemento": {
+                "type": "string",
+                "description": "Complemento",
+                "nullable": true,
+                "example": "Sala 101"
+              },
+              "bairro": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Bairro",
+                "example": "Bela Vista"
+              },
+              "cidade": {
+                "minLength": 1,
+                "type": "string",
+                "description": "Cidade",
+                "example": "São Paulo"
+              },
+              "estado": {
+                "minLength": 1,
+                "type": "string",
+                "description": "UF",
+                "example": "SP"
+              },
+              "cep": {
+                "minLength": 1,
+                "type": "string",
+                "description": "CEP sem pontuação",
+                "example": "01310000"
+              }
+            },
+            "description": "Dados do endereco retornados pela API",
+            "x-readme-ref-name": "EnderecoResponseDTO"
+          }
+        },
+        "description": "Dados do aluno retornados pela API",
+        "x-readme-ref-name": "AlunoResponseDTO"
+      }
+    },
+    "page": {
+      "type": "object",
+      "properties": {
+        "size": { "type": "integer", "format": "int64" },
+        "number": { "type": "integer", "format": "int64" },
+        "totalElements": { "type": "integer", "format": "int64" },
+        "totalPages": { "type": "integer", "format": "int64" }
+      },
+      "x-readme-ref-name": "PageMetadata"
+    }
+  },
+  "x-readme-ref-name": "PagedModelAlunoResponseDTO"
+}

@@ -1,7 +1,7 @@
 package aprimorar.auth.domain;
 
-import aprimorar.shared.MapperUtils;
-import aprimorar.shared.enums.Role;
+import aprimorar.auth.Role;
+import aprimorar.utils.MapperUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,7 +18,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Entity
-@Table(name = "tb_users")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -81,5 +81,11 @@ public class User {
 
     public void toggleActive() {
         this.active = !this.active;
+    }
+
+    public void syncAdminAccess(String encodedPassword) {
+        this.password = validatePassword(encodedPassword);
+        this.role = Role.ADMIN;
+        this.active = true;
     }
 }
