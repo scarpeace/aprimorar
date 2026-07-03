@@ -67,6 +67,7 @@ export function getCalendarioAtendimentosQueryOptions(
     GetCalendarioAtendimentosQueryResponse,
     typeof queryKey
   >({
+    enabled: !!params,
     queryKey,
     queryFn: async ({ signal }) => {
       return getCalendarioAtendimentos(params, {

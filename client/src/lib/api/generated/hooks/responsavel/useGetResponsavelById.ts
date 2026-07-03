@@ -22,7 +22,7 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getResponsavelByIdQueryKey = (
-  responsavelId: GetResponsavelByIdPathParams["responsavelId"] | undefined,
+  responsavelId: GetResponsavelByIdPathParams["responsavelId"],
 ) =>
   [
     {
@@ -58,7 +58,7 @@ export async function getResponsavelById(
 }
 
 export function getResponsavelByIdQueryOptions(
-  responsavelId: GetResponsavelByIdPathParams["responsavelId"] | undefined,
+  responsavelId: GetResponsavelByIdPathParams["responsavelId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = getResponsavelByIdQueryKey(responsavelId);
@@ -71,7 +71,7 @@ export function getResponsavelByIdQueryOptions(
     enabled: !!responsavelId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getResponsavelById(responsavelId!, {
+      return getResponsavelById(responsavelId, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -88,7 +88,7 @@ export function useGetResponsavelById<
   TQueryData = GetResponsavelByIdQueryResponse,
   TQueryKey extends QueryKey = GetResponsavelByIdQueryKey,
 >(
-  responsavelId: GetResponsavelByIdPathParams["responsavelId"] | undefined,
+  responsavelId: GetResponsavelByIdPathParams["responsavelId"],
   options: {
     query?: Partial<
       QueryObserverOptions<

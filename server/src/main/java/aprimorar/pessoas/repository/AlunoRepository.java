@@ -12,9 +12,13 @@ import aprimorar.pessoas.domain.Aluno;
 
 public interface AlunoRepository extends JpaRepository<Aluno, UUID>, JpaSpecificationExecutor<Aluno> {
 
+    @Query("SELECT a FROM Aluno a WHERE a.responsavel.id = :responsavelId")
     List<Aluno> findAllByResponsavelId(UUID responsavelId);
 
+    @Query("SELECT count(a) > 0 FROM Aluno a WHERE a.responsavel.id = :responsavelId")
     boolean existsByResponsavelId(UUID responsavelId);
+
+    @Query("SELECT count(a) > 0 FROM Aluno a WHERE a.responsavel.id = :responsavelId AND a.active = true")
     boolean existsByResponsavelIdAndActiveTrue(UUID responsavelId);
 
     boolean existsByCpf(String cpf);

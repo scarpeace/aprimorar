@@ -20,7 +20,7 @@ export type { GetCalendarioAtendimentosQueryKey } from "./hooks/atendimento/useG
 export type { GetRelatorioAtendimentosQueryKey } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
 export type { GetResumoFinanceiroAlunoQueryKey } from "./hooks/atendimento/useGetResumoFinanceiroAluno.ts";
 export type { GetResumoFinanceiroColaboradorQueryKey } from "./hooks/atendimento/useGetResumoFinanceiroColaborador.ts";
-export type { ReagendarAtendimentoMutationKey } from "./hooks/atendimento/useReagendarAtendimento.ts";
+export type { UpdateAtendimentoMutationKey } from "./hooks/atendimento/useUpdateAtendimento.ts";
 export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
 export type { ArquivarColaboradorMutationKey } from "./hooks/colaborador/useArquivarColaborador.ts";
 export type { CreateColaboradorMutationKey } from "./hooks/colaborador/useCreateColaborador.ts";
@@ -306,14 +306,6 @@ export type { PagedModelAlunoResponseDTO } from "./types/PagedModelAlunoResponse
 export type { PagedModelAtendimentoResponse } from "./types/PagedModelAtendimentoResponse.ts";
 export type { PagedModelColaboradorResponseDTO } from "./types/PagedModelColaboradorResponseDTO.ts";
 export type { PagedModelResponsavelResponseDTO } from "./types/PagedModelResponsavelResponseDTO.ts";
-export type {
-  ReagendarAtendimento200,
-  ReagendarAtendimentoMutation,
-  ReagendarAtendimentoMutationRequest,
-  ReagendarAtendimentoMutationResponse,
-  ReagendarAtendimentoPathParams,
-} from "./types/ReagendarAtendimento.ts";
-export type { ReagendarAtendimentoRequest } from "./types/ReagendarAtendimentoRequest.ts";
 export type { RelatorioAtendimentosResponse } from "./types/RelatorioAtendimentosResponse.ts";
 export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./types/ResponsavelResponseDTO.ts";
@@ -330,6 +322,13 @@ export type {
   UpdateAlunoMutationResponse,
   UpdateAlunoPathParams,
 } from "./types/UpdateAluno.ts";
+export type {
+  UpdateAtendimento200,
+  UpdateAtendimentoMutation,
+  UpdateAtendimentoMutationRequest,
+  UpdateAtendimentoMutationResponse,
+  UpdateAtendimentoPathParams,
+} from "./types/UpdateAtendimento.ts";
 export type {
   UpdateColaborador200,
   UpdateColaboradorMutation,
@@ -440,10 +439,10 @@ export { getResumoFinanceiroColaborador } from "./hooks/atendimento/useGetResumo
 export { getResumoFinanceiroColaboradorQueryKey } from "./hooks/atendimento/useGetResumoFinanceiroColaborador.ts";
 export { getResumoFinanceiroColaboradorQueryOptions } from "./hooks/atendimento/useGetResumoFinanceiroColaborador.ts";
 export { useGetResumoFinanceiroColaborador } from "./hooks/atendimento/useGetResumoFinanceiroColaborador.ts";
-export { reagendarAtendimento } from "./hooks/atendimento/useReagendarAtendimento.ts";
-export { reagendarAtendimentoMutationKey } from "./hooks/atendimento/useReagendarAtendimento.ts";
-export { reagendarAtendimentoMutationOptions } from "./hooks/atendimento/useReagendarAtendimento.ts";
-export { useReagendarAtendimento } from "./hooks/atendimento/useReagendarAtendimento.ts";
+export { updateAtendimento } from "./hooks/atendimento/useUpdateAtendimento.ts";
+export { updateAtendimentoMutationKey } from "./hooks/atendimento/useUpdateAtendimento.ts";
+export { updateAtendimentoMutationOptions } from "./hooks/atendimento/useUpdateAtendimento.ts";
+export { useUpdateAtendimento } from "./hooks/atendimento/useUpdateAtendimento.ts";
 export { login } from "./hooks/auth/useLogin.ts";
 export { loginMutationKey } from "./hooks/auth/useLogin.ts";
 export { loginMutationOptions } from "./hooks/auth/useLogin.ts";
@@ -743,13 +742,6 @@ export { pagedModelAlunoResponseDTOSchema } from "./zod/pagedModelAlunoResponseD
 export { pagedModelAtendimentoResponseSchema } from "./zod/pagedModelAtendimentoResponseSchema.ts";
 export { pagedModelColaboradorResponseDTOSchema } from "./zod/pagedModelColaboradorResponseDTOSchema.ts";
 export { pagedModelResponsavelResponseDTOSchema } from "./zod/pagedModelResponsavelResponseDTOSchema.ts";
-export { reagendarAtendimentoRequestSchema } from "./zod/reagendarAtendimentoRequestSchema.ts";
-export {
-  reagendarAtendimento200Schema,
-  reagendarAtendimentoMutationRequestSchema,
-  reagendarAtendimentoMutationResponseSchema,
-  reagendarAtendimentoPathParamsSchema,
-} from "./zod/reagendarAtendimentoSchema.ts";
 export { relatorioAtendimentosResponseSchema } from "./zod/relatorioAtendimentosResponseSchema.ts";
 export { responsavelRequestDTOSchema } from "./zod/responsavelRequestDTOSchema.ts";
 export { responsavelResponseDTOSchema } from "./zod/responsavelResponseDTOSchema.ts";
@@ -764,6 +756,12 @@ export {
   updateAlunoMutationResponseSchema,
   updateAlunoPathParamsSchema,
 } from "./zod/updateAlunoSchema.ts";
+export {
+  updateAtendimento200Schema,
+  updateAtendimentoMutationRequestSchema,
+  updateAtendimentoMutationResponseSchema,
+  updateAtendimentoPathParamsSchema,
+} from "./zod/updateAtendimentoSchema.ts";
 export {
   updateColaborador200Schema,
   updateColaboradorMutationRequestSchema,

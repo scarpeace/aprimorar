@@ -22,7 +22,7 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getAtendimentoByIdQueryKey = (
-  id: GetAtendimentoByIdPathParams["id"] | undefined,
+  id: GetAtendimentoByIdPathParams["id"],
 ) => [{ url: "/v1/atendimentos/:id", params: { id: id } }] as const;
 
 export type GetAtendimentoByIdQueryKey = ReturnType<
@@ -48,7 +48,7 @@ export async function getAtendimentoById(
 }
 
 export function getAtendimentoByIdQueryOptions(
-  id: GetAtendimentoByIdPathParams["id"] | undefined,
+  id: GetAtendimentoByIdPathParams["id"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = getAtendimentoByIdQueryKey(id);
@@ -61,7 +61,7 @@ export function getAtendimentoByIdQueryOptions(
     enabled: !!id,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getAtendimentoById(id!, {
+      return getAtendimentoById(id, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -78,7 +78,7 @@ export function useGetAtendimentoById<
   TQueryData = GetAtendimentoByIdQueryResponse,
   TQueryKey extends QueryKey = GetAtendimentoByIdQueryKey,
 >(
-  id: GetAtendimentoByIdPathParams["id"] | undefined,
+  id: GetAtendimentoByIdPathParams["id"],
   options: {
     query?: Partial<
       QueryObserverOptions<

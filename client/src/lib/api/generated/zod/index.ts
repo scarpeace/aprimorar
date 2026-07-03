@@ -207,13 +207,6 @@ export { pagedModelAlunoResponseDTOSchema } from "./pagedModelAlunoResponseDTOSc
 export { pagedModelAtendimentoResponseSchema } from "./pagedModelAtendimentoResponseSchema.ts";
 export { pagedModelColaboradorResponseDTOSchema } from "./pagedModelColaboradorResponseDTOSchema.ts";
 export { pagedModelResponsavelResponseDTOSchema } from "./pagedModelResponsavelResponseDTOSchema.ts";
-export { reagendarAtendimentoRequestSchema } from "./reagendarAtendimentoRequestSchema.ts";
-export {
-  reagendarAtendimento200Schema,
-  reagendarAtendimentoMutationRequestSchema,
-  reagendarAtendimentoMutationResponseSchema,
-  reagendarAtendimentoPathParamsSchema,
-} from "./reagendarAtendimentoSchema.ts";
 export { relatorioAtendimentosResponseSchema } from "./relatorioAtendimentosResponseSchema.ts";
 export { responsavelRequestDTOSchema } from "./responsavelRequestDTOSchema.ts";
 export { responsavelResponseDTOSchema } from "./responsavelResponseDTOSchema.ts";
@@ -228,6 +221,12 @@ export {
   updateAlunoMutationResponseSchema,
   updateAlunoPathParamsSchema,
 } from "./updateAlunoSchema.ts";
+export {
+  updateAtendimento200Schema,
+  updateAtendimentoMutationRequestSchema,
+  updateAtendimentoMutationResponseSchema,
+  updateAtendimentoPathParamsSchema,
+} from "./updateAtendimentoSchema.ts";
 export {
   updateColaborador200Schema,
   updateColaboradorMutationRequestSchema,

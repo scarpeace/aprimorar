@@ -16,4 +16,5 @@ export const atendimentoFormSchema = z.object({
   colaboradorId: requiredUuid("Colaborador"),
 });
 
-export type AtendimentoFormData = z.infer<typeof atendimentoFormSchema>;
+export type AtendimentoFormInput = z.input<typeof atendimentoFormSchema>;
+export type AtendimentoFormData = z.output<typeof atendimentoFormSchema>;

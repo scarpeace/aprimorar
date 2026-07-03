@@ -258,14 +258,6 @@ export type { PagedModelAlunoResponseDTO } from "./PagedModelAlunoResponseDTO.ts
 export type { PagedModelAtendimentoResponse } from "./PagedModelAtendimentoResponse.ts";
 export type { PagedModelColaboradorResponseDTO } from "./PagedModelColaboradorResponseDTO.ts";
 export type { PagedModelResponsavelResponseDTO } from "./PagedModelResponsavelResponseDTO.ts";
-export type {
-  ReagendarAtendimento200,
-  ReagendarAtendimentoMutation,
-  ReagendarAtendimentoMutationRequest,
-  ReagendarAtendimentoMutationResponse,
-  ReagendarAtendimentoPathParams,
-} from "./ReagendarAtendimento.ts";
-export type { ReagendarAtendimentoRequest } from "./ReagendarAtendimentoRequest.ts";
 export type { RelatorioAtendimentosResponse } from "./RelatorioAtendimentosResponse.ts";
 export type { ResponsavelRequestDTO } from "./ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./ResponsavelResponseDTO.ts";
@@ -282,6 +274,13 @@ export type {
   UpdateAlunoMutationResponse,
   UpdateAlunoPathParams,
 } from "./UpdateAluno.ts";
+export type {
+  UpdateAtendimento200,
+  UpdateAtendimentoMutation,
+  UpdateAtendimentoMutationRequest,
+  UpdateAtendimentoMutationResponse,
+  UpdateAtendimentoPathParams,
+} from "./UpdateAtendimento.ts";
 export type {
   UpdateColaborador200,
   UpdateColaboradorMutation,

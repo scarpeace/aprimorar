@@ -20,7 +20,7 @@ export type { GetCalendarioAtendimentosQueryKey } from "./atendimento/useGetCale
 export type { GetRelatorioAtendimentosQueryKey } from "./atendimento/useGetRelatorioAtendimentos.ts";
 export type { GetResumoFinanceiroAlunoQueryKey } from "./atendimento/useGetResumoFinanceiroAluno.ts";
 export type { GetResumoFinanceiroColaboradorQueryKey } from "./atendimento/useGetResumoFinanceiroColaborador.ts";
-export type { ReagendarAtendimentoMutationKey } from "./atendimento/useReagendarAtendimento.ts";
+export type { UpdateAtendimentoMutationKey } from "./atendimento/useUpdateAtendimento.ts";
 export type { LoginMutationKey } from "./auth/useLogin.ts";
 export type { ArquivarColaboradorMutationKey } from "./colaborador/useArquivarColaborador.ts";
 export type { CreateColaboradorMutationKey } from "./colaborador/useCreateColaborador.ts";
@@ -129,10 +129,10 @@ export { getResumoFinanceiroColaborador } from "./atendimento/useGetResumoFinanc
 export { getResumoFinanceiroColaboradorQueryKey } from "./atendimento/useGetResumoFinanceiroColaborador.ts";
 export { getResumoFinanceiroColaboradorQueryOptions } from "./atendimento/useGetResumoFinanceiroColaborador.ts";
 export { useGetResumoFinanceiroColaborador } from "./atendimento/useGetResumoFinanceiroColaborador.ts";
-export { reagendarAtendimento } from "./atendimento/useReagendarAtendimento.ts";
-export { reagendarAtendimentoMutationKey } from "./atendimento/useReagendarAtendimento.ts";
-export { reagendarAtendimentoMutationOptions } from "./atendimento/useReagendarAtendimento.ts";
-export { useReagendarAtendimento } from "./atendimento/useReagendarAtendimento.ts";
+export { updateAtendimento } from "./atendimento/useUpdateAtendimento.ts";
+export { updateAtendimentoMutationKey } from "./atendimento/useUpdateAtendimento.ts";
+export { updateAtendimentoMutationOptions } from "./atendimento/useUpdateAtendimento.ts";
+export { useUpdateAtendimento } from "./atendimento/useUpdateAtendimento.ts";
 export { login } from "./auth/useLogin.ts";
 export { loginMutationKey } from "./auth/useLogin.ts";
 export { loginMutationOptions } from "./auth/useLogin.ts";
