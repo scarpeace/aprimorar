@@ -3,9 +3,11 @@ package aprimorar.pessoas.service;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.exception.BusinessException;
 import aprimorar.pessoas.domain.Aluno;
+import aprimorar.pessoas.domain.Responsavel;
 import aprimorar.pessoas.dto.aluno.AlunoRequestDTO;
 import aprimorar.pessoas.dto.aluno.AlunoResponseDTO;
 import aprimorar.pessoas.repository.AlunoRepository;
+import aprimorar.pessoas.repository.ResponsavelRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,22 +24,26 @@ public class AlunoMutationService {
     private static final Logger log = LoggerFactory.getLogger(AlunoMutationService.class);
 
     private final AlunoRepository alunoRepo;
+    private final ResponsavelRepository responsavelRepo;
     private final AtendimentoRepository atendimentoRepo;
     private final UUID ghostStudentId;
 
     public AlunoMutationService(
         AlunoRepository alunoRepo,
+        ResponsavelRepository responsavelRepo,
         AtendimentoRepository atendimentoRepo,
         @Value("${aprimorar.ghost-student-id}") String ghostStudentId
     ) {
         this.alunoRepo = alunoRepo;
+        this.responsavelRepo = responsavelRepo;
         this.atendimentoRepo = atendimentoRepo;
         this.ghostStudentId = UUID.fromString(ghostStudentId);
     }
 
     @Transactional
     public AlunoResponseDTO createAluno(AlunoRequestDTO dto) {
-        Aluno aluno = dto.toEntity();
+        Responsavel responsavel = findResponsavelOrThrow(dto.responsavelId());
+        Aluno aluno = dto.toEntity(responsavel);
 
         if (alunoRepo.existsByCpf(aluno.getCpf())) {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um aluno cadastrado com este CPF.");
@@ -47,7 +53,7 @@ public class AlunoMutationService {
             throw new BusinessException(HttpStatus.CONFLICT, "Já existe um aluno cadastrado com este e-mail.");
         }
 
-        //TODO FIND RESPONSAVELBY ID
+
 
         Aluno savedAluno = alunoRepo.save(aluno);
 
@@ -58,7 +64,8 @@ public class AlunoMutationService {
     @Transactional
     public AlunoResponseDTO updateAluno(UUID alunoId, AlunoRequestDTO dto) {
         Aluno aluno = findAlunoOrThrow(alunoId);
-        Aluno requestedAluno = dto.toEntity();
+        Responsavel responsavel = findResponsavelOrThrow(dto.responsavelId());
+        Aluno requestedAluno = dto.toEntity(responsavel);
 
         if (ghostStudentId.equals(alunoId)) {
             throw new BusinessException(HttpStatus.CONFLICT, "Não é possível modificar o registro de sistema 'Aluno Removido'.");
@@ -78,7 +85,7 @@ public class AlunoMutationService {
             requestedAluno.getTelefone(),
             requestedAluno.getEmail(),
             requestedAluno.getEscola(),
-            requestedAluno.getResponsavelId(),
+            requestedAluno.getResponsavel(),
             requestedAluno.getEndereco()
         );
 
@@ -94,8 +101,13 @@ public class AlunoMutationService {
             throw new BusinessException(HttpStatus.CONFLICT, "O registro não pode ser modificado.");
         }
 
-        log.info("Verificando se aluno {} pode ser arquivado.", aluno.getNome().toUpperCase());
-        ensureAlunoPodeSerArquivado(alunoId);
+        if (atendimentoRepo.alunoPossuiAtendimentoAgendado(alunoId)) {
+            throw new BusinessException(HttpStatus.CONFLICT, "Não é possível arquivar um aluno com atendimentos agendados.");
+        }
+
+        if (atendimentoRepo.alunoPossuiPagamentoAlunoPendente(alunoId)) {
+            throw new BusinessException(HttpStatus.CONFLICT, "Não é possível arquivar um aluno com pagamento pendente.");
+        }
 
         aluno.archive();
         log.info("Aluno {} arquivado com sucesso.", aluno.getNome().toUpperCase());
@@ -121,8 +133,13 @@ public class AlunoMutationService {
             throw new BusinessException(HttpStatus.CONFLICT, "O registro não pode ser modificado.");
         }
 
-        ensureAlunoArquivado(aluno);
-        ensureAlunoPodeSerArquivado(alunoId);
+        if (atendimentoRepo.alunoPossuiAtendimentoAgendado(alunoId)) {
+            throw new BusinessException(HttpStatus.CONFLICT, "Não é possível excluir um aluno com atendimentos agendados.");
+        }
+
+        if (atendimentoRepo.alunoPossuiPagamentoAlunoPendente(alunoId)) {
+            throw new BusinessException(HttpStatus.CONFLICT, "Não é possível excluir um aluno com pagamento pendente.");
+        }
 
         log.info("Realocando atendimentos do aluno ao Aluno Fantasma.", aluno.getNome().toUpperCase());
         atendimentoRepo.reassignAtendimentosAlunoToGhost(alunoId, alunoRepo.getReferenceById(ghostStudentId));
@@ -144,19 +161,10 @@ public class AlunoMutationService {
             .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Aluno não encontrado no banco de dados"));
     }
 
-    private void ensureAlunoPodeSerArquivado(UUID alunoId) {
-        if (atendimentoRepo.alunoPossuiAtendimentoAgendado(alunoId)) {
-            throw new BusinessException(HttpStatus.CONFLICT, "Não é possível arquivar um aluno com atendimentos agendados.");
-        }
-
-        if (atendimentoRepo.alunoPossuiPagamentoAlunoPendente(alunoId)) {
-            throw new BusinessException(HttpStatus.CONFLICT, "Não é possível arquivar um aluno com pagamento pendente.");
-        }
+    private Responsavel findResponsavelOrThrow(UUID responsavelId) {
+        return responsavelRepo
+            .findById(responsavelId)
+            .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "Responsável não encontrado no banco de dados"));
     }
 
-    private void ensureAlunoArquivado(Aluno aluno) {
-        if (!Boolean.FALSE.equals(aluno.getActive())) {
-            throw new BusinessException(HttpStatus.CONFLICT, "O aluno precisa estar arquivado antes de ser excluído.");
-        }
-    }
 }

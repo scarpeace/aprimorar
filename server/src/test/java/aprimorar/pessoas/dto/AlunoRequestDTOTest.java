@@ -2,6 +2,7 @@ package aprimorar.pessoas.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import aprimorar.pessoas.domain.Responsavel;
 import aprimorar.pessoas.dto.aluno.AlunoRequestDTO;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -22,7 +23,15 @@ class AlunoRequestDTOTest {
             UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
         );
 
-        var entity = dto.toEntity();
+        var responsavel = new Responsavel(
+            "Carlos Silva",
+            LocalDate.of(1970, 1, 1),
+            "61999999998",
+            "98765432100",
+            "carlos@example.com"
+        );
+
+        var entity = dto.toEntity(responsavel);
 
         assertEquals("Ana Silva", entity.getNome());
         assertEquals(LocalDate.of(2000, 1, 1), entity.getDataNascimento());
@@ -30,7 +39,7 @@ class AlunoRequestDTOTest {
         assertEquals("12345678900", entity.getCpf());
         assertEquals("ana.silva@example.com", entity.getEmail());
         assertEquals("Colégio Aprimorar", entity.getEscola());
-        assertEquals(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"), entity.getResponsavelId());
+        assertEquals(responsavel, entity.getResponsavel());
         assertEquals("70000000", entity.getEndereco().getCep());
     }
 }

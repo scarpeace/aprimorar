@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import aprimorar.pessoas.domain.Aluno;
+import aprimorar.pessoas.domain.Responsavel;
 import aprimorar.pessoas.dto.EnderecoRequestDTO;
 import aprimorar.utils.MapperUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -50,7 +51,7 @@ public record AlunoRequestDTO(
     @Schema(nullable = false,description = "ID do responsável vinculado ao aluno")
     UUID responsavelId
 ) {
-    public Aluno toEntity() {
+    public Aluno toEntity(Responsavel responsavel) {
         return new Aluno(
             this.nome(),
             this.dataNascimento(),
@@ -58,7 +59,7 @@ public record AlunoRequestDTO(
             MapperUtils.normalizeCpf(this.cpf()),
             MapperUtils.normalizeEmail(this.email()),
             this.escola(),
-            this.responsavelId(),
+            responsavel,
             this.endereco().toEntity()
         );
     }

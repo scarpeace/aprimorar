@@ -75,7 +75,7 @@ public class ResponsavelMutationService {
     @Transactional
     public void deleteResponsavel(UUID responsavelId) {
         var responsavel = findResponsavelOrThrow(responsavelId);
-        var alunos = alunoRepo.findAllByResponsavelId(responsavelId);
+        var alunos = alunoRepo.findAllByResponsavel_Id(responsavelId);
 
         if (!alunos.isEmpty()) {
             throw new BusinessException(
