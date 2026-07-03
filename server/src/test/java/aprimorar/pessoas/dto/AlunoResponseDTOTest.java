@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import aprimorar.pessoas.domain.Aluno;
 import aprimorar.pessoas.domain.Endereco;
+import aprimorar.pessoas.domain.Responsavel;
 import aprimorar.pessoas.dto.aluno.AlunoResponseDTO;
 
 import java.lang.reflect.Field;
@@ -17,6 +18,14 @@ class AlunoResponseDTOTest {
 
     @Test
     void shouldConvertAlunoEntityToDto() {
+        var responsavel = new Responsavel(
+            "João Silva",
+            LocalDate.of(1980, 1, 1),
+            "(11) 99999-9999",
+            "987.654.321-00",
+            "joao.silva@example.com"
+        );
+
         var aluno = new Aluno(
             "Ana Silva",
             LocalDate.of(2000, 1, 1),
@@ -24,9 +33,10 @@ class AlunoResponseDTOTest {
             "123.456.789-00",
             "ana.silva@example.com",
             "Colégio Aprimorar",
-            UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+            responsavel,
             new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
         );
+        setField(responsavel, "id", UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
         setField(aluno, "id", UUID.fromString("223e4567-e89b-12d3-a456-426614174000"));
         setField(aluno, "createdAt", LocalDateTime.of(2024, 1, 1, 10, 0));
         setField(aluno, "updatedAt", LocalDateTime.of(2024, 1, 2, 10, 0));

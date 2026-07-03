@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class AlunoTest {
@@ -20,7 +19,7 @@ class AlunoTest {
             "123.456.789-00",
             "ANA.SILVA@EXAMPLE.COM",
             "Colégio Aprimorar",
-            UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+            validResponsavel(),
             new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
         );
 
@@ -30,7 +29,7 @@ class AlunoTest {
         assertEquals("123.456.789-00", aluno.getCpf());
         assertEquals("ANA.SILVA@EXAMPLE.COM", aluno.getEmail());
         assertEquals("Colégio Aprimorar", aluno.getEscola());
-        assertEquals(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"), aluno.getResponsavelId());
+        assertEquals("João Silva", aluno.getResponsavel().getNome());
         assertTrue(aluno.getActive());
         assertEquals("70000-000", aluno.getEndereco().getCep());
     }
@@ -44,7 +43,7 @@ class AlunoTest {
             "123.456.789-00",
             "ana.silva@example.com",
             "Colégio Aprimorar",
-            UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+            validResponsavel(),
             new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
         );
 
@@ -54,7 +53,13 @@ class AlunoTest {
             "(21) 98888-7777",
             "maria.silva@example.com",
             "Escola Nova",
-            UUID.fromString("223e4567-e89b-12d3-a456-426614174000"),
+            new Responsavel(
+                "Maria Ramos",
+                LocalDate.of(1980, 3, 3),
+                "(21) 97777-6666",
+                "987.654.321-00",
+                "maria.ramos@example.com"
+            ),
             new Endereco("Rua B", "20", "Bairro", "Rio", "RJ", "20000-000", "Sala 2")
         );
 
@@ -63,7 +68,7 @@ class AlunoTest {
         assertEquals("(21) 98888-7777", aluno.getTelefone());
         assertEquals("maria.silva@example.com", aluno.getEmail());
         assertEquals("Escola Nova", aluno.getEscola());
-        assertEquals(UUID.fromString("223e4567-e89b-12d3-a456-426614174000"), aluno.getResponsavelId());
+        assertEquals("Maria Ramos", aluno.getResponsavel().getNome());
         assertEquals("123.456.789-00", aluno.getCpf());
         assertEquals("20000-000", aluno.getEndereco().getCep());
     }
@@ -100,8 +105,18 @@ class AlunoTest {
             "123.456.789-00",
             "ana.silva@example.com",
             "Colégio Aprimorar",
-            UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+            validResponsavel(),
             new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
+        );
+    }
+
+    private static Responsavel validResponsavel() {
+        return new Responsavel(
+            "João Silva",
+            LocalDate.of(1980, 1, 1),
+            "(11) 99999-9999",
+            "123.456.789-01",
+            "joao.silva@example.com"
         );
     }
 }
