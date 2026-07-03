@@ -64,6 +64,7 @@ export function getRelatorioAtendimentosQueryOptions(
     GetRelatorioAtendimentosQueryResponse,
     typeof queryKey
   >({
+    enabled: !!params,
     queryKey,
     queryFn: async ({ signal }) => {
       return getRelatorioAtendimentos(params, {

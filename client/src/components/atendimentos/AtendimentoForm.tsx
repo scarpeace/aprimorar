@@ -15,7 +15,7 @@ import { TextInput } from "@/components/ui/forms/TextInput";
 import { useAtendimentoMutations } from "@/hooks/use-atendimento-mutations";
 import { atendimentoTipoOptions } from "@/lib/constants/atendimento-constants";
 import { addHoursToDateTimeLocal, formatDateTimeLocal, getDurationInHours } from "@/lib/utils/date-utils";
-import { atendimentoFormSchema, type AtendimentoFormData } from "@/lib/validators/atendimento-form-schema";
+import { atendimentoFormSchema, type AtendimentoFormData, type AtendimentoFormInput } from "@/lib/validators/atendimento-form-schema";
 
 const CREATE_TIPO_OPTIONS = atendimentoTipoOptions.filter((option) => option.value !== "");
 
@@ -35,7 +35,7 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
   const alunos = useListAlunos();
   const colaboradores = useGetColaboradoresList();
 
-  const methods = useForm<AtendimentoFormData>({
+  const methods = useForm<AtendimentoFormInput, any, AtendimentoFormData>({
     resolver: zodResolver(atendimentoFormSchema),
     mode: "onBlur",
     defaultValues: {
@@ -52,7 +52,8 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
   const isPending = createAtendimento.isPending || updateAtendimento.isPending;
   const dataHoraInicio = methods.watch("dataHoraInicio");
   const duracao = methods.watch("duracao");
-  const dataHoraFimCalculada = useMemo(() => addHoursToDateTimeLocal(dataHoraInicio, duracao), [dataHoraInicio, duracao]);
+  const duracaoValue = typeof duracao === "number" ? duracao : undefined;
+  const dataHoraFimCalculada = useMemo(() => addHoursToDateTimeLocal(dataHoraInicio, duracaoValue), [dataHoraInicio, duracaoValue]);
 
   const alunoOptions =
     alunos.data?.map((item) => ({

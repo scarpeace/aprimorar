@@ -22,7 +22,7 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getAlunosByResponsavelQueryKey = (
-  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"] | undefined,
+  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"],
 ) =>
   [
     {
@@ -58,7 +58,7 @@ export async function getAlunosByResponsavel(
 }
 
 export function getAlunosByResponsavelQueryOptions(
-  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"] | undefined,
+  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = getAlunosByResponsavelQueryKey(responsavelId);
@@ -71,7 +71,7 @@ export function getAlunosByResponsavelQueryOptions(
     enabled: !!responsavelId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getAlunosByResponsavel(responsavelId!, {
+      return getAlunosByResponsavel(responsavelId, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -88,7 +88,7 @@ export function useGetAlunosByResponsavel<
   TQueryData = GetAlunosByResponsavelQueryResponse,
   TQueryKey extends QueryKey = GetAlunosByResponsavelQueryKey,
 >(
-  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"] | undefined,
+  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"],
   options: {
     query?: Partial<
       QueryObserverOptions<

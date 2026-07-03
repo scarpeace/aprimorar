@@ -23,8 +23,7 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getResumoFinanceiroColaboradorQueryKey = (
-  colaboradorId:
-    GetResumoFinanceiroColaboradorPathParams["colaboradorId"] | undefined,
+  colaboradorId: GetResumoFinanceiroColaboradorPathParams["colaboradorId"],
   params: GetResumoFinanceiroColaboradorQueryParams,
 ) =>
   [
@@ -64,8 +63,7 @@ export async function getResumoFinanceiroColaborador(
 }
 
 export function getResumoFinanceiroColaboradorQueryOptions(
-  colaboradorId:
-    GetResumoFinanceiroColaboradorPathParams["colaboradorId"] | undefined,
+  colaboradorId: GetResumoFinanceiroColaboradorPathParams["colaboradorId"],
   params: GetResumoFinanceiroColaboradorQueryParams,
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
@@ -79,10 +77,10 @@ export function getResumoFinanceiroColaboradorQueryOptions(
     GetResumoFinanceiroColaboradorQueryResponse,
     typeof queryKey
   >({
-    enabled: !!colaboradorId,
+    enabled: !!(colaboradorId && params),
     queryKey,
     queryFn: async ({ signal }) => {
-      return getResumoFinanceiroColaborador(colaboradorId!, params, {
+      return getResumoFinanceiroColaborador(colaboradorId, params, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -99,8 +97,7 @@ export function useGetResumoFinanceiroColaborador<
   TQueryData = GetResumoFinanceiroColaboradorQueryResponse,
   TQueryKey extends QueryKey = GetResumoFinanceiroColaboradorQueryKey,
 >(
-  colaboradorId:
-    GetResumoFinanceiroColaboradorPathParams["colaboradorId"] | undefined,
+  colaboradorId: GetResumoFinanceiroColaboradorPathParams["colaboradorId"],
   params: GetResumoFinanceiroColaboradorQueryParams,
   options: {
     query?: Partial<

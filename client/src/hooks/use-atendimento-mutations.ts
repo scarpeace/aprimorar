@@ -10,7 +10,7 @@ import { useEfetivarRepasseColaborador } from "@/lib/api/generated/hooks/atendim
 import { useExcluirAtendimento } from "@/lib/api/generated/hooks/atendimento/useExcluirAtendimento";
 import { getAtendimentoByIdQueryKey } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentoById";
 import { getAtendimentosQueryKey } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentos";
-import { useReagendarAtendimento } from "@/lib/api/generated/hooks/atendimento/useReagendarAtendimento";
+import { useUpdateAtendimento } from "@/lib/api/generated/hooks/atendimento/useUpdateAtendimento";
 import { getFriendlyErrorMessage } from "@/lib/api/client";
 
 export function useAtendimentoMutations() {
@@ -38,7 +38,7 @@ export function useAtendimentoMutations() {
     },
   });
 
-  const updateAtendimento = useReagendarAtendimento({
+  const updateAtendimento = useUpdateAtendimento({
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao atualizar o atendimento");

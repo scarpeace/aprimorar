@@ -46,14 +46,14 @@ public class AtendimentoMutationController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @PatchMapping("/{id}/reagendar")
-    @Operation(operationId = "reagendarAtendimento", description = "Reagenda um atendimento para uma nova data e hora.")
-    @ApiResponse(responseCode = "200", description = "Atendimento reagendado e retornado com os dados consolidados de aluno e colaborador.")
-    public ResponseEntity<AtendimentoResponse> reagendar(
+    @PatchMapping("/{id}")
+    @Operation(operationId = "updateAtendimento", description = "Atualiza um atendimento existente.")
+    @ApiResponse(responseCode = "200", description = "Atendimento atualizado e retornado com os dados consolidados de aluno e colaborador.")
+    public ResponseEntity<AtendimentoResponse> update(
         @PathVariable Long id,
-        @RequestBody ReagendarAtendimentoRequest request
+        @RequestBody AtendimentoRequest request
     ) {
-        atendimentoMutationService.reagendar(id, request);
+        atendimentoMutationService.update(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 

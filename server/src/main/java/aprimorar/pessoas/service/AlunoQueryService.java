@@ -51,7 +51,6 @@ public class AlunoQueryService {
     @Transactional(readOnly = true)
     public AlunosKpisDTO getAlunosKpis() {
         long totalAlunos = alunoRepo.countByIdNot(ghostStudentId);
-        //TODO: ese andIdNot funciona mas é terrível
         long totalAlunosAtivos = alunoRepo.countByActiveTrueAndIdNot(ghostStudentId);
         return new AlunosKpisDTO(totalAlunos, totalAlunosAtivos);
     }
@@ -87,11 +86,6 @@ public class AlunoQueryService {
 
         log.info("Consulta de alunos por responsavel finalizada, {} registros encontrados.", alunos.size());
         return alunos;
-    }
-
-    @Transactional(readOnly = true)
-    public boolean hasActiveAlunosLinkedToResponsavel(UUID responsavelId) {
-        return alunoRepo.existsByResponsavelIdAndActiveTrue(responsavelId);
     }
 
     private Aluno findStudentOrThrow(UUID studentId) {

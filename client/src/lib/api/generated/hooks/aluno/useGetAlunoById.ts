@@ -22,7 +22,7 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getAlunoByIdQueryKey = (
-  alunoId: GetAlunoByIdPathParams["alunoId"] | undefined,
+  alunoId: GetAlunoByIdPathParams["alunoId"],
 ) => [{ url: "/v1/alunos/:alunoId", params: { alunoId: alunoId } }] as const;
 
 export type GetAlunoByIdQueryKey = ReturnType<typeof getAlunoByIdQueryKey>;
@@ -46,7 +46,7 @@ export async function getAlunoById(
 }
 
 export function getAlunoByIdQueryOptions(
-  alunoId: GetAlunoByIdPathParams["alunoId"] | undefined,
+  alunoId: GetAlunoByIdPathParams["alunoId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = getAlunoByIdQueryKey(alunoId);
@@ -59,7 +59,7 @@ export function getAlunoByIdQueryOptions(
     enabled: !!alunoId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getAlunoById(alunoId!, {
+      return getAlunoById(alunoId, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -76,7 +76,7 @@ export function useGetAlunoById<
   TQueryData = GetAlunoByIdQueryResponse,
   TQueryKey extends QueryKey = GetAlunoByIdQueryKey,
 >(
-  alunoId: GetAlunoByIdPathParams["alunoId"] | undefined,
+  alunoId: GetAlunoByIdPathParams["alunoId"],
   options: {
     query?: Partial<
       QueryObserverOptions<

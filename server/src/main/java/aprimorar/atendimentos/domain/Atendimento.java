@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
+
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -114,6 +116,7 @@ public class Atendimento implements Serializable {
         return this;
     }
 
+
     public void efetivarPagamentoAluno() {
         if (this.dataPagamentoAluno != null) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "Pagamento já efetivado para o aluno");
@@ -171,12 +174,12 @@ public class Atendimento implements Serializable {
     }
 
     @Transient
-    public java.util.UUID getAlunoId() {
+    public UUID getAlunoId() {
         return aluno.getId();
     }
 
     @Transient
-    public java.util.UUID getColaboradorId() {
+    public UUID getColaboradorId() {
         return colaborador.getId();
     }
 

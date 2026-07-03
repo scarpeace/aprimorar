@@ -18,7 +18,7 @@ import type {
 } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const meQueryKey = (username: MePathParams["username"] | undefined) =>
+export const meQueryKey = (username: MePathParams["username"]) =>
   [{ url: "/v1/users/me/:username", params: { username: username } }] as const;
 
 export type MeQueryKey = ReturnType<typeof meQueryKey>;
@@ -42,7 +42,7 @@ export async function me(
 }
 
 export function meQueryOptions(
-  username: MePathParams["username"] | undefined,
+  username: MePathParams["username"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = meQueryKey(username);
@@ -55,7 +55,7 @@ export function meQueryOptions(
     enabled: !!username,
     queryKey,
     queryFn: async ({ signal }) => {
-      return me(username!, { ...config, signal: config.signal ?? signal });
+      return me(username, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -69,7 +69,7 @@ export function useMe<
   TQueryData = MeQueryResponse,
   TQueryKey extends QueryKey = MeQueryKey,
 >(
-  username: MePathParams["username"] | undefined,
+  username: MePathParams["username"],
   options: {
     query?: Partial<
       QueryObserverOptions<

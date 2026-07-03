@@ -23,7 +23,7 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getResumoFinanceiroAlunoQueryKey = (
-  alunoId: GetResumoFinanceiroAlunoPathParams["alunoId"] | undefined,
+  alunoId: GetResumoFinanceiroAlunoPathParams["alunoId"],
   params: GetResumoFinanceiroAlunoQueryParams,
 ) =>
   [
@@ -63,7 +63,7 @@ export async function getResumoFinanceiroAluno(
 }
 
 export function getResumoFinanceiroAlunoQueryOptions(
-  alunoId: GetResumoFinanceiroAlunoPathParams["alunoId"] | undefined,
+  alunoId: GetResumoFinanceiroAlunoPathParams["alunoId"],
   params: GetResumoFinanceiroAlunoQueryParams,
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
@@ -74,10 +74,10 @@ export function getResumoFinanceiroAlunoQueryOptions(
     GetResumoFinanceiroAlunoQueryResponse,
     typeof queryKey
   >({
-    enabled: !!alunoId,
+    enabled: !!(alunoId && params),
     queryKey,
     queryFn: async ({ signal }) => {
-      return getResumoFinanceiroAluno(alunoId!, params, {
+      return getResumoFinanceiroAluno(alunoId, params, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -94,7 +94,7 @@ export function useGetResumoFinanceiroAluno<
   TQueryData = GetResumoFinanceiroAlunoQueryResponse,
   TQueryKey extends QueryKey = GetResumoFinanceiroAlunoQueryKey,
 >(
-  alunoId: GetResumoFinanceiroAlunoPathParams["alunoId"] | undefined,
+  alunoId: GetResumoFinanceiroAlunoPathParams["alunoId"],
   params: GetResumoFinanceiroAlunoQueryParams,
   options: {
     query?: Partial<

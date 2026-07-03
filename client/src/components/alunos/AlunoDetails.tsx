@@ -27,7 +27,8 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
   const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear());
   const [selectedMonthIndex, setSelectedMonthIndex] = useState(() => new Date().getMonth());
   const aluno = useGetAlunoById(alunoId);
-  const responsavel = useGetResponsavelById(aluno.data?.responsavelId);
+  const responsavelId = aluno.data?.responsavelId ?? "";
+  const responsavel = useGetResponsavelById(responsavelId);
   const { archiveAluno, unarchiveAluno, deleteAluno } = useAlunoMutations();
 
   if (aluno.isLoading) {

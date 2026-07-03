@@ -22,7 +22,7 @@ import type {
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const findColaboradorByIdQueryKey = (
-  colaboradorId: FindColaboradorByIdPathParams["colaboradorId"] | undefined,
+  colaboradorId: FindColaboradorByIdPathParams["colaboradorId"],
 ) =>
   [
     {
@@ -58,7 +58,7 @@ export async function findColaboradorById(
 }
 
 export function findColaboradorByIdQueryOptions(
-  colaboradorId: FindColaboradorByIdPathParams["colaboradorId"] | undefined,
+  colaboradorId: FindColaboradorByIdPathParams["colaboradorId"],
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = findColaboradorByIdQueryKey(colaboradorId);
@@ -71,7 +71,7 @@ export function findColaboradorByIdQueryOptions(
     enabled: !!colaboradorId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return findColaboradorById(colaboradorId!, {
+      return findColaboradorById(colaboradorId, {
         ...config,
         signal: config.signal ?? signal,
       });
@@ -88,7 +88,7 @@ export function useFindColaboradorById<
   TQueryData = FindColaboradorByIdQueryResponse,
   TQueryKey extends QueryKey = FindColaboradorByIdQueryKey,
 >(
-  colaboradorId: FindColaboradorByIdPathParams["colaboradorId"] | undefined,
+  colaboradorId: FindColaboradorByIdPathParams["colaboradorId"],
   options: {
     query?: Partial<
       QueryObserverOptions<

@@ -10,7 +10,7 @@ export type { GetCalendarioAtendimentosQueryKey } from "./useGetCalendarioAtendi
 export type { GetRelatorioAtendimentosQueryKey } from "./useGetRelatorioAtendimentos.ts";
 export type { GetResumoFinanceiroAlunoQueryKey } from "./useGetResumoFinanceiroAluno.ts";
 export type { GetResumoFinanceiroColaboradorQueryKey } from "./useGetResumoFinanceiroColaborador.ts";
-export type { ReagendarAtendimentoMutationKey } from "./useReagendarAtendimento.ts";
+export type { UpdateAtendimentoMutationKey } from "./useUpdateAtendimento.ts";
 export { agendarAtendimento } from "./useAgendarAtendimento.ts";
 export { agendarAtendimentoMutationKey } from "./useAgendarAtendimento.ts";
 export { agendarAtendimentoMutationOptions } from "./useAgendarAtendimento.ts";
@@ -59,7 +59,7 @@ export { getResumoFinanceiroColaborador } from "./useGetResumoFinanceiroColabora
 export { getResumoFinanceiroColaboradorQueryKey } from "./useGetResumoFinanceiroColaborador.ts";
 export { getResumoFinanceiroColaboradorQueryOptions } from "./useGetResumoFinanceiroColaborador.ts";
 export { useGetResumoFinanceiroColaborador } from "./useGetResumoFinanceiroColaborador.ts";
-export { reagendarAtendimento } from "./useReagendarAtendimento.ts";
-export { reagendarAtendimentoMutationKey } from "./useReagendarAtendimento.ts";
-export { reagendarAtendimentoMutationOptions } from "./useReagendarAtendimento.ts";
-export { useReagendarAtendimento } from "./useReagendarAtendimento.ts";
+export { updateAtendimento } from "./useUpdateAtendimento.ts";
+export { updateAtendimentoMutationKey } from "./useUpdateAtendimento.ts";
+export { updateAtendimentoMutationOptions } from "./useUpdateAtendimento.ts";
+export { useUpdateAtendimento } from "./useUpdateAtendimento.ts";
