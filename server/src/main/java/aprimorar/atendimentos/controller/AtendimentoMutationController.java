@@ -2,7 +2,6 @@ package aprimorar.atendimentos.controller;
 
 import aprimorar.atendimentos.dto.AtendimentoRequest;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
-import aprimorar.atendimentos.dto.ReagendarAtendimentoRequest;
 import aprimorar.atendimentos.service.AtendimentoMutationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
