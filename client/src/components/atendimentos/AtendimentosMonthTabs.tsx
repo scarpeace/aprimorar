@@ -37,7 +37,7 @@ export function AtendimentosMonthTabs({
         </Button>
       </div>
 
-      <div className="tabs tabs-lift justify-between pt-2">
+      <div className="tabs tabs-lift justify-between pt-2 px-1">
         {atendimentoMonthTabs.map((month, monthIndex) => {
           const isActive = monthIndex === selectedMonthIndex;
 
@@ -52,7 +52,7 @@ export function AtendimentosMonthTabs({
                 onChange={() => onMonthChange(monthIndex)}
               />
 
-              <div className="tab-content rounded-xl border-base-300">{isActive ? children : null}</div>
+              <div className="tab-content px-3">{isActive ? children : null}</div>
             </Fragment>
           );
         })}

@@ -36,14 +36,14 @@ export function AdminUsersOverview() {
   return (
     <section className="app-shell-card p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
+        <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-base-content">Usuários</h2>
-          <p className="mt-2 text-sm text-base-content/65">Gerencie os acessos já cadastrados na plataforma.</p>
+
+          <Button type="button" size="sm" className="btn-square" aria-label="Novo usuário" title="Novo usuário" onClick={() => setIsCreateOpen(true)}>
+            <Plus size={18} />
+          </Button>
         </div>
 
-        <Button type="button" size="sm" className="btn-square" aria-label="Novo usuário" title="Novo usuário" onClick={() => setIsCreateOpen(true)}>
-          <Plus size={18} />
-        </Button>
       </div>
 
       {users.isLoading ? (

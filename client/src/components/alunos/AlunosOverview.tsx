@@ -21,7 +21,9 @@ function StatusBadge({ active }: Readonly<{ active?: boolean }>) {
   const archived = active === false;
 
   return (
-    <span className={`badge badge-sm ${archived ? "badge-ghost" : "badge-success"}`}>
+    <span
+      className={`badge badge-sm ${archived ? "badge-ghost" : "badge-success"}`}
+    >
       {archived ? "Arquivado" : "Ativo"}
     </span>
   );
@@ -62,15 +64,15 @@ export function AlunosOverview() {
   }
 
   return (
-    <section className="app-shell-card h-full p-6">
+    <section className="app-shell-card w-99 h-full p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <h2 className="text-2xl font-bold text-base-content">Alunos</h2>
 
-        <div className="flex flex-wrap items-end gap-3">
-          <SearchInput label="Buscar por nome" value={searchInput} onChange={handleSearchChange} placeholder="Digite o nome do aluno" />
-
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-base-content">Alunos</h2>
           <label className="label cursor-pointer gap-2 rounded-xl border border-base-300 px-3 py-2">
-            <span className="label-text text-sm text-base-content/70">Arquivados</span>
+            <span className="label-text text-sm text-base-content/70">
+              Arquivados
+            </span>
             <input
               type="checkbox"
               className="checkbox checkbox-sm"
@@ -78,8 +80,24 @@ export function AlunosOverview() {
               onChange={(event) => handleArchivedChange(event.target.checked)}
             />
           </label>
+        </div>
 
-          <Button type="button" size="sm" className="btn-square" aria-label="Novo aluno" title="Novo aluno" onClick={() => setIsCreateOpen(true)}>
+        <div className="flex items-end gap-3">
+          <SearchInput
+            label="Buscar por nome"
+            value={searchInput}
+            onChange={handleSearchChange}
+            placeholder="Digite o nome do aluno"
+          />
+
+          <Button
+            type="button"
+            size="sm"
+            className="btn-square mb-1"
+            aria-label="Novo aluno"
+            title="Novo aluno"
+            onClick={() => setIsCreateOpen(true)}
+          >
             <Plus size={18} />
           </Button>
         </div>
@@ -107,8 +125,8 @@ export function AlunosOverview() {
               <thead className="bg-base-200/80">
                 <tr>
                   <th>Nome</th>
-                  <th>CPF</th>
-                  <th>E-mail</th>
+                  <th className="hidden">CPF</th>
+                  <th className="hidden">E-mail</th>
                   <th>Escola</th>
                   <th>Status</th>
                 </tr>
@@ -121,9 +139,11 @@ export function AlunosOverview() {
                     className="cursor-pointer transition-colors hover:bg-base-200/70"
                     onClick={() => router.push(`/alunos/${aluno.id}`)}
                   >
-                    <td className="font-semibold text-base-content">{aluno.nome}</td>
-                    <td>{formatCpf(aluno.cpf)}</td>
-                    <td>{aluno.email}</td>
+                    <td className="font-semibold text-base-content">
+                      {aluno.nome}
+                    </td>
+                    <td className="hidden">{formatCpf(aluno.cpf)}</td>
+                    <td className="hidden">{aluno.email}</td>
                     <td>{aluno.escola || "—"}</td>
                     <td>
                       <StatusBadge active={aluno.active} />
@@ -151,7 +171,10 @@ export function AlunosOverview() {
         description="Preencha os dados para criar um novo aluno."
         size="lg"
       >
-        <AlunoForm onSuccess={() => setIsCreateOpen(false)} onCancel={() => setIsCreateOpen(false)} />
+        <AlunoForm
+          onSuccess={() => setIsCreateOpen(false)}
+          onCancel={() => setIsCreateOpen(false)}
+        />
       </Modal>
     </section>
   );

@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import type { AuthUser } from "@/lib/auth/types";
+import { Button } from "../ui/Button";
+import { LogOut } from "lucide-react";
 
 const navigation = [
   { name: "Dashboard", href: "/" },
@@ -18,18 +20,43 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function MainLayout({ children, user }: Readonly<{ children: ReactNode; user: AuthUser }>) {
+export function MainLayout({
+  children,
+  user,
+}: Readonly<{ children: ReactNode; user: AuthUser }>) {
   const pathname = usePathname();
-  const visibleNavigation = user.role === "ADMIN" ? navigation : navigation.filter((item) => item.href !== "/admin");
+  const visibleNavigation =
+    user.role === "ADMIN"
+      ? navigation
+      : navigation.filter((item) => item.href !== "/admin");
 
   return (
     <div className="flex min-h-screen w-full flex-col md:flex-row">
       <aside className="border-b border-base-300 bg-base-100 shadow-sm md:w-72 md:border-r md:border-b-0">
-        <div className="border-b border-base-300 px-5 py-5">
-          <h1 className="text-xl font-extrabold tracking-tight text-base-content">Aprimorar</h1>
-          <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-base-content/60">
-            Shell Next.js
-          </p>
+        <div className="flex items-center justify-between border-b border-base-300 px-5 py-5">
+          <div>
+            <h1 className="text-xl font-extrabold tracking-tight text-base-content">
+              Aprimorar
+            </h1>
+            <p className="mt-1 text-sm font-semibold uppercase tracking-wider text-base-content/60">
+              Gerenciador de Atendimentos
+            </p>
+          </div>
+          <div className="block md:hidden border-l border-base-300">
+            <div className="flex just mb-3 gap-3 px-3">
+              <div>
+                <p className="truncate text-xs font-semibold text-base-content/60">
+                  {user.username}
+                </p>
+                <p className="text-xs uppercase tracking-wider text-base-content/40">
+                  {user.role}
+                </p>
+              </div>
+              <Button variant="error" size="xs">
+                <LogOut size={12} />
+              </Button>
+            </div>
+          </div>
         </div>
 
         <nav className="flex gap-2 overflow-x-auto p-4 md:flex-col md:overflow-x-visible">
@@ -48,18 +75,23 @@ export function MainLayout({ children, user }: Readonly<{ children: ReactNode; u
           ))}
         </nav>
 
-        <div className="border-t border-base-300 p-4">
+        <div className="hidden md:block border-t border-base-300 p-4">
           <div className="mb-3 px-3">
-            <p className="truncate text-xs font-semibold text-base-content/60">{user.username}</p>
-            <p className="text-xs uppercase tracking-wider text-base-content/40">{user.role}</p>
+            <p className="truncate text-xs font-semibold text-base-content/60">
+              {user.username}
+            </p>
+            <p className="text-xs uppercase tracking-wider text-base-content/40">
+              {user.role}
+            </p>
           </div>
-
           <LogoutButton />
         </div>
       </aside>
 
       <main className="min-h-screen min-w-0 flex-1">
-        <div className="mx-auto w-full min-w-0 px-4 py-5 md:px-8 md:py-7">{children}</div>
+        <div className="mx-auto w-full min-w-0 px-4 py-5 md:px-8 md:py-7">
+          {children}
+        </div>
       </main>
     </div>
   );

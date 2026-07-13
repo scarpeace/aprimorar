@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes } from "react";
 
 type ButtonVariant = "primary" | "secondary" | "success" | "warning" | "error" | "ghost" | "outline";
-type ButtonSize = "sm" | "md" | "lg";
+type ButtonSize = "xs" | "sm" | "md" | "lg";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
@@ -20,8 +20,9 @@ export function Button({ variant = "primary", size = "md", className = "", ...pr
   }[variant];
 
   const sizeClass = {
+    xs: "btn-xs",
     sm: "btn-sm",
-    md: "",
+    md: "btn-md",
     lg: "btn-lg",
   }[size];
 

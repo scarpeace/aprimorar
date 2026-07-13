@@ -124,7 +124,7 @@ export function AtendimentosCalendar() {
     <section className="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-3">
             <h2 className="text-2xl font-bold text-base-content">Calendário de atendimentos</h2>
             <span className="badge badge-primary badge-soft">{data?.totalAtendimentos ?? 0}</span>
           </div>
