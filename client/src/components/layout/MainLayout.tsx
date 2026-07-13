@@ -31,8 +31,8 @@ export function MainLayout({
       : navigation.filter((item) => item.href !== "/admin");
 
   return (
-    <div className="flex min-h-screen w-full flex-col md:flex-row">
-      <aside className="border-b border-base-300 bg-base-100 shadow-sm md:w-72 md:border-r md:border-b-0">
+    <div className="flex min-h-screen w-full flex-col lg:flex-row">
+      <aside className="border-b border-base-300 bg-base-100 shadow-sm lg:w-72 lg:border-r lg:border-b-0">
         <div className="flex items-center justify-between border-b border-base-300 px-5 py-5">
           <div>
             <h1 className="text-xl font-extrabold tracking-tight text-base-content">
@@ -59,7 +59,7 @@ export function MainLayout({
           </div>
         </div>
 
-        <nav className="flex gap-2 overflow-x-auto p-4 md:flex-col md:overflow-x-visible">
+        <nav className="flex gap-2 overflow-x-auto p-4 lg:flex-col lg:overflow-x-visible">
           {visibleNavigation.map((item) => (
             <Link
               key={item.href}
