@@ -7,7 +7,7 @@ type SearchInputProps = {
 
 export function SearchInput({ label = "Buscar", value, placeholder, onChange }: Readonly<SearchInputProps>) {
   return (
-    <label className="form-control w-full md:w-80">
+    <label className="form-control grow">
       <span className="label-text mb-2 text-sm font-medium text-base-content/70">{label}</span>
       <input
         className="input input-bordered w-full"

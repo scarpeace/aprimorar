@@ -7,5 +7,11 @@ export default async function PrivateLayout({
 }: Readonly<{ children: ReactNode }>) {
   const session = await requireSession();
 
-  return <Nav user={session.user}>{children}</Nav>;
+  return (
+    <Nav user={session.user}>
+      <div className="container">
+        {children}
+      </div>
+    </Nav>
+  );
 }

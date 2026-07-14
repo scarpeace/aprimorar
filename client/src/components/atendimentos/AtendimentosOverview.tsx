@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { AtendimentoForm } from "@/components/atendimentos/AtendimentoForm";
 import { AtendimentosFilters } from "@/components/atendimentos/AtendimentosFilters";
 import { AtendimentosMonthTabs } from "@/components/atendimentos/AtendimentosMonthTabs";
@@ -11,18 +11,19 @@ import type {
 } from "@/lib/api/generated/types/AtendimentoResponse";
 import { useGetAtendimentos } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentos";
 import { Modal } from "@/components/ui/Modal";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const PAGE_SIZE = 20;
 
 export function AtendimentosOverview() {
   const [page, setPage] = useState(0);
   const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [status, setStatus] = useState<AtendimentoResponseStatusEnumKey | "">("");
   const [tipo, setTipo] = useState<AtendimentoResponseTipoEnumKey | "">("");
   const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear());
   const [selectedMonthIndex, setSelectedMonthIndex] = useState(() => new Date().getMonth());
+  const search = useDebounce(searchInput.trim(), 300);
   const anoMes = `${selectedYear}-${String(selectedMonthIndex + 1).padStart(2, "0")}`;
 
   const atendimentos = useGetAtendimentos({
@@ -43,12 +44,6 @@ export function AtendimentosOverview() {
   const hasPrevious = currentPage > 0;
   const hasNext = totalPages > 0 && currentPage < totalPages - 1;
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setPage(0);
-    setSearch(searchInput.trim());
-  }
-
   function handleStatusChange(value: AtendimentoResponseStatusEnumKey | "") {
     setPage(0);
     setStatus(value);
@@ -57,6 +52,11 @@ export function AtendimentosOverview() {
   function handleTipoChange(value: AtendimentoResponseTipoEnumKey | "") {
     setPage(0);
     setTipo(value);
+  }
+
+  function handleSearchInputChange(value: string) {
+    setPage(0);
+    setSearchInput(value);
   }
 
   function handlePreviousYear() {
@@ -90,10 +90,9 @@ export function AtendimentosOverview() {
         searchInput={searchInput}
         status={status}
         tipo={tipo}
-        onSearchInputChange={setSearchInput}
+        onSearchInputChange={handleSearchInputChange}
         onStatusChange={handleStatusChange}
         onTipoChange={handleTipoChange}
-        onSubmit={handleSubmit}
         onCreate={() => setIsCreateOpen(true)}
       />
 

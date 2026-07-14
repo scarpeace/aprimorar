@@ -45,7 +45,7 @@ export function ResponsaveisOverview() {
   }
 
   return (
-    <section className="app-shell-card w-99 h-full p-6">
+    <section className="app-shell-card h-full p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <h2 className="text-2xl font-bold text-base-content">Responsáveis</h2>
 
@@ -103,11 +103,17 @@ export function ResponsaveisOverview() {
                   <tr
                     key={responsavel.id}
                     className="cursor-pointer transition-colors hover:bg-base-200/70"
-                    onClick={() => router.push(`/responsaveis/${responsavel.id}`)}
+                    onClick={() =>
+                      router.push(`/responsaveis/${responsavel.id}`)
+                    }
                   >
-                    <td className="font-semibold text-base-content">{responsavel.nome}</td>
+                    <td className="font-semibold text-base-content">
+                      {responsavel.nome}
+                    </td>
                     <td className="hidden">{formatCpf(responsavel.cpf)}</td>
-                    <td className="text-xs">{formatPhone(responsavel.telefone)}</td>
+                    <td className="text-xs">
+                      {formatPhone(responsavel.telefone)}
+                    </td>
                     <td className="hidden">{responsavel.email}</td>
                   </tr>
                 ))}
@@ -132,7 +138,10 @@ export function ResponsaveisOverview() {
         description="Preencha os dados para criar um novo responsável."
         size="md"
       >
-        <ResponsavelForm onSuccess={() => setIsCreateOpen(false)} onCancel={() => setIsCreateOpen(false)} />
+        <ResponsavelForm
+          onSuccess={() => setIsCreateOpen(false)}
+          onCancel={() => setIsCreateOpen(false)}
+        />
       </Modal>
     </section>
   );

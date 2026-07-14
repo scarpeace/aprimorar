@@ -64,7 +64,7 @@ export function AlunosOverview() {
   }
 
   return (
-    <section className="app-shell-card w-99 h-full p-6">
+    <section className="app-shell-card h-full p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
 
         <div className="flex items-center justify-between">

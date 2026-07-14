@@ -1,6 +1,6 @@
 "use client";
 
-import type { FormEvent } from "react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
 import type {
@@ -16,7 +16,6 @@ type AtendimentosFiltersProps = {
   onSearchInputChange: (value: string) => void;
   onStatusChange: (value: AtendimentoResponseStatusEnumKey | "") => void;
   onTipoChange: (value: AtendimentoResponseTipoEnumKey | "") => void;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onCreate: () => void;
 };
 
@@ -27,7 +26,6 @@ export function AtendimentosFilters({
   onSearchInputChange,
   onStatusChange,
   onTipoChange,
-  onSubmit,
   onCreate,
 }: Readonly<AtendimentosFiltersProps>) {
   return (
@@ -37,11 +35,29 @@ export function AtendimentosFilters({
         <p className="mt-2 text-sm text-base-content/65">Listagem mensal com busca, filtros e paginação.</p>
       </div>
 
-      <form className="flex flex-col gap-3" onSubmit={onSubmit}>
-        <div className="flex flex-col gap-3 md:flex-row md:items-end">
-          <SearchInput label="Buscar" value={searchInput} onChange={onSearchInputChange} placeholder="Digite aluno, colaborador ou tipo" />
+      <div className="flex flex-col gap-3 lg:min-w-[42rem]">
+        <div className="flex items-end gap-3">
+          <SearchInput
+            label="Buscar"
+            value={searchInput}
+            onChange={onSearchInputChange}
+            placeholder="Digite aluno, colaborador ou tipo"
+          />
 
-          <label className="form-control w-full md:w-56">
+          <Button
+            type="button"
+            size="sm"
+            className="btn-square mb-1 shrink-0"
+            aria-label="Novo atendimento"
+            title="Novo atendimento"
+            onClick={onCreate}
+          >
+            <Plus size={18} />
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <label className="form-control min-w-0">
             <span className="label-text mb-2 text-sm font-medium text-base-content/70">Status</span>
             <select
               className="select select-bordered w-full"
@@ -56,7 +72,7 @@ export function AtendimentosFilters({
             </select>
           </label>
 
-          <label className="form-control w-full md:w-64">
+          <label className="form-control min-w-0">
             <span className="label-text mb-2 text-sm font-medium text-base-content/70">Tipo</span>
             <select
               className="select select-bordered w-full"
@@ -70,16 +86,8 @@ export function AtendimentosFilters({
               ))}
             </select>
           </label>
-
-          <Button type="submit" variant="outline">
-            Buscar
-          </Button>
-
-          <Button type="button" onClick={onCreate}>
-            Novo atendimento
-          </Button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
