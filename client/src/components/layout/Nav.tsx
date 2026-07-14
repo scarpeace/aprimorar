@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Menu } from "lucide-react";
@@ -36,7 +37,7 @@ export function Nav({ children, user }: Readonly<{ children: ReactNode; user: Au
     <div className="min-h-screen bg-base-200">
       <header className="border-b border-base-300 bg-base-100 shadow-sm">
         <div className="navbar gap-2 px-4 md:px-8">
-          <div className="navbar-start min-w-0 gap-2">
+          <div className="navbar-start w-auto min-w-0 gap-2">
             <div className="dropdown">
               <button type="button" tabIndex={0} className="btn btn-ghost btn-square lg:hidden" aria-label="Abrir navegação">
                 <Menu size={18} />
@@ -86,15 +87,12 @@ export function Nav({ children, user }: Readonly<{ children: ReactNode; user: Au
               </ul>
             </div>
 
-            <div className="min-w-0">
-              <h1 className="truncate text-xl font-extrabold tracking-tight text-base-content">Aprimorar</h1>
-              <p className="hidden text-xs font-semibold uppercase tracking-wider text-base-content/60 sm:block">
-                Gerenciador de Atendimentos
-              </p>
-            </div>
+            <Link href="/" className="flex shrink-0 items-center" aria-label="Aprimorar">
+              <Image src="/aprimorar_logo.svg" alt="Aprimorar" width={236} height={260} className="h-10 w-auto" priority />
+            </Link>
           </div>
 
-          <div className="navbar-center hidden lg:flex">
+          <div className="navbar-center hidden min-w-0 flex-1 justify-center lg:flex">
             <ul className="menu menu-horizontal gap-2 px-1">
               <li>
                 <Link href="/" className={getNavLinkClass(pathname, "/")}>
@@ -126,13 +124,11 @@ export function Nav({ children, user }: Readonly<{ children: ReactNode; user: Au
             </ul>
           </div>
 
-          <div className="navbar-end hidden shrink-0 items-center gap-3 lg:flex">
-            <div className="max-w-40 text-right">
+          <div className="navbar-end hidden w-auto items-center gap-3 lg:flex">
+            <div className="text-right">
               <UserSummary user={user} />
             </div>
-            <div className="w-32">
-              <LogoutButton />
-            </div>
+            <LogoutButton compact />
           </div>
         </div>
       </header>

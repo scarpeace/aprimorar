@@ -35,7 +35,7 @@ export function AtendimentosFilters({
         <p className="mt-2 text-sm text-base-content/65">Listagem mensal com busca, filtros e paginação.</p>
       </div>
 
-      <div className="flex flex-col gap-3 lg:min-w-[42rem]">
+      <div className="flex flex-col gap-3 lg:min-w-2xl">
         <div className="flex items-end gap-3">
           <SearchInput
             label="Buscar"
