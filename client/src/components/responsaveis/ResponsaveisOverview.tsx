@@ -49,7 +49,7 @@ export function ResponsaveisOverview() {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <h2 className="text-2xl font-bold text-base-content">Responsáveis</h2>
 
-        <div className="flex flex-wrap items-end gap-3">
+        <div className="flex items-end gap-3">
           <SearchInput
             label="Buscar por nome"
             value={searchInput}
@@ -60,7 +60,7 @@ export function ResponsaveisOverview() {
           <Button
             type="button"
             size="sm"
-            className="btn-square"
+            className="btn-square mb-1"
             aria-label="Novo responsável"
             title="Novo responsável"
             onClick={() => setIsCreateOpen(true)}
@@ -92,9 +92,9 @@ export function ResponsaveisOverview() {
               <thead className="bg-base-200/80">
                 <tr>
                   <th>Nome</th>
-                  <th>CPF</th>
+                  <th className="hidden">CPF</th>
                   <th>Telefone</th>
-                  <th>E-mail</th>
+                  <th className="hidden">E-mail</th>
                 </tr>
               </thead>
 
@@ -103,12 +103,18 @@ export function ResponsaveisOverview() {
                   <tr
                     key={responsavel.id}
                     className="cursor-pointer transition-colors hover:bg-base-200/70"
-                    onClick={() => router.push(`/responsaveis/${responsavel.id}`)}
+                    onClick={() =>
+                      router.push(`/responsaveis/${responsavel.id}`)
+                    }
                   >
-                    <td className="font-semibold text-base-content">{responsavel.nome}</td>
-                    <td>{formatCpf(responsavel.cpf)}</td>
-                    <td>{formatPhone(responsavel.telefone)}</td>
-                    <td>{responsavel.email}</td>
+                    <td className="font-semibold text-base-content">
+                      {responsavel.nome}
+                    </td>
+                    <td className="hidden">{formatCpf(responsavel.cpf)}</td>
+                    <td className="text-xs">
+                      {formatPhone(responsavel.telefone)}
+                    </td>
+                    <td className="hidden">{responsavel.email}</td>
                   </tr>
                 ))}
               </tbody>
@@ -132,7 +138,10 @@ export function ResponsaveisOverview() {
         description="Preencha os dados para criar um novo responsável."
         size="md"
       >
-        <ResponsavelForm onSuccess={() => setIsCreateOpen(false)} onCancel={() => setIsCreateOpen(false)} />
+        <ResponsavelForm
+          onSuccess={() => setIsCreateOpen(false)}
+          onCancel={() => setIsCreateOpen(false)}
+        />
       </Modal>
     </section>
   );

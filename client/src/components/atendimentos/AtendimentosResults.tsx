@@ -101,7 +101,7 @@ export function AtendimentosResults({ atendimentos, isLoading, error, pagination
         </table>
       </div>
 
-      <div className="grid gap-4 md:hidden">
+      <div className="grid mt-3 gap-4 md:hidden">
         {atendimentos.map((atendimento) => (
           <article
             key={atendimento.id}

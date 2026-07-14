@@ -4,16 +4,16 @@ import { ResponsaveisOverview } from "@/components/responsaveis/ResponsaveisOver
 
 export default function AlunosPage() {
   return (
-    <section className="space-y-6">
-      <div className="app-shell-card p-6 md:p-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-success">Alunos</p>
-        <h1 className="mt-2 text-3xl font-bold text-base-content">Alunos e responsáveis</h1>
-        <p className="mt-3 max-w-2xl text-sm text-base-content/65">
-          Acompanhe e gerencie a base de alunos e responsáveis.
-        </p>
-      </div>
+    <section className="flex flex-col gap-6">
+      <div className="app-shell-card flex flex-col gap-5 p-6 md:p-8 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-success">Alunos</p>
+          <h1 className="mt-2 text-3xl font-bold text-base-content">Alunos e responsáveis</h1>
+          <p className="mt-3 max-w-2xl text-sm text-base-content/65">Acompanhe e gerencie a base de alunos e responsáveis.</p>
+        </div>
 
-      <AlunosKpis />
+        <AlunosKpis />
+      </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
         <AlunosOverview />
