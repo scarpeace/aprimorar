@@ -46,7 +46,6 @@ export type EnderecoRequestDTO = {
   /**
    * @description CEP sem pontuação
    * @minLength 1
-   * @pattern ^\d{8}$
    * @type string
    */
   cep: string;

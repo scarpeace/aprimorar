@@ -14,6 +14,4 @@ export const efetivarRepasseColaboradorPathParamsSchema = z.object({
  */
 export const efetivarRepasseColaborador200Schema = z.any();
 
-export const efetivarRepasseColaboradorMutationResponseSchema = z.lazy(
-  () => efetivarRepasseColaborador200Schema,
-);
+export const efetivarRepasseColaboradorMutationResponseSchema = z.lazy(() => efetivarRepasseColaborador200Schema);

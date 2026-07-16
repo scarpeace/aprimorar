@@ -4,20 +4,9 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  CriarAlunoMutationRequest,
-  CriarAlunoMutationResponse,
-} from "../../types/CriarAluno.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { CriarAlunoMutationRequest, CriarAlunoMutationResponse } from "../../types/CriarAluno.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const criarAlunoMutationKey = () => [{ url: "/v1/alunos" }] as const;
@@ -30,34 +19,26 @@ export type CriarAlunoMutationKey = ReturnType<typeof criarAlunoMutationKey>;
  */
 export async function criarAluno(
   data: CriarAlunoMutationRequest,
-  config: Partial<RequestConfig<CriarAlunoMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<CriarAlunoMutationRequest>> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const requestData = data;
 
-  const res = await request<
-    CriarAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
-    CriarAlunoMutationRequest
-  >({ method: "POST", url: `/v1/alunos`, data: requestData, ...requestConfig });
+  const res = await request<CriarAlunoMutationResponse, ResponseErrorConfig<Error>, CriarAlunoMutationRequest>({
+    method: "POST",
+    url: `/v1/alunos`,
+    data: requestData,
+    ...requestConfig,
+  });
   return res.data;
 }
 
 export function criarAlunoMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig<CriarAlunoMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<CriarAlunoMutationRequest>> & { client?: Client } = {},
 ) {
   const mutationKey = criarAlunoMutationKey();
-  return mutationOptions<
-    CriarAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
-    { data: CriarAlunoMutationRequest },
-    TContext
-  >({
+  return mutationOptions<CriarAlunoMutationResponse, ResponseErrorConfig<Error>, { data: CriarAlunoMutationRequest }, TContext>({
     mutationKey,
     mutationFn: async ({ data }) => {
       return criarAluno(data, config);
@@ -77,9 +58,7 @@ export function useCriarAluno<TContext>(
       { data: CriarAlunoMutationRequest },
       TContext
     > & { client?: QueryClient };
-    client?: Partial<RequestConfig<CriarAlunoMutationRequest>> & {
-      client?: Client;
-    };
+    client?: Partial<RequestConfig<CriarAlunoMutationRequest>> & { client?: Client };
   } = {},
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
@@ -93,22 +72,12 @@ export function useCriarAluno<TContext>(
     TContext
   >;
 
-  return useMutation<
-    CriarAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
-    { data: CriarAlunoMutationRequest },
-    TContext
-  >(
+  return useMutation<CriarAlunoMutationResponse, ResponseErrorConfig<Error>, { data: CriarAlunoMutationRequest }, TContext>(
     {
       ...baseOptions,
       mutationKey,
       ...mutationOptions,
     },
     queryClient,
-  ) as UseMutationResult<
-    CriarAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
-    { data: CriarAlunoMutationRequest },
-    TContext
-  >;
+  ) as UseMutationResult<CriarAlunoMutationResponse, ResponseErrorConfig<Error>, { data: CriarAlunoMutationRequest }, TContext>;
 }

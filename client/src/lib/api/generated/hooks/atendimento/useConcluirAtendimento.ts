@@ -4,28 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  ConcluirAtendimentoMutationResponse,
-  ConcluirAtendimentoPathParams,
-} from "../../types/ConcluirAtendimento.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { ConcluirAtendimentoMutationResponse, ConcluirAtendimentoPathParams } from "../../types/ConcluirAtendimento.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const concluirAtendimentoMutationKey = () =>
-  [{ url: "/v1/atendimentos/:id/concluir" }] as const;
+export const concluirAtendimentoMutationKey = () => [{ url: "/v1/atendimentos/:id/concluir" }] as const;
 
-export type ConcluirAtendimentoMutationKey = ReturnType<
-  typeof concluirAtendimentoMutationKey
->;
+export type ConcluirAtendimentoMutationKey = ReturnType<typeof concluirAtendimentoMutationKey>;
 
 /**
  * @description Muda o status de um atendimento para CONCLUIDO.
@@ -37,11 +23,7 @@ export async function concluirAtendimento(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    ConcluirAtendimentoMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<ConcluirAtendimentoMutationResponse, ResponseErrorConfig<Error>, unknown>({
     method: "PATCH",
     url: `/v1/atendimentos/${id}/concluir`,
     ...requestConfig,
@@ -83,12 +65,9 @@ export function useConcluirAtendimento<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? concluirAtendimentoMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? concluirAtendimentoMutationKey();
 
-  const baseOptions = concluirAtendimentoMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = concluirAtendimentoMutationOptions(config) as UseMutationOptions<
     ConcluirAtendimentoMutationResponse,
     ResponseErrorConfig<Error>,
     { id: ConcluirAtendimentoPathParams["id"] },

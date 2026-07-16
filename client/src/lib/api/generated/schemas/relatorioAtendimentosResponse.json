@@ -11,54 +11,14 @@
   ],
   "type": "object",
   "properties": {
-    "totalAtendimentos": {
-      "type": "integer",
-      "description": "Total de atendimentos",
-      "format": "int64",
-      "example": 120
-    },
-    "totalAulas": {
-      "type": "integer",
-      "description": "Total de aulas",
-      "format": "int64",
-      "example": 50
-    },
-    "totalMentoria": {
-      "type": "integer",
-      "description": "Total de mentorias",
-      "format": "int64",
-      "example": 20
-    },
-    "totalTerapia": {
-      "type": "integer",
-      "description": "Total de terapias",
-      "format": "int64",
-      "example": 10
-    },
-    "totalOV": {
-      "type": "integer",
-      "description": "Total de orientações vocacionais",
-      "format": "int64",
-      "example": 15
-    },
-    "totalENEM": {
-      "type": "integer",
-      "description": "Total de atendimentos de ENEM",
-      "format": "int64",
-      "example": 8
-    },
-    "totalPAS": {
-      "type": "integer",
-      "description": "Total de atendimentos de PAS",
-      "format": "int64",
-      "example": 12
-    },
-    "totalOutros": {
-      "type": "integer",
-      "description": "Total de outros atendimentos",
-      "format": "int64",
-      "example": 5
-    }
+    "totalAtendimentos": { "type": "integer", "description": "Total de atendimentos", "format": "int64", "example": 120 },
+    "totalAulas": { "type": "integer", "description": "Total de aulas", "format": "int64", "example": 50 },
+    "totalMentoria": { "type": "integer", "description": "Total de mentorias", "format": "int64", "example": 20 },
+    "totalTerapia": { "type": "integer", "description": "Total de terapias", "format": "int64", "example": 10 },
+    "totalOV": { "type": "integer", "description": "Total de orientações vocacionais", "format": "int64", "example": 15 },
+    "totalENEM": { "type": "integer", "description": "Total de atendimentos de ENEM", "format": "int64", "example": 8 },
+    "totalPAS": { "type": "integer", "description": "Total de atendimentos de PAS", "format": "int64", "example": 12 },
+    "totalOutros": { "type": "integer", "description": "Total de outros atendimentos", "format": "int64", "example": 5 }
   },
   "description": "Resumo mensal dos atendimentos",
   "x-readme-ref-name": "RelatorioAtendimentosResponse"

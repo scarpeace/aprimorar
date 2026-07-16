@@ -5,53 +5,32 @@
 
 import fetch from "@/lib/api/client";
 import type { ListResponsaveisQueryResponse } from "../../types/ListResponsaveis.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const listResponsaveisQueryKey = () =>
-  [{ url: "/v1/responsaveis/list" }] as const;
+export const listResponsaveisQueryKey = () => [{ url: "/v1/responsaveis/list" }] as const;
 
-export type ListResponsaveisQueryKey = ReturnType<
-  typeof listResponsaveisQueryKey
->;
+export type ListResponsaveisQueryKey = ReturnType<typeof listResponsaveisQueryKey>;
 
 /**
  * @description Retorna uma lista de responsáveis para dropdown
  * {@link /v1/responsaveis/list}
  */
-export async function listResponsaveis(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export async function listResponsaveis(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    ListResponsaveisQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "GET", url: `/v1/responsaveis/list`, ...requestConfig });
+  const res = await request<ListResponsaveisQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "GET",
+    url: `/v1/responsaveis/list`,
+    ...requestConfig,
+  });
   return res.data;
 }
 
-export function listResponsaveisQueryOptions(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function listResponsaveisQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const queryKey = listResponsaveisQueryKey();
-  return queryOptions<
-    ListResponsaveisQueryResponse,
-    ResponseErrorConfig<Error>,
-    ListResponsaveisQueryResponse,
-    typeof queryKey
-  >({
+  return queryOptions<ListResponsaveisQueryResponse, ResponseErrorConfig<Error>, ListResponsaveisQueryResponse, typeof queryKey>({
     queryKey,
     queryFn: async ({ signal }) => {
       return listResponsaveis({ ...config, signal: config.signal ?? signal });
@@ -70,13 +49,7 @@ export function useListResponsaveis<
 >(
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        ListResponsaveisQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<ListResponsaveisQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
@@ -92,9 +65,7 @@ export function useListResponsaveis<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

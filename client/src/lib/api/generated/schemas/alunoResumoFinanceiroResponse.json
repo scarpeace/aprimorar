@@ -2,16 +2,8 @@
   "required": ["totalPago", "totalPendente"],
   "type": "object",
   "properties": {
-    "totalPago": {
-      "type": "number",
-      "description": "Total de pagamentos efetuados no período",
-      "example": 1500
-    },
-    "totalPendente": {
-      "type": "number",
-      "description": "Total de pagamentos pendentes no período",
-      "example": 320
-    }
+    "totalPago": { "type": "number", "description": "Total de pagamentos efetuados no período", "example": 1500 },
+    "totalPendente": { "type": "number", "description": "Total de pagamentos pendentes no período", "example": 320 }
   },
   "description": "Resumo financeiro mensal de um aluno",
   "x-readme-ref-name": "AlunoResumoFinanceiroResponse"

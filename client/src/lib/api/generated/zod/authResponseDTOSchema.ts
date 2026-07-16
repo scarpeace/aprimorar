@@ -14,9 +14,7 @@ export const authResponseDTOSchema = z
     accessToken: z.string().min(1).describe("JWT de acesso"),
     expiresIn: z.int().describe("Tempo de expiração em segundos"),
     get user() {
-      return userResponseDTOSchema.describe(
-        "Dados do usuario retornados pela API",
-      );
+      return userResponseDTOSchema.describe("Dados do usuario retornados pela API");
     },
   })
   .describe("Resposta de autenticacao com access token JWT");

@@ -8,30 +8,14 @@ import type {
   GetCalendarioAtendimentosQueryResponse,
   GetCalendarioAtendimentosQueryParams,
 } from "../../types/GetCalendarioAtendimentos.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getCalendarioAtendimentosQueryKey = (
-  params: GetCalendarioAtendimentosQueryParams,
-) =>
-  [
-    { url: "/v1/atendimentos/calendario" },
-    ...(params ? [params] : []),
-  ] as const;
+export const getCalendarioAtendimentosQueryKey = (params: GetCalendarioAtendimentosQueryParams) =>
+  [{ url: "/v1/atendimentos/calendario" }, ...(params ? [params] : [])] as const;
 
-export type GetCalendarioAtendimentosQueryKey = ReturnType<
-  typeof getCalendarioAtendimentosQueryKey
->;
+export type GetCalendarioAtendimentosQueryKey = ReturnType<typeof getCalendarioAtendimentosQueryKey>;
 
 /**
  * @description Retorna o conteúdo para montar o calendário de atendimentos.
@@ -43,11 +27,7 @@ export async function getCalendarioAtendimentos(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetCalendarioAtendimentosQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<GetCalendarioAtendimentosQueryResponse, ResponseErrorConfig<Error>, unknown>({
     method: "GET",
     url: `/v1/atendimentos/calendario`,
     params,
@@ -70,10 +50,7 @@ export function getCalendarioAtendimentosQueryOptions(
     enabled: !!params,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getCalendarioAtendimentos(params, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getCalendarioAtendimentos(params, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -90,21 +67,14 @@ export function useGetCalendarioAtendimentos<
   params: GetCalendarioAtendimentosQueryParams,
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetCalendarioAtendimentosQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetCalendarioAtendimentosQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey =
-    resolvedOptions?.queryKey ?? getCalendarioAtendimentosQueryKey(params);
+  const queryKey = resolvedOptions?.queryKey ?? getCalendarioAtendimentosQueryKey(params);
 
   const query = useQuery(
     {
@@ -113,9 +83,7 @@ export function useGetCalendarioAtendimentos<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

@@ -14,6 +14,4 @@ export const deleteColaboradorPathParamsSchema = z.object({
  */
 export const deleteColaborador204Schema = z.any();
 
-export const deleteColaboradorMutationResponseSchema = z.lazy(
-  () => deleteColaborador204Schema,
-);
+export const deleteColaboradorMutationResponseSchema = z.lazy(() => deleteColaborador204Schema);

@@ -13,8 +13,7 @@ export const atendimentoRequestTipoEnum = {
   OUTRO: "OUTRO",
 } as const;
 
-export type AtendimentoRequestTipoEnumKey =
-  (typeof atendimentoRequestTipoEnum)[keyof typeof atendimentoRequestTipoEnum];
+export type AtendimentoRequestTipoEnumKey = (typeof atendimentoRequestTipoEnum)[keyof typeof atendimentoRequestTipoEnum];
 
 /**
  * @description Formato de payload para cadastro e atualização de atendimento

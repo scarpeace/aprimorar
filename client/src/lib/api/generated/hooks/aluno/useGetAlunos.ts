@@ -4,25 +4,12 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  GetAlunosQueryResponse,
-  GetAlunosQueryParams,
-} from "../../types/GetAlunos.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { GetAlunosQueryResponse, GetAlunosQueryParams } from "../../types/GetAlunos.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getAlunosQueryKey = (params?: GetAlunosQueryParams) =>
-  [{ url: "/v1/alunos" }, ...(params ? [params] : [])] as const;
+export const getAlunosQueryKey = (params?: GetAlunosQueryParams) => [{ url: "/v1/alunos" }, ...(params ? [params] : [])] as const;
 
 export type GetAlunosQueryKey = ReturnType<typeof getAlunosQueryKey>;
 
@@ -30,31 +17,21 @@ export type GetAlunosQueryKey = ReturnType<typeof getAlunosQueryKey>;
  * @description Retorna uma lista paginada de alunos.
  * {@link /v1/alunos}
  */
-export async function getAlunos(
-  params?: GetAlunosQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export async function getAlunos(params?: GetAlunosQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetAlunosQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "GET", url: `/v1/alunos`, params, ...requestConfig });
+  const res = await request<GetAlunosQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "GET",
+    url: `/v1/alunos`,
+    params,
+    ...requestConfig,
+  });
   return res.data;
 }
 
-export function getAlunosQueryOptions(
-  params?: GetAlunosQueryParams,
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function getAlunosQueryOptions(params?: GetAlunosQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const queryKey = getAlunosQueryKey(params);
-  return queryOptions<
-    GetAlunosQueryResponse,
-    ResponseErrorConfig<Error>,
-    GetAlunosQueryResponse,
-    typeof queryKey
-  >({
+  return queryOptions<GetAlunosQueryResponse, ResponseErrorConfig<Error>, GetAlunosQueryResponse, typeof queryKey>({
     queryKey,
     queryFn: async ({ signal }) => {
       return getAlunos(params, { ...config, signal: config.signal ?? signal });
@@ -73,15 +50,9 @@ export function useGetAlunos<
 >(
   params?: GetAlunosQueryParams,
   options: {
-    query?: Partial<
-      QueryObserverOptions<
-        GetAlunosQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
-    > & { client?: QueryClient };
+    query?: Partial<QueryObserverOptions<GetAlunosQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & {
+      client?: QueryClient;
+    };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
@@ -96,9 +67,7 @@ export function useGetAlunos<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

@@ -12,18 +12,8 @@ export const getAlunosQueryParamsSchema = z.object({
   cpf: z.string().describe("CPF do aluno").nullish(),
   escola: z.string().describe("Escola do aluno").nullish(),
   ativos: z.boolean().describe("Filtrar por alunos ativos").nullish(),
-  page: z.coerce
-    .number()
-    .int()
-    .min(0)
-    .default(0)
-    .describe("Zero-based page index (0..N)"),
-  size: z.coerce
-    .number()
-    .int()
-    .min(1)
-    .default(10)
-    .describe("The size of the page to be returned"),
+  page: z.coerce.number().int().min(0).default(0).describe("Zero-based page index (0..N)"),
+  size: z.coerce.number().int().min(1).default(10).describe("The size of the page to be returned"),
   sort: z
     .array(z.string())
     .describe(
@@ -34,8 +24,6 @@ export const getAlunosQueryParamsSchema = z.object({
 /**
  * @description Lista de alunos retornada com sucesso.
  */
-export const getAlunos200Schema = z.lazy(
-  () => pagedModelAlunoResponseDTOSchema,
-);
+export const getAlunos200Schema = z.lazy(() => pagedModelAlunoResponseDTOSchema);
 
 export const getAlunosQueryResponseSchema = z.lazy(() => getAlunos200Schema);

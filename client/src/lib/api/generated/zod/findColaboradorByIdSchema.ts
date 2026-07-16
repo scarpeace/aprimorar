@@ -17,6 +17,4 @@ export const findColaboradorById200Schema = z
   .lazy(() => colaboradorResponseDTOSchema)
   .describe("Dados do colaborador retornados pela API");
 
-export const findColaboradorByIdQueryResponseSchema = z.lazy(
-  () => findColaboradorById200Schema,
-);
+export const findColaboradorByIdQueryResponseSchema = z.lazy(() => findColaboradorById200Schema);

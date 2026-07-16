@@ -4,28 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  UnarchiveAlunoMutationResponse,
-  UnarchiveAlunoPathParams,
-} from "../../types/UnarchiveAluno.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { UnarchiveAlunoMutationResponse, UnarchiveAlunoPathParams } from "../../types/UnarchiveAluno.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const unarchiveAlunoMutationKey = () =>
-  [{ url: "/v1/alunos/:alunoId/unarchive" }] as const;
+export const unarchiveAlunoMutationKey = () => [{ url: "/v1/alunos/:alunoId/unarchive" }] as const;
 
-export type UnarchiveAlunoMutationKey = ReturnType<
-  typeof unarchiveAlunoMutationKey
->;
+export type UnarchiveAlunoMutationKey = ReturnType<typeof unarchiveAlunoMutationKey>;
 
 /**
  * @description Desarquiva um aluno por ID.
@@ -37,11 +23,7 @@ export async function unarchiveAluno(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    UnarchiveAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<UnarchiveAlunoMutationResponse, ResponseErrorConfig<Error>, unknown>({
     method: "PATCH",
     url: `/v1/alunos/${alunoId}/unarchive`,
     ...requestConfig,
@@ -49,9 +31,7 @@ export async function unarchiveAluno(
   return res.data;
 }
 
-export function unarchiveAlunoMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function unarchiveAlunoMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const mutationKey = unarchiveAlunoMutationKey();
   return mutationOptions<
     UnarchiveAlunoMutationResponse,
@@ -83,12 +63,9 @@ export function useUnarchiveAluno<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? unarchiveAlunoMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? unarchiveAlunoMutationKey();
 
-  const baseOptions = unarchiveAlunoMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = unarchiveAlunoMutationOptions(config) as UseMutationOptions<
     UnarchiveAlunoMutationResponse,
     ResponseErrorConfig<Error>,
     { alunoId: UnarchiveAlunoPathParams["alunoId"] },

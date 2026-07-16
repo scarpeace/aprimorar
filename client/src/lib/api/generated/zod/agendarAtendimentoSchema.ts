@@ -5,6 +5,7 @@
 
 import { atendimentoRequestSchema } from "./atendimentoRequestSchema.ts";
 import { atendimentoResponseSchema } from "./atendimentoResponseSchema.ts";
+import { errorResponseSchema } from "./errorResponseSchema.ts";
 import { z } from "zod/v4";
 
 /**
@@ -14,10 +15,13 @@ export const agendarAtendimento201Schema = z
   .lazy(() => atendimentoResponseSchema)
   .describe("Dados do atendimento retornados pela API");
 
+/**
+ * @description Falha de validação
+ */
+export const agendarAtendimento400Schema = z.lazy(() => errorResponseSchema);
+
 export const agendarAtendimentoMutationRequestSchema = z
   .lazy(() => atendimentoRequestSchema)
   .describe("Formato de payload para cadastro e atualização de atendimento");
 
-export const agendarAtendimentoMutationResponseSchema = z.lazy(
-  () => agendarAtendimento201Schema,
-);
+export const agendarAtendimentoMutationResponseSchema = z.lazy(() => agendarAtendimento201Schema);

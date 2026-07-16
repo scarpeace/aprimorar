@@ -9,24 +9,13 @@ import type {
   UpdateAtendimentoMutationResponse,
   UpdateAtendimentoPathParams,
 } from "../../types/UpdateAtendimento.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const updateAtendimentoMutationKey = () =>
-  [{ url: "/v1/atendimentos/:id" }] as const;
+export const updateAtendimentoMutationKey = () => [{ url: "/v1/atendimentos/:id" }] as const;
 
-export type UpdateAtendimentoMutationKey = ReturnType<
-  typeof updateAtendimentoMutationKey
->;
+export type UpdateAtendimentoMutationKey = ReturnType<typeof updateAtendimentoMutationKey>;
 
 /**
  * @description Atualiza um atendimento existente.
@@ -35,19 +24,13 @@ export type UpdateAtendimentoMutationKey = ReturnType<
 export async function updateAtendimento(
   id: UpdateAtendimentoPathParams["id"],
   data: UpdateAtendimentoMutationRequest,
-  config: Partial<RequestConfig<UpdateAtendimentoMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<UpdateAtendimentoMutationRequest>> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const requestData = data;
 
-  const res = await request<
-    UpdateAtendimentoMutationResponse,
-    ResponseErrorConfig<Error>,
-    UpdateAtendimentoMutationRequest
-  >({
+  const res = await request<UpdateAtendimentoMutationResponse, ResponseErrorConfig<Error>, UpdateAtendimentoMutationRequest>({
     method: "PATCH",
     url: `/v1/atendimentos/${id}`,
     data: requestData,
@@ -57,18 +40,13 @@ export async function updateAtendimento(
 }
 
 export function updateAtendimentoMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig<UpdateAtendimentoMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<UpdateAtendimentoMutationRequest>> & { client?: Client } = {},
 ) {
   const mutationKey = updateAtendimentoMutationKey();
   return mutationOptions<
     UpdateAtendimentoMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      id: UpdateAtendimentoPathParams["id"];
-      data: UpdateAtendimentoMutationRequest;
-    },
+    { id: UpdateAtendimentoPathParams["id"]; data: UpdateAtendimentoMutationRequest },
     TContext
   >({
     mutationKey,
@@ -87,41 +65,27 @@ export function useUpdateAtendimento<TContext>(
     mutation?: UseMutationOptions<
       UpdateAtendimentoMutationResponse,
       ResponseErrorConfig<Error>,
-      {
-        id: UpdateAtendimentoPathParams["id"];
-        data: UpdateAtendimentoMutationRequest;
-      },
+      { id: UpdateAtendimentoPathParams["id"]; data: UpdateAtendimentoMutationRequest },
       TContext
     > & { client?: QueryClient };
-    client?: Partial<RequestConfig<UpdateAtendimentoMutationRequest>> & {
-      client?: Client;
-    };
+    client?: Partial<RequestConfig<UpdateAtendimentoMutationRequest>> & { client?: Client };
   } = {},
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? updateAtendimentoMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? updateAtendimentoMutationKey();
 
-  const baseOptions = updateAtendimentoMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = updateAtendimentoMutationOptions(config) as UseMutationOptions<
     UpdateAtendimentoMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      id: UpdateAtendimentoPathParams["id"];
-      data: UpdateAtendimentoMutationRequest;
-    },
+    { id: UpdateAtendimentoPathParams["id"]; data: UpdateAtendimentoMutationRequest },
     TContext
   >;
 
   return useMutation<
     UpdateAtendimentoMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      id: UpdateAtendimentoPathParams["id"];
-      data: UpdateAtendimentoMutationRequest;
-    },
+    { id: UpdateAtendimentoPathParams["id"]; data: UpdateAtendimentoMutationRequest },
     TContext
   >(
     {
@@ -133,10 +97,7 @@ export function useUpdateAtendimento<TContext>(
   ) as UseMutationResult<
     UpdateAtendimentoMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      id: UpdateAtendimentoPathParams["id"];
-      data: UpdateAtendimentoMutationRequest;
-    },
+    { id: UpdateAtendimentoPathParams["id"]; data: UpdateAtendimentoMutationRequest },
     TContext
   >;
 }

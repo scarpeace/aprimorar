@@ -4,28 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  ArquivarColaboradorMutationResponse,
-  ArquivarColaboradorPathParams,
-} from "../../types/ArquivarColaborador.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { ArquivarColaboradorMutationResponse, ArquivarColaboradorPathParams } from "../../types/ArquivarColaborador.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const arquivarColaboradorMutationKey = () =>
-  [{ url: "/v1/colaboradores/:colaboradorId/archive" }] as const;
+export const arquivarColaboradorMutationKey = () => [{ url: "/v1/colaboradores/:colaboradorId/archive" }] as const;
 
-export type ArquivarColaboradorMutationKey = ReturnType<
-  typeof arquivarColaboradorMutationKey
->;
+export type ArquivarColaboradorMutationKey = ReturnType<typeof arquivarColaboradorMutationKey>;
 
 /**
  * @description Arquiva um colaborador por ID.
@@ -37,11 +23,7 @@ export async function arquivarColaborador(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    ArquivarColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<ArquivarColaboradorMutationResponse, ResponseErrorConfig<Error>, unknown>({
     method: "PATCH",
     url: `/v1/colaboradores/${colaboradorId}/archive`,
     ...requestConfig,
@@ -83,12 +65,9 @@ export function useArquivarColaborador<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? arquivarColaboradorMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? arquivarColaboradorMutationKey();
 
-  const baseOptions = arquivarColaboradorMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = arquivarColaboradorMutationOptions(config) as UseMutationOptions<
     ArquivarColaboradorMutationResponse,
     ResponseErrorConfig<Error>,
     { colaboradorId: ArquivarColaboradorPathParams["colaboradorId"] },

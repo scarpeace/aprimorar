@@ -14,6 +14,4 @@ export const deleteResponsavelPathParamsSchema = z.object({
  */
 export const deleteResponsavel204Schema = z.any();
 
-export const deleteResponsavelMutationResponseSchema = z.lazy(
-  () => deleteResponsavel204Schema,
-);
+export const deleteResponsavelMutationResponseSchema = z.lazy(() => deleteResponsavel204Schema);

@@ -8,24 +8,13 @@ import type {
   EfetivarPagamentoAlunoMutationResponse,
   EfetivarPagamentoAlunoPathParams,
 } from "../../types/EfetivarPagamentoAluno.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const efetivarPagamentoAlunoMutationKey = () =>
-  [{ url: "/v1/atendimentos/:id/efetivarPgtoAluno" }] as const;
+export const efetivarPagamentoAlunoMutationKey = () => [{ url: "/v1/atendimentos/:id/efetivarPgtoAluno" }] as const;
 
-export type EfetivarPagamentoAlunoMutationKey = ReturnType<
-  typeof efetivarPagamentoAlunoMutationKey
->;
+export type EfetivarPagamentoAlunoMutationKey = ReturnType<typeof efetivarPagamentoAlunoMutationKey>;
 
 /**
  * @description Efetiva o pagamento do aluno.
@@ -37,11 +26,7 @@ export async function efetivarPagamentoAluno(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    EfetivarPagamentoAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<EfetivarPagamentoAlunoMutationResponse, ResponseErrorConfig<Error>, unknown>({
     method: "PATCH",
     url: `/v1/atendimentos/${id}/efetivarPgtoAluno`,
     ...requestConfig,
@@ -83,12 +68,9 @@ export function useEfetivarPagamentoAluno<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? efetivarPagamentoAlunoMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? efetivarPagamentoAlunoMutationKey();
 
-  const baseOptions = efetivarPagamentoAlunoMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = efetivarPagamentoAlunoMutationOptions(config) as UseMutationOptions<
     EfetivarPagamentoAlunoMutationResponse,
     ResponseErrorConfig<Error>,
     { id: EfetivarPagamentoAlunoPathParams["id"] },

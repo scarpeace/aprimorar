@@ -7,18 +7,8 @@ import { pagedModelAtendimentoResponseSchema } from "./pagedModelAtendimentoResp
 import { z } from "zod/v4";
 
 export const getAtendimentosQueryParamsSchema = z.object({
-  page: z.coerce
-    .number()
-    .int()
-    .min(0)
-    .default(0)
-    .describe("Zero-based page index (0..N)"),
-  size: z.coerce
-    .number()
-    .int()
-    .min(1)
-    .default(20)
-    .describe("The size of the page to be returned"),
+  page: z.coerce.number().int().min(0).default(0).describe("Zero-based page index (0..N)"),
+  size: z.coerce.number().int().min(1).default(20).describe("The size of the page to be returned"),
   sort: z.optional(
     z
       .array(z.string())
@@ -30,26 +20,12 @@ export const getAtendimentosQueryParamsSchema = z.object({
   anoMes: z.string().describe("Ano e mes do filtro").nullish(),
   inicio: z.iso.datetime().describe("Data inicial").nullish(),
   fim: z.iso.datetime().describe("Data final").nullish(),
-  status: z
-    .enum(["AGENDADO", "CONCLUIDO", "CANCELADO"])
-    .describe("Status do atendimento")
-    .nullish(),
+  status: z.enum(["AGENDADO", "CONCLUIDO", "CANCELADO"]).describe("Status do atendimento").nullish(),
   tipo: z
-    .enum([
-      "AULA",
-      "MENTORIA",
-      "TERAPIA",
-      "ORIENTACAO_VOCACIONAL",
-      "ENEM",
-      "PAS",
-      "OUTRO",
-    ])
+    .enum(["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"])
     .describe("Tipo de conteudo ou categoria do atendimento")
     .nullish(),
-  ocultarCobrados: z
-    .boolean()
-    .describe("Ocultar atendimentos cobrados")
-    .nullish(),
+  ocultarCobrados: z.boolean().describe("Ocultar atendimentos cobrados").nullish(),
   ocultarPagos: z.boolean().describe("Ocultar atendimentos pagos").nullish(),
   alunoId: z.uuid().describe("ID do aluno").nullish(),
   alunoNome: z.string().describe("Nome do aluno").nullish(),
@@ -60,10 +36,6 @@ export const getAtendimentosQueryParamsSchema = z.object({
 /**
  * @description Pagina de atendimentos retornada conforme os filtros informados.
  */
-export const getAtendimentos200Schema = z.lazy(
-  () => pagedModelAtendimentoResponseSchema,
-);
+export const getAtendimentos200Schema = z.lazy(() => pagedModelAtendimentoResponseSchema);
 
-export const getAtendimentosQueryResponseSchema = z.lazy(
-  () => getAtendimentos200Schema,
-);
+export const getAtendimentosQueryResponseSchema = z.lazy(() => getAtendimentos200Schema);

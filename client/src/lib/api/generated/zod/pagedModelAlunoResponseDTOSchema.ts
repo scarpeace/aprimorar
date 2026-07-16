@@ -9,11 +9,7 @@ import { z } from "zod/v4";
 
 export const pagedModelAlunoResponseDTOSchema = z.object({
   get content() {
-    return z
-      .array(
-        alunoResponseDTOSchema.describe("Dados do aluno retornados pela API"),
-      )
-      .optional();
+    return z.array(alunoResponseDTOSchema.describe("Dados do aluno retornados pela API")).optional();
   },
   get page() {
     return pageMetadataSchema.optional();

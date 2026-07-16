@@ -16,10 +16,6 @@ export const enderecoRequestDTOSchema = z
     bairro: z.string().min(1).describe("Bairro"),
     cidade: z.string().min(1).describe("Cidade"),
     estado: z.string().min(2).max(2).describe("UF"),
-    cep: z
-      .string()
-      .min(1)
-      .regex(/^\d{8}$/)
-      .describe("CEP sem pontuação"),
+    cep: z.string().min(1).describe("CEP sem pontuação"),
   })
   .describe("Endereço do cadastro");

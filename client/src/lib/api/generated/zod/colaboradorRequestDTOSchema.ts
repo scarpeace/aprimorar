@@ -17,9 +17,7 @@ export const colaboradorRequestDTOSchema = z
     telefone: z.string().min(1).describe("Telefone de contato do colaborador"),
     cpf: z.string().min(1).describe("CPF do colaborador"),
     email: z.string().min(1).describe("E-mail do colaborador"),
-    funcao: z
-      .enum(["PROFESSOR", "ADMINISTRATIVO", "TERAPEUTA", "MENTOR"])
-      .describe("Função/Papel do funcionário"),
+    funcao: z.enum(["PROFESSOR", "ADMINISTRATIVO", "TERAPEUTA", "MENTOR"]).describe("Função/Papel do funcionário"),
     get endereco() {
       return enderecoRequestDTOSchema.describe("Endereço do cadastro");
     },

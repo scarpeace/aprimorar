@@ -4,29 +4,15 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  GetAtendimentosQueryResponse,
-  GetAtendimentosQueryParams,
-} from "../../types/GetAtendimentos.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { GetAtendimentosQueryResponse, GetAtendimentosQueryParams } from "../../types/GetAtendimentos.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getAtendimentosQueryKey = (params?: GetAtendimentosQueryParams) =>
   [{ url: "/v1/atendimentos" }, ...(params ? [params] : [])] as const;
 
-export type GetAtendimentosQueryKey = ReturnType<
-  typeof getAtendimentosQueryKey
->;
+export type GetAtendimentosQueryKey = ReturnType<typeof getAtendimentosQueryKey>;
 
 /**
  * @description Lista atendimentos com paginacao, ordenacao e filtros opcionais.
@@ -38,11 +24,12 @@ export async function getAtendimentos(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetAtendimentosQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "GET", url: `/v1/atendimentos`, params, ...requestConfig });
+  const res = await request<GetAtendimentosQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "GET",
+    url: `/v1/atendimentos`,
+    params,
+    ...requestConfig,
+  });
   return res.data;
 }
 
@@ -51,18 +38,10 @@ export function getAtendimentosQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = getAtendimentosQueryKey(params);
-  return queryOptions<
-    GetAtendimentosQueryResponse,
-    ResponseErrorConfig<Error>,
-    GetAtendimentosQueryResponse,
-    typeof queryKey
-  >({
+  return queryOptions<GetAtendimentosQueryResponse, ResponseErrorConfig<Error>, GetAtendimentosQueryResponse, typeof queryKey>({
     queryKey,
     queryFn: async ({ signal }) => {
-      return getAtendimentos(params, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getAtendimentos(params, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -79,13 +58,7 @@ export function useGetAtendimentos<
   params?: GetAtendimentosQueryParams,
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetAtendimentosQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetAtendimentosQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
@@ -101,9 +74,7 @@ export function useGetAtendimentos<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

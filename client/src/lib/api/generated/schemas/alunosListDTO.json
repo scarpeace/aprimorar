@@ -8,11 +8,7 @@
       "format": "uuid",
       "example": "550e8400-e29b-41d4-a716-446655440000"
     },
-    "nome": {
-      "type": "string",
-      "description": "Nome completo do aluno",
-      "example": "Maria Silva"
-    }
+    "nome": { "type": "string", "description": "Nome completo do aluno", "example": "Maria Silva" }
   },
   "description": "Opção simplificada de aluno para seletores",
   "x-readme-ref-name": "AlunosListDTO"

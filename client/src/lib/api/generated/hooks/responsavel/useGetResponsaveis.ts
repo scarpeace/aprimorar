@@ -4,29 +4,15 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  GetResponsaveisQueryResponse,
-  GetResponsaveisQueryParams,
-} from "../../types/GetResponsaveis.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { GetResponsaveisQueryResponse, GetResponsaveisQueryParams } from "../../types/GetResponsaveis.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getResponsaveisQueryKey = (params?: GetResponsaveisQueryParams) =>
   [{ url: "/v1/responsaveis" }, ...(params ? [params] : [])] as const;
 
-export type GetResponsaveisQueryKey = ReturnType<
-  typeof getResponsaveisQueryKey
->;
+export type GetResponsaveisQueryKey = ReturnType<typeof getResponsaveisQueryKey>;
 
 /**
  * @description Retorna uma lista de responsáveis paginada
@@ -38,11 +24,12 @@ export async function getResponsaveis(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetResponsaveisQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "GET", url: `/v1/responsaveis`, params, ...requestConfig });
+  const res = await request<GetResponsaveisQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "GET",
+    url: `/v1/responsaveis`,
+    params,
+    ...requestConfig,
+  });
   return res.data;
 }
 
@@ -51,18 +38,10 @@ export function getResponsaveisQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = getResponsaveisQueryKey(params);
-  return queryOptions<
-    GetResponsaveisQueryResponse,
-    ResponseErrorConfig<Error>,
-    GetResponsaveisQueryResponse,
-    typeof queryKey
-  >({
+  return queryOptions<GetResponsaveisQueryResponse, ResponseErrorConfig<Error>, GetResponsaveisQueryResponse, typeof queryKey>({
     queryKey,
     queryFn: async ({ signal }) => {
-      return getResponsaveis(params, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getResponsaveis(params, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -79,13 +58,7 @@ export function useGetResponsaveis<
   params?: GetResponsaveisQueryParams,
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetResponsaveisQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetResponsaveisQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
@@ -101,9 +74,7 @@ export function useGetResponsaveis<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

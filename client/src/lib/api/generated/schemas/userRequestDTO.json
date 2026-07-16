@@ -8,13 +8,7 @@
       "description": "E-mail usado no login",
       "example": "usuario@aprimorar.local"
     },
-    "password": {
-      "maxLength": 2147483647,
-      "minLength": 6,
-      "type": "string",
-      "description": "Senha",
-      "example": "password123"
-    },
+    "password": { "maxLength": 2147483647, "minLength": 6, "type": "string", "description": "Senha", "example": "password123" },
     "role": {
       "type": "string",
       "description": "Perfil de acesso",

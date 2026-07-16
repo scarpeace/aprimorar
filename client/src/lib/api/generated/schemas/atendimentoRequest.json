@@ -1,28 +1,12 @@
 {
-  "required": [
-    "alunoId",
-    "colaboradorId",
-    "dataHoraFim",
-    "dataHoraInicio",
-    "pagamentoAluno",
-    "repasseColaborador",
-    "tipo"
-  ],
+  "required": ["alunoId", "colaboradorId", "dataHoraFim", "dataHoraInicio", "pagamentoAluno", "repasseColaborador", "tipo"],
   "type": "object",
   "properties": {
     "tipo": {
       "type": "string",
       "description": "Tipo de conteudo ou categoria do atendimento",
       "example": "MENTORIA",
-      "enum": [
-        "AULA",
-        "MENTORIA",
-        "TERAPIA",
-        "ORIENTACAO_VOCACIONAL",
-        "ENEM",
-        "PAS",
-        "OUTRO"
-      ]
+      "enum": ["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"]
     },
     "dataHoraInicio": {
       "type": "string",
@@ -36,16 +20,8 @@
       "format": "date-time",
       "example": "2026-11-20T15:30:00Z"
     },
-    "pagamentoAluno": {
-      "type": "number",
-      "description": "Valor pago pelo aluno",
-      "example": 150
-    },
-    "repasseColaborador": {
-      "type": "number",
-      "description": "Valor de repasse ao colaborador",
-      "example": 100
-    },
+    "pagamentoAluno": { "type": "number", "description": "Valor pago pelo aluno", "example": 150 },
+    "repasseColaborador": { "type": "number", "description": "Valor de repasse ao colaborador", "example": 100 },
     "alunoId": {
       "type": "string",
       "description": "ID do aluno vinculado ao atendimento",

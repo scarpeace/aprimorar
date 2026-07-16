@@ -2,18 +2,8 @@
   "required": ["password", "username"],
   "type": "object",
   "properties": {
-    "username": {
-      "minLength": 1,
-      "type": "string",
-      "description": "E-mail usado no login",
-      "example": "admin@aprimorar.local"
-    },
-    "password": {
-      "minLength": 1,
-      "type": "string",
-      "description": "Senha do usuário",
-      "example": "admin123"
-    }
+    "username": { "minLength": 1, "type": "string", "description": "E-mail usado no login", "example": "admin@aprimorar.local" },
+    "password": { "minLength": 1, "type": "string", "description": "Senha do usuário", "example": "admin123" }
   },
   "description": "Payload de autenticação",
   "x-readme-ref-name": "AuthRequestDTO"

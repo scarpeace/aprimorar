@@ -17,8 +17,7 @@ export type GetCalendarioAtendimentosQueryParams = {
  */
 export type GetCalendarioAtendimentos200 = CalendarioMensalAtendimentosResponse;
 
-export type GetCalendarioAtendimentosQueryResponse =
-  GetCalendarioAtendimentos200;
+export type GetCalendarioAtendimentosQueryResponse = GetCalendarioAtendimentos200;
 
 export type GetCalendarioAtendimentosQuery = {
   Response: GetCalendarioAtendimentos200;

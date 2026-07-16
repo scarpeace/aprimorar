@@ -5,46 +5,30 @@
 
 import fetch from "@/lib/api/client";
 import type { GetColaboradoresListQueryResponse } from "../../types/GetColaboradoresList.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getColaboradoresListQueryKey = () =>
-  [{ url: "/v1/colaboradores/list" }] as const;
+export const getColaboradoresListQueryKey = () => [{ url: "/v1/colaboradores/list" }] as const;
 
-export type GetColaboradoresListQueryKey = ReturnType<
-  typeof getColaboradoresListQueryKey
->;
+export type GetColaboradoresListQueryKey = ReturnType<typeof getColaboradoresListQueryKey>;
 
 /**
  * @description Retorna uma lista de opções de colaboradores para dropdown.
  * {@link /v1/colaboradores/list}
  */
-export async function getColaboradoresList(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export async function getColaboradoresList(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetColaboradoresListQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "GET", url: `/v1/colaboradores/list`, ...requestConfig });
+  const res = await request<GetColaboradoresListQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "GET",
+    url: `/v1/colaboradores/list`,
+    ...requestConfig,
+  });
   return res.data;
 }
 
-export function getColaboradoresListQueryOptions(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function getColaboradoresListQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const queryKey = getColaboradoresListQueryKey();
   return queryOptions<
     GetColaboradoresListQueryResponse,
@@ -54,10 +38,7 @@ export function getColaboradoresListQueryOptions(
   >({
     queryKey,
     queryFn: async ({ signal }) => {
-      return getColaboradoresList({
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getColaboradoresList({ ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -73,13 +54,7 @@ export function useGetColaboradoresList<
 >(
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetColaboradoresListQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetColaboradoresListQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
@@ -95,9 +70,7 @@ export function useGetColaboradoresList<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

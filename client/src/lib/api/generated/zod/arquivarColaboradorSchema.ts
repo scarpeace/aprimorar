@@ -14,6 +14,4 @@ export const arquivarColaboradorPathParamsSchema = z.object({
  */
 export const arquivarColaborador204Schema = z.any();
 
-export const arquivarColaboradorMutationResponseSchema = z.lazy(
-  () => arquivarColaborador204Schema,
-);
+export const arquivarColaboradorMutationResponseSchema = z.lazy(() => arquivarColaborador204Schema);

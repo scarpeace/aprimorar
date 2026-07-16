@@ -7,25 +7,15 @@ import fetch from "@/lib/api/client";
 import type {
   AgendarAtendimentoMutationRequest,
   AgendarAtendimentoMutationResponse,
+  AgendarAtendimento400,
 } from "../../types/AgendarAtendimento.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const agendarAtendimentoMutationKey = () =>
-  [{ url: "/v1/atendimentos" }] as const;
+export const agendarAtendimentoMutationKey = () => [{ url: "/v1/atendimentos" }] as const;
 
-export type AgendarAtendimentoMutationKey = ReturnType<
-  typeof agendarAtendimentoMutationKey
->;
+export type AgendarAtendimentoMutationKey = ReturnType<typeof agendarAtendimentoMutationKey>;
 
 /**
  * @description Cria um atendimento vinculando aluno e colaborador.
@@ -33,9 +23,7 @@ export type AgendarAtendimentoMutationKey = ReturnType<
  */
 export async function agendarAtendimento(
   data: AgendarAtendimentoMutationRequest,
-  config: Partial<RequestConfig<AgendarAtendimentoMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<AgendarAtendimentoMutationRequest>> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
@@ -43,26 +31,19 @@ export async function agendarAtendimento(
 
   const res = await request<
     AgendarAtendimentoMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<AgendarAtendimento400>,
     AgendarAtendimentoMutationRequest
-  >({
-    method: "POST",
-    url: `/v1/atendimentos`,
-    data: requestData,
-    ...requestConfig,
-  });
+  >({ method: "POST", url: `/v1/atendimentos`, data: requestData, ...requestConfig });
   return res.data;
 }
 
 export function agendarAtendimentoMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig<AgendarAtendimentoMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<AgendarAtendimentoMutationRequest>> & { client?: Client } = {},
 ) {
   const mutationKey = agendarAtendimentoMutationKey();
   return mutationOptions<
     AgendarAtendimentoMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<AgendarAtendimento400>,
     { data: AgendarAtendimentoMutationRequest },
     TContext
   >({
@@ -81,32 +62,27 @@ export function useAgendarAtendimento<TContext>(
   options: {
     mutation?: UseMutationOptions<
       AgendarAtendimentoMutationResponse,
-      ResponseErrorConfig<Error>,
+      ResponseErrorConfig<AgendarAtendimento400>,
       { data: AgendarAtendimentoMutationRequest },
       TContext
     > & { client?: QueryClient };
-    client?: Partial<RequestConfig<AgendarAtendimentoMutationRequest>> & {
-      client?: Client;
-    };
+    client?: Partial<RequestConfig<AgendarAtendimentoMutationRequest>> & { client?: Client };
   } = {},
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? agendarAtendimentoMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? agendarAtendimentoMutationKey();
 
-  const baseOptions = agendarAtendimentoMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = agendarAtendimentoMutationOptions(config) as UseMutationOptions<
     AgendarAtendimentoMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<AgendarAtendimento400>,
     { data: AgendarAtendimentoMutationRequest },
     TContext
   >;
 
   return useMutation<
     AgendarAtendimentoMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<AgendarAtendimento400>,
     { data: AgendarAtendimentoMutationRequest },
     TContext
   >(
@@ -118,7 +94,7 @@ export function useAgendarAtendimento<TContext>(
     queryClient,
   ) as UseMutationResult<
     AgendarAtendimentoMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<AgendarAtendimento400>,
     { data: AgendarAtendimentoMutationRequest },
     TContext
   >;

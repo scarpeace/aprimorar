@@ -15,8 +15,7 @@ export type EfetivarRepasseColaboradorPathParams = {
  */
 export type EfetivarRepasseColaborador200 = any;
 
-export type EfetivarRepasseColaboradorMutationResponse =
-  EfetivarRepasseColaborador200;
+export type EfetivarRepasseColaboradorMutationResponse = EfetivarRepasseColaborador200;
 
 export type EfetivarRepasseColaboradorMutation = {
   Response: EfetivarRepasseColaborador200;

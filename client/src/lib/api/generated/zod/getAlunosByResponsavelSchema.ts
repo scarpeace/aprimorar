@@ -14,11 +14,7 @@ export const getAlunosByResponsavelPathParamsSchema = z.object({
  * @description Lista de alunos retornada com sucesso.
  */
 export const getAlunosByResponsavel200Schema = z.array(
-  z
-    .lazy(() => alunoResponseDTOSchema)
-    .describe("Dados do aluno retornados pela API"),
+  z.lazy(() => alunoResponseDTOSchema).describe("Dados do aluno retornados pela API"),
 );
 
-export const getAlunosByResponsavelQueryResponseSchema = z.lazy(
-  () => getAlunosByResponsavel200Schema,
-);
+export const getAlunosByResponsavelQueryResponseSchema = z.lazy(() => getAlunosByResponsavel200Schema);

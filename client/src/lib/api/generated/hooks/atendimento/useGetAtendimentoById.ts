@@ -4,30 +4,15 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  GetAtendimentoByIdQueryResponse,
-  GetAtendimentoByIdPathParams,
-} from "../../types/GetAtendimentoById.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { GetAtendimentoByIdQueryResponse, GetAtendimentoByIdPathParams } from "../../types/GetAtendimentoById.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getAtendimentoByIdQueryKey = (
-  id: GetAtendimentoByIdPathParams["id"],
-) => [{ url: "/v1/atendimentos/:id", params: { id: id } }] as const;
+export const getAtendimentoByIdQueryKey = (id: GetAtendimentoByIdPathParams["id"]) =>
+  [{ url: "/v1/atendimentos/:id", params: { id: id } }] as const;
 
-export type GetAtendimentoByIdQueryKey = ReturnType<
-  typeof getAtendimentoByIdQueryKey
->;
+export type GetAtendimentoByIdQueryKey = ReturnType<typeof getAtendimentoByIdQueryKey>;
 
 /**
  * @description Consulta um atendimento especifico pelo ID.
@@ -39,11 +24,11 @@ export async function getAtendimentoById(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetAtendimentoByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "GET", url: `/v1/atendimentos/${id}`, ...requestConfig });
+  const res = await request<GetAtendimentoByIdQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "GET",
+    url: `/v1/atendimentos/${id}`,
+    ...requestConfig,
+  });
   return res.data;
 }
 
@@ -61,10 +46,7 @@ export function getAtendimentoByIdQueryOptions(
     enabled: !!id,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getAtendimentoById(id, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getAtendimentoById(id, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -81,13 +63,7 @@ export function useGetAtendimentoById<
   id: GetAtendimentoByIdPathParams["id"],
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetAtendimentoByIdQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetAtendimentoByIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
@@ -103,9 +79,7 @@ export function useGetAtendimentoById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

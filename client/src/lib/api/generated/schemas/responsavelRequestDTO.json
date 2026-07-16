@@ -2,24 +2,9 @@
   "required": ["cpf", "email", "nome", "telefone"],
   "type": "object",
   "properties": {
-    "nome": {
-      "minLength": 1,
-      "type": "string",
-      "description": "Nome do responsável",
-      "example": "João Silva"
-    },
-    "email": {
-      "minLength": 1,
-      "type": "string",
-      "description": "E-mail do responsável",
-      "example": "joao.silva@example.com"
-    },
-    "telefone": {
-      "minLength": 1,
-      "type": "string",
-      "description": "Contato do responsável",
-      "example": "11999999999"
-    },
+    "nome": { "minLength": 1, "type": "string", "description": "Nome do responsável", "example": "João Silva" },
+    "email": { "minLength": 1, "type": "string", "description": "E-mail do responsável", "example": "joao.silva@example.com" },
+    "telefone": { "minLength": 1, "type": "string", "description": "Contato do responsável", "example": "11999999999" },
     "dataNascimento": {
       "type": "string",
       "description": "Data de nascimento do responsável",
@@ -27,12 +12,7 @@
       "nullable": true,
       "example": "1990-01-01"
     },
-    "cpf": {
-      "minLength": 1,
-      "type": "string",
-      "description": "CPF do responsável",
-      "example": "12345678901"
-    }
+    "cpf": { "minLength": 1, "type": "string", "description": "CPF do responsável", "example": "12345678901" }
   },
   "description": "Formato de payload para criar um novo responsável",
   "x-readme-ref-name": "ResponsavelRequestDTO"

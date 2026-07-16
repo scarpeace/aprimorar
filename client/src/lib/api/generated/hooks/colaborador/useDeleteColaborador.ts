@@ -4,28 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  DeleteColaboradorMutationResponse,
-  DeleteColaboradorPathParams,
-} from "../../types/DeleteColaborador.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { DeleteColaboradorMutationResponse, DeleteColaboradorPathParams } from "../../types/DeleteColaborador.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const deleteColaboradorMutationKey = () =>
-  [{ url: "/v1/colaboradores/:colaboradorId" }] as const;
+export const deleteColaboradorMutationKey = () => [{ url: "/v1/colaboradores/:colaboradorId" }] as const;
 
-export type DeleteColaboradorMutationKey = ReturnType<
-  typeof deleteColaboradorMutationKey
->;
+export type DeleteColaboradorMutationKey = ReturnType<typeof deleteColaboradorMutationKey>;
 
 /**
  * @description Deleta um colaborador por ID.
@@ -37,11 +23,7 @@ export async function deleteColaborador(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    DeleteColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<DeleteColaboradorMutationResponse, ResponseErrorConfig<Error>, unknown>({
     method: "DELETE",
     url: `/v1/colaboradores/${colaboradorId}`,
     ...requestConfig,
@@ -49,9 +31,7 @@ export async function deleteColaborador(
   return res.data;
 }
 
-export function deleteColaboradorMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function deleteColaboradorMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const mutationKey = deleteColaboradorMutationKey();
   return mutationOptions<
     DeleteColaboradorMutationResponse,
@@ -83,12 +63,9 @@ export function useDeleteColaborador<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? deleteColaboradorMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? deleteColaboradorMutationKey();
 
-  const baseOptions = deleteColaboradorMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = deleteColaboradorMutationOptions(config) as UseMutationOptions<
     DeleteColaboradorMutationResponse,
     ResponseErrorConfig<Error>,
     { colaboradorId: DeleteColaboradorPathParams["colaboradorId"] },

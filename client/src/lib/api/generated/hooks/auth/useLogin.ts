@@ -4,20 +4,9 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  LoginMutationRequest,
-  LoginMutationResponse,
-} from "../../types/Login.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { LoginMutationRequest, LoginMutationResponse } from "../../types/Login.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
 export const loginMutationKey = () => [{ url: "/v1/auth/login" }] as const;
@@ -30,19 +19,13 @@ export type LoginMutationKey = ReturnType<typeof loginMutationKey>;
  */
 export async function login(
   data: LoginMutationRequest,
-  config: Partial<RequestConfig<LoginMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<LoginMutationRequest>> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const requestData = data;
 
-  const res = await request<
-    LoginMutationResponse,
-    ResponseErrorConfig<Error>,
-    LoginMutationRequest
-  >({
+  const res = await request<LoginMutationResponse, ResponseErrorConfig<Error>, LoginMutationRequest>({
     method: "POST",
     url: `/v1/auth/login`,
     data: requestData,
@@ -52,17 +35,10 @@ export async function login(
 }
 
 export function loginMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig<LoginMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<LoginMutationRequest>> & { client?: Client } = {},
 ) {
   const mutationKey = loginMutationKey();
-  return mutationOptions<
-    LoginMutationResponse,
-    ResponseErrorConfig<Error>,
-    { data: LoginMutationRequest },
-    TContext
-  >({
+  return mutationOptions<LoginMutationResponse, ResponseErrorConfig<Error>, { data: LoginMutationRequest }, TContext>({
     mutationKey,
     mutationFn: async ({ data }) => {
       return login(data, config);
@@ -76,12 +52,9 @@ export function loginMutationOptions<TContext = unknown>(
  */
 export function useLogin<TContext>(
   options: {
-    mutation?: UseMutationOptions<
-      LoginMutationResponse,
-      ResponseErrorConfig<Error>,
-      { data: LoginMutationRequest },
-      TContext
-    > & { client?: QueryClient };
+    mutation?: UseMutationOptions<LoginMutationResponse, ResponseErrorConfig<Error>, { data: LoginMutationRequest }, TContext> & {
+      client?: QueryClient;
+    };
     client?: Partial<RequestConfig<LoginMutationRequest>> & { client?: Client };
   } = {},
 ) {
@@ -96,22 +69,12 @@ export function useLogin<TContext>(
     TContext
   >;
 
-  return useMutation<
-    LoginMutationResponse,
-    ResponseErrorConfig<Error>,
-    { data: LoginMutationRequest },
-    TContext
-  >(
+  return useMutation<LoginMutationResponse, ResponseErrorConfig<Error>, { data: LoginMutationRequest }, TContext>(
     {
       ...baseOptions,
       mutationKey,
       ...mutationOptions,
     },
     queryClient,
-  ) as UseMutationResult<
-    LoginMutationResponse,
-    ResponseErrorConfig<Error>,
-    { data: LoginMutationRequest },
-    TContext
-  >;
+  ) as UseMutationResult<LoginMutationResponse, ResponseErrorConfig<Error>, { data: LoginMutationRequest }, TContext>;
 }

@@ -1,5 +1,6 @@
 export {
   agendarAtendimento201Schema,
+  agendarAtendimento400Schema,
   agendarAtendimentoMutationRequestSchema,
   agendarAtendimentoMutationResponseSchema,
 } from "./agendarAtendimentoSchema.ts";
@@ -8,16 +9,8 @@ export { alunoResponseDTOSchema } from "./alunoResponseDTOSchema.ts";
 export { alunoResumoFinanceiroResponseSchema } from "./alunoResumoFinanceiroResponseSchema.ts";
 export { alunosKpisDTOSchema } from "./alunosKpisDTOSchema.ts";
 export { alunosListDTOSchema } from "./alunosListDTOSchema.ts";
-export {
-  archiveAluno204Schema,
-  archiveAlunoMutationResponseSchema,
-  archiveAlunoPathParamsSchema,
-} from "./archiveAlunoSchema.ts";
-export {
-  archiveUser200Schema,
-  archiveUserMutationResponseSchema,
-  archiveUserPathParamsSchema,
-} from "./archiveUserSchema.ts";
+export { archiveAluno204Schema, archiveAlunoMutationResponseSchema, archiveAlunoPathParamsSchema } from "./archiveAlunoSchema.ts";
+export { archiveUser200Schema, archiveUserMutationResponseSchema, archiveUserPathParamsSchema } from "./archiveUserSchema.ts";
 export {
   arquivarColaborador204Schema,
   arquivarColaboradorMutationResponseSchema,
@@ -53,21 +46,9 @@ export {
   createResponsavelMutationRequestSchema,
   createResponsavelMutationResponseSchema,
 } from "./createResponsavelSchema.ts";
-export {
-  createUser201Schema,
-  createUserMutationRequestSchema,
-  createUserMutationResponseSchema,
-} from "./createUserSchema.ts";
-export {
-  criarAluno201Schema,
-  criarAlunoMutationRequestSchema,
-  criarAlunoMutationResponseSchema,
-} from "./criarAlunoSchema.ts";
-export {
-  deleteAluno204Schema,
-  deleteAlunoMutationResponseSchema,
-  deleteAlunoPathParamsSchema,
-} from "./deleteAlunoSchema.ts";
+export { createUser201Schema, createUserMutationRequestSchema, createUserMutationResponseSchema } from "./createUserSchema.ts";
+export { criarAluno201Schema, criarAlunoMutationRequestSchema, criarAlunoMutationResponseSchema } from "./criarAlunoSchema.ts";
+export { deleteAluno204Schema, deleteAlunoMutationResponseSchema, deleteAlunoPathParamsSchema } from "./deleteAlunoSchema.ts";
 export {
   deleteColaborador204Schema,
   deleteColaboradorMutationResponseSchema,
@@ -78,11 +59,7 @@ export {
   deleteResponsavelMutationResponseSchema,
   deleteResponsavelPathParamsSchema,
 } from "./deleteResponsavelSchema.ts";
-export {
-  deleteUser204Schema,
-  deleteUserMutationResponseSchema,
-  deleteUserPathParamsSchema,
-} from "./deleteUserSchema.ts";
+export { deleteUser204Schema, deleteUserMutationResponseSchema, deleteUserPathParamsSchema } from "./deleteUserSchema.ts";
 export {
   desarquivarColaborador204Schema,
   desarquivarColaboradorMutationResponseSchema,
@@ -100,6 +77,7 @@ export {
 } from "./efetivarRepasseColaboradorSchema.ts";
 export { enderecoRequestDTOSchema } from "./enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./enderecoResponseDTOSchema.ts";
+export { errorResponseSchema } from "./errorResponseSchema.ts";
 export {
   excluirAtendimento204Schema,
   excluirAtendimentoMutationResponseSchema,
@@ -110,25 +88,14 @@ export {
   findColaboradorByIdPathParamsSchema,
   findColaboradorByIdQueryResponseSchema,
 } from "./findColaboradorByIdSchema.ts";
-export {
-  getAlunoById200Schema,
-  getAlunoByIdPathParamsSchema,
-  getAlunoByIdQueryResponseSchema,
-} from "./getAlunoByIdSchema.ts";
+export { getAlunoById200Schema, getAlunoByIdPathParamsSchema, getAlunoByIdQueryResponseSchema } from "./getAlunoByIdSchema.ts";
 export {
   getAlunosByResponsavel200Schema,
   getAlunosByResponsavelPathParamsSchema,
   getAlunosByResponsavelQueryResponseSchema,
 } from "./getAlunosByResponsavelSchema.ts";
-export {
-  getAlunosKpis200Schema,
-  getAlunosKpisQueryResponseSchema,
-} from "./getAlunosKpisSchema.ts";
-export {
-  getAlunos200Schema,
-  getAlunosQueryParamsSchema,
-  getAlunosQueryResponseSchema,
-} from "./getAlunosSchema.ts";
+export { getAlunosKpis200Schema, getAlunosKpisQueryResponseSchema } from "./getAlunosKpisSchema.ts";
+export { getAlunos200Schema, getAlunosQueryParamsSchema, getAlunosQueryResponseSchema } from "./getAlunosSchema.ts";
 export {
   getAtendimentoById200Schema,
   getAtendimentoByIdPathParamsSchema,
@@ -144,10 +111,7 @@ export {
   getCalendarioAtendimentosQueryParamsSchema,
   getCalendarioAtendimentosQueryResponseSchema,
 } from "./getCalendarioAtendimentosSchema.ts";
-export {
-  getColaboradoresList200Schema,
-  getColaboradoresListQueryResponseSchema,
-} from "./getColaboradoresListSchema.ts";
+export { getColaboradoresList200Schema, getColaboradoresListQueryResponseSchema } from "./getColaboradoresListSchema.ts";
 export {
   getColaboradores200Schema,
   getColaboradoresQueryParamsSchema,
@@ -180,28 +144,11 @@ export {
   getResumoFinanceiroColaboradorQueryParamsSchema,
   getResumoFinanceiroColaboradorQueryResponseSchema,
 } from "./getResumoFinanceiroColaboradorSchema.ts";
-export {
-  listAlunos200Schema,
-  listAlunosQueryResponseSchema,
-} from "./listAlunosSchema.ts";
-export {
-  listResponsaveis200Schema,
-  listResponsaveisQueryResponseSchema,
-} from "./listResponsaveisSchema.ts";
-export {
-  listUsers200Schema,
-  listUsersQueryResponseSchema,
-} from "./listUsersSchema.ts";
-export {
-  login200Schema,
-  loginMutationRequestSchema,
-  loginMutationResponseSchema,
-} from "./loginSchema.ts";
-export {
-  me200Schema,
-  mePathParamsSchema,
-  meQueryResponseSchema,
-} from "./meSchema.ts";
+export { listAlunos200Schema, listAlunosQueryResponseSchema } from "./listAlunosSchema.ts";
+export { listResponsaveis200Schema, listResponsaveisQueryResponseSchema } from "./listResponsaveisSchema.ts";
+export { listUsers200Schema, listUsersQueryResponseSchema } from "./listUsersSchema.ts";
+export { login200Schema, loginMutationRequestSchema, loginMutationResponseSchema } from "./loginSchema.ts";
+export { me200Schema, mePathParamsSchema, meQueryResponseSchema } from "./meSchema.ts";
 export { pageMetadataSchema } from "./pageMetadataSchema.ts";
 export { pagedModelAlunoResponseDTOSchema } from "./pagedModelAlunoResponseDTOSchema.ts";
 export { pagedModelAtendimentoResponseSchema } from "./pagedModelAtendimentoResponseSchema.ts";

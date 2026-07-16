@@ -13,8 +13,6 @@ export const mePathParamsSchema = z.object({
 /**
  * @description Usuario autenticado retornado com sucesso
  */
-export const me200Schema = z
-  .lazy(() => userResponseDTOSchema)
-  .describe("Dados do usuario retornados pela API");
+export const me200Schema = z.lazy(() => userResponseDTOSchema).describe("Dados do usuario retornados pela API");
 
 export const meQueryResponseSchema = z.lazy(() => me200Schema);

@@ -10,14 +10,8 @@ import { z } from "zod/v4";
 /**
  * @description Usuario criado com sucesso
  */
-export const createUser201Schema = z
-  .lazy(() => userResponseDTOSchema)
-  .describe("Dados do usuario retornados pela API");
+export const createUser201Schema = z.lazy(() => userResponseDTOSchema).describe("Dados do usuario retornados pela API");
 
-export const createUserMutationRequestSchema = z
-  .lazy(() => userRequestDTOSchema)
-  .describe("Payload para criação de usuário");
+export const createUserMutationRequestSchema = z.lazy(() => userRequestDTOSchema).describe("Payload para criação de usuário");
 
-export const createUserMutationResponseSchema = z.lazy(
-  () => createUser201Schema,
-);
+export const createUserMutationResponseSchema = z.lazy(() => createUser201Schema);

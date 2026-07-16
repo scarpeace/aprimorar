@@ -10,9 +10,7 @@ import { z } from "zod/v4";
  * @description Lista de opções de alunos retornada com sucesso.
  */
 export const listAlunos200Schema = z.array(
-  z
-    .lazy(() => alunosListDTOSchema)
-    .describe("Opção simplificada de aluno para seletores"),
+  z.lazy(() => alunosListDTOSchema).describe("Opção simplificada de aluno para seletores"),
 );
 
 export const listAlunosQueryResponseSchema = z.lazy(() => listAlunos200Schema);

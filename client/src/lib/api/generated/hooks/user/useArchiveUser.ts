@@ -4,24 +4,12 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  ArchiveUserMutationResponse,
-  ArchiveUserPathParams,
-} from "../../types/ArchiveUser.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { ArchiveUserMutationResponse, ArchiveUserPathParams } from "../../types/ArchiveUser.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const archiveUserMutationKey = () =>
-  [{ url: "/v1/users/:id/archive" }] as const;
+export const archiveUserMutationKey = () => [{ url: "/v1/users/:id/archive" }] as const;
 
 export type ArchiveUserMutationKey = ReturnType<typeof archiveUserMutationKey>;
 
@@ -29,30 +17,20 @@ export type ArchiveUserMutationKey = ReturnType<typeof archiveUserMutationKey>;
  * @summary Toggle active status of a user
  * {@link /v1/users/:id/archive}
  */
-export async function archiveUser(
-  id: ArchiveUserPathParams["id"],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export async function archiveUser(id: ArchiveUserPathParams["id"], config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    ArchiveUserMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "PATCH", url: `/v1/users/${id}/archive`, ...requestConfig });
+  const res = await request<ArchiveUserMutationResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "PATCH",
+    url: `/v1/users/${id}/archive`,
+    ...requestConfig,
+  });
   return res.data;
 }
 
-export function archiveUserMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function archiveUserMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const mutationKey = archiveUserMutationKey();
-  return mutationOptions<
-    ArchiveUserMutationResponse,
-    ResponseErrorConfig<Error>,
-    { id: ArchiveUserPathParams["id"] },
-    TContext
-  >({
+  return mutationOptions<ArchiveUserMutationResponse, ResponseErrorConfig<Error>, { id: ArchiveUserPathParams["id"] }, TContext>({
     mutationKey,
     mutationFn: async ({ id }) => {
       return archiveUser(id, config);
@@ -86,22 +64,12 @@ export function useArchiveUser<TContext>(
     TContext
   >;
 
-  return useMutation<
-    ArchiveUserMutationResponse,
-    ResponseErrorConfig<Error>,
-    { id: ArchiveUserPathParams["id"] },
-    TContext
-  >(
+  return useMutation<ArchiveUserMutationResponse, ResponseErrorConfig<Error>, { id: ArchiveUserPathParams["id"] }, TContext>(
     {
       ...baseOptions,
       mutationKey,
       ...mutationOptions,
     },
     queryClient,
-  ) as UseMutationResult<
-    ArchiveUserMutationResponse,
-    ResponseErrorConfig<Error>,
-    { id: ArchiveUserPathParams["id"] },
-    TContext
-  >;
+  ) as UseMutationResult<ArchiveUserMutationResponse, ResponseErrorConfig<Error>, { id: ArchiveUserPathParams["id"] }, TContext>;
 }

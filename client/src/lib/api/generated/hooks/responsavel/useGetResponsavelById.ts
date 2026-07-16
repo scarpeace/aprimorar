@@ -4,36 +4,15 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  GetResponsavelByIdQueryResponse,
-  GetResponsavelByIdPathParams,
-} from "../../types/GetResponsavelById.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { GetResponsavelByIdQueryResponse, GetResponsavelByIdPathParams } from "../../types/GetResponsavelById.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getResponsavelByIdQueryKey = (
-  responsavelId: GetResponsavelByIdPathParams["responsavelId"],
-) =>
-  [
-    {
-      url: "/v1/responsaveis/:responsavelId",
-      params: { responsavelId: responsavelId },
-    },
-  ] as const;
+export const getResponsavelByIdQueryKey = (responsavelId: GetResponsavelByIdPathParams["responsavelId"]) =>
+  [{ url: "/v1/responsaveis/:responsavelId", params: { responsavelId: responsavelId } }] as const;
 
-export type GetResponsavelByIdQueryKey = ReturnType<
-  typeof getResponsavelByIdQueryKey
->;
+export type GetResponsavelByIdQueryKey = ReturnType<typeof getResponsavelByIdQueryKey>;
 
 /**
  * @description Retorna um responsável por ID
@@ -45,11 +24,7 @@ export async function getResponsavelById(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetResponsavelByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<GetResponsavelByIdQueryResponse, ResponseErrorConfig<Error>, unknown>({
     method: "GET",
     url: `/v1/responsaveis/${responsavelId}`,
     ...requestConfig,
@@ -71,10 +46,7 @@ export function getResponsavelByIdQueryOptions(
     enabled: !!responsavelId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getResponsavelById(responsavelId, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getResponsavelById(responsavelId, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -91,21 +63,14 @@ export function useGetResponsavelById<
   responsavelId: GetResponsavelByIdPathParams["responsavelId"],
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetResponsavelByIdQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetResponsavelByIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey =
-    resolvedOptions?.queryKey ?? getResponsavelByIdQueryKey(responsavelId);
+  const queryKey = resolvedOptions?.queryKey ?? getResponsavelByIdQueryKey(responsavelId);
 
   const query = useQuery(
     {
@@ -114,9 +79,7 @@ export function useGetResponsavelById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

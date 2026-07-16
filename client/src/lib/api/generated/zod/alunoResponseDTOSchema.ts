@@ -21,15 +21,10 @@ export const alunoResponseDTOSchema = z
     idade: z.int().describe("Idade do aluno"),
     responsavelId: z.uuid().describe("ID do responsável"),
     active: z.optional(z.boolean().describe("Indica se o aluno está ativo")),
-    updatedAt: z.iso
-      .datetime()
-      .describe("Data e hora da última atualização do aluno")
-      .nullish(),
+    updatedAt: z.iso.datetime().describe("Data e hora da última atualização do aluno").nullish(),
     createdAt: z.iso.datetime().describe("Data e hora de criação do aluno"),
     get endereco() {
-      return enderecoResponseDTOSchema.describe(
-        "Dados do endereco retornados pela API",
-      );
+      return enderecoResponseDTOSchema.describe("Dados do endereco retornados pela API");
     },
   })
   .describe("Dados do aluno retornados pela API");

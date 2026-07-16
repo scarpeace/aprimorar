@@ -9,10 +9,6 @@ import { z } from "zod/v4";
 /**
  * @description Lista de usuarios retornada com sucesso
  */
-export const listUsers200Schema = z.array(
-  z
-    .lazy(() => userResponseDTOSchema)
-    .describe("Dados do usuario retornados pela API"),
-);
+export const listUsers200Schema = z.array(z.lazy(() => userResponseDTOSchema).describe("Dados do usuario retornados pela API"));
 
 export const listUsersQueryResponseSchema = z.lazy(() => listUsers200Schema);

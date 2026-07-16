@@ -18,6 +18,4 @@ export const createColaboradorMutationRequestSchema = z
   .lazy(() => colaboradorRequestDTOSchema)
   .describe("Formato de payload para criar um novo colaborador");
 
-export const createColaboradorMutationResponseSchema = z.lazy(
-  () => createColaborador201Schema,
-);
+export const createColaboradorMutationResponseSchema = z.lazy(() => createColaborador201Schema);

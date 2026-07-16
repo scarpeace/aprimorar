@@ -9,13 +9,7 @@ import { z } from "zod/v4";
 
 export const pagedModelAtendimentoResponseSchema = z.object({
   get content() {
-    return z
-      .array(
-        atendimentoResponseSchema.describe(
-          "Dados do atendimento retornados pela API",
-        ),
-      )
-      .optional();
+    return z.array(atendimentoResponseSchema.describe("Dados do atendimento retornados pela API")).optional();
   },
   get page() {
     return pageMetadataSchema.optional();

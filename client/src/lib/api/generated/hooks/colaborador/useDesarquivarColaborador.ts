@@ -8,24 +8,13 @@ import type {
   DesarquivarColaboradorMutationResponse,
   DesarquivarColaboradorPathParams,
 } from "../../types/DesarquivarColaborador.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const desarquivarColaboradorMutationKey = () =>
-  [{ url: "/v1/colaboradores/:colaboradorId/unarchive" }] as const;
+export const desarquivarColaboradorMutationKey = () => [{ url: "/v1/colaboradores/:colaboradorId/unarchive" }] as const;
 
-export type DesarquivarColaboradorMutationKey = ReturnType<
-  typeof desarquivarColaboradorMutationKey
->;
+export type DesarquivarColaboradorMutationKey = ReturnType<typeof desarquivarColaboradorMutationKey>;
 
 /**
  * @description Desarquiva um colaborador por ID.
@@ -37,11 +26,7 @@ export async function desarquivarColaborador(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    DesarquivarColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<DesarquivarColaboradorMutationResponse, ResponseErrorConfig<Error>, unknown>({
     method: "PATCH",
     url: `/v1/colaboradores/${colaboradorId}/unarchive`,
     ...requestConfig,
@@ -83,12 +68,9 @@ export function useDesarquivarColaborador<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? desarquivarColaboradorMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? desarquivarColaboradorMutationKey();
 
-  const baseOptions = desarquivarColaboradorMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = desarquivarColaboradorMutationOptions(config) as UseMutationOptions<
     DesarquivarColaboradorMutationResponse,
     ResponseErrorConfig<Error>,
     { colaboradorId: DesarquivarColaboradorPathParams["colaboradorId"] },

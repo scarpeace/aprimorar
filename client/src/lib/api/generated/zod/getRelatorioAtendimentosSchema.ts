@@ -17,6 +17,4 @@ export const getRelatorioAtendimentos200Schema = z
   .lazy(() => relatorioAtendimentosResponseSchema)
   .describe("Resumo mensal dos atendimentos");
 
-export const getRelatorioAtendimentosQueryResponseSchema = z.lazy(
-  () => getRelatorioAtendimentos200Schema,
-);
+export const getRelatorioAtendimentosQueryResponseSchema = z.lazy(() => getRelatorioAtendimentos200Schema);

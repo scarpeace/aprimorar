@@ -12,45 +12,20 @@ export const atendimentoResponseSchema = z
   .object({
     id: z.int().describe("Identificador unico do atendimento"),
     tipo: z
-      .enum([
-        "AULA",
-        "MENTORIA",
-        "TERAPIA",
-        "ORIENTACAO_VOCACIONAL",
-        "ENEM",
-        "PAS",
-        "OUTRO",
-      ])
+      .enum(["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"])
       .describe("Tipo de conteudo ou categoria do atendimento"),
-    dataHoraInicio: z.iso
-      .datetime()
-      .describe("Data/hora de inicio do atendimento"),
+    dataHoraInicio: z.iso.datetime().describe("Data/hora de inicio do atendimento"),
     dataHoraFim: z.iso.datetime().describe("Data/hora de fim do atendimento"),
     pagamentoAluno: z.number().describe("Valor pago pelo aluno"),
     repasseColaborador: z.number().describe("Valor de repasse ao colaborador"),
     alunoId: z.uuid().describe("ID do aluno vinculado ao atendimento"),
     nomeAluno: z.string().describe("Nome do aluno vinculado ao atendimento"),
-    colaboradorId: z
-      .uuid()
-      .describe("ID do colaborador vinculado ao atendimento"),
-    nomeColaborador: z
-      .string()
-      .describe("Nome do colaborador vinculado ao atendimento"),
-    dataPagamentoAluno: z.iso
-      .datetime()
-      .describe("Data do pagamento do aluno")
-      .nullish(),
-    dataPagamentoColaborador: z.iso
-      .datetime()
-      .describe("Data do pagamento do colaborador")
-      .nullish(),
-    status: z
-      .enum(["AGENDADO", "CONCLUIDO", "CANCELADO"])
-      .describe("Status do atendimento"),
+    colaboradorId: z.uuid().describe("ID do colaborador vinculado ao atendimento"),
+    nomeColaborador: z.string().describe("Nome do colaborador vinculado ao atendimento"),
+    dataPagamentoAluno: z.iso.datetime().describe("Data do pagamento do aluno").nullish(),
+    dataPagamentoColaborador: z.iso.datetime().describe("Data do pagamento do colaborador").nullish(),
+    status: z.enum(["AGENDADO", "CONCLUIDO", "CANCELADO"]).describe("Status do atendimento"),
     createdAt: z.iso.datetime().describe("Data de criacao do atendimento"),
-    updatedAt: z.iso
-      .datetime()
-      .describe("Data de atualizacao do atendimento")
-      .nullish(),
+    updatedAt: z.iso.datetime().describe("Data de atualizacao do atendimento").nullish(),
   })
   .describe("Dados do atendimento retornados pela API");

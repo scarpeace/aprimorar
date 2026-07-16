@@ -5,17 +5,8 @@
 
 import fetch from "@/lib/api/client";
 import type { MeQueryResponse, MePathParams } from "../../types/Me.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const meQueryKey = (username: MePathParams["username"]) =>
@@ -27,31 +18,20 @@ export type MeQueryKey = ReturnType<typeof meQueryKey>;
  * @summary Get the authenticated user
  * {@link /v1/users/me/:username}
  */
-export async function me(
-  username: MePathParams["username"],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export async function me(username: MePathParams["username"], config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    MeQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "GET", url: `/v1/users/me/${username}`, ...requestConfig });
+  const res = await request<MeQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "GET",
+    url: `/v1/users/me/${username}`,
+    ...requestConfig,
+  });
   return res.data;
 }
 
-export function meQueryOptions(
-  username: MePathParams["username"],
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function meQueryOptions(username: MePathParams["username"], config: Partial<RequestConfig> & { client?: Client } = {}) {
   const queryKey = meQueryKey(username);
-  return queryOptions<
-    MeQueryResponse,
-    ResponseErrorConfig<Error>,
-    MeQueryResponse,
-    typeof queryKey
-  >({
+  return queryOptions<MeQueryResponse, ResponseErrorConfig<Error>, MeQueryResponse, typeof queryKey>({
     enabled: !!username,
     queryKey,
     queryFn: async ({ signal }) => {
@@ -64,22 +44,12 @@ export function meQueryOptions(
  * @summary Get the authenticated user
  * {@link /v1/users/me/:username}
  */
-export function useMe<
-  TData = MeQueryResponse,
-  TQueryData = MeQueryResponse,
-  TQueryKey extends QueryKey = MeQueryKey,
->(
+export function useMe<TData = MeQueryResponse, TQueryData = MeQueryResponse, TQueryKey extends QueryKey = MeQueryKey>(
   username: MePathParams["username"],
   options: {
-    query?: Partial<
-      QueryObserverOptions<
-        MeQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
-    > & { client?: QueryClient };
+    query?: Partial<QueryObserverOptions<MeQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & {
+      client?: QueryClient;
+    };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
@@ -94,9 +64,7 @@ export function useMe<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

@@ -17,6 +17,4 @@ export const getResponsavelById200Schema = z
   .lazy(() => responsavelResponseDTOSchema)
   .describe("Dados do responsável retornados pela API");
 
-export const getResponsavelByIdQueryResponseSchema = z.lazy(
-  () => getResponsavelById200Schema,
-);
+export const getResponsavelByIdQueryResponseSchema = z.lazy(() => getResponsavelById200Schema);

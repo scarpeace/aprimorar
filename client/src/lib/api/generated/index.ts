@@ -43,6 +43,7 @@ export type { ListUsersQueryKey } from "./hooks/user/useListUsers.ts";
 export type { MeQueryKey } from "./hooks/user/useMe.ts";
 export type {
   AgendarAtendimento201,
+  AgendarAtendimento400,
   AgendarAtendimentoMutation,
   AgendarAtendimentoMutationRequest,
   AgendarAtendimentoMutationResponse,
@@ -70,10 +71,7 @@ export type {
   ArquivarColaboradorMutationResponse,
   ArquivarColaboradorPathParams,
 } from "./types/ArquivarColaborador.ts";
-export type {
-  AtendimentoRequest,
-  AtendimentoRequestTipoEnumKey,
-} from "./types/AtendimentoRequest.ts";
+export type { AtendimentoRequest, AtendimentoRequestTipoEnumKey } from "./types/AtendimentoRequest.ts";
 export type {
   AtendimentoResponse,
   AtendimentoResponseStatusEnumKey,
@@ -92,14 +90,8 @@ export type {
   CancelarAtendimentoMutationResponse,
   CancelarAtendimentoPathParams,
 } from "./types/CancelarAtendimento.ts";
-export type {
-  ColaboradorRequestDTO,
-  ColaboradorRequestDTOFuncaoEnumKey,
-} from "./types/ColaboradorRequestDTO.ts";
-export type {
-  ColaboradorResponseDTO,
-  ColaboradorResponseDTOFuncaoEnumKey,
-} from "./types/ColaboradorResponseDTO.ts";
+export type { ColaboradorRequestDTO, ColaboradorRequestDTOFuncaoEnumKey } from "./types/ColaboradorRequestDTO.ts";
+export type { ColaboradorResponseDTO, ColaboradorResponseDTOFuncaoEnumKey } from "./types/ColaboradorResponseDTO.ts";
 export type { ColaboradorResumoFinanceiroResponse } from "./types/ColaboradorResumoFinanceiroResponse.ts";
 export type { ColaboradoresOptionsDTO } from "./types/ColaboradoresOptionsDTO.ts";
 export type {
@@ -150,12 +142,7 @@ export type {
   DeleteResponsavelMutationResponse,
   DeleteResponsavelPathParams,
 } from "./types/DeleteResponsavel.ts";
-export type {
-  DeleteUser204,
-  DeleteUserMutation,
-  DeleteUserMutationResponse,
-  DeleteUserPathParams,
-} from "./types/DeleteUser.ts";
+export type { DeleteUser204, DeleteUserMutation, DeleteUserMutationResponse, DeleteUserPathParams } from "./types/DeleteUser.ts";
 export type {
   DesarquivarColaborador204,
   DesarquivarColaboradorMutation,
@@ -176,6 +163,7 @@ export type {
 } from "./types/EfetivarRepasseColaborador.ts";
 export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
+export type { ErrorResponse } from "./types/ErrorResponse.ts";
 export type {
   ExcluirAtendimento204,
   ExcluirAtendimentoMutation,
@@ -194,23 +182,14 @@ export type {
   GetAlunoByIdQuery,
   GetAlunoByIdQueryResponse,
 } from "./types/GetAlunoById.ts";
-export type {
-  GetAlunos200,
-  GetAlunosQuery,
-  GetAlunosQueryParams,
-  GetAlunosQueryResponse,
-} from "./types/GetAlunos.ts";
+export type { GetAlunos200, GetAlunosQuery, GetAlunosQueryParams, GetAlunosQueryResponse } from "./types/GetAlunos.ts";
 export type {
   GetAlunosByResponsavel200,
   GetAlunosByResponsavelPathParams,
   GetAlunosByResponsavelQuery,
   GetAlunosByResponsavelQueryResponse,
 } from "./types/GetAlunosByResponsavel.ts";
-export type {
-  GetAlunosKpis200,
-  GetAlunosKpisQuery,
-  GetAlunosKpisQueryResponse,
-} from "./types/GetAlunosKpis.ts";
+export type { GetAlunosKpis200, GetAlunosKpisQuery, GetAlunosKpisQueryResponse } from "./types/GetAlunosKpis.ts";
 export type {
   GetAtendimentoById200,
   GetAtendimentoByIdPathParams,
@@ -274,33 +253,11 @@ export type {
   GetResumoFinanceiroColaboradorQueryParams,
   GetResumoFinanceiroColaboradorQueryResponse,
 } from "./types/GetResumoFinanceiroColaborador.ts";
-export type {
-  ListAlunos200,
-  ListAlunosQuery,
-  ListAlunosQueryResponse,
-} from "./types/ListAlunos.ts";
-export type {
-  ListResponsaveis200,
-  ListResponsaveisQuery,
-  ListResponsaveisQueryResponse,
-} from "./types/ListResponsaveis.ts";
-export type {
-  ListUsers200,
-  ListUsersQuery,
-  ListUsersQueryResponse,
-} from "./types/ListUsers.ts";
-export type {
-  Login200,
-  LoginMutation,
-  LoginMutationRequest,
-  LoginMutationResponse,
-} from "./types/Login.ts";
-export type {
-  Me200,
-  MePathParams,
-  MeQuery,
-  MeQueryResponse,
-} from "./types/Me.ts";
+export type { ListAlunos200, ListAlunosQuery, ListAlunosQueryResponse } from "./types/ListAlunos.ts";
+export type { ListResponsaveis200, ListResponsaveisQuery, ListResponsaveisQueryResponse } from "./types/ListResponsaveis.ts";
+export type { ListUsers200, ListUsersQuery, ListUsersQueryResponse } from "./types/ListUsers.ts";
+export type { Login200, LoginMutation, LoginMutationRequest, LoginMutationResponse } from "./types/Login.ts";
+export type { Me200, MePathParams, MeQuery, MeQueryResponse } from "./types/Me.ts";
 export type { PageMetadata } from "./types/PageMetadata.ts";
 export type { PagedModelAlunoResponseDTO } from "./types/PagedModelAlunoResponseDTO.ts";
 export type { PagedModelAtendimentoResponse } from "./types/PagedModelAtendimentoResponse.ts";
@@ -343,14 +300,8 @@ export type {
   UpdateResponsavelMutationResponse,
   UpdateResponsavelPathParams,
 } from "./types/UpdateResponsavel.ts";
-export type {
-  UserRequestDTO,
-  UserRequestDTORoleEnumKey,
-} from "./types/UserRequestDTO.ts";
-export type {
-  UserResponseDTO,
-  UserResponseDTORoleEnumKey,
-} from "./types/UserResponseDTO.ts";
+export type { UserRequestDTO, UserRequestDTORoleEnumKey } from "./types/UserRequestDTO.ts";
+export type { UserResponseDTO, UserResponseDTORoleEnumKey } from "./types/UserResponseDTO.ts";
 export { archiveAluno } from "./hooks/aluno/useArchiveAluno.ts";
 export { archiveAlunoMutationKey } from "./hooks/aluno/useArchiveAluno.ts";
 export { archiveAlunoMutationOptions } from "./hooks/aluno/useArchiveAluno.ts";
@@ -535,6 +486,7 @@ export { userRequestDTORoleEnum } from "./types/UserRequestDTO.ts";
 export { userResponseDTORoleEnum } from "./types/UserResponseDTO.ts";
 export {
   agendarAtendimento201Schema,
+  agendarAtendimento400Schema,
   agendarAtendimentoMutationRequestSchema,
   agendarAtendimentoMutationResponseSchema,
 } from "./zod/agendarAtendimentoSchema.ts";
@@ -548,11 +500,7 @@ export {
   archiveAlunoMutationResponseSchema,
   archiveAlunoPathParamsSchema,
 } from "./zod/archiveAlunoSchema.ts";
-export {
-  archiveUser200Schema,
-  archiveUserMutationResponseSchema,
-  archiveUserPathParamsSchema,
-} from "./zod/archiveUserSchema.ts";
+export { archiveUser200Schema, archiveUserMutationResponseSchema, archiveUserPathParamsSchema } from "./zod/archiveUserSchema.ts";
 export {
   arquivarColaborador204Schema,
   arquivarColaboradorMutationResponseSchema,
@@ -598,11 +546,7 @@ export {
   criarAlunoMutationRequestSchema,
   criarAlunoMutationResponseSchema,
 } from "./zod/criarAlunoSchema.ts";
-export {
-  deleteAluno204Schema,
-  deleteAlunoMutationResponseSchema,
-  deleteAlunoPathParamsSchema,
-} from "./zod/deleteAlunoSchema.ts";
+export { deleteAluno204Schema, deleteAlunoMutationResponseSchema, deleteAlunoPathParamsSchema } from "./zod/deleteAlunoSchema.ts";
 export {
   deleteColaborador204Schema,
   deleteColaboradorMutationResponseSchema,
@@ -613,11 +557,7 @@ export {
   deleteResponsavelMutationResponseSchema,
   deleteResponsavelPathParamsSchema,
 } from "./zod/deleteResponsavelSchema.ts";
-export {
-  deleteUser204Schema,
-  deleteUserMutationResponseSchema,
-  deleteUserPathParamsSchema,
-} from "./zod/deleteUserSchema.ts";
+export { deleteUser204Schema, deleteUserMutationResponseSchema, deleteUserPathParamsSchema } from "./zod/deleteUserSchema.ts";
 export {
   desarquivarColaborador204Schema,
   desarquivarColaboradorMutationResponseSchema,
@@ -635,6 +575,7 @@ export {
 } from "./zod/efetivarRepasseColaboradorSchema.ts";
 export { enderecoRequestDTOSchema } from "./zod/enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./zod/enderecoResponseDTOSchema.ts";
+export { errorResponseSchema } from "./zod/errorResponseSchema.ts";
 export {
   excluirAtendimento204Schema,
   excluirAtendimentoMutationResponseSchema,
@@ -655,15 +596,8 @@ export {
   getAlunosByResponsavelPathParamsSchema,
   getAlunosByResponsavelQueryResponseSchema,
 } from "./zod/getAlunosByResponsavelSchema.ts";
-export {
-  getAlunosKpis200Schema,
-  getAlunosKpisQueryResponseSchema,
-} from "./zod/getAlunosKpisSchema.ts";
-export {
-  getAlunos200Schema,
-  getAlunosQueryParamsSchema,
-  getAlunosQueryResponseSchema,
-} from "./zod/getAlunosSchema.ts";
+export { getAlunosKpis200Schema, getAlunosKpisQueryResponseSchema } from "./zod/getAlunosKpisSchema.ts";
+export { getAlunos200Schema, getAlunosQueryParamsSchema, getAlunosQueryResponseSchema } from "./zod/getAlunosSchema.ts";
 export {
   getAtendimentoById200Schema,
   getAtendimentoByIdPathParamsSchema,
@@ -679,10 +613,7 @@ export {
   getCalendarioAtendimentosQueryParamsSchema,
   getCalendarioAtendimentosQueryResponseSchema,
 } from "./zod/getCalendarioAtendimentosSchema.ts";
-export {
-  getColaboradoresList200Schema,
-  getColaboradoresListQueryResponseSchema,
-} from "./zod/getColaboradoresListSchema.ts";
+export { getColaboradoresList200Schema, getColaboradoresListQueryResponseSchema } from "./zod/getColaboradoresListSchema.ts";
 export {
   getColaboradores200Schema,
   getColaboradoresQueryParamsSchema,
@@ -715,28 +646,11 @@ export {
   getResumoFinanceiroColaboradorQueryParamsSchema,
   getResumoFinanceiroColaboradorQueryResponseSchema,
 } from "./zod/getResumoFinanceiroColaboradorSchema.ts";
-export {
-  listAlunos200Schema,
-  listAlunosQueryResponseSchema,
-} from "./zod/listAlunosSchema.ts";
-export {
-  listResponsaveis200Schema,
-  listResponsaveisQueryResponseSchema,
-} from "./zod/listResponsaveisSchema.ts";
-export {
-  listUsers200Schema,
-  listUsersQueryResponseSchema,
-} from "./zod/listUsersSchema.ts";
-export {
-  login200Schema,
-  loginMutationRequestSchema,
-  loginMutationResponseSchema,
-} from "./zod/loginSchema.ts";
-export {
-  me200Schema,
-  mePathParamsSchema,
-  meQueryResponseSchema,
-} from "./zod/meSchema.ts";
+export { listAlunos200Schema, listAlunosQueryResponseSchema } from "./zod/listAlunosSchema.ts";
+export { listResponsaveis200Schema, listResponsaveisQueryResponseSchema } from "./zod/listResponsaveisSchema.ts";
+export { listUsers200Schema, listUsersQueryResponseSchema } from "./zod/listUsersSchema.ts";
+export { login200Schema, loginMutationRequestSchema, loginMutationResponseSchema } from "./zod/loginSchema.ts";
+export { me200Schema, mePathParamsSchema, meQueryResponseSchema } from "./zod/meSchema.ts";
 export { pageMetadataSchema } from "./zod/pageMetadataSchema.ts";
 export { pagedModelAlunoResponseDTOSchema } from "./zod/pagedModelAlunoResponseDTOSchema.ts";
 export { pagedModelAtendimentoResponseSchema } from "./zod/pagedModelAtendimentoResponseSchema.ts";

@@ -5,21 +5,11 @@
 
 import fetch from "@/lib/api/client";
 import type { GetAlunosKpisQueryResponse } from "../../types/GetAlunosKpis.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getAlunosKpisQueryKey = () =>
-  [{ url: "/v1/alunos/kpis" }] as const;
+export const getAlunosKpisQueryKey = () => [{ url: "/v1/alunos/kpis" }] as const;
 
 export type GetAlunosKpisQueryKey = ReturnType<typeof getAlunosKpisQueryKey>;
 
@@ -27,29 +17,20 @@ export type GetAlunosKpisQueryKey = ReturnType<typeof getAlunosKpisQueryKey>;
  * @description Retorna os KPIs de alunos.
  * {@link /v1/alunos/kpis}
  */
-export async function getAlunosKpis(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export async function getAlunosKpis(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetAlunosKpisQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "GET", url: `/v1/alunos/kpis`, ...requestConfig });
+  const res = await request<GetAlunosKpisQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "GET",
+    url: `/v1/alunos/kpis`,
+    ...requestConfig,
+  });
   return res.data;
 }
 
-export function getAlunosKpisQueryOptions(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function getAlunosKpisQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const queryKey = getAlunosKpisQueryKey();
-  return queryOptions<
-    GetAlunosKpisQueryResponse,
-    ResponseErrorConfig<Error>,
-    GetAlunosKpisQueryResponse,
-    typeof queryKey
-  >({
+  return queryOptions<GetAlunosKpisQueryResponse, ResponseErrorConfig<Error>, GetAlunosKpisQueryResponse, typeof queryKey>({
     queryKey,
     queryFn: async ({ signal }) => {
       return getAlunosKpis({ ...config, signal: config.signal ?? signal });
@@ -68,13 +49,7 @@ export function useGetAlunosKpis<
 >(
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetAlunosKpisQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetAlunosKpisQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
@@ -90,9 +65,7 @@ export function useGetAlunosKpis<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

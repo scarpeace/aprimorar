@@ -13,10 +13,7 @@ export const responsavelRequestDTOSchema = z
     nome: z.string().min(1).describe("Nome do responsável"),
     email: z.string().min(1).describe("E-mail do responsável"),
     telefone: z.string().min(1).describe("Contato do responsável"),
-    dataNascimento: z.iso
-      .date()
-      .describe("Data de nascimento do responsável")
-      .nullish(),
+    dataNascimento: z.iso.date().describe("Data de nascimento do responsável").nullish(),
     cpf: z.string().min(1).describe("CPF do responsável"),
   })
   .describe("Formato de payload para criar um novo responsável");

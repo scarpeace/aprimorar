@@ -4,28 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  ArchiveAlunoMutationResponse,
-  ArchiveAlunoPathParams,
-} from "../../types/ArchiveAluno.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { ArchiveAlunoMutationResponse, ArchiveAlunoPathParams } from "../../types/ArchiveAluno.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const archiveAlunoMutationKey = () =>
-  [{ url: "/v1/alunos/:alunoId/archive" }] as const;
+export const archiveAlunoMutationKey = () => [{ url: "/v1/alunos/:alunoId/archive" }] as const;
 
-export type ArchiveAlunoMutationKey = ReturnType<
-  typeof archiveAlunoMutationKey
->;
+export type ArchiveAlunoMutationKey = ReturnType<typeof archiveAlunoMutationKey>;
 
 /**
  * @description Arquiva um aluno por ID.
@@ -37,11 +23,7 @@ export async function archiveAluno(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    ArchiveAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<ArchiveAlunoMutationResponse, ResponseErrorConfig<Error>, unknown>({
     method: "PATCH",
     url: `/v1/alunos/${alunoId}/archive`,
     ...requestConfig,
@@ -49,9 +31,7 @@ export async function archiveAluno(
   return res.data;
 }
 
-export function archiveAlunoMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function archiveAlunoMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const mutationKey = archiveAlunoMutationKey();
   return mutationOptions<
     ArchiveAlunoMutationResponse,

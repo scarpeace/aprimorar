@@ -17,6 +17,4 @@ export const getCalendarioAtendimentos200Schema = z
   .lazy(() => calendarioMensalAtendimentosResponseSchema)
   .describe("Conteúdo mensal do dashboard de atendimentos");
 
-export const getCalendarioAtendimentosQueryResponseSchema = z.lazy(
-  () => getCalendarioAtendimentos200Schema,
-);
+export const getCalendarioAtendimentosQueryResponseSchema = z.lazy(() => getCalendarioAtendimentos200Schema);

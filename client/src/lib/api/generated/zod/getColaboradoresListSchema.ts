@@ -10,11 +10,7 @@ import { z } from "zod/v4";
  * @description Lista de opções de colaboradores retornada com sucesso.
  */
 export const getColaboradoresList200Schema = z.array(
-  z
-    .lazy(() => colaboradoresOptionsDTOSchema)
-    .describe("Opção simplificada de colaborador para seletores"),
+  z.lazy(() => colaboradoresOptionsDTOSchema).describe("Opção simplificada de colaborador para seletores"),
 );
 
-export const getColaboradoresListQueryResponseSchema = z.lazy(
-  () => getColaboradoresList200Schema,
-);
+export const getColaboradoresListQueryResponseSchema = z.lazy(() => getColaboradoresList200Schema);

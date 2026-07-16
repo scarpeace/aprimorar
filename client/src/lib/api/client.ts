@@ -1,5 +1,7 @@
 //Importante salientar que o client está dessa maneira porque o KUBB exige esse formato para funcionar corretamente;
 
+import type { ErrorResponse } from "@/lib/api/generated/types/ErrorResponse";
+
 const API_PROXY_PREFIX = "/api/proxy";
 
 export type RequestConfig<TData = unknown> = {
@@ -19,6 +21,10 @@ export type ResponseConfig<TData = unknown> = {
 };
 
 export type ResponseErrorConfig<TError = unknown> = TError;
+
+type ApiErrorPayload = ErrorResponse & {
+  message?: string;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type Client = <TData, _TError = unknown, TVariables = unknown>(
@@ -56,7 +62,7 @@ async function parseResponse<TData>(response: Response, responseType?: RequestCo
 
   const contentType = response.headers.get("content-type") ?? "";
 
-  if (contentType.includes("application/json")) {
+  if (contentType.includes("json")) {
     return (await response.json()) as TData;
   }
 
@@ -64,9 +70,7 @@ async function parseResponse<TData>(response: Response, responseType?: RequestCo
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const client: Client = async <TData, _TError = unknown, TVariables = unknown>(
-  config: RequestConfig<TVariables>,
-) => {
+export const client: Client = async <TData, _TError = unknown, TVariables = unknown>(config: RequestConfig<TVariables>) => {
   const headers = new Headers(config.headers);
 
   if (!(config.data instanceof FormData) && !headers.has("content-type")) {
@@ -75,12 +79,7 @@ export const client: Client = async <TData, _TError = unknown, TVariables = unkn
 
   const response = await fetch(buildUrl(config.url, config.params), {
     method: config.method,
-    body:
-      config.data instanceof FormData
-        ? config.data
-        : config.data === undefined
-          ? undefined
-          : JSON.stringify(config.data),
+    body: config.data instanceof FormData ? config.data : config.data === undefined ? undefined : JSON.stringify(config.data),
     headers,
     signal: config.signal,
     credentials: "same-origin",
@@ -93,13 +92,7 @@ export const client: Client = async <TData, _TError = unknown, TVariables = unkn
   }
 
   if (!response.ok) {
-    const error = data as { message?: string; mensagens?: string[] } | string | undefined;
-    const message =
-      typeof error === "string"
-        ? error
-        : error?.message ?? error?.mensagens?.[0] ?? response.statusText;
-
-    throw new Error(message);
+    throw data || new Error(response.statusText);
   }
 
   return {
@@ -114,6 +107,15 @@ export default client;
 export function getFriendlyErrorMessage(error: unknown): string {
   if (error instanceof Error) {
     return error.message;
+  }
+
+  if (typeof error === "string") {
+    return error;
+  }
+
+  if (error && typeof error === "object") {
+    const payload = error as ApiErrorPayload;
+    return payload.mensagens?.[0] ?? payload.message ?? payload.erro ?? "Ocorreu um erro desconhecido.";
   }
 
   return "Ocorreu um erro desconhecido.";

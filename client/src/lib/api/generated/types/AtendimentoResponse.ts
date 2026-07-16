@@ -13,8 +13,7 @@ export const atendimentoResponseTipoEnum = {
   OUTRO: "OUTRO",
 } as const;
 
-export type AtendimentoResponseTipoEnumKey =
-  (typeof atendimentoResponseTipoEnum)[keyof typeof atendimentoResponseTipoEnum];
+export type AtendimentoResponseTipoEnumKey = (typeof atendimentoResponseTipoEnum)[keyof typeof atendimentoResponseTipoEnum];
 
 export const atendimentoResponseStatusEnum = {
   AGENDADO: "AGENDADO",
@@ -22,8 +21,7 @@ export const atendimentoResponseStatusEnum = {
   CANCELADO: "CANCELADO",
 } as const;
 
-export type AtendimentoResponseStatusEnumKey =
-  (typeof atendimentoResponseStatusEnum)[keyof typeof atendimentoResponseStatusEnum];
+export type AtendimentoResponseStatusEnumKey = (typeof atendimentoResponseStatusEnum)[keyof typeof atendimentoResponseStatusEnum];
 
 /**
  * @description Dados do atendimento retornados pela API

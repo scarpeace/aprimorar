@@ -11,8 +11,7 @@ export const userRequestDTORoleEnum = {
   SISTEMA: "SISTEMA",
 } as const;
 
-export type UserRequestDTORoleEnumKey =
-  (typeof userRequestDTORoleEnum)[keyof typeof userRequestDTORoleEnum];
+export type UserRequestDTORoleEnumKey = (typeof userRequestDTORoleEnum)[keyof typeof userRequestDTORoleEnum];
 
 /**
  * @description Payload para criação de usuário

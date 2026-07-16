@@ -14,6 +14,4 @@ export const deleteUserPathParamsSchema = z.object({
  */
 export const deleteUser204Schema = z.any();
 
-export const deleteUserMutationResponseSchema = z.lazy(
-  () => deleteUser204Schema,
-);
+export const deleteUserMutationResponseSchema = z.lazy(() => deleteUser204Schema);
