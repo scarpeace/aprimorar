@@ -23,7 +23,6 @@ public record AtendimentoRequest(
     LocalDateTime dataHoraInicio,
 
     @NotNull(message = "Informe a data de fim")
-    @Future(message = "A data de fim precisa ser no futuro")
     @Schema(nullable = false, description = "Data e hora de fim do atendimento", example = "2026-11-20T15:30:00Z")
     LocalDateTime dataHoraFim,
 
