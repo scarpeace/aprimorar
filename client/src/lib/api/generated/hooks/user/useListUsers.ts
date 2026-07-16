@@ -5,17 +5,8 @@
 
 import fetch from "@/lib/api/client";
 import type { ListUsersQueryResponse } from "../../types/ListUsers.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const listUsersQueryKey = () => [{ url: "/v1/users" }] as const;
@@ -26,29 +17,20 @@ export type ListUsersQueryKey = ReturnType<typeof listUsersQueryKey>;
  * @summary List all users
  * {@link /v1/users}
  */
-export async function listUsers(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export async function listUsers(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    ListUsersQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "GET", url: `/v1/users`, ...requestConfig });
+  const res = await request<ListUsersQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "GET",
+    url: `/v1/users`,
+    ...requestConfig,
+  });
   return res.data;
 }
 
-export function listUsersQueryOptions(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function listUsersQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const queryKey = listUsersQueryKey();
-  return queryOptions<
-    ListUsersQueryResponse,
-    ResponseErrorConfig<Error>,
-    ListUsersQueryResponse,
-    typeof queryKey
-  >({
+  return queryOptions<ListUsersQueryResponse, ResponseErrorConfig<Error>, ListUsersQueryResponse, typeof queryKey>({
     queryKey,
     queryFn: async ({ signal }) => {
       return listUsers({ ...config, signal: config.signal ?? signal });
@@ -66,15 +48,9 @@ export function useListUsers<
   TQueryKey extends QueryKey = ListUsersQueryKey,
 >(
   options: {
-    query?: Partial<
-      QueryObserverOptions<
-        ListUsersQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
-    > & { client?: QueryClient };
+    query?: Partial<QueryObserverOptions<ListUsersQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & {
+      client?: QueryClient;
+    };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
@@ -89,9 +65,7 @@ export function useListUsers<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

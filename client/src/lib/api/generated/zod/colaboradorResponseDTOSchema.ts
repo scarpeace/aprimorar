@@ -18,21 +18,12 @@ export const colaboradorResponseDTOSchema = z
     telefone: z.string().describe("Telefone de contato do colaborador"),
     cpf: z.string().describe("CPF do colaborador"),
     email: z.string().describe("Email do colaborador"),
-    funcao: z
-      .enum(["PROFESSOR", "ADMINISTRATIVO", "TERAPEUTA", "MENTOR"])
-      .describe("Função/Papel do funcionário"),
+    funcao: z.enum(["PROFESSOR", "ADMINISTRATIVO", "TERAPEUTA", "MENTOR"]).describe("Função/Papel do funcionário"),
     get endereco() {
-      return enderecoResponseDTOSchema.describe(
-        "Dados do endereco retornados pela API",
-      );
+      return enderecoResponseDTOSchema.describe("Dados do endereco retornados pela API");
     },
-    active: z.optional(
-      z.boolean().describe("Indica se o colaborador está ativo"),
-    ),
+    active: z.optional(z.boolean().describe("Indica se o colaborador está ativo")),
     createdAt: z.iso.datetime().describe("Data de criacao do colaborador"),
-    updatedAt: z.iso
-      .datetime()
-      .describe("Data da ultima atualizacao do colaborador")
-      .nullish(),
+    updatedAt: z.iso.datetime().describe("Data da ultima atualizacao do colaborador").nullish(),
   })
   .describe("Dados do colaborador retornados pela API");

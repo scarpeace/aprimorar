@@ -14,6 +14,4 @@ export const excluirAtendimentoPathParamsSchema = z.object({
  */
 export const excluirAtendimento204Schema = z.any();
 
-export const excluirAtendimentoMutationResponseSchema = z.lazy(
-  () => excluirAtendimento204Schema,
-);
+export const excluirAtendimentoMutationResponseSchema = z.lazy(() => excluirAtendimento204Schema);

@@ -8,24 +8,13 @@ import type {
   EfetivarRepasseColaboradorMutationResponse,
   EfetivarRepasseColaboradorPathParams,
 } from "../../types/EfetivarRepasseColaborador.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const efetivarRepasseColaboradorMutationKey = () =>
-  [{ url: "/v1/atendimentos/:id/efetivarRepasseColaborador" }] as const;
+export const efetivarRepasseColaboradorMutationKey = () => [{ url: "/v1/atendimentos/:id/efetivarRepasseColaborador" }] as const;
 
-export type EfetivarRepasseColaboradorMutationKey = ReturnType<
-  typeof efetivarRepasseColaboradorMutationKey
->;
+export type EfetivarRepasseColaboradorMutationKey = ReturnType<typeof efetivarRepasseColaboradorMutationKey>;
 
 /**
  * @description Efetiva o repasse do colaborador.
@@ -37,11 +26,7 @@ export async function efetivarRepasseColaborador(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    EfetivarRepasseColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<EfetivarRepasseColaboradorMutationResponse, ResponseErrorConfig<Error>, unknown>({
     method: "PATCH",
     url: `/v1/atendimentos/${id}/efetivarRepasseColaborador`,
     ...requestConfig,
@@ -83,12 +68,9 @@ export function useEfetivarRepasseColaborador<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? efetivarRepasseColaboradorMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? efetivarRepasseColaboradorMutationKey();
 
-  const baseOptions = efetivarRepasseColaboradorMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = efetivarRepasseColaboradorMutationOptions(config) as UseMutationOptions<
     EfetivarRepasseColaboradorMutationResponse,
     ResponseErrorConfig<Error>,
     { id: EfetivarRepasseColaboradorPathParams["id"] },

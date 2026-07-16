@@ -14,14 +14,10 @@ export const updateAlunoPathParamsSchema = z.object({
 /**
  * @description Aluno atualizado com sucesso.
  */
-export const updateAluno200Schema = z
-  .lazy(() => alunoResponseDTOSchema)
-  .describe("Dados do aluno retornados pela API");
+export const updateAluno200Schema = z.lazy(() => alunoResponseDTOSchema).describe("Dados do aluno retornados pela API");
 
 export const updateAlunoMutationRequestSchema = z
   .lazy(() => alunoRequestDTOSchema)
   .describe("Formato de payload para o cadastro de um aluno");
 
-export const updateAlunoMutationResponseSchema = z.lazy(
-  () => updateAluno200Schema,
-);
+export const updateAlunoMutationResponseSchema = z.lazy(() => updateAluno200Schema);

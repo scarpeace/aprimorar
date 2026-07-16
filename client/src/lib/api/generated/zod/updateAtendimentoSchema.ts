@@ -22,6 +22,4 @@ export const updateAtendimentoMutationRequestSchema = z
   .lazy(() => atendimentoRequestSchema)
   .describe("Formato de payload para cadastro e atualização de atendimento");
 
-export const updateAtendimentoMutationResponseSchema = z.lazy(
-  () => updateAtendimento200Schema,
-);
+export const updateAtendimentoMutationResponseSchema = z.lazy(() => updateAtendimento200Schema);

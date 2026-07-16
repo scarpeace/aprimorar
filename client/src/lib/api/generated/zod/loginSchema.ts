@@ -10,12 +10,8 @@ import { z } from "zod/v4";
 /**
  * @description Usuario autenticado com sucesso.
  */
-export const login200Schema = z
-  .lazy(() => authResponseDTOSchema)
-  .describe("Resposta de autenticacao com access token JWT");
+export const login200Schema = z.lazy(() => authResponseDTOSchema).describe("Resposta de autenticacao com access token JWT");
 
-export const loginMutationRequestSchema = z
-  .lazy(() => authRequestDTOSchema)
-  .describe("Payload de autenticação");
+export const loginMutationRequestSchema = z.lazy(() => authRequestDTOSchema).describe("Payload de autenticação");
 
 export const loginMutationResponseSchema = z.lazy(() => login200Schema);

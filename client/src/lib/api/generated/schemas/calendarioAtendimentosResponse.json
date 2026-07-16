@@ -1,67 +1,29 @@
 {
-  "required": [
-    "alunoId",
-    "colaboradorId",
-    "dataHoraFim",
-    "dataHoraInicio",
-    "id",
-    "nomeAluno",
-    "nomeColaborador",
-    "tipo"
-  ],
+  "required": ["alunoId", "colaboradorId", "dataHoraFim", "dataHoraInicio", "id", "nomeAluno", "nomeColaborador", "tipo"],
   "type": "object",
   "properties": {
-    "id": {
-      "type": "integer",
-      "description": "Identificador do atendimento",
-      "format": "int64",
-      "example": 1
-    },
+    "id": { "type": "integer", "description": "Identificador do atendimento", "format": "int64", "example": 1 },
     "alunoId": {
       "type": "string",
       "description": "ID do aluno",
       "format": "uuid",
       "example": "550e8400-e29b-41d4-a716-446655440000"
     },
-    "nomeAluno": {
-      "type": "string",
-      "description": "Nome do aluno",
-      "example": "João Silva"
-    },
+    "nomeAluno": { "type": "string", "description": "Nome do aluno", "example": "João Silva" },
     "colaboradorId": {
       "type": "string",
       "description": "ID do colaborador",
       "format": "uuid",
       "example": "123e4567-e89b-12d3-a456-426614174000"
     },
-    "nomeColaborador": {
-      "type": "string",
-      "description": "Nome do colaborador",
-      "example": "Maria Souza"
-    },
-    "dataHoraInicio": {
-      "type": "string",
-      "description": "Início do atendimento",
-      "format": "date-time"
-    },
-    "dataHoraFim": {
-      "type": "string",
-      "description": "Fim do atendimento",
-      "format": "date-time"
-    },
+    "nomeColaborador": { "type": "string", "description": "Nome do colaborador", "example": "Maria Souza" },
+    "dataHoraInicio": { "type": "string", "description": "Início do atendimento", "format": "date-time" },
+    "dataHoraFim": { "type": "string", "description": "Fim do atendimento", "format": "date-time" },
     "tipo": {
       "type": "string",
       "description": "Tipo de conteudo ou categoria do atendimento",
       "example": "MENTORIA",
-      "enum": [
-        "AULA",
-        "MENTORIA",
-        "TERAPIA",
-        "ORIENTACAO_VOCACIONAL",
-        "ENEM",
-        "PAS",
-        "OUTRO"
-      ]
+      "enum": ["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"]
     }
   },
   "description": "Evento simplificado para o calendário de atendimentos",

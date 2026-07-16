@@ -12,8 +12,6 @@ export const userRequestDTOSchema = z
   .object({
     username: z.string().min(1).describe("E-mail usado no login"),
     password: z.string().min(6).max(2147483647).describe("Senha"),
-    role: z
-      .enum(["ALUNO", "COLABORADOR", "RESPONSAVEL", "ADMIN", "SISTEMA"])
-      .describe("Perfil de acesso"),
+    role: z.enum(["ALUNO", "COLABORADOR", "RESPONSAVEL", "ADMIN", "SISTEMA"]).describe("Perfil de acesso"),
   })
   .describe("Payload para criação de usuário");

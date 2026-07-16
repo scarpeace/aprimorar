@@ -10,14 +10,10 @@ import { z } from "zod/v4";
 /**
  * @description Aluno criado com sucesso.
  */
-export const criarAluno201Schema = z
-  .lazy(() => alunoResponseDTOSchema)
-  .describe("Dados do aluno retornados pela API");
+export const criarAluno201Schema = z.lazy(() => alunoResponseDTOSchema).describe("Dados do aluno retornados pela API");
 
 export const criarAlunoMutationRequestSchema = z
   .lazy(() => alunoRequestDTOSchema)
   .describe("Formato de payload para o cadastro de um aluno");
 
-export const criarAlunoMutationResponseSchema = z.lazy(
-  () => criarAluno201Schema,
-);
+export const criarAlunoMutationResponseSchema = z.lazy(() => criarAluno201Schema);

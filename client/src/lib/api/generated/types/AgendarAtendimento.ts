@@ -5,11 +5,17 @@
 
 import type { AtendimentoRequest } from "./AtendimentoRequest.ts";
 import type { AtendimentoResponse } from "./AtendimentoResponse.ts";
+import type { ErrorResponse } from "./ErrorResponse.ts";
 
 /**
  * @description Atendimento agendado e retornado com os dados consolidados de aluno e colaborador.
  */
 export type AgendarAtendimento201 = AtendimentoResponse;
+
+/**
+ * @description Falha de validação
+ */
+export type AgendarAtendimento400 = ErrorResponse;
 
 export type AgendarAtendimentoMutationRequest = AtendimentoRequest;
 
@@ -18,5 +24,5 @@ export type AgendarAtendimentoMutationResponse = AgendarAtendimento201;
 export type AgendarAtendimentoMutation = {
   Response: AgendarAtendimento201;
   Request: AgendarAtendimentoMutationRequest;
-  Errors: any;
+  Errors: AgendarAtendimento400;
 };

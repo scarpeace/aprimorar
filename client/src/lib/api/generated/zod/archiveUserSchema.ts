@@ -13,10 +13,6 @@ export const archiveUserPathParamsSchema = z.object({
 /**
  * @description Status ativo alternado com sucesso
  */
-export const archiveUser200Schema = z
-  .lazy(() => userResponseDTOSchema)
-  .describe("Dados do usuario retornados pela API");
+export const archiveUser200Schema = z.lazy(() => userResponseDTOSchema).describe("Dados do usuario retornados pela API");
 
-export const archiveUserMutationResponseSchema = z.lazy(
-  () => archiveUser200Schema,
-);
+export const archiveUserMutationResponseSchema = z.lazy(() => archiveUser200Schema);

@@ -22,11 +22,7 @@ export const calendarioMensalAtendimentosResponseSchema = z
     totalOutros: z.int().describe("Total de outros atendimentos do mês"),
     get eventos() {
       return z
-        .array(
-          calendarioAtendimentosResponseSchema.describe(
-            "Evento simplificado para o calendário de atendimentos",
-          ),
-        )
+        .array(calendarioAtendimentosResponseSchema.describe("Evento simplificado para o calendário de atendimentos"))
         .describe("Eventos do mês");
     },
   })

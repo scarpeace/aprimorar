@@ -17,6 +17,4 @@ export const getAtendimentoById200Schema = z
   .lazy(() => atendimentoResponseSchema)
   .describe("Dados do atendimento retornados pela API");
 
-export const getAtendimentoByIdQueryResponseSchema = z.lazy(
-  () => getAtendimentoById200Schema,
-);
+export const getAtendimentoByIdQueryResponseSchema = z.lazy(() => getAtendimentoById200Schema);

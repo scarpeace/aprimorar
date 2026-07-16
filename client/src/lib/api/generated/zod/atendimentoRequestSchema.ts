@@ -11,25 +11,13 @@ import { z } from "zod/v4";
 export const atendimentoRequestSchema = z
   .object({
     tipo: z
-      .enum([
-        "AULA",
-        "MENTORIA",
-        "TERAPIA",
-        "ORIENTACAO_VOCACIONAL",
-        "ENEM",
-        "PAS",
-        "OUTRO",
-      ])
+      .enum(["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"])
       .describe("Tipo de conteudo ou categoria do atendimento"),
-    dataHoraInicio: z.iso
-      .datetime()
-      .describe("Data e hora de início do atendimento"),
+    dataHoraInicio: z.iso.datetime().describe("Data e hora de início do atendimento"),
     dataHoraFim: z.iso.datetime().describe("Data e hora de fim do atendimento"),
     pagamentoAluno: z.number().describe("Valor pago pelo aluno"),
     repasseColaborador: z.number().describe("Valor de repasse ao colaborador"),
     alunoId: z.uuid().describe("ID do aluno vinculado ao atendimento"),
-    colaboradorId: z
-      .uuid()
-      .describe("ID do colaborador vinculado ao atendimento"),
+    colaboradorId: z.uuid().describe("ID do colaborador vinculado ao atendimento"),
   })
   .describe("Formato de payload para cadastro e atualização de atendimento");

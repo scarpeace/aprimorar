@@ -8,11 +8,7 @@
       "format": "uuid",
       "example": "550e8400-e29b-41d4-a716-446655440000"
     },
-    "nome": {
-      "type": "string",
-      "description": "Nome completo do colaborador",
-      "example": "João Pereira"
-    }
+    "nome": { "type": "string", "description": "Nome completo do colaborador", "example": "João Pereira" }
   },
   "description": "Opção simplificada de colaborador para seletores",
   "x-readme-ref-name": "ColaboradoresOptionsDTO"

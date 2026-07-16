@@ -4,28 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  CreateResponsavelMutationRequest,
-  CreateResponsavelMutationResponse,
-} from "../../types/CreateResponsavel.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { CreateResponsavelMutationRequest, CreateResponsavelMutationResponse } from "../../types/CreateResponsavel.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const createResponsavelMutationKey = () =>
-  [{ url: "/v1/responsaveis" }] as const;
+export const createResponsavelMutationKey = () => [{ url: "/v1/responsaveis" }] as const;
 
-export type CreateResponsavelMutationKey = ReturnType<
-  typeof createResponsavelMutationKey
->;
+export type CreateResponsavelMutationKey = ReturnType<typeof createResponsavelMutationKey>;
 
 /**
  * @description Cria um novo responsável
@@ -33,19 +19,13 @@ export type CreateResponsavelMutationKey = ReturnType<
  */
 export async function createResponsavel(
   data: CreateResponsavelMutationRequest,
-  config: Partial<RequestConfig<CreateResponsavelMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<CreateResponsavelMutationRequest>> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const requestData = data;
 
-  const res = await request<
-    CreateResponsavelMutationResponse,
-    ResponseErrorConfig<Error>,
-    CreateResponsavelMutationRequest
-  >({
+  const res = await request<CreateResponsavelMutationResponse, ResponseErrorConfig<Error>, CreateResponsavelMutationRequest>({
     method: "POST",
     url: `/v1/responsaveis`,
     data: requestData,
@@ -55,9 +35,7 @@ export async function createResponsavel(
 }
 
 export function createResponsavelMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig<CreateResponsavelMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<CreateResponsavelMutationRequest>> & { client?: Client } = {},
 ) {
   const mutationKey = createResponsavelMutationKey();
   return mutationOptions<
@@ -85,19 +63,14 @@ export function useCreateResponsavel<TContext>(
       { data: CreateResponsavelMutationRequest },
       TContext
     > & { client?: QueryClient };
-    client?: Partial<RequestConfig<CreateResponsavelMutationRequest>> & {
-      client?: Client;
-    };
+    client?: Partial<RequestConfig<CreateResponsavelMutationRequest>> & { client?: Client };
   } = {},
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? createResponsavelMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? createResponsavelMutationKey();
 
-  const baseOptions = createResponsavelMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = createResponsavelMutationOptions(config) as UseMutationOptions<
     CreateResponsavelMutationResponse,
     ResponseErrorConfig<Error>,
     { data: CreateResponsavelMutationRequest },

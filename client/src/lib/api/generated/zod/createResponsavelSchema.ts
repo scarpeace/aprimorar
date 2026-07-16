@@ -18,6 +18,4 @@ export const createResponsavelMutationRequestSchema = z
   .lazy(() => responsavelRequestDTOSchema)
   .describe("Formato de payload para criar um novo responsável");
 
-export const createResponsavelMutationResponseSchema = z.lazy(
-  () => createResponsavel201Schema,
-);
+export const createResponsavelMutationResponseSchema = z.lazy(() => createResponsavel201Schema);

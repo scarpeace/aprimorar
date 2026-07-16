@@ -4,28 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  ExcluirAtendimentoMutationResponse,
-  ExcluirAtendimentoPathParams,
-} from "../../types/ExcluirAtendimento.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { ExcluirAtendimentoMutationResponse, ExcluirAtendimentoPathParams } from "../../types/ExcluirAtendimento.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const excluirAtendimentoMutationKey = () =>
-  [{ url: "/v1/atendimentos/:id" }] as const;
+export const excluirAtendimentoMutationKey = () => [{ url: "/v1/atendimentos/:id" }] as const;
 
-export type ExcluirAtendimentoMutationKey = ReturnType<
-  typeof excluirAtendimentoMutationKey
->;
+export type ExcluirAtendimentoMutationKey = ReturnType<typeof excluirAtendimentoMutationKey>;
 
 /**
  * @description Remove definitivamente um atendimento.
@@ -37,17 +23,15 @@ export async function excluirAtendimento(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    ExcluirAtendimentoMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "DELETE", url: `/v1/atendimentos/${id}`, ...requestConfig });
+  const res = await request<ExcluirAtendimentoMutationResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "DELETE",
+    url: `/v1/atendimentos/${id}`,
+    ...requestConfig,
+  });
   return res.data;
 }
 
-export function excluirAtendimentoMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function excluirAtendimentoMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const mutationKey = excluirAtendimentoMutationKey();
   return mutationOptions<
     ExcluirAtendimentoMutationResponse,
@@ -79,12 +63,9 @@ export function useExcluirAtendimento<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? excluirAtendimentoMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? excluirAtendimentoMutationKey();
 
-  const baseOptions = excluirAtendimentoMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = excluirAtendimentoMutationOptions(config) as UseMutationOptions<
     ExcluirAtendimentoMutationResponse,
     ResponseErrorConfig<Error>,
     { id: ExcluirAtendimentoPathParams["id"] },

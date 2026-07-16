@@ -11,8 +11,6 @@ import { z } from "zod/v4";
 export const alunoResumoFinanceiroResponseSchema = z
   .object({
     totalPago: z.number().describe("Total de pagamentos efetuados no período"),
-    totalPendente: z
-      .number()
-      .describe("Total de pagamentos pendentes no período"),
+    totalPendente: z.number().describe("Total de pagamentos pendentes no período"),
   })
   .describe("Resumo financeiro mensal de um aluno");

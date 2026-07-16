@@ -14,6 +14,4 @@ export const efetivarPagamentoAlunoPathParamsSchema = z.object({
  */
 export const efetivarPagamentoAluno200Schema = z.any();
 
-export const efetivarPagamentoAlunoMutationResponseSchema = z.lazy(
-  () => efetivarPagamentoAluno200Schema,
-);
+export const efetivarPagamentoAlunoMutationResponseSchema = z.lazy(() => efetivarPagamentoAluno200Schema);

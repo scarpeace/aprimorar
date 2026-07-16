@@ -10,18 +10,8 @@ export const getResponsaveisQueryParamsSchema = z.object({
   nome: z.string().describe("Nome do responsável").nullish(),
   email: z.string().describe("E-mail do responsável").nullish(),
   cpf: z.string().describe("CPF do responsável").nullish(),
-  page: z.coerce
-    .number()
-    .int()
-    .min(0)
-    .default(0)
-    .describe("Zero-based page index (0..N)"),
-  size: z.coerce
-    .number()
-    .int()
-    .min(1)
-    .default(10)
-    .describe("The size of the page to be returned"),
+  page: z.coerce.number().int().min(0).default(0).describe("Zero-based page index (0..N)"),
+  size: z.coerce.number().int().min(1).default(10).describe("The size of the page to be returned"),
   sort: z
     .array(z.string())
     .describe(
@@ -32,10 +22,6 @@ export const getResponsaveisQueryParamsSchema = z.object({
 /**
  * @description Lista de responsáveis retornada com sucesso.
  */
-export const getResponsaveis200Schema = z.lazy(
-  () => pagedModelResponsavelResponseDTOSchema,
-);
+export const getResponsaveis200Schema = z.lazy(() => pagedModelResponsavelResponseDTOSchema);
 
-export const getResponsaveisQueryResponseSchema = z.lazy(
-  () => getResponsaveis200Schema,
-);
+export const getResponsaveisQueryResponseSchema = z.lazy(() => getResponsaveis200Schema);

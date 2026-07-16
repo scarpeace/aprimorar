@@ -3,7 +3,10 @@ package aprimorar.atendimentos.controller;
 import aprimorar.atendimentos.dto.AtendimentoRequest;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
 import aprimorar.atendimentos.service.AtendimentoMutationService;
+import aprimorar.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -32,6 +35,11 @@ public class AtendimentoMutationController {
     @PostMapping
     @Operation(operationId = "agendarAtendimento", description = "Cria um atendimento vinculando aluno e colaborador.")
     @ApiResponse(responseCode = "201", description = "Atendimento agendado e retornado com os dados consolidados de aluno e colaborador.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de validação",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+    )
     public ResponseEntity<AtendimentoResponse> agendar(@RequestBody @Valid AtendimentoRequest request) {
         AtendimentoResponse created = atendimentoMutationService.agendar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);

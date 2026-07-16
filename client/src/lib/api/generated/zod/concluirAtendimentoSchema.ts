@@ -17,6 +17,4 @@ export const concluirAtendimento200Schema = z
   .lazy(() => atendimentoResponseSchema)
   .describe("Dados do atendimento retornados pela API");
 
-export const concluirAtendimentoMutationResponseSchema = z.lazy(
-  () => concluirAtendimento200Schema,
-);
+export const concluirAtendimentoMutationResponseSchema = z.lazy(() => concluirAtendimento200Schema);

@@ -9,10 +9,6 @@ import { z } from "zod/v4";
 /**
  * @description KPIs de alunos retornados com sucesso.
  */
-export const getAlunosKpis200Schema = z
-  .lazy(() => alunosKpisDTOSchema)
-  .describe("Resumo de alunos cadastrados");
+export const getAlunosKpis200Schema = z.lazy(() => alunosKpisDTOSchema).describe("Resumo de alunos cadastrados");
 
-export const getAlunosKpisQueryResponseSchema = z.lazy(
-  () => getAlunosKpis200Schema,
-);
+export const getAlunosKpisQueryResponseSchema = z.lazy(() => getAlunosKpis200Schema);

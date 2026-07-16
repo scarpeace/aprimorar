@@ -18,15 +18,7 @@ export const calendarioAtendimentosResponseSchema = z
     dataHoraInicio: z.iso.datetime().describe("Início do atendimento"),
     dataHoraFim: z.iso.datetime().describe("Fim do atendimento"),
     tipo: z
-      .enum([
-        "AULA",
-        "MENTORIA",
-        "TERAPIA",
-        "ORIENTACAO_VOCACIONAL",
-        "ENEM",
-        "PAS",
-        "OUTRO",
-      ])
+      .enum(["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"])
       .describe("Tipo de conteudo ou categoria do atendimento"),
   })
   .describe("Evento simplificado para o calendário de atendimentos");

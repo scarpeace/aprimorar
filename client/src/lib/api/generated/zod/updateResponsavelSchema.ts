@@ -22,6 +22,4 @@ export const updateResponsavelMutationRequestSchema = z
   .lazy(() => responsavelRequestDTOSchema)
   .describe("Formato de payload para criar um novo responsável");
 
-export const updateResponsavelMutationResponseSchema = z.lazy(
-  () => updateResponsavel200Schema,
-);
+export const updateResponsavelMutationResponseSchema = z.lazy(() => updateResponsavel200Schema);

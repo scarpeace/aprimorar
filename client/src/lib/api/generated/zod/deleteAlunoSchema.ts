@@ -14,6 +14,4 @@ export const deleteAlunoPathParamsSchema = z.object({
  */
 export const deleteAluno204Schema = z.any();
 
-export const deleteAlunoMutationResponseSchema = z.lazy(
-  () => deleteAluno204Schema,
-);
+export const deleteAlunoMutationResponseSchema = z.lazy(() => deleteAluno204Schema);

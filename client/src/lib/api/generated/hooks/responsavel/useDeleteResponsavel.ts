@@ -4,28 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  DeleteResponsavelMutationResponse,
-  DeleteResponsavelPathParams,
-} from "../../types/DeleteResponsavel.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { DeleteResponsavelMutationResponse, DeleteResponsavelPathParams } from "../../types/DeleteResponsavel.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const deleteResponsavelMutationKey = () =>
-  [{ url: "/v1/responsaveis/:responsavelId" }] as const;
+export const deleteResponsavelMutationKey = () => [{ url: "/v1/responsaveis/:responsavelId" }] as const;
 
-export type DeleteResponsavelMutationKey = ReturnType<
-  typeof deleteResponsavelMutationKey
->;
+export type DeleteResponsavelMutationKey = ReturnType<typeof deleteResponsavelMutationKey>;
 
 /**
  * @description Deleta um responsável por ID
@@ -37,11 +23,7 @@ export async function deleteResponsavel(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    DeleteResponsavelMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<DeleteResponsavelMutationResponse, ResponseErrorConfig<Error>, unknown>({
     method: "DELETE",
     url: `/v1/responsaveis/${responsavelId}`,
     ...requestConfig,
@@ -49,9 +31,7 @@ export async function deleteResponsavel(
   return res.data;
 }
 
-export function deleteResponsavelMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function deleteResponsavelMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const mutationKey = deleteResponsavelMutationKey();
   return mutationOptions<
     DeleteResponsavelMutationResponse,
@@ -83,12 +63,9 @@ export function useDeleteResponsavel<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? deleteResponsavelMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? deleteResponsavelMutationKey();
 
-  const baseOptions = deleteResponsavelMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = deleteResponsavelMutationOptions(config) as UseMutationOptions<
     DeleteResponsavelMutationResponse,
     ResponseErrorConfig<Error>,
     { responsavelId: DeleteResponsavelPathParams["responsavelId"] },

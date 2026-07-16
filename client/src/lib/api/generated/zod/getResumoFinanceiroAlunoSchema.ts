@@ -21,6 +21,4 @@ export const getResumoFinanceiroAluno200Schema = z
   .lazy(() => alunoResumoFinanceiroResponseSchema)
   .describe("Resumo financeiro mensal de um aluno");
 
-export const getResumoFinanceiroAlunoQueryResponseSchema = z.lazy(
-  () => getResumoFinanceiroAluno200Schema,
-);
+export const getResumoFinanceiroAlunoQueryResponseSchema = z.lazy(() => getResumoFinanceiroAluno200Schema);

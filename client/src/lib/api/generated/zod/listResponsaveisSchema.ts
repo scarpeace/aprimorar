@@ -10,11 +10,7 @@ import { z } from "zod/v4";
  * @description Lista de opções retornada com sucesso.
  */
 export const listResponsaveis200Schema = z.array(
-  z
-    .lazy(() => responsavelResponseDTOSchema)
-    .describe("Dados do responsável retornados pela API"),
+  z.lazy(() => responsavelResponseDTOSchema).describe("Dados do responsável retornados pela API"),
 );
 
-export const listResponsaveisQueryResponseSchema = z.lazy(
-  () => listResponsaveis200Schema,
-);
+export const listResponsaveisQueryResponseSchema = z.lazy(() => listResponsaveis200Schema);

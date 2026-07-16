@@ -9,13 +9,7 @@ import { z } from "zod/v4";
 
 export const pagedModelColaboradorResponseDTOSchema = z.object({
   get content() {
-    return z
-      .array(
-        colaboradorResponseDTOSchema.describe(
-          "Dados do colaborador retornados pela API",
-        ),
-      )
-      .optional();
+    return z.array(colaboradorResponseDTOSchema.describe("Dados do colaborador retornados pela API")).optional();
   },
   get page() {
     return pageMetadataSchema.optional();

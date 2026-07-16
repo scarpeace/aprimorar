@@ -1,5 +1,6 @@
 export type {
   AgendarAtendimento201,
+  AgendarAtendimento400,
   AgendarAtendimentoMutation,
   AgendarAtendimentoMutationRequest,
   AgendarAtendimentoMutationResponse,
@@ -15,22 +16,14 @@ export type {
   ArchiveAlunoMutationResponse,
   ArchiveAlunoPathParams,
 } from "./ArchiveAluno.ts";
-export type {
-  ArchiveUser200,
-  ArchiveUserMutation,
-  ArchiveUserMutationResponse,
-  ArchiveUserPathParams,
-} from "./ArchiveUser.ts";
+export type { ArchiveUser200, ArchiveUserMutation, ArchiveUserMutationResponse, ArchiveUserPathParams } from "./ArchiveUser.ts";
 export type {
   ArquivarColaborador204,
   ArquivarColaboradorMutation,
   ArquivarColaboradorMutationResponse,
   ArquivarColaboradorPathParams,
 } from "./ArquivarColaborador.ts";
-export type {
-  AtendimentoRequest,
-  AtendimentoRequestTipoEnumKey,
-} from "./AtendimentoRequest.ts";
+export type { AtendimentoRequest, AtendimentoRequestTipoEnumKey } from "./AtendimentoRequest.ts";
 export type {
   AtendimentoResponse,
   AtendimentoResponseStatusEnumKey,
@@ -49,14 +42,8 @@ export type {
   CancelarAtendimentoMutationResponse,
   CancelarAtendimentoPathParams,
 } from "./CancelarAtendimento.ts";
-export type {
-  ColaboradorRequestDTO,
-  ColaboradorRequestDTOFuncaoEnumKey,
-} from "./ColaboradorRequestDTO.ts";
-export type {
-  ColaboradorResponseDTO,
-  ColaboradorResponseDTOFuncaoEnumKey,
-} from "./ColaboradorResponseDTO.ts";
+export type { ColaboradorRequestDTO, ColaboradorRequestDTOFuncaoEnumKey } from "./ColaboradorRequestDTO.ts";
+export type { ColaboradorResponseDTO, ColaboradorResponseDTOFuncaoEnumKey } from "./ColaboradorResponseDTO.ts";
 export type { ColaboradorResumoFinanceiroResponse } from "./ColaboradorResumoFinanceiroResponse.ts";
 export type { ColaboradoresOptionsDTO } from "./ColaboradoresOptionsDTO.ts";
 export type {
@@ -77,24 +64,9 @@ export type {
   CreateResponsavelMutationRequest,
   CreateResponsavelMutationResponse,
 } from "./CreateResponsavel.ts";
-export type {
-  CreateUser201,
-  CreateUserMutation,
-  CreateUserMutationRequest,
-  CreateUserMutationResponse,
-} from "./CreateUser.ts";
-export type {
-  CriarAluno201,
-  CriarAlunoMutation,
-  CriarAlunoMutationRequest,
-  CriarAlunoMutationResponse,
-} from "./CriarAluno.ts";
-export type {
-  DeleteAluno204,
-  DeleteAlunoMutation,
-  DeleteAlunoMutationResponse,
-  DeleteAlunoPathParams,
-} from "./DeleteAluno.ts";
+export type { CreateUser201, CreateUserMutation, CreateUserMutationRequest, CreateUserMutationResponse } from "./CreateUser.ts";
+export type { CriarAluno201, CriarAlunoMutation, CriarAlunoMutationRequest, CriarAlunoMutationResponse } from "./CriarAluno.ts";
+export type { DeleteAluno204, DeleteAlunoMutation, DeleteAlunoMutationResponse, DeleteAlunoPathParams } from "./DeleteAluno.ts";
 export type {
   DeleteColaborador204,
   DeleteColaboradorMutation,
@@ -107,12 +79,7 @@ export type {
   DeleteResponsavelMutationResponse,
   DeleteResponsavelPathParams,
 } from "./DeleteResponsavel.ts";
-export type {
-  DeleteUser204,
-  DeleteUserMutation,
-  DeleteUserMutationResponse,
-  DeleteUserPathParams,
-} from "./DeleteUser.ts";
+export type { DeleteUser204, DeleteUserMutation, DeleteUserMutationResponse, DeleteUserPathParams } from "./DeleteUser.ts";
 export type {
   DesarquivarColaborador204,
   DesarquivarColaboradorMutation,
@@ -133,6 +100,7 @@ export type {
 } from "./EfetivarRepasseColaborador.ts";
 export type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
+export type { ErrorResponse } from "./ErrorResponse.ts";
 export type {
   ExcluirAtendimento204,
   ExcluirAtendimentoMutation,
@@ -145,29 +113,15 @@ export type {
   FindColaboradorByIdQuery,
   FindColaboradorByIdQueryResponse,
 } from "./FindColaboradorById.ts";
-export type {
-  GetAlunoById200,
-  GetAlunoByIdPathParams,
-  GetAlunoByIdQuery,
-  GetAlunoByIdQueryResponse,
-} from "./GetAlunoById.ts";
-export type {
-  GetAlunos200,
-  GetAlunosQuery,
-  GetAlunosQueryParams,
-  GetAlunosQueryResponse,
-} from "./GetAlunos.ts";
+export type { GetAlunoById200, GetAlunoByIdPathParams, GetAlunoByIdQuery, GetAlunoByIdQueryResponse } from "./GetAlunoById.ts";
+export type { GetAlunos200, GetAlunosQuery, GetAlunosQueryParams, GetAlunosQueryResponse } from "./GetAlunos.ts";
 export type {
   GetAlunosByResponsavel200,
   GetAlunosByResponsavelPathParams,
   GetAlunosByResponsavelQuery,
   GetAlunosByResponsavelQueryResponse,
 } from "./GetAlunosByResponsavel.ts";
-export type {
-  GetAlunosKpis200,
-  GetAlunosKpisQuery,
-  GetAlunosKpisQueryResponse,
-} from "./GetAlunosKpis.ts";
+export type { GetAlunosKpis200, GetAlunosKpisQuery, GetAlunosKpisQueryResponse } from "./GetAlunosKpis.ts";
 export type {
   GetAtendimentoById200,
   GetAtendimentoByIdPathParams,
@@ -231,27 +185,10 @@ export type {
   GetResumoFinanceiroColaboradorQueryParams,
   GetResumoFinanceiroColaboradorQueryResponse,
 } from "./GetResumoFinanceiroColaborador.ts";
-export type {
-  ListAlunos200,
-  ListAlunosQuery,
-  ListAlunosQueryResponse,
-} from "./ListAlunos.ts";
-export type {
-  ListResponsaveis200,
-  ListResponsaveisQuery,
-  ListResponsaveisQueryResponse,
-} from "./ListResponsaveis.ts";
-export type {
-  ListUsers200,
-  ListUsersQuery,
-  ListUsersQueryResponse,
-} from "./ListUsers.ts";
-export type {
-  Login200,
-  LoginMutation,
-  LoginMutationRequest,
-  LoginMutationResponse,
-} from "./Login.ts";
+export type { ListAlunos200, ListAlunosQuery, ListAlunosQueryResponse } from "./ListAlunos.ts";
+export type { ListResponsaveis200, ListResponsaveisQuery, ListResponsaveisQueryResponse } from "./ListResponsaveis.ts";
+export type { ListUsers200, ListUsersQuery, ListUsersQueryResponse } from "./ListUsers.ts";
+export type { Login200, LoginMutation, LoginMutationRequest, LoginMutationResponse } from "./Login.ts";
 export type { Me200, MePathParams, MeQuery, MeQueryResponse } from "./Me.ts";
 export type { PageMetadata } from "./PageMetadata.ts";
 export type { PagedModelAlunoResponseDTO } from "./PagedModelAlunoResponseDTO.ts";
@@ -295,14 +232,8 @@ export type {
   UpdateResponsavelMutationResponse,
   UpdateResponsavelPathParams,
 } from "./UpdateResponsavel.ts";
-export type {
-  UserRequestDTO,
-  UserRequestDTORoleEnumKey,
-} from "./UserRequestDTO.ts";
-export type {
-  UserResponseDTO,
-  UserResponseDTORoleEnumKey,
-} from "./UserResponseDTO.ts";
+export type { UserRequestDTO, UserRequestDTORoleEnumKey } from "./UserRequestDTO.ts";
+export type { UserResponseDTO, UserResponseDTORoleEnumKey } from "./UserResponseDTO.ts";
 export { atendimentoRequestTipoEnum } from "./AtendimentoRequest.ts";
 export { atendimentoResponseStatusEnum } from "./AtendimentoResponse.ts";
 export { atendimentoResponseTipoEnum } from "./AtendimentoResponse.ts";

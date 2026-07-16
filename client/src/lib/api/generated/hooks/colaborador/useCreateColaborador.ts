@@ -4,28 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  CreateColaboradorMutationRequest,
-  CreateColaboradorMutationResponse,
-} from "../../types/CreateColaborador.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { CreateColaboradorMutationRequest, CreateColaboradorMutationResponse } from "../../types/CreateColaborador.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const createColaboradorMutationKey = () =>
-  [{ url: "/v1/colaboradores" }] as const;
+export const createColaboradorMutationKey = () => [{ url: "/v1/colaboradores" }] as const;
 
-export type CreateColaboradorMutationKey = ReturnType<
-  typeof createColaboradorMutationKey
->;
+export type CreateColaboradorMutationKey = ReturnType<typeof createColaboradorMutationKey>;
 
 /**
  * @description Cria um novo colaborador com os dados fornecidos.
@@ -33,19 +19,13 @@ export type CreateColaboradorMutationKey = ReturnType<
  */
 export async function createColaborador(
   data: CreateColaboradorMutationRequest,
-  config: Partial<RequestConfig<CreateColaboradorMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<CreateColaboradorMutationRequest>> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const requestData = data;
 
-  const res = await request<
-    CreateColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
-    CreateColaboradorMutationRequest
-  >({
+  const res = await request<CreateColaboradorMutationResponse, ResponseErrorConfig<Error>, CreateColaboradorMutationRequest>({
     method: "POST",
     url: `/v1/colaboradores`,
     data: requestData,
@@ -55,9 +35,7 @@ export async function createColaborador(
 }
 
 export function createColaboradorMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig<CreateColaboradorMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<CreateColaboradorMutationRequest>> & { client?: Client } = {},
 ) {
   const mutationKey = createColaboradorMutationKey();
   return mutationOptions<
@@ -85,19 +63,14 @@ export function useCreateColaborador<TContext>(
       { data: CreateColaboradorMutationRequest },
       TContext
     > & { client?: QueryClient };
-    client?: Partial<RequestConfig<CreateColaboradorMutationRequest>> & {
-      client?: Client;
-    };
+    client?: Partial<RequestConfig<CreateColaboradorMutationRequest>> & { client?: Client };
   } = {},
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? createColaboradorMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? createColaboradorMutationKey();
 
-  const baseOptions = createColaboradorMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = createColaboradorMutationOptions(config) as UseMutationOptions<
     CreateColaboradorMutationResponse,
     ResponseErrorConfig<Error>,
     { data: CreateColaboradorMutationRequest },

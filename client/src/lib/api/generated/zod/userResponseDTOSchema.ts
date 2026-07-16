@@ -12,9 +12,7 @@ export const userResponseDTOSchema = z
   .object({
     id: z.uuid().describe("ID do usuario"),
     username: z.string().describe("E-mail usado no login"),
-    role: z
-      .enum(["ALUNO", "COLABORADOR", "RESPONSAVEL", "ADMIN", "SISTEMA"])
-      .describe("Perfil de acesso"),
+    role: z.enum(["ALUNO", "COLABORADOR", "RESPONSAVEL", "ADMIN", "SISTEMA"]).describe("Perfil de acesso"),
     active: z.boolean().describe("Indica se a conta está ativa"),
     createdAt: z.iso.datetime().describe("Data de criacao"),
     updatedAt: z.iso.datetime().describe("Data de atualizacao"),

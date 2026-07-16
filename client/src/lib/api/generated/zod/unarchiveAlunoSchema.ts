@@ -14,6 +14,4 @@ export const unarchiveAlunoPathParamsSchema = z.object({
  */
 export const unarchiveAluno204Schema = z.any();
 
-export const unarchiveAlunoMutationResponseSchema = z.lazy(
-  () => unarchiveAluno204Schema,
-);
+export const unarchiveAlunoMutationResponseSchema = z.lazy(() => unarchiveAluno204Schema);

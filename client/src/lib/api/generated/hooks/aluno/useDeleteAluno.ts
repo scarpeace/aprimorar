@@ -4,24 +4,12 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  DeleteAlunoMutationResponse,
-  DeleteAlunoPathParams,
-} from "../../types/DeleteAluno.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { DeleteAlunoMutationResponse, DeleteAlunoPathParams } from "../../types/DeleteAluno.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const deleteAlunoMutationKey = () =>
-  [{ url: "/v1/alunos/:alunoId" }] as const;
+export const deleteAlunoMutationKey = () => [{ url: "/v1/alunos/:alunoId" }] as const;
 
 export type DeleteAlunoMutationKey = ReturnType<typeof deleteAlunoMutationKey>;
 
@@ -35,17 +23,15 @@ export async function deleteAluno(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    DeleteAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "DELETE", url: `/v1/alunos/${alunoId}`, ...requestConfig });
+  const res = await request<DeleteAlunoMutationResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "DELETE",
+    url: `/v1/alunos/${alunoId}`,
+    ...requestConfig,
+  });
   return res.data;
 }
 
-export function deleteAlunoMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+export function deleteAlunoMutationOptions<TContext = unknown>(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const mutationKey = deleteAlunoMutationKey();
   return mutationOptions<
     DeleteAlunoMutationResponse,

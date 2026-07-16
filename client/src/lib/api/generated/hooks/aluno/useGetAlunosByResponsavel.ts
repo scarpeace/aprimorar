@@ -8,32 +8,14 @@ import type {
   GetAlunosByResponsavelQueryResponse,
   GetAlunosByResponsavelPathParams,
 } from "../../types/GetAlunosByResponsavel.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getAlunosByResponsavelQueryKey = (
-  responsavelId: GetAlunosByResponsavelPathParams["responsavelId"],
-) =>
-  [
-    {
-      url: "/v1/alunos/responsavel/:responsavelId",
-      params: { responsavelId: responsavelId },
-    },
-  ] as const;
+export const getAlunosByResponsavelQueryKey = (responsavelId: GetAlunosByResponsavelPathParams["responsavelId"]) =>
+  [{ url: "/v1/alunos/responsavel/:responsavelId", params: { responsavelId: responsavelId } }] as const;
 
-export type GetAlunosByResponsavelQueryKey = ReturnType<
-  typeof getAlunosByResponsavelQueryKey
->;
+export type GetAlunosByResponsavelQueryKey = ReturnType<typeof getAlunosByResponsavelQueryKey>;
 
 /**
  * @description Retorna uma lista de alunos pelo ID do responsável.
@@ -45,11 +27,7 @@ export async function getAlunosByResponsavel(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetAlunosByResponsavelQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<GetAlunosByResponsavelQueryResponse, ResponseErrorConfig<Error>, unknown>({
     method: "GET",
     url: `/v1/alunos/responsavel/${responsavelId}`,
     ...requestConfig,
@@ -71,10 +49,7 @@ export function getAlunosByResponsavelQueryOptions(
     enabled: !!responsavelId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getAlunosByResponsavel(responsavelId, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getAlunosByResponsavel(responsavelId, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -91,21 +66,14 @@ export function useGetAlunosByResponsavel<
   responsavelId: GetAlunosByResponsavelPathParams["responsavelId"],
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetAlunosByResponsavelQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetAlunosByResponsavelQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey =
-    resolvedOptions?.queryKey ?? getAlunosByResponsavelQueryKey(responsavelId);
+  const queryKey = resolvedOptions?.queryKey ?? getAlunosByResponsavelQueryKey(responsavelId);
 
   const query = useQuery(
     {
@@ -114,9 +82,7 @@ export function useGetAlunosByResponsavel<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

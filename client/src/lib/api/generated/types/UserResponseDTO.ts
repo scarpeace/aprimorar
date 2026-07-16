@@ -11,8 +11,7 @@ export const userResponseDTORoleEnum = {
   SISTEMA: "SISTEMA",
 } as const;
 
-export type UserResponseDTORoleEnumKey =
-  (typeof userResponseDTORoleEnum)[keyof typeof userResponseDTORoleEnum];
+export type UserResponseDTORoleEnumKey = (typeof userResponseDTORoleEnum)[keyof typeof userResponseDTORoleEnum];
 
 /**
  * @description Dados do usuario retornados pela API

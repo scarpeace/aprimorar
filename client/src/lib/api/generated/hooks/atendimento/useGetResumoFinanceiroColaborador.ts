@@ -9,17 +9,8 @@ import type {
   GetResumoFinanceiroColaboradorPathParams,
   GetResumoFinanceiroColaboradorQueryParams,
 } from "../../types/GetResumoFinanceiroColaborador.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getResumoFinanceiroColaboradorQueryKey = (
@@ -27,16 +18,11 @@ export const getResumoFinanceiroColaboradorQueryKey = (
   params: GetResumoFinanceiroColaboradorQueryParams,
 ) =>
   [
-    {
-      url: "/v1/atendimentos/colaboradores/:colaboradorId/resumo-financeiro",
-      params: { colaboradorId: colaboradorId },
-    },
+    { url: "/v1/atendimentos/colaboradores/:colaboradorId/resumo-financeiro", params: { colaboradorId: colaboradorId } },
     ...(params ? [params] : []),
   ] as const;
 
-export type GetResumoFinanceiroColaboradorQueryKey = ReturnType<
-  typeof getResumoFinanceiroColaboradorQueryKey
->;
+export type GetResumoFinanceiroColaboradorQueryKey = ReturnType<typeof getResumoFinanceiroColaboradorQueryKey>;
 
 /**
  * @description Retorna o resumo financeiro mensal de um colaborador.
@@ -49,11 +35,7 @@ export async function getResumoFinanceiroColaborador(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetResumoFinanceiroColaboradorQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<GetResumoFinanceiroColaboradorQueryResponse, ResponseErrorConfig<Error>, unknown>({
     method: "GET",
     url: `/v1/atendimentos/colaboradores/${colaboradorId}/resumo-financeiro`,
     params,
@@ -67,10 +49,7 @@ export function getResumoFinanceiroColaboradorQueryOptions(
   params: GetResumoFinanceiroColaboradorQueryParams,
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
-  const queryKey = getResumoFinanceiroColaboradorQueryKey(
-    colaboradorId,
-    params,
-  );
+  const queryKey = getResumoFinanceiroColaboradorQueryKey(colaboradorId, params);
   return queryOptions<
     GetResumoFinanceiroColaboradorQueryResponse,
     ResponseErrorConfig<Error>,
@@ -80,10 +59,7 @@ export function getResumoFinanceiroColaboradorQueryOptions(
     enabled: !!(colaboradorId && params),
     queryKey,
     queryFn: async ({ signal }) => {
-      return getResumoFinanceiroColaborador(colaboradorId, params, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getResumoFinanceiroColaborador(colaboradorId, params, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -101,37 +77,23 @@ export function useGetResumoFinanceiroColaborador<
   params: GetResumoFinanceiroColaboradorQueryParams,
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetResumoFinanceiroColaboradorQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetResumoFinanceiroColaboradorQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey =
-    resolvedOptions?.queryKey ??
-    getResumoFinanceiroColaboradorQueryKey(colaboradorId, params);
+  const queryKey = resolvedOptions?.queryKey ?? getResumoFinanceiroColaboradorQueryKey(colaboradorId, params);
 
   const query = useQuery(
     {
-      ...getResumoFinanceiroColaboradorQueryOptions(
-        colaboradorId,
-        params,
-        config,
-      ),
+      ...getResumoFinanceiroColaboradorQueryOptions(colaboradorId, params, config),
       ...resolvedOptions,
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

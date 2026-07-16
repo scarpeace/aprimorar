@@ -9,17 +9,8 @@ import type {
   GetResumoFinanceiroAlunoPathParams,
   GetResumoFinanceiroAlunoQueryParams,
 } from "../../types/GetResumoFinanceiroAluno.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getResumoFinanceiroAlunoQueryKey = (
@@ -27,16 +18,11 @@ export const getResumoFinanceiroAlunoQueryKey = (
   params: GetResumoFinanceiroAlunoQueryParams,
 ) =>
   [
-    {
-      url: "/v1/atendimentos/alunos/:alunoId/resumo-financeiro",
-      params: { alunoId: alunoId },
-    },
+    { url: "/v1/atendimentos/alunos/:alunoId/resumo-financeiro", params: { alunoId: alunoId } },
     ...(params ? [params] : []),
   ] as const;
 
-export type GetResumoFinanceiroAlunoQueryKey = ReturnType<
-  typeof getResumoFinanceiroAlunoQueryKey
->;
+export type GetResumoFinanceiroAlunoQueryKey = ReturnType<typeof getResumoFinanceiroAlunoQueryKey>;
 
 /**
  * @description Retorna o resumo financeiro mensal de um aluno.
@@ -49,11 +35,7 @@ export async function getResumoFinanceiroAluno(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetResumoFinanceiroAlunoQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<GetResumoFinanceiroAlunoQueryResponse, ResponseErrorConfig<Error>, unknown>({
     method: "GET",
     url: `/v1/atendimentos/alunos/${alunoId}/resumo-financeiro`,
     params,
@@ -77,10 +59,7 @@ export function getResumoFinanceiroAlunoQueryOptions(
     enabled: !!(alunoId && params),
     queryKey,
     queryFn: async ({ signal }) => {
-      return getResumoFinanceiroAluno(alunoId, params, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getResumoFinanceiroAluno(alunoId, params, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -98,22 +77,14 @@ export function useGetResumoFinanceiroAluno<
   params: GetResumoFinanceiroAlunoQueryParams,
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetResumoFinanceiroAlunoQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetResumoFinanceiroAlunoQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey =
-    resolvedOptions?.queryKey ??
-    getResumoFinanceiroAlunoQueryKey(alunoId, params);
+  const queryKey = resolvedOptions?.queryKey ?? getResumoFinanceiroAlunoQueryKey(alunoId, params);
 
   const query = useQuery(
     {
@@ -122,9 +93,7 @@ export function useGetResumoFinanceiroAluno<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

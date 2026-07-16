@@ -11,18 +11,8 @@ export const getColaboradoresQueryParamsSchema = z.object({
   email: z.string().describe("E-mail do colaborador").nullish(),
   cpf: z.string().describe("CPF do colaborador").nullish(),
   ativos: z.boolean().describe("Filtrar por colaboradores ativos").nullish(),
-  page: z.coerce
-    .number()
-    .int()
-    .min(0)
-    .default(0)
-    .describe("Zero-based page index (0..N)"),
-  size: z.coerce
-    .number()
-    .int()
-    .min(1)
-    .default(10)
-    .describe("The size of the page to be returned"),
+  page: z.coerce.number().int().min(0).default(0).describe("Zero-based page index (0..N)"),
+  size: z.coerce.number().int().min(1).default(10).describe("The size of the page to be returned"),
   sort: z
     .array(z.string())
     .describe(
@@ -33,10 +23,6 @@ export const getColaboradoresQueryParamsSchema = z.object({
 /**
  * @description Lista de colaboradores retornada com sucesso.
  */
-export const getColaboradores200Schema = z.lazy(
-  () => pagedModelColaboradorResponseDTOSchema,
-);
+export const getColaboradores200Schema = z.lazy(() => pagedModelColaboradorResponseDTOSchema);
 
-export const getColaboradoresQueryResponseSchema = z.lazy(
-  () => getColaboradores200Schema,
-);
+export const getColaboradoresQueryResponseSchema = z.lazy(() => getColaboradores200Schema);

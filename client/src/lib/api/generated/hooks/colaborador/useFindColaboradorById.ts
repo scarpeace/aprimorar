@@ -4,36 +4,15 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  FindColaboradorByIdQueryResponse,
-  FindColaboradorByIdPathParams,
-} from "../../types/FindColaboradorById.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { FindColaboradorByIdQueryResponse, FindColaboradorByIdPathParams } from "../../types/FindColaboradorById.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const findColaboradorByIdQueryKey = (
-  colaboradorId: FindColaboradorByIdPathParams["colaboradorId"],
-) =>
-  [
-    {
-      url: "/v1/colaboradores/:colaboradorId",
-      params: { colaboradorId: colaboradorId },
-    },
-  ] as const;
+export const findColaboradorByIdQueryKey = (colaboradorId: FindColaboradorByIdPathParams["colaboradorId"]) =>
+  [{ url: "/v1/colaboradores/:colaboradorId", params: { colaboradorId: colaboradorId } }] as const;
 
-export type FindColaboradorByIdQueryKey = ReturnType<
-  typeof findColaboradorByIdQueryKey
->;
+export type FindColaboradorByIdQueryKey = ReturnType<typeof findColaboradorByIdQueryKey>;
 
 /**
  * @description Retorna um colaborador por ID.
@@ -45,11 +24,7 @@ export async function findColaboradorById(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    FindColaboradorByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<FindColaboradorByIdQueryResponse, ResponseErrorConfig<Error>, unknown>({
     method: "GET",
     url: `/v1/colaboradores/${colaboradorId}`,
     ...requestConfig,
@@ -71,10 +46,7 @@ export function findColaboradorByIdQueryOptions(
     enabled: !!colaboradorId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return findColaboradorById(colaboradorId, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return findColaboradorById(colaboradorId, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -91,21 +63,14 @@ export function useFindColaboradorById<
   colaboradorId: FindColaboradorByIdPathParams["colaboradorId"],
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        FindColaboradorByIdQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<FindColaboradorByIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey =
-    resolvedOptions?.queryKey ?? findColaboradorByIdQueryKey(colaboradorId);
+  const queryKey = resolvedOptions?.queryKey ?? findColaboradorByIdQueryKey(colaboradorId);
 
   const query = useQuery(
     {
@@ -114,9 +79,7 @@ export function useFindColaboradorById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

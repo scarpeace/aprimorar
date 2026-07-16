@@ -17,6 +17,4 @@ export const cancelarAtendimento200Schema = z
   .lazy(() => atendimentoResponseSchema)
   .describe("Dados do atendimento retornados pela API");
 
-export const cancelarAtendimentoMutationResponseSchema = z.lazy(
-  () => cancelarAtendimento200Schema,
-);
+export const cancelarAtendimentoMutationResponseSchema = z.lazy(() => cancelarAtendimento200Schema);

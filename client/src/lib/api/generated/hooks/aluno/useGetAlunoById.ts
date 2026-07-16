@@ -4,26 +4,13 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  GetAlunoByIdQueryResponse,
-  GetAlunoByIdPathParams,
-} from "../../types/GetAlunoById.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { GetAlunoByIdQueryResponse, GetAlunoByIdPathParams } from "../../types/GetAlunoById.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getAlunoByIdQueryKey = (
-  alunoId: GetAlunoByIdPathParams["alunoId"],
-) => [{ url: "/v1/alunos/:alunoId", params: { alunoId: alunoId } }] as const;
+export const getAlunoByIdQueryKey = (alunoId: GetAlunoByIdPathParams["alunoId"]) =>
+  [{ url: "/v1/alunos/:alunoId", params: { alunoId: alunoId } }] as const;
 
 export type GetAlunoByIdQueryKey = ReturnType<typeof getAlunoByIdQueryKey>;
 
@@ -37,11 +24,11 @@ export async function getAlunoById(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetAlunoByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({ method: "GET", url: `/v1/alunos/${alunoId}`, ...requestConfig });
+  const res = await request<GetAlunoByIdQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: "GET",
+    url: `/v1/alunos/${alunoId}`,
+    ...requestConfig,
+  });
   return res.data;
 }
 
@@ -50,19 +37,11 @@ export function getAlunoByIdQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = getAlunoByIdQueryKey(alunoId);
-  return queryOptions<
-    GetAlunoByIdQueryResponse,
-    ResponseErrorConfig<Error>,
-    GetAlunoByIdQueryResponse,
-    typeof queryKey
-  >({
+  return queryOptions<GetAlunoByIdQueryResponse, ResponseErrorConfig<Error>, GetAlunoByIdQueryResponse, typeof queryKey>({
     enabled: !!alunoId,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getAlunoById(alunoId, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getAlunoById(alunoId, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -78,15 +57,9 @@ export function useGetAlunoById<
 >(
   alunoId: GetAlunoByIdPathParams["alunoId"],
   options: {
-    query?: Partial<
-      QueryObserverOptions<
-        GetAlunoByIdQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
-    > & { client?: QueryClient };
+    query?: Partial<QueryObserverOptions<GetAlunoByIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & {
+      client?: QueryClient;
+    };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
@@ -101,9 +74,7 @@ export function useGetAlunoById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

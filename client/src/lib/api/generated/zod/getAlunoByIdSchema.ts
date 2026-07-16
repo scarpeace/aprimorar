@@ -13,10 +13,6 @@ export const getAlunoByIdPathParamsSchema = z.object({
 /**
  * @description Aluno retornado com sucesso.
  */
-export const getAlunoById200Schema = z
-  .lazy(() => alunoResponseDTOSchema)
-  .describe("Dados do aluno retornados pela API");
+export const getAlunoById200Schema = z.lazy(() => alunoResponseDTOSchema).describe("Dados do aluno retornados pela API");
 
-export const getAlunoByIdQueryResponseSchema = z.lazy(
-  () => getAlunoById200Schema,
-);
+export const getAlunoByIdQueryResponseSchema = z.lazy(() => getAlunoById200Schema);

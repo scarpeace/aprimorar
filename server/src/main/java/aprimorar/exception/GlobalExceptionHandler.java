@@ -71,17 +71,20 @@ public class GlobalExceptionHandler {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
     )
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
-            .map(error -> error.getDefaultMessage())
-            .findFirst()
-            .orElse("Erro de validação nos campos informados");
+        List<String> errorMessages = ex.getBindingResult().getAllErrors().stream()
+            .map(error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "Erro de validação nos campos informados")
+            .toList();
 
-        log.error("Erro de validação de DTO: {}", errorMessage);
+        if (errorMessages.isEmpty()) {
+            errorMessages = List.of("Erro de validação nos campos informados");
+        }
+
+        log.error("Erro de validação de DTO: {}", errorMessages);
         ErrorResponse response = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Erro de validação nos campos informados",
-                List.of(errorMessage)
+                errorMessages
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }

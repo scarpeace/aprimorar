@@ -8,27 +8,14 @@ import type {
   GetRelatorioAtendimentosQueryResponse,
   GetRelatorioAtendimentosQueryParams,
 } from "../../types/GetRelatorioAtendimentos.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  QueryKey,
-  QueryClient,
-  QueryObserverOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getRelatorioAtendimentosQueryKey = (
-  params: GetRelatorioAtendimentosQueryParams,
-) =>
+export const getRelatorioAtendimentosQueryKey = (params: GetRelatorioAtendimentosQueryParams) =>
   [{ url: "/v1/atendimentos/relatorio" }, ...(params ? [params] : [])] as const;
 
-export type GetRelatorioAtendimentosQueryKey = ReturnType<
-  typeof getRelatorioAtendimentosQueryKey
->;
+export type GetRelatorioAtendimentosQueryKey = ReturnType<typeof getRelatorioAtendimentosQueryKey>;
 
 /**
  * @description Retorna o conteúdo para montar o relatório.
@@ -40,11 +27,7 @@ export async function getRelatorioAtendimentos(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    GetRelatorioAtendimentosQueryResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<GetRelatorioAtendimentosQueryResponse, ResponseErrorConfig<Error>, unknown>({
     method: "GET",
     url: `/v1/atendimentos/relatorio`,
     params,
@@ -67,10 +50,7 @@ export function getRelatorioAtendimentosQueryOptions(
     enabled: !!params,
     queryKey,
     queryFn: async ({ signal }) => {
-      return getRelatorioAtendimentos(params, {
-        ...config,
-        signal: config.signal ?? signal,
-      });
+      return getRelatorioAtendimentos(params, { ...config, signal: config.signal ?? signal });
     },
   });
 }
@@ -87,21 +67,14 @@ export function useGetRelatorioAtendimentos<
   params: GetRelatorioAtendimentosQueryParams,
   options: {
     query?: Partial<
-      QueryObserverOptions<
-        GetRelatorioAtendimentosQueryResponse,
-        ResponseErrorConfig<Error>,
-        TData,
-        TQueryData,
-        TQueryKey
-      >
+      QueryObserverOptions<GetRelatorioAtendimentosQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
   const { query: queryConfig = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...resolvedOptions } = queryConfig;
-  const queryKey =
-    resolvedOptions?.queryKey ?? getRelatorioAtendimentosQueryKey(params);
+  const queryKey = resolvedOptions?.queryKey ?? getRelatorioAtendimentosQueryKey(params);
 
   const query = useQuery(
     {
@@ -110,9 +83,7 @@ export function useGetRelatorioAtendimentos<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & {
-    queryKey: TQueryKey;
-  };
+  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

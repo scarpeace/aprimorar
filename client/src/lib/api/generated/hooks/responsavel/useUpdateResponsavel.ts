@@ -9,24 +9,13 @@ import type {
   UpdateResponsavelMutationResponse,
   UpdateResponsavelPathParams,
 } from "../../types/UpdateResponsavel.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const updateResponsavelMutationKey = () =>
-  [{ url: "/v1/responsaveis/:responsavelId" }] as const;
+export const updateResponsavelMutationKey = () => [{ url: "/v1/responsaveis/:responsavelId" }] as const;
 
-export type UpdateResponsavelMutationKey = ReturnType<
-  typeof updateResponsavelMutationKey
->;
+export type UpdateResponsavelMutationKey = ReturnType<typeof updateResponsavelMutationKey>;
 
 /**
  * @description Atualiza um responsável por ID
@@ -35,19 +24,13 @@ export type UpdateResponsavelMutationKey = ReturnType<
 export async function updateResponsavel(
   responsavelId: UpdateResponsavelPathParams["responsavelId"],
   data: UpdateResponsavelMutationRequest,
-  config: Partial<RequestConfig<UpdateResponsavelMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<UpdateResponsavelMutationRequest>> & { client?: Client } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
   const requestData = data;
 
-  const res = await request<
-    UpdateResponsavelMutationResponse,
-    ResponseErrorConfig<Error>,
-    UpdateResponsavelMutationRequest
-  >({
+  const res = await request<UpdateResponsavelMutationResponse, ResponseErrorConfig<Error>, UpdateResponsavelMutationRequest>({
     method: "PATCH",
     url: `/v1/responsaveis/${responsavelId}`,
     data: requestData,
@@ -57,18 +40,13 @@ export async function updateResponsavel(
 }
 
 export function updateResponsavelMutationOptions<TContext = unknown>(
-  config: Partial<RequestConfig<UpdateResponsavelMutationRequest>> & {
-    client?: Client;
-  } = {},
+  config: Partial<RequestConfig<UpdateResponsavelMutationRequest>> & { client?: Client } = {},
 ) {
   const mutationKey = updateResponsavelMutationKey();
   return mutationOptions<
     UpdateResponsavelMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      responsavelId: UpdateResponsavelPathParams["responsavelId"];
-      data: UpdateResponsavelMutationRequest;
-    },
+    { responsavelId: UpdateResponsavelPathParams["responsavelId"]; data: UpdateResponsavelMutationRequest },
     TContext
   >({
     mutationKey,
@@ -87,41 +65,27 @@ export function useUpdateResponsavel<TContext>(
     mutation?: UseMutationOptions<
       UpdateResponsavelMutationResponse,
       ResponseErrorConfig<Error>,
-      {
-        responsavelId: UpdateResponsavelPathParams["responsavelId"];
-        data: UpdateResponsavelMutationRequest;
-      },
+      { responsavelId: UpdateResponsavelPathParams["responsavelId"]; data: UpdateResponsavelMutationRequest },
       TContext
     > & { client?: QueryClient };
-    client?: Partial<RequestConfig<UpdateResponsavelMutationRequest>> & {
-      client?: Client;
-    };
+    client?: Partial<RequestConfig<UpdateResponsavelMutationRequest>> & { client?: Client };
   } = {},
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? updateResponsavelMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? updateResponsavelMutationKey();
 
-  const baseOptions = updateResponsavelMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = updateResponsavelMutationOptions(config) as UseMutationOptions<
     UpdateResponsavelMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      responsavelId: UpdateResponsavelPathParams["responsavelId"];
-      data: UpdateResponsavelMutationRequest;
-    },
+    { responsavelId: UpdateResponsavelPathParams["responsavelId"]; data: UpdateResponsavelMutationRequest },
     TContext
   >;
 
   return useMutation<
     UpdateResponsavelMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      responsavelId: UpdateResponsavelPathParams["responsavelId"];
-      data: UpdateResponsavelMutationRequest;
-    },
+    { responsavelId: UpdateResponsavelPathParams["responsavelId"]; data: UpdateResponsavelMutationRequest },
     TContext
   >(
     {
@@ -133,10 +97,7 @@ export function useUpdateResponsavel<TContext>(
   ) as UseMutationResult<
     UpdateResponsavelMutationResponse,
     ResponseErrorConfig<Error>,
-    {
-      responsavelId: UpdateResponsavelPathParams["responsavelId"];
-      data: UpdateResponsavelMutationRequest;
-    },
+    { responsavelId: UpdateResponsavelPathParams["responsavelId"]; data: UpdateResponsavelMutationRequest },
     TContext
   >;
 }

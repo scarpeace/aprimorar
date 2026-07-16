@@ -22,11 +22,9 @@ export type GetResumoFinanceiroColaboradorQueryParams = {
 /**
  * @description Resumo financeiro retornado com sucesso.
  */
-export type GetResumoFinanceiroColaborador200 =
-  ColaboradorResumoFinanceiroResponse;
+export type GetResumoFinanceiroColaborador200 = ColaboradorResumoFinanceiroResponse;
 
-export type GetResumoFinanceiroColaboradorQueryResponse =
-  GetResumoFinanceiroColaborador200;
+export type GetResumoFinanceiroColaboradorQueryResponse = GetResumoFinanceiroColaborador200;
 
 export type GetResumoFinanceiroColaboradorQuery = {
   Response: GetResumoFinanceiroColaborador200;

@@ -14,6 +14,4 @@ export const desarquivarColaboradorPathParamsSchema = z.object({
  */
 export const desarquivarColaborador204Schema = z.any();
 
-export const desarquivarColaboradorMutationResponseSchema = z.lazy(
-  () => desarquivarColaborador204Schema,
-);
+export const desarquivarColaboradorMutationResponseSchema = z.lazy(() => desarquivarColaborador204Schema);

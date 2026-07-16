@@ -4,28 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type {
-  CancelarAtendimentoMutationResponse,
-  CancelarAtendimentoPathParams,
-} from "../../types/CancelarAtendimento.ts";
-import type {
-  Client,
-  RequestConfig,
-  ResponseErrorConfig,
-} from "@/lib/api/client";
-import type {
-  UseMutationOptions,
-  UseMutationResult,
-  QueryClient,
-} from "@tanstack/react-query";
+import type { CancelarAtendimentoMutationResponse, CancelarAtendimentoPathParams } from "../../types/CancelarAtendimento.ts";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const cancelarAtendimentoMutationKey = () =>
-  [{ url: "/v1/atendimentos/:id/cancelar" }] as const;
+export const cancelarAtendimentoMutationKey = () => [{ url: "/v1/atendimentos/:id/cancelar" }] as const;
 
-export type CancelarAtendimentoMutationKey = ReturnType<
-  typeof cancelarAtendimentoMutationKey
->;
+export type CancelarAtendimentoMutationKey = ReturnType<typeof cancelarAtendimentoMutationKey>;
 
 /**
  * @description Muda o status de um atendimento para CANCELADO.
@@ -37,11 +23,7 @@ export async function cancelarAtendimento(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<
-    CancelarAtendimentoMutationResponse,
-    ResponseErrorConfig<Error>,
-    unknown
-  >({
+  const res = await request<CancelarAtendimentoMutationResponse, ResponseErrorConfig<Error>, unknown>({
     method: "PATCH",
     url: `/v1/atendimentos/${id}/cancelar`,
     ...requestConfig,
@@ -83,12 +65,9 @@ export function useCancelarAtendimento<TContext>(
 ) {
   const { mutation = {}, client: config = {} } = options ?? {};
   const { client: queryClient, ...mutationOptions } = mutation;
-  const mutationKey =
-    mutationOptions.mutationKey ?? cancelarAtendimentoMutationKey();
+  const mutationKey = mutationOptions.mutationKey ?? cancelarAtendimentoMutationKey();
 
-  const baseOptions = cancelarAtendimentoMutationOptions(
-    config,
-  ) as UseMutationOptions<
+  const baseOptions = cancelarAtendimentoMutationOptions(config) as UseMutationOptions<
     CancelarAtendimentoMutationResponse,
     ResponseErrorConfig<Error>,
     { id: CancelarAtendimentoPathParams["id"] },
