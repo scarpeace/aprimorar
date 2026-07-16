@@ -1,27 +1,47 @@
-function pad(value: number): string {
-  return String(value).padStart(2, "0");
+import { addMinutes, differenceInMinutes, format, isValid, parseISO } from "date-fns";
+
+function toDate(value: string | Date): Date {
+  return typeof value === "string" ? parseISO(value) : value;
 }
 
 export function formatDateShortYear(date: string | Date): string {
-  const value = typeof date === "string" ? new Date(date) : date;
+  const value = toDate(date);
+
+  if (!isValid(value)) {
+    return "";
+  }
+
   return value.toLocaleDateString("pt-BR");
 }
 
 export function formatTime(date: string | Date): string {
-  const value = typeof date === "string" ? new Date(date) : date;
+  const value = toDate(date);
+
+  if (!isValid(value)) {
+    return "";
+  }
+
   return value.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 }
 
 export function formatDateTimeLocal(date: string | Date): string {
-  const value = typeof date === "string" ? new Date(date) : date;
+  const value = toDate(date);
 
-  return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}T${pad(value.getHours())}:${pad(value.getMinutes())}`;
+  if (!isValid(value)) {
+    return "";
+  }
+
+  return format(value, "yyyy-MM-dd'T'HH:mm");
 }
 
 export function toAnoMes(date: string | Date): string {
-  const value = typeof date === "string" ? new Date(date) : date;
+  const value = toDate(date);
 
-  return `${value.getFullYear()}-${pad(value.getMonth() + 1)}`;
+  if (!isValid(value)) {
+    return "";
+  }
+
+  return format(value, "yyyy-MM");
 }
 
 export function addHoursToDateTimeLocal(value: string, hours?: number): string {
@@ -29,21 +49,20 @@ export function addHoursToDateTimeLocal(value: string, hours?: number): string {
     return "";
   }
 
-  const date = new Date(value);
+  const date = parseISO(value);
 
-  if (Number.isNaN(date.getTime())) {
+  if (!isValid(date)) {
     return "";
   }
 
-  date.setMinutes(date.getMinutes() + hours * 60);
-  return formatDateTimeLocal(date);
+  return formatDateTimeLocal(addMinutes(date, hours * 60));
 }
 
 export function getDurationInHours(start: string | Date, end: string | Date): number {
-  const startDate = typeof start === "string" ? new Date(start) : start;
-  const endDate = typeof end === "string" ? new Date(end) : end;
+  const startDate = toDate(start);
+  const endDate = toDate(end);
 
-  return (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+  return differenceInMinutes(endDate, startDate) / 60;
 }
 
 export function formatDateForInput(date?: string | null): string {

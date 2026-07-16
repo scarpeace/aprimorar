@@ -19,7 +19,6 @@ public record AtendimentoRequest(
     TipoAtendimento tipo,
 
     @NotNull(message = "Informe a data de início")
-    @Future(message = "A data de início precisa ser no futuro")
     @Schema(nullable = false, description = "Data e hora de início do atendimento", example = "2026-11-20T14:00:00Z")
     LocalDateTime dataHoraInicio,
 

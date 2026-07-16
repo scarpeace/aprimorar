@@ -34,7 +34,6 @@ public record EnderecoRequestDTO(
     String estado,
 
     @NotBlank(message = "Informe o CEP")
-    @Pattern(regexp = "^\\d{8}$", message = "Use 8 dígitos no CEP")
     @Schema(description = "CEP sem pontuação", example = "01310000")
     String cep
 ) {
