@@ -11,8 +11,6 @@ export type { UpdateAlunoMutationKey } from "./hooks/aluno/useUpdateAluno.ts";
 export type { AgendarAtendimentoMutationKey } from "./hooks/atendimento/useAgendarAtendimento.ts";
 export type { CancelarAtendimentoMutationKey } from "./hooks/atendimento/useCancelarAtendimento.ts";
 export type { ConcluirAtendimentoMutationKey } from "./hooks/atendimento/useConcluirAtendimento.ts";
-export type { EfetivarPagamentoAlunoMutationKey } from "./hooks/atendimento/useEfetivarPagamentoAluno.ts";
-export type { EfetivarRepasseColaboradorMutationKey } from "./hooks/atendimento/useEfetivarRepasseColaborador.ts";
 export type { ExcluirAtendimentoMutationKey } from "./hooks/atendimento/useExcluirAtendimento.ts";
 export type { GetAtendimentoByIdQueryKey } from "./hooks/atendimento/useGetAtendimentoById.ts";
 export type { GetAtendimentosQueryKey } from "./hooks/atendimento/useGetAtendimentos.ts";
@@ -20,6 +18,8 @@ export type { GetCalendarioAtendimentosQueryKey } from "./hooks/atendimento/useG
 export type { GetRelatorioAtendimentosQueryKey } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
 export type { GetResumoFinanceiroAlunoQueryKey } from "./hooks/atendimento/useGetResumoFinanceiroAluno.ts";
 export type { GetResumoFinanceiroColaboradorQueryKey } from "./hooks/atendimento/useGetResumoFinanceiroColaborador.ts";
+export type { TogglePagamentoAlunoMutationKey } from "./hooks/atendimento/useTogglePagamentoAluno.ts";
+export type { ToggleRepasseColaboradorMutationKey } from "./hooks/atendimento/useToggleRepasseColaborador.ts";
 export type { UpdateAtendimentoMutationKey } from "./hooks/atendimento/useUpdateAtendimento.ts";
 export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
 export type { ArquivarColaboradorMutationKey } from "./hooks/colaborador/useArquivarColaborador.ts";
@@ -149,18 +149,6 @@ export type {
   DesarquivarColaboradorMutationResponse,
   DesarquivarColaboradorPathParams,
 } from "./types/DesarquivarColaborador.ts";
-export type {
-  EfetivarPagamentoAluno200,
-  EfetivarPagamentoAlunoMutation,
-  EfetivarPagamentoAlunoMutationResponse,
-  EfetivarPagamentoAlunoPathParams,
-} from "./types/EfetivarPagamentoAluno.ts";
-export type {
-  EfetivarRepasseColaborador200,
-  EfetivarRepasseColaboradorMutation,
-  EfetivarRepasseColaboradorMutationResponse,
-  EfetivarRepasseColaboradorPathParams,
-} from "./types/EfetivarRepasseColaborador.ts";
 export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
 export type { ErrorResponse } from "./types/ErrorResponse.ts";
@@ -267,6 +255,20 @@ export type { RelatorioAtendimentosResponse } from "./types/RelatorioAtendimento
 export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./types/ResponsavelResponseDTO.ts";
 export type {
+  TogglePagamentoAluno200,
+  TogglePagamentoAluno400,
+  TogglePagamentoAlunoMutation,
+  TogglePagamentoAlunoMutationResponse,
+  TogglePagamentoAlunoPathParams,
+} from "./types/TogglePagamentoAluno.ts";
+export type {
+  ToggleRepasseColaborador200,
+  ToggleRepasseColaborador400,
+  ToggleRepasseColaboradorMutation,
+  ToggleRepasseColaboradorMutationResponse,
+  ToggleRepasseColaboradorPathParams,
+} from "./types/ToggleRepasseColaborador.ts";
+export type {
   UnarchiveAluno204,
   UnarchiveAlunoMutation,
   UnarchiveAlunoMutationResponse,
@@ -354,14 +356,6 @@ export { concluirAtendimento } from "./hooks/atendimento/useConcluirAtendimento.
 export { concluirAtendimentoMutationKey } from "./hooks/atendimento/useConcluirAtendimento.ts";
 export { concluirAtendimentoMutationOptions } from "./hooks/atendimento/useConcluirAtendimento.ts";
 export { useConcluirAtendimento } from "./hooks/atendimento/useConcluirAtendimento.ts";
-export { efetivarPagamentoAluno } from "./hooks/atendimento/useEfetivarPagamentoAluno.ts";
-export { efetivarPagamentoAlunoMutationKey } from "./hooks/atendimento/useEfetivarPagamentoAluno.ts";
-export { efetivarPagamentoAlunoMutationOptions } from "./hooks/atendimento/useEfetivarPagamentoAluno.ts";
-export { useEfetivarPagamentoAluno } from "./hooks/atendimento/useEfetivarPagamentoAluno.ts";
-export { efetivarRepasseColaborador } from "./hooks/atendimento/useEfetivarRepasseColaborador.ts";
-export { efetivarRepasseColaboradorMutationKey } from "./hooks/atendimento/useEfetivarRepasseColaborador.ts";
-export { efetivarRepasseColaboradorMutationOptions } from "./hooks/atendimento/useEfetivarRepasseColaborador.ts";
-export { useEfetivarRepasseColaborador } from "./hooks/atendimento/useEfetivarRepasseColaborador.ts";
 export { excluirAtendimento } from "./hooks/atendimento/useExcluirAtendimento.ts";
 export { excluirAtendimentoMutationKey } from "./hooks/atendimento/useExcluirAtendimento.ts";
 export { excluirAtendimentoMutationOptions } from "./hooks/atendimento/useExcluirAtendimento.ts";
@@ -390,6 +384,14 @@ export { getResumoFinanceiroColaborador } from "./hooks/atendimento/useGetResumo
 export { getResumoFinanceiroColaboradorQueryKey } from "./hooks/atendimento/useGetResumoFinanceiroColaborador.ts";
 export { getResumoFinanceiroColaboradorQueryOptions } from "./hooks/atendimento/useGetResumoFinanceiroColaborador.ts";
 export { useGetResumoFinanceiroColaborador } from "./hooks/atendimento/useGetResumoFinanceiroColaborador.ts";
+export { togglePagamentoAluno } from "./hooks/atendimento/useTogglePagamentoAluno.ts";
+export { togglePagamentoAlunoMutationKey } from "./hooks/atendimento/useTogglePagamentoAluno.ts";
+export { togglePagamentoAlunoMutationOptions } from "./hooks/atendimento/useTogglePagamentoAluno.ts";
+export { useTogglePagamentoAluno } from "./hooks/atendimento/useTogglePagamentoAluno.ts";
+export { toggleRepasseColaborador } from "./hooks/atendimento/useToggleRepasseColaborador.ts";
+export { toggleRepasseColaboradorMutationKey } from "./hooks/atendimento/useToggleRepasseColaborador.ts";
+export { toggleRepasseColaboradorMutationOptions } from "./hooks/atendimento/useToggleRepasseColaborador.ts";
+export { useToggleRepasseColaborador } from "./hooks/atendimento/useToggleRepasseColaborador.ts";
 export { updateAtendimento } from "./hooks/atendimento/useUpdateAtendimento.ts";
 export { updateAtendimentoMutationKey } from "./hooks/atendimento/useUpdateAtendimento.ts";
 export { updateAtendimentoMutationOptions } from "./hooks/atendimento/useUpdateAtendimento.ts";
@@ -563,16 +565,6 @@ export {
   desarquivarColaboradorMutationResponseSchema,
   desarquivarColaboradorPathParamsSchema,
 } from "./zod/desarquivarColaboradorSchema.ts";
-export {
-  efetivarPagamentoAluno200Schema,
-  efetivarPagamentoAlunoMutationResponseSchema,
-  efetivarPagamentoAlunoPathParamsSchema,
-} from "./zod/efetivarPagamentoAlunoSchema.ts";
-export {
-  efetivarRepasseColaborador200Schema,
-  efetivarRepasseColaboradorMutationResponseSchema,
-  efetivarRepasseColaboradorPathParamsSchema,
-} from "./zod/efetivarRepasseColaboradorSchema.ts";
 export { enderecoRequestDTOSchema } from "./zod/enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./zod/enderecoResponseDTOSchema.ts";
 export { errorResponseSchema } from "./zod/errorResponseSchema.ts";
@@ -659,6 +651,18 @@ export { pagedModelResponsavelResponseDTOSchema } from "./zod/pagedModelResponsa
 export { relatorioAtendimentosResponseSchema } from "./zod/relatorioAtendimentosResponseSchema.ts";
 export { responsavelRequestDTOSchema } from "./zod/responsavelRequestDTOSchema.ts";
 export { responsavelResponseDTOSchema } from "./zod/responsavelResponseDTOSchema.ts";
+export {
+  togglePagamentoAluno200Schema,
+  togglePagamentoAluno400Schema,
+  togglePagamentoAlunoMutationResponseSchema,
+  togglePagamentoAlunoPathParamsSchema,
+} from "./zod/togglePagamentoAlunoSchema.ts";
+export {
+  toggleRepasseColaborador200Schema,
+  toggleRepasseColaborador400Schema,
+  toggleRepasseColaboradorMutationResponseSchema,
+  toggleRepasseColaboradorPathParamsSchema,
+} from "./zod/toggleRepasseColaboradorSchema.ts";
 export {
   unarchiveAluno204Schema,
   unarchiveAlunoMutationResponseSchema,

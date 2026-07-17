@@ -35,6 +35,12 @@ export function AtendimentoDetails({ atendimentoId }: Readonly<{ atendimentoId: 
 
   return (
     <div className="space-y-6">
+      <section className="grid gap-6 xl:grid-cols-2">
+        <AtendimentoData atendimento={data} onEdit={() => setIsEditOpen(true)} />
+
+        <AtendimentoPayments atendimento={data} />
+      </section>
+
       <Modal
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
@@ -44,12 +50,6 @@ export function AtendimentoDetails({ atendimentoId }: Readonly<{ atendimentoId: 
       >
         <AtendimentoForm initialData={data} onSuccess={() => setIsEditOpen(false)} onCancel={() => setIsEditOpen(false)} />
       </Modal>
-
-      <section className="grid gap-6 xl:grid-cols-2">
-        <AtendimentoData atendimento={data} onEdit={() => setIsEditOpen(true)} />
-
-        <AtendimentoPayments atendimento={data} />
-      </section>
     </div>
   );
 }

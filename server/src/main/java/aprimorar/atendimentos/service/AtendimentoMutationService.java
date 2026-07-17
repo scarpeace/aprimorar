@@ -93,19 +93,21 @@ public class AtendimentoMutationService {
     }
 
     @Transactional
-    public void efetivarPagamentoAluno(Long id) {
+    public AtendimentoResponse togglePagamentoAluno(Long id) {
         Atendimento atendimento = findAtendimentoOrThrow(id);
 
-        atendimento.efetivarPagamentoAluno();
-        log.info("Pagamento do aluno efetivado para o atendimento {}", atendimento.getId());
+        atendimento.togglePagamentoAluno();
+        log.info("Pagamento do aluno alternado para o atendimento {}", atendimento.getId());
+        return AtendimentoResponse.toDto(atendimento);
     }
 
     @Transactional
-    public void efetivarRepasseColaborador(Long id) {
+    public AtendimentoResponse toggleRepasseColaborador(Long id) {
         Atendimento atendimento = findAtendimentoOrThrow(id);
 
-        atendimento.efetivarRepasseColaborador();
-        log.info("Repasse do colaborador efetivado para o atendimento {}", atendimento.getId());
+        atendimento.toggleRepasseColaborador();
+        log.info("Repasse do colaborador alternado para o atendimento {}", atendimento.getId());
+        return AtendimentoResponse.toDto(atendimento);
     }
 
     @Transactional

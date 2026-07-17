@@ -23,7 +23,7 @@ export const atendimentoResponseSchema = z
     colaboradorId: z.uuid().describe("ID do colaborador vinculado ao atendimento"),
     nomeColaborador: z.string().describe("Nome do colaborador vinculado ao atendimento"),
     dataPagamentoAluno: z.iso.datetime().describe("Data do pagamento do aluno").nullish(),
-    dataPagamentoColaborador: z.iso.datetime().describe("Data do pagamento do colaborador").nullish(),
+    dataRepasseColaborador: z.iso.datetime().describe("Data do repasse do colaborador").nullish(),
     status: z.enum(["AGENDADO", "CONCLUIDO", "CANCELADO"]).describe("Status do atendimento"),
     createdAt: z.iso.datetime().describe("Data de criacao do atendimento"),
     updatedAt: z.iso.datetime().describe("Data de atualizacao do atendimento").nullish(),

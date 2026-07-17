@@ -80,19 +80,27 @@ public class AtendimentoMutationController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/efetivarPgtoAluno")
-    @Operation(operationId = "efetivarPagamentoAluno", description = "Efetiva o pagamento do aluno.")
-    @ApiResponse(responseCode = "200", description = "Pagamento do aluno efetivado.")
-    public ResponseEntity<Void> efetivarPagamentoAluno(@PathVariable Long id) {
-        atendimentoMutationService.efetivarPagamentoAluno(id);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    @PatchMapping("/{id}/togglePagamentoAluno")
+    @Operation(operationId = "togglePagamentoAluno", description = "Alterna o pagamento do aluno.")
+    @ApiResponse(responseCode = "200", description = "Pagamento do aluno alternado.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+    )
+    public ResponseEntity<AtendimentoResponse> togglePagamentoAluno(@PathVariable Long id) {
+        return ResponseEntity.ok(atendimentoMutationService.togglePagamentoAluno(id));
     }
 
-    @PatchMapping("/{id}/efetivarRepasseColaborador")
-    @Operation(operationId = "efetivarRepasseColaborador", description = "Efetiva o repasse do colaborador.")
-    @ApiResponse(responseCode = "200", description = "Repasse do colaborador efetivado.")
-    public ResponseEntity<Void> efetivarRepasseColaborador(@PathVariable Long id) {
-        atendimentoMutationService.efetivarRepasseColaborador(id);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    @PatchMapping("/{id}/toggleRepasseColaborador")
+    @Operation(operationId = "toggleRepasseColaborador", description = "Alterna o repasse do colaborador.")
+    @ApiResponse(responseCode = "200", description = "Repasse do colaborador alternado.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de regra de negócio",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+    )
+    public ResponseEntity<AtendimentoResponse> toggleRepasseColaborador(@PathVariable Long id) {
+        return ResponseEntity.ok(atendimentoMutationService.toggleRepasseColaborador(id));
     }
 }
