@@ -238,27 +238,6 @@ class AtendimentoTest {
     }
 
     @Test
-    void shouldNotCreateAtendimentoWhenEndIsInThePast() {
-        var inicio = LocalDateTime.now().minusDays(2);
-        var fim = LocalDateTime.now().minusDays(1);
-
-        var exception = assertThrows(
-            IllegalStateException.class,
-            () -> new Atendimento(
-                inicio,
-                fim,
-                TipoAtendimento.AULA,
-                validAluno(),
-                validColaborador(),
-                BigDecimal.valueOf(150),
-                BigDecimal.valueOf(100)
-            )
-        );
-
-        assertEquals("Data de fim do atendimento nao pode estar no passado", exception.getMessage());
-    }
-
-    @Test
     void shouldNotCreateAtendimentoWhenPagamentoIsLowerThanRepasse() {
         var inicio = LocalDateTime.now().plusDays(1);
         var fim = inicio.plusHours(1);

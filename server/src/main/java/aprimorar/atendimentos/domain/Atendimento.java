@@ -195,9 +195,6 @@ public class Atendimento implements Serializable {
         if (dataHoraFim.isBefore(dataHoraInicio)) {
             throw new IllegalStateException("Data de fim do atendimento nao pode ser anterior a data de inicio");
         }
-        if (dataHoraFim.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("Data de fim do atendimento nao pode estar no passado");
-        }
     }
 
     private void validarValores(BigDecimal pagamentoAluno, BigDecimal repasseColaborador) {
