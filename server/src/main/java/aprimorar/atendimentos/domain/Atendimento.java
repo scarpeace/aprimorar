@@ -55,8 +55,8 @@ public class Atendimento implements Serializable {
     @Column(name = "data_pagamento_aluno")
     private LocalDateTime dataPagamentoAluno;
 
-    @Column(name = "data_pagamento_colaborador")
-    private LocalDateTime dataPagamentoColaborador;
+    @Column(name = "data_repasse_colaborador")
+    private LocalDateTime dataRepasseColaborador;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -117,18 +117,20 @@ public class Atendimento implements Serializable {
     }
 
 
-    public void efetivarPagamentoAluno() {
-        if (this.dataPagamentoAluno != null) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "Pagamento já efetivado para o aluno");
+    public void togglePagamentoAluno() {
+        if (this.status == StatusAtendimento.CANCELADO) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "Não é possível alterar pagamentos de um atendimento cancelado");
         }
-        this.dataPagamentoAluno = LocalDateTime.now();
+
+        this.dataPagamentoAluno = this.dataPagamentoAluno == null ? LocalDateTime.now() : null;
     }
 
-    public void efetivarRepasseColaborador() {
-        if (this.dataPagamentoColaborador != null) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "Repasse já efetivado para o colaborador");
+    public void toggleRepasseColaborador() {
+        if (this.status == StatusAtendimento.CANCELADO) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "Não é possível alterar pagamentos de um atendimento cancelado");
         }
-        this.dataPagamentoColaborador = LocalDateTime.now();
+
+        this.dataRepasseColaborador = this.dataRepasseColaborador == null ? LocalDateTime.now() : null;
     }
 
     public void cancelar(){

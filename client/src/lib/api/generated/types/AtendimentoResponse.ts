@@ -83,10 +83,10 @@ export type AtendimentoResponse = {
    */
   dataPagamentoAluno?: string | null;
   /**
-   * @description Data do pagamento do colaborador
+   * @description Data do repasse do colaborador
    * @type string, date-time
    */
-  dataPagamentoColaborador?: string | null;
+  dataRepasseColaborador?: string | null;
   /**
    * @description Status do atendimento
    * @type string

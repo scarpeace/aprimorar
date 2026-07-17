@@ -106,7 +106,10 @@ export function AtendimentoData({ atendimento, onEdit }: Readonly<AtendimentoDat
 
       <div className="mt-6 grid gap-5 md:grid-cols-2">
         <DetailField label="Data" value={formatDateShortYear(atendimento.dataHoraInicio)} />
-        <DetailField label="Horário" value={`${formatTime(atendimento.dataHoraInicio)} - ${formatTime(atendimento.dataHoraFim)}`} />
+        <DetailField
+          label="Horário"
+          value={`${formatTime(atendimento.dataHoraInicio)} - ${formatTime(atendimento.dataHoraFim)}`}
+        />
         <DetailField label="Valor" value={brl.format(atendimento.pagamentoAluno)} />
         <DetailField label="Repasse" value={brl.format(atendimento.repasseColaborador)} />
         <DetailField label="Criado em" value={formatDate(atendimento.createdAt)} />

@@ -94,7 +94,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
             SELECT COALESCE(SUM(a.repasseColaborador), 0)
             FROM Atendimento a
             WHERE a.colaborador.id = :colaboradorId
-              AND a.dataPagamentoColaborador IS NOT NULL
+              AND a.dataRepasseColaborador IS NOT NULL
               AND a.dataHoraInicio >= :inicio
               AND a.dataHoraFim <= :fim
         """
@@ -110,7 +110,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
             SELECT COALESCE(SUM(a.repasseColaborador), 0)
             FROM Atendimento a
             WHERE a.colaborador.id = :colaboradorId
-              AND a.dataPagamentoColaborador IS NULL
+              AND a.dataRepasseColaborador IS NULL
               AND a.dataHoraInicio >= :inicio
               AND a.dataHoraFim <= :fim
         """
@@ -224,7 +224,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
             FROM Atendimento a
             WHERE a.colaborador.id = :colaboradorId
               AND a.status = aprimorar.atendimentos.enums.StatusAtendimento.CONCLUIDO
-              AND a.dataPagamentoColaborador IS NULL
+              AND a.dataRepasseColaborador IS NULL
         """
     )
     boolean colaboradorPossuiRepassePendente(@Param("colaboradorId") UUID colaboradorId);

@@ -51,7 +51,7 @@ INSERT INTO atendimentos (
   pagamento_aluno,
   repasse_colaborador,
   data_pagamento_aluno,
-  data_pagamento_colaborador,
+  data_repasse_colaborador,
   created_at,
   updated_at
 ) VALUES

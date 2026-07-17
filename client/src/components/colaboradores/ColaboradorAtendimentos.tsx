@@ -75,7 +75,9 @@ export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<Cola
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <h2 className="text-xl font-bold text-base-content">Eventos vinculados</h2>
-          <p className="mt-2 text-sm text-base-content/65">Veja os atendimentos ligados a este colaborador por período, busca e filtros.</p>
+          <p className="mt-2 text-sm text-base-content/65">
+            Veja os atendimentos ligados a este colaborador por período, busca e filtros.
+          </p>
         </div>
 
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
@@ -84,7 +86,11 @@ export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<Cola
 
             <label className="form-control w-full md:w-56">
               <span className="label-text mb-2 text-sm font-medium text-base-content/70">Status</span>
-              <select className="select select-bordered w-full" value={status} onChange={(event) => handleStatusChange(event.target.value)}>
+              <select
+                className="select select-bordered w-full"
+                value={status}
+                onChange={(event) => handleStatusChange(event.target.value)}
+              >
                 {atendimentoStatusOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -95,7 +101,11 @@ export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<Cola
 
             <label className="form-control w-full md:w-64">
               <span className="label-text mb-2 text-sm font-medium text-base-content/70">Tipo</span>
-              <select className="select select-bordered w-full" value={tipo} onChange={(event) => handleTipoChange(event.target.value)}>
+              <select
+                className="select select-bordered w-full"
+                value={tipo}
+                onChange={(event) => handleTipoChange(event.target.value)}
+              >
                 {atendimentoTipoOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -134,7 +144,7 @@ export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<Cola
                     <th>Tipo</th>
                     <th>Status</th>
                     <th className="text-right">Repasse</th>
-                    <th>Pagamento</th>
+                    <th>Repasse</th>
                   </tr>
                 </thead>
 
@@ -159,7 +169,7 @@ export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<Cola
                       <td className="text-right">{brl.format(atendimento.repasseColaborador)}</td>
                       <td>
                         <div className="flex flex-col gap-1">
-                          <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataPagamentoColaborador} />
+                          <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataRepasseColaborador} />
                         </div>
                       </td>
                     </tr>
@@ -186,7 +196,8 @@ export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<Cola
 
                   <div className="mt-4 grid gap-2 rounded-2xl border border-base-200 bg-base-200/35 p-3 text-sm">
                     <p>
-                      <span className="font-medium text-base-content">Data:</span> {formatDateShortYear(atendimento.dataHoraInicio)}
+                      <span className="font-medium text-base-content">Data:</span>{" "}
+                      {formatDateShortYear(atendimento.dataHoraInicio)}
                     </p>
                     <p>
                       <span className="font-medium text-base-content">Horário:</span> {formatTime(atendimento.dataHoraInicio)} -{" "}
@@ -198,7 +209,7 @@ export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<Cola
                   </div>
 
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataPagamentoColaborador} />
+                    <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataRepasseColaborador} />
                   </div>
                 </article>
               ))}

@@ -5,11 +5,11 @@ import { toast } from "sonner";
 import { useAgendarAtendimento } from "@/lib/api/generated/hooks/atendimento/useAgendarAtendimento";
 import { useCancelarAtendimento } from "@/lib/api/generated/hooks/atendimento/useCancelarAtendimento";
 import { useConcluirAtendimento } from "@/lib/api/generated/hooks/atendimento/useConcluirAtendimento";
-import { useEfetivarPagamentoAluno } from "@/lib/api/generated/hooks/atendimento/useEfetivarPagamentoAluno";
-import { useEfetivarRepasseColaborador } from "@/lib/api/generated/hooks/atendimento/useEfetivarRepasseColaborador";
 import { useExcluirAtendimento } from "@/lib/api/generated/hooks/atendimento/useExcluirAtendimento";
 import { getAtendimentoByIdQueryKey } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentoById";
 import { getAtendimentosQueryKey } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentos";
+import { useTogglePagamentoAluno } from "@/lib/api/generated/hooks/atendimento/useTogglePagamentoAluno";
+import { useToggleRepasseColaborador } from "@/lib/api/generated/hooks/atendimento/useToggleRepasseColaborador";
 import { useUpdateAtendimento } from "@/lib/api/generated/hooks/atendimento/useUpdateAtendimento";
 import { getFriendlyErrorMessage } from "@/lib/api/client";
 
@@ -74,26 +74,26 @@ export function useAtendimentoMutations() {
     },
   });
 
-  const efetivarPagamentoAluno = useEfetivarPagamentoAluno({
+  const togglePagamentoAluno = useTogglePagamentoAluno({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao efetivar o pagamento do aluno");
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao alterar o pagamento do aluno");
       },
-      onSuccess: async (_, variables) => {
-        toast.success("Pagamento do aluno efetivado com sucesso");
-        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(variables.id)]);
+      onSuccess: async (updatedAtendimento) => {
+        toast.success("Pagamento do aluno atualizado com sucesso");
+        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(updatedAtendimento.id)]);
       },
     },
   });
 
-  const efetivarRepasseColaborador = useEfetivarRepasseColaborador({
+  const toggleRepasseColaborador = useToggleRepasseColaborador({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao efetivar o repasse do colaborador");
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao alterar o repasse do colaborador");
       },
-      onSuccess: async (_, variables) => {
-        toast.success("Repasse do colaborador efetivado com sucesso");
-        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(variables.id)]);
+      onSuccess: async (updatedAtendimento) => {
+        toast.success("Repasse do colaborador atualizado com sucesso");
+        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(updatedAtendimento.id)]);
       },
     },
   });
@@ -115,8 +115,8 @@ export function useAtendimentoMutations() {
     updateAtendimento,
     concludeAtendimento,
     cancelAtendimento,
-    efetivarPagamentoAluno,
-    efetivarRepasseColaborador,
+    togglePagamentoAluno,
+    toggleRepasseColaborador,
     deleteAtendimento,
   };
 }

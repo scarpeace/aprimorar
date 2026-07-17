@@ -92,7 +92,7 @@ export function AtendimentosResults({ atendimentos, isLoading, error, pagination
                 <td>
                   <div className="flex flex-col gap-1">
                     <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
-                    <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataPagamentoColaborador} />
+                    <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataRepasseColaborador} />
                   </div>
                 </td>
               </tr>
@@ -136,7 +136,7 @@ export function AtendimentosResults({ atendimentos, isLoading, error, pagination
 
             <div className="mt-3 flex flex-wrap gap-2">
               <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
-              <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataPagamentoColaborador} />
+              <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataRepasseColaborador} />
             </div>
           </article>
         ))}

@@ -2,6 +2,7 @@ package aprimorar.atendimentos.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -160,38 +161,48 @@ class AtendimentoTest {
     void shouldSetStudentPaymentDate() {
         var atendimento = validAtendimento();
 
-        atendimento.efetivarPagamentoAluno();
+        atendimento.togglePagamentoAluno();
 
         assertNotNull(atendimento.getDataPagamentoAluno());
     }
 
     @Test
-    void shouldNotSetStudentPaymentDateTwice() {
+    void shouldClearStudentPaymentDateWhenToggledAgain() {
         var atendimento = validAtendimento();
-        atendimento.efetivarPagamentoAluno();
+        atendimento.togglePagamentoAluno();
 
-        var exception = assertThrows(BusinessException.class, atendimento::efetivarPagamentoAluno);
+        atendimento.togglePagamentoAluno();
 
-        assertEquals("Pagamento já efetivado para o aluno", exception.getMessage());
+        assertNull(atendimento.getDataPagamentoAluno());
     }
 
     @Test
-    void shouldSetCollaboratorPaymentDate() {
+    void shouldSetCollaboratorRepasseDate() {
         var atendimento = validAtendimento();
 
-        atendimento.efetivarRepasseColaborador();
+        atendimento.toggleRepasseColaborador();
 
-        assertNotNull(atendimento.getDataPagamentoColaborador());
+        assertNotNull(atendimento.getDataRepasseColaborador());
     }
 
     @Test
-    void shouldNotSetCollaboratorPaymentDateTwice() {
+    void shouldClearCollaboratorRepasseDateWhenToggledAgain() {
         var atendimento = validAtendimento();
-        atendimento.efetivarRepasseColaborador();
+        atendimento.toggleRepasseColaborador();
 
-        var exception = assertThrows(BusinessException.class, atendimento::efetivarRepasseColaborador);
+        atendimento.toggleRepasseColaborador();
 
-        assertEquals("Repasse já efetivado para o colaborador", exception.getMessage());
+        assertNull(atendimento.getDataRepasseColaborador());
+    }
+
+    @Test
+    void shouldNotTogglePaymentsWhenCancelled() {
+        var atendimento = validAtendimento();
+        atendimento.cancelar();
+
+        var exception = assertThrows(BusinessException.class, atendimento::togglePagamentoAluno);
+
+        assertEquals("Não é possível alterar pagamentos de um atendimento cancelado", exception.getMessage());
     }
 
     @Test

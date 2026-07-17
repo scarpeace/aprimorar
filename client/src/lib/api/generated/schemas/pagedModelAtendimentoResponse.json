@@ -66,9 +66,9 @@
             "nullable": true,
             "example": "2024-03-10T15:33:42Z"
           },
-          "dataPagamentoColaborador": {
+          "dataRepasseColaborador": {
             "type": "string",
-            "description": "Data do pagamento do colaborador",
+            "description": "Data do repasse do colaborador",
             "format": "date-time",
             "nullable": true,
             "example": "2024-03-10T15:33:42Z"

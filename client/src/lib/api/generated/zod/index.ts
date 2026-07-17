@@ -65,16 +65,6 @@ export {
   desarquivarColaboradorMutationResponseSchema,
   desarquivarColaboradorPathParamsSchema,
 } from "./desarquivarColaboradorSchema.ts";
-export {
-  efetivarPagamentoAluno200Schema,
-  efetivarPagamentoAlunoMutationResponseSchema,
-  efetivarPagamentoAlunoPathParamsSchema,
-} from "./efetivarPagamentoAlunoSchema.ts";
-export {
-  efetivarRepasseColaborador200Schema,
-  efetivarRepasseColaboradorMutationResponseSchema,
-  efetivarRepasseColaboradorPathParamsSchema,
-} from "./efetivarRepasseColaboradorSchema.ts";
 export { enderecoRequestDTOSchema } from "./enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./enderecoResponseDTOSchema.ts";
 export { errorResponseSchema } from "./errorResponseSchema.ts";
@@ -157,6 +147,18 @@ export { pagedModelResponsavelResponseDTOSchema } from "./pagedModelResponsavelR
 export { relatorioAtendimentosResponseSchema } from "./relatorioAtendimentosResponseSchema.ts";
 export { responsavelRequestDTOSchema } from "./responsavelRequestDTOSchema.ts";
 export { responsavelResponseDTOSchema } from "./responsavelResponseDTOSchema.ts";
+export {
+  togglePagamentoAluno200Schema,
+  togglePagamentoAluno400Schema,
+  togglePagamentoAlunoMutationResponseSchema,
+  togglePagamentoAlunoPathParamsSchema,
+} from "./togglePagamentoAlunoSchema.ts";
+export {
+  toggleRepasseColaborador200Schema,
+  toggleRepasseColaborador400Schema,
+  toggleRepasseColaboradorMutationResponseSchema,
+  toggleRepasseColaboradorPathParamsSchema,
+} from "./toggleRepasseColaboradorSchema.ts";
 export {
   unarchiveAluno204Schema,
   unarchiveAlunoMutationResponseSchema,

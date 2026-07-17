@@ -58,8 +58,8 @@ public record AtendimentoResponse(
     LocalDateTime dataPagamentoAluno,
 
     @Nullable
-    @Schema(nullable = true, description = "Data do pagamento do colaborador", example = "2024-03-10T15:33:42Z")
-    LocalDateTime dataPagamentoColaborador,
+    @Schema(nullable = true, description = "Data do repasse do colaborador", example = "2024-03-10T15:33:42Z")
+    LocalDateTime dataRepasseColaborador,
 
     @NotNull
     @Schema(nullable = false, description = "Status do atendimento", example = "AGENDADO")
@@ -86,7 +86,7 @@ public record AtendimentoResponse(
             atendimento.getColaboradorId(),
             atendimento.getColaborador().getNome(),
             atendimento.getDataPagamentoAluno(),
-            atendimento.getDataPagamentoColaborador(),
+            atendimento.getDataRepasseColaborador(),
             atendimento.getStatus(),
             atendimento.getCreatedAt(),
             atendimento.getUpdatedAt()

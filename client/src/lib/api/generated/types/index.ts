@@ -86,18 +86,6 @@ export type {
   DesarquivarColaboradorMutationResponse,
   DesarquivarColaboradorPathParams,
 } from "./DesarquivarColaborador.ts";
-export type {
-  EfetivarPagamentoAluno200,
-  EfetivarPagamentoAlunoMutation,
-  EfetivarPagamentoAlunoMutationResponse,
-  EfetivarPagamentoAlunoPathParams,
-} from "./EfetivarPagamentoAluno.ts";
-export type {
-  EfetivarRepasseColaborador200,
-  EfetivarRepasseColaboradorMutation,
-  EfetivarRepasseColaboradorMutationResponse,
-  EfetivarRepasseColaboradorPathParams,
-} from "./EfetivarRepasseColaborador.ts";
 export type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
 export type { ErrorResponse } from "./ErrorResponse.ts";
@@ -198,6 +186,20 @@ export type { PagedModelResponsavelResponseDTO } from "./PagedModelResponsavelRe
 export type { RelatorioAtendimentosResponse } from "./RelatorioAtendimentosResponse.ts";
 export type { ResponsavelRequestDTO } from "./ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./ResponsavelResponseDTO.ts";
+export type {
+  TogglePagamentoAluno200,
+  TogglePagamentoAluno400,
+  TogglePagamentoAlunoMutation,
+  TogglePagamentoAlunoMutationResponse,
+  TogglePagamentoAlunoPathParams,
+} from "./TogglePagamentoAluno.ts";
+export type {
+  ToggleRepasseColaborador200,
+  ToggleRepasseColaborador400,
+  ToggleRepasseColaboradorMutation,
+  ToggleRepasseColaboradorMutationResponse,
+  ToggleRepasseColaboradorPathParams,
+} from "./ToggleRepasseColaborador.ts";
 export type {
   UnarchiveAluno204,
   UnarchiveAlunoMutation,
