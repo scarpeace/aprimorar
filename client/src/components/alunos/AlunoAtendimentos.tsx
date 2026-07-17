@@ -11,6 +11,7 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { TablePagination } from "@/components/ui/TablePagination";
+import { useAtendimentoMutations } from "@/hooks/use-atendimento-mutations";
 import { useGetAtendimentos } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentos";
 import type {
   AtendimentoResponseStatusEnumKey,
@@ -22,6 +23,28 @@ import { brl } from "@/lib/utils/formatter";
 
 const PAGE_SIZE = 20;
 
+function StudentPaymentToggle({
+  paid,
+  disabled,
+  onToggle,
+}: Readonly<{
+  paid: boolean;
+  disabled: boolean;
+  onToggle: () => void;
+}>) {
+  return (
+    <input
+      type="checkbox"
+      className="toggle toggle-success toggle-sm"
+      checked={paid}
+      disabled={disabled}
+      aria-label="Alternar pagamento do aluno"
+      onClick={(event) => event.stopPropagation()}
+      onChange={onToggle}
+    />
+  );
+}
+
 type AlunoAtendimentosProps = {
   alunoId: string;
   anoMes: string;
@@ -29,6 +52,7 @@ type AlunoAtendimentosProps = {
 
 export function AlunoAtendimentos({ alunoId, anoMes }: Readonly<AlunoAtendimentosProps>) {
   const router = useRouter();
+  const { togglePagamentoAluno } = useAtendimentoMutations();
   const [page, setPage] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -168,8 +192,13 @@ export function AlunoAtendimentos({ alunoId, anoMes }: Readonly<AlunoAtendimento
                       </td>
                       <td className="text-right">{brl.format(atendimento.pagamentoAluno)}</td>
                       <td>
-                        <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
                           <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
+                          <StudentPaymentToggle
+                            paid={!!atendimento.dataPagamentoAluno}
+                            disabled={togglePagamentoAluno.isPending || atendimento.status === "CANCELADO"}
+                            onToggle={() => togglePagamentoAluno.mutate({ id: atendimento.id })}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -208,8 +237,13 @@ export function AlunoAtendimentos({ alunoId, anoMes }: Readonly<AlunoAtendimento
                     </p>
                   </div>
 
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
                     <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
+                    <StudentPaymentToggle
+                      paid={!!atendimento.dataPagamentoAluno}
+                      disabled={togglePagamentoAluno.isPending || atendimento.status === "CANCELADO"}
+                      onToggle={() => togglePagamentoAluno.mutate({ id: atendimento.id })}
+                    />
                   </div>
                 </article>
               ))}
