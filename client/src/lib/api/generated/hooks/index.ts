@@ -15,6 +15,7 @@ export type { ExcluirAtendimentoMutationKey } from "./atendimento/useExcluirAten
 export type { GetAtendimentoByIdQueryKey } from "./atendimento/useGetAtendimentoById.ts";
 export type { GetAtendimentosQueryKey } from "./atendimento/useGetAtendimentos.ts";
 export type { GetCalendarioAtendimentosQueryKey } from "./atendimento/useGetCalendarioAtendimentos.ts";
+export type { GetRelatorioAlunoQueryKey } from "./atendimento/useGetRelatorioAluno.ts";
 export type { GetRelatorioAtendimentosQueryKey } from "./atendimento/useGetRelatorioAtendimentos.ts";
 export type { GetResumoFinanceiroAlunoQueryKey } from "./atendimento/useGetResumoFinanceiroAluno.ts";
 export type { GetResumoFinanceiroColaboradorQueryKey } from "./atendimento/useGetResumoFinanceiroColaborador.ts";
@@ -109,6 +110,10 @@ export { getCalendarioAtendimentos } from "./atendimento/useGetCalendarioAtendim
 export { getCalendarioAtendimentosQueryKey } from "./atendimento/useGetCalendarioAtendimentos.ts";
 export { getCalendarioAtendimentosQueryOptions } from "./atendimento/useGetCalendarioAtendimentos.ts";
 export { useGetCalendarioAtendimentos } from "./atendimento/useGetCalendarioAtendimentos.ts";
+export { getRelatorioAluno } from "./atendimento/useGetRelatorioAluno.ts";
+export { getRelatorioAlunoQueryKey } from "./atendimento/useGetRelatorioAluno.ts";
+export { getRelatorioAlunoQueryOptions } from "./atendimento/useGetRelatorioAluno.ts";
+export { useGetRelatorioAluno } from "./atendimento/useGetRelatorioAluno.ts";
 export { getRelatorioAtendimentos } from "./atendimento/useGetRelatorioAtendimentos.ts";
 export { getRelatorioAtendimentosQueryKey } from "./atendimento/useGetRelatorioAtendimentos.ts";
 export { getRelatorioAtendimentosQueryOptions } from "./atendimento/useGetRelatorioAtendimentos.ts";

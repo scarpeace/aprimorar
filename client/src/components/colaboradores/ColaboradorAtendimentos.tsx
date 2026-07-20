@@ -11,6 +11,7 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { TablePagination } from "@/components/ui/TablePagination";
+import { useAtendimentoMutations } from "@/hooks/use-atendimento-mutations";
 import { useGetAtendimentos } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentos";
 import type {
   AtendimentoResponseStatusEnumKey,
@@ -22,6 +23,28 @@ import { brl } from "@/lib/utils/formatter";
 
 const PAGE_SIZE = 20;
 
+function CollaboratorRepasseToggle({
+  paid,
+  disabled,
+  onToggle,
+}: Readonly<{
+  paid: boolean;
+  disabled: boolean;
+  onToggle: () => void;
+}>) {
+  return (
+    <input
+      type="checkbox"
+      className="toggle toggle-success toggle-sm"
+      checked={paid}
+      disabled={disabled}
+      aria-label="Alternar repasse do colaborador"
+      onClick={(event) => event.stopPropagation()}
+      onChange={onToggle}
+    />
+  );
+}
+
 type ColaboradorAtendimentosProps = {
   colaboradorId: string;
   anoMes: string;
@@ -29,6 +52,7 @@ type ColaboradorAtendimentosProps = {
 
 export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<ColaboradorAtendimentosProps>) {
   const router = useRouter();
+  const { toggleRepasseColaborador } = useAtendimentoMutations();
   const [page, setPage] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -144,7 +168,7 @@ export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<Cola
                     <th>Tipo</th>
                     <th>Status</th>
                     <th className="text-right">Repasse</th>
-                    <th>Repasse</th>
+                    <th>Pago</th>
                   </tr>
                 </thead>
 
@@ -168,8 +192,13 @@ export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<Cola
                       </td>
                       <td className="text-right">{brl.format(atendimento.repasseColaborador)}</td>
                       <td>
-                        <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
                           <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataRepasseColaborador} />
+                          <CollaboratorRepasseToggle
+                            paid={!!atendimento.dataRepasseColaborador}
+                            disabled={toggleRepasseColaborador.isPending || atendimento.status === "CANCELADO"}
+                            onToggle={() => toggleRepasseColaborador.mutate({ id: atendimento.id })}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -208,8 +237,13 @@ export function ColaboradorAtendimentos({ colaboradorId, anoMes }: Readonly<Cola
                     </p>
                   </div>
 
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
                     <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataRepasseColaborador} />
+                    <CollaboratorRepasseToggle
+                      paid={!!atendimento.dataRepasseColaborador}
+                      disabled={toggleRepasseColaborador.isPending || atendimento.status === "CANCELADO"}
+                      onToggle={() => toggleRepasseColaborador.mutate({ id: atendimento.id })}
+                    />
                   </div>
                 </article>
               ))}

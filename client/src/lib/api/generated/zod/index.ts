@@ -4,6 +4,8 @@ export {
   agendarAtendimentoMutationRequestSchema,
   agendarAtendimentoMutationResponseSchema,
 } from "./agendarAtendimentoSchema.ts";
+export { alunoDadosSchema } from "./alunoDadosSchema.ts";
+export { alunoRelatorioResponseSchema } from "./alunoRelatorioResponseSchema.ts";
 export { alunoRequestDTOSchema } from "./alunoRequestDTOSchema.ts";
 export { alunoResponseDTOSchema } from "./alunoResponseDTOSchema.ts";
 export { alunoResumoFinanceiroResponseSchema } from "./alunoResumoFinanceiroResponseSchema.ts";
@@ -108,6 +110,12 @@ export {
   getColaboradoresQueryResponseSchema,
 } from "./getColaboradoresSchema.ts";
 export {
+  getRelatorioAluno200Schema,
+  getRelatorioAlunoPathParamsSchema,
+  getRelatorioAlunoQueryParamsSchema,
+  getRelatorioAlunoQueryResponseSchema,
+} from "./getRelatorioAlunoSchema.ts";
+export {
   getRelatorioAtendimentos200Schema,
   getRelatorioAtendimentosQueryParamsSchema,
   getRelatorioAtendimentosQueryResponseSchema,
@@ -134,6 +142,7 @@ export {
   getResumoFinanceiroColaboradorQueryParamsSchema,
   getResumoFinanceiroColaboradorQueryResponseSchema,
 } from "./getResumoFinanceiroColaboradorSchema.ts";
+export { itemSchema } from "./itemSchema.ts";
 export { listAlunos200Schema, listAlunosQueryResponseSchema } from "./listAlunosSchema.ts";
 export { listResponsaveis200Schema, listResponsaveisQueryResponseSchema } from "./listResponsaveisSchema.ts";
 export { listUsers200Schema, listUsersQueryResponseSchema } from "./listUsersSchema.ts";
@@ -144,9 +153,12 @@ export { pagedModelAlunoResponseDTOSchema } from "./pagedModelAlunoResponseDTOSc
 export { pagedModelAtendimentoResponseSchema } from "./pagedModelAtendimentoResponseSchema.ts";
 export { pagedModelColaboradorResponseDTOSchema } from "./pagedModelColaboradorResponseDTOSchema.ts";
 export { pagedModelResponsavelResponseDTOSchema } from "./pagedModelResponsavelResponseDTOSchema.ts";
+export { periodoSchema } from "./periodoSchema.ts";
 export { relatorioAtendimentosResponseSchema } from "./relatorioAtendimentosResponseSchema.ts";
+export { responsavelDadosSchema } from "./responsavelDadosSchema.ts";
 export { responsavelRequestDTOSchema } from "./responsavelRequestDTOSchema.ts";
 export { responsavelResponseDTOSchema } from "./responsavelResponseDTOSchema.ts";
+export { resumoSchema } from "./resumoSchema.ts";
 export {
   togglePagamentoAluno200Schema,
   togglePagamentoAluno400Schema,

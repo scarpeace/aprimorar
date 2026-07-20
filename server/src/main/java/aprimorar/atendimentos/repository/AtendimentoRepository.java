@@ -91,6 +91,24 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
 
     @Query(
         """
+            SELECT a
+            FROM Atendimento a
+            JOIN FETCH a.colaborador
+            WHERE a.aluno.id = :alunoId
+              AND a.status <> aprimorar.atendimentos.enums.StatusAtendimento.CANCELADO
+              AND a.dataHoraInicio >= :inicio
+              AND a.dataHoraFim <= :fim
+            ORDER BY a.dataHoraInicio DESC
+        """
+    )
+    List<Atendimento> findRelatorioAluno(
+        @Param("alunoId") UUID alunoId,
+        @Param("inicio") LocalDateTime inicio,
+        @Param("fim") LocalDateTime fim
+    );
+
+    @Query(
+        """
             SELECT COALESCE(SUM(a.repasseColaborador), 0)
             FROM Atendimento a
             WHERE a.colaborador.id = :colaboradorId

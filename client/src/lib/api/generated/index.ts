@@ -15,6 +15,7 @@ export type { ExcluirAtendimentoMutationKey } from "./hooks/atendimento/useExclu
 export type { GetAtendimentoByIdQueryKey } from "./hooks/atendimento/useGetAtendimentoById.ts";
 export type { GetAtendimentosQueryKey } from "./hooks/atendimento/useGetAtendimentos.ts";
 export type { GetCalendarioAtendimentosQueryKey } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
+export type { GetRelatorioAlunoQueryKey } from "./hooks/atendimento/useGetRelatorioAluno.ts";
 export type { GetRelatorioAtendimentosQueryKey } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
 export type { GetResumoFinanceiroAlunoQueryKey } from "./hooks/atendimento/useGetResumoFinanceiroAluno.ts";
 export type { GetResumoFinanceiroColaboradorQueryKey } from "./hooks/atendimento/useGetResumoFinanceiroColaborador.ts";
@@ -48,6 +49,8 @@ export type {
   AgendarAtendimentoMutationRequest,
   AgendarAtendimentoMutationResponse,
 } from "./types/AgendarAtendimento.ts";
+export type { AlunoDados } from "./types/AlunoDados.ts";
+export type { AlunoRelatorioResponse } from "./types/AlunoRelatorioResponse.ts";
 export type { AlunoRequestDTO } from "./types/AlunoRequestDTO.ts";
 export type { AlunoResponseDTO } from "./types/AlunoResponseDTO.ts";
 export type { AlunoResumoFinanceiroResponse } from "./types/AlunoResumoFinanceiroResponse.ts";
@@ -210,6 +213,13 @@ export type {
   GetColaboradoresListQueryResponse,
 } from "./types/GetColaboradoresList.ts";
 export type {
+  GetRelatorioAluno200,
+  GetRelatorioAlunoPathParams,
+  GetRelatorioAlunoQuery,
+  GetRelatorioAlunoQueryParams,
+  GetRelatorioAlunoQueryResponse,
+} from "./types/GetRelatorioAluno.ts";
+export type {
   GetRelatorioAtendimentos200,
   GetRelatorioAtendimentosQuery,
   GetRelatorioAtendimentosQueryParams,
@@ -241,6 +251,7 @@ export type {
   GetResumoFinanceiroColaboradorQueryParams,
   GetResumoFinanceiroColaboradorQueryResponse,
 } from "./types/GetResumoFinanceiroColaborador.ts";
+export type { Item, ItemStatusEnumKey, ItemTipoEnumKey } from "./types/Item.ts";
 export type { ListAlunos200, ListAlunosQuery, ListAlunosQueryResponse } from "./types/ListAlunos.ts";
 export type { ListResponsaveis200, ListResponsaveisQuery, ListResponsaveisQueryResponse } from "./types/ListResponsaveis.ts";
 export type { ListUsers200, ListUsersQuery, ListUsersQueryResponse } from "./types/ListUsers.ts";
@@ -251,9 +262,12 @@ export type { PagedModelAlunoResponseDTO } from "./types/PagedModelAlunoResponse
 export type { PagedModelAtendimentoResponse } from "./types/PagedModelAtendimentoResponse.ts";
 export type { PagedModelColaboradorResponseDTO } from "./types/PagedModelColaboradorResponseDTO.ts";
 export type { PagedModelResponsavelResponseDTO } from "./types/PagedModelResponsavelResponseDTO.ts";
+export type { Periodo } from "./types/Periodo.ts";
 export type { RelatorioAtendimentosResponse } from "./types/RelatorioAtendimentosResponse.ts";
+export type { ResponsavelDados } from "./types/ResponsavelDados.ts";
 export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./types/ResponsavelResponseDTO.ts";
+export type { Resumo } from "./types/Resumo.ts";
 export type {
   TogglePagamentoAluno200,
   TogglePagamentoAluno400,
@@ -372,6 +386,10 @@ export { getCalendarioAtendimentos } from "./hooks/atendimento/useGetCalendarioA
 export { getCalendarioAtendimentosQueryKey } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
 export { getCalendarioAtendimentosQueryOptions } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
 export { useGetCalendarioAtendimentos } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
+export { getRelatorioAluno } from "./hooks/atendimento/useGetRelatorioAluno.ts";
+export { getRelatorioAlunoQueryKey } from "./hooks/atendimento/useGetRelatorioAluno.ts";
+export { getRelatorioAlunoQueryOptions } from "./hooks/atendimento/useGetRelatorioAluno.ts";
+export { useGetRelatorioAluno } from "./hooks/atendimento/useGetRelatorioAluno.ts";
 export { getRelatorioAtendimentos } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
 export { getRelatorioAtendimentosQueryKey } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
 export { getRelatorioAtendimentosQueryOptions } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
@@ -484,6 +502,8 @@ export { colaboradorRequestDTOFuncaoEnum } from "./types/ColaboradorRequestDTO.t
 export { colaboradorResponseDTOFuncaoEnum } from "./types/ColaboradorResponseDTO.ts";
 export { getAtendimentosQueryParamsStatusEnum } from "./types/GetAtendimentos.ts";
 export { getAtendimentosQueryParamsTipoEnum } from "./types/GetAtendimentos.ts";
+export { itemStatusEnum } from "./types/Item.ts";
+export { itemTipoEnum } from "./types/Item.ts";
 export { userRequestDTORoleEnum } from "./types/UserRequestDTO.ts";
 export { userResponseDTORoleEnum } from "./types/UserResponseDTO.ts";
 export {
@@ -492,6 +512,8 @@ export {
   agendarAtendimentoMutationRequestSchema,
   agendarAtendimentoMutationResponseSchema,
 } from "./zod/agendarAtendimentoSchema.ts";
+export { alunoDadosSchema } from "./zod/alunoDadosSchema.ts";
+export { alunoRelatorioResponseSchema } from "./zod/alunoRelatorioResponseSchema.ts";
 export { alunoRequestDTOSchema } from "./zod/alunoRequestDTOSchema.ts";
 export { alunoResponseDTOSchema } from "./zod/alunoResponseDTOSchema.ts";
 export { alunoResumoFinanceiroResponseSchema } from "./zod/alunoResumoFinanceiroResponseSchema.ts";
@@ -612,6 +634,12 @@ export {
   getColaboradoresQueryResponseSchema,
 } from "./zod/getColaboradoresSchema.ts";
 export {
+  getRelatorioAluno200Schema,
+  getRelatorioAlunoPathParamsSchema,
+  getRelatorioAlunoQueryParamsSchema,
+  getRelatorioAlunoQueryResponseSchema,
+} from "./zod/getRelatorioAlunoSchema.ts";
+export {
   getRelatorioAtendimentos200Schema,
   getRelatorioAtendimentosQueryParamsSchema,
   getRelatorioAtendimentosQueryResponseSchema,
@@ -638,6 +666,7 @@ export {
   getResumoFinanceiroColaboradorQueryParamsSchema,
   getResumoFinanceiroColaboradorQueryResponseSchema,
 } from "./zod/getResumoFinanceiroColaboradorSchema.ts";
+export { itemSchema } from "./zod/itemSchema.ts";
 export { listAlunos200Schema, listAlunosQueryResponseSchema } from "./zod/listAlunosSchema.ts";
 export { listResponsaveis200Schema, listResponsaveisQueryResponseSchema } from "./zod/listResponsaveisSchema.ts";
 export { listUsers200Schema, listUsersQueryResponseSchema } from "./zod/listUsersSchema.ts";
@@ -648,9 +677,12 @@ export { pagedModelAlunoResponseDTOSchema } from "./zod/pagedModelAlunoResponseD
 export { pagedModelAtendimentoResponseSchema } from "./zod/pagedModelAtendimentoResponseSchema.ts";
 export { pagedModelColaboradorResponseDTOSchema } from "./zod/pagedModelColaboradorResponseDTOSchema.ts";
 export { pagedModelResponsavelResponseDTOSchema } from "./zod/pagedModelResponsavelResponseDTOSchema.ts";
+export { periodoSchema } from "./zod/periodoSchema.ts";
 export { relatorioAtendimentosResponseSchema } from "./zod/relatorioAtendimentosResponseSchema.ts";
+export { responsavelDadosSchema } from "./zod/responsavelDadosSchema.ts";
 export { responsavelRequestDTOSchema } from "./zod/responsavelRequestDTOSchema.ts";
 export { responsavelResponseDTOSchema } from "./zod/responsavelResponseDTOSchema.ts";
+export { resumoSchema } from "./zod/resumoSchema.ts";
 export {
   togglePagamentoAluno200Schema,
   togglePagamentoAluno400Schema,

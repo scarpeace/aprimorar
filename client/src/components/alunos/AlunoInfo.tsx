@@ -4,8 +4,6 @@ import Link from "next/link";
 import { Archive, ArchiveRestore, PencilLine, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AlunoAtendimentos } from "@/components/alunos/AlunoAtendimentos";
-import { AlunoFinanceSummary } from "@/components/alunos/AlunoFinanceSummary";
 import { AlunoForm } from "@/components/alunos/AlunoForm";
 import { useGetAlunoById } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
 import { useGetResponsavelById } from "@/lib/api/generated/hooks/responsavel/useGetResponsavelById";
@@ -13,19 +11,15 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { DetailField } from "@/components/ui/DetailField";
 import { ErrorCard } from "@/components/ui/ErrorCard";
-import { MonthYearSelector } from "@/components/ui/MonthYearSelector";
 import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { useAlunoMutations } from "@/hooks/use-aluno-mutations";
-import { toAnoMes } from "@/lib/utils/date-utils";
 import { formatCpf, formatDate, formatPhone, formatZip } from "@/lib/utils/formatter";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
 
-export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
+export function AlunoInfo({ alunoId }: Readonly<{ alunoId: string }>) {
   const router = useRouter();
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear());
-  const [selectedMonthIndex, setSelectedMonthIndex] = useState(() => new Date().getMonth());
   const aluno = useGetAlunoById(alunoId);
   const responsavelId = aluno.data?.responsavelId ?? "";
   const responsavel = useGetResponsavelById(responsavelId);
@@ -59,7 +53,6 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
   const active = data.active !== false;
   const isArchivePending = archiveAluno.isPending || unarchiveAluno.isPending;
   const isPending = isArchivePending || deleteAluno.isPending;
-  const anoMes = toAnoMes(new Date(selectedYear, selectedMonthIndex, 1));
 
   function handleArchiveToggle() {
     const actionLabel = active ? "arquivar" : "desarquivar";
@@ -87,18 +80,6 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
     );
   }
 
-  function handlePreviousYear() {
-    setSelectedYear((value) => value - 1);
-  }
-
-  function handleNextYear() {
-    setSelectedYear((value) => value + 1);
-  }
-
-  function handleMonthChange(monthIndex: number) {
-    setSelectedMonthIndex(monthIndex);
-  }
-
   return (
     <div className="space-y-6">
       <Modal
@@ -112,10 +93,11 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
       </Modal>
 
       <section className="app-shell-card p-6">
+
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="flex flex-col">
             <div className="flex gap-3">
-              <h2 className="text-2xl font-bold text-base-content">{data.nome}</h2>
+              <h2 className="text-2xl font-bold text-base-content uppercase">{data.nome}</h2>
               <Badge variant={active ? "success" : "ghost"}>
                 {active ? "Ativo" : "Arquivado"}
               </Badge>
@@ -143,7 +125,7 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
         </div>
 
         <div className="mt-6 rounded-2xl border border-base-300 bg-base-100 p-5">
-          <h3 className="text-lg font-bold text-base-content">Detalhes do aluno</h3>
+          <h3 className="text-lg font-bold text-base-content">Dados cadastrais</h3>
 
           <div className="mt-5 grid gap-6 lg:grid-cols-2 lg:gap-8">
             <div className="space-y-4">
@@ -204,19 +186,6 @@ export function AlunoDetails({ alunoId }: Readonly<{ alunoId: string }>) {
             </div>
           </div>
         </div>
-      </section>
-
-      <MonthYearSelector
-        selectedYear={selectedYear}
-        selectedMonthIndex={selectedMonthIndex}
-        onPreviousYear={handlePreviousYear}
-        onNextYear={handleNextYear}
-        onMonthChange={handleMonthChange}
-      />
-
-      <section className="space-y-6">
-        <AlunoFinanceSummary alunoId={alunoId} anoMes={anoMes} />
-        <AlunoAtendimentos key={anoMes} alunoId={alunoId} anoMes={anoMes} />
       </section>
     </div>
   );

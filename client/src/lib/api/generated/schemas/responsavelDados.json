@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "nome": { "type": "string" },
+    "email": { "type": "string" },
+    "telefone": { "type": "string" }
+  },
+  "x-readme-ref-name": "ResponsavelDados"
+}

@@ -1,6 +1,7 @@
 package aprimorar.atendimentos.controller;
 
 import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
+import aprimorar.atendimentos.dto.AlunoRelatorioResponse;
 import aprimorar.atendimentos.dto.AlunoResumoFinanceiroResponse;
 import aprimorar.atendimentos.dto.CalendarioMensalAtendimentosResponse;
 import aprimorar.atendimentos.dto.ColaboradorResumoFinanceiroResponse;
@@ -11,7 +12,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +85,17 @@ public class AtendimentoQueryController {
         @RequestParam YearMonth anoMes
     ) {
         return ResponseEntity.ok(atendimentoQueryService.getResumoFinanceiroAluno(alunoId, anoMes));
+    }
+
+    @GetMapping("/alunos/{alunoId}/relatorio")
+    @Operation(operationId = "getRelatorioAluno", description = "Retorna o relatório de atendimentos de um aluno em um período.")
+    @ApiResponse(responseCode = "200", description = "Relatório retornado com sucesso.")
+    public ResponseEntity<AlunoRelatorioResponse> getRelatorioAluno(
+        @PathVariable UUID alunoId,
+        @RequestParam LocalDate dataInicio,
+        @RequestParam LocalDate dataFim
+    ) {
+        return ResponseEntity.ok(atendimentoQueryService.getRelatorioAluno(alunoId, dataInicio, dataFim));
     }
 
 }

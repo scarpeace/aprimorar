@@ -5,6 +5,8 @@ export type {
   AgendarAtendimentoMutationRequest,
   AgendarAtendimentoMutationResponse,
 } from "./AgendarAtendimento.ts";
+export type { AlunoDados } from "./AlunoDados.ts";
+export type { AlunoRelatorioResponse } from "./AlunoRelatorioResponse.ts";
 export type { AlunoRequestDTO } from "./AlunoRequestDTO.ts";
 export type { AlunoResponseDTO } from "./AlunoResponseDTO.ts";
 export type { AlunoResumoFinanceiroResponse } from "./AlunoResumoFinanceiroResponse.ts";
@@ -142,6 +144,13 @@ export type {
   GetColaboradoresListQueryResponse,
 } from "./GetColaboradoresList.ts";
 export type {
+  GetRelatorioAluno200,
+  GetRelatorioAlunoPathParams,
+  GetRelatorioAlunoQuery,
+  GetRelatorioAlunoQueryParams,
+  GetRelatorioAlunoQueryResponse,
+} from "./GetRelatorioAluno.ts";
+export type {
   GetRelatorioAtendimentos200,
   GetRelatorioAtendimentosQuery,
   GetRelatorioAtendimentosQueryParams,
@@ -173,6 +182,7 @@ export type {
   GetResumoFinanceiroColaboradorQueryParams,
   GetResumoFinanceiroColaboradorQueryResponse,
 } from "./GetResumoFinanceiroColaborador.ts";
+export type { Item, ItemStatusEnumKey, ItemTipoEnumKey } from "./Item.ts";
 export type { ListAlunos200, ListAlunosQuery, ListAlunosQueryResponse } from "./ListAlunos.ts";
 export type { ListResponsaveis200, ListResponsaveisQuery, ListResponsaveisQueryResponse } from "./ListResponsaveis.ts";
 export type { ListUsers200, ListUsersQuery, ListUsersQueryResponse } from "./ListUsers.ts";
@@ -183,9 +193,12 @@ export type { PagedModelAlunoResponseDTO } from "./PagedModelAlunoResponseDTO.ts
 export type { PagedModelAtendimentoResponse } from "./PagedModelAtendimentoResponse.ts";
 export type { PagedModelColaboradorResponseDTO } from "./PagedModelColaboradorResponseDTO.ts";
 export type { PagedModelResponsavelResponseDTO } from "./PagedModelResponsavelResponseDTO.ts";
+export type { Periodo } from "./Periodo.ts";
 export type { RelatorioAtendimentosResponse } from "./RelatorioAtendimentosResponse.ts";
+export type { ResponsavelDados } from "./ResponsavelDados.ts";
 export type { ResponsavelRequestDTO } from "./ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./ResponsavelResponseDTO.ts";
+export type { Resumo } from "./Resumo.ts";
 export type {
   TogglePagamentoAluno200,
   TogglePagamentoAluno400,
@@ -244,5 +257,7 @@ export { colaboradorRequestDTOFuncaoEnum } from "./ColaboradorRequestDTO.ts";
 export { colaboradorResponseDTOFuncaoEnum } from "./ColaboradorResponseDTO.ts";
 export { getAtendimentosQueryParamsStatusEnum } from "./GetAtendimentos.ts";
 export { getAtendimentosQueryParamsTipoEnum } from "./GetAtendimentos.ts";
+export { itemStatusEnum } from "./Item.ts";
+export { itemTipoEnum } from "./Item.ts";
 export { userRequestDTORoleEnum } from "./UserRequestDTO.ts";
 export { userResponseDTORoleEnum } from "./UserResponseDTO.ts";
