@@ -6,6 +6,7 @@ import aprimorar.atendimentos.dto.AlunoResumoFinanceiroResponse;
 import aprimorar.atendimentos.dto.CalendarioMensalAtendimentosResponse;
 import aprimorar.atendimentos.dto.ColaboradorResumoFinanceiroResponse;
 import aprimorar.atendimentos.dto.RelatorioAtendimentosResponse;
+import aprimorar.atendimentos.service.AlunoRelatorioPdfService;
 import aprimorar.atendimentos.service.AtendimentoQueryService;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,8 @@ import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,9 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AtendimentoQueryController {
 
     private final AtendimentoQueryService atendimentoQueryService;
+    private final AlunoRelatorioPdfService alunoRelatorioPdfService;
 
-    public AtendimentoQueryController(AtendimentoQueryService atendimentoQueryService) {
+    public AtendimentoQueryController(
+        AtendimentoQueryService atendimentoQueryService,
+        AlunoRelatorioPdfService alunoRelatorioPdfService
+    ) {
         this.atendimentoQueryService = atendimentoQueryService;
+        this.alunoRelatorioPdfService = alunoRelatorioPdfService;
     }
 
     @GetMapping
@@ -96,6 +104,23 @@ public class AtendimentoQueryController {
         @RequestParam LocalDate dataFim
     ) {
         return ResponseEntity.ok(atendimentoQueryService.getRelatorioAluno(alunoId, dataInicio, dataFim));
+    }
+
+    @GetMapping(value = "/alunos/{alunoId}/relatorio.pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Operation(operationId = "getRelatorioAlunoPdf", description = "Retorna o relatório de atendimentos de um aluno em PDF.")
+    @ApiResponse(responseCode = "200", description = "PDF retornado com sucesso.")
+    public ResponseEntity<byte[]> getRelatorioAlunoPdf(
+        @PathVariable UUID alunoId,
+        @RequestParam LocalDate dataInicio,
+        @RequestParam LocalDate dataFim
+    ) {
+        var relatorio = atendimentoQueryService.getRelatorioAluno(alunoId, dataInicio, dataFim);
+        var pdf = alunoRelatorioPdfService.gerar(relatorio);
+
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_PDF)
+            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=relatorio-aluno.pdf")
+            .body(pdf);
     }
 
 }

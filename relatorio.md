@@ -61,7 +61,8 @@ Por enquanto, usar `useGetRelatorioAluno` para preencher os cards.
 
 ## Depois
 
+- adicionar endpoint PDF. OK
+- implementar conteudo do PDF com OpenPDF. OK
 - adicionar botao `Gerar relatorio`
 - decidir se abre outra pagina, modal ou preview dedicado
-- decidir PDF/imagem
 - decidir envio por email/WhatsApp

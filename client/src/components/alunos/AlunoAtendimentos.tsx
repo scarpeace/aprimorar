@@ -128,6 +128,7 @@ export function AlunoAtendimentos({ alunoId }: Readonly<AlunoAtendimentosProps>)
 
   const content = atendimentos.data?.content ?? [];
   const resumo = relatorio.data?.resumo;
+  const relatorioPdfUrl = `/api/proxy/v1/atendimentos/alunos/${alunoId}/relatorio.pdf?dataInicio=${dataInicio}&dataFim=${dataFim}`;
   const metadata = atendimentos.data?.page;
   const totalPages = metadata?.totalPages ?? 0;
   const totalElements = metadata?.totalElements ?? 0;
@@ -190,6 +191,15 @@ export function AlunoAtendimentos({ alunoId }: Readonly<AlunoAtendimentosProps>)
               onChange={(event) => handleDataFimChange(event.target.value)}
             />
           </label>
+
+          <a
+            className={`btn btn-primary ${!hasPeriod ? "btn-disabled" : ""}`}
+            href={relatorioPdfUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Gerar relatório
+          </a>
         </div>
       </div>
 
