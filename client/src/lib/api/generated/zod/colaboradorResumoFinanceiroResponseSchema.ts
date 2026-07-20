@@ -6,11 +6,13 @@
 import { z } from "zod/v4";
 
 /**
- * @description Resumo financeiro mensal de um colaborador
+ * @description Resumo financeiro de um colaborador no período
  */
 export const colaboradorResumoFinanceiroResponseSchema = z
   .object({
-    totalPago: z.number().describe("Total de repasses pagos no período"),
-    totalPendente: z.number().describe("Total de repasses pendentes no período"),
+    totalAtendimentos: z.int().describe("Quantidade de atendimentos no período"),
+    valorTotal: z.number().describe("Valor total de repasses no período"),
+    valorPago: z.number().describe("Valor de repasses pagos no período"),
+    valorPendente: z.number().describe("Valor de repasses pendentes no período"),
   })
-  .describe("Resumo financeiro mensal de um colaborador");
+  .describe("Resumo financeiro de um colaborador no período");

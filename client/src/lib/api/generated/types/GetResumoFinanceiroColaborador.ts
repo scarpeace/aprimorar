@@ -14,9 +14,13 @@ export type GetResumoFinanceiroColaboradorPathParams = {
 
 export type GetResumoFinanceiroColaboradorQueryParams = {
   /**
-   * @type string
+   * @type string, date
    */
-  anoMes: string;
+  dataInicio: string;
+  /**
+   * @type string, date
+   */
+  dataFim: string;
 };
 
 /**

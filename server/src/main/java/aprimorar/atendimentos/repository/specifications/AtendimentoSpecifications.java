@@ -5,7 +5,7 @@ import aprimorar.atendimentos.dto.AtendimentoFiltroRequest;
 import aprimorar.atendimentos.enums.StatusAtendimento;
 import aprimorar.atendimentos.enums.TipoAtendimento;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.UUID;
 
@@ -49,11 +49,11 @@ public final class AtendimentoSpecifications {
         };
     }
 
-    public static Specification<Atendimento> inicioMaiorOuIgual(Instant inicio) {
+    public static Specification<Atendimento> inicioMaiorOuIgual(LocalDateTime inicio) {
         return (root, query, cb) -> inicio == null ? null : cb.greaterThanOrEqualTo(root.get("dataHoraInicio"), inicio);
     }
 
-    public static Specification<Atendimento> fimMenorOuIgual(Instant fim) {
+    public static Specification<Atendimento> fimMenorOuIgual(LocalDateTime fim) {
         return (root, query, cb) -> fim == null ? null : cb.lessThanOrEqualTo(root.get("dataHoraFim"), fim);
     }
 

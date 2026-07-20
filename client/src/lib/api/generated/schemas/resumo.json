@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "totalAtendimentos": { "type": "integer", "format": "int32" },
+    "valorTotal": { "type": "number" },
+    "valorPago": { "type": "number" },
+    "valorPendente": { "type": "number" }
+  },
+  "x-readme-ref-name": "Resumo"
+}

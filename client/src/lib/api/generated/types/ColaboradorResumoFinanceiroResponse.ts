@@ -4,17 +4,27 @@
  */
 
 /**
- * @description Resumo financeiro mensal de um colaborador
+ * @description Resumo financeiro de um colaborador no período
  */
 export type ColaboradorResumoFinanceiroResponse = {
   /**
-   * @description Total de repasses pagos no período
-   * @type number
+   * @description Quantidade de atendimentos no período
+   * @type integer, int64
    */
-  totalPago: number;
+  totalAtendimentos: number;
   /**
-   * @description Total de repasses pendentes no período
+   * @description Valor total de repasses no período
    * @type number
    */
-  totalPendente: number;
+  valorTotal: number;
+  /**
+   * @description Valor de repasses pagos no período
+   * @type number
+   */
+  valorPago: number;
+  /**
+   * @description Valor de repasses pendentes no período
+   * @type number
+   */
+  valorPendente: number;
 };

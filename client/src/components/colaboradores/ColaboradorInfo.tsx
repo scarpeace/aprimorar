@@ -4,27 +4,21 @@ import Link from "next/link";
 import { Archive, ArchiveRestore, PencilLine, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ColaboradorAtendimentos } from "@/components/colaboradores/ColaboradorAtendimentos";
-import { ColaboradorFinanceSummary } from "@/components/colaboradores/ColaboradorFinanceSummary";
-import { useFindColaboradorById } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
 import { ColaboradorForm } from "@/components/colaboradores/ColaboradorForm";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { DetailField } from "@/components/ui/DetailField";
 import { ErrorCard } from "@/components/ui/ErrorCard";
-import { MonthYearSelector } from "@/components/ui/MonthYearSelector";
 import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useColaboradorMutations } from "@/hooks/use-colaborador-mutations";
-import { toAnoMes } from "@/lib/utils/date-utils";
+import { useFindColaboradorById } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
 import { formatCpf, formatDate, formatPhone, formatZip } from "@/lib/utils/formatter";
-import { LoadingSpinner } from "../ui/LoadingSpinner";
 
-export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: string }>) {
+export function ColaboradorInfo({ colaboradorId }: Readonly<{ colaboradorId: string }>) {
   const router = useRouter();
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear());
-  const [selectedMonthIndex, setSelectedMonthIndex] = useState(() => new Date().getMonth());
   const colaborador = useFindColaboradorById(colaboradorId);
   const { archiveColaborador, unarchiveColaborador, deleteColaborador } = useColaboradorMutations();
 
@@ -43,9 +37,7 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
   }
 
   if (!colaborador.data) {
-    return (
-      <ErrorCard title="Colaborador não encontrado" description="A API respondeu sem conteúdo para este cadastro." />
-    );
+    return <ErrorCard title="Colaborador não encontrado" description="A API respondeu sem conteúdo para este cadastro." />;
   }
 
   const { data } = colaborador;
@@ -53,7 +45,6 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
   const active = data.active !== false;
   const isArchivePending = archiveColaborador.isPending || unarchiveColaborador.isPending;
   const isPending = isArchivePending || deleteColaborador.isPending;
-  const anoMes = toAnoMes(new Date(selectedYear, selectedMonthIndex, 1));
 
   function handleArchiveToggle() {
     const actionLabel = active ? "arquivar" : "desarquivar";
@@ -81,18 +72,6 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
     );
   }
 
-  function handlePreviousYear() {
-    setSelectedYear((value) => value - 1);
-  }
-
-  function handleNextYear() {
-    setSelectedYear((value) => value + 1);
-  }
-
-  function handleMonthChange(monthIndex: number) {
-    setSelectedMonthIndex(monthIndex);
-  }
-
   return (
     <div className="space-y-6">
       <Modal
@@ -106,27 +85,46 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
       </Modal>
 
       <section className="app-shell-card p-6">
-
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div className="flex flex-col">
-              <div className="flex gap-3">
-                <h2 className="text-2xl font-bold text-base-content">{data.nome}</h2>
-                <Badge variant={active ? "success" : "ghost"}>{active ? "Ativo" : "Arquivado"}</Badge>
-              </div>
-              <p className="text-base font-bold text-base-content/75">{data.funcao}</p>
+          <div className="flex flex-col">
+            <div className="flex gap-3">
+              <h2 className="text-2xl font-bold uppercase text-base-content">{data.nome}</h2>
+              <Badge variant={active ? "success" : "ghost"}>{active ? "Ativo" : "Arquivado"}</Badge>
             </div>
+            <p className="text-base font-bold text-base-content/75">{data.funcao}</p>
+          </div>
 
           <div className="flex flex-wrap gap-2">
-            <Button type="button" size="sm" variant="primary" aria-label="Editar colaborador" title="Editar colaborador" onClick={() => setIsEditOpen(true)}>
+            <Button
+              type="button"
+              size="sm"
+              variant="primary"
+              aria-label="Editar colaborador"
+              title="Editar colaborador"
+              onClick={() => setIsEditOpen(true)}
+            >
               <PencilLine size={18} />
             </Button>
 
-            <Button type="button" size="sm" variant={active ? "warning" : "outline"} disabled={isPending} onClick={handleArchiveToggle}>
-
-              {isArchivePending ? <LoadingSpinner/> : active ? <Archive size={16} /> : <ArchiveRestore size={16} />}
+            <Button
+              type="button"
+              size="sm"
+              variant={active ? "warning" : "outline"}
+              disabled={isPending}
+              onClick={handleArchiveToggle}
+            >
+              {isArchivePending ? <LoadingSpinner /> : active ? <Archive size={16} /> : <ArchiveRestore size={16} />}
             </Button>
 
-            <Button type="button" size="sm" variant="error" aria-label="Excluir colaborador" title="Excluir colaborador" disabled={isPending} onClick={handleDelete}>
+            <Button
+              type="button"
+              size="sm"
+              variant="error"
+              aria-label="Excluir colaborador"
+              title="Excluir colaborador"
+              disabled={isPending}
+              onClick={handleDelete}
+            >
               <Trash2 size={18} />
             </Button>
 
@@ -137,7 +135,7 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
         </div>
 
         <div className="mt-6 rounded-2xl border border-base-300 bg-base-100 p-5">
-          <h3 className="text-lg font-bold text-base-content">Detalhes do colaborador</h3>
+          <h3 className="text-lg font-bold text-base-content">Dados cadastrais</h3>
 
           <div className="mt-5 grid gap-6 lg:grid-cols-2 lg:gap-8">
             <div className="space-y-4">
@@ -168,19 +166,6 @@ export function ColaboradorDetails({ colaboradorId }: Readonly<{ colaboradorId: 
             </div>
           </div>
         </div>
-      </section>
-
-      <MonthYearSelector
-        selectedYear={selectedYear}
-        selectedMonthIndex={selectedMonthIndex}
-        onPreviousYear={handlePreviousYear}
-        onNextYear={handleNextYear}
-        onMonthChange={handleMonthChange}
-      />
-
-      <section className="space-y-6">
-        <ColaboradorFinanceSummary colaboradorId={colaboradorId} anoMes={anoMes} />
-        <ColaboradorAtendimentos key={anoMes} colaboradorId={colaboradorId} anoMes={anoMes} />
       </section>
     </div>
   );

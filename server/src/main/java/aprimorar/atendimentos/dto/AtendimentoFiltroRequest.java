@@ -3,7 +3,7 @@ package aprimorar.atendimentos.dto;
 import aprimorar.atendimentos.enums.StatusAtendimento;
 import aprimorar.atendimentos.enums.TipoAtendimento;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.UUID;
 
@@ -14,9 +14,9 @@ public record AtendimentoFiltroRequest(
     @Schema(description = "Ano e mes do filtro", example = "2026-06", nullable = true)
     YearMonth anoMes,
     @Schema(description = "Data inicial", format = "date-time", nullable = true)
-    Instant inicio,
+    LocalDateTime inicio,
     @Schema(description = "Data final", format = "date-time", nullable = true)
-    Instant fim,
+    LocalDateTime fim,
     @Schema(description = "Status do atendimento", nullable = true)
     StatusAtendimento status,
     @Schema(description = "Tipo do atendimento", nullable = true)

@@ -1,0 +1,5 @@
+{
+  "type": "object",
+  "properties": { "dataInicio": { "type": "string", "format": "date" }, "dataFim": { "type": "string", "format": "date" } },
+  "x-readme-ref-name": "Periodo"
+}

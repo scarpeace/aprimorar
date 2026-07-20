@@ -91,31 +91,38 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long>,
 
     @Query(
         """
-            SELECT COALESCE(SUM(a.repasseColaborador), 0)
+            SELECT a
             FROM Atendimento a
-            WHERE a.colaborador.id = :colaboradorId
-              AND a.dataRepasseColaborador IS NOT NULL
+            JOIN FETCH a.colaborador
+            WHERE a.aluno.id = :alunoId
+              AND a.status <> aprimorar.atendimentos.enums.StatusAtendimento.CANCELADO
               AND a.dataHoraInicio >= :inicio
               AND a.dataHoraFim <= :fim
+            ORDER BY a.dataHoraInicio DESC
         """
     )
-    BigDecimal getTotalRepassePagoColaborador(
-        @Param("colaboradorId") UUID colaboradorId,
+    List<Atendimento> findRelatorioAluno(
+        @Param("alunoId") UUID alunoId,
         @Param("inicio") LocalDateTime inicio,
         @Param("fim") LocalDateTime fim
     );
 
     @Query(
         """
-            SELECT COALESCE(SUM(a.repasseColaborador), 0)
+            SELECT new aprimorar.atendimentos.dto.ColaboradorResumoFinanceiroResponse(
+              COUNT(a),
+              COALESCE(SUM(a.repasseColaborador), 0),
+              COALESCE(SUM(CASE WHEN a.dataRepasseColaborador IS NOT NULL THEN a.repasseColaborador ELSE 0 END), 0),
+              COALESCE(SUM(CASE WHEN a.dataRepasseColaborador IS NULL THEN a.repasseColaborador ELSE 0 END), 0)
+            )
             FROM Atendimento a
             WHERE a.colaborador.id = :colaboradorId
-              AND a.dataRepasseColaborador IS NULL
+              AND a.status <> aprimorar.atendimentos.enums.StatusAtendimento.CANCELADO
               AND a.dataHoraInicio >= :inicio
               AND a.dataHoraFim <= :fim
         """
     )
-    BigDecimal getTotalRepassePendenteColaborador(
+    aprimorar.atendimentos.dto.ColaboradorResumoFinanceiroResponse getResumoFinanceiroColaborador(
         @Param("colaboradorId") UUID colaboradorId,
         @Param("inicio") LocalDateTime inicio,
         @Param("fim") LocalDateTime fim
