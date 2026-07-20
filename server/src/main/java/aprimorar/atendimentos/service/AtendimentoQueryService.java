@@ -30,6 +30,7 @@ import aprimorar.atendimentos.repository.projections.AtendimentosReportProjectio
 import aprimorar.atendimentos.repository.specifications.AtendimentoSpecifications;
 import aprimorar.exception.BusinessException;
 import aprimorar.pessoas.repository.AlunoRepository;
+import aprimorar.pessoas.repository.ColaboradorRepository;
 
 @Service
 public class AtendimentoQueryService {
@@ -38,10 +39,16 @@ public class AtendimentoQueryService {
 
     private final AtendimentoRepository atendimentoRepo;
     private final AlunoRepository alunoRepo;
+    private final ColaboradorRepository colaboradorRepo;
 
-    public AtendimentoQueryService(AtendimentoRepository atendimentoRepo, AlunoRepository alunoRepo) {
+    public AtendimentoQueryService(
+        AtendimentoRepository atendimentoRepo,
+        AlunoRepository alunoRepo,
+        ColaboradorRepository colaboradorRepo
+    ) {
         this.atendimentoRepo = atendimentoRepo;
         this.alunoRepo = alunoRepo;
+        this.colaboradorRepo = colaboradorRepo;
     }
 
     @Transactional(readOnly = true)
@@ -105,13 +112,19 @@ public class AtendimentoQueryService {
     }
 
     @Transactional(readOnly = true)
-    public ColaboradorResumoFinanceiroResponse getResumoFinanceiroColaborador(UUID colaboradorId, YearMonth mes) {
-        var dataInicio = mes.atDay(1).atStartOfDay();
-        var dataFim = mes.atEndOfMonth().atTime(LocalTime.MAX);
+    public ColaboradorResumoFinanceiroResponse getResumoFinanceiroColaborador(UUID colaboradorId, LocalDate dataInicio, LocalDate dataFim) {
+        if (dataFim.isBefore(dataInicio)) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "A data final não pode ser anterior à data inicial");
+        }
 
-        return new ColaboradorResumoFinanceiroResponse(
-            atendimentoRepo.getTotalRepassePagoColaborador(colaboradorId, dataInicio, dataFim),
-            atendimentoRepo.getTotalRepassePendenteColaborador(colaboradorId, dataInicio, dataFim)
+        if (!colaboradorRepo.existsById(colaboradorId)) {
+            throw new BusinessException(HttpStatus.NOT_FOUND, "Colaborador não encontrado");
+        }
+
+        return atendimentoRepo.getResumoFinanceiroColaborador(
+            colaboradorId,
+            dataInicio.atStartOfDay(),
+            dataFim.atTime(LocalTime.MAX)
         );
     }
 

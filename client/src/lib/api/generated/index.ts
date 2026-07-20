@@ -16,6 +16,7 @@ export type { GetAtendimentoByIdQueryKey } from "./hooks/atendimento/useGetAtend
 export type { GetAtendimentosQueryKey } from "./hooks/atendimento/useGetAtendimentos.ts";
 export type { GetCalendarioAtendimentosQueryKey } from "./hooks/atendimento/useGetCalendarioAtendimentos.ts";
 export type { GetRelatorioAlunoQueryKey } from "./hooks/atendimento/useGetRelatorioAluno.ts";
+export type { GetRelatorioAlunoPdfQueryKey } from "./hooks/atendimento/useGetRelatorioAlunoPdf.ts";
 export type { GetRelatorioAtendimentosQueryKey } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
 export type { GetResumoFinanceiroAlunoQueryKey } from "./hooks/atendimento/useGetResumoFinanceiroAluno.ts";
 export type { GetResumoFinanceiroColaboradorQueryKey } from "./hooks/atendimento/useGetResumoFinanceiroColaborador.ts";
@@ -220,6 +221,13 @@ export type {
   GetRelatorioAlunoQueryResponse,
 } from "./types/GetRelatorioAluno.ts";
 export type {
+  GetRelatorioAlunoPdf200,
+  GetRelatorioAlunoPdfPathParams,
+  GetRelatorioAlunoPdfQuery,
+  GetRelatorioAlunoPdfQueryParams,
+  GetRelatorioAlunoPdfQueryResponse,
+} from "./types/GetRelatorioAlunoPdf.ts";
+export type {
   GetRelatorioAtendimentos200,
   GetRelatorioAtendimentosQuery,
   GetRelatorioAtendimentosQueryParams,
@@ -390,6 +398,10 @@ export { getRelatorioAluno } from "./hooks/atendimento/useGetRelatorioAluno.ts";
 export { getRelatorioAlunoQueryKey } from "./hooks/atendimento/useGetRelatorioAluno.ts";
 export { getRelatorioAlunoQueryOptions } from "./hooks/atendimento/useGetRelatorioAluno.ts";
 export { useGetRelatorioAluno } from "./hooks/atendimento/useGetRelatorioAluno.ts";
+export { getRelatorioAlunoPdf } from "./hooks/atendimento/useGetRelatorioAlunoPdf.ts";
+export { getRelatorioAlunoPdfQueryKey } from "./hooks/atendimento/useGetRelatorioAlunoPdf.ts";
+export { getRelatorioAlunoPdfQueryOptions } from "./hooks/atendimento/useGetRelatorioAlunoPdf.ts";
+export { useGetRelatorioAlunoPdf } from "./hooks/atendimento/useGetRelatorioAlunoPdf.ts";
 export { getRelatorioAtendimentos } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
 export { getRelatorioAtendimentosQueryKey } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
 export { getRelatorioAtendimentosQueryOptions } from "./hooks/atendimento/useGetRelatorioAtendimentos.ts";
@@ -633,6 +645,12 @@ export {
   getColaboradoresQueryParamsSchema,
   getColaboradoresQueryResponseSchema,
 } from "./zod/getColaboradoresSchema.ts";
+export {
+  getRelatorioAlunoPdf200Schema,
+  getRelatorioAlunoPdfPathParamsSchema,
+  getRelatorioAlunoPdfQueryParamsSchema,
+  getRelatorioAlunoPdfQueryResponseSchema,
+} from "./zod/getRelatorioAlunoPdfSchema.ts";
 export {
   getRelatorioAluno200Schema,
   getRelatorioAlunoPathParamsSchema,

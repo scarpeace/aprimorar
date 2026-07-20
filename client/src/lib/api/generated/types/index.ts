@@ -151,6 +151,13 @@ export type {
   GetRelatorioAlunoQueryResponse,
 } from "./GetRelatorioAluno.ts";
 export type {
+  GetRelatorioAlunoPdf200,
+  GetRelatorioAlunoPdfPathParams,
+  GetRelatorioAlunoPdfQuery,
+  GetRelatorioAlunoPdfQueryParams,
+  GetRelatorioAlunoPdfQueryResponse,
+} from "./GetRelatorioAlunoPdf.ts";
+export type {
   GetRelatorioAtendimentos200,
   GetRelatorioAtendimentosQuery,
   GetRelatorioAtendimentosQueryParams,

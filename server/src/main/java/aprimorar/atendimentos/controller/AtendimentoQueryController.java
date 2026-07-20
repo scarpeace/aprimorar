@@ -76,13 +76,14 @@ public class AtendimentoQueryController {
     }
 
     @GetMapping("/colaboradores/{colaboradorId}/resumo-financeiro")
-    @Operation(operationId = "getResumoFinanceiroColaborador", description = "Retorna o resumo financeiro mensal de um colaborador.")
+    @Operation(operationId = "getResumoFinanceiroColaborador", description = "Retorna o resumo financeiro de um colaborador em um período.")
     @ApiResponse(responseCode = "200", description = "Resumo financeiro retornado com sucesso.")
     public ResponseEntity<ColaboradorResumoFinanceiroResponse> getResumoFinanceiroColaborador(
         @PathVariable java.util.UUID colaboradorId,
-        @RequestParam YearMonth anoMes
+        @RequestParam LocalDate dataInicio,
+        @RequestParam LocalDate dataFim
     ) {
-        return ResponseEntity.ok(atendimentoQueryService.getResumoFinanceiroColaborador(colaboradorId, anoMes));
+        return ResponseEntity.ok(atendimentoQueryService.getResumoFinanceiroColaborador(colaboradorId, dataInicio, dataFim));
     }
 
     @GetMapping("/alunos/{alunoId}/resumo-financeiro")

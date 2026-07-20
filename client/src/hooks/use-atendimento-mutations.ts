@@ -20,6 +20,7 @@ export function useAtendimentoMutations() {
     queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
     queryClient.invalidateQueries({ queryKey: [{ url: "/v1/atendimentos/relatorio" }] });
     queryClient.invalidateQueries({ queryKey: [{ url: "/v1/atendimentos/alunos/:alunoId/relatorio" }] });
+    queryClient.invalidateQueries({ queryKey: [{ url: "/v1/atendimentos/colaboradores/:colaboradorId/resumo-financeiro" }] });
     queryClient.invalidateQueries({ queryKey: [{ url: "/v1/atendimentos/calendario" }] });
   }
 

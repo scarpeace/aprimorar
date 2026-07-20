@@ -11,7 +11,8 @@ export const getResumoFinanceiroColaboradorPathParamsSchema = z.object({
 });
 
 export const getResumoFinanceiroColaboradorQueryParamsSchema = z.object({
-  anoMes: z.string(),
+  dataInicio: z.iso.date(),
+  dataFim: z.iso.date(),
 });
 
 /**
@@ -19,6 +20,6 @@ export const getResumoFinanceiroColaboradorQueryParamsSchema = z.object({
  */
 export const getResumoFinanceiroColaborador200Schema = z
   .lazy(() => colaboradorResumoFinanceiroResponseSchema)
-  .describe("Resumo financeiro mensal de um colaborador");
+  .describe("Resumo financeiro de um colaborador no período");
 
 export const getResumoFinanceiroColaboradorQueryResponseSchema = z.lazy(() => getResumoFinanceiroColaborador200Schema);

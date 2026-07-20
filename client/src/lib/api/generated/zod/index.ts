@@ -110,6 +110,12 @@ export {
   getColaboradoresQueryResponseSchema,
 } from "./getColaboradoresSchema.ts";
 export {
+  getRelatorioAlunoPdf200Schema,
+  getRelatorioAlunoPdfPathParamsSchema,
+  getRelatorioAlunoPdfQueryParamsSchema,
+  getRelatorioAlunoPdfQueryResponseSchema,
+} from "./getRelatorioAlunoPdfSchema.ts";
+export {
   getRelatorioAluno200Schema,
   getRelatorioAlunoPathParamsSchema,
   getRelatorioAlunoQueryParamsSchema,

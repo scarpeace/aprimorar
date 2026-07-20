@@ -1,10 +1,17 @@
 {
-  "required": ["totalPago", "totalPendente"],
+  "required": ["totalAtendimentos", "valorPago", "valorPendente", "valorTotal"],
   "type": "object",
   "properties": {
-    "totalPago": { "type": "number", "description": "Total de repasses pagos no período", "example": 1500 },
-    "totalPendente": { "type": "number", "description": "Total de repasses pendentes no período", "example": 320 }
+    "totalAtendimentos": {
+      "type": "integer",
+      "description": "Quantidade de atendimentos no período",
+      "format": "int64",
+      "example": 8
+    },
+    "valorTotal": { "type": "number", "description": "Valor total de repasses no período", "example": 1820 },
+    "valorPago": { "type": "number", "description": "Valor de repasses pagos no período", "example": 1500 },
+    "valorPendente": { "type": "number", "description": "Valor de repasses pendentes no período", "example": 320 }
   },
-  "description": "Resumo financeiro mensal de um colaborador",
+  "description": "Resumo financeiro de um colaborador no período",
   "x-readme-ref-name": "ColaboradorResumoFinanceiroResponse"
 }

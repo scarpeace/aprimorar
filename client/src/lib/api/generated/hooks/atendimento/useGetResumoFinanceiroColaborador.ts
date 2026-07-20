@@ -25,7 +25,7 @@ export const getResumoFinanceiroColaboradorQueryKey = (
 export type GetResumoFinanceiroColaboradorQueryKey = ReturnType<typeof getResumoFinanceiroColaboradorQueryKey>;
 
 /**
- * @description Retorna o resumo financeiro mensal de um colaborador.
+ * @description Retorna o resumo financeiro de um colaborador em um período.
  * {@link /v1/atendimentos/colaboradores/:colaboradorId/resumo-financeiro}
  */
 export async function getResumoFinanceiroColaborador(
@@ -65,7 +65,7 @@ export function getResumoFinanceiroColaboradorQueryOptions(
 }
 
 /**
- * @description Retorna o resumo financeiro mensal de um colaborador.
+ * @description Retorna o resumo financeiro de um colaborador em um período.
  * {@link /v1/atendimentos/colaboradores/:colaboradorId/resumo-financeiro}
  */
 export function useGetResumoFinanceiroColaborador<
