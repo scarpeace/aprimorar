@@ -124,10 +124,6 @@ public class AtendimentoMutationService {
     public void excluir(Long id) {
         Atendimento atendimento = findAtendimentoOrThrow(id);
 
-        if(atendimento.getStatus() == StatusAtendimento.CONCLUIDO) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "Um atendimento concluído não pode ser excluído.");
-        }
-
         atendimentoRepo.delete(atendimento);
         log.info("Atendimento {} deletado com sucesso.", atendimento.getId());
     }

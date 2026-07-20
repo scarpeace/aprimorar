@@ -157,13 +157,6 @@ public class Atendimento implements Serializable {
     }
 
     public void reagendar(LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim){
-        if(this.status == StatusAtendimento.CANCELADO){
-            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível reagendar um evento cancelado");
-        }
-
-        if(this.status == StatusAtendimento.CONCLUIDO){
-            throw new BusinessException(HttpStatus.BAD_REQUEST,"Não é possível reagendar um evento concluído");
-        }
 
         validarDatas(dataHoraInicio, dataHoraFim);
         this.dataHoraInicio = dataHoraInicio;
