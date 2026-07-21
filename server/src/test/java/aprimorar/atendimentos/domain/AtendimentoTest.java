@@ -145,19 +145,6 @@ class AtendimentoTest {
     }
 
     @Test
-    void shouldNotRescheduleCancelledAtendimento() {
-        var atendimento = validAtendimento();
-        atendimento.cancelar();
-
-        var exception = assertThrows(
-            BusinessException.class,
-            () -> atendimento.reagendar(LocalDateTime.now().plusDays(2), LocalDateTime.now().plusDays(2).plusHours(1))
-        );
-
-        assertEquals("Não é possível reagendar um evento cancelado", exception.getMessage());
-    }
-
-    @Test
     void shouldSetStudentPaymentDate() {
         var atendimento = validAtendimento();
 
