@@ -159,7 +159,7 @@ public class AtendimentoQueryService {
             .map(Atendimento::getPagamentoAluno)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         var valorPago = atendimentos.stream()
-            .filter((atendimento) -> atendimento.getDataPagamentoAluno() != null)
+            .filter(atendimento -> atendimento.getDataPagamentoAluno() != null)
             .map(Atendimento::getPagamentoAluno)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -179,7 +179,7 @@ public class AtendimentoQueryService {
                 valorTotal.subtract(valorPago)
             ),
             atendimentos.stream()
-                .map((atendimento) -> new AlunoRelatorioResponse.Item(
+                .map(atendimento -> new AlunoRelatorioResponse.Item(
                     atendimento.getId(),
                     atendimento.getDataHoraInicio(),
                     atendimento.getDataHoraFim(),

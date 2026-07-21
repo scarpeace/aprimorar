@@ -72,7 +72,7 @@ public class AlunoQueryService {
     @Transactional(readOnly = true)
     public AlunoResponseDTO findAlunoById(UUID studentId) {
         Aluno student = findStudentOrThrow(studentId);
-        log.info("Aluno {} consultado com sucesso.", student.getNome().toUpperCase());
+        log.info("Aluno {} consultado com sucesso.", student.getNome());
         return AlunoResponseDTO.toDto(student);
     }
 

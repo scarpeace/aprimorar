@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final String VALIDATION_ERROR_MESSAGE = "Erro de validação nos campos informados";
 
     @ExceptionHandler(BusinessException.class)
     @ApiResponse(
@@ -72,18 +73,18 @@ public class GlobalExceptionHandler {
     )
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
         List<String> errorMessages = ex.getBindingResult().getAllErrors().stream()
-            .map(error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "Erro de validação nos campos informados")
+            .map(error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : VALIDATION_ERROR_MESSAGE)
             .toList();
 
         if (errorMessages.isEmpty()) {
-            errorMessages = List.of("Erro de validação nos campos informados");
+            errorMessages = List.of(VALIDATION_ERROR_MESSAGE);
         }
 
         log.error("Erro de validação de DTO: {}", errorMessages);
         ErrorResponse response = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                "Erro de validação nos campos informados",
+                VALIDATION_ERROR_MESSAGE,
                 errorMessages
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
