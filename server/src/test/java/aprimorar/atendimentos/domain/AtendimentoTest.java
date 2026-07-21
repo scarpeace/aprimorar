@@ -207,6 +207,10 @@ class AtendimentoTest {
     void shouldNotCreateAtendimentoWhenEndIsBeforeStart() {
         var inicio = LocalDateTime.now().plusDays(1);
         var fim = inicio.minusHours(1);
+        var aluno = validAluno();
+        var colaborador = validColaborador();
+        var pagamentoAluno = BigDecimal.valueOf(150);
+        var repasseColaborador = BigDecimal.valueOf(100);
 
         var exception = assertThrows(
             IllegalStateException.class,
@@ -214,10 +218,10 @@ class AtendimentoTest {
                 inicio,
                 fim,
                 TipoAtendimento.AULA,
-                validAluno(),
-                validColaborador(),
-                BigDecimal.valueOf(150),
-                BigDecimal.valueOf(100)
+                aluno,
+                colaborador,
+                pagamentoAluno,
+                repasseColaborador
             )
         );
 
@@ -228,6 +232,10 @@ class AtendimentoTest {
     void shouldNotCreateAtendimentoWhenPagamentoIsLowerThanRepasse() {
         var inicio = LocalDateTime.now().plusDays(1);
         var fim = inicio.plusHours(1);
+        var aluno = validAluno();
+        var colaborador = validColaborador();
+        var pagamentoAluno = BigDecimal.valueOf(90);
+        var repasseColaborador = BigDecimal.valueOf(100);
 
         var exception = assertThrows(
             IllegalStateException.class,
@@ -235,10 +243,10 @@ class AtendimentoTest {
                 inicio,
                 fim,
                 TipoAtendimento.AULA,
-                validAluno(),
-                validColaborador(),
-                BigDecimal.valueOf(90),
-                BigDecimal.valueOf(100)
+                aluno,
+                colaborador,
+                pagamentoAluno,
+                repasseColaborador
             )
         );
 
@@ -249,6 +257,10 @@ class AtendimentoTest {
     void shouldNotCreateAtendimentoWhenPagamentoIsLowerThanMinimum() {
         var inicio = LocalDateTime.now().plusDays(1);
         var fim = inicio.plusHours(1);
+        var aluno = validAluno();
+        var colaborador = validColaborador();
+        var pagamentoAluno = BigDecimal.valueOf(49);
+        var repasseColaborador = BigDecimal.valueOf(30);
 
         var exception = assertThrows(
             IllegalStateException.class,
@@ -256,10 +268,10 @@ class AtendimentoTest {
                 inicio,
                 fim,
                 TipoAtendimento.AULA,
-                validAluno(),
-                validColaborador(),
-                BigDecimal.valueOf(49),
-                BigDecimal.valueOf(30)
+                aluno,
+                colaborador,
+                pagamentoAluno,
+                repasseColaborador
             )
         );
 

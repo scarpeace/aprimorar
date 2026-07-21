@@ -132,7 +132,8 @@ class ColaboradorMutationServiceTest {
 
         when(colaboradorRepo.findById(GHOST_ID)).thenReturn(Optional.of(ghost));
 
-        var ex = assertThrows(BusinessException.class, () -> service.updateColaborador(GHOST_ID, collaboratorRequest()));
+        var request = collaboratorRequest();
+        var ex = assertThrows(BusinessException.class, () -> service.updateColaborador(GHOST_ID, request));
 
         assertEquals(HttpStatus.CONFLICT, ex.getStatus());
         assertEquals("Não é possível modificar o registro de sistema 'Colaborador Removido'.", ex.getMessage());
@@ -147,7 +148,8 @@ class ColaboradorMutationServiceTest {
         when(colaboradorRepo.findById(id)).thenReturn(Optional.of(colaborador));
         when(colaboradorRepo.existsByEmailAndIdNot("joao@example.com", id)).thenReturn(true);
 
-        var ex = assertThrows(BusinessException.class, () -> service.updateColaborador(id, collaboratorRequest()));
+        var request = collaboratorRequest();
+        var ex = assertThrows(BusinessException.class, () -> service.updateColaborador(id, request));
 
         assertEquals(HttpStatus.CONFLICT, ex.getStatus());
         assertEquals("Já existe um colaborador utilizando este e-mail.", ex.getMessage());
