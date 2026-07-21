@@ -3,7 +3,6 @@ package aprimorar.atendimentos.service;
 import aprimorar.atendimentos.dto.AtendimentoRequest;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
 import aprimorar.atendimentos.dto.ReagendarAtendimentoRequest;
-import aprimorar.atendimentos.enums.StatusAtendimento;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
 import aprimorar.exception.BusinessException;
 import aprimorar.atendimentos.domain.Atendimento;
