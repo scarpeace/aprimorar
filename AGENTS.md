@@ -43,14 +43,26 @@ Dentro de `server/`:
 ./mvnw clean compile
 ./mvnw test
 ./mvnw test -Dtest=ModuleVerificationTest
+./sonar.sh
 ```
 
 ### Observações do domínio
 
 - atendimento usa relações JPA com aluno e colaborador
 - transações/financeiro antigo saíram do fluxo principal
+- pagamento do aluno e repasse do colaborador vivem no próprio atendimento
+- `dataPagamentoAluno` e `dataRepasseColaborador` nulos indicam pendência
+- status `CANCELADO` não permite alterar pagamento/repasse
+- relatórios de aluno usam período com `dataInicio` e `dataFim`
 - deleções de aluno e colaborador respeitam validações de negócio antes de excluir
 - existem registros ghost/sistema; regras de exclusão e contagem precisam respeitá-los
+
+### Testes
+
+- testes unitários de service usam Mockito e ficam próximos ao pacote testado
+- não misturar teste de `Specification` dentro de teste de service
+- preferir teste pequeno por regra de negócio relevante
+- warnings de JaCoCo/ByteBuddy sobre instrumentação podem aparecer no sandbox; considerar o exit code do Maven
 
 ## Frontend
 
@@ -62,6 +74,7 @@ Dentro de `server/`:
 - Zod
 - DaisyUI
 - Kubb
+- date-fns
 
 ### Convenções
 
@@ -72,6 +85,7 @@ Dentro de `server/`:
 - não editar manualmente `src/lib/api/generated/`
 - formulários usam RHF + `FormProvider` quando distribuídos
 - inputs reutilizáveis ficam em `src/components/ui/forms/`
+- datas usam `date-fns` ou helpers em `src/lib/utils/date-utils`
 - backend continua responsável por sanitização e normalização final
 
 ### Padrões visuais já consolidados
@@ -79,14 +93,19 @@ Dentro de `server/`:
 - detalhes de aluno e colaborador:
   - cabeçalho simples
   - bloco de dados
-  - seletor de mês quando necessário
-  - resumo financeiro
+  - filtro por período com inputs `date`
+  - cards de resumo financeiro acima da tabela
   - tabela de atendimentos vinculados
+- tabela de atendimentos vinculados:
+  - filtros aplicam direto quando alterados
+  - busca pode usar debounce
+  - pagamento/repasse usa toggle do DaisyUI
 - ações:
   - editar: `primary`
   - arquivar: `warning`
   - excluir: `error`
 - tabelas de detalhe preferem linha clicável em vez de botão extra
+- calendário usa visualização cheia só a partir de `lg`; abaixo disso usa lista
 
 ### Comandos úteis
 
@@ -102,7 +121,7 @@ npm run sync
 ### Observações
 
 - `npm run sync` depende do backend em `http://localhost:8080/v3/api-docs`
-- helpers de data devem ficar centralizados em utilitários, não espalhados nos componentes
+- PDF autenticado deve passar pelo proxy em `src/app/api/proxy/[...path]/route.ts`
 - evitar estado global sem necessidade real
 
 ## Fluxo backend -> frontend
@@ -119,6 +138,7 @@ Dentro de `server/`:
 
 ```bash
 docker compose up -d db
+docker compose up -d sonarqube
 ```
 
 Banco local esperado no profile `dev`:
@@ -128,6 +148,12 @@ Banco local esperado no profile `dev`:
 - database: `aprimorar`
 - user: `myuser`
 - password: `mypassword`
+
+SonarQube local:
+
+- dashboard: `http://localhost:9000`
+- script de análise: `server/sonar.sh`
+- token fica em `.env.local` ou `.env` como `SONAR_TOKEN`
 
 ## O que costuma quebrar
 
