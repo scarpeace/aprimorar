@@ -44,6 +44,11 @@ export {
   createColaboradorMutationResponseSchema,
 } from "./createColaboradorSchema.ts";
 export {
+  createDespesa201Schema,
+  createDespesaMutationRequestSchema,
+  createDespesaMutationResponseSchema,
+} from "./createDespesaSchema.ts";
+export {
   createResponsavel201Schema,
   createResponsavelMutationRequestSchema,
   createResponsavelMutationResponseSchema,
@@ -57,6 +62,11 @@ export {
   deleteColaboradorPathParamsSchema,
 } from "./deleteColaboradorSchema.ts";
 export {
+  deleteDespesa204Schema,
+  deleteDespesaMutationResponseSchema,
+  deleteDespesaPathParamsSchema,
+} from "./deleteDespesaSchema.ts";
+export {
   deleteResponsavel204Schema,
   deleteResponsavelMutationResponseSchema,
   deleteResponsavelPathParamsSchema,
@@ -67,6 +77,8 @@ export {
   desarquivarColaboradorMutationResponseSchema,
   desarquivarColaboradorPathParamsSchema,
 } from "./desarquivarColaboradorSchema.ts";
+export { despesaRequestSchema } from "./despesaRequestSchema.ts";
+export { despesaResponseSchema } from "./despesaResponseSchema.ts";
 export { enderecoRequestDTOSchema } from "./enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./enderecoResponseDTOSchema.ts";
 export { errorResponseSchema } from "./errorResponseSchema.ts";
@@ -109,6 +121,12 @@ export {
   getColaboradoresQueryParamsSchema,
   getColaboradoresQueryResponseSchema,
 } from "./getColaboradoresSchema.ts";
+export {
+  getDespesaById200Schema,
+  getDespesaByIdPathParamsSchema,
+  getDespesaByIdQueryResponseSchema,
+} from "./getDespesaByIdSchema.ts";
+export { getDespesas200Schema, getDespesasQueryParamsSchema, getDespesasQueryResponseSchema } from "./getDespesasSchema.ts";
 export {
   getRelatorioAlunoPdf200Schema,
   getRelatorioAlunoPdfPathParamsSchema,
@@ -158,6 +176,7 @@ export { pageMetadataSchema } from "./pageMetadataSchema.ts";
 export { pagedModelAlunoResponseDTOSchema } from "./pagedModelAlunoResponseDTOSchema.ts";
 export { pagedModelAtendimentoResponseSchema } from "./pagedModelAtendimentoResponseSchema.ts";
 export { pagedModelColaboradorResponseDTOSchema } from "./pagedModelColaboradorResponseDTOSchema.ts";
+export { pagedModelDespesaResponseSchema } from "./pagedModelDespesaResponseSchema.ts";
 export { pagedModelResponsavelResponseDTOSchema } from "./pagedModelResponsavelResponseDTOSchema.ts";
 export { periodoSchema } from "./periodoSchema.ts";
 export { relatorioAtendimentosResponseSchema } from "./relatorioAtendimentosResponseSchema.ts";
@@ -200,6 +219,12 @@ export {
   updateColaboradorMutationResponseSchema,
   updateColaboradorPathParamsSchema,
 } from "./updateColaboradorSchema.ts";
+export {
+  updateDespesa200Schema,
+  updateDespesaMutationRequestSchema,
+  updateDespesaMutationResponseSchema,
+  updateDespesaPathParamsSchema,
+} from "./updateDespesaSchema.ts";
 export {
   updateResponsavel200Schema,
   updateResponsavelMutationRequestSchema,

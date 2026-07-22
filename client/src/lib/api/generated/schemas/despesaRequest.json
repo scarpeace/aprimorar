@@ -1,0 +1,37 @@
+{
+  "required": ["categoria", "dataPagamento", "formaPagamento", "titulo", "valor"],
+  "type": "object",
+  "properties": {
+    "titulo": {
+      "maxLength": 120,
+      "minLength": 0,
+      "type": "string",
+      "description": "Título da despesa",
+      "example": "Conta de energia"
+    },
+    "categoria": {
+      "type": "string",
+      "description": "Categoria da despesa operacional",
+      "example": "CONTAS",
+      "enum": ["CONTAS", "PROFESSORES", "FUNCIONARIOS", "DESPENSA", "MANUTENCAO", "SERVICOS", "ASSINATURAS"]
+    },
+    "valor": { "minimum": 0.01, "exclusiveMinimum": false, "type": "number", "description": "Valor da despesa", "example": 250 },
+    "dataPagamento": { "type": "string", "description": "Data de pagamento", "format": "date", "example": "2026-07-22" },
+    "formaPagamento": {
+      "type": "string",
+      "description": "Forma de pagamento da despesa",
+      "example": "PIX",
+      "enum": ["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]
+    },
+    "descricao": {
+      "maxLength": 500,
+      "minLength": 0,
+      "type": "string",
+      "description": "Descrição curta da despesa",
+      "nullable": true,
+      "example": "Pagamento referente ao mês de julho"
+    }
+  },
+  "description": "Payload para criar ou atualizar uma despesa",
+  "x-readme-ref-name": "DespesaRequest"
+}

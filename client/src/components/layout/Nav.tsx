@@ -32,6 +32,7 @@ function UserSummary({ user }: Readonly<{ user: AuthUser }>) {
 export function Nav({ children, user }: Readonly<{ children: ReactNode; user: AuthUser }>) {
   const pathname = usePathname();
   const isAdmin = user.role === "ADMIN";
+  const canAccessDespesas = isAdmin || user.role === "COLABORADOR";
 
   return (
     <div className="min-h-screen bg-base-200">
@@ -67,6 +68,13 @@ export function Nav({ children, user }: Readonly<{ children: ReactNode; user: Au
                     Atendimentos
                   </Link>
                 </li>
+                {canAccessDespesas ? (
+                  <li>
+                    <Link href="/despesas" className={getNavLinkClass(pathname, "/despesas")}>
+                      Despesas
+                    </Link>
+                  </li>
+                ) : null}
                 {isAdmin ? (
                   <li>
                     <Link href="/admin" className={getNavLinkClass(pathname, "/admin")}>
@@ -114,6 +122,13 @@ export function Nav({ children, user }: Readonly<{ children: ReactNode; user: Au
                   Atendimentos
                 </Link>
               </li>
+              {canAccessDespesas ? (
+                <li>
+                  <Link href="/despesas" className={getNavLinkClass(pathname, "/despesas")}>
+                    Despesas
+                  </Link>
+                </li>
+              ) : null}
               {isAdmin ? (
                 <li>
                   <Link href="/admin" className={getNavLinkClass(pathname, "/admin")}>

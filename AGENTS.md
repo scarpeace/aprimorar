@@ -49,6 +49,7 @@ Dentro de `server/`:
 ### Observações do domínio
 
 - atendimento usa relações JPA com aluno e colaborador
+- despesas registra gastos operacionais independentes de aluno, colaborador e atendimento
 - transações/financeiro antigo saíram do fluxo principal
 - pagamento do aluno e repasse do colaborador vivem no próprio atendimento
 - `dataPagamentoAluno` e `dataRepasseColaborador` nulos indicam pendência
