@@ -53,7 +53,7 @@ export type DespesaRequest = {
    * @description Data de pagamento
    * @type string, date
    */
-  dataPagamento: string;
+  dataPagamento?: string | null;
   /**
    * @description Forma de pagamento da despesa
    * @type string

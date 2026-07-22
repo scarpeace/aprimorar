@@ -55,6 +55,15 @@ public class DespesaMutationService {
         log.info("Despesa {} excluída com sucesso.", despesa.getTitulo().toUpperCase());
     }
 
+    @Transactional
+    public DespesaResponse togglePagamento(Long despesaId) {
+        Despesa despesa = findDespesaOrThrow(despesaId);
+
+        despesa.togglePagamento();
+        log.info("Pagamento da despesa {} alternado com sucesso.", despesa.getTitulo().toUpperCase());
+        return DespesaResponse.toDto(despesa);
+    }
+
     private Despesa findDespesaOrThrow(Long despesaId) {
         return despesaRepo
             .findById(despesaId)

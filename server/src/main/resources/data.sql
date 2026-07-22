@@ -2,6 +2,7 @@
 -- Keeps the dataset small and aligned with the current schema.
 
 DELETE FROM atendimentos;
+DELETE FROM despesas;
 DELETE FROM alunos WHERE id <> '00000000-0000-4000-8000-000000000002';
 DELETE FROM responsaveis WHERE id <> 'ffffffff-ffff-ffff-ffff-ffffffffffff';
 DELETE FROM colaboradores WHERE id <> '00000000-0000-4000-8000-000000000001';
@@ -96,5 +97,48 @@ INSERT INTO atendimentos (
   (1039, 'de87ab23-c4f6-5cdb-88e4-c1e524f9f5b3', '9e79c84d-d10a-59ca-8196-3963139e8096', TIMESTAMP '2026-12-08 14:00:00', TIMESTAMP '2026-12-08 15:00:00', 'MENTORIA', 'AGENDADO', 170.00, 110.00, NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   (1040, '41e8e58f-124a-5969-b16f-ac57993d7a00', '890322e5-6327-53c6-a9a7-726765d704d8', TIMESTAMP '2026-12-15 16:00:00', TIMESTAMP '2026-12-15 17:30:00', 'ENEM', 'AGENDADO', 200.00, 130.00, TIMESTAMP '2026-12-15 18:00:00', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
+INSERT INTO despesas (
+  id,
+  titulo,
+  categoria,
+  valor,
+  data_pagamento,
+  forma_pagamento,
+  descricao,
+  created_at,
+  updated_at
+) VALUES
+  (1, 'Conta de energia - julho', 'CONTAS', 620.45, DATE '2026-07-05', 'PIX', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (2, 'Conta de agua - julho', 'CONTAS', 185.30, DATE '2026-07-06', 'BOLETO', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (3, 'Internet - julho', 'ASSINATURAS', 149.90, DATE '2026-07-07', 'CARTAO_CREDITO', 'Plano fibra', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (4, 'Material de limpeza', 'DESPENSA', 238.70, DATE '2026-07-09', 'CARTAO_DEBITO', 'Reposicao mensal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (5, 'Manutencao ar condicionado', 'MANUTENCAO', 480.00, NULL, 'PIX', 'Orcamento aprovado', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (6, 'Material de apoio para professores', 'PROFESSORES', 720.00, DATE '2026-07-15', 'TRANSFERENCIA', 'Compra de materiais pedagogicos', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (7, 'Treinamento da equipe docente', 'PROFESSORES', 620.00, DATE '2026-07-18', 'TRANSFERENCIA', 'Capacitacao mensal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (8, 'Servico de contabilidade', 'SERVICOS', 350.00, NULL, 'BOLETO', 'Mensalidade julho', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (9, 'Uniformes da equipe', 'FUNCIONARIOS', 1800.00, DATE '2026-07-30', 'TRANSFERENCIA', 'Compra de uniformes internos', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (10, 'Conta de energia - agosto', 'CONTAS', 645.10, NULL, 'PIX', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (11, 'Conta de agua - agosto', 'CONTAS', 192.80, DATE '2026-08-06', 'BOLETO', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (12, 'Internet - agosto', 'ASSINATURAS', 149.90, DATE '2026-08-07', 'CARTAO_CREDITO', 'Plano fibra', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (13, 'Cafe e descartaveis', 'DESPENSA', 312.40, DATE '2026-08-10', 'CARTAO_DEBITO', 'Consumo interno', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (14, 'Pintura sala de estudos', 'MANUTENCAO', 950.00, NULL, 'PIX', 'Melhoria de ambiente', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (15, 'Livros para sala dos professores', 'PROFESSORES', 540.00, DATE '2026-08-20', 'TRANSFERENCIA', 'Acervo de apoio pedagogico', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (16, 'Sistema de gestao', 'ASSINATURAS', 89.90, DATE '2026-09-01', 'CARTAO_CREDITO', 'Assinatura mensal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (17, 'Conta de energia - setembro', 'CONTAS', 610.25, DATE '2026-09-05', 'PIX', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (18, 'Conta de agua - setembro', 'CONTAS', 176.45, NULL, 'BOLETO', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (19, 'Produtos de copa', 'DESPENSA', 220.15, DATE '2026-09-11', 'CARTAO_DEBITO', 'Reposicao quinzenal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (20, 'Servico eletricista', 'SERVICOS', 420.00, DATE '2026-09-16', 'PIX', 'Ajuste em tomadas', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (21, 'Material administrativo da equipe', 'FUNCIONARIOS', 2100.00, NULL, 'TRANSFERENCIA', 'Itens de uso interno', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (22, 'Workshop para professores', 'PROFESSORES', 810.00, DATE '2026-09-25', 'TRANSFERENCIA', 'Evento de capacitacao', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (23, 'Conta de energia - outubro', 'CONTAS', 635.90, NULL, 'PIX', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (24, 'Conta de agua - outubro', 'CONTAS', 181.20, DATE '2026-10-06', 'BOLETO', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (25, 'Licenca de software', 'ASSINATURAS', 129.90, DATE '2026-10-08', 'CARTAO_CREDITO', 'Ferramenta administrativa', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (26, 'Conserto fechadura', 'MANUTENCAO', 160.00, DATE '2026-10-13', 'PIX', 'Porta da sala 2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (27, 'Servico de limpeza extra', 'SERVICOS', 300.00, NULL, 'PIX', 'Limpeza pos-evento', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (28, 'Equipamentos para equipe administrativa', 'FUNCIONARIOS', 1700.00, DATE '2026-10-30', 'TRANSFERENCIA', 'Reposicao de perifericos', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (29, 'Conta de energia - novembro', 'CONTAS', 658.75, NULL, 'PIX', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  (30, 'Materiais pedagogicos', 'DESPENSA', 410.60, DATE '2026-11-09', 'CARTAO_DEBITO', 'Apoio as aulas', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
 SELECT setval('enderecos_id_seq', (SELECT MAX(id) FROM enderecos), TRUE);
 SELECT setval('atendimentos_id_seq', (SELECT MAX(id) FROM atendimentos), TRUE);
+SELECT setval('despesas_id_seq', (SELECT MAX(id) FROM despesas), TRUE);

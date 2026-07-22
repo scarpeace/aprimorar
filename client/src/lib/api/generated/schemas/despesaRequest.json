@@ -1,5 +1,5 @@
 {
-  "required": ["categoria", "dataPagamento", "formaPagamento", "titulo", "valor"],
+  "required": ["categoria", "formaPagamento", "titulo", "valor"],
   "type": "object",
   "properties": {
     "titulo": {
@@ -16,7 +16,13 @@
       "enum": ["CONTAS", "PROFESSORES", "FUNCIONARIOS", "DESPENSA", "MANUTENCAO", "SERVICOS", "ASSINATURAS"]
     },
     "valor": { "minimum": 0.01, "exclusiveMinimum": false, "type": "number", "description": "Valor da despesa", "example": 250 },
-    "dataPagamento": { "type": "string", "description": "Data de pagamento", "format": "date", "example": "2026-07-22" },
+    "dataPagamento": {
+      "type": "string",
+      "description": "Data de pagamento",
+      "format": "date",
+      "nullable": true,
+      "example": "2026-07-22"
+    },
     "formaPagamento": {
       "type": "string",
       "description": "Forma de pagamento da despesa",

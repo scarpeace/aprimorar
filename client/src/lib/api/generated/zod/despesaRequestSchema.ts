@@ -15,7 +15,7 @@ export const despesaRequestSchema = z
       .enum(["CONTAS", "PROFESSORES", "FUNCIONARIOS", "DESPENSA", "MANUTENCAO", "SERVICOS", "ASSINATURAS"])
       .describe("Categoria da despesa operacional"),
     valor: z.number().min(0.01).describe("Valor da despesa"),
-    dataPagamento: z.iso.date().describe("Data de pagamento"),
+    dataPagamento: z.iso.date().describe("Data de pagamento").nullish(),
     formaPagamento: z
       .enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"])
       .describe("Forma de pagamento da despesa"),

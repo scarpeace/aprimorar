@@ -6,6 +6,7 @@ import { useCreateDespesa } from "@/lib/api/generated/hooks/despesa/useCreateDes
 import { useDeleteDespesa } from "@/lib/api/generated/hooks/despesa/useDeleteDespesa";
 import { getDespesaByIdQueryKey } from "@/lib/api/generated/hooks/despesa/useGetDespesaById";
 import { getDespesasQueryKey } from "@/lib/api/generated/hooks/despesa/useGetDespesas";
+import { useTogglePagamentoDespesa } from "@/lib/api/generated/hooks/despesa/useTogglePagamentoDespesa";
 import { useUpdateDespesa } from "@/lib/api/generated/hooks/despesa/useUpdateDespesa";
 import { getFriendlyErrorMessage } from "@/lib/api/client";
 
@@ -60,9 +61,25 @@ export function useDespesaMutations() {
     },
   });
 
+  const togglePagamentoDespesa = useTogglePagamentoDespesa({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao alterar o pagamento da despesa");
+      },
+      onSuccess: async (despesa) => {
+        toast.success(despesa.dataPagamento ? "Despesa marcada como paga" : "Despesa marcada como pendente");
+        await invalidateDespesas();
+        if (despesa.id) {
+          await invalidateDespesaDetail(despesa.id);
+        }
+      },
+    },
+  });
+
   return {
     createDespesa,
     updateDespesa,
     deleteDespesa,
+    togglePagamentoDespesa,
   };
 }

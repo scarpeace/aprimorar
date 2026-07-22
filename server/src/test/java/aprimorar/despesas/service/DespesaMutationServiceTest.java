@@ -1,7 +1,9 @@
 package aprimorar.despesas.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -112,6 +114,37 @@ class DespesaMutationServiceTest {
         assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
         assertEquals("Despesa não encontrada no banco de dados", ex.getMessage());
         verify(despesaRepo, never()).delete(any(Despesa.class));
+    }
+
+    @Test
+    void shouldTogglePagamentoDespesa() {
+        var despesa = new Despesa(
+            "Conta de energia",
+            CategoriaDespesa.CONTAS,
+            new BigDecimal("250.00"),
+            null,
+            FormaPagamento.PIX,
+            "Pagamento de julho"
+        );
+        setId(despesa, 1L);
+
+        when(despesaRepo.findById(1L)).thenReturn(Optional.of(despesa));
+
+        var response = service.togglePagamento(1L);
+
+        assertNotNull(response.dataPagamento());
+    }
+
+    @Test
+    void shouldTogglePagamentoDespesaBackToPending() {
+        var despesa = despesa();
+        setId(despesa, 1L);
+
+        when(despesaRepo.findById(1L)).thenReturn(Optional.of(despesa));
+
+        var response = service.togglePagamento(1L);
+
+        assertNull(response.dataPagamento());
     }
 
     private static DespesaRequest despesaRequest() {

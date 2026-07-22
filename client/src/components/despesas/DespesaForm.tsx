@@ -44,6 +44,7 @@ export function DespesaForm({ initialData, onSuccess, onCancel }: Readonly<Despe
   const onSubmit = methods.handleSubmit((data) => {
     const payload = {
       ...data,
+      dataPagamento: data.dataPagamento || null,
       descricao: data.descricao?.trim() || undefined,
     };
 

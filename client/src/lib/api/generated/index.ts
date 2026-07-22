@@ -36,6 +36,7 @@ export type { CreateDespesaMutationKey } from "./hooks/despesa/useCreateDespesa.
 export type { DeleteDespesaMutationKey } from "./hooks/despesa/useDeleteDespesa.ts";
 export type { GetDespesaByIdQueryKey } from "./hooks/despesa/useGetDespesaById.ts";
 export type { GetDespesasQueryKey } from "./hooks/despesa/useGetDespesas.ts";
+export type { TogglePagamentoDespesaMutationKey } from "./hooks/despesa/useTogglePagamentoDespesa.ts";
 export type { UpdateDespesaMutationKey } from "./hooks/despesa/useUpdateDespesa.ts";
 export type { CreateResponsavelMutationKey } from "./hooks/responsavel/useCreateResponsavel.ts";
 export type { DeleteResponsavelMutationKey } from "./hooks/responsavel/useDeleteResponsavel.ts";
@@ -326,6 +327,12 @@ export type {
   TogglePagamentoAlunoPathParams,
 } from "./types/TogglePagamentoAluno.ts";
 export type {
+  TogglePagamentoDespesa200,
+  TogglePagamentoDespesaMutation,
+  TogglePagamentoDespesaMutationResponse,
+  TogglePagamentoDespesaPathParams,
+} from "./types/TogglePagamentoDespesa.ts";
+export type {
   ToggleRepasseColaborador200,
   ToggleRepasseColaborador400,
   ToggleRepasseColaboradorMutation,
@@ -527,6 +534,10 @@ export { getDespesas } from "./hooks/despesa/useGetDespesas.ts";
 export { getDespesasQueryKey } from "./hooks/despesa/useGetDespesas.ts";
 export { getDespesasQueryOptions } from "./hooks/despesa/useGetDespesas.ts";
 export { useGetDespesas } from "./hooks/despesa/useGetDespesas.ts";
+export { togglePagamentoDespesa } from "./hooks/despesa/useTogglePagamentoDespesa.ts";
+export { togglePagamentoDespesaMutationKey } from "./hooks/despesa/useTogglePagamentoDespesa.ts";
+export { togglePagamentoDespesaMutationOptions } from "./hooks/despesa/useTogglePagamentoDespesa.ts";
+export { useTogglePagamentoDespesa } from "./hooks/despesa/useTogglePagamentoDespesa.ts";
 export { updateDespesa } from "./hooks/despesa/useUpdateDespesa.ts";
 export { updateDespesaMutationKey } from "./hooks/despesa/useUpdateDespesa.ts";
 export { updateDespesaMutationOptions } from "./hooks/despesa/useUpdateDespesa.ts";
@@ -801,6 +812,11 @@ export {
   togglePagamentoAlunoMutationResponseSchema,
   togglePagamentoAlunoPathParamsSchema,
 } from "./zod/togglePagamentoAlunoSchema.ts";
+export {
+  togglePagamentoDespesa200Schema,
+  togglePagamentoDespesaMutationResponseSchema,
+  togglePagamentoDespesaPathParamsSchema,
+} from "./zod/togglePagamentoDespesaSchema.ts";
 export {
   toggleRepasseColaborador200Schema,
   toggleRepasseColaborador400Schema,

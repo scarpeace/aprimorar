@@ -1,7 +1,7 @@
 "use client";
 
 import { PencilLine, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
@@ -38,7 +38,7 @@ export function DespesasOverview() {
   const [editingDespesa, setEditingDespesa] = useState<DespesaResponse | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const search = useDebounce(searchInput.trim(), 300);
-  const { deleteDespesa } = useDespesaMutations();
+  const { deleteDespesa, togglePagamentoDespesa } = useDespesaMutations();
 
   const despesas = useGetDespesas({
     page,
@@ -48,7 +48,7 @@ export function DespesasOverview() {
     formaPagamento: formaPagamento || undefined,
     dataInicio: dataInicio || undefined,
     dataFim: dataFim || undefined,
-    sort: ["dataPagamento,desc", "id,desc"],
+    sort: ["createdAt,desc", "id,desc"],
   });
 
   const content = despesas.data?.content ?? [];
@@ -64,7 +64,7 @@ export function DespesasOverview() {
     setSearchInput(value);
   }
 
-  function handleDelete(event: React.MouseEvent<HTMLButtonElement>, despesa: DespesaResponse) {
+  function handleDelete(event: MouseEvent<HTMLButtonElement>, despesa: DespesaResponse) {
     event.stopPropagation();
 
     if (!despesa.id || !window.confirm("Deseja mesmo excluir esta despesa?")) {
@@ -72,6 +72,14 @@ export function DespesasOverview() {
     }
 
     deleteDespesa.mutate({ despesaId: despesa.id });
+  }
+
+  function handleTogglePagamento(despesa: DespesaResponse) {
+    if (!despesa.id) {
+      return;
+    }
+
+    togglePagamentoDespesa.mutate({ despesaId: despesa.id });
   }
 
   return (
@@ -181,9 +189,9 @@ export function DespesasOverview() {
                   <tr>
                     <th>Título</th>
                     <th>Categoria</th>
-                    <th>Pagamento</th>
                     <th>Forma</th>
                     <th className="text-right">Valor</th>
+                    <th>Pagamento</th>
                     <th className="w-24">Ações</th>
                   </tr>
                 </thead>
@@ -200,9 +208,25 @@ export function DespesasOverview() {
                         {despesa.descricao ? <p className="mt-1 max-w-md truncate text-xs text-base-content/55">{despesa.descricao}</p> : null}
                       </td>
                       <td>{despesa.categoria ? categoriaDespesaLabels[despesa.categoria] : "—"}</td>
-                      <td>{formatDate(despesa.dataPagamento)}</td>
                       <td>{despesa.formaPagamento ? formaPagamentoDespesaLabels[despesa.formaPagamento] : "—"}</td>
                       <td className="text-right font-semibold">{brl.format(despesa.valor ?? 0)}</td>
+                      <td>
+                        <div className="flex items-center gap-2">
+                          <span>{formatDate(despesa.dataPagamento)}</span>
+                          <input
+                            type="checkbox"
+                            className="toggle toggle-success toggle-sm"
+                            checked={!!despesa.dataPagamento}
+                            disabled={togglePagamentoDespesa.isPending}
+                            aria-label="Alternar pagamento da despesa"
+                            onClick={(event) => event.stopPropagation()}
+                            onChange={(event) => {
+                              event.stopPropagation();
+                              handleTogglePagamento(despesa);
+                            }}
+                          />
+                        </div>
+                      </td>
                       <td>
                         <div className="flex gap-2">
                           <Button

@@ -191,6 +191,11 @@ export {
   togglePagamentoAlunoPathParamsSchema,
 } from "./togglePagamentoAlunoSchema.ts";
 export {
+  togglePagamentoDespesa200Schema,
+  togglePagamentoDespesaMutationResponseSchema,
+  togglePagamentoDespesaPathParamsSchema,
+} from "./togglePagamentoDespesaSchema.ts";
+export {
   toggleRepasseColaborador200Schema,
   toggleRepasseColaborador400Schema,
   toggleRepasseColaboradorMutationResponseSchema,

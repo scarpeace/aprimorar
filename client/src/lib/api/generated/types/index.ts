@@ -247,6 +247,12 @@ export type {
   TogglePagamentoAlunoPathParams,
 } from "./TogglePagamentoAluno.ts";
 export type {
+  TogglePagamentoDespesa200,
+  TogglePagamentoDespesaMutation,
+  TogglePagamentoDespesaMutationResponse,
+  TogglePagamentoDespesaPathParams,
+} from "./TogglePagamentoDespesa.ts";
+export type {
   ToggleRepasseColaborador200,
   ToggleRepasseColaborador400,
   ToggleRepasseColaboradorMutation,

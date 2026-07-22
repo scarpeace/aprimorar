@@ -50,7 +50,7 @@ public class DespesaController {
     @ApiResponse(responseCode = "200", description = "Página de despesas retornada com sucesso")
     public ResponseEntity<Page<DespesaResponse>> getDespesas(
         @ParameterObject @Valid DespesaFiltroRequest filtro,
-        @ParameterObject @PageableDefault(sort = "dataPagamento", direction = Sort.Direction.DESC) Pageable pageable
+        @ParameterObject @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ResponseEntity.ok(despesaQueryService.getDespesas(filtro, pageable));
     }
@@ -78,5 +78,12 @@ public class DespesaController {
     public ResponseEntity<Void> deleteDespesa(@PathVariable Long despesaId) {
         despesaMutationService.deleteDespesa(despesaId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{despesaId}/togglePagamento")
+    @Operation(operationId = "togglePagamentoDespesa", description = "Alterna o pagamento da despesa")
+    @ApiResponse(responseCode = "200", description = "Pagamento da despesa alternado com sucesso")
+    public ResponseEntity<DespesaResponse> togglePagamento(@PathVariable Long despesaId) {
+        return ResponseEntity.ok(despesaMutationService.togglePagamento(despesaId));
     }
 }

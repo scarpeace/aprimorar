@@ -36,7 +36,7 @@ public class Despesa {
     @Column(name = "valor", precision = 10, scale = 2, nullable = false)
     private BigDecimal valor;
 
-    @Column(name = "data_pagamento", nullable = false)
+    @Column(name = "data_pagamento")
     private LocalDate dataPagamento;
 
     @Enumerated(EnumType.STRING)
@@ -84,6 +84,10 @@ public class Despesa {
         this.dataPagamento = dataPagamento;
         this.formaPagamento = formaPagamento;
         this.descricao = descricao;
+    }
+
+    public void togglePagamento() {
+        this.dataPagamento = this.dataPagamento == null ? LocalDate.now() : null;
     }
 
     @PrePersist

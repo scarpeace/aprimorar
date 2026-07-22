@@ -27,8 +27,7 @@ public record DespesaRequest(
     @Schema(nullable = false, description = "Valor da despesa", example = "250.00")
     BigDecimal valor,
 
-    @NotNull(message = "Data de pagamento é obrigatória")
-    @Schema(nullable = false, description = "Data de pagamento", example = "2026-07-22")
+    @Schema(nullable = true, description = "Data de pagamento", example = "2026-07-22")
     LocalDate dataPagamento,
 
     @NotNull(message = "Forma de pagamento é obrigatória")
