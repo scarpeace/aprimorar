@@ -17,6 +17,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -65,14 +67,18 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({ MethodArgumentNotValidException.class, BindException.class })
     @ApiResponse(
         responseCode = "400",
         description = "Falha de validação",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
     )
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        List<String> errorMessages = ex.getBindingResult().getAllErrors().stream()
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(Exception ex, HttpServletRequest request) {
+        BindingResult bindingResult = ex instanceof MethodArgumentNotValidException validationException
+            ? validationException.getBindingResult()
+            : ((BindException) ex).getBindingResult();
+
+        List<String> errorMessages = bindingResult.getAllErrors().stream()
             .map(error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : VALIDATION_ERROR_MESSAGE)
             .toList();
 
