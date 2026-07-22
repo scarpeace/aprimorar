@@ -3,6 +3,7 @@
 import { PencilLine, Plus, Trash2 } from "lucide-react";
 import { useState, type MouseEvent } from "react";
 import { Button } from "@/components/ui/Button";
+import { AtendimentoPaymentBadge } from "@/components/atendimentos/AtendimentoPaymentBadge";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
@@ -24,7 +25,7 @@ import {
   formaPagamentoDespesaLabels,
   formaPagamentoDespesaOptions,
 } from "@/lib/constants/despesa-constants";
-import { brl, formatDate } from "@/lib/utils/formatter";
+import { brl } from "@/lib/utils/formatter";
 
 const PAGE_SIZE = 10;
 
@@ -191,7 +192,7 @@ export function DespesasOverview() {
                     <th>Categoria</th>
                     <th>Forma</th>
                     <th className="text-right">Valor</th>
-                    <th>Pagamento</th>
+                    <th>Status pagamento</th>
                     <th className="w-24">Ações</th>
                   </tr>
                 </thead>
@@ -212,10 +213,10 @@ export function DespesasOverview() {
                       <td className="text-right font-semibold">{brl.format(despesa.valor ?? 0)}</td>
                       <td>
                         <div className="flex items-center gap-2">
-                          <span>{formatDate(despesa.dataPagamento)}</span>
+                          <AtendimentoPaymentBadge label={despesa.dataPagamento ? "Pago" : "Pendente"} paidAt={despesa.dataPagamento} />
                           <input
                             type="checkbox"
-                            className="toggle toggle-success toggle-sm"
+                            className={`toggle toggle-sm ${despesa.dataPagamento ? "toggle-success" : "toggle-warning"}`}
                             checked={!!despesa.dataPagamento}
                             disabled={togglePagamentoDespesa.isPending}
                             aria-label="Alternar pagamento da despesa"
