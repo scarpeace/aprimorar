@@ -61,6 +61,12 @@ export type {
   CreateColaboradorMutationResponse,
 } from "./CreateColaborador.ts";
 export type {
+  CreateDespesa201,
+  CreateDespesaMutation,
+  CreateDespesaMutationRequest,
+  CreateDespesaMutationResponse,
+} from "./CreateDespesa.ts";
+export type {
   CreateResponsavel201,
   CreateResponsavelMutation,
   CreateResponsavelMutationRequest,
@@ -76,6 +82,12 @@ export type {
   DeleteColaboradorPathParams,
 } from "./DeleteColaborador.ts";
 export type {
+  DeleteDespesa204,
+  DeleteDespesaMutation,
+  DeleteDespesaMutationResponse,
+  DeleteDespesaPathParams,
+} from "./DeleteDespesa.ts";
+export type {
   DeleteResponsavel204,
   DeleteResponsavelMutation,
   DeleteResponsavelMutationResponse,
@@ -88,6 +100,12 @@ export type {
   DesarquivarColaboradorMutationResponse,
   DesarquivarColaboradorPathParams,
 } from "./DesarquivarColaborador.ts";
+export type { DespesaRequest, DespesaRequestCategoriaEnumKey, DespesaRequestFormaPagamentoEnumKey } from "./DespesaRequest.ts";
+export type {
+  DespesaResponse,
+  DespesaResponseCategoriaEnumKey,
+  DespesaResponseFormaPagamentoEnumKey,
+} from "./DespesaResponse.ts";
 export type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
 export type { ErrorResponse } from "./ErrorResponse.ts";
@@ -144,6 +162,20 @@ export type {
   GetColaboradoresListQueryResponse,
 } from "./GetColaboradoresList.ts";
 export type {
+  GetDespesaById200,
+  GetDespesaByIdPathParams,
+  GetDespesaByIdQuery,
+  GetDespesaByIdQueryResponse,
+} from "./GetDespesaById.ts";
+export type {
+  GetDespesas200,
+  GetDespesasQuery,
+  GetDespesasQueryParams,
+  GetDespesasQueryParamsCategoriaEnumKey,
+  GetDespesasQueryParamsFormaPagamentoEnumKey,
+  GetDespesasQueryResponse,
+} from "./GetDespesas.ts";
+export type {
   GetRelatorioAluno200,
   GetRelatorioAlunoPathParams,
   GetRelatorioAlunoQuery,
@@ -199,6 +231,7 @@ export type { PageMetadata } from "./PageMetadata.ts";
 export type { PagedModelAlunoResponseDTO } from "./PagedModelAlunoResponseDTO.ts";
 export type { PagedModelAtendimentoResponse } from "./PagedModelAtendimentoResponse.ts";
 export type { PagedModelColaboradorResponseDTO } from "./PagedModelColaboradorResponseDTO.ts";
+export type { PagedModelDespesaResponse } from "./PagedModelDespesaResponse.ts";
 export type { PagedModelResponsavelResponseDTO } from "./PagedModelResponsavelResponseDTO.ts";
 export type { Periodo } from "./Periodo.ts";
 export type { RelatorioAtendimentosResponse } from "./RelatorioAtendimentosResponse.ts";
@@ -213,6 +246,12 @@ export type {
   TogglePagamentoAlunoMutationResponse,
   TogglePagamentoAlunoPathParams,
 } from "./TogglePagamentoAluno.ts";
+export type {
+  TogglePagamentoDespesa200,
+  TogglePagamentoDespesaMutation,
+  TogglePagamentoDespesaMutationResponse,
+  TogglePagamentoDespesaPathParams,
+} from "./TogglePagamentoDespesa.ts";
 export type {
   ToggleRepasseColaborador200,
   ToggleRepasseColaborador400,
@@ -248,6 +287,13 @@ export type {
   UpdateColaboradorPathParams,
 } from "./UpdateColaborador.ts";
 export type {
+  UpdateDespesa200,
+  UpdateDespesaMutation,
+  UpdateDespesaMutationRequest,
+  UpdateDespesaMutationResponse,
+  UpdateDespesaPathParams,
+} from "./UpdateDespesa.ts";
+export type {
   UpdateResponsavel200,
   UpdateResponsavelMutation,
   UpdateResponsavelMutationRequest,
@@ -262,8 +308,14 @@ export { atendimentoResponseTipoEnum } from "./AtendimentoResponse.ts";
 export { calendarioAtendimentosResponseTipoEnum } from "./CalendarioAtendimentosResponse.ts";
 export { colaboradorRequestDTOFuncaoEnum } from "./ColaboradorRequestDTO.ts";
 export { colaboradorResponseDTOFuncaoEnum } from "./ColaboradorResponseDTO.ts";
+export { despesaRequestCategoriaEnum } from "./DespesaRequest.ts";
+export { despesaRequestFormaPagamentoEnum } from "./DespesaRequest.ts";
+export { despesaResponseCategoriaEnum } from "./DespesaResponse.ts";
+export { despesaResponseFormaPagamentoEnum } from "./DespesaResponse.ts";
 export { getAtendimentosQueryParamsStatusEnum } from "./GetAtendimentos.ts";
 export { getAtendimentosQueryParamsTipoEnum } from "./GetAtendimentos.ts";
+export { getDespesasQueryParamsCategoriaEnum } from "./GetDespesas.ts";
+export { getDespesasQueryParamsFormaPagamentoEnum } from "./GetDespesas.ts";
 export { itemStatusEnum } from "./Item.ts";
 export { itemTipoEnum } from "./Item.ts";
 export { userRequestDTORoleEnum } from "./UserRequestDTO.ts";

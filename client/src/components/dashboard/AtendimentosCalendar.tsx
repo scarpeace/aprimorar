@@ -46,6 +46,10 @@ function toCalendarEvent(
     start: atendimento.dataHoraInicio,
     end: atendimento.dataHoraFim,
     color: getAtendimentoCalendarColor(atendimento.tipo).backgroundColor,
+    extendedProps: {
+      nomeAluno: atendimento.nomeAluno,
+      nomeColaborador: atendimento.nomeColaborador,
+    },
   };
 }
 

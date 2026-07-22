@@ -32,6 +32,12 @@ export type { FindColaboradorByIdQueryKey } from "./hooks/colaborador/useFindCol
 export type { GetColaboradoresQueryKey } from "./hooks/colaborador/useGetColaboradores.ts";
 export type { GetColaboradoresListQueryKey } from "./hooks/colaborador/useGetColaboradoresList.ts";
 export type { UpdateColaboradorMutationKey } from "./hooks/colaborador/useUpdateColaborador.ts";
+export type { CreateDespesaMutationKey } from "./hooks/despesa/useCreateDespesa.ts";
+export type { DeleteDespesaMutationKey } from "./hooks/despesa/useDeleteDespesa.ts";
+export type { GetDespesaByIdQueryKey } from "./hooks/despesa/useGetDespesaById.ts";
+export type { GetDespesasQueryKey } from "./hooks/despesa/useGetDespesas.ts";
+export type { TogglePagamentoDespesaMutationKey } from "./hooks/despesa/useTogglePagamentoDespesa.ts";
+export type { UpdateDespesaMutationKey } from "./hooks/despesa/useUpdateDespesa.ts";
 export type { CreateResponsavelMutationKey } from "./hooks/responsavel/useCreateResponsavel.ts";
 export type { DeleteResponsavelMutationKey } from "./hooks/responsavel/useDeleteResponsavel.ts";
 export type { GetResponsaveisQueryKey } from "./hooks/responsavel/useGetResponsaveis.ts";
@@ -111,6 +117,12 @@ export type {
   CreateColaboradorMutationResponse,
 } from "./types/CreateColaborador.ts";
 export type {
+  CreateDespesa201,
+  CreateDespesaMutation,
+  CreateDespesaMutationRequest,
+  CreateDespesaMutationResponse,
+} from "./types/CreateDespesa.ts";
+export type {
   CreateResponsavel201,
   CreateResponsavelMutation,
   CreateResponsavelMutationRequest,
@@ -141,6 +153,12 @@ export type {
   DeleteColaboradorPathParams,
 } from "./types/DeleteColaborador.ts";
 export type {
+  DeleteDespesa204,
+  DeleteDespesaMutation,
+  DeleteDespesaMutationResponse,
+  DeleteDespesaPathParams,
+} from "./types/DeleteDespesa.ts";
+export type {
   DeleteResponsavel204,
   DeleteResponsavelMutation,
   DeleteResponsavelMutationResponse,
@@ -153,6 +171,16 @@ export type {
   DesarquivarColaboradorMutationResponse,
   DesarquivarColaboradorPathParams,
 } from "./types/DesarquivarColaborador.ts";
+export type {
+  DespesaRequest,
+  DespesaRequestCategoriaEnumKey,
+  DespesaRequestFormaPagamentoEnumKey,
+} from "./types/DespesaRequest.ts";
+export type {
+  DespesaResponse,
+  DespesaResponseCategoriaEnumKey,
+  DespesaResponseFormaPagamentoEnumKey,
+} from "./types/DespesaResponse.ts";
 export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
 export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
 export type { ErrorResponse } from "./types/ErrorResponse.ts";
@@ -214,6 +242,20 @@ export type {
   GetColaboradoresListQueryResponse,
 } from "./types/GetColaboradoresList.ts";
 export type {
+  GetDespesaById200,
+  GetDespesaByIdPathParams,
+  GetDespesaByIdQuery,
+  GetDespesaByIdQueryResponse,
+} from "./types/GetDespesaById.ts";
+export type {
+  GetDespesas200,
+  GetDespesasQuery,
+  GetDespesasQueryParams,
+  GetDespesasQueryParamsCategoriaEnumKey,
+  GetDespesasQueryParamsFormaPagamentoEnumKey,
+  GetDespesasQueryResponse,
+} from "./types/GetDespesas.ts";
+export type {
   GetRelatorioAluno200,
   GetRelatorioAlunoPathParams,
   GetRelatorioAlunoQuery,
@@ -269,6 +311,7 @@ export type { PageMetadata } from "./types/PageMetadata.ts";
 export type { PagedModelAlunoResponseDTO } from "./types/PagedModelAlunoResponseDTO.ts";
 export type { PagedModelAtendimentoResponse } from "./types/PagedModelAtendimentoResponse.ts";
 export type { PagedModelColaboradorResponseDTO } from "./types/PagedModelColaboradorResponseDTO.ts";
+export type { PagedModelDespesaResponse } from "./types/PagedModelDespesaResponse.ts";
 export type { PagedModelResponsavelResponseDTO } from "./types/PagedModelResponsavelResponseDTO.ts";
 export type { Periodo } from "./types/Periodo.ts";
 export type { RelatorioAtendimentosResponse } from "./types/RelatorioAtendimentosResponse.ts";
@@ -283,6 +326,12 @@ export type {
   TogglePagamentoAlunoMutationResponse,
   TogglePagamentoAlunoPathParams,
 } from "./types/TogglePagamentoAluno.ts";
+export type {
+  TogglePagamentoDespesa200,
+  TogglePagamentoDespesaMutation,
+  TogglePagamentoDespesaMutationResponse,
+  TogglePagamentoDespesaPathParams,
+} from "./types/TogglePagamentoDespesa.ts";
 export type {
   ToggleRepasseColaborador200,
   ToggleRepasseColaborador400,
@@ -317,6 +366,13 @@ export type {
   UpdateColaboradorMutationResponse,
   UpdateColaboradorPathParams,
 } from "./types/UpdateColaborador.ts";
+export type {
+  UpdateDespesa200,
+  UpdateDespesaMutation,
+  UpdateDespesaMutationRequest,
+  UpdateDespesaMutationResponse,
+  UpdateDespesaPathParams,
+} from "./types/UpdateDespesa.ts";
 export type {
   UpdateResponsavel200,
   UpdateResponsavelMutation,
@@ -462,6 +518,30 @@ export { updateColaborador } from "./hooks/colaborador/useUpdateColaborador.ts";
 export { updateColaboradorMutationKey } from "./hooks/colaborador/useUpdateColaborador.ts";
 export { updateColaboradorMutationOptions } from "./hooks/colaborador/useUpdateColaborador.ts";
 export { useUpdateColaborador } from "./hooks/colaborador/useUpdateColaborador.ts";
+export { createDespesa } from "./hooks/despesa/useCreateDespesa.ts";
+export { createDespesaMutationKey } from "./hooks/despesa/useCreateDespesa.ts";
+export { createDespesaMutationOptions } from "./hooks/despesa/useCreateDespesa.ts";
+export { useCreateDespesa } from "./hooks/despesa/useCreateDespesa.ts";
+export { deleteDespesa } from "./hooks/despesa/useDeleteDespesa.ts";
+export { deleteDespesaMutationKey } from "./hooks/despesa/useDeleteDespesa.ts";
+export { deleteDespesaMutationOptions } from "./hooks/despesa/useDeleteDespesa.ts";
+export { useDeleteDespesa } from "./hooks/despesa/useDeleteDespesa.ts";
+export { getDespesaById } from "./hooks/despesa/useGetDespesaById.ts";
+export { getDespesaByIdQueryKey } from "./hooks/despesa/useGetDespesaById.ts";
+export { getDespesaByIdQueryOptions } from "./hooks/despesa/useGetDespesaById.ts";
+export { useGetDespesaById } from "./hooks/despesa/useGetDespesaById.ts";
+export { getDespesas } from "./hooks/despesa/useGetDespesas.ts";
+export { getDespesasQueryKey } from "./hooks/despesa/useGetDespesas.ts";
+export { getDespesasQueryOptions } from "./hooks/despesa/useGetDespesas.ts";
+export { useGetDespesas } from "./hooks/despesa/useGetDespesas.ts";
+export { togglePagamentoDespesa } from "./hooks/despesa/useTogglePagamentoDespesa.ts";
+export { togglePagamentoDespesaMutationKey } from "./hooks/despesa/useTogglePagamentoDespesa.ts";
+export { togglePagamentoDespesaMutationOptions } from "./hooks/despesa/useTogglePagamentoDespesa.ts";
+export { useTogglePagamentoDespesa } from "./hooks/despesa/useTogglePagamentoDespesa.ts";
+export { updateDespesa } from "./hooks/despesa/useUpdateDespesa.ts";
+export { updateDespesaMutationKey } from "./hooks/despesa/useUpdateDespesa.ts";
+export { updateDespesaMutationOptions } from "./hooks/despesa/useUpdateDespesa.ts";
+export { useUpdateDespesa } from "./hooks/despesa/useUpdateDespesa.ts";
 export { createResponsavel } from "./hooks/responsavel/useCreateResponsavel.ts";
 export { createResponsavelMutationKey } from "./hooks/responsavel/useCreateResponsavel.ts";
 export { createResponsavelMutationOptions } from "./hooks/responsavel/useCreateResponsavel.ts";
@@ -512,8 +592,14 @@ export { atendimentoResponseTipoEnum } from "./types/AtendimentoResponse.ts";
 export { calendarioAtendimentosResponseTipoEnum } from "./types/CalendarioAtendimentosResponse.ts";
 export { colaboradorRequestDTOFuncaoEnum } from "./types/ColaboradorRequestDTO.ts";
 export { colaboradorResponseDTOFuncaoEnum } from "./types/ColaboradorResponseDTO.ts";
+export { despesaRequestCategoriaEnum } from "./types/DespesaRequest.ts";
+export { despesaRequestFormaPagamentoEnum } from "./types/DespesaRequest.ts";
+export { despesaResponseCategoriaEnum } from "./types/DespesaResponse.ts";
+export { despesaResponseFormaPagamentoEnum } from "./types/DespesaResponse.ts";
 export { getAtendimentosQueryParamsStatusEnum } from "./types/GetAtendimentos.ts";
 export { getAtendimentosQueryParamsTipoEnum } from "./types/GetAtendimentos.ts";
+export { getDespesasQueryParamsCategoriaEnum } from "./types/GetDespesas.ts";
+export { getDespesasQueryParamsFormaPagamentoEnum } from "./types/GetDespesas.ts";
 export { itemStatusEnum } from "./types/Item.ts";
 export { itemTipoEnum } from "./types/Item.ts";
 export { userRequestDTORoleEnum } from "./types/UserRequestDTO.ts";
@@ -568,6 +654,11 @@ export {
   createColaboradorMutationResponseSchema,
 } from "./zod/createColaboradorSchema.ts";
 export {
+  createDespesa201Schema,
+  createDespesaMutationRequestSchema,
+  createDespesaMutationResponseSchema,
+} from "./zod/createDespesaSchema.ts";
+export {
   createResponsavel201Schema,
   createResponsavelMutationRequestSchema,
   createResponsavelMutationResponseSchema,
@@ -589,6 +680,11 @@ export {
   deleteColaboradorPathParamsSchema,
 } from "./zod/deleteColaboradorSchema.ts";
 export {
+  deleteDespesa204Schema,
+  deleteDespesaMutationResponseSchema,
+  deleteDespesaPathParamsSchema,
+} from "./zod/deleteDespesaSchema.ts";
+export {
   deleteResponsavel204Schema,
   deleteResponsavelMutationResponseSchema,
   deleteResponsavelPathParamsSchema,
@@ -599,6 +695,8 @@ export {
   desarquivarColaboradorMutationResponseSchema,
   desarquivarColaboradorPathParamsSchema,
 } from "./zod/desarquivarColaboradorSchema.ts";
+export { despesaRequestSchema } from "./zod/despesaRequestSchema.ts";
+export { despesaResponseSchema } from "./zod/despesaResponseSchema.ts";
 export { enderecoRequestDTOSchema } from "./zod/enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./zod/enderecoResponseDTOSchema.ts";
 export { errorResponseSchema } from "./zod/errorResponseSchema.ts";
@@ -645,6 +743,12 @@ export {
   getColaboradoresQueryParamsSchema,
   getColaboradoresQueryResponseSchema,
 } from "./zod/getColaboradoresSchema.ts";
+export {
+  getDespesaById200Schema,
+  getDespesaByIdPathParamsSchema,
+  getDespesaByIdQueryResponseSchema,
+} from "./zod/getDespesaByIdSchema.ts";
+export { getDespesas200Schema, getDespesasQueryParamsSchema, getDespesasQueryResponseSchema } from "./zod/getDespesasSchema.ts";
 export {
   getRelatorioAlunoPdf200Schema,
   getRelatorioAlunoPdfPathParamsSchema,
@@ -694,6 +798,7 @@ export { pageMetadataSchema } from "./zod/pageMetadataSchema.ts";
 export { pagedModelAlunoResponseDTOSchema } from "./zod/pagedModelAlunoResponseDTOSchema.ts";
 export { pagedModelAtendimentoResponseSchema } from "./zod/pagedModelAtendimentoResponseSchema.ts";
 export { pagedModelColaboradorResponseDTOSchema } from "./zod/pagedModelColaboradorResponseDTOSchema.ts";
+export { pagedModelDespesaResponseSchema } from "./zod/pagedModelDespesaResponseSchema.ts";
 export { pagedModelResponsavelResponseDTOSchema } from "./zod/pagedModelResponsavelResponseDTOSchema.ts";
 export { periodoSchema } from "./zod/periodoSchema.ts";
 export { relatorioAtendimentosResponseSchema } from "./zod/relatorioAtendimentosResponseSchema.ts";
@@ -707,6 +812,11 @@ export {
   togglePagamentoAlunoMutationResponseSchema,
   togglePagamentoAlunoPathParamsSchema,
 } from "./zod/togglePagamentoAlunoSchema.ts";
+export {
+  togglePagamentoDespesa200Schema,
+  togglePagamentoDespesaMutationResponseSchema,
+  togglePagamentoDespesaPathParamsSchema,
+} from "./zod/togglePagamentoDespesaSchema.ts";
 export {
   toggleRepasseColaborador200Schema,
   toggleRepasseColaborador400Schema,
@@ -736,6 +846,12 @@ export {
   updateColaboradorMutationResponseSchema,
   updateColaboradorPathParamsSchema,
 } from "./zod/updateColaboradorSchema.ts";
+export {
+  updateDespesa200Schema,
+  updateDespesaMutationRequestSchema,
+  updateDespesaMutationResponseSchema,
+  updateDespesaPathParamsSchema,
+} from "./zod/updateDespesaSchema.ts";
 export {
   updateResponsavel200Schema,
   updateResponsavelMutationRequestSchema,

@@ -4,7 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { Menu } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  CalendarDays,
+  GraduationCap,
+  LayoutDashboard,
+  Menu,
+  Receipt,
+  ShieldUser,
+} from "lucide-react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import type { AuthUser } from "@/lib/auth/types";
 
@@ -20,6 +28,15 @@ function getNavLinkClass(pathname: string, href: string) {
   return `${navLinkBase} ${isActive(pathname, href) ? navLinkActive : navLinkInactive}`;
 }
 
+function NavLabel({ icon: Icon, label }: Readonly<{ icon: typeof LayoutDashboard; label: string }>) {
+  return (
+    <span className="flex items-center gap-2">
+      <Icon size={16} />
+      <span>{label}</span>
+    </span>
+  );
+}
+
 function UserSummary({ user }: Readonly<{ user: AuthUser }>) {
   return (
     <div className="px-3 py-2">
@@ -32,6 +49,7 @@ function UserSummary({ user }: Readonly<{ user: AuthUser }>) {
 export function Nav({ children, user }: Readonly<{ children: ReactNode; user: AuthUser }>) {
   const pathname = usePathname();
   const isAdmin = user.role === "ADMIN";
+  const canAccessDespesas = isAdmin || user.role === "COLABORADOR";
 
   return (
     <div className="min-h-screen bg-base-200">
@@ -49,28 +67,35 @@ export function Nav({ children, user }: Readonly<{ children: ReactNode; user: Au
               >
                 <li>
                   <Link href="/" className={getNavLinkClass(pathname, "/")}>
-                    Dashboard
+                    <NavLabel icon={LayoutDashboard} label="Dashboard" />
                   </Link>
                 </li>
                 <li>
                   <Link href="/alunos" className={getNavLinkClass(pathname, "/alunos")}>
-                    Alunos
+                    <NavLabel icon={GraduationCap} label="Alunos" />
                   </Link>
                 </li>
                 <li>
                   <Link href="/colaboradores" className={getNavLinkClass(pathname, "/colaboradores")}>
-                    Colaboradores
+                    <NavLabel icon={BriefcaseBusiness} label="Colaboradores" />
                   </Link>
                 </li>
                 <li>
                   <Link href="/atendimentos" className={getNavLinkClass(pathname, "/atendimentos")}>
-                    Atendimentos
+                    <NavLabel icon={CalendarDays} label="Atendimentos" />
                   </Link>
                 </li>
+                {canAccessDespesas ? (
+                  <li>
+                    <Link href="/despesas" className={getNavLinkClass(pathname, "/despesas")}>
+                      <NavLabel icon={Receipt} label="Despesas" />
+                    </Link>
+                  </li>
+                ) : null}
                 {isAdmin ? (
                   <li>
                     <Link href="/admin" className={getNavLinkClass(pathname, "/admin")}>
-                      Admin
+                      <NavLabel icon={ShieldUser} label="Admin" />
                     </Link>
                   </li>
                 ) : null}
@@ -96,28 +121,35 @@ export function Nav({ children, user }: Readonly<{ children: ReactNode; user: Au
             <ul className="menu menu-horizontal gap-2 px-1">
               <li>
                 <Link href="/" className={getNavLinkClass(pathname, "/")}>
-                  Dashboard
+                  <NavLabel icon={LayoutDashboard} label="Dashboard" />
                 </Link>
               </li>
               <li>
                 <Link href="/alunos" className={getNavLinkClass(pathname, "/alunos")}>
-                  Alunos
+                  <NavLabel icon={GraduationCap} label="Alunos" />
                 </Link>
               </li>
               <li>
                 <Link href="/colaboradores" className={getNavLinkClass(pathname, "/colaboradores")}>
-                  Colaboradores
+                  <NavLabel icon={BriefcaseBusiness} label="Colaboradores" />
                 </Link>
               </li>
               <li>
                 <Link href="/atendimentos" className={getNavLinkClass(pathname, "/atendimentos")}>
-                  Atendimentos
+                  <NavLabel icon={CalendarDays} label="Atendimentos" />
                 </Link>
               </li>
+              {canAccessDespesas ? (
+                <li>
+                  <Link href="/despesas" className={getNavLinkClass(pathname, "/despesas")}>
+                    <NavLabel icon={Receipt} label="Despesas" />
+                  </Link>
+                </li>
+              ) : null}
               {isAdmin ? (
                 <li>
                   <Link href="/admin" className={getNavLinkClass(pathname, "/admin")}>
-                    Admin
+                    <NavLabel icon={ShieldUser} label="Admin" />
                   </Link>
                 </li>
               ) : null}
