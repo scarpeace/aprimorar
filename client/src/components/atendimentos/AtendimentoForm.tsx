@@ -7,6 +7,7 @@ import type { AtendimentoResponse } from "@/lib/api/generated/types/AtendimentoR
 import { useListAlunos } from "@/lib/api/generated/hooks/aluno/useListAlunos";
 import { useGetColaboradoresList } from "@/lib/api/generated/hooks/colaborador/useGetColaboradoresList";
 import { Button } from "@/components/ui/Button";
+import { DateInput } from "@/components/ui/forms/DateInput";
 import { Field } from "@/components/ui/forms/Field";
 import { MonetaryInput } from "@/components/ui/forms/MonetaryInput";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
@@ -29,7 +30,7 @@ type AtendimentoFormProps = {
 };
 
 export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<AtendimentoFormProps>) {
-  const { createAtendimento, updateAtendimento } = useAtendimentoMutations();
+  const { createAtendimento, createAtendimentosRecorrentes, updateAtendimento } = useAtendimentoMutations();
   const isEditMode = !!initialData;
   const alunos = useListAlunos();
   const colaboradores = useGetColaboradoresList();
@@ -45,13 +46,15 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
       duracao: initialData ? getDurationInHours(initialData.dataHoraInicio, initialData.dataHoraFim) : 1,
       pagamentoAluno: initialData?.pagamentoAluno,
       repasseColaborador: initialData?.repasseColaborador,
+      recorrente: false,
+      dataFimRecorrencia: "",
     },
   });
 
-  const isPending = createAtendimento.isPending || updateAtendimento.isPending;
-  const [dataHoraInicio, duracao] = useWatch({
+  const isPending = createAtendimento.isPending || createAtendimentosRecorrentes.isPending || updateAtendimento.isPending;
+  const [dataHoraInicio, duracao, recorrente] = useWatch({
     control: methods.control,
-    name: ["dataHoraInicio", "duracao"],
+    name: ["dataHoraInicio", "duracao", "recorrente"],
   });
   const duracaoValue = Number(duracao);
   const dataHoraFimCalculada = addHoursToDateTimeLocal(dataHoraInicio, Number.isFinite(duracaoValue) ? duracaoValue : undefined);
@@ -97,6 +100,21 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
       return;
     }
 
+    if (data.recorrente && data.dataFimRecorrencia) {
+      createAtendimentosRecorrentes.mutate(
+        {
+          data: {
+            atendimento: payload,
+            dataFimRecorrencia: data.dataFimRecorrencia,
+          },
+        },
+        {
+          onSuccess,
+        },
+      );
+      return;
+    }
+
     createAtendimento.mutate(
       {
         data: payload,
@@ -129,7 +147,7 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
               <p className="mt-2 text-sm text-base-content/60">
                 Não encontrou o aluno?{" "}
                 <Link className="link link-primary font-medium" href="/alunos">
-                  Cadastre primeiro em alunos
+                  Cadastre aqui
                 </Link>
                 .
               </p>
@@ -147,12 +165,14 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
               <p className="mt-2 text-sm text-base-content/60">
                 Não encontrou o colaborador?{" "}
                 <Link className="link link-primary font-medium" href="/colaboradores">
-                  Cadastre primeiro em colaboradores
+                  Cadastre aqui
                 </Link>
                 .
               </p>
             </div>
+          </div>
 
+          <div className="grid gap-4 md:grid-cols-2">
             <SelectInput name="tipo" label="Tipo" options={CREATE_TIPO_OPTIONS} disabled={isPending} />
             <TextInput name="dataHoraInicio" type="datetime-local" label="Início" disabled={isPending} />
             <TextInput
@@ -168,7 +188,29 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
             <Field label="Fim calculado" helperText="Campo calculado automaticamente a partir do início e duração.">
               <input type="datetime-local" value={dataHoraFimCalculada} disabled className="input input-bordered w-full" />
             </Field>
+          </div>
 
+          {!isEditMode ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              <label className="label min-h-12 cursor-pointer justify-start gap-3 rounded-lg border border-base-300 px-3 py-2">
+                <input
+                  type="checkbox"
+                  className="checkbox checkbox-sm"
+                  disabled={isPending}
+                  {...methods.register("recorrente")}
+                />
+                <span className="label-text text-sm font-medium text-base-content/75">Repetir semanalmente</span>
+              </label>
+
+              {recorrente ? (
+                <DateInput name="dataFimRecorrencia" label="Repetir até" disabled={isPending} />
+              ) : (
+                <div className="hidden md:block" />
+              )}
+            </div>
+          ) : null}
+
+          <div className="grid gap-4 md:grid-cols-2">
             <MonetaryInput name="pagamentoAluno" label="Valor pago pelo aluno" disabled={isPending} />
             <MonetaryInput name="repasseColaborador" label="Repasse ao colaborador" disabled={isPending} />
           </div>

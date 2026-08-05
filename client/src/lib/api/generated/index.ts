@@ -9,6 +9,7 @@ export type { ListAlunosQueryKey } from "./hooks/aluno/useListAlunos.ts";
 export type { UnarchiveAlunoMutationKey } from "./hooks/aluno/useUnarchiveAluno.ts";
 export type { UpdateAlunoMutationKey } from "./hooks/aluno/useUpdateAluno.ts";
 export type { AgendarAtendimentoMutationKey } from "./hooks/atendimento/useAgendarAtendimento.ts";
+export type { AgendarAtendimentosRecorrentesMutationKey } from "./hooks/atendimento/useAgendarAtendimentosRecorrentes.ts";
 export type { CancelarAtendimentoMutationKey } from "./hooks/atendimento/useCancelarAtendimento.ts";
 export type { ConcluirAtendimentoMutationKey } from "./hooks/atendimento/useConcluirAtendimento.ts";
 export type { ExcluirAtendimentoMutationKey } from "./hooks/atendimento/useExcluirAtendimento.ts";
@@ -56,6 +57,13 @@ export type {
   AgendarAtendimentoMutationRequest,
   AgendarAtendimentoMutationResponse,
 } from "./types/AgendarAtendimento.ts";
+export type {
+  AgendarAtendimentosRecorrentes201,
+  AgendarAtendimentosRecorrentes400,
+  AgendarAtendimentosRecorrentesMutation,
+  AgendarAtendimentosRecorrentesMutationRequest,
+  AgendarAtendimentosRecorrentesMutationResponse,
+} from "./types/AgendarAtendimentosRecorrentes.ts";
 export type { AlunoDados } from "./types/AlunoDados.ts";
 export type { AlunoRelatorioResponse } from "./types/AlunoRelatorioResponse.ts";
 export type { AlunoRequestDTO } from "./types/AlunoRequestDTO.ts";
@@ -81,6 +89,7 @@ export type {
   ArquivarColaboradorMutationResponse,
   ArquivarColaboradorPathParams,
 } from "./types/ArquivarColaborador.ts";
+export type { AtendimentoRecorrenteRequest } from "./types/AtendimentoRecorrenteRequest.ts";
 export type { AtendimentoRequest, AtendimentoRequestTipoEnumKey } from "./types/AtendimentoRequest.ts";
 export type {
   AtendimentoResponse,
@@ -426,6 +435,10 @@ export { agendarAtendimento } from "./hooks/atendimento/useAgendarAtendimento.ts
 export { agendarAtendimentoMutationKey } from "./hooks/atendimento/useAgendarAtendimento.ts";
 export { agendarAtendimentoMutationOptions } from "./hooks/atendimento/useAgendarAtendimento.ts";
 export { useAgendarAtendimento } from "./hooks/atendimento/useAgendarAtendimento.ts";
+export { agendarAtendimentosRecorrentes } from "./hooks/atendimento/useAgendarAtendimentosRecorrentes.ts";
+export { agendarAtendimentosRecorrentesMutationKey } from "./hooks/atendimento/useAgendarAtendimentosRecorrentes.ts";
+export { agendarAtendimentosRecorrentesMutationOptions } from "./hooks/atendimento/useAgendarAtendimentosRecorrentes.ts";
+export { useAgendarAtendimentosRecorrentes } from "./hooks/atendimento/useAgendarAtendimentosRecorrentes.ts";
 export { cancelarAtendimento } from "./hooks/atendimento/useCancelarAtendimento.ts";
 export { cancelarAtendimentoMutationKey } from "./hooks/atendimento/useCancelarAtendimento.ts";
 export { cancelarAtendimentoMutationOptions } from "./hooks/atendimento/useCancelarAtendimento.ts";
@@ -610,6 +623,12 @@ export {
   agendarAtendimentoMutationRequestSchema,
   agendarAtendimentoMutationResponseSchema,
 } from "./zod/agendarAtendimentoSchema.ts";
+export {
+  agendarAtendimentosRecorrentes201Schema,
+  agendarAtendimentosRecorrentes400Schema,
+  agendarAtendimentosRecorrentesMutationRequestSchema,
+  agendarAtendimentosRecorrentesMutationResponseSchema,
+} from "./zod/agendarAtendimentosRecorrentesSchema.ts";
 export { alunoDadosSchema } from "./zod/alunoDadosSchema.ts";
 export { alunoRelatorioResponseSchema } from "./zod/alunoRelatorioResponseSchema.ts";
 export { alunoRequestDTOSchema } from "./zod/alunoRequestDTOSchema.ts";
@@ -628,6 +647,7 @@ export {
   arquivarColaboradorMutationResponseSchema,
   arquivarColaboradorPathParamsSchema,
 } from "./zod/arquivarColaboradorSchema.ts";
+export { atendimentoRecorrenteRequestSchema } from "./zod/atendimentoRecorrenteRequestSchema.ts";
 export { atendimentoRequestSchema } from "./zod/atendimentoRequestSchema.ts";
 export { atendimentoResponseSchema } from "./zod/atendimentoResponseSchema.ts";
 export { authRequestDTOSchema } from "./zod/authRequestDTOSchema.ts";

@@ -4,6 +4,12 @@ export {
   agendarAtendimentoMutationRequestSchema,
   agendarAtendimentoMutationResponseSchema,
 } from "./agendarAtendimentoSchema.ts";
+export {
+  agendarAtendimentosRecorrentes201Schema,
+  agendarAtendimentosRecorrentes400Schema,
+  agendarAtendimentosRecorrentesMutationRequestSchema,
+  agendarAtendimentosRecorrentesMutationResponseSchema,
+} from "./agendarAtendimentosRecorrentesSchema.ts";
 export { alunoDadosSchema } from "./alunoDadosSchema.ts";
 export { alunoRelatorioResponseSchema } from "./alunoRelatorioResponseSchema.ts";
 export { alunoRequestDTOSchema } from "./alunoRequestDTOSchema.ts";
@@ -18,6 +24,7 @@ export {
   arquivarColaboradorMutationResponseSchema,
   arquivarColaboradorPathParamsSchema,
 } from "./arquivarColaboradorSchema.ts";
+export { atendimentoRecorrenteRequestSchema } from "./atendimentoRecorrenteRequestSchema.ts";
 export { atendimentoRequestSchema } from "./atendimentoRequestSchema.ts";
 export { atendimentoResponseSchema } from "./atendimentoResponseSchema.ts";
 export { authRequestDTOSchema } from "./authRequestDTOSchema.ts";

@@ -3,6 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAgendarAtendimento } from "@/lib/api/generated/hooks/atendimento/useAgendarAtendimento";
+import { useAgendarAtendimentosRecorrentes } from "@/lib/api/generated/hooks/atendimento/useAgendarAtendimentosRecorrentes";
 import { useCancelarAtendimento } from "@/lib/api/generated/hooks/atendimento/useCancelarAtendimento";
 import { useConcluirAtendimento } from "@/lib/api/generated/hooks/atendimento/useConcluirAtendimento";
 import { useExcluirAtendimento } from "@/lib/api/generated/hooks/atendimento/useExcluirAtendimento";
@@ -36,6 +37,18 @@ export function useAtendimentoMutations() {
       onSuccess: async (createdAtendimento) => {
         toast.success("Atendimento criado com sucesso");
         await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(createdAtendimento.id)]);
+      },
+    },
+  });
+
+  const createAtendimentosRecorrentes = useAgendarAtendimentosRecorrentes({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao criar os atendimentos recorrentes");
+      },
+      onSuccess: async (createdAtendimentos) => {
+        toast.success(`${createdAtendimentos.length} atendimento(s) criado(s) com sucesso`);
+        await invalidateAtendimentos();
       },
     },
   });
@@ -114,6 +127,7 @@ export function useAtendimentoMutations() {
 
   return {
     createAtendimento,
+    createAtendimentosRecorrentes,
     updateAtendimento,
     concludeAtendimento,
     cancelAtendimento,

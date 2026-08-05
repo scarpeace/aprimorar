@@ -5,6 +5,13 @@ export type {
   AgendarAtendimentoMutationRequest,
   AgendarAtendimentoMutationResponse,
 } from "./AgendarAtendimento.ts";
+export type {
+  AgendarAtendimentosRecorrentes201,
+  AgendarAtendimentosRecorrentes400,
+  AgendarAtendimentosRecorrentesMutation,
+  AgendarAtendimentosRecorrentesMutationRequest,
+  AgendarAtendimentosRecorrentesMutationResponse,
+} from "./AgendarAtendimentosRecorrentes.ts";
 export type { AlunoDados } from "./AlunoDados.ts";
 export type { AlunoRelatorioResponse } from "./AlunoRelatorioResponse.ts";
 export type { AlunoRequestDTO } from "./AlunoRequestDTO.ts";
@@ -25,6 +32,7 @@ export type {
   ArquivarColaboradorMutationResponse,
   ArquivarColaboradorPathParams,
 } from "./ArquivarColaborador.ts";
+export type { AtendimentoRecorrenteRequest } from "./AtendimentoRecorrenteRequest.ts";
 export type { AtendimentoRequest, AtendimentoRequestTipoEnumKey } from "./AtendimentoRequest.ts";
 export type {
   AtendimentoResponse,

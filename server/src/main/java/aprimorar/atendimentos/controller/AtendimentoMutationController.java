@@ -1,6 +1,7 @@
 package aprimorar.atendimentos.controller;
 
 import aprimorar.atendimentos.dto.AtendimentoRequest;
+import aprimorar.atendimentos.dto.AtendimentoRecorrenteRequest;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
 import aprimorar.atendimentos.service.AtendimentoMutationService;
 import aprimorar.exception.ErrorResponse;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,6 +45,18 @@ public class AtendimentoMutationController {
     public ResponseEntity<AtendimentoResponse> agendar(@RequestBody @Valid AtendimentoRequest request) {
         AtendimentoResponse created = atendimentoMutationService.agendar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PostMapping("/recorrentes")
+    @Operation(operationId = "agendarAtendimentosRecorrentes", description = "Cria atendimentos semanais até a data final informada.")
+    @ApiResponse(responseCode = "201", description = "Atendimentos recorrentes agendados.")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Falha de validação",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+    )
+    public ResponseEntity<List<AtendimentoResponse>> agendarRecorrente(@RequestBody @Valid AtendimentoRecorrenteRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoMutationService.agendarRecorrente(request));
     }
 
     @PatchMapping("/{id}/concluir")
