@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import aprimorar.atendimentos.domain.Atendimento;
+import aprimorar.atendimentos.dto.AtendimentoRecorrenteRequest;
 import aprimorar.atendimentos.dto.AtendimentoRequest;
 import aprimorar.atendimentos.dto.ReagendarAtendimentoRequest;
 import aprimorar.atendimentos.enums.StatusAtendimento;
@@ -25,6 +26,7 @@ import aprimorar.pessoas.shared.FuncoesColaborador;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -84,6 +86,44 @@ class AtendimentoMutationServiceTest {
         ArgumentCaptor<Atendimento> captor = ArgumentCaptor.forClass(Atendimento.class);
         verify(atendimentoRepo).save(captor.capture());
         assertEquals(BigDecimal.valueOf(150), captor.getValue().getPagamentoAluno());
+    }
+
+    @Test
+    void shouldAgendarAtendimentosRecorrentesAteDataFinal() {
+        var request = atendimentoRequest();
+        var recorrenteRequest = new AtendimentoRecorrenteRequest(request, request.dataHoraInicio().toLocalDate().plusWeeks(2));
+
+        when(alunoRepo.findById(ALUNO_ID)).thenReturn(Optional.of(aluno()));
+        when(colaboradorRepo.findById(COLABORADOR_ID)).thenReturn(Optional.of(colaborador()));
+        when(atendimentoRepo.alunoPossuiAtendimentoConflitante(any(), any(), any(), any())).thenReturn(false);
+        when(atendimentoRepo.colaboradorPossuiAtendimentoConflitante(any(), any(), any(), any())).thenReturn(false);
+        when(atendimentoRepo.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        var response = service.agendarRecorrente(recorrenteRequest);
+
+        assertEquals(3, response.size());
+
+        ArgumentCaptor<List<Atendimento>> captor = ArgumentCaptor.forClass(List.class);
+        verify(atendimentoRepo).saveAll(captor.capture());
+        assertEquals(request.dataHoraInicio(), captor.getValue().get(0).getDataHoraInicio());
+        assertEquals(request.dataHoraInicio().plusWeeks(1), captor.getValue().get(1).getDataHoraInicio());
+        assertEquals(request.dataHoraInicio().plusWeeks(2), captor.getValue().get(2).getDataHoraInicio());
+    }
+
+    @Test
+    void shouldThrowWhenAgendarRecorrenteAndOccurrenceHasConflict() {
+        var request = atendimentoRequest();
+        var recorrenteRequest = new AtendimentoRecorrenteRequest(request, request.dataHoraInicio().toLocalDate().plusWeeks(2));
+
+        when(alunoRepo.findById(ALUNO_ID)).thenReturn(Optional.of(aluno()));
+        when(colaboradorRepo.findById(COLABORADOR_ID)).thenReturn(Optional.of(colaborador()));
+        when(atendimentoRepo.alunoPossuiAtendimentoConflitante(any(), any(), any(), any())).thenReturn(false, true);
+
+        var ex = assertThrows(BusinessException.class, () -> service.agendarRecorrente(recorrenteRequest));
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        assertEquals("O aluno informado ja possui um atendimento no intervalo", ex.getMessage());
+        verify(atendimentoRepo, never()).saveAll(any());
     }
 
     @Test

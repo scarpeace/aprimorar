@@ -1,4 +1,5 @@
 export type { AgendarAtendimentoMutationKey } from "./useAgendarAtendimento.ts";
+export type { AgendarAtendimentosRecorrentesMutationKey } from "./useAgendarAtendimentosRecorrentes.ts";
 export type { CancelarAtendimentoMutationKey } from "./useCancelarAtendimento.ts";
 export type { ConcluirAtendimentoMutationKey } from "./useConcluirAtendimento.ts";
 export type { ExcluirAtendimentoMutationKey } from "./useExcluirAtendimento.ts";
@@ -17,6 +18,10 @@ export { agendarAtendimento } from "./useAgendarAtendimento.ts";
 export { agendarAtendimentoMutationKey } from "./useAgendarAtendimento.ts";
 export { agendarAtendimentoMutationOptions } from "./useAgendarAtendimento.ts";
 export { useAgendarAtendimento } from "./useAgendarAtendimento.ts";
+export { agendarAtendimentosRecorrentes } from "./useAgendarAtendimentosRecorrentes.ts";
+export { agendarAtendimentosRecorrentesMutationKey } from "./useAgendarAtendimentosRecorrentes.ts";
+export { agendarAtendimentosRecorrentesMutationOptions } from "./useAgendarAtendimentosRecorrentes.ts";
+export { useAgendarAtendimentosRecorrentes } from "./useAgendarAtendimentosRecorrentes.ts";
 export { cancelarAtendimento } from "./useCancelarAtendimento.ts";
 export { cancelarAtendimentoMutationKey } from "./useCancelarAtendimento.ts";
 export { cancelarAtendimentoMutationOptions } from "./useCancelarAtendimento.ts";

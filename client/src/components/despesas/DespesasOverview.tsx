@@ -85,25 +85,30 @@ export function DespesasOverview() {
 
   return (
     <section className="app-shell-card p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex gap-3 items-center">
           <h2 className="text-2xl font-bold text-base-content">Despesas</h2>
-          <p className="mt-2 text-sm text-base-content/65">Gerencie os gastos operacionais da instituição.</p>
-        </div>
-
-        <div className="flex items-end gap-3">
-          <SearchInput label="Buscar" value={searchInput} onChange={handleSearchChange} placeholder="Digite título ou descrição" />
-
           <Button
             type="button"
             size="sm"
-            className="btn-square mb-1 shrink-0"
+            variant="primary"
             aria-label="Nova despesa"
             title="Nova despesa"
             onClick={() => setIsCreateOpen(true)}
           >
+            Nova Despesa
             <Plus size={18} />
           </Button>
+        </div>
+
+        <div className="flex w-full items-center gap-3 lg:w-auto">
+          <SearchInput
+            className="min-w-0 flex-1 md:w-180 sm:flex-none"
+            label="Buscar"
+            value={searchInput}
+            onChange={handleSearchChange}
+            placeholder="Digite título ou descrição"
+          />
         </div>
       </div>
 
@@ -206,14 +211,19 @@ export function DespesasOverview() {
                     >
                       <td>
                         <p className="font-semibold text-base-content">{despesa.titulo}</p>
-                        {despesa.descricao ? <p className="mt-1 max-w-md truncate text-xs text-base-content/55">{despesa.descricao}</p> : null}
+                        {despesa.descricao ? (
+                          <p className="mt-1 max-w-md truncate text-xs text-base-content/55">{despesa.descricao}</p>
+                        ) : null}
                       </td>
                       <td>{despesa.categoria ? categoriaDespesaLabels[despesa.categoria] : "—"}</td>
                       <td>{despesa.formaPagamento ? formaPagamentoDespesaLabels[despesa.formaPagamento] : "—"}</td>
                       <td className="text-right font-semibold">{brl.format(despesa.valor ?? 0)}</td>
                       <td>
                         <div className="flex items-center gap-2">
-                          <AtendimentoPaymentBadge label={despesa.dataPagamento ? "Pago" : "Pendente"} paidAt={despesa.dataPagamento} />
+                          <AtendimentoPaymentBadge
+                            label={despesa.dataPagamento ? "Pago" : "Pendente"}
+                            paidAt={despesa.dataPagamento}
+                          />
                           <input
                             type="checkbox"
                             className={`toggle toggle-sm ${despesa.dataPagamento ? "toggle-success" : "toggle-warning"}`}
@@ -293,7 +303,11 @@ export function DespesasOverview() {
         size="lg"
       >
         {editingDespesa ? (
-          <DespesaForm initialData={editingDespesa} onSuccess={() => setEditingDespesa(null)} onCancel={() => setEditingDespesa(null)} />
+          <DespesaForm
+            initialData={editingDespesa}
+            onSuccess={() => setEditingDespesa(null)}
+            onCancel={() => setEditingDespesa(null)}
+          />
         ) : null}
       </Modal>
     </section>

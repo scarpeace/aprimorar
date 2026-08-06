@@ -1,6 +1,7 @@
 package aprimorar.atendimentos.service;
 
 import aprimorar.atendimentos.dto.AtendimentoRequest;
+import aprimorar.atendimentos.dto.AtendimentoRecorrenteRequest;
 import aprimorar.atendimentos.dto.AtendimentoResponse;
 import aprimorar.atendimentos.dto.ReagendarAtendimentoRequest;
 import aprimorar.atendimentos.repository.AtendimentoRepository;
@@ -11,6 +12,9 @@ import aprimorar.pessoas.domain.Colaborador;
 import aprimorar.pessoas.repository.AlunoRepository;
 import aprimorar.pessoas.repository.ColaboradorRepository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +49,39 @@ public class AtendimentoMutationService {
 
         log.info("Atendimento {} cadastrado com sucesso.", saved.getId());
         return AtendimentoResponse.toDto(saved);
+    }
+
+    @Transactional
+    public List<AtendimentoResponse> agendarRecorrente(AtendimentoRecorrenteRequest request) {
+        AtendimentoRequest dto = request.atendimento();
+        Aluno aluno = findAlunoOrThrow(dto.alunoId());
+        Colaborador colaborador = findColaboradorOrThrow(dto.colaboradorId());
+        List<Atendimento> atendimentos = new ArrayList<>();
+        LocalDateTime inicio = dto.dataHoraInicio();
+        LocalDateTime fim = dto.dataHoraFim();
+
+        while (!inicio.toLocalDate().isAfter(request.dataFimRecorrencia())) {
+            Atendimento atendimento = new Atendimento(
+                inicio,
+                fim,
+                dto.tipo(),
+                aluno,
+                colaborador,
+                dto.pagamentoAluno(),
+                dto.repasseColaborador()
+            );
+
+            validarDisponibilidadeDosParticipantes(atendimento);
+            atendimentos.add(atendimento);
+
+            inicio = inicio.plusWeeks(1);
+            fim = fim.plusWeeks(1);
+        }
+
+        List<Atendimento> saved = atendimentoRepo.saveAll(atendimentos);
+
+        log.info("{} atendimentos recorrentes cadastrados com sucesso.", saved.size());
+        return saved.stream().map(AtendimentoResponse::toDto).toList();
     }
 
     public AtendimentoResponse update(Long id, AtendimentoRequest dto) {
