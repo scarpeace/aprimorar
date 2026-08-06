@@ -46,27 +46,29 @@ export function ResponsaveisOverview() {
 
   return (
     <section className="app-shell-card h-full p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <h2 className="text-2xl font-bold text-base-content">Responsáveis</h2>
-
-        <div className="flex items-end gap-3">
-          <SearchInput
-            label="Buscar por nome"
-            value={searchInput}
-            onChange={handleSearchChange}
-            placeholder="Digite o nome do responsável"
-          />
-
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-2xl font-bold text-base-content">Responsáveis</h2>
           <Button
             type="button"
             size="sm"
-            className="btn-square mb-1"
+            variant="primary"
             aria-label="Novo responsável"
             title="Novo responsável"
             onClick={() => setIsCreateOpen(true)}
           >
+            Novo Responsável
             <Plus size={18} />
           </Button>
+        </div>
+
+        <div className="flex w-full items-center gap-3 lg:w-auto">
+          <SearchInput
+            className="min-w-0 flex-1 sm:w-60 sm:flex-none"
+            value={searchInput}
+            onChange={handleSearchChange}
+            placeholder="Digite o nome do responsável"
+          />
         </div>
       </div>
 
@@ -103,17 +105,11 @@ export function ResponsaveisOverview() {
                   <tr
                     key={responsavel.id}
                     className="cursor-pointer transition-colors hover:bg-base-200/70"
-                    onClick={() =>
-                      router.push(`/responsaveis/${responsavel.id}`)
-                    }
+                    onClick={() => router.push(`/responsaveis/${responsavel.id}`)}
                   >
-                    <td className="font-semibold text-base-content">
-                      {responsavel.nome}
-                    </td>
+                    <td className="font-semibold text-base-content">{responsavel.nome}</td>
                     <td className="hidden">{formatCpf(responsavel.cpf)}</td>
-                    <td className="text-xs">
-                      {formatPhone(responsavel.telefone)}
-                    </td>
+                    <td className="text-xs">{formatPhone(responsavel.telefone)}</td>
                     <td className="hidden">{responsavel.email}</td>
                   </tr>
                 ))}
@@ -138,10 +134,7 @@ export function ResponsaveisOverview() {
         description="Preencha os dados para criar um novo responsável."
         size="md"
       >
-        <ResponsavelForm
-          onSuccess={() => setIsCreateOpen(false)}
-          onCancel={() => setIsCreateOpen(false)}
-        />
+        <ResponsavelForm onSuccess={() => setIsCreateOpen(false)} onCancel={() => setIsCreateOpen(false)} />
       </Modal>
     </section>
   );

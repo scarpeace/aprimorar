@@ -29,32 +29,43 @@ export function AtendimentosFilters({
   onCreate,
 }: Readonly<AtendimentosFiltersProps>) {
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-      <div>
+    <div className="flex flex-col gap-4 lg:flex-row lg:justify-between">
+      <div className="flex flex-col gap-3">
         <h2 className="text-2xl font-bold text-base-content">Atendimentos</h2>
-        <p className="mt-2 text-sm text-base-content/65">Listagem mensal com busca, filtros e paginação.</p>
+        <div className="flex gap-3">
+          <Button
+            type="button"
+            size="sm"
+            variant="primary"
+            aria-label="Novo atendimento"
+            title="Novo atendimento"
+            onClick={onCreate}
+          >
+            Novo Atendimento
+            <Plus size={18} />
+          </Button>
+
+          <Button
+            type="button"
+            size="sm"
+            variant="success"
+            aria-label="Novo Aulão"
+            title="Novo Aulão"
+            onClick={onCreate}
+          >
+            Novo Aulão
+            <Plus size={18} />
+          </Button>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-3 lg:min-w-2xl">
-        <div className="flex items-end gap-3">
+      <div className="flex flex-row gap-3 lg:min-w-2xl">
           <SearchInput
             label="Buscar"
             value={searchInput}
             onChange={onSearchInputChange}
             placeholder="Digite aluno, colaborador ou tipo"
           />
-
-          <Button
-            type="button"
-            size="sm"
-            className="btn-square mb-1 shrink-0"
-            aria-label="Novo atendimento"
-            title="Novo atendimento"
-            onClick={onCreate}
-          >
-            <Plus size={18} />
-          </Button>
-        </div>
 
         <div className="grid grid-cols-2 gap-3">
           <label className="form-control min-w-0">

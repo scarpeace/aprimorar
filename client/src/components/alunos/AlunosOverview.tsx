@@ -12,6 +12,7 @@ import { PageLoading } from "@/components/ui/PageLoading";
 import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { TablePagination } from "@/components/ui/TablePagination";
+import { Toggle } from "@/components/ui/Toggle";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatCpf } from "@/lib/utils/formatter";
 
@@ -21,11 +22,7 @@ function StatusBadge({ active }: Readonly<{ active?: boolean }>) {
   const archived = active === false;
 
   return (
-    <span
-      className={`badge badge-sm ${archived ? "badge-ghost" : "badge-success"}`}
-    >
-      {archived ? "Arquivado" : "Ativo"}
-    </span>
+    <span className={`badge badge-sm ${archived ? "badge-ghost" : "badge-success"}`}>{archived ? "Arquivado" : "Ativo"}</span>
   );
 }
 
@@ -65,41 +62,36 @@ export function AlunosOverview() {
 
   return (
     <section className="app-shell-card h-full p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-
-        <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex gap-3 items-center justify-between">
           <h2 className="text-2xl font-bold text-base-content">Alunos</h2>
-          <label className="label cursor-pointer gap-2 rounded-xl border border-base-300 px-3 py-2">
-            <span className="label-text text-sm text-base-content/70">
-              Arquivados
-            </span>
-            <input
-              type="checkbox"
-              className="checkbox checkbox-sm"
-              checked={showArchived}
-              onChange={(event) => handleArchivedChange(event.target.checked)}
-            />
-          </label>
+          <Button
+            type="button"
+            size="sm"
+            variant="primary"
+            aria-label="Novo aluno"
+            title="Novo aluno"
+            onClick={() => setIsCreateOpen(true)}
+          >
+            Novo Aluno
+            <Plus size={18} />
+          </Button>
         </div>
 
-        <div className="flex items-end gap-3">
+        <div className="flex w-full items-center gap-3 lg:w-auto">
           <SearchInput
-            label="Buscar por nome"
+            className="min-w-0 flex-1 sm:w-60 sm:flex-none"
             value={searchInput}
             onChange={handleSearchChange}
             placeholder="Digite o nome do aluno"
           />
 
-          <Button
-            type="button"
-            size="sm"
-            className="btn-square mb-1"
-            aria-label="Novo aluno"
-            title="Novo aluno"
-            onClick={() => setIsCreateOpen(true)}
-          >
-            <Plus size={18} />
-          </Button>
+          <span className="text-base-500 text-sm">Arquivados</span>
+          <Toggle
+            checked={showArchived}
+            ariaLabel="Mostrar alunos arquivados"
+            onChange={(event) => handleArchivedChange(event.target.checked)}
+          />
         </div>
       </div>
 
@@ -114,10 +106,7 @@ export function AlunosOverview() {
           />
         </div>
       ) : content.length === 0 ? (
-        <EmptyCard
-          title="Nenhum aluno encontrado"
-          description="Ajuste o filtro atual para localizar os alunos desejados."
-        />
+        <EmptyCard title="Nenhum aluno encontrado" description="Ajuste o filtro atual para localizar os alunos desejados." />
       ) : (
         <div className="mt-6 space-y-4">
           <div className="overflow-x-auto rounded-2xl border border-base-300 bg-base-100">
@@ -139,9 +128,7 @@ export function AlunosOverview() {
                     className="cursor-pointer transition-colors hover:bg-base-200/70"
                     onClick={() => router.push(`/alunos/${aluno.id}`)}
                   >
-                    <td className="font-semibold text-base-content">
-                      {aluno.nome}
-                    </td>
+                    <td className="font-semibold text-base-content">{aluno.nome}</td>
                     <td className="hidden">{formatCpf(aluno.cpf)}</td>
                     <td className="hidden">{aluno.email}</td>
                     <td>{aluno.escola || "—"}</td>
@@ -171,10 +158,7 @@ export function AlunosOverview() {
         description="Preencha os dados para criar um novo aluno."
         size="lg"
       >
-        <AlunoForm
-          onSuccess={() => setIsCreateOpen(false)}
-          onCancel={() => setIsCreateOpen(false)}
-        />
+        <AlunoForm onSuccess={() => setIsCreateOpen(false)} onCancel={() => setIsCreateOpen(false)} />
       </Modal>
     </section>
   );

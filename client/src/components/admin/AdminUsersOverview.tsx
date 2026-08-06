@@ -36,10 +36,11 @@ export function AdminUsersOverview() {
   return (
     <section className="app-shell-card p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
           <h2 className="text-2xl font-bold text-base-content">Usuários</h2>
 
-          <Button type="button" size="sm" className="btn-square" aria-label="Novo usuário" title="Novo usuário" onClick={() => setIsCreateOpen(true)}>
+          <Button type="button" size="sm" variant="primary" aria-label="Novo usuário" title="Novo usuário" onClick={() => setIsCreateOpen(true)}>
+            Novo Usuário
             <Plus size={18} />
           </Button>
         </div>

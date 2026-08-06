@@ -11,6 +11,7 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { TablePagination } from "@/components/ui/TablePagination";
+import { Toggle } from "@/components/ui/Toggle";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useAtendimentoMutations } from "@/hooks/use-atendimento-mutations";
 import { useGetAtendimentos } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentos";
@@ -57,28 +58,6 @@ function SummaryCard({
       <p className="text-xs font-bold uppercase tracking-wider text-base-content/50">{label}</p>
       <p className={`mt-2 text-xl font-bold ${valueClassName}`}>{value}</p>
     </div>
-  );
-}
-
-function StudentPaymentToggle({
-  paid,
-  disabled,
-  onToggle,
-}: Readonly<{
-  paid: boolean;
-  disabled: boolean;
-  onToggle: () => void;
-}>) {
-  return (
-    <input
-      type="checkbox"
-      className="toggle toggle-success toggle-sm"
-      checked={paid}
-      disabled={disabled}
-      aria-label="Alternar pagamento do aluno"
-      onClick={(event) => event.stopPropagation()}
-      onChange={onToggle}
-    />
   );
 }
 
@@ -208,7 +187,11 @@ export function AlunoAtendimentos({ alunoId }: Readonly<AlunoAtendimentosProps>)
 
         <label className="form-control w-full md:w-56">
           <span className="label-text mb-2 text-sm font-medium text-base-content/70">Status</span>
-          <select className="select select-bordered w-full" value={status} onChange={(event) => handleStatusChange(event.target.value)}>
+          <select
+            className="select select-bordered w-full"
+            value={status}
+            onChange={(event) => handleStatusChange(event.target.value)}
+          >
             {atendimentoStatusOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -219,7 +202,11 @@ export function AlunoAtendimentos({ alunoId }: Readonly<AlunoAtendimentosProps>)
 
         <label className="form-control w-full md:w-64">
           <span className="label-text mb-2 text-sm font-medium text-base-content/70">Tipo</span>
-          <select className="select select-bordered w-full" value={tipo} onChange={(event) => handleTipoChange(event.target.value)}>
+          <select
+            className="select select-bordered w-full"
+            value={tipo}
+            onChange={(event) => handleTipoChange(event.target.value)}
+          >
             {atendimentoTipoOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -295,10 +282,12 @@ export function AlunoAtendimentos({ alunoId }: Readonly<AlunoAtendimentosProps>)
                       <td>
                         <div className="flex items-center gap-2">
                           <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
-                          <StudentPaymentToggle
-                            paid={!!atendimento.dataPagamentoAluno}
+                          <Toggle
+                            checked={!!atendimento.dataPagamentoAluno}
                             disabled={togglePagamentoAluno.isPending || atendimento.status === "CANCELADO"}
-                            onToggle={() => togglePagamentoAluno.mutate({ id: atendimento.id })}
+                            ariaLabel="Alternar pagamento do aluno"
+                            onClick={(event) => event.stopPropagation()}
+                            onChange={() => togglePagamentoAluno.mutate({ id: atendimento.id })}
                           />
                         </div>
                       </td>
@@ -340,10 +329,12 @@ export function AlunoAtendimentos({ alunoId }: Readonly<AlunoAtendimentosProps>)
 
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
-                    <StudentPaymentToggle
-                      paid={!!atendimento.dataPagamentoAluno}
+                    <Toggle
+                      checked={!!atendimento.dataPagamentoAluno}
                       disabled={togglePagamentoAluno.isPending || atendimento.status === "CANCELADO"}
-                      onToggle={() => togglePagamentoAluno.mutate({ id: atendimento.id })}
+                      ariaLabel="Alternar pagamento do aluno"
+                      onClick={(event) => event.stopPropagation()}
+                      onChange={() => togglePagamentoAluno.mutate({ id: atendimento.id })}
                     />
                   </div>
                 </article>
