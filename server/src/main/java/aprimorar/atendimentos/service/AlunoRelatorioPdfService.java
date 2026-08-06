@@ -2,22 +2,27 @@ package aprimorar.atendimentos.service;
 
 import aprimorar.atendimentos.dto.AlunoRelatorioResponse;
 import java.awt.Color;
-import java.math.BigDecimal;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import org.openpdf.text.BadElementException;
 import org.openpdf.text.Document;
 import org.openpdf.text.DocumentException;
 import org.openpdf.text.Element;
 import org.openpdf.text.Font;
 import org.openpdf.text.FontFactory;
+import org.openpdf.text.Image;
 import org.openpdf.text.PageSize;
 import org.openpdf.text.Paragraph;
 import org.openpdf.text.Phrase;
+import org.openpdf.text.Rectangle;
 import org.openpdf.text.pdf.PdfPCell;
 import org.openpdf.text.pdf.PdfPTable;
 import org.openpdf.text.pdf.PdfWriter;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,6 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class AlunoRelatorioPdfService {
 
+    private static final String LOGO_PATH = "reports/aprimorar_logo.png";
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
     private static final Color HEADER_BACKGROUND = new Color(230, 230, 230);
@@ -46,22 +52,41 @@ public class AlunoRelatorioPdfService {
             document.close();
 
             return output.toByteArray();
-        } catch (DocumentException ex) {
+        } catch (DocumentException | IOException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível gerar o PDF", ex);
         }
     }
 
-    private void addHeader(Document document, AlunoRelatorioResponse relatorio) throws DocumentException {
-        document.add(new Paragraph("Relatório de atendimentos", TITLE_FONT));
-        document.add(new Paragraph("Aluno: " + relatorio.aluno().nome(), BODY_FONT));
-        document.add(new Paragraph("Escola: " + valueOrDash(relatorio.aluno().escola()), BODY_FONT));
-        document.add(new Paragraph("Responsável: " + relatorio.responsavel().nome(), BODY_FONT));
-        document.add(new Paragraph("Telefone: " + relatorio.responsavel().telefone(), BODY_FONT));
-        document.add(new Paragraph("E-mail: " + relatorio.responsavel().email(), BODY_FONT));
-        document.add(new Paragraph(
-            "Período: " + DATE_FORMAT.format(relatorio.periodo().dataInicio()) + " a " + DATE_FORMAT.format(relatorio.periodo().dataFim()),
-            BODY_FONT
+    private void addHeader(Document document, AlunoRelatorioResponse relatorio) throws DocumentException, IOException {
+        var table = new PdfPTable(new float[] {3.2f, 1});
+        table.setWidthPercentage(100);
+
+        var textCell = new PdfPCell();
+        textCell.setBorder(Rectangle.NO_BORDER);
+        textCell.addElement(new Paragraph("Atendimentos: " + relatorio.aluno().nome(), TITLE_FONT));
+        textCell.addElement(new Paragraph("Aluno: " + relatorio.aluno().nome(), BODY_FONT));
+        textCell.addElement(new Paragraph("Escola: " + valueOrDash(relatorio.aluno().escola()), BODY_FONT));
+        textCell.addElement(new Paragraph("Responsável: " + relatorio.responsavel().nome(), BODY_FONT));
+        textCell.addElement(new Paragraph("Telefone: " + relatorio.responsavel().telefone(), BODY_FONT));
+        textCell.addElement(new Paragraph("E-mail: " + relatorio.responsavel().email(), BODY_FONT));
+        textCell.addElement(new Paragraph(
+            "PERIODO: " + DATE_FORMAT.format(relatorio.periodo().dataInicio()) + " até " + DATE_FORMAT.format(relatorio.periodo().dataFim()),
+            SECTION_FONT
         ));
+
+        var logoCell = new PdfPCell();
+        logoCell.setBorder(Rectangle.NO_BORDER);
+        logoCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        logoCell.setVerticalAlignment(Element.ALIGN_TOP);
+        var logo = logoImage();
+        if (logo != null) {
+            logoCell.addElement(logo);
+        }
+
+        table.addCell(textCell);
+        table.addCell(logoCell);
+
+        document.add(table);
         document.add(new Paragraph(" "));
     }
 
@@ -95,7 +120,7 @@ public class AlunoRelatorioPdfService {
         table.addCell(headerCell("Tipo"));
         table.addCell(headerCell("Colaborador"));
         table.addCell(headerCell("Valor"));
-        table.addCell(headerCell("Pagamento"));
+        table.addCell(headerCell("Status"));
 
         for (var atendimento : relatorio.atendimentos()) {
             table.addCell(bodyCell(DATE_FORMAT.format(atendimento.dataHoraInicio())));
@@ -107,6 +132,20 @@ public class AlunoRelatorioPdfService {
         }
 
         document.add(table);
+    }
+
+    private Image logoImage() throws BadElementException, IOException {
+        var resource = new ClassPathResource(LOGO_PATH);
+        if (!resource.exists()) {
+            return null;
+        }
+
+        try (var inputStream = resource.getInputStream()) {
+            var logo = Image.getInstance(inputStream.readAllBytes());
+            logo.scaleToFit(110, 70);
+            logo.setAlignment(Element.ALIGN_RIGHT);
+            return logo;
+        }
     }
 
     private PdfPCell headerCell(String text) {
