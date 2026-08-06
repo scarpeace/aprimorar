@@ -45,17 +45,16 @@ export function AtendimentosFilters({
             <Plus size={18} />
           </Button>
 
-          <Button
+          {/*<Button
             type="button"
             size="sm"
             variant="success"
             aria-label="Novo Aulão"
             title="Novo Aulão"
-            onClick={onCreate}
           >
             Novo Aulão
             <Plus size={18} />
-          </Button>
+          </Button>*/}
         </div>
       </div>
 
