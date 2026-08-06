@@ -5,11 +5,26 @@ import type { DateClickArg } from "@fullcalendar/interaction";
 import ptBrLocale from "@fullcalendar/core/locales/pt-br";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import listPlugin from "@fullcalendar/list";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import type { SharedCalendarProps } from "@/components/dashboard/calendar-shared";
 
-const CALENDAR_PLUGINS = [dayGridPlugin, timeGridPlugin, interactionPlugin];
+const CALENDAR_PLUGINS = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin];
+
+const HEADER_TOOLBAR = {
+  left: "prev,next today",
+  center: "title",
+  right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
+};
+
+const BUTTON_TEXT = {
+  today: "Hoje",
+  month: "Mês",
+  week: "Semana",
+  day: "Dia",
+  // list: "Lista",
+};
 
 const VIEWS = {
   dayGridMonth: {
@@ -20,6 +35,9 @@ const VIEWS = {
   },
   timeGridDay: {
     titleFormat: { month: "short", day: "numeric", year: "numeric" } as const,
+  },
+  listMonth: {
+    titleFormat: { month: "long", year: "numeric" } as const,
   },
 };
 
@@ -44,32 +62,18 @@ function renderEventContent(info: EventContentArg) {
       style={{ backgroundColor: color ? `${color}18` : undefined }}
       title={info.event.title}
     >
-      <span
-        className="mt-1 h-2 w-2 shrink-0 rounded-full"
-        style={{ backgroundColor: color }}
-      />
+      <span className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
       <div className="min-w-0">
         <p className="truncate text-xs font-semibold">
           <span>{info.timeText}</span> {nomeAluno ?? info.event.title}
         </p>
-        {nomeColaborador ? (
-          <p className="truncate text-[11px] text-base-content/60">
-            {nomeColaborador}
-          </p>
-        ) : null}
+        {nomeColaborador ? <p className="truncate text-[11px] text-base-content/60">{nomeColaborador}</p> : null}
       </div>
     </div>
   );
 }
 
-export function CalendarDesktop({
-  calendarRef,
-  calendarDate,
-  events,
-  onDatesSet,
-  onEventClick,
-  onOpenDay,
-}: SharedCalendarProps) {
+export function CalendarDesktop({ calendarRef, calendarDate, events, onDatesSet, onEventClick, onOpenDay }: SharedCalendarProps) {
   function handleDateClick(info: DateClickArg) {
     onOpenDay(info.date);
   }
@@ -81,7 +85,8 @@ export function CalendarDesktop({
       plugins={CALENDAR_PLUGINS}
       initialView="dayGridMonth"
       initialDate={calendarDate}
-      headerToolbar={false}
+      headerToolbar={HEADER_TOOLBAR}
+      buttonText={BUTTON_TEXT}
       views={VIEWS}
       events={events}
       eventDisplay="list-item"
