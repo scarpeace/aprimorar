@@ -12,4 +12,5 @@ RUN addgroup -S app && adduser -S app -G app
 COPY --from=builder /app/target/*.jar app.jar
 USER app
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
+ENV SPRING_PROFILES_ACTIVE=prod
+ENTRYPOINT ["java", "-jar", "app.jar"]
