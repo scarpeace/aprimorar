@@ -1,95 +1,117 @@
-# Plano — Endereço como value object
+# Plano — Responsável embutido no aluno
 
 ## Objetivo
 
-Remover a entidade/tabela `enderecos` e tratar o endereço como um dado composto
-do proprietário (`aluno` ou `colaborador`). O endereço continuará sendo
-representado por um tipo Java compartilhado, mas será persistido como colunas
-da tabela principal.
+Remover o relacionamento entre `alunos` e `responsaveis` e armazenar os dados
+do responsável diretamente na tabela `alunos`, usando um value object JPA
+`@Embeddable`.
 
-Não usaremos JSON/JSONB: os campos são conhecidos, possuem validações próprias
-e podem precisar de consultas ou restrições no banco.
+O responsável não terá acesso ao sistema, identidade própria ou ciclo de vida
+independente. Ele será apenas um conjunto de dados pertencente ao aluno.
 
-## Estado atual
+## Contrato HTTP desejado
 
-- `Endereco` é uma entidade JPA com tabela própria.
-- `alunos.endereco_id` aponta para `enderecos.id`.
-- `colaboradores.endereco_id` aponta para `enderecos.id`.
-- Os dois relacionamentos são `@OneToOne` com chave estrangeira única.
-- Os DTOs de endereço já são aninhados nos DTOs de aluno e colaborador.
+O aluno receberá os dados do responsável aninhados:
+
+```json
+{
+  "nome": "Carlos Eduardo Ramos",
+  "dataNascimento": "1981-02-12",
+  "cpf": "204.681.357-07",
+  "telefone": "11980000001",
+  "email": "carlos.ramos@example.com"
+}
+```
+
+`responsavelId` deixará de fazer parte do request do aluno.
 
 ## Estrutura desejada
 
 ```text
 alunos
-├── endereco_rua
-├── endereco_numero
-├── endereco_bairro
-├── endereco_cidade
-├── endereco_estado
-├── endereco_cep
-└── endereco_complemento
-
-colaboradores
-├── endereco_rua
-├── endereco_numero
-├── endereco_bairro
-├── endereco_cidade
-├── endereco_estado
-├── endereco_cep
-└── endereco_complemento
+├── responsavel_nome
+├── responsavel_data_nascimento
+├── responsavel_cpf
+├── responsavel_telefone
+└── responsavel_email
 ```
 
-No Java, `Endereco` será um `@Embeddable`, e as entidades usarão
-`@Embedded`. O pacote `pessoas.endereco` continua sendo apenas um tipo interno
-compartilhado; não haverá módulo ou ciclo de vida próprio para endereço.
+No Java, o value object ficará sob o domínio de aluno:
+
+```text
+pessoas/aluno/
+├── domain/Responsavel.java
+└── web/dto/
+    ├── ResponsavelRequestDTO.java
+    └── ResponsavelResponseDTO.java
+```
 
 ## Fases
 
-### Fase 1 — Migration de expansão
+### Fase 1 — Value object e contrato
 
-- Criar a próxima migration Flyway (`V4`).
-- Adicionar as colunas `endereco_*` em `alunos` e `colaboradores`.
-- Copiar os dados de `enderecos` para as respectivas tabelas proprietárias.
-- Manter temporariamente `endereco_id` e a tabela `enderecos` para permitir a
-  transição sem perda de dados.
-- Tornar `NOT NULL` os campos obrigatórios depois do backfill.
+- Criar `Responsavel` como `@Embeddable` em `pessoas.aluno.domain`.
+- Remover do modelo novo `id`, `userId` e comportamento de autenticação.
+- Criar os DTOs aninhados de request e response dentro de `pessoas.aluno.web.dto`.
+- Alterar `AlunoRequestDTO` para receber `ResponsavelRequestDTO`.
+- Manter o formato aninhado em `AlunoResponseDTO`.
 
-### Fase 2 — Troca do mapeamento JPA
+### Fase 2 — Migration de expansão
 
-- Remover `@Entity`, `@Id` e geração de identificador de `Endereco`.
-- Tornar `Endereco` um `@Embeddable`.
-- Substituir os relacionamentos `@OneToOne` por `@Embedded` em
-  `AlunoEntity` e `ColaboradorEntity`.
-- Ajustar construtores, métodos de atualização e mapeamentos somente onde
-  necessário.
-- Manter os DTOs HTTP de endereço, sem alterar o formato externo neste passo.
+- Criar a próxima migration livre (`V8`).
+- Adicionar as colunas `responsavel_*` em `alunos`.
+- Copiar os dados de `responsaveis` para `alunos` usando `responsavel_id`.
+- Aplicar `NOT NULL` aos campos obrigatórios após o backfill.
+- Manter temporariamente `responsavel_id` e a tabela `responsaveis`.
+- Não criar unicidade global para CPF ou e-mail do responsável, pois vários
+  alunos podem compartilhar o mesmo responsável.
 
-### Fase 3 — Limpeza do schema
+### Fase 3 — Troca do mapeamento JPA
 
-- Criar uma migration posterior (`V5`) após o código estar usando as novas
-  colunas.
-- Remover as chaves estrangeiras e as colunas `endereco_id`.
-- Remover a tabela `enderecos`.
-- Não editar migrations já aplicadas, especialmente `V1`.
+- Substituir `@ManyToOne ResponsavelEntity` por `@Embedded Responsavel` em
+  `AlunoEntity`.
+- Ajustar construtores, método de atualização e mapeamentos.
+- Remover a busca por `ResponsavelService` no fluxo de aluno.
+- Criar e atualizar os dados do responsável junto com o aluno.
 
-### Fase 4 — Limpeza de código
+### Fase 4 — Transição do schema e seed
 
-- Remover qualquer repositório ou referência residual à tabela `enderecos`.
-- Remover diretórios vazios.
-- Preservar apenas `Endereco` como value object e os DTOs necessários.
+- Atualizar `data.sql` para usar as colunas `responsavel_*`.
+- Criar uma migration intermediária (`V9`) tornando `responsavel_id` anulável.
+- Garantir que novos alunos não dependam mais da tabela legada.
 
-### Fase 5 — Validação
+### Fase 5 — Limpeza do schema
+
+- Criar uma migration posterior (`V10`).
+- Remover a FK e a coluna `responsavel_id`.
+- Remover a tabela `responsaveis`.
+- Não editar migrations já aplicadas.
+
+### Fase 6 — Limpeza de código
+
+- Remover `ResponsavelEntity`.
+- Remover `ResponsavelRepository`.
+- Remover `ResponsavelService` e sua implementação.
+- Remover controller, contratos públicos e exceções exclusivas do responsável,
+  caso não tenham mais consumidores.
+- Remover referências residuais e diretórios vazios.
+
+### Fase 7 — Validação
 
 - Executar `compile` e `test-compile`.
-- Atualizar testes de entidade/DTO que dependam do ID de endereço ou do
-  relacionamento JPA.
-- Verificar que não restaram referências a `endereco_id`, `@OneToOne` ou à
-  tabela `enderecos`.
-- Conferir o diff da migration e a integridade do backfill.
+- Atualizar testes que dependam de `responsavelId` ou `ResponsavelEntity`.
+- Verificar que não restaram referências a `responsavel_id` no código ativo.
+- Conferir o backfill e a integridade dos dados antes da limpeza definitiva.
+
+## Observação de modelagem
+
+O modelo embutido duplica os dados quando vários alunos possuem o mesmo
+responsável. Alterar os dados em um aluno não atualizará automaticamente os
+demais. Isso é aceitável enquanto o responsável for apenas um dado cadastral
+do aluno, sem identidade ou operações próprias.
 
 ## Fora deste plano
 
-- Incorporação dos dados de responsável em `alunos`.
-- Alteração dos contratos HTTP do frontend.
-- Migração para JSON/JSONB.
+- Criação de acesso para responsáveis.
+- Compartilhamento de responsáveis como entidade independente.
+- Alterações no frontend nesta etapa.
