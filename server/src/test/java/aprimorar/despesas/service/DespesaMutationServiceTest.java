@@ -10,11 +10,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import aprimorar.despesas.domain.Despesa;
+import aprimorar.despesas.domain.exception.DespesaNaoEncontradaException;
 import aprimorar.despesas.dto.DespesaRequest;
 import aprimorar.despesas.enums.CategoriaDespesa;
 import aprimorar.despesas.enums.FormaPagamento;
 import aprimorar.despesas.repository.DespesaRepository;
-import aprimorar.exception.BusinessException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -24,7 +24,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,9 +86,8 @@ class DespesaMutationServiceTest {
     void shouldThrowWhenUpdateAndDespesaDoesNotExist() {
         when(despesaRepo.findById(1L)).thenReturn(Optional.empty());
 
-        var ex = assertThrows(BusinessException.class, () -> service.updateDespesa(1L, despesaRequest()));
+        var ex = assertThrows(DespesaNaoEncontradaException.class, () -> service.updateDespesa(1L, despesaRequest()));
 
-        assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
         assertEquals("Despesa não encontrada no banco de dados", ex.getMessage());
     }
 
@@ -109,9 +107,8 @@ class DespesaMutationServiceTest {
     void shouldThrowWhenDeleteAndDespesaDoesNotExist() {
         when(despesaRepo.findById(1L)).thenReturn(Optional.empty());
 
-        var ex = assertThrows(BusinessException.class, () -> service.deleteDespesa(1L));
+        var ex = assertThrows(DespesaNaoEncontradaException.class, () -> service.deleteDespesa(1L));
 
-        assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
         assertEquals("Despesa não encontrada no banco de dados", ex.getMessage());
         verify(despesaRepo, never()).delete(any(Despesa.class));
     }

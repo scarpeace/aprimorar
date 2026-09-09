@@ -33,6 +33,7 @@ Documento operacional do repositório. Mantenha este arquivo atualizado quando a
 - entidade JPA não vaza para API
 - mudança de schema sempre via Flyway
 - dependência entre módulos só pelos contratos permitidos
+- em `pessoas`, `Aluno`/`AlunoService`, `Colaborador`/`ColaboradorService` e `Responsavel`/`ResponsavelService` na raiz são contratos públicos; entidades, repositórios e implementações ficam em `internal/`, enquanto controller e DTOs HTTP ficam em `internal/web/`; `Endereco` é um tipo interno compartilhado do módulo
 
 ### Comandos úteis
 

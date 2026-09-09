@@ -7,11 +7,11 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import aprimorar.despesas.domain.Despesa;
+import aprimorar.despesas.domain.exception.DespesaNaoEncontradaException;
 import aprimorar.despesas.dto.DespesaFiltroRequest;
 import aprimorar.despesas.enums.CategoriaDespesa;
 import aprimorar.despesas.enums.FormaPagamento;
 import aprimorar.despesas.repository.DespesaRepository;
-import aprimorar.exception.BusinessException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +24,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,9 +72,8 @@ class DespesaQueryServiceTest {
     void shouldThrowWhenFindDespesaByIdDoesNotExist() {
         when(despesaRepo.findById(1L)).thenReturn(Optional.empty());
 
-        var ex = assertThrows(BusinessException.class, () -> service.findDespesaById(1L));
+        var ex = assertThrows(DespesaNaoEncontradaException.class, () -> service.findDespesaById(1L));
 
-        assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
         assertEquals("Despesa não encontrada no banco de dados", ex.getMessage());
     }
 

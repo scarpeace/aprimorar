@@ -6,12 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import aprimorar.auth.service.UserService;
+import aprimorar.auth.usuario.service.UserService;
 
-// @Modulithic(
-// 		additionalPackages = "aprimorar",
-// 		sharedModules = {"config", "shared"}
-// )
 @SpringBootApplication
 public class AprimorarAplication {
 
