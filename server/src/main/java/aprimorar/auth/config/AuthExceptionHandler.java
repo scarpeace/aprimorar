@@ -1,9 +1,9 @@
 package aprimorar.auth.config;
 
-import aprimorar.auth.usuario.domain.exception.UsuarioDadosInvalidosException;
-import aprimorar.auth.usuario.domain.exception.UsuarioDuplicadoException;
-import aprimorar.auth.usuario.domain.exception.UsuarioEstadoInvalidoException;
-import aprimorar.auth.usuario.domain.exception.UsuarioNaoEncontradoException;
+import aprimorar.auth.domain.exception.UsuarioDadosInvalidosException;
+import aprimorar.auth.domain.exception.UsuarioDuplicadoException;
+import aprimorar.auth.domain.exception.UsuarioEstadoInvalidoException;
+import aprimorar.auth.domain.exception.UsuarioNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import org.springframework.core.Ordered;

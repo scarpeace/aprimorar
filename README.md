@@ -40,15 +40,11 @@ Variáveis mínimas:
 ```env
 APP_ADMIN_USERNAME=admin@aprimorar.com
 APP_ADMIN_PASSWORD=admin123
-APRIMORAR_ADMIN_ID=b3a092e0-fc48-43ff-8b35-149eb81a033f
-APRIMORAR_GHOST_STUDENT_ID=00000000-0000-4000-8000-000000000002
-APRIMORAR_GHOST_COLABORADOR_ID=00000000-0000-4000-8000-000000000001
 ```
 
 Notas:
 
 - `APP_ADMIN_PASSWORD` é obrigatória
-- os IDs ghost devem bater com a migration inicial
 - no profile `dev`, o banco local já aponta para `localhost:5432/aprimorar` com `myuser/mypassword`
 
 Arquivos de exemplo:
@@ -226,13 +222,6 @@ Verifique principalmente:
 
 - `APP_ADMIN_PASSWORD`
 - `APP_ADMIN_USERNAME`
-
-### O backend não sobe por erro de usuário ghost
-
-Verifique:
-
-- `APRIMORAR_GHOST_STUDENT_ID`
-- `APRIMORAR_GHOST_COLABORADOR_ID`
 
 ### Não sei onde está o contexto técnico mais completo
 

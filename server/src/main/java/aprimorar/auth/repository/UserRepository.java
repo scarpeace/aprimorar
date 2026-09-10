@@ -1,6 +1,6 @@
-package aprimorar.auth.usuario.repository;
+package aprimorar.auth.repository;
 
-import aprimorar.auth.usuario.domain.User;
+import aprimorar.auth.domain.User;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

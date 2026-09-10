@@ -1,4 +1,4 @@
-package aprimorar.auth.usuario.domain.exception;
+package aprimorar.auth.domain.exception;
 
 public class UsuarioDadosInvalidosException extends RuntimeException {
 

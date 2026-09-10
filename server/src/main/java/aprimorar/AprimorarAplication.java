@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import aprimorar.auth.usuario.service.UserService;
+import aprimorar.auth.service.AuthService;
 
 @SpringBootApplication
 public class AprimorarAplication {
@@ -15,7 +15,7 @@ public class AprimorarAplication {
 	}
 
 	@Bean
-    public CommandLineRunner seedAdminUser(UserService userService) {
-		return args -> userService.ensureAdminUser();
+	public CommandLineRunner seedAdminUser(AuthService authService) {
+		return args -> authService.ensureAdminUser();
 	}
 }

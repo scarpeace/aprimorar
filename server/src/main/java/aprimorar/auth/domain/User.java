@@ -1,7 +1,7 @@
-package aprimorar.auth.usuario.domain;
+package aprimorar.auth.domain;
 
 import aprimorar.auth.Role;
-import aprimorar.auth.usuario.domain.exception.UsuarioEstadoInvalidoException;
+import aprimorar.auth.domain.exception.UsuarioEstadoInvalidoException;
 import aprimorar.common.utils.MapperUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -114,13 +114,11 @@ public class User implements UserDetails {
     }
 
     public void promoteToAdmin(String encodedPassword) {
-        if(this.role == Role.ALUNO || this.role == Role.COLABORADOR){
+        if (this.role == Role.ALUNO || this.role == Role.COLABORADOR) {
             throw new UsuarioEstadoInvalidoException("Não é permitido promover este usuário para ADMIN");
         }
         this.password = validatePassword(encodedPassword);
         this.role = Role.ADMIN;
         this.active = true;
     }
-
-
 }
