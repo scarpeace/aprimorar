@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
-import aprimorar.pessoas.colaborador.domain.enums.FuncoesColaborador;
+import aprimorar.pessoas.colaborador.enums.FuncoesColaborador;
 import aprimorar.pessoas.shared.endereco.domain.Endereco;
 
 class ColaboradorEntityTest {

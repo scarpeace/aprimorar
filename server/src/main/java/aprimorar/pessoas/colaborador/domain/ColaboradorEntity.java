@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import aprimorar.pessoas.colaborador.domain.enums.FuncoesColaborador;
+import aprimorar.pessoas.colaborador.enums.FuncoesColaborador;
 import aprimorar.pessoas.shared.endereco.domain.Endereco;
 
 @Getter

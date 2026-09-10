@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import aprimorar.pessoas.aluno.AlunoServiceImpl;
+import aprimorar.pessoas.aluno.service.AlunoServiceImpl;
 import aprimorar.pessoas.aluno.web.dto.AlunoFiltroRequest;
 import aprimorar.pessoas.aluno.web.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.web.dto.AlunoResponseDTO;

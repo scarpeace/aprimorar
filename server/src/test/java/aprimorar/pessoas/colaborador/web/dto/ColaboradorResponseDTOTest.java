@@ -3,7 +3,7 @@ package aprimorar.pessoas.colaborador.web.dto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import aprimorar.pessoas.colaborador.domain.ColaboradorEntity;
-import aprimorar.pessoas.colaborador.domain.enums.FuncoesColaborador;
+import aprimorar.pessoas.colaborador.enums.FuncoesColaborador;
 import aprimorar.pessoas.shared.endereco.domain.Endereco;
 
 import java.lang.reflect.Field;

@@ -48,24 +48,31 @@ aprimorar/
 ├── auth/
 ├── atendimentos/
 │   └── individuais/
+│       └── api/
 ├── pessoas/
 │   ├── aluno/
+│   │   └── api/
 │   ├── colaborador/
+│   │   └── api/
 │   └── shared/endereco/
-├── despesas/
+├── financeiro/
+│   └── despesas/
 ├── common/
 └── config/
 ```
 
 - `auth` concentra login e gerenciamento de usuários.
-- `atendimentos` expõe `Atendimento` e `AtendimentoService`; a implementação
-  atual fica em `atendimentos/individuais`.
-- `pessoas` expõe `Aluno`, `AlunoService`, `Colaborador` e `ColaboradorService`
-  na raiz; as implementações ficam em `aluno` e `colaborador`.
+- `atendimentos` expõe `Atendimento` e `AtendimentoService` em
+  `individuais/api`; a implementação atual fica em
+  `atendimentos/individuais/service`.
+- `pessoas` expõe `Aluno`/`AlunoService` em `aluno/api` e
+  `Colaborador`/`ColaboradorService` em `colaborador/api`; cada subdomínio possui
+  seu próprio `service` e `config`.
 - `pessoas/shared/endereco` contém o value object `Endereco` e seus DTOs; não
   é uma entidade nem possui ciclo de vida próprio.
 - `Responsavel` é um value object embutido em `AlunoEntity`, sem tabela própria.
-- `despesas` é independente de pessoas e atendimentos.
+- `financeiro` é o módulo financeiro; `financeiro/despesas` é seu subdomínio
+  interno, independente de pessoas e atendimentos.
 - `common` é aberto para modelos, utilitários e anotações compartilhadas.
 - `config` contém configuração transversal, não regras de domínio.
 
@@ -91,9 +98,8 @@ Dentro de `server/`:
 - `AlunoEntity` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável
 - despesas registra gastos operacionais independentes de aluno, colaborador e atendimento
-- pagamento do aluno e repasse do colaborador vivem no próprio atendimento
-- `dataPagamentoAluno` e `dataRepasseColaborador` nulos indicam pendência
-- status `CANCELADO` não permite alterar pagamento/repasse
+- os valores de pagamento do aluno e repasse do colaborador vivem no próprio
+  atendimento; datas de pagamento e status não fazem mais parte do atendimento
 - alunos e colaboradores não são excluídos; o campo `ativo` controla ativação e
   desativação
 - não existem registros ou realocação para aluno, colaborador ou responsável fantasma
@@ -105,8 +111,9 @@ Dentro de `server/`:
 - respostas de erro usam `org.springframework.http.ProblemDetail`
 - `GlobalExceptionHandler` em `aprimorar.config` tem baixa precedência e trata
   apenas erros transversais
-- handlers de `auth`, `pessoas`, `atendimentos.individuais` e `despesas` ficam
-  nos pacotes dos módulos e tratam as exceções próprias de cada domínio
+- handlers de `auth`, `pessoas/aluno`, `pessoas/colaborador`,
+  `atendimentos/individuais` e `financeiro/despesas` ficam nos pacotes dos
+  respectivos subdomínios e tratam as exceções próprias de cada domínio
 - anotações OpenAPI reutilizáveis ficam em `common/openapi`
 
 ### Autenticação

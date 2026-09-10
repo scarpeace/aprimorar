@@ -1,9 +1,8 @@
 package aprimorar.atendimentos.individuais.domain;
 
-import aprimorar.atendimentos.individuais.domain.enums.TipoAtendimento;
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoDadosInvalidosException;
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoEdicaoExpiradaException;
-import aprimorar.atendimentos.individuais.domain.exception.AtendimentoEstadoInvalidoException;
+import aprimorar.atendimentos.individuais.enums.TipoAtendimento;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -32,10 +31,6 @@ public class AtendimentoEntity implements Serializable {
     @Column(name = "tipo", nullable = false)
     private TipoAtendimento tipo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private StatusAtendimento status;
-
     @Column(name = "aluno_id", nullable = false)
     private UUID alunoId;
 
@@ -47,12 +42,6 @@ public class AtendimentoEntity implements Serializable {
 
     @Column(name = "repasse_colaborador", precision = 10, scale = 2, nullable = false)
     private BigDecimal repasseColaborador;
-
-    @Column(name = "data_pagamento_aluno")
-    private LocalDateTime dataPagamentoAluno;
-
-    @Column(name = "data_repasse_colaborador")
-    private LocalDateTime dataRepasseColaborador;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -86,7 +75,6 @@ public class AtendimentoEntity implements Serializable {
         this.dataHoraInicio = dataHoraInicio;
         this.dataHoraFim = dataHoraFim;
         this.tipo = tipo;
-        this.status = StatusAtendimento.AGENDADO;
         this.alunoId = alunoId;
         this.colaboradorId = colaboradorId;
         this.pagamentoAluno = pagamentoAluno;
@@ -102,6 +90,7 @@ public class AtendimentoEntity implements Serializable {
         BigDecimal pagamentoAluno,
         BigDecimal repasseColaborador
     ) {
+        validarJanelaEdicao();
         validarDatas(dataHoraInicio, dataHoraFim);
         validarValores(pagamentoAluno, repasseColaborador);
         reagendar(dataHoraInicio, dataHoraFim);
@@ -112,45 +101,6 @@ public class AtendimentoEntity implements Serializable {
         return this;
     }
 
-
-    public void togglePagamentoAluno() {
-        if (this.status == StatusAtendimento.CANCELADO) {
-            throw new AtendimentoEstadoInvalidoException("Não é possível alterar pagamentos de um atendimento cancelado");
-        }
-
-        this.dataPagamentoAluno = this.dataPagamentoAluno == null ? LocalDateTime.now() : null;
-    }
-
-    public void toggleRepasseColaborador() {
-        if (this.status == StatusAtendimento.CANCELADO) {
-            throw new AtendimentoEstadoInvalidoException("Não é possível alterar pagamentos de um atendimento cancelado");
-        }
-
-        this.dataRepasseColaborador = this.dataRepasseColaborador == null ? LocalDateTime.now() : null;
-    }
-
-    public void cancelar(){
-        if(this.status == StatusAtendimento.CANCELADO){
-            throw new AtendimentoEstadoInvalidoException("Evento já cancelado");
-        }
-
-        if(this.status == StatusAtendimento.CONCLUIDO){
-            throw new AtendimentoEstadoInvalidoException("Não é possível cancelar um evento concluído");
-        }
-        this.status = StatusAtendimento.CANCELADO;
-    }
-
-    public void concluir(){
-        if(this.status == StatusAtendimento.CANCELADO){
-            throw new AtendimentoEstadoInvalidoException("Não é possível concluir um evento cancelado");
-        }
-
-        if(this.status == StatusAtendimento.CONCLUIDO){
-            throw new AtendimentoEstadoInvalidoException("Evento já concluido");
-        }
-
-        this.status = StatusAtendimento.CONCLUIDO;
-    }
 
     public void reagendar(LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim){
 

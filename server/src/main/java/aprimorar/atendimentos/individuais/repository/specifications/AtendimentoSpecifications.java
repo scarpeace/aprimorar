@@ -1,9 +1,8 @@
 package aprimorar.atendimentos.individuais.repository.specifications;
 
 import aprimorar.atendimentos.individuais.domain.AtendimentoEntity;
+import aprimorar.atendimentos.individuais.enums.TipoAtendimento;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoFiltroRequest;
-import aprimorar.atendimentos.individuais.domain.StatusAtendimento;
-import aprimorar.atendimentos.individuais.domain.enums.TipoAtendimento;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -22,7 +21,6 @@ public final class AtendimentoSpecifications {
             .and(anoMesEntre(filtro.anoMes()))
             .and(inicioMaiorOuIgual(filtro.anoMes() == null ? filtro.inicio() : null))
             .and(fimMenorOuIgual(filtro.anoMes() == null ? filtro.fim() : null))
-            .and(statusIgual(filtro.status()))
             .and(tipoIgual(filtro.tipo()))
             .and(alunoIdIgual(filtro.alunoId()))
             .and(colaboradorIdIgual(filtro.colaboradorId()));
@@ -65,10 +63,6 @@ public final class AtendimentoSpecifications {
 
     public static Specification<AtendimentoEntity> alunoIdIgual(UUID alunoId) {
         return (root, query, cb) -> alunoId == null ? null : cb.equal(root.get("alunoId"), alunoId);
-    }
-
-    public static Specification<AtendimentoEntity> statusIgual(StatusAtendimento status) {
-        return (root, query, cb) -> status == null ? null : cb.equal(root.get("status"), status);
     }
 
     public static Specification<AtendimentoEntity> tipoIgual(TipoAtendimento tipo) {

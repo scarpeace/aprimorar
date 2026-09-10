@@ -1,10 +1,9 @@
 package aprimorar.atendimentos.individuais.web.dto;
 
 import aprimorar.atendimentos.individuais.domain.AtendimentoEntity;
-import aprimorar.atendimentos.individuais.domain.StatusAtendimento;
-import aprimorar.atendimentos.individuais.domain.enums.TipoAtendimento;
-import aprimorar.pessoas.Aluno;
-import aprimorar.pessoas.Colaborador;
+import aprimorar.atendimentos.individuais.enums.TipoAtendimento;
+import aprimorar.pessoas.aluno.api.Aluno;
+import aprimorar.pessoas.colaborador.api.Colaborador;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -54,18 +53,6 @@ public record AtendimentoResponse(
     @Schema(nullable = false, description = "Nome do colaborador vinculado ao atendimento", example = "João Santos")
     String nomeColaborador,
 
-    @Nullable
-    @Schema(nullable = true, description = "Data do pagamento do aluno", example = "2024-03-10T15:33:42Z")
-    LocalDateTime dataPagamentoAluno,
-
-    @Nullable
-    @Schema(nullable = true, description = "Data do repasse do colaborador", example = "2024-03-10T15:33:42Z")
-    LocalDateTime dataRepasseColaborador,
-
-    @NotNull
-    @Schema(nullable = false, description = "Status do atendimento", example = "AGENDADO")
-    StatusAtendimento status,
-
     @NotNull
     @Schema(nullable = false, description = "Data de criacao do atendimento", example = "2024-03-10T15:33:42Z")
     LocalDateTime createdAt,
@@ -86,9 +73,6 @@ public record AtendimentoResponse(
             aluno.nome(),
             atendimento.getColaboradorId(),
             colaborador.nome(),
-            atendimento.getDataPagamentoAluno(),
-            atendimento.getDataRepasseColaborador(),
-            atendimento.getStatus(),
             atendimento.getCreatedAt(),
             atendimento.getUpdatedAt()
         );

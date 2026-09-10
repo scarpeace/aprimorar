@@ -1,7 +1,7 @@
 package aprimorar.atendimentos.individuais.web.controller;
 
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoFiltroRequest;
-import aprimorar.atendimentos.individuais.AtendimentoServiceImpl;
+import aprimorar.atendimentos.individuais.service.AtendimentoServiceImpl;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

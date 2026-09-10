@@ -1,11 +1,11 @@
 package aprimorar.atendimentos.individuais.web.dto;
 
-import aprimorar.atendimentos.individuais.domain.StatusAtendimento;
-import aprimorar.atendimentos.individuais.domain.enums.TipoAtendimento;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.UUID;
+
+import aprimorar.atendimentos.individuais.enums.TipoAtendimento;
 
 @Schema(description = "Filtros opcionais para listar atendimentos")
 public record AtendimentoFiltroRequest(
@@ -17,14 +17,8 @@ public record AtendimentoFiltroRequest(
     LocalDateTime inicio,
     @Schema(description = "Data final", format = "date-time", nullable = true)
     LocalDateTime fim,
-    @Schema(description = "Status do atendimento", nullable = true)
-    StatusAtendimento status,
     @Schema(description = "Tipo do atendimento", nullable = true)
     TipoAtendimento tipo,
-    @Schema(description = "Ocultar atendimentos cobrados", nullable = true)
-    Boolean ocultarCobrados,
-    @Schema(description = "Ocultar atendimentos pagos", nullable = true)
-    Boolean ocultarPagos,
     @Schema(description = "ID do aluno", nullable = true)
     UUID alunoId,
     @Schema(description = "ID do colaborador", nullable = true)

@@ -47,47 +47,4 @@ public interface AtendimentoRepository extends JpaRepository<AtendimentoEntity, 
         @Param("ignoredAtendimentoId") Long ignoredAtendimentoId
     );
 
-    @Query(
-        """
-            SELECT count(a) > 0
-            FROM AtendimentoEntity a
-            WHERE a.alunoId = :alunoId
-              AND a.status = aprimorar.atendimentos.individuais.domain.StatusAtendimento.AGENDADO
-        """
-    )
-    boolean alunoPossuiAtendimentoAgendado(@Param("alunoId") UUID alunoId);
-
-    @Query(
-        """
-            SELECT count(a) > 0
-            FROM AtendimentoEntity a
-            WHERE a.alunoId = :alunoId
-              AND a.status = aprimorar.atendimentos.individuais.domain.StatusAtendimento.CONCLUIDO
-              AND a.dataPagamentoAluno IS NULL
-        """
-    )
-    boolean alunoPossuiPagamentoAlunoPendente(@Param("alunoId") UUID alunoId);
-
-    @Query(
-        """
-            SELECT count(a) > 0
-            FROM AtendimentoEntity a
-            WHERE a.colaboradorId = :colaboradorId
-              AND a.status = aprimorar.atendimentos.individuais.domain.StatusAtendimento.AGENDADO
-        """
-    )
-    boolean colaboradorPossuiAtendimentoAgendado(@Param("colaboradorId") UUID colaboradorId);
-
-    @Query(
-        """
-            SELECT count(a) > 0
-            FROM AtendimentoEntity a
-            WHERE a.colaboradorId = :colaboradorId
-              AND a.status = aprimorar.atendimentos.individuais.domain.StatusAtendimento.CONCLUIDO
-              AND a.dataRepasseColaborador IS NULL
-        """
-    )
-    boolean colaboradorPossuiRepassePendente(@Param("colaboradorId") UUID colaboradorId);
-
-
 }

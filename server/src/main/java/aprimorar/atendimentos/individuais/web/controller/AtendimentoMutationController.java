@@ -3,7 +3,7 @@ package aprimorar.atendimentos.individuais.web.controller;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoRequest;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoRecorrenteRequest;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoResponse;
-import aprimorar.atendimentos.individuais.AtendimentoServiceImpl;
+import aprimorar.atendimentos.individuais.service.AtendimentoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,14 +46,6 @@ public class AtendimentoMutationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoService.agendarRecorrente(request));
     }
 
-    @PatchMapping("/{id}/concluir")
-    @Operation(operationId = "concluirAtendimento", description = "Muda o status de um atendimento para CONCLUIDO.")
-    @ApiResponse(responseCode = "200", description = "Atendimento concluído e retornado com os dados consolidados de aluno e colaborador.")
-    public ResponseEntity<AtendimentoResponse> concluir(@PathVariable Long id) {
-        atendimentoService.concluir(id);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
-    }
-
     @PatchMapping("/{id}")
     @Operation(operationId = "updateAtendimento", description = "Atualiza um atendimento existente.")
     @ApiResponse(responseCode = "200", description = "Atendimento atualizado e retornado com os dados consolidados de aluno e colaborador.")
@@ -65,14 +57,6 @@ public class AtendimentoMutationController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @PatchMapping("/{id}/cancelar")
-    @Operation(operationId = "cancelarAtendimento", description = "Muda o status de um atendimento para CANCELADO.")
-    @ApiResponse(responseCode = "200", description = "Atendimento cancelado e retornado com os dados consolidados de aluno e colaborador.")
-    public ResponseEntity<AtendimentoResponse> cancelar(@PathVariable Long id) {
-        atendimentoService.cancelar(id);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
-    }
-
     @DeleteMapping("/{id}")
     @Operation(operationId = "excluirAtendimento", description = "Remove definitivamente um atendimento.")
     @ApiResponse(responseCode = "204", description = "Atendimento removido sem corpo de resposta.")
@@ -81,17 +65,4 @@ public class AtendimentoMutationController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/togglePagamentoAluno")
-    @Operation(operationId = "togglePagamentoAluno", description = "Alterna o pagamento do aluno.")
-    @ApiResponse(responseCode = "200", description = "Pagamento do aluno alternado.")
-    public ResponseEntity<AtendimentoResponse> togglePagamentoAluno(@PathVariable Long id) {
-        return ResponseEntity.ok(atendimentoService.togglePagamentoAluno(id));
-    }
-
-    @PatchMapping("/{id}/toggleRepasseColaborador")
-    @Operation(operationId = "toggleRepasseColaborador", description = "Alterna o repasse do colaborador.")
-    @ApiResponse(responseCode = "200", description = "Repasse do colaborador alternado.")
-    public ResponseEntity<AtendimentoResponse> toggleRepasseColaborador(@PathVariable Long id) {
-        return ResponseEntity.ok(atendimentoService.toggleRepasseColaborador(id));
-    }
 }

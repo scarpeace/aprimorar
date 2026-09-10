@@ -1,7 +1,7 @@
 package aprimorar.atendimentos.individuais.web.dto;
 
 import aprimorar.atendimentos.individuais.domain.AtendimentoEntity;
-import aprimorar.atendimentos.individuais.domain.enums.TipoAtendimento;
+import aprimorar.atendimentos.individuais.enums.TipoAtendimento;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;

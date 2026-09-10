@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import aprimorar.pessoas.colaborador.ColaboradorServiceImpl;
+import aprimorar.pessoas.colaborador.service.ColaboradorServiceImpl;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradorFiltroRequest;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradorRequestDTO;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradorResponseDTO;
