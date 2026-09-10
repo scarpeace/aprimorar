@@ -1,4 +1,4 @@
-package aprimorar.pessoas.colaborador.repository.web.dto;
+package aprimorar.pessoas.aluno.web.dto;
 
 import aprimorar.common.utils.MapperUtils;
 import aprimorar.pessoas.aluno.domain.Responsavel;

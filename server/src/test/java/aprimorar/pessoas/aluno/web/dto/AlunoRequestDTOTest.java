@@ -2,8 +2,8 @@ package aprimorar.pessoas.aluno.web.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import aprimorar.pessoas.colaborador.repository.web.dto.AlunoRequestDTO;
-import aprimorar.pessoas.colaborador.repository.web.dto.ResponsavelRequestDTO;
+import aprimorar.pessoas.aluno.web.dto.AlunoRequestDTO;
+import aprimorar.pessoas.aluno.web.dto.ResponsavelRequestDTO;
 import aprimorar.pessoas.shared.endereco.web.dto.EnderecoRequestDTO;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;

@@ -63,10 +63,19 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/archive")
-    @Operation(operationId = "archiveUser", summary = "Toggle active status of a user")
-    @ApiResponse(responseCode = "200", description = "Status ativo alternado com sucesso")
-    public ResponseEntity<UserResponseDTO> archiveUser(@PathVariable UUID id) {
-        return ResponseEntity.ok(userService.toggleActive(id));
+    @PatchMapping("/{id}/deactivate")
+    @Operation(operationId = "deactivateUser", summary = "Deactivate a user")
+    @ApiResponse(responseCode = "204", description = "Usuário desativado com sucesso")
+    public ResponseEntity<Void> deactivateUser(@PathVariable UUID id) {
+        userService.deactivateUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/activate")
+    @Operation(operationId = "activateUser", summary = "Activate a user")
+    @ApiResponse(responseCode = "204", description = "Usuário ativado com sucesso")
+    public ResponseEntity<Void> activateUser(@PathVariable UUID id) {
+        userService.activateUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

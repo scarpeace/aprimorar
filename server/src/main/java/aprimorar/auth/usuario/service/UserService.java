@@ -12,7 +12,6 @@ import aprimorar.auth.usuario.repository.UserRepository;
 import aprimorar.common.utils.MapperUtils;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -101,7 +100,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDTO toggleActive(UUID id) {
+    public void deactivateUser(UUID id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
 
@@ -109,8 +108,19 @@ public class UserService {
             throw new UsuarioEstadoInvalidoException("Não é permitido alterar este usuário");
         }
 
-        user.toggleActive();
-        return userMapper.toDto(user);
+        user.deactivate();
+    }
+
+    @Transactional
+    public void activateUser(UUID id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
+
+        if (user.getRole() == Role.ADMIN) {
+            throw new UsuarioEstadoInvalidoException("Não é permitido alterar este usuário");
+        }
+
+        user.activate();
     }
 
     @Transactional(readOnly = true)
@@ -129,13 +139,4 @@ public class UserService {
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
     }
 
-    @Transactional(readOnly = true)
-    public Optional<User> findActiveByUsername(String username) {
-        String normalizedUsername = MapperUtils.normalizeEmail(username);
-        if (normalizedUsername == null) {
-            return Optional.empty();
-        }
-
-        return userRepository.findByUsernameAndActiveTrue(normalizedUsername);
-    }
 }

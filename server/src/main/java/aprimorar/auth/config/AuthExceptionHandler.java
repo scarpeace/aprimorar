@@ -6,6 +6,8 @@ import aprimorar.auth.usuario.domain.exception.UsuarioEstadoInvalidoException;
 import aprimorar.auth.usuario.domain.exception.UsuarioNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = "aprimorar.auth")
 public class AuthExceptionHandler {
 

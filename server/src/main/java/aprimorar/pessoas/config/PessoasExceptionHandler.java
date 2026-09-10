@@ -8,12 +8,15 @@ import aprimorar.pessoas.colaborador.domain.exception.ColaboradorEstadoInvalidoE
 import aprimorar.pessoas.colaborador.domain.exception.ColaboradorNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class PessoasExceptionHandler {
 

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import aprimorar.pessoas.aluno.domain.AlunoEntity;
 import aprimorar.pessoas.aluno.domain.Responsavel;
-import aprimorar.pessoas.colaborador.repository.web.dto.AlunoResponseDTO;
+import aprimorar.pessoas.aluno.web.dto.AlunoResponseDTO;
 import aprimorar.pessoas.shared.endereco.domain.Endereco;
 
 import java.lang.reflect.Field;
