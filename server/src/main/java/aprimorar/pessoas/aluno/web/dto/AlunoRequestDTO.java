@@ -1,12 +1,9 @@
 package aprimorar.pessoas.aluno.web.dto;
 
 import java.time.LocalDate;
-import java.util.UUID;
-
 import aprimorar.common.utils.MapperUtils;
 import aprimorar.pessoas.aluno.domain.AlunoEntity;
-import aprimorar.pessoas.endereco.web.dto.EnderecoRequestDTO;
-import aprimorar.pessoas.responsavel.domain.ResponsavelEntity;
+import aprimorar.pessoas.shared.endereco.web.dto.EnderecoRequestDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -47,11 +44,12 @@ public record AlunoRequestDTO(
     @Schema(nullable = false,description = "Endereço do aluno", implementation = EnderecoRequestDTO.class)
     EnderecoRequestDTO endereco,
 
+    @Valid
     @NotNull(message = "Aluno não pode ser criado sem um responsável")
-    @Schema(nullable = false,description = "ID do responsável vinculado ao aluno")
-    UUID responsavelId
+    @Schema(nullable = false, description = "Dados do responsável do aluno", implementation = ResponsavelRequestDTO.class)
+    ResponsavelRequestDTO responsavel
 ) {
-    public AlunoEntity toEntity(ResponsavelEntity responsavel) {
+    public AlunoEntity toEntity() {
         return new AlunoEntity(
             this.nome(),
             this.dataNascimento(),
@@ -59,7 +57,7 @@ public record AlunoRequestDTO(
             MapperUtils.normalizeCpf(this.cpf()),
             MapperUtils.normalizeEmail(this.email()),
             this.escola(),
-            responsavel,
+            this.responsavel().toDomain(),
             this.endereco().toEntity()
         );
     }

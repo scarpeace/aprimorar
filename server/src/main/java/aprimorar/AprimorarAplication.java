@@ -1,6 +1,5 @@
 package aprimorar;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,11 +15,7 @@ public class AprimorarAplication {
 	}
 
 	@Bean
-	public CommandLineRunner seedAdminUser(
-		UserService userService,
-		@Value("${aprimorar.admin-username:}") String adminUsername,
-		@Value("${aprimorar.admin-password:}") String adminPassword
-	) {
-		return args -> userService.ensureAdminUser(adminUsername, adminPassword);
+    public CommandLineRunner seedAdminUser(UserService userService) {
+		return args -> userService.ensureAdminUser();
 	}
 }

@@ -7,12 +7,11 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import aprimorar.pessoas.aluno.domain.AlunoEntity;
+import aprimorar.pessoas.aluno.domain.Responsavel;
 import aprimorar.pessoas.aluno.domain.exception.AlunoNaoEncontradoException;
 import aprimorar.pessoas.aluno.repository.AlunoRepository;
 import aprimorar.pessoas.aluno.web.dto.AlunoFiltroRequest;
-import aprimorar.pessoas.endereco.domain.Endereco;
-import aprimorar.pessoas.responsavel.domain.ResponsavelEntity;
-import aprimorar.pessoas.responsavel.repository.ResponsavelRepository;
+import aprimorar.pessoas.shared.endereco.domain.Endereco;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -31,20 +30,14 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class AlunoServiceImplQueryTest {
 
-    private static final UUID GHOST_ID = UUID.fromString("00000000-0000-4000-8000-000000000002");
-    private static final UUID RESPONSAVEL_ID = UUID.fromString("11111111-1111-4111-8111-111111111111");
-
     @Mock
     private AlunoRepository alunoRepo;
-
-    @Mock
-    private ResponsavelRepository responsavelRepo;
 
     private AlunoServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        service = new AlunoServiceImpl(alunoRepo, responsavelRepo, GHOST_ID.toString());
+        service = new AlunoServiceImpl(alunoRepo);
     }
 
     @Test
@@ -59,18 +52,7 @@ class AlunoServiceImplQueryTest {
         assertEquals(1, response.getTotalElements());
         assertEquals(aluno.getId(), response.getContent().getFirst().id());
         assertEquals("Ana Silva", response.getContent().getFirst().nome());
-        assertEquals(RESPONSAVEL_ID, response.getContent().getFirst().responsavelId());
-    }
-
-    @Test
-    void shouldGetAlunosKpis() {
-        when(alunoRepo.countByIdNot(GHOST_ID)).thenReturn(5L);
-        when(alunoRepo.countByActiveTrueAndIdNot(GHOST_ID)).thenReturn(4L);
-
-        var response = service.getAlunosKpis();
-
-        assertEquals(5, response.totalAlunos());
-        assertEquals(4, response.totalAlunosAtivos());
+        assertEquals("João Pereira", response.getContent().getFirst().responsavel().nome());
     }
 
     @Test
@@ -98,7 +80,7 @@ class AlunoServiceImplQueryTest {
 
         assertEquals(id, response.id());
         assertEquals("Ana Silva", response.nome());
-        assertEquals(RESPONSAVEL_ID, response.responsavelId());
+        assertEquals("João Pereira", response.responsavel().nome());
     }
 
     @Test
@@ -128,19 +110,6 @@ class AlunoServiceImplQueryTest {
         assertEquals("Aluno não encontrado no banco de dados", ex.getMessage());
     }
 
-    @Test
-    void shouldGetAlunosByResponsavelId() {
-        var aluno = aluno("Ana Silva");
-
-        when(alunoRepo.findAllByResponsavelId(RESPONSAVEL_ID)).thenReturn(List.of(aluno));
-
-        var response = service.getAlunosByResponsavelId(RESPONSAVEL_ID);
-
-        assertEquals(1, response.size());
-        assertEquals(aluno.getId(), response.getFirst().id());
-        assertEquals("Ana Silva", response.getFirst().nome());
-    }
-
     private static AlunoEntity aluno(String nome) {
         var aluno = new AlunoEntity(
             nome,
@@ -156,23 +125,17 @@ class AlunoServiceImplQueryTest {
         return aluno;
     }
 
-    private static ResponsavelEntity responsavel() {
-        var responsavel = new ResponsavelEntity(
+    private static Responsavel responsavel() {
+        return new Responsavel(
             "João Pereira",
-            LocalDate.of(1980, 5, 21),
             "61988887777",
             "98765432100",
             "joao@example.com"
         );
-        setId(responsavel, RESPONSAVEL_ID);
-        return responsavel;
     }
 
     private static void setId(AlunoEntity aluno, UUID id) {
         ReflectionTestUtils.setField(aluno, "id", id);
     }
 
-    private static void setId(ResponsavelEntity responsavel, UUID id) {
-        ReflectionTestUtils.setField(responsavel, "id", id);
-    }
 }

@@ -3,13 +3,13 @@ package aprimorar.pessoas.aluno.web.dto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import aprimorar.pessoas.aluno.domain.AlunoEntity;
-import aprimorar.pessoas.endereco.domain.Endereco;
-import aprimorar.pessoas.responsavel.domain.ResponsavelEntity;
+import aprimorar.pessoas.aluno.domain.Responsavel;
+import aprimorar.pessoas.colaborador.repository.web.dto.AlunoResponseDTO;
+import aprimorar.pessoas.shared.endereco.domain.Endereco;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +17,8 @@ class AlunoResponseDTOTest {
 
     @Test
     void shouldConvertAlunoEntityToDto() {
-        var responsavel = new ResponsavelEntity(
+        var responsavel = new Responsavel(
             "João Silva",
-            LocalDate.of(1980, 1, 1),
             "(11) 99999-9999",
             "987.654.321-00",
             "joao.silva@example.com"
@@ -35,7 +34,6 @@ class AlunoResponseDTOTest {
             responsavel,
             new Endereco("Rua A", "10", "Centro", "Brasilia", "DF", "70000-000", "Apto 1")
         );
-        setField(responsavel, "id", UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
         setField(aluno, "id", UUID.fromString("223e4567-e89b-12d3-a456-426614174000"));
         setField(aluno, "createdAt", LocalDateTime.of(2024, 1, 1, 10, 0));
         setField(aluno, "updatedAt", LocalDateTime.of(2024, 1, 2, 10, 0));
@@ -48,8 +46,8 @@ class AlunoResponseDTOTest {
         assertEquals("123.456.789-00", dto.cpf());
         assertEquals(LocalDate.of(2000, 1, 1), dto.dataNascimento());
         assertEquals("Colégio Aprimorar", dto.escola());
-        assertEquals(Period.between(LocalDate.of(2000, 1, 1), LocalDate.now()).getYears(), dto.idade());
-        assertEquals(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"), dto.responsavelId());
+        assertEquals("João Silva", dto.responsavel().nome());
+        assertEquals("987.654.321-00", dto.responsavel().cpf());
         assertEquals(true, dto.active());
         assertEquals(LocalDateTime.of(2024, 1, 1, 10, 0), dto.createdAt());
         assertEquals(LocalDateTime.of(2024, 1, 2, 10, 0), dto.updatedAt());

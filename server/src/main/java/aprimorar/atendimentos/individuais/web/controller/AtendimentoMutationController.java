@@ -3,11 +3,8 @@ package aprimorar.atendimentos.individuais.web.controller;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoRequest;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoRecorrenteRequest;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoResponse;
-import aprimorar.common.models.ErrorResponse;
 import aprimorar.atendimentos.individuais.AtendimentoServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -37,11 +34,6 @@ public class AtendimentoMutationController {
     @PostMapping
     @Operation(operationId = "agendarAtendimento", description = "Cria um atendimento vinculando aluno e colaborador.")
     @ApiResponse(responseCode = "201", description = "Atendimento agendado e retornado com os dados consolidados de aluno e colaborador.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de validação",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-    )
     public ResponseEntity<AtendimentoResponse> agendar(@RequestBody @Valid AtendimentoRequest request) {
         AtendimentoResponse created = atendimentoService.agendar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -50,11 +42,6 @@ public class AtendimentoMutationController {
     @PostMapping("/recorrentes")
     @Operation(operationId = "agendarAtendimentosRecorrentes", description = "Cria atendimentos semanais até a data final informada.")
     @ApiResponse(responseCode = "201", description = "Atendimentos recorrentes agendados.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de validação",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-    )
     public ResponseEntity<List<AtendimentoResponse>> agendarRecorrente(@RequestBody @Valid AtendimentoRecorrenteRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoService.agendarRecorrente(request));
     }
@@ -97,11 +84,6 @@ public class AtendimentoMutationController {
     @PatchMapping("/{id}/togglePagamentoAluno")
     @Operation(operationId = "togglePagamentoAluno", description = "Alterna o pagamento do aluno.")
     @ApiResponse(responseCode = "200", description = "Pagamento do aluno alternado.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-    )
     public ResponseEntity<AtendimentoResponse> togglePagamentoAluno(@PathVariable Long id) {
         return ResponseEntity.ok(atendimentoService.togglePagamentoAluno(id));
     }
@@ -109,11 +91,6 @@ public class AtendimentoMutationController {
     @PatchMapping("/{id}/toggleRepasseColaborador")
     @Operation(operationId = "toggleRepasseColaborador", description = "Alterna o repasse do colaborador.")
     @ApiResponse(responseCode = "200", description = "Repasse do colaborador alternado.")
-    @ApiResponse(
-        responseCode = "400",
-        description = "Falha de regra de negócio",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-    )
     public ResponseEntity<AtendimentoResponse> toggleRepasseColaborador(@PathVariable Long id) {
         return ResponseEntity.ok(atendimentoService.toggleRepasseColaborador(id));
     }

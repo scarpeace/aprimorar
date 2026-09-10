@@ -5,11 +5,10 @@ import aprimorar.atendimentos.individuais.domain.exception.AtendimentoDadosInval
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoEdicaoExpiradaException;
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoEstadoInvalidoException;
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoNaoEncontradoException;
-import aprimorar.common.models.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.net.URI;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,8 +17,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class AtendimentosExceptionHandler {
 
     @ExceptionHandler(AtendimentoNaoEncontradoException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(AtendimentoNaoEncontradoException ex, HttpServletRequest request) {
-        return response(HttpStatus.NOT_FOUND, "Atendimento não encontrado", ex.getMessage());
+    public ResponseEntity<ProblemDetail> handleNotFound(AtendimentoNaoEncontradoException ex, HttpServletRequest request) {
+        return response(HttpStatus.NOT_FOUND, "Atendimento não encontrado", ex.getMessage(), request);
     }
 
     @ExceptionHandler({
@@ -28,17 +27,22 @@ public class AtendimentosExceptionHandler {
         AtendimentoEdicaoExpiradaException.class,
         AtendimentoEstadoInvalidoException.class
     })
-    public ResponseEntity<ErrorResponse> handleBadRequest(RuntimeException ex, HttpServletRequest request) {
-        return response(HttpStatus.BAD_REQUEST, "Erro de regra de negócio", ex.getMessage());
+    public ResponseEntity<ProblemDetail> handleBadRequest(RuntimeException ex, HttpServletRequest request) {
+        return response(HttpStatus.BAD_REQUEST, "Erro de regra de negócio", ex.getMessage(), request);
     }
 
-    private ResponseEntity<ErrorResponse> response(HttpStatus status, String error, String message) {
-        ErrorResponse body = new ErrorResponse(
-            LocalDateTime.now(),
-            status.value(),
-            error,
-            List.of(message)
+    private ResponseEntity<ProblemDetail> response(
+        HttpStatus status,
+        String title,
+        String detail,
+        HttpServletRequest request
+    ) {
+        ProblemDetail body = ProblemDetail.forStatusAndDetail(
+            status,
+            detail == null ? status.getReasonPhrase() : detail
         );
+        body.setTitle(title);
+        body.setInstance(URI.create(request.getRequestURI()));
         return ResponseEntity.status(status).body(body);
     }
 }

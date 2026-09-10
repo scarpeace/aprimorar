@@ -1,16 +1,18 @@
 package aprimorar.config;
 
-import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
+import java.util.Base64;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -21,11 +23,28 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 @Configuration
 public class JwtConfig {
 
-    @Value("${jwt.public.key}")
-    private RSAPublicKey publicKey;
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
-    @Value("${jwt.private.key}")
-    private RSAPrivateKey privateKey;
+    @Bean
+    public SecretKey jwtSecretKey() {
+        if (jwtSecret == null || jwtSecret.isBlank()) {
+            throw new IllegalStateException("A variável JWT_SECRET é obrigatória");
+        }
+
+        byte[] keyBytes;
+        try {
+            keyBytes = Base64.getDecoder().decode(jwtSecret);
+        } catch (IllegalArgumentException exception) {
+            throw new IllegalStateException("A variável JWT_SECRET deve estar em Base64", exception);
+        }
+
+        if (keyBytes.length < 32) {
+            throw new IllegalStateException("A variável JWT_SECRET deve ter pelo menos 32 bytes");
+        }
+
+        return new SecretKeySpec(keyBytes, "HmacSHA256");
+    }
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
@@ -39,13 +58,18 @@ public class JwtConfig {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(publicKey).build();
+    public JwtDecoder jwtDecoder(SecretKey jwtSecretKey) {
+        return NimbusJwtDecoder.withSecretKey(jwtSecretKey)
+            .macAlgorithm(MacAlgorithm.HS256)
+            .build();
     }
 
     @Bean
-    public JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
+    public JwtEncoder jwtEncoder(SecretKey jwtSecretKey) {
+        var jwk = new OctetSequenceKey.Builder(jwtSecretKey)
+            .algorithm(JWSAlgorithm.HS256)
+            .build();
+
         return new NimbusJwtEncoder(new ImmutableJWKSet<>(new JWKSet(jwk)));
     }
 

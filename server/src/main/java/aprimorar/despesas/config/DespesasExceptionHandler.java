@@ -1,11 +1,10 @@
 package aprimorar.despesas.config;
 
-import aprimorar.common.models.ErrorResponse;
 import aprimorar.despesas.domain.exception.DespesaNaoEncontradaException;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
+import java.net.URI;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,13 +13,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class DespesasExceptionHandler {
 
     @ExceptionHandler(DespesaNaoEncontradaException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(DespesaNaoEncontradaException ex) {
-        ErrorResponse body = new ErrorResponse(
-            LocalDateTime.now(),
-            HttpStatus.NOT_FOUND.value(),
-            "Despesa não encontrada",
-            List.of(ex.getMessage())
+    public ResponseEntity<ProblemDetail> handleNotFound(DespesaNaoEncontradaException ex, HttpServletRequest request) {
+        ProblemDetail body = ProblemDetail.forStatusAndDetail(
+            HttpStatus.NOT_FOUND,
+            ex.getMessage() == null ? HttpStatus.NOT_FOUND.getReasonPhrase() : ex.getMessage()
         );
+        body.setTitle("Despesa não encontrada");
+        body.setInstance(URI.create(request.getRequestURI()));
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 }

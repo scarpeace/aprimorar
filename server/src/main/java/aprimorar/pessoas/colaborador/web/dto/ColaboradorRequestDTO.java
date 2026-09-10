@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import aprimorar.common.utils.MapperUtils;
 import aprimorar.pessoas.colaborador.domain.ColaboradorEntity;
 import aprimorar.pessoas.colaborador.domain.enums.FuncoesColaborador;
-import aprimorar.pessoas.endereco.web.dto.EnderecoRequestDTO;
+import aprimorar.pessoas.shared.endereco.web.dto.EnderecoRequestDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

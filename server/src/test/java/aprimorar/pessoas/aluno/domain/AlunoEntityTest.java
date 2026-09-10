@@ -6,8 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import aprimorar.pessoas.endereco.domain.Endereco;
-import aprimorar.pessoas.responsavel.domain.ResponsavelEntity;
+import aprimorar.pessoas.shared.endereco.domain.Endereco;
 import org.junit.jupiter.api.Test;
 
 class AlunoEntityTest {
@@ -55,9 +54,8 @@ class AlunoEntityTest {
             "(21) 98888-7777",
             "maria.silva@example.com",
             "Escola Nova",
-            new ResponsavelEntity(
+            new Responsavel(
                 "Maria Ramos",
-                LocalDate.of(1980, 3, 3),
                 "(21) 97777-6666",
                 "987.654.321-00",
                 "maria.ramos@example.com"
@@ -76,13 +74,13 @@ class AlunoEntityTest {
     }
 
     @Test
-    void shouldArchiveAndUnarchiveAluno() {
+    void shouldDeactivateAndActivateAluno() {
         var aluno = validAluno();
 
-        aluno.archive();
+        aluno.deactivate();
         assertFalse(aluno.getActive());
 
-        aluno.unarchive();
+        aluno.activate();
         assertTrue(aluno.getActive());
     }
 
@@ -112,10 +110,9 @@ class AlunoEntityTest {
         );
     }
 
-    private static ResponsavelEntity validResponsavel() {
-        return new ResponsavelEntity(
+    private static Responsavel validResponsavel() {
+        return new Responsavel(
             "João Silva",
-            LocalDate.of(1980, 1, 1),
             "(11) 99999-9999",
             "123.456.789-01",
             "joao.silva@example.com"

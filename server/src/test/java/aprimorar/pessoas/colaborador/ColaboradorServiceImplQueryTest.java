@@ -11,7 +11,7 @@ import aprimorar.pessoas.colaborador.domain.enums.FuncoesColaborador;
 import aprimorar.pessoas.colaborador.domain.exception.ColaboradorNaoEncontradoException;
 import aprimorar.pessoas.colaborador.repository.ColaboradorRepository;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradorFiltroRequest;
-import aprimorar.pessoas.endereco.domain.Endereco;
+import aprimorar.pessoas.shared.endereco.domain.Endereco;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +30,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class ColaboradorServiceImplQueryTest {
 
-    private static final UUID GHOST_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
 
     @Mock
     private ColaboradorRepository colaboradorRepo;
@@ -39,7 +38,7 @@ class ColaboradorServiceImplQueryTest {
 
     @BeforeEach
     void setUp() {
-        service = new ColaboradorServiceImpl(colaboradorRepo, GHOST_ID.toString());
+        service = new ColaboradorServiceImpl(colaboradorRepo);
     }
 
     @Test

@@ -3,7 +3,7 @@ package aprimorar.pessoas.colaborador.web.dto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import aprimorar.pessoas.colaborador.domain.enums.FuncoesColaborador;
-import aprimorar.pessoas.endereco.web.dto.EnderecoRequestDTO;
+import aprimorar.pessoas.shared.endereco.web.dto.EnderecoRequestDTO;
 
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;

@@ -83,7 +83,7 @@ public class User {
         this.active = !this.active;
     }
 
-    public void syncAdminAccess(String encodedPassword) {
+    public void promoteToAdmin(String encodedPassword) {
         this.password = validatePassword(encodedPassword);
         this.role = Role.ADMIN;
         this.active = true;

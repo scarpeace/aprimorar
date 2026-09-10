@@ -4,23 +4,18 @@ import aprimorar.pessoas.Aluno;
 import aprimorar.pessoas.AlunoService;
 import aprimorar.pessoas.aluno.domain.AlunoEntity;
 import aprimorar.pessoas.aluno.domain.exception.AlunoDuplicadoException;
-import aprimorar.pessoas.aluno.domain.exception.AlunoEstadoInvalidoException;
 import aprimorar.pessoas.aluno.domain.exception.AlunoNaoEncontradoException;
 import aprimorar.pessoas.aluno.repository.AlunoRepository;
 import aprimorar.pessoas.aluno.repository.specifications.AlunoSpecifications;
 import aprimorar.pessoas.aluno.web.dto.AlunoFiltroRequest;
 import aprimorar.pessoas.aluno.web.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.web.dto.AlunoResponseDTO;
-import aprimorar.pessoas.aluno.web.dto.AlunosKpisDTO;
 import aprimorar.pessoas.aluno.web.dto.AlunosListDTO;
-import aprimorar.pessoas.responsavel.domain.ResponsavelEntity;
-import aprimorar.pessoas.responsavel.domain.exception.ResponsavelNaoEncontradoException;
-import aprimorar.pessoas.responsavel.repository.ResponsavelRepository;
+
 import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,29 +29,26 @@ public class AlunoServiceImpl implements AlunoService {
     private static final Logger log = LoggerFactory.getLogger(AlunoServiceImpl.class);
 
     private final AlunoRepository alunoRepo;
-    private final ResponsavelRepository responsavelRepo;
-    private final UUID ghostStudentId;
 
-    public AlunoServiceImpl(
-        AlunoRepository alunoRepo,
-        ResponsavelRepository responsavelRepo,
-        @Value("${aprimorar.ghost-student-id}") String ghostStudentId
-    ) {
+    public AlunoServiceImpl(AlunoRepository alunoRepo) {
         this.alunoRepo = alunoRepo;
-        this.responsavelRepo = responsavelRepo;
-        this.ghostStudentId = UUID.fromString(ghostStudentId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Aluno buscarPorId(UUID alunoId) {
         AlunoEntity aluno = findAlunoOrThrow(alunoId);
-        return new Aluno(aluno.getId(), aluno.getNome(), aluno.getEscola(), aluno.getActive());
+
+        return new Aluno(
+            aluno.getId(),
+            aluno.getNome(),
+            aluno.getEscola(),
+            aluno.getActive());
     }
 
     @Transactional(readOnly = true)
     public Page<AlunoResponseDTO> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
-        Specification<AlunoEntity> spec = AlunoSpecifications.comFiltros(filtro, ghostStudentId);
+        Specification<AlunoEntity> spec = AlunoSpecifications.comFiltros(filtro);
         Page<AlunoEntity> alunosPage = alunoRepo.findAll(spec, pageable);
 
         log.info("Consulta de alunos finalizada, {} registros encontrados.", alunosPage.getTotalElements());
@@ -64,17 +56,10 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Transactional(readOnly = true)
-    public AlunosKpisDTO getAlunosKpis() {
-        long totalAlunos = alunoRepo.countByIdNot(ghostStudentId);
-        long totalAlunosAtivos = alunoRepo.countByActiveTrueAndIdNot(ghostStudentId);
-        return new AlunosKpisDTO(totalAlunos, totalAlunosAtivos);
-    }
-
-    @Transactional(readOnly = true)
     public List<AlunosListDTO> listAlunos() {
         Sort sort = Sort.by(Sort.Direction.ASC, "nome");
         List<AlunosListDTO> alunos = alunoRepo
-            .findAll(AlunoSpecifications.isNotArchived().and(AlunoSpecifications.isNotGhost(ghostStudentId)), sort)
+            .findAll(AlunoSpecifications.isActive(), sort)
             .stream()
             .map(aluno -> new AlunosListDTO(aluno.getId(), aluno.getNome()))
             .toList();
@@ -90,21 +75,9 @@ public class AlunoServiceImpl implements AlunoService {
         return AlunoResponseDTO.toDto(aluno);
     }
 
-    @Transactional(readOnly = true)
-    public List<AlunoResponseDTO> getAlunosByResponsavelId(UUID responsavelId) {
-        List<AlunoResponseDTO> alunos = alunoRepo.findAllByResponsavelId(responsavelId)
-            .stream()
-            .map(AlunoResponseDTO::toDto)
-            .toList();
-
-        log.info("Consulta de alunos por responsavel finalizada, {} registros encontrados.", alunos.size());
-        return alunos;
-    }
-
     @Transactional
     public AlunoResponseDTO createAluno(AlunoRequestDTO dto) {
-        ResponsavelEntity responsavel = findResponsavelOrThrow(dto.responsavelId());
-        AlunoEntity aluno = dto.toEntity(responsavel);
+        AlunoEntity aluno = dto.toEntity();
 
         if (alunoRepo.existsByCpf(aluno.getCpf())) {
             throw new AlunoDuplicadoException("Já existe um aluno cadastrado com este CPF.");
@@ -115,6 +88,7 @@ public class AlunoServiceImpl implements AlunoService {
         }
 
         AlunoEntity savedAluno = alunoRepo.save(aluno);
+
         log.info("Aluno {} cadastrado com sucesso.", savedAluno.getNome().toUpperCase());
         return AlunoResponseDTO.toDto(savedAluno);
     }
@@ -122,12 +96,7 @@ public class AlunoServiceImpl implements AlunoService {
     @Transactional
     public AlunoResponseDTO updateAluno(UUID alunoId, AlunoRequestDTO dto) {
         AlunoEntity aluno = findAlunoOrThrow(alunoId);
-        ResponsavelEntity responsavel = findResponsavelOrThrow(dto.responsavelId());
-        AlunoEntity requestedAluno = dto.toEntity(responsavel);
-
-        if (ghostStudentId.equals(alunoId)) {
-            throw new AlunoEstadoInvalidoException("Não é possível modificar o registro de sistema 'Aluno Removido'.");
-        }
+        AlunoEntity requestedAluno = dto.toEntity();
 
         if (alunoRepo.existsByCpfAndIdNot(requestedAluno.getCpf(), alunoId)) {
             throw new AlunoDuplicadoException("Já existe um aluno utilizando este CPF.");
@@ -152,39 +121,18 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Transactional
-    public void archiveAluno(UUID alunoId) {
+    public void deactivateAluno(UUID alunoId) {
         AlunoEntity aluno = findAlunoOrThrow(alunoId);
-
-        if (ghostStudentId.equals(alunoId)) {
-            throw new AlunoEstadoInvalidoException("O registro não pode ser modificado.");
-        }
-
-        aluno.archive();
-        log.info("Aluno {} arquivado com sucesso.", aluno.getNome().toUpperCase());
+        //TODO: Verificar se aluno tem pagamentos pendentes
+        aluno.deactivate();
+        log.info("Aluno {} desativado com sucesso.", aluno.getNome().toUpperCase());
     }
 
     @Transactional
-    public void unarchiveAluno(UUID alunoId) {
+    public void activateAluno(UUID alunoId) {
         AlunoEntity aluno = findAlunoOrThrow(alunoId);
-
-        if (ghostStudentId.equals(alunoId)) {
-            throw new AlunoEstadoInvalidoException("O registro não pode ser modificado.");
-        }
-
-        aluno.unarchive();
-        log.info("Aluno {} desarquivado com sucesso.", aluno.getNome().toUpperCase());
-    }
-
-    @Transactional
-    public void deleteAluno(UUID alunoId) {
-        AlunoEntity aluno = findAlunoOrThrow(alunoId);
-
-        if (ghostStudentId.equals(alunoId)) {
-            throw new AlunoEstadoInvalidoException("O registro não pode ser modificado.");
-        }
-
-        alunoRepo.delete(aluno);
-        log.info("Aluno {} deletado com sucesso.", aluno.getNome().toUpperCase());
+        aluno.activate();
+        log.info("Aluno {} ativado com sucesso.", aluno.getNome().toUpperCase());
     }
 
     private AlunoEntity findAlunoOrThrow(UUID alunoId) {
@@ -192,8 +140,4 @@ public class AlunoServiceImpl implements AlunoService {
             .orElseThrow(() -> new AlunoNaoEncontradoException("Aluno não encontrado no banco de dados"));
     }
 
-    private ResponsavelEntity findResponsavelOrThrow(UUID responsavelId) {
-        return responsavelRepo.findById(responsavelId)
-            .orElseThrow(() -> new ResponsavelNaoEncontradoException("Responsável não encontrado no banco de dados"));
-    }
 }

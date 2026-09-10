@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,14 +59,6 @@ public class ColaboradorController {
         return ResponseEntity.ok(colaboradores);
     }
 
-    // @GetMapping("/kpis")
-    // @Operation(operationId = "getColaboradoresKpis", description = "Retorna os KPIs de colaboradores.")
-    // @ApiResponse(responseCode = "200", description = "KPIs de colaboradores retornados com sucesso.")
-    // public ResponseEntity<ColaboradoresKpisDTO> getColaboradoresKpis() {
-    //     ColaboradoresKpisDTO kpis = colaboradorQueryService.getColaboradoresKpis();
-    //     return ResponseEntity.ok(kpis);
-    // }
-
     @GetMapping("/list")
     @Operation(operationId = "getColaboradoresList", description = "Retorna uma lista de opções de colaboradores para dropdown.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
@@ -95,27 +86,19 @@ public class ColaboradorController {
         return ResponseEntity.ok(colaboradorAtualizado);
     }
 
-    @DeleteMapping("/{colaboradorId}")
-    @Operation(operationId = "deleteColaborador", description = "Deleta um colaborador por ID.")
-    @ApiResponse(responseCode = "204", description = "Colaborador deletado com sucesso.")
-    public ResponseEntity<Void> deleteColaborador(@PathVariable UUID colaboradorId) {
-        colaboradorService.deleteColaborador(colaboradorId);
+    @PatchMapping("/{colaboradorId}/deactivate")
+    @Operation(operationId = "deactivateColaborador", description = "Desativa um colaborador por ID.")
+    @ApiResponse(responseCode = "204", description = "Colaborador desativado com sucesso.")
+    public ResponseEntity<Void> deactivateColaborador(@PathVariable UUID colaboradorId) {
+        colaboradorService.deactivateColaborador(colaboradorId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{colaboradorId}/archive")
-    @Operation(operationId = "arquivarColaborador", description = "Arquiva um colaborador por ID.")
-    @ApiResponse(responseCode = "204", description = "Colaborador arquivado com sucesso.")
-    public ResponseEntity<Void> archiveColaborador(@PathVariable UUID colaboradorId) {
-        colaboradorService.archiveColaborador(colaboradorId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{colaboradorId}/unarchive")
-    @Operation(operationId = "desarquivarColaborador", description = "Desarquiva um colaborador por ID.")
-    @ApiResponse(responseCode = "204", description = "Colaborador desarquivado com sucesso.")
-    public ResponseEntity<Void> unarchiveColaborador(@PathVariable UUID colaboradorId) {
-        colaboradorService.unarchiveColaborador(colaboradorId);
+    @PatchMapping("/{colaboradorId}/activate")
+    @Operation(operationId = "activateColaborador", description = "Ativa um colaborador por ID.")
+    @ApiResponse(responseCode = "204", description = "Colaborador ativado com sucesso.")
+    public ResponseEntity<Void> activateColaborador(@PathVariable UUID colaboradorId) {
+        colaboradorService.activateColaborador(colaboradorId);
         return ResponseEntity.noContent().build();
     }
 }

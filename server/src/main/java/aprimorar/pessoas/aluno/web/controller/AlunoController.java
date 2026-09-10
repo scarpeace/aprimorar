@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +22,11 @@ import aprimorar.pessoas.aluno.AlunoServiceImpl;
 import aprimorar.pessoas.aluno.web.dto.AlunoFiltroRequest;
 import aprimorar.pessoas.aluno.web.dto.AlunoRequestDTO;
 import aprimorar.pessoas.aluno.web.dto.AlunoResponseDTO;
-import aprimorar.pessoas.aluno.web.dto.AlunosKpisDTO;
 import aprimorar.pessoas.aluno.web.dto.AlunosListDTO;
+import aprimorar.common.openapi.BadRequestProblemResponse;
+import aprimorar.common.openapi.CommonProblemResponses;
+import aprimorar.common.openapi.ConflictProblemResponse;
+import aprimorar.common.openapi.NotFoundProblemResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,6 +35,10 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/v1/alunos")
 @Tag(name = "Aluno", description = "APIs de gestão de alunos")
+@CommonProblemResponses
+@BadRequestProblemResponse
+@ConflictProblemResponse
+@NotFoundProblemResponse
 public class AlunoController {
 
     private final AlunoServiceImpl alunoService;
@@ -58,25 +64,6 @@ public class AlunoController {
     ) {
         Page<AlunoResponseDTO> alunos = alunoService.getAlunos(filtro, pageable);
         return ResponseEntity.ok(alunos);
-    }
-
-    @GetMapping("/kpis")
-    @Operation(operationId = "getAlunosKpis", description = "Retorna os KPIs de alunos.")
-    @ApiResponse(responseCode = "200", description = "KPIs de alunos retornados com sucesso.")
-    public ResponseEntity<AlunosKpisDTO> getAlunosKpis() {
-        AlunosKpisDTO kpis = alunoService.getAlunosKpis();
-        return ResponseEntity.ok(kpis);
-    }
-
-    @GetMapping("/responsavel/{responsavelId}")
-    @Operation(operationId = "getAlunosByResponsavel", description = "Retorna uma lista de alunos pelo ID do responsável.")
-    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
-
-    public ResponseEntity<List<AlunoResponseDTO>> getAlunosPorResponsavel(
-        @PathVariable UUID responsavelId
-    ) {
-        List<AlunoResponseDTO> options = alunoService.getAlunosByResponsavelId(responsavelId);
-        return ResponseEntity.ok(options);
     }
 
     @GetMapping("/options")
@@ -106,27 +93,19 @@ public class AlunoController {
         return ResponseEntity.ok(updatedAluno);
     }
 
-    @DeleteMapping("/{alunoId}")
-    @Operation(operationId = "deleteAluno", description = "Deleta um aluno por ID.")
-    @ApiResponse(responseCode = "204", description = "Aluno deletado com sucesso.")
-    public ResponseEntity<Void> deleteAluno(@PathVariable UUID alunoId) {
-        alunoService.deleteAluno(alunoId);
+    @PatchMapping("/{alunoId}/deactivate")
+    @Operation(operationId = "deactivateAluno", description = "Desativa um aluno por ID.")
+    @ApiResponse(responseCode = "204", description = "Aluno desativado com sucesso.")
+    public ResponseEntity<Void> deactivateAluno(@PathVariable UUID alunoId) {
+        alunoService.deactivateAluno(alunoId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{alunoId}/archive")
-    @Operation(operationId = "archiveAluno", description = "Arquiva um aluno por ID.")
-    @ApiResponse(responseCode = "204", description = "Aluno arquivado com sucesso.")
-    public ResponseEntity<Void> archiveAluno(@PathVariable UUID alunoId) {
-        alunoService.archiveAluno(alunoId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{alunoId}/unarchive")
-    @Operation(operationId = "unarchiveAluno", description = "Desarquiva um aluno por ID.")
-    @ApiResponse(responseCode = "204", description = "Aluno desarquivado com sucesso.")
-    public ResponseEntity<Void> unarchiveAluno(@PathVariable UUID alunoId) {
-        alunoService.unarchiveAluno(alunoId);
+    @PatchMapping("/{alunoId}/activate")
+    @Operation(operationId = "activateAluno", description = "Ativa um aluno por ID.")
+    @ApiResponse(responseCode = "204", description = "Aluno ativado com sucesso.")
+    public ResponseEntity<Void> activateAluno(@PathVariable UUID alunoId) {
+        alunoService.activateAluno(alunoId);
         return ResponseEntity.noContent().build();
     }
 }

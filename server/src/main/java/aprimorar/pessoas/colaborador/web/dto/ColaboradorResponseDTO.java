@@ -2,7 +2,7 @@ package aprimorar.pessoas.colaborador.web.dto;
 
 import aprimorar.pessoas.colaborador.domain.ColaboradorEntity;
 import aprimorar.pessoas.colaborador.domain.enums.FuncoesColaborador;
-import aprimorar.pessoas.endereco.web.dto.EnderecoResponseDTO;
+import aprimorar.pessoas.shared.endereco.web.dto.EnderecoResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;

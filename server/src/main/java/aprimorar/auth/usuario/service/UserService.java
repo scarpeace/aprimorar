@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +26,21 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final String adminUsername;
+    private final String adminPassword;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public UserService(
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder,
+        UserMapper userMapper,
+        @Value("${aprimorar.admin-username:}") String adminUsername,
+        @Value("${aprimorar.admin-password:}") String adminPassword
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.adminUsername = adminUsername;
+        this.adminPassword = adminPassword;
     }
 
     @Transactional
@@ -55,20 +66,20 @@ public class UserService {
     }
 
     @Transactional
-    public void ensureAdminUser(String username, String password) {
-        String normalizedUsername = MapperUtils.normalizeEmail(username);
+    public void ensureAdminUser() {
+        String normalizedUsername = MapperUtils.normalizeEmail(adminUsername);
         if (normalizedUsername == null) {
             throw new IllegalStateException("Configuração aprimorar.admin-username inválida");
         }
 
-        if (password == null || password.isBlank()) {
+        if (adminPassword == null || adminPassword.isBlank()) {
             throw new IllegalStateException("Configuração aprimorar.admin-password ausente");
         }
 
-        String encodedPassword = passwordEncoder.encode(password);
+        String encodedPassword = passwordEncoder.encode(adminPassword);
 
         userRepository.findByUsername(normalizedUsername).ifPresentOrElse(user -> {
-            user.syncAdminAccess(encodedPassword);
+            user.promoteToAdmin(encodedPassword);
         }, () -> userRepository.save(new User(
             normalizedUsername,
             encodedPassword,
@@ -82,7 +93,7 @@ public class UserService {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
 
-        if (user.getRole() == Role.ADMIN || user.getRole() == Role.SISTEMA) {
+        if (user.getRole() == Role.ADMIN) {
             throw new UsuarioEstadoInvalidoException("Não é permitido alterar este usuário");
         }
 
@@ -94,7 +105,7 @@ public class UserService {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
 
-        if (user.getRole() == Role.ADMIN || user.getRole() == Role.SISTEMA) {
+        if (user.getRole() == Role.ADMIN) {
             throw new UsuarioEstadoInvalidoException("Não é permitido alterar este usuário");
         }
 

@@ -67,8 +67,7 @@
 - Query sem filtro minimo em endpoint de listagem.
 
 ## Regras de negocio do projeto (resumo)
-- Contagens de resumo de aluno/colaborador excluem ghost.
-- Contagens "ativas" excluem arquivados; contagens totais ainda incluem arquivados nao-ghost.
+- Alunos e colaboradores não são excluídos; o campo `ativo` controla seu estado.
 - Seguranca por JWT (resource server); fluxo de autenticacao deve manter esse contrato.
 - `dev` e o profile padrao; execute comandos dentro de `server/`.
 

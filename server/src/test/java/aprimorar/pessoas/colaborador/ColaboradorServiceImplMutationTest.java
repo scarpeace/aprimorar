@@ -12,11 +12,10 @@ import static org.mockito.Mockito.when;
 import aprimorar.pessoas.colaborador.domain.ColaboradorEntity;
 import aprimorar.pessoas.colaborador.domain.enums.FuncoesColaborador;
 import aprimorar.pessoas.colaborador.domain.exception.ColaboradorDuplicadoException;
-import aprimorar.pessoas.colaborador.domain.exception.ColaboradorEstadoInvalidoException;
 import aprimorar.pessoas.colaborador.repository.ColaboradorRepository;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradorRequestDTO;
-import aprimorar.pessoas.endereco.domain.Endereco;
-import aprimorar.pessoas.endereco.web.dto.EnderecoRequestDTO;
+import aprimorar.pessoas.shared.endereco.domain.Endereco;
+import aprimorar.pessoas.shared.endereco.web.dto.EnderecoRequestDTO;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,8 +30,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class ColaboradorServiceImplMutationTest {
 
-    private static final UUID GHOST_ID = UUID.fromString("00000000-0000-4000-8000-000000000001");
-
     @Mock
     private ColaboradorRepository colaboradorRepo;
 
@@ -40,7 +37,7 @@ class ColaboradorServiceImplMutationTest {
 
     @BeforeEach
     void setUp() {
-        service = new ColaboradorServiceImpl(colaboradorRepo, GHOST_ID.toString());
+        service = new ColaboradorServiceImpl(colaboradorRepo);
     }
 
     @Test
@@ -120,19 +117,6 @@ class ColaboradorServiceImplMutationTest {
     }
 
     @Test
-    void shouldThrowWhenUpdateGhost() {
-        var ghost = collaborator();
-        setId(ghost, GHOST_ID);
-
-        when(colaboradorRepo.findById(GHOST_ID)).thenReturn(Optional.of(ghost));
-
-        var request = collaboratorRequest();
-        var ex = assertThrows(ColaboradorEstadoInvalidoException.class, () -> service.updateColaborador(GHOST_ID, request));
-
-        assertEquals("Não é possível modificar o registro de sistema 'Colaborador Removido'.", ex.getMessage());
-    }
-
-    @Test
     void shouldThrowWhenUpdateAndEmailAlreadyUsed() {
         UUID id = UUID.randomUUID();
         var colaborador = collaborator();
@@ -148,55 +132,29 @@ class ColaboradorServiceImplMutationTest {
     }
 
     @Test
-    void shouldArchiveColaborador() {
+    void shouldDeactivateColaborador() {
         UUID id = UUID.randomUUID();
         var colaborador = collaborator();
         setId(colaborador, id);
 
         when(colaboradorRepo.findById(id)).thenReturn(Optional.of(colaborador));
-        service.archiveColaborador(id);
+        service.deactivateColaborador(id);
 
         assertFalse(colaborador.getActive());
     }
 
     @Test
-    void shouldUnarchiveColaborador() {
+    void shouldActivateColaborador() {
         UUID id = UUID.randomUUID();
         var colaborador = collaborator();
         setId(colaborador, id);
-        colaborador.archive();
+        colaborador.deactivate();
 
         when(colaboradorRepo.findById(id)).thenReturn(Optional.of(colaborador));
 
-        service.unarchiveColaborador(id);
+        service.activateColaborador(id);
 
         assertTrue(colaborador.getActive());
-    }
-
-    @Test
-    void shouldThrowWhenDeleteAndColaboradorIsNotArchived() {
-        UUID id = UUID.randomUUID();
-        var colaborador = collaborator();
-        setId(colaborador, id);
-
-        when(colaboradorRepo.findById(id)).thenReturn(Optional.of(colaborador));
-
-        var ex = assertThrows(ColaboradorEstadoInvalidoException.class, () -> service.deleteColaborador(id));
-
-        assertEquals("O colaborador precisa estar arquivado antes de ser excluído.", ex.getMessage());
-        verify(colaboradorRepo, never()).delete(any(ColaboradorEntity.class));
-    }
-
-    @Test
-    void shouldThrowWhenDeleteGhost() {
-        var ghost = collaborator();
-        setId(ghost, GHOST_ID);
-
-        when(colaboradorRepo.findById(GHOST_ID)).thenReturn(Optional.of(ghost));
-
-        var ex = assertThrows(ColaboradorEstadoInvalidoException.class, () -> service.deleteColaborador(GHOST_ID));
-
-        assertEquals("O registro não pode ser modificado.", ex.getMessage());
     }
 
     private static ColaboradorRequestDTO collaboratorRequest() {

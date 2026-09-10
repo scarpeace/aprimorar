@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import aprimorar.pessoas.colaborador.domain.enums.FuncoesColaborador;
-import aprimorar.pessoas.endereco.domain.Endereco;
+import aprimorar.pessoas.shared.endereco.domain.Endereco;
 
 @Getter
 @Entity
@@ -117,11 +117,11 @@ public class ColaboradorEntity {
         this.endereco = endereco;
     }
 
-    public void archive() {
+    public void deactivate() {
         this.active = false;
     }
 
-    public void unarchive() {
+    public void activate() {
         this.active = true;
     }
 }

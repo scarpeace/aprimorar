@@ -1,6 +1,5 @@
 package aprimorar.pessoas.colaborador.repository.specifications;
 
-import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
 
 import aprimorar.pessoas.colaborador.domain.ColaboradorEntity;
@@ -10,13 +9,12 @@ public final class ColaboradorSpecifications {
 
     private ColaboradorSpecifications() {}
 
-    public static Specification<ColaboradorEntity> comFiltros(ColaboradorFiltroRequest filtro, UUID ghostColaboradorId) {
+    public static Specification<ColaboradorEntity> comFiltros(ColaboradorFiltroRequest filtro) {
         return Specification
             .where(nomeContem(filtro.nome()))
             .and(emailContem(filtro.email()))
             .and(cpfContem(filtro.cpf()))
-            .and(ativosContem(filtro.ativos()))
-            .and(isNotGhost(ghostColaboradorId));
+            .and(ativosContem(filtro.ativos()));
     }
 
     public static Specification<ColaboradorEntity> nomeContem(String nome) {
@@ -50,11 +48,7 @@ public final class ColaboradorSpecifications {
         };
     }
 
-    public static Specification<ColaboradorEntity> isNotArchived() {
+    public static Specification<ColaboradorEntity> isActive() {
         return (root, query, cb) -> cb.isTrue(root.get("active"));
-    }
-
-    public static Specification<ColaboradorEntity> isNotGhost(UUID ghostColaboradorId) {
-        return (root, query, cb) -> cb.notEqual(root.get("id"), ghostColaboradorId);
     }
 }

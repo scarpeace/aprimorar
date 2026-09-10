@@ -16,7 +16,6 @@ O aluno receberá os dados do responsável aninhados:
 ```json
 {
   "nome": "Carlos Eduardo Ramos",
-  "dataNascimento": "1981-02-12",
   "cpf": "204.681.357-07",
   "telefone": "11980000001",
   "email": "carlos.ramos@example.com"
@@ -30,7 +29,6 @@ O aluno receberá os dados do responsável aninhados:
 ```text
 alunos
 ├── responsavel_nome
-├── responsavel_data_nascimento
 ├── responsavel_cpf
 ├── responsavel_telefone
 └── responsavel_email
@@ -48,7 +46,7 @@ pessoas/aluno/
 
 ## Fases
 
-### Fase 1 — Value object e contrato
+### Fase 1 — Value object e contrato (concluída)
 
 - Criar `Responsavel` como `@Embeddable` em `pessoas.aluno.domain`.
 - Remover do modelo novo `id`, `userId` e comportamento de autenticação.
@@ -56,7 +54,7 @@ pessoas/aluno/
 - Alterar `AlunoRequestDTO` para receber `ResponsavelRequestDTO`.
 - Manter o formato aninhado em `AlunoResponseDTO`.
 
-### Fase 2 — Migration de expansão
+### Fase 2 — Migration de expansão (concluída)
 
 - Criar a próxima migration livre (`V8`).
 - Adicionar as colunas `responsavel_*` em `alunos`.
@@ -66,7 +64,7 @@ pessoas/aluno/
 - Não criar unicidade global para CPF ou e-mail do responsável, pois vários
   alunos podem compartilhar o mesmo responsável.
 
-### Fase 3 — Troca do mapeamento JPA
+### Fase 3 — Troca do mapeamento JPA (concluída)
 
 - Substituir `@ManyToOne ResponsavelEntity` por `@Embedded Responsavel` em
   `AlunoEntity`.
@@ -74,20 +72,21 @@ pessoas/aluno/
 - Remover a busca por `ResponsavelService` no fluxo de aluno.
 - Criar e atualizar os dados do responsável junto com o aluno.
 
-### Fase 4 — Transição do schema e seed
+### Fase 4 — Transição do schema e seed (concluída)
 
 - Atualizar `data.sql` para usar as colunas `responsavel_*`.
 - Criar uma migration intermediária (`V9`) tornando `responsavel_id` anulável.
 - Garantir que novos alunos não dependam mais da tabela legada.
 
-### Fase 5 — Limpeza do schema
+### Fase 5 — Limpeza do schema (concluída)
 
 - Criar uma migration posterior (`V10`).
 - Remover a FK e a coluna `responsavel_id`.
+- Remover a coluna `responsavel_data_nascimento`.
 - Remover a tabela `responsaveis`.
 - Não editar migrations já aplicadas.
 
-### Fase 6 — Limpeza de código
+### Fase 6 — Limpeza de código (concluída)
 
 - Remover `ResponsavelEntity`.
 - Remover `ResponsavelRepository`.
@@ -96,12 +95,15 @@ pessoas/aluno/
   caso não tenham mais consumidores.
 - Remover referências residuais e diretórios vazios.
 
-### Fase 7 — Validação
+### Fase 7 — Validação (parcialmente concluída)
 
 - Executar `compile` e `test-compile`.
 - Atualizar testes que dependam de `responsavelId` ou `ResponsavelEntity`.
 - Verificar que não restaram referências a `responsavel_id` no código ativo.
 - Conferir o backfill e a integridade dos dados antes da limpeza definitiva.
+
+Compilação e testes foram executados com sucesso; a aplicação ainda precisa
+ser iniciada com o banco local para validar a execução da V10.
 
 ## Observação de modelagem
 

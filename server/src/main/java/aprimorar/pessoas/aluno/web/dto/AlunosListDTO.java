@@ -1,4 +1,4 @@
-package aprimorar.pessoas.aluno.web.dto;
+package aprimorar.pessoas.colaborador.repository.web.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;

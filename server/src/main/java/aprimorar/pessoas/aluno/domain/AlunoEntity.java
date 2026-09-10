@@ -1,21 +1,16 @@
 package aprimorar.pessoas.aluno.domain;
 
-import aprimorar.pessoas.endereco.domain.Endereco;
-import aprimorar.pessoas.responsavel.domain.ResponsavelEntity;
+import aprimorar.pessoas.shared.endereco.domain.Endereco;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.Getter;
 
 
@@ -50,9 +45,8 @@ public class AlunoEntity {
     @Column(name = "escola")
     private String escola;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "responsavel_id", nullable = false)
-    private ResponsavelEntity responsavel;
+    @Embedded
+    private Responsavel responsavel;
 
     @Column(name = "ativo", nullable = false)
     private Boolean active = true;
@@ -89,7 +83,7 @@ public class AlunoEntity {
             String cpf,
             String email,
             String escola,
-            ResponsavelEntity responsavel,
+            Responsavel responsavel,
             Endereco endereco
     ) {
         this.nome = nome;
@@ -108,7 +102,7 @@ public class AlunoEntity {
         String telefone,
         String email,
         String escola,
-        ResponsavelEntity responsavel,
+        Responsavel responsavel,
         Endereco endereco
     ) {
         this.nome = nome;
@@ -120,16 +114,11 @@ public class AlunoEntity {
         this.endereco = endereco;
     }
 
-    @Transient
-    public UUID getResponsavelId() {
-        return responsavel.getId();
-    }
-
-    public void archive() {
+    public void deactivate() {
         this.active = false;
     }
 
-    public void unarchive() {
+    public void activate() {
         this.active = true;
     }
 }

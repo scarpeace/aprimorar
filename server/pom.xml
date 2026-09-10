@@ -1,6 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -8,7 +11,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.7</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <groupId>aprimorar</groupId>
@@ -24,10 +27,14 @@
         <spring-modulith.version>1.4.11</spring-modulith.version>
 
         <!-- CVE overrides for transitive dependencies -->
-        <logback.version>1.5.25</logback.version>                <!-- CVE-2026-1225 -->
-        <tomcat.version>10.1.50</tomcat.version>                 <!-- CVE-2025-66614, CVE-2026-24733 -->
-        <commons-lang3.version>3.18.0</commons-lang3.version>    <!-- CVE-2025-48924 -->
-        <assertj.version>3.27.7</assertj.version>                <!-- CVE-2026-24400 -->
+        <logback.version
+        >1.5.25</logback.version>                <!-- CVE-2026-1225 -->
+        <tomcat.version
+        >10.1.50</tomcat.version>                 <!-- CVE-2025-66614, CVE-2026-24733 -->
+        <commons-lang3.version
+        >3.18.0</commons-lang3.version>    <!-- CVE-2025-48924 -->
+        <assertj.version
+        >3.27.7</assertj.version>                <!-- CVE-2026-24400 -->
     </properties>
 
     <dependencies>
@@ -51,10 +58,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.modulith</groupId>
@@ -110,12 +113,6 @@
         <dependency>
             <groupId>org.springframework.modulith</groupId>
             <artifactId>spring-modulith-starter-test</artifactId>
-            <version>${spring-modulith.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.modulith</groupId>
-            <artifactId>spring-modulith-docs</artifactId>
             <version>${spring-modulith.version}</version>
             <scope>test</scope>
         </dependency>
@@ -196,9 +193,11 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <apiDocsUrl>http://localhost:8080/v3/api-docs</apiDocsUrl>
+                            <apiDocsUrl
+                            >http://localhost:8080/v3/api-docs</apiDocsUrl>
                             <outputFileName>openapi.json</outputFileName>
-                            <outputDir>${project.build.directory}/generated/openapi</outputDir>
+                            <outputDir
+                            >${project.build.directory}/generated/openapi</outputDir>
                         </configuration>
                     </plugin>
 

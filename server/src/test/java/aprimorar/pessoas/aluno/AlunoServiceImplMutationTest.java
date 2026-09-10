@@ -10,15 +10,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import aprimorar.pessoas.aluno.domain.AlunoEntity;
+import aprimorar.pessoas.aluno.domain.Responsavel;
 import aprimorar.pessoas.aluno.domain.exception.AlunoDuplicadoException;
 import aprimorar.pessoas.aluno.domain.exception.AlunoEstadoInvalidoException;
 import aprimorar.pessoas.aluno.repository.AlunoRepository;
-import aprimorar.pessoas.aluno.web.dto.AlunoRequestDTO;
-import aprimorar.pessoas.endereco.domain.Endereco;
-import aprimorar.pessoas.endereco.web.dto.EnderecoRequestDTO;
-import aprimorar.pessoas.responsavel.domain.ResponsavelEntity;
-import aprimorar.pessoas.responsavel.domain.exception.ResponsavelNaoEncontradoException;
-import aprimorar.pessoas.responsavel.repository.ResponsavelRepository;
+import aprimorar.pessoas.colaborador.repository.web.dto.AlunoRequestDTO;
+import aprimorar.pessoas.colaborador.repository.web.dto.ResponsavelRequestDTO;
+import aprimorar.pessoas.shared.endereco.domain.Endereco;
+import aprimorar.pessoas.shared.endereco.web.dto.EnderecoRequestDTO;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,30 +32,22 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class AlunoServiceImplMutationTest {
 
-    private static final UUID GHOST_ID = UUID.fromString("00000000-0000-4000-8000-000000000002");
-    private static final UUID RESPONSAVEL_ID = UUID.fromString("11111111-1111-4111-8111-111111111111");
-
     @Mock
     private AlunoRepository alunoRepo;
-
-    @Mock
-    private ResponsavelRepository responsavelRepo;
 
     private AlunoServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        service = new AlunoServiceImpl(alunoRepo, responsavelRepo, GHOST_ID.toString());
+        service = new AlunoServiceImpl(alunoRepo);
     }
 
     @Test
     void shouldCreateAluno() {
-        var responsavel = responsavel();
         var dto = alunoRequest();
-        var saved = dto.toEntity(responsavel);
+        var saved = dto.toEntity();
         setId(saved, UUID.randomUUID());
 
-        when(responsavelRepo.findById(RESPONSAVEL_ID)).thenReturn(Optional.of(responsavel));
         when(alunoRepo.existsByCpf("12345678900")).thenReturn(false);
         when(alunoRepo.existsByEmail("ana@example.com")).thenReturn(false);
         when(alunoRepo.save(any(AlunoEntity.class))).thenReturn(saved);
@@ -65,7 +56,7 @@ class AlunoServiceImplMutationTest {
 
         assertEquals(saved.getId(), response.id());
         assertEquals("Ana Silva", response.nome());
-        assertEquals(RESPONSAVEL_ID, response.responsavelId());
+        assertEquals("João Pereira", response.responsavel().nome());
 
         ArgumentCaptor<AlunoEntity> captor = ArgumentCaptor.forClass(AlunoEntity.class);
         verify(alunoRepo).save(captor.capture());
@@ -75,22 +66,9 @@ class AlunoServiceImplMutationTest {
     }
 
     @Test
-    void shouldThrowWhenCreateAndResponsavelDoesNotExist() {
-        var dto = alunoRequest();
-
-        when(responsavelRepo.findById(RESPONSAVEL_ID)).thenReturn(Optional.empty());
-
-        var ex = assertThrows(ResponsavelNaoEncontradoException.class, () -> service.createAluno(dto));
-
-        assertEquals("Responsável não encontrado no banco de dados", ex.getMessage());
-        verify(alunoRepo, never()).save(any());
-    }
-
-    @Test
     void shouldThrowWhenCreateAndCpfAlreadyExists() {
         var dto = alunoRequest();
 
-        when(responsavelRepo.findById(RESPONSAVEL_ID)).thenReturn(Optional.of(responsavel()));
         when(alunoRepo.existsByCpf("12345678900")).thenReturn(true);
 
         var ex = assertThrows(AlunoDuplicadoException.class, () -> service.createAluno(dto));
@@ -103,7 +81,6 @@ class AlunoServiceImplMutationTest {
     void shouldThrowWhenCreateAndEmailAlreadyExists() {
         var dto = alunoRequest();
 
-        when(responsavelRepo.findById(RESPONSAVEL_ID)).thenReturn(Optional.of(responsavel()));
         when(alunoRepo.existsByCpf("12345678900")).thenReturn(false);
         when(alunoRepo.existsByEmail("ana@example.com")).thenReturn(true);
 
@@ -117,7 +94,6 @@ class AlunoServiceImplMutationTest {
     void shouldUpdateAluno() {
         UUID id = UUID.randomUUID();
         var aluno = aluno(responsavel());
-        var newResponsavel = responsavel("Maria Ramos", "maria@example.com");
         setId(aluno, id);
 
         var dto = new AlunoRequestDTO(
@@ -128,11 +104,10 @@ class AlunoServiceImplMutationTest {
             "(61) 98888-7777",
             "maria.silva@example.com",
             enderecoRequest(),
-            RESPONSAVEL_ID
+            new ResponsavelRequestDTO("Maria Ramos", "maria@example.com", "(61) 98888-7777", "987.654.321-00")
         );
 
         when(alunoRepo.findById(id)).thenReturn(Optional.of(aluno));
-        when(responsavelRepo.findById(RESPONSAVEL_ID)).thenReturn(Optional.of(newResponsavel));
         when(alunoRepo.existsByCpfAndIdNot("12345678900", id)).thenReturn(false);
         when(alunoRepo.existsByEmailAndIdNot("maria.silva@example.com", id)).thenReturn(false);
 
@@ -142,22 +117,8 @@ class AlunoServiceImplMutationTest {
         assertEquals("maria.silva@example.com", aluno.getEmail());
         assertEquals("61988887777", aluno.getTelefone());
         assertEquals("Escola Nova", aluno.getEscola());
-        assertEquals(newResponsavel, aluno.getResponsavel());
+        assertEquals("Maria Ramos", aluno.getResponsavel().getNome());
         assertEquals("Maria Silva", response.nome());
-    }
-
-    @Test
-    void shouldThrowWhenUpdateGhost() {
-        var ghost = aluno(responsavel());
-        setId(ghost, GHOST_ID);
-
-        when(alunoRepo.findById(GHOST_ID)).thenReturn(Optional.of(ghost));
-        when(responsavelRepo.findById(RESPONSAVEL_ID)).thenReturn(Optional.of(responsavel()));
-
-        var request = alunoRequest();
-        var ex = assertThrows(AlunoEstadoInvalidoException.class, () -> service.updateAluno(GHOST_ID, request));
-
-        assertEquals("Não é possível modificar o registro de sistema 'Aluno Removido'.", ex.getMessage());
     }
 
     @Test
@@ -167,7 +128,6 @@ class AlunoServiceImplMutationTest {
         setId(aluno, id);
 
         when(alunoRepo.findById(id)).thenReturn(Optional.of(aluno));
-        when(responsavelRepo.findById(RESPONSAVEL_ID)).thenReturn(Optional.of(responsavel()));
         when(alunoRepo.existsByCpfAndIdNot("12345678900", id)).thenReturn(true);
 
         var request = alunoRequest();
@@ -183,7 +143,6 @@ class AlunoServiceImplMutationTest {
         setId(aluno, id);
 
         when(alunoRepo.findById(id)).thenReturn(Optional.of(aluno));
-        when(responsavelRepo.findById(RESPONSAVEL_ID)).thenReturn(Optional.of(responsavel()));
         when(alunoRepo.existsByCpfAndIdNot("12345678900", id)).thenReturn(false);
         when(alunoRepo.existsByEmailAndIdNot("ana@example.com", id)).thenReturn(true);
 
@@ -194,53 +153,29 @@ class AlunoServiceImplMutationTest {
     }
 
     @Test
-    void shouldArchiveAluno() {
+    void shouldDeactivateAluno() {
         UUID id = UUID.randomUUID();
         var aluno = aluno(responsavel());
         setId(aluno, id);
 
         when(alunoRepo.findById(id)).thenReturn(Optional.of(aluno));
-        service.archiveAluno(id);
+        service.deactivateAluno(id);
 
         assertFalse(aluno.getActive());
     }
 
     @Test
-    void shouldThrowWhenArchiveGhost() {
-        var ghost = aluno(responsavel());
-        setId(ghost, GHOST_ID);
-
-        when(alunoRepo.findById(GHOST_ID)).thenReturn(Optional.of(ghost));
-
-        var ex = assertThrows(AlunoEstadoInvalidoException.class, () -> service.archiveAluno(GHOST_ID));
-
-        assertEquals("O registro não pode ser modificado.", ex.getMessage());
-    }
-
-    @Test
-    void shouldUnarchiveAluno() {
+    void shouldActivateAluno() {
         UUID id = UUID.randomUUID();
         var aluno = aluno(responsavel());
         setId(aluno, id);
-        aluno.archive();
+        aluno.deactivate();
 
         when(alunoRepo.findById(id)).thenReturn(Optional.of(aluno));
 
-        service.unarchiveAluno(id);
+        service.activateAluno(id);
 
         assertTrue(aluno.getActive());
-    }
-
-    @Test
-    void shouldThrowWhenDeleteGhost() {
-        var ghost = aluno(responsavel());
-        setId(ghost, GHOST_ID);
-
-        when(alunoRepo.findById(GHOST_ID)).thenReturn(Optional.of(ghost));
-
-        var ex = assertThrows(AlunoEstadoInvalidoException.class, () -> service.deleteAluno(GHOST_ID));
-
-        assertEquals("O registro não pode ser modificado.", ex.getMessage());
     }
 
     private static AlunoRequestDTO alunoRequest() {
@@ -252,7 +187,7 @@ class AlunoServiceImplMutationTest {
             "(61) 99999-9999",
             "ana@example.com",
             enderecoRequest(),
-            RESPONSAVEL_ID
+            responsavelRequest()
         );
     }
 
@@ -260,7 +195,11 @@ class AlunoServiceImplMutationTest {
         return new EnderecoRequestDTO("Rua A", "10", "Apto 1", "Centro", "Brasilia", "DF", "70000000");
     }
 
-    private static AlunoEntity aluno(ResponsavelEntity responsavel) {
+    private static ResponsavelRequestDTO responsavelRequest() {
+        return new ResponsavelRequestDTO("João Pereira", "joao@example.com", "(61) 99999-9999", "987.654.321-00");
+    }
+
+    private static AlunoEntity aluno(Responsavel responsavel) {
         return new AlunoEntity(
             "Ana Silva",
             LocalDate.of(2010, 1, 1),
@@ -273,27 +212,21 @@ class AlunoServiceImplMutationTest {
         );
     }
 
-    private static ResponsavelEntity responsavel() {
+    private static Responsavel responsavel() {
         return responsavel("João Pereira", "joao@example.com");
     }
 
-    private static ResponsavelEntity responsavel(String nome, String email) {
-        var responsavel = new ResponsavelEntity(
+    private static Responsavel responsavel(String nome, String email) {
+        return new Responsavel(
             nome,
-            LocalDate.of(1980, 5, 21),
             "61999999999",
             "98765432100",
             email
         );
-        setId(responsavel, RESPONSAVEL_ID);
-        return responsavel;
     }
 
     private static void setId(AlunoEntity aluno, UUID id) {
         ReflectionTestUtils.setField(aluno, "id", id);
     }
 
-    private static void setId(ResponsavelEntity responsavel, UUID id) {
-        ReflectionTestUtils.setField(responsavel, "id", id);
-    }
 }

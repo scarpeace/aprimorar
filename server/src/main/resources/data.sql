@@ -3,9 +3,8 @@
 
 DELETE FROM atendimentos;
 DELETE FROM despesas;
-DELETE FROM alunos WHERE id <> '00000000-0000-4000-8000-000000000002';
-DELETE FROM responsaveis WHERE id <> 'ffffffff-ffff-ffff-ffff-ffffffffffff';
-DELETE FROM colaboradores WHERE id <> '00000000-0000-4000-8000-000000000001';
+DELETE FROM alunos;
+DELETE FROM colaboradores;
 
 INSERT INTO colaboradores (
   id, user_id,
@@ -16,23 +15,17 @@ INSERT INTO colaboradores (
   ('9e79c84d-d10a-59ca-8196-3963139e8096', NULL, 'Rua Harmonia', '245', 'Vila Madalena', 'Sao Paulo', 'SP', '05435000', 'Casa', 'Mariana Costa', '987.654.321-00', 'mariana.costa@example.com', DATE '2001-05-27', '11990000002', 'MENTOR', '11990000002', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   ('46b8b924-f738-5a05-930c-1be3b563773e', NULL, 'Rua das Acacias', '88', 'Jardim Paulista', 'Sao Paulo', 'SP', '01407002', 'Apto 32', 'Aline Souza', '951.753.852-91', 'aline.souza@example.com', DATE '2003-10-24', '11990000003', 'TERAPEUTA', '11990000003', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO responsaveis (
-  id, user_id, nome, data_nascimento, cpf, telefone, email, created_at, updated_at
-) VALUES
-  ('cbbe29c8-3177-548f-b3d3-24dd0463a495', NULL, 'Carlos Eduardo Ramos', DATE '1981-02-12', '204.681.357-07', '11980000001', 'carlos.ramos@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('7db99ca8-59f6-5b7d-8e85-465b2f62cb38', NULL, 'Marcos Vinicius Barros', DATE '1979-07-25', '315.792.468-00', '11980000002', 'marcos.barros@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('576f4f56-3232-5af8-a610-caa7a5b6f9dc', NULL, 'Felipe Andrade', DATE '1984-11-08', '426.813.579-00', '11980000003', 'felipe.andrade@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
 INSERT INTO alunos (
-  id, user_id, responsavel_id,
+  id, user_id,
+  responsavel_nome, responsavel_cpf, responsavel_telefone, responsavel_email,
   endereco_rua, endereco_numero, endereco_bairro, endereco_cidade, endereco_estado, endereco_cep, endereco_complemento,
   nome, cpf, email, data_nascimento, telefone, escola, ativo, created_at, updated_at
 ) VALUES
-  ('df351208-d6c8-5c8a-a2ce-19cea64ac3a8', NULL, 'cbbe29c8-3177-548f-b3d3-24dd0463a495', 'Rua Vergueiro', '2100', 'Vila Mariana', 'Sao Paulo', 'SP', '04102000', 'Bloco B', 'Joao Pedro Ramos', '120.345.678-62', 'joao.pedro.ramos@example.com', DATE '2008-04-12', '11970000001', 'Escola Monteiro Lobato', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('852b7c98-e262-51e7-88ab-84b93ea99f09', NULL, 'cbbe29c8-3177-548f-b3d3-24dd0463a495', 'Alameda Santos', '900', 'Cerqueira Cesar', 'Sao Paulo', 'SP', '01418002', 'Sala 5', 'Ana Clara Ramos', '231.456.789-73', 'ana.clara.ramos@example.com', DATE '2012-09-03', '11970000002', 'Colegio Brasil', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('f0af156a-fbe5-5b29-9acb-5fe22508eb62', NULL, '7db99ca8-59f6-5b7d-8e85-465b2f62cb38', 'Rua Cardeal Arcoverde', '1200', 'Pinheiros', 'Sao Paulo', 'SP', '05408001', 'Casa 2', 'Miguel Barros', '342.567.890-65', 'miguel.barros@example.com', DATE '2009-06-21', '11970000003', 'Escola Parque Aprimorar', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('de87ab23-c4f6-5cdb-88e4-c1e524f9f5b3', NULL, '576f4f56-3232-5af8-a610-caa7a5b6f9dc', 'Rua Bela Cintra', '640', 'Consolacao', 'Sao Paulo', 'SP', '01415000', 'Apto 91', 'Arthur Andrade', '564.789.012-11', 'arthur.andrade@example.com', DATE '2010-11-05', '11970000004', 'Colegio Sao Paulo', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('41e8e58f-124a-5969-b16f-ac57993d7a00', NULL, '7db99ca8-59f6-5b7d-8e85-465b2f62cb38', 'Rua Itapeva', '410', 'Bela Vista', 'Sao Paulo', 'SP', '01332000', NULL, 'Sofia Barros', '453.678.901-48', 'sofia.barros@example.com', DATE '2014-01-17', '11970000005', 'Colegio Sao Paulo', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+  ('df351208-d6c8-5c8a-a2ce-19cea64ac3a8', NULL, 'Carlos Eduardo Ramos', '204.681.357-07', '11980000001', 'carlos.ramos@example.com', 'Rua Vergueiro', '2100', 'Vila Mariana', 'Sao Paulo', 'SP', '04102000', 'Bloco B', 'Joao Pedro Ramos', '120.345.678-62', 'joao.pedro.ramos@example.com', DATE '2008-04-12', '11970000001', 'Escola Monteiro Lobato', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  ('852b7c98-e262-51e7-88ab-84b93ea99f09', NULL, 'Carlos Eduardo Ramos', '204.681.357-07', '11980000001', 'carlos.ramos@example.com', 'Alameda Santos', '900', 'Cerqueira Cesar', 'Sao Paulo', 'SP', '01418002', 'Sala 5', 'Ana Clara Ramos', '231.456.789-73', 'ana.clara.ramos@example.com', DATE '2012-09-03', '11970000002', 'Colegio Brasil', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  ('f0af156a-fbe5-5b29-9acb-5fe22508eb62', NULL, 'Marcos Vinicius Barros', '315.792.468-00', '11980000002', 'marcos.barros@example.com', 'Rua Cardeal Arcoverde', '1200', 'Pinheiros', 'Sao Paulo', 'SP', '05408001', 'Casa 2', 'Miguel Barros', '342.567.890-65', 'miguel.barros@example.com', DATE '2009-06-21', '11970000003', 'Escola Parque Aprimorar', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  ('de87ab23-c4f6-5cdb-88e4-c1e524f9f5b3', NULL, 'Felipe Andrade', '426.813.579-00', '11980000003', 'felipe.andrade@example.com', 'Rua Bela Cintra', '640', 'Consolacao', 'Sao Paulo', 'SP', '01415000', 'Apto 91', 'Arthur Andrade', '564.789.012-11', 'arthur.andrade@example.com', DATE '2010-11-05', '11970000004', 'Colegio Sao Paulo', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  ('41e8e58f-124a-5969-b16f-ac57993d7a00', NULL, 'Marcos Vinicius Barros', '315.792.468-00', '11980000002', 'marcos.barros@example.com', 'Rua Itapeva', '410', 'Bela Vista', 'Sao Paulo', 'SP', '01332000', NULL, 'Sofia Barros', '453.678.901-48', 'sofia.barros@example.com', DATE '2014-01-17', '11970000005', 'Colegio Sao Paulo', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO atendimentos (
   id,

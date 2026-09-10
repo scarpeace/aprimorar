@@ -1,6 +1,5 @@
 package aprimorar.pessoas.aluno.repository.specifications;
 
-import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
 
 import aprimorar.pessoas.aluno.domain.AlunoEntity;
@@ -10,14 +9,13 @@ public final class AlunoSpecifications {
 
     private AlunoSpecifications() {}
 
-    public static Specification<AlunoEntity> comFiltros(AlunoFiltroRequest filtro, UUID ghostStudentId) {
+    public static Specification<AlunoEntity> comFiltros(AlunoFiltroRequest filtro) {
         return Specification
             .where(nomeContem(filtro.nome()))
             .and(emailContem(filtro.email()))
             .and(cpfContem(filtro.cpf()))
             .and(escolaContem(filtro.escola()))
-            .and(ativosContem(filtro.ativos()))
-            .and(isNotGhost(ghostStudentId));
+            .and(ativosContem(filtro.ativos()));
     }
 
     public static Specification<AlunoEntity> nomeContem(String nome) {
@@ -59,11 +57,7 @@ public final class AlunoSpecifications {
         };
     }
 
-    public static Specification<AlunoEntity> isNotArchived() {
+    public static Specification<AlunoEntity> isActive() {
         return (root, query, cb) -> cb.isTrue(root.get("active"));
-    }
-
-    public static Specification<AlunoEntity> isNotGhost(UUID ghostStudentId) {
-        return (root, query, cb) -> cb.notEqual(root.get("id"), ghostStudentId);
     }
 }

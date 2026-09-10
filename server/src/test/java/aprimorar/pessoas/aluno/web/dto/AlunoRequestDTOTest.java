@@ -2,10 +2,10 @@ package aprimorar.pessoas.aluno.web.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import aprimorar.pessoas.endereco.web.dto.EnderecoRequestDTO;
-import aprimorar.pessoas.responsavel.domain.ResponsavelEntity;
+import aprimorar.pessoas.colaborador.repository.web.dto.AlunoRequestDTO;
+import aprimorar.pessoas.colaborador.repository.web.dto.ResponsavelRequestDTO;
+import aprimorar.pessoas.shared.endereco.web.dto.EnderecoRequestDTO;
 import java.time.LocalDate;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class AlunoRequestDTOTest {
@@ -20,18 +20,10 @@ class AlunoRequestDTOTest {
             "(61) 99999-9999",
             "ANA.SILVA@EXAMPLE.COM",
             new EnderecoRequestDTO("Rua A", "10", "Apto 1", "Centro", "Brasilia", "DF", "70000-000"),
-            UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
+            new ResponsavelRequestDTO("Carlos Silva", "carlos@example.com", "61999999998", "98765432100")
         );
 
-        var responsavel = new ResponsavelEntity(
-            "Carlos Silva",
-            LocalDate.of(1970, 1, 1),
-            "61999999998",
-            "98765432100",
-            "carlos@example.com"
-        );
-
-        var entity = dto.toEntity(responsavel);
+        var entity = dto.toEntity();
 
         assertEquals("Ana Silva", entity.getNome());
         assertEquals(LocalDate.of(2000, 1, 1), entity.getDataNascimento());
@@ -39,7 +31,7 @@ class AlunoRequestDTOTest {
         assertEquals("12345678900", entity.getCpf());
         assertEquals("ana.silva@example.com", entity.getEmail());
         assertEquals("Colégio Aprimorar", entity.getEscola());
-        assertEquals(responsavel, entity.getResponsavel());
+        assertEquals("Carlos Silva", entity.getResponsavel().getNome());
         assertEquals("70000000", entity.getEndereco().getCep());
     }
 }
