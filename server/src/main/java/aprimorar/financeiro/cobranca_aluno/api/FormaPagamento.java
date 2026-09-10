@@ -1,4 +1,4 @@
-package aprimorar.financeiro.pagamento_aluno.api;
+package aprimorar.financeiro.cobranca_aluno.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

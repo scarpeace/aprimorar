@@ -56,7 +56,7 @@ aprimorar/
 │   └── shared/endereco/
 ├── financeiro/
 │   ├── despesas/
-│   └── pagamento_aluno/
+│   └── cobranca_aluno/
 ├── common/
 └── config/
 ```
@@ -71,10 +71,9 @@ aprimorar/
   é uma entidade nem possui ciclo de vida próprio.
 - `Responsavel` é um value object embutido em `AlunoEntity`, sem tabela própria.
 - `financeiro` é o módulo financeiro; `financeiro/despesas` e
-  `financeiro/pagamento_aluno` são seus subdomínios internos.
-- `pagamento_aluno` expõe `PagamentoAluno`, `FormaPagamento` e
-  `PagamentoAlunoService` em `api`; sua implementação e persistência ficam nos
-  subpacotes internos.
+  `financeiro/cobranca_aluno` são seus subdomínios internos.
+- `cobranca_aluno` expõe `FormaPagamento` em `api`; sua implementação,
+  persistência e HTTP ficam nos subpacotes internos.
 - `common` é aberto para modelos, utilitários e anotações compartilhadas.
 - `config` contém configuração transversal, não regras de domínio.
 
@@ -93,17 +92,17 @@ Dentro de `server/`:
 
 ### Observações do domínio
 
-- `AtendimentoEntity` armazena `alunoId`, `colaboradorId` e
-  `pagamentoAlunoId` como escalares, sem relações JPA com outros módulos
-- o registro de pagamento é orquestrado por `atendimentos` e persistido pelo
-  contrato público de `financeiro/pagamento_aluno`; um pagamento pode ser
-  vinculado a vários atendimentos
+- `AtendimentoEntity` armazena `alunoId` e `colaboradorId` como escalares, sem
+  relações JPA com outros módulos
+- a criação de uma cobrança é disparada pelo evento público de atendimento e
+  persistida pelo submódulo `financeiro/cobranca_aluno`; várias cobranças podem
+  compartilhar o mesmo `pagamento_id`
 - `AlunoEntity` e `ColaboradorEntity` usam `Endereco` com `@Embedded`
 - `AlunoEntity` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável
 - despesas registra gastos operacionais independentes de aluno, colaborador e atendimento
-- os valores de pagamento do aluno e repasse do colaborador vivem no próprio
-  atendimento; datas de pagamento e status não fazem mais parte do atendimento
+- o valor de repasse do colaborador vive no próprio atendimento; o valor,
+  status e os dados de liquidação da cobrança vivem em `cobrancas_alunos`
 - alunos e colaboradores não são excluídos; o campo `ativo` controla ativação e
   desativação
 - não existem registros ou realocação para aluno, colaborador ou responsável fantasma

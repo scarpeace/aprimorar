@@ -2,7 +2,7 @@
 -- Keeps the dataset small and aligned with the current schema.
 
 DELETE FROM atendimentos;
-DELETE FROM pagamentos_alunos;
+DELETE FROM cobrancas_alunos;
 DELETE FROM despesas;
 DELETE FROM alunos;
 DELETE FROM colaboradores;
