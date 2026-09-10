@@ -1,7 +1,7 @@
 package aprimorar.auth.web.dto;
 
 import aprimorar.auth.Role;
-import aprimorar.auth.domain.User;
+import aprimorar.auth.domain.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
@@ -34,7 +34,7 @@ public record UserResponseDTO(
     Instant updatedAt
 ) {
 
-    public static UserResponseDTO toDto(User user) {
+    public static UserResponseDTO toDto(UserEntity user) {
         return new UserResponseDTO(
             user.getId(),
             user.getUsername(),

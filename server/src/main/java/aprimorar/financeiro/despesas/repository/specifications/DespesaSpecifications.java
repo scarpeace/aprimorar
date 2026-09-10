@@ -1,6 +1,6 @@
 package aprimorar.financeiro.despesas.repository.specifications;
 
-import aprimorar.financeiro.despesas.domain.Despesa;
+import aprimorar.financeiro.despesas.domain.DespesaEntity;
 import aprimorar.financeiro.despesas.enums.CategoriaDespesa;
 import aprimorar.financeiro.despesas.enums.FormaPagamento;
 import aprimorar.financeiro.despesas.web.dto.DespesaFiltroRequest;
@@ -11,7 +11,7 @@ public final class DespesaSpecifications {
 
     private DespesaSpecifications() {}
 
-    public static Specification<Despesa> comFiltros(DespesaFiltroRequest filtro) {
+    public static Specification<DespesaEntity> comFiltros(DespesaFiltroRequest filtro) {
         return Specification
             .where(buscaContem(filtro.busca()))
             .and(categoriaIgual(filtro.categoria()))
@@ -20,7 +20,7 @@ public final class DespesaSpecifications {
             .and(dataMenorOuIgual(filtro.dataFim()));
     }
 
-    public static Specification<Despesa> buscaContem(String termo) {
+    public static Specification<DespesaEntity> buscaContem(String termo) {
         return (root, query, cb) -> {
             if (termo == null || termo.trim().isEmpty()) {
                 return null;
@@ -34,19 +34,19 @@ public final class DespesaSpecifications {
         };
     }
 
-    public static Specification<Despesa> categoriaIgual(CategoriaDespesa categoria) {
+    public static Specification<DespesaEntity> categoriaIgual(CategoriaDespesa categoria) {
         return (root, query, cb) -> categoria == null ? null : cb.equal(root.get("categoria"), categoria);
     }
 
-    public static Specification<Despesa> formaPagamentoIgual(FormaPagamento formaPagamento) {
+    public static Specification<DespesaEntity> formaPagamentoIgual(FormaPagamento formaPagamento) {
         return (root, query, cb) -> formaPagamento == null ? null : cb.equal(root.get("formaPagamento"), formaPagamento);
     }
 
-    public static Specification<Despesa> dataMaiorOuIgual(LocalDate dataInicio) {
+    public static Specification<DespesaEntity> dataMaiorOuIgual(LocalDate dataInicio) {
         return (root, query, cb) -> dataInicio == null ? null : cb.greaterThanOrEqualTo(root.get("dataPagamento"), dataInicio);
     }
 
-    public static Specification<Despesa> dataMenorOuIgual(LocalDate dataFim) {
+    public static Specification<DespesaEntity> dataMenorOuIgual(LocalDate dataFim) {
         return (root, query, cb) -> dataFim == null ? null : cb.lessThanOrEqualTo(root.get("dataPagamento"), dataFim);
     }
 }

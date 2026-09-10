@@ -22,7 +22,7 @@ import lombok.Getter;
 @Getter
 @Entity
 @Table(name = "despesas")
-public class Despesa {
+public class DespesaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,9 +65,9 @@ public class Despesa {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    protected Despesa() {}
+    protected DespesaEntity() {}
 
-    public Despesa(
+    public DespesaEntity(
         String titulo,
         TipoDespesa tipo,
         CategoriaDespesa categoria,

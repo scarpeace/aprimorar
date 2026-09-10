@@ -37,9 +37,6 @@ public class AtendimentoEntity implements Serializable {
     @Column(name = "colaborador_id", nullable = false)
     private UUID colaboradorId;
 
-    @Column(name = "pagamento_aluno", precision = 10, scale = 2, nullable = false)
-    private BigDecimal pagamentoAluno;
-
     @Column(name = "repasse_colaborador", precision = 10, scale = 2, nullable = false)
     private BigDecimal repasseColaborador;
 
@@ -77,7 +74,6 @@ public class AtendimentoEntity implements Serializable {
         this.tipo = tipo;
         this.alunoId = alunoId;
         this.colaboradorId = colaboradorId;
-        this.pagamentoAluno = pagamentoAluno;
         this.repasseColaborador = repasseColaborador;
     }
 
@@ -93,25 +89,13 @@ public class AtendimentoEntity implements Serializable {
         validarJanelaEdicao();
         validarDatas(dataHoraInicio, dataHoraFim);
         validarValores(pagamentoAluno, repasseColaborador);
-        reagendar(dataHoraInicio, dataHoraFim);
-        alterarParticipantes(alunoId, colaboradorId);
-        this.tipo = tipo;
-        this.pagamentoAluno = pagamentoAluno;
-        this.repasseColaborador = repasseColaborador;
-        return this;
-    }
-
-
-    public void reagendar(LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim){
-
-        validarDatas(dataHoraInicio, dataHoraFim);
         this.dataHoraInicio = dataHoraInicio;
         this.dataHoraFim = dataHoraFim;
-    }
-
-    public void alterarParticipantes(UUID alunoId, UUID colaboradorId){
         this.alunoId = alunoId;
         this.colaboradorId = colaboradorId;
+        this.tipo = tipo;
+        this.repasseColaborador = repasseColaborador;
+        return this;
     }
 
     public void validarJanelaEdicao() {

@@ -1,7 +1,7 @@
 package aprimorar.auth.service;
 
 import aprimorar.auth.Role;
-import aprimorar.auth.domain.User;
+import aprimorar.auth.domain.UserEntity;
 import aprimorar.auth.domain.exception.UsuarioDadosInvalidosException;
 import aprimorar.auth.domain.exception.UsuarioDuplicadoException;
 import aprimorar.auth.domain.exception.UsuarioEstadoInvalidoException;
@@ -57,7 +57,7 @@ public class AuthService implements UserDetailsService {
         Authentication authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken.unauthenticated(email, rawPassword)
         );
-        User user = (User) authentication.getPrincipal();
+        UserEntity user = (UserEntity) authentication.getPrincipal();
 
         String accessToken = jwtService.generateToken(user);
         return AuthResponseDTO.toDto(accessToken, jwtService.expiresInSeconds(), user);
@@ -78,7 +78,7 @@ public class AuthService implements UserDetailsService {
             throw new UsuarioEstadoInvalidoException("Não é possível criar um usuário com este perfil");
         }
 
-        User user = new User(
+        UserEntity user = new UserEntity(
             normalizedUsername,
             passwordEncoder.encode(dto.password()),
             dto.role(),
@@ -102,27 +102,27 @@ public class AuthService implements UserDetailsService {
         String encodedPassword = passwordEncoder.encode(adminPassword);
         userRepository.findByUsername(normalizedUsername).ifPresentOrElse(
             user -> user.promoteToAdmin(encodedPassword),
-            () -> userRepository.save(new User(normalizedUsername, encodedPassword, Role.ADMIN, true))
+            () -> userRepository.save(new UserEntity(normalizedUsername, encodedPassword, Role.ADMIN, true))
         );
     }
 
     @Transactional
     public void deleteUser(UUID id) {
-        User user = findUserOrThrow(id);
+        UserEntity user = findUserOrThrow(id);
         ensureUserCanBeChanged(user);
         userRepository.delete(user);
     }
 
     @Transactional
     public void deactivateUser(UUID id) {
-        User user = findUserOrThrow(id);
+        UserEntity user = findUserOrThrow(id);
         ensureUserCanBeChanged(user);
         user.deactivate();
     }
 
     @Transactional
     public void activateUser(UUID id) {
-        User user = findUserOrThrow(id);
+        UserEntity user = findUserOrThrow(id);
         ensureUserCanBeChanged(user);
         user.activate();
     }
@@ -143,7 +143,7 @@ public class AuthService implements UserDetailsService {
     }
 
     @Override
-    public User loadUserByUsername(String username) {
+    public UserEntity loadUserByUsername(String username) {
         String normalizedUsername = MapperUtils.normalizeEmail(username);
         if (normalizedUsername == null) {
             throw new UsernameNotFoundException("Usuário não encontrado");
@@ -153,12 +153,12 @@ public class AuthService implements UserDetailsService {
             .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
     }
 
-    private User findUserOrThrow(UUID id) {
+    private UserEntity findUserOrThrow(UUID id) {
         return userRepository.findById(id)
             .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
     }
 
-    private void ensureUserCanBeChanged(User user) {
+    private void ensureUserCanBeChanged(UserEntity user) {
         if (user.getRole() == Role.ADMIN) {
             throw new UsuarioEstadoInvalidoException("Não é permitido alterar este usuário");
         }

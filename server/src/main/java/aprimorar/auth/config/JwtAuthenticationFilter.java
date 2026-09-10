@@ -1,6 +1,6 @@
 package aprimorar.auth.config;
 
-import aprimorar.auth.domain.User;
+import aprimorar.auth.domain.UserEntity;
 import aprimorar.auth.repository.UserRepository;
 import aprimorar.auth.service.JwtService;
 import jakarta.servlet.FilterChain;
@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         extractBearerToken(request)
             .flatMap(jwtService::validateAndExtractUserId)
             .flatMap(userRepository::findById)
-            .filter(User::isActive)
+            .filter(UserEntity::isActive)
             .ifPresent(this::authenticate);
 
         filterChain.doFilter(request, response);
@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return token.isBlank() || token.contains(" ") ? Optional.empty() : Optional.of(token);
     }
 
-    private void authenticate(User user) {
+    private void authenticate(UserEntity user) {
         var authentication = UsernamePasswordAuthenticationToken.authenticated(
             user,
             null,

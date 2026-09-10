@@ -1,7 +1,10 @@
 @org.springframework.modulith.ApplicationModule(
     id = "financeiro",
     displayName = "Financeiro",
-    allowedDependencies = { "common::*" }
+    allowedDependencies = {
+        "common::*",
+        "atendimentos::events"
+    }
 )
 package aprimorar.financeiro;
 

@@ -1,62 +1,47 @@
 package aprimorar.atendimentos.individuais.service;
 
-import aprimorar.atendimentos.individuais.api.Atendimento;
-import aprimorar.atendimentos.individuais.api.AtendimentoService;
+import aprimorar.atendimentos.individuais.api.AtendimentoCreatedEvent;
 import aprimorar.atendimentos.individuais.domain.AtendimentoEntity;
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoConflitanteException;
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoNaoEncontradoException;
 import aprimorar.atendimentos.individuais.repository.AtendimentoRepository;
 import aprimorar.atendimentos.individuais.repository.specifications.AtendimentoSpecifications;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoFiltroRequest;
-import aprimorar.atendimentos.individuais.web.dto.AtendimentoRecorrenteRequest;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoRequest;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoResponse;
-import aprimorar.atendimentos.individuais.web.dto.ReagendarAtendimentoRequest;
 import aprimorar.pessoas.aluno.api.Aluno;
 import aprimorar.pessoas.aluno.api.AlunoService;
 import aprimorar.pessoas.colaborador.api.Colaborador;
 import aprimorar.pessoas.colaborador.api.ColaboradorService;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class AtendimentoServiceImpl implements AtendimentoService {
+public class AtendimentoServiceImpl {
 
     private static final Logger log = LoggerFactory.getLogger(AtendimentoServiceImpl.class);
 
     private final AtendimentoRepository atendimentoRepo;
+    private final ApplicationEventPublisher eventPublisher;
     private final AlunoService alunoService;
     private final ColaboradorService colaboradorService;
 
     public AtendimentoServiceImpl(
         AtendimentoRepository atendimentoRepo,
+        ApplicationEventPublisher eventPublisher,
         AlunoService alunoService,
         ColaboradorService colaboradorService
     ) {
         this.atendimentoRepo = atendimentoRepo;
+        this.eventPublisher = eventPublisher;
         this.alunoService = alunoService;
         this.colaboradorService = colaboradorService;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Atendimento buscarPorId(Long atendimentoId) {
-        AtendimentoEntity atendimento = findAtendimentoOrThrow(atendimentoId);
-
-        return new Atendimento(
-            atendimento.getId(),
-            atendimento.getAlunoId(),
-            atendimento.getColaboradorId()
-        );
     }
 
     @Transactional(readOnly = true)
@@ -85,42 +70,14 @@ public class AtendimentoServiceImpl implements AtendimentoService {
         validarDisponibilidadeDosParticipantes(atendimento);
 
         AtendimentoEntity saved = atendimentoRepo.save(atendimento);
+        eventPublisher.publishEvent(new AtendimentoCreatedEvent(
+            saved.getId(),
+            saved.getAlunoId(),
+            dto.pagamentoAluno()
+        ));
 
         log.info("Atendimento {} cadastrado com sucesso.", saved.getId());
         return AtendimentoResponse.toDto(saved, aluno, colaborador);
-    }
-
-    @Transactional
-    public List<AtendimentoResponse> agendarRecorrente(AtendimentoRecorrenteRequest request) {
-        AtendimentoRequest dto = request.atendimento();
-        Aluno aluno = alunoService.buscarPorId(dto.alunoId());
-        Colaborador colaborador = colaboradorService.buscarPorId(dto.colaboradorId());
-        List<AtendimentoEntity> atendimentos = new ArrayList<>();
-        LocalDateTime inicio = dto.dataHoraInicio();
-        LocalDateTime fim = dto.dataHoraFim();
-
-        while (!inicio.toLocalDate().isAfter(request.dataFimRecorrencia())) {
-            AtendimentoEntity atendimento = new AtendimentoEntity(
-                inicio,
-                fim,
-                dto.tipo(),
-                dto.alunoId(),
-                dto.colaboradorId(),
-                dto.pagamentoAluno(),
-                dto.repasseColaborador()
-            );
-
-            validarDisponibilidadeDosParticipantes(atendimento);
-            atendimentos.add(atendimento);
-
-            inicio = inicio.plusWeeks(1);
-            fim = fim.plusWeeks(1);
-        }
-
-        List<AtendimentoEntity> saved = atendimentoRepo.saveAll(atendimentos);
-
-        log.info("{} atendimentos recorrentes cadastrados com sucesso.", saved.size());
-        return saved.stream().map(atendimento -> AtendimentoResponse.toDto(atendimento, aluno, colaborador)).toList();
     }
 
     @Transactional
@@ -142,24 +99,6 @@ public class AtendimentoServiceImpl implements AtendimentoService {
         AtendimentoEntity saved = atendimentoRepo.save(atendimento);
         log.info("Atendimento {} atualizado com sucesso.", saved.getId());
         return AtendimentoResponse.toDto(saved, aluno, colaborador);
-    }
-
-    @Transactional
-    public void reagendar(Long id, ReagendarAtendimentoRequest request) {
-        AtendimentoEntity atendimento = findAtendimentoOrThrow(id);
-
-        atendimento.reagendar(request.novoInicio(), request.novoFim());
-        log.info("Atendimento {} reagendado com sucesso.", atendimento.getId());
-    }
-
-    @Transactional
-    public void alterarParticipantes(Long id, UUID alunoId, UUID colaboradorId) {
-        AtendimentoEntity atendimento = findAtendimentoOrThrow(id);
-        alunoService.buscarPorId(alunoId);
-        colaboradorService.buscarPorId(colaboradorId);
-
-        atendimento.alterarParticipantes(alunoId, colaboradorId);
-        log.info("Participantes do evento {} atualizados com sucesso", atendimento.getId());
     }
 
     @Transactional

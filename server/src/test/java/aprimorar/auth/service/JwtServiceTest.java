@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import aprimorar.auth.domain.User;
+import aprimorar.auth.domain.UserEntity;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ class JwtServiceTest {
     @Test
     void shouldExtractUserIdFromValidToken() {
         UUID userId = UUID.randomUUID();
-        User user = mock(User.class);
+        UserEntity user = mock(UserEntity.class);
         when(user.getId()).thenReturn(userId);
 
         String token = jwtService.generateToken(user);

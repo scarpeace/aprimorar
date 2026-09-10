@@ -25,7 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -52,10 +52,10 @@ public class User implements UserDetails {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    protected User() {
+    protected UserEntity() {
     }
 
-    public User(String username, String password, Role role, boolean active) {
+    public UserEntity(String username, String password, Role role, boolean active) {
         this.username = validateUsername(username);
         this.password = validatePassword(password);
         this.role = validateRole(role);

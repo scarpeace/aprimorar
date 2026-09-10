@@ -1,6 +1,6 @@
 package aprimorar.financeiro.despesas.service;
 
-import aprimorar.financeiro.despesas.domain.Despesa;
+import aprimorar.financeiro.despesas.domain.DespesaEntity;
 import aprimorar.financeiro.despesas.domain.exception.DespesaNaoEncontradaException;
 import aprimorar.financeiro.despesas.repository.DespesaRepository;
 import aprimorar.financeiro.despesas.repository.specifications.DespesaSpecifications;
@@ -28,8 +28,8 @@ public class DespesaService {
 
     @Transactional(readOnly = true)
     public Page<DespesaResponse> getDespesas(DespesaFiltroRequest filtro, Pageable pageable) {
-        Specification<Despesa> spec = DespesaSpecifications.comFiltros(filtro);
-        Page<Despesa> despesasPage = despesaRepo.findAll(spec, pageable);
+        Specification<DespesaEntity> spec = DespesaSpecifications.comFiltros(filtro);
+        Page<DespesaEntity> despesasPage = despesaRepo.findAll(spec, pageable);
 
         log.info("Consulta de despesas finalizada, {} registros encontrados.", despesasPage.getTotalElements());
         return despesasPage.map(DespesaResponse::toDto);
@@ -37,14 +37,14 @@ public class DespesaService {
 
     @Transactional(readOnly = true)
     public DespesaResponse findDespesaById(Long despesaId) {
-        Despesa despesa = findDespesaOrThrow(despesaId);
+        DespesaEntity despesa = findDespesaOrThrow(despesaId);
         log.info("Despesa {} consultada com sucesso.", despesa.getTitulo().toUpperCase());
         return DespesaResponse.toDto(despesa);
     }
 
     @Transactional
     public DespesaResponse createDespesa(DespesaRequest dto) {
-        Despesa saved = despesaRepo.save(dto.toEntity());
+        DespesaEntity saved = despesaRepo.save(dto.toEntity());
 
         log.info("Despesa {} cadastrada com sucesso.", saved.getTitulo().toUpperCase());
         return DespesaResponse.toDto(saved);
@@ -52,8 +52,8 @@ public class DespesaService {
 
     @Transactional
     public DespesaResponse updateDespesa(Long despesaId, DespesaRequest dto) {
-        Despesa despesa = findDespesaOrThrow(despesaId);
-        Despesa requested = dto.toEntity();
+        DespesaEntity despesa = findDespesaOrThrow(despesaId);
+        DespesaEntity requested = dto.toEntity();
 
         despesa.update(
             requested.getTitulo(),
@@ -71,14 +71,14 @@ public class DespesaService {
 
     @Transactional
     public void deleteDespesa(Long despesaId) {
-        Despesa despesa = findDespesaOrThrow(despesaId);
+        DespesaEntity despesa = findDespesaOrThrow(despesaId);
         despesaRepo.delete(despesa);
         log.info("Despesa {} excluída com sucesso.", despesa.getTitulo().toUpperCase());
     }
 
     @Transactional
     public DespesaResponse pagar(Long despesaId) {
-        Despesa despesa = findDespesaOrThrow(despesaId);
+        DespesaEntity despesa = findDespesaOrThrow(despesaId);
 
         despesa.pagar();
         log.info("Despesa {} paga com sucesso.", despesa.getTitulo().toUpperCase());
@@ -87,14 +87,14 @@ public class DespesaService {
 
     @Transactional
     public DespesaResponse cancelarPagamento(Long despesaId) {
-        Despesa despesa = findDespesaOrThrow(despesaId);
+        DespesaEntity despesa = findDespesaOrThrow(despesaId);
 
         despesa.cancelarPagamento();
         log.info("Pagamento da despesa {} cancelado com sucesso.", despesa.getTitulo().toUpperCase());
         return DespesaResponse.toDto(despesa);
     }
 
-    private Despesa findDespesaOrThrow(Long despesaId) {
+    private DespesaEntity findDespesaOrThrow(Long despesaId) {
         return despesaRepo.findById(despesaId)
             .orElseThrow(DespesaNaoEncontradaException::new);
     }

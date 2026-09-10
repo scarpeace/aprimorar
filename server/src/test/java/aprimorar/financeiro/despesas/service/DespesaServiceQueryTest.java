@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import aprimorar.financeiro.despesas.domain.Despesa;
+import aprimorar.financeiro.despesas.domain.DespesaEntity;
 import aprimorar.financeiro.despesas.domain.exception.DespesaNaoEncontradaException;
 import aprimorar.financeiro.despesas.enums.CategoriaDespesa;
 import aprimorar.financeiro.despesas.enums.FormaPagamento;
@@ -78,8 +78,8 @@ class DespesaServiceQueryTest {
         assertEquals("Despesa não encontrada no banco de dados", ex.getMessage());
     }
 
-    private static Despesa despesa() {
-        return new Despesa(
+    private static DespesaEntity despesa() {
+        return new DespesaEntity(
             "Conta de energia",
             TipoDespesa.SAIDA,
             CategoriaDespesa.CONTAS,
@@ -90,7 +90,7 @@ class DespesaServiceQueryTest {
         );
     }
 
-    private static void setId(Despesa despesa, Long id) {
+    private static void setId(DespesaEntity despesa, Long id) {
         ReflectionTestUtils.setField(despesa, "id", id);
     }
 }

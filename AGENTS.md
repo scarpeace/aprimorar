@@ -48,7 +48,6 @@ aprimorar/
 ├── auth/
 ├── atendimentos/
 │   └── individuais/
-│       └── api/
 ├── pessoas/
 │   ├── aluno/
 │   │   └── api/
@@ -56,23 +55,26 @@ aprimorar/
 │   │   └── api/
 │   └── shared/endereco/
 ├── financeiro/
-│   └── despesas/
+│   ├── despesas/
+│   └── pagamento_aluno/
 ├── common/
 └── config/
 ```
 
 - `auth` concentra login e gerenciamento de usuários.
-- `atendimentos` expõe `Atendimento` e `AtendimentoService` em
-  `individuais/api`; a implementação atual fica em
-  `atendimentos/individuais/service`.
+- `atendimentos/individuais` ainda não possui contrato público; sua
+  implementação atual fica em `atendimentos/individuais/service`.
 - `pessoas` expõe `Aluno`/`AlunoService` em `aluno/api` e
   `Colaborador`/`ColaboradorService` em `colaborador/api`; cada subdomínio possui
   seu próprio `service` e `config`.
 - `pessoas/shared/endereco` contém o value object `Endereco` e seus DTOs; não
   é uma entidade nem possui ciclo de vida próprio.
 - `Responsavel` é um value object embutido em `AlunoEntity`, sem tabela própria.
-- `financeiro` é o módulo financeiro; `financeiro/despesas` é seu subdomínio
-  interno, independente de pessoas e atendimentos.
+- `financeiro` é o módulo financeiro; `financeiro/despesas` e
+  `financeiro/pagamento_aluno` são seus subdomínios internos.
+- `pagamento_aluno` expõe `PagamentoAluno`, `FormaPagamento` e
+  `PagamentoAlunoService` em `api`; sua implementação e persistência ficam nos
+  subpacotes internos.
 - `common` é aberto para modelos, utilitários e anotações compartilhadas.
 - `config` contém configuração transversal, não regras de domínio.
 
@@ -91,9 +93,11 @@ Dentro de `server/`:
 
 ### Observações do domínio
 
-- `AtendimentoEntity` armazena `alunoId` e `colaboradorId` como UUIDs escalares,
-  sem relações JPA com o módulo `pessoas`
-- `Atendimento` é o record público com o identificador e os IDs dos participantes
+- `AtendimentoEntity` armazena `alunoId`, `colaboradorId` e
+  `pagamentoAlunoId` como escalares, sem relações JPA com outros módulos
+- o registro de pagamento é orquestrado por `atendimentos` e persistido pelo
+  contrato público de `financeiro/pagamento_aluno`; um pagamento pode ser
+  vinculado a vários atendimentos
 - `AlunoEntity` e `ColaboradorEntity` usam `Endereco` com `@Embedded`
 - `AlunoEntity` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável
@@ -123,7 +127,7 @@ Dentro de `server/`:
 - `JWT_SECRET` é texto bruto, obrigatório e deve ter ao menos 32 bytes em UTF-8
 - o token usa issuer `aprimorar-api`, UUID no `subject` e expiração de oito horas
 - authorities são carregadas do usuário no banco, não de claims do token
-- `User` implementa `UserDetails`
+- `UserEntity` implementa `UserDetails`
 - `AuthService` implementa `UserDetailsService` e usa `DaoAuthenticationProvider`
   com BCrypt
 - login fica em `POST /v1/auth/login`; gerenciamento de usuários fica em

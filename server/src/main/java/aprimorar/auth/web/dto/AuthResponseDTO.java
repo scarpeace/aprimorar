@@ -1,6 +1,6 @@
 package aprimorar.auth.web.dto;
 
-import aprimorar.auth.domain.User;
+import aprimorar.auth.domain.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +22,7 @@ public record AuthResponseDTO(
     UserResponseDTO user
 ) {
 
-    public static AuthResponseDTO toDto(String accessToken, long expiresIn, User user) {
+    public static AuthResponseDTO toDto(String accessToken, long expiresIn, UserEntity user) {
         return new AuthResponseDTO(accessToken, expiresIn, UserResponseDTO.toDto(user));
     }
 }

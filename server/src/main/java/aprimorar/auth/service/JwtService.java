@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import aprimorar.auth.domain.User;
+import aprimorar.auth.domain.UserEntity;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
@@ -36,7 +36,7 @@ public class JwtService {
             .build();
     }
 
-    public String generateToken(User user) {
+    public String generateToken(UserEntity user) {
         Instant now = Instant.now();
         Instant expiresAt = now.plusSeconds(ACCESS_TOKEN_EXPIRES_IN_SECONDS);
 

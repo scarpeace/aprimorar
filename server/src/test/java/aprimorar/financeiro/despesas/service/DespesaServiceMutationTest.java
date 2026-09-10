@@ -9,7 +9,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import aprimorar.financeiro.despesas.domain.Despesa;
+import aprimorar.financeiro.despesas.domain.DespesaEntity;
 import aprimorar.financeiro.despesas.domain.exception.DespesaNaoEncontradaException;
 import aprimorar.financeiro.despesas.enums.CategoriaDespesa;
 import aprimorar.financeiro.despesas.enums.FormaPagamento;
@@ -47,14 +47,14 @@ class DespesaServiceMutationTest {
         var saved = request.toEntity();
         setId(saved, 1L);
 
-        when(despesaRepo.save(any(Despesa.class))).thenReturn(saved);
+        when(despesaRepo.save(any(DespesaEntity.class))).thenReturn(saved);
 
         var response = service.createDespesa(request);
 
         assertEquals(1L, response.id());
         assertEquals("Conta de energia", response.titulo());
 
-        ArgumentCaptor<Despesa> captor = ArgumentCaptor.forClass(Despesa.class);
+        ArgumentCaptor<DespesaEntity> captor = ArgumentCaptor.forClass(DespesaEntity.class);
         verify(despesaRepo).save(captor.capture());
         assertEquals("Conta de energia", captor.getValue().getTitulo());
         assertEquals(CategoriaDespesa.CONTAS, captor.getValue().getCategoria());
@@ -113,7 +113,7 @@ class DespesaServiceMutationTest {
         var ex = assertThrows(DespesaNaoEncontradaException.class, () -> service.deleteDespesa(1L));
 
         assertEquals("Despesa não encontrada no banco de dados", ex.getMessage());
-        verify(despesaRepo, never()).delete(any(Despesa.class));
+        verify(despesaRepo, never()).delete(any(DespesaEntity.class));
     }
 
     @Test
@@ -154,8 +154,8 @@ class DespesaServiceMutationTest {
         );
     }
 
-    private static Despesa despesa() {
-        return new Despesa(
+    private static DespesaEntity despesa() {
+        return new DespesaEntity(
             "Conta de energia",
             TipoDespesa.SAIDA,
             CategoriaDespesa.CONTAS,
@@ -166,7 +166,7 @@ class DespesaServiceMutationTest {
         );
     }
 
-    private static void setId(Despesa despesa, Long id) {
+    private static void setId(DespesaEntity despesa, Long id) {
         ReflectionTestUtils.setField(despesa, "id", id);
     }
 }

@@ -1,6 +1,6 @@
 package aprimorar.financeiro.despesas.web.dto;
 
-import aprimorar.financeiro.despesas.domain.Despesa;
+import aprimorar.financeiro.despesas.domain.DespesaEntity;
 import aprimorar.financeiro.despesas.enums.CategoriaDespesa;
 import aprimorar.financeiro.despesas.enums.FormaPagamento;
 import aprimorar.financeiro.despesas.enums.TipoDespesa;
@@ -44,8 +44,8 @@ public record DespesaRequest(
     @Schema(nullable = true, description = "Descrição curta da despesa", example = "Pagamento referente ao mês de julho")
     String descricao
 ) {
-    public Despesa toEntity() {
-        return new Despesa(
+    public DespesaEntity toEntity() {
+        return new DespesaEntity(
             titulo.trim(),
             tipo,
             categoria,

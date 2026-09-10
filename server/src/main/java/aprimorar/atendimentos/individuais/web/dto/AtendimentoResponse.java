@@ -30,10 +30,6 @@ public record AtendimentoResponse(
     LocalDateTime dataHoraFim,
 
     @NotNull
-    @Schema(nullable = false, description = "Valor pago pelo aluno", example = "150.00")
-    BigDecimal pagamentoAluno,
-
-    @NotNull
     @Schema(nullable = false, description = "Valor de repasse ao colaborador", example = "100.00")
     BigDecimal repasseColaborador,
 
@@ -67,7 +63,6 @@ public record AtendimentoResponse(
             atendimento.getTipo(),
             atendimento.getDataHoraInicio(),
             atendimento.getDataHoraFim(),
-            atendimento.getPagamentoAluno(),
             atendimento.getRepasseColaborador(),
             atendimento.getAlunoId(),
             aluno.nome(),
