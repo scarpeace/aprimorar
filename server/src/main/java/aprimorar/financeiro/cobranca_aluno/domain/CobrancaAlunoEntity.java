@@ -44,9 +44,6 @@ public class CobrancaAlunoEntity {
     @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
 
-    @Column(name = "desconto", precision = 10, scale = 2)
-    private BigDecimal desconto;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "forma_pagamento", length = 40)
     private FormaPagamento formaPagamento;
@@ -67,14 +64,12 @@ public class CobrancaAlunoEntity {
         this.status = StatusCobrancaAluno.PENDENTE;
     }
 
-    public void registrarPagamento(BigDecimal desconto, FormaPagamento formaPagamento, String comprovanteUrl) {
+    public void registrarPagamento(FormaPagamento formaPagamento, String comprovanteUrl) {
         if (status == StatusCobrancaAluno.PAGO) {
             throw new IllegalStateException("Pagamento já está pago");
         }
         validarFormaPagamento(formaPagamento);
-        validarDesconto(desconto, valor);
 
-        this.desconto = desconto;
         this.formaPagamento = formaPagamento;
         this.comprovanteUrl = comprovanteUrl;
         this.dataPagamento = LocalDateTime.now();
@@ -83,7 +78,6 @@ public class CobrancaAlunoEntity {
 
     public void cancelarPagamento() {
         this.status = StatusCobrancaAluno.PENDENTE;
-        this.desconto = null;
         this.dataPagamento = null;
         this.formaPagamento = null;
         this.comprovanteUrl = null;
@@ -101,15 +95,6 @@ public class CobrancaAlunoEntity {
     private static void validarFormaPagamento(FormaPagamento formaPagamento) {
         if (formaPagamento == null) {
             throw new IllegalArgumentException("Forma de pagamento é obrigatória");
-        }
-    }
-
-    private static void validarDesconto(BigDecimal desconto, BigDecimal valor) {
-        if (desconto != null && desconto.signum() < 0) {
-            throw new IllegalArgumentException("Desconto não pode ser negativo");
-        }
-        if (desconto != null && valor != null && desconto.compareTo(valor) > 0) {
-            throw new IllegalArgumentException("Desconto não pode ser maior que o valor do pagamento");
         }
     }
 
