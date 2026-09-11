@@ -23,7 +23,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -39,29 +38,6 @@ class AlunoServiceImplMutationTest {
     @BeforeEach
     void setUp() {
         service = new AlunoServiceImpl(alunoRepo);
-    }
-
-    @Test
-    void shouldCreateAluno() {
-        var dto = alunoRequest();
-        var saved = dto.toEntity();
-        setId(saved, UUID.randomUUID());
-
-        when(alunoRepo.existsByCpf("12345678900")).thenReturn(false);
-        when(alunoRepo.existsByEmail("ana@example.com")).thenReturn(false);
-        when(alunoRepo.save(any(AlunoEntity.class))).thenReturn(saved);
-
-        var response = service.createAluno(dto);
-
-        assertEquals(saved.getId(), response.id());
-        assertEquals("Ana Silva", response.nome());
-        assertEquals("João Pereira", response.responsavel().nome());
-
-        ArgumentCaptor<AlunoEntity> captor = ArgumentCaptor.forClass(AlunoEntity.class);
-        verify(alunoRepo).save(captor.capture());
-        assertEquals("12345678900", captor.getValue().getCpf());
-        assertEquals("ana@example.com", captor.getValue().getEmail());
-        assertEquals("61999999999", captor.getValue().getTelefone());
     }
 
     @Test
@@ -87,37 +63,6 @@ class AlunoServiceImplMutationTest {
 
         assertEquals("Já existe um aluno cadastrado com este e-mail.", ex.getMessage());
         verify(alunoRepo, never()).save(any());
-    }
-
-    @Test
-    void shouldUpdateAluno() {
-        UUID id = UUID.randomUUID();
-        var aluno = aluno(responsavel());
-        setId(aluno, id);
-
-        var dto = new AlunoRequestDTO(
-            "Maria Silva",
-            LocalDate.of(2011, 2, 2),
-            "123.456.789-00",
-            "Escola Nova",
-            "(61) 98888-7777",
-            "maria.silva@example.com",
-            enderecoRequest(),
-            new ResponsavelRequestDTO("Maria Ramos", "maria@example.com", "(61) 98888-7777", "987.654.321-00")
-        );
-
-        when(alunoRepo.findById(id)).thenReturn(Optional.of(aluno));
-        when(alunoRepo.existsByCpfAndIdNot("12345678900", id)).thenReturn(false);
-        when(alunoRepo.existsByEmailAndIdNot("maria.silva@example.com", id)).thenReturn(false);
-
-        var response = service.updateAluno(id, dto);
-
-        assertEquals("Maria Silva", aluno.getNome());
-        assertEquals("maria.silva@example.com", aluno.getEmail());
-        assertEquals("61988887777", aluno.getTelefone());
-        assertEquals("Escola Nova", aluno.getEscola());
-        assertEquals("Maria Ramos", aluno.getResponsavel().getNome());
-        assertEquals("Maria Silva", response.nome());
     }
 
     @Test

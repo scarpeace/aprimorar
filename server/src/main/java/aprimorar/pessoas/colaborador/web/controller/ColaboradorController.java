@@ -2,12 +2,12 @@ package aprimorar.pessoas.colaborador.web.controller;
 
 import java.util.List;
 import java.util.UUID;
+import java.net.URI;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aprimorar.pessoas.colaborador.service.ColaboradorServiceImpl;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradorFiltroRequest;
+import aprimorar.pessoas.colaborador.web.dto.ColaboradorDetailResponseDTO;
+import aprimorar.pessoas.colaborador.web.dto.ColaboradorListResponseDTO;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradorRequestDTO;
-import aprimorar.pessoas.colaborador.web.dto.ColaboradorResponseDTO;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradoresOptionsDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,21 +42,21 @@ public class ColaboradorController {
     @PostMapping
     @Operation(operationId = "createColaborador", description = "Cria um novo colaborador com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Colaborador criado com sucesso.")
-    public ResponseEntity<ColaboradorResponseDTO> createColaborador(
+    public ResponseEntity<Void> createColaborador(
         @RequestBody @Valid ColaboradorRequestDTO colaboradorRequestDto
     ) {
-        ColaboradorResponseDTO response = colaboradorService.createColaborador(colaboradorRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        UUID id = colaboradorService.createColaborador(colaboradorRequestDto);
+        return ResponseEntity.created(URI.create("/v1/colaboradores/" + id)).build();
     }
 
     @GetMapping
     @Operation(operationId = "getColaboradores", description = "Retorna uma lista paginada de colaboradores.")
     @ApiResponse(responseCode = "200", description = "Lista de colaboradores retornada com sucesso.")
-    public ResponseEntity<Page<ColaboradorResponseDTO>> getColaboradores(
+    public ResponseEntity<Page<ColaboradorListResponseDTO>> getColaboradores(
         @ParameterObject ColaboradorFiltroRequest filtro,
         @ParameterObject @PageableDefault(sort = "nome") Pageable pageable
     ) {
-        Page<ColaboradorResponseDTO> colaboradores = colaboradorService.getColaboradores(filtro, pageable);
+        Page<ColaboradorListResponseDTO> colaboradores = colaboradorService.getColaboradores(filtro, pageable);
         return ResponseEntity.ok(colaboradores);
     }
 
@@ -70,20 +71,20 @@ public class ColaboradorController {
     @GetMapping("/{colaboradorId}")
     @Operation(operationId = "findColaboradorById", description = "Retorna um colaborador por ID.")
     @ApiResponse(responseCode = "200", description = "Colaborador retornado com sucesso.")
-    public ResponseEntity<ColaboradorResponseDTO> buscarPorId(@PathVariable UUID colaboradorId) {
-        ColaboradorResponseDTO colaborador = colaboradorService.findById(colaboradorId);
+    public ResponseEntity<ColaboradorDetailResponseDTO> buscarPorId(@PathVariable UUID colaboradorId) {
+        ColaboradorDetailResponseDTO colaborador = colaboradorService.findById(colaboradorId);
         return ResponseEntity.ok(colaborador);
     }
 
     @PatchMapping("/{colaboradorId}")
     @Operation(operationId = "updateColaborador", description = "Atualiza um colaborador por ID.")
     @ApiResponse(responseCode = "200", description = "Colaborador atualizado com sucesso.")
-    public ResponseEntity<ColaboradorResponseDTO> updateColaborador(
+    public ResponseEntity<Void> updateColaborador(
         @PathVariable UUID colaboradorId,
         @RequestBody @Valid ColaboradorRequestDTO colaboradorRequestDTO
     ) {
-        ColaboradorResponseDTO colaboradorAtualizado = colaboradorService.updateColaborador(colaboradorId, colaboradorRequestDTO);
-        return ResponseEntity.ok(colaboradorAtualizado);
+        colaboradorService.updateColaborador(colaboradorId, colaboradorRequestDTO);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{colaboradorId}/deactivate")

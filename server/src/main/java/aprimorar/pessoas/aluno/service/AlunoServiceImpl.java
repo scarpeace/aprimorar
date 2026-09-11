@@ -8,8 +8,9 @@ import aprimorar.pessoas.aluno.domain.exception.AlunoNaoEncontradoException;
 import aprimorar.pessoas.aluno.repository.AlunoRepository;
 import aprimorar.pessoas.aluno.repository.specifications.AlunoSpecifications;
 import aprimorar.pessoas.aluno.web.dto.AlunoFiltroRequest;
+import aprimorar.pessoas.aluno.web.dto.AlunoDetailResponseDTO;
+import aprimorar.pessoas.aluno.web.dto.AlunoListResponseDTO;
 import aprimorar.pessoas.aluno.web.dto.AlunoRequestDTO;
-import aprimorar.pessoas.aluno.web.dto.AlunoResponseDTO;
 import aprimorar.pessoas.aluno.web.dto.AlunosListDTO;
 
 import java.util.List;
@@ -47,12 +48,12 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AlunoResponseDTO> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
+    public Page<AlunoListResponseDTO> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
         Specification<AlunoEntity> spec = AlunoSpecifications.comFiltros(filtro);
         Page<AlunoEntity> alunosPage = alunoRepo.findAll(spec, pageable);
 
         log.info("Consulta de alunos finalizada, {} registros encontrados.", alunosPage.getTotalElements());
-        return alunosPage.map(AlunoResponseDTO::toDto);
+        return alunosPage.map(AlunoListResponseDTO::from);
     }
 
     @Transactional(readOnly = true)
@@ -69,14 +70,14 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Transactional(readOnly = true)
-    public AlunoResponseDTO findAlunoById(UUID alunoId) {
+    public AlunoDetailResponseDTO findAlunoById(UUID alunoId) {
         AlunoEntity aluno = findAlunoOrThrow(alunoId);
         log.info("Aluno {} consultado com sucesso.", aluno.getNome());
-        return AlunoResponseDTO.toDto(aluno);
+        return AlunoDetailResponseDTO.from(aluno);
     }
 
     @Transactional
-    public AlunoResponseDTO createAluno(AlunoRequestDTO dto) {
+    public UUID createAluno(AlunoRequestDTO dto) {
         AlunoEntity aluno = dto.toEntity();
 
         if (alunoRepo.existsByCpf(aluno.getCpf())) {
@@ -90,11 +91,11 @@ public class AlunoServiceImpl implements AlunoService {
         AlunoEntity savedAluno = alunoRepo.save(aluno);
 
         log.info("Aluno {} cadastrado com sucesso.", savedAluno.getNome().toUpperCase());
-        return AlunoResponseDTO.toDto(savedAluno);
+        return savedAluno.getId();
     }
 
     @Transactional
-    public AlunoResponseDTO updateAluno(UUID alunoId, AlunoRequestDTO dto) {
+    public void updateAluno(UUID alunoId, AlunoRequestDTO dto) {
         AlunoEntity aluno = findAlunoOrThrow(alunoId);
         AlunoEntity requestedAluno = dto.toEntity();
 
@@ -117,7 +118,6 @@ public class AlunoServiceImpl implements AlunoService {
         );
 
         log.info("Aluno {} atualizado com sucesso.", aluno.getNome().toUpperCase());
-        return AlunoResponseDTO.toDto(aluno);
     }
 
     @Transactional

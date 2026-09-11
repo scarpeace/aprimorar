@@ -1,13 +1,13 @@
 package aprimorar.pessoas.aluno.web.controller;
 
 import java.util.List;
+import java.net.URI;
 import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,9 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import aprimorar.pessoas.aluno.service.AlunoServiceImpl;
+import aprimorar.pessoas.aluno.web.dto.AlunoDetailResponseDTO;
 import aprimorar.pessoas.aluno.web.dto.AlunoFiltroRequest;
+import aprimorar.pessoas.aluno.web.dto.AlunoListResponseDTO;
 import aprimorar.pessoas.aluno.web.dto.AlunoRequestDTO;
-import aprimorar.pessoas.aluno.web.dto.AlunoResponseDTO;
 import aprimorar.pessoas.aluno.web.dto.AlunosListDTO;
 import aprimorar.common.openapi.BadRequestProblemResponse;
 import aprimorar.common.openapi.CommonProblemResponses;
@@ -50,19 +51,19 @@ public class AlunoController {
     @PostMapping
     @Operation(operationId = "criarAluno", description = "Cria um novo aluno com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso.")
-    public ResponseEntity<AlunoResponseDTO> createAluno(@RequestBody @Valid AlunoRequestDTO alunoRequestDTO) {
-        AlunoResponseDTO response = alunoService.createAluno(alunoRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Void> createAluno(@RequestBody @Valid AlunoRequestDTO alunoRequestDTO) {
+        UUID id = alunoService.createAluno(alunoRequestDTO);
+        return ResponseEntity.created(URI.create("/v1/alunos/" + id)).build();
     }
 
     @GetMapping
     @Operation(operationId = "getAlunos", description = "Retorna uma lista paginada de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
-    public ResponseEntity<Page<AlunoResponseDTO>> getAlunos(
+    public ResponseEntity<Page<AlunoListResponseDTO>> getAlunos(
         @ParameterObject AlunoFiltroRequest filtro,
         @ParameterObject @PageableDefault(sort = "nome") Pageable pageable
     ) {
-        Page<AlunoResponseDTO> alunos = alunoService.getAlunos(filtro, pageable);
+        Page<AlunoListResponseDTO> alunos = alunoService.getAlunos(filtro, pageable);
         return ResponseEntity.ok(alunos);
     }
 
@@ -77,20 +78,20 @@ public class AlunoController {
     @GetMapping("/{alunoId}")
     @Operation(operationId = "getAlunoById", description = "Retorna um aluno por ID.")
     @ApiResponse(responseCode = "200", description = "Aluno retornado com sucesso.")
-    public ResponseEntity<AlunoResponseDTO> getAlunoById(@PathVariable UUID alunoId) {
-        AlunoResponseDTO foundAluno = alunoService.findAlunoById(alunoId);
+    public ResponseEntity<AlunoDetailResponseDTO> getAlunoById(@PathVariable UUID alunoId) {
+        AlunoDetailResponseDTO foundAluno = alunoService.findAlunoById(alunoId);
         return ResponseEntity.ok(foundAluno);
     }
 
     @PutMapping("/{alunoId}")
     @Operation(operationId = "updateAluno", description = "Atualiza um aluno por ID.")
     @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso.")
-    public ResponseEntity<AlunoResponseDTO> updateAluno(
+    public ResponseEntity<Void> updateAluno(
         @PathVariable UUID alunoId,
         @RequestBody @Valid AlunoRequestDTO dto
     ) {
-        AlunoResponseDTO updatedAluno = alunoService.updateAluno(alunoId, dto);
-        return ResponseEntity.ok(updatedAluno);
+        alunoService.updateAluno(alunoId, dto);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{alunoId}/deactivate")

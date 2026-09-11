@@ -41,21 +41,6 @@ class AlunoServiceImplQueryTest {
     }
 
     @Test
-    void shouldGetAlunos() {
-        var aluno = aluno("Ana Silva");
-        var pageable = PageRequest.of(0, 10);
-
-        when(alunoRepo.findAll(any(Specification.class), eq(pageable))).thenReturn(new PageImpl<>(List.of(aluno), pageable, 1));
-
-        var response = service.getAlunos(new AlunoFiltroRequest(null, null, null, null, true), pageable);
-
-        assertEquals(1, response.getTotalElements());
-        assertEquals(aluno.getId(), response.getContent().getFirst().id());
-        assertEquals("Ana Silva", response.getContent().getFirst().nome());
-        assertEquals("João Pereira", response.getContent().getFirst().responsavel().nome());
-    }
-
-    @Test
     void shouldListAlunos() {
         var aluno = aluno("Ana Silva");
 

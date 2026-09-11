@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Schema(description = "Dados do colaborador retornados pela API")
-public record ColaboradorResponseDTO(
+@Schema(description = "Dados detalhados do colaborador")
+public record ColaboradorDetailResponseDTO(
     @NotNull
     @Schema(description = "Identificador unico do colaborador", example = "550e8400-e29b-41d4-a716-446655440000")
     UUID id,
@@ -49,8 +49,8 @@ public record ColaboradorResponseDTO(
     LocalDateTime updatedAt
 ) {
 
-    public static ColaboradorResponseDTO toDto(ColaboradorEntity colaborador) {
-        return new ColaboradorResponseDTO(
+    public static ColaboradorDetailResponseDTO from(ColaboradorEntity colaborador) {
+        return new ColaboradorDetailResponseDTO(
             colaborador.getId(),
             colaborador.getNome(),
             colaborador.getDataNascimento(),

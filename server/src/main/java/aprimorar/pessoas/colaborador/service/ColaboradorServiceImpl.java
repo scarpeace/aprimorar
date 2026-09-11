@@ -8,8 +8,9 @@ import aprimorar.pessoas.colaborador.domain.exception.ColaboradorNaoEncontradoEx
 import aprimorar.pessoas.colaborador.repository.ColaboradorRepository;
 import aprimorar.pessoas.colaborador.repository.specifications.ColaboradorSpecifications;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradorFiltroRequest;
+import aprimorar.pessoas.colaborador.web.dto.ColaboradorDetailResponseDTO;
+import aprimorar.pessoas.colaborador.web.dto.ColaboradorListResponseDTO;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradorRequestDTO;
-import aprimorar.pessoas.colaborador.web.dto.ColaboradorResponseDTO;
 import aprimorar.pessoas.colaborador.web.dto.ColaboradoresOptionsDTO;
 import java.util.List;
 import java.util.UUID;
@@ -41,19 +42,19 @@ public class ColaboradorServiceImpl implements ColaboradorService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ColaboradorResponseDTO> getColaboradores(ColaboradorFiltroRequest filtro, Pageable pageable) {
+    public Page<ColaboradorListResponseDTO> getColaboradores(ColaboradorFiltroRequest filtro, Pageable pageable) {
         Specification<ColaboradorEntity> spec = ColaboradorSpecifications.comFiltros(filtro);
         Page<ColaboradorEntity> colaboradoresPage = colaboradorRepo.findAll(spec, pageable);
 
         log.info("Consulta de colaboradores finalizada, {} registros encontrados.", colaboradoresPage.getTotalElements());
-        return colaboradoresPage.map(ColaboradorResponseDTO::toDto);
+        return colaboradoresPage.map(ColaboradorListResponseDTO::from);
     }
 
     @Transactional(readOnly = true)
-    public ColaboradorResponseDTO findById(UUID colaboradorId) {
+    public ColaboradorDetailResponseDTO findById(UUID colaboradorId) {
         ColaboradorEntity colaborador = findByIdOrThrow(colaboradorId);
         log.info("Colaborador {} consultado com sucesso.", colaborador.getNome().toUpperCase());
-        return ColaboradorResponseDTO.toDto(colaborador);
+        return ColaboradorDetailResponseDTO.from(colaborador);
     }
 
     @Transactional(readOnly = true)
@@ -68,7 +69,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
     }
 
     @Transactional
-    public ColaboradorResponseDTO createColaborador(ColaboradorRequestDTO dto) {
+    public UUID createColaborador(ColaboradorRequestDTO dto) {
         ColaboradorEntity colaborador = dto.toEntity();
 
         if (colaboradorRepo.existsByCpf(colaborador.getCpf())) {
@@ -81,11 +82,11 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 
         ColaboradorEntity savedColaborador = colaboradorRepo.save(colaborador);
         log.info("Colaborador {} cadastrado com sucesso.", savedColaborador.getNome().toUpperCase());
-        return ColaboradorResponseDTO.toDto(savedColaborador);
+        return savedColaborador.getId();
     }
 
     @Transactional
-    public ColaboradorResponseDTO updateColaborador(UUID colaboradorId, ColaboradorRequestDTO dto) {
+    public void updateColaborador(UUID colaboradorId, ColaboradorRequestDTO dto) {
         ColaboradorEntity colaborador = findByIdOrThrow(colaboradorId);
         ColaboradorEntity requestedColaborador = dto.toEntity();
 
@@ -104,7 +105,6 @@ public class ColaboradorServiceImpl implements ColaboradorService {
         );
 
         log.info("Colaborador {} atualizado com sucesso.", colaborador.getNome().toUpperCase());
-        return ColaboradorResponseDTO.toDto(colaborador);
     }
 
     @Transactional
