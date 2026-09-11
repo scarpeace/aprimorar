@@ -80,6 +80,37 @@ INSERT INTO atendimentos (
   (1039, 'de87ab23-c4f6-5cdb-88e4-c1e524f9f5b3', '9e79c84d-d10a-59ca-8196-3963139e8096', TIMESTAMP '2026-12-08 14:00:00', TIMESTAMP '2026-12-08 15:00:00', 'MENTORIA', 110.00, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   (1040, '41e8e58f-124a-5969-b16f-ac57993d7a00', '890322e5-6327-53c6-a9a7-726765d704d8', TIMESTAMP '2026-12-15 16:00:00', TIMESTAMP '2026-12-15 17:30:00', 'ENEM', 130.00, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
+-- Cobranças fictícias para os atendimentos acima.
+-- Parte delas fica paga para permitir testar os dois estados na consulta composta.
+INSERT INTO cobrancas_alunos (
+  atendimento_id,
+  aluno_id,
+  valor,
+  status,
+  comprovante_url,
+  data_pagamento,
+  forma_pagamento,
+  created_at,
+  updated_at
+)
+SELECT
+  atendimento.id,
+  atendimento.aluno_id,
+  atendimento.repasse_colaborador + 40.00,
+  CASE WHEN atendimento.id % 4 = 0 THEN 'PAGO' ELSE 'PENDENTE' END,
+  CASE WHEN atendimento.id % 4 = 0
+    THEN 'https://example.com/comprovantes/cobranca-' || atendimento.id || '.pdf'
+    ELSE NULL
+  END,
+  CASE WHEN atendimento.id % 4 = 0
+    THEN atendimento.data_hora_fim + INTERVAL '1 hour'
+    ELSE NULL
+  END,
+  CASE WHEN atendimento.id % 4 = 0 THEN 'PIX' ELSE NULL END,
+  CURRENT_TIMESTAMP,
+  CURRENT_TIMESTAMP
+FROM atendimentos atendimento;
+
 INSERT INTO despesas (
   id,
   titulo,

@@ -1,6 +1,5 @@
 package aprimorar.pessoas.aluno.service;
 
-import aprimorar.pessoas.aluno.api.Aluno;
 import aprimorar.pessoas.aluno.api.AlunoService;
 import aprimorar.pessoas.aluno.domain.AlunoEntity;
 import aprimorar.pessoas.aluno.domain.exception.AlunoDuplicadoException;
@@ -37,14 +36,8 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Override
     @Transactional(readOnly = true)
-    public Aluno buscarPorId(UUID alunoId) {
-        AlunoEntity aluno = findAlunoOrThrow(alunoId);
-
-        return new Aluno(
-            aluno.getId(),
-            aluno.getNome(),
-            aluno.getEscola(),
-            aluno.getActive());
+    public boolean existsById(UUID alunoId) {
+        return alunoRepo.existsById(alunoId);
     }
 
     @Transactional(readOnly = true)

@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface ColaboradorService {
 
-    Colaborador buscarPorId(UUID colaboradorId);
+    boolean existsById(UUID colaboradorId);
 }

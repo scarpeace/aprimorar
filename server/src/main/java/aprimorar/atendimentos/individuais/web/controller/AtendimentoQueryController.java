@@ -1,7 +1,7 @@
 package aprimorar.atendimentos.individuais.web.controller;
 
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoFiltroRequest;
-import aprimorar.atendimentos.individuais.service.AtendimentoServiceImpl;
+import aprimorar.atendimentos.individuais.service.AtendimentoQueryService;
 import aprimorar.atendimentos.individuais.web.dto.AtendimentoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Atendimento")
 public class AtendimentoQueryController {
 
-    private final AtendimentoServiceImpl atendimentoService;
+    private final AtendimentoQueryService atendimentoService;
 
-    public AtendimentoQueryController(AtendimentoServiceImpl atendimentoService) {
+    public AtendimentoQueryController(AtendimentoQueryService atendimentoService) {
         this.atendimentoService = atendimentoService;
     }
 

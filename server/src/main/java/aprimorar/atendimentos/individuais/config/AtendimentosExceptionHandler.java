@@ -1,5 +1,6 @@
 package aprimorar.atendimentos.individuais.config;
 
+import aprimorar.atendimentos.cobranca_aluno.domain.exception.CobrancaAlunoDadosInvalidosException;
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoConflitanteException;
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoDadosInvalidosException;
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoEdicaoExpiradaException;
@@ -26,7 +27,9 @@ public class AtendimentosExceptionHandler {
     @ExceptionHandler({
         AtendimentoConflitanteException.class,
         AtendimentoDadosInvalidosException.class,
-        AtendimentoEdicaoExpiradaException.class
+        AtendimentoEdicaoExpiradaException.class,
+        CobrancaAlunoDadosInvalidosException.class,
+        IllegalStateException.class
     })
     public ResponseEntity<ProblemDetail> handleBadRequest(RuntimeException ex, HttpServletRequest request) {
         return response(HttpStatus.BAD_REQUEST, "Erro de regra de negócio", ex.getMessage(), request);

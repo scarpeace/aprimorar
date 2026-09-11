@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface AlunoService {
 
-    Aluno buscarPorId(UUID alunoId);
+    boolean existsById(UUID alunoId);
 }

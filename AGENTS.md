@@ -62,11 +62,11 @@ aprimorar/
 ```
 
 - `auth` concentra login e gerenciamento de usuários.
-- `atendimentos/individuais` ainda não possui contrato público; sua
-  implementação atual fica em `atendimentos/individuais/service`.
-- `pessoas` expõe `Aluno`/`AlunoService` em `aluno/api` e
-  `Colaborador`/`ColaboradorService` em `colaborador/api`; cada subdomínio possui
-  seu próprio `service` e `config`.
+- `atendimentos/individuais` expõe apenas eventos em `api`; sua implementação
+  fica separada entre `AtendimentoMutationService` e `AtendimentoQueryService`.
+- `pessoas` expõe `AlunoService` e `ColaboradorService` em `api`; esses
+  contratos oferecem apenas verificação de existência por ID. Cada subdomínio
+  possui seu próprio `service` e `config`.
 - `pessoas/shared/endereco` contém o value object `Endereco` e seus DTOs; não
   é uma entidade nem possui ciclo de vida próprio.
 - `Responsavel` é um value object embutido em `AlunoEntity`, sem tabela própria.
@@ -94,9 +94,9 @@ Dentro de `server/`:
 
 - `AtendimentoEntity` armazena `alunoId` e `colaboradorId` como escalares, sem
   relações JPA com outros módulos
-- a criação de uma cobrança é disparada pelo evento público de atendimento e
-  persistida pelo submódulo `financeiro/cobranca_aluno`; várias cobranças podem
-  compartilhar o mesmo `pagamento_id`
+- a criação, atualização e exclusão da cobrança são disparadas pelos eventos
+  públicos de atendimento e persistidas pelo submódulo
+  `financeiro/cobranca_aluno`
 - `AlunoEntity` e `ColaboradorEntity` usam `Endereco` com `@Embedded`
 - `AlunoEntity` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável

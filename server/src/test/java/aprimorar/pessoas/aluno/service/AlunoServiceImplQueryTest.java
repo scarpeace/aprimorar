@@ -2,6 +2,7 @@ package aprimorar.pessoas.aluno.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -69,19 +70,16 @@ class AlunoServiceImplQueryTest {
     }
 
     @Test
-    void shouldExposeAlunoContract() {
+    void shouldCheckAlunoExists() {
         var id = UUID.randomUUID();
         var aluno = aluno("Ana Silva");
         setId(aluno, id);
 
-        when(alunoRepo.findById(id)).thenReturn(Optional.of(aluno));
+        when(alunoRepo.existsById(id)).thenReturn(true);
 
-        var response = service.buscarPorId(id);
+        var response = service.existsById(id);
 
-        assertEquals(id, response.id());
-        assertEquals("Ana Silva", response.nome());
-        assertEquals("Colégio Aprimorar", response.escola());
-        assertEquals(true, response.ativo());
+        assertTrue(response);
     }
 
     @Test

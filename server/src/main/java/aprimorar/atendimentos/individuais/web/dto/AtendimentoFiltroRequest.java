@@ -22,6 +22,8 @@ public record AtendimentoFiltroRequest(
     @Schema(description = "ID do aluno", nullable = true)
     UUID alunoId,
     @Schema(description = "ID do colaborador", nullable = true)
-    UUID colaboradorId
+    UUID colaboradorId,
+    @Schema(description = "Status da cobrança", example = "PENDENTE", nullable = true)
+    String statusCobranca
 ) {
 }

@@ -1,9 +1,7 @@
 package aprimorar.atendimentos.individuais.web.dto;
 
-import aprimorar.atendimentos.individuais.domain.AtendimentoEntity;
+import aprimorar.atendimentos.individuais.domain.AtendimentoConsultaViewEntity;
 import aprimorar.atendimentos.individuais.enums.TipoAtendimento;
-import aprimorar.pessoas.aluno.api.Aluno;
-import aprimorar.pessoas.colaborador.api.Colaborador;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -34,20 +32,16 @@ public record AtendimentoResponse(
     BigDecimal repasseColaborador,
 
     @NotNull
-    @Schema(nullable = false, description = "ID do aluno vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174000")
-    UUID alunoId,
+    @Schema(nullable = false, description = "Resumo do aluno vinculado ao atendimento")
+    AlunoResumo alunoResumo,
 
     @NotNull
-    @Schema(nullable = false, description = "Nome do aluno vinculado ao atendimento", example = "Maria da Silva")
-    String nomeAluno,
+    @Schema(nullable = false, description = "Resumo do colaborador vinculado ao atendimento")
+    ColaboradorResumo colaboradorResumo,
 
     @NotNull
-    @Schema(nullable = false, description = "ID do colaborador vinculado ao atendimento", example = "123e4567-e89b-12d3-a456-426614174001")
-    UUID colaboradorId,
-
-    @NotNull
-    @Schema(nullable = false, description = "Nome do colaborador vinculado ao atendimento", example = "João Santos")
-    String nomeColaborador,
+    @Schema(nullable = false, description = "Resumo da cobrança do atendimento")
+    CobrancaResumo cobranca,
 
     @NotNull
     @Schema(nullable = false, description = "Data de criacao do atendimento", example = "2024-03-10T15:33:42Z")
@@ -57,19 +51,41 @@ public record AtendimentoResponse(
     @Schema(nullable = true, description = "Data de atualizacao do atendimento", example = "2024-03-10T15:33:42Z")
     LocalDateTime updatedAt
 ) {
-    public static AtendimentoResponse toDto(AtendimentoEntity atendimento, Aluno aluno, Colaborador colaborador) {
+    public static AtendimentoResponse toDto(AtendimentoConsultaViewEntity atendimento) {
         return new AtendimentoResponse(
             atendimento.getId(),
             atendimento.getTipo(),
             atendimento.getDataHoraInicio(),
             atendimento.getDataHoraFim(),
             atendimento.getRepasseColaborador(),
-            atendimento.getAlunoId(),
-            aluno.nome(),
-            atendimento.getColaboradorId(),
-            colaborador.nome(),
+            new AlunoResumo(atendimento.getAlunoId(), atendimento.getAlunoNome()),
+            new ColaboradorResumo(atendimento.getColaboradorId(), atendimento.getColaboradorNome()),
+            new CobrancaResumo(
+                atendimento.getCobrancaId(),
+                atendimento.getCobrancaValor(),
+                atendimento.getCobrancaStatus(),
+                atendimento.getCobrancaDataPagamento(),
+                atendimento.getCobrancaFormaPagamento(),
+                atendimento.getCobrancaComprovanteUrl()
+            ),
             atendimento.getCreatedAt(),
             atendimento.getUpdatedAt()
         );
+    }
+
+    public record AlunoResumo(UUID id, String nome) {
+    }
+
+    public record ColaboradorResumo(UUID id, String nome) {
+    }
+
+    public record CobrancaResumo(
+        Long id,
+        BigDecimal valor,
+        String status,
+        LocalDateTime dataPagamento,
+        String formaPagamento,
+        String comprovanteUrl
+    ) {
     }
 }

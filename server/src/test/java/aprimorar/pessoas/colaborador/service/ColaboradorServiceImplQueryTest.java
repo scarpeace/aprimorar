@@ -2,6 +2,7 @@ package aprimorar.pessoas.colaborador.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -70,18 +71,16 @@ class ColaboradorServiceImplQueryTest {
     }
 
     @Test
-    void shouldExposeColaboradorContract() {
+    void shouldCheckColaboradorExists() {
         var id = UUID.randomUUID();
         var colaborador = colaborador("João Pereira");
         setId(colaborador, id);
 
-        when(colaboradorRepo.findById(id)).thenReturn(Optional.of(colaborador));
+        when(colaboradorRepo.existsById(id)).thenReturn(true);
 
-        var response = service.buscarPorId(id);
+        var response = service.existsById(id);
 
-        assertEquals(id, response.id());
-        assertEquals("João Pereira", response.nome());
-        assertEquals(true, response.ativo());
+        assertTrue(response);
     }
 
     @Test

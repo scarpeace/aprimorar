@@ -1,6 +1,5 @@
 package aprimorar.pessoas.colaborador.service;
 
-import aprimorar.pessoas.colaborador.api.Colaborador;
 import aprimorar.pessoas.colaborador.api.ColaboradorService;
 import aprimorar.pessoas.colaborador.domain.ColaboradorEntity;
 import aprimorar.pessoas.colaborador.domain.exception.ColaboradorDuplicadoException;
@@ -36,9 +35,8 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 
     @Override
     @Transactional(readOnly = true)
-    public Colaborador buscarPorId(UUID colaboradorId) {
-        ColaboradorEntity colaborador = findByIdOrThrow(colaboradorId);
-        return new Colaborador(colaborador.getId(), colaborador.getNome(), colaborador.getActive());
+    public boolean existsById(UUID colaboradorId) {
+        return colaboradorRepo.existsById(colaboradorId);
     }
 
     @Transactional(readOnly = true)
