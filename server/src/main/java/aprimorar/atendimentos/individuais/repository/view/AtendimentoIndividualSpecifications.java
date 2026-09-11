@@ -3,6 +3,7 @@ package aprimorar.atendimentos.individuais.repository.view;
 import aprimorar.atendimentos.individuais.domain.AtendimentoIndividualViewEntity;
 import aprimorar.atendimentos.individuais.domain.enums.TipoAtendimento;
 import aprimorar.atendimentos.individuais.web.dto.atendimento.AtendimentoIndividualFiltroRequest;
+import aprimorar.atendimentos.individuais.web.dto.calendario.AtendimentoIndividualCalendarioFiltroRequest;
 import aprimorar.atendimentos.individuais.web.dto.cobranca.CobrancaIndividualFiltroRequest;
 import aprimorar.atendimentos.individuais.web.dto.repasse.RepasseIndividualFiltroRequest;
 import java.time.LocalDate;
@@ -29,6 +30,16 @@ public final class AtendimentoIndividualSpecifications {
             .and(alunoIdIgual(filtro.alunoId()))
             .and(colaboradorIdIgual(filtro.colaboradorId()))
             .and(valorIgual("cobrancaStatus", filtro.statusCobranca()));
+    }
+
+    public static Specification<AtendimentoIndividualViewEntity> paraCalendario(
+        AtendimentoIndividualCalendarioFiltroRequest filtro
+    ) {
+        return Specification
+            .where(dataHoraFimMaiorOuIgual(filtro.inicio()))
+            .and(dataHoraInicioMenorOuIgual(filtro.fim()))
+            .and(alunoIdIgual(filtro.alunoId()))
+            .and(colaboradorIdIgual(filtro.colaboradorId()));
     }
 
     public static Specification<AtendimentoIndividualViewEntity> paraCobrancas(
@@ -93,6 +104,18 @@ public final class AtendimentoIndividualSpecifications {
         return (root, query, cb) -> fim == null
             ? null
             : cb.lessThanOrEqualTo(root.get("dataHoraFim"), fim);
+    }
+
+    private static Specification<AtendimentoIndividualViewEntity> dataHoraFimMaiorOuIgual(LocalDateTime inicio) {
+        return (root, query, cb) -> inicio == null
+            ? null
+            : cb.greaterThanOrEqualTo(root.get("dataHoraFim"), inicio);
+    }
+
+    private static Specification<AtendimentoIndividualViewEntity> dataHoraInicioMenorOuIgual(LocalDateTime fim) {
+        return (root, query, cb) -> fim == null
+            ? null
+            : cb.lessThanOrEqualTo(root.get("dataHoraInicio"), fim);
     }
 
     private static Specification<AtendimentoIndividualViewEntity> tipoIgual(TipoAtendimento tipo) {

@@ -1,5 +1,6 @@
 package aprimorar.despesas.config;
 
+import aprimorar.despesas.domain.exception.DespesaDadosInvalidosException;
 import aprimorar.despesas.domain.exception.DespesaNaoEncontradaException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -14,6 +15,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class DespesasExceptionHandler {
+
+    @ExceptionHandler(DespesaDadosInvalidosException.class)
+    public ResponseEntity<ProblemDetail> handleBadRequest(
+        DespesaDadosInvalidosException ex,
+        HttpServletRequest request
+    ) {
+        ProblemDetail body = ProblemDetail.forStatusAndDetail(
+            HttpStatus.BAD_REQUEST,
+            ex.getMessage()
+        );
+        body.setTitle("Dados inválidos da despesa");
+        body.setInstance(URI.create(request.getRequestURI()));
+        return ResponseEntity.badRequest().body(body);
+    }
 
     @ExceptionHandler(DespesaNaoEncontradaException.class)
     public ResponseEntity<ProblemDetail> handleNotFound(DespesaNaoEncontradaException ex, HttpServletRequest request) {

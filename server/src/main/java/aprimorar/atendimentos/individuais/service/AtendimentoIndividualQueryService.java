@@ -8,12 +8,16 @@ import aprimorar.atendimentos.individuais.repository.view.AtendimentoIndividualS
 import aprimorar.atendimentos.individuais.repository.view.AtendimentoIndividualViewRepository;
 import aprimorar.atendimentos.individuais.web.dto.atendimento.AtendimentoIndividualFiltroRequest;
 import aprimorar.atendimentos.individuais.web.dto.atendimento.AtendimentoIndividualResponse;
+import aprimorar.atendimentos.individuais.web.dto.calendario.AtendimentoIndividualCalendarioFiltroRequest;
+import aprimorar.atendimentos.individuais.web.dto.calendario.AtendimentoIndividualCalendarioResponse;
 import aprimorar.atendimentos.individuais.web.dto.cobranca.CobrancaIndividualFiltroRequest;
 import aprimorar.atendimentos.individuais.web.dto.cobranca.CobrancaIndividualResponse;
 import aprimorar.atendimentos.individuais.web.dto.repasse.RepasseIndividualFiltroRequest;
 import aprimorar.atendimentos.individuais.web.dto.repasse.RepasseIndividualResponse;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +46,16 @@ public class AtendimentoIndividualQueryService {
             .orElseThrow(AtendimentoIndividualNaoEncontradoException::new);
 
         return AtendimentoIndividualResponse.toDto(atendimento);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AtendimentoIndividualCalendarioResponse> buscarCalendario(
+        AtendimentoIndividualCalendarioFiltroRequest filtro
+    ) {
+        return atendimentoConsultaRepository.findAll(
+            AtendimentoIndividualSpecifications.paraCalendario(filtro),
+            Sort.by(Sort.Direction.ASC, "dataHoraInicio")
+        ).stream().map(AtendimentoIndividualCalendarioResponse::toDto).toList();
     }
 
     @Transactional(readOnly = true)

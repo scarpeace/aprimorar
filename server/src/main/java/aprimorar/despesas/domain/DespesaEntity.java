@@ -18,6 +18,7 @@ import aprimorar.despesas.domain.enums.CategoriaDespesa;
 import aprimorar.despesas.domain.enums.FormaPagamento;
 import aprimorar.despesas.domain.enums.StatusDespesa;
 import aprimorar.despesas.domain.enums.TipoDespesa;
+import aprimorar.despesas.domain.exception.DespesaDadosInvalidosException;
 import lombok.Getter;
 
 @Getter
@@ -127,22 +128,22 @@ public class DespesaEntity {
         FormaPagamento formaPagamento
     ) {
         if (titulo == null || titulo.isBlank()) {
-            throw new IllegalArgumentException("Título é obrigatório");
+            throw new DespesaDadosInvalidosException("Título é obrigatório");
         }
         if (tipo == null) {
-            throw new IllegalArgumentException("Tipo é obrigatório");
+            throw new DespesaDadosInvalidosException("Tipo é obrigatório");
         }
         if (categoria == null) {
-            throw new IllegalArgumentException("Categoria é obrigatória");
+            throw new DespesaDadosInvalidosException("Categoria é obrigatória");
         }
         if (valor == null) {
-            throw new IllegalArgumentException("Valor é obrigatório");
+            throw new DespesaDadosInvalidosException("Valor é obrigatório");
         }
         if (dataVencimento == null) {
-            throw new IllegalArgumentException("Data de vencimento é obrigatória");
+            throw new DespesaDadosInvalidosException("Data de vencimento é obrigatória");
         }
         if (formaPagamento == null) {
-            throw new IllegalArgumentException("Forma de pagamento é obrigatória");
+            throw new DespesaDadosInvalidosException("Forma de pagamento é obrigatória");
         }
     }
 

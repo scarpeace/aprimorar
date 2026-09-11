@@ -5,6 +5,10 @@ import aprimorar.auth.web.dto.AuthRequestDTO;
 import aprimorar.auth.web.dto.AuthResponseDTO;
 import aprimorar.auth.web.dto.UserRequestDTO;
 import aprimorar.auth.web.dto.UserResponseDTO;
+import aprimorar.common.openapi.BadRequestProblemResponse;
+import aprimorar.common.openapi.CommonProblemResponses;
+import aprimorar.common.openapi.ConflictProblemResponse;
+import aprimorar.common.openapi.NotFoundProblemResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/auth")
 @Tag(name = "Auth", description = "APIs de autenticação e usuários")
+@CommonProblemResponses
 public class AuthController {
 
     private final AuthService authService;
@@ -38,6 +43,7 @@ public class AuthController {
     @Operation(operationId = "login", description = "Autentica um usuário e retorna um access token JWT.")
     @SecurityRequirements({})
     @ApiResponse(responseCode = "200", description = "Usuário autenticado com sucesso.")
+    @BadRequestProblemResponse
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthRequestDTO request) {
         return ResponseEntity.ok(authService.authenticate(request.username(), request.password()));
     }
@@ -45,6 +51,8 @@ public class AuthController {
     @PostMapping("/users")
     @Operation(operationId = "createUser", summary = "Cria um novo usuário")
     @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso")
+    @BadRequestProblemResponse
+    @ConflictProblemResponse
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO dto) {
         UserResponseDTO response = authService.createUser(dto);
         return ResponseEntity.created(URI.create("/v1/auth/users/" + response.id())).body(response);
@@ -60,6 +68,7 @@ public class AuthController {
     @GetMapping("/users/me/{username}")
     @Operation(operationId = "me", summary = "Retorna um usuário pelo e-mail")
     @ApiResponse(responseCode = "200", description = "Usuário retornado com sucesso")
+    @NotFoundProblemResponse
     public ResponseEntity<UserResponseDTO> me(@PathVariable String username) {
         return ResponseEntity.ok(authService.findUserByUsername(username));
     }
@@ -67,6 +76,8 @@ public class AuthController {
     @DeleteMapping("/users/{id}")
     @Operation(operationId = "deleteUser", summary = "Exclui um usuário")
     @ApiResponse(responseCode = "204", description = "Usuário excluído com sucesso")
+    @ConflictProblemResponse
+    @NotFoundProblemResponse
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         authService.deleteUser(id);
         return ResponseEntity.noContent().build();
@@ -75,6 +86,8 @@ public class AuthController {
     @PatchMapping("/users/{id}/deactivate")
     @Operation(operationId = "deactivateUser", summary = "Desativa um usuário")
     @ApiResponse(responseCode = "204", description = "Usuário desativado com sucesso")
+    @ConflictProblemResponse
+    @NotFoundProblemResponse
     public ResponseEntity<Void> deactivateUser(@PathVariable UUID id) {
         authService.deactivateUser(id);
         return ResponseEntity.noContent().build();
@@ -83,6 +96,8 @@ public class AuthController {
     @PatchMapping("/users/{id}/activate")
     @Operation(operationId = "activateUser", summary = "Ativa um usuário")
     @ApiResponse(responseCode = "204", description = "Usuário ativado com sucesso")
+    @ConflictProblemResponse
+    @NotFoundProblemResponse
     public ResponseEntity<Void> activateUser(@PathVariable UUID id) {
         authService.activateUser(id);
         return ResponseEntity.noContent().build();

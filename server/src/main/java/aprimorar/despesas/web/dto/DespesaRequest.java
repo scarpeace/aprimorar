@@ -46,7 +46,7 @@ public record DespesaRequest(
 ) {
     public DespesaEntity toEntity() {
         return new DespesaEntity(
-            titulo.trim(),
+            titulo,
             tipo,
             categoria,
             valor,

@@ -4,6 +4,10 @@ import aprimorar.despesas.service.DespesaService;
 import aprimorar.despesas.web.dto.DespesaFiltroRequest;
 import aprimorar.despesas.web.dto.DespesaRequest;
 import aprimorar.despesas.web.dto.DespesaResponse;
+import aprimorar.common.openapi.BadRequestProblemResponse;
+import aprimorar.common.openapi.CommonProblemResponses;
+import aprimorar.common.openapi.ConflictProblemResponse;
+import aprimorar.common.openapi.NotFoundProblemResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/despesas")
 @Tag(name = "Despesa", description = "APIs de gestão de despesas operacionais")
+@CommonProblemResponses
 public class DespesaController {
 
     private final DespesaService despesaService;
@@ -38,6 +43,8 @@ public class DespesaController {
     @PostMapping
     @Operation(operationId = "createDespesa", description = "Cria uma nova despesa operacional")
     @ApiResponse(responseCode = "201", description = "Despesa criada com sucesso")
+    @BadRequestProblemResponse
+    @ConflictProblemResponse
     public ResponseEntity<DespesaResponse> createDespesa(@RequestBody @Valid DespesaRequest despesaRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(despesaService.createDespesa(despesaRequest));
     }
@@ -45,6 +52,7 @@ public class DespesaController {
     @GetMapping
     @Operation(operationId = "getDespesas", description = "Lista despesas com paginação, ordenação e filtros opcionais")
     @ApiResponse(responseCode = "200", description = "Página de despesas retornada com sucesso")
+    @BadRequestProblemResponse
     public ResponseEntity<Page<DespesaResponse>> getDespesas(
         @ParameterObject @Valid DespesaFiltroRequest filtro,
         @ParameterObject @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
@@ -55,6 +63,7 @@ public class DespesaController {
     @GetMapping("/{despesaId}")
     @Operation(operationId = "getDespesaById", description = "Retorna uma despesa por ID")
     @ApiResponse(responseCode = "200", description = "Despesa retornada com sucesso")
+    @NotFoundProblemResponse
     public ResponseEntity<DespesaResponse> getDespesaById(@PathVariable Long despesaId) {
         return ResponseEntity.ok(despesaService.findDespesaById(despesaId));
     }
@@ -62,6 +71,9 @@ public class DespesaController {
     @PatchMapping("/{despesaId}")
     @Operation(operationId = "updateDespesa", description = "Atualiza uma despesa por ID")
     @ApiResponse(responseCode = "200", description = "Despesa atualizada com sucesso")
+    @BadRequestProblemResponse
+    @NotFoundProblemResponse
+    @ConflictProblemResponse
     public ResponseEntity<DespesaResponse> updateDespesa(
         @PathVariable Long despesaId,
         @RequestBody @Valid DespesaRequest despesaRequest
@@ -72,6 +84,7 @@ public class DespesaController {
     @DeleteMapping("/{despesaId}")
     @Operation(operationId = "deleteDespesa", description = "Exclui uma despesa por ID")
     @ApiResponse(responseCode = "204", description = "Despesa excluída com sucesso")
+    @NotFoundProblemResponse
     public ResponseEntity<Void> deleteDespesa(@PathVariable Long despesaId) {
         despesaService.deleteDespesa(despesaId);
         return ResponseEntity.noContent().build();
@@ -80,6 +93,7 @@ public class DespesaController {
     @PatchMapping("/{despesaId}/pagar")
     @Operation(operationId = "pagarDespesa", description = "Marca a despesa como paga")
     @ApiResponse(responseCode = "200", description = "Despesa paga com sucesso")
+    @NotFoundProblemResponse
     public ResponseEntity<DespesaResponse> pagar(@PathVariable Long despesaId) {
         return ResponseEntity.ok(despesaService.pagar(despesaId));
     }
@@ -87,6 +101,7 @@ public class DespesaController {
     @PatchMapping("/{despesaId}/cancelarPagamento")
     @Operation(operationId = "cancelarPagamentoDespesa", description = "Cancela o pagamento da despesa")
     @ApiResponse(responseCode = "200", description = "Pagamento da despesa cancelado com sucesso")
+    @NotFoundProblemResponse
     public ResponseEntity<DespesaResponse> cancelarPagamento(@PathVariable Long despesaId) {
         return ResponseEntity.ok(despesaService.cancelarPagamento(despesaId));
     }
