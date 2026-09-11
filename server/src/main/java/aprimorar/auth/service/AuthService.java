@@ -10,7 +10,7 @@ import aprimorar.auth.repository.UserRepository;
 import aprimorar.auth.web.dto.AuthResponseDTO;
 import aprimorar.auth.web.dto.UserRequestDTO;
 import aprimorar.auth.web.dto.UserResponseDTO;
-import aprimorar.common.utils.MapperUtils;
+import aprimorar.common.utils.EmailUtils;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +65,7 @@ public class AuthService implements UserDetailsService {
 
     @Transactional
     public UserResponseDTO createUser(UserRequestDTO dto) {
-        String normalizedUsername = MapperUtils.normalizeEmail(dto.username());
+        String normalizedUsername = EmailUtils.normalize(dto.username());
         if (normalizedUsername == null) {
             throw new UsuarioDadosInvalidosException("E-mail em formato inválido");
         }
@@ -90,7 +90,7 @@ public class AuthService implements UserDetailsService {
 
     @Transactional
     public void ensureAdminUser() {
-        String normalizedUsername = MapperUtils.normalizeEmail(adminUsername);
+        String normalizedUsername = EmailUtils.normalize(adminUsername);
         if (normalizedUsername == null) {
             throw new IllegalStateException("Configuração aprimorar.admin-username inválida");
         }
@@ -136,7 +136,7 @@ public class AuthService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public UserResponseDTO findUserByUsername(String username) {
-        String normalizedUsername = MapperUtils.normalizeEmail(username);
+        String normalizedUsername = EmailUtils.normalize(username);
         return userRepository.findByUsername(normalizedUsername)
             .map(UserResponseDTO::toDto)
             .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
@@ -144,7 +144,7 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserEntity loadUserByUsername(String username) {
-        String normalizedUsername = MapperUtils.normalizeEmail(username);
+        String normalizedUsername = EmailUtils.normalize(username);
         if (normalizedUsername == null) {
             throw new UsernameNotFoundException("Usuário não encontrado");
         }

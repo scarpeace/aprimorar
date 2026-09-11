@@ -2,7 +2,7 @@ package aprimorar.auth.domain;
 
 import aprimorar.auth.Role;
 import aprimorar.auth.domain.exception.UsuarioEstadoInvalidoException;
-import aprimorar.common.utils.MapperUtils;
+import aprimorar.common.utils.EmailUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -83,7 +83,7 @@ public class UserEntity implements UserDetails {
     }
 
     private String validateUsername(String username) {
-        var normalized = MapperUtils.normalizeEmail(username);
+        var normalized = EmailUtils.normalize(username);
 
         if (normalized == null || normalized.isBlank()) {
             throw new IllegalArgumentException("E-mail é obrigatório");

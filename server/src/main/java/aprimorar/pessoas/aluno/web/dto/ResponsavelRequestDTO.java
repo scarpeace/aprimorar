@@ -1,6 +1,8 @@
 package aprimorar.pessoas.aluno.web.dto;
 
-import aprimorar.common.utils.MapperUtils;
+import aprimorar.common.utils.CpfUtils;
+import aprimorar.common.utils.EmailUtils;
+import aprimorar.common.utils.PhoneUtils;
 import aprimorar.pessoas.aluno.domain.Responsavel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -28,9 +30,9 @@ public record ResponsavelRequestDTO(
     public Responsavel toDomain() {
         return new Responsavel(
             nome,
-            MapperUtils.normalizeContact(telefone),
-            MapperUtils.normalizeCpf(cpf),
-            MapperUtils.normalizeEmail(email)
+            PhoneUtils.normalize(telefone),
+            CpfUtils.normalize(cpf),
+            EmailUtils.normalize(email)
         );
     }
 }

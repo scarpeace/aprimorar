@@ -2,7 +2,9 @@ package aprimorar.pessoas.colaborador.web.dto;
 
 import java.time.LocalDate;
 
-import aprimorar.common.utils.MapperUtils;
+import aprimorar.common.utils.CpfUtils;
+import aprimorar.common.utils.EmailUtils;
+import aprimorar.common.utils.PhoneUtils;
 import aprimorar.pessoas.colaborador.domain.ColaboradorEntity;
 import aprimorar.pessoas.colaborador.enums.FuncoesColaborador;
 import aprimorar.pessoas.shared.endereco.web.dto.EnderecoRequestDTO;
@@ -55,9 +57,9 @@ public record ColaboradorRequestDTO(
             this.nome(),
             this.dataNascimento(),
             this.pix(),
-            MapperUtils.normalizeContact(this.telefone()),
-            MapperUtils.normalizeCpf(this.cpf()),
-            MapperUtils.normalizeEmail(this.email()),
+            PhoneUtils.normalize(this.telefone()),
+            CpfUtils.normalize(this.cpf()),
+            EmailUtils.normalize(this.email()),
             this.funcao(),
             this.endereco().toEntity()
         );

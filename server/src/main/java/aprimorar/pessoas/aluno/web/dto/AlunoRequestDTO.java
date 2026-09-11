@@ -1,7 +1,9 @@
 package aprimorar.pessoas.aluno.web.dto;
 
 import java.time.LocalDate;
-import aprimorar.common.utils.MapperUtils;
+import aprimorar.common.utils.CpfUtils;
+import aprimorar.common.utils.EmailUtils;
+import aprimorar.common.utils.PhoneUtils;
 import aprimorar.pessoas.aluno.domain.AlunoEntity;
 import aprimorar.pessoas.shared.endereco.web.dto.EnderecoRequestDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,9 +55,9 @@ public record AlunoRequestDTO(
         return new AlunoEntity(
             this.nome(),
             this.dataNascimento(),
-            MapperUtils.normalizeContact(this.telefone()),
-            MapperUtils.normalizeCpf(this.cpf()),
-            MapperUtils.normalizeEmail(this.email()),
+            PhoneUtils.normalize(this.telefone()),
+            CpfUtils.normalize(this.cpf()),
+            EmailUtils.normalize(this.email()),
             this.escola(),
             this.responsavel().toDomain(),
             this.endereco().toEntity()

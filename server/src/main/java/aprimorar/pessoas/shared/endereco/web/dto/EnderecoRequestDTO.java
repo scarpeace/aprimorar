@@ -1,6 +1,6 @@
 package aprimorar.pessoas.shared.endereco.web.dto;
 
-import aprimorar.common.utils.MapperUtils;
+import aprimorar.common.utils.ZipCodeUtils;
 import aprimorar.pessoas.shared.endereco.domain.Endereco;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -44,7 +44,7 @@ public record EnderecoRequestDTO(
             bairro,
             cidade,
             estado,
-            MapperUtils.normalizeZip(cep),
+            ZipCodeUtils.normalize(cep),
             complemento
         );
     }
