@@ -1,9 +1,9 @@
 package aprimorar.despesas.web.dto;
 
 import aprimorar.despesas.domain.DespesaEntity;
-import aprimorar.despesas.enums.CategoriaDespesa;
-import aprimorar.despesas.enums.FormaPagamento;
-import aprimorar.despesas.enums.TipoDespesa;
+import aprimorar.despesas.domain.enums.CategoriaDespesa;
+import aprimorar.despesas.domain.enums.FormaPagamento;
+import aprimorar.despesas.domain.enums.TipoDespesa;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

@@ -2,8 +2,7 @@
     id = "atendimentos",
     displayName = "Atendimento",
     allowedDependencies = {
-        "pessoas::aluno",
-        "pessoas::colaborador",
+        "pessoas::api",
         "common::*"
     }
 )

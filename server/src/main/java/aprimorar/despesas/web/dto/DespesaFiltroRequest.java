@@ -1,10 +1,11 @@
 package aprimorar.despesas.web.dto;
 
-import aprimorar.despesas.enums.CategoriaDespesa;
-import aprimorar.despesas.enums.FormaPagamento;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
 import java.time.LocalDate;
+
+import aprimorar.despesas.domain.enums.CategoriaDespesa;
+import aprimorar.despesas.domain.enums.FormaPagamento;
 
 @Schema(description = "Filtros opcionais para listar despesas")
 public record DespesaFiltroRequest(

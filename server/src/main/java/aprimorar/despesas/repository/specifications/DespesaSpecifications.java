@@ -1,8 +1,8 @@
 package aprimorar.despesas.repository.specifications;
 
 import aprimorar.despesas.domain.DespesaEntity;
-import aprimorar.despesas.enums.CategoriaDespesa;
-import aprimorar.despesas.enums.FormaPagamento;
+import aprimorar.despesas.domain.enums.CategoriaDespesa;
+import aprimorar.despesas.domain.enums.FormaPagamento;
 import aprimorar.despesas.web.dto.DespesaFiltroRequest;
 import java.time.LocalDate;
 import org.springframework.data.jpa.domain.Specification;

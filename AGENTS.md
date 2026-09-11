@@ -53,11 +53,13 @@ aprimorar/
 │       ├── repository/{atendimento,cobranca,repasse,view}
 │       └── web/controller/AtendimentoIndividualController.java
 ├── pessoas/
-│   ├── aluno/
-│   │   └── api/
-│   ├── colaborador/
-│   │   └── api/
-│   └── shared/endereco/
+│   ├── api/
+│   ├── domain/{enums,exception}
+│   ├── repository/specifications/
+│   ├── service/
+│   └── web/
+│       ├── controller/
+│       └── dto/{aluno,colaborador,endereco}
 ├── financeiro/
 │   ├── despesas/
 │   └── cobranca_aluno/
@@ -69,11 +71,12 @@ aprimorar/
 - `atendimentos/individuais` concentra o fluxo de atendimento, cobrança e
   repasse individuais; há um controller HTTP único e services separados para
   escrita e leitura pela view.
-- `pessoas` expõe `AlunoService` e `ColaboradorService` em `api`; esses
-  contratos oferecem apenas verificação de existência por ID. Cada subdomínio
-  possui seu próprio `service` e `config`.
-- `pessoas/shared/endereco` contém o value object `Endereco` e seus DTOs; não
-  é uma entidade nem possui ciclo de vida próprio.
+- `pessoas` expõe `AlunoService` e `ColaboradorService` em uma única `api`; esses
+  contratos oferecem apenas verificação de existência por ID. As implementações
+  de aluno e colaborador permanecem separadas em `service` e `web`, com DTOs
+  organizados em `web/dto/aluno`, `web/dto/colaborador` e `web/dto/endereco`.
+- `pessoas/domain/Endereco` contém o value object de endereço; não é uma entidade
+  nem possui ciclo de vida próprio.
 - `Responsavel` é um value object embutido em `AlunoEntity`, sem tabela própria.
 - `despesas` registra gastos operacionais independentes de atendimento.
 - `common` é aberto para modelos, utilitários e anotações compartilhadas.

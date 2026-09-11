@@ -20,8 +20,8 @@ import aprimorar.atendimentos.individuais.web.dto.cobranca.CancelarCobrancasIndi
 import aprimorar.atendimentos.individuais.web.dto.cobranca.RegistrarPagamentoIndividualRequest;
 import aprimorar.atendimentos.individuais.web.dto.repasse.CancelarRepasseIndividualRequest;
 import aprimorar.atendimentos.individuais.web.dto.repasse.RegistrarRepasseIndividualRequest;
-import aprimorar.pessoas.aluno.api.AlunoService;
-import aprimorar.pessoas.colaborador.api.ColaboradorService;
+import aprimorar.pessoas.api.AlunoService;
+import aprimorar.pessoas.api.ColaboradorService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -99,11 +99,13 @@ public class AtendimentoIndividualService {
 
         cobranca.update(request.alunoId(), request.valorCobranca());
         repasse.update(request.colaboradorId(), request.valorRepasse());
+
         validarValores(cobranca.getValor(), repasse.getValor());
+
         atendimento.update(
             request.dataHoraInicio(), request.dataHoraFim(), request.tipo(), request.alunoId(), request.colaboradorId()
         );
-        atendimentoRepository.save(atendimento);
+
         log.info("Atendimento individual {} atualizado.", id);
     }
 
@@ -153,7 +155,6 @@ public class AtendimentoIndividualService {
         }
 
         cobrancas.forEach(c -> c.registrarPagamento(request.formaPagamento(), request.comprovanteUrl()));
-        cobrancaRepository.saveAll(cobrancas);
     }
 
     @Transactional
@@ -172,7 +173,6 @@ public class AtendimentoIndividualService {
         }
 
         cobrancas.forEach(CobrancaIndividualEntity::cancelarPagamento);
-        cobrancaRepository.saveAll(cobrancas);
     }
 
     @Transactional
@@ -196,7 +196,6 @@ public class AtendimentoIndividualService {
         }
 
         repasses.forEach(r -> r.registrarRepasse(request.formaPagamento(), request.comprovanteUrl()));
-        repasseRepository.saveAll(repasses);
     }
 
     @Transactional
@@ -215,7 +214,6 @@ public class AtendimentoIndividualService {
         }
 
         repasses.forEach(RepasseIndividualEntity::cancelarRepasse);
-        repasseRepository.saveAll(repasses);
     }
 
     private AtendimentoIndividualEntity findAtendimentoOrThrow(Long id) {

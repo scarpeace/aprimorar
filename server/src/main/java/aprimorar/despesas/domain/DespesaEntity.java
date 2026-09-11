@@ -1,9 +1,5 @@
 package aprimorar.despesas.domain;
 
-import aprimorar.despesas.enums.CategoriaDespesa;
-import aprimorar.despesas.enums.FormaPagamento;
-import aprimorar.despesas.enums.StatusDespesa;
-import aprimorar.despesas.enums.TipoDespesa;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,6 +13,11 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import aprimorar.despesas.domain.enums.CategoriaDespesa;
+import aprimorar.despesas.domain.enums.FormaPagamento;
+import aprimorar.despesas.domain.enums.StatusDespesa;
+import aprimorar.despesas.domain.enums.TipoDespesa;
 import lombok.Getter;
 
 @Getter
