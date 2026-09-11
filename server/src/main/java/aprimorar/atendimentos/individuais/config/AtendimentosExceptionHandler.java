@@ -1,10 +1,13 @@
 package aprimorar.atendimentos.individuais.config;
 
-import aprimorar.atendimentos.cobranca_aluno.domain.exception.CobrancaAlunoDadosInvalidosException;
-import aprimorar.atendimentos.individuais.domain.exception.AtendimentoConflitanteException;
-import aprimorar.atendimentos.individuais.domain.exception.AtendimentoDadosInvalidosException;
-import aprimorar.atendimentos.individuais.domain.exception.AtendimentoEdicaoExpiradaException;
-import aprimorar.atendimentos.individuais.domain.exception.AtendimentoNaoEncontradoException;
+import aprimorar.atendimentos.individuais.domain.exception.CobrancaIndividualDadosInvalidosException;
+import aprimorar.atendimentos.individuais.domain.exception.CobrancaIndividualNaoEncontradoException;
+import aprimorar.atendimentos.individuais.domain.exception.RepasseIndividualDadosInvalidosException;
+import aprimorar.atendimentos.individuais.domain.exception.RepasseIndividualNaoEncontradoException;
+import aprimorar.atendimentos.individuais.domain.exception.AtendimentoIndividualConflitanteException;
+import aprimorar.atendimentos.individuais.domain.exception.AtendimentoIndividualDadosInvalidosException;
+import aprimorar.atendimentos.individuais.domain.exception.AtendimentoIndividualEdicaoExpiradaException;
+import aprimorar.atendimentos.individuais.domain.exception.AtendimentoIndividualNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import org.springframework.core.Ordered;
@@ -19,16 +22,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(basePackages = "aprimorar.atendimentos.individuais.web.controller")
 public class AtendimentosExceptionHandler {
 
-    @ExceptionHandler(AtendimentoNaoEncontradoException.class)
-    public ResponseEntity<ProblemDetail> handleNotFound(AtendimentoNaoEncontradoException ex, HttpServletRequest request) {
+    @ExceptionHandler(AtendimentoIndividualNaoEncontradoException.class)
+    public ResponseEntity<ProblemDetail> handleNotFound(AtendimentoIndividualNaoEncontradoException ex, HttpServletRequest request) {
         return response(HttpStatus.NOT_FOUND, "Atendimento não encontrado", ex.getMessage(), request);
     }
 
+    @ExceptionHandler({ CobrancaIndividualNaoEncontradoException.class, RepasseIndividualNaoEncontradoException.class })
+    public ResponseEntity<ProblemDetail> handleFinancialNotFound(RuntimeException ex, HttpServletRequest request) {
+        return response(HttpStatus.NOT_FOUND, "Registro financeiro não encontrado", ex.getMessage(), request);
+    }
+
     @ExceptionHandler({
-        AtendimentoConflitanteException.class,
-        AtendimentoDadosInvalidosException.class,
-        AtendimentoEdicaoExpiradaException.class,
-        CobrancaAlunoDadosInvalidosException.class,
+        AtendimentoIndividualConflitanteException.class,
+        AtendimentoIndividualDadosInvalidosException.class,
+        AtendimentoIndividualEdicaoExpiradaException.class,
+        CobrancaIndividualDadosInvalidosException.class,
+        RepasseIndividualDadosInvalidosException.class,
         IllegalStateException.class
     })
     public ResponseEntity<ProblemDetail> handleBadRequest(RuntimeException ex, HttpServletRequest request) {

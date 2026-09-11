@@ -48,6 +48,10 @@ aprimorar/
 ├── auth/
 ├── atendimentos/
 │   └── individuais/
+│       ├── domain/*.java
+│       │   └── enums/
+│       ├── repository/{atendimento,cobranca,repasse,view}
+│       └── web/controller/AtendimentoIndividualController.java
 ├── pessoas/
 │   ├── aluno/
 │   │   └── api/
@@ -62,18 +66,16 @@ aprimorar/
 ```
 
 - `auth` concentra login e gerenciamento de usuários.
-- `atendimentos/individuais` expõe apenas eventos em `api`; sua implementação
-  fica separada entre `AtendimentoMutationService` e `AtendimentoQueryService`.
+- `atendimentos/individuais` concentra o fluxo de atendimento, cobrança e
+  repasse individuais; há um controller HTTP único e services separados para
+  escrita e leitura pela view.
 - `pessoas` expõe `AlunoService` e `ColaboradorService` em `api`; esses
   contratos oferecem apenas verificação de existência por ID. Cada subdomínio
   possui seu próprio `service` e `config`.
 - `pessoas/shared/endereco` contém o value object `Endereco` e seus DTOs; não
   é uma entidade nem possui ciclo de vida próprio.
 - `Responsavel` é um value object embutido em `AlunoEntity`, sem tabela própria.
-- `financeiro` é o módulo financeiro; `financeiro/despesas` e
-  `financeiro/cobranca_aluno` são seus subdomínios internos.
-- `cobranca_aluno` expõe `FormaPagamento` em `api`; sua implementação,
-  persistência e HTTP ficam nos subpacotes internos.
+- `despesas` registra gastos operacionais independentes de atendimento.
 - `common` é aberto para modelos, utilitários e anotações compartilhadas.
 - `config` contém configuração transversal, não regras de domínio.
 
@@ -92,17 +94,15 @@ Dentro de `server/`:
 
 ### Observações do domínio
 
-- `AtendimentoEntity` armazena `alunoId` e `colaboradorId` como escalares, sem
+- `AtendimentoIndividualEntity` armazena `alunoId` e `colaboradorId` como escalares, sem
   relações JPA com outros módulos
-- a criação, atualização e exclusão da cobrança são disparadas pelos eventos
-  públicos de atendimento e persistidas pelo submódulo
-  `financeiro/cobranca_aluno`
+- a criação, atualização e exclusão do atendimento, da cobrança e do repasse
+  individual acontecem no `AtendimentoIndividualService`
 - `AlunoEntity` e `ColaboradorEntity` usam `Endereco` com `@Embedded`
 - `AlunoEntity` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável
-- despesas registra gastos operacionais independentes de aluno, colaborador e atendimento
-- o valor de repasse do colaborador vive no próprio atendimento; o valor,
-  status e os dados de liquidação da cobrança vivem em `cobrancas_alunos`
+- o valor da cobrança vive em `cobrancas_individuais`; o valor do repasse vive
+  em `repasses_individuais`
 - alunos e colaboradores não são excluídos; o campo `ativo` controla ativação e
   desativação
 - não existem registros ou realocação para aluno, colaborador ou responsável fantasma

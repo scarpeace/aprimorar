@@ -1,8 +1,9 @@
 -- Development seed for Aprimorar.
 -- Keeps the dataset small and aligned with the current schema.
 
-DELETE FROM atendimentos;
-DELETE FROM cobrancas_alunos;
+DELETE FROM repasses_individuais;
+DELETE FROM cobrancas_individuais;
+DELETE FROM atendimentos_individuais;
 DELETE FROM despesas;
 DELETE FROM alunos;
 DELETE FROM colaboradores;
@@ -28,14 +29,28 @@ INSERT INTO alunos (
   ('de87ab23-c4f6-5cdb-88e4-c1e524f9f5b3', NULL, 'Felipe Andrade', '426.813.579-00', '11980000003', 'felipe.andrade@example.com', 'Rua Bela Cintra', '640', 'Consolacao', 'Sao Paulo', 'SP', '01415000', 'Apto 91', 'Arthur Andrade', '564.789.012-11', 'arthur.andrade@example.com', DATE '2010-11-05', '11970000004', 'Colegio Sao Paulo', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   ('41e8e58f-124a-5969-b16f-ac57993d7a00', NULL, 'Marcos Vinicius Barros', '315.792.468-00', '11980000002', 'marcos.barros@example.com', 'Rua Itapeva', '410', 'Bela Vista', 'Sao Paulo', 'SP', '01332000', NULL, 'Sofia Barros', '453.678.901-48', 'sofia.barros@example.com', DATE '2014-01-17', '11970000005', 'Colegio Sao Paulo', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO atendimentos (
+DROP TABLE IF EXISTS seed_atendimentos;
+
+CREATE TEMP TABLE seed_atendimentos (
+  id BIGINT,
+  aluno_id UUID,
+  colaborador_id UUID,
+  data_hora_inicio TIMESTAMP,
+  data_hora_fim TIMESTAMP,
+  tipo VARCHAR(255),
+  repasse NUMERIC(10, 2),
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+INSERT INTO seed_atendimentos (
   id,
   aluno_id,
   colaborador_id,
   data_hora_inicio,
   data_hora_fim,
   tipo,
-  repasse_colaborador,
+  repasse,
   created_at,
   updated_at
 ) VALUES
@@ -80,9 +95,35 @@ INSERT INTO atendimentos (
   (1039, 'de87ab23-c4f6-5cdb-88e4-c1e524f9f5b3', '9e79c84d-d10a-59ca-8196-3963139e8096', TIMESTAMP '2026-12-08 14:00:00', TIMESTAMP '2026-12-08 15:00:00', 'MENTORIA', 110.00, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   (1040, '41e8e58f-124a-5969-b16f-ac57993d7a00', '890322e5-6327-53c6-a9a7-726765d704d8', TIMESTAMP '2026-12-15 16:00:00', TIMESTAMP '2026-12-15 17:30:00', 'ENEM', 130.00, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
+INSERT INTO atendimentos_individuais (
+  id,
+  aluno_id,
+  colaborador_id,
+  data_hora_inicio,
+  data_hora_fim,
+  tipo,
+  created_at,
+  updated_at
+)
+SELECT id, aluno_id, colaborador_id, data_hora_inicio, data_hora_fim, tipo,
+  created_at, updated_at
+FROM seed_atendimentos;
+
+INSERT INTO repasses_individuais (
+  atendimento_id,
+  colaborador_id,
+  valor,
+  created_at,
+  updated_at
+)
+SELECT id, colaborador_id, repasse, created_at, updated_at
+FROM seed_atendimentos;
+
+DROP TABLE seed_atendimentos;
+
 -- Cobranças fictícias para os atendimentos acima.
 -- Parte delas fica paga para permitir testar os dois estados na consulta composta.
-INSERT INTO cobrancas_alunos (
+INSERT INTO cobrancas_individuais (
   atendimento_id,
   aluno_id,
   valor,
@@ -96,7 +137,7 @@ INSERT INTO cobrancas_alunos (
 SELECT
   atendimento.id,
   atendimento.aluno_id,
-  atendimento.repasse_colaborador + 40.00,
+  repasse.valor + 40.00,
   CASE WHEN atendimento.id % 4 = 0 THEN 'PAGO' ELSE 'PENDENTE' END,
   CASE WHEN atendimento.id % 4 = 0
     THEN 'https://example.com/comprovantes/cobranca-' || atendimento.id || '.pdf'
@@ -109,7 +150,8 @@ SELECT
   CASE WHEN atendimento.id % 4 = 0 THEN 'PIX' ELSE NULL END,
   CURRENT_TIMESTAMP,
   CURRENT_TIMESTAMP
-FROM atendimentos atendimento;
+FROM atendimentos_individuais atendimento
+JOIN repasses_individuais repasse ON repasse.atendimento_id = atendimento.id;
 
 INSERT INTO despesas (
   id,
@@ -156,5 +198,7 @@ INSERT INTO despesas (
   (29, 'Conta de energia - novembro', 'SAIDA', 'CONTAS', 658.75, DATE '2026-11-05', NULL, 'PENDENTE', 'PIX', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   (30, 'Materiais pedagogicos', 'SAIDA', 'DESPENSA', 410.60, DATE '2026-11-09', DATE '2026-11-09', 'PAGA', 'CARTAO_DEBITO', 'Apoio as aulas', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-SELECT setval('atendimentos_id_seq', (SELECT MAX(id) FROM atendimentos), TRUE);
+SELECT setval('atendimentos_individuais_id_seq', (SELECT MAX(id) FROM atendimentos_individuais), TRUE);
+SELECT setval('cobrancas_individuais_id_seq', (SELECT MAX(id) FROM cobrancas_individuais), TRUE);
+SELECT setval('repasses_individuais_id_seq', (SELECT MAX(id) FROM repasses_individuais), TRUE);
 SELECT setval('despesas_id_seq', (SELECT MAX(id) FROM despesas), TRUE);
